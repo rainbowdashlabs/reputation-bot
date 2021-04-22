@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+        <!-- Console logger for debugging (prints stacktrace) -->
+        <Console name="ConsoleDebug" target="SYSTEM_OUT">
+            <PatternLayout
+                    pattern="%highlight{[%d{HH:mm:ss]}[%p{length=3}][%c] %m%n}{FATAL=black, ERROR=red, WARN=yellow, INFO=green, DEBUG=blue, TRACE=white}"
+                    disableAnsi="false"/>
+        </Console>
+
+        <RollingFile name="RollingFile" fileName="logs/app.log" filePattern="logs/app-%d{yyyy-MM-dd}.log">
+            <PatternLayout pattern="[%d{HH:mm:ss]}[%p{length=3}][%15.15c{1}] %m%ex%n"/>
+            <Policies>
+                <OnStartupTriggeringPolicy/>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+
+        <!-- remove too verbose library logging -->
+        <Logger name="net.dv8tion.jda" level="INFO"/>
+        <Logger name="org.eclipse.jetty" level="INFO"/>
+
+        <Root level="TRACE">
+            <AppenderRef ref="ConsoleDebug"/>
+            <AppenderRef ref="RollingFile"/>
+        </Root>
+    </Loggers>
+</Configuration>
