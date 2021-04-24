@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Function;
@@ -27,7 +26,7 @@ public class Configuration {
     }
 
     public static Configuration create() {
-        Configuration configuration = new Configuration();
+        var configuration = new Configuration();
         configuration.reload();
         return configuration;
     }
@@ -46,7 +45,6 @@ public class Configuration {
     }
 
     private void forceConsistency() throws IOException {
-        Path directories = Files.createDirectories(getConfig().getParent());
         if (!getConfig().toFile().exists()) {
             if (getConfig().toFile().createNewFile()) {
                 objectMapper.writeValue(getConfig().toFile(), new ConfigFile());
@@ -55,8 +53,8 @@ public class Configuration {
     }
 
     private Path getConfig() {
-        Path home = new File(".").getAbsoluteFile().getParentFile().toPath();
-        String property = System.getProperty("bot.config");
+        var home = new File(".").getAbsoluteFile().getParentFile().toPath();
+        var property = System.getProperty("bot.config");
 
         return Paths.get(home.toString(), property);
     }

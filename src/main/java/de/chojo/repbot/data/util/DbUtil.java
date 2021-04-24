@@ -3,7 +3,6 @@ package de.chojo.repbot.data.util;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Nullable;
-import java.sql.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -36,7 +35,7 @@ public class DbUtil {
     @SuppressWarnings("unchecked")
     @Nullable
     public static <T> T[] arrayToArray(ResultSet resultSet, String column, @Nullable T[] def) throws SQLException {
-        Array array = resultSet.getArray(column);
+        var array = resultSet.getArray(column);
         return array == null ? def : (T[]) resultSet.getArray(column).getArray();
     }
 }

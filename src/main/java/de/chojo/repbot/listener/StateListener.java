@@ -9,7 +9,7 @@ import javax.sql.DataSource;
 
 public class StateListener extends ListenerAdapter {
 
-    private GuildData data;
+    private final GuildData data;
 
     public StateListener(DataSource dataSource) {
         data = new GuildData(dataSource);
