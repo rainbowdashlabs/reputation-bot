@@ -1,6 +1,7 @@
 package de.chojo.repbot.commands;
 
 import de.chojo.jdautil.command.SimpleCommand;
+import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.jdautil.text.TextFormatting;
 import de.chojo.jdautil.wrapper.CommandContext;
@@ -13,11 +14,18 @@ import java.util.stream.Collectors;
 
 public class Roles extends SimpleCommand {
 
-    private GuildData data;
+    private final GuildData data;
 
-    public Roles(DataSource dataSource) {
-        super("roles", new String[] {"role"}, "Manage reputation roles.",
-                "role < add <role> <reputation> | remove <role> | list >", Permission.ADMINISTRATOR);
+    public Roles(DataSource dataSource, Localizer localizer) {
+        super("roles", new String[] {"role"},
+                "Manage reputation roles.",
+                null,
+                subCommandBuilder()
+                        .add("add", "<role> <reputation>", "Add a reputation role.")
+                        .add("remove", "<role>", "Remove a reputation role.")
+                        .add("list", null, "List repuation roles.")
+                        .build(),
+                Permission.ADMINISTRATOR);
         data = new GuildData(dataSource);
     }
 

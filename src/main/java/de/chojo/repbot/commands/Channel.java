@@ -1,6 +1,7 @@
 package de.chojo.repbot.commands;
 
 import de.chojo.jdautil.command.SimpleCommand;
+import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
@@ -15,11 +16,17 @@ import java.util.stream.Collectors;
 public class Channel extends SimpleCommand {
     private final GuildData data;
 
-    public Channel(DataSource dataSource) {
+    public Channel(DataSource dataSource, Localizer localizer) {
         super("channel",
                 null,
                 "Manage channel for reputation collection.",
-                "channel <set <channel...> | add <channel...> | remove <channel...> | list>",
+                null,
+                subCommandBuilder()
+                        .add("set", "<channel...>", "Set the reputation channel.")
+                        .add("add", "<channel...>", "Add a reputation channel.")
+                        .add("remove", "<channel...>", "Remove a reputation channel.")
+                        .add("list", null, "List reputation channel.")
+                        .build(),
                 Permission.ADMINISTRATOR);
         data = new GuildData(dataSource);
     }
@@ -83,10 +90,7 @@ public class Channel extends SimpleCommand {
 
     private boolean list(MessageEventWrapper eventWrapper, CommandContext context) {
         var guildSettings = data.getGuildSettings(eventWrapper.getGuild());
-        if (guildSettings.isEmpty()) {
-            eventWrapper.replyNonMention("Could not retrieve guild settings").queue();
-            return true;
-        }
+        if (guildSettings.isEmpty()) return true;
 
         var settings = guildSettings.get();
         var channelNames = DiscordResolver
