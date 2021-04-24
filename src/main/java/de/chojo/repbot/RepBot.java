@@ -2,14 +2,23 @@ package de.chojo.repbot;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import de.chojo.jdautil.listener.CommandListener;
+import de.chojo.repbot.commands.Channel;
+import de.chojo.repbot.commands.Prefix;
+import de.chojo.repbot.commands.Reputation;
+import de.chojo.repbot.commands.Roles;
 import de.chojo.repbot.config.ConfigFile;
 import de.chojo.repbot.config.Configuration;
+import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.listener.MessageListener;
+import de.chojo.repbot.listener.ReactionListener;
 import de.chojo.repbot.listener.StateListener;
+import de.chojo.repbot.manager.RoleAssigner;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.postgresql.ds.PGSimpleDataSource;
 
@@ -21,10 +30,10 @@ import java.util.concurrent.Executors;
 @Slf4j
 public class RepBot {
     private static RepBot instance;
+    private final ExecutorService executorService = Executors.newFixedThreadPool(30);
     private ShardManager shardManager;
     private HikariDataSource dataSource;
     private Configuration configuration;
-    private final ExecutorService executorService = Executors.newFixedThreadPool(30);
 
     public static void main(String[] args) {
         RepBot.instance = new RepBot();
@@ -52,8 +61,25 @@ public class RepBot {
     }
 
     private void initBot() {
-        shardManager.addEventListener(new MessageListener(dataSource, configuration));
-        shardManager.addEventListener(new StateListener(dataSource));
+        var roleAssigner = new RoleAssigner(dataSource);
+
+        shardManager.addEventListener(
+                new MessageListener(dataSource, configuration, roleAssigner),
+                new StateListener(dataSource),
+                new ReactionListener(dataSource, roleAssigner));
+
+        CommandListener.builder(shardManager, configuration.get().getDefaultPrefix())
+                .receiveGuildMessage()
+                .receiveGuildMessagesUpdates()
+                .withConversationSystem()
+                .withPrefixResolver(guild -> new GuildData(dataSource).getPrefix(guild))
+                .withCommands(
+                        new Channel(dataSource),
+                        new Prefix(dataSource, configuration),
+                        new Reputation(dataSource),
+                        new Roles(dataSource)
+                )
+                .build();
     }
 
     private void initShutdownHook() {
@@ -66,9 +92,15 @@ public class RepBot {
 
     private void initJDA() throws LoginException {
         shardManager = DefaultShardManagerBuilder.createDefault(configuration.get(ConfigFile::getToken))
-                .enableIntents(GatewayIntent.GUILD_MESSAGE_REACTIONS,
-                        GatewayIntent.GUILD_MESSAGES)
+                .enableIntents(
+                        GatewayIntent.GUILD_MESSAGE_REACTIONS,
+                        GatewayIntent.GUILD_MESSAGES,
+                        GatewayIntent.GUILD_MEMBERS,
+                        GatewayIntent.GUILD_MESSAGES,
+                        GatewayIntent.GUILD_EMOJIS)
                 .enableCache(CacheFlag.EMOTE)
+                .setEnableShutdownHook(false)
+                .setMemberCachePolicy(MemberCachePolicy.ALL)
                 .setEventPool(executorService)
                 .build();
     }
