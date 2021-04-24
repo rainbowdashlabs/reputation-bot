@@ -2,11 +2,17 @@ package de.chojo.repbot;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import de.chojo.jdautil.listener.CommandListener;
+import de.chojo.jdautil.listener.CommandHub;
+import de.chojo.jdautil.localization.Localizer;
+import de.chojo.jdautil.localization.util.Language;
 import de.chojo.repbot.commands.Channel;
+import de.chojo.repbot.commands.Help;
 import de.chojo.repbot.commands.Prefix;
+import de.chojo.repbot.commands.RepSettings;
 import de.chojo.repbot.commands.Reputation;
 import de.chojo.repbot.commands.Roles;
+import de.chojo.repbot.commands.Scan;
+import de.chojo.repbot.commands.Thankwords;
 import de.chojo.repbot.config.ConfigFile;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
@@ -30,10 +36,11 @@ import java.util.concurrent.Executors;
 @Slf4j
 public class RepBot {
     private static RepBot instance;
-    private final ExecutorService executorService = Executors.newFixedThreadPool(30);
+    private final ExecutorService executorService = Executors.newFixedThreadPool(50);
     private ShardManager shardManager;
     private HikariDataSource dataSource;
     private Configuration configuration;
+    private Localizer localizer;
 
     public static void main(String[] args) {
         RepBot.instance = new RepBot();
@@ -56,8 +63,18 @@ public class RepBot {
         log.info("Creating Shutdown Hook");
         initShutdownHook();
 
+        initLocalization();
+
         log.info("Initializing bot.");
         initBot();
+    }
+
+    private void initLocalization() {
+        localizer = Localizer.builder(Language.ENGLISH)
+                .addLanguage(Language.GERMAN)
+                .withLanguageProvider(guild -> new GuildData(dataSource).getLanguage(guild))
+                .withBundlePath("locale")
+                .build();
     }
 
     private void initBot() {
@@ -68,18 +85,22 @@ public class RepBot {
                 new StateListener(dataSource),
                 new ReactionListener(dataSource, roleAssigner));
 
-        CommandListener.builder(shardManager, configuration.get().getDefaultPrefix())
+        var hub = CommandHub.builder(shardManager, configuration.get().getDefaultPrefix())
                 .receiveGuildMessage()
                 .receiveGuildMessagesUpdates()
                 .withConversationSystem()
                 .withPrefixResolver(guild -> new GuildData(dataSource).getPrefix(guild))
                 .withCommands(
-                        new Channel(dataSource),
-                        new Prefix(dataSource, configuration),
-                        new Reputation(dataSource),
-                        new Roles(dataSource)
+                        new Channel(dataSource, localizer),
+                        new Prefix(dataSource, configuration, localizer),
+                        new Reputation(dataSource, localizer),
+                        new Roles(dataSource, localizer),
+                        new RepSettings(dataSource, localizer),
+                        new Thankwords(dataSource, localizer),
+                        new Scan(dataSource, shardManager, localizer)
                 )
                 .build();
+        hub.registerCommands(new Help(hub));
     }
 
     private void initShutdownHook() {
