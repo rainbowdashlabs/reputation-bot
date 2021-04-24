@@ -54,6 +54,7 @@ public class GuildData {
                                 rs.getBoolean("reactions_active"),
                                 rs.getBoolean("answer_active"),
                                 rs.getBoolean("mention_active"),
+                                rs.getBoolean("fuzzy_active"),
                                 DbUtil.arrayToArray(rs, "active_channels", new Long[0]),
                                 rs.getInt("cooldown"))
                 );
@@ -66,7 +67,7 @@ public class GuildData {
 
     public Optional<String> getPrefix(Guild guild) {
         try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
-                SELECT prefix FROM guild_prefix where guild_id = ?;
+                SELECT prefix FROM guild_bot_settings where guild_id = ?;
                 """)) {
             stmt.setLong(1, guild.getIdLong());
             var rs = stmt.executeQuery();
@@ -82,10 +83,10 @@ public class GuildData {
     public boolean setPrefix(Guild guild, @Nullable String prefix) {
         try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
                 INSERT INTO
-                    guild_prefix(guild_id, prefix) VALUES (?,?)
+                    guild_bot_settings(guild_id, prefix) VALUES (?,?)
                     ON CONFLICT(guild_id)
                         DO UPDATE
-                            SET guild_prefix = excluded.prefix;
+                            SET prefix = excluded.prefix;
                 """)) {
             stmt.setLong(1, guild.getIdLong());
             if (prefix == null) {
@@ -93,9 +94,47 @@ public class GuildData {
             } else {
                 stmt.setString(2, prefix);
             }
+            stmt.execute();
             return true;
         } catch (SQLException e) {
             DbUtil.logSQLError("Could not retrieve guild prefix", e);
+        }
+        return false;
+    }
+    
+    public Optional<String> getLanguage(Guild guild) {
+        try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
+                SELECT language FROM guild_bot_settings where guild_id = ?;
+                """)) {
+            stmt.setLong(1, guild.getIdLong());
+            var rs = stmt.executeQuery();
+            if (rs.next()) {
+                return Optional.ofNullable(rs.getString(1));
+            }
+        } catch (SQLException e) {
+            DbUtil.logSQLError("Could not retrieve guild prefix", e);
+        }
+        return Optional.empty();
+    }
+
+    public boolean setLanguage(Guild guild, @Nullable String language) {
+        try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
+                INSERT INTO
+                    guild_bot_settings(guild_id, language) VALUES (?,?)
+                    ON CONFLICT(guild_id)
+                        DO UPDATE
+                            SET language = excluded.language;
+                """)) {
+            stmt.setLong(1, guild.getIdLong());
+            if (language == null) {
+                stmt.setNull(2, Types.VARCHAR);
+            } else {
+                stmt.setString(2, language);
+            }
+            stmt.execute();
+            return true;
+        } catch (SQLException e) {
+            DbUtil.logSQLError("Could not retrieve guild language", e);
         }
         return false;
     }
@@ -240,7 +279,7 @@ public class GuildData {
         return Collections.emptyList();
     }
 
-    public boolean uppateMessageSettings(Guild guild, @Nullable Integer maxMessageAge, @Nullable String reaction,
+    public boolean updateMessageSettings(Guild guild, @Nullable Integer maxMessageAge, @Nullable String reaction,
                                          @Nullable Boolean reactionsActive, @Nullable Boolean answerActive, @Nullable Boolean mentionActive,
                                          @Nullable Boolean fuzzyActive, Integer cooldown) {
         try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
@@ -290,9 +329,47 @@ public class GuildData {
             } else {
                 stmt.setInt(7, cooldown);
             }
+            stmt.setLong(8, guild.getIdLong());
+            stmt.executeUpdate();
+            return true;
         } catch (SQLException e) {
             DbUtil.logSQLError("Could not update message settings", e);
         }
+        return false;
+    }
+
+    public boolean addThankWord(Guild guild, String pattern) {
+        try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
+                INSERT INTO
+                    thankwords(guild_id, thankword) VALUES(?,?)
+                        ON CONFLICT
+                            DO NOTHING;
+                """)) {
+            stmt.setLong(1, guild.getIdLong());
+            stmt.setString(1, pattern);
+            stmt.execute();
+            return true;
+        } catch (SQLException e) {
+            DbUtil.logSQLError("Could not add thankword", e);
+        }
+        return false;
+    }
+
+    public boolean removeThankWord(Guild guild, String pattern) {
+        try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
+                DELETE FROM
+                    thankwords
+                WHERE
+                    guild_id = ?
+                    and thankword = ?
+                """)) {
+            stmt.setLong(1, guild.getIdLong());
+            stmt.setString(1, pattern);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            DbUtil.logSQLError("Could not add thankword", e);
+        }
+        return false;
     }
 
     private ReputationRole buildRole(ResultSet rs) throws SQLException {

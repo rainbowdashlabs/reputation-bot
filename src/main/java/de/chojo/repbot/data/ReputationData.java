@@ -2,6 +2,7 @@ package de.chojo.repbot.data;
 
 import de.chojo.repbot.data.util.DbUtil;
 import de.chojo.repbot.data.wrapper.ReputationUser;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.OptionalLong;
 
+@Slf4j
 public class ReputationData {
     private final DataSource source;
 
@@ -28,23 +30,13 @@ public class ReputationData {
             try (var stmt = conn.prepareStatement("""
                     INSERT INTO
                         reputation_log(guild_id, donor_id, receiver_id, message_id) VALUES(?,?,?,?)
+                            ON CONFLICT(guild_id, donor_id, receiver_id, message_id)
+                                DO NOTHING;
                                         """)) {
                 stmt.setLong(1, guild.getIdLong());
                 stmt.setLong(2, donor.getIdLong());
                 stmt.setLong(3, receiver.getIdLong());
                 stmt.setLong(4, message.getIdLong());
-                stmt.execute();
-            }
-
-            try (var stmt = conn.prepareStatement("""
-                    INSERT INTO
-                        user_reputation (guild_id, user_id, reputation) VALUES (?,?,1)
-                        ON CONFLICT(guild_id, user_id)
-                            DO UPDATE
-                                SET reputation = user_reputation.reputation + 1
-                                        """)) {
-                stmt.setLong(1, guild.getIdLong());
-                stmt.setLong(2, receiver.getIdLong());
                 stmt.execute();
                 return true;
             }
@@ -80,13 +72,13 @@ public class ReputationData {
 
     public List<ReputationUser> getRanking(Guild guild, int limit, int offset) {
         try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
-                SELECT 
+                SELECT
                     user_id,
                     reputation
                 from
                     user_reputation
                 WHERE guild_id = ?
-                ORDER BY reputation
+                ORDER BY reputation DESC
                 OFFSET ?
                 LIMIT ?
                 """)) {
@@ -117,13 +109,24 @@ public class ReputationData {
             stmt.setLong(1, guild.getIdLong());
             stmt.setLong(2, user.getIdLong());
             var rs = stmt.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 return OptionalLong.of(rs.getLong("reputation"));
             }
-        }catch (SQLException e){
+        } catch (SQLException e) {
             DbUtil.logSQLError("Could not retrieve user reputation", e);
         }
         return OptionalLong.empty();
+    }
+
+    public void removeMessage(long messageId) {
+        try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
+                DELETE FROM reputation_log where message_id = ?;
+                """)) {
+            stmt.setLong(1, messageId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            DbUtil.logSQLError("Could not delete message from log", e);
+        }
     }
 
     public Long getLastRatedDuration(Guild guild, User donor, User receiver, ChronoUnit unit) {
