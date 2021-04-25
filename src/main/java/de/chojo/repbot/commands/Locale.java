@@ -40,8 +40,11 @@ public class Locale extends SimpleCommand {
         }
 
         var subCmd = context.argString(0).get();
-        if (subCmd.equalsIgnoreCase("set")) {
+        if ("set".equalsIgnoreCase(subCmd)) {
             return set(eventWrapper, context.subContext(subCmd));
+        }
+        if ("list".equalsIgnoreCase(subCmd)) {
+            return list(eventWrapper, context.subContext(subCmd));
         }
 
         return false;
@@ -57,7 +60,7 @@ public class Locale extends SimpleCommand {
         data.setLanguage(eventWrapper.getGuild(), language.get());
         eventWrapper.reply(eventWrapper.localize("command.locale.sub.set.set",
                 Replacement.create("LOCALE", language.get().getLanguage(), Format.CODE))).queue();
-        return false;
+        return true;
     }
 
     private boolean list(MessageEventWrapper eventWrapper, CommandContext context) {
@@ -66,6 +69,6 @@ public class Locale extends SimpleCommand {
                 eventWrapper.localize("words.language"), eventWrapper.localize("words.code"));
         languages.forEach(l -> builder.setNextRow(l.getLanguage(), l.getCode()));
         eventWrapper.reply(eventWrapper.localize("command.locale.sub.list.list") + "\n" + builder).queue();
-        return false;
+        return true;
     }
 }

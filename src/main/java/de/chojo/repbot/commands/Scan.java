@@ -131,16 +131,17 @@ public class Scan extends SimpleCommand {
         var duration = DurationFormatUtils.formatDuration((long) messageCount / 100 * INTERVAL_MS, "mm:ss");
         eventWrapper.reply(eventWrapper.localize("command.scan.scheduling", Replacement.create("DURATION", duration))).queue();
 
-        schedule(history, pattern, eventWrapper, messageCount / 100);
+        schedule(history, pattern, eventWrapper, messageCount);
     }
 
     private void schedule(MessageHistory history, Pattern pattern, MessageEventWrapper eventWrapper, int calls) {
-
         var progressMessage = eventWrapper.answer(eventWrapper.localize("command.scan.progress",
                 Replacement.create("PERCENT", String.format("%.02f", 0d))) + " " + TextGenerator.progressBar(0, 40)).complete();
         var scanProcess = new ScanProcess(loc, progressMessage, history, pattern, calls, reputationData);
 
         activeScans.add(eventWrapper.getGuild().getIdLong());
+
+        eventWrapper.getGuild().loadMembers().get();
 
         executorService.schedule(() -> processScan(scanProcess), 0, TimeUnit.SECONDS);
 
@@ -163,12 +164,12 @@ public class Scan extends SimpleCommand {
         var scan = finished.poll();
         activeScans.remove(scan.getGuild().getIdLong());
         scan.getProgressMessage().editMessage(loc.localize("command.scan.progress", scan.getGuild(),
-                Replacement.create("PERCENT", String.format("%.02f", 0d))) + " " + TextGenerator.progressBar(0, 40)).queue();
+                Replacement.create("PERCENT", String.format("%.02f", 100d))) + " " + TextGenerator.progressBar(1, 40)).queue();
         var embed = new LocalizedEmbedBuilder(loc, scan.getGuild())
                 .setTitle("command.scan.completed")
                 .setDescription(loc.localize("command.scan.result", scan.getGuild(),
                         Replacement.create("SCANNED", scan.getScanned()),
-                        Replacement.create("HIT", scan.getHits())))
+                        Replacement.create("HITS", scan.getHits())))
                 .build();
         scan.getResultChannel().sendMessage(embed).reference(scan.getProgressMessage()).queue();
     }
@@ -181,7 +182,7 @@ public class Scan extends SimpleCommand {
                 .setTitle("command.scan.canceled")
                 .setDescription(loc.localize("command.scan.result", scan.getGuild(),
                         Replacement.create("SCANNED", scan.getScanned()),
-                        Replacement.create("HIT", scan.getHits())))
+                        Replacement.create("HITS", scan.getHits())))
                 .build();
         scan.getResultChannel().sendMessage(embed).reference(scan.getProgressMessage()).queue();
     }
@@ -208,8 +209,8 @@ public class Scan extends SimpleCommand {
             this.progressMessage = progressMessage;
             this.history = history;
             this.pattern = pattern;
-            this.calls = Math.min(Math.max(100, calls), 100000);
-            this.callsLeft = calls;
+            this.calls = Math.min(Math.max(0, calls), 100000);
+            this.callsLeft = this.calls;
             reputationData = data;
         }
 
@@ -222,9 +223,11 @@ public class Scan extends SimpleCommand {
         }
 
         public boolean scan() {
+            if(callsLeft == 0) return false;
             var start = Instant.now();
             var size = history.size();
-            var messages = history.retrievePast(100).timeout(10, TimeUnit.SECONDS).complete();
+            var messages = history.retrievePast(Math.min(callsLeft, 100)).timeout(10, TimeUnit.SECONDS).complete();
+            callsLeft -= Math.min(callsLeft, 100);
             if (size == history.size()) {
                 return false;
             }
@@ -250,12 +253,11 @@ public class Scan extends SimpleCommand {
                     }
                 }
             }
-            var progress = (calls - callsLeft) / (double) calls;
+            var progress = (calls - Math.max(callsLeft, 0)) / (double) calls;
             progressMessage.editMessage(loc.localize("command.scan.progress", guild,
-                    Replacement.create("PERCENT", String.format("%.02f", progress * 100))) + " " + TextGenerator.progressBar(0, 40)).complete();
-            callsLeft--;
+                    Replacement.create("PERCENT", String.format("%.02f", progress * 100d))) + " " + TextGenerator.progressBar(progress, 40)).complete();
             time = Instant.now().until(start, ChronoUnit.MILLIS);
-            return callsLeft != 0;
+            return callsLeft > 0;
         }
 
         public long getTime() {

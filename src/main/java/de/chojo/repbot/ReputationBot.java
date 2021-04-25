@@ -7,6 +7,7 @@ import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Language;
 import de.chojo.repbot.commands.Channel;
 import de.chojo.repbot.commands.Help;
+import de.chojo.repbot.commands.Locale;
 import de.chojo.repbot.commands.Prefix;
 import de.chojo.repbot.commands.RepSettings;
 import de.chojo.repbot.commands.Reputation;
@@ -31,7 +32,6 @@ import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.annotation.Nullable;
 import javax.security.auth.login.LoginException;
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -128,7 +128,8 @@ public class ReputationBot {
                         new Roles(dataSource, localizer),
                         new RepSettings(dataSource, localizer),
                         new Thankwords(dataSource, localizer),
-                        new Scan(dataSource, localizer)
+                        new Scan(dataSource, localizer),
+                        new Locale(dataSource, localizer)
                 )
                 .withInvalidArgumentProvider(((loc, command) -> new EmbedBuilder()
                         .setTitle(loc.localize("error.invalidArguments"))

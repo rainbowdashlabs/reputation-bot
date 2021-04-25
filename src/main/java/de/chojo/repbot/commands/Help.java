@@ -59,6 +59,10 @@ public class Help extends SimpleCommand {
             return true;
         }
 
+        if (!eventWrapper.getMember().hasPermission(command.get().getPermission())) {
+            return true;
+        }
+
         eventWrapper.reply(getcommandHelpEmbed(eventWrapper, command.get())).queue();
         return true;
     }
