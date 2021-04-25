@@ -1,0 +1,3 @@
+files:
+  - source: src/main/resources/locale.properties
+    translation: src/main/resources/%original_file_name%
