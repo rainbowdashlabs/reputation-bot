@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
     id("com.github.johnrengelman.shadow") version "6.0.0"
     java
@@ -7,12 +9,12 @@ plugins {
 group = "de.chojo"
 version = "1.0"
 
+
 val log4jVersion = "2.14.0"
 val lombokVersion = "1.18.20"
 
 java.sourceCompatibility = JavaVersion.VERSION_15
 java.targetCompatibility = JavaVersion.VERSION_15
-
 
 repositories {
     mavenLocal()
@@ -43,7 +45,7 @@ dependencies {
     implementation("org.apache.logging.log4j", "log4j-slf4j-impl", log4jVersion)
     // annotation processing
     compileOnly("org.projectlombok", "lombok", lombokVersion)
-    annotationProcessor("org.projectlombok", "lombok",lombokVersion )
+    annotationProcessor("org.projectlombok", "lombok", lombokVersion)
     // utils
     implementation("com.kcthota", "emoji4j", "6.0")
     implementation("org.apache.commons", "commons-lang3", "3.12.0")
@@ -51,12 +53,32 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:5.7.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testCompileOnly("org.projectlombok", "lombok", lombokVersion)
-    testAnnotationProcessor("org.projectlombok", "lombok",lombokVersion )
+    testAnnotationProcessor("org.projectlombok", "lombok", lombokVersion)
 }
 
 tasks.test {
     useJUnitPlatform()
     testLogging {
         events("passed", "skipped", "failed")
+    }
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
+}
+
+tasks {
+    named<ShadowJar>("shadowJar") {
+        mergeServiceFiles()
+        manifest {
+            attributes(mapOf("Main-Class" to "de.chojo.repbot.ReputationBot"))
+        }
+    }
+}
+
+tasks {
+    build {
+        dependsOn(shadowJar)
     }
 }
