@@ -1,0 +1,32 @@
+version: '3.7'
+
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    networks:
+      - repbot
+    depends_on:
+      - database
+    volumes:
+      - ./config.json:/config.json
+      - ./log4j2.xml:/log4j2.xml
+  database:
+    networks:
+      - repbot
+    image: postgres:13.2
+    volumes:
+    - db_data:/var/lib/postgres/data
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: 'changeme'
+      POSTGRES_DB: repbot
+
+networks:
+  repbot:
+    name: repbot
+    external: false
+
+volumes:
+  db_data:

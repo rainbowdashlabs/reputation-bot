@@ -1,0 +1,12 @@
+{
+  "token": "",
+  "database": {
+    "host": "database",
+    "port": 5432,
+    "database": "repbot",
+    "schema": "repbot",
+    "user": "root",
+    "password": "changeme",
+    "poolSize": 20
+  }
+}
