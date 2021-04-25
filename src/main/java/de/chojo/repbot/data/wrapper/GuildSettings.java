@@ -47,6 +47,7 @@ public class GuildSettings {
     }
 
     public Pattern getThankwordPattern() {
+        if (thankwords.length == 0) return Pattern.compile("");
         return Pattern.compile(
                 "(?i)(" + String.join(")|(", thankwords) + ")",
                 Pattern.CASE_INSENSITIVE + Pattern.MULTILINE + Pattern.DOTALL);
@@ -78,7 +79,7 @@ public class GuildSettings {
     }
 
     public String getReactionMention(Guild guild) {
-        if(!reactionIsEmote()){
+        if (!reactionIsEmote()) {
             return reaction;
         }
         return guild.retrieveEmoteById(reaction).complete().getAsMention();

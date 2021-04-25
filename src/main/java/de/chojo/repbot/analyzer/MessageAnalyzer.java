@@ -15,6 +15,7 @@ public class MessageAnalyzer {
     private static final int LOOKAROUND = 6;
 
     public static AnalyzerResult processMessage(Pattern pattern, Message message) {
+        if(pattern.pattern().isBlank()) return AnalyzerResult.noMatch();
         var contentRaw = message.getContentRaw();
 
         if (!pattern.matcher(contentRaw).find()) return AnalyzerResult.noMatch();
