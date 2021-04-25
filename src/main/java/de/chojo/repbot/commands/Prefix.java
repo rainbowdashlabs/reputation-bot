@@ -2,6 +2,8 @@ package de.chojo.repbot.commands;
 
 import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.Localizer;
+import de.chojo.jdautil.localization.util.Format;
+import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.repbot.config.ConfigFile;
@@ -14,18 +16,20 @@ import javax.sql.DataSource;
 public class Prefix extends SimpleCommand {
     private final GuildData data;
     private final Configuration configuration;
+    private Localizer loc;
 
     public Prefix(DataSource dataSource, Configuration configuration, Localizer localizer) {
         super("prefix",
                 null,
-                "Show prefix",
+                "command.prefix.description",
                 "",
-                subCommandBuilder().add("set", "<prefix>", "Set the prefix")
-                        .add("reset", null, "Reset the prefix")
+                subCommandBuilder().add("set", "<prefix>", "command.prefix.sub.set")
+                        .add("reset", null, "command.prefix.sub.reset")
                         .build(),
                 Permission.ADMINISTRATOR);
         data = new GuildData(dataSource);
         this.configuration = configuration;
+        loc = localizer;
     }
 
     @Override
@@ -53,7 +57,8 @@ public class Prefix extends SimpleCommand {
 
     private void changePrefix(MessageEventWrapper wrapper, String prefix) {
         if (data.setPrefix(wrapper.getGuild(), prefix)) {
-            wrapper.replyNonMention("Prefix set to `" + prefix + "`.").queue();
+            wrapper.replyNonMention(loc.localize("command.prefix.changed", wrapper,
+                    Replacement.create("PREFIX", prefix, Format.CODE))).queue();
         }
     }
 
@@ -63,7 +68,7 @@ public class Prefix extends SimpleCommand {
         var prefix = optArg.get();
 
         if (prefix.length() > 3) {
-            eventWrapper.replyNonMention("Prefix can be only 3 chars long.").queue();
+            eventWrapper.replyNonMention(loc.localize("error.prefixTooLong", eventWrapper)).queue();
             return true;
         }
         changePrefix(eventWrapper, prefix);
@@ -72,7 +77,8 @@ public class Prefix extends SimpleCommand {
 
     private boolean get(MessageEventWrapper eventWrapper) {
         var prefix = data.getPrefix(eventWrapper.getGuild()).orElse(configuration.get(ConfigFile::getDefaultPrefix));
-        eventWrapper.replyNonMention("The current prefix is `" + prefix + "`.").queue();
+        eventWrapper.replyNonMention(loc.localize("command.prefix.show", eventWrapper,
+                Replacement.create("PREFIX", prefix, Format.CODE))).queue();
         return true;
     }
 

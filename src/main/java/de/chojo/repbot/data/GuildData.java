@@ -101,7 +101,7 @@ public class GuildData {
         }
         return false;
     }
-    
+
     public Optional<String> getLanguage(Guild guild) {
         try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
                 SELECT language FROM guild_bot_settings where guild_id = ?;
@@ -178,17 +178,34 @@ public class GuildData {
     }
 
     public boolean addReputationRole(Guild guild, Role role, long reputation) {
-        try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
-                INSERT INTO guild_ranks(guild_id, role_id, reputation) VALUES(?,?,?)
-                    ON CONFLICT(guild_id, role_id)
-                        DO UPDATE
-                            SET reputation = excluded.reputation
-                """)) {
-            stmt.setLong(1, guild.getIdLong());
-            stmt.setLong(2, role.getIdLong());
-            stmt.setLong(3, reputation);
-            stmt.execute();
-            return true;
+        try (var conn = source.getConnection()) {
+            try (var stmt = conn.prepareStatement("""
+                    DELETE FROM
+                        guild_ranks
+                    WHERE
+                        guild_id = ?
+                            AND (role_id = ?
+                                OR reputation = ?)
+                    """)) {
+                stmt.setLong(1, guild.getIdLong());
+                stmt.setLong(2, role.getIdLong());
+                stmt.setLong(3, reputation);
+                stmt.executeUpdate();
+            }
+
+            try (var stmt = conn.prepareStatement("""
+                    INSERT INTO guild_ranks(guild_id, role_id, reputation) VALUES(?,?,?)
+                        ON CONFLICT(guild_id, role_id)
+                            DO UPDATE
+                                SET reputation = excluded.reputation,
+                                    role_id = excluded.role_id;
+                    """)) {
+                stmt.setLong(1, guild.getIdLong());
+                stmt.setLong(2, role.getIdLong());
+                stmt.setLong(3, reputation);
+                stmt.execute();
+                return true;
+            }
         } catch (SQLException e) {
             DbUtil.logSQLError("Could not add reputation role.", e);
         }

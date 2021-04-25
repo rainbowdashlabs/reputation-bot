@@ -2,6 +2,7 @@ package de.chojo.repbot.commands;
 
 import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.Localizer;
+import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
@@ -15,20 +16,22 @@ import java.util.stream.Collectors;
 
 public class Channel extends SimpleCommand {
     private final GuildData data;
+    private Localizer loc;
 
     public Channel(DataSource dataSource, Localizer localizer) {
         super("channel",
                 null,
-                "Manage channel for reputation collection.",
+                "command.channel.description",
                 null,
                 subCommandBuilder()
-                        .add("set", "<channel...>", "Set the reputation channel.")
-                        .add("add", "<channel...>", "Add a reputation channel.")
-                        .add("remove", "<channel...>", "Remove a reputation channel.")
-                        .add("list", null, "List reputation channel.")
+                        .add("set", "<channel...>", "command.channel.sub.set")
+                        .add("add", "<channel...>", "command.channel.sub.add")
+                        .add("remove", "<channel...>", "command.channel.sub.remove")
+                        .add("list", null, "command.channel.sub.list")
                         .build(),
                 Permission.ADMINISTRATOR);
         data = new GuildData(dataSource);
+        this.loc = localizer;
     }
 
     @Override
@@ -58,7 +61,7 @@ public class Channel extends SimpleCommand {
         var args = context.args();
         var validTextChannels = DiscordResolver.getValidTextChannels(eventWrapper.getGuild(), args);
         if (validTextChannels.isEmpty()) {
-            eventWrapper.replyNonMention("No valid channels provided").queue();
+            eventWrapper.replyErrorAndDelete(loc.localize("error.invalidChannel", eventWrapper), 10);
             return true;
         }
 
@@ -66,7 +69,9 @@ public class Channel extends SimpleCommand {
                 .filter(c -> data.addChannel(eventWrapper.getGuild(), c))
                 .map(IMentionable::getAsMention)
                 .collect(Collectors.joining(", "));
-        eventWrapper.replyNonMention("Added the following channel to reputation channel:\n" + addedChannel).queue();
+        eventWrapper.replyNonMention(
+                loc.localize("command.channel.sub.add.added", eventWrapper,
+                        Replacement.create("CHANNEL", addedChannel))).queue();
         return true;
     }
 
@@ -76,7 +81,7 @@ public class Channel extends SimpleCommand {
         var args = context.args();
         var validTextChannels = DiscordResolver.getValidTextChannels(eventWrapper.getGuild(), args);
         if (validTextChannels.isEmpty()) {
-            eventWrapper.replyNonMention("No valid channels provided").queue();
+            eventWrapper.replyErrorAndDelete(loc.localize("error.invalidChannel", eventWrapper), 10);
             return true;
         }
 
@@ -84,7 +89,8 @@ public class Channel extends SimpleCommand {
                 .filter(c -> data.deleteChannel(eventWrapper.getGuild(), c))
                 .map(IMentionable::getAsMention)
                 .collect(Collectors.joining(", "));
-        eventWrapper.replyNonMention("Removed the following channel from reputation channel:\n" + removedChannel).queue();
+        eventWrapper.replyNonMention(loc.localize("command.channel.sub.remove.removed", eventWrapper,
+                Replacement.create("CHANNEL", removedChannel))).queue();
         return true;
     }
 
@@ -97,8 +103,8 @@ public class Channel extends SimpleCommand {
                 .getValidTextChannelsById(
                         eventWrapper.getGuild(), new ArrayList<>(settings.getActiveChannel()))
                 .stream().map(IMentionable::getAsMention).collect(Collectors.joining(", "));
-        eventWrapper.replyNonMention("Following channel are channels where reputation can be collected:\n" + channelNames)
-                .queue();
+        eventWrapper.replyNonMention(loc.localize("command.channel.sub.list.list", eventWrapper,
+                Replacement.create("CHANNEL", channelNames))).queue();
         return true;
     }
 
@@ -108,7 +114,7 @@ public class Channel extends SimpleCommand {
         var args = context.args();
         var validTextChannels = DiscordResolver.getValidTextChannels(eventWrapper.getGuild(), args);
         if (validTextChannels.isEmpty()) {
-            eventWrapper.replyNonMention("No valid channels provided").queue();
+            eventWrapper.replyErrorAndDelete(loc.localize("error.invalidChannel", eventWrapper), 10);
             return true;
         }
 
@@ -117,7 +123,8 @@ public class Channel extends SimpleCommand {
                 .filter(c -> data.addChannel(eventWrapper.getGuild(), c))
                 .map(IMentionable::getAsMention)
                 .collect(Collectors.joining(", "));
-        eventWrapper.replyNonMention("Set the following channel as reputation channel:\n" + collect).queue();
+        eventWrapper.replyNonMention(loc.localize("command.channel.sub.set.set", eventWrapper,
+                Replacement.create("CHANNEL", collect))).queue();
         return true;
     }
 }

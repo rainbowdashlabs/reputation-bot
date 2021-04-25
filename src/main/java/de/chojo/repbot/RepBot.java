@@ -97,10 +97,10 @@ public class RepBot {
                         new Roles(dataSource, localizer),
                         new RepSettings(dataSource, localizer),
                         new Thankwords(dataSource, localizer),
-                        new Scan(dataSource, shardManager, localizer)
+                        new Scan(dataSource, localizer)
                 )
                 .build();
-        hub.registerCommands(new Help(hub));
+        hub.registerCommands(new Help(hub, localizer));
     }
 
     private void initShutdownHook() {

@@ -65,11 +65,18 @@ public class GuildSettings {
     }
 
     public boolean isFreshMessage(Message message) {
-        long until = message.getTimeCreated().toInstant().until(Instant.now(), ChronoUnit.MINUTES);
+        var until = message.getTimeCreated().toInstant().until(Instant.now(), ChronoUnit.MINUTES);
         return until < maxMessageAge;
     }
 
     public Optional<String> getPrefix() {
         return Optional.ofNullable(prefix);
+    }
+
+    public String getReactionMention(Guild guild) {
+        if(reactionIsEmote()){
+            return reaction;
+        }
+        return guild.retrieveEmoteById(reaction).complete().getAsMention();
     }
 }
