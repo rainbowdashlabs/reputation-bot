@@ -1,37 +1,19 @@
-## Welcome to GitHub Pages
+# Welcome to Reputation Bot
 
-You can use the [editor on GitHub](https://github.com/RainbowDashLabs/reputation-bot/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+The reputation bot will scan messages for thank phrases, which you can define.\
+When a thank phrase is found the bot will try to find the receiver of the message. This is done by several checks.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+- Answer: You can answer the message which helped you with a thank word.
+- Mention: You can mention the user which helped you with a thankword
+- Fuzzy: You can write the name, or a part of the name relative to a thank word, and the bot will try to find the user.
 
-### Markdown
+As an alternative you can also give a reputation reaction to the message which helped you.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+After a user has given another user a reputation he has to wait a configurable amount of minutes until he can give this
+user reputation again.\
+Also if a message is older than a configurable amount no reputation will be given when someone answers it or adds a
+reaction.
 
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/RainbowDashLabs/reputation-bot/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+You can invite the bot with
+this [link](https://discord.com/oauth2/authorize?client_id=834843896579489794&scope=bot&permissions=1342532672). \
+Or if you dont trust me you can host it by yourself.
