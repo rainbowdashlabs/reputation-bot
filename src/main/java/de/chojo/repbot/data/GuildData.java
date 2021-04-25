@@ -1,5 +1,6 @@
 package de.chojo.repbot.data;
 
+import de.chojo.jdautil.localization.util.Language;
 import de.chojo.repbot.data.util.DbUtil;
 import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.data.wrapper.ReputationRole;
@@ -117,7 +118,7 @@ public class GuildData {
         return Optional.empty();
     }
 
-    public boolean setLanguage(Guild guild, @Nullable String language) {
+    public boolean setLanguage(Guild guild, @Nullable Language language) {
         try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
                 INSERT INTO
                     guild_bot_settings(guild_id, language) VALUES (?,?)
@@ -129,7 +130,7 @@ public class GuildData {
             if (language == null) {
                 stmt.setNull(2, Types.VARCHAR);
             } else {
-                stmt.setString(2, language);
+                stmt.setString(2, language.getCode());
             }
             stmt.execute();
             return true;

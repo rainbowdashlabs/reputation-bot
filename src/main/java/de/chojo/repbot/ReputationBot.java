@@ -21,6 +21,7 @@ import de.chojo.repbot.listener.ReactionListener;
 import de.chojo.repbot.listener.StateListener;
 import de.chojo.repbot.manager.RoleAssigner;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -29,25 +30,29 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.postgresql.ds.PGSimpleDataSource;
 
 import javax.security.auth.login.LoginException;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 @Slf4j
-public class RepBot {
-    private static RepBot instance;
+public class ReputationBot {
+    private static ReputationBot instance;
     private final ExecutorService executorService = Executors.newFixedThreadPool(50);
     private ShardManager shardManager;
     private HikariDataSource dataSource;
     private Configuration configuration;
     private Localizer localizer;
 
-    public static void main(String[] args) {
-        RepBot.instance = new RepBot();
+    public static void main(String[] args) throws SQLException, IOException {
+        ReputationBot.instance = new ReputationBot();
         instance.start();
     }
 
-    private void start() {
+    private void start() throws SQLException, IOException {
         configuration = Configuration.create();
         log.info("Initializing JDA");
         try {
@@ -114,6 +119,16 @@ public class RepBot {
                         new Thankwords(dataSource, localizer),
                         new Scan(dataSource, localizer)
                 )
+                .withInvalidArgumentProvider(((loc, command) -> {
+                    return new EmbedBuilder()
+                            .setTitle(loc.localize("error.invalidArguments"))
+                            .appendDescription(command.getArgs() != null ? command.getCommand() + " " + command.getArgs() + "\n" : "")
+                            .appendDescription(">>> " + Arrays.stream(command.getSubCommands())
+                                    .map(c -> command.getCommand() + " " + c.getName() + (c.getArgs() == null ? "" : c.getArgs()))
+                                    .collect(Collectors.joining("\n")))
+                            .build();
+                }))
+                .withLocalizer(localizer)
                 .build();
         hub.registerCommands(new Help(hub, localizer));
     }
