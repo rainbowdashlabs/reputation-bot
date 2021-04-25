@@ -141,7 +141,7 @@ public class ReputationBot {
                             .appendDescription(command.getArgs() != null ? command.getCommand() + " " + command.getArgs() + "\n" : "");
                     if (command.getSubCommands().length != 0) {
                         embedBuilder.appendDescription(">>> " + Arrays.stream(command.getSubCommands())
-                                .map(c -> command.getCommand() + " " + c.getName() + (c.getArgs() == null ? "" : c.getArgs()))
+                                .map(c -> command.getCommand() + " " + c.getName() + (c.getArgs() == null ? "" : " "+ c.getArgs()))
                                 .collect(Collectors.joining("\n")));
                     }
                     return embedBuilder.build();

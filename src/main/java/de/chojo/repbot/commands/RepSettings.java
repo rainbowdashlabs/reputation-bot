@@ -275,10 +275,10 @@ public class RepSettings extends SimpleCommand {
             eventWrapper.replyErrorAndDelete(context.argString(0) + " is not a number", 30);
             return false;
         }
-
-        if (data.updateMessageSettings(guildSettings.getGuild(), optAge.get(), null, null, null, null, null, null)) {
+        Integer integer = Math.max(0, optAge.get());
+        if (data.updateMessageSettings(guildSettings.getGuild(), integer, null, null, null, null, null, null)) {
             eventWrapper.reply(eventWrapper.localize("command.repSettings.sub.maxMessageAge.get",
-                    Replacement.create("MINUTES", optAge.get()))).queue();
+                    Replacement.create("MINUTES", integer))).queue();
         }
         return true;
     }
