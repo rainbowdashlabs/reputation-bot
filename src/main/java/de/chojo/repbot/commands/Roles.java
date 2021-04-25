@@ -45,11 +45,11 @@ public class Roles extends SimpleCommand {
         }
 
         if ("add".equalsIgnoreCase(subCmd)) {
-            return add(eventWrapper, context.subCommandcontext(subCmd));
+            return add(eventWrapper, context.subContext(subCmd));
         }
 
         if ("remove".equalsIgnoreCase(subCmd)) {
-            return remove(eventWrapper, context.subCommandcontext(subCmd));
+            return remove(eventWrapper, context.subContext(subCmd));
         }
         return false;
     }
@@ -59,16 +59,16 @@ public class Roles extends SimpleCommand {
         if (commandContext.argsEmpty() || role.isEmpty()) return false;
         var roleById = DiscordResolver.getRole(eventWrapper.getGuild(), role.get());
         if (roleById.isEmpty()) {
-            eventWrapper.replyErrorAndDelete(loc.localize("error.invalidRole", eventWrapper), 30);
+            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.invalidRole"), 30);
             return true;
         }
 
         if (data.removeReputationRole(eventWrapper.getGuild(), roleById.get())) {
-            eventWrapper.replyNonMention(loc.localize("command.roles.sub.remove.removed", eventWrapper,
+            eventWrapper.reply(eventWrapper.localize("command.roles.sub.remove.removed",
                     Replacement.create("ROLE", roleById.get().getName(), Format.BOLD))).queue();
             return true;
         }
-        eventWrapper.replyErrorAndDelete(loc.localize("command.roles.sub.remove.notARepRole", eventWrapper), 10);
+        eventWrapper.replyErrorAndDelete(eventWrapper.localize("command.roles.sub.remove.notARepRole"), 10);
         return true;
     }
 
@@ -78,11 +78,11 @@ public class Roles extends SimpleCommand {
         if (commandContext.argsEmpty() || role.isEmpty() || reputation.isEmpty()) return false;
         var roleById = DiscordResolver.getRole(eventWrapper.getGuild(), role.get());
         if (roleById.isEmpty()) {
-            eventWrapper.replyErrorAndDelete(loc.localize("error.invalidRole", eventWrapper), 30);
+            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.invalidRole"), 30);
             return true;
         }
         if (data.addReputationRole(eventWrapper.getGuild(), roleById.get(), reputation.get())) {
-            eventWrapper.replyNonMention(loc.localize("command.roles.sub.add.added", eventWrapper,
+            eventWrapper.reply(eventWrapper.localize("command.roles.sub.add.added",
                     Replacement.create("ROLE", roleById.get().getName(), Format.BOLD), Replacement.create("POINTS", reputation.get()))).queue();
         }
         return true;
@@ -94,14 +94,14 @@ public class Roles extends SimpleCommand {
                 .filter(role -> role.getRole(eventWrapper.getGuild()) != null)
                 .collect(Collectors.toList());
         var builder = TextFormatting.getTableBuilder(reputationRoles,
-                loc.localize("words.role", eventWrapper),
+                eventWrapper.localize("words.role"),
                 "id",
-                loc.localize("words.reputation", eventWrapper));
+                eventWrapper.localize("words.reputation"));
 
         for (var role : reputationRoles) {
             builder.setNextRow(role.getRole().getName(), String.valueOf(role.getRoleId()), String.valueOf(role.getReputation()));
         }
-        eventWrapper.replyNonMention(builder.toString()).queue();
+        eventWrapper.reply(builder.toString()).queue();
         return true;
     }
 }

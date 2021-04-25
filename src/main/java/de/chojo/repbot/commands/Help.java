@@ -43,11 +43,11 @@ public class Help extends SimpleCommand {
                     .collect(Collectors.joining(", "));
             var message = new LocalizedEmbedBuilder(loc, eventWrapper)
                     .setTitle("command.help.list.title")
-                    .setDescription(loc.localize("command.help.list.list", eventWrapper,
+                    .setDescription(eventWrapper.localize("command.help.list.list",
                             Replacement.create("COMMAND", "help <command>", Format.CODE)))
                     .addField("", commands, false)
                     .build();
-            eventWrapper.replyNonMention(message).queue();
+            eventWrapper.reply(message).queue();
             return true;
         }
 
@@ -55,17 +55,17 @@ public class Help extends SimpleCommand {
 
         var command = hub.getCommand(cmd);
         if (command.isEmpty()) {
-            eventWrapper.replyErrorAndDelete(loc.localize("error.commandNotFound", eventWrapper), 10);
+            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.commandNotFound"), 10);
             return true;
         }
 
-        eventWrapper.replyNonMention(getcommandHelpEmbed(eventWrapper, command.get())).queue();
+        eventWrapper.reply(getcommandHelpEmbed(eventWrapper, command.get())).queue();
         return true;
     }
 
-    private MessageEmbed getcommandHelpEmbed(MessageEventWrapper wrapper, SimpleCommand command) {
-        var embedBuilder = new LocalizedEmbedBuilder(loc, wrapper)
-                .setTitle(loc.localize("command.help.title", wrapper,
+    private MessageEmbed getcommandHelpEmbed(MessageEventWrapper eventWrapper, SimpleCommand command) {
+        var embedBuilder = new LocalizedEmbedBuilder(loc, eventWrapper)
+                .setTitle(eventWrapper.localize("command.help.title",
                         Replacement.create("COMMAND", command.getCommand())))
                 .setDescription(command.getDescription());
 

@@ -44,10 +44,10 @@ public class Thankwords extends SimpleCommand {
         if (context.argsEmpty()) return false;
         var subCmd = context.argString(0).get();
         if ("add".equalsIgnoreCase(subCmd)) {
-            return add(eventWrapper, context.subCommandcontext(subCmd));
+            return add(eventWrapper, context.subContext(subCmd));
         }
         if ("remove".equalsIgnoreCase(subCmd)) {
-            return remove(eventWrapper, context.subCommandcontext(subCmd));
+            return remove(eventWrapper, context.subContext(subCmd));
         }
         if ("list".equalsIgnoreCase(subCmd)) {
             return list(eventWrapper);
@@ -65,11 +65,11 @@ public class Thankwords extends SimpleCommand {
         try {
             Pattern.compile(pattern);
         } catch (PatternSyntaxException e) {
-            eventWrapper.replyErrorAndDelete(loc.localize("command.thankwords.error.invalidRegex", eventWrapper), 30);
+            eventWrapper.replyErrorAndDelete(eventWrapper.localize("command.thankwords.error.invalidRegex"), 30);
             return true;
         }
         if (data.addThankWord(eventWrapper.getGuild(), pattern)) {
-            eventWrapper.replyNonMention(loc.localize("command.thankwords.sub.add.added", eventWrapper,
+            eventWrapper.reply(eventWrapper.localize("command.thankwords.sub.add.added",
                     Replacement.create("PATTERN", pattern, Format.CODE))).queue();
         }
         return true;
@@ -82,15 +82,15 @@ public class Thankwords extends SimpleCommand {
         try {
             Pattern.compile(pattern);
         } catch (PatternSyntaxException e) {
-            eventWrapper.replyErrorAndDelete(loc.localize("command.thankwords.error.invalidRegex", eventWrapper), 30);
+            eventWrapper.replyErrorAndDelete(eventWrapper.localize("command.thankwords.error.invalidRegex"), 30);
             return true;
         }
         if (data.removeThankWord(eventWrapper.getGuild(), pattern)) {
-            eventWrapper.replyNonMention(loc.localize("command.thankwords.sub.remove.removed", eventWrapper,
+            eventWrapper.reply(eventWrapper.localize("command.thankwords.sub.remove.removed",
                     Replacement.create("PATTERN", pattern, Format.CODE))).queue();
             return true;
         }
-        eventWrapper.replyErrorAndDelete(loc.localize("command.thankwords.error.patternNotFound", eventWrapper), 10);
+        eventWrapper.replyErrorAndDelete(eventWrapper.localize("command.thankwords.error.patternNotFound"), 10);
         return true;
     }
 
@@ -104,7 +104,7 @@ public class Thankwords extends SimpleCommand {
                 .map(w -> StringUtils.wrap(w, "`"))
                 .collect(Collectors.joining(", "));
 
-        eventWrapper.replyNonMention(loc.localize("command.thankwords.sub.list.list", eventWrapper) + "\n" + pattern).queue();
+        eventWrapper.reply(eventWrapper.localize("command.thankwords.sub.list.list") + "\n" + pattern).queue();
         return true;
     }
 
@@ -121,39 +121,39 @@ public class Thankwords extends SimpleCommand {
                 var match = new LocalizedEmbedBuilder(loc, eventWrapper)
                         .setTitle("command.thankwords.sub.check.match.fuzzy")
                         .setDescription(
-                                loc.localize("command.thankwords.sub.check.result", eventWrapper,
+                                eventWrapper.localize("command.thankwords.sub.check.result",
                                         Replacement.create("DONATOR", result.getDonator().getAsMention()),
                                         Replacement.create("RECEIVER", result.getReceiver().getAsMention())) + "\n"
-                                        + loc.localize("command.thankwords.sub.check.confidence", eventWrapper,
+                                        + eventWrapper.localize("command.thankwords.sub.check.confidence",
                                         Replacement.create("SCORE", String.format("%.3f", result.getConfidenceScore()))));
 
                 if (result.getConfidenceScore() < 0.85) {
                     match.setFooter("command.thankwords.sub.check.notConfident");
                 }
 
-                eventWrapper.replyNonMention(match.build()).queue();
+                eventWrapper.reply(match.build()).queue();
             }
             case MENTION -> {
                 var match = new EmbedBuilder()
                         .setTitle("command.thankwords.sub.check.match.mention")
                         .setDescription(
-                                loc.localize("command.thankwords.sub.check.result", eventWrapper,
+                                eventWrapper.localize("command.thankwords.sub.check.result",
                                         Replacement.create("DONATOR", result.getDonator().getAsMention()),
                                         Replacement.create("RECEIVER", result.getReceiver().getAsMention())));
-                eventWrapper.replyNonMention(match.build()).queue();
+                eventWrapper.reply(match.build()).queue();
             }
             case ANSWER -> {
                 var match = new EmbedBuilder()
                         .setTitle("command.thankwords.sub.check.match.answer")
                         .setDescription(
-                                loc.localize("command.thankwords.sub.check.result", eventWrapper,
+                                eventWrapper.localize("command.thankwords.sub.check.result",
                                         Replacement.create("DONATOR", result.getDonator().getAsMention()),
                                         Replacement.create("RECEIVER", result.getReceiver().getAsMention())) + "\n"
-                                        + loc.localize("command.thankwords.sub.check.reference", eventWrapper,
+                                        + eventWrapper.localize("command.thankwords.sub.check.reference",
                                         Replacement.create("URL", result.getReferenceMessage().getJumpUrl())));
-                eventWrapper.replyNonMention(match.build()).queue();
+                eventWrapper.reply(match.build()).queue();
             }
-            case NO_MATCH -> eventWrapper.replyNonMention(loc.localize("command.thankwords.sub.check.match.noMatch", eventWrapper)).queue();
+            case NO_MATCH -> eventWrapper.reply(eventWrapper.localize("command.thankwords.sub.check.match.noMatch")).queue();
         }
         return true;
     }

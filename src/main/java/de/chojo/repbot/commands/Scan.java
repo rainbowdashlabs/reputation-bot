@@ -67,7 +67,7 @@ public class Scan extends SimpleCommand {
     @Override
     public boolean onCommand(MessageEventWrapper eventWrapper, CommandContext context) {
         if (!eventWrapper.getGuild().getSelfMember().hasPermission(Permission.MESSAGE_HISTORY)) {
-            eventWrapper.replyErrorAndDelete(loc.localize("command.scan.error.history", eventWrapper), 10);
+            eventWrapper.replyErrorAndDelete(eventWrapper.localize("command.scan.error.history"), 10);
             return true;
         }
         if (context.argsEmpty()) {
@@ -77,7 +77,7 @@ public class Scan extends SimpleCommand {
 
         if ("cancel".equalsIgnoreCase(context.argString(0).get())) {
             if (!activeScans.contains(eventWrapper.getGuild().getIdLong())) {
-                eventWrapper.replyErrorAndDelete(loc.localize("command.scan.sub.cancel.noTask", eventWrapper), 10);
+                eventWrapper.replyErrorAndDelete(eventWrapper.localize("command.scan.sub.cancel.noTask"), 10);
                 return true;
             }
             cancelScan(eventWrapper.getGuild());
@@ -85,12 +85,12 @@ public class Scan extends SimpleCommand {
         }
 
         if (activeScans.contains(eventWrapper.getGuild().getIdLong())) {
-            eventWrapper.replyErrorAndDelete(":stop_sign: " + loc.localize("command.scan.error.running", eventWrapper), 10);
+            eventWrapper.replyErrorAndDelete(":stop_sign: " + eventWrapper.localize("command.scan.error.running"), 10);
             return true;
         }
 
         if (activeScans.size() >= SCAN_THREADS) {
-            eventWrapper.replyErrorAndDelete(":stop_sign: " + loc.localize("command.scan.error.queueFull", eventWrapper), 10);
+            eventWrapper.replyErrorAndDelete(":stop_sign: " + eventWrapper.localize("command.scan.error.queueFull"), 10);
             return true;
         }
 
@@ -99,7 +99,7 @@ public class Scan extends SimpleCommand {
         if (context.hasFlagValue("n")) {
             var n1 = context.getFlag("n", ValueParser::parseInt);
             if (n1.isEmpty()) {
-                eventWrapper.replyErrorAndDelete(loc.localize("error.invalidNumber", eventWrapper), 10);
+                eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.invalidNumber"), 10);
                 return true;
             }
             messages = Math.max(n1.get(), 0);
@@ -113,7 +113,7 @@ public class Scan extends SimpleCommand {
 
         var textChannel = DiscordResolver.getTextChannel(eventWrapper.getGuild(), channel);
         if (textChannel.isEmpty()) {
-            eventWrapper.replyErrorAndDelete(loc.localize("error.invalidChannel", eventWrapper), 10);
+            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.invalidChannel"), 10);
             return true;
         }
         scanChannel(eventWrapper, textChannel.get(), messages);
@@ -129,14 +129,14 @@ public class Scan extends SimpleCommand {
 
 
         var duration = DurationFormatUtils.formatDuration((long) messageCount / 100 * INTERVAL_MS, "mm:ss");
-        eventWrapper.replyNonMention(loc.localize("command.scan.scheduling", eventWrapper, Replacement.create("DURATION", duration))).queue();
+        eventWrapper.reply(eventWrapper.localize("command.scan.scheduling", Replacement.create("DURATION", duration))).queue();
 
         schedule(history, pattern, eventWrapper, messageCount / 100);
     }
 
     private void schedule(MessageHistory history, Pattern pattern, MessageEventWrapper eventWrapper, int calls) {
 
-        var progressMessage = eventWrapper.answer(loc.localize("command.scan.progress", eventWrapper,
+        var progressMessage = eventWrapper.answer(eventWrapper.localize("command.scan.progress",
                 Replacement.create("PERCENT", String.format("%.02f", 0d))) + " " + TextGenerator.progressBar(0, 40)).complete();
         var scanProcess = new ScanProcess(loc, progressMessage, history, pattern, calls, reputationData);
 

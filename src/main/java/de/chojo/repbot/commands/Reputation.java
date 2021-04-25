@@ -44,7 +44,7 @@ public class Reputation extends SimpleCommand {
     public boolean onCommand(MessageEventWrapper eventWrapper, CommandContext context) {
         if (context.argsEmpty()) {
             var reputation = reputationData.getReputation(eventWrapper.getGuild(), eventWrapper.getAuthor()).orElse(0);
-            eventWrapper.replyNonMention(getUserRepEmbed(eventWrapper, eventWrapper.getMember(), reputation)).queue();
+            eventWrapper.reply(getUserRepEmbed(eventWrapper, eventWrapper.getMember(), reputation)).queue();
             return true;
         }
 
@@ -57,23 +57,23 @@ public class Reputation extends SimpleCommand {
             var page = context.argInt(1).orElse(1);
             var ranking = reputationData.getRanking(eventWrapper.getGuild(), 10, (page - 1) * 10);
             var builder = TextFormatting.getTableBuilder(ranking,
-                    loc.localize("words.name", eventWrapper),
-                    loc.localize("words.reputation", eventWrapper));
+                    eventWrapper.localize("words.name"),
+                    eventWrapper.localize("words.reputation"));
             for (var reputationUser : ranking) {
                 var memberById = eventWrapper.getGuild().retrieveMemberById(reputationUser.getUserId()).complete();
-                builder.setNextRow(memberById == null ? loc.localize("words.unknown", eventWrapper) : memberById.getEffectiveName(),
+                builder.setNextRow(memberById == null ? eventWrapper.localize("words.unknown") : memberById.getEffectiveName(),
                         String.valueOf(reputationUser.getReputation()));
             }
-            eventWrapper.replyNonMention(builder.toString()).queue();
+            eventWrapper.reply(builder.toString()).queue();
             return true;
         }
         var guildMember = DiscordResolver.getGuildMember(eventWrapper.getGuild(), subCmd);
         if (guildMember.isEmpty()) {
-            eventWrapper.replyErrorAndDelete(loc.localize("error.userNotFound", eventWrapper), 10);
+            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.userNotFound"), 10);
             return true;
         }
         var reputation = reputationData.getReputation(eventWrapper.getGuild(), guildMember.get().getUser()).orElse(0);
-        eventWrapper.replyNonMention(getUserRepEmbed(eventWrapper, guildMember.get(), reputation)).queue();
+        eventWrapper.reply(getUserRepEmbed(eventWrapper, guildMember.get(), reputation)).queue();
         return true;
     }
 
@@ -92,10 +92,10 @@ public class Reputation extends SimpleCommand {
         var currProgress = String.valueOf(reputation - currentRoleRep);
         var nextLevel = nextRoleRep.equals(currentRoleRep) ? "\uA74E" : String.valueOf(nextRoleRep - currentRoleRep);
         return new LocalizedEmbedBuilder(loc, eventWrapper)
-                .setTitle(loc.localize("command.reputation.profile.title", eventWrapper,
+                .setTitle(eventWrapper.localize("command.reputation.profile.title",
                         Replacement.create("NAME", member.getEffectiveName())))
                 .addField("words.level", level, true)
-                .addField(loc.localize("words.reputation", eventWrapper), Format.BOLD.apply(String.valueOf(reputation)), true)
+                .addField(eventWrapper.localize("words.reputation"), Format.BOLD.apply(String.valueOf(reputation)), true)
                 .addField("command.reputation.profile.nextLevel", currProgress + "/" + nextLevel + "  " + progressBar, false)
                 .setThumbnail(member.getUser().getEffectiveAvatarUrl())
                 .setColor(member.getColor())

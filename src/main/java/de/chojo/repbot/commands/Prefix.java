@@ -38,7 +38,7 @@ public class Prefix extends SimpleCommand {
         if (optSubCmd.isPresent()) {
             var subCmd = optSubCmd.get();
             if ("set".equalsIgnoreCase(subCmd)) {
-                return set(eventWrapper, context.subCommandcontext(subCmd));
+                return set(eventWrapper, context.subContext(subCmd));
             }
 
             if ("reset".equalsIgnoreCase(subCmd)) {
@@ -55,20 +55,20 @@ public class Prefix extends SimpleCommand {
         return true;
     }
 
-    private void changePrefix(MessageEventWrapper wrapper, String prefix) {
-        if (data.setPrefix(wrapper.getGuild(), prefix)) {
-            wrapper.replyNonMention(loc.localize("command.prefix.changed", wrapper,
+    private void changePrefix(MessageEventWrapper eventWrapper, String prefix) {
+        if (data.setPrefix(eventWrapper.getGuild(), prefix)) {
+            eventWrapper.reply(eventWrapper.localize("command.prefix.changed",
                     Replacement.create("PREFIX", prefix, Format.CODE))).queue();
         }
     }
 
-    private boolean set(MessageEventWrapper eventWrapper, CommandContext subCommandcontext) {
-        var optArg = subCommandcontext.argString(0);
+    private boolean set(MessageEventWrapper eventWrapper, CommandContext subContext) {
+        var optArg = subContext.argString(0);
         if (optArg.isEmpty()) return false;
         var prefix = optArg.get();
 
         if (prefix.length() > 3) {
-            eventWrapper.replyNonMention(loc.localize("error.prefixTooLong", eventWrapper)).queue();
+            eventWrapper.reply(eventWrapper.localize("error.prefixTooLong")).queue();
             return true;
         }
         changePrefix(eventWrapper, prefix);
@@ -77,7 +77,7 @@ public class Prefix extends SimpleCommand {
 
     private boolean get(MessageEventWrapper eventWrapper) {
         var prefix = data.getPrefix(eventWrapper.getGuild()).orElse(configuration.get(ConfigFile::getDefaultPrefix));
-        eventWrapper.replyNonMention(loc.localize("command.prefix.show", eventWrapper,
+        eventWrapper.reply(eventWrapper.localize("command.prefix.show",
                 Replacement.create("PREFIX", prefix, Format.CODE))).queue();
         return true;
     }

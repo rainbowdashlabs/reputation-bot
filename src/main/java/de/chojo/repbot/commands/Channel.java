@@ -41,16 +41,16 @@ public class Channel extends SimpleCommand {
         var subCmd = optsubCmd.get();
 
         if ("set".equalsIgnoreCase(subCmd)) {
-            return set(messageEventWrapper, commandContext.subCommandcontext(subCmd));
+            return set(messageEventWrapper, commandContext.subContext(subCmd));
         }
         if ("remove".equalsIgnoreCase(subCmd)) {
-            return remove(messageEventWrapper, commandContext.subCommandcontext(subCmd));
+            return remove(messageEventWrapper, commandContext.subContext(subCmd));
         }
         if ("add".equalsIgnoreCase(subCmd)) {
-            return add(messageEventWrapper, commandContext.subCommandcontext(subCmd));
+            return add(messageEventWrapper, commandContext.subContext(subCmd));
         }
         if ("list".equalsIgnoreCase(subCmd)) {
-            return list(messageEventWrapper, commandContext.subCommandcontext(subCmd));
+            return list(messageEventWrapper, commandContext.subContext(subCmd));
         }
         return false;
     }
@@ -61,7 +61,7 @@ public class Channel extends SimpleCommand {
         var args = context.args();
         var validTextChannels = DiscordResolver.getValidTextChannels(eventWrapper.getGuild(), args);
         if (validTextChannels.isEmpty()) {
-            eventWrapper.replyErrorAndDelete(loc.localize("error.invalidChannel", eventWrapper), 10);
+            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.invalidChannel"), 10);
             return true;
         }
 
@@ -69,8 +69,8 @@ public class Channel extends SimpleCommand {
                 .filter(c -> data.addChannel(eventWrapper.getGuild(), c))
                 .map(IMentionable::getAsMention)
                 .collect(Collectors.joining(", "));
-        eventWrapper.replyNonMention(
-                loc.localize("command.channel.sub.add.added", eventWrapper,
+        eventWrapper.reply(
+                eventWrapper.localize("command.channel.sub.add.added",
                         Replacement.create("CHANNEL", addedChannel))).queue();
         return true;
     }
@@ -81,7 +81,7 @@ public class Channel extends SimpleCommand {
         var args = context.args();
         var validTextChannels = DiscordResolver.getValidTextChannels(eventWrapper.getGuild(), args);
         if (validTextChannels.isEmpty()) {
-            eventWrapper.replyErrorAndDelete(loc.localize("error.invalidChannel", eventWrapper), 10);
+            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.invalidChannel"), 10);
             return true;
         }
 
@@ -89,7 +89,7 @@ public class Channel extends SimpleCommand {
                 .filter(c -> data.deleteChannel(eventWrapper.getGuild(), c))
                 .map(IMentionable::getAsMention)
                 .collect(Collectors.joining(", "));
-        eventWrapper.replyNonMention(loc.localize("command.channel.sub.remove.removed", eventWrapper,
+        eventWrapper.reply(eventWrapper.localize("command.channel.sub.remove.removed",
                 Replacement.create("CHANNEL", removedChannel))).queue();
         return true;
     }
@@ -103,7 +103,7 @@ public class Channel extends SimpleCommand {
                 .getValidTextChannelsById(
                         eventWrapper.getGuild(), new ArrayList<>(settings.getActiveChannel()))
                 .stream().map(IMentionable::getAsMention).collect(Collectors.joining(", "));
-        eventWrapper.replyNonMention(loc.localize("command.channel.sub.list.list", eventWrapper,
+        eventWrapper.reply(eventWrapper.localize("command.channel.sub.list.list",
                 Replacement.create("CHANNEL", channelNames))).queue();
         return true;
     }
@@ -114,7 +114,7 @@ public class Channel extends SimpleCommand {
         var args = context.args();
         var validTextChannels = DiscordResolver.getValidTextChannels(eventWrapper.getGuild(), args);
         if (validTextChannels.isEmpty()) {
-            eventWrapper.replyErrorAndDelete(loc.localize("error.invalidChannel", eventWrapper), 10);
+            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.invalidChannel"), 10);
             return true;
         }
 
@@ -123,7 +123,7 @@ public class Channel extends SimpleCommand {
                 .filter(c -> data.addChannel(eventWrapper.getGuild(), c))
                 .map(IMentionable::getAsMention)
                 .collect(Collectors.joining(", "));
-        eventWrapper.replyNonMention(loc.localize("command.channel.sub.set.set", eventWrapper,
+        eventWrapper.reply(eventWrapper.localize("command.channel.sub.set.set",
                 Replacement.create("CHANNEL", collect))).queue();
         return true;
     }
