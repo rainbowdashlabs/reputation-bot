@@ -70,7 +70,7 @@ public class Thankwords extends SimpleCommand {
         }
         if (data.addThankWord(eventWrapper.getGuild(), pattern)) {
             eventWrapper.reply(eventWrapper.localize("command.thankwords.sub.add.added",
-                    Replacement.create("PATTERN", pattern, Format.CODE))).queue();
+                    Replacement.create("REGEX", pattern, Format.CODE))).queue();
         }
         return true;
     }

@@ -1,6 +1,7 @@
 package de.chojo.repbot.listener;
 
 import de.chojo.repbot.data.GuildData;
+import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -18,5 +19,10 @@ public class StateListener extends ListenerAdapter {
     @Override
     public void onGuildJoin(@NotNull GuildJoinEvent event) {
         data.initGuild(event.getGuild());
+    }
+
+    @Override
+    public void onReady(@NotNull ReadyEvent event) {
+        event.getJDA().getGuildCache().forEach(data::initGuild);
     }
 }

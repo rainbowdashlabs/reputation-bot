@@ -364,7 +364,7 @@ public class GuildData {
                             DO NOTHING;
                 """)) {
             stmt.setLong(1, guild.getIdLong());
-            stmt.setString(1, pattern);
+            stmt.setString(2, pattern);
             stmt.execute();
             return true;
         } catch (SQLException e) {
@@ -382,7 +382,7 @@ public class GuildData {
                     and thankword = ?
                 """)) {
             stmt.setLong(1, guild.getIdLong());
-            stmt.setString(1, pattern);
+            stmt.setString(2, pattern);
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             DbUtil.logSQLError("Could not add thankword", e);

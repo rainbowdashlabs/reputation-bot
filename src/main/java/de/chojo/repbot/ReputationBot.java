@@ -29,7 +29,9 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.postgresql.ds.PGSimpleDataSource;
 
+import javax.annotation.Nullable;
 import javax.security.auth.login.LoginException;
+import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Arrays;
@@ -63,7 +65,6 @@ public class ReputationBot {
         }
 
         log.info("Initializing connection pool");
-        initConnectionPool();
 
         initDatabase();
 
@@ -77,9 +78,19 @@ public class ReputationBot {
     }
 
     private void initDatabase() throws SQLException, IOException {
+        var connectionPool = getConnectionPool(null);
+        try (var conn = connectionPool.getConnection(); var stmt = conn.prepareStatement(
+                "CREATE SCHEMA IF NOT EXISTS " + configuration.getConfigFile().getDatabase().getSchema())) {
+            stmt.executeUpdate();
+        }
+
+        connectionPool.close();
+
+        dataSource = getConnectionPool(configuration.get().getDatabase().getSchema());
+
         try (var in = getClass().getClassLoader().getResourceAsStream("dbsetup.sql")) {
             var upgrade = new String(in.readAllBytes());
-            try (var conn = dataSource.getConnection(); var stmt = conn.prepareStatement(upgrade)){
+            try (var conn = dataSource.getConnection(); var stmt = conn.prepareStatement(upgrade)) {
                 stmt.execute();
             }
         } catch (IOException e) {
@@ -154,7 +165,7 @@ public class ReputationBot {
                 .build();
     }
 
-    private void initConnectionPool() {
+    private HikariDataSource getConnectionPool(@Nullable String schema) {
         var db = configuration.get(ConfigFile::getDatabase);
         var props = new Properties();
         props.setProperty("dataSourceClassName", PGSimpleDataSource.class.getName());
@@ -166,8 +177,10 @@ public class ReputationBot {
 
         var config = new HikariConfig(props);
         config.setMaximumPoolSize(db.getPoolSize());
-        config.setSchema(db.getSchema());
+        if (schema != null) {
+            config.setSchema(db.getSchema());
+        }
 
-        dataSource = new HikariDataSource(config);
+        return new HikariDataSource(config);
     }
 }

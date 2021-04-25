@@ -74,7 +74,7 @@ public class GuildSettings {
     }
 
     public String getReactionMention(Guild guild) {
-        if(reactionIsEmote()){
+        if(!reactionIsEmote()){
             return reaction;
         }
         return guild.retrieveEmoteById(reaction).complete().getAsMention();

@@ -60,7 +60,9 @@ public class Configuration {
     private Path getConfig() {
         var home = new File(".").getAbsoluteFile().getParentFile().toPath();
         var property = System.getProperty("bot.config");
-
+        if(property == null){
+            log.error("bot.config property is not set.");
+        }
         return Paths.get(home.toString(), property);
     }
 

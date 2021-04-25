@@ -91,12 +91,13 @@ public class RepSettings extends SimpleCommand {
         if (context.argsEmpty()) {
             eventWrapper.reply(eventWrapper.localize("command.repSettings.sub.cooldown.get",
                     Replacement.create("MINUTES", guildSettings.getCooldown()))).queue();
+            return true;
         }
         var optCooldown = context.argInt(0);
 
         if (optCooldown.isEmpty()) {
             eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.notANumber",
-                    Replacement.create("INPUT", context.argString(0))), 30);
+                    Replacement.create("INPUT", context.argString(0).get())), 30);
             return false;
         }
 
