@@ -90,7 +90,7 @@ public class Thankwords extends SimpleCommand {
                     Replacement.create("PATTERN", pattern, Format.CODE))).queue();
             return true;
         }
-        eventWrapper.replyErrorAndDelete("Pattern does not exist.", 10);
+        eventWrapper.replyErrorAndDelete(loc.localize("command.thankwords.error.patternNotFound", eventWrapper), 10);
         return true;
     }
 
@@ -124,7 +124,7 @@ public class Thankwords extends SimpleCommand {
                                 loc.localize("command.thankwords.sub.check.result", eventWrapper,
                                         Replacement.create("DONATOR", result.getDonator().getAsMention()),
                                         Replacement.create("RECEIVER", result.getReceiver().getAsMention())) + "\n"
-                                        + loc.localize("Confidence Score: %SCORE%", eventWrapper,
+                                        + loc.localize("command.thankwords.sub.check.confidence", eventWrapper,
                                         Replacement.create("SCORE", String.format("%.3f", result.getConfidenceScore()))));
 
                 if (result.getConfidenceScore() < 0.85) {
