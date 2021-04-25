@@ -78,6 +78,10 @@ tasks {
             attributes(mapOf("Main-Class" to "de.chojo.repbot.ReputationBot"))
         }
     }
+
+    compileJava{
+        options.encoding = "UTF-8"
+    }
 }
 
 tasks {
