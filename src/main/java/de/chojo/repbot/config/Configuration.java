@@ -2,13 +2,16 @@ package de.chojo.repbot.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.core.PrettyPrinter;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.chojo.repbot.listener.ReactionListener;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.function.Function;
@@ -45,9 +48,11 @@ public class Configuration {
     }
 
     private void forceConsistency() throws IOException {
+        Files.createDirectories(getConfig().getParent());
         if (!getConfig().toFile().exists()) {
             if (getConfig().toFile().createNewFile()) {
-                objectMapper.writeValue(getConfig().toFile(), new ConfigFile());
+                objectMapper.writerWithDefaultPrettyPrinter().writeValues(getConfig().toFile()).write(new ConfigFile());
+                throw new RuntimeException("Please configure the config.");
             }
         }
     }
