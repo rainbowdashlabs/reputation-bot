@@ -7,12 +7,14 @@ import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Language;
 import de.chojo.repbot.commands.Channel;
 import de.chojo.repbot.commands.Help;
+import de.chojo.repbot.commands.Invite;
 import de.chojo.repbot.commands.Locale;
 import de.chojo.repbot.commands.Prefix;
 import de.chojo.repbot.commands.RepSettings;
 import de.chojo.repbot.commands.Reputation;
 import de.chojo.repbot.commands.Roles;
 import de.chojo.repbot.commands.Scan;
+import de.chojo.repbot.commands.Source;
 import de.chojo.repbot.commands.Thankwords;
 import de.chojo.repbot.config.ConfigFile;
 import de.chojo.repbot.config.Configuration;
@@ -115,30 +117,45 @@ public class ReputationBot {
                 new MessageListener(dataSource, configuration, roleAssigner),
                 new StateListener(dataSource),
                 new ReactionListener(dataSource, roleAssigner));
-
+        var data = new GuildData(dataSource);
         var hub = CommandHub.builder(shardManager, configuration.get().getDefaultPrefix())
                 .receiveGuildMessage()
                 .receiveGuildMessagesUpdates()
                 .withConversationSystem()
-                .withPrefixResolver(guild -> new GuildData(dataSource).getPrefix(guild))
+                .withPrefixResolver(data::getPrefix)
                 .withCommands(
-                        new Channel(dataSource, localizer),
-                        new Prefix(dataSource, configuration, localizer),
+                        new Channel(dataSource),
+                        new Prefix(dataSource, configuration),
                         new Reputation(dataSource, localizer),
-                        new Roles(dataSource, localizer),
+                        new Roles(dataSource),
                         new RepSettings(dataSource, localizer),
                         new Thankwords(dataSource, localizer),
                         new Scan(dataSource, localizer),
-                        new Locale(dataSource, localizer)
+                        new Locale(dataSource, localizer),
+                        new Invite(localizer),
+                        new Source(localizer)
                 )
-                .withInvalidArgumentProvider(((loc, command) -> new EmbedBuilder()
-                        .setTitle(loc.localize("error.invalidArguments"))
-                        .appendDescription(command.getArgs() != null ? command.getCommand() + " " + command.getArgs() + "\n" : "")
-                        .appendDescription(">>> " + Arrays.stream(command.getSubCommands())
+                .withInvalidArgumentProvider(((loc, command) -> {
+                    var embedBuilder = new EmbedBuilder()
+                            .setTitle(loc.localize("error.invalidArguments"))
+                            .appendDescription(command.getArgs() != null ? command.getCommand() + " " + command.getArgs() + "\n" : "");
+                    if (command.getSubCommands().length != 0) {
+                        embedBuilder.appendDescription(">>> " + Arrays.stream(command.getSubCommands())
                                 .map(c -> command.getCommand() + " " + c.getName() + (c.getArgs() == null ? "" : c.getArgs()))
-                                .collect(Collectors.joining("\n")))
-                        .build()))
+                                .collect(Collectors.joining("\n")));
+                    }
+                    return embedBuilder.build();
+                }))
                 .withLocalizer(localizer)
+                .withPermissionCheck((wrapper, command) -> {
+                    if (wrapper.getMember().hasPermission(command.getPermission())) return true;
+                    var guildSettings = data.getGuildSettings(wrapper.getGuild());
+                    if (guildSettings.isEmpty()) return false;
+                    var settings = guildSettings.get();
+                    var roleById = wrapper.getGuild().getRoleById(settings.getManagerRole().orElse(0));
+                    if (roleById == null) return false;
+                    return wrapper.getMember().getRoles().contains(roleById);
+                })
                 .build();
         hub.registerCommands(new Help(hub, localizer));
     }

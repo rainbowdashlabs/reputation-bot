@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class Help extends SimpleCommand {
-    private CommandHub<SimpleCommand> hub;
-    private Localizer loc;
+    private final CommandHub<SimpleCommand> hub;
+    private final Localizer loc;
 
     public Help(CommandHub<SimpleCommand> hub, Localizer localizer) {
         super("help",
@@ -32,13 +32,11 @@ public class Help extends SimpleCommand {
         this.loc = localizer;
     }
 
-
     @Override
     public boolean onCommand(MessageEventWrapper eventWrapper, CommandContext context) {
         if (context.argsEmpty()) {
-
             var commands = hub.getCommands().stream()
-                    .filter(c -> eventWrapper.getMember().hasPermission(c.getPermission()))
+                    .filter(c -> hub.canExecute(eventWrapper, c))
                     .map(c -> "`" + c.getCommand() + "`")
                     .collect(Collectors.joining(", "));
             var message = new LocalizedEmbedBuilder(loc, eventWrapper)

@@ -9,7 +9,6 @@ import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.data.GuildData;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import org.apache.commons.lang3.StringUtils;
 
@@ -34,7 +33,7 @@ public class Thankwords extends SimpleCommand {
                         .add("list", null, "command.thankwords.sub.list")
                         .add("check", "<Sentence>", "command.thankwords.sub.check")
                         .build(),
-                Permission.ADMINISTRATOR);
+                Permission.MANAGE_SERVER);
         data = new GuildData(dataSource);
         loc = localizer;
     }

@@ -54,7 +54,7 @@ public class Scan extends SimpleCommand {
                 subCommandBuilder()
                         .add("cancel", null, "command.scan.sub.cancel")
                         .build(),
-                Permission.ADMINISTRATOR);
+                Permission.MANAGE_SERVER);
         guildData = new GuildData(dataSource);
         reputationData = new ReputationData(dataSource);
         loc = localizer;

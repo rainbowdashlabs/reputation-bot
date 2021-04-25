@@ -34,7 +34,7 @@ public class RepSettings extends SimpleCommand {
                         .add("fuzzy", "[true|false]", "command.repSettings.sub.fuzzy")
                         .add("cooldown", "[minutes]", "command.repSettings.sub.cooldown")
                         .build(),
-                Permission.ADMINISTRATOR);
+                Permission.MANAGE_SERVER);
         data = new GuildData(source);
         loc = localizer;
     }

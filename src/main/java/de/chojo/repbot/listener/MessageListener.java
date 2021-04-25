@@ -91,6 +91,7 @@ public class MessageListener extends ListenerAdapter {
     }
 
     private void submitRepVote(Guild guild, User donator, User receiver, Message scope, GuildSettings settings) {
+        if (receiver.isBot()) return;
         var lastRatedDuration = reputationData.getLastRatedDuration(guild, donator, receiver, ChronoUnit.MINUTES);
         if (lastRatedDuration < settings.getCooldown()) return;
 

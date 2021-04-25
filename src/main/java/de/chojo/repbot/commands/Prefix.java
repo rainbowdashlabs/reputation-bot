@@ -1,7 +1,6 @@
 package de.chojo.repbot.commands;
 
 import de.chojo.jdautil.command.SimpleCommand;
-import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.CommandContext;
@@ -16,9 +15,8 @@ import javax.sql.DataSource;
 public class Prefix extends SimpleCommand {
     private final GuildData data;
     private final Configuration configuration;
-    private Localizer loc;
 
-    public Prefix(DataSource dataSource, Configuration configuration, Localizer localizer) {
+    public Prefix(DataSource dataSource, Configuration configuration) {
         super("prefix",
                 null,
                 "command.prefix.description",
@@ -26,10 +24,9 @@ public class Prefix extends SimpleCommand {
                 subCommandBuilder().add("set", "<prefix>", "command.prefix.sub.set")
                         .add("reset", null, "command.prefix.sub.reset")
                         .build(),
-                Permission.ADMINISTRATOR);
+                Permission.MANAGE_SERVER);
         data = new GuildData(dataSource);
         this.configuration = configuration;
-        loc = localizer;
     }
 
     @Override

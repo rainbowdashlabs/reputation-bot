@@ -16,9 +16,8 @@ import java.util.stream.Collectors;
 
 public class Channel extends SimpleCommand {
     private final GuildData data;
-    private Localizer loc;
 
-    public Channel(DataSource dataSource, Localizer localizer) {
+    public Channel(DataSource dataSource) {
         super("channel",
                 null,
                 "command.channel.description",
@@ -29,9 +28,8 @@ public class Channel extends SimpleCommand {
                         .add("remove", "<channel...>", "command.channel.sub.remove")
                         .add("list", null, "command.channel.sub.list")
                         .build(),
-                Permission.ADMINISTRATOR);
+                Permission.MANAGE_SERVER);
         data = new GuildData(dataSource);
-        this.loc = localizer;
     }
 
     @Override

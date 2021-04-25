@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
+import java.util.OptionalLong;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -26,9 +27,11 @@ public class GuildSettings {
     private final boolean fuzzyActive;
     private final Set<Long> activeChannel;
     private final int cooldown;
+    private final Long managerRole;
 
     public GuildSettings(Guild guild, String prefix, String[] thankwords, int maxMessageAge, String reaction,
-                         boolean reactionActive, boolean answerActive, boolean mentionActive, boolean fuzzyActive, Long[] activeChannel, int cooldown) {
+                         boolean reactionActive, boolean answerActive, boolean mentionActive, boolean fuzzyActive,
+                         Long[] activeChannel, int cooldown, Long managerRole) {
         this.guild = guild;
         this.prefix = prefix;
         this.thankwords = thankwords;
@@ -40,6 +43,7 @@ public class GuildSettings {
         this.fuzzyActive = fuzzyActive;
         this.activeChannel = Set.of(activeChannel);
         this.cooldown = cooldown;
+        this.managerRole = managerRole;
     }
 
     public Pattern getThankwordPattern() {
@@ -78,5 +82,9 @@ public class GuildSettings {
             return reaction;
         }
         return guild.retrieveEmoteById(reaction).complete().getAsMention();
+    }
+
+    public OptionalLong getManagerRole() {
+        return OptionalLong.of(managerRole);
     }
 }

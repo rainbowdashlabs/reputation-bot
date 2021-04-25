@@ -37,7 +37,8 @@ public class GuildData {
                     mention_active,
                     fuzzy_active,
                     active_channels,
-                    cooldown
+                    cooldown,
+                    manager_role
                 FROM
                     guild_settings
                 WHERE 
@@ -57,7 +58,8 @@ public class GuildData {
                                 rs.getBoolean("mention_active"),
                                 rs.getBoolean("fuzzy_active"),
                                 DbUtil.arrayToArray(rs, "active_channels", new Long[0]),
-                                rs.getInt("cooldown"))
+                                rs.getInt("cooldown"),
+                                rs.getLong("manager_role"))
                 );
             }
         } catch (SQLException e) {
@@ -405,5 +407,23 @@ public class GuildData {
         } catch (SQLException e) {
             DbUtil.logSQLError("Could not init guild", e);
         }
+    }
+
+    public boolean setManagerRole(Guild guild, Role role) {
+        try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
+                INSERT INTO
+                    guild_bot_settings(guild_id, manager_role) VALUES (?,?)
+                    ON CONFLICT(guild_id)
+                        DO UPDATE
+                            SET manager_role = excluded.manager_role;
+                """)) {
+            stmt.setLong(1, guild.getIdLong());
+            stmt.setLong(2, role.getIdLong());
+            stmt.execute();
+            return true;
+        } catch (SQLException e) {
+            DbUtil.logSQLError("Could not set guild manager role", e);
+        }
+        return false;
     }
 }

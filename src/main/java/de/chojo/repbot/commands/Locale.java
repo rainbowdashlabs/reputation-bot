@@ -3,7 +3,6 @@ package de.chojo.repbot.commands;
 import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Format;
-import de.chojo.jdautil.localization.util.Language;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.text.TextFormatting;
 import de.chojo.jdautil.wrapper.CommandContext;
@@ -25,7 +24,7 @@ public class Locale extends SimpleCommand {
                         .add("set", "<locale>", "command.locale.sub.set")
                         .add("list", null, "command.locale.sub.list")
                         .build(),
-                Permission.ADMINISTRATOR);
+                Permission.MANAGE_SERVER);
         this.data = new GuildData(dataSource);
         this.loc = loc;
     }

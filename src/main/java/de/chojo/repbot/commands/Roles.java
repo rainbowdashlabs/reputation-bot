@@ -16,20 +16,19 @@ import java.util.stream.Collectors;
 
 public class Roles extends SimpleCommand {
     private final GuildData data;
-    private final Localizer loc;
 
-    public Roles(DataSource dataSource, Localizer localizer) {
+    public Roles(DataSource dataSource) {
         super("roles", new String[] {"role"},
                 "command.roles.description",
                 null,
                 subCommandBuilder()
+                        .add("managerRole", "[role]", "command.roles.sub.managerRole")
                         .add("add", "<role> <reputation>", "command.roles.sub.add")
                         .add("remove", "<role>", "command.roles.sub.remove")
                         .add("list", null, "command.roles.sub.list")
                         .build(),
-                Permission.ADMINISTRATOR);
+                Permission.MANAGE_SERVER);
         data = new GuildData(dataSource);
-        loc = localizer;
     }
 
     @Override
@@ -51,7 +50,38 @@ public class Roles extends SimpleCommand {
         if ("remove".equalsIgnoreCase(subCmd)) {
             return remove(eventWrapper, context.subContext(subCmd));
         }
+        if ("managerRole".equalsIgnoreCase(subCmd)) {
+            return managerRole(eventWrapper, context.subContext(subCmd));
+        }
         return false;
+    }
+
+    private boolean managerRole(MessageEventWrapper eventWrapper, CommandContext subContext) {
+        if (subContext.argsEmpty()) {
+            var guildSettings = data.getGuildSettings(eventWrapper.getGuild());
+            if (guildSettings.isEmpty()) return true;
+            var settings = guildSettings.get();
+            settings.getManagerRole().ifPresentOrElse(r -> {
+                var roleById = eventWrapper.getGuild().getRoleById(r);
+                if (roleById != null) {
+                    eventWrapper.reply(eventWrapper.localize("command.roles.sub.managerRole.current",
+                            Replacement.createMention(roleById))).queue();
+                    return;
+                }
+                eventWrapper.reply(eventWrapper.localize("command.roles.sub.managerRole.noRole")).queue();
+            }, () -> eventWrapper.reply(eventWrapper.localize("command.roles.sub.managerRole.noRole")).queue());
+            return true;
+        }
+        var role = DiscordResolver.getRole(eventWrapper.getGuild(), subContext.argString(0).get());
+        if (role.isEmpty()) {
+            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.invalidRole"), 10);
+            return true;
+        }
+        if (data.setManagerRole(eventWrapper.getGuild(), role.get())) {
+            eventWrapper.reply(eventWrapper.localize("command.roles.sub.managerRole.set",
+                    Replacement.createMention(role.get()))).queue();
+        }
+        return true;
     }
 
     private boolean remove(MessageEventWrapper eventWrapper, CommandContext commandContext) {

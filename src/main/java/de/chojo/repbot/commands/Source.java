@@ -8,22 +8,22 @@ import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import net.dv8tion.jda.api.Permission;
 
-public class Invite extends SimpleCommand {
+public class Source extends SimpleCommand {
     private final Localizer localizer;
 
-    public Invite(Localizer localizer) {
-        super("invite", null, "command.invite.description", null, null, Permission.UNKNOWN);
+    public Source(Localizer localizer) {
+        super("source", null, "command.source.description", null, null, Permission.UNKNOWN);
         this.localizer = localizer;
     }
 
     @Override
     public boolean onCommand(MessageEventWrapper eventWrapper, CommandContext context) {
         eventWrapper.reply(new LocalizedEmbedBuilder(localizer, eventWrapper)
-                .setTitle("command.invite.title")
-                .setDescription(eventWrapper.localize("command.invite.click",
-                        Replacement.create("URL", "https://discord.com/oauth2/authorize?client_id=834843896579489794&scope=bot&permissions=1342532672")))
+                .setTitle("command.source.title")
+                .setDescription(eventWrapper.localize("command.source.click",
+                        Replacement.create("URL", "https://github.com/RainbowDashLabs/reputation-bot")))
                 .build())
                 .queue();
-        return false;
+        return true;
     }
 }
