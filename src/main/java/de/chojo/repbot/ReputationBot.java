@@ -119,15 +119,13 @@ public class ReputationBot {
                         new Thankwords(dataSource, localizer),
                         new Scan(dataSource, localizer)
                 )
-                .withInvalidArgumentProvider(((loc, command) -> {
-                    return new EmbedBuilder()
-                            .setTitle(loc.localize("error.invalidArguments"))
-                            .appendDescription(command.getArgs() != null ? command.getCommand() + " " + command.getArgs() + "\n" : "")
-                            .appendDescription(">>> " + Arrays.stream(command.getSubCommands())
-                                    .map(c -> command.getCommand() + " " + c.getName() + (c.getArgs() == null ? "" : c.getArgs()))
-                                    .collect(Collectors.joining("\n")))
-                            .build();
-                }))
+                .withInvalidArgumentProvider(((loc, command) -> new EmbedBuilder()
+                        .setTitle(loc.localize("error.invalidArguments"))
+                        .appendDescription(command.getArgs() != null ? command.getCommand() + " " + command.getArgs() + "\n" : "")
+                        .appendDescription(">>> " + Arrays.stream(command.getSubCommands())
+                                .map(c -> command.getCommand() + " " + c.getName() + (c.getArgs() == null ? "" : c.getArgs()))
+                                .collect(Collectors.joining("\n")))
+                        .build()))
                 .withLocalizer(localizer)
                 .build();
         hub.registerCommands(new Help(hub, localizer));

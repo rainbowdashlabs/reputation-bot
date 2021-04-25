@@ -134,7 +134,7 @@ public class Thankwords extends SimpleCommand {
                 eventWrapper.reply(match.build()).queue();
             }
             case MENTION -> {
-                var match = new EmbedBuilder()
+                var match = new LocalizedEmbedBuilder(loc, eventWrapper)
                         .setTitle("command.thankwords.sub.check.match.mention")
                         .setDescription(
                                 eventWrapper.localize("command.thankwords.sub.check.result",
@@ -143,7 +143,7 @@ public class Thankwords extends SimpleCommand {
                 eventWrapper.reply(match.build()).queue();
             }
             case ANSWER -> {
-                var match = new EmbedBuilder()
+                var match = new LocalizedEmbedBuilder(loc, eventWrapper)
                         .setTitle("command.thankwords.sub.check.match.answer")
                         .setDescription(
                                 eventWrapper.localize("command.thankwords.sub.check.result",
