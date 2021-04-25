@@ -10,13 +10,14 @@ CREATE TABLE IF NOT EXISTS thankwords
 CREATE INDEX IF NOT EXISTS thankwords_guild_id_index
     on thankwords (guild_id);
 
-CREATE TABLE IF NOT EXISTS guild_bot_settings
+create table IF NOT EXISTS guild_bot_settings
 (
-    guild_id bigint not null
+    guild_id     bigint not null
         constraint prefix_pk
             primary key,
-    prefix   varchar,
-    language text
+    prefix       varchar,
+    language     text,
+    manager_role bigint
 );
 
 
@@ -74,7 +75,7 @@ CREATE INDEX IF NOT EXISTS guild_ranks_guild_id_index
 
 create or replace view guild_settings
             (guild_id, max_message_age, reaction, reactions_active, answer_active, mention_active, fuzzy_active, prefix,
-             thankswords, active_channels, cooldown)
+             thankswords, active_channels, cooldown, manager_role)
 as
 SELECT ms.guild_id,
        ms.max_message_age,
@@ -83,19 +84,20 @@ SELECT ms.guild_id,
        ms.answer_active,
        ms.mention_active,
        ms.fuzzy_active,
-       p.prefix,
+       gbs.prefix,
        t.thankswords,
        ac.active_channels,
-       ms.cooldown
-FROM repbot.message_settings ms
-         LEFT JOIN guild_bot_settings p ON ms.guild_id = p.guild_id
+       ms.cooldown,
+       gbs.manager_role
+FROM message_settings ms
+         LEFT JOIN guild_bot_settings gbs ON ms.guild_id = gbs.guild_id
          LEFT JOIN (SELECT t_1.guild_id,
                            array_agg(t_1.thankword) AS thankswords
-                    FROM repbot.thankwords t_1
+                    FROM thankwords t_1
                     GROUP BY t_1.guild_id) t ON ms.guild_id = t.guild_id
          LEFT JOIN (SELECT active_channel.guild_id,
                            array_agg(active_channel.channel_id) AS active_channels
-                    FROM repbot.active_channel
+                    FROM active_channel
                     GROUP BY active_channel.guild_id) ac ON ms.guild_id = ac.guild_id;
 
 create or replace view user_reputation(guild_id, user_id, reputation, donated) as
