@@ -60,6 +60,8 @@ public class RepBot {
         log.info("Initializing connection pool");
         initConnectionPool();
 
+        initDatabase();
+
         log.info("Creating Shutdown Hook");
         initShutdownHook();
 
@@ -67,6 +69,19 @@ public class RepBot {
 
         log.info("Initializing bot.");
         initBot();
+    }
+
+    private void initDatabase() throws SQLException, IOException {
+        try (var in = getClass().getClassLoader().getResourceAsStream("dbsetup.sql")) {
+            var upgrade = new String(in.readAllBytes());
+            try (var conn = dataSource.getConnection(); var stmt = conn.prepareStatement(upgrade)){
+                stmt.execute();
+            }
+        } catch (IOException e) {
+            log.info("Could not read upgrade script.", e);
+            throw e;
+        }
+        log.info("Database update done.");
     }
 
     private void initLocalization() {
