@@ -22,13 +22,13 @@ import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.listener.MessageListener;
 import de.chojo.repbot.listener.ReactionListener;
 import de.chojo.repbot.listener.StateListener;
+import de.chojo.repbot.manager.MemberCacheManager;
 import de.chojo.repbot.manager.RoleAssigner;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
-import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.postgresql.ds.PGSimpleDataSource;
 
@@ -50,6 +50,8 @@ public class ReputationBot {
     private HikariDataSource dataSource;
     private Configuration configuration;
     private Localizer localizer;
+    private Scan scan;
+    private MemberCacheManager memberCacheManager;
 
     public static void main(String[] args) throws SQLException, IOException {
         ReputationBot.instance = new ReputationBot();
@@ -58,13 +60,6 @@ public class ReputationBot {
 
     private void start() throws SQLException, IOException {
         configuration = Configuration.create();
-        log.info("Initializing JDA");
-        try {
-            initJDA();
-        } catch (LoginException e) {
-            log.error("Could not login.", e);
-            return;
-        }
 
         log.info("Initializing connection pool");
 
@@ -74,6 +69,14 @@ public class ReputationBot {
         initShutdownHook();
 
         initLocalization();
+
+        log.info("Initializing JDA");
+        try {
+            initJDA();
+        } catch (LoginException e) {
+            log.error("Could not login.", e);
+            return;
+        }
 
         log.info("Initializing bot.");
         initBot();
@@ -114,7 +117,7 @@ public class ReputationBot {
         var roleAssigner = new RoleAssigner(dataSource);
 
         shardManager.addEventListener(
-                new MessageListener(dataSource, configuration, roleAssigner),
+                new MessageListener(dataSource, configuration, roleAssigner, memberCacheManager),
                 new StateListener(dataSource),
                 new ReactionListener(dataSource, roleAssigner));
         var data = new GuildData(dataSource);
@@ -130,7 +133,7 @@ public class ReputationBot {
                         new Roles(dataSource),
                         new RepSettings(dataSource, localizer),
                         new Thankwords(dataSource, localizer),
-                        new Scan(dataSource, localizer),
+                        scan,
                         new Locale(dataSource, localizer),
                         new Invite(localizer),
                         new Source(localizer)
@@ -141,7 +144,7 @@ public class ReputationBot {
                             .appendDescription(command.getArgs() != null ? command.getCommand() + " " + command.getArgs() + "\n" : "");
                     if (command.getSubCommands().length != 0) {
                         embedBuilder.appendDescription(">>> " + Arrays.stream(command.getSubCommands())
-                                .map(c -> command.getCommand() + " " + c.getName() + (c.getArgs() == null ? "" : " "+ c.getArgs()))
+                                .map(c -> command.getCommand() + " " + c.getName() + (c.getArgs() == null ? "" : " " + c.getArgs()))
                                 .collect(Collectors.joining("\n")));
                     }
                     return embedBuilder.build();
@@ -169,6 +172,8 @@ public class ReputationBot {
     }
 
     private void initJDA() throws LoginException {
+        scan = new Scan(dataSource, localizer);
+        memberCacheManager = new MemberCacheManager(scan);
         shardManager = DefaultShardManagerBuilder.createDefault(configuration.get(ConfigFile::getToken))
                 .enableIntents(
                         GatewayIntent.GUILD_MESSAGE_REACTIONS,
@@ -178,7 +183,7 @@ public class ReputationBot {
                         GatewayIntent.GUILD_EMOJIS)
                 .enableCache(CacheFlag.EMOTE)
                 .setEnableShutdownHook(false)
-                .setMemberCachePolicy(MemberCachePolicy.ALL)
+                .setMemberCachePolicy(memberCacheManager)
                 .setEventPool(executorService)
                 .build();
     }
