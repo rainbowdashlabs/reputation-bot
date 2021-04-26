@@ -6,15 +6,15 @@ import net.dv8tion.jda.api.entities.User;
 
 @Getter
 public class AnalyzerResult {
-    private static final AnalyzerResult NO_MATCH = new AnalyzerResult(ResultType.NO_MATCH, null, null, null, 1);
+    private static final AnalyzerResult NO_MATCH = new AnalyzerResult(ThankType.NO_MATCH, null, null, null, 1);
 
-    ResultType type;
+    ThankType type;
     Message referenceMessage;
     User donator;
     User receiver;
     double confidenceScore;
 
-    public AnalyzerResult(ResultType type, Message referenceMessage, User donator, User receiver, double confidenceScore) {
+    public AnalyzerResult(ThankType type, Message referenceMessage, User donator, User receiver, double confidenceScore) {
         this.type = type;
         this.referenceMessage = referenceMessage;
         this.donator = donator;
@@ -27,14 +27,14 @@ public class AnalyzerResult {
     }
 
     public static AnalyzerResult mention(User donator, User receiver) {
-        return new AnalyzerResult(ResultType.MENTION, null, donator, receiver, 1);
+        return new AnalyzerResult(ThankType.MENTION, null, donator, receiver, 1);
     }
 
     public static AnalyzerResult answer(User donator, User receiver, Message referenceMessage) {
-        return new AnalyzerResult(ResultType.ANSWER, referenceMessage, donator, receiver, 1);
+        return new AnalyzerResult(ThankType.ANSWER, referenceMessage, donator, receiver, 1);
     }
 
     public static AnalyzerResult fuzzy(User donator, User receiver, double confidenceScore) {
-        return new AnalyzerResult(ResultType.FUZZY, null, donator, receiver, confidenceScore);
+        return new AnalyzerResult(ThankType.FUZZY, null, donator, receiver, confidenceScore);
     }
 }

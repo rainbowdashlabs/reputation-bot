@@ -1,6 +1,7 @@
 package de.chojo.repbot.listener;
 
 import de.chojo.jdautil.parsing.Verifier;
+import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.manager.RoleAssigner;
@@ -50,7 +51,7 @@ public class ReactionListener extends ListenerAdapter {
 
                     if (Verifier.equalSnowflake(event.getMember(), message.getAuthor())) return;
 
-                    reputationData.logReputation(event.getGuild(), event.getUser(), message.getAuthor(), message);
+                    reputationData.logReputation(event.getGuild(), event.getUser(), message.getAuthor(), message, null, ThankType.REACTION);
                     roleAssigner.update(message.getMember());
                 }, err -> {
                     log.error("Could not retrieve reaction message.", err);

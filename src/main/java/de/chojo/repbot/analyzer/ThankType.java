@@ -1,5 +1,5 @@
 package de.chojo.repbot.analyzer;
 
-public enum ResultType {
-    FUZZY, MENTION, ANSWER, NO_MATCH
+public enum ThankType {
+    FUZZY, MENTION, ANSWER, REACTION, NO_MATCH
 }

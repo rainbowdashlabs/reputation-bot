@@ -41,7 +41,8 @@ public class MessageAnalyzer {
     private static AnalyzerResult resolveMessage(Message message, Pattern thankPattern) {
         var contentRaw = message.getContentRaw();
 
-        var words = List.of(contentRaw.split("\\s"));
+        var words = new ArrayList<>(List.of(contentRaw.split("\\s")));
+        words.removeIf(String::isBlank);
 
         String match = null;
         for (var word : words) {

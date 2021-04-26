@@ -1,5 +1,6 @@
 package de.chojo.repbot.data;
 
+import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.data.util.DbUtil;
 import de.chojo.repbot.data.wrapper.ReputationUser;
 import lombok.extern.slf4j.Slf4j;
@@ -7,8 +8,10 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 
+import javax.annotation.Nullable;
 import javax.sql.DataSource;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -25,11 +28,11 @@ public class ReputationData {
         this.source = source;
     }
 
-    public boolean logReputation(Guild guild, User donor, User receiver, Message message) {
+    public boolean logReputation(Guild guild, User donor, User receiver, Message message, @Nullable Message refMessage, ThankType type) {
         try (var conn = source.getConnection()) {
             try (var stmt = conn.prepareStatement("""
                     INSERT INTO
-                        reputation_log(guild_id, donor_id, receiver_id, message_id) VALUES(?,?,?,?)
+                        reputation_log(guild_id, donor_id, receiver_id, message_id, ref_message_id, channel_id, cause) VALUES(?,?,?,?,?,?,?)
                             ON CONFLICT(guild_id, donor_id, receiver_id, message_id)
                                 DO NOTHING;
                                         """)) {
@@ -37,6 +40,13 @@ public class ReputationData {
                 stmt.setLong(2, donor.getIdLong());
                 stmt.setLong(3, receiver.getIdLong());
                 stmt.setLong(4, message.getIdLong());
+                if(refMessage == null){
+                    stmt.setNull(5, Types.BIGINT);
+                }else {
+                stmt.setLong(5, refMessage.getIdLong());
+                }
+                stmt.setLong(6, message.getChannel().getIdLong());
+                stmt.setString(7, type.name());
                 stmt.execute();
                 return true;
             }
@@ -50,12 +60,14 @@ public class ReputationData {
         try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
                                 SELECT
                                     received
-                                from
+                                FROM
                                     reputation_log
-                                where
+                                WHERE
                                     guild_id = ?
                                     AND donor_id = ?
-                                    AND receiver_id = ?;
+                                    AND receiver_id = ?
+                                ORDER BY received DESC
+                                LIMIT  1;
                 """)) {
             stmt.setLong(1, guild.getIdLong());
             stmt.setLong(2, donor.getIdLong());

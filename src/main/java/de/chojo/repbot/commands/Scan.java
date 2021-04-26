@@ -19,6 +19,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageHistory;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.User;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
 import javax.sql.DataSource;
@@ -187,6 +188,10 @@ public class Scan extends SimpleCommand {
         scan.getResultChannel().sendMessage(embed).reference(scan.getProgressMessage()).queue();
     }
 
+    public boolean isRunning(Guild guild) {
+        return activeScans.contains(guild.getIdLong());
+    }
+
     @Getter
     private static class ScanProcess {
         private int scanned = 0;
@@ -235,18 +240,18 @@ public class Scan extends SimpleCommand {
             for (var message : messages) {
                 scanned();
                 var result = MessageAnalyzer.processMessage(pattern, message);
+
+                var donator = result.getDonator();
+                var receiver = result.getReceiver();
+                var refMessage = result.getReferenceMessage();
                 switch (result.getType()) {
                     case FUZZY -> {
                         if (result.getConfidenceScore() < 0.85) continue;
-                        reputationData.logReputation(guild, result.getDonator(), result.getReceiver(), message);
+                        reputationData.logReputation(guild, donator, receiver, message, refMessage, result.getType());
                         hit();
                     }
-                    case MENTION -> {
-                        reputationData.logReputation(guild, result.getDonator(), result.getReceiver(), message);
-                        hit();
-                    }
-                    case ANSWER -> {
-                        reputationData.logReputation(guild, result.getDonator(), result.getReceiver(), result.getReferenceMessage());
+                    case MENTION, ANSWER -> {
+                        reputationData.logReputation(guild, donator, receiver, message, refMessage, result.getType());
                         hit();
                     }
                     case NO_MATCH -> {
