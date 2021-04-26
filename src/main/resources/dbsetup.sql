@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS message_settings
 );
 
 
-CREATE TABLE IF NOT EXISTS reputation_log
+create table if not exists reputation_log
 (
     guild_id    bigint not null,
     donor_id    bigint not null,
@@ -45,14 +45,17 @@ CREATE TABLE IF NOT EXISTS reputation_log
     received    timestamp default now()
 );
 
-CREATE INDEX IF NOT EXISTS repuation_log_donated
+create index if not exists repuation_log_donated
     on reputation_log (guild_id, donor_id);
 
-CREATE INDEX IF NOT EXISTS repuation_log_received
+create index if not exists repuation_log_received
     on reputation_log (guild_id, receiver_id);
 
-CREATE UNIQUE INDEX IF NOT EXISTS reputation_log_guild_id_donor_id_receiver_id_message_id_uindex
+create unique index if not exists reputation_log_guild_id_donor_id_receiver_id_message_id_uindex
     on reputation_log (guild_id, donor_id, receiver_id, message_id);
+
+create index if not exists reputation_log_received_guild_id_donor_id_receiver_id_index
+    on reputation_log (received desc, guild_id asc, donor_id asc, receiver_id asc);
 
 CREATE TABLE IF NOT EXISTS active_channel
 (
@@ -100,18 +103,41 @@ FROM message_settings ms
                     FROM active_channel
                     GROUP BY active_channel.guild_id) ac ON ms.guild_id = ac.guild_id;
 
-create or replace view user_reputation(guild_id, user_id, reputation, donated) as
-SELECT rep.guild_id,
-       rep.receiver_id                     AS user_id,
-       COALESCE(rep.reputation, 0::bigint) AS reputation,
-       COALESCE(don.donated, 0::bigint)    AS donated
-FROM (SELECT reputation_log.guild_id,
-             reputation_log.receiver_id,
-             count(1) AS reputation
-      FROM repbot.reputation_log
-      GROUP BY reputation_log.guild_id, reputation_log.receiver_id) rep
-         LEFT JOIN (SELECT reputation_log.guild_id,
-                           reputation_log.donor_id,
-                           count(1) AS donated
-                    FROM repbot.reputation_log
-                    GROUP BY reputation_log.guild_id, reputation_log.donor_id) don ON rep.receiver_id = don.donor_id;
+DROP VIEW IF EXISTS user_reputation;
+CREATE OR REPLACE VIEW user_reputation(rank, guild_id, user_id, reputation, donated) AS
+SELECT
+            row_number() OVER (PARTITION BY guild_id ORDER BY reputation DESC) AS rank,
+            rank.guild_id,
+            rank.user_id,
+            rank.reputation,
+            rank.donated
+FROM
+    (
+        SELECT
+            coalesce(don.guild_id, rep.guild_id)    AS guild_id,
+            coalesce(rep.receiver_id, don.donor_id) AS user_id,
+            coalesce(rep.reputation, 0::BIGINT)     AS reputation,
+            coalesce(don.donated, 0::BIGINT)        AS donated
+        FROM
+            (
+                SELECT
+                        r.guild_id # r.receiver_id AS key,
+                        r.guild_id,
+                        r.receiver_id,
+                        count(1)                   AS reputation
+                FROM
+                    reputation_log r
+                GROUP BY r.guild_id, r.receiver_id
+            ) rep
+                FULL JOIN (
+                SELECT
+                        r.guild_id # r.donor_id AS key,
+                        r.guild_id,
+                        r.donor_id,
+                        count(1)                AS donated
+                FROM
+                    reputation_log r
+                GROUP BY r.guild_id, r.donor_id
+            ) don
+                          ON rep.key = don.key
+    ) rank;
