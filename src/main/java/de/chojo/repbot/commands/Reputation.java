@@ -4,14 +4,15 @@ import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
+import de.chojo.jdautil.localization.util.LocalizedField;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.DiscordResolver;
-import de.chojo.jdautil.text.TextFormatting;
 import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.data.wrapper.ReputationRole;
+import de.chojo.repbot.data.wrapper.ReputationUser;
 import de.chojo.repbot.util.TextGenerator;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.IMentionable;
@@ -19,6 +20,8 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import javax.sql.DataSource;
+import java.awt.Color;
+import java.util.stream.Collectors;
 
 public class Reputation extends SimpleCommand {
     private final ReputationData reputationData;
@@ -43,7 +46,7 @@ public class Reputation extends SimpleCommand {
     @Override
     public boolean onCommand(MessageEventWrapper eventWrapper, CommandContext context) {
         if (context.argsEmpty()) {
-            var reputation = reputationData.getReputation(eventWrapper.getGuild(), eventWrapper.getAuthor()).orElse(0);
+            var reputation = reputationData.getReputation(eventWrapper.getGuild(), eventWrapper.getAuthor()).orElse(ReputationUser.empty(eventWrapper.getAuthor()));
             eventWrapper.reply(getUserRepEmbed(eventWrapper, eventWrapper.getMember(), reputation)).queue();
             return true;
         }
@@ -56,15 +59,30 @@ public class Reputation extends SimpleCommand {
         if ("top".equalsIgnoreCase(subCmd)) {
             var page = context.argInt(1).orElse(1);
             var ranking = reputationData.getRanking(eventWrapper.getGuild(), 10, (page - 1) * 10);
-            var builder = TextFormatting.getTableBuilder(ranking,
-                    eventWrapper.localize("words.name"),
-                    eventWrapper.localize("words.reputation"));
-            for (var reputationUser : ranking) {
-                var memberById = eventWrapper.getGuild().retrieveMemberById(reputationUser.getUserId()).complete();
-                builder.setNextRow(memberById == null ? eventWrapper.localize("words.unknown") : memberById.getEffectiveName(),
-                        String.valueOf(reputationUser.getReputation()));
-            }
-            eventWrapper.reply(builder.toString()).queue();
+            var ranks = ranking.stream()
+                    .map(u -> String.valueOf(u.getRank()))
+                    .collect(Collectors.joining("\n"));
+            var users = ranking.stream()
+                    .map(u -> {
+                        var memberById = eventWrapper.getGuild().getMemberById(u.getUserId());
+                        if (memberById == null) {
+                            memberById = eventWrapper.getGuild().retrieveMemberById(u.getUserId()).complete();
+                        }
+                        return memberById == null ? eventWrapper.localize("words.unknown") : memberById.getAsMention();
+                    })
+                    .collect(Collectors.joining("\n"));
+            var reputation = ranking.stream()
+                    .map(u -> String.valueOf(u.getReputation()))
+                    .collect(Collectors.joining("\n"));
+            var embed = new LocalizedEmbedBuilder(loc, eventWrapper)
+                    .setTitle(eventWrapper.localize("command.reputation.sub.top.ranking",
+                            Replacement.create("GUILD", eventWrapper.getGuild().getName())))
+                    .addField(new LocalizedField(loc, "", ranks, true, eventWrapper))
+                    .addField(new LocalizedField(loc, "words.name", users, true, eventWrapper))
+                    .addField(new LocalizedField(loc, "words.reputation", reputation, true, eventWrapper))
+                    .setColor(Color.CYAN)
+                    .build();
+            eventWrapper.reply(embed).queue();
             return true;
         }
         var guildMember = DiscordResolver.getGuildMember(eventWrapper.getGuild(), subCmd);
@@ -72,30 +90,32 @@ public class Reputation extends SimpleCommand {
             eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.userNotFound"), 10);
             return true;
         }
-        var reputation = reputationData.getReputation(eventWrapper.getGuild(), guildMember.get().getUser()).orElse(0);
+        var reputation = reputationData.getReputation(eventWrapper.getGuild(), guildMember.get().getUser()).orElse(ReputationUser.empty(eventWrapper.getAuthor()));
         eventWrapper.reply(getUserRepEmbed(eventWrapper, guildMember.get(), reputation)).queue();
         return true;
     }
 
-    private MessageEmbed getUserRepEmbed(MessageEventWrapper eventWrapper, Member member, long reputation) {
-        var current = guildData.getCurrentReputationRole(member.getGuild(), reputation);
-        var next = guildData.getNextReputationRole(member.getGuild(), reputation);
+    private MessageEmbed getUserRepEmbed(MessageEventWrapper eventWrapper, Member member, ReputationUser reputation) {
+        var current = guildData.getCurrentReputationRole(member.getGuild(), reputation.getReputation());
+        var next = guildData.getNextReputationRole(member.getGuild(), reputation.getReputation());
 
         var currentRoleRep = current.map(ReputationRole::getReputation).orElse(0L);
         var nextRoleRep = next.map(ReputationRole::getReputation).orElse(currentRoleRep);
-        var progess = (double) (reputation - currentRoleRep) / (double) (nextRoleRep - currentRoleRep);
+        var progess = (double) (reputation.getReputation() - currentRoleRep) / (double) (nextRoleRep - currentRoleRep);
 
         var progressBar = TextGenerator.progressBar(progess, BAR_SIZE);
 
         var level = current.map(r -> r.getRole(member.getGuild())).map(IMentionable::getAsMention).orElse("none");
 
-        var currProgress = String.valueOf(reputation - currentRoleRep);
+        var currProgress = String.valueOf(reputation.getReputation() - currentRoleRep);
         var nextLevel = nextRoleRep.equals(currentRoleRep) ? "\uA74E" : String.valueOf(nextRoleRep - currentRoleRep);
         return new LocalizedEmbedBuilder(loc, eventWrapper)
-                .setTitle(eventWrapper.localize("command.reputation.profile.title",
-                        Replacement.create("NAME", member.getEffectiveName())))
+                .setTitle(
+                        (reputation.getRank() != 0 ? "#" + reputation.getRank() + " " : "")
+                                + eventWrapper.localize("command.reputation.profile.title",
+                                Replacement.create("NAME", member.getEffectiveName())))
                 .addField("words.level", level, true)
-                .addField(eventWrapper.localize("words.reputation"), Format.BOLD.apply(String.valueOf(reputation)), true)
+                .addField(eventWrapper.localize("words.reputation"), Format.BOLD.apply(String.valueOf(reputation.getReputation())), true)
                 .addField("command.reputation.profile.nextLevel", currProgress + "/" + nextLevel + "  " + progressBar, false)
                 .setThumbnail(member.getUser().getEffectiveAvatarUrl())
                 .setColor(member.getColor())
