@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.User;
 @Getter
 public class AnalyzerResult {
     private static final AnalyzerResult NO_MATCH = new AnalyzerResult(ThankType.NO_MATCH, null, null, null, 1);
+    private static final AnalyzerResult NO_TARGET = new AnalyzerResult(ThankType.NO_MATCH, null, null, null, 1);
 
     ThankType type;
     Message referenceMessage;
@@ -24,6 +25,10 @@ public class AnalyzerResult {
 
     public static AnalyzerResult noMatch() {
         return NO_MATCH;
+    }
+
+    public static AnalyzerResult noTarget(User donator) {
+        return new AnalyzerResult(ThankType.NO_TARGET, null, donator, null, 0);
     }
 
     public static AnalyzerResult mention(User donator, User receiver) {
