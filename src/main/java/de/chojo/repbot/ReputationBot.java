@@ -84,25 +84,15 @@ public class ReputationBot {
 
     private void initDatabase() throws SQLException, IOException {
         var connectionPool = getConnectionPool(null);
-        try (var conn = connectionPool.getConnection(); var stmt = conn.prepareStatement(
-                "CREATE SCHEMA IF NOT EXISTS " + configuration.getConfigFile().getDatabase().getSchema())) {
-            stmt.executeUpdate();
-        }
 
-        connectionPool.close();
+        var schema = configuration.get(ConfigFile::getDatabase).getSchema();
+        SqlUpdater.builder(connectionPool)
+                .setReplacements(new QueryReplacement("repbot_schema", schema))
+                .setVersionTable(schema + ".repbot_version")
+                .setSchemas(schema)
+                .execute();
 
         dataSource = getConnectionPool(configuration.get().getDatabase().getSchema());
-
-        try (var in = getClass().getClassLoader().getResourceAsStream("dbsetup.sql")) {
-            var upgrade = new String(in.readAllBytes());
-            try (var conn = dataSource.getConnection(); var stmt = conn.prepareStatement(upgrade)) {
-                stmt.execute();
-            }
-        } catch (IOException e) {
-            log.info("Could not read upgrade script.", e);
-            throw e;
-        }
-        log.info("Database update done.");
     }
 
     private void initLocalization() {
