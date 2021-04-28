@@ -21,13 +21,13 @@ public class Help extends SimpleCommand {
     private final CommandHub<SimpleCommand> hub;
     private final Localizer loc;
 
-    public Help(CommandHub<SimpleCommand> hub, Localizer localizer) {
+    public Help(CommandHub<SimpleCommand> hub, Localizer localizer, boolean exclusiveHelp) {
         super("help",
                 null,
                 "command.help.description",
                 "[command]",
                 null,
-                Permission.UNKNOWN);
+                exclusiveHelp ? Permission.ADMINISTRATOR : Permission.UNKNOWN);
         this.hub = hub;
         this.loc = localizer;
     }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.PrettyPrinter;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.chojo.repbot.config.elements.Database;
 import de.chojo.repbot.listener.ReactionListener;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -72,5 +73,43 @@ public class Configuration {
 
     public ConfigFile get() {
         return configFile;
+    }
+
+
+    // DELEGATES
+    public String getToken() {
+        return configFile.getToken();
+    }
+
+    public String getDefaultPrefix() {
+        return configFile.getDefaultPrefix();
+    }
+
+    public Database getDatabase() {
+        return configFile.getDatabase();
+    }
+
+    public boolean isExclusiveHelp() {
+        return configFile.isExclusiveHelp();
+    }
+
+    public void setToken(String token) {
+        configFile.setToken(token);
+    }
+
+    public void setDefaultPrefix(String defaultPrefix) {
+        configFile.setDefaultPrefix(defaultPrefix);
+    }
+
+    public void setDatabase(Database database) {
+        configFile.setDatabase(database);
+    }
+
+    public void setExclusiveHelp(boolean exclusiveHelp) {
+        configFile.setExclusiveHelp(exclusiveHelp);
+    }
+
+    public boolean canEqual(Object other) {
+        return configFile.canEqual(other);
     }
 }

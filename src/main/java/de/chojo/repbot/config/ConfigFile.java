@@ -12,4 +12,5 @@ public class ConfigFile {
     private String token = "";
     private String defaultPrefix = "!";
     private Database database = new Database();
+    private boolean exclusiveHelp = false;
 }
