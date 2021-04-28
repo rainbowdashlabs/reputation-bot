@@ -3,6 +3,7 @@ package de.chojo.repbot.manager;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.data.wrapper.ReputationRole;
+import de.chojo.repbot.data.wrapper.ReputationUser;
 import net.dv8tion.jda.api.entities.Member;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,9 +22,9 @@ public class RoleAssigner {
     public void update(@Nullable Member member) {
         if (member == null) return;
         var guild = member.getGuild();
-        var reputation = reputationData.getReputation(guild, member.getUser()).orElse(0);
+        var reputation = reputationData.getReputation(guild, member.getUser()).orElse(ReputationUser.empty(member.getUser()));
 
-        var optRepRole = guildData.getCurrentReputationRole(guild, reputation);
+        var optRepRole = guildData.getCurrentReputationRole(guild, reputation.getReputation());
 
         if (optRepRole.isEmpty()) return;
 

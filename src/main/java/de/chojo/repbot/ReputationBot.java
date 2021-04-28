@@ -19,6 +19,8 @@ import de.chojo.repbot.commands.Thankwords;
 import de.chojo.repbot.config.ConfigFile;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
+import de.chojo.repbot.data.updater.QueryReplacement;
+import de.chojo.repbot.data.updater.SqlUpdater;
 import de.chojo.repbot.listener.MessageListener;
 import de.chojo.repbot.listener.ReactionListener;
 import de.chojo.repbot.listener.StateListener;
@@ -40,12 +42,15 @@ import java.util.Arrays;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
 public class ReputationBot {
     private static ReputationBot instance;
     private final ExecutorService executorService = Executors.newFixedThreadPool(50);
+    private final ScheduledExecutorService cleaner = Executors.newScheduledThreadPool(1);
     private ShardManager shardManager;
     private HikariDataSource dataSource;
     private Configuration configuration;
@@ -105,11 +110,14 @@ public class ReputationBot {
 
     private void initBot() {
         var roleAssigner = new RoleAssigner(dataSource);
+        var reactionListener = new ReactionListener(dataSource, roleAssigner, localizer);
+        var stateListener = new StateListener(dataSource);
+        cleaner.scheduleAtFixedRate(stateListener, 12, 12, TimeUnit.HOURS);
 
         shardManager.addEventListener(
-                new MessageListener(dataSource, configuration, roleAssigner, memberCacheManager),
-                new StateListener(dataSource),
-                new ReactionListener(dataSource, roleAssigner));
+                new MessageListener(dataSource, configuration, roleAssigner, memberCacheManager, reactionListener, localizer),
+                stateListener,
+                reactionListener);
         var data = new GuildData(dataSource);
         var hub = CommandHub.builder(shardManager, configuration.get().getDefaultPrefix())
                 .receiveGuildMessage()
@@ -150,13 +158,18 @@ public class ReputationBot {
                     return wrapper.getMember().getRoles().contains(roleById);
                 })
                 .build();
-        hub.registerCommands(new Help(hub, localizer));
+        hub.registerCommands(new Help(hub, localizer, configuration.isExclusiveHelp()));
     }
 
     private void initShutdownHook() {
         var shutdown = new Thread(() -> {
+            log.info("Shuting down shardmanager.");
             shardManager.shutdown();
+            log.info("Shutting down scheduler.");
+            cleaner.shutdown();
+            log.info("Shutting down database connections.");
             dataSource.close();
+            log.info("Bot shutdown complete.");
         });
         Runtime.getRuntime().addShutdownHook(shutdown);
     }

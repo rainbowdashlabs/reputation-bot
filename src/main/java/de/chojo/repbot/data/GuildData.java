@@ -3,10 +3,14 @@ package de.chojo.repbot.data;
 import de.chojo.jdautil.localization.util.Language;
 import de.chojo.repbot.data.util.DbUtil;
 import de.chojo.repbot.data.wrapper.GuildSettings;
+import de.chojo.repbot.data.wrapper.RemovalTask;
 import de.chojo.repbot.data.wrapper.ReputationRole;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.User;
 
 import javax.annotation.Nullable;
 import javax.sql.DataSource;
@@ -18,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 public class GuildData {
     private final DataSource source;
 
@@ -27,7 +32,7 @@ public class GuildData {
 
     public Optional<GuildSettings> getGuildSettings(Guild guild) {
         try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
-                SELECT 
+                SELECT
                     prefix,
                     thankswords,
                     max_message_age,
@@ -41,7 +46,7 @@ public class GuildData {
                     manager_role
                 FROM
                     guild_settings
-                WHERE 
+                WHERE
                     guild_id = ?
                                 """)) {
             stmt.setLong(1, guild.getIdLong());
@@ -107,7 +112,11 @@ public class GuildData {
 
     public Optional<String> getLanguage(Guild guild) {
         try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
-                SELECT language FROM guild_bot_settings where guild_id = ?;
+                SELECT
+                    language
+                FROM
+                    guild_bot_settings
+                where guild_id = ?;
                 """)) {
             stmt.setLong(1, guild.getIdLong());
             var rs = stmt.executeQuery();
