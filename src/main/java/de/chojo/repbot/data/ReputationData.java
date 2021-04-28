@@ -144,4 +144,43 @@ public class ReputationData {
     public Long getLastRatedDuration(Guild guild, User donor, User receiver, ChronoUnit unit) {
         return getLastRated(guild, donor, receiver).map(i -> i.until(Instant.now(), unit)).orElse(Long.MAX_VALUE);
     }
+
+    public Optional<ReputationLogEntry> getLogEntry(Message message) {
+        try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
+                SELECT
+                    guild_id,
+                    donor_id,
+                    receiver_id,
+                    message_id,
+                    received,
+                    ref_message_id,
+                    channel_id,
+                    cause
+                FROM
+                    reputation_log
+                where
+                    message_id = ?
+                """)) {
+            stmt.setLong(1, message.getIdLong());
+            var rs = stmt.executeQuery();
+            if (rs.next()) {
+                return Optional.of(buildLogEntry(rs));
+            }
+        } catch (SQLException e) {
+            DbUtil.logSQLError("Could not retrieve log entry", e);
+        }
+        return Optional.empty();
+    }
+
+    private ReputationLogEntry buildLogEntry(ResultSet rs) throws SQLException {
+        return new ReputationLogEntry(
+                rs.getLong("guild_id"),
+                rs.getLong("channel_id"),
+                rs.getLong("donor_id"),
+                rs.getLong("receiver_id"),
+                rs.getLong("message_id"),
+                rs.getLong("ref_message_id"),
+                ThankType.valueOf(rs.getString("cause"))
+        );
+    }
 }

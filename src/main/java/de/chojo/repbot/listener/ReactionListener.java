@@ -6,6 +6,7 @@ import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.manager.RoleAssigner;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -50,6 +51,21 @@ public class ReactionListener extends ListenerAdapter {
                     if (lastRatedDuration < guildSettings.getCooldown()) return;
 
                     if (Verifier.equalSnowflake(event.getMember(), message.getAuthor())) return;
+
+                    var logEntry = reputationData.getLogEntry(message);
+                    if (logEntry.isPresent()) {
+                        Member newReceiver;
+                        try {
+                            newReceiver = event.getGuild().retrieveMemberById(logEntry.get().getReceiverId()).complete();
+                        } catch (RuntimeException e) {
+                            return;
+                        }
+                        if (newReceiver == null) return;
+                        var lastRated = reputationData.getLastRatedDuration(event.getGuild(), event.getUser(), newReceiver.getUser(), ChronoUnit.MINUTES);
+                        if (lastRated < guildSettings.getCooldown()) return;
+                        reputationData.logReputation(event.getGuild(), event.getUser(), newReceiver.getUser(), message, null, ThankType.REACTION);
+                        return;
+                    }
 
                     reputationData.logReputation(event.getGuild(), event.getUser(), message.getAuthor(), message, null, ThankType.REACTION);
                     roleAssigner.update(message.getMember());
