@@ -11,6 +11,8 @@ import de.chojo.repbot.data.GuildData;
 import net.dv8tion.jda.api.Permission;
 
 import javax.sql.DataSource;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 public class Prefix extends SimpleCommand {
     private final GuildData data;
@@ -64,9 +66,24 @@ public class Prefix extends SimpleCommand {
         if (optArg.isEmpty()) return false;
         var prefix = optArg.get();
 
-        if (prefix.length() > 3) {
+        if (!prefix.startsWith("re:") && prefix.length() > 3) {
             eventWrapper.reply(eventWrapper.localize("error.prefixTooLong")).queue();
             return true;
+        }
+        if (prefix.startsWith("re:")) {
+            if (prefix.equalsIgnoreCase("re:")) {
+                eventWrapper.reply(eventWrapper.localize("error.invalidRegex")).queue();
+                return true;
+            }
+            if (!prefix.startsWith("^")) {
+                prefix = "^" + prefix;
+            }
+            try {
+                Pattern.compile(prefix);
+            } catch (PatternSyntaxException e) {
+                eventWrapper.reply(eventWrapper.localize("error.invalidRegex")).queue();
+                return true;
+            }
         }
         changePrefix(eventWrapper, prefix);
         return true;
