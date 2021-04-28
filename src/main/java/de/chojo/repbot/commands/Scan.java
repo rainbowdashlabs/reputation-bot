@@ -19,7 +19,6 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageHistory;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
 import javax.sql.DataSource;
@@ -228,7 +227,7 @@ public class Scan extends SimpleCommand {
         }
 
         public boolean scan() {
-            if(callsLeft == 0) return false;
+            if (callsLeft == 0) return false;
             var start = Instant.now();
             var size = history.size();
             var messages = history.retrievePast(Math.min(callsLeft, 100)).timeout(10, TimeUnit.SECONDS).complete();
@@ -239,7 +238,7 @@ public class Scan extends SimpleCommand {
 
             for (var message : messages) {
                 scanned();
-                var result = MessageAnalyzer.processMessage(pattern, message);
+                var result = MessageAnalyzer.processMessage(pattern, message, 0, false);
 
                 var donator = result.getDonator();
                 var receiver = result.getReceiver();

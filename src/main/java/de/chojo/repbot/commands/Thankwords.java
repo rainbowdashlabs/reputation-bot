@@ -10,6 +10,7 @@ import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.data.GuildData;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Message;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.sql.DataSource;
@@ -64,7 +65,7 @@ public class Thankwords extends SimpleCommand {
         try {
             Pattern.compile(pattern);
         } catch (PatternSyntaxException e) {
-            eventWrapper.replyErrorAndDelete(eventWrapper.localize("command.thankwords.error.invalidRegex"), 30);
+            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.invalidRegex"), 30);
             return true;
         }
         if (data.addThankWord(eventWrapper.getGuild(), pattern)) {
@@ -81,7 +82,7 @@ public class Thankwords extends SimpleCommand {
         try {
             Pattern.compile(pattern);
         } catch (PatternSyntaxException e) {
-            eventWrapper.replyErrorAndDelete(eventWrapper.localize("command.thankwords.error.invalidRegex"), 30);
+            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.invalidRegex"), 30);
             return true;
         }
         if (data.removeThankWord(eventWrapper.getGuild(), pattern)) {
@@ -113,7 +114,10 @@ public class Thankwords extends SimpleCommand {
 
         var guildSettings = optGuildSettings.get();
 
-        var result = MessageAnalyzer.processMessage(guildSettings.getThankwordPattern(), eventWrapper.getMessage());
+        var complete = eventWrapper.getChannel().getHistoryBefore(eventWrapper.getMessage(), 100).complete();
+        var targets = complete.getRetrievedHistory().stream().map(Message::getMember).collect(Collectors.toSet());
+
+        var result = MessageAnalyzer.processMessage(guildSettings.getThankwordPattern(), eventWrapper.getMessage(), guildSettings.getMaxMessageAge(), true);
 
         switch (result.getType()) {
             case FUZZY -> {
