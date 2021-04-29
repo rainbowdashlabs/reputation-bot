@@ -5,7 +5,9 @@ import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
+import de.chojo.repbot.util.HistoryUtil;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import org.jetbrains.annotations.Nullable;
@@ -13,6 +15,8 @@ import org.jetbrains.annotations.Nullable;
 import javax.sql.DataSource;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static de.chojo.repbot.util.MessageUtil.markMessage;
 
@@ -68,6 +72,13 @@ public class ReputationManager {
             }
             default -> throw new IllegalStateException("Unexpected value: " + type);
         }
+
+        // Check if user was recently seen in this channel.
+        var recentUsers = HistoryUtil.getRecentMembers(message, settings.getMaxMessageAge())
+                .stream()
+                .map(Member::getUser)
+                .collect(Collectors.toSet());
+        if(!recentUsers.contains(receiver)) return false;
 
         // block non vote channel
         if (!settings.isReputationChannel(message.getTextChannel())) return false;
