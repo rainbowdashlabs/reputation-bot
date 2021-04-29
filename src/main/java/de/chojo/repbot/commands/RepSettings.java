@@ -84,7 +84,7 @@ public class RepSettings extends SimpleCommand {
             return cooldown(eventWrapper, context.subContext(subcmd), guildSettings);
 
         }
-        return true;
+        return false;
     }
 
     private boolean cooldown(MessageEventWrapper eventWrapper, CommandContext context, GuildSettings guildSettings) {
@@ -267,13 +267,13 @@ public class RepSettings extends SimpleCommand {
     private boolean maxMessageAge(MessageEventWrapper eventWrapper, CommandContext context, GuildSettings guildSettings) {
         if (context.argsEmpty()) {
             eventWrapper.reply(eventWrapper.localize("command.repSettings.sub.maxMessageAge.get",
-                    Replacement.create("MINUTES", guildSettings.getCooldown()))).queue();
+                    Replacement.create("MINUTES", guildSettings.getMaxMessageAge()))).queue();
         }
         var optAge = context.argInt(0);
 
         if (optAge.isEmpty()) {
-            eventWrapper.replyErrorAndDelete(context.argString(0) + " is not a number", 30);
-            return false;
+            eventWrapper.replyErrorAndDelete(context.argString(0).get() + " is not a number", 30);
+            return true;
         }
         Integer integer = Math.max(0, optAge.get());
         if (data.updateMessageSettings(guildSettings.getGuild(), integer, null, null, null, null, null, null)) {
