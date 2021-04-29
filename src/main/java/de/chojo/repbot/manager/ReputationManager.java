@@ -67,7 +67,7 @@ public class ReputationManager {
                 if (!settings.isReactionActive()) return false;
             }
             default -> throw new IllegalStateException("Unexpected value: " + type);
-        }   
+        }
 
         // block non vote channel
         if (!settings.isReputationChannel(message.getTextChannel())) return false;
