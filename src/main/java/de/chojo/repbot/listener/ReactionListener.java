@@ -44,9 +44,16 @@ public class ReactionListener extends ListenerAdapter {
         if (voteRequests.containsKey(event.getMessageIdLong())) {
             if (event.getReactionEmote().isEmote()) return;
             var voteRequest = voteRequests.get(event.getMessageIdLong());
+            if (!voteRequest.getMember().equals(event.getMember())) return;
             if (voteRequest.getRemainingVotes() == 0) return;
             var target = voteRequest.getTarget(event.getReactionEmote().getEmoji());
-            if (target.isEmpty()) return;
+            if (target.isEmpty()) {
+                if (event.getReactionEmote().getEmoji().equals("🗑️")) {
+                    unregisterVote(voteRequest.getVoteMessage());
+                    voteRequest.getVoteMessage().delete().queue();
+                }
+                return;
+            }
 
             if (reputationManager.submitReputation(event.getGuild(), event.getUser(), target.get().getUser(), voteRequest.getRefMessage(), null, ThankType.REACTION)) {
                 voteRequest.voted();
@@ -62,27 +69,25 @@ public class ReactionListener extends ListenerAdapter {
         if (!guildSettings.isReactionActive()) return;
         if (!guildSettings.isReaction(event.getReaction().getReactionEmote())) return;
 
-        event.getChannel()
+        Message message = event.getChannel()
                 .retrieveMessageById(event.getMessageId())
-                .timeout(10, TimeUnit.SECONDS)
-                .queue(message -> {
-                    var recentMembers = HistoryUtil.getRecentMembers(message, guildSettings.getMaxMessageAge());
-                    if (!recentMembers.contains(event.getMember())) return;
+                .timeout(10, TimeUnit.SECONDS).complete();
+        var recentMembers = HistoryUtil.getRecentMembers(message, guildSettings.getMaxMessageAge());
+        if (!recentMembers.contains(event.getMember())) return;
 
-                    var logEntry = reputationData.getLogEntry(message);
-                    if (logEntry.isPresent()) {
-                        Member newReceiver;
-                        try {
-                            newReceiver = event.getGuild().retrieveMemberById(logEntry.get().getReceiverId()).complete();
-                        } catch (RuntimeException e) {
-                            return;
-                        }
-                        if (newReceiver == null) return;
-                        reputationManager.submitReputation(event.getGuild(), event.getUser(), newReceiver.getUser(), message, null, ThankType.REACTION);
-                        return;
-                    }
-                    reputationManager.submitReputation(event.getGuild(), event.getUser(), message.getAuthor(), message, null, ThankType.REACTION);
-                }, err -> log.error("Could not retrieve reaction message.", err));
+        var logEntry = reputationData.getLogEntry(message);
+        if (logEntry.isPresent()) {
+            Member newReceiver;
+            try {
+                newReceiver = event.getGuild().retrieveMemberById(logEntry.get().getReceiverId()).complete();
+            } catch (RuntimeException e) {
+                return;
+            }
+            if (newReceiver == null) return;
+            reputationManager.submitReputation(event.getGuild(), event.getUser(), newReceiver.getUser(), message, null, ThankType.REACTION);
+            return;
+        }
+        reputationManager.submitReputation(event.getGuild(), event.getUser(), message.getAuthor(), message, null, ThankType.REACTION);
     }
 
     public void registerAfterVote(Message message, VoteRequest request) {

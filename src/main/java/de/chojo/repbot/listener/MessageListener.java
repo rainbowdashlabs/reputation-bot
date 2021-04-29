@@ -5,7 +5,6 @@ import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.analyzer.ThankType;
-import de.chojo.repbot.config.ConfigFile;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
@@ -152,6 +151,7 @@ public class MessageListener extends ListenerAdapter {
                 voteMessage.addReaction(reaction).queueAfter(i * 250L, TimeUnit.MILLISECONDS);
                 i++;
             }
+            voteMessage.addReaction("🗑️").queueAfter(i * 250L, TimeUnit.MILLISECONDS);
             voteMessage.delete().queueAfter(1, TimeUnit.MINUTES, e -> reactionListener.unregisterVote(voteMessage), err -> reactionListener.unregisterVote(voteMessage));
         });
     }
