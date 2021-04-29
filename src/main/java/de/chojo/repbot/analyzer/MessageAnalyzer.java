@@ -34,6 +34,10 @@ public class MessageAnalyzer {
         Set<Member> targets = Collections.emptySet();
         if (limitTargets) {
             targets = HistoryUtil.getRecentMembers(message, maxHistoryAge);
+
+            if (targets.size() == 1) {
+                return AnalyzerResult.mention(message.getAuthor(), new ArrayList<>(targets));
+            }
         }
 
         var mentionedMembers = message.getMentionedUsers();
