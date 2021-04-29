@@ -28,6 +28,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -76,6 +77,13 @@ public class MessageListener extends ListenerAdapter {
 
         var message = event.getMessage();
 
+        var prefix = settings.getPrefix().orElse(configuration.getDefaultPrefix());
+        if (prefix.startsWith("re:")) {
+            var compile = Pattern.compile(prefix.substring(3));
+            if(compile.matcher(message.getContentRaw()).find()) return;
+        }else {
+            if (message.getContentRaw().startsWith(prefix)) return;
+        }
         if (message.getContentRaw().startsWith(settings.getPrefix().orElse(configuration.getDefaultPrefix()))) {
             return;
         }
