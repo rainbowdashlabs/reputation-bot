@@ -4,6 +4,7 @@ import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
+import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.config.ConfigFile;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
@@ -84,6 +85,8 @@ public class MessageListener extends ListenerAdapter {
 
         var donator = analyzerResult.getDonator();
 
+        if (analyzerResult.getType() == ThankType.NO_MATCH) return;
+
         var resultType = analyzerResult.getType();
         var resolveNoTarget = true;
         for (var result : analyzerResult.getReceivers()) {
@@ -91,7 +94,6 @@ public class MessageListener extends ListenerAdapter {
             switch (resultType) {
                 case FUZZY -> {
                     if (!settings.isFuzzyActive()) return;
-                    if (result.getWeight() < 0.85) return;
                     reputationManager.submitReputation(guild, donator, result.getReference().getUser(), message, refMessage, resultType);
                     resolveNoTarget = false;
                 }
