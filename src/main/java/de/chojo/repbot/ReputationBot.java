@@ -25,6 +25,7 @@ import de.chojo.repbot.listener.MessageListener;
 import de.chojo.repbot.listener.ReactionListener;
 import de.chojo.repbot.listener.StateListener;
 import de.chojo.repbot.manager.MemberCacheManager;
+import de.chojo.repbot.manager.ReputationManager;
 import de.chojo.repbot.manager.RoleAssigner;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -110,12 +111,13 @@ public class ReputationBot {
 
     private void initBot() {
         var roleAssigner = new RoleAssigner(dataSource);
-        var reactionListener = new ReactionListener(dataSource, roleAssigner, localizer);
+        var reputationManager = new ReputationManager(dataSource, roleAssigner);
+        var reactionListener = new ReactionListener(dataSource, localizer, reputationManager);
         var stateListener = new StateListener(dataSource);
         cleaner.scheduleAtFixedRate(stateListener, 12, 12, TimeUnit.HOURS);
 
         shardManager.addEventListener(
-                new MessageListener(dataSource, configuration, roleAssigner, memberCacheManager, reactionListener, localizer),
+                new MessageListener(dataSource, configuration, memberCacheManager, reactionListener, localizer, reputationManager),
                 stateListener,
                 reactionListener);
         var data = new GuildData(dataSource);

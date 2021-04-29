@@ -3,32 +3,26 @@ package de.chojo.repbot.listener;
 import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
-import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
-import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.config.ConfigFile;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.manager.MemberCacheManager;
-import de.chojo.repbot.manager.RoleAssigner;
+import de.chojo.repbot.manager.ReputationManager;
 import de.chojo.repbot.util.HistoryUtil;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.MessageBulkDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.sql.DataSource;
 import java.awt.Color;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -36,27 +30,25 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static de.chojo.repbot.util.MessageUtil.markMessage;
-
 @Slf4j
 public class MessageListener extends ListenerAdapter {
     private final Configuration configuration;
     private final GuildData guildData;
     private final ReputationData reputationData;
-    private final RoleAssigner roleAssigner;
     private final MemberCacheManager memberCacheManager;
     private final String[] requestEmojis = new String[] {"1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"};
     private final ReactionListener reactionListener;
     private final Localizer localizer;
+    private final ReputationManager reputationManager;
 
-    public MessageListener(DataSource dataSource, Configuration configuration, RoleAssigner roleAssigner, MemberCacheManager memberCacheManager, ReactionListener reactionListener, Localizer localizer) {
+    public MessageListener(DataSource dataSource, Configuration configuration, MemberCacheManager memberCacheManager, ReactionListener reactionListener, Localizer localizer, ReputationManager reputationManager) {
         guildData = new GuildData(dataSource);
         reputationData = new ReputationData(dataSource);
         this.configuration = configuration;
-        this.roleAssigner = roleAssigner;
         this.memberCacheManager = memberCacheManager;
         this.reactionListener = reactionListener;
         this.localizer = localizer;
+        this.reputationManager = reputationManager;
     }
 
     @Override
@@ -88,38 +80,36 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        var result = MessageAnalyzer.processMessage(thankwordPattern, message, settings.getMaxMessageAge(), true);
+        var analyzerResult = MessageAnalyzer.processMessage(thankwordPattern, message, settings.getMaxMessageAge(), true, 0.85, 3);
 
-        var receiver = result.getReceiver();
-        var donator = result.getDonator();
-        var resultType = result.getType();
-        if (resultType != ThankType.NO_MATCH) {
-            if (Verifier.equalSnowflake(donator, receiver)) return;
-        }
+        var donator = analyzerResult.getDonator();
 
-        var refMessage = result.getReferenceMessage();
-
-        switch (resultType) {
-            case FUZZY -> {
-                if (!settings.isFuzzyActive()) return;
-                if (result.getConfidenceScore() < 0.85) {
-                    resolveNoTarget(message, settings);
-                    return;
+        var resultType = analyzerResult.getType();
+        var resolveNoTarget = true;
+        for (var result : analyzerResult.getReceivers()) {
+            var refMessage = analyzerResult.getReferenceMessage();
+            switch (resultType) {
+                case FUZZY -> {
+                    if (!settings.isFuzzyActive()) return;
+                    if (result.getWeight() < 0.85) return;
+                    reputationManager.submitReputation(guild, donator, result.getReference().getUser(), message, refMessage, resultType);
+                    resolveNoTarget = false;
                 }
-                submitRepVote(guild, donator, receiver, message, refMessage, settings, resultType);
+                case MENTION -> {
+                    if (!settings.isMentionActive()) return;
+                    reputationManager.submitReputation(guild, donator, result.getReference().getUser(), message, refMessage, resultType);
+                    resolveNoTarget = false;
+                }
+                case ANSWER -> {
+                    if (!settings.isAnswerActive()) return;
+                    if (!settings.isFreshMessage(refMessage)) return;
+                    reputationManager.submitReputation(guild, donator, result.getReference().getUser(), message, refMessage, resultType);
+                    resolveNoTarget = false;
+                }
             }
-            case MENTION -> {
-                if (!settings.isMentionActive()) return;
-                submitRepVote(guild, donator, receiver, message, refMessage, settings, resultType);
-            }
-            case ANSWER -> {
-                if (!settings.isAnswerActive()) return;
-                if (!settings.isFreshMessage(refMessage)) return;
-                submitRepVote(guild, donator, receiver, message, refMessage, settings, resultType);
-            }
-            case NO_TARGET -> resolveNoTarget(message, settings);
-            case NO_MATCH -> {
-            }
+        }
+        if (resolveNoTarget) {
+            resolveNoTarget(message, settings);
         }
     }
 
@@ -155,23 +145,12 @@ public class MessageListener extends ListenerAdapter {
 
         message.reply(builder.build()).queue(voteMessage -> {
             reactionListener.registerAfterVote(voteMessage, new VoteRequest(message.getMember(), builder, voteMessage, message, targets, Math.min(3, targets.size())));
-            int i = 0;
+            var i = 0;
             for (var reaction : targets.keySet()) {
                 voteMessage.addReaction(reaction).queueAfter(i * 250L, TimeUnit.MILLISECONDS);
                 i++;
             }
             voteMessage.delete().queueAfter(1, TimeUnit.MINUTES, e -> reactionListener.unregisterVote(voteMessage), err -> reactionListener.unregisterVote(voteMessage));
         });
-    }
-
-    private void submitRepVote(Guild guild, User donator, User receiver, Message scope, Message refMessage, GuildSettings settings, ThankType type) {
-        if (receiver.isBot()) return;
-        var lastRatedDuration = reputationData.getLastRatedDuration(guild, donator, receiver, ChronoUnit.MINUTES);
-        if (lastRatedDuration < settings.getCooldown()) return;
-
-        if (reputationData.logReputation(guild, donator, receiver, scope, refMessage, type)) {
-            markMessage(scope, refMessage, settings);
-            roleAssigner.update(guild.getMember(receiver));
-        }
     }
 }
