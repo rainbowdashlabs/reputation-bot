@@ -13,9 +13,9 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class SqlUpdater {
-    private final DataSource source;
     public static final int MAJOR = 1;
     public static final int PATCH = 0;
+    private final DataSource source;
     private final String versionTable;
     private final String[] schemas;
     private final QueryReplacement[] replacements;
@@ -25,6 +25,10 @@ public class SqlUpdater {
         this.versionTable = versionTable;
         this.replacements = replacements;
         this.schemas = schemas;
+    }
+
+    public static SqlUpdaterBuilder builder(DataSource dataSource) {
+        return new SqlUpdaterBuilder(dataSource);
     }
 
     public void init() throws IOException, SQLException {
@@ -250,11 +254,6 @@ public class SqlUpdater {
         }
         return result;
     }
-
-    public static SqlUpdaterBuilder builder(DataSource dataSource) {
-        return new SqlUpdaterBuilder(dataSource);
-    }
-
 
     public static class SqlUpdaterBuilder {
         private final DataSource source;

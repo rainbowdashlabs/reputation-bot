@@ -1,7 +1,6 @@
 package de.chojo.repbot.listener;
 
 import de.chojo.repbot.data.GuildData;
-import de.chojo.repbot.data.wrapper.RemovalTask;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
@@ -11,7 +10,6 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import javax.sql.DataSource;
-import java.util.List;
 
 public class StateListener extends ListenerAdapter implements Runnable {
 

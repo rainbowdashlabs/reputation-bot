@@ -5,7 +5,6 @@ import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
-import de.chojo.repbot.config.ConfigFile;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
 import net.dv8tion.jda.api.Permission;
@@ -50,7 +49,7 @@ public class Prefix extends SimpleCommand {
     }
 
     private boolean reset(MessageEventWrapper eventWrapper) {
-        changePrefix(eventWrapper, configuration.get(ConfigFile::getDefaultPrefix));
+        changePrefix(eventWrapper, configuration.getDefaultPrefix());
         return true;
     }
 
@@ -90,7 +89,7 @@ public class Prefix extends SimpleCommand {
     }
 
     private boolean get(MessageEventWrapper eventWrapper) {
-        var prefix = data.getPrefix(eventWrapper.getGuild()).orElse(configuration.get(ConfigFile::getDefaultPrefix));
+        var prefix = data.getPrefix(eventWrapper.getGuild()).orElse(configuration.getDefaultPrefix());
         eventWrapper.reply(eventWrapper.localize("command.prefix.show",
                 Replacement.create("PREFIX", prefix, Format.CODE))).queue();
         return true;

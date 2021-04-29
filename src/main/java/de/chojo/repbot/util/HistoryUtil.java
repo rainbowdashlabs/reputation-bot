@@ -6,8 +6,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -30,7 +30,7 @@ public class HistoryUtil {
         Set<Member> targets;
         var history = message.getChannel().getHistoryBefore(message, 50).complete();
         var oldest = Instant.now().minus(maxHistoryAge, ChronoUnit.MINUTES);
-        List<Message> retrievedHistory = history.getRetrievedHistory();
+        var retrievedHistory = new ArrayList<>(history.getRetrievedHistory());
         // add user message
         retrievedHistory.add(message);
         var first = retrievedHistory.stream().map(m -> m.getTimeCreated().toInstant()).min(Instant::compareTo);

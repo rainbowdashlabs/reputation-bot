@@ -91,14 +91,14 @@ public class ReputationBot {
     private void initDatabase() throws SQLException, IOException {
         var connectionPool = getConnectionPool(null);
 
-        var schema = configuration.get(ConfigFile::getDatabase).getSchema();
+        var schema = configuration.getDatabase().getSchema();
         SqlUpdater.builder(connectionPool)
                 .setReplacements(new QueryReplacement("repbot_schema", schema))
                 .setVersionTable(schema + ".repbot_version")
                 .setSchemas(schema)
                 .execute();
 
-        dataSource = getConnectionPool(configuration.get().getDatabase().getSchema());
+        dataSource = getConnectionPool(configuration.getDatabase().getSchema());
     }
 
     private void initLocalization() {
@@ -121,7 +121,7 @@ public class ReputationBot {
                 stateListener,
                 reactionListener);
         var data = new GuildData(dataSource);
-        var hub = CommandHub.builder(shardManager, configuration.get().getDefaultPrefix())
+        var hub = CommandHub.builder(shardManager, configuration.getDefaultPrefix())
                 .receiveGuildMessage()
                 .receiveGuildMessagesUpdates()
                 .withConversationSystem()
@@ -179,7 +179,7 @@ public class ReputationBot {
     private void initJDA() throws LoginException {
         scan = new Scan(dataSource, localizer);
         memberCacheManager = new MemberCacheManager(scan);
-        shardManager = DefaultShardManagerBuilder.createDefault(configuration.get(ConfigFile::getToken))
+        shardManager = DefaultShardManagerBuilder.createDefault(configuration.getToken())
                 .enableIntents(
                         GatewayIntent.GUILD_MESSAGE_REACTIONS,
                         GatewayIntent.GUILD_MESSAGES,
@@ -194,7 +194,7 @@ public class ReputationBot {
     }
 
     private HikariDataSource getConnectionPool(@Nullable String schema) {
-        var db = configuration.get(ConfigFile::getDatabase);
+        var db = configuration.getDatabase();
         var props = new Properties();
         props.setProperty("dataSourceClassName", PGSimpleDataSource.class.getName());
         props.setProperty("dataSource.serverName", db.getHost());

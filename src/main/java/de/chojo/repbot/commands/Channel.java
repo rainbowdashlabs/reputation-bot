@@ -7,7 +7,6 @@ import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.repbot.data.GuildData;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.IMentionable;
 
 import javax.sql.DataSource;
@@ -48,7 +47,7 @@ public class Channel extends SimpleCommand {
             return add(messageEventWrapper, commandContext.subContext(subCmd));
         }
         if ("list".equalsIgnoreCase(subCmd)) {
-            return list(messageEventWrapper, commandContext.subContext(subCmd));
+            return list(messageEventWrapper);
         }
         return false;
     }
@@ -92,7 +91,7 @@ public class Channel extends SimpleCommand {
         return true;
     }
 
-    private boolean list(MessageEventWrapper eventWrapper, CommandContext context) {
+    private boolean list(MessageEventWrapper eventWrapper) {
         var guildSettings = data.getGuildSettings(eventWrapper.getGuild());
         if (guildSettings.isEmpty()) return true;
 

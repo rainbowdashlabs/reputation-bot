@@ -3,9 +3,7 @@ package de.chojo.repbot.manager;
 import de.chojo.repbot.commands.Scan;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
-import net.dv8tion.jda.internal.utils.CacheConsumer;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;

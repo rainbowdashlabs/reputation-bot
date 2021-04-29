@@ -77,7 +77,7 @@ public class MessageListener extends ListenerAdapter {
 
         var message = event.getMessage();
 
-        if (message.getContentRaw().startsWith(settings.getPrefix().orElse(configuration.get(ConfigFile::getDefaultPrefix)))) {
+        if (message.getContentRaw().startsWith(settings.getPrefix().orElse(configuration.getDefaultPrefix()))) {
             return;
         }
 

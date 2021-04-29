@@ -24,10 +24,10 @@ import java.awt.Color;
 import java.util.stream.Collectors;
 
 public class Reputation extends SimpleCommand {
+    private static final int BAR_SIZE = 20;
     private final ReputationData reputationData;
     private final GuildData guildData;
     private final Localizer loc;
-    private static final int BAR_SIZE = 20;
 
     public Reputation(DataSource dataSource, Localizer localizer) {
         super("reputation",

@@ -10,7 +10,6 @@ import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.data.GuildData;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Message;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.sql.DataSource;
@@ -114,50 +113,54 @@ public class Thankwords extends SimpleCommand {
 
         var guildSettings = optGuildSettings.get();
 
-        var complete = eventWrapper.getChannel().getHistoryBefore(eventWrapper.getMessage(), 100).complete();
-        var targets = complete.getRetrievedHistory().stream().map(Message::getMember).collect(Collectors.toSet());
-
-        var result = MessageAnalyzer.processMessage(guildSettings.getThankwordPattern(), eventWrapper.getMessage(), guildSettings.getMaxMessageAge(), true);
-
-        switch (result.getType()) {
-            case FUZZY -> {
-                var match = new LocalizedEmbedBuilder(loc, eventWrapper)
-                        .setTitle("command.thankwords.sub.check.match.fuzzy")
-                        .setDescription(
-                                eventWrapper.localize("command.thankwords.sub.check.result",
-                                        Replacement.create("DONATOR", result.getDonator().getAsMention()),
-                                        Replacement.create("RECEIVER", result.getReceivers().getAsMention())) + "\n"
-                                        + eventWrapper.localize("command.thankwords.sub.check.confidence",
-                                        Replacement.create("SCORE", String.format("%.3f", result.getConfidenceScore()))));
-
-                if (result.getConfidenceScore() < 0.85) {
-                    match.setFooter("command.thankwords.sub.check.notConfident");
-                }
-
-                eventWrapper.reply(match.build()).queue();
-            }
-            case MENTION -> {
-                var match = new LocalizedEmbedBuilder(loc, eventWrapper)
-                        .setTitle("command.thankwords.sub.check.match.mention")
-                        .setDescription(
-                                eventWrapper.localize("command.thankwords.sub.check.result",
-                                        Replacement.create("DONATOR", result.getDonator().getAsMention()),
-                                        Replacement.create("RECEIVER", result.getReceivers().getAsMention())));
-                eventWrapper.reply(match.build()).queue();
-            }
-            case ANSWER -> {
-                var match = new LocalizedEmbedBuilder(loc, eventWrapper)
-                        .setTitle("command.thankwords.sub.check.match.answer")
-                        .setDescription(
-                                eventWrapper.localize("command.thankwords.sub.check.result",
-                                        Replacement.create("DONATOR", result.getDonator().getAsMention()),
-                                        Replacement.create("RECEIVER", result.getReceivers().getAsMention())) + "\n"
-                                        + eventWrapper.localize("command.thankwords.sub.check.reference",
-                                        Replacement.create("URL", result.getReferenceMessage().getJumpUrl())));
-                eventWrapper.reply(match.build()).queue();
-            }
-            case NO_MATCH -> eventWrapper.reply(eventWrapper.localize("command.thankwords.sub.check.match.noMatch")).queue();
+        var result = MessageAnalyzer.processMessage(guildSettings.getThankwordPattern(), eventWrapper.getMessage(), guildSettings.getMaxMessageAge(), true, 0.85, 3);
+        var builder = new LocalizedEmbedBuilder(eventWrapper);
+        if (result.getReceivers().isEmpty()) {
+            eventWrapper.reply(eventWrapper.localize("command.thankwords.sub.check.match.noMatch")).queue();
+            return true;
         }
+
+        for (var receiver : result.getReceivers()) {
+            switch (result.getType()) {
+                case FUZZY -> {
+                    builder.addField("command.thankwords.sub.check.match.fuzzy",
+                            eventWrapper.localize("command.thankwords.sub.check.result",
+                                    Replacement.create("DONATOR", result.getDonator().getAsMention()),
+                                    Replacement.create("RECEIVER", receiver.getReference().getAsMention())) + "\n"
+                                    + eventWrapper.localize("command.thankwords.sub.check.confidence",
+                                    Replacement.create("SCORE", String.format("%.3f", receiver.getWeight()))),
+                            false);
+                }
+                case MENTION -> {
+                    builder.addField("command.thankwords.sub.check.match.mention",
+                            eventWrapper.localize("command.thankwords.sub.check.result",
+                                    Replacement.create("DONATOR", result.getDonator().getAsMention()),
+                                    Replacement.create("RECEIVER", receiver.getReference().getAsMention())),
+                            false);
+                }
+                case ANSWER -> {
+                    builder.addField("command.thankwords.sub.check.match.answer",
+                            eventWrapper.localize("command.thankwords.sub.check.result",
+                                    Replacement.create("DONATOR", result.getDonator().getAsMention()),
+                                    Replacement.create("RECEIVER", receiver.getReference().getAsMention())) + "\n"
+                                    + eventWrapper.localize("command.thankwords.sub.check.reference",
+                                    Replacement.create("URL", result.getReferenceMessage().getJumpUrl())),
+                            false);
+
+                    var match = new LocalizedEmbedBuilder(loc, eventWrapper)
+                            .setTitle("command.thankwords.sub.check.match.answer")
+                            .setDescription(
+                                    eventWrapper.localize("command.thankwords.sub.check.result",
+                                            Replacement.create("DONATOR", result.getDonator().getAsMention()),
+                                            Replacement.create("RECEIVER", receiver.getReference().getAsMention())) + "\n"
+                                            + eventWrapper.localize("command.thankwords.sub.check.reference",
+                                            Replacement.create("URL", result.getReferenceMessage().getJumpUrl())));
+                    eventWrapper.reply(match.build()).queue();
+                }
+            }
+        }
+
+        eventWrapper.reply(builder.build()).queue();
         return true;
     }
 }

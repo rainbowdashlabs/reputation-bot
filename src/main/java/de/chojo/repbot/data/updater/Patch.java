@@ -6,7 +6,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 class Patch {
-    private int major;
-    private int patch;
-    private String query;
+    private final int major;
+    private final int patch;
+    private final String query;
 }
