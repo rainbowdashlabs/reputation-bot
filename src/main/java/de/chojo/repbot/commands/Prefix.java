@@ -74,15 +74,17 @@ public class Prefix extends SimpleCommand {
                 eventWrapper.reply(eventWrapper.localize("error.invalidRegex")).queue();
                 return true;
             }
-            if (!prefix.startsWith("^")) {
-                prefix = "^" + prefix;
+            String substring = prefix.substring(3);
+            if (!substring.startsWith("^")) {
+                substring= "^" + substring;
             }
             try {
-                Pattern.compile(prefix);
+                Pattern.compile(substring);
             } catch (PatternSyntaxException e) {
                 eventWrapper.reply(eventWrapper.localize("error.invalidRegex")).queue();
                 return true;
             }
+            prefix = "re:" + substring;
         }
         changePrefix(eventWrapper, prefix);
         return true;
