@@ -174,7 +174,7 @@ public class SqlUpdater {
     }
 
     private boolean patchExists(int major, int patch) {
-        return getClass().getClassLoader().getResource("database/" + major + "/patch-" + patch + ".sql") != null;
+        return getClass().getClassLoader().getResource("database/" + major + "/patch_" + patch + ".sql") != null;
     }
 
     private String loadPatch(int major, int patch) throws IOException {
