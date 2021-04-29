@@ -28,7 +28,7 @@ public class MessageAnalyzer {
             var referencedMessage = message.getReferencedMessage();
             if (referencedMessage == null) return AnalyzerResult.noMatch();
 
-            return AnalyzerResult.answer(message.getAuthor(), message.getGuild().retrieveMemberById(message.getAuthor().getIdLong()).complete(), referencedMessage);
+            return AnalyzerResult.answer(message.getAuthor(), message.getGuild().retrieveMemberById(referencedMessage.getAuthor().getIdLong()).complete(), referencedMessage);
         }
 
         Set<Member> targets = Collections.emptySet();
