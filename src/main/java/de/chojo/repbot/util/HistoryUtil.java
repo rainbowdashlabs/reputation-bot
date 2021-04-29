@@ -2,12 +2,12 @@ package de.chojo.repbot.util;
 
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -30,15 +30,17 @@ public class HistoryUtil {
         Set<Member> targets;
         var history = message.getChannel().getHistoryBefore(message, 50).complete();
         var oldest = Instant.now().minus(maxHistoryAge, ChronoUnit.MINUTES);
-
-        var first = history.getRetrievedHistory().stream().map(m -> m.getTimeCreated().toInstant()).min(Instant::compareTo);
+        List<Message> retrievedHistory = history.getRetrievedHistory();
+        // add user message
+        retrievedHistory.add(message);
+        var first = retrievedHistory.stream().map(m -> m.getTimeCreated().toInstant()).min(Instant::compareTo);
 
         if (first.isPresent()) {
             oldest = first.get().isAfter(oldest) ? first.get() : oldest;
         }
 
         var finalOldest = oldest;
-        targets = history.getRetrievedHistory().stream()
+        targets = retrievedHistory.stream()
                 // filter message for only recent messages and after the first message of the user.
                 .filter(m -> m.getTimeCreated().toInstant().isAfter(finalOldest))
                 .map(Message::getAuthor)
