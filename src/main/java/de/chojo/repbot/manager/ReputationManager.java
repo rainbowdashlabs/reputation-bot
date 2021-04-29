@@ -15,7 +15,6 @@ import org.jetbrains.annotations.Nullable;
 import javax.sql.DataSource;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static de.chojo.repbot.util.MessageUtil.markMessage;
@@ -78,7 +77,7 @@ public class ReputationManager {
                 .stream()
                 .map(Member::getUser)
                 .collect(Collectors.toSet());
-        if(!recentUsers.contains(receiver)) return false;
+        if (!recentUsers.contains(receiver)) return false;
 
         // block non vote channel
         if (!settings.isReputationChannel(message.getTextChannel())) return false;

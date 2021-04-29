@@ -16,7 +16,6 @@ import de.chojo.repbot.commands.Roles;
 import de.chojo.repbot.commands.Scan;
 import de.chojo.repbot.commands.Source;
 import de.chojo.repbot.commands.Thankwords;
-import de.chojo.repbot.config.ConfigFile;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.updater.QueryReplacement;

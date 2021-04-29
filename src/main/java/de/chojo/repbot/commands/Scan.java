@@ -252,7 +252,6 @@ public class Scan extends SimpleCommand {
                 var result = MessageAnalyzer.processMessage(pattern, message, 0, false, 0.85, 3);
 
                 var donator = result.getDonator();
-                var receiver = result.getReceivers();
                 var refMessage = result.getReferenceMessage();
                 for (var resultReceiver : result.getReceivers()) {
                     switch (result.getType()) {
