@@ -126,7 +126,7 @@ public class Thankwords extends SimpleCommand {
                         .setDescription(
                                 eventWrapper.localize("command.thankwords.sub.check.result",
                                         Replacement.create("DONATOR", result.getDonator().getAsMention()),
-                                        Replacement.create("RECEIVER", result.getReceiver().getAsMention())) + "\n"
+                                        Replacement.create("RECEIVER", result.getReceivers().getAsMention())) + "\n"
                                         + eventWrapper.localize("command.thankwords.sub.check.confidence",
                                         Replacement.create("SCORE", String.format("%.3f", result.getConfidenceScore()))));
 
@@ -142,7 +142,7 @@ public class Thankwords extends SimpleCommand {
                         .setDescription(
                                 eventWrapper.localize("command.thankwords.sub.check.result",
                                         Replacement.create("DONATOR", result.getDonator().getAsMention()),
-                                        Replacement.create("RECEIVER", result.getReceiver().getAsMention())));
+                                        Replacement.create("RECEIVER", result.getReceivers().getAsMention())));
                 eventWrapper.reply(match.build()).queue();
             }
             case ANSWER -> {
@@ -151,7 +151,7 @@ public class Thankwords extends SimpleCommand {
                         .setDescription(
                                 eventWrapper.localize("command.thankwords.sub.check.result",
                                         Replacement.create("DONATOR", result.getDonator().getAsMention()),
-                                        Replacement.create("RECEIVER", result.getReceiver().getAsMention())) + "\n"
+                                        Replacement.create("RECEIVER", result.getReceivers().getAsMention())) + "\n"
                                         + eventWrapper.localize("command.thankwords.sub.check.reference",
                                         Replacement.create("URL", result.getReferenceMessage().getJumpUrl())));
                 eventWrapper.reply(match.build()).queue();

@@ -241,7 +241,7 @@ public class Scan extends SimpleCommand {
                 var result = MessageAnalyzer.processMessage(pattern, message, 0, false);
 
                 var donator = result.getDonator();
-                var receiver = result.getReceiver();
+                var receiver = result.getReceivers();
                 var refMessage = result.getReferenceMessage();
                 switch (result.getType()) {
                     case FUZZY -> {
