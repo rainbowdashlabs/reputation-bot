@@ -2,7 +2,7 @@ FROM openjdk:15-jdk-alpine
 COPY . .
 RUN apk update \
     && apk add git
-RUN git clone https://github.com/RainbowDashLabs/cdja-util.git \
+RUN git clone https://github.com/RainbowDashLabs/cjda-util.git \
     && cd cdja-util \
     && ./gradlew publishToMavenLocal \
     && cd ..
