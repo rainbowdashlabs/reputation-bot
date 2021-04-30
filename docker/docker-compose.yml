@@ -8,8 +8,8 @@ services:
     depends_on:
       - database
     volumes:
-      - ./config.json:/config.json
-      - ./log4j2.xml:/log4j2.xml
+      - ${PWD}/config.json:/config.json
+      - ${PWD}/log4j2.xml:/log4j2.xml
   database:
     networks:
       - repbot
