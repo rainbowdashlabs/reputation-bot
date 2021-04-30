@@ -23,9 +23,6 @@ repositories {
     maven {
         url = uri("https://eldonexus.de/repository/maven-releases")
     }
-    maven {
-        url = uri("https://maven.pkg.github.com")
-    }
     mavenCentral()
     maven {
         name = "m2-dv8tion"
@@ -38,7 +35,7 @@ dependencies {
     implementation("net.dv8tion", "JDA", "4.2.1_259") {
         exclude(module = "opus-java")
     }
-    implementation("de.chojo", "cjda-util", "1.0")
+    implementation("de.chojo", "cjda-util", "1.0.0")
     // database
     implementation("org.postgresql", "postgresql", "42.2.19")
     implementation("com.zaxxer", "HikariCP", "4.0.3")
