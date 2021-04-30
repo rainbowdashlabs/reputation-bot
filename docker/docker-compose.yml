@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   app:
-    image: chojo/reputation-image:latest
+    image: chojo/reputation-bot:latest
     networks:
       - repbot
     depends_on:
