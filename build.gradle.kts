@@ -17,9 +17,11 @@ java.sourceCompatibility = JavaVersion.VERSION_15
 java.targetCompatibility = JavaVersion.VERSION_15
 
 repositories {
-    mavenLocal()
     maven {
         url = uri("https://repo.maven.apache.org/maven2/")
+    }
+    maven {
+        url = uri("https://eldonexus.de/repository/maven-releases")
     }
     maven {
         url = uri("https://maven.pkg.github.com")

@@ -16,13 +16,15 @@ import de.chojo.repbot.commands.Roles;
 import de.chojo.repbot.commands.Scan;
 import de.chojo.repbot.commands.Source;
 import de.chojo.repbot.commands.Thankwords;
-import de.chojo.repbot.config.ConfigFile;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
+import de.chojo.repbot.data.updater.QueryReplacement;
+import de.chojo.repbot.data.updater.SqlUpdater;
 import de.chojo.repbot.listener.MessageListener;
 import de.chojo.repbot.listener.ReactionListener;
 import de.chojo.repbot.listener.StateListener;
 import de.chojo.repbot.manager.MemberCacheManager;
+import de.chojo.repbot.manager.ReputationManager;
 import de.chojo.repbot.manager.RoleAssigner;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -40,12 +42,15 @@ import java.util.Arrays;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
 public class ReputationBot {
     private static ReputationBot instance;
     private final ExecutorService executorService = Executors.newFixedThreadPool(50);
+    private final ScheduledExecutorService cleaner = Executors.newScheduledThreadPool(1);
     private ShardManager shardManager;
     private HikariDataSource dataSource;
     private Configuration configuration;
@@ -84,25 +89,15 @@ public class ReputationBot {
 
     private void initDatabase() throws SQLException, IOException {
         var connectionPool = getConnectionPool(null);
-        try (var conn = connectionPool.getConnection(); var stmt = conn.prepareStatement(
-                "CREATE SCHEMA IF NOT EXISTS " + configuration.getConfigFile().getDatabase().getSchema())) {
-            stmt.executeUpdate();
-        }
 
-        connectionPool.close();
+        var schema = configuration.getDatabase().getSchema();
+        SqlUpdater.builder(connectionPool)
+                .setReplacements(new QueryReplacement("repbot_schema", schema))
+                .setVersionTable(schema + ".repbot_version")
+                .setSchemas(schema)
+                .execute();
 
-        dataSource = getConnectionPool(configuration.get().getDatabase().getSchema());
-
-        try (var in = getClass().getClassLoader().getResourceAsStream("dbsetup.sql")) {
-            var upgrade = new String(in.readAllBytes());
-            try (var conn = dataSource.getConnection(); var stmt = conn.prepareStatement(upgrade)) {
-                stmt.execute();
-            }
-        } catch (IOException e) {
-            log.info("Could not read upgrade script.", e);
-            throw e;
-        }
-        log.info("Database update done.");
+        dataSource = getConnectionPool(configuration.getDatabase().getSchema());
     }
 
     private void initLocalization() {
@@ -115,13 +110,17 @@ public class ReputationBot {
 
     private void initBot() {
         var roleAssigner = new RoleAssigner(dataSource);
+        var reputationManager = new ReputationManager(dataSource, roleAssigner);
+        var reactionListener = new ReactionListener(dataSource, localizer, reputationManager);
+        var stateListener = new StateListener(dataSource);
+        cleaner.scheduleAtFixedRate(stateListener, 12, 12, TimeUnit.HOURS);
 
         shardManager.addEventListener(
-                new MessageListener(dataSource, configuration, roleAssigner, memberCacheManager),
-                new StateListener(dataSource),
-                new ReactionListener(dataSource, roleAssigner));
+                new MessageListener(dataSource, configuration, memberCacheManager, reactionListener, localizer, reputationManager),
+                stateListener,
+                reactionListener);
         var data = new GuildData(dataSource);
-        var hub = CommandHub.builder(shardManager, configuration.get().getDefaultPrefix())
+        var hub = CommandHub.builder(shardManager, configuration.getDefaultPrefix())
                 .receiveGuildMessage()
                 .receiveGuildMessagesUpdates()
                 .withConversationSystem()
@@ -160,13 +159,18 @@ public class ReputationBot {
                     return wrapper.getMember().getRoles().contains(roleById);
                 })
                 .build();
-        hub.registerCommands(new Help(hub, localizer));
+        hub.registerCommands(new Help(hub, localizer, configuration.isExclusiveHelp()));
     }
 
     private void initShutdownHook() {
         var shutdown = new Thread(() -> {
+            log.info("Shuting down shardmanager.");
             shardManager.shutdown();
+            log.info("Shutting down scheduler.");
+            cleaner.shutdown();
+            log.info("Shutting down database connections.");
             dataSource.close();
+            log.info("Bot shutdown complete.");
         });
         Runtime.getRuntime().addShutdownHook(shutdown);
     }
@@ -174,7 +178,7 @@ public class ReputationBot {
     private void initJDA() throws LoginException {
         scan = new Scan(dataSource, localizer);
         memberCacheManager = new MemberCacheManager(scan);
-        shardManager = DefaultShardManagerBuilder.createDefault(configuration.get(ConfigFile::getToken))
+        shardManager = DefaultShardManagerBuilder.createDefault(configuration.getToken())
                 .enableIntents(
                         GatewayIntent.GUILD_MESSAGE_REACTIONS,
                         GatewayIntent.GUILD_MESSAGES,
@@ -189,7 +193,7 @@ public class ReputationBot {
     }
 
     private HikariDataSource getConnectionPool(@Nullable String schema) {
-        var db = configuration.get(ConfigFile::getDatabase);
+        var db = configuration.getDatabase();
         var props = new Properties();
         props.setProperty("dataSourceClassName", PGSimpleDataSource.class.getName());
         props.setProperty("dataSource.serverName", db.getHost());

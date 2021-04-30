@@ -1,6 +1,7 @@
 package de.chojo.repbot.manager;
 
 import de.chojo.repbot.commands.Scan;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import org.jetbrains.annotations.NotNull;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+@Slf4j
 public class MemberCacheManager implements MemberCachePolicy, Runnable {
     public static final int CACHE_DURATION = 15;
     private final HashMap<Long, Instant> seen = new HashMap<>();
@@ -29,13 +31,23 @@ public class MemberCacheManager implements MemberCachePolicy, Runnable {
         if (MemberCachePolicy.ONLINE.cacheMember(member)) {
             return true;
         }
+
         if (scan.isRunning(member.getGuild())) {
             return true;
         }
+
         if (!seen.containsKey(member.getIdLong())) {
+            seen.put(member.getIdLong(), Instant.now());
+            log.debug("Requested user for the first time. Caching for some time.");
             return false;
         }
-        return seen.get(member.getIdLong()).isBefore(oldest());
+
+        if (seen.get(member.getIdLong()).isBefore(oldest())) {
+            var remove = seen.remove(member.getIdLong());
+            log.debug("Removing {} from cache. Havent seen for {} minutes.", member.getIdLong(), remove.until(Instant.now(), ChronoUnit.MINUTES));
+            return false;
+        }
+        return true;
     }
 
     @Override

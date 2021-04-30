@@ -1,40 +1,52 @@
 package de.chojo.repbot.analyzer;
 
+import de.chojo.jdautil.parsing.WeightedEntry;
 import lombok.Getter;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Getter
 public class AnalyzerResult {
-    private static final AnalyzerResult NO_MATCH = new AnalyzerResult(ThankType.NO_MATCH, null, null, null, 1);
+    private static final AnalyzerResult NO_MATCH = new AnalyzerResult(ThankType.NO_MATCH, null, null, null);
+    private static final AnalyzerResult NO_TARGET = new AnalyzerResult(ThankType.NO_MATCH, null, null, null);
+    private final ThankType type;
+    private final Message referenceMessage;
+    private final User donator;
+    private final List<WeightedEntry<Member>> receivers;
 
-    ThankType type;
-    Message referenceMessage;
-    User donator;
-    User receiver;
-    double confidenceScore;
-
-    public AnalyzerResult(ThankType type, Message referenceMessage, User donator, User receiver, double confidenceScore) {
+    public AnalyzerResult(ThankType type, Message referenceMessage, User donator, List<WeightedEntry<Member>> receivers) {
         this.type = type;
         this.referenceMessage = referenceMessage;
         this.donator = donator;
-        this.receiver = receiver;
-        this.confidenceScore = confidenceScore;
+        this.receivers = receivers == null ? Collections.emptyList() : receivers;
     }
 
     public static AnalyzerResult noMatch() {
         return NO_MATCH;
     }
 
-    public static AnalyzerResult mention(User donator, User receiver) {
-        return new AnalyzerResult(ThankType.MENTION, null, donator, receiver, 1);
+    public static AnalyzerResult noTarget(User donator) {
+        return new AnalyzerResult(ThankType.NO_TARGET, null, donator, null);
     }
 
-    public static AnalyzerResult answer(User donator, User receiver, Message referenceMessage) {
-        return new AnalyzerResult(ThankType.ANSWER, referenceMessage, donator, receiver, 1);
+    public static AnalyzerResult mention(User donator, List<Member> receiver) {
+        return new AnalyzerResult(ThankType.MENTION, null, donator, receiver.stream().map(u -> WeightedEntry.withWeight(u, 1)).collect(Collectors.toList()));
     }
 
-    public static AnalyzerResult fuzzy(User donator, User receiver, double confidenceScore) {
-        return new AnalyzerResult(ThankType.FUZZY, null, donator, receiver, confidenceScore);
+    public static AnalyzerResult answer(User donator, Member receiver, Message referenceMessage) {
+        return new AnalyzerResult(ThankType.ANSWER, referenceMessage, donator, Collections.singletonList(WeightedEntry.withWeight(receiver, 1)));
+    }
+
+    public static AnalyzerResult fuzzy(User donator, List<WeightedEntry<Member>> receivers) {
+        return new AnalyzerResult(ThankType.FUZZY, null, donator, receivers);
+    }
+
+    public boolean isEmpty() {
+        return receivers.isEmpty();
     }
 }

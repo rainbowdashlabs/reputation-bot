@@ -11,6 +11,7 @@ import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
+import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.util.TextGenerator;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +20,6 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageHistory;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
 import javax.sql.DataSource;
@@ -36,8 +36,8 @@ import java.util.regex.Pattern;
 
 @Slf4j
 public class Scan extends SimpleCommand {
-    private static final int SCAN_THREADS = 10;
     public static final int INTERVAL_MS = 2000;
+    private static final int SCAN_THREADS = 10;
     private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(SCAN_THREADS + 1);
     private final GuildData guildData;
     private final ReputationData reputationData;
@@ -132,13 +132,13 @@ public class Scan extends SimpleCommand {
         var duration = DurationFormatUtils.formatDuration((long) messageCount / 100 * INTERVAL_MS, "mm:ss");
         eventWrapper.reply(eventWrapper.localize("command.scan.scheduling", Replacement.create("DURATION", duration))).queue();
 
-        schedule(history, pattern, eventWrapper, messageCount);
+        schedule(history, pattern, eventWrapper, messageCount, guildSettings.get());
     }
 
-    private void schedule(MessageHistory history, Pattern pattern, MessageEventWrapper eventWrapper, int calls) {
+    private void schedule(MessageHistory history, Pattern pattern, MessageEventWrapper eventWrapper, int calls, GuildSettings settings) {
         var progressMessage = eventWrapper.answer(eventWrapper.localize("command.scan.progress",
                 Replacement.create("PERCENT", String.format("%.02f", 0d))) + " " + TextGenerator.progressBar(0, 40)).complete();
-        var scanProcess = new ScanProcess(loc, progressMessage, history, pattern, calls, reputationData);
+        var scanProcess = new ScanProcess(loc, progressMessage, history, pattern, calls, reputationData, settings);
 
         activeScans.add(eventWrapper.getGuild().getIdLong());
 
@@ -192,10 +192,18 @@ public class Scan extends SimpleCommand {
         return activeScans.contains(guild.getIdLong());
     }
 
+    public void cancelScan(Guild guild) {
+        activeScans.remove(guild.getIdLong());
+        cancel.add(guild.getIdLong());
+    }
+
+    public void finishScan(ScanProcess scanProcess) {
+        activeScans.remove(scanProcess.getGuild().getIdLong());
+        finished.add(scanProcess);
+    }
+
     @Getter
     private static class ScanProcess {
-        private int scanned = 0;
-        private int hits = 0;
         private final Localizer loc;
         private final Guild guild;
         private final TextChannel resultChannel;
@@ -203,11 +211,13 @@ public class Scan extends SimpleCommand {
         private final MessageHistory history;
         private final Pattern pattern;
         private final int calls;
-        private int callsLeft;
         private final ReputationData reputationData;
+        private int scanned = 0;
+        private int hits = 0;
+        private int callsLeft;
         private long time;
 
-        public ScanProcess(Localizer localizer, Message progressMessage, MessageHistory history, Pattern pattern, int calls, ReputationData data) {
+        public ScanProcess(Localizer localizer, Message progressMessage, MessageHistory history, Pattern pattern, int calls, ReputationData data, GuildSettings settings) {
             loc = localizer;
             this.guild = progressMessage.getGuild();
             this.resultChannel = progressMessage.getTextChannel();
@@ -228,7 +238,7 @@ public class Scan extends SimpleCommand {
         }
 
         public boolean scan() {
-            if(callsLeft == 0) return false;
+            if (callsLeft == 0) return false;
             var start = Instant.now();
             var size = history.size();
             var messages = history.retrievePast(Math.min(callsLeft, 100)).timeout(10, TimeUnit.SECONDS).complete();
@@ -239,22 +249,18 @@ public class Scan extends SimpleCommand {
 
             for (var message : messages) {
                 scanned();
-                var result = MessageAnalyzer.processMessage(pattern, message);
+                var result = MessageAnalyzer.processMessage(pattern, message, 0, false, 0.85, 3);
 
                 var donator = result.getDonator();
-                var receiver = result.getReceiver();
                 var refMessage = result.getReferenceMessage();
-                switch (result.getType()) {
-                    case FUZZY -> {
-                        if (result.getConfidenceScore() < 0.85) continue;
-                        reputationData.logReputation(guild, donator, receiver, message, refMessage, result.getType());
-                        hit();
-                    }
-                    case MENTION, ANSWER -> {
-                        reputationData.logReputation(guild, donator, receiver, message, refMessage, result.getType());
-                        hit();
-                    }
-                    case NO_MATCH -> {
+                for (var resultReceiver : result.getReceivers()) {
+                    switch (result.getType()) {
+                        case FUZZY, MENTION, ANSWER -> {
+                            reputationData.logReputation(guild, donator, resultReceiver.getReference().getUser(), message, refMessage, result.getType());
+                            hit();
+                        }
+                        case NO_MATCH -> {
+                        }
                     }
                 }
             }
@@ -268,15 +274,5 @@ public class Scan extends SimpleCommand {
         public long getTime() {
             return time;
         }
-    }
-
-    public void cancelScan(Guild guild) {
-        activeScans.remove(guild.getIdLong());
-        cancel.add(guild.getIdLong());
-    }
-
-    public void finishScan(ScanProcess scanProcess) {
-        activeScans.remove(scanProcess.getGuild().getIdLong());
-        finished.add(scanProcess);
     }
 }

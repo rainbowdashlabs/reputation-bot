@@ -2,10 +2,9 @@ package de.chojo.repbot.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.core.PrettyPrinter;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import de.chojo.repbot.listener.ReactionListener;
+import de.chojo.repbot.config.elements.Database;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,7 +13,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.function.Function;
 
 @Getter
 @Slf4j
@@ -60,17 +58,46 @@ public class Configuration {
     private Path getConfig() {
         var home = new File(".").getAbsoluteFile().getParentFile().toPath();
         var property = System.getProperty("bot.config");
-        if(property == null){
+        if (property == null) {
             log.error("bot.config property is not set.");
         }
         return Paths.get(home.toString(), property);
     }
 
-    public <T> T get(Function<ConfigFile, T> get) {
-        return get.apply(configFile);
+    // DELEGATES
+    public String getToken() {
+        return configFile.getToken();
     }
 
-    public ConfigFile get() {
-        return configFile;
+    public void setToken(String token) {
+        configFile.setToken(token);
+    }
+
+    public String getDefaultPrefix() {
+        return configFile.getDefaultPrefix();
+    }
+
+    public void setDefaultPrefix(String defaultPrefix) {
+        configFile.setDefaultPrefix(defaultPrefix);
+    }
+
+    public Database getDatabase() {
+        return configFile.getDatabase();
+    }
+
+    public void setDatabase(Database database) {
+        configFile.setDatabase(database);
+    }
+
+    public boolean isExclusiveHelp() {
+        return configFile.isExclusiveHelp();
+    }
+
+    public void setExclusiveHelp(boolean exclusiveHelp) {
+        configFile.setExclusiveHelp(exclusiveHelp);
+    }
+
+    public boolean canEqual(Object other) {
+        return configFile.canEqual(other);
     }
 }

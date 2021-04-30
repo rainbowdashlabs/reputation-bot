@@ -3,10 +3,14 @@ package de.chojo.repbot.data;
 import de.chojo.jdautil.localization.util.Language;
 import de.chojo.repbot.data.util.DbUtil;
 import de.chojo.repbot.data.wrapper.GuildSettings;
+import de.chojo.repbot.data.wrapper.RemovalTask;
 import de.chojo.repbot.data.wrapper.ReputationRole;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.User;
 
 import javax.annotation.Nullable;
 import javax.sql.DataSource;
@@ -18,6 +22,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 public class GuildData {
     private final DataSource source;
 
@@ -27,7 +32,7 @@ public class GuildData {
 
     public Optional<GuildSettings> getGuildSettings(Guild guild) {
         try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
-                SELECT 
+                SELECT
                     prefix,
                     thankswords,
                     max_message_age,
@@ -41,7 +46,7 @@ public class GuildData {
                     manager_role
                 FROM
                     guild_settings
-                WHERE 
+                WHERE
                     guild_id = ?
                                 """)) {
             stmt.setLong(1, guild.getIdLong());
@@ -107,7 +112,11 @@ public class GuildData {
 
     public Optional<String> getLanguage(Guild guild) {
         try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
-                SELECT language FROM guild_bot_settings where guild_id = ?;
+                SELECT
+                    language
+                FROM
+                    guild_bot_settings
+                where guild_id = ?;
                 """)) {
             stmt.setLong(1, guild.getIdLong());
             var rs = stmt.executeQuery();
@@ -425,5 +434,167 @@ public class GuildData {
             DbUtil.logSQLError("Could not set guild manager role", e);
         }
         return false;
+    }
+
+    public void queueDeletion(Guild guild) {
+        try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
+                INSERT INTO
+                    cleanup_schedule(guild_id)
+                    VALUES (?)
+                        ON CONFLICT(guild_id, user_id)
+                            DO NOTHING;
+                """)) {
+            stmt.setLong(1, guild.getIdLong());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            DbUtil.logSQLError("Could not queue guild deletion", e);
+        }
+    }
+
+    public void queueDeletion(User user, Guild guild) {
+        try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
+                INSERT INTO
+                    cleanup_schedule(guild_id, user_id)
+                    VALUES (?,?)
+                        ON CONFLICT(guild_id, user_id)
+                            DO NOTHING;
+                """)) {
+            stmt.setLong(1, guild.getIdLong());
+            stmt.setLong(2, user.getIdLong());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            DbUtil.logSQLError("Could not queue member deletion", e);
+        }
+    }
+
+    public void dequeueDeletion(Guild guild) {
+        try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
+                DELETE FROM
+                    cleanup_schedule
+                where guild_id = ?
+                """)) {
+            stmt.setLong(1, guild.getIdLong());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            DbUtil.logSQLError("Could not dequeue guild deletion", e);
+        }
+    }
+
+    public void dequeueDeletion(Member member) {
+        try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
+                DELETE FROM
+                    cleanup_schedule
+                where guild_id = ?
+                    AND user_id = ?
+                """)) {
+            stmt.setLong(1, member.getGuild().getIdLong());
+            stmt.setLong(2, member.getIdLong());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            DbUtil.logSQLError("Could not dequeue member deletion", e);
+        }
+    }
+
+    public List<RemovalTask> getRemovalTasks() {
+        try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
+                SELECT
+                    task_id,
+                    user_id,
+                    guild_id
+                from
+                    cleanup_schedule
+                where delete_after < now();
+                """)) {
+            var rs = stmt.executeQuery();
+            var results = new ArrayList<RemovalTask>();
+            while (rs.next()) {
+                results.add(new RemovalTask(
+                        rs.getLong("task_id"),
+                        rs.getLong("user_id"),
+                        rs.getLong("guild_id")
+                ));
+            }
+            return results;
+        } catch (SQLException e) {
+            DbUtil.logSQLError("Could not retrieve removal tasks", e);
+        }
+        return Collections.emptyList();
+    }
+
+    public void executeRemovalTask(RemovalTask task) {
+        try (var conn = source.getConnection()) {
+            conn.setAutoCommit(false);
+            if (task.getUserId() == null) {
+                try (var stmt = conn.prepareStatement("""
+                        DELETE FROM reputation_log where guild_id = ?;
+                        """)) {
+                    stmt.setLong(1, task.getGuildId());
+                    stmt.executeUpdate();
+                }
+
+                try (var stmt = conn.prepareStatement("""
+                        DELETE FROM guild_bot_settings where guild_id = ?;
+                        """)) {
+                    stmt.setLong(1, task.getGuildId());
+                    stmt.executeUpdate();
+                }
+
+                try (var stmt = conn.prepareStatement("""
+                        DELETE FROM active_channel where guild_id = ?;
+                        """)) {
+                    stmt.setLong(1, task.getGuildId());
+                    stmt.executeUpdate();
+                }
+
+                try (var stmt = conn.prepareStatement("""
+                        DELETE FROM message_settings where guild_id = ?;
+                        """)) {
+                    stmt.setLong(1, task.getGuildId());
+                    stmt.executeUpdate();
+                }
+                try (var stmt = conn.prepareStatement("""
+                        DELETE FROM guild_ranks where guild_id = ?;
+                        """)) {
+                    stmt.setLong(1, task.getGuildId());
+                    stmt.executeUpdate();
+                }
+                try (var stmt = conn.prepareStatement("""
+                        DELETE FROM thankwords where guild_id = ?;
+                        """)) {
+                    stmt.setLong(1, task.getGuildId());
+                    stmt.executeUpdate();
+                }
+                log.info("Removed guild settings for {}", task.getGuildId());
+            } else {
+                // Remove all received donations
+                try (var stmt = conn.prepareStatement("""
+                        DELETE FROM reputation_log where guild_id = ? AND received = ?;
+                        """)) {
+                    stmt.setLong(1, task.getGuildId());
+                    stmt.setLong(2, task.getUserId());
+                    stmt.executeUpdate();
+                }
+                // Remove association with donations given.
+                try (var stmt = conn.prepareStatement("""
+                        UPDATE reputation_log SET donor_id = 0 where guild_id = ? AND donor_id = ?;
+                        """)) {
+                    stmt.setLong(1, task.getGuildId());
+                    stmt.setLong(2, task.getUserId());
+                    stmt.executeUpdate();
+                }
+                log.info("Removed user reputation from guild {} of user {}", task.getGuildId(), task.getUserId());
+            }
+
+            // mark task as done
+            try (var stmt = conn.prepareStatement("""
+                    DELETE FROM cleanup_schedule where task_id = ?;
+                    """)) {
+                stmt.setLong(1, task.getTaskId());
+                stmt.executeUpdate();
+            }
+            conn.commit();
+        } catch (SQLException e) {
+            DbUtil.logSQLError("Could not clean up data", e);
+        }
     }
 }

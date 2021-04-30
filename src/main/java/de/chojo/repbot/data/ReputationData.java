@@ -2,6 +2,7 @@ package de.chojo.repbot.data;
 
 import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.data.util.DbUtil;
+import de.chojo.repbot.data.wrapper.ReputationLogEntry;
 import de.chojo.repbot.data.wrapper.ReputationUser;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
@@ -10,6 +11,7 @@ import net.dv8tion.jda.api.entities.User;
 
 import javax.annotation.Nullable;
 import javax.sql.DataSource;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.time.Instant;
@@ -18,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.OptionalLong;
 
 @Slf4j
 public class ReputationData {
@@ -40,15 +41,15 @@ public class ReputationData {
                 stmt.setLong(2, donor.getIdLong());
                 stmt.setLong(3, receiver.getIdLong());
                 stmt.setLong(4, message.getIdLong());
-                if(refMessage == null){
+                if (refMessage == null) {
                     stmt.setNull(5, Types.BIGINT);
-                }else {
-                stmt.setLong(5, refMessage.getIdLong());
+                } else {
+                    stmt.setLong(5, refMessage.getIdLong());
                 }
                 stmt.setLong(6, message.getChannel().getIdLong());
                 stmt.setString(7, type.name());
-                stmt.execute();
-                return true;
+                log.debug("{} received one reputation from {}", receiver.getName(), donor.getName());
+                return stmt.executeUpdate() > 0;
             }
         } catch (SQLException e) {
             DbUtil.logSQLError("Could not log reputation", e);
@@ -85,6 +86,7 @@ public class ReputationData {
     public List<ReputationUser> getRanking(Guild guild, int limit, int offset) {
         try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
                 SELECT
+                    rank,
                     user_id,
                     reputation
                 from
@@ -102,6 +104,7 @@ public class ReputationData {
             while (rs.next()) {
                 users.add(
                         new ReputationUser(
+                                rs.getLong("rank"),
                                 rs.getLong("user_id"),
                                 rs.getLong("reputation")
                         )
@@ -114,20 +117,28 @@ public class ReputationData {
         return Collections.emptyList();
     }
 
-    public OptionalLong getReputation(Guild guild, User user) {
+    public Optional<ReputationUser> getReputation(Guild guild, User user) {
         try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
-                SELECT reputation from user_reputation where guild_id = ? and user_id = ?
+                SELECT rank, user_id, reputation from user_reputation where guild_id = ? and user_id = ?
                 """)) {
             stmt.setLong(1, guild.getIdLong());
             stmt.setLong(2, user.getIdLong());
             var rs = stmt.executeQuery();
             if (rs.next()) {
-                return OptionalLong.of(rs.getLong("reputation"));
+                return Optional.of(buildUser(rs));
             }
         } catch (SQLException e) {
             DbUtil.logSQLError("Could not retrieve user reputation", e);
         }
-        return OptionalLong.empty();
+        return Optional.empty();
+    }
+
+    private ReputationUser buildUser(ResultSet rs) throws SQLException {
+        return new ReputationUser(
+                rs.getLong("rank"),
+                rs.getLong("user_id"),
+                rs.getLong("reputation")
+        );
     }
 
     public void removeMessage(long messageId) {
@@ -143,5 +154,44 @@ public class ReputationData {
 
     public Long getLastRatedDuration(Guild guild, User donor, User receiver, ChronoUnit unit) {
         return getLastRated(guild, donor, receiver).map(i -> i.until(Instant.now(), unit)).orElse(Long.MAX_VALUE);
+    }
+
+    public Optional<ReputationLogEntry> getLogEntry(Message message) {
+        try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
+                SELECT
+                    guild_id,
+                    donor_id,
+                    receiver_id,
+                    message_id,
+                    received,
+                    ref_message_id,
+                    channel_id,
+                    cause
+                FROM
+                    reputation_log
+                where
+                    message_id = ?
+                """)) {
+            stmt.setLong(1, message.getIdLong());
+            var rs = stmt.executeQuery();
+            if (rs.next()) {
+                return Optional.of(buildLogEntry(rs));
+            }
+        } catch (SQLException e) {
+            DbUtil.logSQLError("Could not retrieve log entry", e);
+        }
+        return Optional.empty();
+    }
+
+    private ReputationLogEntry buildLogEntry(ResultSet rs) throws SQLException {
+        return new ReputationLogEntry(
+                rs.getLong("guild_id"),
+                rs.getLong("channel_id"),
+                rs.getLong("donor_id"),
+                rs.getLong("receiver_id"),
+                rs.getLong("message_id"),
+                rs.getLong("ref_message_id"),
+                ThankType.valueOf(rs.getString("cause"))
+        );
     }
 }
