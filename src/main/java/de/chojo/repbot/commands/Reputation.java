@@ -57,33 +57,7 @@ public class Reputation extends SimpleCommand {
         }
         var subCmd = optSubComd.get();
         if ("top".equalsIgnoreCase(subCmd)) {
-            var page = context.argInt(1).orElse(1);
-            var ranking = reputationData.getRanking(eventWrapper.getGuild(), 10, (page - 1) * 10);
-            var ranks = ranking.stream()
-                    .map(u -> String.valueOf(u.getRank()))
-                    .collect(Collectors.joining("\n"));
-            var users = ranking.stream()
-                    .map(u -> {
-                        var memberById = eventWrapper.getGuild().getMemberById(u.getUserId());
-                        if (memberById == null) {
-                            memberById = eventWrapper.getGuild().retrieveMemberById(u.getUserId()).complete();
-                        }
-                        return memberById == null ? eventWrapper.localize("words.unknown") : memberById.getAsMention();
-                    })
-                    .collect(Collectors.joining("\n"));
-            var reputation = ranking.stream()
-                    .map(u -> String.valueOf(u.getReputation()))
-                    .collect(Collectors.joining("\n"));
-            var embed = new LocalizedEmbedBuilder(loc, eventWrapper)
-                    .setTitle(eventWrapper.localize("command.reputation.sub.top.ranking",
-                            Replacement.create("GUILD", eventWrapper.getGuild().getName())))
-                    .addField(new LocalizedField(loc, "", ranks, true, eventWrapper))
-                    .addField(new LocalizedField(loc, "words.name", users, true, eventWrapper))
-                    .addField(new LocalizedField(loc, "words.reputation", reputation, true, eventWrapper))
-                    .setColor(Color.CYAN)
-                    .build();
-            eventWrapper.reply(embed).queue();
-            return true;
+            return top(eventWrapper, context.subContext(subCmd));
         }
         var guildMember = DiscordResolver.getGuildMember(eventWrapper.getGuild(), subCmd);
         if (guildMember.isEmpty()) {
@@ -92,6 +66,40 @@ public class Reputation extends SimpleCommand {
         }
         var reputation = reputationData.getReputation(eventWrapper.getGuild(), guildMember.get().getUser()).orElse(ReputationUser.empty(eventWrapper.getAuthor()));
         eventWrapper.reply(getUserRepEmbed(eventWrapper, guildMember.get(), reputation)).queue();
+        return true;
+    }
+
+    private boolean top(MessageEventWrapper eventWrapper, CommandContext context) {
+        var page = context.argInt(0).orElse(1);
+        var ranking = reputationData.getRanking(eventWrapper.getGuild(), 10, (page - 1) * 10);
+        var ranks = ranking.stream()
+                .map(u -> String.valueOf(u.getRank()))
+                .collect(Collectors.joining("\n"));
+        var users = ranking.stream()
+                .map(u -> {
+                    var memberById = eventWrapper.getGuild().getMemberById(u.getUserId());
+                    if (memberById == null) {
+                        try {
+                            memberById = eventWrapper.getGuild().retrieveMemberById(u.getUserId()).complete();
+                        } catch (RuntimeException e) {
+                            // Happens I guess ¯\_(ツ)_/¯
+                        }
+                    }
+                    return memberById == null ? eventWrapper.localize("words.unknown") : memberById.getAsMention();
+                })
+                .collect(Collectors.joining("\n"));
+        var reputation = ranking.stream()
+                .map(u -> String.valueOf(u.getReputation()))
+                .collect(Collectors.joining("\n"));
+        var embed = new LocalizedEmbedBuilder(loc, eventWrapper)
+                .setTitle(eventWrapper.localize("command.reputation.sub.top.ranking",
+                        Replacement.create("GUILD", eventWrapper.getGuild().getName())))
+                .addField(new LocalizedField(loc, "", ranks, true, eventWrapper))
+                .addField(new LocalizedField(loc, "words.name", users, true, eventWrapper))
+                .addField(new LocalizedField(loc, "words.reputation", reputation, true, eventWrapper))
+                .setColor(Color.CYAN)
+                .build();
+        eventWrapper.reply(embed).queue();
         return true;
     }
 
