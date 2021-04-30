@@ -18,6 +18,19 @@ import java.util.stream.Collectors;
 public class MessageAnalyzer {
     private static final int LOOKAROUND = 6;
 
+    /**
+     * Analyze a message.
+     *
+     * @param pattern       regex pattern for targetwords
+     * @param message       message to analyze
+     * @param maxHistoryAge max age of messages to find targets
+     * @param limitTargets  true if targets should be limited to users which have written in the channel in the
+     *                      maxHistoryAge
+     * @param threshold     threshold for fuzzy matches
+     * @param limit         limit for returned matches in the analyzer result
+     *
+     * @return analyzer results
+     */
     public static AnalyzerResult processMessage(Pattern pattern, Message message, int maxHistoryAge, boolean limitTargets, double threshold, int limit) {
         if (pattern.pattern().isBlank()) return AnalyzerResult.noMatch();
         var contentRaw = message.getContentRaw();
