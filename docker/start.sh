@@ -1,2 +1,2 @@
 #!/usr/bin/env sh
-java -Dbot.config=config.json -Dlog4j.configurationFile=log4j2.xml -jar app.jar
+java -Dbot.config=config/config.json -Dlog4j.configurationFile=config/log4j2.xml -jar app.jar
