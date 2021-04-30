@@ -2,9 +2,7 @@ version: '3.7'
 
 services:
   app:
-    build:
-      context: ..
-      dockerfile: docker/Dockerfile
+    image: chojo/reputation-image:latest
     networks:
       - repbot
     depends_on:
