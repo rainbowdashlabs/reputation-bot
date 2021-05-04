@@ -1,9 +1,11 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    id("com.github.johnrengelman.shadow") version "6.0.0"
+    id("com.github.johnrengelman.shadow") version "7.0.0"
     java
     `maven-publish`
+    id("org.panteleyev.jpackageplugin") version "1.3.1"
+    // id("org.beryx.jlink") version "2.23.8"
 }
 
 group = "de.chojo"
@@ -86,5 +88,40 @@ tasks {
 tasks {
     build {
         dependsOn(shadowJar)
+    }
+}
+
+/*jlink {
+    addOptions("--strip-debug", "--compress", "2", "--no-header-files", "--no-man-pages")
+    launcher{
+        name = "app"
+        jvmArgs = listOf("-Dlog4j.configurationFile=config/log4j2.xml", "-Dbot.config=config/config.json")
+    }
+}*/
+
+task("copyDependencies", Copy::class) {
+    from(configurations.runtimeClasspath).into("$buildDir/jars")
+}
+
+task("copyJar", Copy::class) {
+    from(tasks.jar).into("$buildDir/jars")
+}
+
+tasks.jpackage {
+    dependsOn("build", "copyDependencies", "copyJar")
+
+    input  = "$buildDir/libs"
+    destination = "$buildDir/dist"
+
+    appName = "Reputation Bot"
+    vendor = "app.org"
+
+    mainJar = tasks.shadowJar.get().archiveFileName.get()
+    mainClass = "de.chojo.repbot.ReputationBot"
+
+    javaOptions = listOf("-Dfile.encoding=UTF-8")
+
+    windows {
+        winConsole = true
     }
 }
