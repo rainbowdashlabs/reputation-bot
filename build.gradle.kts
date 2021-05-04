@@ -9,12 +9,9 @@ plugins {
 group = "de.chojo"
 version = "1.0"
 
-
 val log4jVersion = "2.14.0"
 val lombokVersion = "1.18.20"
 
-java.sourceCompatibility = JavaVersion.VERSION_15
-java.targetCompatibility = JavaVersion.VERSION_15
 
 repositories {
     maven {
@@ -36,21 +33,27 @@ dependencies {
         exclude(module = "opus-java")
     }
     implementation("de.chojo", "cjda-util", "1.0.0")
+
     // database
     implementation("org.postgresql", "postgresql", "42.2.19")
     implementation("com.zaxxer", "HikariCP", "4.0.3")
+
     // Serialization
     implementation("com.fasterxml.jackson.core", "jackson-databind", "2.12.3")
+
     // Logging
     implementation("org.slf4j", "slf4j-api", "1.7.30")
     implementation("org.apache.logging.log4j", "log4j-core", log4jVersion)
     implementation("org.apache.logging.log4j", "log4j-slf4j-impl", log4jVersion)
+
     // annotation processing
     compileOnly("org.projectlombok", "lombok", lombokVersion)
     annotationProcessor("org.projectlombok", "lombok", lombokVersion)
+
     // utils
     implementation("com.kcthota", "emoji4j", "6.0")
     implementation("org.apache.commons", "commons-lang3", "3.12.0")
+
     // unit testing
     testImplementation(platform("org.junit:junit-bom:5.7.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
@@ -58,19 +61,22 @@ dependencies {
     testAnnotationProcessor("org.projectlombok", "lombok", lombokVersion)
 }
 
-tasks.test {
-    useJUnitPlatform()
-    testLogging {
-        events("passed", "skipped", "failed")
-    }
-}
 
 java {
     withSourcesJar()
     withJavadocJar()
+
+    sourceCompatibility = JavaVersion.VERSION_15
+    targetCompatibility = JavaVersion.VERSION_15
 }
 
 tasks {
+    test {
+        useJUnitPlatform()
+        testLogging {
+            events("passed", "skipped", "failed")
+        }
+    }
     named<ShadowJar>("shadowJar") {
         mergeServiceFiles()
         manifest {
@@ -78,12 +84,9 @@ tasks {
         }
     }
 
-    compileJava{
+    compileJava {
         options.encoding = "UTF-8"
     }
-}
-
-tasks {
     build {
         dependsOn(shadowJar)
     }
