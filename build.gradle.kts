@@ -67,7 +67,6 @@ java {
     withJavadocJar()
 
     sourceCompatibility = JavaVersion.VERSION_15
-    targetCompatibility = JavaVersion.VERSION_15
 }
 
 tasks {
