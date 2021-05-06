@@ -6,6 +6,7 @@ import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.util.HistoryUtil;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -13,8 +14,11 @@ import net.dv8tion.jda.api.entities.User;
 import org.jetbrains.annotations.Nullable;
 
 import javax.sql.DataSource;
+import java.awt.*;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static de.chojo.repbot.util.MessageUtil.markMessage;
@@ -29,6 +33,8 @@ public class ReputationManager {
         this.guildData = new GuildData(dataSource);
         this.assigner = assigner;
     }
+    
+    private Instant lastEasterEggSent = Instant.EPOCH;
 
     /**
      * Submit a reputation.
@@ -47,8 +53,6 @@ public class ReputationManager {
     public boolean submitReputation(Guild guild, User donor, User receiver, Message message, @Nullable Message refMessage, ThankType type) {
         // block bots
         if (receiver.isBot()) return false;
-        // block self vote
-        if (Verifier.equalSnowflake(receiver, donor)) return false;
 
         var optGuildSettings = guildData.getGuildSettings(guild);
         if (optGuildSettings.isEmpty()) return false;
@@ -100,6 +104,19 @@ public class ReputationManager {
         var until = message.getTimeCreated().toInstant().until(Instant.now(), ChronoUnit.MINUTES);
         if (until > settings.getMaxMessageAge()) return false;
 
+        // block self vote
+        if (Verifier.equalSnowflake(receiver, donor)) {
+            if (lastEasterEggSent.until(Instant.now(), ChronoUnit.MINUTES) > 30
+                && ThreadLocalRandom.current().nextInt(10) == 9) {
+                lastEasterEggSent = Instant.now();
+                message.reply(new EmbedBuilder()
+                    .setImage("https://cdn.discordapp.com/attachments/466561879674847233/839921810714656818/cover1.png")
+                    .setColor(Color.RED).build())
+                    .queue(message1 -> message1.delete().queueAfter(1, TimeUnit.MINUTES));
+            }
+            return false;
+        }
+        
         // try to log reputation
         if (reputationData.logReputation(guild, donor, receiver, message, refMessage, type)) {
             // mark messages
