@@ -141,7 +141,7 @@ public class MessageListener extends ListenerAdapter {
 
         for (var i = 0; i < members.size(); i++) {
             targets.put(requestEmojis[i], members.get(i));
-            (i % 2 == 0 ? first : second).add(requestEmojis[i] + " " + members.get(i).getAsMention());
+            (i <= members.size()/2 + members.size()%2 ? first : second).add(requestEmojis[i] + " " + members.get(i).getAsMention());
         }
 
         var builder = new LocalizedEmbedBuilder(localizer, message.getGuild())
