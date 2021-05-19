@@ -2,7 +2,7 @@ package de.chojo.repbot.manager;
 
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.repbot.analyzer.ThankType;
-import de.chojo.repbot.config.Configuration;
+import de.chojo.repbot.config.elements.MagicImage;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
@@ -28,13 +28,13 @@ public class ReputationManager {
     private final ReputationData reputationData;
     private final GuildData guildData;
     private final RoleAssigner assigner;
-    private final Configuration configuration;
+    private final MagicImage magicImage;
 
-    public ReputationManager(DataSource dataSource, RoleAssigner assigner, Configuration configuration) {
+    public ReputationManager(DataSource dataSource, RoleAssigner assigner, MagicImage magicImage) {
         this.reputationData = new ReputationData(dataSource);
         this.guildData = new GuildData(dataSource);
         this.assigner = assigner;
-        this.configuration = configuration;
+        this.magicImage = magicImage;
     }
     
     private Instant lastEasterEggSent = Instant.EPOCH;
@@ -109,13 +109,14 @@ public class ReputationManager {
 
         // block self vote
         if (Verifier.equalSnowflake(receiver, donor)) {
-            if (lastEasterEggSent.until(Instant.now(), ChronoUnit.MINUTES) > configuration.getMagicImageCooldown()
-                && ThreadLocalRandom.current().nextInt(configuration.getMagicImagineChance()) == 0) {
+            if (lastEasterEggSent.until(Instant.now(), ChronoUnit.MINUTES) > magicImage.getMagicImageCooldown()
+                && ThreadLocalRandom.current().nextInt(magicImage.getMagicImagineChance()) == 0) {
                 lastEasterEggSent = Instant.now();
                 message.reply(new EmbedBuilder()
-                    .setImage(configuration.getMagicImageLink())
+                    .setImage(magicImage.getMagicImageLink())
                     .setColor(Color.RED).build())
-                    .queue(message1 -> message1.delete().queueAfter(configuration.getMagicImageDeleteSchedule(), TimeUnit.SECONDS));
+                    .queue(message1 -> message1.delete().queueAfter(
+                        magicImage.getMagicImageDeleteSchedule(), TimeUnit.SECONDS));
             }
             return false;
         }
