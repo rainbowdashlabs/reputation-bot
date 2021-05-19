@@ -45,7 +45,6 @@ public class ReactionListener extends ListenerAdapter {
             if (event.getReactionEmote().isEmote()) return;
             var voteRequest = voteRequests.get(event.getMessageIdLong());
             if (!voteRequest.getMember().equals(event.getMember())) return;
-            if (voteRequest.getRemainingVotes() == 0) return;
             var target = voteRequest.getTarget(event.getReactionEmote().getEmoji());
             if (target.isEmpty()) {
                 if (event.getReactionEmote().getEmoji().equals("🗑️")) {
@@ -54,6 +53,7 @@ public class ReactionListener extends ListenerAdapter {
                 }
                 return;
             }
+            if (voteRequest.getRemainingVotes() == 0) return;
 
             if (reputationManager.submitReputation(event.getGuild(), event.getUser(), target.get().getUser(), voteRequest.getRefMessage(), null, ThankType.REACTION)) {
                 voteRequest.voted();
