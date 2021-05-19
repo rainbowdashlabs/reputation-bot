@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.chojo.repbot.config.elements.Database;
+import de.chojo.repbot.config.elements.MagicImage;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -83,5 +84,9 @@ public class Configuration {
 
     public boolean canEqual(Object other) {
         return configFile.canEqual(other);
+    }
+    
+    public MagicImage getMagicImage() {
+        return configFile.getMagicImage();
     }
 }
