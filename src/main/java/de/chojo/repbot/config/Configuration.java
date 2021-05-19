@@ -100,4 +100,36 @@ public class Configuration {
     public boolean canEqual(Object other) {
         return configFile.canEqual(other);
     }
+    
+    public String getMagicImageLink() {
+        return configFile.getMagicImageLink();
+    }
+    
+    public void setMagicImageLink(String magicImageLink) {
+        configFile.setMagicImageLink(magicImageLink);
+    }
+    
+    public int getMagicImagineChance() {
+        return configFile.getMagicImagineChance();
+    }
+    
+    public void setMagicImagineChance(int magicImagineChance) {
+        configFile.setMagicImagineChance(magicImagineChance);
+    }
+    
+    public int getMagicImageCooldown() {
+        return configFile.getMagicImageCooldown();
+    }
+    
+    public void setMagicImageCooldown(int magicImageCooldown) {
+        configFile.setMagicImageCooldown(magicImageCooldown);
+    }
+    
+    public int getMagicImageDeleteSchedule() {
+        return configFile.getMagicImageDeleteSchedule();
+    }
+    
+    public void setMagicImageDeleteSchedule(int magicImageDeleteSchedule) {
+        configFile.setMagicImageDeleteSchedule(magicImageDeleteSchedule);
+    }
 }

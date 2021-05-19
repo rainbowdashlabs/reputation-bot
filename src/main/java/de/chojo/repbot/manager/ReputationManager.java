@@ -2,6 +2,7 @@ package de.chojo.repbot.manager;
 
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.repbot.analyzer.ThankType;
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
@@ -27,11 +28,13 @@ public class ReputationManager {
     private final ReputationData reputationData;
     private final GuildData guildData;
     private final RoleAssigner assigner;
+    private final Configuration configuration;
 
-    public ReputationManager(DataSource dataSource, RoleAssigner assigner) {
+    public ReputationManager(DataSource dataSource, RoleAssigner assigner, Configuration configuration) {
         this.reputationData = new ReputationData(dataSource);
         this.guildData = new GuildData(dataSource);
         this.assigner = assigner;
+        this.configuration = configuration;
     }
     
     private Instant lastEasterEggSent = Instant.EPOCH;
@@ -106,13 +109,13 @@ public class ReputationManager {
 
         // block self vote
         if (Verifier.equalSnowflake(receiver, donor)) {
-            if (lastEasterEggSent.until(Instant.now(), ChronoUnit.MINUTES) > 30
-                && ThreadLocalRandom.current().nextInt(10) == 9) {
+            if (lastEasterEggSent.until(Instant.now(), ChronoUnit.MINUTES) > configuration.getMagicImageCooldown()
+                && ThreadLocalRandom.current().nextInt(configuration.getMagicImagineChance()) == 0) {
                 lastEasterEggSent = Instant.now();
                 message.reply(new EmbedBuilder()
-                    .setImage("https://cdn.discordapp.com/attachments/466561879674847233/839921810714656818/cover1.png")
+                    .setImage(configuration.getMagicImageLink())
                     .setColor(Color.RED).build())
-                    .queue(message1 -> message1.delete().queueAfter(1, TimeUnit.MINUTES));
+                    .queue(message1 -> message1.delete().queueAfter(configuration.getMagicImageDeleteSchedule(), TimeUnit.SECONDS));
             }
             return false;
         }
