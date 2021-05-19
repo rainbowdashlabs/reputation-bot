@@ -9,6 +9,7 @@ import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.data.wrapper.ReputationLogEntry;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.sharding.ShardManager;
 
 import javax.sql.DataSource;
@@ -36,13 +37,19 @@ public class Log extends SimpleCommand {
 
     @Override
     public boolean onCommand(MessageEventWrapper eventWrapper, CommandContext context) {
-        if (context.argsEmpty()) return false;
+        if (context.argsArray().length <= 1) return false;
         var cmd = context.argString(0).get();
-        if ("received".equalsIgnoreCase(cmd)) {
-            return received(eventWrapper, context.subContext(cmd));
-        }
-        if ("donated".equalsIgnoreCase(cmd)) {
-            return donated(eventWrapper, context.subContext(cmd));
+        if ("received".equalsIgnoreCase(cmd) || "donated".equalsIgnoreCase(cmd)) {
+            var userArg = context.argString(0).get();
+            var optUser = DiscordResolver.getUser(shardManager, userArg);
+            if (optUser.isEmpty()) {
+                eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.userNotFound"), 15);
+                return true;
+            }
+            if ("received".equalsIgnoreCase(cmd)) {
+                return received(eventWrapper, context.subContext(cmd), optUser.get());
+            }
+            return donated(eventWrapper, context.subContext(cmd), optUser.get());
         }
         if ("message".equalsIgnoreCase(cmd)) {
             return message(eventWrapper, context.subContext(cmd));
@@ -51,8 +58,6 @@ public class Log extends SimpleCommand {
     }
 
     private boolean message(MessageEventWrapper eventWrapper, CommandContext subContext) {
-        if (subContext.argsEmpty()) return false;
-
         var optMessageId = subContext.argLong(0);
 
         if (optMessageId.isEmpty()) {
@@ -69,57 +74,38 @@ public class Log extends SimpleCommand {
                 .setDescription(log)
                 .build();
         eventWrapper.reply(message).queue();
-
         return true;
     }
 
-    private boolean donated(MessageEventWrapper eventWrapper, CommandContext context) {
-        if (context.argsEmpty()) return false;
-        var userArg = context.argString(0).get();
-        var optUser = DiscordResolver.getUser(shardManager, userArg);
-        if (optUser.isEmpty()) {
-            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.userNotFound"), 15);
-            return true;
-        }
-        var user = optUser.get();
+    private void sendUserLog(MessageEventWrapper eventWrapper, User user, String title, String log) {
+        var message = new LocalizedEmbedBuilder(eventWrapper)
+                .setAuthor(eventWrapper.localize(title,
+                        Replacement.create("USER", user.getAsTag())),
+                        user.getAvatarUrl())
+                .setDescription(log)
+                .build();
+        eventWrapper.reply(message).queue();
 
+    }
+
+    private boolean donated(MessageEventWrapper eventWrapper, CommandContext context, User user) {
         var limit = context.argInt(1).orElse(10);
 
         var userDonatedLog = reputationData.getUserDonatedLog(user, eventWrapper.getGuild(), Math.max(5, Math.min(limit, 50)));
 
         var log = mapLogEntry(eventWrapper, userDonatedLog, ReputationLogEntry::getReceiverId);
-
-        var message = new LocalizedEmbedBuilder(eventWrapper)
-                .setAuthor(eventWrapper.localize("command.log.donatedLog", Replacement.create("USER", user.getAsTag())),
-                        user.getAvatarUrl())
-                .setDescription(log)
-                .build();
-        eventWrapper.reply(message).queue();
+        sendUserLog(eventWrapper, user,"command.log.donatedLog", log);
         return true;
     }
 
-    private boolean received(MessageEventWrapper eventWrapper, CommandContext context) {
-        if (context.argsEmpty()) return false;
-        var userArg = context.argString(0).get();
-        var optUser = DiscordResolver.getUser(shardManager, userArg);
-        if (optUser.isEmpty()) {
-            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.userNotFound"), 15);
-            return true;
-        }
-        var user = optUser.get();
-
+    private boolean received(MessageEventWrapper eventWrapper, CommandContext context, User user) {
         var limit = context.argInt(1).orElse(10);
 
         var userDonatedLog = reputationData.getUserReceivedLog(user, eventWrapper.getGuild(), Math.max(5, Math.min(limit, 50)));
 
         var log = mapLogEntry(eventWrapper, userDonatedLog, ReputationLogEntry::getDonorId);
 
-        var message = new LocalizedEmbedBuilder(eventWrapper)
-                .setAuthor(eventWrapper.localize("command.log.receivedLog", Replacement.create("USER", user.getAsTag())),
-                        user.getAvatarUrl())
-                .setDescription(log)
-                .build();
-        eventWrapper.reply(message).queue();
+        sendUserLog(eventWrapper, user,"command.log.receivedLog", log);
         return true;
     }
 
@@ -138,7 +124,7 @@ public class Log extends SimpleCommand {
                         Replacement.create("URL", logEntry.getMessageJumpLink()));
             }
             entries.add(String.format("**%s** %s **%s** %s",
-                    thankType, received == null ? "----" : received.getAsMention(), jump, refJump == null ? "" : "➜ **"+refJump + "**"));
+                    thankType, received == null ? "----" : received.getAsMention(), jump, refJump == null ? "" : "➜ **" + refJump + "**"));
         }
         return String.join("\n", entries);
     }
