@@ -10,7 +10,7 @@ public class ReputationLogEntry {
     private static final String PATH = "https://discord.com/channels/%s/%s/%s";
 
     private final long guildId;
-    private final long channel_id;
+    private final long channelId;
     private final long donorId;
     private final long receiverId;
     private final long messageId;
@@ -18,11 +18,11 @@ public class ReputationLogEntry {
     private final ThankType type;
 
     public String getMessageJumpLink() {
-        return String.format(PATH, guildId, channel_id, messageId);
+        return String.format(PATH, guildId, channelId, messageId);
     }
 
     public String getRedMessageJumpLink() {
-        return String.format(PATH, guildId, channel_id, refMessageId);
+        return String.format(PATH, guildId, channelId, refMessageId);
     }
 
     public boolean hasRefMessage() {
