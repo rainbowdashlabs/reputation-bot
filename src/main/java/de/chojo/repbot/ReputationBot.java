@@ -110,7 +110,7 @@ public class ReputationBot {
 
     private void initBot() {
         var roleAssigner = new RoleAssigner(dataSource);
-        var reputationManager = new ReputationManager(dataSource, roleAssigner, configuration);
+        var reputationManager = new ReputationManager(dataSource, roleAssigner, configuration.getMagicImage());
         var reactionListener = new ReactionListener(dataSource, localizer, reputationManager);
         var stateListener = new StateListener(dataSource);
         cleaner.scheduleAtFixedRate(stateListener, 12, 12, TimeUnit.HOURS);
