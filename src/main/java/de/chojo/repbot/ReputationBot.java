@@ -9,6 +9,7 @@ import de.chojo.repbot.commands.Channel;
 import de.chojo.repbot.commands.Help;
 import de.chojo.repbot.commands.Invite;
 import de.chojo.repbot.commands.Locale;
+import de.chojo.repbot.commands.Log;
 import de.chojo.repbot.commands.Prefix;
 import de.chojo.repbot.commands.RepSettings;
 import de.chojo.repbot.commands.Reputation;
@@ -135,7 +136,8 @@ public class ReputationBot {
                         scan,
                         new Locale(dataSource, localizer),
                         new Invite(localizer),
-                        new Source(localizer)
+                        new Source(localizer),
+                        new Log(shardManager, dataSource)
                 )
                 .withInvalidArgumentProvider(((loc, command) -> {
                     var embedBuilder = new EmbedBuilder()
