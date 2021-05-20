@@ -81,7 +81,7 @@ public class Log extends SimpleCommand {
         var message = new LocalizedEmbedBuilder(eventWrapper)
                 .setAuthor(eventWrapper.localize(title,
                         Replacement.create("USER", user.getAsTag())),
-                        user.getAvatarUrl())
+                        null, user.getAvatarUrl())
                 .setDescription(log)
                 .build();
         eventWrapper.reply(message).queue();
