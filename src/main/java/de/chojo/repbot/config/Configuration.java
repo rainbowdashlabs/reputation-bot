@@ -70,32 +70,16 @@ public class Configuration {
         return configFile.getToken();
     }
 
-    public void setToken(String token) {
-        configFile.setToken(token);
-    }
-
     public String getDefaultPrefix() {
         return configFile.getDefaultPrefix();
-    }
-
-    public void setDefaultPrefix(String defaultPrefix) {
-        configFile.setDefaultPrefix(defaultPrefix);
     }
 
     public Database getDatabase() {
         return configFile.getDatabase();
     }
 
-    public void setDatabase(Database database) {
-        configFile.setDatabase(database);
-    }
-
     public boolean isExclusiveHelp() {
         return configFile.isExclusiveHelp();
-    }
-
-    public void setExclusiveHelp(boolean exclusiveHelp) {
-        configFile.setExclusiveHelp(exclusiveHelp);
     }
 
     public boolean canEqual(Object other) {

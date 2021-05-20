@@ -70,6 +70,13 @@ java {
 }
 
 tasks {
+    compileJava {
+        options.encoding = "UTF-8"
+    }
+    javadoc {
+        options.encoding = "UTF-8"
+    }
+
     test {
         useJUnitPlatform()
         testLogging {
@@ -83,9 +90,6 @@ tasks {
         }
     }
 
-    compileJava {
-        options.encoding = "UTF-8"
-    }
     build {
         dependsOn(shadowJar)
     }
