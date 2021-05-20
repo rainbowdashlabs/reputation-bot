@@ -40,7 +40,7 @@ public class Log extends SimpleCommand {
         if (context.argsArray().length <= 1) return false;
         var cmd = context.argString(0).get();
         if ("received".equalsIgnoreCase(cmd) || "donated".equalsIgnoreCase(cmd)) {
-            var userArg = context.argString(0).get();
+            var userArg = context.argString(1).get();
             var optUser = DiscordResolver.getUser(shardManager, userArg);
             if (optUser.isEmpty()) {
                 eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.userNotFound"), 15);
@@ -81,11 +81,10 @@ public class Log extends SimpleCommand {
         var message = new LocalizedEmbedBuilder(eventWrapper)
                 .setAuthor(eventWrapper.localize(title,
                         Replacement.create("USER", user.getAsTag())),
-                        null, user.getAvatarUrl())
+                        null, user.getEffectiveAvatarUrl())
                 .setDescription(log)
                 .build();
         eventWrapper.reply(message).queue();
-
     }
 
     private boolean donated(MessageEventWrapper eventWrapper, CommandContext context, User user) {
