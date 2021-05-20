@@ -8,5 +8,12 @@
     "user": "root",
     "password": "changeme",
     "poolSize": 20
+  },
+  "exclusiveHelp": true,
+  "magicImage": {
+    "magicImageLink": "",
+    "magicImagineChance": 10,
+    "magicImageCooldown": 30,
+    "magicImageDeleteSchedule": 60
   }
 }
