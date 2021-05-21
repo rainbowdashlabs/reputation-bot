@@ -39,6 +39,15 @@ public class Configuration {
         } catch (IOException e) {
             log.info("Could not load config", e);
         }
+        try {
+            save();
+        } catch (IOException e) {
+            log.error("Could not save config.");
+        }
+    }
+
+    private void save() throws IOException {
+        objectMapper.writerWithDefaultPrettyPrinter().writeValues(getConfig().toFile()).write(configFile);
     }
 
     private void reloadFile() throws IOException {
@@ -82,10 +91,6 @@ public class Configuration {
         return configFile.isExclusiveHelp();
     }
 
-    public boolean canEqual(Object other) {
-        return configFile.canEqual(other);
-    }
-    
     public MagicImage getMagicImage() {
         return configFile.getMagicImage();
     }
