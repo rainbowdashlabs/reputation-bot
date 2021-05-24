@@ -11,6 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveAllEvent;
+import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEmoteEvent;
+import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
@@ -88,6 +91,29 @@ public class ReactionListener extends ListenerAdapter {
             return;
         }
         reputationManager.submitReputation(event.getGuild(), event.getUser(), message.getAuthor(), message, null, ThankType.REACTION);
+    }
+
+    @Override
+    public void onGuildMessageReactionRemoveEmote(@NotNull GuildMessageReactionRemoveEmoteEvent event) {
+        var optGuildSettings = guildData.getGuildSettings(event.getGuild());
+        if (optGuildSettings.isEmpty()) return;
+        var guildSettings = optGuildSettings.get();
+        if (!guildSettings.isReaction(event.getReactionEmote())) return;
+        reputationData.removeMessage(event.getMessageIdLong());
+    }
+
+    @Override
+    public void onGuildMessageReactionRemove(@NotNull GuildMessageReactionRemoveEvent event) {
+        var optGuildSettings = guildData.getGuildSettings(event.getGuild());
+        if (optGuildSettings.isEmpty()) return;
+        var guildSettings = optGuildSettings.get();
+        if (!guildSettings.isReaction(event.getReactionEmote())) return;
+        reputationData.removeReputation(event.getUserIdLong(), event.getMessageIdLong(), ThankType.REACTION);
+    }
+
+    @Override
+    public void onGuildMessageReactionRemoveAll(@NotNull GuildMessageReactionRemoveAllEvent event) {
+        reputationData.removeMessage(event.getMessageIdLong());
     }
 
     public void registerAfterVote(Message message, VoteRequest request) {
