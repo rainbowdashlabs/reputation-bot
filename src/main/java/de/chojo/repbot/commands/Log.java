@@ -67,7 +67,7 @@ public class Log extends SimpleCommand {
 
         var messageLog = reputationData.getMessageLog(optMessageId.get(), eventWrapper.getGuild(), 50);
 
-        var log = mapLogEntry(eventWrapper, messageLog, ReputationLogEntry::getDonorId);
+        var log = mapLogEntry(eventWrapper, messageLog, ReputationLogEntry::getReceiverId);
 
         var message = new LocalizedEmbedBuilder(eventWrapper)
                 .setAuthor(eventWrapper.localize("command.log.messageLog", Replacement.create("ID", optMessageId.get())))
