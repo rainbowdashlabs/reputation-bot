@@ -11,11 +11,15 @@ import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEmoteEvent;
+import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import javax.sql.DataSource;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -69,11 +73,13 @@ public class ReactionListener extends ListenerAdapter {
         if (!guildSettings.isReactionActive()) return;
         if (!guildSettings.isReaction(event.getReaction().getReactionEmote())) return;
 
-        Message message = event.getChannel()
+        var message = event.getChannel()
                 .retrieveMessageById(event.getMessageId())
                 .timeout(10, TimeUnit.SECONDS).complete();
         var recentMembers = HistoryUtil.getRecentMembers(message, guildSettings.getMaxMessageAge());
         if (!recentMembers.contains(event.getMember())) return;
+
+        var receiver = message.getAuthor();
 
         var logEntry = reputationData.getLogEntry(message);
         if (logEntry.isPresent()) {
@@ -84,10 +90,15 @@ public class ReactionListener extends ListenerAdapter {
                 return;
             }
             if (newReceiver == null) return;
-            reputationManager.submitReputation(event.getGuild(), event.getUser(), newReceiver.getUser(), message, null, ThankType.REACTION);
+            receiver = newReceiver.getUser();
             return;
         }
-        reputationManager.submitReputation(event.getGuild(), event.getUser(), message.getAuthor(), message, null, ThankType.REACTION);
+        if (reputationManager.submitReputation(event.getGuild(), event.getUser(), receiver, message, null, ThankType.REACTION)) {
+            event.getChannel().sendMessage(localizer.localize("listener.reaction.confirmation", event.getGuild(),
+                    Replacement.create("DONOR", event.getUser().getAsMention()), Replacement.create("RECEIVER", receiver.getAsMention())))
+                    .mention(event.getUser())
+                    .queue(m -> m.delete().queueAfter(30, TimeUnit.SECONDS));
+        }
     }
 
     public void registerAfterVote(Message message, VoteRequest request) {
