@@ -10,7 +10,9 @@ import de.chojo.repbot.util.HistoryUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveAllEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEmoteEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -99,6 +101,33 @@ public class ReactionListener extends ListenerAdapter {
                     .mention(event.getUser())
                     .queue(m -> m.delete().queueAfter(30, TimeUnit.SECONDS));
         }
+    }
+
+    @Override
+    public void onGuildMessageReactionRemoveEmote(@NotNull GuildMessageReactionRemoveEmoteEvent event) {
+        var optGuildSettings = guildData.getGuildSettings(event.getGuild());
+        if (optGuildSettings.isEmpty()) return;
+        var guildSettings = optGuildSettings.get();
+        if (!guildSettings.isReaction(event.getReactionEmote())) return;
+        reputationData.removeMessage(event.getMessageIdLong());
+    }
+
+    @Override
+    public void onGuildMessageReactionRemove(@NotNull GuildMessageReactionRemoveEvent event) {
+        var optGuildSettings = guildData.getGuildSettings(event.getGuild());
+        if (optGuildSettings.isEmpty()) return;
+        var guildSettings = optGuildSettings.get();
+        if (!guildSettings.isReaction(event.getReactionEmote())) return;
+        if (reputationData.removeReputation(event.getUserIdLong(), event.getMessageIdLong(), ThankType.REACTION)) {
+            event.getChannel().sendMessage(localizer.localize("listener.reaction.removal", event.getGuild(),
+                    Replacement.create("DONOR", User.fromId(event.getUserId()))))
+                    .queue(m -> m.delete().queueAfter(30, TimeUnit.SECONDS));
+        }
+    }
+
+    @Override
+    public void onGuildMessageReactionRemoveAll(@NotNull GuildMessageReactionRemoveAllEvent event) {
+        reputationData.removeMessage(event.getMessageIdLong());
     }
 
     public void registerAfterVote(Message message, VoteRequest request) {
