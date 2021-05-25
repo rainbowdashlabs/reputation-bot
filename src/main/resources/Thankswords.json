@@ -1,0 +1,13 @@
+{
+  "defaults": {
+    "english": [
+      "thx",
+      "thank(s)?"
+    ],
+    "deutsch": [
+      "dank(e)?",
+      "dankeschön",
+      "dange"
+    ]
+  }
+}

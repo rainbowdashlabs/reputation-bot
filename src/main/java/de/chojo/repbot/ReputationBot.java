@@ -132,7 +132,7 @@ public class ReputationBot {
                         new Reputation(dataSource, localizer),
                         new Roles(dataSource),
                         new RepSettings(dataSource, localizer),
-                        new Thankwords(dataSource, localizer),
+                        Thankwords.of(dataSource, localizer),
                         scan,
                         new Locale(dataSource, localizer),
                         new Invite(localizer),

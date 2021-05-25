@@ -1,5 +1,8 @@
 package de.chojo.repbot.commands;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Format;
@@ -11,20 +14,33 @@ import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.data.GuildData;
 import net.dv8tion.jda.api.Permission;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
 
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class Thankwords extends SimpleCommand {
 
     private final GuildData data;
     private final Localizer loc;
+    private final ThankwordsContainer thankwordsContainer;
 
-    public Thankwords(DataSource dataSource, Localizer localizer) {
-        super("thankwords", new String[] {"tw"},
+    private static final Logger log = getLogger(Thankwords.class);
+
+    private Thankwords(GuildData data, Localizer localizer, ThankwordsContainer thankwordsContainer) {
+        super("thankwords", new String[]{"tw"},
                 "command.thankwords.description",
                 null,
                 subCommandBuilder()
@@ -32,10 +48,25 @@ public class Thankwords extends SimpleCommand {
                         .add("remove", "<pattern>", "command.thankwords.sub.remove")
                         .add("list", null, "command.thankwords.sub.list")
                         .add("check", "<Sentence>", "command.thankwords.sub.check")
+                        .add("loadDefault", "[language]", "command.thankwords.sub.loadDefault")
                         .build(),
                 Permission.MANAGE_SERVER);
-        data = new GuildData(dataSource);
-        loc = localizer;
+        this.data = data;
+        this.loc = localizer;
+        this.thankwordsContainer = thankwordsContainer;
+    }
+
+    public static Thankwords of(DataSource dataSource, Localizer localizer) {
+        ThankwordsContainer thankwordsContainer;
+        try {
+            thankwordsContainer = new ObjectMapper()
+                    .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
+                    .readValue(Thankwords.class.getClassLoader().getResourceAsStream("Thankswords.json"), ThankwordsContainer.class);
+        } catch (IOException e) {
+            thankwordsContainer = null;
+            log.error("Could not read thankwords", e);
+        }
+        return new Thankwords(new GuildData(dataSource), localizer, thankwordsContainer);
     }
 
     @Override
@@ -53,6 +84,9 @@ public class Thankwords extends SimpleCommand {
         }
         if ("check".equalsIgnoreCase(subCmd)) {
             return check(eventWrapper);
+        }
+        if ("loadDefaults".equalsIgnoreCase(subCmd)) {
+            return loadDefaults(eventWrapper, context.subContext(subCmd));
         }
         return false;
     }
@@ -162,5 +196,42 @@ public class Thankwords extends SimpleCommand {
 
         eventWrapper.reply(builder.build()).queue();
         return true;
+    }
+
+    private boolean loadDefaults(MessageEventWrapper eventWrapper, CommandContext context) {
+        if (context.argsEmpty()) {
+            eventWrapper.reply(eventWrapper.localize("command.thankwords.sub.loadDefault.available")
+                    + " " + String.join(", ", thankwordsContainer.getAvailableLanguages())).queue();
+            return true;
+        }
+        var language = context.argString(0).get();
+        var words = thankwordsContainer.get(language.toLowerCase(Locale.ROOT));
+        if (words == null) {
+            eventWrapper.replyErrorAndDelete(eventWrapper.localize("command.locale.error.invalidLocale"), 10);
+            return true;
+        }
+        for (var word : words) {
+            data.addThankWord(eventWrapper.getGuild(), word);
+        }
+
+        var wordsJoined = words.stream().map(w -> StringUtils.wrap(w, "`")).collect(Collectors.joining(", "));
+
+        eventWrapper.reply(eventWrapper.localize("command.thankwords.sub.loadDefault.added") + wordsJoined).queue();
+        return true;
+    }
+
+    private static class ThankwordsContainer {
+        private Map<String, List<String>> defaults = new HashMap<>();
+
+        public ThankwordsContainer() {
+        }
+
+        public List<String> get(String key) {
+            return defaults.get(key);
+        }
+
+        public Set<String> getAvailableLanguages() {
+            return Collections.unmodifiableSet(defaults.keySet());
+        }
     }
 }
