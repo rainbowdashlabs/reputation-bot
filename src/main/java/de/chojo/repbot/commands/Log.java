@@ -67,7 +67,7 @@ public class Log extends SimpleCommand {
 
         var messageLog = reputationData.getMessageLog(optMessageId.get(), eventWrapper.getGuild(), 50);
 
-        var log = mapLogEntry(eventWrapper, messageLog, ReputationLogEntry::getDonorId);
+        var log = mapMessageLogEntry(eventWrapper, messageLog);
 
         var message = new LocalizedEmbedBuilder(eventWrapper)
                 .setAuthor(eventWrapper.localize("command.log.messageLog", Replacement.create("ID", optMessageId.get())))
@@ -92,8 +92,8 @@ public class Log extends SimpleCommand {
 
         var userDonatedLog = reputationData.getUserDonatedLog(user, eventWrapper.getGuild(), Math.max(5, Math.min(limit, 50)));
 
-        var log = mapLogEntry(eventWrapper, userDonatedLog, ReputationLogEntry::getReceiverId);
-        sendUserLog(eventWrapper, user,"command.log.donatedLog", log);
+        var log = mapUserLogEntry(eventWrapper, userDonatedLog, ReputationLogEntry::getReceiverId);
+        sendUserLog(eventWrapper, user, "command.log.donatedLog", log);
         return true;
     }
 
@@ -102,29 +102,51 @@ public class Log extends SimpleCommand {
 
         var userDonatedLog = reputationData.getUserReceivedLog(user, eventWrapper.getGuild(), Math.max(5, Math.min(limit, 50)));
 
-        var log = mapLogEntry(eventWrapper, userDonatedLog, ReputationLogEntry::getDonorId);
+        var log = mapUserLogEntry(eventWrapper, userDonatedLog, ReputationLogEntry::getDonorId);
 
-        sendUserLog(eventWrapper, user,"command.log.receivedLog", log);
+        sendUserLog(eventWrapper, user, "command.log.receivedLog", log);
         return true;
     }
 
-    private String mapLogEntry(MessageEventWrapper wrapper, List<ReputationLogEntry> logEntries, Function<ReputationLogEntry, Long> userId) {
+    private String mapUserLogEntry(MessageEventWrapper wrapper, List<ReputationLogEntry> logEntries, Function<ReputationLogEntry, Long> userId) {
         List<String> entries = new ArrayList<>();
         for (var logEntry : logEntries) {
             var received = wrapper.getGuild().retrieveMemberById(userId.apply(logEntry)).complete();
             var thankType = wrapper.localize("thankType." + logEntry.getType().name().toLowerCase(Locale.ROOT));
-            var jump = wrapper.localize("words.jumpMarker",
-                    Replacement.create("TARGET", "$words.message$"),
-                    Replacement.create("URL", logEntry.getMessageJumpLink()));
-            String refJump = null;
-            if (logEntry.hasRefMessage()) {
-                refJump = wrapper.localize("words.jumpMarker",
-                        Replacement.create("TARGET", "$words.refMessage$"),
-                        Replacement.create("URL", logEntry.getMessageJumpLink()));
-            }
-            entries.add(String.format("**%s** %s **%s** %s",
-                    thankType, received == null ? "----" : received.getAsMention(), jump, refJump == null ? "" : "➜ **" + refJump + "**"));
+            var jumpLink = createJumpLink(wrapper, logEntry);
+            entries.add(String.format("**%s** %s %s",
+                    thankType, received == null ? "----" : received.getAsMention(), jumpLink));
         }
         return String.join("\n", entries);
+    }
+
+    private String mapMessageLogEntry(MessageEventWrapper wrapper, List<ReputationLogEntry> logEntries) {
+        if (logEntries.isEmpty()) return "";
+
+        List<String> entries = new ArrayList<>();
+        for (var logEntry : logEntries) {
+            var jumpLink = createJumpLink(wrapper, logEntry);
+            var donator = wrapper.getGuild().retrieveMemberById(logEntry.getDonorId()).complete();
+            var receiver = wrapper.getGuild().retrieveMemberById(logEntry.getReceiverId()).complete();
+            var thankType = wrapper.localize("thankType." + logEntry.getType().name().toLowerCase(Locale.ROOT));
+            entries.add(String.format("**%s** %s ➜ %s **|** %s",
+                    thankType, donator == null ? "----" : donator.getAsMention(), receiver == null ? "----" : receiver.getAsMention(), jumpLink));
+        }
+        return String.join("\n", entries);
+    }
+
+    private String createJumpLink(MessageEventWrapper wrapper, ReputationLogEntry log) {
+        var jump = wrapper.localize("words.jumpMarker",
+                Replacement.create("TARGET", "$words.message$"),
+                Replacement.create("URL", log.getMessageJumpLink()));
+
+        String refJump = null;
+        if (log.hasRefMessage()) {
+            refJump = wrapper.localize("words.jumpMarker",
+                    Replacement.create("TARGET", "$words.refMessage$"),
+                    Replacement.create("URL", log.getMessageJumpLink()));
+        }
+
+        return String.format("**%s** %s", jump, refJump == null ? "" : "➜ **" + refJump + "**");
     }
 }
