@@ -120,7 +120,7 @@ public class ReactionListener extends ListenerAdapter {
         if (!guildSettings.isReaction(event.getReactionEmote())) return;
         if (reputationData.removeReputation(event.getUserIdLong(), event.getMessageIdLong(), ThankType.REACTION)) {
             event.getChannel().sendMessage(localizer.localize("listener.reaction.removal", event.getGuild(),
-                    Replacement.create("DONOR", User.fromId(event.getUserId()))))
+                    Replacement.create("DONOR", User.fromId(event.getUserId()).getAsMention())))
                     .queue(m -> m.delete().queueAfter(30, TimeUnit.SECONDS));
         }
     }
