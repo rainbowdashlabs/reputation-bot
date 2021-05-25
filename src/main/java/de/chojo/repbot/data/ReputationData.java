@@ -293,4 +293,23 @@ public class ReputationData {
                 ThankType.valueOf(rs.getString("cause"))
         );
     }
+
+    public boolean removeReputation(long user, long message, ThankType type) {
+        try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
+                DELETE FROM
+                    reputation_log
+                where
+                    message_id = ?
+                    AND donor_id = ?
+                    AND cause = ?
+                """)) {
+            stmt.setLong(1, message);
+            stmt.setLong(2, user);
+            stmt.setString(3, type.name());
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            DbUtil.logSQLError("Could not delete reputation", e);
+        }
+        return false;
+    }
 }
