@@ -39,7 +39,7 @@ public class Thankwords extends SimpleCommand {
 
     private static final Logger log = getLogger(Thankwords.class);
 
-    private Thankwords(DataSource dataSource, Localizer localizer, ThankwordsContainer thankwordsContainer) {
+    private Thankwords(GuildData data, Localizer localizer, ThankwordsContainer thankwordsContainer) {
         super("thankwords", new String[]{"tw"},
                 "command.thankwords.description",
                 null,
@@ -51,8 +51,8 @@ public class Thankwords extends SimpleCommand {
                         .add("loadDefault", "[language]", "command.thankwords.sub.loadDefault")
                         .build(),
                 Permission.MANAGE_SERVER);
-        data = new GuildData(dataSource);
-        loc = localizer;
+        this.data = data;
+        this.loc = localizer;
         this.thankwordsContainer = thankwordsContainer;
     }
 
@@ -66,7 +66,7 @@ public class Thankwords extends SimpleCommand {
             thankwordsContainer = null;
             log.error("Could not read thankwords", e);
         }
-        return new Thankwords(dataSource, localizer, thankwordsContainer);
+        return new Thankwords(new GuildData(dataSource), localizer, thankwordsContainer);
     }
 
     @Override
