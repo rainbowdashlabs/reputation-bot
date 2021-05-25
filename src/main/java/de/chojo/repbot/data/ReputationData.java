@@ -183,6 +183,105 @@ public class ReputationData {
         return Optional.empty();
     }
 
+    public List<ReputationLogEntry> getUserReceivedLog(User user, Guild guild, int count) {
+        List<ReputationLogEntry> log = new ArrayList<>();
+        try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
+                SELECT
+                    guild_id,
+                    donor_id,
+                    receiver_id,
+                    message_id,
+                    received,
+                    ref_message_id,
+                    channel_id,
+                    cause
+                FROM
+                    reputation_log
+                where
+                    receiver_id = ?
+                    AND guild_id = ?
+                ORDER BY received DESC
+                LIMIT ?
+                """)) {
+            stmt.setLong(1, user.getIdLong());
+            stmt.setLong(2, guild.getIdLong());
+            stmt.setInt(3, count);
+            var rs = stmt.executeQuery();
+            while (rs.next()) {
+                log.add(buildLogEntry(rs));
+            }
+        } catch (SQLException e) {
+            DbUtil.logSQLError("Could not retrieve log entry", e);
+        }
+        return log;
+    }
+
+    public List<ReputationLogEntry> getUserDonatedLog(User user, Guild guild, int count) {
+        List<ReputationLogEntry> log = new ArrayList<>();
+        try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
+                SELECT
+                    guild_id,
+                    donor_id,
+                    receiver_id,
+                    message_id,
+                    received,
+                    ref_message_id,
+                    channel_id,
+                    cause
+                FROM
+                    reputation_log
+                where
+                    donor_id = ?
+                    AND guild_id = ?
+                ORDER BY received DESC
+                LIMIT ?
+                """)) {
+            stmt.setLong(1, user.getIdLong());
+            stmt.setLong(2, guild.getIdLong());
+            stmt.setInt(3, count);
+            var rs = stmt.executeQuery();
+            while (rs.next()) {
+                log.add(buildLogEntry(rs));
+            }
+        } catch (SQLException e) {
+            DbUtil.logSQLError("Could not retrieve log entry", e);
+        }
+        return log;
+    }
+
+    public List<ReputationLogEntry> getMessageLog(long messageId, Guild guild, int count) {
+        List<ReputationLogEntry> log = new ArrayList<>();
+        try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
+                SELECT
+                    guild_id,
+                    donor_id,
+                    receiver_id,
+                    message_id,
+                    received,
+                    ref_message_id,
+                    channel_id,
+                    cause
+                FROM
+                    reputation_log
+                where
+                    message_id = ?
+                    AND guild_id = ?
+                ORDER BY received DESC
+                LIMIT ?
+                """)) {
+            stmt.setLong(1, messageId);
+            stmt.setLong(2, guild.getIdLong());
+            stmt.setInt(3, count);
+            var rs = stmt.executeQuery();
+            while (rs.next()) {
+                log.add(buildLogEntry(rs));
+            }
+        } catch (SQLException e) {
+            DbUtil.logSQLError("Could not retrieve log entry", e);
+        }
+        return log;
+    }
+
     private ReputationLogEntry buildLogEntry(ResultSet rs) throws SQLException {
         return new ReputationLogEntry(
                 rs.getLong("guild_id"),
@@ -193,5 +292,24 @@ public class ReputationData {
                 rs.getLong("ref_message_id"),
                 ThankType.valueOf(rs.getString("cause"))
         );
+    }
+
+    public boolean removeReputation(long user, long message, ThankType type) {
+        try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
+                DELETE FROM
+                    reputation_log
+                where
+                    message_id = ?
+                    AND donor_id = ?
+                    AND cause = ?
+                """)) {
+            stmt.setLong(1, message);
+            stmt.setLong(2, user);
+            stmt.setString(3, type.name());
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            DbUtil.logSQLError("Could not delete reputation", e);
+        }
+        return false;
     }
 }

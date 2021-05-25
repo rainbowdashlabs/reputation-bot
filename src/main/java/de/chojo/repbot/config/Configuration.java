@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.chojo.repbot.config.elements.Database;
+import de.chojo.repbot.config.elements.MagicImage;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,6 +39,15 @@ public class Configuration {
         } catch (IOException e) {
             log.info("Could not load config", e);
         }
+        try {
+            save();
+        } catch (IOException e) {
+            log.error("Could not save config.");
+        }
+    }
+
+    private void save() throws IOException {
+        objectMapper.writerWithDefaultPrettyPrinter().writeValues(getConfig().toFile()).write(configFile);
     }
 
     private void reloadFile() throws IOException {
@@ -69,35 +79,19 @@ public class Configuration {
         return configFile.getToken();
     }
 
-    public void setToken(String token) {
-        configFile.setToken(token);
-    }
-
     public String getDefaultPrefix() {
         return configFile.getDefaultPrefix();
-    }
-
-    public void setDefaultPrefix(String defaultPrefix) {
-        configFile.setDefaultPrefix(defaultPrefix);
     }
 
     public Database getDatabase() {
         return configFile.getDatabase();
     }
 
-    public void setDatabase(Database database) {
-        configFile.setDatabase(database);
-    }
-
     public boolean isExclusiveHelp() {
         return configFile.isExclusiveHelp();
     }
 
-    public void setExclusiveHelp(boolean exclusiveHelp) {
-        configFile.setExclusiveHelp(exclusiveHelp);
-    }
-
-    public boolean canEqual(Object other) {
-        return configFile.canEqual(other);
+    public MagicImage getMagicImage() {
+        return configFile.getMagicImage();
     }
 }

@@ -1,6 +1,7 @@
 package de.chojo.repbot.config;
 
 import de.chojo.repbot.config.elements.Database;
+import de.chojo.repbot.config.elements.MagicImage;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,4 +14,5 @@ public class ConfigFile {
     private String defaultPrefix = "!";
     private Database database = new Database();
     private boolean exclusiveHelp = false;
+    private MagicImage magicImage = new MagicImage();
 }

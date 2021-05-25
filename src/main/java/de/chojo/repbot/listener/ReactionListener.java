@@ -10,12 +10,18 @@ import de.chojo.repbot.util.HistoryUtil;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveAllEvent;
+import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEmoteEvent;
+import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import javax.sql.DataSource;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -45,7 +51,6 @@ public class ReactionListener extends ListenerAdapter {
             if (event.getReactionEmote().isEmote()) return;
             var voteRequest = voteRequests.get(event.getMessageIdLong());
             if (!voteRequest.getMember().equals(event.getMember())) return;
-            if (voteRequest.getRemainingVotes() == 0) return;
             var target = voteRequest.getTarget(event.getReactionEmote().getEmoji());
             if (target.isEmpty()) {
                 if (event.getReactionEmote().getEmoji().equals("🗑️")) {
@@ -54,6 +59,7 @@ public class ReactionListener extends ListenerAdapter {
                 }
                 return;
             }
+            if (voteRequest.getRemainingVotes() == 0) return;
 
             if (reputationManager.submitReputation(event.getGuild(), event.getUser(), target.get().getUser(), voteRequest.getRefMessage(), null, ThankType.REACTION)) {
                 voteRequest.voted();
@@ -69,11 +75,13 @@ public class ReactionListener extends ListenerAdapter {
         if (!guildSettings.isReactionActive()) return;
         if (!guildSettings.isReaction(event.getReaction().getReactionEmote())) return;
 
-        Message message = event.getChannel()
+        var message = event.getChannel()
                 .retrieveMessageById(event.getMessageId())
                 .timeout(10, TimeUnit.SECONDS).complete();
         var recentMembers = HistoryUtil.getRecentMembers(message, guildSettings.getMaxMessageAge());
         if (!recentMembers.contains(event.getMember())) return;
+
+        var receiver = message.getAuthor();
 
         var logEntry = reputationData.getLogEntry(message);
         if (logEntry.isPresent()) {
@@ -84,10 +92,42 @@ public class ReactionListener extends ListenerAdapter {
                 return;
             }
             if (newReceiver == null) return;
-            reputationManager.submitReputation(event.getGuild(), event.getUser(), newReceiver.getUser(), message, null, ThankType.REACTION);
+            receiver = newReceiver.getUser();
             return;
         }
-        reputationManager.submitReputation(event.getGuild(), event.getUser(), message.getAuthor(), message, null, ThankType.REACTION);
+        if (reputationManager.submitReputation(event.getGuild(), event.getUser(), receiver, message, null, ThankType.REACTION)) {
+            event.getChannel().sendMessage(localizer.localize("listener.reaction.confirmation", event.getGuild(),
+                    Replacement.create("DONOR", event.getUser().getAsMention()), Replacement.create("RECEIVER", receiver.getAsMention())))
+                    .mention(event.getUser())
+                    .queue(m -> m.delete().queueAfter(30, TimeUnit.SECONDS));
+        }
+    }
+
+    @Override
+    public void onGuildMessageReactionRemoveEmote(@NotNull GuildMessageReactionRemoveEmoteEvent event) {
+        var optGuildSettings = guildData.getGuildSettings(event.getGuild());
+        if (optGuildSettings.isEmpty()) return;
+        var guildSettings = optGuildSettings.get();
+        if (!guildSettings.isReaction(event.getReactionEmote())) return;
+        reputationData.removeMessage(event.getMessageIdLong());
+    }
+
+    @Override
+    public void onGuildMessageReactionRemove(@NotNull GuildMessageReactionRemoveEvent event) {
+        var optGuildSettings = guildData.getGuildSettings(event.getGuild());
+        if (optGuildSettings.isEmpty()) return;
+        var guildSettings = optGuildSettings.get();
+        if (!guildSettings.isReaction(event.getReactionEmote())) return;
+        if (reputationData.removeReputation(event.getUserIdLong(), event.getMessageIdLong(), ThankType.REACTION)) {
+            event.getChannel().sendMessage(localizer.localize("listener.reaction.removal", event.getGuild(),
+                    Replacement.create("DONOR", User.fromId(event.getUserId()).getAsMention())))
+                    .queue(m -> m.delete().queueAfter(30, TimeUnit.SECONDS));
+        }
+    }
+
+    @Override
+    public void onGuildMessageReactionRemoveAll(@NotNull GuildMessageReactionRemoveAllEvent event) {
+        reputationData.removeMessage(event.getMessageIdLong());
     }
 
     public void registerAfterVote(Message message, VoteRequest request) {

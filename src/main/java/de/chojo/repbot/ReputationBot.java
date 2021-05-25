@@ -9,6 +9,7 @@ import de.chojo.repbot.commands.Channel;
 import de.chojo.repbot.commands.Help;
 import de.chojo.repbot.commands.Invite;
 import de.chojo.repbot.commands.Locale;
+import de.chojo.repbot.commands.Log;
 import de.chojo.repbot.commands.Prefix;
 import de.chojo.repbot.commands.RepSettings;
 import de.chojo.repbot.commands.Reputation;
@@ -110,7 +111,7 @@ public class ReputationBot {
 
     private void initBot() {
         var roleAssigner = new RoleAssigner(dataSource);
-        var reputationManager = new ReputationManager(dataSource, roleAssigner);
+        var reputationManager = new ReputationManager(dataSource, roleAssigner, configuration.getMagicImage());
         var reactionListener = new ReactionListener(dataSource, localizer, reputationManager);
         var stateListener = new StateListener(dataSource);
         cleaner.scheduleAtFixedRate(stateListener, 12, 12, TimeUnit.HOURS);
@@ -131,11 +132,12 @@ public class ReputationBot {
                         new Reputation(dataSource, localizer),
                         new Roles(dataSource),
                         new RepSettings(dataSource, localizer),
-                        new Thankwords(dataSource, localizer),
+                        Thankwords.of(dataSource, localizer),
                         scan,
                         new Locale(dataSource, localizer),
                         new Invite(localizer),
-                        new Source(localizer)
+                        new Source(localizer),
+                        new Log(shardManager, dataSource)
                 )
                 .withInvalidArgumentProvider(((loc, command) -> {
                     var embedBuilder = new EmbedBuilder()
