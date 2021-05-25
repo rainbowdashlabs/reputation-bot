@@ -39,7 +39,7 @@ public class Thankwords extends SimpleCommand {
 
     private static final Logger log = getLogger(Thankwords.class);
 
-    public Thankwords(DataSource dataSource, Localizer localizer) {
+    private Thankwords(DataSource dataSource, Localizer localizer, ThankwordsContainer thankwordsContainer) {
         super("thankwords", new String[]{"tw"},
                 "command.thankwords.description",
                 null,
@@ -53,16 +53,20 @@ public class Thankwords extends SimpleCommand {
                 Permission.MANAGE_SERVER);
         data = new GuildData(dataSource);
         loc = localizer;
+        this.thankwordsContainer = thankwordsContainer;
+    }
+
+    public static Thankwords of(DataSource dataSource, Localizer localizer) {
         ThankwordsContainer thankwordsContainer;
         try {
             thankwordsContainer = new ObjectMapper()
                     .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
-                    .readValue(getClass().getClassLoader().getResourceAsStream("Thankswords.json"), ThankwordsContainer.class);
+                    .readValue(Thankwords.class.getClassLoader().getResourceAsStream("Thankswords.json"), ThankwordsContainer.class);
         } catch (IOException e) {
             thankwordsContainer = null;
             log.error("Could not read thankwords", e);
         }
-        this.thankwordsContainer = thankwordsContainer;
+        return new Thankwords(dataSource, localizer, thankwordsContainer);
     }
 
     @Override
