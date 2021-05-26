@@ -33,11 +33,10 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class Thankwords extends SimpleCommand {
 
+    private static final Logger log = getLogger(Thankwords.class);
     private final GuildData data;
     private final Localizer loc;
     private final ThankwordsContainer thankwordsContainer;
-
-    private static final Logger log = getLogger(Thankwords.class);
 
     private Thankwords(GuildData data, Localizer localizer, ThankwordsContainer thankwordsContainer) {
         super("thankwords", new String[]{"tw"},
@@ -156,22 +155,18 @@ public class Thankwords extends SimpleCommand {
 
         for (var receiver : result.getReceivers()) {
             switch (result.getType()) {
-                case FUZZY -> {
-                    builder.addField("command.thankwords.sub.check.match.fuzzy",
-                            eventWrapper.localize("command.thankwords.sub.check.result",
-                                    Replacement.create("DONATOR", result.getDonator().getAsMention()),
-                                    Replacement.create("RECEIVER", receiver.getReference().getAsMention())) + "\n"
-                                    + eventWrapper.localize("command.thankwords.sub.check.confidence",
-                                    Replacement.create("SCORE", String.format("%.3f", receiver.getWeight()))),
-                            false);
-                }
-                case MENTION -> {
-                    builder.addField("command.thankwords.sub.check.match.mention",
-                            eventWrapper.localize("command.thankwords.sub.check.result",
-                                    Replacement.create("DONATOR", result.getDonator().getAsMention()),
-                                    Replacement.create("RECEIVER", receiver.getReference().getAsMention())),
-                            false);
-                }
+                case FUZZY -> builder.addField("command.thankwords.sub.check.match.fuzzy",
+                        eventWrapper.localize("command.thankwords.sub.check.result",
+                                Replacement.create("DONATOR", result.getDonator().getAsMention()),
+                                Replacement.create("RECEIVER", receiver.getReference().getAsMention())) + "\n"
+                                + eventWrapper.localize("command.thankwords.sub.check.confidence",
+                                Replacement.create("SCORE", String.format("%.3f", receiver.getWeight()))),
+                        false);
+                case MENTION -> builder.addField("command.thankwords.sub.check.match.mention",
+                        eventWrapper.localize("command.thankwords.sub.check.result",
+                                Replacement.create("DONATOR", result.getDonator().getAsMention()),
+                                Replacement.create("RECEIVER", receiver.getReference().getAsMention())),
+                        false);
                 case ANSWER -> {
                     builder.addField("command.thankwords.sub.check.match.answer",
                             eventWrapper.localize("command.thankwords.sub.check.result",
@@ -221,7 +216,7 @@ public class Thankwords extends SimpleCommand {
     }
 
     private static class ThankwordsContainer {
-        private Map<String, List<String>> defaults = new HashMap<>();
+        private final Map<String, List<String>> defaults = new HashMap<>();
 
         public ThankwordsContainer() {
         }

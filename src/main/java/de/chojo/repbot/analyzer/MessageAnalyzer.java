@@ -28,7 +28,6 @@ public class MessageAnalyzer {
      *                      maxHistoryAge
      * @param threshold     threshold for fuzzy matches
      * @param limit         limit for returned matches in the analyzer result
-     *
      * @return analyzer results
      */
     public static AnalyzerResult processMessage(Pattern pattern, Message message, int maxHistoryAge, boolean limitTargets, double threshold, int limit) {

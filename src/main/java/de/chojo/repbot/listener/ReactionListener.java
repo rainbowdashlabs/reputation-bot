@@ -19,9 +19,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import javax.sql.DataSource;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -93,7 +91,6 @@ public class ReactionListener extends ListenerAdapter {
             }
             if (newReceiver == null) return;
             receiver = newReceiver.getUser();
-            return;
         }
         if (reputationManager.submitReputation(event.getGuild(), event.getUser(), receiver, message, null, ThankType.REACTION)) {
             event.getChannel().sendMessage(localizer.localize("listener.reaction.confirmation", event.getGuild(),

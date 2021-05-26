@@ -74,9 +74,9 @@ public class Prefix extends SimpleCommand {
                 eventWrapper.reply(eventWrapper.localize("error.invalidRegex")).queue();
                 return true;
             }
-            String substring = prefix.substring(3);
+            var substring = prefix.substring(3);
             if (!substring.startsWith("^")) {
-                substring= "^" + substring;
+                substring = "^" + substring;
             }
             try {
                 Pattern.compile(substring);

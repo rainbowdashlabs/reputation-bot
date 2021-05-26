@@ -43,7 +43,7 @@ public class Locale extends SimpleCommand {
             return set(eventWrapper, context.subContext(subCmd));
         }
         if ("list".equalsIgnoreCase(subCmd)) {
-            return list(eventWrapper, context.subContext(subCmd));
+            return list(eventWrapper);
         }
 
         return false;
@@ -62,7 +62,7 @@ public class Locale extends SimpleCommand {
         return true;
     }
 
-    private boolean list(MessageEventWrapper eventWrapper, CommandContext context) {
+    private boolean list(MessageEventWrapper eventWrapper) {
         var languages = loc.getLanguages();
         var builder = TextFormatting.getTableBuilder(languages,
                 eventWrapper.localize("words.language"), eventWrapper.localize("words.code"));
