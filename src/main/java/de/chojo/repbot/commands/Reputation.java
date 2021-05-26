@@ -4,7 +4,6 @@ import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
-import de.chojo.jdautil.localization.util.LocalizedField;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.jdautil.wrapper.CommandContext;
@@ -20,18 +19,19 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import javax.sql.DataSource;
-import java.awt.Color;
+import java.awt.*;
 import java.util.stream.Collectors;
 
 public class Reputation extends SimpleCommand {
     private static final int BAR_SIZE = 20;
+    private static final int TOP_PAGE_SIZE = 10;
     private final ReputationData reputationData;
     private final GuildData guildData;
     private final Localizer loc;
 
     public Reputation(DataSource dataSource, Localizer localizer) {
         super("reputation",
-                new String[] {"rep"},
+                new String[]{"rep"},
                 "command.reputation.description",
                 "[user]",
                 subCommandBuilder()
@@ -71,32 +71,16 @@ public class Reputation extends SimpleCommand {
 
     private boolean top(MessageEventWrapper eventWrapper, CommandContext context) {
         var page = context.argInt(0).orElse(1);
-        var ranking = reputationData.getRanking(eventWrapper.getGuild(), 10, (page - 1) * 10);
-        var ranks = ranking.stream()
-                .map(u -> String.valueOf(u.getRank()))
-                .collect(Collectors.joining("\n"));
-        var users = ranking.stream()
-                .map(u -> {
-                    var memberById = eventWrapper.getGuild().getMemberById(u.getUserId());
-                    if (memberById == null) {
-                        try {
-                            memberById = eventWrapper.getGuild().retrieveMemberById(u.getUserId()).complete();
-                        } catch (RuntimeException e) {
-                            // Happens I guess ¯\_(ツ)_/¯
-                        }
-                    }
-                    return memberById == null ? eventWrapper.localize("words.unknown") : memberById.getAsMention();
-                })
-                .collect(Collectors.joining("\n"));
-        var reputation = ranking.stream()
-                .map(u -> String.valueOf(u.getReputation()))
-                .collect(Collectors.joining("\n"));
+        var offset = (page - 1) * TOP_PAGE_SIZE;
+        var ranking = reputationData.getRanking(eventWrapper.getGuild(), TOP_PAGE_SIZE, offset);
+
+        var maxRank = offset + TOP_PAGE_SIZE;
+        var rankString = ranking.stream().map(rank -> rank.fancyString(maxRank)).collect(Collectors.joining("\n"));
+
         var embed = new LocalizedEmbedBuilder(loc, eventWrapper)
                 .setTitle(eventWrapper.localize("command.reputation.sub.top.ranking",
                         Replacement.create("GUILD", eventWrapper.getGuild().getName())))
-                .addField(new LocalizedField(loc, "", ranks, true, eventWrapper))
-                .addField(new LocalizedField(loc, "words.name", users, true, eventWrapper))
-                .addField(new LocalizedField(loc, "words.reputation", reputation, true, eventWrapper))
+                .setDescription(rankString)
                 .setColor(Color.CYAN)
                 .build();
         eventWrapper.reply(embed).queue();
