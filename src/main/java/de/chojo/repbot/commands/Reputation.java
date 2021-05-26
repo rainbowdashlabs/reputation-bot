@@ -19,7 +19,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
 import javax.sql.DataSource;
-import java.awt.*;
+import java.awt.Color;
 import java.util.stream.Collectors;
 
 public class Reputation extends SimpleCommand {
