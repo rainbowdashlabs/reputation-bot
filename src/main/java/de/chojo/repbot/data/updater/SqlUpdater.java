@@ -73,7 +73,7 @@ public class SqlUpdater {
         if (patch.getPatch() != -1) {
             log.info("Deployed patch number {}.{} to database.", patch.getMajor(), patch.getPatch());
         } else {
-            log.info("Migrated database to version.", patch.getMajor());
+            log.info("Migrated database to version {}.", patch.getMajor());
         }
     }
 

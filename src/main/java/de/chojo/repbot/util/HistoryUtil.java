@@ -22,7 +22,6 @@ public class HistoryUtil {
      * @param message       message to determine channel, author and start time
      * @param maxHistoryAge max age of analyzed messages. may be overriden by first message of author if this is more
      *                      recent.
-     *
      * @return list of members which have written in this channel
      */
     @NotNull

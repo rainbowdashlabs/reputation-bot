@@ -22,7 +22,7 @@ public class RepSettings extends SimpleCommand {
 
     public RepSettings(DataSource source, Localizer localizer) {
         super("repSettings",
-                new String[] {"rs"},
+                new String[]{"rs"},
                 "command.repSettings.description",
                 "",
                 subCommandBuilder()

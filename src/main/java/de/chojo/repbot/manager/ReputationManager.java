@@ -15,7 +15,7 @@ import net.dv8tion.jda.api.entities.User;
 import org.jetbrains.annotations.Nullable;
 
 import javax.sql.DataSource;
-import java.awt.*;
+import java.awt.Color;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.ThreadLocalRandom;
@@ -29,6 +29,7 @@ public class ReputationManager {
     private final GuildData guildData;
     private final RoleAssigner assigner;
     private final MagicImage magicImage;
+    private Instant lastEasterEggSent = Instant.EPOCH;
 
     public ReputationManager(DataSource dataSource, RoleAssigner assigner, MagicImage magicImage) {
         this.reputationData = new ReputationData(dataSource);
@@ -36,8 +37,6 @@ public class ReputationManager {
         this.assigner = assigner;
         this.magicImage = magicImage;
     }
-    
-    private Instant lastEasterEggSent = Instant.EPOCH;
 
     /**
      * Submit a reputation.
@@ -50,7 +49,6 @@ public class ReputationManager {
      * @param message    triggered message
      * @param refMessage reference message if present
      * @param type       type of reputation source
-     *
      * @return true if the reputation was counted and is valid
      */
     public boolean submitReputation(Guild guild, User donor, User receiver, Message message, @Nullable Message refMessage, ThankType type) {
@@ -110,17 +108,17 @@ public class ReputationManager {
         // block self vote
         if (Verifier.equalSnowflake(receiver, donor)) {
             if (lastEasterEggSent.until(Instant.now(), ChronoUnit.MINUTES) > magicImage.getMagicImageCooldown()
-                && ThreadLocalRandom.current().nextInt(magicImage.getMagicImagineChance()) == 0) {
+                    && ThreadLocalRandom.current().nextInt(magicImage.getMagicImagineChance()) == 0) {
                 lastEasterEggSent = Instant.now();
                 message.reply(new EmbedBuilder()
-                    .setImage(magicImage.getMagicImageLink())
-                    .setColor(Color.RED).build())
-                    .queue(message1 -> message1.delete().queueAfter(
-                        magicImage.getMagicImageDeleteSchedule(), TimeUnit.SECONDS));
+                        .setImage(magicImage.getMagicImageLink())
+                        .setColor(Color.RED).build())
+                        .queue(message1 -> message1.delete().queueAfter(
+                                magicImage.getMagicImageDeleteSchedule(), TimeUnit.SECONDS));
             }
             return false;
         }
-        
+
         // try to log reputation
         if (reputationData.logReputation(guild, donor, receiver, message, refMessage, type)) {
             // mark messages

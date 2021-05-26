@@ -38,7 +38,7 @@ class MessageListenerTest {
 
     public int[] divide(int total) {
         int left = 0, right = 0;
-        for (int i = 1; i <= total; i++) {
+        for (var i = 1; i <= total; i++) {
             if (leftSide(i, total)) left++;
             else right++;
         }
