@@ -14,7 +14,7 @@ import java.util.Set;
 
 @Slf4j
 public class MemberCacheManager implements MemberCachePolicy, Runnable {
-    public static final int CACHE_DURATION = 15;
+    public static final int CACHE_DURATION = 30;
     private final HashMap<Long, Instant> seen = new HashMap<>();
     private final Scan scan;
 
@@ -38,8 +38,8 @@ public class MemberCacheManager implements MemberCachePolicy, Runnable {
 
         if (!seen.containsKey(member.getIdLong())) {
             seen.put(member.getIdLong(), Instant.now());
-            log.debug("Requested user for the first time. Caching for some time.");
-            return false;
+            log.debug("Requested user {} for the first time. Caching for some time.", member.getIdLong());
+            return true;
         }
 
         if (seen.get(member.getIdLong()).isBefore(oldest())) {
