@@ -4,6 +4,7 @@ import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.DiscordResolver;
+import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.repbot.data.ReputationData;
@@ -16,6 +17,7 @@ import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.function.Function;
 
 public class Log extends SimpleCommand {
@@ -41,7 +43,9 @@ public class Log extends SimpleCommand {
         var cmd = context.argString(0).get();
         if ("received".equalsIgnoreCase(cmd) || "donated".equalsIgnoreCase(cmd)) {
             var userArg = context.argString(1).get();
-            var optUser = DiscordResolver.getUser(shardManager, userArg);
+            var optUser = Verifier.getIdRaw(userArg)
+                    .map(c -> eventWrapper.getGuild().retrieveMemberById(c).complete().getUser())
+                    .or(() -> DiscordResolver.getUser(shardManager, userArg));
             if (optUser.isEmpty()) {
                 eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.userNotFound"), 15);
                 return true;
@@ -111,11 +115,10 @@ public class Log extends SimpleCommand {
     private String mapUserLogEntry(MessageEventWrapper wrapper, List<ReputationLogEntry> logEntries, Function<ReputationLogEntry, Long> userId) {
         List<String> entries = new ArrayList<>();
         for (var logEntry : logEntries) {
-            var received = wrapper.getGuild().retrieveMemberById(userId.apply(logEntry)).complete();
             var thankType = wrapper.localize("thankType." + logEntry.getType().name().toLowerCase(Locale.ROOT));
             var jumpLink = createJumpLink(wrapper, logEntry);
             entries.add(String.format("**%s** %s %s",
-                    thankType, received == null ? "----" : received.getAsMention(), jumpLink));
+                    thankType, User.fromId(userId.apply(logEntry)).getAsMention(), jumpLink));
         }
         return String.join("\n", entries);
     }
@@ -126,11 +129,9 @@ public class Log extends SimpleCommand {
         List<String> entries = new ArrayList<>();
         for (var logEntry : logEntries) {
             var jumpLink = createJumpLink(wrapper, logEntry);
-            var donator = wrapper.getGuild().retrieveMemberById(logEntry.getDonorId()).complete();
-            var receiver = wrapper.getGuild().retrieveMemberById(logEntry.getReceiverId()).complete();
             var thankType = wrapper.localize("thankType." + logEntry.getType().name().toLowerCase(Locale.ROOT));
             entries.add(String.format("**%s** %s ➜ %s **|** %s",
-                    thankType, donator == null ? "----" : donator.getAsMention(), receiver == null ? "----" : receiver.getAsMention(), jumpLink));
+                    thankType, User.fromId(logEntry.getReceiverId()).getAsMention(), User.fromId(logEntry.getReceiverId()).getAsMention(), jumpLink));
         }
         return String.join("\n", entries);
     }
