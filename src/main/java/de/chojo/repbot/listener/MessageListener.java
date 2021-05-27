@@ -139,7 +139,7 @@ public class MessageListener extends ListenerAdapter {
         List<String> second = new ArrayList<>();
         Map<String, Member> targets = new LinkedHashMap<>();
 
-        for (var i = 1; i <= members.size(); i++) {
+        for (var i = 0; i < members.size(); i++) {
             targets.put(requestEmojis[i], members.get(i));
             (leftSide(i, members.size()) ? first : second).add(requestEmojis[i] + " " + members.get(i).getAsMention());
         }
@@ -165,6 +165,6 @@ public class MessageListener extends ListenerAdapter {
     }
 
     private boolean leftSide(int num, int total) {
-        return num <= total / 2 + total % 2;
+        return num + 1 <= total / 2 + total % 2;
     }
 }
