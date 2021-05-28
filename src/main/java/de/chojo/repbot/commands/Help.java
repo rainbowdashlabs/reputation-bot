@@ -8,7 +8,6 @@ import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
-import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -69,7 +68,7 @@ public class Help extends SimpleCommand {
 
         if (event.getOptions().isEmpty()) {
             MessageEmbed message = getAllCommandsEmbed(eventWrapper);
-            event.reply(new MessageBuilder(message).build()).queue();
+            event.reply(wrap(message)).queue();
             eventWrapper.reply(message).queue();
             return;
         }
