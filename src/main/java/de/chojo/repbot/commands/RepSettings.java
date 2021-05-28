@@ -11,9 +11,11 @@ import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
 import emoji4j.EmojiUtils;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import javax.sql.DataSource;
-import java.awt.Color;
+import java.awt.*;
 
 public class RepSettings extends SimpleCommand {
 
@@ -24,15 +26,34 @@ public class RepSettings extends SimpleCommand {
         super("repSettings",
                 new String[]{"rs"},
                 "command.repSettings.description",
-                "",
                 subCommandBuilder()
-                        .add("maxMessageAge", "[minutes]", "command.repSettings.sub.maxMessageAge")
-                        .add("reaction", "[emote|emoji]", "command.repSettings.sub.reaction")
-                        .add("reactions", "[true|false]", "command.repSettings.sub.reactions")
-                        .add("answer", "[true|false]", "command.repSettings.sub.answer")
-                        .add("mention", "[true|false]", "command.repSettings.sub.mention")
-                        .add("fuzzy", "[true|false]", "command.repSettings.sub.fuzzy")
-                        .add("cooldown", "[minutes]", "command.repSettings.sub.cooldown")
+                        .add("maxMessageAge", "command.repSettings.sub.maxMessageAge", argsBuilder()
+                                .add(OptionType.INTEGER, "minutes", "minutes")
+                                .build()
+                        )
+                        .add("reaction", "command.repSettings.sub.reaction", argsBuilder()
+                                .add(OptionType.STRING, "emote", "emote")
+                                .build()
+                        )
+                        .add("reactions", "command.repSettings.sub.reactions", argsBuilder()
+                                .add(OptionType.BOOLEAN, "reactions", "reactions")
+                                .build()
+                        )
+                        .add("answer", "command.repSettings.sub.answer", argsBuilder()
+                                .add(OptionType.BOOLEAN, "answer", "answer")
+                                .build()
+                        )
+                        .add("mention", "command.repSettings.sub.mention", argsBuilder()
+                                .add(OptionType.BOOLEAN, "mention", "mention")
+                                .build()
+                        )
+                        .add("fuzzy", "command.repSettings.sub.fuzzy", argsBuilder()
+                                .add(OptionType.BOOLEAN, "fuzzy", "fuzzy").build()
+                        )
+                        .add("cooldown", "command.repSettings.sub.cooldown", argsBuilder()
+                                .add(OptionType.INTEGER, "minutes", "minutes")
+                                .build()
+                        )
                         .build(),
                 Permission.MANAGE_SERVER);
         data = new GuildData(source);
@@ -85,6 +106,11 @@ public class RepSettings extends SimpleCommand {
 
         }
         return false;
+    }
+
+    @Override
+    public void onSlashCommand(SlashCommandEvent event) {
+
     }
 
     private boolean cooldown(MessageEventWrapper eventWrapper, CommandContext context, GuildSettings guildSettings) {

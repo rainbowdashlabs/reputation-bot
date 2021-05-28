@@ -13,18 +13,15 @@ import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.data.GuildData;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
@@ -41,14 +38,22 @@ public class Thankwords extends SimpleCommand {
     private Thankwords(GuildData data, Localizer localizer, ThankwordsContainer thankwordsContainer) {
         super("thankwords", new String[]{"tw"},
                 "command.thankwords.description",
-                null,
                 subCommandBuilder()
-                        .add("add", "<pattern>", "command.thankwords.sub.add")
-                        .add("remove", "<pattern>", "command.thankwords.sub.remove")
-                        .add("list", null, "command.thankwords.sub.list")
-                        .add("check", "<Sentence>", "command.thankwords.sub.check")
-                        .add("loadDefault", "[language]", "command.thankwords.sub.loadDefault")
-                        .build(),
+                        .add("add", "command.thankwords.sub.add", argsBuilder()
+                                .add(OptionType.STRING, "pattern", "pattern", true)
+                                .build())
+                        .add("remove", "pattern", argsBuilder()
+                                .add(OptionType.STRING, "pattern", "pattern", true)
+                                .build())
+                        .add("list", "command.thankwords.sub.list")
+                        .add("check", "command.thankwords.sub.check", argsBuilder()
+                                .add(OptionType.STRING, "sentence", "sentence")
+                                .build()
+                        )
+                        .add("loadDefault", "command.thankwords.sub.loadDefault", argsBuilder()
+                                .add(OptionType.STRING, "langauge", "language")
+                                .build()
+                        ).build(),
                 Permission.MANAGE_SERVER);
         this.data = data;
         this.loc = localizer;
@@ -88,6 +93,11 @@ public class Thankwords extends SimpleCommand {
             return loadDefaults(eventWrapper, context.subContext(subCmd));
         }
         return false;
+    }
+
+    @Override
+    public void onSlashCommand(SlashCommandEvent event) {
+
     }
 
     private boolean add(MessageEventWrapper eventWrapper, CommandContext context) {

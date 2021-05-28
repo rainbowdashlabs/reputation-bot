@@ -9,6 +9,8 @@ import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.repbot.data.GuildData;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import javax.sql.DataSource;
 
@@ -20,9 +22,12 @@ public class Locale extends SimpleCommand {
         super("locale",
                 null,
                 "command.locale.description",
-                "", subCommandBuilder()
-                        .add("set", "<locale>", "command.locale.sub.set")
-                        .add("list", null, "command.locale.sub.list")
+                subCommandBuilder()
+                        .add("set", "command.locale.sub.set", argsBuilder()
+                                .add(OptionType.STRING, "locale", "locale")
+                                .build()
+                        )
+                        .add("list", "command.locale.sub.list")
                         .build(),
                 Permission.MANAGE_SERVER);
         this.data = new GuildData(dataSource);
@@ -47,6 +52,11 @@ public class Locale extends SimpleCommand {
         }
 
         return false;
+    }
+
+    @Override
+    public void onSlashCommand(SlashCommandEvent event) {
+
     }
 
     private boolean set(MessageEventWrapper eventWrapper, CommandContext context) {

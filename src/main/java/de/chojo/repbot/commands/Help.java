@@ -8,10 +8,16 @@ import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -25,8 +31,9 @@ public class Help extends SimpleCommand {
         super("help",
                 null,
                 "command.help.description",
-                "[command]",
-                null,
+                argsBuilder()
+                        .add(OptionType.STRING, "command", "command.help.arguments.command")
+                        .build(),
                 exclusiveHelp ? Permission.ADMINISTRATOR : Permission.UNKNOWN);
         this.hub = hub;
         this.loc = localizer;
@@ -35,16 +42,7 @@ public class Help extends SimpleCommand {
     @Override
     public boolean onCommand(MessageEventWrapper eventWrapper, CommandContext context) {
         if (context.argsEmpty()) {
-            var commands = hub.getCommands().stream()
-                    .filter(c -> hub.canExecute(eventWrapper, c))
-                    .map(c -> "`" + c.getCommand() + "`")
-                    .collect(Collectors.joining(", "));
-            var message = new LocalizedEmbedBuilder(loc, eventWrapper)
-                    .setTitle("command.help.list.title")
-                    .setDescription(eventWrapper.localize("command.help.list.list",
-                            Replacement.create("COMMAND", "help <command>", Format.CODE)))
-                    .addField("", commands, false)
-                    .build();
+            var message = getAllCommandsEmbed(eventWrapper);
             eventWrapper.reply(message).queue();
             return true;
         }
@@ -57,36 +55,77 @@ public class Help extends SimpleCommand {
             return true;
         }
 
-        if (!eventWrapper.getMember().hasPermission(command.get().getPermission())) {
+        if (!eventWrapper.getMember().hasPermission(command.get().permission())) {
             return true;
         }
 
-        eventWrapper.reply(getcommandHelpEmbed(eventWrapper, command.get())).queue();
+        eventWrapper.reply(getCommandHelpEmbed(eventWrapper, command.get())).queue();
         return true;
     }
 
-    private MessageEmbed getcommandHelpEmbed(MessageEventWrapper eventWrapper, SimpleCommand command) {
+    @Override
+    public void onSlashCommand(SlashCommandEvent event) {
+        var eventWrapper = MessageEventWrapper.create(event);
+
+        if (event.getOptions().isEmpty()) {
+            MessageEmbed message = getAllCommandsEmbed(eventWrapper);
+            event.reply(new MessageBuilder(message).build()).queue();
+            eventWrapper.reply(message).queue();
+            return;
+        }
+
+        @SuppressWarnings("ConstantConditions")
+        var cmd = event.getOption("command").getAsString();
+        var command = hub.getCommand(cmd);
+        if (command.isEmpty() || !eventWrapper.getMember().hasPermission(command.get().permission())) {
+            event.reply(eventWrapper.localize("error.commandNotFound"))
+                    .delay(Duration.ofSeconds(10))
+                    .flatMap(InteractionHook::deleteOriginal)
+                    .queue();
+            return;
+        }
+
+        eventWrapper.reply(getCommandHelpEmbed(eventWrapper, command.get())).queue();
+    }
+
+    @NotNull
+    private MessageEmbed getAllCommandsEmbed(MessageEventWrapper eventWrapper) {
+        var commands = hub.getCommands().stream()
+                .filter(c -> hub.canExecute(eventWrapper, c))
+                .map(c -> "`" + c.command() + "`")
+                .collect(Collectors.joining(", "));
+        return new LocalizedEmbedBuilder(loc, eventWrapper)
+                .setTitle("command.help.list.title")
+                .setDescription(eventWrapper.localize("command.help.list.list",
+                        Replacement.create("COMMAND", "help <command>", Format.CODE)))
+                .addField("", commands, false)
+                .build();
+    }
+
+    private MessageEmbed getCommandHelpEmbed(MessageEventWrapper eventWrapper, SimpleCommand command) {
         var embedBuilder = new LocalizedEmbedBuilder(loc, eventWrapper)
                 .setTitle(eventWrapper.localize("command.help.title",
-                        Replacement.create("COMMAND", command.getCommand())))
-                .setDescription(command.getDescription());
+                        Replacement.create("COMMAND", command.command())))
+                .setDescription(command.description());
 
-        if (command.getAlias().length > 0) {
-            var aliases = Arrays.stream(command.getAlias())
+        if (command.alias().length > 0) {
+            var aliases = Arrays.stream(command.alias())
                     .map(s -> StringUtils.wrap(s, "`"))
                     .collect(Collectors.joining(", "));
             embedBuilder.addField("command.help.alias", aliases, false);
         }
 
-        if (command.getArgs() != null) {
-            embedBuilder.addField("command.help.usage", command.getCommand() + " " + command.getArgs(), false);
+
+        // TODO: 28.05.2021 Fix it
+        if (command.alias() != null) {
+            embedBuilder.addField("command.help.usage", command.alias() + " " + command.args(), false);
         }
 
         List<String> subCommands = new ArrayList<>();
         for (var subCommand : command.getSubCommands()) {
-            subCommands.add("`" + command.getCommand() + " "
-                    + subCommand.getName() + (subCommand.getArgs() != null ? " " + subCommand.getArgs() : "")
-                    + "` -> " + subCommand.getDescription());
+            subCommands.add("`" + command.command() + " "
+                    + subCommand.name() + (subCommand.args() != null ? " " + subCommand.args() : "")
+                    + "` -> " + subCommand.description());
         }
         if (!subCommands.isEmpty()) {
             embedBuilder.addField("command.help.subCommands", String.join("\n", subCommands), false);

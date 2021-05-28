@@ -20,6 +20,8 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageHistory;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
 import javax.sql.DataSource;
@@ -51,9 +53,13 @@ public class Scan extends SimpleCommand {
         super("scan",
                 null,
                 "command.scan.description",
-                "[channel] [-n <number_messages>]",
                 subCommandBuilder()
-                        .add("cancel", null, "command.scan.sub.cancel")
+                        .add("start", "command.scan.description", argsBuilder()
+                                .add(OptionType.CHANNEL, "channel", "channel")
+                                .add(OptionType.INTEGER, "number_messages", "number_messages")
+                                .build()
+                        )
+                        .add("cancel", "command.scan.sub.cancel")
                         .build(),
                 Permission.MANAGE_SERVER);
         guildData = new GuildData(dataSource);
@@ -119,6 +125,11 @@ public class Scan extends SimpleCommand {
         }
         scanChannel(eventWrapper, textChannel.get(), messages);
         return true;
+    }
+
+    @Override
+    public void onSlashCommand(SlashCommandEvent event) {
+
     }
 
     private void scanChannel(MessageEventWrapper eventWrapper, TextChannel channel, int messageCount) {

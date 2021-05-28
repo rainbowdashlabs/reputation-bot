@@ -116,6 +116,7 @@ public class ReputationBot {
         var stateListener = new StateListener(dataSource);
         cleaner.scheduleAtFixedRate(stateListener, 12, 12, TimeUnit.HOURS);
 
+        // TODO: 28.05.2021 NE MENGE!
         shardManager.addEventListener(
                 new MessageListener(dataSource, configuration, memberCacheManager, reactionListener, localizer, reputationManager),
                 stateListener,
@@ -142,17 +143,17 @@ public class ReputationBot {
                 .withInvalidArgumentProvider(((loc, command) -> {
                     var embedBuilder = new EmbedBuilder()
                             .setTitle(loc.localize("error.invalidArguments"))
-                            .appendDescription(command.getArgs() != null ? command.getCommand() + " " + command.getArgs() + "\n" : "");
+                            .appendDescription(command.args() != null ? command.command() + " " + command.args() + "\n" : "");
                     if (command.getSubCommands().length != 0) {
                         embedBuilder.appendDescription(">>> " + Arrays.stream(command.getSubCommands())
-                                .map(c -> command.getCommand() + " " + c.getName() + (c.getArgs() == null ? "" : " " + c.getArgs()))
+                                .map(c -> command.command() + " " + c.name() + (c.args() == null ? "" : " " + c.args()))
                                 .collect(Collectors.joining("\n")));
                     }
                     return embedBuilder.build();
                 }))
                 .withLocalizer(localizer)
                 .withPermissionCheck((wrapper, command) -> {
-                    if (wrapper.getMember().hasPermission(command.getPermission())) return true;
+                    if (wrapper.getMember().hasPermission(command.permission())) return true;
                     var guildSettings = data.getGuildSettings(wrapper.getGuild());
                     if (guildSettings.isEmpty()) return false;
                     var settings = guildSettings.get();

@@ -11,6 +11,8 @@ import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.data.wrapper.ReputationLogEntry;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.sharding.ShardManager;
 
 import javax.sql.DataSource;
@@ -26,10 +28,21 @@ public class Log extends SimpleCommand {
     public Log(ShardManager shardManager, DataSource dataSource) {
         super("log",
                 null,
-                "command.log.description", null, subCommandBuilder()
-                        .add("received", "<user> [count]", "command.log.sub.received")
-                        .add("donated", "<user> [count]", "command.log.sub.donated")
-                        .add("message", "<message_id>", "command.log.sub.message")
+                "command.log.description", subCommandBuilder()
+                        .add("received", "command.log.sub.received", argsBuilder()
+                                .add(OptionType.USER, "user", "user", true)
+                                .add(OptionType.INTEGER, "count", "count")
+                                .build()
+                        )
+                        .add("donated", "command.log.sub.donated", argsBuilder()
+                                .add(OptionType.USER, "user", "user")
+                                .add(OptionType.INTEGER, "count", "count")
+                                .build()
+                        )
+                        .add("message", "command.log.sub.message", argsBuilder()
+                                .add(OptionType.INTEGER, "message_id", "message_id", true)
+                                .build()
+                        )
                         .build(),
                 Permission.ADMINISTRATOR);
         this.shardManager = shardManager;
@@ -58,6 +71,11 @@ public class Log extends SimpleCommand {
             return message(eventWrapper, context.subContext(cmd));
         }
         return false;
+    }
+
+    @Override
+    public void onSlashCommand(SlashCommandEvent event) {
+
     }
 
     private boolean message(MessageEventWrapper eventWrapper, CommandContext subContext) {

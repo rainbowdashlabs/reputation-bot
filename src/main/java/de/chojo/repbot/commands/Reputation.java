@@ -17,9 +17,11 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import javax.sql.DataSource;
-import java.awt.Color;
+import java.awt.*;
 import java.util.stream.Collectors;
 
 public class Reputation extends SimpleCommand {
@@ -33,9 +35,8 @@ public class Reputation extends SimpleCommand {
         super("reputation",
                 new String[]{"rep"},
                 "command.reputation.description",
-                "[user]",
-                subCommandBuilder()
-                        .add("top", "[page]", "command.reputation.sub.top")
+                argsBuilder()
+                        .add(OptionType.USER, "user", "user")
                         .build(),
                 Permission.UNKNOWN);
         reputationData = new ReputationData(dataSource);
@@ -67,6 +68,11 @@ public class Reputation extends SimpleCommand {
         var reputation = reputationData.getReputation(eventWrapper.getGuild(), guildMember.get().getUser()).orElse(ReputationUser.empty(eventWrapper.getAuthor()));
         eventWrapper.reply(getUserRepEmbed(eventWrapper, guildMember.get(), reputation)).queue();
         return true;
+    }
+
+    @Override
+    public void onSlashCommand(SlashCommandEvent event) {
+
     }
 
     private boolean top(MessageEventWrapper eventWrapper, CommandContext context) {

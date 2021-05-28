@@ -8,6 +8,8 @@ import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.repbot.data.GuildData;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.IMentionable;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
@@ -20,12 +22,20 @@ public class Channel extends SimpleCommand {
         super("channel",
                 null,
                 "command.channel.description",
-                null,
                 subCommandBuilder()
-                        .add("set", "<channel...>", "command.channel.sub.set")
-                        .add("add", "<channel...>", "command.channel.sub.add")
-                        .add("remove", "<channel...>", "command.channel.sub.remove")
-                        .add("list", null, "command.channel.sub.list")
+                        .add("set", "command.channel.sub.set", argsBuilder()
+                                .add(OptionType.CHANNEL, "channel", "channel", true)
+                                .build()
+                        )
+                        .add("add", "command.channel.sub.add", argsBuilder()
+                                .add(OptionType.CHANNEL, "channel", "channel", true)
+                                .build()
+                        )
+                        .add("remove", "command.channel.sub.remove", argsBuilder()
+                                .add(OptionType.CHANNEL, "channel", "channel", true)
+                                .build()
+                        )
+                        .add("list", "command.channel.sub.list")
                         .build(),
                 Permission.MANAGE_SERVER);
         data = new GuildData(dataSource);
@@ -50,6 +60,10 @@ public class Channel extends SimpleCommand {
             return list(messageEventWrapper);
         }
         return false;
+    }
+
+    @Override
+    public void onSlashCommand(SlashCommandEvent event) {
     }
 
     private boolean add(MessageEventWrapper eventWrapper, CommandContext context) {

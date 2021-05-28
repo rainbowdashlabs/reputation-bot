@@ -9,6 +9,8 @@ import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.repbot.data.GuildData;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import javax.sql.DataSource;
 import java.util.stream.Collectors;
@@ -19,12 +21,21 @@ public class Roles extends SimpleCommand {
     public Roles(DataSource dataSource) {
         super("roles", new String[]{"role"},
                 "command.roles.description",
-                null,
                 subCommandBuilder()
-                        .add("managerRole", "[role]", "command.roles.sub.managerRole")
-                        .add("add", "<role> <reputation>", "command.roles.sub.add")
-                        .add("remove", "<role>", "command.roles.sub.remove")
-                        .add("list", null, "command.roles.sub.list")
+                        .add("managerRole", "command.roles.sub.managerRole", argsBuilder()
+                                .add(OptionType.ROLE, "role", "role")
+                                .build()
+                        )
+                        .add("add", "command.roles.sub.add", argsBuilder()
+                                .add(OptionType.ROLE, "role", "role")
+                                .add(OptionType.INTEGER, "reputation", "reputation")
+                                .build()
+                        )
+                        .add("remove", "command.roles.sub.remove", argsBuilder()
+                                .add(OptionType.ROLE, "role", "role")
+                                .build()
+                        )
+                        .add("list", "command.roles.sub.list")
                         .build(),
                 Permission.MANAGE_SERVER);
         data = new GuildData(dataSource);
@@ -53,6 +64,11 @@ public class Roles extends SimpleCommand {
             return managerRole(eventWrapper, context.subContext(subCmd));
         }
         return false;
+    }
+
+    @Override
+    public void onSlashCommand(SlashCommandEvent event) {
+
     }
 
     private boolean managerRole(MessageEventWrapper eventWrapper, CommandContext subContext) {

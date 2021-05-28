@@ -8,6 +8,8 @@ import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import javax.sql.DataSource;
 import java.util.regex.Pattern;
@@ -21,9 +23,12 @@ public class Prefix extends SimpleCommand {
         super("prefix",
                 null,
                 "command.prefix.description",
-                "",
-                subCommandBuilder().add("set", "<prefix>", "command.prefix.sub.set")
-                        .add("reset", null, "command.prefix.sub.reset")
+                subCommandBuilder()
+                        .add("set", "command.prefix.sub.set", argsBuilder()
+                                .add(OptionType.STRING, "prefix", "prefix")
+                                .build()
+                        )
+                        .add("reset", "command.prefix.sub.reset")
                         .build(),
                 Permission.MANAGE_SERVER);
         data = new GuildData(dataSource);
@@ -46,6 +51,11 @@ public class Prefix extends SimpleCommand {
         } else {
             return get(eventWrapper);
         }
+    }
+
+    @Override
+    public void onSlashCommand(SlashCommandEvent event) {
+
     }
 
     private boolean reset(MessageEventWrapper eventWrapper) {
