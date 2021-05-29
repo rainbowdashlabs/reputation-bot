@@ -22,7 +22,7 @@ public class Roles extends SimpleCommand {
         super("roles", new String[]{"role"},
                 "command.roles.description",
                 subCommandBuilder()
-                        .add("managerRole", "command.roles.sub.managerRole", argsBuilder()
+                        .add("managerrole", "command.roles.sub.managerRole", argsBuilder()
                                 .add(OptionType.ROLE, "role", "role")
                                 .build()
                         )

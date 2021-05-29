@@ -37,7 +37,7 @@ public class Invite extends SimpleCommand {
     private MessageEmbed getResponse(MessageEventWrapper eventWrapper) {
         return new LocalizedEmbedBuilder(localizer, eventWrapper)
                 .setTitle("command.invite.title")
-                .setDescription(eventWrapper.localize("command.invite.click",
+                .setDescription(localizer.localize("command.invite.click",
                         Replacement.create("URL", "https://discord.com/oauth2/authorize?client_id=834843896579489794&scope=bot&permissions=1342532672")))
                 .build();
     }

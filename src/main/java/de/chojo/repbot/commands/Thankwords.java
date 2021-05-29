@@ -50,7 +50,7 @@ public class Thankwords extends SimpleCommand {
                                 .add(OptionType.STRING, "sentence", "sentence")
                                 .build()
                         )
-                        .add("loadDefault", "command.thankwords.sub.loadDefault", argsBuilder()
+                        .add("loaddefault", "command.thankwords.sub.loadDefault", argsBuilder()
                                 .add(OptionType.STRING, "langauge", "language")
                                 .build()
                         ).build(),
@@ -89,7 +89,7 @@ public class Thankwords extends SimpleCommand {
         if ("check".equalsIgnoreCase(subCmd)) {
             return check(eventWrapper);
         }
-        if ("loadDefaults".equalsIgnoreCase(subCmd)) {
+        if ("loaddefaults".equalsIgnoreCase(subCmd)) {
             return loadDefaults(eventWrapper, context.subContext(subCmd));
         }
         return false;

@@ -31,7 +31,7 @@ public class Source extends SimpleCommand {
     private MessageEmbed getResponse(MessageEventWrapper eventWrapper) {
         return new LocalizedEmbedBuilder(localizer, eventWrapper)
                 .setTitle("command.source.title")
-                .setDescription(eventWrapper.localize("command.source.click",
+                .setDescription(localizer.localize("command.source.click",
                         Replacement.create("URL", "https://github.com/RainbowDashLabs/reputation-bot")))
                 .build();
     }

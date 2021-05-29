@@ -23,11 +23,11 @@ public class RepSettings extends SimpleCommand {
     private final Localizer loc;
 
     public RepSettings(DataSource source, Localizer localizer) {
-        super("repSettings",
+        super("repsettings",
                 new String[]{"rs"},
                 "command.repSettings.description",
                 subCommandBuilder()
-                        .add("maxMessageAge", "command.repSettings.sub.maxMessageAge", argsBuilder()
+                        .add("maxmessageage", "command.repSettings.sub.maxMessageAge", argsBuilder()
                                 .add(OptionType.INTEGER, "minutes", "minutes")
                                 .build()
                         )
