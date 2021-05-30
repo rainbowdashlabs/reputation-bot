@@ -17,7 +17,7 @@ public class Roles extends SimpleCommand {
     private final GuildData data;
 
     public Roles(DataSource dataSource) {
-        super("roles", new String[] {"role"},
+        super("roles", new String[]{"role"},
                 "command.roles.description",
                 null,
                 subCommandBuilder()

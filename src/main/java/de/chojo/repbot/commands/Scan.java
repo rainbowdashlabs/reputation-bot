@@ -138,7 +138,7 @@ public class Scan extends SimpleCommand {
     private void schedule(MessageHistory history, Pattern pattern, MessageEventWrapper eventWrapper, int calls, GuildSettings settings) {
         var progressMessage = eventWrapper.answer(eventWrapper.localize("command.scan.progress",
                 Replacement.create("PERCENT", String.format("%.02f", 0d))) + " " + TextGenerator.progressBar(0, 40)).complete();
-        var scanProcess = new ScanProcess(loc, progressMessage, history, pattern, calls, reputationData, settings);
+        var scanProcess = new ScanProcess(loc, progressMessage, history, pattern, calls, reputationData);
 
         activeScans.add(eventWrapper.getGuild().getIdLong());
 
@@ -217,7 +217,7 @@ public class Scan extends SimpleCommand {
         private int callsLeft;
         private long time;
 
-        public ScanProcess(Localizer localizer, Message progressMessage, MessageHistory history, Pattern pattern, int calls, ReputationData data, GuildSettings settings) {
+        public ScanProcess(Localizer localizer, Message progressMessage, MessageHistory history, Pattern pattern, int calls, ReputationData data) {
             loc = localizer;
             this.guild = progressMessage.getGuild();
             this.resultChannel = progressMessage.getTextChannel();

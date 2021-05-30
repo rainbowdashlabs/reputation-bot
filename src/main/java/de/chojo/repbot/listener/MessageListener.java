@@ -37,7 +37,7 @@ public class MessageListener extends ListenerAdapter {
     private final GuildData guildData;
     private final ReputationData reputationData;
     private final MemberCacheManager memberCacheManager;
-    private final String[] requestEmojis = new String[] {"1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"};
+    private final String[] requestEmojis = new String[]{"1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"};
     private final ReactionListener reactionListener;
     private final Localizer localizer;
     private final ReputationManager reputationManager;
@@ -80,8 +80,8 @@ public class MessageListener extends ListenerAdapter {
         var prefix = settings.getPrefix().orElse(configuration.getDefaultPrefix());
         if (prefix.startsWith("re:")) {
             var compile = Pattern.compile(prefix.substring(3));
-            if(compile.matcher(message.getContentRaw()).find()) return;
-        }else {
+            if (compile.matcher(message.getContentRaw()).find()) return;
+        } else {
             if (message.getContentRaw().startsWith(prefix)) return;
         }
         if (message.getContentRaw().startsWith(settings.getPrefix().orElse(configuration.getDefaultPrefix()))) {
@@ -141,7 +141,7 @@ public class MessageListener extends ListenerAdapter {
 
         for (var i = 0; i < members.size(); i++) {
             targets.put(requestEmojis[i], members.get(i));
-            (i <= members.size() / 2 + members.size() % 2 ? first : second).add(requestEmojis[i] + " " + members.get(i).getAsMention());
+            (leftSide(i, members.size()) ? first : second).add(requestEmojis[i] + " " + members.get(i).getAsMention());
         }
 
         var builder = new LocalizedEmbedBuilder(localizer, message.getGuild())
@@ -162,5 +162,9 @@ public class MessageListener extends ListenerAdapter {
             voteMessage.addReaction("🗑️").queueAfter(i * 250L, TimeUnit.MILLISECONDS);
             voteMessage.delete().queueAfter(1, TimeUnit.MINUTES, e -> reactionListener.unregisterVote(voteMessage), err -> reactionListener.unregisterVote(voteMessage));
         });
+    }
+
+    private boolean leftSide(int num, int total) {
+        return num + 1 <= total / 2 + total % 2;
     }
 }
