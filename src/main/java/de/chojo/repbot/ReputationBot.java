@@ -128,6 +128,7 @@ public class ReputationBot {
                 .receiveGuildMessagesUpdates()
                 .withConversationSystem()
                 .withPrefixResolver(data::getPrefix)
+                .withSlashCommands()
                 .withCommands(
                         new Channel(dataSource, loc),
                         new Prefix(dataSource, configuration),
