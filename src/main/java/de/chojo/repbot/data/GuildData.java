@@ -510,8 +510,8 @@ public class GuildData {
             while (rs.next()) {
                 results.add(new RemovalTask(
                         rs.getLong("task_id"),
-                        rs.getLong("user_id"),
-                        rs.getLong("guild_id")
+                        rs.getLong("guild_id"),
+                        rs.getLong("user_id")
                 ));
             }
             return results;
@@ -568,7 +568,7 @@ public class GuildData {
             } else {
                 // Remove all received donations
                 try (var stmt = conn.prepareStatement("""
-                        DELETE FROM reputation_log where guild_id = ? AND received = ?;
+                        DELETE FROM reputation_log where guild_id = ? AND receiver_id = ?;
                         """)) {
                     stmt.setLong(1, task.getGuildId());
                     stmt.setLong(2, task.getUserId());
