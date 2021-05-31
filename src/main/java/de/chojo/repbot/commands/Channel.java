@@ -1,13 +1,16 @@
 package de.chojo.repbot.commands;
 
 import de.chojo.jdautil.command.SimpleCommand;
+import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.repbot.data.GuildData;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.IMentionable;
+import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 
@@ -17,8 +20,9 @@ import java.util.stream.Collectors;
 
 public class Channel extends SimpleCommand {
     private final GuildData data;
+    private final Localizer loc;
 
-    public Channel(DataSource dataSource) {
+    public Channel(DataSource dataSource, Localizer loc) {
         super("channel",
                 null,
                 "command.channel.description",
@@ -39,6 +43,7 @@ public class Channel extends SimpleCommand {
                         .build(),
                 Permission.MANAGE_SERVER);
         data = new GuildData(dataSource);
+        this.loc = loc;
     }
 
     @Override
@@ -64,6 +69,32 @@ public class Channel extends SimpleCommand {
 
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
+        var subCmd = event.getSubcommandName();
+        if ("set".equalsIgnoreCase(subCmd)) {
+            set(event);
+        }
+        if ("remove".equalsIgnoreCase(subCmd)) {
+            remove(event);
+        }
+        if ("add".equalsIgnoreCase(subCmd)) {
+            add(event);
+        }
+        if ("list".equalsIgnoreCase(subCmd)) {
+            list(event);
+        }
+    }
+
+    private void add(SlashCommandEvent event) {
+        var channel = event.getOption("channel").getAsMessageChannel();
+        if (channel == null || channel.getType() != ChannelType.TEXT) {
+            event.reply(loc.localize("error.invalidChannel")).queue();
+            return;
+        }
+
+        data.addChannel(event.getGuild(), channel);
+        event.reply(
+                loc.localize("command.channel.sub.add.added", event.getGuild(),
+                        Replacement.create("CHANNEL", ((TextChannel) channel).getAsMention()))).queue();
     }
 
     private boolean add(MessageEventWrapper eventWrapper, CommandContext context) {
@@ -86,6 +117,18 @@ public class Channel extends SimpleCommand {
         return true;
     }
 
+    private void remove(SlashCommandEvent event) {
+        var channel = event.getOption("channel").getAsMessageChannel();
+        if (channel == null || channel.getType() != ChannelType.TEXT) {
+            event.reply(loc.localize("error.invalidChannel")).queue();
+            return;
+        }
+        data.deleteChannel(event.getGuild(), channel);
+
+        event.reply(loc.localize("command.channel.sub.remove.removed",
+                Replacement.create("CHANNEL", ((TextChannel) channel).getAsMention()))).queue();
+    }
+
     private boolean remove(MessageEventWrapper eventWrapper, CommandContext context) {
         if (context.argsEmpty()) return false;
 
@@ -105,6 +148,19 @@ public class Channel extends SimpleCommand {
         return true;
     }
 
+    private void list(SlashCommandEvent event) {
+        var guildSettings = data.getGuildSettings(event.getGuild());
+        if (guildSettings.isEmpty()) return;
+
+        var settings = guildSettings.get();
+        var channelNames = DiscordResolver
+                .getValidTextChannelsById(
+                        event.getGuild(), new ArrayList<>(settings.getActiveChannel()))
+                .stream().map(IMentionable::getAsMention).collect(Collectors.joining(", "));
+        event.reply(loc.localize("command.channel.sub.list.list",
+                Replacement.create("CHANNEL", channelNames))).queue();
+    }
+
     private boolean list(MessageEventWrapper eventWrapper) {
         var guildSettings = data.getGuildSettings(eventWrapper.getGuild());
         if (guildSettings.isEmpty()) return true;
@@ -117,6 +173,19 @@ public class Channel extends SimpleCommand {
         eventWrapper.reply(eventWrapper.localize("command.channel.sub.list.list",
                 Replacement.create("CHANNEL", channelNames))).queue();
         return true;
+    }
+
+    private void set(SlashCommandEvent event) {
+        var channel = event.getOption("channel").getAsMessageChannel();
+        if (channel == null || channel.getType() != ChannelType.TEXT) {
+            event.reply(loc.localize("error.invalidChannel")).queue();
+            return;
+        }
+
+        data.clearChannel(event.getGuild());
+        data.addChannel(event.getGuild(), channel);
+        event.reply(loc.localize("command.channel.sub.set.set",
+                Replacement.create("CHANNEL", ((TextChannel) channel).getAsMention()))).queue();
     }
 
     private boolean set(MessageEventWrapper eventWrapper, CommandContext context) {
