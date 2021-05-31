@@ -21,12 +21,9 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import javax.sql.DataSource;
-import java.awt.*;
-import java.util.stream.Collectors;
 
 public class Reputation extends SimpleCommand {
     private static final int BAR_SIZE = 20;
-    private static final int TOP_PAGE_SIZE = 10;
     private final ReputationData reputationData;
     private final GuildData guildData;
     private final Localizer loc;
@@ -48,7 +45,7 @@ public class Reputation extends SimpleCommand {
     public boolean onCommand(MessageEventWrapper eventWrapper, CommandContext context) {
         if (context.argsEmpty()) {
             var reputation = reputationData.getReputation(eventWrapper.getGuild(), eventWrapper.getAuthor()).orElse(ReputationUser.empty(eventWrapper.getAuthor()));
-            eventWrapper.reply(getUserRepEmbed(eventWrapper, eventWrapper.getMember(), reputation)).queue();
+            eventWrapper.reply(getUserRepEmbed(eventWrapper.getMember(), reputation)).queue();
             return true;
         }
 
@@ -57,43 +54,25 @@ public class Reputation extends SimpleCommand {
             return false;
         }
         var subCmd = optSubComd.get();
-        if ("top".equalsIgnoreCase(subCmd)) {
-            return top(eventWrapper, context.subContext(subCmd));
-        }
         var guildMember = DiscordResolver.getGuildMember(eventWrapper.getGuild(), subCmd);
         if (guildMember.isEmpty()) {
             eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.userNotFound"), 10);
             return true;
         }
         var reputation = reputationData.getReputation(eventWrapper.getGuild(), guildMember.get().getUser()).orElse(ReputationUser.empty(eventWrapper.getAuthor()));
-        eventWrapper.reply(getUserRepEmbed(eventWrapper, guildMember.get(), reputation)).queue();
+        eventWrapper.reply(getUserRepEmbed(guildMember.get(), reputation)).queue();
         return true;
     }
 
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
-
+        var userOption = event.getOption("user");
+        var member = userOption != null ? userOption.getAsMember() : event.getMember();
+        var reputation = reputationData.getReputation(event.getGuild(), event.getUser()).orElse(ReputationUser.empty(event.getUser()));
+        event.reply(wrap(getUserRepEmbed(member, reputation))).queue();
     }
 
-    private boolean top(MessageEventWrapper eventWrapper, CommandContext context) {
-        var page = context.argInt(0).orElse(1);
-        var offset = (page - 1) * TOP_PAGE_SIZE;
-        var ranking = reputationData.getRanking(eventWrapper.getGuild(), TOP_PAGE_SIZE, offset);
-
-        var maxRank = offset + TOP_PAGE_SIZE;
-        var rankString = ranking.stream().map(rank -> rank.fancyString(maxRank)).collect(Collectors.joining("\n"));
-
-        var embed = new LocalizedEmbedBuilder(loc, eventWrapper)
-                .setTitle(eventWrapper.localize("command.reputation.sub.top.ranking",
-                        Replacement.create("GUILD", eventWrapper.getGuild().getName())))
-                .setDescription(rankString)
-                .setColor(Color.CYAN)
-                .build();
-        eventWrapper.reply(embed).queue();
-        return true;
-    }
-
-    private MessageEmbed getUserRepEmbed(MessageEventWrapper eventWrapper, Member member, ReputationUser reputation) {
+    private MessageEmbed getUserRepEmbed(Member member, ReputationUser reputation) {
         var current = guildData.getCurrentReputationRole(member.getGuild(), reputation.getReputation());
         var next = guildData.getNextReputationRole(member.getGuild(), reputation.getReputation());
 
@@ -107,13 +86,14 @@ public class Reputation extends SimpleCommand {
 
         var currProgress = String.valueOf(reputation.getReputation() - currentRoleRep);
         var nextLevel = nextRoleRep.equals(currentRoleRep) ? "\uA74E" : String.valueOf(nextRoleRep - currentRoleRep);
-        return new LocalizedEmbedBuilder(loc, eventWrapper)
+        return new LocalizedEmbedBuilder(loc, member.getGuild())
                 .setTitle(
                         (reputation.getRank() != 0 ? "#" + reputation.getRank() + " " : "")
-                                + eventWrapper.localize("command.reputation.profile.title",
+                                + loc.localize("command.reputation.profile.title",
+                                member.getGuild(),
                                 Replacement.create("NAME", member.getEffectiveName())))
                 .addField("words.level", level, true)
-                .addField(eventWrapper.localize("words.reputation"), Format.BOLD.apply(String.valueOf(reputation.getReputation())), true)
+                .addField(loc.localize("words.reputation", member.getGuild()), Format.BOLD.apply(String.valueOf(reputation.getReputation())), true)
                 .addField("command.reputation.profile.nextLevel", currProgress + "/" + nextLevel + "  " + progressBar, false)
                 .setThumbnail(member.getUser().getEffectiveAvatarUrl())
                 .setColor(member.getColor())

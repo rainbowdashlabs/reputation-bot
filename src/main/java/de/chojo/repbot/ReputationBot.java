@@ -17,6 +17,7 @@ import de.chojo.repbot.commands.Roles;
 import de.chojo.repbot.commands.Scan;
 import de.chojo.repbot.commands.Source;
 import de.chojo.repbot.commands.Thankwords;
+import de.chojo.repbot.commands.TopReputation;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.updater.QueryReplacement;
@@ -133,6 +134,7 @@ public class ReputationBot {
                         new Reputation(dataSource, localizer),
                         new Roles(dataSource),
                         new RepSettings(dataSource, localizer),
+                        new TopReputation(dataSource, localizer),
                         Thankwords.of(dataSource, localizer),
                         scan,
                         new Locale(dataSource, localizer),
