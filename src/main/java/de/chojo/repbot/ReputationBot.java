@@ -130,7 +130,7 @@ public class ReputationBot {
                 .withPrefixResolver(data::getPrefix)
                 .withSlashCommands()
                 .withCommands(
-                        new Channel(dataSource, loc),
+                        new Channel(dataSource, localizer),
                         new Prefix(dataSource, configuration),
                         new Reputation(dataSource, localizer),
                         new Roles(dataSource),
