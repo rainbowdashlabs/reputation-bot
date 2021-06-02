@@ -28,10 +28,11 @@ dependencies {
     // discord
     implementation("com.github.DV8FromTheWorld", "JDA", "9c31ef1504") {
         exclude(module = "opus-java")
+        version {
+            strictly("9c31ef1504")
+        }
     }
-    implementation("de.chojo", "cjda-util", "1.1.0-DEV") {
-        isTransitive = false
-    }
+    implementation("de.chojo", "cjda-util", "1.1.0-DEV")
 
     // database
     implementation("org.postgresql", "postgresql", "42.2.19")
