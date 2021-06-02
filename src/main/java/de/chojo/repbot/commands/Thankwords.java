@@ -136,6 +136,7 @@ public class Thankwords extends SimpleCommand {
     }
 
     private boolean add(SlashCommandEvent event) {
+        var loc = this.loc.getContextLocalizer(event.getGuild());
         var pattern = event.getOption("pattern").getAsString();
         try {
             Pattern.compile(pattern);
@@ -172,6 +173,7 @@ public class Thankwords extends SimpleCommand {
     }
 
     private boolean remove(SlashCommandEvent event) {
+        var loc = this.loc.getContextLocalizer(event.getGuild());
         var pattern = event.getOption("pattern").getAsString();
         try {
             Pattern.compile(pattern);
@@ -201,6 +203,8 @@ public class Thankwords extends SimpleCommand {
     }
 
     private boolean list(SlashCommandEvent event) {
+        var loc = this.loc.getContextLocalizer(event.getGuild());
+
         String pattern = getGuildPattern(event.getGuild());
         if (pattern == null) return false;
 
@@ -222,6 +226,7 @@ public class Thankwords extends SimpleCommand {
     }
 
     private boolean check(SlashCommandEvent event) {
+        var loc = this.loc.getContextLocalizer(event.getGuild());
         var optGuildSettings = data.getGuildSettings(event.getGuild());
         if (optGuildSettings.isEmpty()) return false;
 
@@ -230,7 +235,7 @@ public class Thankwords extends SimpleCommand {
         var messageId = event.getOption("message").getAsString();
         var message = event.getChannel().retrieveMessageById(messageId).complete();
         var result = MessageAnalyzer.processMessage(guildSettings.getThankwordPattern(), message, guildSettings.getMaxMessageAge(), true, 0.85, 3);
-        var builder = new LocalizedEmbedBuilder(loc, event.getGuild());
+        var builder = new LocalizedEmbedBuilder(this.loc, event.getGuild());
         if (result.getReceivers().isEmpty()) {
             event.reply(loc.localize("command.thankwords.sub.check.match.noMatch")).queue();
             return true;
@@ -330,6 +335,8 @@ public class Thankwords extends SimpleCommand {
     }
 
     private boolean loadDefaults(SlashCommandEvent slashCommandEvent) {
+        var loc = this.loc.getContextLocalizer(slashCommandEvent.getGuild());
+
         var languageOption = slashCommandEvent.getOption("language");
         if (languageOption == null) {
             slashCommandEvent.reply(loc.localize("command.thankwords.sub.loadDefault.available")
