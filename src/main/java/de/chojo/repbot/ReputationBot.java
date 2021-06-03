@@ -131,7 +131,7 @@ public class ReputationBot {
                 .withSlashCommands()
                 .withCommands(
                         new Channel(dataSource, localizer),
-                        new Prefix(dataSource, configuration),
+                        new Prefix(dataSource, configuration, localizer),
                         new Reputation(dataSource, localizer),
                         new Roles(dataSource),
                         new RepSettings(dataSource, localizer),
