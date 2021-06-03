@@ -141,7 +141,7 @@ public class ReputationBot {
                         new Locale(dataSource, localizer),
                         new Invite(localizer),
                         new Source(localizer),
-                        new Log(shardManager, dataSource)
+                        new Log(shardManager, dataSource, localizer)
                 )
                 .withInvalidArgumentProvider(((loc, command) -> {
                     var embedBuilder = new EmbedBuilder()
