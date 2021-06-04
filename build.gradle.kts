@@ -18,7 +18,7 @@ repositories {
         url = uri("https://repo.maven.apache.org/maven2/")
     }
     maven {
-        url = uri("https://eldonexus.de/repository/maven-releases")
+        url = uri("https://eldonexus.de/repository/maven-public")
     }
     mavenCentral()
     maven {
@@ -32,7 +32,7 @@ dependencies {
     implementation("net.dv8tion", "JDA", "4.2.1_259") {
         exclude(module = "opus-java")
     }
-    implementation("de.chojo", "cjda-util", "1.0.0")
+    implementation("de.chojo", "cjda-util", "1.2.2-DEV")
 
     // database
     implementation("org.postgresql", "postgresql", "42.2.19")

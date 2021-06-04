@@ -1,5 +1,9 @@
 package de.chojo.repbot.data;
 
+import de.chojo.jdautil.database.QueryObject;
+import de.chojo.jdautil.database.builder.QueryBuilderConfig;
+import de.chojo.jdautil.database.builder.QueryBuilderFactory;
+import de.chojo.jdautil.database.builder.stage.ResultStage;
 import de.chojo.jdautil.localization.util.Language;
 import de.chojo.repbot.data.util.DbUtil;
 import de.chojo.repbot.data.wrapper.GuildSettings;
@@ -23,69 +27,58 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-public class GuildData {
+public class GuildData extends QueryObject {
     private final DataSource source;
+    private final QueryBuilderFactory factory;
 
     public GuildData(DataSource source) {
+        super(source);
         this.source = source;
+        factory = new QueryBuilderFactory(QueryBuilderConfig.builder().build(), source);
     }
 
     public Optional<GuildSettings> getGuildSettings(Guild guild) {
-        try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
-                SELECT
-                    prefix,
-                    thankswords,
-                    max_message_age,
-                    reaction,
-                    reactions_active,
-                    answer_active,
-                    mention_active,
-                    fuzzy_active,
-                    active_channels,
-                    cooldown,
-                    manager_role
-                FROM
-                    guild_settings
-                WHERE
-                    guild_id = ?
-                                """)) {
-            stmt.setLong(1, guild.getIdLong());
-            var rs = stmt.executeQuery();
-            if (rs.next()) {
-                return Optional.of(
-                        new GuildSettings(guild,
-                                rs.getString("prefix"),
-                                DbUtil.arrayToArray(rs, "thankswords", new String[0]),
-                                rs.getInt("max_message_age"),
-                                rs.getString("reaction"),
-                                rs.getBoolean("reactions_active"),
-                                rs.getBoolean("answer_active"),
-                                rs.getBoolean("mention_active"),
-                                rs.getBoolean("fuzzy_active"),
-                                DbUtil.arrayToArray(rs, "active_channels", new Long[0]),
-                                rs.getInt("cooldown"),
-                                rs.getLong("manager_role"))
-                );
-            }
-        } catch (SQLException e) {
-            DbUtil.logSQLError("Could not retrieve guild settings", e);
-        }
-        return Optional.empty();
+        return factory.builder(GuildSettings.class)
+                .query("""
+                        SELECT
+                            prefix,
+                            thankswords,
+                            max_message_age,
+                            reaction,
+                            reactions_active,
+                            answer_active,
+                            mention_active,
+                            fuzzy_active,
+                            active_channels,
+                            cooldown,
+                            manager_role
+                        FROM
+                            guild_settings
+                        WHERE
+                            guild_id = ?
+
+                        """)
+                .params(stmt -> stmt.setLong(1, guild.getIdLong()))
+                .readRow(row -> new GuildSettings(guild,
+                        row.getString("prefix"),
+                        DbUtil.arrayToArray(row, "thankswords", new String[0]),
+                        row.getInt("max_message_age"),
+                        row.getString("reaction"),
+                        row.getBoolean("reactions_active"),
+                        row.getBoolean("answer_active"),
+                        row.getBoolean("mention_active"),
+                        row.getBoolean("fuzzy_active"),
+                        DbUtil.arrayToArray(row, "active_channels", new Long[0]),
+                        row.getInt("cooldown"),
+                        row.getLong("manager_role")))
+                .firstSync();
     }
 
     public Optional<String> getPrefix(Guild guild) {
-        try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
-                SELECT prefix FROM guild_bot_settings where guild_id = ?;
-                """)) {
-            stmt.setLong(1, guild.getIdLong());
-            var rs = stmt.executeQuery();
-            if (rs.next()) {
-                return Optional.ofNullable(rs.getString(1));
-            }
-        } catch (SQLException e) {
-            DbUtil.logSQLError("Could not retrieve guild prefix", e);
-        }
-        return Optional.empty();
+        return factory.builder(String.class).query("SELECT prefix FROM guild_bot_settings where guild_id = ?;")
+                .params(stmt -> stmt.setLong(1, guild.getIdLong()))
+                .readRow(row -> row.getString(1))
+                .firstSync();
     }
 
     public boolean setPrefix(Guild guild, @Nullable String prefix) {
@@ -311,60 +304,23 @@ public class GuildData {
     public boolean updateMessageSettings(Guild guild, @Nullable Integer maxMessageAge, @Nullable String reaction,
                                          @Nullable Boolean reactionsActive, @Nullable Boolean answerActive, @Nullable Boolean mentionActive,
                                          @Nullable Boolean fuzzyActive, Integer cooldown) {
-        try (var conn = source.getConnection(); var stmt = conn.prepareStatement("""
-                UPDATE
-                    message_settings
-                SET max_message_age = coalesce(?, max_message_age),
-                    reaction = coalesce(?, reaction),
-                    reactions_active = coalesce(?, reactions_active),
-                    answer_active = coalesce(?, answer_active),
-                    mention_active = coalesce(?, mention_active),
-                    fuzzy_active = coalesce(?, fuzzy_active),
-                    cooldown = coalesce(?, cooldown)
-                where guild_id = ?;
-                """)) {
-            if (maxMessageAge == null) {
-                stmt.setNull(1, Types.INTEGER);
-            } else {
-                stmt.setInt(1, maxMessageAge);
-            }
-            if (reaction == null) {
-                stmt.setNull(2, Types.VARCHAR);
-            } else {
-                stmt.setString(2, reaction);
-            }
-            if (reactionsActive == null) {
-                stmt.setNull(3, Types.BOOLEAN);
-            } else {
-                stmt.setBoolean(3, reactionsActive);
-            }
-            if (answerActive == null) {
-                stmt.setNull(4, Types.BOOLEAN);
-            } else {
-                stmt.setBoolean(4, answerActive);
-            }
-            if (mentionActive == null) {
-                stmt.setNull(5, Types.BOOLEAN);
-            } else {
-                stmt.setBoolean(5, mentionActive);
-            }
-            if (fuzzyActive == null) {
-                stmt.setNull(6, Types.BOOLEAN);
-            } else {
-                stmt.setBoolean(6, fuzzyActive);
-            }
-            if (cooldown == null) {
-                stmt.setNull(7, Types.INTEGER);
-            } else {
-                stmt.setInt(7, cooldown);
-            }
-            stmt.setLong(8, guild.getIdLong());
-            stmt.executeUpdate();
-            return true;
-        } catch (SQLException e) {
-            DbUtil.logSQLError("Could not update message settings", e);
-        }
-        return false;
+        return factory.builder()
+                .query("""
+                        UPDATE
+                            message_settings
+                        SET max_message_age = coalesce(?, max_message_age),
+                            reaction = coalesce(?, reaction),
+                            reactions_active = coalesce(?, reactions_active),
+                            answer_active = coalesce(?, answer_active),
+                            mention_active = coalesce(?, mention_active),
+                            fuzzy_active = coalesce(?, fuzzy_active),
+                            cooldown = coalesce(?, cooldown)
+                        where guild_id = ?;
+                        """)
+                .paramsBuilder(stmt -> stmt.setInt(maxMessageAge).setString(reaction).setBoolean(reactionsActive)
+                .setBoolean(answerActive).setBoolean(mentionActive).setBoolean(fuzzyActive).setInt(cooldown)
+                .setLong(guild.getIdLong()))
+                .update().executeSync() > 0;
     }
 
     public boolean addThankWord(Guild guild, String pattern) {
@@ -522,79 +478,37 @@ public class GuildData {
     }
 
     public void executeRemovalTask(RemovalTask task) {
-        try (var conn = source.getConnection()) {
-            conn.setAutoCommit(false);
-            if (task.getUserId() == null) {
-                try (var stmt = conn.prepareStatement("""
-                        DELETE FROM reputation_log where guild_id = ?;
-                        """)) {
-                    stmt.setLong(1, task.getGuildId());
-                    stmt.executeUpdate();
-                }
-
-                try (var stmt = conn.prepareStatement("""
-                        DELETE FROM guild_bot_settings where guild_id = ?;
-                        """)) {
-                    stmt.setLong(1, task.getGuildId());
-                    stmt.executeUpdate();
-                }
-
-                try (var stmt = conn.prepareStatement("""
-                        DELETE FROM active_channel where guild_id = ?;
-                        """)) {
-                    stmt.setLong(1, task.getGuildId());
-                    stmt.executeUpdate();
-                }
-
-                try (var stmt = conn.prepareStatement("""
-                        DELETE FROM message_settings where guild_id = ?;
-                        """)) {
-                    stmt.setLong(1, task.getGuildId());
-                    stmt.executeUpdate();
-                }
-                try (var stmt = conn.prepareStatement("""
-                        DELETE FROM guild_ranks where guild_id = ?;
-                        """)) {
-                    stmt.setLong(1, task.getGuildId());
-                    stmt.executeUpdate();
-                }
-                try (var stmt = conn.prepareStatement("""
-                        DELETE FROM thankwords where guild_id = ?;
-                        """)) {
-                    stmt.setLong(1, task.getGuildId());
-                    stmt.executeUpdate();
-                }
-                log.info("Removed guild settings for {}", task.getGuildId());
-            } else {
-                // Remove all received donations
-                try (var stmt = conn.prepareStatement("""
-                        DELETE FROM reputation_log where guild_id = ? AND receiver_id = ?;
-                        """)) {
-                    stmt.setLong(1, task.getGuildId());
-                    stmt.setLong(2, task.getUserId());
-                    stmt.executeUpdate();
-                }
-                // Remove association with donations given.
-                try (var stmt = conn.prepareStatement("""
-                        UPDATE reputation_log SET donor_id = 0 where guild_id = ? AND donor_id = ?;
-                        """)) {
-                    stmt.setLong(1, task.getGuildId());
-                    stmt.setLong(2, task.getUserId());
-                    stmt.executeUpdate();
-                }
-                log.info("Removed user reputation from guild {} of user {}", task.getGuildId(), task.getUserId());
-            }
-
-            // mark task as done
-            try (var stmt = conn.prepareStatement("""
-                    DELETE FROM cleanup_schedule where task_id = ?;
-                    """)) {
-                stmt.setLong(1, task.getTaskId());
-                stmt.executeUpdate();
-            }
-            conn.commit();
-        } catch (SQLException e) {
-            DbUtil.logSQLError("Could not clean up data", e);
+        ResultStage<Void> builder;
+        if (task.getUserId() == null) {
+            builder = factory.builder().query("DELETE FROM reputation_log where guild_id = ?;")
+                    .params(stmt -> stmt.setLong(1, task.getGuildId()))
+                    .append().query("DELETE FROM guild_bot_settings where guild_id = ?;")
+                    .params(stmt -> stmt.setLong(1, task.getGuildId()))
+                    .append().query("DELETE FROM active_channel where guild_id = ?;")
+                    .params(stmt -> stmt.setLong(1, task.getGuildId()))
+                    .append().query("DELETE FROM message_settings where guild_id = ?;")
+                    .params(stmt -> stmt.setLong(1, task.getGuildId()))
+                    .append().query("DELETE FROM guild_ranks where guild_id = ?;")
+                    .params(stmt -> stmt.setLong(1, task.getGuildId()))
+                    .append().query("DELETE FROM thankwords where guild_id = ?;")
+                    .params(stmt -> stmt.setLong(1, task.getGuildId()));
+            log.info("Removed guild settings for {}", task.getGuildId());
+        } else {
+            builder = factory.builder().query("DELETE FROM reputation_log where guild_id = ? AND receiver_id = ?;")
+                    .params(stmt -> {
+                        stmt.setLong(1, task.getGuildId());
+                        stmt.setLong(2, task.getUserId());
+                    })
+                    .append().query("UPDATE reputation_log SET donor_id = 0 where guild_id = ? AND donor_id = ?;")
+                    .params(stmt -> {
+                        stmt.setLong(1, task.getGuildId());
+                        stmt.setLong(2, task.getUserId());
+                    });
+            log.info("Removed user reputation from guild {} of user {}", task.getGuildId(), task.getUserId());
         }
+
+        builder.append().query("DELETE FROM cleanup_schedule where task_id = ?;")
+                .params(stmt -> stmt.setLong(1, task.getTaskId()))
+                .update().executeSync();
     }
 }
