@@ -115,7 +115,7 @@ public class ReputationBot {
         var reputationManager = new ReputationManager(dataSource, roleAssigner, configuration.getMagicImage());
         var reactionListener = new ReactionListener(dataSource, localizer, reputationManager);
         var stateListener = new StateListener(dataSource);
-        cleaner.scheduleAtFixedRate(stateListener, 12, 12, TimeUnit.HOURS);
+        cleaner.scheduleAtFixedRate(stateListener, 0, 12, TimeUnit.HOURS);
 
         // TODO: 28.05.2021 NE MENGE!
         shardManager.addEventListener(
