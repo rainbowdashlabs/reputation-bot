@@ -4,12 +4,10 @@ import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
-import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
-import emoji4j.EmojiUtils;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -121,7 +119,7 @@ public class RepSettings extends SimpleCommand {
     public void onSlashCommand(SlashCommandEvent event) {
         var optGuildSettings = data.getGuildSettings(event.getGuild());
         if ((optGuildSettings.isEmpty())) return;
-        GuildSettings guildSettings = optGuildSettings.get();
+        var guildSettings = optGuildSettings.get();
 
         var subcmd = event.getSubcommandName();
         if ("info".equalsIgnoreCase(subcmd)) {
@@ -379,32 +377,29 @@ public class RepSettings extends SimpleCommand {
             return true;
         }
 
-        var emotes = eventWrapper.getMessage().getEmotes();
-        if (emotes.isEmpty()) {
-            var emoji = context.argString(0).get();
-            if (!EmojiUtils.isEmoji(emoji)) {
-                eventWrapper.replyErrorAndDelete(eventWrapper.localize("command.repSettings.error.emojiNotFound"), 10);
-                return true;
-            }
-            if (data.updateMessageSettings(guildSettings.getGuild(), null, emoji, null, null, null, null, null)) {
-                eventWrapper.reply(eventWrapper.localize("command.repSettings.sub.reaction.set.emoji",
-                        Replacement.create("EMOJI", emoji))).queue();
-            }
-        } else {
-            if (emotes.size() > 1) {
-                eventWrapper.replyErrorAndDelete(eventWrapper.localize("command.repSettings.error.multi"), 10);
-                return true;
-            }
-            var emote = emotes.get(0);
+        String emote = context.argString(0).get();
+        var matcher = emotePattern.matcher(emote);
+        if (!matcher.find()) {
+            eventWrapper.reply("Checking Emote").queue(origM -> {
+                origM.addReaction(emote).queue(succ -> {
+                    if (data.updateMessageSettings(guildSettings.getGuild(), null, emote, null, null, null, null, null)) {
+                        origM.editMessage(loc.localize("command.repSettings.sub.reaction.set.emoji",
+                                Replacement.create("EMOJI", emote))).queue();
+                    }
+                }, err -> origM.editMessage(loc.localize("command.repSettings.error.emojiNotFound")).queue());
+            });
+            return true;
+        }
+        var id = matcher.group("id");
+        var emoteById = eventWrapper.getGuild().getEmoteById(id);
+        if (emoteById == null) {
+            eventWrapper.reply(eventWrapper.localize("command.repSettings.error.emojiNotFound")).queue();
+            return true;
+        }
 
-            if (!Verifier.equalSnowflake(eventWrapper.getGuild(), emote.getGuild())) {
-                eventWrapper.replyErrorAndDelete(eventWrapper.localize("command.repSettings.error.otherServer"), 10);
-                return true;
-            }
-            if (data.updateMessageSettings(guildSettings.getGuild(), null, emote.getId(), null, null, null, null, null)) {
-                eventWrapper.reply(eventWrapper.localize("command.repSettings.sub.reaction.set.emote",
-                        Replacement.create("EMOTE", emote.getAsMention()))).queue();
-            }
+        if (data.updateMessageSettings(guildSettings.getGuild(), null, id, null, null, null, null, null)) {
+            eventWrapper.reply(loc.localize("command.repSettings.sub.reaction.set.emote",
+                    Replacement.create("EMOTE", emoteById.getAsMention()))).queue();
         }
         return true;
     }
@@ -425,16 +420,19 @@ public class RepSettings extends SimpleCommand {
         }
 
         var emote = event.getOption("emote").getAsString();
-        if (EmojiUtils.isEmoji(emote)) {
-            if (data.updateMessageSettings(guildSettings.getGuild(), null, emote, null, null, null, null, null)) {
-                event.reply(loc.localize("command.repSettings.sub.reaction.set.emoji",
-                        Replacement.create("EMOJI", emote))).queue();
-            }
-            return;
-        }
+
         var matcher = emotePattern.matcher(emote);
         if (!matcher.find()) {
-            event.reply("command.repSettings.error.emojiNotFound").setEphemeral(true).queue();
+            event.reply("Checking Emote").queue(message -> {
+                message.retrieveOriginal().queue(origM -> {
+                    origM.addReaction(emote).queue(succ -> {
+                        if (data.updateMessageSettings(guildSettings.getGuild(), null, emote, null, null, null, null, null)) {
+                            origM.editMessage(loc.localize("command.repSettings.sub.reaction.set.emoji",
+                                    Replacement.create("EMOJI", emote))).queue();
+                        }
+                    }, err -> origM.editMessage(loc.localize("command.repSettings.error.emojiNotFound")).queue());
+                });
+            });
             return;
         }
         var id = matcher.group("id");
@@ -446,7 +444,7 @@ public class RepSettings extends SimpleCommand {
 
         if (data.updateMessageSettings(guildSettings.getGuild(), null, id, null, null, null, null, null)) {
             event.reply(loc.localize("command.repSettings.sub.reaction.set.emote",
-                    Replacement.create("EMOTE", emoteById.getAsMention()))).queue();
+                    Replacement.create("EMOTE", emoteById.getAsMention()))).queue(m -> m.retrieveOriginal().queue(m2 -> m2.addReaction(emoteById).queue()));
         }
     }
 

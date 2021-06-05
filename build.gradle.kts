@@ -43,7 +43,6 @@ dependencies {
     annotationProcessor("org.projectlombok", "lombok", lombokVersion)
 
     // utils
-    implementation("com.kcthota", "emoji4j", "6.0")
     implementation("org.apache.commons", "commons-lang3", "3.12.0")
 
     // unit testing
