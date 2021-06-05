@@ -154,7 +154,7 @@ public class Log extends SimpleCommand {
 
     private String getDonatedLog(User user, Guild guild, int limit) {
         var userDonatedLog = reputationData.getUserDonatedLog(user, guild, Math.max(5, Math.min(limit, 50)));
-        return mapUserLogEntry(guild, userDonatedLog, ReputationLogEntry::getReceiverId);
+        return mapUserLogEntry(guild, userDonatedLog, ReputationLogEntry::receiverId);
     }
 
     private boolean received(MessageEventWrapper eventWrapper, CommandContext context, User user) {
@@ -172,14 +172,14 @@ public class Log extends SimpleCommand {
 
     private String getReceivedLog(User user, Guild guild, int limit) {
         var userDonatedLog = reputationData.getUserReceivedLog(user, guild, Math.max(5, Math.min(limit, 50)));
-        return mapUserLogEntry(guild, userDonatedLog, ReputationLogEntry::getDonorId);
+        return mapUserLogEntry(guild, userDonatedLog, ReputationLogEntry::donorId);
     }
 
     private String mapUserLogEntry(Guild wrapper, List<ReputationLogEntry> logEntries, Function<ReputationLogEntry, Long> userId) {
         var loc = this.loc.getContextLocalizer(wrapper);
         List<String> entries = new ArrayList<>();
         for (var logEntry : logEntries) {
-            var thankType = loc.localize("thankType." + logEntry.getType().name().toLowerCase(Locale.ROOT));
+            var thankType = loc.localize("thankType." + logEntry.type().name().toLowerCase(Locale.ROOT));
             var jumpLink = createJumpLink(wrapper, logEntry);
             entries.add(String.format("**%s** %s %s",
                     thankType, User.fromId(userId.apply(logEntry)).getAsMention(), jumpLink));
@@ -195,9 +195,9 @@ public class Log extends SimpleCommand {
         List<String> entries = new ArrayList<>();
         for (var logEntry : logEntries) {
             var jumpLink = createJumpLink(guild, logEntry);
-            var thankType = loc.localize("thankType." + logEntry.getType().name().toLowerCase(Locale.ROOT));
+            var thankType = loc.localize("thankType." + logEntry.type().name().toLowerCase(Locale.ROOT));
             entries.add(String.format("**%s** %s ➜ %s **|** %s",
-                    thankType, User.fromId(logEntry.getReceiverId()).getAsMention(), User.fromId(logEntry.getReceiverId()).getAsMention(), jumpLink));
+                    thankType, User.fromId(logEntry.receiverId()).getAsMention(), User.fromId(logEntry.receiverId()).getAsMention(), jumpLink));
         }
         return String.join("\n", entries);
     }

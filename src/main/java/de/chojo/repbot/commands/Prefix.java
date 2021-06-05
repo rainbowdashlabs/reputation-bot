@@ -73,7 +73,7 @@ public class Prefix extends SimpleCommand {
     }
 
     private boolean reset(MessageEventWrapper eventWrapper) {
-        final var response = changePrefix(eventWrapper.getGuild(), configuration.getDefaultPrefix());
+        final var response = changePrefix(eventWrapper.getGuild(), configuration.defaultPrefix());
         if (response != null) {
             eventWrapper.reply(response).queue();
         }
@@ -81,7 +81,7 @@ public class Prefix extends SimpleCommand {
     }
 
     private void reset(SlashCommandEvent event) {
-        final var response = changePrefix(event.getGuild(), configuration.getDefaultPrefix());
+        final var response = changePrefix(event.getGuild(), configuration.defaultPrefix());
         if (response != null) {
             event.reply(response).queue();
         }
@@ -134,7 +134,7 @@ public class Prefix extends SimpleCommand {
     }
 
     private boolean get(MessageEventWrapper eventWrapper) {
-        var prefix = data.getPrefix(eventWrapper.getGuild()).orElse(configuration.getDefaultPrefix());
+        var prefix = data.getPrefix(eventWrapper.getGuild()).orElse(configuration.defaultPrefix());
         eventWrapper.reply(eventWrapper.localize("command.prefix.show",
                 Replacement.create("PREFIX", prefix, Format.CODE))).queue();
         return true;

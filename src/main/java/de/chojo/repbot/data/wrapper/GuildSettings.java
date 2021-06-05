@@ -1,7 +1,6 @@
 package de.chojo.repbot.data.wrapper;
 
 import de.chojo.jdautil.parsing.Verifier;
-import lombok.Getter;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReaction;
@@ -14,7 +13,6 @@ import java.util.OptionalLong;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-@Getter
 public class GuildSettings {
     private final Guild guild;
     private final String prefix;
@@ -46,7 +44,7 @@ public class GuildSettings {
         this.managerRole = managerRole;
     }
 
-    public Pattern getThankwordPattern() {
+    public Pattern thankwordPattern() {
         if (thankwords.length == 0) return Pattern.compile("");
         return Pattern.compile(
                 "(?i)(" + String.join(")|(", thankwords) + ")",
@@ -74,18 +72,58 @@ public class GuildSettings {
         return until < maxMessageAge;
     }
 
-    public Optional<String> getPrefix() {
+    public Optional<String> prefix() {
         return Optional.ofNullable(prefix);
     }
 
-    public String getReactionMention(Guild guild) {
+    public String reactionMention(Guild guild) {
         if (!reactionIsEmote()) {
             return reaction;
         }
         return guild.retrieveEmoteById(reaction).complete().getAsMention();
     }
 
-    public OptionalLong getManagerRole() {
+    public OptionalLong managerRole() {
         return OptionalLong.of(managerRole);
+    }
+
+    public int maxMessageAge() {
+        return maxMessageAge;
+    }
+
+    public boolean isReactionActive() {
+        return reactionActive;
+    }
+
+    public boolean isAnswerActive() {
+        return answerActive;
+    }
+
+    public boolean isMentionActive() {
+        return mentionActive;
+    }
+
+    public boolean isFuzzyActive() {
+        return fuzzyActive;
+    }
+
+    public String[] thankwords() {
+        return thankwords;
+    }
+
+    public String reaction() {
+        return reaction;
+    }
+
+    public Set<Long> activeChannel() {
+        return activeChannel;
+    }
+
+    public int cooldown() {
+        return cooldown;
+    }
+
+    public Guild guild() {
+        return guild;
     }
 }

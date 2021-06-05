@@ -175,13 +175,13 @@ public class RepSettings extends SimpleCommand {
         return new LocalizedEmbedBuilder(loc, guild)
                 .setTitle("command.repSettings.embed.title")
                 .appendDescription(loc.localize("command.repSettings.embed.descr", guild,
-                        Replacement.create("MAX_AGE", guildSettings.getMaxMessageAge()),
-                        Replacement.create("REACTION", guildSettings.getReactionMention(guild)),
+                        Replacement.create("MAX_AGE", guildSettings.maxMessageAge()),
+                        Replacement.create("REACTION", guildSettings.reactionMention(guild)),
                         Replacement.create("REACTION_ACTIVE", guildSettings.isReactionActive()),
                         Replacement.create("ANSWER_ACTIVE", guildSettings.isAnswerActive()),
                         Replacement.create("MENTION_ACTIVE", guildSettings.isMentionActive()),
                         Replacement.create("FUZZY_ACTIVE", guildSettings.isFuzzyActive()),
-                        Replacement.create("COOLDOWN", guildSettings.getCooldown())
+                        Replacement.create("COOLDOWN", guildSettings.cooldown())
                 ))
                 .setColor(Color.GREEN)
                 .build();
@@ -190,7 +190,7 @@ public class RepSettings extends SimpleCommand {
     private boolean cooldown(MessageEventWrapper eventWrapper, CommandContext context, GuildSettings guildSettings) {
         if (context.argsEmpty()) {
             eventWrapper.reply(eventWrapper.localize("command.repSettings.sub.cooldown.get",
-                    Replacement.create("MINUTES", guildSettings.getCooldown()))).queue();
+                    Replacement.create("MINUTES", guildSettings.cooldown()))).queue();
             return true;
         }
         var optCooldown = context.argInt(0);
@@ -201,7 +201,7 @@ public class RepSettings extends SimpleCommand {
             return false;
         }
 
-        if (data.updateMessageSettings(guildSettings.getGuild(), null, null, null, null, null, null, optCooldown.get())) {
+        if (data.updateMessageSettings(eventWrapper.getGuild(), null, null, null, null, null, null, optCooldown.get())) {
             eventWrapper.reply(eventWrapper.localize("command.repSettings.sub.cooldown.set",
                     Replacement.create("MINUTES", optCooldown.get()))).queue();
         }
@@ -212,12 +212,12 @@ public class RepSettings extends SimpleCommand {
         var loc = this.loc.getContextLocalizer(event.getGuild());
         if (event.getOptions().isEmpty()) {
             event.reply(loc.localize("command.repSettings.sub.cooldown.get",
-                    Replacement.create("MINUTES", guildSettings.getCooldown()))).queue();
+                    Replacement.create("MINUTES", guildSettings.cooldown()))).queue();
             return;
         }
         var cooldown = event.getOption("minutes").getAsLong();
 
-        if (data.updateMessageSettings(guildSettings.getGuild(), null, null, null, null, null, null, (int) cooldown)) {
+        if (data.updateMessageSettings(event.getGuild(), null, null, null, null, null, null, (int) cooldown)) {
             event.reply(loc.localize("command.repSettings.sub.cooldown.set",
                     Replacement.create("MINUTES", cooldown))).queue();
         }
@@ -237,7 +237,7 @@ public class RepSettings extends SimpleCommand {
             return false;
         }
 
-        if (data.updateMessageSettings(guildSettings.getGuild(), null, null, null, null, null, optFuzzy.get(), null)) {
+        if (data.updateMessageSettings(eventWrapper.getGuild(), null, null, null, null, null, optFuzzy.get(), null)) {
             eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), optFuzzy.get(),
                     "command.repSettings.sub.fuzzy.true", "command.repSettings.sub.fuzzy.false")).queue();
         }
@@ -252,7 +252,7 @@ public class RepSettings extends SimpleCommand {
         }
         var fuzzy = event.getOption("fuzzy").getAsBoolean();
 
-        if (data.updateMessageSettings(guildSettings.getGuild(), null, null, null, null, null, fuzzy, null)) {
+        if (data.updateMessageSettings(event.getGuild(), null, null, null, null, null, fuzzy, null)) {
             event.reply(getBooleanMessage(event.getGuild(), fuzzy,
                     "command.repSettings.sub.fuzzy.true", "command.repSettings.sub.fuzzy.false")).queue();
         }
@@ -272,7 +272,7 @@ public class RepSettings extends SimpleCommand {
             return false;
         }
 
-        if (data.updateMessageSettings(guildSettings.getGuild(), null, null, null, null, optMention.get(), null, null)) {
+        if (data.updateMessageSettings(eventWrapper.getGuild(), null, null, null, null, optMention.get(), null, null)) {
             eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), optMention.get(),
                     "command.repSettings.sub.mention.true", "command.repSettings.sub.mention.false")).queue();
         }
@@ -287,7 +287,7 @@ public class RepSettings extends SimpleCommand {
         }
         var mention = event.getOption("mention").getAsBoolean();
 
-        if (data.updateMessageSettings(guildSettings.getGuild(), null, null, null, null, mention, null, null)) {
+        if (data.updateMessageSettings(event.getGuild(), null, null, null, null, mention, null, null)) {
             event.reply(getBooleanMessage(event.getGuild(), mention,
                     "command.repSettings.sub.mention.true", "command.repSettings.sub.mention.false")).queue();
         }
@@ -308,7 +308,7 @@ public class RepSettings extends SimpleCommand {
             return false;
         }
 
-        if (data.updateMessageSettings(guildSettings.getGuild(), null, null, null, optAnswer.get(), null, null, null)) {
+        if (data.updateMessageSettings(eventWrapper.getGuild(), null, null, null, optAnswer.get(), null, null, null)) {
             eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), optAnswer.get(),
                     "command.repSettings.sub.answer.true", "command.repSettings.sub.answer.false")).queue();
         }
@@ -323,7 +323,7 @@ public class RepSettings extends SimpleCommand {
         }
         var answer = event.getOption("answer").getAsBoolean();
 
-        if (data.updateMessageSettings(guildSettings.getGuild(), null, null, null, answer, null, null, null)) {
+        if (data.updateMessageSettings(event.getGuild(), null, null, null, answer, null, null, null)) {
             event.reply(getBooleanMessage(event.getGuild(), answer,
                     "command.repSettings.sub.answer.true", "command.repSettings.sub.answer.false")).queue();
         }
@@ -343,7 +343,7 @@ public class RepSettings extends SimpleCommand {
             return false;
         }
 
-        if (data.updateMessageSettings(guildSettings.getGuild(), null, null, optReactions.get(), null, null, null, null)) {
+        if (data.updateMessageSettings(eventWrapper.getGuild(), null, null, optReactions.get(), null, null, null, null)) {
             eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), optReactions.get(),
                     "command.repSettings.sub.reactions.true", "command.repSettings.sub.reactions.false")).queue();
         }
@@ -358,7 +358,7 @@ public class RepSettings extends SimpleCommand {
         }
         var reactions = event.getOption("reactions").getAsBoolean();
 
-        if (data.updateMessageSettings(guildSettings.getGuild(), null, null, reactions, null, null, null, null)) {
+        if (data.updateMessageSettings(event.getGuild(), null, null, reactions, null, null, null, null)) {
             event.reply(getBooleanMessage(event.getGuild(), reactions,
                     "command.repSettings.sub.reactions.true", "command.repSettings.sub.reactions.false")).queue();
         }
@@ -367,7 +367,7 @@ public class RepSettings extends SimpleCommand {
     private boolean reaction(MessageEventWrapper eventWrapper, CommandContext context, GuildSettings guildSettings) {
         if (context.argsEmpty()) {
             if (guildSettings.reactionIsEmote()) {
-                eventWrapper.getGuild().retrieveEmoteById(guildSettings.getReaction())
+                eventWrapper.getGuild().retrieveEmoteById(guildSettings.reaction())
                         .flatMap(e -> eventWrapper.reply(eventWrapper.localize("command.repSettings.sub.reaction.get.emote",
                                 Replacement.create("EMOTE", e.getAsMention()))))
                         .onErrorFlatMap(
@@ -376,7 +376,7 @@ public class RepSettings extends SimpleCommand {
                 return true;
             }
             eventWrapper.reply(eventWrapper.localize("command.repSettings.sub.reaction.get.emoji",
-                    Replacement.create("EMOJI", guildSettings.getReaction()))).queue();
+                    Replacement.create("EMOJI", guildSettings.reaction()))).queue();
             return true;
         }
 
@@ -386,7 +386,7 @@ public class RepSettings extends SimpleCommand {
             eventWrapper.reply("Checking Emote").flatMap(origM -> origM.addReaction(emote)
                     .onErrorFlatMap(err -> origM.editMessage("").map(x -> null))
                     .map(succ -> {
-                        if (data.updateMessageSettings(guildSettings.getGuild(), null, emote, null, null, null, null, null)) {
+                        if (data.updateMessageSettings(eventWrapper.getGuild(), null, emote, null, null, null, null, null)) {
                             return origM.editMessage(loc.localize("command.repSettings.sub.reaction.set.emoji",
                                     Replacement.create("EMOJI", emote)));
                         }
@@ -401,7 +401,7 @@ public class RepSettings extends SimpleCommand {
             return true;
         }
 
-        if (data.updateMessageSettings(guildSettings.getGuild(), null, id, null, null, null, null, null)) {
+        if (data.updateMessageSettings(eventWrapper.getGuild(), null, id, null, null, null, null, null)) {
             eventWrapper.reply(loc.localize("command.repSettings.sub.reaction.set.emote",
                     Replacement.create("EMOTE", emoteById.getAsMention()))).queue();
         }
@@ -412,7 +412,7 @@ public class RepSettings extends SimpleCommand {
         var loc = this.loc.getContextLocalizer(event.getGuild());
         if (event.getOptions().isEmpty()) {
             if (guildSettings.reactionIsEmote()) {
-                event.getGuild().retrieveEmoteById(guildSettings.getReaction())
+                event.getGuild().retrieveEmoteById(guildSettings.reaction())
                         .flatMap(e -> event.reply(
                                 loc.localize("command.repSettings.sub.reaction.get.emote",
                                         Replacement.create("EMOTE", e.getAsMention()))))
@@ -422,7 +422,7 @@ public class RepSettings extends SimpleCommand {
                 return;
             }
             event.reply(loc.localize("command.repSettings.sub.reaction.get.emoji",
-                    Replacement.create("EMOJI", guildSettings.getReaction()))).queue();
+                    Replacement.create("EMOJI", guildSettings.reaction()))).queue();
             return;
         }
 
@@ -435,7 +435,7 @@ public class RepSettings extends SimpleCommand {
                     .flatMap(origM -> origM.addReaction(emote)
                             .onErrorFlatMap(err -> origM.editMessage(loc.localize("command.repSettings.error.emojiNotFound")).map(x -> null))
                             .map(succ -> {
-                                if (data.updateMessageSettings(guildSettings.getGuild(), null, emote, null, null, null, null, null)) {
+                                if (data.updateMessageSettings(event.getGuild(), null, emote, null, null, null, null, null)) {
                                     origM.editMessage(loc.localize("command.repSettings.sub.reaction.set.emoji",
                                             Replacement.create("EMOJI", emote))).queue();
                                 }
@@ -452,7 +452,7 @@ public class RepSettings extends SimpleCommand {
             return;
         }
 
-        if (data.updateMessageSettings(guildSettings.getGuild(), null, id, null, null, null, null, null)) {
+        if (data.updateMessageSettings(event.getGuild(), null, id, null, null, null, null, null)) {
             event.reply(loc.localize("command.repSettings.sub.reaction.set.emote",
                     Replacement.create("EMOTE", emoteById.getAsMention()))).flatMap(InteractionHook::retrieveOriginal).flatMap(m2 -> m2.addReaction(emoteById)).queue();
         }
@@ -461,7 +461,7 @@ public class RepSettings extends SimpleCommand {
     private boolean maxMessageAge(MessageEventWrapper eventWrapper, CommandContext context, GuildSettings guildSettings) {
         if (context.argsEmpty()) {
             eventWrapper.reply(eventWrapper.localize("command.repSettings.sub.maxMessageAge.get",
-                    Replacement.create("MINUTES", guildSettings.getMaxMessageAge()))).queue();
+                    Replacement.create("MINUTES", guildSettings.maxMessageAge()))).queue();
             return true;
         }
         var optAge = context.argInt(0);
@@ -471,7 +471,7 @@ public class RepSettings extends SimpleCommand {
             return true;
         }
         Integer integer = Math.max(0, optAge.get());
-        if (data.updateMessageSettings(guildSettings.getGuild(), integer, null, null, null, null, null, null)) {
+        if (data.updateMessageSettings(eventWrapper.getGuild(), integer, null, null, null, null, null, null)) {
             eventWrapper.reply(eventWrapper.localize("command.repSettings.sub.maxMessageAge.get",
                     Replacement.create("MINUTES", integer))).queue();
         }
@@ -482,13 +482,13 @@ public class RepSettings extends SimpleCommand {
         var loc = this.loc.getContextLocalizer(event.getGuild());
         if (event.getOptions().isEmpty()) {
             event.reply(loc.localize("command.repSettings.sub.maxMessageAge.get",
-                    Replacement.create("MINUTES", guildSettings.getMaxMessageAge()))).queue();
+                    Replacement.create("MINUTES", guildSettings.maxMessageAge()))).queue();
             return;
         }
         var age = event.getOption("minutes").getAsLong();
 
         age = Math.max(0, age);
-        if (data.updateMessageSettings(guildSettings.getGuild(), (int) age, null, null, null, null, null, null)) {
+        if (data.updateMessageSettings(event.getGuild(), (int) age, null, null, null, null, null, null)) {
             event.reply(loc.localize("command.repSettings.sub.maxMessageAge.get",
                     Replacement.create("MINUTES", age))).queue();
         }

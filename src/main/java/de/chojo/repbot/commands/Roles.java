@@ -5,7 +5,6 @@ import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.DiscordResolver;
-import de.chojo.jdautil.text.TextFormatting;
 import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.repbot.data.GuildData;
@@ -131,8 +130,8 @@ public class Roles extends SimpleCommand {
     }
 
     private String getManagerRoleMessage(Guild guild, GuildSettings settings) {
-        if (settings.getManagerRole().isPresent()) {
-            var roleById = guild.getRoleById(settings.getManagerRole().getAsLong());
+        if (settings.managerRole().isPresent()) {
+            var roleById = guild.getRoleById(settings.managerRole().getAsLong());
             if (roleById != null) {
                 return loc.localize("command.roles.sub.managerRole.current", guild,
                         Replacement.createMention(roleById));
@@ -211,7 +210,7 @@ public class Roles extends SimpleCommand {
         return data.getReputationRoles(guild)
                 .stream()
                 .filter(role -> role.getRole(guild) != null)
-                .map(role -> role.getReputation() + " ➜ " + role.getRole(guild).getAsMention())
+                .map(role -> role.reputation() + " ➜ " + role.getRole(guild).getAsMention())
                 .collect(Collectors.joining("\n"));
     }
 }

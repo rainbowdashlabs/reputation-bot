@@ -73,27 +73,27 @@ public class Reputation extends SimpleCommand {
     }
 
     private MessageEmbed getUserRepEmbed(Member member, ReputationUser reputation) {
-        var current = guildData.getCurrentReputationRole(member.getGuild(), reputation.getReputation());
-        var next = guildData.getNextReputationRole(member.getGuild(), reputation.getReputation());
+        var current = guildData.getCurrentReputationRole(member.getGuild(), reputation.reputation());
+        var next = guildData.getNextReputationRole(member.getGuild(), reputation.reputation());
 
-        var currentRoleRep = current.map(ReputationRole::getReputation).orElse(0L);
-        var nextRoleRep = next.map(ReputationRole::getReputation).orElse(currentRoleRep);
-        var progess = (double) (reputation.getReputation() - currentRoleRep) / (double) (nextRoleRep - currentRoleRep);
+        var currentRoleRep = current.map(ReputationRole::reputation).orElse(0L);
+        var nextRoleRep = next.map(ReputationRole::reputation).orElse(currentRoleRep);
+        var progess = (double) (reputation.reputation() - currentRoleRep) / (double) (nextRoleRep - currentRoleRep);
 
         var progressBar = TextGenerator.progressBar(progess, BAR_SIZE);
 
         var level = current.map(r -> r.getRole(member.getGuild())).map(IMentionable::getAsMention).orElse("none");
 
-        var currProgress = String.valueOf(reputation.getReputation() - currentRoleRep);
+        var currProgress = String.valueOf(reputation.reputation() - currentRoleRep);
         var nextLevel = nextRoleRep.equals(currentRoleRep) ? "\uA74E" : String.valueOf(nextRoleRep - currentRoleRep);
         return new LocalizedEmbedBuilder(loc, member.getGuild())
                 .setTitle(
-                        (reputation.getRank() != 0 ? "#" + reputation.getRank() + " " : "")
+                        (reputation.rank() != 0 ? "#" + reputation.rank() + " " : "")
                                 + loc.localize("command.reputation.profile.title",
                                 member.getGuild(),
                                 Replacement.create("NAME", member.getEffectiveName())))
                 .addField("words.level", level, true)
-                .addField(loc.localize("words.reputation", member.getGuild()), Format.BOLD.apply(String.valueOf(reputation.getReputation())), true)
+                .addField(loc.localize("words.reputation", member.getGuild()), Format.BOLD.apply(String.valueOf(reputation.reputation())), true)
                 .addField("command.reputation.profile.nextLevel", currProgress + "/" + nextLevel + "  " + progressBar, false)
                 .setThumbnail(member.getUser().getEffectiveAvatarUrl())
                 .setColor(member.getColor())

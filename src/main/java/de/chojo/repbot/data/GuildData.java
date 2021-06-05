@@ -5,12 +5,12 @@ import de.chojo.repbot.data.util.DbUtil;
 import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.data.wrapper.RemovalTask;
 import de.chojo.repbot.data.wrapper.ReputationRole;
-import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
+import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
 import javax.sql.DataSource;
@@ -22,9 +22,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-@Slf4j
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class GuildData {
     private final DataSource source;
+    private static final Logger log = getLogger(GuildData.class);
 
     public GuildData(DataSource source) {
         this.source = source;
@@ -524,72 +526,72 @@ public class GuildData {
     public void executeRemovalTask(RemovalTask task) {
         try (var conn = source.getConnection()) {
             conn.setAutoCommit(false);
-            if (task.getUserId() == null) {
+            if (task.userId() == null) {
                 try (var stmt = conn.prepareStatement("""
                         DELETE FROM reputation_log where guild_id = ?;
                         """)) {
-                    stmt.setLong(1, task.getGuildId());
+                    stmt.setLong(1, task.guildId());
                     stmt.executeUpdate();
                 }
 
                 try (var stmt = conn.prepareStatement("""
                         DELETE FROM guild_bot_settings where guild_id = ?;
                         """)) {
-                    stmt.setLong(1, task.getGuildId());
+                    stmt.setLong(1, task.guildId());
                     stmt.executeUpdate();
                 }
 
                 try (var stmt = conn.prepareStatement("""
                         DELETE FROM active_channel where guild_id = ?;
                         """)) {
-                    stmt.setLong(1, task.getGuildId());
+                    stmt.setLong(1, task.guildId());
                     stmt.executeUpdate();
                 }
 
                 try (var stmt = conn.prepareStatement("""
                         DELETE FROM message_settings where guild_id = ?;
                         """)) {
-                    stmt.setLong(1, task.getGuildId());
+                    stmt.setLong(1, task.guildId());
                     stmt.executeUpdate();
                 }
                 try (var stmt = conn.prepareStatement("""
                         DELETE FROM guild_ranks where guild_id = ?;
                         """)) {
-                    stmt.setLong(1, task.getGuildId());
+                    stmt.setLong(1, task.guildId());
                     stmt.executeUpdate();
                 }
                 try (var stmt = conn.prepareStatement("""
                         DELETE FROM thankwords where guild_id = ?;
                         """)) {
-                    stmt.setLong(1, task.getGuildId());
+                    stmt.setLong(1, task.guildId());
                     stmt.executeUpdate();
                 }
-                log.info("Removed guild settings for {}", task.getGuildId());
+                log.info("Removed guild settings for {}", task.guildId());
             } else {
                 // Remove all received donations
                 try (var stmt = conn.prepareStatement("""
                         DELETE FROM reputation_log where guild_id = ? AND receiver_id = ?;
                         """)) {
-                    stmt.setLong(1, task.getGuildId());
-                    stmt.setLong(2, task.getUserId());
+                    stmt.setLong(1, task.guildId());
+                    stmt.setLong(2, task.userId());
                     stmt.executeUpdate();
                 }
                 // Remove association with donations given.
                 try (var stmt = conn.prepareStatement("""
                         UPDATE reputation_log SET donor_id = 0 where guild_id = ? AND donor_id = ?;
                         """)) {
-                    stmt.setLong(1, task.getGuildId());
-                    stmt.setLong(2, task.getUserId());
+                    stmt.setLong(1, task.guildId());
+                    stmt.setLong(2, task.userId());
                     stmt.executeUpdate();
                 }
-                log.info("Removed user reputation from guild {} of user {}", task.getGuildId(), task.getUserId());
+                log.info("Removed user reputation from guild {} of user {}", task.guildId(), task.userId());
             }
 
             // mark task as done
             try (var stmt = conn.prepareStatement("""
                     DELETE FROM cleanup_schedule where task_id = ?;
                     """)) {
-                stmt.setLong(1, task.getTaskId());
+                stmt.setLong(1, task.taskId());
                 stmt.executeUpdate();
             }
             conn.commit();

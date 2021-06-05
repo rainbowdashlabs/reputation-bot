@@ -155,7 +155,7 @@ public class Channel extends SimpleCommand {
         var settings = guildSettings.get();
         var channelNames = DiscordResolver
                 .getValidTextChannelsById(
-                        event.getGuild(), new ArrayList<>(settings.getActiveChannel()))
+                        event.getGuild(), new ArrayList<>(settings.activeChannel()))
                 .stream().map(IMentionable::getAsMention).collect(Collectors.joining(", "));
         event.reply(loc.localize("command.channel.sub.list.list",
                 Replacement.create("CHANNEL", channelNames))).queue();
@@ -168,7 +168,7 @@ public class Channel extends SimpleCommand {
         var settings = guildSettings.get();
         var channelNames = DiscordResolver
                 .getValidTextChannelsById(
-                        eventWrapper.getGuild(), new ArrayList<>(settings.getActiveChannel()))
+                        eventWrapper.getGuild(), new ArrayList<>(settings.activeChannel()))
                 .stream().map(IMentionable::getAsMention).collect(Collectors.joining(", "));
         eventWrapper.reply(eventWrapper.localize("command.channel.sub.list.list",
                 Replacement.create("CHANNEL", channelNames))).queue();

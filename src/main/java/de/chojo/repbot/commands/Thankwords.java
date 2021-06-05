@@ -220,7 +220,7 @@ public class Thankwords extends SimpleCommand {
 
         var guildSettings = optGuildSettings.get();
 
-        var pattern = Arrays.stream(guildSettings.getThankwords())
+        var pattern = Arrays.stream(guildSettings.thankwords())
                 .map(w -> StringUtils.wrap(w, "`"))
                 .collect(Collectors.joining(", "));
         return pattern;
@@ -241,9 +241,9 @@ public class Thankwords extends SimpleCommand {
         }
 
         var message = event.getChannel().retrieveMessageById(messageId).complete();
-        var result = MessageAnalyzer.processMessage(guildSettings.getThankwordPattern(), message, guildSettings.getMaxMessageAge(), true, 0.85, 3);
+        var result = MessageAnalyzer.processMessage(guildSettings.thankwordPattern(), message, guildSettings.maxMessageAge(), true, 0.85, 3);
         var builder = new LocalizedEmbedBuilder(this.loc, event.getGuild());
-        if (result.getReceivers().isEmpty()) {
+        if (result.receivers().isEmpty()) {
             event.reply(loc.localize("command.thankwords.sub.check.match.noMatch")).queue();
             return true;
         }
@@ -263,9 +263,9 @@ public class Thankwords extends SimpleCommand {
 
         var guildSettings = optGuildSettings.get();
 
-        var result = MessageAnalyzer.processMessage(guildSettings.getThankwordPattern(), eventWrapper.getMessage(), guildSettings.getMaxMessageAge(), true, 0.85, 3);
+        var result = MessageAnalyzer.processMessage(guildSettings.thankwordPattern(), eventWrapper.getMessage(), guildSettings.maxMessageAge(), true, 0.85, 3);
         var builder = new LocalizedEmbedBuilder(eventWrapper);
-        if (result.getReceivers().isEmpty()) {
+        if (result.receivers().isEmpty()) {
             eventWrapper.reply(eventWrapper.localize("command.thankwords.sub.check.match.noMatch")).queue();
             return true;
         }
@@ -280,37 +280,37 @@ public class Thankwords extends SimpleCommand {
     }
 
     private MessageEmbed processMessage(Guild guild, de.chojo.repbot.analyzer.AnalyzerResult result, LocalizedEmbedBuilder builder) {
-        for (var receiver : result.getReceivers()) {
-            switch (result.getType()) {
+        for (var receiver : result.receivers()) {
+            switch (result.type()) {
                 case FUZZY -> builder.addField("command.thankwords.sub.check.match.fuzzy",
                         loc.localize("command.thankwords.sub.check.result",
-                                Replacement.create("DONATOR", result.getDonator().getAsMention()),
+                                Replacement.create("DONATOR", result.donator().getAsMention()),
                                 Replacement.create("RECEIVER", receiver.getReference().getAsMention())) + "\n"
                                 + loc.localize("command.thankwords.sub.check.confidence",
                                 Replacement.create("SCORE", String.format("%.3f", receiver.getWeight()))),
                         false);
                 case MENTION -> builder.addField("command.thankwords.sub.check.match.mention",
                         loc.localize("command.thankwords.sub.check.result",
-                                Replacement.create("DONATOR", result.getDonator().getAsMention()),
+                                Replacement.create("DONATOR", result.donator().getAsMention()),
                                 Replacement.create("RECEIVER", receiver.getReference().getAsMention())),
                         false);
                 case ANSWER -> {
                     builder.addField("command.thankwords.sub.check.match.answer",
                             loc.localize("command.thankwords.sub.check.result",
-                                    Replacement.create("DONATOR", result.getDonator().getAsMention()),
+                                    Replacement.create("DONATOR", result.donator().getAsMention()),
                                     Replacement.create("RECEIVER", receiver.getReference().getAsMention())) + "\n"
                                     + loc.localize("command.thankwords.sub.check.reference",
-                                    Replacement.create("URL", result.getReferenceMessage().getJumpUrl())),
+                                    Replacement.create("URL", result.referenceMessage().getJumpUrl())),
                             false);
 
                     var match = new LocalizedEmbedBuilder(loc, guild)
                             .setTitle("command.thankwords.sub.check.match.answer")
                             .setDescription(
                                     loc.localize("command.thankwords.sub.check.result",
-                                            Replacement.create("DONATOR", result.getDonator().getAsMention()),
+                                            Replacement.create("DONATOR", result.donator().getAsMention()),
                                             Replacement.create("RECEIVER", receiver.getReference().getAsMention())) + "\n"
                                             + loc.localize("command.thankwords.sub.check.reference",
-                                            Replacement.create("URL", result.getReferenceMessage().getJumpUrl())));
+                                            Replacement.create("URL", result.referenceMessage().getJumpUrl())));
                     return match.build();
                 }
             }

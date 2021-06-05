@@ -38,18 +38,12 @@ dependencies {
     implementation("org.apache.logging.log4j", "log4j-core", log4jVersion)
     implementation("org.apache.logging.log4j", "log4j-slf4j-impl", log4jVersion)
 
-    // annotation processing
-    compileOnly("org.projectlombok", "lombok", lombokVersion)
-    annotationProcessor("org.projectlombok", "lombok", lombokVersion)
-
     // utils
     implementation("org.apache.commons", "commons-lang3", "3.12.0")
 
     // unit testing
     testImplementation(platform("org.junit:junit-bom:5.7.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
-    testCompileOnly("org.projectlombok", "lombok", lombokVersion)
-    testAnnotationProcessor("org.projectlombok", "lombok", lombokVersion)
 }
 
 

@@ -28,13 +28,13 @@ import de.chojo.repbot.listener.StateListener;
 import de.chojo.repbot.manager.MemberCacheManager;
 import de.chojo.repbot.manager.ReputationManager;
 import de.chojo.repbot.manager.RoleAssigner;
-import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.postgresql.ds.PGSimpleDataSource;
+import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
 import javax.security.auth.login.LoginException;
@@ -48,8 +48,10 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-@Slf4j
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class ReputationBot {
+    private static final Logger log = getLogger(ReputationBot.class);
     private static ReputationBot instance;
     private final ExecutorService executorService = Executors.newFixedThreadPool(50);
     private final ScheduledExecutorService cleaner = Executors.newScheduledThreadPool(1);
@@ -92,14 +94,14 @@ public class ReputationBot {
     private void initDatabase() throws SQLException, IOException {
         var connectionPool = getConnectionPool(null);
 
-        var schema = configuration.getDatabase().getSchema();
+        var schema = configuration.database().schema();
         SqlUpdater.builder(connectionPool)
                 .setReplacements(new QueryReplacement("repbot_schema", schema))
                 .setVersionTable(schema + ".repbot_version")
                 .setSchemas(schema)
                 .execute();
 
-        dataSource = getConnectionPool(configuration.getDatabase().getSchema());
+        dataSource = getConnectionPool(configuration.database().schema());
     }
 
     private void initLocalization() {
@@ -112,7 +114,7 @@ public class ReputationBot {
 
     private void initBot() {
         var roleAssigner = new RoleAssigner(dataSource);
-        var reputationManager = new ReputationManager(dataSource, roleAssigner, configuration.getMagicImage());
+        var reputationManager = new ReputationManager(dataSource, roleAssigner, configuration.magicImage());
         var reactionListener = new ReactionListener(dataSource, localizer, reputationManager);
         var stateListener = new StateListener(dataSource);
         cleaner.scheduleAtFixedRate(stateListener, 0, 12, TimeUnit.HOURS);
@@ -123,11 +125,12 @@ public class ReputationBot {
                 stateListener,
                 reactionListener);
         var data = new GuildData(dataSource);
-        var hub = CommandHub.builder(shardManager, configuration.getDefaultPrefix())
+        var hubBuilder = CommandHub.builder(shardManager, configuration.defaultPrefix())
                 .receiveGuildMessage()
                 .receiveGuildMessagesUpdates()
                 .withConversationSystem()
                 .withPrefixResolver(data::getPrefix)
+                .onlyGuildCommands()
                 .withSlashCommands()
                 .withCommands(
                         new Channel(dataSource, localizer),
@@ -160,11 +163,14 @@ public class ReputationBot {
                     var guildSettings = data.getGuildSettings(wrapper.getGuild());
                     if (guildSettings.isEmpty()) return false;
                     var settings = guildSettings.get();
-                    var roleById = wrapper.getGuild().getRoleById(settings.getManagerRole().orElse(0));
+                    var roleById = wrapper.getGuild().getRoleById(settings.managerRole().orElse(0));
                     if (roleById == null) return false;
                     return wrapper.getMember().getRoles().contains(roleById);
-                })
-                .build();
+                });
+        if (configuration.testMode().isTestMode()) {
+            hubBuilder.onlyGuildCommands(configuration.testMode().testGuilds());
+        }
+        var hub = hubBuilder.build();
         hub.registerCommands(new Help(hub, localizer, configuration.isExclusiveHelp()));
     }
 
@@ -199,19 +205,19 @@ public class ReputationBot {
     }
 
     private HikariDataSource getConnectionPool(@Nullable String schema) {
-        var db = configuration.getDatabase();
+        var db = configuration.database();
         var props = new Properties();
         props.setProperty("dataSourceClassName", PGSimpleDataSource.class.getName());
-        props.setProperty("dataSource.serverName", db.getHost());
-        props.setProperty("dataSource.portNumber", db.getPort());
-        props.setProperty("dataSource.user", db.getUser());
-        props.setProperty("dataSource.password", db.getPassword());
-        props.setProperty("dataSource.databaseName", db.getDatabase());
+        props.setProperty("dataSource.serverName", db.host());
+        props.setProperty("dataSource.portNumber", db.port());
+        props.setProperty("dataSource.user", db.user());
+        props.setProperty("dataSource.password", db.password());
+        props.setProperty("dataSource.databaseName", db.database());
 
         var config = new HikariConfig(props);
-        config.setMaximumPoolSize(db.getPoolSize());
+        config.setMaximumPoolSize(db.poolSize());
         if (schema != null) {
-            config.setSchema(db.getSchema());
+            config.setSchema(db.schema());
         }
 
         return new HikariDataSource(config);

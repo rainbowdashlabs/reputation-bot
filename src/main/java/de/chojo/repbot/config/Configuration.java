@@ -6,8 +6,8 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.chojo.repbot.config.elements.Database;
 import de.chojo.repbot.config.elements.MagicImage;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
+import de.chojo.repbot.config.elements.TestMode;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,11 +15,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-@Getter
-@Slf4j
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class Configuration {
     private final ObjectMapper objectMapper;
     private ConfigFile configFile;
+    private static final Logger log = getLogger(Configuration.class);
 
     private Configuration() {
         objectMapper = new ObjectMapper();
@@ -76,22 +77,26 @@ public class Configuration {
 
     // DELEGATES
     public String getToken() {
-        return configFile.getToken();
+        return configFile.token();
     }
 
-    public String getDefaultPrefix() {
-        return configFile.getDefaultPrefix();
+    public String defaultPrefix() {
+        return configFile.defaultPrefix();
     }
 
-    public Database getDatabase() {
-        return configFile.getDatabase();
+    public Database database() {
+        return configFile.database();
     }
 
     public boolean isExclusiveHelp() {
         return configFile.isExclusiveHelp();
     }
 
-    public MagicImage getMagicImage() {
-        return configFile.getMagicImage();
+    public MagicImage magicImage() {
+        return configFile.magicImage();
+    }
+
+    public TestMode testMode() {
+        return configFile.testMode();
     }
 }

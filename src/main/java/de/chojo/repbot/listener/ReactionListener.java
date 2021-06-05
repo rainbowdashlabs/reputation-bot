@@ -7,7 +7,6 @@ import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.manager.ReputationManager;
 import de.chojo.repbot.util.HistoryUtil;
-import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -17,14 +16,17 @@ import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemove
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-@Slf4j
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class ReactionListener extends ListenerAdapter {
+    private static final Logger log = getLogger(ReactionListener.class);
     private final GuildData guildData;
     private final ReputationData reputationData;
     private final Map<Long, VoteRequest> voteRequests = new HashMap<>();
@@ -48,22 +50,22 @@ public class ReactionListener extends ListenerAdapter {
         if (voteRequests.containsKey(event.getMessageIdLong())) {
             if (event.getReactionEmote().isEmote()) return;
             var voteRequest = voteRequests.get(event.getMessageIdLong());
-            if (!voteRequest.getMember().equals(event.getMember())) return;
+            if (!voteRequest.member().equals(event.getMember())) return;
             var target = voteRequest.getTarget(event.getReactionEmote().getEmoji());
             if (target.isEmpty()) {
                 if (event.getReactionEmote().getEmoji().equals("🗑️")) {
-                    unregisterVote(voteRequest.getVoteMessage());
-                    voteRequest.getVoteMessage().delete().queue();
+                    unregisterVote(voteRequest.voteMessage());
+                    voteRequest.voteMessage().delete().queue();
                 }
                 return;
             }
-            if (voteRequest.getRemainingVotes() == 0) return;
+            if (voteRequest.remainingVotes() == 0) return;
 
-            if (reputationManager.submitReputation(event.getGuild(), event.getUser(), target.get().getUser(), voteRequest.getRefMessage(), null, ThankType.REACTION)) {
+            if (reputationManager.submitReputation(event.getGuild(), event.getUser(), target.get().getUser(), voteRequest.refMessage(), null, ThankType.REACTION)) {
                 voteRequest.voted();
-                voteRequest.getVoteMessage().
+                voteRequest.voteMessage().
                         editMessage(voteRequest.getNewEmbed(localizer.localize("listener.messages.request.descrThank"
-                                , event.getGuild(), Replacement.create("MORE", voteRequest.getRemainingVotes()))))
+                                , event.getGuild(), Replacement.create("MORE", voteRequest.remainingVotes()))))
                         .queue();
             }
             return;
@@ -76,7 +78,7 @@ public class ReactionListener extends ListenerAdapter {
         var message = event.getChannel()
                 .retrieveMessageById(event.getMessageId())
                 .timeout(10, TimeUnit.SECONDS).complete();
-        var recentMembers = HistoryUtil.getRecentMembers(message, guildSettings.getMaxMessageAge());
+        var recentMembers = HistoryUtil.getRecentMembers(message, guildSettings.maxMessageAge());
         if (!recentMembers.contains(event.getMember())) return;
 
         var receiver = message.getAuthor();
@@ -85,7 +87,7 @@ public class ReactionListener extends ListenerAdapter {
         if (logEntry.isPresent()) {
             Member newReceiver;
             try {
-                newReceiver = event.getGuild().retrieveMemberById(logEntry.get().getReceiverId()).complete();
+                newReceiver = event.getGuild().retrieveMemberById(logEntry.get().receiverId()).complete();
             } catch (RuntimeException e) {
                 return;
             }
