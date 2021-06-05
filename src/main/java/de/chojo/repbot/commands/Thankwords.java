@@ -196,7 +196,7 @@ public class Thankwords extends SimpleCommand {
     }
 
     private boolean list(MessageEventWrapper eventWrapper) {
-        String pattern = getGuildPattern(eventWrapper.getGuild());
+        var pattern = getGuildPattern(eventWrapper.getGuild());
         if (pattern == null) return false;
 
         eventWrapper.reply(eventWrapper.localize("command.thankwords.sub.list.list") + "\n" + pattern).queue();
@@ -206,7 +206,7 @@ public class Thankwords extends SimpleCommand {
     private boolean list(SlashCommandEvent event) {
         var loc = this.loc.getContextLocalizer(event.getGuild());
 
-        String pattern = getGuildPattern(event.getGuild());
+        var pattern = getGuildPattern(event.getGuild());
         if (pattern == null) return false;
 
         event.reply(loc.localize("command.thankwords.sub.list.list") + "\n" + pattern).queue();
@@ -251,6 +251,7 @@ public class Thankwords extends SimpleCommand {
         var processResult = processMessage(event.getGuild(), result, builder);
         if (processResult != null) {
             event.reply(wrap(processResult)).queue();
+            return true;
         }
 
         event.reply(wrap(builder.build())).queue();
@@ -273,6 +274,7 @@ public class Thankwords extends SimpleCommand {
         var processResult = processMessage(eventWrapper.getGuild(), result, builder);
         if (processResult != null) {
             eventWrapper.reply(processResult).queue();
+            return true;
         }
 
         eventWrapper.reply(builder.build()).queue();
