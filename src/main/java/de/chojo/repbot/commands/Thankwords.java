@@ -8,6 +8,7 @@ import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
+import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
@@ -233,6 +234,12 @@ public class Thankwords extends SimpleCommand {
 
         var guildSettings = optGuildSettings.get();
         var messageId = event.getOption("message").getAsString();
+
+        if(!Verifier.isValidId(messageId)){
+            event.reply(loc.localize("error.invalidMessage")).queue();
+            return true;
+        }
+
         var message = event.getChannel().retrieveMessageById(messageId).complete();
         var result = MessageAnalyzer.processMessage(guildSettings.getThankwordPattern(), message, guildSettings.getMaxMessageAge(), true, 0.85, 3);
         var builder = new LocalizedEmbedBuilder(this.loc, event.getGuild());

@@ -119,13 +119,14 @@ public class Roles extends SimpleCommand {
             if (guildSettings.isEmpty()) return;
 
             var settings = guildSettings.get();
-            event.reply(getManagerRoleMessage(event.getGuild(), settings)).queue();
+            event.reply(getManagerRoleMessage(event.getGuild(), settings)).allowedMentions(Collections.emptyList()).queue();
             return;
         }
         var role = event.getOption("role").getAsRole();
         if (data.setManagerRole(event.getGuild(), role)) {
             event.reply(loc.localize("command.roles.sub.managerRole.set",
-                    Replacement.createMention(role))).queue();
+                    Replacement.createMention(role)))
+                    .allowedMentions(Collections.emptyList()).queue();
         }
     }
 
@@ -164,7 +165,7 @@ public class Roles extends SimpleCommand {
 
         if (data.removeReputationRole(event.getGuild(), role)) {
             event.reply(loc.localize("command.roles.sub.remove.removed",
-                    Replacement.createMention("ROLE", role))).mention(Collections.emptyList()).queue();
+                    Replacement.createMention("ROLE", role))).allowedMentions(Collections.emptyList()).queue();
             return;
         }
         event.reply(loc.localize("command.roles.sub.remove.notARepRole")).setEphemeral(true).queue();
@@ -191,7 +192,8 @@ public class Roles extends SimpleCommand {
         var reputation = event.getOption("reputation").getAsLong();
         if (data.addReputationRole(event.getGuild(), role, reputation)) {
             event.reply(loc.localize("command.roles.sub.add.added", event.getGuild(),
-                    Replacement.createMention("ROLE", role), Replacement.create("POINTS", reputation))).mention(Collections.emptyList()).queue();
+                    Replacement.createMention("ROLE", role), Replacement.create("POINTS", reputation)))
+                    .allowedMentions(Collections.emptyList()).queue();
         }
         return true;
     }
@@ -202,14 +204,14 @@ public class Roles extends SimpleCommand {
     }
 
     private void list(SlashCommandEvent event) {
-        event.reply(getRoleList(event.getGuild())).mention(Collections.emptyList()).queue();
+        event.reply(getRoleList(event.getGuild())).allowedMentions(Collections.emptyList()).queue();
     }
 
     private String getRoleList(Guild guild) {
         return data.getReputationRoles(guild)
                 .stream()
                 .filter(role -> role.getRole(guild) != null)
-                .map(role -> role.getReputation() + " ➜ " + role.getRole(guild))
+                .map(role -> role.getReputation() + " ➜ " + role.getRole(guild).getAsMention())
                 .collect(Collectors.joining("\n"));
     }
 }

@@ -134,12 +134,12 @@ public class Scan extends SimpleCommand {
 
         var subCmd = event.getSubcommandName();
 
-
         if ("cancel".equalsIgnoreCase(subCmd)) {
             if (!activeScans.contains(event.getGuild().getIdLong())) {
                 event.reply(loc.localize("command.scan.sub.cancel.noTask")).setEphemeral(true).queue();
                 return;
             }
+            event.reply(loc.localize("command.scan.canceling")).queue();
             cancelScan(event.getGuild());
             return;
         }
