@@ -24,7 +24,7 @@ public class Locale extends SimpleCommand {
                 "command.locale.description",
                 subCommandBuilder()
                         .add("set", "command.locale.sub.set", argsBuilder()
-                                .add(OptionType.STRING, "locale", "locale")
+                                .add(OptionType.STRING, "language", "language")
                                 .build()
                         )
                         .add("list", "command.locale.sub.list")

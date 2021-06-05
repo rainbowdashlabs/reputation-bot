@@ -149,7 +149,7 @@ public class Log extends SimpleCommand {
     private void donated(SlashCommandEvent event, User user) {
         var limit = Optional.ofNullable(event.getOption("count")).map(OptionMapping::getAsLong).orElse(10L);
         event.reply(wrap(sendUserLog(event.getGuild(), user, "command.log.donatedLog",
-                getReceivedLog(user, event.getGuild(), limit.intValue())))).queue();
+                getDonatedLog(user, event.getGuild(), limit.intValue())))).queue();
     }
 
     private String getDonatedLog(User user, Guild guild, int limit) {

@@ -53,9 +53,8 @@ public class Prefix extends SimpleCommand {
                 return reset(eventWrapper);
             }
             return false;
-        } else {
-            return get(eventWrapper);
         }
+        return get(eventWrapper);
     }
 
     @Override
