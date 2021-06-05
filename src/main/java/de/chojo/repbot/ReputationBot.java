@@ -119,7 +119,6 @@ public class ReputationBot {
         var stateListener = new StateListener(dataSource);
         cleaner.scheduleAtFixedRate(stateListener, 0, 12, TimeUnit.HOURS);
 
-        // TODO: 28.05.2021 NE MENGE!
         shardManager.addEventListener(
                 new MessageListener(dataSource, configuration, memberCacheManager, reactionListener, localizer, reputationManager),
                 stateListener,
