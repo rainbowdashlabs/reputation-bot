@@ -64,7 +64,7 @@ public class Help extends SimpleCommand {
             return true;
         }
 
-        eventWrapper.reply(getCommandHelpEmbed(eventWrapper, command.get())).queue();
+        eventWrapper.reply(getCommandHelp(command.get(), eventWrapper.getGuild())).queue();
         return true;
     }
 
@@ -91,7 +91,7 @@ public class Help extends SimpleCommand {
             return;
         }
 
-        eventWrapper.reply(getCommandHelpEmbed(eventWrapper, command.get())).queue();
+        event.reply(wrap(getCommandHelp(command.get(), event.getGuild()))).queue();
     }
 
     @NotNull
@@ -131,10 +131,10 @@ public class Help extends SimpleCommand {
         return embedBuilder.build();
     }
 
-    public MessageEmbed getCommandHelp(SimpleCommand command, ILocalizer localizer, Guild guild) {
-        var loc = localizer.getContextLocalizer(guild);
+    public MessageEmbed getCommandHelp(SimpleCommand command, Guild guild) {
+        var loc = this.loc.getContextLocalizer(guild);
 
-        var builder = new LocalizedEmbedBuilder(localizer, guild)
+        var builder = new LocalizedEmbedBuilder(this.loc, guild)
                 .setTitle(loc.localize("command.help.title",
                         Replacement.create("COMMAND", command.command())))
                 .setDescription(loc.localize(description()));
@@ -146,15 +146,15 @@ public class Help extends SimpleCommand {
             builder.addField("command.help.alias", aliases, false);
         }
 
-        if (subCommands() != null) {
+        if (command.subCommands() != null) {
             List<String> commands = new ArrayList<>();
-            for (var simpleSubCommand : subCommands()) {
-                commands.add(simpleSubCommand.name() + " " + argsAsString(simpleSubCommand.args(), loc));
+            for (var simpleSubCommand : command.subCommands()) {
+                commands.add("`"+simpleSubCommand.name() + " " + argsAsString(simpleSubCommand.args(), loc) + "` ➜ "  + loc.localize(simpleSubCommand.description()));
             }
             builder.addField("command.help.subCommands", String.join("\n", commands), false);
         }
 
-        if (args() != null) {
+        if (command.args() != null) {
             builder.addField("command.help.usage", argsAsString(command.args(), loc), false);
         }
 
@@ -162,6 +162,7 @@ public class Help extends SimpleCommand {
     }
 
     private String argsAsString(SimpleArgument[] args, ContextLocalizer localizer) {
+        if(args == null) return "";
         List<String> strArgs = new ArrayList<>();
         for (var arg : args) {
             strArgs.add(String.format(arg.isRequired() ? REQ : OPT, localizer.localize(arg.name())));

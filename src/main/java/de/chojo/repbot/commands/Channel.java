@@ -87,7 +87,7 @@ public class Channel extends SimpleCommand {
     private void add(SlashCommandEvent event) {
         var channel = event.getOption("channel").getAsMessageChannel();
         if (channel == null || channel.getType() != ChannelType.TEXT) {
-            event.reply(loc.localize("error.invalidChannel")).queue();
+            event.reply(loc.localize("error.invalidChannel")).setEphemeral(true).queue();
             return;
         }
 
@@ -120,7 +120,7 @@ public class Channel extends SimpleCommand {
     private void remove(SlashCommandEvent event) {
         var channel = event.getOption("channel").getAsMessageChannel();
         if (channel == null || channel.getType() != ChannelType.TEXT) {
-            event.reply(loc.localize("error.invalidChannel")).queue();
+            event.reply(loc.localize("error.invalidChannel")).setEphemeral(true).queue();
             return;
         }
         data.deleteChannel(event.getGuild(), channel);
@@ -178,7 +178,7 @@ public class Channel extends SimpleCommand {
     private void set(SlashCommandEvent event) {
         var channel = event.getOption("channel").getAsMessageChannel();
         if (channel == null || channel.getType() != ChannelType.TEXT) {
-            event.reply(loc.localize("error.invalidChannel")).queue();
+            event.reply(loc.localize("error.invalidChannel")).setEphemeral(true).queue();
             return;
         }
 
