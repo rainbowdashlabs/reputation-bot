@@ -15,24 +15,16 @@ val lombokVersion = "1.18.20"
 
 repositories {
     maven("https://eldonexus.de/repository/maven-proxies")
-    maven {
-        url = uri("https://eldonexus.de/repository/maven-public")
-    }
-    maven {
-        name = "m2-dv8tion"
-        url = uri("https://m2.dv8tion.net/releases")
-    }
+    maven("https://eldonexus.de/repository/maven-public")
+    maven("https://m2.dv8tion.net/releases")
 }
 
 dependencies {
     // discord
-    implementation("com.github.DV8FromTheWorld", "JDA", "9c31ef1504") {
+    implementation("net.dv8tion", "JDA", "4.2.1_269") {
         exclude(module = "opus-java")
-        version {
-            strictly("9c31ef1504")
-        }
     }
-    implementation("de.chojo", "cjda-util", "1.1.0-DEV")
+    implementation("de.chojo", "cjda-util", "1.2.3-DEV")
 
     // database
     implementation("org.postgresql", "postgresql", "42.2.19")
