@@ -12,10 +12,11 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import javax.sql.DataSource;
-import java.awt.Color;
+import java.awt.*;
 import java.util.regex.Pattern;
 
 public class RepSettings extends SimpleCommand {
@@ -366,10 +367,12 @@ public class RepSettings extends SimpleCommand {
     private boolean reaction(MessageEventWrapper eventWrapper, CommandContext context, GuildSettings guildSettings) {
         if (context.argsEmpty()) {
             if (guildSettings.reactionIsEmote()) {
-                eventWrapper.getGuild().retrieveEmoteById(guildSettings.getReaction()).queue(
-                        e -> eventWrapper.reply(eventWrapper.localize("command.repSettings.sub.reaction.get.emote",
-                                Replacement.create("EMOTE", e.getAsMention()))).queue(),
-                        err -> eventWrapper.reply(eventWrapper.localize("command.repSettings.sub.reaction.get.error")).queue());
+                eventWrapper.getGuild().retrieveEmoteById(guildSettings.getReaction())
+                        .flatMap(e -> eventWrapper.reply(eventWrapper.localize("command.repSettings.sub.reaction.get.emote",
+                                Replacement.create("EMOTE", e.getAsMention()))))
+                        .onErrorFlatMap(
+                                err -> eventWrapper.reply(eventWrapper.localize("command.repSettings.sub.reaction.get.error"))
+                        ).queue();
                 return true;
             }
             eventWrapper.reply(eventWrapper.localize("command.repSettings.sub.reaction.get.emoji",
@@ -380,14 +383,15 @@ public class RepSettings extends SimpleCommand {
         String emote = context.argString(0).get();
         var matcher = emotePattern.matcher(emote);
         if (!matcher.find()) {
-            eventWrapper.reply("Checking Emote").queue(origM -> {
-                origM.addReaction(emote).queue(succ -> {
-                    if (data.updateMessageSettings(guildSettings.getGuild(), null, emote, null, null, null, null, null)) {
-                        origM.editMessage(loc.localize("command.repSettings.sub.reaction.set.emoji",
-                                Replacement.create("EMOJI", emote))).queue();
-                    }
-                }, err -> origM.editMessage(loc.localize("command.repSettings.error.emojiNotFound")).queue());
-            });
+            eventWrapper.reply("Checking Emote").flatMap(origM -> origM.addReaction(emote)
+                    .onErrorFlatMap(err -> origM.editMessage("").map(x -> null))
+                    .map(succ -> {
+                        if (data.updateMessageSettings(guildSettings.getGuild(), null, emote, null, null, null, null, null)) {
+                            return origM.editMessage(loc.localize("command.repSettings.sub.reaction.set.emoji",
+                                    Replacement.create("EMOJI", emote)));
+                        }
+                        return null;
+                    })).queue();
             return true;
         }
         var id = matcher.group("id");
@@ -408,10 +412,13 @@ public class RepSettings extends SimpleCommand {
         var loc = this.loc.getContextLocalizer(event.getGuild());
         if (event.getOptions().isEmpty()) {
             if (guildSettings.reactionIsEmote()) {
-                event.getGuild().retrieveEmoteById(guildSettings.getReaction()).queue(
-                        e -> event.reply(loc.localize("command.repSettings.sub.reaction.get.emote",
-                                Replacement.create("EMOTE", e.getAsMention()))).queue(),
-                        err -> event.reply(loc.localize("command.repSettings.sub.reaction.get.error")).queue());
+                event.getGuild().retrieveEmoteById(guildSettings.getReaction())
+                        .flatMap(e -> event.reply(
+                                loc.localize("command.repSettings.sub.reaction.get.emote",
+                                        Replacement.create("EMOTE", e.getAsMention()))))
+                        .onErrorFlatMap(
+                                err -> event.reply(loc.localize("command.repSettings.sub.reaction.get.error")))
+                        .queue();
                 return;
             }
             event.reply(loc.localize("command.repSettings.sub.reaction.get.emoji",
@@ -423,16 +430,19 @@ public class RepSettings extends SimpleCommand {
 
         var matcher = emotePattern.matcher(emote);
         if (!matcher.find()) {
-            event.reply("Checking Emote").queue(message -> {
-                message.retrieveOriginal().queue(origM -> {
-                    origM.addReaction(emote).queue(succ -> {
-                        if (data.updateMessageSettings(guildSettings.getGuild(), null, emote, null, null, null, null, null)) {
-                            origM.editMessage(loc.localize("command.repSettings.sub.reaction.set.emoji",
-                                    Replacement.create("EMOJI", emote))).queue();
-                        }
-                    }, err -> origM.editMessage(loc.localize("command.repSettings.error.emojiNotFound")).queue());
-                });
-            });
+            event.reply("Checking Emote")
+                    .flatMap(InteractionHook::retrieveOriginal)
+                    .flatMap(origM -> origM.addReaction(emote)
+                            .onErrorFlatMap(err -> origM.editMessage(loc.localize("command.repSettings.error.emojiNotFound")).map(x -> null))
+                            .map(succ -> {
+                                if (data.updateMessageSettings(guildSettings.getGuild(), null, emote, null, null, null, null, null)) {
+                                    origM.editMessage(loc.localize("command.repSettings.sub.reaction.set.emoji",
+                                            Replacement.create("EMOJI", emote))).queue();
+                                }
+                                return null;
+                            }))
+                    .queue();
+
             return;
         }
         var id = matcher.group("id");
@@ -444,7 +454,7 @@ public class RepSettings extends SimpleCommand {
 
         if (data.updateMessageSettings(guildSettings.getGuild(), null, id, null, null, null, null, null)) {
             event.reply(loc.localize("command.repSettings.sub.reaction.set.emote",
-                    Replacement.create("EMOTE", emoteById.getAsMention()))).queue(m -> m.retrieveOriginal().queue(m2 -> m2.addReaction(emoteById).queue()));
+                    Replacement.create("EMOTE", emoteById.getAsMention()))).flatMap(InteractionHook::retrieveOriginal).flatMap(m2 -> m2.addReaction(emoteById)).queue();
         }
     }
 
