@@ -133,7 +133,7 @@ public class ReputationBot {
                         new Channel(dataSource, localizer),
                         new Prefix(dataSource, configuration, localizer),
                         new Reputation(dataSource, localizer),
-                        new Roles(dataSource),
+                        new Roles(dataSource, localizer),
                         new RepSettings(dataSource, localizer),
                         new TopReputation(dataSource, localizer),
                         Thankwords.of(dataSource, localizer),

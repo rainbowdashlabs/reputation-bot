@@ -316,11 +316,11 @@ public class RepSettings extends SimpleCommand {
         return true;
     }
 
-    private boolean answer(SlashCommandEvent event, GuildSettings guildSettings) {
+    private void answer(SlashCommandEvent event, GuildSettings guildSettings) {
         if (event.getOptions().isEmpty()) {
             event.reply(getBooleanMessage(event.getGuild(), guildSettings.isAnswerActive(),
                     "command.repSettings.sub.answer.true", "command.repSettings.sub.answer.false")).queue();
-            return true;
+            return;
         }
         var answer = event.getOption("answer").getAsBoolean();
 
@@ -328,7 +328,6 @@ public class RepSettings extends SimpleCommand {
             event.reply(getBooleanMessage(event.getGuild(), answer,
                     "command.repSettings.sub.answer.true", "command.repSettings.sub.answer.false")).queue();
         }
-        return true;
     }
 
     private boolean reactions(MessageEventWrapper eventWrapper, CommandContext context, GuildSettings guildSettings) {
@@ -352,11 +351,11 @@ public class RepSettings extends SimpleCommand {
         return true;
     }
 
-    private boolean reactions(SlashCommandEvent event, GuildSettings guildSettings) {
+    private void reactions(SlashCommandEvent event, GuildSettings guildSettings) {
         if (event.getOptions().isEmpty()) {
             event.reply(getBooleanMessage(event.getGuild(), guildSettings.isReactionActive(),
                     "command.repSettings.sub.reactions.true", "command.repSettings.sub.reactions.false")).queue();
-            return true;
+            return;
         }
         var reactions = event.getOption("reactions").getAsBoolean();
 
@@ -364,7 +363,6 @@ public class RepSettings extends SimpleCommand {
             event.reply(getBooleanMessage(event.getGuild(), reactions,
                     "command.repSettings.sub.reactions.true", "command.repSettings.sub.reactions.false")).queue();
         }
-        return true;
     }
 
     private boolean reaction(MessageEventWrapper eventWrapper, CommandContext context, GuildSettings guildSettings) {
