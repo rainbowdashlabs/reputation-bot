@@ -25,8 +25,9 @@ import de.chojo.repbot.data.updater.SqlUpdater;
 import de.chojo.repbot.listener.MessageListener;
 import de.chojo.repbot.listener.ReactionListener;
 import de.chojo.repbot.listener.StateListener;
+import de.chojo.repbot.listener.voting.ReputationVoteListener;
 import de.chojo.repbot.manager.MemberCacheManager;
-import de.chojo.repbot.manager.ReputationManager;
+import de.chojo.repbot.manager.ReputationService;
 import de.chojo.repbot.manager.RoleAssigner;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
@@ -114,15 +115,17 @@ public class ReputationBot {
 
     private void initBot() {
         var roleAssigner = new RoleAssigner(dataSource);
-        var reputationManager = new ReputationManager(dataSource, roleAssigner, configuration.magicImage());
-        var reactionListener = new ReactionListener(dataSource, localizer, reputationManager);
+        var reputationService = new ReputationService(dataSource, roleAssigner, configuration.magicImage());
+        var reactionListener = new ReactionListener(dataSource, localizer, reputationService);
+        var reputatinoVoteListener = new ReputationVoteListener(reputationService, localizer);
         var stateListener = new StateListener(dataSource);
         cleaner.scheduleAtFixedRate(stateListener, 0, 12, TimeUnit.HOURS);
 
         shardManager.addEventListener(
-                new MessageListener(dataSource, configuration, memberCacheManager, reactionListener, localizer, reputationManager),
+                new MessageListener(dataSource, configuration, memberCacheManager, reputatinoVoteListener, localizer, reputationService),
                 stateListener,
-                reactionListener);
+                reactionListener,
+                reputatinoVoteListener);
         var data = new GuildData(dataSource);
         var hubBuilder = CommandHub.builder(shardManager, configuration.defaultPrefix())
                 .receiveGuildMessage()

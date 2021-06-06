@@ -24,14 +24,14 @@ import java.util.stream.Collectors;
 
 import static de.chojo.repbot.util.MessageUtil.markMessage;
 
-public class ReputationManager {
+public class ReputationService {
     private final ReputationData reputationData;
     private final GuildData guildData;
     private final RoleAssigner assigner;
     private final MagicImage magicImage;
     private Instant lastEasterEggSent = Instant.EPOCH;
 
-    public ReputationManager(DataSource dataSource, RoleAssigner assigner, MagicImage magicImage) {
+    public ReputationService(DataSource dataSource, RoleAssigner assigner, MagicImage magicImage) {
         this.reputationData = new ReputationData(dataSource);
         this.guildData = new GuildData(dataSource);
         this.assigner = assigner;
@@ -87,13 +87,7 @@ public class ReputationManager {
         // block non vote channel
         if (!settings.isReputationChannel(message.getTextChannel())) return false;
 
-        // block cooldown
-        var lastRatedDuration = reputationData.getLastRatedDuration(guild, donor, receiver, ChronoUnit.MINUTES);
-        if (lastRatedDuration < settings.cooldown()) return false;
-
-        // block rep4rep
-        var lastRatedEachDuration = reputationData.getLastRatedDuration(guild, receiver, donor, ChronoUnit.MINUTES);
-        if (lastRatedEachDuration < settings.cooldown()) return false;
+        if (!canVote(donor, receiver, guild, settings)) return false;
 
         // block outdated ref message
         if (refMessage != null) {
@@ -129,5 +123,23 @@ public class ReputationManager {
         }
         // submit to database failed. Maybe this message was already voted by the user.
         return false;
+    }
+
+    public boolean canVote(User donor, User receiver, Guild guild, GuildSettings settings) {
+        // block cooldown
+        var lastRatedDuration = reputationData.getLastRatedDuration(guild, donor, receiver, ChronoUnit.MINUTES);
+        if (lastRatedDuration < settings.cooldown()) return false;
+
+        // block rep4rep
+        var lastRatedEachDuration = reputationData.getLastRatedDuration(guild, receiver, donor, ChronoUnit.MINUTES);
+        if (lastRatedEachDuration < settings.cooldown()) return false;
+        return true;
+    }
+
+    public boolean canVote(User donor, User receiver, Guild guild) {
+        var optGuildSettings = guildData.getGuildSettings(guild);
+        if (optGuildSettings.isEmpty()) return false;
+        var settings = optGuildSettings.get();
+        return canVote(donor, receiver, guild, settings);
     }
 }
