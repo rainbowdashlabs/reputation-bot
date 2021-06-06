@@ -27,26 +27,20 @@ public class HistoryUtil {
      */
     @NotNull
     public static Set<Member> getRecentMembers(Message message, int maxHistoryAge) {
-        Set<Member> targets;
         var history = message.getChannel().getHistoryBefore(message, 50).complete();
-        var oldest = Instant.now().minus(maxHistoryAge, ChronoUnit.MINUTES);
+        var maxAge = Instant.now().minus(maxHistoryAge, ChronoUnit.MINUTES);
         var retrievedHistory = new ArrayList<>(history.getRetrievedHistory());
         // add user message
         retrievedHistory.add(message);
         // find the oldest message in the history written by the message author.
-        var first = retrievedHistory.stream()
+        var oldest = retrievedHistory.stream()
                 .filter(m -> Verifier.equalSnowflake(m.getAuthor(), message.getAuthor()))
                 .map(m -> m.getTimeCreated().toInstant())
-                .min(Instant::compareTo);
+                .min(Instant::compareTo).filter(entry -> entry.isAfter(maxAge)).orElse(maxAge);
 
-        if (first.isPresent()) {
-            oldest = first.get().isAfter(oldest) ? first.get() : oldest;
-        }
-
-        var finalOldest = oldest;
         return retrievedHistory.stream()
                 // filter message for only recent messages and after the first message of the user.
-                .filter(m -> m.getTimeCreated().toInstant().isAfter(finalOldest))
+                .filter(m -> m.getTimeCreated().toInstant().isAfter(oldest))
                 .map(Message::getAuthor)
                 .distinct()
                 .filter(u -> !u.isBot())
