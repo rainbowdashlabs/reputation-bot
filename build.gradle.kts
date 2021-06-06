@@ -14,25 +14,17 @@ val lombokVersion = "1.18.20"
 
 
 repositories {
-    maven {
-        url = uri("https://repo.maven.apache.org/maven2/")
-    }
-    maven {
-        url = uri("https://eldonexus.de/repository/maven-releases")
-    }
-    mavenCentral()
-    maven {
-        name = "m2-dv8tion"
-        url = uri("https://m2.dv8tion.net/releases")
-    }
+    maven("https://eldonexus.de/repository/maven-proxies")
+    maven("https://eldonexus.de/repository/maven-public")
+    maven("https://m2.dv8tion.net/releases")
 }
 
 dependencies {
     // discord
-    implementation("net.dv8tion", "JDA", "4.2.1_259") {
+    implementation("net.dv8tion", "JDA", "4.2.1_269") {
         exclude(module = "opus-java")
     }
-    implementation("de.chojo", "cjda-util", "1.0.0")
+    implementation("de.chojo", "cjda-util", "1.2.3-DEV")
 
     // database
     implementation("org.postgresql", "postgresql", "42.2.19")
@@ -46,19 +38,12 @@ dependencies {
     implementation("org.apache.logging.log4j", "log4j-core", log4jVersion)
     implementation("org.apache.logging.log4j", "log4j-slf4j-impl", log4jVersion)
 
-    // annotation processing
-    compileOnly("org.projectlombok", "lombok", lombokVersion)
-    annotationProcessor("org.projectlombok", "lombok", lombokVersion)
-
     // utils
-    implementation("com.kcthota", "emoji4j", "6.0")
     implementation("org.apache.commons", "commons-lang3", "3.12.0")
 
     // unit testing
     testImplementation(platform("org.junit:junit-bom:5.7.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
-    testCompileOnly("org.projectlombok", "lombok", lombokVersion)
-    testAnnotationProcessor("org.projectlombok", "lombok", lombokVersion)
 }
 
 

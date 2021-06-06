@@ -1,10 +1,10 @@
 package de.chojo.repbot.manager;
 
 import de.chojo.repbot.commands.Scan;
-import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -12,8 +12,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-@Slf4j
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class MemberCacheManager implements MemberCachePolicy, Runnable {
+    private static final Logger log = getLogger(MemberCacheManager.class);
     public static final int CACHE_DURATION = 30;
     private final HashMap<Long, Instant> seen = new HashMap<>();
     private final Scan scan;

@@ -24,13 +24,13 @@ public class RoleAssigner {
         var guild = member.getGuild();
         var reputation = reputationData.getReputation(guild, member.getUser()).orElse(ReputationUser.empty(member.getUser()));
 
-        var optRepRole = guildData.getCurrentReputationRole(guild, reputation.getReputation());
+        var optRepRole = guildData.getCurrentReputationRole(guild, reputation.reputation());
 
         if (optRepRole.isEmpty()) return;
 
         var repRole = optRepRole.get();
 
-        var roleById = guild.getRoleById(repRole.getRoleId());
+        var roleById = guild.getRoleById(repRole.roleId());
 
         if (roleById == null) return;
 
@@ -45,7 +45,7 @@ public class RoleAssigner {
         var guild = member.getGuild();
         guildData.getReputationRoles(guild)
                 .stream()
-                .map(ReputationRole::getRoleId)
+                .map(ReputationRole::roleId)
                 .map(guild::getRoleById)
                 .filter(Objects::nonNull)
                 .forEach(r -> guild.removeRoleFromMember(member, r).queue());

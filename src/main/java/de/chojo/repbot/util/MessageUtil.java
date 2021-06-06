@@ -1,15 +1,17 @@
 package de.chojo.repbot.util;
 
 import de.chojo.repbot.data.wrapper.GuildSettings;
-import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
 
-@Slf4j
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class MessageUtil {
+    private static final Logger log = getLogger(MessageUtil.class);
     public static void markMessage(Message message, @Nullable Message refMessage, GuildSettings settings) {
         if (settings.reactionIsEmote()) {
-            message.getGuild().retrieveEmoteById(settings.getReaction()).queue(e -> {
+            message.getGuild().retrieveEmoteById(settings.reaction()).queue(e -> {
                 message.addReaction(e).queue(emote -> {
                 }, err -> log.error("Could not add reaction emote", err));
                 if (refMessage != null) {
@@ -19,10 +21,10 @@ public class MessageUtil {
             }, err -> log.error("Could not resolve emoji.", err));
         } else {
             if (refMessage != null) {
-                message.addReaction(settings.getReaction()).queue(e -> {
+                message.addReaction(settings.reaction()).queue(e -> {
                 }, err -> log.error("Could not add reaction emoji.", err));
             }
-            message.addReaction(settings.getReaction()).queue(e -> {
+            message.addReaction(settings.reaction()).queue(e -> {
             }, err -> log.error("Could not add reaction emoji.", err));
         }
     }

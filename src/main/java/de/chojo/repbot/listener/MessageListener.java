@@ -12,7 +12,6 @@ import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.manager.MemberCacheManager;
 import de.chojo.repbot.manager.ReputationManager;
 import de.chojo.repbot.util.HistoryUtil;
-import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageBulkDeleteEvent;
@@ -20,6 +19,7 @@ import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 import javax.sql.DataSource;
 import java.awt.Color;
@@ -31,8 +31,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-@Slf4j
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class MessageListener extends ListenerAdapter {
+    private static final Logger log = getLogger(MessageListener.class);
     private final Configuration configuration;
     private final GuildData guildData;
     private final ReputationData reputationData;
@@ -73,31 +75,31 @@ public class MessageListener extends ListenerAdapter {
 
         if (!settings.isReputationChannel(event.getChannel())) return;
 
-        var thankwordPattern = settings.getThankwordPattern();
+        var thankwordPattern = settings.thankwordPattern();
 
         var message = event.getMessage();
 
-        var prefix = settings.getPrefix().orElse(configuration.getDefaultPrefix());
+        var prefix = settings.prefix().orElse(configuration.defaultPrefix());
         if (prefix.startsWith("re:")) {
             var compile = Pattern.compile(prefix.substring(3));
             if (compile.matcher(message.getContentRaw()).find()) return;
         } else {
             if (message.getContentRaw().startsWith(prefix)) return;
         }
-        if (message.getContentRaw().startsWith(settings.getPrefix().orElse(configuration.getDefaultPrefix()))) {
+        if (message.getContentRaw().startsWith(settings.prefix().orElse(configuration.defaultPrefix()))) {
             return;
         }
 
-        var analyzerResult = MessageAnalyzer.processMessage(thankwordPattern, message, settings.getMaxMessageAge(), true, 0.85, 3);
+        var analyzerResult = MessageAnalyzer.processMessage(thankwordPattern, message, settings.maxMessageAge(), true, 0.85, 3);
 
-        var donator = analyzerResult.getDonator();
+        var donator = analyzerResult.donator();
 
-        if (analyzerResult.getType() == ThankType.NO_MATCH) return;
+        if (analyzerResult.type() == ThankType.NO_MATCH) return;
 
-        var resultType = analyzerResult.getType();
+        var resultType = analyzerResult.type();
         var resolveNoTarget = true;
-        for (var result : analyzerResult.getReceivers()) {
-            var refMessage = analyzerResult.getReferenceMessage();
+        for (var result : analyzerResult.receivers()) {
+            var refMessage = analyzerResult.referenceMessage();
             switch (resultType) {
                 case FUZZY -> {
                     if (!settings.isFuzzyActive()) return;
@@ -123,7 +125,7 @@ public class MessageListener extends ListenerAdapter {
     }
 
     private void resolveNoTarget(Message message, GuildSettings settings) {
-        var recentMembers = HistoryUtil.getRecentMembers(message, settings.getMaxMessageAge());
+        var recentMembers = HistoryUtil.getRecentMembers(message, settings.maxMessageAge());
         recentMembers.remove(message.getMember());
         if (recentMembers.isEmpty()) return;
 

@@ -1,7 +1,7 @@
 package de.chojo.repbot.data.updater;
 
 import de.chojo.repbot.config.Configuration;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -11,8 +11,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class SqlUpdater {
+    private static final Logger log = getLogger(SqlUpdater.class);
     public static final int MAJOR = 1;
     public static final int PATCH = 0;
     private final DataSource source;
@@ -37,13 +39,13 @@ public class SqlUpdater {
         var versionInfo = getVersionInfo();
 
         // Only update if the major version matches.
-        if (versionInfo.getVersion() == MAJOR || versionInfo.getPatch() == PATCH) {
+        if (versionInfo.version() == MAJOR || versionInfo.patch() == PATCH) {
             log.info("Database is up to date. No update is required! Version {} Patch {}",
-                    versionInfo.getVersion(), versionInfo.getPatch());
+                    versionInfo.version(), versionInfo.patch());
             return;
         }
 
-        var patches = getPatchesFrom(versionInfo.getVersion(), versionInfo.getPatch());
+        var patches = getPatchesFrom(versionInfo.version(), versionInfo.patch());
 
         log.info("Database is {} versions behind.", patches.size());
 
@@ -62,18 +64,18 @@ public class SqlUpdater {
 
     private void performUpdate(Patch patch) throws SQLException {
         try (var conn = source.getConnection()) {
-            try (var statement = conn.prepareStatement(patch.getQuery())) {
+            try (var statement = conn.prepareStatement(patch.query())) {
                 statement.execute();
             }
         } catch (SQLException e) {
             log.error("Database update failed", e);
             throw e;
         }
-        updateVersion(patch.getMajor() + 1, patch.getPatch());
-        if (patch.getPatch() != -1) {
-            log.info("Deployed patch number {}.{} to database.", patch.getMajor(), patch.getPatch());
+        updateVersion(patch.major() + 1, patch.patch());
+        if (patch.patch() != -1) {
+            log.info("Deployed patch number {}.{} to database.", patch.major(), patch.patch());
         } else {
-            log.info("Migrated database to version {}.", patch.getMajor());
+            log.info("Migrated database to version {}.", patch.major());
         }
     }
 
