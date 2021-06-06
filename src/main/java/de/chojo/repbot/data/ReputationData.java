@@ -37,14 +37,13 @@ public class ReputationData extends QueryObject {
                         reputation_log(guild_id, donor_id, receiver_id, message_id, ref_message_id, channel_id, cause) VALUES(?,?,?,?,?,?,?)
                             ON CONFLICT(guild_id, donor_id, receiver_id, message_id)
                                 DO NOTHING;
-
                         """)
                 .paramsBuilder(b -> b.setLong(guild.getIdLong()).setLong(donor.getIdLong()).setLong(receiver.getIdLong())
-                        .setLong(message.getIdLong()).setLong(refMessage.getIdLong())
+                        .setLong(message.getIdLong()).setLong(refMessage ==  null ? null : refMessage.getIdLong())
                         .setLong(message.getChannel().getIdLong()).setString(type.name()))
-                .update().executeSync() > 0;
+                .insert().executeSync() > 0;
         if (success) {
-            log.debug("{} received one reputation from {}", receiver.getName(), donor.getName());
+            log.debug("{} received one reputation from {} for message {}", receiver.getName(), donor.getName(), message.getIdLong());
         }
         return success;
     }
@@ -106,9 +105,7 @@ public class ReputationData extends QueryObject {
 
     public void removeMessage(long messageId) {
         factory.builder()
-                .query("""
-                        DELETE FROM reputation_log where message_id = ?;
-                        """)
+                .query("DELETE FROM reputation_log where message_id = ?;")
                 .paramsBuilder(stmt -> stmt.setLong(messageId))
                 .update().execute();
     }

@@ -20,8 +20,6 @@ import javax.annotation.Nullable;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -95,13 +93,7 @@ public class GuildData extends QueryObject {
 
     public Optional<String> getLanguage(Guild guild) {
         return factory.builder(String.class)
-                .query("""
-                        SELECT
-                            language
-                        FROM
-                            guild_bot_settings
-                        where guild_id = ?;
-                        """)
+                .query("SELECT language FROM guild_bot_settings where guild_id = ?;")
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
                 .readRow(rs -> rs.getString(1))
                 .firstSync();
@@ -123,7 +115,7 @@ public class GuildData extends QueryObject {
     public boolean addChannel(Guild guild, MessageChannel channel) {
         return factory.builder()
                 .query("INSERT INTO active_channel(guild_id, channel_id) VALUES(?,?) ON CONFLICT DO NOTHING;")
-                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setLong(channel.getIdLong()))
                 .update().executeSync() > 0;
     }
 
@@ -322,11 +314,7 @@ public class GuildData extends QueryObject {
 
     public void dequeueDeletion(Guild guild) {
         factory.builder()
-                .query("""
-                        DELETE FROM
-                            cleanup_schedule
-                        where guild_id = ?;
-                        """)
+                .query("DELETE FROM cleanup_schedule where guild_id = ?;")
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
                 .update().executeSync();
     }

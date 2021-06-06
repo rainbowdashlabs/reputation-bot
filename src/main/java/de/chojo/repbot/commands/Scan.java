@@ -5,6 +5,7 @@ import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.DiscordResolver;
+import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
@@ -39,7 +40,12 @@ public class Scan extends SimpleCommand {
     public static final int INTERVAL_MS = 2000;
     private static final int SCAN_THREADS = 10;
     private static final Logger log = getLogger(Scan.class);
-    private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(SCAN_THREADS + 1);
+    private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(SCAN_THREADS + 1,
+            runnable -> {
+                var t = new Thread(runnable, "Scanner");
+                t.setUncaughtExceptionHandler((thread, err) -> log.error("Unhandled exception in Scanner Thread {}.", thread.getId(), err));
+                return t;
+            });
     private final GuildData guildData;
     private final ReputationData reputationData;
     private final Localizer loc;
@@ -65,6 +71,7 @@ public class Scan extends SimpleCommand {
         reputationData = new ReputationData(dataSource);
         loc = localizer;
         executorService.scheduleAtFixedRate(() -> {
+            Thread.currentThread().setName("Scan Backsync");
             finishTasks();
             finishCanceledTasks();
         }, 1, 1, TimeUnit.SECONDS);
@@ -305,6 +312,9 @@ public class Scan extends SimpleCommand {
 
             for (var message : messages) {
                 countScan();
+
+                if (message.getAuthor().isBot()) continue;
+
                 var result = MessageAnalyzer.processMessage(pattern, message, 0, false, 0.85, 3);
 
                 var donator = result.donator();
@@ -312,6 +322,7 @@ public class Scan extends SimpleCommand {
                 for (var resultReceiver : result.receivers()) {
                     switch (result.type()) {
                         case FUZZY, MENTION, ANSWER -> {
+                            if (Verifier.equalSnowflake(donator, resultReceiver.getReference())) continue;
                             if (reputationData.logReputation(guild, donator, resultReceiver.getReference().getUser(), message, refMessage, result.type())) {
                                 hit();
                             }
