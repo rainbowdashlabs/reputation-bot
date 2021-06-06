@@ -78,7 +78,7 @@ public class ReputationManager {
         }
 
         // Check if user was recently seen in this channel.
-        var recentUsers = HistoryUtil.getRecentMembers(message, settings.getMaxMessageAge())
+        var recentUsers = HistoryUtil.getRecentMembers(message, settings.maxMessageAge())
                 .stream()
                 .map(Member::getUser)
                 .collect(Collectors.toSet());
@@ -89,32 +89,32 @@ public class ReputationManager {
 
         // block cooldown
         var lastRatedDuration = reputationData.getLastRatedDuration(guild, donor, receiver, ChronoUnit.MINUTES);
-        if (lastRatedDuration < settings.getCooldown()) return false;
+        if (lastRatedDuration < settings.cooldown()) return false;
 
         // block rep4rep
         var lastRatedEachDuration = reputationData.getLastRatedDuration(guild, receiver, donor, ChronoUnit.MINUTES);
-        if (lastRatedEachDuration < settings.getCooldown()) return false;
+        if (lastRatedEachDuration < settings.cooldown()) return false;
 
         // block outdated ref message
         if (refMessage != null) {
             var until = refMessage.getTimeCreated().toInstant().until(Instant.now(), ChronoUnit.MINUTES);
-            if (until > settings.getMaxMessageAge()) return false;
+            if (until > settings.maxMessageAge()) return false;
         }
 
         // block outdated message
         var until = message.getTimeCreated().toInstant().until(Instant.now(), ChronoUnit.MINUTES);
-        if (until > settings.getMaxMessageAge()) return false;
+        if (until > settings.maxMessageAge()) return false;
 
         // block self vote
         if (Verifier.equalSnowflake(receiver, donor)) {
-            if (lastEasterEggSent.until(Instant.now(), ChronoUnit.MINUTES) > magicImage.getMagicImageCooldown()
-                    && ThreadLocalRandom.current().nextInt(magicImage.getMagicImagineChance()) == 0) {
+            if (lastEasterEggSent.until(Instant.now(), ChronoUnit.MINUTES) > magicImage.magicImageCooldown()
+                    && ThreadLocalRandom.current().nextInt(magicImage.magicImagineChance()) == 0) {
                 lastEasterEggSent = Instant.now();
                 message.reply(new EmbedBuilder()
-                        .setImage(magicImage.getMagicImageLink())
+                        .setImage(magicImage.magicImageLink())
                         .setColor(Color.RED).build())
                         .queue(message1 -> message1.delete().queueAfter(
-                                magicImage.getMagicImageDeleteSchedule(), TimeUnit.SECONDS));
+                                magicImage.magicImageDeleteSchedule(), TimeUnit.SECONDS));
             }
             return false;
         }

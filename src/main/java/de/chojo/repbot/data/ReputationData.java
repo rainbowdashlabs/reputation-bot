@@ -6,10 +6,10 @@ import de.chojo.jdautil.database.builder.QueryBuilderFactory;
 import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.data.wrapper.ReputationLogEntry;
 import de.chojo.repbot.data.wrapper.ReputationUser;
-import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
+import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
 import javax.sql.DataSource;
@@ -20,9 +20,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
-@Slf4j
+import static org.slf4j.LoggerFactory.getLogger;
 public class ReputationData extends QueryObject {
     private final QueryBuilderFactory factory;
+    private static final Logger log = getLogger(ReputationData.class);
 
     public ReputationData(DataSource source) {
         super(source);

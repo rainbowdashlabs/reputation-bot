@@ -9,12 +9,12 @@ import de.chojo.repbot.data.util.DbUtil;
 import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.data.wrapper.RemovalTask;
 import de.chojo.repbot.data.wrapper.ReputationRole;
-import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
+import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
 import javax.sql.DataSource;
@@ -25,9 +25,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-@Slf4j
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class GuildData extends QueryObject {
     private final QueryBuilderFactory factory;
+    private static final Logger log = getLogger(GuildData.class);
 
     public GuildData(DataSource source) {
         super(source);
@@ -358,30 +360,30 @@ public class GuildData extends QueryObject {
 
     public void executeRemovalTask(RemovalTask task) {
         ResultStage<Void> builder;
-        if (task.getUserId() == null) {
+        if (task.userId() == null) {
             builder = factory.builder().query("DELETE FROM reputation_log where guild_id = ?;")
-                    .paramsBuilder(stmt -> stmt.setLong(task.getGuildId()))
+                    .paramsBuilder(stmt -> stmt.setLong(task.guildId()))
                     .append().query("DELETE FROM guild_bot_settings where guild_id = ?;")
-                    .paramsBuilder(stmt -> stmt.setLong(task.getGuildId()))
+                    .paramsBuilder(stmt -> stmt.setLong(task.guildId()))
                     .append().query("DELETE FROM active_channel where guild_id = ?;")
-                    .paramsBuilder(stmt -> stmt.setLong(task.getGuildId()))
+                    .paramsBuilder(stmt -> stmt.setLong(task.guildId()))
                     .append().query("DELETE FROM message_settings where guild_id = ?;")
-                    .paramsBuilder(stmt -> stmt.setLong(task.getGuildId()))
+                    .paramsBuilder(stmt -> stmt.setLong(task.guildId()))
                     .append().query("DELETE FROM guild_ranks where guild_id = ?;")
-                    .paramsBuilder(stmt -> stmt.setLong(task.getGuildId()))
+                    .paramsBuilder(stmt -> stmt.setLong(task.guildId()))
                     .append().query("DELETE FROM thankwords where guild_id = ?;")
-                    .paramsBuilder(stmt -> stmt.setLong(task.getGuildId()));
-            log.info("Removed guild settings for {}", task.getGuildId());
+                    .paramsBuilder(stmt -> stmt.setLong(task.guildId()));
+            log.info("Removed guild settings for {}", task.guildId());
         } else {
             builder = factory.builder().query("DELETE FROM reputation_log where guild_id = ? AND receiver_id = ?;")
-                    .paramsBuilder(stmt -> stmt.setLong(task.getGuildId()).setLong(task.getUserId()))
+                    .paramsBuilder(stmt -> stmt.setLong(task.guildId()).setLong(task.userId()))
                     .append().query("UPDATE reputation_log SET donor_id = 0 where guild_id = ? AND donor_id = ?;")
-                    .paramsBuilder(stmt -> stmt.setLong(task.getGuildId()).setLong(task.getUserId()));
-            log.info("Removed user reputation from guild {} of user {}", task.getGuildId(), task.getUserId());
+                    .paramsBuilder(stmt -> stmt.setLong(task.guildId()).setLong(task.userId()));
+            log.info("Removed user reputation from guild {} of user {}", task.guildId(), task.userId());
         }
 
         builder.append().query("DELETE FROM cleanup_schedule where task_id = ?;")
-                .params(stmt -> stmt.setLong(1, task.getTaskId()))
+                .params(stmt -> stmt.setLong(1, task.taskId()))
                 .update().executeSync();
     }
 }

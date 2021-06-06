@@ -7,9 +7,13 @@ import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import org.jetbrains.annotations.NotNull;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 public class StateListener extends ListenerAdapter implements Runnable {
 

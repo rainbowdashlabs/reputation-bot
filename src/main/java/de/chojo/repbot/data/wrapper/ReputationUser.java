@@ -1,10 +1,8 @@
 package de.chojo.repbot.data.wrapper;
 
-import lombok.Getter;
 import net.dv8tion.jda.api.entities.User;
 import org.apache.commons.lang3.StringUtils;
 
-@Getter
 public class ReputationUser {
     private final long rank;
     private final Long userId;
@@ -28,5 +26,17 @@ public class ReputationUser {
         var length = String.valueOf(maxRank).length();
         var rank = StringUtils.rightPad(String.valueOf(this.rank), length);
         return "`" + rank + "` **|** " + userFromId().getAsMention() + " ➜ " + reputation;
+    }
+
+    public long rank() {
+        return rank;
+    }
+
+    public Long userId() {
+        return userId;
+    }
+
+    public long reputation() {
+        return reputation;
     }
 }

@@ -1,12 +1,6 @@
 package de.chojo.repbot.config.elements;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class Database {
     private String host = "localhost";
     private String port = "5432";
@@ -15,4 +9,32 @@ public class Database {
     private String user = "user";
     private String password = "pw";
     private int poolSize = 5;
+
+    public String host() {
+        return host;
+    }
+
+    public String port() {
+        return port;
+    }
+
+    public String database() {
+        return database;
+    }
+
+    public String schema() {
+        return schema;
+    }
+
+    public String user() {
+        return user;
+    }
+
+    public String password() {
+        return password;
+    }
+
+    public int poolSize() {
+        return poolSize;
+    }
 }

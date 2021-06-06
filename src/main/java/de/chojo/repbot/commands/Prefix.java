@@ -1,6 +1,7 @@
 package de.chojo.repbot.commands;
 
 import de.chojo.jdautil.command.SimpleCommand;
+import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.CommandContext;
@@ -8,6 +9,10 @@ import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
+import org.jetbrains.annotations.Nullable;
 
 import javax.sql.DataSource;
 import java.util.regex.Pattern;
@@ -16,18 +21,23 @@ import java.util.regex.PatternSyntaxException;
 public class Prefix extends SimpleCommand {
     private final GuildData data;
     private final Configuration configuration;
+    private final Localizer localizer;
 
-    public Prefix(DataSource dataSource, Configuration configuration) {
+    public Prefix(DataSource dataSource, Configuration configuration, Localizer localizer) {
         super("prefix",
                 null,
                 "command.prefix.description",
-                "",
-                subCommandBuilder().add("set", "<prefix>", "command.prefix.sub.set")
-                        .add("reset", null, "command.prefix.sub.reset")
+                subCommandBuilder()
+                        .add("set", "command.prefix.sub.set", argsBuilder()
+                                .add(OptionType.STRING, "prefix", "prefix")
+                                .build()
+                        )
+                        .add("reset", "command.prefix.sub.reset")
                         .build(),
                 Permission.MANAGE_SERVER);
         data = new GuildData(dataSource);
         this.configuration = configuration;
+        this.localizer = localizer;
     }
 
     @Override
@@ -43,21 +53,48 @@ public class Prefix extends SimpleCommand {
                 return reset(eventWrapper);
             }
             return false;
-        } else {
-            return get(eventWrapper);
+        }
+        return get(eventWrapper);
+    }
+
+    @Override
+    public void onSlashCommand(SlashCommandEvent event) {
+        var subCmd = event.getSubcommandName();
+        if ("set".equalsIgnoreCase(subCmd)) {
+            final var response = set(event.getOption("prefix").getAsString(), event.getGuild());
+            if (response != null) {
+                event.reply(response).queue();
+            }
+        }
+
+        if ("reset".equalsIgnoreCase(subCmd)) {
+           reset(event);
         }
     }
 
     private boolean reset(MessageEventWrapper eventWrapper) {
-        changePrefix(eventWrapper, configuration.getDefaultPrefix());
+        final var response = changePrefix(eventWrapper.getGuild(), configuration.defaultPrefix());
+        if (response != null) {
+            eventWrapper.reply(response).queue();
+        }
         return true;
     }
 
-    private void changePrefix(MessageEventWrapper eventWrapper, String prefix) {
-        if (data.setPrefix(eventWrapper.getGuild(), prefix)) {
-            eventWrapper.reply(eventWrapper.localize("command.prefix.changed",
-                    Replacement.create("PREFIX", prefix, Format.CODE))).queue();
+    private void reset(SlashCommandEvent event) {
+        final var response = changePrefix(event.getGuild(), configuration.defaultPrefix());
+        if (response != null) {
+            event.reply(response).queue();
         }
+    }
+
+    @Nullable
+    private String changePrefix(Guild guild, String prefix) {
+        if (data.setPrefix(guild, prefix)) {
+            return localizer.localize("command.prefix.changed", guild,
+                    Replacement.create("PREFIX", prefix, Format.CODE));
+        }
+
+        return null;
     }
 
     private boolean set(MessageEventWrapper eventWrapper, CommandContext subContext) {
@@ -65,14 +102,22 @@ public class Prefix extends SimpleCommand {
         if (optArg.isEmpty()) return false;
         var prefix = optArg.get();
 
+        final var response = set(prefix, eventWrapper.getGuild());
+        if (response != null) {
+            eventWrapper.reply(response).queue();
+        }
+        return true;
+    }
+
+    @Nullable
+    private String set(String prefix, Guild guild) {
+        var loc = localizer.getContextLocalizer(guild);
         if (!prefix.startsWith("re:") && prefix.length() > 3) {
-            eventWrapper.reply(eventWrapper.localize("error.prefixTooLong")).queue();
-            return true;
+            return loc.localize("error.prefixTooLong");
         }
         if (prefix.startsWith("re:")) {
             if (prefix.equalsIgnoreCase("re:")) {
-                eventWrapper.reply(eventWrapper.localize("error.invalidRegex")).queue();
-                return true;
+                loc.localize("error.invalidRegex");
             }
             var substring = prefix.substring(3);
             if (!substring.startsWith("^")) {
@@ -81,17 +126,15 @@ public class Prefix extends SimpleCommand {
             try {
                 Pattern.compile(substring);
             } catch (PatternSyntaxException e) {
-                eventWrapper.reply(eventWrapper.localize("error.invalidRegex")).queue();
-                return true;
+                loc.localize("error.invalidRegex");
             }
             prefix = "re:" + substring;
         }
-        changePrefix(eventWrapper, prefix);
-        return true;
+        return changePrefix(guild, prefix);
     }
 
     private boolean get(MessageEventWrapper eventWrapper) {
-        var prefix = data.getPrefix(eventWrapper.getGuild()).orElse(configuration.getDefaultPrefix());
+        var prefix = data.getPrefix(eventWrapper.getGuild()).orElse(configuration.defaultPrefix());
         eventWrapper.reply(eventWrapper.localize("command.prefix.show",
                 Replacement.create("PREFIX", prefix, Format.CODE))).queue();
         return true;
