@@ -10,11 +10,14 @@ import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
+import net.dv8tion.jda.api.exceptions.ErrorHandler;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.Button;
 import net.dv8tion.jda.api.interactions.components.ButtonStyle;
 import net.dv8tion.jda.api.interactions.components.Component;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.Color;
@@ -67,8 +70,7 @@ public class ReputationVoteListener extends ListenerAdapter {
                     .queue();
             if (voteRequest.remainingVotes() == 0) {
                 voteRequest.voteMessage().delete().queueAfter(5, TimeUnit.SECONDS,
-                        suc -> voteRequests.remove(voteRequest.voteMessage().getIdLong()), err -> {
-                        });
+                        suc -> voteRequests.remove(voteRequest.voteMessage().getIdLong()), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
             }
         }
     }
@@ -87,15 +89,15 @@ public class ReputationVoteListener extends ListenerAdapter {
             components.put(id, new VoteComponent(member, Button.of(ButtonStyle.PRIMARY, id, member.getEffectiveName())));
         }
 
-        var collect = components.values().stream().map(VoteComponent::component).collect(Collectors.toCollection(ArrayList::new));
+        var collect = components.values().stream().map(VoteComponent::component).collect(Collectors.toUnmodifiableList());
 
         var componentRows = getComponentRows(collect);
 
         message.reply(builder.build())
                 .setActionRows(componentRows).queue(voteMessage -> {
             voteRequests.put(voteMessage.getIdLong(), new VoteRequest(message.getMember(), builder, voteMessage, message, components, Math.min(3, members.size())));
-            voteMessage.delete().queueAfter(1, TimeUnit.MINUTES, submit -> voteRequests.remove(voteMessage.getIdLong()), err -> {
-            });
+            voteMessage.delete().queueAfter(1, TimeUnit.MINUTES, submit -> voteRequests.remove(voteMessage.getIdLong()),
+                    ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
         });
     }
 
