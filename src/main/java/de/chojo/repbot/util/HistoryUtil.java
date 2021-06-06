@@ -1,5 +1,6 @@
 package de.chojo.repbot.util;
 
+import de.chojo.jdautil.parsing.Verifier;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;
@@ -32,14 +33,18 @@ public class HistoryUtil {
         var retrievedHistory = new ArrayList<>(history.getRetrievedHistory());
         // add user message
         retrievedHistory.add(message);
-        var first = retrievedHistory.stream().map(m -> m.getTimeCreated().toInstant()).min(Instant::compareTo);
+        // find the oldest message in the history written by the message author.
+        var first = retrievedHistory.stream()
+                .filter(m -> Verifier.equalSnowflake(m.getAuthor(), message.getAuthor()))
+                .map(m -> m.getTimeCreated().toInstant())
+                .min(Instant::compareTo);
 
         if (first.isPresent()) {
             oldest = first.get().isAfter(oldest) ? first.get() : oldest;
         }
 
         var finalOldest = oldest;
-        targets = retrievedHistory.stream()
+        return retrievedHistory.stream()
                 // filter message for only recent messages and after the first message of the user.
                 .filter(m -> m.getTimeCreated().toInstant().isAfter(finalOldest))
                 .map(Message::getAuthor)
@@ -54,7 +59,6 @@ public class HistoryUtil {
                 })
                 .filter(Objects::nonNull)
                 .collect(Collectors.toCollection(HashSet::new));
-        return targets;
     }
 
 }
