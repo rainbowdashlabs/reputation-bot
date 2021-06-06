@@ -29,8 +29,8 @@ public class Reputation extends SimpleCommand {
     private final Localizer loc;
 
     public Reputation(DataSource dataSource, Localizer localizer) {
-        super("reputation",
-                new String[]{"rep"},
+        super("rep",
+                new String[]{"reputation"},
                 "command.reputation.description",
                 argsBuilder()
                         .add(OptionType.USER, "user", "user")

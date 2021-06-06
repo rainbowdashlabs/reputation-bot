@@ -6,7 +6,10 @@ import de.chojo.repbot.util.HistoryUtil;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageType;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.exceptions.ContextException;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,8 +18,11 @@ import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class MessageAnalyzer {
     private static final int LOOKAROUND = 6;
+    private static final Logger log = getLogger(MessageAnalyzer.class);
 
     /**
      * Analyze a message.
@@ -40,7 +46,16 @@ public class MessageAnalyzer {
             var referencedMessage = message.getReferencedMessage();
             if (referencedMessage == null) return AnalyzerResult.noMatch();
 
-            return AnalyzerResult.answer(message.getAuthor(), message.getGuild().retrieveMemberById(referencedMessage.getAuthor().getIdLong()).complete(), referencedMessage);
+            Member user;
+
+            try {
+                user = message.getGuild().retrieveMemberById(referencedMessage.getAuthor().getIdLong()).complete();
+            } catch (RuntimeException e) {
+                log.debug("Could not retrieve member. Probably not on guild anymore.");
+                return AnalyzerResult.noMatch();
+            }
+
+            return AnalyzerResult.answer(message.getAuthor(), user, referencedMessage);
         }
 
         Set<Member> targets = Collections.emptySet();
@@ -53,14 +68,26 @@ public class MessageAnalyzer {
         }
 
         var mentionedMembers = message.getMentionedUsers();
-        if (mentionedMembers.size() > 0) {
+        if (!mentionedMembers.isEmpty()) {
             if (mentionedMembers.size() > limit) {
                 return resolveMessage(message, pattern, targets, threshold, limit);
             }
-            return AnalyzerResult.mention(message.getAuthor(), mentionedMembers.stream().map(u -> message.getGuild().retrieveMemberById(u.getIdLong()).complete()).collect(Collectors.toList()));
-        } else {
-            return resolveMessage(message, pattern, targets, threshold, limit);
+
+            List<Member> members = new ArrayList<>();
+
+            for (var mentionedMember : mentionedMembers) {
+                try {
+                    members.add(message.getGuild().retrieveMemberById(mentionedMember.getIdLong()).complete());
+                } catch (RuntimeException e) {
+                    log.debug("Could not retrieve member. Probably not on guild anymore.");
+                }
+            }
+
+            if(members.isEmpty()) return AnalyzerResult.noMatch();
+
+            return AnalyzerResult.mention(message.getAuthor(), members);
         }
+        return resolveMessage(message, pattern, targets, threshold, limit);
     }
 
 
