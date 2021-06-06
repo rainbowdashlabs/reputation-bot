@@ -62,7 +62,7 @@ public class VoteRequest {
     }
 
     public List<Component> components() {
-        return voteTargets.values().stream().map(VoteComponent::component).collect(Collectors.toCollection(ArrayList::new));
+        return voteTargets.values().stream().map(VoteComponent::component).collect(Collectors.toUnmodifiableList());
     }
 
     public int remainingVotes() {
