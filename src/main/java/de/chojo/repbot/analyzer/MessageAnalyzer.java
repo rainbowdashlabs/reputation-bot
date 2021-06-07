@@ -2,7 +2,6 @@ package de.chojo.repbot.analyzer;
 
 import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.jdautil.parsing.WeightedEntry;
-import de.chojo.repbot.data.VoiceData;
 import de.chojo.repbot.util.ContextResolver;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -66,9 +65,6 @@ public class MessageAnalyzer {
         Set<Member> targets = Collections.emptySet();
         if (limitTargets) {
             targets = contextResolver.getCombinedContext(message, maxHistoryAge);
-            if (targets.size() == 1) {
-                return AnalyzerResult.mention(message.getAuthor(), new ArrayList<>(targets));
-            }
         }
 
         var mentionedMembers = message.getMentionedUsers();
