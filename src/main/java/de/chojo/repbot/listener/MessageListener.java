@@ -1,6 +1,5 @@
 package de.chojo.repbot.listener;
 
-import de.chojo.jdautil.localization.Localizer;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.config.Configuration;
@@ -124,6 +123,8 @@ public class MessageListener extends ListenerAdapter {
                 .filter(receiver -> reputationService.canVote(message.getAuthor(), receiver.getUser(), message.getGuild(), settings))
                 .limit(10)
                 .collect(Collectors.toList());
+
+        if (members.isEmpty()) return;
 
         reputationVoteListener.registerVote(message, members);
     }
