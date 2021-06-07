@@ -6,7 +6,6 @@ import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.manager.ReputationService;
-import de.chojo.repbot.util.HistoryUtil;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
@@ -50,8 +49,6 @@ public class ReactionListener extends ListenerAdapter {
         var message = event.getChannel()
                 .retrieveMessageById(event.getMessageId())
                 .timeout(10, TimeUnit.SECONDS).complete();
-        var recentMembers = HistoryUtil.getRecentMembers(message, guildSettings.maxMessageAge());
-        if (!recentMembers.contains(event.getMember())) return;
 
         var receiver = message.getAuthor();
 

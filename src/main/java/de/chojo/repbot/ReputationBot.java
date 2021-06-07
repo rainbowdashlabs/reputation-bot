@@ -122,15 +122,18 @@ public class ReputationBot {
         var reputationService = new ReputationService(dataSource, roleAssigner, configuration.magicImage());
         var reactionListener = new ReactionListener(dataSource, localizer, reputationService);
         var reputatinoVoteListener = new ReputationVoteListener(reputationService, localizer);
+        var messageListener = new MessageListener(dataSource, configuration, memberCacheManager, reputatinoVoteListener, reputationService);
         var stateListener = new StateListener(dataSource);
+        var voiceStateListener = new VoiceStateListener(dataSource);
         cleaner.scheduleAtFixedRate(stateListener, 1, 12, TimeUnit.HOURS);
+        cleaner.scheduleAtFixedRate(voiceStateListener, 2, 12, TimeUnit.HOURS);
 
         shardManager.addEventListener(
-                new MessageListener(dataSource, configuration, memberCacheManager, reputatinoVoteListener, localizer, reputationService),
+                messageListener,
                 stateListener,
                 reactionListener,
                 reputatinoVoteListener,
-                new VoiceStateListener(dataSource));
+                voiceStateListener);
         var data = new GuildData(dataSource);
         var hubBuilder = CommandHub.builder(shardManager, configuration.defaultPrefix())
                 .receiveGuildMessage()
@@ -205,7 +208,9 @@ public class ReputationBot {
                         // Required to scan for thankwords
                         GatewayIntent.GUILD_MESSAGES,
                         // Required to resolve member without a direct mention
-                        GatewayIntent.GUILD_MEMBERS)
+                        GatewayIntent.GUILD_MEMBERS,
+                        // For online status caching
+                        GatewayIntent.GUILD_PRESENCES)
                 .enableCache(
                         // Required for voice activity
                         CacheFlag.VOICE_STATE,
