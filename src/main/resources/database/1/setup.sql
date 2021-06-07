@@ -102,20 +102,20 @@ SELECT ms.guild_id,
        ac.active_channels,
        ms.cooldown,
        gbs.manager_role
-FROM repbot.message_settings ms
-         LEFT JOIN repbot.guild_bot_settings gbs
+FROM repbot_schema.message_settings ms
+         LEFT JOIN repbot_schema.guild_bot_settings gbs
                    ON ms.guild_id = gbs.guild_id
          LEFT JOIN (
     SELECT t_1.guild_id,
            array_agg(t_1.thankword) AS thankswords
-    FROM repbot.thankwords t_1
+    FROM repbot_schema.thankwords t_1
     GROUP BY t_1.guild_id
 ) t
                    ON ms.guild_id = t.guild_id
          LEFT JOIN (
     SELECT active_channel.guild_id,
            array_agg(active_channel.channel_id) AS active_channels
-    FROM repbot.active_channel
+    FROM repbot_schema.active_channel
     GROUP BY active_channel.guild_id
 ) ac
                    ON ms.guild_id = ac.guild_id;
@@ -136,7 +136,7 @@ FROM (
                          r.guild_id,
                          r.receiver_id,
                          count(1)                   AS reputation
-                  FROM repbot.reputation_log r
+                  FROM repbot_schema.reputation_log r
                   GROUP BY r.guild_id, r.receiver_id
               ) rep
                   FULL JOIN (
@@ -144,7 +144,7 @@ FROM (
                     r.guild_id,
                     r.donor_id,
                     count(1)                AS donated
-             FROM repbot.reputation_log r
+             FROM repbot_schema.reputation_log r
              GROUP BY r.guild_id, r.donor_id
          ) don
                             ON rep.key = don.key
@@ -155,6 +155,6 @@ SELECT row_number() OVER ()            AS rank,
        user_reputation.user_id,
        sum(user_reputation.reputation) AS reputation,
        sum(user_reputation.donated)    AS donated
-FROM repbot.user_reputation
+FROM repbot_schema.user_reputation
 GROUP BY user_reputation.user_id;
 
