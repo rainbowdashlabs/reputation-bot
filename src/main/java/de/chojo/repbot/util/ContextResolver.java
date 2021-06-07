@@ -66,9 +66,12 @@ public class ContextResolver {
 
     public Set<Member> getVoiceContext(Message message, int maxAge) {
         var pastUser = voiceData.getPastUser(message.getAuthor(), message.getGuild(), maxAge, 10);
-        return pastUser.stream()
+        var collect = pastUser.stream()
                 .map(id -> message.getGuild().retrieveMemberById(id).onErrorMap(throwable -> null).complete())
-                .collect(Collectors.toSet());
+                .collect(Collectors.toCollection(HashSet::new));
+        var voiceState = message.getMember().getVoiceState();
+        if (voiceState.inVoiceChannel()) collect.addAll(voiceState.getChannel().getMembers());
+        return collect;
     }
 
     public Set<Member> getCombinedContext(Message message, int maxAge) {
