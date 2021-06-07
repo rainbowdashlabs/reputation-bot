@@ -8,12 +8,16 @@ import net.dv8tion.jda.api.entities.TextChannel;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.OptionalLong;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class GuildSettings {
+    private static final String THANKWORD = "((?:^|\\b)%s(?:$|\\b))";
+    private static final String PATTERN = "(?i)(%s)";
     private final Guild guild;
     private final String prefix;
     private final String[] thankwords;
@@ -46,10 +50,11 @@ public class GuildSettings {
 
     public Pattern thankwordPattern() {
         if (thankwords.length == 0) return Pattern.compile("");
-        return Pattern.compile(
-                "(?i)(" + String.join(")|(", thankwords) + ")",
-                Pattern.CASE_INSENSITIVE + Pattern.MULTILINE + Pattern.DOTALL);
-
+        var twPattern = Arrays.stream(this.thankwords)
+                .map(t -> String.format(THANKWORD, t))
+                .collect(Collectors.joining("|"));
+        return Pattern.compile(String.format(PATTERN, twPattern),
+                Pattern.CASE_INSENSITIVE + Pattern.MULTILINE + Pattern.DOTALL + Pattern.COMMENTS);
     }
 
     public boolean isReputationChannel(TextChannel channel) {
