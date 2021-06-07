@@ -1,22 +1,26 @@
-package de.chojo.repbot.listener;
+package de.chojo.repbot.listener.voting;
 
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.interactions.components.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class VoteRequest {
     private final Member member;
     private final LocalizedEmbedBuilder embedBuilder;
     private final Message voteMessage;
     private final Message refMessage;
-    private final Map<String, Member> voteTargets;
+    private final Map<String, VoteComponent> voteTargets;
     private int remainingVotes;
 
-    public VoteRequest(Member member, LocalizedEmbedBuilder embedBuilder, Message voteMessage, Message refMessage, Map<String, Member> voteTargets, int remainingVotes) {
+    public VoteRequest(Member member, LocalizedEmbedBuilder embedBuilder, Message voteMessage, Message refMessage, Map<String, VoteComponent> voteTargets, int remainingVotes) {
         this.member = member;
         this.embedBuilder = embedBuilder;
         this.voteMessage = voteMessage;
@@ -25,8 +29,8 @@ public class VoteRequest {
         this.remainingVotes = remainingVotes;
     }
 
-    public Optional<Member> getTarget(String emoji) {
-        return Optional.ofNullable(voteTargets.get(emoji));
+    public Optional<Member> getTarget(String id) {
+        return Optional.ofNullable(voteTargets.get(id).member());
     }
 
     public void voted() {
@@ -53,11 +57,19 @@ public class VoteRequest {
         return refMessage;
     }
 
-    public Map<String, Member> voteTargets() {
+    public Map<String, VoteComponent> voteTargets() {
         return voteTargets;
+    }
+
+    public List<Component> components() {
+        return voteTargets.values().stream().map(VoteComponent::component).collect(Collectors.toUnmodifiableList());
     }
 
     public int remainingVotes() {
         return remainingVotes;
+    }
+
+    public void remove(String id) {
+        voteTargets.remove(id);
     }
 }

@@ -1,16 +1,15 @@
 package de.chojo.repbot.listener;
 
 import de.chojo.jdautil.localization.Localizer;
-import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
-import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
+import de.chojo.repbot.listener.voting.ReputationVoteListener;
 import de.chojo.repbot.manager.MemberCacheManager;
-import de.chojo.repbot.manager.ReputationManager;
+import de.chojo.repbot.manager.ReputationService;
 import de.chojo.repbot.util.HistoryUtil;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -22,12 +21,8 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import javax.sql.DataSource;
-import java.awt.Color;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -40,18 +35,18 @@ public class MessageListener extends ListenerAdapter {
     private final ReputationData reputationData;
     private final MemberCacheManager memberCacheManager;
     private final String[] requestEmojis = new String[]{"1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"};
-    private final ReactionListener reactionListener;
+    private final ReputationVoteListener reputationVoteListener;
     private final Localizer localizer;
-    private final ReputationManager reputationManager;
+    private final ReputationService reputationService;
 
-    public MessageListener(DataSource dataSource, Configuration configuration, MemberCacheManager memberCacheManager, ReactionListener reactionListener, Localizer localizer, ReputationManager reputationManager) {
+    public MessageListener(DataSource dataSource, Configuration configuration, MemberCacheManager memberCacheManager, ReputationVoteListener reputationVoteListener, Localizer localizer, ReputationService reputationService) {
         guildData = new GuildData(dataSource);
         reputationData = new ReputationData(dataSource);
         this.configuration = configuration;
         this.memberCacheManager = memberCacheManager;
-        this.reactionListener = reactionListener;
+        this.reputationVoteListener = reputationVoteListener;
         this.localizer = localizer;
-        this.reputationManager = reputationManager;
+        this.reputationService = reputationService;
     }
 
     @Override
@@ -103,25 +98,23 @@ public class MessageListener extends ListenerAdapter {
             switch (resultType) {
                 case FUZZY -> {
                     if (!settings.isFuzzyActive()) return;
-                    reputationManager.submitReputation(guild, donator, result.getReference().getUser(), message, refMessage, resultType);
+                    reputationService.submitReputation(guild, donator, result.getReference().getUser(), message, refMessage, resultType);
                     resolveNoTarget = false;
                 }
                 case MENTION -> {
                     if (!settings.isMentionActive()) return;
-                    reputationManager.submitReputation(guild, donator, result.getReference().getUser(), message, refMessage, resultType);
+                    reputationService.submitReputation(guild, donator, result.getReference().getUser(), message, refMessage, resultType);
                     resolveNoTarget = false;
                 }
                 case ANSWER -> {
                     if (!settings.isAnswerActive()) return;
                     if (!settings.isFreshMessage(refMessage)) return;
-                    reputationManager.submitReputation(guild, donator, result.getReference().getUser(), message, refMessage, resultType);
+                    reputationService.submitReputation(guild, donator, result.getReference().getUser(), message, refMessage, resultType);
                     resolveNoTarget = false;
                 }
             }
         }
-        if (resolveNoTarget) {
-            resolveNoTarget(message, settings);
-        }
+        if (resolveNoTarget) resolveNoTarget(message, settings);
     }
 
     private void resolveNoTarget(Message message, GuildSettings settings) {
@@ -129,44 +122,11 @@ public class MessageListener extends ListenerAdapter {
         recentMembers.remove(message.getMember());
         if (recentMembers.isEmpty()) return;
 
-        List<Member> members;
+        var members = recentMembers.stream()
+                .filter(receiver -> reputationService.canVote(message.getAuthor(), receiver.getUser(), message.getGuild(), settings))
+                .limit(10)
+                .collect(Collectors.toList());
 
-        if (recentMembers.size() > 10) {
-            members = recentMembers.stream().limit(10).collect(Collectors.toList());
-        } else {
-            members = new ArrayList<>(recentMembers);
-        }
-
-        List<String> first = new ArrayList<>();
-        List<String> second = new ArrayList<>();
-        Map<String, Member> targets = new LinkedHashMap<>();
-
-        for (var i = 0; i < members.size(); i++) {
-            targets.put(requestEmojis[i], members.get(i));
-            (leftSide(i, members.size()) ? first : second).add(requestEmojis[i] + " " + members.get(i).getAsMention());
-        }
-
-        var builder = new LocalizedEmbedBuilder(localizer, message.getGuild())
-                .setTitle("listener.messages.request.title")
-                .setDescription("listener.messages.request.descr")
-                .addField("", String.join("\n", first), true)
-                .addField("", String.join("\n", second), true)
-                .setColor(Color.orange)
-                .setFooter(localizer.localize("messages.destruction", message.getGuild(), Replacement.create("MIN", 1)));
-
-        message.reply(builder.build()).queue(voteMessage -> {
-            reactionListener.registerAfterVote(voteMessage, new VoteRequest(message.getMember(), builder, voteMessage, message, targets, Math.min(3, targets.size())));
-            var i = 0;
-            for (var reaction : targets.keySet()) {
-                voteMessage.addReaction(reaction).queueAfter(i * 250L, TimeUnit.MILLISECONDS);
-                i++;
-            }
-            voteMessage.addReaction("🗑️").queueAfter(i * 250L, TimeUnit.MILLISECONDS);
-            voteMessage.delete().queueAfter(1, TimeUnit.MINUTES, e -> reactionListener.unregisterVote(voteMessage), err -> reactionListener.unregisterVote(voteMessage));
-        });
-    }
-
-    private boolean leftSide(int num, int total) {
-        return num + 1 <= total / 2 + total % 2;
+        reputationVoteListener.registerVote(message, members);
     }
 }
