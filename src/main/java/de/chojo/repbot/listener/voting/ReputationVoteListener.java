@@ -10,7 +10,6 @@ import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
-import net.dv8tion.jda.api.exceptions.ErrorHandler;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
@@ -51,7 +50,10 @@ public class ReputationVoteListener extends ListenerAdapter {
         if (!matcher.find()) return;
         if (!voteRequests.containsKey(event.getMessageIdLong())) return;
         var voteRequest = voteRequests.get(event.getMessageIdLong());
-        if (!Verifier.equalSnowflake(voteRequest.member(), event.getMember())) return;
+        if (!Verifier.equalSnowflake(voteRequest.member(), event.getMember())) {
+            event.getHook().sendMessage(loc.localize("error.notYourEmbed", event.getGuild())).setEphemeral(true).queue();
+            return;
+        }
         if ("vote:delete".equals(event.getButton().getId())) {
             event.getMessage().delete().queue();
             voteRequests.remove(event.getMessageIdLong());
