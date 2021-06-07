@@ -35,6 +35,7 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import org.apache.logging.log4j.LogManager;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.slf4j.Logger;
 
@@ -189,6 +190,7 @@ public class ReputationBot {
             log.info("Shutting down database connections.");
             dataSource.close();
             log.info("Bot shutdown complete.");
+            LogManager.shutdown();
         });
         Runtime.getRuntime().addShutdownHook(shutdown);
     }
