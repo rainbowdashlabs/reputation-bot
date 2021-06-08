@@ -1,19 +1,19 @@
 package de.chojo.repbot.listener;
 
 import de.chojo.repbot.data.GuildData;
+import de.chojo.repbot.data.wrapper.GuildSettingUpdate;
 import net.dv8tion.jda.api.events.ReadyEvent;
+import net.dv8tion.jda.api.events.channel.text.TextChannelDeleteEvent;
+import net.dv8tion.jda.api.events.emote.EmoteRemovedEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
+import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.commands.build.CommandData;
 import org.jetbrains.annotations.NotNull;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
 
 public class StateListener extends ListenerAdapter implements Runnable {
 
@@ -42,6 +42,25 @@ public class StateListener extends ListenerAdapter implements Runnable {
     @Override
     public void onGuildMemberRemove(@NotNull GuildMemberRemoveEvent event) {
         data.queueDeletion(event.getUser(), event.getGuild());
+    }
+
+    @Override
+    public void onRoleDelete(@NotNull RoleDeleteEvent event) {
+        data.removeReputationRole(event.getGuild(), event.getRole());
+    }
+
+    @Override
+    public void onTextChannelDelete(@NotNull TextChannelDeleteEvent event) {
+        data.removeChannel(event.getGuild(), event.getChannel());
+    }
+
+    @Override
+    public void onEmoteRemoved(@NotNull EmoteRemovedEvent event) {
+        var guildSettings = data.getGuildSettings(event.getGuild());
+        if (guildSettings.isEmpty()) return;
+        if (!guildSettings.get().reactionIsEmote()) return;
+        if (!guildSettings.get().reaction().equals(event.getEmote().getId())) return;
+        data.updateMessageSettings(GuildSettingUpdate.builder(event.getGuild()).reaction("✅").build());
     }
 
     @Override
