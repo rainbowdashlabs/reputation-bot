@@ -1,19 +1,28 @@
 package de.chojo.repbot.util;
 
 import de.chojo.jdautil.parsing.Verifier;
+import de.chojo.repbot.data.VoiceData;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;
 
+import javax.sql.DataSource;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class HistoryUtil {
+public class ContextResolver {
+    private final VoiceData voiceData;
+
+    public ContextResolver(DataSource dataSource) {
+        voiceData = new VoiceData(dataSource);
+    }
+
     /**
      * Get members which have written in the channel of the message.
      * <p>
@@ -26,7 +35,7 @@ public class HistoryUtil {
      * @return list of members which have written in this channel
      */
     @NotNull
-    public static Set<Member> getRecentMembers(Message message, int maxHistoryAge) {
+    public Set<Member> getChannelContext(Message message, int maxHistoryAge) {
         var history = message.getChannel().getHistoryBefore(message, 50).complete();
         var maxAge = Instant.now().minus(maxHistoryAge, ChronoUnit.MINUTES);
         var retrievedHistory = new ArrayList<>(history.getRetrievedHistory());
@@ -44,6 +53,7 @@ public class HistoryUtil {
                 .map(Message::getAuthor)
                 .distinct()
                 .filter(u -> !u.isBot())
+                .filter(u -> !Verifier.equalSnowflake(message.getAuthor(), u))
                 .map(u -> {
                     try {
                         return message.getGuild().retrieveMemberById(u.getIdLong()).complete();
@@ -55,4 +65,20 @@ public class HistoryUtil {
                 .collect(Collectors.toCollection(HashSet::new));
     }
 
+    public Set<Member> getVoiceContext(Message message, int maxAge) {
+        Set<Member> members = new LinkedHashSet<>();
+        var voiceState = message.getMember().getVoiceState();
+        if (voiceState.inVoiceChannel()) members.addAll(voiceState.getChannel().getMembers());
+        var pastUser = voiceData.getPastUser(message.getAuthor(), message.getGuild(), maxAge, 10);
+        return pastUser.stream()
+                .map(id -> message.getGuild().retrieveMemberById(id).onErrorMap(throwable -> null).complete())
+                .collect(Collectors.toCollection(() -> members));
+    }
+
+    public Set<Member> getCombinedContext(Message message, int maxAge) {
+        Set<Member> members = new LinkedHashSet<>();
+        members.addAll(getChannelContext(message, maxAge));
+        members.addAll(getVoiceContext(message, maxAge));
+        return members;
+    }
 }

@@ -38,8 +38,9 @@ public class Thankwords extends SimpleCommand {
     private final GuildData data;
     private final Localizer loc;
     private final ThankwordsContainer thankwordsContainer;
+    private final MessageAnalyzer messageAnalyzer;
 
-    private Thankwords(GuildData data, Localizer localizer, ThankwordsContainer thankwordsContainer) {
+    private Thankwords(MessageAnalyzer messageAnalyzer, GuildData data, Localizer localizer, ThankwordsContainer thankwordsContainer) {
         super("thankwords", new String[]{"tw"},
                 "command.thankwords.description",
                 subCommandBuilder()
@@ -62,6 +63,7 @@ public class Thankwords extends SimpleCommand {
         this.data = data;
         this.loc = localizer;
         this.thankwordsContainer = thankwordsContainer;
+        this.messageAnalyzer = messageAnalyzer;
     }
 
     public static Thankwords of(DataSource dataSource, Localizer localizer) {
@@ -74,7 +76,7 @@ public class Thankwords extends SimpleCommand {
             thankwordsContainer = null;
             log.error("Could not read thankwords", e);
         }
-        return new Thankwords(new GuildData(dataSource), localizer, thankwordsContainer);
+        return new Thankwords(new MessageAnalyzer(dataSource), new GuildData(dataSource), localizer, thankwordsContainer);
     }
 
     @Override
@@ -241,7 +243,7 @@ public class Thankwords extends SimpleCommand {
         }
 
         var message = event.getChannel().retrieveMessageById(messageId).complete();
-        var result = MessageAnalyzer.processMessage(guildSettings.thankwordPattern(), message, guildSettings.maxMessageAge(), true, 0.85, 3);
+        var result = messageAnalyzer.processMessage(guildSettings.thankwordPattern(), message, guildSettings.maxMessageAge(), true, 0.85, 3);
         var builder = new LocalizedEmbedBuilder(this.loc, event.getGuild());
         if (result.receivers().isEmpty()) {
             event.reply(loc.localize("command.thankwords.sub.check.match.noMatch")).queue();
@@ -264,7 +266,7 @@ public class Thankwords extends SimpleCommand {
 
         var guildSettings = optGuildSettings.get();
 
-        var result = MessageAnalyzer.processMessage(guildSettings.thankwordPattern(), eventWrapper.getMessage(), guildSettings.maxMessageAge(), true, 0.85, 3);
+        var result = messageAnalyzer.processMessage(guildSettings.thankwordPattern(), eventWrapper.getMessage(), guildSettings.maxMessageAge(), true, 0.85, 3);
         var builder = new LocalizedEmbedBuilder(eventWrapper);
         if (result.receivers().isEmpty()) {
             eventWrapper.reply(eventWrapper.localize("command.thankwords.sub.check.match.noMatch")).queue();

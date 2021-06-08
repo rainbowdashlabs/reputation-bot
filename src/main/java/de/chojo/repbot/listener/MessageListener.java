@@ -1,6 +1,5 @@
 package de.chojo.repbot.listener;
 
-import de.chojo.jdautil.localization.Localizer;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.config.Configuration;
@@ -10,8 +9,7 @@ import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;
 import de.chojo.repbot.manager.MemberCacheManager;
 import de.chojo.repbot.manager.ReputationService;
-import de.chojo.repbot.util.HistoryUtil;
-import net.dv8tion.jda.api.entities.Member;
+import de.chojo.repbot.util.ContextResolver;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageBulkDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
@@ -21,8 +19,6 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import javax.sql.DataSource;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -34,19 +30,20 @@ public class MessageListener extends ListenerAdapter {
     private final GuildData guildData;
     private final ReputationData reputationData;
     private final MemberCacheManager memberCacheManager;
-    private final String[] requestEmojis = new String[]{"1️⃣", "2️⃣", "3️⃣", "4️⃣", "5️⃣", "6️⃣", "7️⃣", "8️⃣", "9️⃣", "🔟"};
     private final ReputationVoteListener reputationVoteListener;
-    private final Localizer localizer;
     private final ReputationService reputationService;
+    private final ContextResolver contextResolver;
+    private final MessageAnalyzer messageAnalyzer;
 
-    public MessageListener(DataSource dataSource, Configuration configuration, MemberCacheManager memberCacheManager, ReputationVoteListener reputationVoteListener, Localizer localizer, ReputationService reputationService) {
+    public MessageListener(DataSource dataSource, Configuration configuration, MemberCacheManager memberCacheManager, ReputationVoteListener reputationVoteListener, ReputationService reputationService) {
         guildData = new GuildData(dataSource);
         reputationData = new ReputationData(dataSource);
         this.configuration = configuration;
         this.memberCacheManager = memberCacheManager;
         this.reputationVoteListener = reputationVoteListener;
-        this.localizer = localizer;
         this.reputationService = reputationService;
+        this.contextResolver = new ContextResolver(dataSource);
+        this.messageAnalyzer = new MessageAnalyzer(dataSource);
     }
 
     @Override
@@ -85,7 +82,7 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        var analyzerResult = MessageAnalyzer.processMessage(thankwordPattern, message, settings.maxMessageAge(), true, 0.85, 3);
+        var analyzerResult = messageAnalyzer.processMessage(thankwordPattern, message, settings.maxMessageAge(), true, 0.85, 3);
 
         var donator = analyzerResult.donator();
 
@@ -118,7 +115,7 @@ public class MessageListener extends ListenerAdapter {
     }
 
     private void resolveNoTarget(Message message, GuildSettings settings) {
-        var recentMembers = HistoryUtil.getRecentMembers(message, settings.maxMessageAge());
+        var recentMembers = contextResolver.getCombinedContext(message, settings.maxMessageAge());
         recentMembers.remove(message.getMember());
         if (recentMembers.isEmpty()) return;
 
@@ -126,6 +123,8 @@ public class MessageListener extends ListenerAdapter {
                 .filter(receiver -> reputationService.canVote(message.getAuthor(), receiver.getUser(), message.getGuild(), settings))
                 .limit(10)
                 .collect(Collectors.toList());
+
+        if (members.isEmpty()) return;
 
         reputationVoteListener.registerVote(message, members);
     }

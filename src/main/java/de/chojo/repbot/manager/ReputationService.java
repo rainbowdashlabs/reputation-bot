@@ -6,7 +6,7 @@ import de.chojo.repbot.config.elements.MagicImage;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
-import de.chojo.repbot.util.HistoryUtil;
+import de.chojo.repbot.util.ContextResolver;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -30,12 +30,14 @@ public class ReputationService {
     private final RoleAssigner assigner;
     private final MagicImage magicImage;
     private Instant lastEasterEggSent = Instant.EPOCH;
+    private final ContextResolver contextResolver;
 
     public ReputationService(DataSource dataSource, RoleAssigner assigner, MagicImage magicImage) {
         this.reputationData = new ReputationData(dataSource);
         this.guildData = new GuildData(dataSource);
         this.assigner = assigner;
         this.magicImage = magicImage;
+        this.contextResolver = new ContextResolver(dataSource);
     }
 
     /**
@@ -78,7 +80,7 @@ public class ReputationService {
         }
 
         // Check if user was recently seen in this channel.
-        var recentUsers = HistoryUtil.getRecentMembers(message, settings.maxMessageAge())
+        var recentUsers = contextResolver.getCombinedContext(message, settings.maxMessageAge())
                 .stream()
                 .map(Member::getUser)
                 .collect(Collectors.toSet());
