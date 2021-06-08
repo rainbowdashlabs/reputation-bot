@@ -1,20 +1,20 @@
-create table if not exists repbot_schema.voice_activity
+CREATE TABLE IF NOT EXISTS repbot_schema.voice_activity
 (
-    relation_key bigint                  not null,
-    guild_id        bigint                  not null,
-    user_id_1    bigint                  not null,
-    user_id_2    bigint                  not null,
-    seen         timestamp default now() not null,
-    constraint voice_activity_pk
-        primary key (relation_key, guild_id)
+    relation_key BIGINT                  NOT NULL,
+    guild_id     BIGINT                  NOT NULL,
+    user_id_1    BIGINT                  NOT NULL,
+    user_id_2    BIGINT                  NOT NULL,
+    seen         TIMESTAMP DEFAULT now() NOT NULL,
+    CONSTRAINT voice_activity_pk
+        PRIMARY KEY (relation_key, guild_id)
 );
 
-create unique index if not exists voice_activity_relation_key_uindex
-    on repbot_schema.voice_activity (relation_key);
+CREATE UNIQUE INDEX IF NOT EXISTS voice_activity_relation_key_uindex
+    ON repbot_schema.voice_activity (relation_key);
 
-create index if not exists voice_activity_user_id_1_index
-    on repbot_schema.voice_activity (user_id_1);
+CREATE INDEX IF NOT EXISTS voice_activity_user_id_1_index
+    ON repbot_schema.voice_activity (user_id_1);
 
-create index if not exists voice_activity_user_id_2_index
-    on repbot_schema.voice_activity (user_id_2);
+CREATE INDEX IF NOT EXISTS voice_activity_user_id_2_index
+    ON repbot_schema.voice_activity (user_id_2);
 
