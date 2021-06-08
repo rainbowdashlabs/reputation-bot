@@ -212,9 +212,7 @@ public class GuildData extends QueryObject {
                 .readRow(this::buildRole).allSync();
     }
 
-    public boolean updateMessageSettings(Guild guild, @Nullable Integer maxMessageAge, @Nullable String reaction,
-                                         @Nullable Boolean reactionsActive, @Nullable Boolean answerActive, @Nullable Boolean mentionActive,
-                                         @Nullable Boolean fuzzyActive, Integer cooldown) {
+    public boolean updateMessageSettings(GuildSettingUpdate update) {
         return factory.builder()
                 .query("""
                         UPDATE
@@ -228,9 +226,10 @@ public class GuildData extends QueryObject {
                             cooldown = coalesce(?, cooldown)
                         where guild_id = ?;
                         """)
-                .paramsBuilder(stmt -> stmt.setInt(maxMessageAge).setString(reaction).setBoolean(reactionsActive)
-                        .setBoolean(answerActive).setBoolean(mentionActive).setBoolean(fuzzyActive).setInt(cooldown)
-                        .setLong(guild.getIdLong()))
+                .paramsBuilder(stmt -> stmt.setInt(update.maxMessageAge()).setString(update.reaction())
+                        .setBoolean(update.reactionsActive()).setBoolean(update.answerActive())
+                        .setBoolean(update.mentionActive()).setBoolean(update.fuzzyActive()).setInt(update.cooldown())
+                        .setLong(update.guild().getIdLong()))
                 .update().executeSync() > 0;
     }
 
