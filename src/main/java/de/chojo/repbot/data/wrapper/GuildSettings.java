@@ -116,6 +116,13 @@ public class GuildSettings {
         return thankwords;
     }
 
+    /**
+     * Get the reaction.
+     * <p>
+     * This may be a unicode emote or a emote id of the guild
+     *
+     * @return reaction for reputation
+     */
     public String reaction() {
         return reaction;
     }

@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.slf4j.LoggerFactory.getLogger;
+
 public class ReputationData extends QueryObject {
     private final QueryBuilderFactory factory;
     private static final Logger log = getLogger(ReputationData.class);
@@ -30,6 +31,17 @@ public class ReputationData extends QueryObject {
         factory = new QueryBuilderFactory(QueryBuilderConfig.builder().build(), source);
     }
 
+    /**
+     * Log reputation for a user.
+     *
+     * @param guild      guild to log for
+     * @param donor      donator of the reputation
+     * @param receiver   receiver of the reputation
+     * @param message    message to log
+     * @param refMessage reference message if available
+     * @param type       type of reputation
+     * @return true if the statement was logged.
+     */
     public boolean logReputation(Guild guild, User donor, User receiver, Message message, @Nullable Message refMessage, ThankType type) {
         var success = factory.builder()
                 .query("""
@@ -39,7 +51,7 @@ public class ReputationData extends QueryObject {
                                 DO NOTHING;
                         """)
                 .paramsBuilder(b -> b.setLong(guild.getIdLong()).setLong(donor.getIdLong()).setLong(receiver.getIdLong())
-                        .setLong(message.getIdLong()).setLong(refMessage ==  null ? null : refMessage.getIdLong())
+                        .setLong(message.getIdLong()).setLong(refMessage == null ? null : refMessage.getIdLong())
                         .setLong(message.getChannel().getIdLong()).setString(type.name()))
                 .insert().executeSync() > 0;
         if (success) {
@@ -48,6 +60,14 @@ public class ReputationData extends QueryObject {
         return success;
     }
 
+    /**
+     * Get the last time where the donor gave reputation to the receiver on this guild
+     *
+     * @param guild    guild
+     * @param donor    donor
+     * @param receiver receiver
+     * @return last timestamp as instant
+     */
     public Optional<Instant> getLastRated(Guild guild, User donor, User receiver) {
         return factory.builder(Instant.class).
                 query("""
@@ -67,7 +87,15 @@ public class ReputationData extends QueryObject {
                 .firstSync();
     }
 
-    public List<ReputationUser> getRanking(Guild guild, int limit, int offset) {
+    /**
+     * Get the ranking of the guild.
+     *
+     * @param guild    guild
+     * @param pageSize the size of a page
+     * @param page     the number of the page. zero based
+     * @return a sorted list of reputation users
+     */
+    public List<ReputationUser> getRanking(Guild guild, int pageSize, int page) {
         return factory.builder(ReputationUser.class)
                 .query("""
                         SELECT
@@ -81,11 +109,18 @@ public class ReputationData extends QueryObject {
                         OFFSET ?
                         LIMIT ?;
                         """)
-                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setInt(offset).setInt(limit))
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setInt((page - 1) * pageSize).setInt(pageSize))
                 .readRow(row -> new ReputationUser(row.getLong("rank"), row.getLong("user_id"), row.getLong("reputation")))
                 .allSync();
     }
 
+    /**
+     * Get the reputation user.
+     *
+     * @param guild guild
+     * @param user  user
+     * @return the reputation user
+     */
     public Optional<ReputationUser> getReputation(Guild guild, User user) {
         return factory.builder(ReputationUser.class)
                 .query("""
@@ -103,6 +138,11 @@ public class ReputationData extends QueryObject {
         );
     }
 
+    /**
+     * Removes all reputations associated with the message
+     *
+     * @param messageId message id
+     */
     public void removeMessage(long messageId) {
         factory.builder()
                 .query("DELETE FROM reputation_log where message_id = ?;")
@@ -110,10 +150,26 @@ public class ReputationData extends QueryObject {
                 .update().execute();
     }
 
+    /**
+     * Get the time since the last reputation was given from the donator to the receiver on this guild in the requested
+     * time unit.
+     *
+     * @param guild    guild
+     * @param donor    donor
+     * @param receiver receiver
+     * @param unit     time unit
+     * @return the time since the last vote in the requested time unit or  {@link Long#MAX_VALUE} if no entry was found.
+     */
     public Long getLastRatedDuration(Guild guild, User donor, User receiver, ChronoUnit unit) {
         return getLastRated(guild, donor, receiver).map(i -> i.until(Instant.now(), unit)).orElse(Long.MAX_VALUE);
     }
 
+    /**
+     * Get the log entries for a message.
+     *
+     * @param message message
+     * @return a log entry if found
+     */
     public Optional<ReputationLogEntry> getLogEntry(Message message) {
         return factory.builder(ReputationLogEntry.class)
                 .query("""
@@ -135,6 +191,14 @@ public class ReputationData extends QueryObject {
                 .readRow(this::buildLogEntry).firstSync();
     }
 
+    /**
+     * Get the last log entries for reputation received by the user.
+     *
+     * @param user  user
+     * @param guild guild
+     * @param count amount of log entries to retrieve
+     * @return sorted list of entries. the most recent first.
+     */
     public List<ReputationLogEntry> getUserReceivedLog(User user, Guild guild, int count) {
         return factory.builder(ReputationLogEntry.class)
                 .query("""
@@ -159,6 +223,14 @@ public class ReputationData extends QueryObject {
                 .readRow(this::buildLogEntry).allSync();
     }
 
+    /**
+     * Get the last log entries for reputation donated by the user.
+     *
+     * @param user  user
+     * @param guild guild
+     * @param count amount of log entries to retrieve
+     * @return sorted list of entries. the most recent first.
+     */
     public List<ReputationLogEntry> getUserDonatedLog(User user, Guild guild, int count) {
         return factory.builder(ReputationLogEntry.class)
                 .query("""
@@ -183,6 +255,14 @@ public class ReputationData extends QueryObject {
                 .readRow(this::buildLogEntry).allSync();
     }
 
+    /**
+     * Get the log entried for a message
+     *
+     * @param messageId message id
+     * @param guild     guild
+     * @param count     amount of log entries to retrieve
+     * @return sorted list of entries. the most recent first.
+     */
     public List<ReputationLogEntry> getMessageLog(long messageId, Guild guild, int count) {
         return factory.builder(ReputationLogEntry.class)
                 .query("""
@@ -220,6 +300,14 @@ public class ReputationData extends QueryObject {
         );
     }
 
+    /**
+     * Remove reputation of a type from a message.
+     *
+     * @param user    user
+     * @param message message
+     * @param type    type
+     * @return true if at least one entry was removed
+     */
     public boolean removeReputation(long user, long message, ThankType type) {
         return factory.builder()
                 .query("""
