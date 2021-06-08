@@ -6,6 +6,7 @@ import de.chojo.jdautil.database.builder.QueryBuilderFactory;
 import de.chojo.jdautil.database.builder.stage.ResultStage;
 import de.chojo.jdautil.localization.util.Language;
 import de.chojo.repbot.data.util.DbUtil;
+import de.chojo.repbot.data.wrapper.GuildSettingUpdate;
 import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.data.wrapper.RemovalTask;
 import de.chojo.repbot.data.wrapper.ReputationRole;
@@ -34,6 +35,12 @@ public class GuildData extends QueryObject {
         factory = new QueryBuilderFactory(QueryBuilderConfig.builder().build(), source);
     }
 
+    /**
+     * Get the settings of the guild
+     *
+     * @param guild guild
+     * @return guild settings if present
+     */
     public Optional<GuildSettings> getGuildSettings(Guild guild) {
         return factory.builder(GuildSettings.class)
                 .query("""
@@ -71,6 +78,12 @@ public class GuildData extends QueryObject {
                 .firstSync();
     }
 
+    /**
+     * Get the prefix of the guild.
+     *
+     * @param guild guild
+     * @return prefix if set
+     */
     public Optional<String> getPrefix(Guild guild) {
         return factory.builder(String.class).query("SELECT prefix FROM guild_bot_settings where guild_id = ?;")
                 .params(stmt -> stmt.setLong(1, guild.getIdLong()))
@@ -78,6 +91,13 @@ public class GuildData extends QueryObject {
                 .firstSync();
     }
 
+    /**
+     * Set the prefix for a guild.
+     *
+     * @param guild  guild
+     * @param prefix prefix. may be null
+     * @return true if prefix was changed
+     */
     public boolean setPrefix(Guild guild, @Nullable String prefix) {
         return factory.builder()
                 .query("""
@@ -91,6 +111,12 @@ public class GuildData extends QueryObject {
                 .update().executeSync() > 0;
     }
 
+    /**
+     * Get the language of the guild if set.
+     *
+     * @param guild guild
+     * @return language as string if set
+     */
     public Optional<String> getLanguage(Guild guild) {
         return factory.builder(String.class)
                 .query("SELECT language FROM guild_bot_settings where guild_id = ?;")
@@ -99,6 +125,13 @@ public class GuildData extends QueryObject {
                 .firstSync();
     }
 
+    /**
+     * Set the language for a guild
+     *
+     * @param guild    guild
+     * @param language language. May be null
+     * @return true if the language was changed
+     */
     public boolean setLanguage(Guild guild, @Nullable Language language) {
         return factory.builder()
                 .query("""
@@ -112,6 +145,13 @@ public class GuildData extends QueryObject {
                 .update().executeSync() > 0;
     }
 
+    /**
+     * Add a channel to reputation channel
+     *
+     * @param guild   guild
+     * @param channel channel
+     * @return true if a channel was added
+     */
     public boolean addChannel(Guild guild, MessageChannel channel) {
         return factory.builder()
                 .query("INSERT INTO active_channel(guild_id, channel_id) VALUES(?,?) ON CONFLICT DO NOTHING;")
@@ -119,13 +159,26 @@ public class GuildData extends QueryObject {
                 .update().executeSync() > 0;
     }
 
-    public boolean deleteChannel(Guild guild, MessageChannel channel) {
+    /**
+     * Remove a reputation channel
+     *
+     * @param guild   guild
+     * @param channel channel
+     * @return true if the channel was removed
+     */
+    public boolean removeChannel(Guild guild, MessageChannel channel) {
         return factory.builder()
                 .query("DELETE FROM active_channel where guild_id = ? and channel_id = ?;")
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setLong(channel.getIdLong()))
                 .update().executeSync() > 0;
     }
 
+    /**
+     * Remove all channel of a guild
+     *
+     * @param guild guild
+     * @return the amount of removed channel
+     */
     public int clearChannel(Guild guild) {
         return factory.builder()
                 .query("DELETE FROM active_channel where guild_id = ?;")
@@ -133,6 +186,16 @@ public class GuildData extends QueryObject {
                 .update().executeSync();
     }
 
+    /**
+     * Add a reputation role.
+     * <p>
+     * If the role or the reputation amount is already in use it will be removed first.
+     *
+     * @param guild      guild
+     * @param role       role
+     * @param reputation required reputation of role
+     * @return true if the role was added or updated
+     */
     public boolean addReputationRole(Guild guild, Role role, long reputation) {
         return factory.builder()
                 .query("""
@@ -156,6 +219,13 @@ public class GuildData extends QueryObject {
                 .update().executeSync() > 0;
     }
 
+    /**
+     * Remove a reputation role.
+     *
+     * @param guild guild
+     * @param role  role
+     * @return true
+     */
     public boolean removeReputationRole(Guild guild, Role role) {
         return factory.builder()
                 .query("DELETE FROM guild_ranks where guild_id =? and role_id = ?;")
