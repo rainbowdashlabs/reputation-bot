@@ -19,8 +19,14 @@ public class VoiceData extends QueryObject {
         factory = new QueryBuilderFactory(QueryBuilderConfig.builder().build(), dataSource);
     }
 
-    public void logUser(Member left, List<Member> seen) {
-        var baseId = left.getIdLong();
+    /**
+     * Log that a user was in a channel with another user.
+     *
+     * @param source the user which has seen the users.
+     * @param seen   the members which were seen by the user lately
+     */
+    public void logUser(Member source, List<Member> seen) {
+        var baseId = source.getIdLong();
         var builder = factory.builder();
         ResultStage<Void> resultStage = null;
         for (var user : seen) {
@@ -31,7 +37,7 @@ public class VoiceData extends QueryObject {
                             DO UPDATE
                                 set seen = now()
                     """)
-                    .paramsBuilder(stmt -> stmt.setLong(baseId ^ otherId).setLong(left.getGuild().getIdLong())
+                    .paramsBuilder(stmt -> stmt.setLong(baseId ^ otherId).setLong(source.getGuild().getIdLong())
                             .setLong(baseId).setLong(otherId));
         }
         if (resultStage == null) return;
@@ -73,6 +79,9 @@ public class VoiceData extends QueryObject {
                 }).allSync();
     }
 
+    /**
+     * Cleanup the voice activity
+     */
     public void cleanup() {
         factory.builder()
                 .queryWithoutParams("""
