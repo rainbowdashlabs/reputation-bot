@@ -2,15 +2,14 @@ package de.chojo.repbot.analyzer;
 
 import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.jdautil.parsing.WeightedEntry;
-import de.chojo.repbot.util.HistoryUtil;
+import de.chojo.repbot.util.ContextResolver;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageType;
-import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.exceptions.ContextException;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
+import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,6 +22,11 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class MessageAnalyzer {
     private static final int LOOKAROUND = 6;
     private static final Logger log = getLogger(MessageAnalyzer.class);
+    private final ContextResolver contextResolver;
+
+    public MessageAnalyzer(DataSource dataSource) {
+        contextResolver = new ContextResolver(dataSource);
+    }
 
     /**
      * Analyze a message.
@@ -36,7 +40,7 @@ public class MessageAnalyzer {
      * @param limit         limit for returned matches in the analyzer result
      * @return analyzer results
      */
-    public static AnalyzerResult processMessage(Pattern pattern, Message message, int maxHistoryAge, boolean limitTargets, double threshold, int limit) {
+    public AnalyzerResult processMessage(Pattern pattern, Message message, int maxHistoryAge, boolean limitTargets, double threshold, int limit) {
         if (pattern.pattern().isBlank()) return AnalyzerResult.noMatch();
         var contentRaw = message.getContentRaw();
 
@@ -60,11 +64,7 @@ public class MessageAnalyzer {
 
         Set<Member> targets = Collections.emptySet();
         if (limitTargets) {
-            targets = HistoryUtil.getRecentMembers(message, maxHistoryAge);
-
-            if (targets.size() == 1) {
-                return AnalyzerResult.mention(message.getAuthor(), new ArrayList<>(targets));
-            }
+            targets = contextResolver.getCombinedContext(message, maxHistoryAge);
         }
 
         var mentionedMembers = message.getMentionedUsers();
@@ -83,7 +83,7 @@ public class MessageAnalyzer {
                 }
             }
 
-            if(members.isEmpty()) return AnalyzerResult.noMatch();
+            if (members.isEmpty()) return AnalyzerResult.noMatch();
 
             return AnalyzerResult.mention(message.getAuthor(), members);
         }
@@ -91,7 +91,7 @@ public class MessageAnalyzer {
     }
 
 
-    private static AnalyzerResult resolveMessage(Message message, Pattern thankPattern, @NotNull Set<Member> targets, double threshold, int limit) {
+    private AnalyzerResult resolveMessage(Message message, Pattern thankPattern, @NotNull Set<Member> targets, double threshold, int limit) {
         var contentRaw = message.getContentRaw();
 
         var words = new ArrayList<>(List.of(contentRaw.split("\\s")));

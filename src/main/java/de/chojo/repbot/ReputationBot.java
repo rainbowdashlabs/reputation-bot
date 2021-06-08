@@ -25,6 +25,7 @@ import de.chojo.repbot.data.updater.SqlUpdater;
 import de.chojo.repbot.listener.MessageListener;
 import de.chojo.repbot.listener.ReactionListener;
 import de.chojo.repbot.listener.StateListener;
+import de.chojo.repbot.listener.VoiceStateListener;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;
 import de.chojo.repbot.manager.MemberCacheManager;
 import de.chojo.repbot.manager.ReputationService;
@@ -34,6 +35,7 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import org.apache.logging.log4j.LogManager;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.slf4j.Logger;
 
@@ -54,8 +56,10 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ReputationBot {
     private static final Logger log = getLogger(ReputationBot.class);
     private static ReputationBot instance;
-    private final ExecutorService executorService = Executors.newFixedThreadPool(50);
-    private final ScheduledExecutorService cleaner = Executors.newScheduledThreadPool(1);
+    private final ThreadGroup eventGroup = new ThreadGroup("Event Handler");
+    private final ThreadGroup workerGroup = new ThreadGroup("Scheduled Worker");
+    private final ExecutorService eventThreads = Executors.newFixedThreadPool(50, r -> new Thread(eventGroup, r));
+    private final ScheduledExecutorService cleaner = Executors.newScheduledThreadPool(1, r -> new Thread(workerGroup, r));
     private ShardManager shardManager;
     private HikariDataSource dataSource;
     private Configuration configuration;
@@ -118,14 +122,18 @@ public class ReputationBot {
         var reputationService = new ReputationService(dataSource, roleAssigner, configuration.magicImage());
         var reactionListener = new ReactionListener(dataSource, localizer, reputationService);
         var reputatinoVoteListener = new ReputationVoteListener(reputationService, localizer);
+        var messageListener = new MessageListener(dataSource, configuration, memberCacheManager, reputatinoVoteListener, reputationService);
         var stateListener = new StateListener(dataSource);
-        cleaner.scheduleAtFixedRate(stateListener, 0, 12, TimeUnit.HOURS);
+        var voiceStateListener = new VoiceStateListener(dataSource);
+        cleaner.scheduleAtFixedRate(stateListener, 1, 12, TimeUnit.HOURS);
+        cleaner.scheduleAtFixedRate(voiceStateListener, 2, 12, TimeUnit.HOURS);
 
         shardManager.addEventListener(
-                new MessageListener(dataSource, configuration, memberCacheManager, reputatinoVoteListener, localizer, reputationService),
+                messageListener,
                 stateListener,
                 reactionListener,
-                reputatinoVoteListener);
+                reputatinoVoteListener,
+                voiceStateListener);
         var data = new GuildData(dataSource);
         var hubBuilder = CommandHub.builder(shardManager, configuration.defaultPrefix())
                 .receiveGuildMessage()
@@ -185,6 +193,7 @@ public class ReputationBot {
             log.info("Shutting down database connections.");
             dataSource.close();
             log.info("Bot shutdown complete.");
+            LogManager.shutdown();
         });
         Runtime.getRuntime().addShutdownHook(shutdown);
     }
@@ -194,15 +203,23 @@ public class ReputationBot {
         memberCacheManager = new MemberCacheManager(scan);
         shardManager = DefaultShardManagerBuilder.createDefault(configuration.getToken())
                 .enableIntents(
+                        // Required to retrieve reputation emotes
                         GatewayIntent.GUILD_MESSAGE_REACTIONS,
+                        // Required to scan for thankwords
                         GatewayIntent.GUILD_MESSAGES,
+                        // Required to resolve member without a direct mention
                         GatewayIntent.GUILD_MEMBERS,
-                        GatewayIntent.GUILD_MESSAGES,
-                        GatewayIntent.GUILD_EMOJIS)
-                .enableCache(CacheFlag.EMOTE)
+                        // For online status caching
+                        GatewayIntent.GUILD_PRESENCES)
+                .enableCache(
+                        // Required for voice activity
+                        CacheFlag.VOICE_STATE,
+                        //Required for custom member cache
+                        CacheFlag.ONLINE_STATUS)
+                // we have our own shutdown hook
                 .setEnableShutdownHook(false)
                 .setMemberCachePolicy(memberCacheManager)
-                .setEventPool(executorService)
+                .setEventPool(eventThreads)
                 .build();
     }
 

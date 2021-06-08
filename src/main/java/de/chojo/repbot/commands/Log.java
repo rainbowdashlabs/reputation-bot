@@ -47,7 +47,7 @@ public class Log extends SimpleCommand {
                                 .build()
                         )
                         .add("message", "command.log.sub.message", argsBuilder()
-                                .add(OptionType.INTEGER, "message_id", "message_id", true)
+                                .add(OptionType.STRING, "message_id", "message_id", true)
                                 .build()
                         )
                         .build(),

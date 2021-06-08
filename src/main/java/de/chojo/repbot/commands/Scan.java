@@ -53,6 +53,7 @@ public class Scan extends SimpleCommand {
     private final Set<Long> cancel = new HashSet<>();
     private final Queue<ScanProcess> finished = new ArrayDeque<>();
     private final Queue<ScanProcess> canceled = new ArrayDeque<>();
+    private final MessageAnalyzer messageAnalyzer;
 
     public Scan(DataSource dataSource, Localizer localizer) {
         super("scan",
@@ -75,6 +76,7 @@ public class Scan extends SimpleCommand {
             finishTasks();
             finishCanceledTasks();
         }, 1, 1, TimeUnit.SECONDS);
+        this.messageAnalyzer = new MessageAnalyzer(dataSource);
     }
 
     @Override
@@ -205,7 +207,7 @@ public class Scan extends SimpleCommand {
         var loc = this.loc.getContextLocalizer(reportChannel.getGuild());
         var progressMessage = reportChannel.sendMessage(loc.localize("command.scan.progress",
                 Replacement.create("PERCENT", String.format("%.02f", 0d))) + " " + TextGenerator.progressBar(0, 40)).complete();
-        var scanProcess = new ScanProcess(this.loc, progressMessage, history, pattern, calls, reputationData);
+        var scanProcess = new ScanProcess(messageAnalyzer, this.loc, progressMessage, history, pattern, calls, reputationData);
 
         activeScans.add(reportChannel.getGuild().getIdLong());
         reportChannel.getGuild().loadMembers().get();
@@ -267,6 +269,7 @@ public class Scan extends SimpleCommand {
     }
 
     private static class ScanProcess {
+        private final MessageAnalyzer messageAnalyzer;
         private final Localizer loc;
         private final Guild guild;
         private final TextChannel resultChannel;
@@ -280,7 +283,8 @@ public class Scan extends SimpleCommand {
         private int callsLeft;
         private long time;
 
-        public ScanProcess(Localizer localizer, Message progressMessage, MessageHistory history, Pattern pattern, int calls, ReputationData data) {
+        public ScanProcess(MessageAnalyzer messageAnalyzer, Localizer localizer, Message progressMessage, MessageHistory history, Pattern pattern, int calls, ReputationData data) {
+            this.messageAnalyzer = messageAnalyzer;
             loc = localizer;
             this.guild = progressMessage.getGuild();
             this.resultChannel = progressMessage.getTextChannel();
@@ -315,7 +319,7 @@ public class Scan extends SimpleCommand {
 
                 if (message.getAuthor().isBot()) continue;
 
-                var result = MessageAnalyzer.processMessage(pattern, message, 0, false, 0.85, 3);
+                var result = messageAnalyzer.processMessage(pattern, message, 0, false, 0.85, 3);
 
                 var donator = result.donator();
                 var refMessage = result.referenceMessage();
