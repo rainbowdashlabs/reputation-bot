@@ -72,9 +72,10 @@ public class Locale extends SimpleCommand {
             eventWrapper.replyErrorAndDelete(eventWrapper.localize("command.locale.error.invalidLocale"), 10);
             return true;
         }
-        data.setLanguage(eventWrapper.getGuild(), language.get());
-        eventWrapper.reply(eventWrapper.localize("command.locale.sub.set.set",
-                Replacement.create("LOCALE", language.get().getLanguage(), Format.CODE))).queue();
+        if (data.setLanguage(eventWrapper.getGuild(), language.get())) {
+            eventWrapper.reply(eventWrapper.localize("command.locale.sub.set.set",
+                    Replacement.create("LOCALE", language.get().getLanguage(), Format.CODE))).queue();
+        }
         return true;
     }
 
@@ -95,9 +96,10 @@ public class Locale extends SimpleCommand {
             event.reply(loc.localize("command.locale.error.invalidLocale")).setEphemeral(true).queue();
             return true;
         }
-        data.setLanguage(event.getGuild(), language.get());
-        event.reply(loc.localize("command.locale.sub.set.set",
-                Replacement.create("LOCALE", language.get().getLanguage(), Format.CODE))).queue();
+        if (data.setLanguage(event.getGuild(), language.get())) {
+            event.reply(loc.localize("command.locale.sub.set.set",
+                    Replacement.create("LOCALE", language.get().getLanguage(), Format.CODE))).queue();
+        }
         return true;
     }
 

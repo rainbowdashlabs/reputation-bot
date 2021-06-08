@@ -123,7 +123,7 @@ public class Channel extends SimpleCommand {
             event.reply(loc.localize("error.invalidChannel")).setEphemeral(true).queue();
             return;
         }
-        data.deleteChannel(event.getGuild(), channel);
+        data.removeChannel(event.getGuild(), channel);
 
         event.reply(loc.localize("command.channel.sub.remove.removed",
                 Replacement.create("CHANNEL", ((TextChannel) channel).getAsMention()))).queue();
@@ -140,7 +140,7 @@ public class Channel extends SimpleCommand {
         }
 
         var removedChannel = validTextChannels.stream()
-                .filter(c -> data.deleteChannel(eventWrapper.getGuild(), c))
+                .filter(c -> data.removeChannel(eventWrapper.getGuild(), c))
                 .map(IMentionable::getAsMention)
                 .collect(Collectors.joining(", "));
         eventWrapper.reply(eventWrapper.localize("command.channel.sub.remove.removed",
