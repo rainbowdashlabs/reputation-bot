@@ -11,6 +11,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -65,17 +66,17 @@ public class ContextResolver {
     }
 
     public Set<Member> getVoiceContext(Message message, int maxAge) {
-        var pastUser = voiceData.getPastUser(message.getAuthor(), message.getGuild(), maxAge, 10);
-        var collect = pastUser.stream()
-                .map(id -> message.getGuild().retrieveMemberById(id).onErrorMap(throwable -> null).complete())
-                .collect(Collectors.toCollection(HashSet::new));
+        Set<Member> members = new LinkedHashSet<>();
         var voiceState = message.getMember().getVoiceState();
-        if (voiceState.inVoiceChannel()) collect.addAll(voiceState.getChannel().getMembers());
-        return collect;
+        if (voiceState.inVoiceChannel()) members.addAll(voiceState.getChannel().getMembers());
+        var pastUser = voiceData.getPastUser(message.getAuthor(), message.getGuild(), maxAge, 10);
+        return pastUser.stream()
+                .map(id -> message.getGuild().retrieveMemberById(id).onErrorMap(throwable -> null).complete())
+                .collect(Collectors.toCollection(() -> members));
     }
 
     public Set<Member> getCombinedContext(Message message, int maxAge) {
-        Set<Member> members = new HashSet<>();
+        Set<Member> members = new LinkedHashSet<>();
         members.addAll(getChannelContext(message, maxAge));
         members.addAll(getVoiceContext(message, maxAge));
         return members;
