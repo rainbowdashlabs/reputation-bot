@@ -319,7 +319,7 @@ public class Scan extends SimpleCommand {
 
                 if (message.getAuthor().isBot()) continue;
 
-                var result = messageAnalyzer.processMessage(pattern, message, 0, false, 0.85, 3);
+                var result = messageAnalyzer.processMessage(pattern, message, null, false, 0.85, 3);
 
                 var donator = result.donator();
                 var refMessage = result.referenceMessage();

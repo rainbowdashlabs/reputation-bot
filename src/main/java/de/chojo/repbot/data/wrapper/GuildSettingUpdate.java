@@ -9,6 +9,8 @@ public class GuildSettingUpdate {
     @Nullable
     private final Integer maxMessageAge;
     @Nullable
+    private Integer minMessages;
+    @Nullable
     private final String reaction;
     @Nullable
     private final Boolean reactionsActive;
@@ -78,10 +80,17 @@ public class GuildSettingUpdate {
         return cooldown;
     }
 
+    @Nullable
+    public Integer minMessages() {
+        return minMessages;
+    }
+
     public static class Builder {
         private final Guild guild;
         @Nullable
         private Integer maxMessageAge;
+        @Nullable
+        private Integer minMessages;
         @Nullable
         private String reaction;
         @Nullable
@@ -131,6 +140,10 @@ public class GuildSettingUpdate {
 
         public Builder cooldown(@Nullable Integer cooldown) {
             this.cooldown = cooldown;
+            return this;
+        }
+        public Builder minMessages(@Nullable Integer minMessages) {
+            this.minMessages = minMessages;
             return this;
         }
 
