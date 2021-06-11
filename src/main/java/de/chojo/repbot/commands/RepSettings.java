@@ -23,7 +23,7 @@ import java.util.regex.Pattern;
 public class RepSettings extends SimpleCommand {
     private final GuildData data;
     private final Localizer loc;
-    Pattern emotePattern = Pattern.compile("<:.*?:(?<id>[0-9]*?)>");
+    private final Pattern emotePattern = Pattern.compile("<:.*?:(?<id>[0-9]*?)>");
 
     public RepSettings(DataSource source, Localizer localizer) {
         super("repsettings",
@@ -35,6 +35,10 @@ public class RepSettings extends SimpleCommand {
                         )
                         .add("maxmessageage", "command.repSettings.sub.maxMessageAge", argsBuilder()
                                 .add(OptionType.INTEGER, "minutes", "minutes")
+                                .build()
+                        )
+                        .add("minmessages", "command.repSettings.sub.minMessages", argsBuilder()
+                                .add(OptionType.INTEGER, "messages", "messages")
                                 .build()
                         )
                         .add("reaction", "command.repSettings.sub.reaction", argsBuilder()
@@ -85,6 +89,10 @@ public class RepSettings extends SimpleCommand {
             return maxMessageAge(eventWrapper, context.subContext(subcmd), guildSettings);
         }
 
+        if ("minMessages".equalsIgnoreCase(subcmd)) {
+            return minMessages(eventWrapper, context.subContext(subcmd), guildSettings);
+        }
+
         if ("reaction".equalsIgnoreCase(subcmd)) {
             return reaction(eventWrapper, context.subContext(subcmd), guildSettings);
 
@@ -130,6 +138,9 @@ public class RepSettings extends SimpleCommand {
 
         if ("maxMessageAge".equalsIgnoreCase(subcmd)) {
             maxMessageAge(event, guildSettings);
+        }
+        if ("minMessages".equalsIgnoreCase(subcmd)) {
+            minMessages(event, guildSettings);
         }
 
         if ("reaction".equalsIgnoreCase(subcmd)) {
@@ -492,6 +503,42 @@ public class RepSettings extends SimpleCommand {
         if (data.updateMessageSettings(GuildSettingUpdate.builder(event.getGuild()).maxMessageAge((int) age).build())) {
             event.reply(loc.localize("command.repSettings.sub.maxMessageAge.get",
                     Replacement.create("MINUTES", age))).queue();
+        }
+    }
+
+    private boolean minMessages(MessageEventWrapper eventWrapper, CommandContext context, GuildSettings guildSettings) {
+        if (context.argsEmpty()) {
+            eventWrapper.reply(eventWrapper.localize("command.repSettings.sub.minMessages.get",
+                    Replacement.create("MINUTES", guildSettings.minMessages()))).queue();
+            return true;
+        }
+        var optAge = context.argInt(0);
+
+        if (optAge.isEmpty()) {
+            eventWrapper.replyErrorAndDelete(context.argString(0).get() + " is not a number", 30);
+            return true;
+        }
+        Integer minMessages = Math.max(0, Math.min(optAge.get(), 100));
+        if (data.updateMessageSettings(GuildSettingUpdate.builder(eventWrapper.getGuild()).minMessages(minMessages).build())) {
+            eventWrapper.reply(eventWrapper.localize("command.repSettings.sub.minMessages.get",
+                    Replacement.create("AMOUNT", minMessages))).queue();
+        }
+        return true;
+    }
+
+    private void minMessages(SlashCommandEvent event, GuildSettings guildSettings) {
+        var loc = this.loc.getContextLocalizer(event.getGuild());
+        if (event.getOptions().isEmpty()) {
+            event.reply(loc.localize("command.repSettings.sub.minMessages.get",
+                    Replacement.create("AMOUNT", guildSettings.minMessages()))).queue();
+            return;
+        }
+        var minMessages = event.getOption("messages").getAsLong();
+
+        minMessages = Math.max(0, Math.min(minMessages, 100));
+        if (data.updateMessageSettings(GuildSettingUpdate.builder(event.getGuild()).minMessages((int) minMessages).build())) {
+            event.reply(loc.localize("command.repSettings.sub.minMessages.get",
+                    Replacement.create("AMOUNT", minMessages))).queue();
         }
     }
 

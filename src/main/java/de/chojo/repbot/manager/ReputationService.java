@@ -6,7 +6,7 @@ import de.chojo.repbot.config.elements.MagicImage;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
-import de.chojo.repbot.util.ContextResolver;
+import de.chojo.repbot.analyzer.ContextResolver;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -80,7 +80,7 @@ public class ReputationService {
         }
 
         // Check if user was recently seen in this channel.
-        var recentUsers = contextResolver.getCombinedContext(message, settings.maxMessageAge())
+        var recentUsers = contextResolver.getCombinedContext(message, settings)
                 .stream()
                 .map(Member::getUser)
                 .collect(Collectors.toSet());
