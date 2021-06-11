@@ -22,6 +22,7 @@ public class GuildSettings {
     private final String prefix;
     private final String[] thankwords;
     private final int maxMessageAge;
+    private final int minMessages;
     private final String reaction;
     private final boolean reactionActive;
     private final boolean answerActive;
@@ -31,13 +32,14 @@ public class GuildSettings {
     private final int cooldown;
     private final Long managerRole;
 
-    public GuildSettings(Guild guild, String prefix, String[] thankwords, int maxMessageAge, String reaction,
+    public GuildSettings(Guild guild, String prefix, String[] thankwords, int maxMessageAge, int minMessages, String reaction,
                          boolean reactionActive, boolean answerActive, boolean mentionActive, boolean fuzzyActive,
                          Long[] activeChannel, int cooldown, Long managerRole) {
         this.guild = guild;
         this.prefix = prefix;
         this.thankwords = thankwords;
         this.maxMessageAge = maxMessageAge;
+        this.minMessages = minMessages;
         this.reaction = reaction == null ? "✅" : reaction;
         this.reactionActive = reactionActive;
         this.answerActive = answerActive;
@@ -137,5 +139,9 @@ public class GuildSettings {
 
     public Guild guild() {
         return guild;
+    }
+
+    public int minMessages() {
+        return minMessages;
     }
 }

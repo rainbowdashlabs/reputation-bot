@@ -48,6 +48,7 @@ public class GuildData extends QueryObject {
                             prefix,
                             thankswords,
                             max_message_age,
+                            min_messages,
                             reaction,
                             reactions_active,
                             answer_active,
@@ -59,14 +60,14 @@ public class GuildData extends QueryObject {
                         FROM
                             guild_settings
                         WHERE
-                            guild_id = ?
-
+                            guild_id = ?;
                         """)
                 .params(stmt -> stmt.setLong(1, guild.getIdLong()))
                 .readRow(row -> new GuildSettings(guild,
                         row.getString("prefix"),
                         DbUtil.arrayToArray(row, "thankswords", new String[0]),
                         row.getInt("max_message_age"),
+                        row.getInt("min_messages"),
                         row.getString("reaction"),
                         row.getBoolean("reactions_active"),
                         row.getBoolean("answer_active"),
@@ -288,6 +289,7 @@ public class GuildData extends QueryObject {
                         UPDATE
                             message_settings
                         SET max_message_age = coalesce(?, max_message_age),
+                            min_messages = coalesce(?, min_messages),
                             reaction = coalesce(?, reaction),
                             reactions_active = coalesce(?, reactions_active),
                             answer_active = coalesce(?, answer_active),
