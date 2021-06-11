@@ -5,15 +5,13 @@ import java.util.Optional;
 public class Badges {
     private boolean enables = true;
     private String[] badges = new String[0];
-
-    public Badges() {
-    }
-
-    public Badges(boolean enables, String[] badges) {
-        this.enables = enables;
-        this.badges = badges;
-    }
-
+    
+    /**
+     * Retrieve the badge for the rank.
+     *
+     * @param rank rank to get the badge
+     * @return badge if a badge is present for this rank.
+     */
     public Optional<String> badge(int rank) {
         if (rank == 0) return Optional.empty();
         if (!enables) return Optional.empty();
