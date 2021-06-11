@@ -80,7 +80,7 @@ public class ReputationService {
         }
 
         // Check if user was recently seen in this channel.
-        var recentUsers = contextResolver.getCombinedContext(message, settings.maxMessageAge())
+        var recentUsers = contextResolver.getCombinedContext(message, settings)
                 .stream()
                 .map(Member::getUser)
                 .collect(Collectors.toSet());

@@ -1,4 +1,4 @@
-package de.chojo.repbot.util;
+package de.chojo.repbot.analyzer;
 
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.repbot.data.VoiceData;
@@ -37,8 +37,8 @@ public class ContextResolver {
      */
     @NotNull
     public Set<Member> getChannelContext(Message message, GuildSettings settings) {
-        var history = message.getChannel().getHistoryBefore(message, 50).complete();
-        var maxAge = Instant.now().minus(settings == null ? Long.MAX_VALUE : settings.maxMessageAge() , ChronoUnit.MINUTES);
+        var history = message.getChannel().getHistoryBefore(message, 100).complete();
+        var maxAge = Instant.now().minus(settings == null ? Long.MAX_VALUE : settings.maxMessageAge(), ChronoUnit.MINUTES);
         var retrievedHistory = new ArrayList<>(history.getRetrievedHistory());
         // add user message
         retrievedHistory.add(message);
@@ -48,7 +48,8 @@ public class ContextResolver {
                 .map(m -> m.getTimeCreated().toInstant())
                 .min(Instant::compareTo).filter(entry -> entry.isAfter(maxAge)).orElse(maxAge);
 
-        return retrievedHistory.stream()
+
+        var contextMember = retrievedHistory.stream()
                 // filter message for only recent messages and after the first message of the user.
                 .filter(m -> m.getTimeCreated().toInstant().isAfter(oldest))
                 .map(Message::getAuthor)
@@ -64,9 +65,17 @@ public class ContextResolver {
                 })
                 .filter(Objects::nonNull)
                 .collect(Collectors.toCollection(HashSet::new));
+        // add users of the last recent messages
+        retrievedHistory.stream()
+                .limit(settings == null ? 100 : settings.minMessages())
+                .filter(m -> m.getTimeCreated().toInstant().isAfter(oldest))
+                .map(Message::getMember)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toCollection(() -> contextMember));
+        return contextMember;
     }
 
-    public Set<Member> getVoiceContext(Message message, @Nullable  GuildSettings settings) {
+    public Set<Member> getVoiceContext(Message message, @Nullable GuildSettings settings) {
         Set<Member> members = new LinkedHashSet<>();
         var voiceState = message.getMember().getVoiceState();
         if (voiceState.inVoiceChannel()) members.addAll(voiceState.getChannel().getMembers());

@@ -2,11 +2,12 @@ package de.chojo.repbot.analyzer;
 
 import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.jdautil.parsing.WeightedEntry;
-import de.chojo.repbot.util.ContextResolver;
+import de.chojo.repbot.data.wrapper.GuildSettings;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageType;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import javax.sql.DataSource;
@@ -31,16 +32,16 @@ public class MessageAnalyzer {
     /**
      * Analyze a message.
      *
-     * @param pattern       regex pattern for targetwords
-     * @param message       message to analyze
-     * @param maxHistoryAge max age of messages to find targets
-     * @param limitTargets  true if targets should be limited to users which have written in the channel in the
-     *                      maxHistoryAge
-     * @param threshold     threshold for fuzzy matches
-     * @param limit         limit for returned matches in the analyzer result
+     * @param pattern      regex pattern for targetwords
+     * @param message      message to analyze
+     * @param settings     settings of the guild
+     * @param limitTargets true if targets should be limited to users which have written in the channel in the
+     *                     maxHistoryAge
+     * @param threshold    threshold for fuzzy matches
+     * @param limit        limit for returned matches in the analyzer result
      * @return analyzer results
      */
-    public AnalyzerResult processMessage(Pattern pattern, Message message, int maxHistoryAge, boolean limitTargets, double threshold, int limit) {
+    public AnalyzerResult processMessage(Pattern pattern, Message message, @Nullable GuildSettings settings, boolean limitTargets, double threshold, int limit) {
         if (pattern.pattern().isBlank()) return AnalyzerResult.noMatch();
         var contentRaw = message.getContentRaw();
 
@@ -64,7 +65,7 @@ public class MessageAnalyzer {
 
         Set<Member> targets = Collections.emptySet();
         if (limitTargets) {
-            targets = contextResolver.getCombinedContext(message, maxHistoryAge);
+            targets = contextResolver.getCombinedContext(message, settings);
         }
 
         var mentionedMembers = message.getMentionedUsers();
