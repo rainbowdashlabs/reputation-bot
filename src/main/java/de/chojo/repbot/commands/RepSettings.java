@@ -509,7 +509,7 @@ public class RepSettings extends SimpleCommand {
     private boolean minMessages(MessageEventWrapper eventWrapper, CommandContext context, GuildSettings guildSettings) {
         if (context.argsEmpty()) {
             eventWrapper.reply(eventWrapper.localize("command.repSettings.sub.minMessages.get",
-                    Replacement.create("MINUTES", guildSettings.maxMessageAge()))).queue();
+                    Replacement.create("MINUTES", guildSettings.minMessages()))).queue();
             return true;
         }
         var optAge = context.argInt(0);
@@ -530,13 +530,13 @@ public class RepSettings extends SimpleCommand {
         var loc = this.loc.getContextLocalizer(event.getGuild());
         if (event.getOptions().isEmpty()) {
             event.reply(loc.localize("command.repSettings.sub.minMessages.get",
-                    Replacement.create("AMOUNT", guildSettings.maxMessageAge()))).queue();
+                    Replacement.create("AMOUNT", guildSettings.minMessages()))).queue();
             return;
         }
         var minMessages = event.getOption("messages").getAsLong();
 
         minMessages = Math.max(0, Math.min(minMessages, 100));
-        if (data.updateMessageSettings(GuildSettingUpdate.builder(event.getGuild()).maxMessageAge((int) minMessages).build())) {
+        if (data.updateMessageSettings(GuildSettingUpdate.builder(event.getGuild()).minMessages((int) minMessages).build())) {
             event.reply(loc.localize("command.repSettings.sub.minMessages.get",
                     Replacement.create("AMOUNT", minMessages))).queue();
         }
