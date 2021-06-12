@@ -179,7 +179,7 @@ public class RepSettings extends SimpleCommand {
     }
 
     private void sendSettings(SlashCommandEvent event, GuildSettings guildSettings) {
-        event.reply(wrap(getSettings(event.getGuild(), guildSettings))).queue();
+        event.replyEmbeds(getSettings(event.getGuild(), guildSettings)).queue();
         return;
     }
 

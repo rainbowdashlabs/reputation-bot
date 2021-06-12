@@ -127,7 +127,7 @@ public class Log extends SimpleCommand {
             return;
         }
 
-        event.reply(wrap(getMessageLog(event.getGuild(), event.getOption("message_id").getAsLong()))).queue();
+        event.replyEmbeds(getMessageLog(event.getGuild(), event.getOption("message_id").getAsLong())).queue();
     }
 
     private MessageEmbed sendUserLog(Guild guild, User user, String title, String log) {

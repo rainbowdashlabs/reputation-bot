@@ -109,7 +109,7 @@ public class Help extends SimpleCommand {
 
         if (event.getOptions().isEmpty()) {
             var message = getAllCommandsEmbed(eventWrapper);
-            event.reply(wrap(message)).queue();
+            event.replyEmbeds(message).queue();
             return;
         }
 

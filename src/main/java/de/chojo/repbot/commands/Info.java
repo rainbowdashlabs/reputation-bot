@@ -110,7 +110,7 @@ public class Info extends SimpleCommand {
     @Override
     public void onSlashCommand(SlashCommandEvent event) {
         var eventWrapper = MessageEventWrapper.create(event);
-        event.reply(wrap(getResponse(eventWrapper))).queue();
+        event.replyEmbeds(getResponse(eventWrapper)).queue();
     }
 
 

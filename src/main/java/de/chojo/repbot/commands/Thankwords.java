@@ -257,11 +257,11 @@ public class Thankwords extends SimpleCommand {
 
         var processResult = processMessage(event.getGuild(), result, builder);
         if (processResult != null) {
-            event.reply(wrap(processResult)).queue();
+            event.replyEmbeds(processResult).queue();
             return true;
         }
 
-        event.reply(wrap(builder.build())).queue();
+        event.replyEmbeds(builder.build()).queue();
         return true;
     }
 
@@ -362,7 +362,7 @@ public class Thankwords extends SimpleCommand {
         var language = languageOption.getAsString();
         var words = thankwordsContainer.get(language.toLowerCase(Locale.ROOT));
         if (words == null) {
-            slashCommandEvent.reply(wrap(loc.localize("command.locale.error.invalidLocale")))
+            slashCommandEvent.reply(loc.localize("command.locale.error.invalidLocale"))
                     .setEphemeral(true)
                     .queue();
             return true;
