@@ -64,7 +64,7 @@ public class Help extends SimpleCommand {
             return true;
         }
 
-        eventWrapper.reply(getCommandHelp(command.get(), eventWrapper.getGuild())).queue();
+        eventWrapper.reply(getCommandHelp(command.get(), loc.getContextLocalizer(eventWrapper.getGuild()))).queue();
         return true;
     }
 
@@ -91,7 +91,7 @@ public class Help extends SimpleCommand {
             return;
         }
 
-        event.reply(wrap(getCommandHelp(command.get(), event.getGuild()))).queue();
+        event.reply(wrap(getCommandHelp(command.get(), loc.getContextLocalizer(eventWrapper.getGuild())))).queue();
     }
 
     @NotNull
@@ -108,36 +108,11 @@ public class Help extends SimpleCommand {
                 .build();
     }
 
-    private MessageEmbed getCommandHelpEmbed(MessageEventWrapper eventWrapper, SimpleCommand command) {
-        var embedBuilder = new LocalizedEmbedBuilder(loc, eventWrapper)
-                .setTitle(eventWrapper.localize("command.help.title",
-                        Replacement.create("COMMAND", command.command())))
-                .setDescription(command.description());
-
-
-        if (command.alias() != null) {
-            embedBuilder.addField("command.help.usage", command.alias() + " " + command.args(), false);
-        }
-
-        List<String> subCommands = new ArrayList<>();
-        for (var subCommand : command.getSubCommands()) {
-            subCommands.add("`" + command.command() + " "
-                    + subCommand.name() + (subCommand.args() != null ? " " + subCommand.args() : "")
-                    + "` -> " + subCommand.description());
-        }
-        if (!subCommands.isEmpty()) {
-            embedBuilder.addField("command.help.subCommands", String.join("\n", subCommands), false);
-        }
-        return embedBuilder.build();
-    }
-
-    public MessageEmbed getCommandHelp(SimpleCommand command, Guild guild) {
-        var loc = this.loc.getContextLocalizer(guild);
-
-        var builder = new LocalizedEmbedBuilder(this.loc, guild)
+    public static MessageEmbed getCommandHelp(SimpleCommand command, ContextLocalizer loc) {
+        var builder = new LocalizedEmbedBuilder(loc)
                 .setTitle(loc.localize("command.help.title",
                         Replacement.create("COMMAND", command.command())))
-                .setDescription(loc.localize(description()));
+                .setDescription(loc.localize(command.description()));
 
         if (command.alias().length > 0) {
             var aliases = Arrays.stream(command.alias())
@@ -161,7 +136,7 @@ public class Help extends SimpleCommand {
         return builder.build();
     }
 
-    private String argsAsString(SimpleArgument[] args, ContextLocalizer localizer) {
+    private static String argsAsString(SimpleArgument[] args, ContextLocalizer localizer) {
         if(args == null) return "";
         List<String> strArgs = new ArrayList<>();
         for (var arg : args) {

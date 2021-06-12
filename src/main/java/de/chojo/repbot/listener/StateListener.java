@@ -12,11 +12,14 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 import javax.sql.DataSource;
 
-public class StateListener extends ListenerAdapter implements Runnable {
+import static org.slf4j.LoggerFactory.getLogger;
 
+public class StateListener extends ListenerAdapter implements Runnable {
+    private static final Logger log = getLogger(StateListener.class);
     private final GuildData data;
 
     public StateListener(DataSource dataSource) {
@@ -65,6 +68,7 @@ public class StateListener extends ListenerAdapter implements Runnable {
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
+        log.info("");
         event.getJDA().getGuildCache().forEach(data::initGuild);
     }
 
