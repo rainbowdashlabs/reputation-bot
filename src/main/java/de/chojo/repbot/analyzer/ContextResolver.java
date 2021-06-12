@@ -39,9 +39,10 @@ public class ContextResolver {
     public Set<Member> getChannelContext(Message message, GuildSettings settings) {
         var history = message.getChannel().getHistoryBefore(message, 100).complete();
         var maxAge = Instant.now().minus(settings == null ? Long.MAX_VALUE : settings.maxMessageAge(), ChronoUnit.MINUTES);
-        var retrievedHistory = new ArrayList<>(history.getRetrievedHistory());
+        var retrievedHistory = new ArrayList<Message>();
         // add user message
         retrievedHistory.add(message);
+        retrievedHistory.addAll(history.getRetrievedHistory());
         // find the oldest message in the history written by the message author.
         var oldest = retrievedHistory.stream()
                 .filter(m -> Verifier.equalSnowflake(m.getAuthor(), message.getAuthor()))
