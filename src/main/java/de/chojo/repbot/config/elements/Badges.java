@@ -2,10 +2,11 @@ package de.chojo.repbot.config.elements;
 
 import java.util.Optional;
 
+@SuppressWarnings("FieldMayBeFinal")
 public class Badges {
     private boolean enables = true;
     private String[] badges = new String[0];
-    
+
     /**
      * Retrieve the badge for the rank.
      *

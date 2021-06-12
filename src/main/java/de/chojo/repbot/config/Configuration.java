@@ -3,14 +3,15 @@ package de.chojo.repbot.config;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import de.chojo.repbot.config.elements.Badges;
 import de.chojo.repbot.config.elements.Database;
 import de.chojo.repbot.config.elements.Links;
 import de.chojo.repbot.config.elements.MagicImage;
 import de.chojo.repbot.config.elements.TestMode;
 import de.chojo.repbot.config.exception.ConfigurationException;
-import org.apache.logging.log4j.core.tools.picocli.CommandLine;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -22,14 +23,15 @@ import java.nio.file.Paths;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Configuration {
+    private static final Logger log = getLogger(Configuration.class);
     private final ObjectMapper objectMapper;
     private ConfigFile configFile;
-    private static final Logger log = getLogger(Configuration.class);
 
     private Configuration() {
-        objectMapper = new ObjectMapper();
-        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-        objectMapper.setDefaultPrettyPrinter(new DefaultPrettyPrinter());
+        objectMapper = new ObjectMapper()
+        .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
+        .setDefaultPrettyPrinter(new DefaultPrettyPrinter())
+                .configure(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS, true);
     }
 
     public static Configuration create() {

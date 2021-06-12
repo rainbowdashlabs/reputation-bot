@@ -28,7 +28,6 @@ import java.net.http.HttpResponse;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -37,7 +36,6 @@ public class Info extends SimpleCommand {
     private static final String ART = "**SmartieFox ☆*:.｡.o(≧▽≦)o.｡.:*☆**\n[Twitter](https://twitter.com/smartiefoxart) [Twitch](https://www.twitch.tv/smartiefox)";
     private static final String SOURCE = "[rainbowdashlabs/reputation-bot](https://github.com/rainbowdashlabs/reputation-bot)";
     private static final Logger log = getLogger(Info.class);
-    private String contributors;
     private final Localizer localizer;
     private final HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
     private final ObjectMapper mapper = new ObjectMapper()
@@ -45,6 +43,7 @@ public class Info extends SimpleCommand {
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     private final String version;
     private final Configuration configuration;
+    private String contributors;
     private Instant lastFetch = Instant.MIN;
 
 

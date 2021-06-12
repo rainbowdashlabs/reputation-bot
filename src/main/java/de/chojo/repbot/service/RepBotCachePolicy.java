@@ -15,8 +15,8 @@ import java.util.Set;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class RepBotCachePolicy implements MemberCachePolicy, Runnable {
-    private static final Logger log = getLogger(RepBotCachePolicy.class);
     public static final int CACHE_DURATION = 30;
+    private static final Logger log = getLogger(RepBotCachePolicy.class);
     private final HashMap<Long, Instant> seen = new HashMap<>();
     private final Scan scan;
 

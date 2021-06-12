@@ -54,9 +54,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class ReputationBot {
     private static final Logger log = getLogger(ReputationBot.class);
-    private static ReputationBot instance;
     private static final Thread.UncaughtExceptionHandler EXCEPTION_HANDLER =
             (t, e) -> log.error(LogNotify.NOTIFY_ADMIN, "An uncaught exception occured in " + t.getName() + "-" + t.getId() + ".", e);
+    private static ReputationBot instance;
     private final ThreadGroup eventGroup = new ThreadGroup("Event Handler");
     private final ThreadGroup workerGroup = new ThreadGroup("Scheduled Worker");
     private final ThreadGroup hikariGroup = new ThreadGroup("Hikari Worker");
@@ -73,6 +73,14 @@ public class ReputationBot {
     public static void main(String[] args) throws SQLException, IOException {
         ReputationBot.instance = new ReputationBot();
         instance.start();
+    }
+
+    private static ThreadFactory createThreadFactory(ThreadGroup group) {
+        return r -> {
+            var thread = new Thread(group, r);
+            thread.setUncaughtExceptionHandler(EXCEPTION_HANDLER);
+            return thread;
+        };
     }
 
     private void start() throws SQLException, IOException {
@@ -237,13 +245,5 @@ public class ReputationBot {
         config.setThreadFactory(createThreadFactory(hikariGroup));
 
         return new HikariDataSource(config);
-    }
-
-    private static ThreadFactory createThreadFactory(ThreadGroup group) {
-        return r -> {
-            var thread = new Thread(group, r);
-            thread.setUncaughtExceptionHandler(EXCEPTION_HANDLER);
-            return thread;
-        };
     }
 }

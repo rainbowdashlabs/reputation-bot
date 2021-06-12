@@ -24,8 +24,13 @@ import org.slf4j.Logger;
 
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
@@ -237,7 +242,7 @@ public class Thankwords extends SimpleCommand {
         var guildSettings = optGuildSettings.get();
         var messageId = event.getOption("message").getAsString();
 
-        if(!Verifier.isValidId(messageId)){
+        if (!Verifier.isValidId(messageId)) {
             event.reply(loc.localize("error.invalidMessage")).queue();
             return true;
         }

@@ -278,8 +278,8 @@ public class Scan extends SimpleCommand {
         private final Pattern pattern;
         private final int calls;
         private final ReputationData reputationData;
-        private int scanned = 0;
-        private int hits = 0;
+        private int scanned;
+        private int hits;
         private int callsLeft;
         private long time;
 

@@ -27,8 +27,8 @@ import java.util.Optional;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class GuildData extends QueryObject {
-    private final QueryBuilderFactory factory;
     private static final Logger log = getLogger(GuildData.class);
+    private final QueryBuilderFactory factory;
 
     public GuildData(DataSource source) {
         super(source);

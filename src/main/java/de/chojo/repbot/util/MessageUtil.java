@@ -9,6 +9,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class MessageUtil {
     private static final Logger log = getLogger(MessageUtil.class);
+
     public static void markMessage(Message message, @Nullable Message refMessage, GuildSettings settings) {
         if (settings.reactionIsEmote()) {
             message.getGuild().retrieveEmoteById(settings.reaction()).queue(e -> {

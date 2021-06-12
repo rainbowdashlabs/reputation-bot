@@ -17,7 +17,7 @@ import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import javax.sql.DataSource;
-import java.awt.*;
+import java.awt.Color;
 import java.util.regex.Pattern;
 
 public class RepSettings extends SimpleCommand {

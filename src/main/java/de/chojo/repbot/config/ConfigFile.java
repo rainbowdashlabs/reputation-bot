@@ -6,8 +6,7 @@ import de.chojo.repbot.config.elements.Links;
 import de.chojo.repbot.config.elements.MagicImage;
 import de.chojo.repbot.config.elements.TestMode;
 
-import java.util.List;
-
+@SuppressWarnings("FieldMayBeFinal")
 public class ConfigFile {
     private String token = "";
     private String defaultPrefix = "!";
