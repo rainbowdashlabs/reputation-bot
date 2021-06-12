@@ -22,6 +22,7 @@ import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.updater.QueryReplacement;
 import de.chojo.repbot.data.updater.SqlUpdater;
+import de.chojo.repbot.listener.LogListener;
 import de.chojo.repbot.listener.MessageListener;
 import de.chojo.repbot.listener.ReactionListener;
 import de.chojo.repbot.listener.StateListener;
@@ -43,23 +44,25 @@ import javax.annotation.Nullable;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ReputationBot {
     private static final Logger log = getLogger(ReputationBot.class);
     private static ReputationBot instance;
+    private static final Thread.UncaughtExceptionHandler EXCEPTION_HANDLER =
+            (t, e) -> log.error(LogNotify.NOTIFY_ADMIN, "An uncaught exception occured in " + t.getName() + "-" + t.getId() + ".", e);
     private final ThreadGroup eventGroup = new ThreadGroup("Event Handler");
     private final ThreadGroup workerGroup = new ThreadGroup("Scheduled Worker");
-    private final ExecutorService eventThreads = Executors.newFixedThreadPool(50, r -> new Thread(eventGroup, r));
-    private final ScheduledExecutorService cleaner = Executors.newScheduledThreadPool(1, r -> new Thread(workerGroup, r));
+    private final ThreadGroup jdaGroup = new ThreadGroup("JDA Worker");
+    private final ExecutorService eventThreads = Executors.newFixedThreadPool(50, createThreadFactory(eventGroup));
+    private final ScheduledExecutorService repBotWorker = Executors.newScheduledThreadPool(2, createThreadFactory(workerGroup));
     private ShardManager shardManager;
     private HikariDataSource dataSource;
     private Configuration configuration;
@@ -125,15 +128,16 @@ public class ReputationBot {
         var messageListener = new MessageListener(dataSource, configuration, repBotCachePolicy, reputatinoVoteListener, reputationService);
         var stateListener = new StateListener(dataSource);
         var voiceStateListener = new VoiceStateListener(dataSource);
-        cleaner.scheduleAtFixedRate(stateListener, 1, 12, TimeUnit.HOURS);
-        cleaner.scheduleAtFixedRate(voiceStateListener, 2, 12, TimeUnit.HOURS);
-
+        var logListener = LogListener.create(repBotWorker);
+        repBotWorker.scheduleAtFixedRate(stateListener, 1, 12, TimeUnit.HOURS);
+        repBotWorker.scheduleAtFixedRate(voiceStateListener, 2, 12, TimeUnit.HOURS);
         shardManager.addEventListener(
                 messageListener,
                 stateListener,
                 reactionListener,
                 reputatinoVoteListener,
-                voiceStateListener);
+                voiceStateListener,
+                logListener);
         var data = new GuildData(dataSource);
         var hubBuilder = CommandHub.builder(shardManager, configuration.defaultPrefix())
                 .receiveGuildMessage()
@@ -156,17 +160,7 @@ public class ReputationBot {
                         Info.create(localizer, configuration),
                         new Log(shardManager, dataSource, localizer)
                 )
-                .withInvalidArgumentProvider(((loc, command) -> {
-                    var embedBuilder = new EmbedBuilder()
-                            .setTitle(loc.localize("error.invalidArguments"))
-                            .appendDescription(command.args() != null ? command.command() + " " + command.args() + "\n" : "");
-                    if (command.getSubCommands().length != 0) {
-                        embedBuilder.appendDescription(">>> " + Arrays.stream(command.getSubCommands())
-                                .map(c -> command.command() + " " + c.name() + (c.args() == null ? "" : " " + c.args()))
-                                .collect(Collectors.joining("\n")));
-                    }
-                    return embedBuilder.build();
-                }))
+                .withInvalidArgumentProvider(((loc, command) -> Help.getCommandHelp(command, loc)))
                 .withLocalizer(localizer)
                 .withPermissionCheck((wrapper, command) -> {
                     if (wrapper.getMember().hasPermission(command.permission())) return true;
@@ -189,7 +183,7 @@ public class ReputationBot {
             log.info("Shuting down shardmanager.");
             shardManager.shutdown();
             log.info("Shutting down scheduler.");
-            cleaner.shutdown();
+            repBotWorker.shutdown();
             log.info("Shutting down database connections.");
             dataSource.close();
             log.info("Bot shutdown complete.");
@@ -220,6 +214,7 @@ public class ReputationBot {
                 .setEnableShutdownHook(false)
                 .setMemberCachePolicy(repBotCachePolicy)
                 .setEventPool(eventThreads)
+                .setThreadFactory(createThreadFactory(jdaGroup))
                 .build();
     }
 
@@ -240,5 +235,13 @@ public class ReputationBot {
         }
 
         return new HikariDataSource(config);
+    }
+
+    private static ThreadFactory createThreadFactory(ThreadGroup group) {
+        return r -> {
+            var thread = new Thread(group, r);
+            thread.setUncaughtExceptionHandler(EXCEPTION_HANDLER);
+            return thread;
+        };
     }
 }

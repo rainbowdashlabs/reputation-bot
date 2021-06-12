@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<Configuration status="WARN" packages="de.chojo">
+<Configuration status="WARN" shutdownHook="disable" packages="de.chojo.repbot.util">
     <Appenders>
         <!-- Console logger for debugging (prints stacktrace) -->
-        <Console name="Console" target="SYSTEM_OUT">
+        <Console name="ConsoleDebug" target="SYSTEM_OUT">
             <PatternLayout
                     pattern="%highlight{[%d{HH:mm:ss]}[%p{length=3}][%c] %m%n}{FATAL=black, ERROR=red, WARN=yellow, INFO=green, DEBUG=blue, TRACE=white}"
                     disableAnsi="false"/>
@@ -16,17 +16,42 @@
             </Policies>
             <DefaultRolloverStrategy max="10"/>
         </RollingFile>
+
+        <DiscordWebhook name="DiscordVerbose"
+                        url="">
+            <filters>
+                <MarkerFilter marker="DISCORD" onMatch="ACCEPT" onMismatch="NEUTRAL"/>
+                <MarkerFilter marker="+" onMatch="DENY" onMismatch="NEUTRAL"/>
+                <ThresholdFilter level="INFO"/>
+            </filters>
+        </DiscordWebhook>
+
+        <DiscordWebhook name="DiscordStatus"
+                        url="">
+            <filters>
+                <MarkerFilter marker="STATUS" onMatch="ACCEPT" onMismatch="DENY"/>
+            </filters>
+        </DiscordWebhook>
+
+        <DiscordWebhook name="DiscordError"
+                        url="">
+            <MarkerFilter marker="NOTIFY_ADMIN" onMatch="ACCEPT" onMismatch="DENY"/>
+        </DiscordWebhook>
+
     </Appenders>
     <Loggers>
-
         <!-- remove too verbose library logging -->
         <Logger name="net.dv8tion.jda" level="INFO"/>
-        <Logger name="org.eclipse.jetty" level="WARN"/>
-        <Logger name="com.zaxxer" level="INFO"/>
+        <Logger name="org.eclipse.jetty" level="INFO"/>
+        <Logger name="com.zaxxer.hikari" level="INFO"/>
 
         <Root level="TRACE">
-            <AppenderRef ref="Console"/>
+            <AppenderRef ref="ConsoleDebug"/>
             <AppenderRef ref="RollingFile"/>
+
+            <AppenderRef ref="DiscordVerbose"/>
+            <AppenderRef ref="DiscordStatus"/>
+            <AppenderRef ref="DiscordError"/>
         </Root>
     </Loggers>
 </Configuration>
