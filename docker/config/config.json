@@ -16,8 +16,12 @@
     "magicImageCooldown": 30,
     "magicImageDeleteSchedule": 60
   },
-  "testMode" : {
-    "testMode" : false,
-    "testGuilds" : [ 519849671284490240 ]
+  "testMode": {
+    "testMode": false,
+    "testGuilds": []
+  },
+  "badges": {
+    "enables": true,
+    "badges": []
   }
 }

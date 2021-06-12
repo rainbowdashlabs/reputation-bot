@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.chojo.repbot.config.elements.Badges;
 import de.chojo.repbot.config.elements.Database;
 import de.chojo.repbot.config.elements.MagicImage;
 import de.chojo.repbot.config.elements.TestMode;
@@ -98,5 +99,9 @@ public class Configuration {
 
     public TestMode testMode() {
         return configFile.testMode();
+    }
+
+    public Badges badges() {
+        return configFile.badges();
     }
 }

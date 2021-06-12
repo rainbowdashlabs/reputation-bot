@@ -145,7 +145,7 @@ public class ReputationBot {
                 .withCommands(
                         new Channel(dataSource, localizer),
                         new Prefix(dataSource, configuration, localizer),
-                        new Reputation(dataSource, localizer),
+                        new Reputation(dataSource, localizer, configuration),
                         new Roles(dataSource, localizer),
                         new RepSettings(dataSource, localizer),
                         new TopReputation(dataSource, localizer),
