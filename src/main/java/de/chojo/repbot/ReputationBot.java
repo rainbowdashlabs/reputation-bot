@@ -7,6 +7,7 @@ import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Language;
 import de.chojo.repbot.commands.Channel;
 import de.chojo.repbot.commands.Help;
+import de.chojo.repbot.commands.Info;
 import de.chojo.repbot.commands.Invite;
 import de.chojo.repbot.commands.Locale;
 import de.chojo.repbot.commands.Log;
@@ -15,7 +16,6 @@ import de.chojo.repbot.commands.RepSettings;
 import de.chojo.repbot.commands.Reputation;
 import de.chojo.repbot.commands.Roles;
 import de.chojo.repbot.commands.Scan;
-import de.chojo.repbot.commands.Info;
 import de.chojo.repbot.commands.Thankwords;
 import de.chojo.repbot.commands.TopReputation;
 import de.chojo.repbot.config.Configuration;
@@ -31,7 +31,7 @@ import de.chojo.repbot.listener.voting.ReputationVoteListener;
 import de.chojo.repbot.service.RepBotCachePolicy;
 import de.chojo.repbot.service.ReputationService;
 import de.chojo.repbot.service.RoleAssigner;
-import net.dv8tion.jda.api.EmbedBuilder;
+import de.chojo.repbot.util.LogNotify;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -40,7 +40,6 @@ import org.apache.logging.log4j.LogManager;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.slf4j.Logger;
 
-import javax.annotation.Nullable;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -60,6 +59,7 @@ public class ReputationBot {
             (t, e) -> log.error(LogNotify.NOTIFY_ADMIN, "An uncaught exception occured in " + t.getName() + "-" + t.getId() + ".", e);
     private final ThreadGroup eventGroup = new ThreadGroup("Event Handler");
     private final ThreadGroup workerGroup = new ThreadGroup("Scheduled Worker");
+    private final ThreadGroup hikariGroup = new ThreadGroup("Hikari Worker");
     private final ThreadGroup jdaGroup = new ThreadGroup("JDA Worker");
     private final ExecutorService eventThreads = Executors.newFixedThreadPool(50, createThreadFactory(eventGroup));
     private final ScheduledExecutorService repBotWorker = Executors.newScheduledThreadPool(2, createThreadFactory(workerGroup));
@@ -234,6 +234,7 @@ public class ReputationBot {
         if (withSchema) {
             config.setSchema(db.schema());
         }
+        config.setThreadFactory(createThreadFactory(hikariGroup));
 
         return new HikariDataSource(config);
     }
