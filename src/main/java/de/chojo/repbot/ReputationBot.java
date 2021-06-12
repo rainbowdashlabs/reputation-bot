@@ -100,7 +100,7 @@ public class ReputationBot {
     }
 
     private void initDatabase() throws SQLException, IOException {
-        var connectionPool = getConnectionPool(null);
+        var connectionPool = getConnectionPool(false);
 
         var schema = configuration.database().schema();
         SqlUpdater.builder(connectionPool)
@@ -108,8 +108,9 @@ public class ReputationBot {
                 .setVersionTable(schema + ".repbot_version")
                 .setSchemas(schema)
                 .execute();
+        connectionPool.close();
 
-        dataSource = getConnectionPool(configuration.database().schema());
+        dataSource = getConnectionPool(true);
     }
 
     private void initLocalization() {
@@ -218,7 +219,7 @@ public class ReputationBot {
                 .build();
     }
 
-    private HikariDataSource getConnectionPool(@Nullable String schema) {
+    private HikariDataSource getConnectionPool(boolean withSchema) {
         var db = configuration.database();
         var props = new Properties();
         props.setProperty("dataSourceClassName", PGSimpleDataSource.class.getName());
@@ -230,7 +231,7 @@ public class ReputationBot {
 
         var config = new HikariConfig(props);
         config.setMaximumPoolSize(db.poolSize());
-        if (schema != null) {
+        if (withSchema) {
             config.setSchema(db.schema());
         }
 
