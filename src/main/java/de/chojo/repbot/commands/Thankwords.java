@@ -243,7 +243,7 @@ public class Thankwords extends SimpleCommand {
         }
 
         var message = event.getChannel().retrieveMessageById(messageId).complete();
-        var result = messageAnalyzer.processMessage(guildSettings.thankwordPattern(), message, guildSettings.maxMessageAge(), true, 0.85, 3);
+        var result = messageAnalyzer.processMessage(guildSettings.thankwordPattern(), message, guildSettings, true, 0.85, 3);
         var builder = new LocalizedEmbedBuilder(this.loc, event.getGuild());
         if (result.receivers().isEmpty()) {
             event.reply(loc.localize("command.thankwords.sub.check.match.noMatch")).queue();
@@ -266,7 +266,7 @@ public class Thankwords extends SimpleCommand {
 
         var guildSettings = optGuildSettings.get();
 
-        var result = messageAnalyzer.processMessage(guildSettings.thankwordPattern(), eventWrapper.getMessage(), guildSettings.maxMessageAge(), true, 0.85, 3);
+        var result = messageAnalyzer.processMessage(guildSettings.thankwordPattern(), eventWrapper.getMessage(), guildSettings, true, 0.85, 3);
         var builder = new LocalizedEmbedBuilder(eventWrapper);
         if (result.receivers().isEmpty()) {
             eventWrapper.reply(eventWrapper.localize("command.thankwords.sub.check.match.noMatch")).queue();

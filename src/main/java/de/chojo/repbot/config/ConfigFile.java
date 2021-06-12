@@ -1,5 +1,6 @@
 package de.chojo.repbot.config;
 
+import de.chojo.repbot.config.elements.Badges;
 import de.chojo.repbot.config.elements.Database;
 import de.chojo.repbot.config.elements.MagicImage;
 import de.chojo.repbot.config.elements.TestMode;
@@ -11,6 +12,7 @@ public class ConfigFile {
     private boolean exclusiveHelp = false;
     private MagicImage magicImage = new MagicImage();
     private TestMode testMode = new TestMode();
+    private Badges badges = new Badges();
 
     public String token() {
         return token;
@@ -34,5 +36,9 @@ public class ConfigFile {
 
     public TestMode testMode() {
         return testMode;
+    }
+
+    public Badges badges() {
+        return badges;
     }
 }

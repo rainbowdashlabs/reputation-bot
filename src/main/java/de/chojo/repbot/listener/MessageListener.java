@@ -9,7 +9,7 @@ import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;
 import de.chojo.repbot.manager.MemberCacheManager;
 import de.chojo.repbot.manager.ReputationService;
-import de.chojo.repbot.util.ContextResolver;
+import de.chojo.repbot.analyzer.ContextResolver;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageBulkDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
@@ -82,7 +82,7 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        var analyzerResult = messageAnalyzer.processMessage(thankwordPattern, message, settings.maxMessageAge(), true, 0.85, 3);
+        var analyzerResult = messageAnalyzer.processMessage(thankwordPattern, message, settings, true, 0.85, 3);
 
         var donator = analyzerResult.donator();
 
@@ -115,7 +115,7 @@ public class MessageListener extends ListenerAdapter {
     }
 
     private void resolveNoTarget(Message message, GuildSettings settings) {
-        var recentMembers = contextResolver.getCombinedContext(message, settings.maxMessageAge());
+        var recentMembers = contextResolver.getCombinedContext(message, settings);
         recentMembers.remove(message.getMember());
         if (recentMembers.isEmpty()) return;
 

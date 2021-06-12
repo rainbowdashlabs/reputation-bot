@@ -8,6 +8,7 @@ import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.data.wrapper.ReputationRole;
@@ -27,8 +28,9 @@ public class Reputation extends SimpleCommand {
     private final ReputationData reputationData;
     private final GuildData guildData;
     private final Localizer loc;
+    private final Configuration configuration;
 
-    public Reputation(DataSource dataSource, Localizer localizer) {
+    public Reputation(DataSource dataSource, Localizer localizer, Configuration configuration) {
         super("rep",
                 new String[]{"reputation"},
                 "command.reputation.description",
@@ -39,6 +41,7 @@ public class Reputation extends SimpleCommand {
         reputationData = new ReputationData(dataSource);
         guildData = new GuildData(dataSource);
         loc = localizer;
+        this.configuration = configuration;
     }
 
     @Override
@@ -68,7 +71,7 @@ public class Reputation extends SimpleCommand {
     public void onSlashCommand(SlashCommandEvent event) {
         var userOption = event.getOption("user");
         var member = userOption != null ? userOption.getAsMember() : event.getMember();
-        var reputation = reputationData.getReputation(event.getGuild(), event.getUser()).orElse(ReputationUser.empty(event.getUser()));
+        var reputation = reputationData.getReputation(event.getGuild(), member.getUser()).orElse(ReputationUser.empty(event.getUser()));
         event.reply(wrap(getUserRepEmbed(member, reputation))).queue();
     }
 
@@ -86,17 +89,18 @@ public class Reputation extends SimpleCommand {
 
         var currProgress = String.valueOf(reputation.reputation() - currentRoleRep);
         var nextLevel = nextRoleRep.equals(currentRoleRep) ? "\uA74E" : String.valueOf(nextRoleRep - currentRoleRep);
-        return new LocalizedEmbedBuilder(loc, member.getGuild())
-                .setTitle(
+        var build = new LocalizedEmbedBuilder(loc, member.getGuild())
+                .setAuthor(
                         (reputation.rank() != 0 ? "#" + reputation.rank() + " " : "")
                                 + loc.localize("command.reputation.profile.title",
                                 member.getGuild(),
-                                Replacement.create("NAME", member.getEffectiveName())))
+                                Replacement.create("NAME", member.getEffectiveName())), null, member.getUser().getEffectiveAvatarUrl())
                 .addField("words.level", level, true)
                 .addField(loc.localize("words.reputation", member.getGuild()), Format.BOLD.apply(String.valueOf(reputation.reputation())), true)
                 .addField("command.reputation.profile.nextLevel", currProgress + "/" + nextLevel + "  " + progressBar, false)
-                .setThumbnail(member.getUser().getEffectiveAvatarUrl())
-                .setColor(member.getColor())
-                .build();
+                .setColor(member.getColor());
+        var badge = configuration.badges().badge((int) reputation.rank());
+        badge.ifPresent(build::setThumbnail);
+        return build.build();
     }
 }
