@@ -298,7 +298,7 @@ public class GuildData extends QueryObject {
                             cooldown = coalesce(?, cooldown)
                         where guild_id = ?;
                         """)
-                .paramsBuilder(stmt -> stmt.setInt(update.maxMessageAge()).setString(update.reaction())
+                .paramsBuilder(stmt -> stmt.setInt(update.maxMessageAge()).setInt(update.minMessages()).setString(update.reaction())
                         .setBoolean(update.reactionsActive()).setBoolean(update.answerActive())
                         .setBoolean(update.mentionActive()).setBoolean(update.fuzzyActive()).setInt(update.cooldown())
                         .setLong(update.guild().getIdLong()))

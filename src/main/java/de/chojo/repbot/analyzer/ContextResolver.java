@@ -69,6 +69,7 @@ public class ContextResolver {
         retrievedHistory.stream()
                 .limit(settings == null ? 100 : settings.minMessages())
                 .filter(m -> m.getTimeCreated().toInstant().isAfter(oldest))
+                .filter(m -> !m.getAuthor().isBot())
                 .map(Message::getMember)
                 .filter(Objects::nonNull)
                 .collect(Collectors.toCollection(() -> contextMember));

@@ -57,7 +57,7 @@ public class Thankwords extends SimpleCommand {
                                 .build())
                         .add("list", "command.thankwords.sub.list")
                         .add("check", "command.thankwords.sub.check", argsBuilder()
-                                .add(OptionType.STRING, "message", "message")
+                                .add(OptionType.STRING, "message", "message", true)
                                 .build()
                         )
                         .add("loaddefault", "command.thankwords.sub.loadDefault", argsBuilder()

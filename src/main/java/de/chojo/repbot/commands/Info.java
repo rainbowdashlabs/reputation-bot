@@ -98,10 +98,10 @@ public class Info extends SimpleCommand {
                 .addField("command.info.art", ART, true)
                 .addField("command.info.source", SOURCE, true)
                 .addField("command.info.version", version, true)
-                .addField("", localizer.localize("command.info.links", eventWrapper.getGuild(),
+                .addField("", "**"+localizer.localize("command.info.links", eventWrapper.getGuild(),
                         Replacement.create("INVITE", configuration.links().invite()),
                         Replacement.create("SUPPORT", configuration.links().support()),
-                        Replacement.create("TOS", configuration.links().tos())), false)
+                        Replacement.create("TOS", configuration.links().tos())) + "**", false)
                 .setColor(Colors.Pastel.BLUE)
                 .build();
     }
