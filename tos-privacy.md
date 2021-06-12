@@ -28,7 +28,7 @@ In no event shall I be liable for any damages or loss of data arising out of the
 
 Your privacy is important, it always is.\
 Your data will not be shared publicly or with third parties. Only data which is required to maintain this service is
-saved. I do my best to keep your data secured and save at any time. By using this Service you accept that I may process
+stored. I do my best to keep your data secured and safe at any time. By using this Service you accept that I may process
 every personal data I need to provide this service in the best possible quality.
 
 You may request the deletion of your data. Please open
