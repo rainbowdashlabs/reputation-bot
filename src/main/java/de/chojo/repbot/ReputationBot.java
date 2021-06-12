@@ -152,8 +152,8 @@ public class ReputationBot {
                         Thankwords.of(dataSource, localizer),
                         scan,
                         new Locale(dataSource, localizer),
-                        new Invite(localizer),
-                        Info.create(localizer),
+                        new Invite(localizer, configuration),
+                        Info.create(localizer, ),
                         new Log(shardManager, dataSource, localizer)
                 )
                 .withInvalidArgumentProvider(((loc, command) -> {
@@ -201,7 +201,7 @@ public class ReputationBot {
     private void initJDA() throws LoginException {
         scan = new Scan(dataSource, localizer);
         memberCacheManager = new MemberCacheManager(scan);
-        shardManager = DefaultShardManagerBuilder.createDefault(configuration.getToken())
+        shardManager = DefaultShardManagerBuilder.createDefault(configuration.token())
                 .enableIntents(
                         // Required to retrieve reputation emotes
                         GatewayIntent.GUILD_MESSAGE_REACTIONS,

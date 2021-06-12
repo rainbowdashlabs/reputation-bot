@@ -6,8 +6,11 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.chojo.repbot.config.elements.Badges;
 import de.chojo.repbot.config.elements.Database;
+import de.chojo.repbot.config.elements.Links;
 import de.chojo.repbot.config.elements.MagicImage;
 import de.chojo.repbot.config.elements.TestMode;
+import de.chojo.repbot.config.exception.ConfigurationException;
+import org.apache.logging.log4j.core.tools.picocli.CommandLine;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -40,6 +43,7 @@ public class Configuration {
             reloadFile();
         } catch (IOException e) {
             log.info("Could not load config", e);
+            throw new ConfigurationException("Could not load config file", e);
         }
         try {
             save();
@@ -62,7 +66,7 @@ public class Configuration {
         if (!getConfig().toFile().exists()) {
             if (getConfig().toFile().createNewFile()) {
                 objectMapper.writerWithDefaultPrettyPrinter().writeValues(getConfig().toFile()).write(new ConfigFile());
-                throw new RuntimeException("Please configure the config.");
+                throw new ConfigurationException("Please configure the config.");
             }
         }
     }
@@ -72,12 +76,13 @@ public class Configuration {
         var property = System.getProperty("bot.config");
         if (property == null) {
             log.error("bot.config property is not set.");
+            throw new ConfigurationException("Property -Dbot.config=<config path> is not set.");
         }
         return Paths.get(home.toString(), property);
     }
 
     // DELEGATES
-    public String getToken() {
+    public String token() {
         return configFile.token();
     }
 
@@ -103,5 +108,9 @@ public class Configuration {
 
     public Badges badges() {
         return configFile.badges();
+    }
+
+    public Links links() {
+        return configFile.links();
     }
 }

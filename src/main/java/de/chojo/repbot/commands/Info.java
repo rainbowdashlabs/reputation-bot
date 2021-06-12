@@ -9,8 +9,10 @@ import de.chojo.jdautil.command.SimpleArgument;
 import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
+import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.util.Colors;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -42,23 +44,25 @@ public class Info extends SimpleCommand {
             .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     private final String version;
+    private final Configuration configuration;
     private Instant lastFetch = Instant.MIN;
 
 
-    public Info(Localizer localizer, String version) {
+    public Info(Localizer localizer, String version, Configuration configuration) {
         super("info", null, "command.info.description", (SimpleArgument[]) null, Permission.UNKNOWN);
         this.localizer = localizer;
         this.version = version;
+        this.configuration = configuration;
     }
 
-    public static Info create(Localizer localizer) {
+    public static Info create(Localizer localizer, Configuration configuration) {
         var version = "undefined";
         try (var in = Info.class.getClassLoader().getResourceAsStream("version")) {
             version = new String(in.readAllBytes());
         } catch (IOException e) {
             log.error("Could not determine version.");
         }
-        return new Info(localizer, version);
+        return new Info(localizer, version, configuration);
     }
 
 
@@ -85,6 +89,7 @@ public class Info extends SimpleCommand {
             } catch (IOException | InterruptedException e) {
                 log.error("Could not read response", e);
             }
+            lastFetch = Instant.now();
         }
 
         return new LocalizedEmbedBuilder(localizer, eventWrapper)
@@ -94,6 +99,10 @@ public class Info extends SimpleCommand {
                 .addField("command.info.art", ART, true)
                 .addField("command.info.source", SOURCE, true)
                 .addField("command.info.version", version, true)
+                .addField("", localizer.localize("command.info.links", eventWrapper.getGuild(),
+                        Replacement.create("INVITE", configuration.links().invite()),
+                        Replacement.create("SUPPORT", configuration.links().support()),
+                        Replacement.create("TOS", configuration.links().tos())), false)
                 .setColor(Colors.Pastel.BLUE)
                 .build();
     }
@@ -113,24 +122,6 @@ public class Info extends SimpleCommand {
         @Override
         public String toString() {
             return String.format("[%s](%s)", login, htmlUrl);
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-
-            var that = (GithubProfile) o;
-
-            if (!Objects.equals(login, that.login)) return false;
-            return Objects.equals(htmlUrl, that.htmlUrl);
-        }
-
-        @Override
-        public int hashCode() {
-            int result = login != null ? login.hashCode() : 0;
-            result = 31 * result + (htmlUrl != null ? htmlUrl.hashCode() : 0);
-            return result;
         }
     }
 }

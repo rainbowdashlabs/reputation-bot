@@ -7,6 +7,7 @@ import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
+import de.chojo.repbot.config.Configuration;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -14,10 +15,12 @@ import org.jetbrains.annotations.NotNull;
 
 public class Invite extends SimpleCommand {
     private final Localizer localizer;
+    private final Configuration configuration;
 
-    public Invite(Localizer localizer) {
+    public Invite(Localizer localizer, Configuration configuration) {
         super("invite", null, "command.invite.description", (SimpleArgument[]) null, Permission.UNKNOWN);
         this.localizer = localizer;
+        this.configuration = configuration;
     }
 
     @Override
@@ -38,7 +41,7 @@ public class Invite extends SimpleCommand {
         return new LocalizedEmbedBuilder(localizer, eventWrapper)
                 .setTitle("command.invite.title")
                 .setDescription(localizer.localize("command.invite.click",
-                        Replacement.create("URL", "https://discord.com/oauth2/authorize?client_id=834843896579489794&scope=bot&permissions=1342532672")))
+                        Replacement.create("URL", configuration.links().invite())))
                 .build();
     }
 }
