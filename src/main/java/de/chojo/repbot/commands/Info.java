@@ -101,7 +101,8 @@ public class Info extends SimpleCommand {
                 .addField("", "**"+localizer.localize("command.info.links", eventWrapper.getGuild(),
                         Replacement.create("INVITE", configuration.links().invite()),
                         Replacement.create("SUPPORT", configuration.links().support()),
-                        Replacement.create("TOS", configuration.links().tos())) + "**", false)
+                        Replacement.create("TOS", configuration.links().tos()),
+                        Replacement.create("WEBSITE", configuration.links().website())) + "**", false)
                 .setColor(Colors.Pastel.BLUE)
                 .build();
     }
