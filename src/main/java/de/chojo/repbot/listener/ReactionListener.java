@@ -5,7 +5,7 @@ import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
-import de.chojo.repbot.manager.ReputationService;
+import de.chojo.repbot.service.ReputationService;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;

@@ -27,9 +27,9 @@ import de.chojo.repbot.listener.ReactionListener;
 import de.chojo.repbot.listener.StateListener;
 import de.chojo.repbot.listener.VoiceStateListener;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;
-import de.chojo.repbot.manager.MemberCacheManager;
-import de.chojo.repbot.manager.ReputationService;
-import de.chojo.repbot.manager.RoleAssigner;
+import de.chojo.repbot.service.RepBotCachePolicy;
+import de.chojo.repbot.service.ReputationService;
+import de.chojo.repbot.service.RoleAssigner;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
@@ -65,7 +65,7 @@ public class ReputationBot {
     private Configuration configuration;
     private Localizer localizer;
     private Scan scan;
-    private MemberCacheManager memberCacheManager;
+    private RepBotCachePolicy repBotCachePolicy;
 
     public static void main(String[] args) throws SQLException, IOException {
         ReputationBot.instance = new ReputationBot();
@@ -122,7 +122,7 @@ public class ReputationBot {
         var reputationService = new ReputationService(dataSource, roleAssigner, configuration.magicImage());
         var reactionListener = new ReactionListener(dataSource, localizer, reputationService);
         var reputatinoVoteListener = new ReputationVoteListener(reputationService, localizer);
-        var messageListener = new MessageListener(dataSource, configuration, memberCacheManager, reputatinoVoteListener, reputationService);
+        var messageListener = new MessageListener(dataSource, configuration, repBotCachePolicy, reputatinoVoteListener, reputationService);
         var stateListener = new StateListener(dataSource);
         var voiceStateListener = new VoiceStateListener(dataSource);
         cleaner.scheduleAtFixedRate(stateListener, 1, 12, TimeUnit.HOURS);
@@ -153,7 +153,7 @@ public class ReputationBot {
                         scan,
                         new Locale(dataSource, localizer),
                         new Invite(localizer, configuration),
-                        Info.create(localizer, ),
+                        Info.create(localizer, configuration),
                         new Log(shardManager, dataSource, localizer)
                 )
                 .withInvalidArgumentProvider(((loc, command) -> {
@@ -200,7 +200,7 @@ public class ReputationBot {
 
     private void initJDA() throws LoginException {
         scan = new Scan(dataSource, localizer);
-        memberCacheManager = new MemberCacheManager(scan);
+        repBotCachePolicy = new RepBotCachePolicy(scan);
         shardManager = DefaultShardManagerBuilder.createDefault(configuration.token())
                 .enableIntents(
                         // Required to retrieve reputation emotes
@@ -218,7 +218,7 @@ public class ReputationBot {
                         CacheFlag.ONLINE_STATUS)
                 // we have our own shutdown hook
                 .setEnableShutdownHook(false)
-                .setMemberCachePolicy(memberCacheManager)
+                .setMemberCachePolicy(repBotCachePolicy)
                 .setEventPool(eventThreads)
                 .build();
     }

@@ -1,4 +1,4 @@
-package de.chojo.repbot.manager;
+package de.chojo.repbot.service;
 
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.repbot.analyzer.ThankType;

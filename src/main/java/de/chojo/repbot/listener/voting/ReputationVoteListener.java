@@ -5,7 +5,7 @@ import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.repbot.analyzer.ThankType;
-import de.chojo.repbot.manager.ReputationService;
+import de.chojo.repbot.service.ReputationService;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
