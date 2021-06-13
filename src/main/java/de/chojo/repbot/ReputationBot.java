@@ -149,11 +149,10 @@ public class ReputationBot {
                 logListener);
         var data = new GuildData(dataSource);
         var hubBuilder = CommandHub.builder(shardManager, configuration.defaultPrefix())
-                .receiveGuildMessage()
+                .receiveGuildCommands()
                 .receiveGuildMessagesUpdates()
                 .withConversationSystem()
                 .withPrefixResolver(data::getPrefix)
-                .onlyGuildCommands()
                 .withSlashCommands()
                 .withCommands(
                         new Channel(dataSource, localizer),
@@ -179,6 +178,9 @@ public class ReputationBot {
                     var roleById = wrapper.getGuild().getRoleById(settings.managerRole().orElse(0));
                     if (roleById == null) return false;
                     return wrapper.getMember().getRoles().contains(roleById);
+                })
+                .withCommandErrorHandler((command, message, throwable) -> {
+                    log.error(LogNotify.NOTIFY_ADMIN, "Command execution of {} failed\n{}", command.command(), message, throwable);
                 });
         if (configuration.testMode().isTestMode()) {
             hubBuilder.onlyGuildCommands(configuration.testMode().testGuilds());

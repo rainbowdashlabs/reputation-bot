@@ -62,7 +62,7 @@ public class SqlUpdater {
 
     private void performUpdate(Patch patch) throws SQLException {
         try (var conn = source.getConnection()) {
-            try (var statement = conn.prepareStatement(patch.query())) {
+            try (var statement = conn.prepareStatement(adjust(patch.query()))) {
                 statement.execute();
             }
         } catch (SQLException e) {
