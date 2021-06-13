@@ -1,7 +1,7 @@
 package de.chojo.repbot.data.updater;
 
 import de.chojo.repbot.config.Configuration;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 
 import javax.sql.DataSource;
 import java.io.IOException;
@@ -11,10 +11,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class SqlUpdater {
     public static final int MAJOR = 1;
-    public static final int PATCH = 0;
+    public static final int PATCH = 1;
+    private static final Logger log = getLogger(SqlUpdater.class);
     private final DataSource source;
     private final String versionTable;
     private final String[] schemas;
@@ -36,14 +38,13 @@ public class SqlUpdater {
 
         var versionInfo = getVersionInfo();
 
-        // Only update if the major version matches.
-        if (versionInfo.getVersion() == MAJOR || versionInfo.getPatch() == PATCH) {
+        if (versionInfo.version() == MAJOR && versionInfo.patch() == PATCH) {
             log.info("Database is up to date. No update is required! Version {} Patch {}",
-                    versionInfo.getVersion(), versionInfo.getPatch());
+                    versionInfo.version(), versionInfo.patch());
             return;
         }
 
-        var patches = getPatchesFrom(versionInfo.getVersion(), versionInfo.getPatch());
+        var patches = getPatchesFrom(versionInfo.version(), versionInfo.patch());
 
         log.info("Database is {} versions behind.", patches.size());
 
@@ -51,7 +52,6 @@ public class SqlUpdater {
 
         for (var patch : patches) {
             try {
-
                 performUpdate(patch);
             } catch (SQLException e) {
                 throw new RuntimeException("Database update failed!", e);
@@ -62,18 +62,18 @@ public class SqlUpdater {
 
     private void performUpdate(Patch patch) throws SQLException {
         try (var conn = source.getConnection()) {
-            try (var statement = conn.prepareStatement(patch.getQuery())) {
+            try (var statement = conn.prepareStatement(adjust(patch.query()))) {
                 statement.execute();
             }
         } catch (SQLException e) {
             log.error("Database update failed", e);
             throw e;
         }
-        updateVersion(patch.getMajor() + 1, patch.getPatch());
-        if (patch.getPatch() != -1) {
-            log.info("Deployed patch number {}.{} to database.", patch.getMajor(), patch.getPatch());
+        updateVersion(patch.major(), patch.patch());
+        if (patch.patch() != 0) {
+            log.info("Deployed patch {}.{} to database.", patch.major(), patch.patch());
         } else {
-            log.info("Migrated database to version {}.", patch.getMajor());
+            log.info("Migrated database to version {}.", patch.major());
         }
     }
 
@@ -151,9 +151,8 @@ public class SqlUpdater {
             var resultSet = statement.executeQuery();
             if (resultSet.next()) {
                 return new VersionInfo(resultSet.getInt("major"), resultSet.getInt("patch"));
-            } else {
-                throw new Error("Could not retrieve database version!");
             }
+            throw new Error("Could not retrieve database version!");
         } catch (SQLException e) {
             log.error("Could not check if schema exists in database!", e);
         }
@@ -164,13 +163,14 @@ public class SqlUpdater {
         List<Patch> patches = new ArrayList<>();
         var currPatch = patch;
         for (var currMajor = major; currMajor <= MAJOR; currMajor++) {
-            while (currPatch != PATCH && currMajor != MAJOR) {
+            while (currPatch < PATCH) {
                 currPatch++;
                 if (patchExists(currMajor, currPatch)) {
                     patches.add(new Patch(major, currPatch, loadPatch(currMajor, currPatch)));
-                } else {
-                    patches.add(new Patch(major + 1, -1, getMigrationFromVersion(major)));
+                } else if (currMajor != MAJOR) {
+                    patches.add(new Patch(major + 1, 0, getMigrationFromVersion(major)));
                     currPatch = 0;
+                    break;
                 }
             }
         }
@@ -182,12 +182,12 @@ public class SqlUpdater {
     }
 
     private String loadPatch(int major, int patch) throws IOException {
-        return loadFromResource(major, "patch-" + patch + ".sql");
+        return loadFromResource(major, "patch_" + patch + ".sql");
     }
 
     private String loadFromResource(Object... path) throws IOException {
         var p = Arrays.stream(path).map(Object::toString).collect(Collectors.joining("/"));
-        try (var in = getClass().getClassLoader().getResourceAsStream("database/" + String.join("/", p))) {
+        try (var in = getClass().getClassLoader().getResourceAsStream("database/" + p)) {
             return new String(in.readAllBytes());
         }
     }
@@ -204,9 +204,8 @@ public class SqlUpdater {
         var split = table.split("\\.");
         if (split.length == 2) {
             return tableExists(split[0], split[1]);
-        } else {
-            return tableExists("public", split[0]);
         }
+        return tableExists("public", split[0]);
     }
 
     private boolean tableExists(String schema, String table) {

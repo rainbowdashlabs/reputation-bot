@@ -1,6 +1,6 @@
 package de.chojo.repbot.data.util;
 
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
 import java.sql.ResultSet;
@@ -10,8 +10,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@Slf4j
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class DbUtil {
+    private static final Logger log = getLogger(DbUtil.class);
+
     public static void logSQLError(String message, SQLException ex) {
         log.error("{}\nMessage: {}\nCode: {}\nState: {}",
                 message, ex.getMessage(), ex.getErrorCode(), ex.getSQLState(), ex);

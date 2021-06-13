@@ -1,7 +1,6 @@
 package de.chojo.repbot.analyzer;
 
 import de.chojo.jdautil.parsing.WeightedEntry;
-import lombok.Getter;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -10,7 +9,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Getter
 public class AnalyzerResult {
     private static final AnalyzerResult NO_MATCH = new AnalyzerResult(ThankType.NO_MATCH, null, null, null);
     private static final AnalyzerResult NO_TARGET = new AnalyzerResult(ThankType.NO_MATCH, null, null, null);
@@ -48,5 +46,21 @@ public class AnalyzerResult {
 
     public boolean isEmpty() {
         return receivers.isEmpty();
+    }
+
+    public ThankType type() {
+        return type;
+    }
+
+    public Message referenceMessage() {
+        return referenceMessage;
+    }
+
+    public User donator() {
+        return donator;
+    }
+
+    public List<WeightedEntry<Member>> receivers() {
+        return receivers;
     }
 }

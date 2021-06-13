@@ -49,14 +49,17 @@ After the first start a config will be created, and the bot will fail to start. 
 
 # Setup on your server
 
+All commands are also available as slash commands.
+
 - The default prefix is `!`
 - Set your language with `!locale set <language>`.
 - Set a manager role with `!roles managerRole <role>`. Users with this role can manage the bot settings.
 - Set your reputation roles with `!roles add <role> <reputation>`
-- Set your thankwords with `!tw add <pattern>`. Look below for some examples.
+- Set your thankwords with `!tw add <pattern>`. Look below for some examples. You can also load default thankwords for
+  your language with `!ts loaddefault <language>`
 - Optional: `Use !tw check <sentence>` to check if your thankwords are matching the messages.
 - Set channel where reputation can be received with `!channel add <channel...>`. You can set multiple channel with one
-  command.\
+  command.
 
 ## Optional steps
 
@@ -73,7 +76,7 @@ The ranking is available with `!rep top`
 ## Example thankwords
 
 This section contains thankword pattern for some languages which we think are suitable.\
-German: `thx`, `thank[a-z]*?`, `danke[a-z]*?`
+German: `thx`, `thank[a-z]*?`, `danke[a-z]*?`\
 English: `thx`, `thank[a-z]*?`
 
 Thankwords are not case sensitive.\

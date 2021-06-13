@@ -1,18 +1,51 @@
 package de.chojo.repbot.config;
 
+import de.chojo.repbot.config.elements.Badges;
 import de.chojo.repbot.config.elements.Database;
+import de.chojo.repbot.config.elements.Links;
 import de.chojo.repbot.config.elements.MagicImage;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import de.chojo.repbot.config.elements.TestMode;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@SuppressWarnings("FieldMayBeFinal")
 public class ConfigFile {
     private String token = "";
     private String defaultPrefix = "!";
     private Database database = new Database();
     private boolean exclusiveHelp = false;
     private MagicImage magicImage = new MagicImage();
+    private TestMode testMode = new TestMode();
+    private Badges badges = new Badges();
+    private Links links = new Links();
+
+    public String token() {
+        return token;
+    }
+
+    public String defaultPrefix() {
+        return defaultPrefix;
+    }
+
+    public Database database() {
+        return database;
+    }
+
+    public boolean isExclusiveHelp() {
+        return exclusiveHelp;
+    }
+
+    public MagicImage magicImage() {
+        return magicImage;
+    }
+
+    public TestMode testMode() {
+        return testMode;
+    }
+
+    public Badges badges() {
+        return badges;
+    }
+
+    public Links links() {
+        return links;
+    }
 }

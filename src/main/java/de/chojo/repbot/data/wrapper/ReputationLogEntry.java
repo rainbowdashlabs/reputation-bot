@@ -1,11 +1,7 @@
 package de.chojo.repbot.data.wrapper;
 
 import de.chojo.repbot.analyzer.ThankType;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 
-@Getter
-@AllArgsConstructor
 public class ReputationLogEntry {
     private static final String PATH = "https://discord.com/channels/%s/%s/%s";
 
@@ -17,6 +13,16 @@ public class ReputationLogEntry {
     private final long refMessageId;
     private final ThankType type;
 
+    public ReputationLogEntry(long guildId, long channelId, long donorId, long receiverId, long messageId, long refMessageId, ThankType type) {
+        this.guildId = guildId;
+        this.channelId = channelId;
+        this.donorId = donorId;
+        this.receiverId = receiverId;
+        this.messageId = messageId;
+        this.refMessageId = refMessageId;
+        this.type = type;
+    }
+
     public String getMessageJumpLink() {
         return String.format(PATH, guildId, channelId, messageId);
     }
@@ -27,5 +33,33 @@ public class ReputationLogEntry {
 
     public boolean hasRefMessage() {
         return refMessageId != 0;
+    }
+
+    public long guildId() {
+        return guildId;
+    }
+
+    public long channelId() {
+        return channelId;
+    }
+
+    public long donorId() {
+        return donorId;
+    }
+
+    public long receiverId() {
+        return receiverId;
+    }
+
+    public long messageId() {
+        return messageId;
+    }
+
+    public long refMessageId() {
+        return refMessageId;
+    }
+
+    public ThankType type() {
+        return type;
     }
 }

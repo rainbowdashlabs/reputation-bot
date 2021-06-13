@@ -1,12 +1,12 @@
-package de.chojo.repbot.manager;
+package de.chojo.repbot.service;
 
 import de.chojo.jdautil.parsing.Verifier;
+import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.config.elements.MagicImage;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
-import de.chojo.repbot.util.HistoryUtil;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -24,18 +24,20 @@ import java.util.stream.Collectors;
 
 import static de.chojo.repbot.util.MessageUtil.markMessage;
 
-public class ReputationManager {
+public class ReputationService {
     private final ReputationData reputationData;
     private final GuildData guildData;
     private final RoleAssigner assigner;
     private final MagicImage magicImage;
+    private final ContextResolver contextResolver;
     private Instant lastEasterEggSent = Instant.EPOCH;
 
-    public ReputationManager(DataSource dataSource, RoleAssigner assigner, MagicImage magicImage) {
+    public ReputationService(DataSource dataSource, RoleAssigner assigner, MagicImage magicImage) {
         this.reputationData = new ReputationData(dataSource);
         this.guildData = new GuildData(dataSource);
         this.assigner = assigner;
         this.magicImage = magicImage;
+        this.contextResolver = new ContextResolver(dataSource);
     }
 
     /**
@@ -78,7 +80,7 @@ public class ReputationManager {
         }
 
         // Check if user was recently seen in this channel.
-        var recentUsers = HistoryUtil.getRecentMembers(message, settings.getMaxMessageAge())
+        var recentUsers = contextResolver.getCombinedContext(message, settings)
                 .stream()
                 .map(Member::getUser)
                 .collect(Collectors.toSet());
@@ -87,34 +89,28 @@ public class ReputationManager {
         // block non vote channel
         if (!settings.isReputationChannel(message.getTextChannel())) return false;
 
-        // block cooldown
-        var lastRatedDuration = reputationData.getLastRatedDuration(guild, donor, receiver, ChronoUnit.MINUTES);
-        if (lastRatedDuration < settings.getCooldown()) return false;
-
-        // block rep4rep
-        var lastRatedEachDuration = reputationData.getLastRatedDuration(guild, receiver, donor, ChronoUnit.MINUTES);
-        if (lastRatedEachDuration < settings.getCooldown()) return false;
+        if (!canVote(donor, receiver, guild, settings)) return false;
 
         // block outdated ref message
         if (refMessage != null) {
             var until = refMessage.getTimeCreated().toInstant().until(Instant.now(), ChronoUnit.MINUTES);
-            if (until > settings.getMaxMessageAge()) return false;
+            if (until > settings.maxMessageAge()) return false;
         }
 
         // block outdated message
         var until = message.getTimeCreated().toInstant().until(Instant.now(), ChronoUnit.MINUTES);
-        if (until > settings.getMaxMessageAge()) return false;
+        if (until > settings.maxMessageAge()) return false;
 
         // block self vote
         if (Verifier.equalSnowflake(receiver, donor)) {
-            if (lastEasterEggSent.until(Instant.now(), ChronoUnit.MINUTES) > magicImage.getMagicImageCooldown()
-                    && ThreadLocalRandom.current().nextInt(magicImage.getMagicImagineChance()) == 0) {
+            if (lastEasterEggSent.until(Instant.now(), ChronoUnit.MINUTES) > magicImage.magicImageCooldown()
+                    && ThreadLocalRandom.current().nextInt(magicImage.magicImagineChance()) == 0) {
                 lastEasterEggSent = Instant.now();
                 message.reply(new EmbedBuilder()
-                        .setImage(magicImage.getMagicImageLink())
+                        .setImage(magicImage.magicImageLink())
                         .setColor(Color.RED).build())
                         .queue(message1 -> message1.delete().queueAfter(
-                                magicImage.getMagicImageDeleteSchedule(), TimeUnit.SECONDS));
+                                magicImage.magicImageDeleteSchedule(), TimeUnit.SECONDS));
             }
             return false;
         }
@@ -129,5 +125,22 @@ public class ReputationManager {
         }
         // submit to database failed. Maybe this message was already voted by the user.
         return false;
+    }
+
+    public boolean canVote(User donor, User receiver, Guild guild, GuildSettings settings) {
+        // block cooldown
+        var lastRatedDuration = reputationData.getLastRatedDuration(guild, donor, receiver, ChronoUnit.MINUTES);
+        if (lastRatedDuration < settings.cooldown()) return false;
+
+        // block rep4rep
+        var lastRatedEachDuration = reputationData.getLastRatedDuration(guild, receiver, donor, ChronoUnit.MINUTES);
+        return lastRatedEachDuration >= settings.cooldown();
+    }
+
+    public boolean canVote(User donor, User receiver, Guild guild) {
+        var optGuildSettings = guildData.getGuildSettings(guild);
+        if (optGuildSettings.isEmpty()) return false;
+        var settings = optGuildSettings.get();
+        return canVote(donor, receiver, guild, settings);
     }
 }

@@ -8,12 +8,18 @@ import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
+import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.data.GuildData;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionType;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import javax.sql.DataSource;
@@ -37,22 +43,32 @@ public class Thankwords extends SimpleCommand {
     private final GuildData data;
     private final Localizer loc;
     private final ThankwordsContainer thankwordsContainer;
+    private final MessageAnalyzer messageAnalyzer;
 
-    private Thankwords(GuildData data, Localizer localizer, ThankwordsContainer thankwordsContainer) {
+    private Thankwords(MessageAnalyzer messageAnalyzer, GuildData data, Localizer localizer, ThankwordsContainer thankwordsContainer) {
         super("thankwords", new String[]{"tw"},
                 "command.thankwords.description",
-                null,
                 subCommandBuilder()
-                        .add("add", "<pattern>", "command.thankwords.sub.add")
-                        .add("remove", "<pattern>", "command.thankwords.sub.remove")
-                        .add("list", null, "command.thankwords.sub.list")
-                        .add("check", "<Sentence>", "command.thankwords.sub.check")
-                        .add("loadDefault", "[language]", "command.thankwords.sub.loadDefault")
-                        .build(),
+                        .add("add", "command.thankwords.sub.add", argsBuilder()
+                                .add(OptionType.STRING, "pattern", "pattern", true)
+                                .build())
+                        .add("remove", "pattern", argsBuilder()
+                                .add(OptionType.STRING, "pattern", "pattern", true)
+                                .build())
+                        .add("list", "command.thankwords.sub.list")
+                        .add("check", "command.thankwords.sub.check", argsBuilder()
+                                .add(OptionType.STRING, "message", "message", true)
+                                .build()
+                        )
+                        .add("loaddefault", "command.thankwords.sub.loadDefault", argsBuilder()
+                                .add(OptionType.STRING, "language", "language")
+                                .build()
+                        ).build(),
                 Permission.MANAGE_SERVER);
         this.data = data;
         this.loc = localizer;
         this.thankwordsContainer = thankwordsContainer;
+        this.messageAnalyzer = messageAnalyzer;
     }
 
     public static Thankwords of(DataSource dataSource, Localizer localizer) {
@@ -65,7 +81,7 @@ public class Thankwords extends SimpleCommand {
             thankwordsContainer = null;
             log.error("Could not read thankwords", e);
         }
-        return new Thankwords(new GuildData(dataSource), localizer, thankwordsContainer);
+        return new Thankwords(new MessageAnalyzer(dataSource), new GuildData(dataSource), localizer, thankwordsContainer);
     }
 
     @Override
@@ -84,10 +100,30 @@ public class Thankwords extends SimpleCommand {
         if ("check".equalsIgnoreCase(subCmd)) {
             return check(eventWrapper);
         }
-        if ("loadDefaults".equalsIgnoreCase(subCmd)) {
+        if ("loaddefaults".equalsIgnoreCase(subCmd)) {
             return loadDefaults(eventWrapper, context.subContext(subCmd));
         }
         return false;
+    }
+
+    @Override
+    public void onSlashCommand(SlashCommandEvent event) {
+        var subCmd = event.getSubcommandName();
+        if ("add".equalsIgnoreCase(subCmd)) {
+            add(event);
+        }
+        if ("remove".equalsIgnoreCase(subCmd)) {
+            remove(event);
+        }
+        if ("list".equalsIgnoreCase(subCmd)) {
+            list(event);
+        }
+        if ("check".equalsIgnoreCase(subCmd)) {
+            check(event);
+        }
+        if ("loaddefault".equalsIgnoreCase(subCmd)) {
+            loadDefaults(event);
+        }
     }
 
     private boolean add(MessageEventWrapper eventWrapper, CommandContext context) {
@@ -102,6 +138,24 @@ public class Thankwords extends SimpleCommand {
         }
         if (data.addThankWord(eventWrapper.getGuild(), pattern)) {
             eventWrapper.reply(eventWrapper.localize("command.thankwords.sub.add.added",
+                    Replacement.create("REGEX", pattern, Format.CODE))).queue();
+        }
+        return true;
+    }
+
+    private boolean add(SlashCommandEvent event) {
+        var loc = this.loc.getContextLocalizer(event.getGuild());
+        var pattern = event.getOption("pattern").getAsString();
+        try {
+            Pattern.compile(pattern);
+        } catch (PatternSyntaxException e) {
+            event.reply(loc.localize("error.invalidRegex"))
+                    .setEphemeral(true)
+                    .queue();
+            return true;
+        }
+        if (data.addThankWord(event.getGuild(), pattern)) {
+            event.reply(loc.localize("command.thankwords.sub.add.added",
                     Replacement.create("REGEX", pattern, Format.CODE))).queue();
         }
         return true;
@@ -126,17 +180,88 @@ public class Thankwords extends SimpleCommand {
         return true;
     }
 
+    private boolean remove(SlashCommandEvent event) {
+        var loc = this.loc.getContextLocalizer(event.getGuild());
+        var pattern = event.getOption("pattern").getAsString();
+        try {
+            Pattern.compile(pattern);
+        } catch (PatternSyntaxException e) {
+            event.reply(loc.localize("error.invalidRegex"))
+                    .setEphemeral(true)
+                    .queue();
+            return true;
+        }
+        if (data.removeThankWord(event.getGuild(), pattern)) {
+            event.reply(loc.localize("command.thankwords.sub.remove.removed",
+                    Replacement.create("PATTERN", pattern, Format.CODE))).queue();
+            return true;
+        }
+        event.reply(loc.localize("command.thankwords.error.patternNotFound"))
+                .setEphemeral(true)
+                .queue();
+        return true;
+    }
+
     private boolean list(MessageEventWrapper eventWrapper) {
-        var optGuildSettings = data.getGuildSettings(eventWrapper.getGuild());
-        if (optGuildSettings.isEmpty()) return false;
+        var pattern = getGuildPattern(eventWrapper.getGuild());
+        if (pattern == null) return false;
+
+        eventWrapper.reply(eventWrapper.localize("command.thankwords.sub.list.list") + "\n" + pattern).queue();
+        return true;
+    }
+
+    private boolean list(SlashCommandEvent event) {
+        var loc = this.loc.getContextLocalizer(event.getGuild());
+
+        var pattern = getGuildPattern(event.getGuild());
+        if (pattern == null) return false;
+
+        event.reply(loc.localize("command.thankwords.sub.list.list") + "\n" + pattern).queue();
+        return true;
+    }
+
+    @Nullable
+    private String getGuildPattern(Guild guild) {
+        var optGuildSettings = data.getGuildSettings(guild);
+        if (optGuildSettings.isEmpty()) return null;
 
         var guildSettings = optGuildSettings.get();
 
-        var pattern = Arrays.stream(guildSettings.getThankwords())
+        var pattern = Arrays.stream(guildSettings.thankwords())
                 .map(w -> StringUtils.wrap(w, "`"))
                 .collect(Collectors.joining(", "));
+        return pattern;
+    }
 
-        eventWrapper.reply(eventWrapper.localize("command.thankwords.sub.list.list") + "\n" + pattern).queue();
+    private boolean check(SlashCommandEvent event) {
+        var loc = this.loc.getContextLocalizer(event.getGuild());
+        var optGuildSettings = data.getGuildSettings(event.getGuild());
+        if (optGuildSettings.isEmpty()) return false;
+
+
+        var guildSettings = optGuildSettings.get();
+        var messageId = event.getOption("message").getAsString();
+
+        if (!Verifier.isValidId(messageId)) {
+            event.reply(loc.localize("error.invalidMessage")).queue();
+            return true;
+        }
+
+        var message = event.getChannel().retrieveMessageById(messageId).complete();
+        var result = messageAnalyzer.processMessage(guildSettings.thankwordPattern(), message, guildSettings, true, 0.85, 3);
+        var builder = new LocalizedEmbedBuilder(this.loc, event.getGuild());
+        if (result.receivers().isEmpty()) {
+            event.reply(loc.localize("command.thankwords.sub.check.match.noMatch")).queue();
+            return true;
+        }
+
+        var processResult = processMessage(event.getGuild(), result, builder);
+        if (processResult != null) {
+            event.replyEmbeds(processResult).queue();
+            return true;
+        }
+
+        event.replyEmbeds(builder.build()).queue();
         return true;
     }
 
@@ -146,51 +271,61 @@ public class Thankwords extends SimpleCommand {
 
         var guildSettings = optGuildSettings.get();
 
-        var result = MessageAnalyzer.processMessage(guildSettings.getThankwordPattern(), eventWrapper.getMessage(), guildSettings.getMaxMessageAge(), true, 0.85, 3);
+        var result = messageAnalyzer.processMessage(guildSettings.thankwordPattern(), eventWrapper.getMessage(), guildSettings, true, 0.85, 3);
         var builder = new LocalizedEmbedBuilder(eventWrapper);
-        if (result.getReceivers().isEmpty()) {
+        if (result.receivers().isEmpty()) {
             eventWrapper.reply(eventWrapper.localize("command.thankwords.sub.check.match.noMatch")).queue();
             return true;
         }
 
-        for (var receiver : result.getReceivers()) {
-            switch (result.getType()) {
-                case FUZZY -> builder.addField("command.thankwords.sub.check.match.fuzzy",
-                        eventWrapper.localize("command.thankwords.sub.check.result",
-                                Replacement.create("DONATOR", result.getDonator().getAsMention()),
-                                Replacement.create("RECEIVER", receiver.getReference().getAsMention())) + "\n"
-                                + eventWrapper.localize("command.thankwords.sub.check.confidence",
-                                Replacement.create("SCORE", String.format("%.3f", receiver.getWeight()))),
-                        false);
-                case MENTION -> builder.addField("command.thankwords.sub.check.match.mention",
-                        eventWrapper.localize("command.thankwords.sub.check.result",
-                                Replacement.create("DONATOR", result.getDonator().getAsMention()),
-                                Replacement.create("RECEIVER", receiver.getReference().getAsMention())),
-                        false);
-                case ANSWER -> {
-                    builder.addField("command.thankwords.sub.check.match.answer",
-                            eventWrapper.localize("command.thankwords.sub.check.result",
-                                    Replacement.create("DONATOR", result.getDonator().getAsMention()),
-                                    Replacement.create("RECEIVER", receiver.getReference().getAsMention())) + "\n"
-                                    + eventWrapper.localize("command.thankwords.sub.check.reference",
-                                    Replacement.create("URL", result.getReferenceMessage().getJumpUrl())),
-                            false);
-
-                    var match = new LocalizedEmbedBuilder(loc, eventWrapper)
-                            .setTitle("command.thankwords.sub.check.match.answer")
-                            .setDescription(
-                                    eventWrapper.localize("command.thankwords.sub.check.result",
-                                            Replacement.create("DONATOR", result.getDonator().getAsMention()),
-                                            Replacement.create("RECEIVER", receiver.getReference().getAsMention())) + "\n"
-                                            + eventWrapper.localize("command.thankwords.sub.check.reference",
-                                            Replacement.create("URL", result.getReferenceMessage().getJumpUrl())));
-                    eventWrapper.reply(match.build()).queue();
-                }
-            }
+        var processResult = processMessage(eventWrapper.getGuild(), result, builder);
+        if (processResult != null) {
+            eventWrapper.reply(processResult).queue();
+            return true;
         }
 
         eventWrapper.reply(builder.build()).queue();
         return true;
+    }
+
+    private MessageEmbed processMessage(Guild guild, de.chojo.repbot.analyzer.AnalyzerResult result, LocalizedEmbedBuilder builder) {
+        for (var receiver : result.receivers()) {
+            switch (result.type()) {
+                case FUZZY -> builder.addField("command.thankwords.sub.check.match.fuzzy",
+                        loc.localize("command.thankwords.sub.check.result",
+                                Replacement.create("DONATOR", result.donator().getAsMention()),
+                                Replacement.create("RECEIVER", receiver.getReference().getAsMention())) + "\n"
+                                + loc.localize("command.thankwords.sub.check.confidence",
+                                Replacement.create("SCORE", String.format("%.3f", receiver.getWeight()))),
+                        false);
+                case MENTION -> builder.addField("command.thankwords.sub.check.match.mention",
+                        loc.localize("command.thankwords.sub.check.result",
+                                Replacement.create("DONATOR", result.donator().getAsMention()),
+                                Replacement.create("RECEIVER", receiver.getReference().getAsMention())),
+                        false);
+                case ANSWER -> {
+                    builder.addField("command.thankwords.sub.check.match.answer",
+                            loc.localize("command.thankwords.sub.check.result",
+                                    Replacement.create("DONATOR", result.donator().getAsMention()),
+                                    Replacement.create("RECEIVER", receiver.getReference().getAsMention())) + "\n"
+                                    + loc.localize("command.thankwords.sub.check.reference",
+                                    Replacement.create("URL", result.referenceMessage().getJumpUrl())),
+                            false);
+
+                    var match = new LocalizedEmbedBuilder(loc, guild)
+                            .setTitle("command.thankwords.sub.check.match.answer")
+                            .setDescription(
+                                    loc.localize("command.thankwords.sub.check.result",
+                                            Replacement.create("DONATOR", result.donator().getAsMention()),
+                                            Replacement.create("RECEIVER", receiver.getReference().getAsMention())) + "\n"
+                                            + loc.localize("command.thankwords.sub.check.reference",
+                                            Replacement.create("URL", result.referenceMessage().getJumpUrl())));
+                    return match.build();
+                }
+            }
+        }
+
+        return null;
     }
 
     private boolean loadDefaults(MessageEventWrapper eventWrapper, CommandContext context) {
@@ -212,6 +347,33 @@ public class Thankwords extends SimpleCommand {
         var wordsJoined = words.stream().map(w -> StringUtils.wrap(w, "`")).collect(Collectors.joining(", "));
 
         eventWrapper.reply(eventWrapper.localize("command.thankwords.sub.loadDefault.added") + wordsJoined).queue();
+        return true;
+    }
+
+    private boolean loadDefaults(SlashCommandEvent slashCommandEvent) {
+        var loc = this.loc.getContextLocalizer(slashCommandEvent.getGuild());
+
+        var languageOption = slashCommandEvent.getOption("language");
+        if (languageOption == null) {
+            slashCommandEvent.reply(loc.localize("command.thankwords.sub.loadDefault.available")
+                    + " " + String.join(", ", thankwordsContainer.getAvailableLanguages())).queue();
+            return true;
+        }
+        var language = languageOption.getAsString();
+        var words = thankwordsContainer.get(language.toLowerCase(Locale.ROOT));
+        if (words == null) {
+            slashCommandEvent.reply(loc.localize("command.locale.error.invalidLocale"))
+                    .setEphemeral(true)
+                    .queue();
+            return true;
+        }
+        for (var word : words) {
+            data.addThankWord(slashCommandEvent.getGuild(), word);
+        }
+
+        var wordsJoined = words.stream().map(w -> StringUtils.wrap(w, "`")).collect(Collectors.joining(", "));
+
+        slashCommandEvent.reply(loc.localize("command.thankwords.sub.loadDefault.added") + wordsJoined).queue();
         return true;
     }
 

@@ -5,11 +5,8 @@ import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
-import de.chojo.repbot.manager.ReputationManager;
-import de.chojo.repbot.util.HistoryUtil;
-import lombok.extern.slf4j.Slf4j;
+import de.chojo.repbot.service.ReputationService;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveAllEvent;
@@ -17,25 +14,25 @@ import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemove
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-@Slf4j
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class ReactionListener extends ListenerAdapter {
+    private static final Logger log = getLogger(ReactionListener.class);
     private final GuildData guildData;
     private final ReputationData reputationData;
-    private final Map<Long, VoteRequest> voteRequests = new HashMap<>();
     private final Localizer localizer;
-    private final ReputationManager reputationManager;
+    private final ReputationService reputationService;
 
-    public ReactionListener(DataSource dataSource, Localizer localizer, ReputationManager reputationManager) {
+    public ReactionListener(DataSource dataSource, Localizer localizer, ReputationService reputationService) {
         guildData = new GuildData(dataSource);
         reputationData = new ReputationData(dataSource);
         this.localizer = localizer;
-        this.reputationManager = reputationManager;
+        this.reputationService = reputationService;
     }
 
     @Override
@@ -45,30 +42,6 @@ public class ReactionListener extends ListenerAdapter {
         if (optGuildSettings.isEmpty()) return;
         var guildSettings = optGuildSettings.get();
 
-        if (voteRequests.containsKey(event.getMessageIdLong())) {
-            if (event.getReactionEmote().isEmote()) return;
-            var voteRequest = voteRequests.get(event.getMessageIdLong());
-            if (!voteRequest.getMember().equals(event.getMember())) return;
-            var target = voteRequest.getTarget(event.getReactionEmote().getEmoji());
-            if (target.isEmpty()) {
-                if (event.getReactionEmote().getEmoji().equals("🗑️")) {
-                    unregisterVote(voteRequest.getVoteMessage());
-                    voteRequest.getVoteMessage().delete().queue();
-                }
-                return;
-            }
-            if (voteRequest.getRemainingVotes() == 0) return;
-
-            if (reputationManager.submitReputation(event.getGuild(), event.getUser(), target.get().getUser(), voteRequest.getRefMessage(), null, ThankType.REACTION)) {
-                voteRequest.voted();
-                voteRequest.getVoteMessage().
-                        editMessage(voteRequest.getNewEmbed(localizer.localize("listener.messages.request.descrThank"
-                                , event.getGuild(), Replacement.create("MORE", voteRequest.getRemainingVotes()))))
-                        .queue();
-            }
-            return;
-        }
-
         if (!guildSettings.isReputationChannel(event.getChannel())) return;
         if (!guildSettings.isReactionActive()) return;
         if (!guildSettings.isReaction(event.getReaction().getReactionEmote())) return;
@@ -76,8 +49,6 @@ public class ReactionListener extends ListenerAdapter {
         var message = event.getChannel()
                 .retrieveMessageById(event.getMessageId())
                 .timeout(10, TimeUnit.SECONDS).complete();
-        var recentMembers = HistoryUtil.getRecentMembers(message, guildSettings.getMaxMessageAge());
-        if (!recentMembers.contains(event.getMember())) return;
 
         var receiver = message.getAuthor();
 
@@ -85,14 +56,14 @@ public class ReactionListener extends ListenerAdapter {
         if (logEntry.isPresent()) {
             Member newReceiver;
             try {
-                newReceiver = event.getGuild().retrieveMemberById(logEntry.get().getReceiverId()).complete();
+                newReceiver = event.getGuild().retrieveMemberById(logEntry.get().receiverId()).complete();
             } catch (RuntimeException e) {
                 return;
             }
             if (newReceiver == null) return;
             receiver = newReceiver.getUser();
         }
-        if (reputationManager.submitReputation(event.getGuild(), event.getUser(), receiver, message, null, ThankType.REACTION)) {
+        if (reputationService.submitReputation(event.getGuild(), event.getUser(), receiver, message, null, ThankType.REACTION)) {
             event.getChannel().sendMessage(localizer.localize("listener.reaction.confirmation", event.getGuild(),
                     Replacement.create("DONOR", event.getUser().getAsMention()), Replacement.create("RECEIVER", receiver.getAsMention())))
                     .mention(event.getUser())
@@ -125,13 +96,5 @@ public class ReactionListener extends ListenerAdapter {
     @Override
     public void onGuildMessageReactionRemoveAll(@NotNull GuildMessageReactionRemoveAllEvent event) {
         reputationData.removeMessage(event.getMessageIdLong());
-    }
-
-    public void registerAfterVote(Message message, VoteRequest request) {
-        voteRequests.put(message.getIdLong(), request);
-    }
-
-    public void unregisterVote(Message voteMessage) {
-        voteRequests.remove(voteMessage.getIdLong());
     }
 }

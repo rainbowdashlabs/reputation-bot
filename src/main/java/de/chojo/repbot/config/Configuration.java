@@ -3,11 +3,16 @@ package de.chojo.repbot.config;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import de.chojo.repbot.config.elements.Badges;
 import de.chojo.repbot.config.elements.Database;
+import de.chojo.repbot.config.elements.Links;
 import de.chojo.repbot.config.elements.MagicImage;
-import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
+import de.chojo.repbot.config.elements.TestMode;
+import de.chojo.repbot.config.exception.ConfigurationException;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,16 +20,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-@Getter
-@Slf4j
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class Configuration {
+    private static final Logger log = getLogger(Configuration.class);
     private final ObjectMapper objectMapper;
     private ConfigFile configFile;
 
     private Configuration() {
-        objectMapper = new ObjectMapper();
-        objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-        objectMapper.setDefaultPrettyPrinter(new DefaultPrettyPrinter());
+        objectMapper = new ObjectMapper()
+        .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
+        .setDefaultPrettyPrinter(new DefaultPrettyPrinter())
+                .configure(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS, true);
     }
 
     public static Configuration create() {
@@ -38,6 +45,7 @@ public class Configuration {
             reloadFile();
         } catch (IOException e) {
             log.info("Could not load config", e);
+            throw new ConfigurationException("Could not load config file", e);
         }
         try {
             save();
@@ -60,7 +68,7 @@ public class Configuration {
         if (!getConfig().toFile().exists()) {
             if (getConfig().toFile().createNewFile()) {
                 objectMapper.writerWithDefaultPrettyPrinter().writeValues(getConfig().toFile()).write(new ConfigFile());
-                throw new RuntimeException("Please configure the config.");
+                throw new ConfigurationException("Please configure the config.");
             }
         }
     }
@@ -70,28 +78,41 @@ public class Configuration {
         var property = System.getProperty("bot.config");
         if (property == null) {
             log.error("bot.config property is not set.");
+            throw new ConfigurationException("Property -Dbot.config=<config path> is not set.");
         }
         return Paths.get(home.toString(), property);
     }
 
     // DELEGATES
-    public String getToken() {
-        return configFile.getToken();
+    public String token() {
+        return configFile.token();
     }
 
-    public String getDefaultPrefix() {
-        return configFile.getDefaultPrefix();
+    public String defaultPrefix() {
+        return configFile.defaultPrefix();
     }
 
-    public Database getDatabase() {
-        return configFile.getDatabase();
+    public Database database() {
+        return configFile.database();
     }
 
     public boolean isExclusiveHelp() {
         return configFile.isExclusiveHelp();
     }
 
-    public MagicImage getMagicImage() {
-        return configFile.getMagicImage();
+    public MagicImage magicImage() {
+        return configFile.magicImage();
+    }
+
+    public TestMode testMode() {
+        return configFile.testMode();
+    }
+
+    public Badges badges() {
+        return configFile.badges();
+    }
+
+    public Links links() {
+        return configFile.links();
     }
 }
