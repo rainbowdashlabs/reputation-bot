@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class SqlUpdater {
-    private static final Logger log = getLogger(SqlUpdater.class);
     public static final int MAJOR = 1;
     public static final int PATCH = 1;
+    private static final Logger log = getLogger(SqlUpdater.class);
     private final DataSource source;
     private final String versionTable;
     private final String[] schemas;

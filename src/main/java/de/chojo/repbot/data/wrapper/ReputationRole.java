@@ -6,7 +6,7 @@ import net.dv8tion.jda.api.entities.Role;
 public class ReputationRole {
     private final long roleId;
     private final long reputation;
-    private Role role = null;
+    private Role role;
 
     public ReputationRole(long roleId, long reputation) {
         this.roleId = roleId;

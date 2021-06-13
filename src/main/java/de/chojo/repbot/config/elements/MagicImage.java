@@ -1,6 +1,7 @@
 package de.chojo.repbot.config.elements;
 
 
+@SuppressWarnings("FieldMayBeFinal")
 public class MagicImage {
     private String magicImageLink = "";
     private int magicImagineChance = 10;

@@ -1,12 +1,12 @@
-package de.chojo.repbot.manager;
+package de.chojo.repbot.service;
 
 import de.chojo.jdautil.parsing.Verifier;
+import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.config.elements.MagicImage;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
-import de.chojo.repbot.analyzer.ContextResolver;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -29,8 +29,8 @@ public class ReputationService {
     private final GuildData guildData;
     private final RoleAssigner assigner;
     private final MagicImage magicImage;
-    private Instant lastEasterEggSent = Instant.EPOCH;
     private final ContextResolver contextResolver;
+    private Instant lastEasterEggSent = Instant.EPOCH;
 
     public ReputationService(DataSource dataSource, RoleAssigner assigner, MagicImage magicImage) {
         this.reputationData = new ReputationData(dataSource);
@@ -134,8 +134,7 @@ public class ReputationService {
 
         // block rep4rep
         var lastRatedEachDuration = reputationData.getLastRatedDuration(guild, receiver, donor, ChronoUnit.MINUTES);
-        if (lastRatedEachDuration < settings.cooldown()) return false;
-        return true;
+        return lastRatedEachDuration >= settings.cooldown();
     }
 
     public boolean canVote(User donor, User receiver, Guild guild) {

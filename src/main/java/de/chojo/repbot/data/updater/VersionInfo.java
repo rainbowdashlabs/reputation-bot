@@ -1,8 +1,8 @@
 package de.chojo.repbot.data.updater;
 
 class VersionInfo {
-    private int version;
-    private int patch;
+    private final int version;
+    private final int patch;
 
     public VersionInfo(int version, int patch) {
         this.version = version;

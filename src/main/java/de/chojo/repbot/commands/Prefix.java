@@ -68,7 +68,7 @@ public class Prefix extends SimpleCommand {
         }
 
         if ("reset".equalsIgnoreCase(subCmd)) {
-           reset(event);
+            reset(event);
         }
     }
 

@@ -1,6 +1,7 @@
 package de.chojo.repbot.data.wrapper;
 
 import de.chojo.repbot.analyzer.ThankType;
+
 public class ReputationLogEntry {
     private static final String PATH = "https://discord.com/channels/%s/%s/%s";
 

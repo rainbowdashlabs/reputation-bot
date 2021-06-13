@@ -27,8 +27,8 @@ import java.util.Optional;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class GuildData extends QueryObject {
-    private final QueryBuilderFactory factory;
     private static final Logger log = getLogger(GuildData.class);
+    private final QueryBuilderFactory factory;
 
     public GuildData(DataSource source) {
         super(source);
@@ -298,7 +298,7 @@ public class GuildData extends QueryObject {
                             cooldown = coalesce(?, cooldown)
                         where guild_id = ?;
                         """)
-                .paramsBuilder(stmt -> stmt.setInt(update.maxMessageAge()).setString(update.reaction())
+                .paramsBuilder(stmt -> stmt.setInt(update.maxMessageAge()).setInt(update.minMessages()).setString(update.reaction())
                         .setBoolean(update.reactionsActive()).setBoolean(update.answerActive())
                         .setBoolean(update.mentionActive()).setBoolean(update.fuzzyActive()).setInt(update.cooldown())
                         .setLong(update.guild().getIdLong()))

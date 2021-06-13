@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "1.1.2"
+version = "1.2.0"
 
 val log4jVersion = "2.14.0"
 val lombokVersion = "1.18.20"
@@ -56,6 +56,16 @@ java {
 }
 
 tasks {
+    processResources {
+        from(sourceSets.main.get().resources.srcDirs) {
+            filesMatching("version") {
+                expand(
+                    "version" to project.version
+                )
+            }
+            duplicatesStrategy = DuplicatesStrategy.INCLUDE
+        }
+    }
     compileJava {
         options.encoding = "UTF-8"
     }

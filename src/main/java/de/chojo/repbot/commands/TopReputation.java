@@ -46,7 +46,7 @@ public class TopReputation extends SimpleCommand {
     public void onSlashCommand(SlashCommandEvent event) {
         var page = event.getOption("page");
         var l = page == null ? 1 : page.getAsLong();
-        event.reply(wrap(top(event.getGuild(), (int) l))).queue();
+        event.replyEmbeds(top(event.getGuild(), (int) l)).queue();
     }
 
     private MessageEmbed top(Guild guild, int page) {

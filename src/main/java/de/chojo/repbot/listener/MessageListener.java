@@ -1,5 +1,6 @@
 package de.chojo.repbot.listener;
 
+import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.config.Configuration;
@@ -7,9 +8,8 @@ import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;
-import de.chojo.repbot.manager.MemberCacheManager;
-import de.chojo.repbot.manager.ReputationService;
-import de.chojo.repbot.analyzer.ContextResolver;
+import de.chojo.repbot.service.RepBotCachePolicy;
+import de.chojo.repbot.service.ReputationService;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageBulkDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
@@ -29,17 +29,17 @@ public class MessageListener extends ListenerAdapter {
     private final Configuration configuration;
     private final GuildData guildData;
     private final ReputationData reputationData;
-    private final MemberCacheManager memberCacheManager;
+    private final RepBotCachePolicy repBotCachePolicy;
     private final ReputationVoteListener reputationVoteListener;
     private final ReputationService reputationService;
     private final ContextResolver contextResolver;
     private final MessageAnalyzer messageAnalyzer;
 
-    public MessageListener(DataSource dataSource, Configuration configuration, MemberCacheManager memberCacheManager, ReputationVoteListener reputationVoteListener, ReputationService reputationService) {
+    public MessageListener(DataSource dataSource, Configuration configuration, RepBotCachePolicy repBotCachePolicy, ReputationVoteListener reputationVoteListener, ReputationService reputationService) {
         guildData = new GuildData(dataSource);
         reputationData = new ReputationData(dataSource);
         this.configuration = configuration;
-        this.memberCacheManager = memberCacheManager;
+        this.repBotCachePolicy = repBotCachePolicy;
         this.reputationVoteListener = reputationVoteListener;
         this.reputationService = reputationService;
         this.contextResolver = new ContextResolver(dataSource);
@@ -59,7 +59,7 @@ public class MessageListener extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
         if (event.getAuthor().isBot() || event.isWebhookMessage()) return;
-        memberCacheManager.seen(event.getMember());
+        repBotCachePolicy.seen(event.getMember());
         var guild = event.getGuild();
         var optGuildSettings = guildData.getGuildSettings(guild);
         if (optGuildSettings.isEmpty()) return;

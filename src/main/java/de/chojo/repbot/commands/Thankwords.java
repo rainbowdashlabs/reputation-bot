@@ -24,8 +24,13 @@ import org.slf4j.Logger;
 
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
-import java.util.*;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
@@ -52,7 +57,7 @@ public class Thankwords extends SimpleCommand {
                                 .build())
                         .add("list", "command.thankwords.sub.list")
                         .add("check", "command.thankwords.sub.check", argsBuilder()
-                                .add(OptionType.STRING, "message", "message")
+                                .add(OptionType.STRING, "message", "message", true)
                                 .build()
                         )
                         .add("loaddefault", "command.thankwords.sub.loadDefault", argsBuilder()
@@ -237,7 +242,7 @@ public class Thankwords extends SimpleCommand {
         var guildSettings = optGuildSettings.get();
         var messageId = event.getOption("message").getAsString();
 
-        if(!Verifier.isValidId(messageId)){
+        if (!Verifier.isValidId(messageId)) {
             event.reply(loc.localize("error.invalidMessage")).queue();
             return true;
         }
@@ -252,11 +257,11 @@ public class Thankwords extends SimpleCommand {
 
         var processResult = processMessage(event.getGuild(), result, builder);
         if (processResult != null) {
-            event.reply(wrap(processResult)).queue();
+            event.replyEmbeds(processResult).queue();
             return true;
         }
 
-        event.reply(wrap(builder.build())).queue();
+        event.replyEmbeds(builder.build()).queue();
         return true;
     }
 
@@ -357,7 +362,7 @@ public class Thankwords extends SimpleCommand {
         var language = languageOption.getAsString();
         var words = thankwordsContainer.get(language.toLowerCase(Locale.ROOT));
         if (words == null) {
-            slashCommandEvent.reply(wrap(loc.localize("command.locale.error.invalidLocale")))
+            slashCommandEvent.reply(loc.localize("command.locale.error.invalidLocale"))
                     .setEphemeral(true)
                     .queue();
             return true;

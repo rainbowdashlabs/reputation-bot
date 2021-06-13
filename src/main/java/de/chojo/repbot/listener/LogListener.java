@@ -24,8 +24,8 @@ import java.util.stream.Collectors;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class LogListener extends ListenerAdapter implements Runnable {
-    private final Map<Integer, Instant> disconnected = new HashMap<>();
     private static final Logger log = getLogger(LogListener.class);
+    private final Map<Integer, Instant> disconnected = new HashMap<>();
 
     private LogListener() {
     }

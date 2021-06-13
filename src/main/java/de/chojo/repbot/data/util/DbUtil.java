@@ -14,6 +14,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class DbUtil {
     private static final Logger log = getLogger(DbUtil.class);
+
     public static void logSQLError(String message, SQLException ex) {
         log.error("{}\nMessage: {}\nCode: {}\nState: {}",
                 message, ex.getMessage(), ex.getErrorCode(), ex.getSQLState(), ex);

@@ -4,7 +4,6 @@ import de.chojo.jdautil.command.SimpleArgument;
 import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.listener.CommandHub;
 import de.chojo.jdautil.localization.ContextLocalizer;
-import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
@@ -12,7 +11,6 @@ import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
@@ -42,6 +40,43 @@ public class Help extends SimpleCommand {
                 exclusiveHelp ? Permission.ADMINISTRATOR : Permission.UNKNOWN);
         this.hub = hub;
         this.loc = localizer;
+    }
+
+    public static MessageEmbed getCommandHelp(SimpleCommand command, ContextLocalizer loc) {
+        var builder = new LocalizedEmbedBuilder(loc)
+                .setTitle(loc.localize("command.help.title",
+                        Replacement.create("COMMAND", command.command())))
+                .setDescription(loc.localize(command.description()));
+
+        if (command.alias().length > 0) {
+            var aliases = Arrays.stream(command.alias())
+                    .map(s -> StringUtils.wrap(s, "`"))
+                    .collect(Collectors.joining(", "));
+            builder.addField("command.help.alias", aliases, false);
+        }
+
+        if (command.subCommands() != null) {
+            List<String> commands = new ArrayList<>();
+            for (var simpleSubCommand : command.subCommands()) {
+                commands.add("`" + simpleSubCommand.name() + " " + argsAsString(simpleSubCommand.args(), loc) + "` ➜ " + loc.localize(simpleSubCommand.description()));
+            }
+            builder.addField("command.help.subCommands", String.join("\n", commands), false);
+        }
+
+        if (command.args() != null) {
+            builder.addField("command.help.usage", argsAsString(command.args(), loc), false);
+        }
+
+        return builder.build();
+    }
+
+    private static String argsAsString(SimpleArgument[] args, ContextLocalizer localizer) {
+        if (args == null) return "";
+        List<String> strArgs = new ArrayList<>();
+        for (var arg : args) {
+            strArgs.add(String.format(arg.isRequired() ? REQ : OPT, localizer.localize(arg.name())));
+        }
+        return String.join(" ", strArgs);
     }
 
     @Override
@@ -74,7 +109,7 @@ public class Help extends SimpleCommand {
 
         if (event.getOptions().isEmpty()) {
             var message = getAllCommandsEmbed(eventWrapper);
-            event.reply(wrap(message)).queue();
+            event.replyEmbeds(message).queue();
             return;
         }
 
@@ -106,42 +141,5 @@ public class Help extends SimpleCommand {
                         Replacement.create("COMMAND", "help <command>", Format.CODE)))
                 .addField("", commands, false)
                 .build();
-    }
-
-    public static MessageEmbed getCommandHelp(SimpleCommand command, ContextLocalizer loc) {
-        var builder = new LocalizedEmbedBuilder(loc)
-                .setTitle(loc.localize("command.help.title",
-                        Replacement.create("COMMAND", command.command())))
-                .setDescription(loc.localize(command.description()));
-
-        if (command.alias().length > 0) {
-            var aliases = Arrays.stream(command.alias())
-                    .map(s -> StringUtils.wrap(s, "`"))
-                    .collect(Collectors.joining(", "));
-            builder.addField("command.help.alias", aliases, false);
-        }
-
-        if (command.subCommands() != null) {
-            List<String> commands = new ArrayList<>();
-            for (var simpleSubCommand : command.subCommands()) {
-                commands.add("`"+simpleSubCommand.name() + " " + argsAsString(simpleSubCommand.args(), loc) + "` ➜ "  + loc.localize(simpleSubCommand.description()));
-            }
-            builder.addField("command.help.subCommands", String.join("\n", commands), false);
-        }
-
-        if (command.args() != null) {
-            builder.addField("command.help.usage", argsAsString(command.args(), loc), false);
-        }
-
-        return builder.build();
-    }
-
-    private static String argsAsString(SimpleArgument[] args, ContextLocalizer localizer) {
-        if(args == null) return "";
-        List<String> strArgs = new ArrayList<>();
-        for (var arg : args) {
-            strArgs.add(String.format(arg.isRequired() ? REQ : OPT, localizer.localize(arg.name())));
-        }
-        return String.join(" ", strArgs);
     }
 }

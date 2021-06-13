@@ -72,7 +72,7 @@ public class Reputation extends SimpleCommand {
         var userOption = event.getOption("user");
         var member = userOption != null ? userOption.getAsMember() : event.getMember();
         var reputation = reputationData.getReputation(event.getGuild(), member.getUser()).orElse(ReputationUser.empty(event.getUser()));
-        event.reply(wrap(getUserRepEmbed(member, reputation))).queue();
+        event.replyEmbeds(getUserRepEmbed(member, reputation)).queue();
     }
 
     private MessageEmbed getUserRepEmbed(Member member, ReputationUser reputation) {

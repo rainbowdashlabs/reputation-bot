@@ -1,4 +1,4 @@
-package de.chojo.repbot.manager;
+package de.chojo.repbot.service;
 
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;

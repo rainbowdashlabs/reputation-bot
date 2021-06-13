@@ -1,6 +1,7 @@
 package de.chojo.repbot.config.elements;
 
 
+@SuppressWarnings("FieldMayBeFinal")
 public class Database {
     private String host = "localhost";
     private String port = "5432";

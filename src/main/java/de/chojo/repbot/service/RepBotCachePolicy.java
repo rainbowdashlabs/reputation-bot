@@ -1,4 +1,4 @@
-package de.chojo.repbot.manager;
+package de.chojo.repbot.service;
 
 import de.chojo.repbot.commands.Scan;
 import net.dv8tion.jda.api.entities.Member;
@@ -14,13 +14,13 @@ import java.util.Set;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class MemberCacheManager implements MemberCachePolicy, Runnable {
-    private static final Logger log = getLogger(MemberCacheManager.class);
+public class RepBotCachePolicy implements MemberCachePolicy, Runnable {
     public static final int CACHE_DURATION = 30;
+    private static final Logger log = getLogger(RepBotCachePolicy.class);
     private final HashMap<Long, Instant> seen = new HashMap<>();
     private final Scan scan;
 
-    public MemberCacheManager(Scan scan) {
+    public RepBotCachePolicy(Scan scan) {
         this.scan = scan;
     }
 

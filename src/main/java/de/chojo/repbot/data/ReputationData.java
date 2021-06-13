@@ -23,8 +23,8 @@ import java.util.Optional;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ReputationData extends QueryObject {
-    private final QueryBuilderFactory factory;
     private static final Logger log = getLogger(ReputationData.class);
+    private final QueryBuilderFactory factory;
 
     public ReputationData(DataSource source) {
         super(source);

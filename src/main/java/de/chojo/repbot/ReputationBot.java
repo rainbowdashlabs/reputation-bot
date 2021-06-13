@@ -7,6 +7,7 @@ import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Language;
 import de.chojo.repbot.commands.Channel;
 import de.chojo.repbot.commands.Help;
+import de.chojo.repbot.commands.Info;
 import de.chojo.repbot.commands.Invite;
 import de.chojo.repbot.commands.Locale;
 import de.chojo.repbot.commands.Log;
@@ -15,7 +16,6 @@ import de.chojo.repbot.commands.RepSettings;
 import de.chojo.repbot.commands.Reputation;
 import de.chojo.repbot.commands.Roles;
 import de.chojo.repbot.commands.Scan;
-import de.chojo.repbot.commands.Source;
 import de.chojo.repbot.commands.Thankwords;
 import de.chojo.repbot.commands.TopReputation;
 import de.chojo.repbot.config.Configuration;
@@ -28,9 +28,9 @@ import de.chojo.repbot.listener.ReactionListener;
 import de.chojo.repbot.listener.StateListener;
 import de.chojo.repbot.listener.VoiceStateListener;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;
-import de.chojo.repbot.manager.MemberCacheManager;
-import de.chojo.repbot.manager.ReputationService;
-import de.chojo.repbot.manager.RoleAssigner;
+import de.chojo.repbot.service.RepBotCachePolicy;
+import de.chojo.repbot.service.ReputationService;
+import de.chojo.repbot.service.RoleAssigner;
 import de.chojo.repbot.util.LogNotify;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
@@ -40,7 +40,6 @@ import org.apache.logging.log4j.LogManager;
 import org.postgresql.ds.PGSimpleDataSource;
 import org.slf4j.Logger;
 
-import javax.annotation.Nullable;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -55,11 +54,12 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class ReputationBot {
     private static final Logger log = getLogger(ReputationBot.class);
-    private static ReputationBot instance;
     private static final Thread.UncaughtExceptionHandler EXCEPTION_HANDLER =
             (t, e) -> log.error(LogNotify.NOTIFY_ADMIN, "An uncaught exception occured in " + t.getName() + "-" + t.getId() + ".", e);
+    private static ReputationBot instance;
     private final ThreadGroup eventGroup = new ThreadGroup("Event Handler");
     private final ThreadGroup workerGroup = new ThreadGroup("Scheduled Worker");
+    private final ThreadGroup hikariGroup = new ThreadGroup("Hikari Worker");
     private final ThreadGroup jdaGroup = new ThreadGroup("JDA Worker");
     private final ExecutorService eventThreads = Executors.newFixedThreadPool(50, createThreadFactory(eventGroup));
     private final ScheduledExecutorService repBotWorker = Executors.newScheduledThreadPool(2, createThreadFactory(workerGroup));
@@ -68,11 +68,19 @@ public class ReputationBot {
     private Configuration configuration;
     private Localizer localizer;
     private Scan scan;
-    private MemberCacheManager memberCacheManager;
+    private RepBotCachePolicy repBotCachePolicy;
 
     public static void main(String[] args) throws SQLException, IOException {
         ReputationBot.instance = new ReputationBot();
         instance.start();
+    }
+
+    private static ThreadFactory createThreadFactory(ThreadGroup group) {
+        return r -> {
+            var thread = new Thread(group, r);
+            thread.setUncaughtExceptionHandler(EXCEPTION_HANDLER);
+            return thread;
+        };
     }
 
     private void start() throws SQLException, IOException {
@@ -100,7 +108,7 @@ public class ReputationBot {
     }
 
     private void initDatabase() throws SQLException, IOException {
-        var connectionPool = getConnectionPool(null);
+        var connectionPool = getConnectionPool(false);
 
         var schema = configuration.database().schema();
         SqlUpdater.builder(connectionPool)
@@ -108,8 +116,9 @@ public class ReputationBot {
                 .setVersionTable(schema + ".repbot_version")
                 .setSchemas(schema)
                 .execute();
+        connectionPool.close();
 
-        dataSource = getConnectionPool(configuration.database().schema());
+        dataSource = getConnectionPool(true);
     }
 
     private void initLocalization() {
@@ -125,7 +134,7 @@ public class ReputationBot {
         var reputationService = new ReputationService(dataSource, roleAssigner, configuration.magicImage());
         var reactionListener = new ReactionListener(dataSource, localizer, reputationService);
         var reputatinoVoteListener = new ReputationVoteListener(reputationService, localizer);
-        var messageListener = new MessageListener(dataSource, configuration, memberCacheManager, reputatinoVoteListener, reputationService);
+        var messageListener = new MessageListener(dataSource, configuration, repBotCachePolicy, reputatinoVoteListener, reputationService);
         var stateListener = new StateListener(dataSource);
         var voiceStateListener = new VoiceStateListener(dataSource);
         var logListener = LogListener.create(repBotWorker);
@@ -156,8 +165,8 @@ public class ReputationBot {
                         Thankwords.of(dataSource, localizer),
                         scan,
                         new Locale(dataSource, localizer),
-                        new Invite(localizer),
-                        new Source(localizer),
+                        new Invite(localizer, configuration),
+                        Info.create(localizer, configuration),
                         new Log(shardManager, dataSource, localizer)
                 )
                 .withInvalidArgumentProvider(((loc, command) -> Help.getCommandHelp(command, loc)))
@@ -194,8 +203,8 @@ public class ReputationBot {
 
     private void initJDA() throws LoginException {
         scan = new Scan(dataSource, localizer);
-        memberCacheManager = new MemberCacheManager(scan);
-        shardManager = DefaultShardManagerBuilder.createDefault(configuration.getToken())
+        repBotCachePolicy = new RepBotCachePolicy(scan);
+        shardManager = DefaultShardManagerBuilder.createDefault(configuration.token())
                 .enableIntents(
                         // Required to retrieve reputation emotes
                         GatewayIntent.GUILD_MESSAGE_REACTIONS,
@@ -212,13 +221,13 @@ public class ReputationBot {
                         CacheFlag.ONLINE_STATUS)
                 // we have our own shutdown hook
                 .setEnableShutdownHook(false)
-                .setMemberCachePolicy(memberCacheManager)
+                .setMemberCachePolicy(repBotCachePolicy)
                 .setEventPool(eventThreads)
                 .setThreadFactory(createThreadFactory(jdaGroup))
                 .build();
     }
 
-    private HikariDataSource getConnectionPool(@Nullable String schema) {
+    private HikariDataSource getConnectionPool(boolean withSchema) {
         var db = configuration.database();
         var props = new Properties();
         props.setProperty("dataSourceClassName", PGSimpleDataSource.class.getName());
@@ -230,18 +239,11 @@ public class ReputationBot {
 
         var config = new HikariConfig(props);
         config.setMaximumPoolSize(db.poolSize());
-        if (schema != null) {
+        if (withSchema) {
             config.setSchema(db.schema());
         }
+        config.setThreadFactory(createThreadFactory(hikariGroup));
 
         return new HikariDataSource(config);
-    }
-
-    private static ThreadFactory createThreadFactory(ThreadGroup group) {
-        return r -> {
-            var thread = new Thread(group, r);
-            thread.setUncaughtExceptionHandler(EXCEPTION_HANDLER);
-            return thread;
-        };
     }
 }
