@@ -131,7 +131,7 @@ public class ReputationBot {
 
     private void initBot() {
         var roleAssigner = new RoleAssigner(dataSource);
-        var reputationService = new ReputationService(dataSource, roleAssigner, configuration.magicImage());
+        var reputationService = new ReputationService(dataSource, roleAssigner, configuration.magicImage(), localizer);
         var reactionListener = new ReactionListener(dataSource, localizer, reputationService);
         var reputatinoVoteListener = new ReputationVoteListener(reputationService, localizer);
         var messageListener = new MessageListener(dataSource, configuration, repBotCachePolicy, reputatinoVoteListener, reputationService);
