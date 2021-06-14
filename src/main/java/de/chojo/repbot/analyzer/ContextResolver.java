@@ -37,6 +37,7 @@ public class ContextResolver {
      */
     @NotNull
     public Set<Member> getChannelContext(Message message, GuildSettings settings) {
+        var oldestPossible = Instant.now().minus(12, ChronoUnit.HOURS);
         var history = message.getChannel().getHistoryBefore(message, 100).complete();
         var maxAge = Instant.now().minus(settings == null ? Long.MAX_VALUE : settings.maxMessageAge(), ChronoUnit.MINUTES);
         var retrievedHistory = new ArrayList<Message>();
@@ -48,6 +49,10 @@ public class ContextResolver {
                 .filter(m -> Verifier.equalSnowflake(m.getAuthor(), message.getAuthor()))
                 .map(m -> m.getTimeCreated().toInstant())
                 .min(Instant::compareTo).filter(entry -> entry.isAfter(maxAge)).orElse(maxAge);
+        var oldestEntry = retrievedHistory.stream()
+                .filter(m -> Verifier.equalSnowflake(m.getAuthor(), message.getAuthor()))
+                .map(m -> m.getTimeCreated().toInstant())
+                .min(Instant::compareTo).filter(entry -> entry.isAfter(oldestPossible)).orElse(maxAge);
 
 
         var contextMember = retrievedHistory.stream()
@@ -69,7 +74,7 @@ public class ContextResolver {
         // add users of the last recent messages
         retrievedHistory.stream()
                 .limit(settings == null ? 100 : settings.minMessages())
-                .filter(m -> m.getTimeCreated().toInstant().isAfter(oldest))
+                .filter(m -> m.getTimeCreated().toInstant().isAfter(oldestEntry))
                 .filter(m -> !m.getAuthor().isBot())
                 .map(Message::getMember)
                 .filter(Objects::nonNull)
