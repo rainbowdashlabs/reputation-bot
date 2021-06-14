@@ -2,6 +2,7 @@ package de.chojo.repbot;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import de.chojo.jdautil.botlist.BotlistReporter;
 import de.chojo.jdautil.listener.CommandHub;
 import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Language;
@@ -105,6 +106,19 @@ public class ReputationBot {
 
         log.info("Initializing bot.");
         initBot();
+
+        initBotList();
+    }
+
+    private void initBotList() {
+        var botlist = configuration.botlist();
+        if (!botlist.isSubmit()) return;
+        BotlistReporter.build(shardManager)
+                .forDiscordBotListCOM(botlist.discordBotlistCom())
+                .forDiscordBotsGG(botlist.discordBotsGg())
+                .forTopGG(botlist.topGg())
+                .withExecutorService(repBotWorker)
+                .build();
     }
 
     private void initDatabase() throws SQLException, IOException {
@@ -131,7 +145,7 @@ public class ReputationBot {
 
     private void initBot() {
         var roleAssigner = new RoleAssigner(dataSource);
-        var reputationService = new ReputationService(dataSource, roleAssigner, configuration.magicImage());
+        var reputationService = new ReputationService(dataSource, roleAssigner, configuration.magicImage(), localizer);
         var reactionListener = new ReactionListener(dataSource, localizer, reputationService);
         var reputatinoVoteListener = new ReputationVoteListener(reputationService, localizer);
         var messageListener = new MessageListener(dataSource, configuration, repBotCachePolicy, reputatinoVoteListener, reputationService);
