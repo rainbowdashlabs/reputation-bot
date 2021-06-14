@@ -134,9 +134,7 @@ public class ReputationService {
                                 Replacement.createMention("ROLE", e.role())))
                         .allowedMentions(Collections.emptyList())
                         .queue();
-                return true;
             }
-
             return true;
         }
         // submit to database failed. Maybe this message was already voted by the user.

@@ -49,12 +49,13 @@ public class RoleAssigner {
 
     private void cleanMemberRoles(Member member) throws RoleAccessException {
         var guild = member.getGuild();
-        var collect = guildData.getReputationRoles(guild)
+        var reputationRoles = guildData.getReputationRoles(guild)
                 .stream()
                 .map(ReputationRole::roleId)
                 .map(guild::getRoleById)
-                .filter(Objects::nonNull).collect(Collectors.toList());
-        for (var role : collect) {
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+        for (var role : reputationRoles) {
             assertInteract(role, member.getGuild());
             guild.removeRoleFromMember(member, role).queue();
         }
