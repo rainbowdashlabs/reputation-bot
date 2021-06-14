@@ -23,6 +23,7 @@ import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.updater.QueryReplacement;
 import de.chojo.repbot.data.updater.SqlUpdater;
+import de.chojo.repbot.listener.InternalCommandListener;
 import de.chojo.repbot.listener.LogListener;
 import de.chojo.repbot.listener.MessageListener;
 import de.chojo.repbot.listener.ReactionListener;
@@ -152,6 +153,7 @@ public class ReputationBot {
         var stateListener = new StateListener(dataSource);
         var voiceStateListener = new VoiceStateListener(dataSource);
         var logListener = LogListener.create(repBotWorker);
+        var internalCommandListener = new InternalCommandListener(configuration);
         repBotWorker.scheduleAtFixedRate(stateListener, 1, 12, TimeUnit.HOURS);
         repBotWorker.scheduleAtFixedRate(voiceStateListener, 2, 12, TimeUnit.HOURS);
         shardManager.addEventListener(
@@ -160,9 +162,10 @@ public class ReputationBot {
                 reactionListener,
                 reputatinoVoteListener,
                 voiceStateListener,
-                logListener);
+                logListener,
+                internalCommandListener);
         var data = new GuildData(dataSource);
-        var hubBuilder = CommandHub.builder(shardManager, configuration.defaultPrefix())
+        var hubBuilder = CommandHub.builder(shardManager, configuration.baseSettings().defaultPrefix())
                 .receiveGuildCommands()
                 .receiveGuildMessagesUpdates()
                 .withConversationSystem()
@@ -200,7 +203,7 @@ public class ReputationBot {
             hubBuilder.onlyGuildCommands(configuration.testMode().testGuilds());
         }
         var hub = hubBuilder.build();
-        hub.registerCommands(new Help(hub, localizer, configuration.isExclusiveHelp()));
+        hub.registerCommands(new Help(hub, localizer, configuration.baseSettings().isExclusiveHelp()));
     }
 
     private void initShutdownHook() {
@@ -220,7 +223,7 @@ public class ReputationBot {
     private void initJDA() throws LoginException {
         scan = new Scan(dataSource, localizer);
         repBotCachePolicy = new RepBotCachePolicy(scan);
-        shardManager = DefaultShardManagerBuilder.createDefault(configuration.token())
+        shardManager = DefaultShardManagerBuilder.createDefault(configuration.baseSettings().token())
                 .enableIntents(
                         // Required to retrieve reputation emotes
                         GatewayIntent.GUILD_MESSAGE_REACTIONS,

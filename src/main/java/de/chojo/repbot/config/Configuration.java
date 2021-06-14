@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import de.chojo.repbot.config.elements.Badges;
+import de.chojo.repbot.config.elements.BaseSettings;
 import de.chojo.repbot.config.elements.Botlist;
 import de.chojo.repbot.config.elements.Database;
 import de.chojo.repbot.config.elements.Links;
@@ -84,21 +85,12 @@ public class Configuration {
         return Paths.get(home.toString(), property);
     }
 
-    // DELEGATES
-    public String token() {
-        return configFile.token();
-    }
-
-    public String defaultPrefix() {
-        return configFile.defaultPrefix();
-    }
-
     public Database database() {
         return configFile.database();
     }
 
-    public boolean isExclusiveHelp() {
-        return configFile.isExclusiveHelp();
+    public BaseSettings baseSettings() {
+        return configFile.baseSettings();
     }
 
     public MagicImage magicImage() {
