@@ -4,11 +4,15 @@ import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.data.wrapper.ReputationRole;
 import de.chojo.repbot.data.wrapper.ReputationUser;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.exceptions.HierarchyException;
 import org.jetbrains.annotations.Nullable;
 
 import javax.sql.DataSource;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class RoleAssigner {
     private final GuildData guildData;
@@ -19,7 +23,7 @@ public class RoleAssigner {
         reputationData = new ReputationData(dataSource);
     }
 
-    public void update(@Nullable Member member) {
+    public void update(@Nullable Member member) throws HierarchyException, RoleAccessException {
         if (member == null) return;
         var guild = member.getGuild();
         var reputation = reputationData.getReputation(guild, member.getUser()).orElse(ReputationUser.empty(member.getUser()));
@@ -38,16 +42,28 @@ public class RoleAssigner {
 
         cleanMemberRoles(member);
 
+        assertInteract(roleById, member.getGuild());
+
         guild.addRoleToMember(member, roleById).queue();
     }
 
-    private void cleanMemberRoles(Member member) {
+    private void cleanMemberRoles(Member member) throws RoleAccessException {
         var guild = member.getGuild();
-        guildData.getReputationRoles(guild)
+        var reputationRoles = guildData.getReputationRoles(guild)
                 .stream()
                 .map(ReputationRole::roleId)
                 .map(guild::getRoleById)
                 .filter(Objects::nonNull)
-                .forEach(r -> guild.removeRoleFromMember(member, r).queue());
+                .collect(Collectors.toList());
+        for (var role : reputationRoles) {
+            assertInteract(role, member.getGuild());
+            guild.removeRoleFromMember(member, role).queue();
+        }
+    }
+
+    private void assertInteract(Role role, Guild guild) throws RoleAccessException {
+        if (!guild.getSelfMember().canInteract(role)) {
+            throw new RoleAccessException(role);
+        }
     }
 }
