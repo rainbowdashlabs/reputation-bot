@@ -37,7 +37,9 @@ import de.chojo.repbot.service.RoleAssigner;
 import de.chojo.repbot.util.LogNotify;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -219,7 +221,7 @@ public class ReputationBot {
                         context.guild().retrieveMemberById(ownerId)
                                 .queue(member -> member.getUser().openPrivateChannel()
                                         .queue(privateChannel -> privateChannel.sendMessage(finalErrorMessage)
-                                                .queue()));
+                                                .queue(succ -> {}, err -> ErrorResponseException.ignore(ErrorResponse.CANNOT_SEND_TO_USER))));
                         return;
                     }
                     log.error(LogNotify.NOTIFY_ADMIN, "Command execution of {} failed\n{}", context.command().command(), context.args(), throwable);
