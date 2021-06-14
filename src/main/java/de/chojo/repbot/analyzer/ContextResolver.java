@@ -48,11 +48,15 @@ public class ContextResolver {
         var oldest = retrievedHistory.stream()
                 .filter(m -> Verifier.equalSnowflake(m.getAuthor(), message.getAuthor()))
                 .map(m -> m.getTimeCreated().toInstant())
-                .min(Instant::compareTo).filter(entry -> entry.isAfter(maxAge)).orElse(maxAge);
+                .min(Instant::compareTo)
+                .filter(entry -> entry.isAfter(maxAge))
+                .orElse(maxAge);
         var oldestEntry = retrievedHistory.stream()
                 .filter(m -> Verifier.equalSnowflake(m.getAuthor(), message.getAuthor()))
                 .map(m -> m.getTimeCreated().toInstant())
-                .min(Instant::compareTo).filter(entry -> entry.isAfter(oldestPossible)).orElse(maxAge);
+                .min(Instant::compareTo)
+                .filter(entry -> entry.isAfter(oldestPossible))
+                .orElse(oldestPossible);
 
 
         var contextMember = retrievedHistory.stream()
