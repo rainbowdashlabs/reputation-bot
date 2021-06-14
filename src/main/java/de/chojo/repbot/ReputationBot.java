@@ -37,9 +37,7 @@ import de.chojo.repbot.service.RoleAssigner;
 import de.chojo.repbot.util.LogNotify;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
-import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -216,6 +214,8 @@ public class ReputationBot {
                             context.channel().sendMessage(errorMessage).queue();
                             return;
                         }
+                        // botlists always have permission issues. We will ignore them and wont try to notify anyone...
+                        if (configuration.botlist().isBotlistGuild(permissionException.getGuildId())) return;
                         var ownerId = context.guild().getOwnerIdLong();
                         var finalErrorMessage = errorMessage;
                         context.guild().retrieveMemberById(ownerId)

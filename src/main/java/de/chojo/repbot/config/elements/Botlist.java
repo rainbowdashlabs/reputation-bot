@@ -1,8 +1,12 @@
 package de.chojo.repbot.config.elements;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SuppressWarnings("FieldMayBeFinal")
 public class Botlist {
     private boolean submit = false;
+    private List<Long> guildIds = new ArrayList<>();
     private String topGg = "";
     private String discordBotsGg = "";
     private String discordBotlistCom = "";
@@ -21,5 +25,9 @@ public class Botlist {
 
     public String discordBotlistCom() {
         return discordBotlistCom;
+    }
+
+    public boolean isBotlistGuild(long id) {
+        return guildIds.contains(id);
     }
 }
