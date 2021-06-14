@@ -219,9 +219,10 @@ public class ReputationBot {
                         var ownerId = context.guild().getOwnerIdLong();
                         var finalErrorMessage = errorMessage;
                         context.guild().retrieveMemberById(ownerId)
-                                .queue(member -> member.getUser().openPrivateChannel()
-                                        .queue(privateChannel -> privateChannel.sendMessage(finalErrorMessage)
-                                                .queue(succ -> {}, err -> ErrorResponseException.ignore(ErrorResponse.CANNOT_SEND_TO_USER))));
+                                .flatMap(member -> member.getUser().openPrivateChannel())
+                                .flatMap(privateChannel -> privateChannel.sendMessage(finalErrorMessage))
+                                .onErrorMap(t -> null)
+                                .queue();
                         return;
                     }
                     log.error(LogNotify.NOTIFY_ADMIN, "Command execution of {} failed\n{}", context.command().command(), context.args(), throwable);
