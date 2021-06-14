@@ -7,6 +7,7 @@ public class BaseSettings {
     private String token = "";
     private String defaultPrefix = "!";
     private boolean exclusiveHelp = false;
+    private boolean internalCommands = false;
     private List<Long> botOwner = new ArrayList<>();
 
     public String token() {
@@ -19,6 +20,10 @@ public class BaseSettings {
 
     public String defaultPrefix() {
         return defaultPrefix;
+    }
+
+    public boolean isInternalCommands() {
+        return internalCommands;
     }
 
     public boolean isExclusiveHelp() {

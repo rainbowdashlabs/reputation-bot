@@ -153,7 +153,6 @@ public class ReputationBot {
         var stateListener = new StateListener(dataSource);
         var voiceStateListener = new VoiceStateListener(dataSource);
         var logListener = LogListener.create(repBotWorker);
-        var internalCommandListener = new InternalCommandListener(configuration);
         repBotWorker.scheduleAtFixedRate(stateListener, 1, 12, TimeUnit.HOURS);
         repBotWorker.scheduleAtFixedRate(voiceStateListener, 2, 12, TimeUnit.HOURS);
         shardManager.addEventListener(
@@ -162,8 +161,10 @@ public class ReputationBot {
                 reactionListener,
                 reputatinoVoteListener,
                 voiceStateListener,
-                logListener,
-                internalCommandListener);
+                logListener);
+        if (configuration.baseSettings().isInternalCommands()) {
+            shardManager.addEventListener(new InternalCommandListener(configuration));
+        }
         var data = new GuildData(dataSource);
         var hubBuilder = CommandHub.builder(shardManager, configuration.baseSettings().defaultPrefix())
                 .receiveGuildCommands()
