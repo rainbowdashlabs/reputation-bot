@@ -16,7 +16,7 @@ public class Badges {
     public Optional<String> badge(int rank) {
         if (rank == 0) return Optional.empty();
         if (!enables) return Optional.empty();
-        if (rank >= badges.length) {
+        if (rank > badges.length) {
             return Optional.empty();
         }
         return Optional.ofNullable(badges[rank - 1]);
