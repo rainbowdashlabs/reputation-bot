@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import de.chojo.repbot.config.elements.Badges;
+import de.chojo.repbot.config.elements.Botlist;
 import de.chojo.repbot.config.elements.Database;
 import de.chojo.repbot.config.elements.Links;
 import de.chojo.repbot.config.elements.MagicImage;
@@ -114,5 +115,9 @@ public class Configuration {
 
     public Links links() {
         return configFile.links();
+    }
+
+    public Botlist botlist() {
+        return configFile.botlist();
     }
 }

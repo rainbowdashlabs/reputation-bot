@@ -1,6 +1,7 @@
 package de.chojo.repbot.config;
 
 import de.chojo.repbot.config.elements.Badges;
+import de.chojo.repbot.config.elements.Botlist;
 import de.chojo.repbot.config.elements.Database;
 import de.chojo.repbot.config.elements.Links;
 import de.chojo.repbot.config.elements.MagicImage;
@@ -16,6 +17,7 @@ public class ConfigFile {
     private TestMode testMode = new TestMode();
     private Badges badges = new Badges();
     private Links links = new Links();
+    private Botlist botlist = new Botlist();
 
     public String token() {
         return token;
@@ -47,5 +49,9 @@ public class ConfigFile {
 
     public Links links() {
         return links;
+    }
+
+    public Botlist botlist() {
+        return botlist;
     }
 }
