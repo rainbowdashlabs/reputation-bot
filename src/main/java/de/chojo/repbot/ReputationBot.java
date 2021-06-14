@@ -205,7 +205,7 @@ public class ReputationBot {
                         var permissionException = (InsufficientPermissionException) throwable;
                         var permission = permissionException.getPermission();
                         var errorMessage = localizer.localize("error.missingPermission", context.guild(),
-                                Replacement.create("PERM", permission, Format.BOLD));
+                                Replacement.create("PERM", permission.getName(), Format.BOLD));
                         if (context.guild().getSelfMember().hasPermission(permission)) {
                             errorMessage += "\n" + localizer.localize("error.missingPermissionChannel", context.guild(),
                                     Replacement.createMention((TextChannel) context.channel()));
