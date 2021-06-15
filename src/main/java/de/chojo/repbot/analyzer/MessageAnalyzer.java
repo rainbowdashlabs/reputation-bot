@@ -28,7 +28,10 @@ public class MessageAnalyzer {
     private static final int LOOKAROUND = 6;
     private static final Logger log = getLogger(MessageAnalyzer.class);
     private final ContextResolver contextResolver;
-    private final Cache<Long, AnalyzerResult> resultCache = CacheBuilder.newBuilder().expireAfterWrite(10, TimeUnit.MINUTES).build();
+    private final Cache<Long, AnalyzerResult> resultCache = CacheBuilder.newBuilder()
+            .expireAfterWrite(10, TimeUnit.MINUTES)
+            .maximumSize(100000)
+            .build();
     private final Configuration configuration;
 
     public MessageAnalyzer(ContextResolver resolver, Configuration configuration) {
@@ -36,15 +39,6 @@ public class MessageAnalyzer {
         this.configuration = configuration;
     }
 
-
-    public AnalyzerResult processMessage(Pattern pattern, Message message, @Nullable GuildSettings settings, boolean limitTargets, int limit) {
-        try {
-            return resultCache.get(message.getIdLong(), () -> analyze(pattern, message, settings, limitTargets, limit));
-        } catch (ExecutionException e) {
-            log.error("Could not compute anaylzer result", e);
-        }
-        return AnalyzerResult.noMatch();
-    }
 
     /**
      * Analyze a message.
@@ -57,6 +51,15 @@ public class MessageAnalyzer {
      * @param limit        limit for returned matches in the analyzer result
      * @return analyzer results
      */
+    public AnalyzerResult processMessage(Pattern pattern, Message message, @Nullable GuildSettings settings, boolean limitTargets, int limit) {
+        try {
+            return resultCache.get(message.getIdLong(), () -> analyze(pattern, message, settings, limitTargets, limit));
+        } catch (ExecutionException e) {
+            log.error("Could not compute anaylzer result", e);
+        }
+        return AnalyzerResult.noMatch();
+    }
+
     private AnalyzerResult analyze(Pattern pattern, Message message, @Nullable GuildSettings settings, boolean limitTargets, int limit) {
         if (pattern.pattern().isBlank()) return AnalyzerResult.noMatch();
         var contentRaw = message.getContentRaw();

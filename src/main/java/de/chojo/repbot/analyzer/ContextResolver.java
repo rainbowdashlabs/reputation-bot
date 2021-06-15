@@ -37,6 +37,7 @@ public class ContextResolver {
     private final Cache<Long, Set<Long>> messageContextCache = CacheBuilder.newBuilder()
             .expireAfterAccess(5, TimeUnit.SECONDS)
             .expireAfterWrite(10, TimeUnit.SECONDS)
+            .maximumSize(100000)
             .build();
 
     private final Cache<Long, Set<Long>> voiceContextCache = CacheBuilder.newBuilder()
