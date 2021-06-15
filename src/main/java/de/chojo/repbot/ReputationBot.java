@@ -3,9 +3,11 @@ package de.chojo.repbot;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import de.chojo.jdautil.botlist.BotlistReporter;
-import de.chojo.jdautil.listener.CommandHub;
+import de.chojo.jdautil.command.dispatching.CommandHub;
 import de.chojo.jdautil.localization.Localizer;
+import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.Language;
+import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.commands.Channel;
 import de.chojo.repbot.commands.Help;
 import de.chojo.repbot.commands.Info;
@@ -34,6 +36,9 @@ import de.chojo.repbot.service.RepBotCachePolicy;
 import de.chojo.repbot.service.ReputationService;
 import de.chojo.repbot.service.RoleAssigner;
 import de.chojo.repbot.util.LogNotify;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -197,8 +202,34 @@ public class ReputationBot {
                     if (roleById == null) return false;
                     return wrapper.getMember().getRoles().contains(roleById);
                 })
-                .withCommandErrorHandler((command, message, throwable) -> {
-                    log.error(LogNotify.NOTIFY_ADMIN, "Command execution of {} failed\n{}", command.command(), message, throwable);
+                .withCommandErrorHandler((context, throwable) -> {
+                    if (throwable instanceof InsufficientPermissionException) {
+                        var permissionException = (InsufficientPermissionException) throwable;
+                        var permission = permissionException.getPermission();
+                        var errorMessage = localizer.localize("error.missingPermission", context.guild(),
+                                Replacement.create("PERM", permission.getName(), Format.BOLD));
+                        if (context.guild().getSelfMember().hasPermission(permission)) {
+                            errorMessage += "\n" + localizer.localize("error.missingPermissionChannel", context.guild(),
+                                    Replacement.createMention((TextChannel) context.channel()));
+                        } else {
+                            errorMessage += "\n" + localizer.localize("error.missingPermissionGuild", context.guild());
+                        }
+                        if (permissionException.getPermission() != Permission.MESSAGE_WRITE) {
+                            context.channel().sendMessage(errorMessage).queue();
+                            return;
+                        }
+                        // botlists always have permission issues. We will ignore them and wont try to notify anyone...
+                        if (configuration.botlist().isBotlistGuild(permissionException.getGuildId())) return;
+                        var ownerId = context.guild().getOwnerIdLong();
+                        var finalErrorMessage = errorMessage;
+                        context.guild().retrieveMemberById(ownerId)
+                                .flatMap(member -> member.getUser().openPrivateChannel())
+                                .flatMap(privateChannel -> privateChannel.sendMessage(finalErrorMessage))
+                                .onErrorMap(t -> null)
+                                .queue();
+                        return;
+                    }
+                    log.error(LogNotify.NOTIFY_ADMIN, "Command execution of {} failed\n{}", context.command().command(), context.args(), throwable);
                 });
         if (configuration.testMode().isTestMode()) {
             hubBuilder.onlyGuildCommands(configuration.testMode().testGuilds());
