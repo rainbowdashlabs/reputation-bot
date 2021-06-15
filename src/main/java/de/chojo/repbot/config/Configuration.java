@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import de.chojo.repbot.config.elements.AnalyzerSettings;
 import de.chojo.repbot.config.elements.Badges;
 import de.chojo.repbot.config.elements.BaseSettings;
 import de.chojo.repbot.config.elements.Botlist;
@@ -91,6 +92,10 @@ public class Configuration {
 
     public BaseSettings baseSettings() {
         return configFile.baseSettings();
+    }
+
+    public AnalyzerSettings analyzerSettings() {
+        return configFile.analyzerSettings();
     }
 
     public MagicImage magicImage() {

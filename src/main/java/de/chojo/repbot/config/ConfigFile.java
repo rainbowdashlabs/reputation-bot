@@ -1,5 +1,6 @@
 package de.chojo.repbot.config;
 
+import de.chojo.repbot.config.elements.AnalyzerSettings;
 import de.chojo.repbot.config.elements.Badges;
 import de.chojo.repbot.config.elements.BaseSettings;
 import de.chojo.repbot.config.elements.Botlist;
@@ -11,6 +12,7 @@ import de.chojo.repbot.config.elements.TestMode;
 @SuppressWarnings("FieldMayBeFinal")
 public class ConfigFile {
     private BaseSettings baseSettings = new BaseSettings();
+    private AnalyzerSettings analyzerSettings = new AnalyzerSettings();
     private Database database = new Database();
     private MagicImage magicImage = new MagicImage();
     private TestMode testMode = new TestMode();
@@ -20,6 +22,10 @@ public class ConfigFile {
 
     public BaseSettings baseSettings() {
         return baseSettings;
+    }
+
+    public AnalyzerSettings analyzerSettings() {
+        return analyzerSettings;
     }
 
     public Database database() {
