@@ -179,6 +179,10 @@ public class Roles extends SimpleCommand {
             eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.invalidRole"), 30);
             return true;
         }
+        if (!eventWrapper.getGuild().getSelfMember().canInteract(roleById.get())) {
+            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.roleAccess", Replacement.createMention(roleById.get())), 15);
+            return true;
+        }
         if (data.addReputationRole(eventWrapper.getGuild(), roleById.get(), reputation.get())) {
             eventWrapper.reply(eventWrapper.localize("command.roles.sub.add.added",
                     Replacement.create("ROLE", roleById.get().getName(), Format.BOLD), Replacement.create("POINTS", reputation.get()))).queue();
@@ -186,15 +190,20 @@ public class Roles extends SimpleCommand {
         return true;
     }
 
-    private boolean add(SlashCommandEvent event) {
+    private void add(SlashCommandEvent event) {
         var role = event.getOption("role").getAsRole();
         var reputation = event.getOption("reputation").getAsLong();
+        if (!event.getGuild().getSelfMember().canInteract(role)) {
+            event.reply(loc.localize("error.roleAccess", event.getGuild(),
+                    Replacement.createMention(role))).setEphemeral(true).queue();
+            return;
+        }
+
         if (data.addReputationRole(event.getGuild(), role, reputation)) {
             event.reply(loc.localize("command.roles.sub.add.added", event.getGuild(),
                     Replacement.createMention("ROLE", role), Replacement.create("POINTS", reputation)))
                     .allowedMentions(Collections.emptyList()).queue();
         }
-        return true;
     }
 
     private boolean list(MessageEventWrapper eventWrapper) {

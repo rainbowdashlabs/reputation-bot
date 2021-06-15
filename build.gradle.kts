@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "1.2.0"
+version = "1.2.1"
 
 val log4jVersion = "2.14.0"
 val lombokVersion = "1.18.20"
@@ -24,7 +24,7 @@ dependencies {
     implementation("net.dv8tion", "JDA", "4.2.1_269") {
         exclude(module = "opus-java")
     }
-    implementation("de.chojo", "cjda-util", "1.2.4-DEV")
+    implementation("de.chojo", "cjda-util", "1.3.2-DEV")
 
     // database
     implementation("org.postgresql", "postgresql", "42.2.19")

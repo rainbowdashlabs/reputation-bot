@@ -1,5 +1,7 @@
 package de.chojo.repbot.service;
 
+import de.chojo.jdautil.localization.ILocalizer;
+import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.ThankType;
@@ -12,12 +14,14 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.exceptions.HierarchyException;
 import org.jetbrains.annotations.Nullable;
 
 import javax.sql.DataSource;
 import java.awt.Color;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -30,14 +34,16 @@ public class ReputationService {
     private final RoleAssigner assigner;
     private final MagicImage magicImage;
     private final ContextResolver contextResolver;
+    private final ILocalizer localizer;
     private Instant lastEasterEggSent = Instant.EPOCH;
 
-    public ReputationService(DataSource dataSource, RoleAssigner assigner, MagicImage magicImage) {
+    public ReputationService(DataSource dataSource, RoleAssigner assigner, MagicImage magicImage, ILocalizer localizer) {
         this.reputationData = new ReputationData(dataSource);
         this.guildData = new GuildData(dataSource);
         this.assigner = assigner;
         this.magicImage = magicImage;
         this.contextResolver = new ContextResolver(dataSource);
+        this.localizer = localizer;
     }
 
     /**
@@ -120,7 +126,15 @@ public class ReputationService {
             // mark messages
             markMessage(message, refMessage, settings);
             // update role
-            assigner.update(guild.getMember(receiver));
+            try {
+                assigner.update(guild.getMember(receiver));
+            } catch (RoleAccessException e) {
+                message.getChannel()
+                        .sendMessage(localizer.localize("error.roleAccess", message.getGuild(),
+                                Replacement.createMention("ROLE", e.role())))
+                        .allowedMentions(Collections.emptyList())
+                        .queue();
+            }
             return true;
         }
         // submit to database failed. Maybe this message was already voted by the user.

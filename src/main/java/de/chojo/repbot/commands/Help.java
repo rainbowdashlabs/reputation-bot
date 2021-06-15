@@ -2,7 +2,7 @@ package de.chojo.repbot.commands;
 
 import de.chojo.jdautil.command.SimpleArgument;
 import de.chojo.jdautil.command.SimpleCommand;
-import de.chojo.jdautil.listener.CommandHub;
+import de.chojo.jdautil.command.dispatching.CommandHub;
 import de.chojo.jdautil.localization.ContextLocalizer;
 import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Format;

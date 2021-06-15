@@ -2,9 +2,12 @@ package de.chojo.repbot;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import de.chojo.jdautil.listener.CommandHub;
+import de.chojo.jdautil.botlist.BotlistReporter;
+import de.chojo.jdautil.command.dispatching.CommandHub;
 import de.chojo.jdautil.localization.Localizer;
+import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.Language;
+import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.commands.Channel;
 import de.chojo.repbot.commands.Help;
 import de.chojo.repbot.commands.Info;
@@ -22,6 +25,7 @@ import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.updater.QueryReplacement;
 import de.chojo.repbot.data.updater.SqlUpdater;
+import de.chojo.repbot.listener.InternalCommandListener;
 import de.chojo.repbot.listener.LogListener;
 import de.chojo.repbot.listener.MessageListener;
 import de.chojo.repbot.listener.ReactionListener;
@@ -32,6 +36,9 @@ import de.chojo.repbot.service.RepBotCachePolicy;
 import de.chojo.repbot.service.ReputationService;
 import de.chojo.repbot.service.RoleAssigner;
 import de.chojo.repbot.util.LogNotify;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -105,6 +112,19 @@ public class ReputationBot {
 
         log.info("Initializing bot.");
         initBot();
+
+        initBotList();
+    }
+
+    private void initBotList() {
+        var botlist = configuration.botlist();
+        if (!botlist.isSubmit()) return;
+        BotlistReporter.build(shardManager)
+                .forDiscordBotListCOM(botlist.discordBotlistCom())
+                .forDiscordBotsGG(botlist.discordBotsGg())
+                .forTopGG(botlist.topGg())
+                .withExecutorService(repBotWorker)
+                .build();
     }
 
     private void initDatabase() throws SQLException, IOException {
@@ -131,7 +151,7 @@ public class ReputationBot {
 
     private void initBot() {
         var roleAssigner = new RoleAssigner(dataSource);
-        var reputationService = new ReputationService(dataSource, roleAssigner, configuration.magicImage());
+        var reputationService = new ReputationService(dataSource, roleAssigner, configuration.magicImage(), localizer);
         var reactionListener = new ReactionListener(dataSource, localizer, reputationService);
         var reputatinoVoteListener = new ReputationVoteListener(reputationService, localizer);
         var messageListener = new MessageListener(dataSource, configuration, repBotCachePolicy, reputatinoVoteListener, reputationService);
@@ -147,8 +167,11 @@ public class ReputationBot {
                 reputatinoVoteListener,
                 voiceStateListener,
                 logListener);
+        if (configuration.baseSettings().isInternalCommands()) {
+            shardManager.addEventListener(new InternalCommandListener(configuration));
+        }
         var data = new GuildData(dataSource);
-        var hubBuilder = CommandHub.builder(shardManager, configuration.defaultPrefix())
+        var hubBuilder = CommandHub.builder(shardManager, configuration.baseSettings().defaultPrefix())
                 .receiveGuildCommands()
                 .receiveGuildMessagesUpdates()
                 .withConversationSystem()
@@ -179,14 +202,40 @@ public class ReputationBot {
                     if (roleById == null) return false;
                     return wrapper.getMember().getRoles().contains(roleById);
                 })
-                .withCommandErrorHandler((command, message, throwable) -> {
-                    log.error(LogNotify.NOTIFY_ADMIN, "Command execution of {} failed\n{}", command.command(), message, throwable);
+                .withCommandErrorHandler((context, throwable) -> {
+                    if (throwable instanceof InsufficientPermissionException) {
+                        var permissionException = (InsufficientPermissionException) throwable;
+                        var permission = permissionException.getPermission();
+                        var errorMessage = localizer.localize("error.missingPermission", context.guild(),
+                                Replacement.create("PERM", permission.getName(), Format.BOLD));
+                        if (context.guild().getSelfMember().hasPermission(permission)) {
+                            errorMessage += "\n" + localizer.localize("error.missingPermissionChannel", context.guild(),
+                                    Replacement.createMention((TextChannel) context.channel()));
+                        } else {
+                            errorMessage += "\n" + localizer.localize("error.missingPermissionGuild", context.guild());
+                        }
+                        if (permissionException.getPermission() != Permission.MESSAGE_WRITE) {
+                            context.channel().sendMessage(errorMessage).queue();
+                            return;
+                        }
+                        // botlists always have permission issues. We will ignore them and wont try to notify anyone...
+                        if (configuration.botlist().isBotlistGuild(permissionException.getGuildId())) return;
+                        var ownerId = context.guild().getOwnerIdLong();
+                        var finalErrorMessage = errorMessage;
+                        context.guild().retrieveMemberById(ownerId)
+                                .flatMap(member -> member.getUser().openPrivateChannel())
+                                .flatMap(privateChannel -> privateChannel.sendMessage(finalErrorMessage))
+                                .onErrorMap(t -> null)
+                                .queue();
+                        return;
+                    }
+                    log.error(LogNotify.NOTIFY_ADMIN, "Command execution of {} failed\n{}", context.command().command(), context.args(), throwable);
                 });
         if (configuration.testMode().isTestMode()) {
             hubBuilder.onlyGuildCommands(configuration.testMode().testGuilds());
         }
         var hub = hubBuilder.build();
-        hub.registerCommands(new Help(hub, localizer, configuration.isExclusiveHelp()));
+        hub.registerCommands(new Help(hub, localizer, configuration.baseSettings().isExclusiveHelp()));
     }
 
     private void initShutdownHook() {
@@ -206,7 +255,7 @@ public class ReputationBot {
     private void initJDA() throws LoginException {
         scan = new Scan(dataSource, localizer);
         repBotCachePolicy = new RepBotCachePolicy(scan);
-        shardManager = DefaultShardManagerBuilder.createDefault(configuration.token())
+        shardManager = DefaultShardManagerBuilder.createDefault(configuration.baseSettings().token())
                 .enableIntents(
                         // Required to retrieve reputation emotes
                         GatewayIntent.GUILD_MESSAGE_REACTIONS,
