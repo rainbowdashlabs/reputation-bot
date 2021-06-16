@@ -138,7 +138,7 @@ public class MessageAnalyzer {
 
             for (var word : resolve) {
                 List<WeightedEntry<Member>> weightedMembers;
-                if (targets.isEmpty()) {
+                if (!targets.isEmpty()) {
                     weightedMembers = DiscordResolver.fuzzyGuildTargetSearch(word, targets);
                 } else {
                     weightedMembers = DiscordResolver.fuzzyGuildUserSearch(message.getGuild(), word);
