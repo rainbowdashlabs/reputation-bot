@@ -90,7 +90,7 @@ public class MessageAnalyzer {
         var mentionedMembers = message.getMentionedUsers();
         if (!mentionedMembers.isEmpty()) {
             if (mentionedMembers.size() > limit) {
-                return resolveMessage(message, pattern, targets, limit);
+                return resolveMessage(message, pattern, targets, limitTargets, limit);
             }
 
             List<Member> members = new ArrayList<>();
@@ -107,11 +107,11 @@ public class MessageAnalyzer {
 
             return AnalyzerResult.mention(message.getAuthor(), members);
         }
-        return resolveMessage(message, pattern, targets, limit);
+        return resolveMessage(message, pattern, targets, limitTargets, limit);
     }
 
 
-    private AnalyzerResult resolveMessage(Message message, Pattern thankPattern, @NotNull Set<Member> targets, int limit) {
+    private AnalyzerResult resolveMessage(Message message, Pattern thankPattern, @NotNull Set<Member> targets, boolean limitTargets, int limit) {
         var contentRaw = message.getContentRaw();
 
         var words = new ArrayList<>(List.of(contentRaw.split("\\s")));
@@ -138,7 +138,7 @@ public class MessageAnalyzer {
 
             for (var word : resolve) {
                 List<WeightedEntry<Member>> weightedMembers;
-                if (!targets.isEmpty()) {
+                if (limitTargets) {
                     weightedMembers = DiscordResolver.fuzzyGuildTargetSearch(word, targets);
                 } else {
                     weightedMembers = DiscordResolver.fuzzyGuildUserSearch(message.getGuild(), word);
