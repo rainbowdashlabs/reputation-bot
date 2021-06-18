@@ -6,11 +6,13 @@ import de.chojo.repbot.config.elements.Botlist;
 import de.chojo.repbot.config.elements.Database;
 import de.chojo.repbot.config.elements.Links;
 import de.chojo.repbot.config.elements.MagicImage;
+import de.chojo.repbot.config.elements.Presence;
 import de.chojo.repbot.config.elements.TestMode;
 
 @SuppressWarnings("FieldMayBeFinal")
 public class ConfigFile {
     private BaseSettings baseSettings = new BaseSettings();
+    private Presence presence = new Presence();
     private Database database = new Database();
     private MagicImage magicImage = new MagicImage();
     private TestMode testMode = new TestMode();
@@ -20,6 +22,10 @@ public class ConfigFile {
 
     public BaseSettings baseSettings() {
         return baseSettings;
+    }
+
+    public Presence presence() {
+        return presence;
     }
 
     public Database database() {

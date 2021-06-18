@@ -14,8 +14,8 @@ val lombokVersion = "1.18.20"
 
 
 repositories {
-    maven("https://eldonexus.de/repository/maven-proxies")
     maven("https://eldonexus.de/repository/maven-public")
+    maven("https://eldonexus.de/repository/maven-proxies")
     maven("https://m2.dv8tion.net/releases")
 }
 
@@ -24,7 +24,7 @@ dependencies {
     implementation("net.dv8tion", "JDA", "4.2.1_269") {
         exclude(module = "opus-java")
     }
-    implementation("de.chojo", "cjda-util", "1.3.2-DEV")
+    implementation("de.chojo", "cjda-util", "1.5.0-DEV")
 
     // database
     implementation("org.postgresql", "postgresql", "42.2.19")
@@ -41,6 +41,7 @@ dependencies {
 
     // utils
     implementation("org.apache.commons", "commons-lang3", "3.12.0")
+    implementation("de.chojo", "sql-util", "1.0.0")
 
     // unit testing
     testImplementation(platform("org.junit:junit-bom:5.7.1"))
@@ -52,7 +53,7 @@ java {
     withSourcesJar()
     withJavadocJar()
 
-    sourceCompatibility = JavaVersion.VERSION_15
+    sourceCompatibility = JavaVersion.VERSION_16
 }
 
 tasks {

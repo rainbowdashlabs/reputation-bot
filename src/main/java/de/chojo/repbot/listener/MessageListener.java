@@ -10,6 +10,7 @@ import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;
 import de.chojo.repbot.service.RepBotCachePolicy;
 import de.chojo.repbot.service.ReputationService;
+import de.chojo.repbot.statistic.Statistic;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageBulkDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
@@ -34,8 +35,9 @@ public class MessageListener extends ListenerAdapter {
     private final ReputationService reputationService;
     private final ContextResolver contextResolver;
     private final MessageAnalyzer messageAnalyzer;
+    private final Statistic statistic;
 
-    public MessageListener(DataSource dataSource, Configuration configuration, RepBotCachePolicy repBotCachePolicy, ReputationVoteListener reputationVoteListener, ReputationService reputationService) {
+    public MessageListener(DataSource dataSource, Configuration configuration, RepBotCachePolicy repBotCachePolicy, ReputationVoteListener reputationVoteListener, ReputationService reputationService, Statistic statistic) {
         guildData = new GuildData(dataSource);
         reputationData = new ReputationData(dataSource);
         this.configuration = configuration;
@@ -44,6 +46,7 @@ public class MessageListener extends ListenerAdapter {
         this.reputationService = reputationService;
         this.contextResolver = new ContextResolver(dataSource);
         this.messageAnalyzer = new MessageAnalyzer(dataSource);
+        this.statistic = statistic;
     }
 
     @Override
@@ -83,6 +86,8 @@ public class MessageListener extends ListenerAdapter {
         }
 
         var analyzerResult = messageAnalyzer.processMessage(thankwordPattern, message, settings, true, 0.85, 3);
+
+        statistic.messageAnalyzed(event.getJDA());
 
         var donator = analyzerResult.donator();
 

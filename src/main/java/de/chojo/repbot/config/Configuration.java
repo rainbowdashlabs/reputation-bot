@@ -12,6 +12,7 @@ import de.chojo.repbot.config.elements.Botlist;
 import de.chojo.repbot.config.elements.Database;
 import de.chojo.repbot.config.elements.Links;
 import de.chojo.repbot.config.elements.MagicImage;
+import de.chojo.repbot.config.elements.Presence;
 import de.chojo.repbot.config.elements.TestMode;
 import de.chojo.repbot.config.exception.ConfigurationException;
 import org.slf4j.Logger;
@@ -111,5 +112,9 @@ public class Configuration {
 
     public Botlist botlist() {
         return configFile.botlist();
+    }
+
+    public Presence presence() {
+        return configFile.presence();
     }
 }

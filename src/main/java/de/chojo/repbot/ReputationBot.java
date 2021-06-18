@@ -154,7 +154,7 @@ public class ReputationBot {
         var reputationService = new ReputationService(dataSource, roleAssigner, configuration.magicImage(), localizer);
         var reactionListener = new ReactionListener(dataSource, localizer, reputationService);
         var reputatinoVoteListener = new ReputationVoteListener(reputationService, localizer);
-        var messageListener = new MessageListener(dataSource, configuration, repBotCachePolicy, reputatinoVoteListener, reputationService);
+        var messageListener = new MessageListener(dataSource, configuration, repBotCachePolicy, reputatinoVoteListener, reputationService, statistic);
         var stateListener = new StateListener(dataSource);
         var voiceStateListener = new VoiceStateListener(dataSource);
         var logListener = LogListener.create(repBotWorker);
