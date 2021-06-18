@@ -1,7 +1,10 @@
 package de.chojo.repbot.analyzer;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.jdautil.parsing.WeightedEntry;
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.wrapper.GuildSettings;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -10,11 +13,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
-import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -24,10 +28,17 @@ public class MessageAnalyzer {
     private static final int LOOKAROUND = 6;
     private static final Logger log = getLogger(MessageAnalyzer.class);
     private final ContextResolver contextResolver;
+    private final Cache<Long, AnalyzerResult> resultCache = CacheBuilder.newBuilder()
+            .expireAfterWrite(10, TimeUnit.MINUTES)
+            .maximumSize(100000)
+            .build();
+    private final Configuration configuration;
 
-    public MessageAnalyzer(DataSource dataSource) {
-        contextResolver = new ContextResolver(dataSource);
+    public MessageAnalyzer(ContextResolver resolver, Configuration configuration) {
+        contextResolver = resolver;
+        this.configuration = configuration;
     }
+
 
     /**
      * Analyze a message.
@@ -37,11 +48,19 @@ public class MessageAnalyzer {
      * @param settings     settings of the guild
      * @param limitTargets true if targets should be limited to users which have written in the channel in the
      *                     maxHistoryAge
-     * @param threshold    threshold for fuzzy matches
      * @param limit        limit for returned matches in the analyzer result
      * @return analyzer results
      */
-    public AnalyzerResult processMessage(Pattern pattern, Message message, @Nullable GuildSettings settings, boolean limitTargets, double threshold, int limit) {
+    public AnalyzerResult processMessage(Pattern pattern, Message message, @Nullable GuildSettings settings, boolean limitTargets, int limit) {
+        try {
+            return resultCache.get(message.getIdLong(), () -> analyze(pattern, message, settings, limitTargets, limit));
+        } catch (ExecutionException e) {
+            log.error("Could not compute anaylzer result", e);
+        }
+        return AnalyzerResult.noMatch();
+    }
+
+    private AnalyzerResult analyze(Pattern pattern, Message message, @Nullable GuildSettings settings, boolean limitTargets, int limit) {
         if (pattern.pattern().isBlank()) return AnalyzerResult.noMatch();
         var contentRaw = message.getContentRaw();
 
@@ -71,7 +90,7 @@ public class MessageAnalyzer {
         var mentionedMembers = message.getMentionedUsers();
         if (!mentionedMembers.isEmpty()) {
             if (mentionedMembers.size() > limit) {
-                return resolveMessage(message, pattern, targets, threshold, limit);
+                return resolveMessage(message, pattern, targets, limitTargets, limit);
             }
 
             List<Member> members = new ArrayList<>();
@@ -88,11 +107,11 @@ public class MessageAnalyzer {
 
             return AnalyzerResult.mention(message.getAuthor(), members);
         }
-        return resolveMessage(message, pattern, targets, threshold, limit);
+        return resolveMessage(message, pattern, targets, limitTargets, limit);
     }
 
 
-    private AnalyzerResult resolveMessage(Message message, Pattern thankPattern, @NotNull Set<Member> targets, double threshold, int limit) {
+    private AnalyzerResult resolveMessage(Message message, Pattern thankPattern, @NotNull Set<Member> targets, boolean limitTargets, int limit) {
         var contentRaw = message.getContentRaw();
 
         var words = new ArrayList<>(List.of(contentRaw.split("\\s")));
@@ -119,7 +138,7 @@ public class MessageAnalyzer {
 
             for (var word : resolve) {
                 List<WeightedEntry<Member>> weightedMembers;
-                if (!targets.isEmpty()) {
+                if (limitTargets) {
                     weightedMembers = DiscordResolver.fuzzyGuildTargetSearch(word, targets);
                 } else {
                     weightedMembers = DiscordResolver.fuzzyGuildUserSearch(message.getGuild(), word);
@@ -130,7 +149,7 @@ public class MessageAnalyzer {
         }
 
         var members = users.stream()
-                .filter(e -> e.getWeight() >= threshold)
+                .filter(e -> e.getWeight() >= configuration.analyzerSettings().minFuzzyScore())
                 .distinct()
                 .sorted()
                 .limit(limit)

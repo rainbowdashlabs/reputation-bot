@@ -8,6 +8,8 @@ import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.Language;
 import de.chojo.jdautil.localization.util.Replacement;
+import de.chojo.repbot.analyzer.ContextResolver;
+import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.commands.Channel;
 import de.chojo.repbot.commands.Help;
 import de.chojo.repbot.commands.Info;
@@ -76,6 +78,8 @@ public class ReputationBot {
     private Localizer localizer;
     private Scan scan;
     private RepBotCachePolicy repBotCachePolicy;
+    private ContextResolver contextResolver;
+    private MessageAnalyzer messageAnalyzer;
 
     public static void main(String[] args) throws SQLException, IOException {
         ReputationBot.instance = new ReputationBot();
@@ -102,6 +106,8 @@ public class ReputationBot {
 
         initLocalization();
 
+        initAnalyzer();
+
         log.info("Initializing JDA");
         try {
             initJDA();
@@ -114,6 +120,11 @@ public class ReputationBot {
         initBot();
 
         initBotList();
+    }
+
+    private void initAnalyzer() {
+        contextResolver = new ContextResolver(dataSource, configuration);
+        messageAnalyzer = new MessageAnalyzer(contextResolver, configuration);
     }
 
     private void initBotList() {
@@ -150,26 +161,34 @@ public class ReputationBot {
     }
 
     private void initBot() {
+        // init services
         var roleAssigner = new RoleAssigner(dataSource);
-        var reputationService = new ReputationService(dataSource, roleAssigner, configuration.magicImage(), localizer);
+        var reputationService = new ReputationService(dataSource, contextResolver, roleAssigner, configuration.magicImage(), localizer);
+
+        // init listener and services
         var reactionListener = new ReactionListener(dataSource, localizer, reputationService);
         var reputatinoVoteListener = new ReputationVoteListener(reputationService, localizer);
-        var messageListener = new MessageListener(dataSource, configuration, repBotCachePolicy, reputatinoVoteListener, reputationService);
+        var messageListener = new MessageListener(dataSource, configuration, repBotCachePolicy, reputatinoVoteListener,
+                reputationService, contextResolver, messageAnalyzer);
         var stateListener = new StateListener(dataSource);
         var voiceStateListener = new VoiceStateListener(dataSource);
         var logListener = LogListener.create(repBotWorker);
+        // schedule worker
         repBotWorker.scheduleAtFixedRate(stateListener, 1, 12, TimeUnit.HOURS);
         repBotWorker.scheduleAtFixedRate(voiceStateListener, 2, 12, TimeUnit.HOURS);
+
         shardManager.addEventListener(
-                messageListener,
-                stateListener,
                 reactionListener,
                 reputatinoVoteListener,
+                messageListener,
+                stateListener,
                 voiceStateListener,
                 logListener);
+
         if (configuration.baseSettings().isInternalCommands()) {
             shardManager.addEventListener(new InternalCommandListener(configuration));
         }
+
         var data = new GuildData(dataSource);
         var hubBuilder = CommandHub.builder(shardManager, configuration.baseSettings().defaultPrefix())
                 .receiveGuildCommands()
@@ -184,7 +203,7 @@ public class ReputationBot {
                         new Roles(dataSource, localizer),
                         new RepSettings(dataSource, localizer),
                         new TopReputation(dataSource, localizer),
-                        Thankwords.of(dataSource, localizer),
+                        Thankwords.of(messageAnalyzer, dataSource, localizer),
                         scan,
                         new Locale(dataSource, localizer),
                         new Invite(localizer, configuration),
@@ -253,7 +272,7 @@ public class ReputationBot {
     }
 
     private void initJDA() throws LoginException {
-        scan = new Scan(dataSource, localizer);
+        scan = new Scan(dataSource, messageAnalyzer, localizer);
         repBotCachePolicy = new RepBotCachePolicy(scan);
         shardManager = DefaultShardManagerBuilder.createDefault(configuration.baseSettings().token())
                 .enableIntents(
