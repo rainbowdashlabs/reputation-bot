@@ -9,9 +9,6 @@ import java.util.Set;
 public class ThankwordsContainer {
     private final Map<String, List<String>> defaults = new HashMap<>();
 
-    public ThankwordsContainer() {
-    }
-
     public List<String> get(String key) {
         return defaults.get(key);
     }

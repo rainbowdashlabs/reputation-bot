@@ -48,6 +48,15 @@ public class Setup extends SimpleCommand {
     private final GuildData guildData;
     private final ThankwordsContainer thankwordsContainer;
 
+    public Setup(Localizer localizer, DataSource dataSource,
+                 ThankwordsContainer thankwordsContainer) {
+        super("setup", null, "command.setup.description", (SimpleArgument[]) null,
+                Permission.ADMINISTRATOR);
+        this.localizer = localizer;
+        this.guildData = new GuildData(dataSource);
+        this.thankwordsContainer = thankwordsContainer;
+    }
+
     public static Setup of(DataSource dataSource, Localizer localizer) {
         ThankwordsContainer thankwordsContainer;
         try {
@@ -60,16 +69,6 @@ public class Setup extends SimpleCommand {
             log.error("Could not read thankwords", e);
         }
         return new Setup(localizer, dataSource, thankwordsContainer);
-    }
-
-
-    public Setup(Localizer localizer, DataSource dataSource,
-                 ThankwordsContainer thankwordsContainer) {
-        super("setup", null, "command.setup.description", (SimpleArgument[]) null,
-                Permission.ADMINISTRATOR);
-        this.localizer = localizer;
-        this.guildData = new GuildData(dataSource);
-        this.thankwordsContainer = thankwordsContainer;
     }
 
     @Override
