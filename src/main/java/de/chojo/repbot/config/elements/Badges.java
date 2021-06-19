@@ -2,7 +2,7 @@ package de.chojo.repbot.config.elements;
 
 import java.util.Optional;
 
-@SuppressWarnings("FieldMayBeFinal")
+@SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
 public class Badges {
     private boolean enables = true;
     private String[] badges = new String[0];
