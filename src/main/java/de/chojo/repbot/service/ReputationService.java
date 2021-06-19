@@ -14,7 +14,6 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.exceptions.HierarchyException;
 import org.jetbrains.annotations.Nullable;
 
 import javax.sql.DataSource;
@@ -37,12 +36,12 @@ public class ReputationService {
     private final ILocalizer localizer;
     private Instant lastEasterEggSent = Instant.EPOCH;
 
-    public ReputationService(DataSource dataSource, RoleAssigner assigner, MagicImage magicImage, ILocalizer localizer) {
+    public ReputationService(DataSource dataSource,ContextResolver contextResolver, RoleAssigner assigner, MagicImage magicImage, ILocalizer localizer) {
         this.reputationData = new ReputationData(dataSource);
         this.guildData = new GuildData(dataSource);
         this.assigner = assigner;
         this.magicImage = magicImage;
-        this.contextResolver = new ContextResolver(dataSource);
+        this.contextResolver = contextResolver;
         this.localizer = localizer;
     }
 

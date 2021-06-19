@@ -8,6 +8,7 @@ import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
+import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
@@ -55,7 +56,7 @@ public class Scan extends SimpleCommand {
     private final Queue<ScanProcess> canceled = new ArrayDeque<>();
     private final MessageAnalyzer messageAnalyzer;
 
-    public Scan(DataSource dataSource, Localizer localizer) {
+    public Scan(DataSource dataSource, MessageAnalyzer messageAnalyzer, Localizer localizer) {
         super("scan",
                 null,
                 "command.scan.description",
@@ -76,7 +77,7 @@ public class Scan extends SimpleCommand {
             finishTasks();
             finishCanceledTasks();
         }, 1, 1, TimeUnit.SECONDS);
-        this.messageAnalyzer = new MessageAnalyzer(dataSource);
+        this.messageAnalyzer = messageAnalyzer;
     }
 
     @Override
@@ -134,7 +135,7 @@ public class Scan extends SimpleCommand {
     }
 
     @Override
-    public void onSlashCommand(SlashCommandEvent event) {
+    public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
         var loc = this.loc.getContextLocalizer(event.getGuild());
         if (!event.getGuild().getSelfMember().hasPermission(Permission.MESSAGE_HISTORY)) {
             event.reply(loc.localize("command.scan.error.history")).setEphemeral(true).queue();
@@ -319,7 +320,7 @@ public class Scan extends SimpleCommand {
 
                 if (message.getAuthor().isBot()) continue;
 
-                var result = messageAnalyzer.processMessage(pattern, message, null, false, 0.85, 3);
+                var result = messageAnalyzer.processMessage(pattern, message, null, false, 3);
 
                 var donator = result.donator();
                 var refMessage = result.referenceMessage();

@@ -9,6 +9,7 @@ import de.chojo.jdautil.parsing.ValueParser;
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
+import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.data.wrapper.ReputationLogEntry;
 import net.dv8tion.jda.api.Permission;
@@ -82,7 +83,7 @@ public class Log extends SimpleCommand {
     }
 
     @Override
-    public void onSlashCommand(SlashCommandEvent event) {
+    public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
         var cmd = event.getSubcommandName();
         if ("received".equalsIgnoreCase(cmd)) {
             received(event, event.getOption("user").getAsUser());
@@ -197,7 +198,7 @@ public class Log extends SimpleCommand {
             var jumpLink = createJumpLink(guild, logEntry);
             var thankType = loc.localize("thankType." + logEntry.type().name().toLowerCase(Locale.ROOT));
             entries.add(String.format("**%s** %s ➜ %s **|** %s",
-                    thankType, User.fromId(logEntry.receiverId()).getAsMention(), User.fromId(logEntry.receiverId()).getAsMention(), jumpLink));
+                    thankType, User.fromId(logEntry.donorId()).getAsMention(), User.fromId(logEntry.receiverId()).getAsMention(), jumpLink));
         }
         return String.join("\n", entries);
     }

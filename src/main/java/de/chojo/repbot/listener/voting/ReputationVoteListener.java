@@ -43,12 +43,12 @@ public class ReputationVoteListener extends ListenerAdapter {
 
     @Override
     public void onButtonClick(@NotNull ButtonClickEvent event) {
-        event.deferEdit().queue();
+        if (!voteRequests.containsKey(event.getMessageIdLong())) return;
         if (event.getButton() == null || event.getButton().getId() == null) return;
+        event.deferEdit().queue();
 
         var matcher = VOTE.matcher(event.getButton().getId());
         if (!matcher.find()) return;
-        if (!voteRequests.containsKey(event.getMessageIdLong())) return;
         var voteRequest = voteRequests.get(event.getMessageIdLong());
         if (!Verifier.equalSnowflake(voteRequest.member(), event.getMember())) {
             event.getHook().sendMessage(loc.localize("error.notYourEmbed", event.getGuild())).setEphemeral(true).queue();

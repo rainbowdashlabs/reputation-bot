@@ -40,13 +40,13 @@ public class RepBotCachePolicy implements MemberCachePolicy, Runnable {
 
         if (!seen.containsKey(member.getIdLong())) {
             seen.put(member.getIdLong(), Instant.now());
-            log.debug("Requested user {} for the first time. Caching for some time.", member.getIdLong());
+            log.trace("Requested user {} for the first time. Caching for some time.", member.getIdLong());
             return true;
         }
 
         if (seen.get(member.getIdLong()).isBefore(oldest())) {
             var remove = seen.remove(member.getIdLong());
-            log.debug("Removing {} from cache. Havent seen for {} minutes.", member.getIdLong(), remove.until(Instant.now(), ChronoUnit.MINUTES));
+            log.trace("Removing {} from cache. Havent seen for {} minutes.", member.getIdLong(), remove.until(Instant.now(), ChronoUnit.MINUTES));
             return false;
         }
         return true;

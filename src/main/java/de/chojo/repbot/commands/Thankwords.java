@@ -11,8 +11,10 @@ import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
+import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.data.GuildData;
+import de.chojo.repbot.serialization.ThankwordsContainer;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -25,12 +27,7 @@ import org.slf4j.Logger;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
@@ -71,7 +68,7 @@ public class Thankwords extends SimpleCommand {
         this.messageAnalyzer = messageAnalyzer;
     }
 
-    public static Thankwords of(DataSource dataSource, Localizer localizer) {
+    public static Thankwords of(MessageAnalyzer messageAnalyzer, DataSource dataSource, Localizer localizer) {
         ThankwordsContainer thankwordsContainer;
         try {
             thankwordsContainer = new ObjectMapper()
@@ -81,7 +78,7 @@ public class Thankwords extends SimpleCommand {
             thankwordsContainer = null;
             log.error("Could not read thankwords", e);
         }
-        return new Thankwords(new MessageAnalyzer(dataSource), new GuildData(dataSource), localizer, thankwordsContainer);
+        return new Thankwords(messageAnalyzer, new GuildData(dataSource), localizer, thankwordsContainer);
     }
 
     @Override
@@ -107,7 +104,7 @@ public class Thankwords extends SimpleCommand {
     }
 
     @Override
-    public void onSlashCommand(SlashCommandEvent event) {
+    public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
         var subCmd = event.getSubcommandName();
         if ("add".equalsIgnoreCase(subCmd)) {
             add(event);
@@ -248,7 +245,7 @@ public class Thankwords extends SimpleCommand {
         }
 
         var message = event.getChannel().retrieveMessageById(messageId).complete();
-        var result = messageAnalyzer.processMessage(guildSettings.thankwordPattern(), message, guildSettings, true, 0.85, 3);
+        var result = messageAnalyzer.processMessage(guildSettings.thankwordPattern(), message, guildSettings, true, 3);
         var builder = new LocalizedEmbedBuilder(this.loc, event.getGuild());
         if (result.receivers().isEmpty()) {
             event.reply(loc.localize("command.thankwords.sub.check.match.noMatch")).queue();
@@ -271,7 +268,7 @@ public class Thankwords extends SimpleCommand {
 
         var guildSettings = optGuildSettings.get();
 
-        var result = messageAnalyzer.processMessage(guildSettings.thankwordPattern(), eventWrapper.getMessage(), guildSettings, true, 0.85, 3);
+        var result = messageAnalyzer.processMessage(guildSettings.thankwordPattern(), eventWrapper.getMessage(), guildSettings, true, 3);
         var builder = new LocalizedEmbedBuilder(eventWrapper);
         if (result.receivers().isEmpty()) {
             eventWrapper.reply(eventWrapper.localize("command.thankwords.sub.check.match.noMatch")).queue();
@@ -375,20 +372,5 @@ public class Thankwords extends SimpleCommand {
 
         slashCommandEvent.reply(loc.localize("command.thankwords.sub.loadDefault.added") + wordsJoined).queue();
         return true;
-    }
-
-    private static class ThankwordsContainer {
-        private final Map<String, List<String>> defaults = new HashMap<>();
-
-        public ThankwordsContainer() {
-        }
-
-        public List<String> get(String key) {
-            return defaults.get(key);
-        }
-
-        public Set<String> getAvailableLanguages() {
-            return Collections.unmodifiableSet(defaults.keySet());
-        }
     }
 }

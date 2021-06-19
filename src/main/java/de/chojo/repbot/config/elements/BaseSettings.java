@@ -3,11 +3,12 @@ package de.chojo.repbot.config.elements;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
 public class BaseSettings {
     private String token = "";
     private String defaultPrefix = "!";
-    private boolean exclusiveHelp = false;
-    private boolean internalCommands = false;
+    private boolean exclusiveHelp;
+    private boolean internalCommands;
     private List<Long> botOwner = new ArrayList<>();
 
     public String token() {

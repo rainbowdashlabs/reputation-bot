@@ -1,15 +1,14 @@
 package de.chojo.repbot.data;
 
-import de.chojo.jdautil.database.QueryObject;
-import de.chojo.jdautil.database.builder.QueryBuilderConfig;
-import de.chojo.jdautil.database.builder.QueryBuilderFactory;
-import de.chojo.jdautil.database.builder.stage.ResultStage;
 import de.chojo.jdautil.localization.util.Language;
 import de.chojo.repbot.data.util.DbUtil;
 import de.chojo.repbot.data.wrapper.GuildSettingUpdate;
 import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.data.wrapper.RemovalTask;
 import de.chojo.repbot.data.wrapper.ReputationRole;
+import de.chojo.sqlutil.base.QueryFactoryHolder;
+import de.chojo.sqlutil.wrapper.QueryBuilderConfig;
+import de.chojo.sqlutil.wrapper.stage.ResultStage;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -26,13 +25,11 @@ import java.util.Optional;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class GuildData extends QueryObject {
+public class GuildData extends QueryFactoryHolder {
     private static final Logger log = getLogger(GuildData.class);
-    private final QueryBuilderFactory factory;
 
     public GuildData(DataSource source) {
-        super(source);
-        factory = new QueryBuilderFactory(QueryBuilderConfig.builder().build(), source);
+        super(source, QueryBuilderConfig.builder().build());
     }
 
     /**
@@ -42,7 +39,7 @@ public class GuildData extends QueryObject {
      * @return guild settings if present
      */
     public Optional<GuildSettings> getGuildSettings(Guild guild) {
-        return factory.builder(GuildSettings.class)
+        return builder(GuildSettings.class)
                 .query("""
                         SELECT
                             prefix,
@@ -86,7 +83,7 @@ public class GuildData extends QueryObject {
      * @return prefix if set
      */
     public Optional<String> getPrefix(Guild guild) {
-        return factory.builder(String.class).query("SELECT prefix FROM guild_bot_settings where guild_id = ?;")
+        return builder(String.class).query("SELECT prefix FROM guild_bot_settings where guild_id = ?;")
                 .params(stmt -> stmt.setLong(1, guild.getIdLong()))
                 .readRow(row -> row.getString(1))
                 .firstSync();
@@ -100,7 +97,7 @@ public class GuildData extends QueryObject {
      * @return true if prefix was changed
      */
     public boolean setPrefix(Guild guild, @Nullable String prefix) {
-        return factory.builder()
+        return builder()
                 .query("""
                         INSERT INTO
                             guild_bot_settings(guild_id, prefix) VALUES (?,?)
@@ -119,7 +116,7 @@ public class GuildData extends QueryObject {
      * @return language as string if set
      */
     public Optional<String> getLanguage(Guild guild) {
-        return factory.builder(String.class)
+        return builder(String.class)
                 .query("SELECT language FROM guild_bot_settings where guild_id = ?;")
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
                 .readRow(rs -> rs.getString(1))
@@ -134,7 +131,7 @@ public class GuildData extends QueryObject {
      * @return true if the language was changed
      */
     public boolean setLanguage(Guild guild, @Nullable Language language) {
-        return factory.builder()
+        return builder()
                 .query("""
                         INSERT INTO
                             guild_bot_settings(guild_id, language) VALUES (?,?)
@@ -154,7 +151,7 @@ public class GuildData extends QueryObject {
      * @return true if a channel was added
      */
     public boolean addChannel(Guild guild, MessageChannel channel) {
-        return factory.builder()
+        return builder()
                 .query("INSERT INTO active_channel(guild_id, channel_id) VALUES(?,?) ON CONFLICT DO NOTHING;")
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setLong(channel.getIdLong()))
                 .update().executeSync() > 0;
@@ -168,7 +165,7 @@ public class GuildData extends QueryObject {
      * @return true if the channel was removed
      */
     public boolean removeChannel(Guild guild, MessageChannel channel) {
-        return factory.builder()
+        return builder()
                 .query("DELETE FROM active_channel where guild_id = ? and channel_id = ?;")
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setLong(channel.getIdLong()))
                 .update().executeSync() > 0;
@@ -181,7 +178,7 @@ public class GuildData extends QueryObject {
      * @return the amount of removed channel
      */
     public int clearChannel(Guild guild) {
-        return factory.builder()
+        return builder()
                 .query("DELETE FROM active_channel where guild_id = ?;")
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
                 .update().executeSync();
@@ -198,7 +195,7 @@ public class GuildData extends QueryObject {
      * @return true if the role was added or updated
      */
     public boolean addReputationRole(Guild guild, Role role, long reputation) {
-        return factory.builder()
+        return builder()
                 .query("""
                         DELETE FROM
                             guild_ranks
@@ -228,14 +225,14 @@ public class GuildData extends QueryObject {
      * @return true
      */
     public boolean removeReputationRole(Guild guild, Role role) {
-        return factory.builder()
+        return builder()
                 .query("DELETE FROM guild_ranks where guild_id =? and role_id = ?;")
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setLong(role.getIdLong()))
                 .update().executeSync() > 0;
     }
 
     public Optional<ReputationRole> getCurrentReputationRole(Guild guild, long reputation) {
-        return factory.builder(ReputationRole.class)
+        return builder(ReputationRole.class)
                 .query("""
                         SELECT
                             role_id,
@@ -252,7 +249,7 @@ public class GuildData extends QueryObject {
     }
 
     public Optional<ReputationRole> getNextReputationRole(Guild guild, long reputation) {
-        return factory.builder(ReputationRole.class)
+        return builder(ReputationRole.class)
                 .query("""
                         SELECT
                             role_id,
@@ -269,7 +266,7 @@ public class GuildData extends QueryObject {
     }
 
     public List<ReputationRole> getReputationRoles(Guild guild) {
-        return factory.builder(ReputationRole.class)
+        return builder(ReputationRole.class)
                 .query("""
                         SELECT
                             role_id,
@@ -284,7 +281,7 @@ public class GuildData extends QueryObject {
     }
 
     public boolean updateMessageSettings(GuildSettingUpdate update) {
-        return factory.builder()
+        return builder()
                 .query("""
                         UPDATE
                             message_settings
@@ -306,7 +303,7 @@ public class GuildData extends QueryObject {
     }
 
     public boolean addThankWord(Guild guild, String pattern) {
-        return factory.builder()
+        return builder()
                 .query("""
                         INSERT INTO
                             thankwords(guild_id, thankword) VALUES(?,?)
@@ -318,7 +315,7 @@ public class GuildData extends QueryObject {
     }
 
     public boolean removeThankWord(Guild guild, String pattern) {
-        return factory.builder()
+        return builder()
                 .query("""
                         DELETE FROM
                             thankwords
@@ -338,14 +335,14 @@ public class GuildData extends QueryObject {
     }
 
     public void initGuild(Guild guild) {
-        factory.builder()
+        builder()
                 .query("INSERT INTO message_settings(guild_id) VALUES (?) ON CONFLICT DO NOTHING;")
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
                 .update().executeSync();
     }
 
     public boolean setManagerRole(Guild guild, Role role) {
-        return factory.builder()
+        return builder()
                 .query("""
                         INSERT INTO
                             guild_bot_settings(guild_id, manager_role) VALUES (?,?)
@@ -358,7 +355,7 @@ public class GuildData extends QueryObject {
     }
 
     public void queueDeletion(Guild guild) {
-        factory.builder()
+        builder()
                 .query("""
                         INSERT INTO
                             cleanup_schedule(guild_id)
@@ -371,7 +368,7 @@ public class GuildData extends QueryObject {
     }
 
     public void queueDeletion(User user, Guild guild) {
-        factory.builder()
+        builder()
                 .query("""
                         INSERT INTO
                             cleanup_schedule(guild_id, user_id)
@@ -384,14 +381,14 @@ public class GuildData extends QueryObject {
     }
 
     public void dequeueDeletion(Guild guild) {
-        factory.builder()
+        builder()
                 .query("DELETE FROM cleanup_schedule where guild_id = ?;")
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
                 .update().executeSync();
     }
 
     public void dequeueDeletion(Member member) {
-        factory.builder()
+        builder()
                 .query("""
                         DELETE FROM
                             cleanup_schedule
@@ -403,7 +400,7 @@ public class GuildData extends QueryObject {
     }
 
     public List<RemovalTask> getRemovalTasks() {
-        return factory.builder(RemovalTask.class)
+        return builder(RemovalTask.class)
                 .queryWithoutParams("""
                         SELECT
                             task_id,
@@ -420,7 +417,7 @@ public class GuildData extends QueryObject {
     public void executeRemovalTask(RemovalTask task) {
         ResultStage<Void> builder;
         if (task.userId() == null) {
-            builder = factory.builder().query("DELETE FROM reputation_log where guild_id = ?;")
+            builder = builder().query("DELETE FROM reputation_log where guild_id = ?;")
                     .paramsBuilder(stmt -> stmt.setLong(task.guildId()))
                     .append().query("DELETE FROM guild_bot_settings where guild_id = ?;")
                     .paramsBuilder(stmt -> stmt.setLong(task.guildId()))
@@ -434,7 +431,7 @@ public class GuildData extends QueryObject {
                     .paramsBuilder(stmt -> stmt.setLong(task.guildId()));
             log.info("Removed guild settings for {}", task.guildId());
         } else {
-            builder = factory.builder().query("DELETE FROM reputation_log where guild_id = ? AND receiver_id = ?;")
+            builder = builder().query("DELETE FROM reputation_log where guild_id = ? AND receiver_id = ?;")
                     .paramsBuilder(stmt -> stmt.setLong(task.guildId()).setLong(task.userId()))
                     .append().query("UPDATE reputation_log SET donor_id = 0 where guild_id = ? AND donor_id = ?;")
                     .paramsBuilder(stmt -> stmt.setLong(task.guildId()).setLong(task.userId()));
