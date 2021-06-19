@@ -41,6 +41,7 @@ dependencies {
 
     // utils
     implementation("org.apache.commons", "commons-lang3", "3.12.0")
+    implementation("com.google.guava","guava","30.1.1-jre")
 
     // unit testing
     testImplementation(platform("org.junit:junit-bom:5.7.1"))

@@ -35,15 +35,17 @@ public class MessageListener extends ListenerAdapter {
     private final ContextResolver contextResolver;
     private final MessageAnalyzer messageAnalyzer;
 
-    public MessageListener(DataSource dataSource, Configuration configuration, RepBotCachePolicy repBotCachePolicy, ReputationVoteListener reputationVoteListener, ReputationService reputationService) {
+    public MessageListener(DataSource dataSource, Configuration configuration, RepBotCachePolicy repBotCachePolicy,
+                           ReputationVoteListener reputationVoteListener, ReputationService reputationService,
+                           ContextResolver contextResolver, MessageAnalyzer messageAnalyzer) {
         guildData = new GuildData(dataSource);
         reputationData = new ReputationData(dataSource);
         this.configuration = configuration;
         this.repBotCachePolicy = repBotCachePolicy;
         this.reputationVoteListener = reputationVoteListener;
         this.reputationService = reputationService;
-        this.contextResolver = new ContextResolver(dataSource);
-        this.messageAnalyzer = new MessageAnalyzer(dataSource);
+        this.contextResolver = contextResolver;
+        this.messageAnalyzer = messageAnalyzer;
     }
 
     @Override
@@ -82,7 +84,7 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        var analyzerResult = messageAnalyzer.processMessage(thankwordPattern, message, settings, true, 0.85, 3);
+        var analyzerResult = messageAnalyzer.processMessage(thankwordPattern, message, settings, true, 3);
 
         var donator = analyzerResult.donator();
 
@@ -94,18 +96,18 @@ public class MessageListener extends ListenerAdapter {
             var refMessage = analyzerResult.referenceMessage();
             switch (resultType) {
                 case FUZZY -> {
-                    if (!settings.isFuzzyActive()) return;
+                    if (!settings.isFuzzyActive()) continue;
                     reputationService.submitReputation(guild, donator, result.getReference().getUser(), message, refMessage, resultType);
                     resolveNoTarget = false;
                 }
                 case MENTION -> {
-                    if (!settings.isMentionActive()) return;
+                    if (!settings.isMentionActive()) continue;
                     reputationService.submitReputation(guild, donator, result.getReference().getUser(), message, refMessage, resultType);
                     resolveNoTarget = false;
                 }
                 case ANSWER -> {
-                    if (!settings.isAnswerActive()) return;
-                    if (!settings.isFreshMessage(refMessage)) return;
+                    if (!settings.isAnswerActive()) continue;
+                    if (!settings.isFreshMessage(refMessage)) continue;
                     reputationService.submitReputation(guild, donator, result.getReference().getUser(), message, refMessage, resultType);
                     resolveNoTarget = false;
                 }
