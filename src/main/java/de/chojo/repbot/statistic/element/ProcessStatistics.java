@@ -1,14 +1,17 @@
 package de.chojo.repbot.statistic.element;
 
 import de.chojo.jdautil.localization.util.Replacement;
+import de.chojo.repbot.statistic.EmbedDisplay;
 import de.chojo.repbot.statistic.ReplacementProvider;
+import net.dv8tion.jda.api.EmbedBuilder;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 
-import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-public class ProcessStatistics implements ReplacementProvider {
+public class ProcessStatistics implements ReplacementProvider, EmbedDisplay {
+
     private static final int MB = 1024 * 1024;
     private static final Instant START = Instant.now();
     private final long total;
@@ -55,7 +58,7 @@ public class ProcessStatistics implements ReplacementProvider {
         return new ProcessStatistics(total, free, used, max, Thread.activeCount());
     }
 
-    public long uptime(){
+    public long uptime() {
         return START.until(Instant.now(), ChronoUnit.MILLIS);
     }
 
@@ -64,5 +67,18 @@ public class ProcessStatistics implements ReplacementProvider {
         return List.of(Replacement.create("total_mem", total), Replacement.create("used_mem", used),
                 Replacement.create("free_mem", free), Replacement.create("max_mem", max),
                 Replacement.create("threads", threads));
+    }
+
+    @Override
+    public void appendTo(EmbedBuilder embedBuilder) {
+        embedBuilder.addField("Process Info",
+                String.format("""
+                                Threads: %s
+                                Memory: %s/%s MB
+                                Uptime: %s
+                                """.stripIndent(),
+                        threads, used, total,
+                        DurationFormatUtils
+                                .formatDuration(uptime(), "dd:HH:mm:ss")), false);
     }
 }

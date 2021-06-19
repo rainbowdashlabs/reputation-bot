@@ -7,12 +7,9 @@ import de.chojo.repbot.util.LogNotify;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -61,35 +58,7 @@ public class InternalCommandListener extends ListenerAdapter {
         if ("stats".equalsIgnoreCase(args[0]) || "system".equalsIgnoreCase(args[0])) {
             var builder = new EmbedBuilder();
             var systemStatistic = statistic.getSystemStatistic();
-            var global = systemStatistic.aggregatedShards();
-            var process = systemStatistic.processStatistics();
-            var data = systemStatistic.dataStatistic();
-
-            builder.setTitle("System Info")
-                    .appendDescription(
-                            String.format("Watching %s guilds on %s shard/s",
-                                    systemStatistic.dataStatistic().guilds(), systemStatistic.shardCount()))
-                    .addField("Process Info",
-                            String.format("""
-                                            Threads: %s
-                                            Memory: %s/%s MB
-                                            Uptime: %s
-                                            """.stripIndent(),
-                                    process.threads(), process.used(), process.total(),
-                                    DurationFormatUtils.formatDuration(process.uptime(), "dd:HH:mm:ss" )), false)
-                    .addField("Global Info",
-                            String.format("""
-                                            Analyzed: %s
-                                            Total Reputation: %s
-                                            Week Reputation: %s
-                                            AverageWeek Reputation: %s
-                                            Today Reputation: %s
-                                            """.stripIndent(),
-                                    global.analyzedMessages(), data.totalRep(), data.weeklyRep(), data.weeklyAvgRep(), data.today()), false);
-            for (var shard : systemStatistic.shardStatistics()) {
-                builder.addField("#" + shard.shard(),
-                        "Status: " + shard.status().name(), true);
-            }
+            systemStatistic.appendTo(builder);
             event.getMessage().reply(builder.build()).queue();
         }
     }
