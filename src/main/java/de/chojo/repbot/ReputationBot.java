@@ -164,7 +164,7 @@ public class ReputationBot {
     }
 
     private void initBot() {
-        var statistic = Statistic.create(shardManager, dataSource, repBotWorker);
+        var statistic = Statistic.of(shardManager, dataSource, repBotWorker);
         PresenceService.start(shardManager, configuration, statistic, repBotWorker);
 
         // init services

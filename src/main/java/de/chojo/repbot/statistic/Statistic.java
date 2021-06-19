@@ -55,7 +55,7 @@ public class Statistic implements Runnable {
 
     private void resetMinute(Map<Integer, long[]> map) {
         for (var shardId = 0; shardId < shardManager.getShardsTotal(); shardId++) {
-            getShardMessageStats(shardId)[currentMin] = 0;
+            map.getOrDefault(shardId, new long[60])[currentMin] = 0;
         }
     }
 
@@ -90,7 +90,7 @@ public class Statistic implements Runnable {
         return Arrays.stream(array).sum();
     }
 
-    public static Statistic create(ShardManager shardManager, DataSource dataSource, ScheduledExecutorService service) {
+    public static Statistic of(ShardManager shardManager, DataSource dataSource, ScheduledExecutorService service) {
         var statistic = new Statistic(shardManager, dataSource);
         service.scheduleAtFixedRate(statistic, 0, 1, TimeUnit.MINUTES);
         service.scheduleAtFixedRate(statistic::refreshStatistics, 1, 30, TimeUnit.MINUTES);
