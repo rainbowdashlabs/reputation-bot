@@ -10,6 +10,7 @@ import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
+import de.chojo.jdautil.wrapper.SlashCommandContext;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -104,7 +105,7 @@ public class Help extends SimpleCommand {
     }
 
     @Override
-    public void onSlashCommand(SlashCommandEvent event) {
+    public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
         var eventWrapper = MessageEventWrapper.create(event);
 
         if (event.getOptions().isEmpty()) {

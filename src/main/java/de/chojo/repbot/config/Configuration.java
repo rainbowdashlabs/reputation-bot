@@ -32,8 +32,8 @@ public class Configuration {
 
     private Configuration() {
         objectMapper = new ObjectMapper()
-        .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
-        .setDefaultPrettyPrinter(new DefaultPrettyPrinter())
+                .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
+                .setDefaultPrettyPrinter(new DefaultPrettyPrinter())
                 .configure(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS, true);
     }
 

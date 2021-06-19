@@ -3,9 +3,9 @@ package de.chojo.repbot.config.elements;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("FieldMayBeFinal")
+@SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
 public class Botlist {
-    private boolean submit = false;
+    private boolean submit;
     private List<Long> guildIds = new ArrayList<>();
     private String topGg = "";
     private String discordBotsGg = "";

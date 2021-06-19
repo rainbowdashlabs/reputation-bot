@@ -7,6 +7,7 @@ import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
+import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.config.Configuration;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -31,7 +32,7 @@ public class Invite extends SimpleCommand {
     }
 
     @Override
-    public void onSlashCommand(SlashCommandEvent event) {
+    public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
         var eventWrapper = MessageEventWrapper.create(event);
         event.replyEmbeds(getResponse(eventWrapper)).queue();
     }

@@ -6,6 +6,7 @@ import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
+import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
 import net.dv8tion.jda.api.Permission;
@@ -58,7 +59,7 @@ public class Prefix extends SimpleCommand {
     }
 
     @Override
-    public void onSlashCommand(SlashCommandEvent event) {
+    public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
         var subCmd = event.getSubcommandName();
         if ("set".equalsIgnoreCase(subCmd)) {
             final var response = set(event.getOption("prefix").getAsString(), event.getGuild());
