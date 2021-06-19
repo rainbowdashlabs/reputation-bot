@@ -21,7 +21,6 @@ public class InternalCommandListener extends ListenerAdapter {
     private static final Logger log = getLogger(InternalCommandListener.class);
     private final Configuration configuration;
     private final Statistic statistic;
-    private final Instant start = Instant.now();
 
     public InternalCommandListener(Configuration configuration, Statistic statistic) {
         this.configuration = configuration;
@@ -59,7 +58,7 @@ public class InternalCommandListener extends ListenerAdapter {
             System.exit(0);
         }
 
-        if ("stats".equalsIgnoreCase(args[0])) {
+        if ("stats".equalsIgnoreCase(args[0]) || "system".equalsIgnoreCase(args[0])) {
             var builder = new EmbedBuilder();
             var systemStatistic = statistic.getSystemStatistic();
             var global = systemStatistic.aggregatedShards();
@@ -68,7 +67,7 @@ public class InternalCommandListener extends ListenerAdapter {
 
             builder.setTitle("System Info")
                     .appendDescription(
-                            String.format("Watching %s guilds %s shard/s",
+                            String.format("Watching %s guilds on %s shard/s",
                                     systemStatistic.dataStatistic().guilds(), systemStatistic.shardCount()))
                     .addField("Process Info",
                             String.format("""
@@ -77,7 +76,7 @@ public class InternalCommandListener extends ListenerAdapter {
                                             Uptime: %s
                                             """.stripIndent(),
                                     process.threads(), process.used(), process.total(),
-                                    DurationFormatUtils.formatDuration(start.until(Instant.now(), ChronoUnit.MILLIS), "dd:HH:mm:ss" )), false)
+                                    DurationFormatUtils.formatDuration(process.uptime(), "dd:HH:mm:ss" )), false)
                     .addField("Global Info",
                             String.format("""
                                             Analyzed: %s
@@ -86,7 +85,7 @@ public class InternalCommandListener extends ListenerAdapter {
                                             AverageWeek Reputation: %s
                                             Today Reputation: %s
                                             """.stripIndent(),
-                                    global.analyzedMessages(), data.totalRep(), data.weeklyRep(), data.weeklyAvgRep(), data.today()), true);
+                                    global.analyzedMessages(), data.totalRep(), data.weeklyRep(), data.weeklyAvgRep(), data.today()), false);
             for (var shard : systemStatistic.shardStatistics()) {
                 builder.addField("#" + shard.shard(),
                         "Status: " + shard.status().name(), true);

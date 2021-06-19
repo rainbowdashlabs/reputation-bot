@@ -31,6 +31,7 @@ public class Statistic implements Runnable {
     private Statistic(ShardManager shardManager, DataSource dataSource) {
         this.shardManager = shardManager;
         this.statisticData = new StatisticData(dataSource);
+        getSystemStatistic();
     }
 
     private int minute() {
@@ -39,7 +40,11 @@ public class Statistic implements Runnable {
 
     public void messageAnalyzed(JDA shard) {
         var shardId = shard.getShardInfo().getShardId();
-        analyzedMessages.get(shardId)[currentMin]++;
+        getShardMessageStats(shardId)[currentMin]++;
+    }
+
+    private long[] getShardMessageStats(int shardId){
+        return analyzedMessages.computeIfAbsent(shardId, k -> new long[60]);
     }
 
     @Override
@@ -50,14 +55,13 @@ public class Statistic implements Runnable {
 
     private void resetMinute(Map<Integer, long[]> map) {
         for (var shardId = 0; shardId < shardManager.getShardsTotal(); shardId++) {
-            map.putIfAbsent(shardId, new long[60]);
-            map.get(shardId)[currentMin] = 0;
+            getShardMessageStats(shardId)[currentMin] = 0;
         }
     }
 
     private ShardStatistic getShardStatistic(JDA jda) throws ExecutionException {
         var shardId = jda.getShardInfo().getShardId();
-        var analyzedMessages = arraySum(this.analyzedMessages.get(shardId));
+        var analyzedMessages = arraySum(getShardMessageStats(shardId));
 
         return new ShardStatistic(
                 shardId + 1,

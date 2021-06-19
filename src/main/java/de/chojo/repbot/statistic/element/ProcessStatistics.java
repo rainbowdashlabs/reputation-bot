@@ -3,8 +3,13 @@ package de.chojo.repbot.statistic.element;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.statistic.ReplacementProvider;
 
+import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+
 public class ProcessStatistics implements ReplacementProvider {
     private static final int MB = 1024 * 1024;
+    private static final Instant START = Instant.now();
     private final long total;
     private final long used;
     private final long free;
@@ -47,6 +52,10 @@ public class ProcessStatistics implements ReplacementProvider {
         var max = instance.maxMemory() / MB;
 
         return new ProcessStatistics(total, free, used, max, Thread.activeCount());
+    }
+
+    public long uptime(){
+        return START.until(Instant.now(), ChronoUnit.MILLIS);
     }
 
     @Override

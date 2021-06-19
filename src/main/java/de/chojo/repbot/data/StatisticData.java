@@ -30,7 +30,7 @@ public class StatisticData extends QueryFactoryHolder {
                 	data_statistics;
                 """).readRow(rs -> new DataStatistic(rs.getInt("guilds"), rs.getInt("channel"),
                 rs.getInt("total_reputation"), rs.getInt("today_reputation"), rs.getInt("weekly_reputation"),
-                rs.getInt("weeky_avg_reputation")))
+                rs.getInt("weekly_avg_reputation")))
         .firstSync();
     }
 

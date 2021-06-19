@@ -41,7 +41,7 @@ dependencies {
 
     // utils
     implementation("org.apache.commons", "commons-lang3", "3.12.0")
-    implementation("de.chojo", "sql-util", "1.0.0")
+    implementation("de.chojo", "sql-util", "1.0.1")
 
     // unit testing
     testImplementation(platform("org.junit:junit-bom:5.7.1"))
@@ -53,7 +53,7 @@ java {
     withSourcesJar()
     withJavadocJar()
 
-    sourceCompatibility = JavaVersion.VERSION_16
+    sourceCompatibility = JavaVersion.VERSION_15
 }
 
 tasks {

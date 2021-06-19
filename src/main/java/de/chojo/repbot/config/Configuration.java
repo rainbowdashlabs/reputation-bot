@@ -5,14 +5,13 @@ import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import de.chojo.repbot.config.elements.Badges;
 import de.chojo.repbot.config.elements.BaseSettings;
 import de.chojo.repbot.config.elements.Botlist;
 import de.chojo.repbot.config.elements.Database;
 import de.chojo.repbot.config.elements.Links;
 import de.chojo.repbot.config.elements.MagicImage;
-import de.chojo.repbot.config.elements.Presence;
+import de.chojo.repbot.config.elements.PresenceSettings;
 import de.chojo.repbot.config.elements.TestMode;
 import de.chojo.repbot.config.exception.ConfigurationException;
 import org.slf4j.Logger;
@@ -114,7 +113,7 @@ public class Configuration {
         return configFile.botlist();
     }
 
-    public Presence presence() {
+    public PresenceSettings presence() {
         return configFile.presence();
     }
 }
