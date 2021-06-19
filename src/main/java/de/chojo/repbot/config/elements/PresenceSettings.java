@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.entities.Activity;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-@SuppressWarnings("FieldMayBeFinal")
+@SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
 public class PresenceSettings {
     private boolean active = false;
     private int interval = 5;
