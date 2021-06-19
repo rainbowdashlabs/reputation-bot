@@ -1,21 +1,14 @@
-DROP materialized view IF EXISTS repbot_schema.data_statistics;
+-- add the missing unique constrain on table. requires deduplication.
+create temp table temp_channel on commit drop as
+    (select distinct guild_id, channel_id
+     from repbot_schema.active_channel);
 
-create materialized view repbot_schema.data_statistics as
-(
-SELECT (Select count(1) from repbot_schema.guild_settings) as guilds,
-       (select count(1) from repbot_schema.active_channel) as channel,
-       (select count(1) from repbot_schema.reputation_log) as total_reputation,
-       (select count(1)
-        from repbot_schema.reputation_log
-        where received > now() - '1 DAY'::INTERVAL)        as today_reputation,
-       (select count(1)
-        from repbot_schema.reputation_log
-        where received > now() - '1 WEEK'::INTERVAL)       as weekly_reputation,
-       (select count(1) / 4
-        from repbot_schema.reputation_log
-        where received > now() - '4 WEEK'::INTERVAL)       as weekly_avg_reputation );
+DELETE
+from repbot_schema.active_channel;
 
-refresh materialized view repbot_schema.data_statistics;
+create unique index if not exists active_channel_guild_id_channel_id_uindex
+    on repbot_schema.active_channel (guild_id, channel_id);
 
-SELECT guilds, channel, total_reputation, today_reputation, weekly_reputation, weekly_avg_reputation
-from data_statistics;
+insert into repbot_schema.active_channel(guild_id, channel_id)
+select guild_id, channel_id
+from temp_channel;

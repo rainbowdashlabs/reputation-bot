@@ -19,6 +19,7 @@ import de.chojo.repbot.commands.RepSettings;
 import de.chojo.repbot.commands.Reputation;
 import de.chojo.repbot.commands.Roles;
 import de.chojo.repbot.commands.Scan;
+import de.chojo.repbot.commands.Setup;
 import de.chojo.repbot.commands.Thankwords;
 import de.chojo.repbot.commands.TopReputation;
 import de.chojo.repbot.config.Configuration;
@@ -196,7 +197,8 @@ public class ReputationBot {
                         new Locale(dataSource, localizer),
                         new Invite(localizer, configuration),
                         Info.create(localizer, configuration),
-                        new Log(shardManager, dataSource, localizer)
+                        new Log(shardManager, dataSource, localizer),
+                        Setup.of(dataSource, localizer)
                 )
                 .withInvalidArgumentProvider(((loc, command) -> Help.getCommandHelp(command, loc)))
                 .withLocalizer(localizer)

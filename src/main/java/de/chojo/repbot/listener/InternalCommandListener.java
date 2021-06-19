@@ -7,9 +7,12 @@ import de.chojo.repbot.util.LogNotify;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -18,6 +21,7 @@ public class InternalCommandListener extends ListenerAdapter {
     private static final Logger log = getLogger(InternalCommandListener.class);
     private final Configuration configuration;
     private final Statistic statistic;
+    private final Instant start = Instant.now();
 
     public InternalCommandListener(Configuration configuration, Statistic statistic) {
         this.configuration = configuration;
@@ -70,8 +74,10 @@ public class InternalCommandListener extends ListenerAdapter {
                             String.format("""
                                             Threads: %s
                                             Memory: %s/%s MB
+                                            Uptime: %s
                                             """.stripIndent(),
-                                    process.threads(), process.used(), process.total()), false)
+                                    process.threads(), process.used(), process.total(),
+                                    DurationFormatUtils.formatDuration(start.until(Instant.now(), ChronoUnit.MILLIS), "dd:HH:mm:ss" )), false)
                     .addField("Global Info",
                             String.format("""
                                             Analyzed: %s
