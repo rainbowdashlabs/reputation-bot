@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import de.chojo.jdautil.localization.util.Replacement;
 import net.dv8tion.jda.api.entities.Activity;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -13,15 +12,15 @@ import java.util.concurrent.ThreadLocalRandom;
 public class PresenceSettings {
     private boolean active = false;
     private int interval = 5;
-    private List<Presence> status = new ArrayList<>() {{
-        add(Presence.of(Activity.ActivityType.WATCHING, "%guild_count% guilds!"));
-        add(Presence.of(Activity.ActivityType.LISTENING, "%channel_count% channels!"));
-        add(Presence.of(Activity.ActivityType.WATCHING, "%total_rep% Reputations!"));
-        add(Presence.of(Activity.ActivityType.WATCHING, "%weekly_rep% Reputation this week!"));
-        add(Presence.of(Activity.ActivityType.WATCHING, "%today_rep% Reputation today!"));
-        add(Presence.of(Activity.ActivityType.WATCHING, "%weekly_avg_rep% Reputation per week!"));
-        add(Presence.of(Activity.ActivityType.LISTENING, "%analyzed_messages% messages during the last hour!"));
-    }};
+    private List<Presence> status = List.of(
+            Presence.of(Activity.ActivityType.WATCHING, "%guild_count% guilds!"),
+            Presence.of(Activity.ActivityType.LISTENING, "%channel_count% channels!"),
+            Presence.of(Activity.ActivityType.WATCHING, "%total_rep% Reputations!"),
+            Presence.of(Activity.ActivityType.WATCHING, "%weekly_rep% Reputation this week!"),
+            Presence.of(Activity.ActivityType.WATCHING, "%today_rep% Reputation today!"),
+            Presence.of(Activity.ActivityType.WATCHING, "%weekly_avg_rep% Reputation per week!"),
+            Presence.of(Activity.ActivityType.LISTENING, "%analyzed_messages% messages during the last hour!")
+            );
 
     public boolean isActive() {
         return active;
