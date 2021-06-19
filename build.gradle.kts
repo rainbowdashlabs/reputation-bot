@@ -1,7 +1,7 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
-    id("com.github.johnrengelman.shadow") version "6.0.0"
+    id("com.github.johnrengelman.shadow") version "7.0.0"
     java
     `maven-publish`
 }
@@ -14,8 +14,8 @@ val lombokVersion = "1.18.20"
 
 
 repositories {
-    maven("https://eldonexus.de/repository/maven-proxies")
     maven("https://eldonexus.de/repository/maven-public")
+    maven("https://eldonexus.de/repository/maven-proxies")
     maven("https://m2.dv8tion.net/releases")
 }
 
@@ -24,7 +24,7 @@ dependencies {
     implementation("net.dv8tion", "JDA", "4.2.1_269") {
         exclude(module = "opus-java")
     }
-    implementation("de.chojo", "cjda-util", "1.4.1")
+    implementation("de.chojo", "cjda-util", "1.5.0-DEV")
 
     // database
     implementation("org.postgresql", "postgresql", "42.2.19")
@@ -41,6 +41,7 @@ dependencies {
 
     // utils
     implementation("org.apache.commons", "commons-lang3", "3.12.0")
+    implementation("de.chojo", "sql-util", "1.0.1")
     implementation("com.google.guava","guava","30.1.1-jre")
 
     // unit testing

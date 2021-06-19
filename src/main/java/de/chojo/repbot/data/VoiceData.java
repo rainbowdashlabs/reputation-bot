@@ -1,9 +1,8 @@
 package de.chojo.repbot.data;
 
-import de.chojo.jdautil.database.QueryObject;
-import de.chojo.jdautil.database.builder.QueryBuilderConfig;
-import de.chojo.jdautil.database.builder.QueryBuilderFactory;
-import de.chojo.jdautil.database.builder.stage.ResultStage;
+import de.chojo.sqlutil.base.QueryFactoryHolder;
+import de.chojo.sqlutil.wrapper.QueryBuilderConfig;
+import de.chojo.sqlutil.wrapper.stage.ResultStage;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
@@ -11,12 +10,9 @@ import net.dv8tion.jda.api.entities.User;
 import javax.sql.DataSource;
 import java.util.List;
 
-public class VoiceData extends QueryObject {
-    private final QueryBuilderFactory factory;
-
+public class VoiceData extends QueryFactoryHolder {
     public VoiceData(DataSource dataSource) {
-        super(dataSource);
-        factory = new QueryBuilderFactory(QueryBuilderConfig.builder().build(), dataSource);
+        super(dataSource, QueryBuilderConfig.builder().build());
     }
 
     /**
@@ -27,10 +23,10 @@ public class VoiceData extends QueryObject {
      */
     public void logUser(Member source, List<Member> seen) {
         var baseId = source.getIdLong();
-        var builder = factory.builder();
+        var builder = builder();
         ResultStage<Void> resultStage = null;
         for (var user : seen) {
-            long otherId = user.getIdLong();
+            var otherId = user.getIdLong();
             resultStage = builder.query("""
                     INSERT INTO voice_activity(relation_key, guild_id, user_id_1, user_id_2) VALUES (?,?,?,?)
                         ON CONFLICT(relation_key, guild_id)
@@ -54,7 +50,7 @@ public class VoiceData extends QueryObject {
      * @return list of ids
      */
     public List<Long> getPastUser(User user, Guild guild, int minutes, int limit) {
-        return factory.builder(Long.class)
+        return builder(Long.class)
                 .query("""
                         SELECT
                             user_id_1, user_id_2
@@ -83,7 +79,7 @@ public class VoiceData extends QueryObject {
      * Cleanup the voice activity
      */
     public void cleanup() {
-        factory.builder()
+        builder()
                 .queryWithoutParams("""
                         DELETE FROM voice_activity WHERE seen < now() - '12 hours'::interval
                         """)

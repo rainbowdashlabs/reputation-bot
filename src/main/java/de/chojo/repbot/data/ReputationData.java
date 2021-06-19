@@ -1,11 +1,10 @@
 package de.chojo.repbot.data;
 
-import de.chojo.jdautil.database.QueryObject;
-import de.chojo.jdautil.database.builder.QueryBuilderConfig;
-import de.chojo.jdautil.database.builder.QueryBuilderFactory;
 import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.data.wrapper.ReputationLogEntry;
 import de.chojo.repbot.data.wrapper.ReputationUser;
+import de.chojo.sqlutil.base.QueryFactoryHolder;
+import de.chojo.sqlutil.wrapper.QueryBuilderConfig;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -22,13 +21,11 @@ import java.util.Optional;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class ReputationData extends QueryObject {
+public class ReputationData extends QueryFactoryHolder {
     private static final Logger log = getLogger(ReputationData.class);
-    private final QueryBuilderFactory factory;
 
     public ReputationData(DataSource source) {
-        super(source);
-        factory = new QueryBuilderFactory(QueryBuilderConfig.builder().build(), source);
+        super(source, QueryBuilderConfig.builder().build());
     }
 
     /**
@@ -43,7 +40,7 @@ public class ReputationData extends QueryObject {
      * @return true if the statement was logged.
      */
     public boolean logReputation(Guild guild, User donor, User receiver, Message message, @Nullable Message refMessage, ThankType type) {
-        var success = factory.builder()
+        var success = builder()
                 .query("""
                         INSERT INTO
                         reputation_log(guild_id, donor_id, receiver_id, message_id, ref_message_id, channel_id, cause) VALUES(?,?,?,?,?,?,?)
@@ -69,7 +66,7 @@ public class ReputationData extends QueryObject {
      * @return last timestamp as instant
      */
     public Optional<Instant> getLastRated(Guild guild, User donor, User receiver) {
-        return factory.builder(Instant.class).
+        return builder(Instant.class).
                 query("""
                         SELECT
                             received
@@ -96,7 +93,7 @@ public class ReputationData extends QueryObject {
      * @return a sorted list of reputation users
      */
     public List<ReputationUser> getRanking(Guild guild, int pageSize, int page) {
-        return factory.builder(ReputationUser.class)
+        return builder(ReputationUser.class)
                 .query("""
                         SELECT
                             rank,
@@ -122,7 +119,7 @@ public class ReputationData extends QueryObject {
      * @return the reputation user
      */
     public Optional<ReputationUser> getReputation(Guild guild, User user) {
-        return factory.builder(ReputationUser.class)
+        return builder(ReputationUser.class)
                 .query("""
                         SELECT rank, user_id, reputation from user_reputation where guild_id = ? and user_id = ?;
                         """)
@@ -144,7 +141,7 @@ public class ReputationData extends QueryObject {
      * @param messageId message id
      */
     public void removeMessage(long messageId) {
-        factory.builder()
+        builder()
                 .query("DELETE FROM reputation_log where message_id = ?;")
                 .paramsBuilder(stmt -> stmt.setLong(messageId))
                 .update().execute();
@@ -171,7 +168,7 @@ public class ReputationData extends QueryObject {
      * @return a log entry if found
      */
     public Optional<ReputationLogEntry> getLogEntry(Message message) {
-        return factory.builder(ReputationLogEntry.class)
+        return builder(ReputationLogEntry.class)
                 .query("""
                         SELECT
                             guild_id,
@@ -200,7 +197,7 @@ public class ReputationData extends QueryObject {
      * @return sorted list of entries. the most recent first.
      */
     public List<ReputationLogEntry> getUserReceivedLog(User user, Guild guild, int count) {
-        return factory.builder(ReputationLogEntry.class)
+        return builder(ReputationLogEntry.class)
                 .query("""
                         SELECT
                             guild_id,
@@ -232,7 +229,7 @@ public class ReputationData extends QueryObject {
      * @return sorted list of entries. the most recent first.
      */
     public List<ReputationLogEntry> getUserDonatedLog(User user, Guild guild, int count) {
-        return factory.builder(ReputationLogEntry.class)
+        return builder(ReputationLogEntry.class)
                 .query("""
                         SELECT
                             guild_id,
@@ -264,7 +261,7 @@ public class ReputationData extends QueryObject {
      * @return sorted list of entries. the most recent first.
      */
     public List<ReputationLogEntry> getMessageLog(long messageId, Guild guild, int count) {
-        return factory.builder(ReputationLogEntry.class)
+        return builder(ReputationLogEntry.class)
                 .query("""
                         SELECT
                             guild_id,
@@ -309,7 +306,7 @@ public class ReputationData extends QueryObject {
      * @return true if at least one entry was removed
      */
     public boolean removeReputation(long user, long message, ThankType type) {
-        return factory.builder()
+        return builder()
                 .query("""
                         DELETE FROM
                             reputation_log

@@ -1,10 +1,10 @@
 {
   "defaults": {
-    "english": [
+    "English": [
       "thx",
       "thank(s)?"
     ],
-    "deutsch": [
+    "Deutsch": [
       "dank(e)?",
       "dankeschön",
       "dange"
