@@ -198,7 +198,7 @@ public class Log extends SimpleCommand {
             var jumpLink = createJumpLink(guild, logEntry);
             var thankType = loc.localize("thankType." + logEntry.type().name().toLowerCase(Locale.ROOT));
             entries.add(String.format("**%s** %s ➜ %s **|** %s",
-                    thankType, User.fromId(logEntry.receiverId()).getAsMention(), User.fromId(logEntry.receiverId()).getAsMention(), jumpLink));
+                    thankType, User.fromId(logEntry.donorId()).getAsMention(), User.fromId(logEntry.receiverId()).getAsMention(), jumpLink));
         }
         return String.join("\n", entries);
     }
