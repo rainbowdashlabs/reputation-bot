@@ -176,7 +176,7 @@ public class ReputationBot {
         var reputatinoVoteListener = new ReputationVoteListener(reputationService, localizer);
         var messageListener = new MessageListener(dataSource, configuration, repBotCachePolicy, reputatinoVoteListener,
                 reputationService, contextResolver, messageAnalyzer, statistic);
-        var stateListener = new StateListener(dataSource);
+        var stateListener = new StateListener(localizer, dataSource, configuration);
         var voiceStateListener = new VoiceStateListener(dataSource);
         var logListener = LogListener.create(repBotWorker);
         // schedule worker
@@ -190,7 +190,6 @@ public class ReputationBot {
                 stateListener,
                 voiceStateListener,
                 logListener);
-
         if (configuration.baseSettings().isInternalCommands()) {
             shardManager.addEventListener(new InternalCommandListener(configuration, statistic));
         }
