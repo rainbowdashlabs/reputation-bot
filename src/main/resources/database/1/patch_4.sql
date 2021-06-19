@@ -16,6 +16,3 @@ SELECT (Select count(1) from repbot_schema.guild_settings) as guilds,
         where received > now() - '4 WEEK'::INTERVAL)       as weekly_avg_reputation );
 
 refresh materialized view repbot_schema.data_statistics;
-
-SELECT guilds, channel, total_reputation, today_reputation, weekly_reputation, weekly_avg_reputation
-from data_statistics;
