@@ -48,10 +48,10 @@ public class PresenceService implements Runnable {
         var systemStatistic = statistic.getSystemStatistic();
 
         replacements.clear();
-        replacements.addAll(Arrays.asList(systemStatistic.replacements()));
-        replacements.addAll(Arrays.asList(systemStatistic.aggregatedShards().replacements()));
-        replacements.addAll(Arrays.asList(systemStatistic.dataStatistic().replacements()));
-        replacements.addAll(Arrays.asList(systemStatistic.processStatistics().replacements()));
+        replacements.addAll(systemStatistic.replacements());
+        replacements.addAll(systemStatistic.aggregatedShards().replacements());
+        replacements.addAll(systemStatistic.dataStatistic().replacements());
+        replacements.addAll(systemStatistic.processStatistics().replacements());
 
         var currentPresence = configuration.presence().randomStatus();
         var text = currentPresence.text(replacements);

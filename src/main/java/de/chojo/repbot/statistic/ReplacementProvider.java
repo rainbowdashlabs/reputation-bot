@@ -1,7 +1,9 @@
 package de.chojo.repbot.statistic;
 
+import java.util.List;
+
 import de.chojo.jdautil.localization.util.Replacement;
 
 public interface ReplacementProvider {
-    Replacement[] replacements();
+    List<Replacement> replacements();
 }

@@ -3,6 +3,7 @@ package de.chojo.repbot.statistic.element;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.statistic.ReplacementProvider;
 
+import java.util.Collections;
 import java.util.List;
 
 public class SystemStatistics implements ReplacementProvider {
@@ -39,7 +40,7 @@ public class SystemStatistics implements ReplacementProvider {
     }
 
     @Override
-    public Replacement[] replacements() {
-        return new Replacement[]{Replacement.create("shard_count", shardCount())};
+    public List<Replacement> replacements() {
+        return Collections.singletonList(Replacement.create("shard_count", shardCount()));
     }
 }

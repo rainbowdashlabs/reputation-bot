@@ -3,6 +3,8 @@ package de.chojo.repbot.statistic.element;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.statistic.ReplacementProvider;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class GlobalShardStatistic implements ReplacementProvider {
@@ -19,7 +21,7 @@ public class GlobalShardStatistic implements ReplacementProvider {
 
 
     @Override
-    public Replacement[] replacements() {
-        return new Replacement[]{Replacement.create("analyzed_messages", analyzedMessages)};
+    public List<Replacement> replacements() {
+        return Collections.singletonList(Replacement.create("analyzed_messages", analyzedMessages));
     }
 }

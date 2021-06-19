@@ -1,5 +1,7 @@
 package de.chojo.repbot.statistic.element;
 
+import java.util.List;
+
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.statistic.ReplacementProvider;
 
@@ -49,9 +51,9 @@ public class DataStatistic implements ReplacementProvider {
     }
 
     @Override
-    public Replacement[] replacements() {
-        return new Replacement[]{Replacement.create("guild_count", guilds), Replacement.create("channel_count", channel),
+    public List<Replacement> replacements() {
+        return List.of(Replacement.create("guild_count", guilds), Replacement.create("channel_count", channel),
                 Replacement.create("total_rep", totalRep), Replacement.create("today_rep", todayRep),
-                Replacement.create("weekly_rep", weeklyRep), Replacement.create("weekly_avg_rep", weeklyAvgRep)};
+                Replacement.create("weekly_rep", weeklyRep), Replacement.create("weekly_avg_rep", weeklyAvgRep));
     }
 }

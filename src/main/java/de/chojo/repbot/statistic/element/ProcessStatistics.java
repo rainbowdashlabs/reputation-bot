@@ -6,6 +6,7 @@ import de.chojo.repbot.statistic.ReplacementProvider;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 public class ProcessStatistics implements ReplacementProvider {
     private static final int MB = 1024 * 1024;
@@ -59,9 +60,9 @@ public class ProcessStatistics implements ReplacementProvider {
     }
 
     @Override
-    public Replacement[] replacements() {
-        return new Replacement[]{Replacement.create("total_mem", total), Replacement.create("used_mem", used),
+    public List<Replacement> replacements() {
+        return List.of(Replacement.create("total_mem", total), Replacement.create("used_mem", used),
                 Replacement.create("free_mem", free), Replacement.create("max_mem", max),
-                Replacement.create("threads", threads)};
+                Replacement.create("threads", threads));
     }
 }

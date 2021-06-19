@@ -1,5 +1,7 @@
 package de.chojo.repbot.statistic.element;
 
+import java.util.List;
+
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.statistic.ReplacementProvider;
 import net.dv8tion.jda.api.JDA;
@@ -28,8 +30,8 @@ public class ShardStatistic implements ReplacementProvider {
     }
 
     @Override
-    public Replacement[] replacements() {
-        return new Replacement[]{Replacement.create("analyzed_messages_shard", analyzedMessages), Replacement.create("shard_status", status.name()),
-                Replacement.create("shard_id", shard)};
+    public List<Replacement> replacements() {
+        return List.of(Replacement.create("analyzed_messages_shard", analyzedMessages), Replacement.create("shard_status", status.name()),
+                Replacement.create("shard_id", shard));
     }
 }
