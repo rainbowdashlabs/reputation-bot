@@ -10,6 +10,8 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class PresenceService implements Runnable {
     private final ShardManager shardManager;
@@ -37,6 +39,14 @@ public class PresenceService implements Runnable {
 
     private Activity activity() {
         return Activity.of(Activity.ActivityType.CUSTOM_STATUS, currentPresence);
+    }
+
+    public static PresenceService start(ShardManager shardManager, Configuration configuration, Statistic statistic, ScheduledExecutorService executorService) {
+        var presenceService = new PresenceService(shardManager, configuration, statistic);
+        if (configuration.presence().isActive()) {
+            executorService.scheduleAtFixedRate(presenceService, 0, configuration.presence().interval(), TimeUnit.MINUTES);
+        }
+        return presenceService;
     }
 
     @Override

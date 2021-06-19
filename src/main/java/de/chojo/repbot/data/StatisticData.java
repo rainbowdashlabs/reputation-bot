@@ -33,4 +33,8 @@ public class StatisticData extends QueryFactoryHolder {
                 rs.getInt("weeky_avg_reputation")))
         .firstSync();
     }
+
+    public void refreshStatistics(){
+        builder().queryWithoutParams("REFRESH MATERIALIZED VIEW data_statistics").update().executeSync();
+    }
 }

@@ -32,9 +32,11 @@ import de.chojo.repbot.listener.ReactionListener;
 import de.chojo.repbot.listener.StateListener;
 import de.chojo.repbot.listener.VoiceStateListener;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;
+import de.chojo.repbot.service.PresenceService;
 import de.chojo.repbot.service.RepBotCachePolicy;
 import de.chojo.repbot.service.ReputationService;
 import de.chojo.repbot.service.RoleAssigner;
+import de.chojo.repbot.statistic.Statistic;
 import de.chojo.repbot.util.LogNotify;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.TextChannel;
@@ -69,7 +71,7 @@ public class ReputationBot {
     private final ThreadGroup hikariGroup = new ThreadGroup("Hikari Worker");
     private final ThreadGroup jdaGroup = new ThreadGroup("JDA Worker");
     private final ExecutorService eventThreads = Executors.newFixedThreadPool(50, createThreadFactory(eventGroup));
-    private final ScheduledExecutorService repBotWorker = Executors.newScheduledThreadPool(2, createThreadFactory(workerGroup));
+    private final ScheduledExecutorService repBotWorker = Executors.newScheduledThreadPool(3, createThreadFactory(workerGroup));
     private ShardManager shardManager;
     private HikariDataSource dataSource;
     private Configuration configuration;
@@ -150,6 +152,9 @@ public class ReputationBot {
     }
 
     private void initBot() {
+        var statistic = Statistic.create(shardManager, dataSource, repBotWorker);
+        PresenceService.start(shardManager, configuration, statistic, repBotWorker);
+
         var roleAssigner = new RoleAssigner(dataSource);
         var reputationService = new ReputationService(dataSource, roleAssigner, configuration.magicImage(), localizer);
         var reactionListener = new ReactionListener(dataSource, localizer, reputationService);
@@ -167,9 +172,11 @@ public class ReputationBot {
                 reputatinoVoteListener,
                 voiceStateListener,
                 logListener);
+
         if (configuration.baseSettings().isInternalCommands()) {
-            shardManager.addEventListener(new InternalCommandListener(configuration));
+            shardManager.addEventListener(new InternalCommandListener(configuration, statistic));
         }
+
         var data = new GuildData(dataSource);
         var hubBuilder = CommandHub.builder(shardManager, configuration.baseSettings().defaultPrefix())
                 .receiveGuildCommands()

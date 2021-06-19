@@ -2,6 +2,7 @@ package de.chojo.repbot.listener;
 
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.repbot.config.Configuration;
+import de.chojo.repbot.statistic.Statistic;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +12,7 @@ import java.util.Arrays;
 public class InternalCommandListener extends ListenerAdapter {
     private final Configuration configuration;
 
-    public InternalCommandListener(Configuration configuration) {
+    public InternalCommandListener(Configuration configuration, Statistic statistic) {
         this.configuration = configuration;
     }
 

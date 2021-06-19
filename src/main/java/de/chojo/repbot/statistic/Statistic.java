@@ -25,10 +25,10 @@ public class Statistic implements Runnable {
     private static final Logger log = getLogger(Statistic.class);
     private final Map<Integer, long[]> analyzedMessages = new HashMap<>();
     private int currentMin = 0;
-    private ShardManager shardManager;
-    private StatisticData statisticData;
+    private final ShardManager shardManager;
+    private final StatisticData statisticData;
 
-    public Statistic(ShardManager shardManager, DataSource dataSource) {
+    private Statistic(ShardManager shardManager, DataSource dataSource) {
         this.shardManager = shardManager;
         this.statisticData = new StatisticData(dataSource);
     }
@@ -89,6 +89,11 @@ public class Statistic implements Runnable {
     public static Statistic create(ShardManager shardManager, DataSource dataSource, ScheduledExecutorService service) {
         var statistic = new Statistic(shardManager, dataSource);
         service.scheduleAtFixedRate(statistic, 0, 1, TimeUnit.MINUTES);
+        service.scheduleAtFixedRate(statistic::refreshStatistics, 1, 30, TimeUnit.MINUTES);
         return statistic;
+    }
+
+    private void refreshStatistics() {
+        statisticData.refreshStatistics();
     }
 }
