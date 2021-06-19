@@ -1,17 +1,12 @@
 package de.chojo.repbot.service;
 
-import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.config.Configuration;
-import de.chojo.repbot.config.elements.PresenceSettings;
 import de.chojo.repbot.statistic.Statistic;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -22,7 +17,6 @@ public class PresenceService implements Runnable {
     private final ShardManager shardManager;
     private final Configuration configuration;
     private final Statistic statistic;
-    private List<Replacement> replacements = new ArrayList<>();
 
     public PresenceService(ShardManager shardManager, Configuration configuration, Statistic statistic) {
         this.shardManager = shardManager;
@@ -45,14 +39,7 @@ public class PresenceService implements Runnable {
     }
 
     private void refresh() {
-        var systemStatistic = statistic.getSystemStatistic();
-
-        replacements.clear();
-        replacements.addAll(systemStatistic.replacements());
-        replacements.addAll(systemStatistic.aggregatedShards().replacements());
-        replacements.addAll(systemStatistic.dataStatistic().replacements());
-        replacements.addAll(systemStatistic.processStatistics().replacements());
-
+        var replacements = statistic.getSystemStatistic().replacements();
         var currentPresence = configuration.presence().randomStatus();
         var text = currentPresence.text(replacements);
         log.debug("Changed presence to: {}", text);
