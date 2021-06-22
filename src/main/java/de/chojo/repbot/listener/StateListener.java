@@ -1,5 +1,6 @@
 package de.chojo.repbot.listener;
 
+import com.zaxxer.hikari.HikariDataSource;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.wrapper.GuildSettingUpdate;
 import net.dv8tion.jda.api.events.ReadyEvent;
@@ -15,6 +16,8 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import javax.sql.DataSource;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -24,6 +27,12 @@ public class StateListener extends ListenerAdapter implements Runnable {
 
     public StateListener(DataSource dataSource) {
         data = new GuildData(dataSource);
+    }
+
+    public static StateListener of(HikariDataSource dataSource, ScheduledExecutorService repBotWorker) {
+        var stateListener = new StateListener(dataSource);
+        repBotWorker.scheduleAtFixedRate(stateListener, 1, 12, TimeUnit.HOURS);
+        return stateListener;
     }
 
     @Override
