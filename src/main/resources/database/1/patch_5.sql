@@ -1,7 +1,7 @@
 alter table repbot_schema.cleanup_schedule
     alter column guild_id drop not null;
 
-CREATE OR REPLACE FUNCTION repbot_schema.aggregate_user_data(user_id bigint)
+CREATE OR REPLACE FUNCTION repbot_schema.aggregate_user_data(user_id BIGINT)
     returns jsonb
     language plpgsql
     cost 100
