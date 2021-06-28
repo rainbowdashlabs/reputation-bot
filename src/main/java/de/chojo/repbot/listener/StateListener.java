@@ -1,6 +1,5 @@
 package de.chojo.repbot.listener;
 
-import com.zaxxer.hikari.HikariDataSource;
 import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
