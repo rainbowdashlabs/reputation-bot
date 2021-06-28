@@ -36,7 +36,7 @@ import de.chojo.repbot.listener.ReactionListener;
 import de.chojo.repbot.listener.StateListener;
 import de.chojo.repbot.listener.VoiceStateListener;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;
-import de.chojo.repbot.service.GdprReporterService;
+import de.chojo.repbot.service.GdprService;
 import de.chojo.repbot.service.PresenceService;
 import de.chojo.repbot.service.RepBotCachePolicy;
 import de.chojo.repbot.service.ReputationService;
@@ -171,7 +171,7 @@ public class ReputationBot {
         // init services
         var roleAssigner = new RoleAssigner(dataSource);
         var reputationService = new ReputationService(dataSource, contextResolver, roleAssigner, configuration.magicImage(), localizer);
-        var reporterService = GdprReporterService.of(shardManager, dataSource, repBotWorker);
+        var reporterService = GdprService.of(shardManager, dataSource, repBotWorker);
 
         // init listener and services
         var reactionListener = new ReactionListener(dataSource, localizer, reputationService);

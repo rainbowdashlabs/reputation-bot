@@ -15,19 +15,19 @@ import java.util.concurrent.TimeUnit;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class GdprReporterService implements Runnable {
-    private static final Logger log = getLogger(GdprReporterService.class);
+public class GdprService implements Runnable {
+    private static final Logger log = getLogger(GdprService.class);
     private final ShardManager shardManager;
     private final GdprData data;
 
-    private GdprReporterService(ShardManager shardManager, DataSource data) {
+    private GdprService(ShardManager shardManager, DataSource data) {
         this.shardManager = shardManager;
         this.data = new GdprData(data);
     }
 
-    public static GdprReporterService of(ShardManager shardManager, DataSource data, ScheduledExecutorService executorService) {
-        var service = new GdprReporterService(shardManager, data);
-        executorService.scheduleAtFixedRate(service, 10, 60, TimeUnit.SECONDS);
+    public static GdprService of(ShardManager shardManager, DataSource data, ScheduledExecutorService executorService) {
+        var service = new GdprService(shardManager, data);
+        executorService.scheduleAtFixedRate(service, 10, 60, TimeUnit.MINUTES);
         return service;
     }
 
@@ -100,7 +100,7 @@ public class GdprReporterService implements Runnable {
                     .addFile(tempFile.toFile())
                     .complete();
         } catch (RuntimeException e) {
-            log.info("Could not send gdpr data to user {}. File sending failed.", userId, e);
+            log.info("Could not send gdpr data to user {}. File sending failed.", userId);
             return false;
         }
         return true;
