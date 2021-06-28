@@ -38,10 +38,10 @@ BEGIN
                    'reputation', coalesce(rep, '[]'::jsonb),
                    'voice_activity', coalesce(voice, '[]'::jsonb)
                )
-    from reputation,
+    FROM reputation,
          voice_activity
-    into _result;
-    return _result;
+    INTO _result;
+    RETURN _result;
 END;
 $BODY$;
 
