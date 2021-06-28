@@ -53,3 +53,7 @@ create table IF NOT EXISTS repbot_schema.gdpr_log
 
 create unique index IF NOT EXISTS gdpr_log_user_id_uindex
     on repbot_schema.gdpr_log (user_id);
+
+alter table repbot_schema.cleanup_schedule alter column guild_id set default 0;
+
+alter table repbot_schema.cleanup_schedule alter column user_id set default 0;
