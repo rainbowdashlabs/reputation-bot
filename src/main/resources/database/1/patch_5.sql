@@ -1,5 +1,5 @@
-alter table repbot_schema.cleanup_schedule
-    alter column guild_id drop not null;
+ALTER TABLE repbot_schema.cleanup_schedule
+    ALTER COLUMN guild_id DROP NOT NULL;
 
 CREATE OR REPLACE FUNCTION repbot_schema.aggregate_user_data(user_id BIGINT)
     returns jsonb
