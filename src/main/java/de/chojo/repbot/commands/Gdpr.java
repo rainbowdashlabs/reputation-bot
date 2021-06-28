@@ -1,6 +1,7 @@
 package de.chojo.repbot.commands;
 
 import de.chojo.jdautil.command.SimpleCommand;
+import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
@@ -12,19 +13,19 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import javax.sql.DataSource;
 
 public class Gdpr extends SimpleCommand {
-    private final GdprReporterService reporterService;
     private final GdprData gdprData;
+    private final ILocalizer localizer;
 
-    public Gdpr(GdprReporterService reporterService, DataSource dataSource) {
+    public Gdpr(DataSource dataSource, ILocalizer localizer) {
         super("gdpr",
                 new String[]{"dsgvo"},
-                "Request your data or its deletion",
+                "command.gdpr.description",
                 subCommandBuilder()
-                        .add("request", "request a copy or your data.")
-                        .add("delete", "Request deletion of your data.")
+                        .add("request", "command.gdpr.sub.request")
+                        .add("delete", "command.gdpr.sub.delete")
                         .build(),
                 Permission.UNKNOWN);
-        this.reporterService = reporterService;
+        this.localizer = localizer;
         gdprData = new GdprData(dataSource);
     }
 
@@ -38,9 +39,9 @@ public class Gdpr extends SimpleCommand {
         if ("request".equalsIgnoreCase(cmd)) {
             var request = gdprData.request(eventWrapper.getAuthor());
             if (request) {
-                eventWrapper.reply("We received your request. You will get your data within the next hours. You can request your data every 30 days.").queue();
+                eventWrapper.reply(localizer.localize("command.gdpr.sub.request.received", eventWrapper.getGuild())).queue();
             } else {
-                eventWrapper.reply("Your have requested your data in the last 30 days. You can request your data only every 30 days.").queue();
+                eventWrapper.reply(localizer.localize("command.gdpr.sub.request.requested", eventWrapper.getGuild())).queue();
             }
             return true;
         }
@@ -48,9 +49,9 @@ public class Gdpr extends SimpleCommand {
         if ("delete".equalsIgnoreCase(cmd)) {
             var success = gdprData.queueUserDeletion(eventWrapper.getAuthor());
             if (success) {
-                eventWrapper.reply("Your data is scheduled to be deleted. It will be deleted within the next days.").queue();
+                eventWrapper.reply(localizer.localize("command.gdpr.sub.delete.received", eventWrapper.getGuild())).queue();
             } else {
-                eventWrapper.reply("Your data is already scheduled to be deleted. It will be deleted within the next days.").queue();
+                eventWrapper.reply(localizer.localize("command.gdpr.sub.delete.scheduled", eventWrapper.getGuild())).queue();
             }
             return true;
         }
@@ -63,18 +64,18 @@ public class Gdpr extends SimpleCommand {
         if ("request".equalsIgnoreCase(event.getSubcommandName())) {
             var request = gdprData.request(event.getUser());
             if (request) {
-                event.reply("We received your request. You will get your data within the next hours. You can request your data every 30 days.").setEphemeral(true).queue();
+                event.reply(localizer.localize("command.gdpr.sub.request.received", event.getGuild())).setEphemeral(true).queue();
             } else {
-                event.reply("Your have requested your data in the last 30 days. You can request your data only every 30 days.").setEphemeral(true).queue();
+                event.reply(localizer.localize("command.gdpr.sub.request.requested", event.getGuild())).setEphemeral(true).queue();
             }
         }
 
         if ("delete".equalsIgnoreCase(event.getSubcommandName())) {
             var success = gdprData.queueUserDeletion(event.getUser());
             if (success) {
-                event.reply("Your data is scheduled to be deleted. It will be deleted within the next days.").setEphemeral(true).queue();
+                event.reply(localizer.localize("command.gdpr.sub.delete.received", event.getGuild())).setEphemeral(true).queue();
             } else {
-                event.reply("Your data is already scheduled to be deleted. It will be deleted within the next days.").setEphemeral(true).queue();
+                event.reply(localizer.localize("command.gdpr.sub.delete.scheduled", event.getGuild())).setEphemeral(true).queue();
             }
         }
     }

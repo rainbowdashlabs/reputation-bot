@@ -214,7 +214,7 @@ public class ReputationBot {
                         Info.create(localizer, configuration),
                         new Log(shardManager, dataSource, localizer),
                         Setup.of(dataSource, localizer),
-                        new Gdpr(reporterService, dataSource)
+                        new Gdpr(dataSource, localizer)
                 )
                 .withInvalidArgumentProvider(((loc, command) -> Help.getCommandHelp(command, loc)))
                 .withLocalizer(localizer)
