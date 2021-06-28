@@ -72,8 +72,8 @@ public class GdprData extends QueryFactoryHolder {
                 .update().executeSync();
     }
 
-    public void queueUserDeletion(User user) {
-        builder()
+    public boolean queueUserDeletion(User user) {
+        return builder()
                 .query("""
                         INSERT INTO
                             cleanup_schedule(user_id, delete_after)
@@ -82,7 +82,8 @@ public class GdprData extends QueryFactoryHolder {
                                     DO NOTHING;
                         """)
                 .paramsBuilder(stmt -> stmt.setLong(user.getIdLong()))
-                .update().executeSync();
+                .update()
+                .executeSync() > 0;
     }
 
     public List<RemovalTask> getRemovalTasks() {
@@ -100,17 +101,55 @@ public class GdprData extends QueryFactoryHolder {
                 .allSync();
     }
 
+    public void cleanupRequests() {
+        builder()
+                .queryWithoutParams("DELETE FROM gdpr_log WHERE received is not null and received < now() - INTERVAL '30 DAYS'")
+                .update()
+                .executeSync();
+    }
+
+    public boolean request(User user) {
+        return builder()
+                .query("INSERT INTO gdpr_log(user_id) VALUES(?) ON CONFLICT(user_id) DO NOTHING")
+                .paramsBuilder(stmt -> stmt.setLong(user.getIdLong()))
+                .update()
+                .executeSync() > 0;
+    }
+
     public Optional<String> getUserData(User user) {
         return builder(String.class)
-                .query("select repbot_schema.aggregate_user_data(?)")
+                .query("SELECT repbot_schema.aggregate_user_data(?)")
                 .paramsBuilder(stmt -> stmt.setLong(user.getIdLong()))
                 .readRow(rs -> rs.getString(1))
                 .firstSync();
     }
 
+    public List<Long> getReportRequests() {
+        return builder(Long.class)
+                .queryWithoutParams("SELECT user_id from gdpr_log where received is null")
+                .readRow(rs -> rs.getLong(1))
+                .allSync();
+    }
+
+    public void markAsSend(Long user) {
+        builder()
+                .query("UPDATE gdpr_log SET received = now() where user_id = ?")
+                .paramsBuilder(stmt -> stmt.setLong(user))
+                .update()
+                .executeSync();
+    }
+
+    public void markAsFailed(long user) {
+        builder()
+                .query("UPDATE gdpr_log SET tries = tries + 1 where user_id = ?")
+                .paramsBuilder(stmt -> stmt.setLong(user))
+                .update()
+                .executeSync();
+    }
+
     public void executeRemovalTask(RemovalTask task) {
         ResultStage<Void> builder;
-        if (task.userId() == null) {
+        if (task.userId() == 0) {
             builder = builder().query("DELETE FROM reputation_log where guild_id = ?;")
                     .paramsBuilder(stmt -> stmt.setLong(task.guildId()))
                     .append().query("DELETE FROM guild_bot_settings where guild_id = ?;")
@@ -124,11 +163,12 @@ public class GdprData extends QueryFactoryHolder {
                     .append().query("DELETE FROM thankwords where guild_id = ?;")
                     .paramsBuilder(stmt -> stmt.setLong(task.guildId()));
             log.info("Removed guild settings for {}", task.guildId());
-        } else if (task.guildId() == null) {
+        } else if (task.guildId() == 0) {
             builder = builder().query("DELETE FROM reputation_log where receiver_id = ?;")
                     .paramsBuilder(stmt -> stmt.setLong(task.userId()))
                     .append().query("UPDATE reputation_log SET donor_id = 0 where donor_id = ?;")
                     .paramsBuilder(stmt -> stmt.setLong(task.userId()));
+            log.info("Removed Data of user user {}", task.userId());
         } else {
             builder = builder().query("DELETE FROM reputation_log where guild_id = ? AND receiver_id = ?;")
                     .paramsBuilder(stmt -> stmt.setLong(task.guildId()).setLong(task.userId()))

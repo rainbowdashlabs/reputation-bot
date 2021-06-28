@@ -11,6 +11,7 @@ import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.commands.Channel;
+import de.chojo.repbot.commands.Gdpr;
 import de.chojo.repbot.commands.Help;
 import de.chojo.repbot.commands.Info;
 import de.chojo.repbot.commands.Invite;
@@ -35,6 +36,7 @@ import de.chojo.repbot.listener.ReactionListener;
 import de.chojo.repbot.listener.StateListener;
 import de.chojo.repbot.listener.VoiceStateListener;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;
+import de.chojo.repbot.service.GdprReporterService;
 import de.chojo.repbot.service.PresenceService;
 import de.chojo.repbot.service.RepBotCachePolicy;
 import de.chojo.repbot.service.ReputationService;
@@ -60,7 +62,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -69,7 +70,7 @@ public class ReputationBot {
     private static final Thread.UncaughtExceptionHandler EXCEPTION_HANDLER =
             (t, e) -> log.error(LogNotify.NOTIFY_ADMIN, "An uncaught exception occured in " + t.getName() + "-" + t.getId() + ".", e);
     private static ReputationBot instance;
-    private final ThreadGroup eventGroup = new ThreadGroup("Event Handler");
+    private final ThreadGroup eventGroup = new ThreadGroup("Event Worker");
     private final ThreadGroup workerGroup = new ThreadGroup("Scheduled Worker");
     private final ThreadGroup hikariGroup = new ThreadGroup("Hikari Worker");
     private final ThreadGroup jdaGroup = new ThreadGroup("JDA Worker");
@@ -91,7 +92,7 @@ public class ReputationBot {
 
     private static ThreadFactory createThreadFactory(ThreadGroup group) {
         return r -> {
-            var thread = new Thread(group, r);
+            var thread = new Thread(group, r, group.getName());
             thread.setUncaughtExceptionHandler(EXCEPTION_HANDLER);
             return thread;
         };
@@ -170,22 +171,20 @@ public class ReputationBot {
         // init services
         var roleAssigner = new RoleAssigner(dataSource);
         var reputationService = new ReputationService(dataSource, contextResolver, roleAssigner, configuration.magicImage(), localizer);
+        var reporterService = GdprReporterService.of(shardManager, dataSource, repBotWorker);
 
         // init listener and services
         var reactionListener = new ReactionListener(dataSource, localizer, reputationService);
-        var reputatinoVoteListener = new ReputationVoteListener(reputationService, localizer);
-        var messageListener = new MessageListener(dataSource, configuration, repBotCachePolicy, reputatinoVoteListener,
+        var reputationVoteListener = new ReputationVoteListener(reputationService, localizer);
+        var messageListener = new MessageListener(dataSource, configuration, repBotCachePolicy, reputationVoteListener,
                 reputationService, contextResolver, messageAnalyzer, statistic);
-        var stateListener = new StateListener(localizer, dataSource, configuration);
-        var voiceStateListener = new VoiceStateListener(dataSource);
+        var stateListener = StateListener.of(localizer, dataSource, configuration);
+        var voiceStateListener = VoiceStateListener.of(dataSource, repBotWorker);
         var logListener = LogListener.create(repBotWorker);
-        // schedule worker
-        repBotWorker.scheduleAtFixedRate(stateListener, 1, 12, TimeUnit.HOURS);
-        repBotWorker.scheduleAtFixedRate(voiceStateListener, 2, 12, TimeUnit.HOURS);
 
         shardManager.addEventListener(
                 reactionListener,
-                reputatinoVoteListener,
+                reputationVoteListener,
                 messageListener,
                 stateListener,
                 voiceStateListener,
@@ -214,7 +213,8 @@ public class ReputationBot {
                         new Invite(localizer, configuration),
                         Info.create(localizer, configuration),
                         new Log(shardManager, dataSource, localizer),
-                        Setup.of(dataSource, localizer)
+                        Setup.of(dataSource, localizer),
+                        new Gdpr(reporterService, dataSource)
                 )
                 .withInvalidArgumentProvider(((loc, command) -> Help.getCommandHelp(command, loc)))
                 .withLocalizer(localizer)

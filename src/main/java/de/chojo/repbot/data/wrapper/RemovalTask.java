@@ -1,25 +1,25 @@
 package de.chojo.repbot.data.wrapper;
 
 public class RemovalTask {
-    private final Long taskId;
-    private final Long guildId;
-    private final Long userId;
+    private final long taskId;
+    private final long guildId;
+    private final long userId;
 
-    public RemovalTask(Long taskId, Long guildId, Long userId) {
+    public RemovalTask(long taskId, long guildId, long userId) {
         this.taskId = taskId;
         this.guildId = guildId;
         this.userId = userId;
     }
 
-    public Long taskId() {
+    public long taskId() {
         return taskId;
     }
 
-    public Long guildId() {
+    public long guildId() {
         return guildId;
     }
 
-    public Long userId() {
+    public long userId() {
         return userId;
     }
 }

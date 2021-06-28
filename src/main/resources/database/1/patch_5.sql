@@ -44,3 +44,12 @@ BEGIN
         return _result;
 END;
 $BODY$;
+
+create table repbot_schema.gdpr_log
+(
+    user_id  bigint not null,
+    received timestamp
+);
+
+create unique index gdpr_log_user_id_uindex
+    on repbot_schema.gdpr_log (user_id);

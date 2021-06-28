@@ -22,18 +22,22 @@ import javax.sql.DataSource;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class StateListener extends ListenerAdapter implements Runnable {
+public class StateListener extends ListenerAdapter {
     private static final Logger log = getLogger(StateListener.class);
     private final GuildData guildData;
     private final GdprData gdprData;
     private final ILocalizer localizer;
     private final Configuration configuration;
 
-    public StateListener(ILocalizer localizer, DataSource dataSource, Configuration configuration) {
+    private StateListener(ILocalizer localizer, DataSource dataSource, Configuration configuration) {
         this.localizer = localizer;
         guildData = new GuildData(dataSource);
         this.gdprData = new GdprData(dataSource);
         this.configuration = configuration;
+    }
+
+    public static StateListener of(ILocalizer localizer, DataSource dataSource, Configuration configuration) {
+        return new StateListener(localizer, dataSource, configuration);
     }
 
     @Override
@@ -90,10 +94,5 @@ public class StateListener extends ListenerAdapter implements Runnable {
     @Override
     public void onReady(@NotNull ReadyEvent event) {
         event.getJDA().getGuildCache().forEach(guildData::initGuild);
-    }
-
-    @Override
-    public void run() {
-        gdprData.getRemovalTasks().forEach(gdprData::executeRemovalTask);
     }
 }
