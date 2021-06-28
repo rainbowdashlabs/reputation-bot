@@ -1,8 +1,11 @@
 package de.chojo.repbot.listener;
 
 import com.zaxxer.hikari.HikariDataSource;
+import de.chojo.jdautil.localization.ILocalizer;
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.wrapper.GuildSettingUpdate;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.channel.text.TextChannelDeleteEvent;
 import net.dv8tion.jda.api.events.emote.EmoteRemovedEvent;
@@ -24,13 +27,18 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class StateListener extends ListenerAdapter implements Runnable {
     private static final Logger log = getLogger(StateListener.class);
     private final GuildData data;
+    private final ILocalizer localizer;
+    private final Configuration configuration;
 
-    public StateListener(DataSource dataSource) {
+    private StateListener(ILocalizer localizer, DataSource dataSource, Configuration configuration) {
+        this.localizer = localizer;
         data = new GuildData(dataSource);
+        this.configuration = configuration;
     }
 
-    public static StateListener of(HikariDataSource dataSource, ScheduledExecutorService repBotWorker) {
-        var stateListener = new StateListener(dataSource);
+    public static StateListener of(ILocalizer localizer, DataSource dataSource, Configuration configuration,
+                                   ScheduledExecutorService repBotWorker) {
+        var stateListener = new StateListener(localizer, dataSource, configuration);
         repBotWorker.scheduleAtFixedRate(stateListener, 1, 12, TimeUnit.HOURS);
         return stateListener;
     }
@@ -39,6 +47,17 @@ public class StateListener extends ListenerAdapter implements Runnable {
     public void onGuildJoin(@NotNull GuildJoinEvent event) {
         data.initGuild(event.getGuild());
         data.dequeueDeletion(event.getGuild());
+
+        if (configuration.botlist().isBotlistGuild(event.getGuild().getIdLong())) return;
+
+        var selfMember = event.getGuild().getSelfMember();
+        for (var channel : event.getGuild().getTextChannels()) {
+            if (selfMember.hasPermission(channel, Permission.VIEW_CHANNEL)
+                    && selfMember.hasPermission(channel, Permission.MESSAGE_WRITE)) {
+                channel.sendMessage(localizer.localize("message.welcome", event.getGuild())).queue();
+                break;
+            }
+        }
     }
 
     @Override
@@ -77,7 +96,6 @@ public class StateListener extends ListenerAdapter implements Runnable {
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
-        log.info("");
         event.getJDA().getGuildCache().forEach(data::initGuild);
     }
 

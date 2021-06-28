@@ -22,7 +22,7 @@ Also if a message is older than a configurable amount no reputation will be give
 reaction.
 
 You can invite the bot with
-this [link](https://discord.com/oauth2/authorize?client_id=834843896579489794&scope=bot&permissions=1342532672). \
+this [link](https://discord.com/oauth2/authorize?client_id=834843896579489794&scope=bot%20applications.commands&permissions=1342532672). \
 Or if you dont trust me you can host it by yourself.
 
 # Can I backfill my reputation
