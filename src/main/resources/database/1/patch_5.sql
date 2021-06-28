@@ -20,9 +20,9 @@ BEGIN
                 'ref_message', ref_message_id,
                 'cause', cause,
                 'received', received::text
-            )) as rep
-        from repbot_schema.reputation_log l
-        where l.receiver_id = user_id
+            )) AS rep
+        FROM repbot_schema.reputation_log l
+        WHERE l.receiver_id = user_id
            OR l.donor_id = user_id
     ),
          voice_activity AS (
