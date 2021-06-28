@@ -45,15 +45,15 @@ BEGIN
 END;
 $BODY$;
 
-create table IF NOT EXISTS repbot_schema.gdpr_log
+CREATE TABLE IF NOT EXISTS repbot_schema.gdpr_log
 (
-    user_id  bigint not null,
-    received timestamp
+    user_id  BIGINT NOT NULL,
+    received TIMESTAMP
 );
 
-create unique index IF NOT EXISTS gdpr_log_user_id_uindex
-    on repbot_schema.gdpr_log (user_id);
+CREATE UNIQUE INDEX IF NOT EXISTS gdpr_log_user_id_uindex
+    ON repbot_schema.gdpr_log (user_id);
 
-alter table repbot_schema.cleanup_schedule alter column guild_id set default 0;
+ALTER TABLE repbot_schema.cleanup_schedule ALTER COLUMN guild_id SET DEFAULT 0;
 
-alter table repbot_schema.cleanup_schedule alter column user_id set default 0;
+ALTER TABLE repbot_schema.cleanup_schedule ALTER COLUMN user_id SET DEFAULT 0;
