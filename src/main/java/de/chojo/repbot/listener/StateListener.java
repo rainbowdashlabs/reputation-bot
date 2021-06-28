@@ -18,6 +18,8 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import javax.sql.DataSource;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -27,10 +29,17 @@ public class StateListener extends ListenerAdapter implements Runnable {
     private final ILocalizer localizer;
     private final Configuration configuration;
 
-    public StateListener(ILocalizer localizer, DataSource dataSource, Configuration configuration) {
+    private StateListener(ILocalizer localizer, DataSource dataSource, Configuration configuration) {
         this.localizer = localizer;
         data = new GuildData(dataSource);
         this.configuration = configuration;
+    }
+
+    public static StateListener of(ILocalizer localizer, DataSource dataSource, Configuration configuration,
+                                   ScheduledExecutorService repBotWorker) {
+        var stateListener = new StateListener(localizer, dataSource, configuration);
+        repBotWorker.scheduleAtFixedRate(stateListener, 1, 12, TimeUnit.HOURS);
+        return stateListener;
     }
 
     @Override
