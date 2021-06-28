@@ -10,7 +10,7 @@ $BODY$
 DECLARE
     _result jsonb;
 BEGIN
-    with reputation as (
+    WITH reputation AS (
         SELECT jsonb_agg(jsonb_build_object(
                 'guild', guild_id,
                 'channel', channel_id,
