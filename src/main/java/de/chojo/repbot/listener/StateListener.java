@@ -2,6 +2,7 @@ package de.chojo.repbot.listener;
 
 import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.repbot.config.Configuration;
+import de.chojo.repbot.data.GdprData;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.wrapper.GuildSettingUpdate;
 import net.dv8tion.jda.api.Permission;
@@ -21,22 +22,28 @@ import javax.sql.DataSource;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class StateListener extends ListenerAdapter implements Runnable {
+public class StateListener extends ListenerAdapter {
     private static final Logger log = getLogger(StateListener.class);
-    private final GuildData data;
+    private final GuildData guildData;
+    private final GdprData gdprData;
     private final ILocalizer localizer;
     private final Configuration configuration;
 
-    public StateListener(ILocalizer localizer, DataSource dataSource, Configuration configuration) {
+    private StateListener(ILocalizer localizer, DataSource dataSource, Configuration configuration) {
         this.localizer = localizer;
-        data = new GuildData(dataSource);
+        guildData = new GuildData(dataSource);
+        this.gdprData = new GdprData(dataSource);
         this.configuration = configuration;
+    }
+
+    public static StateListener of(ILocalizer localizer, DataSource dataSource, Configuration configuration) {
+        return new StateListener(localizer, dataSource, configuration);
     }
 
     @Override
     public void onGuildJoin(@NotNull GuildJoinEvent event) {
-        data.initGuild(event.getGuild());
-        data.dequeueDeletion(event.getGuild());
+        guildData.initGuild(event.getGuild());
+        gdprData.dequeueGuildDeletion(event.getGuild());
 
         if (configuration.botlist().isBotlistGuild(event.getGuild().getIdLong())) return;
 
@@ -52,45 +59,40 @@ public class StateListener extends ListenerAdapter implements Runnable {
 
     @Override
     public void onGuildLeave(@NotNull GuildLeaveEvent event) {
-        data.queueDeletion(event.getGuild());
+        gdprData.queueGuildDeletion(event.getGuild());
     }
 
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
-        data.dequeueDeletion(event.getMember());
+        gdprData.dequeueGuildUserDeletion(event.getMember());
     }
 
     @Override
     public void onGuildMemberRemove(@NotNull GuildMemberRemoveEvent event) {
-        data.queueDeletion(event.getUser(), event.getGuild());
+        gdprData.queueGuildUserDeletion(event.getUser(), event.getGuild());
     }
 
     @Override
     public void onRoleDelete(@NotNull RoleDeleteEvent event) {
-        data.removeReputationRole(event.getGuild(), event.getRole());
+        guildData.removeReputationRole(event.getGuild(), event.getRole());
     }
 
     @Override
     public void onTextChannelDelete(@NotNull TextChannelDeleteEvent event) {
-        data.removeChannel(event.getGuild(), event.getChannel());
+        guildData.removeChannel(event.getGuild(), event.getChannel());
     }
 
     @Override
     public void onEmoteRemoved(@NotNull EmoteRemovedEvent event) {
-        var guildSettings = data.getGuildSettings(event.getGuild());
+        var guildSettings = guildData.getGuildSettings(event.getGuild());
         if (guildSettings.isEmpty()) return;
         if (!guildSettings.get().reactionIsEmote()) return;
         if (!guildSettings.get().reaction().equals(event.getEmote().getId())) return;
-        data.updateMessageSettings(GuildSettingUpdate.builder(event.getGuild()).reaction("✅").build());
+        guildData.updateMessageSettings(GuildSettingUpdate.builder(event.getGuild()).reaction("✅").build());
     }
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
-        event.getJDA().getGuildCache().forEach(data::initGuild);
-    }
-
-    @Override
-    public void run() {
-        data.getRemovalTasks().forEach(data::executeRemovalTask);
+        event.getJDA().getGuildCache().forEach(guildData::initGuild);
     }
 }

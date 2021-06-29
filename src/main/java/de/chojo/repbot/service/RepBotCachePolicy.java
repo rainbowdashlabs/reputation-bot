@@ -34,6 +34,14 @@ public class RepBotCachePolicy implements MemberCachePolicy, Runnable {
             return true;
         }
 
+        if (MemberCachePolicy.VOICE.cacheMember(member)) {
+            return true;
+        }
+
+        if (MemberCachePolicy.OWNER.cacheMember(member)) {
+            return true;
+        }
+
         if (scan.isRunning(member.getGuild())) {
             return true;
         }
