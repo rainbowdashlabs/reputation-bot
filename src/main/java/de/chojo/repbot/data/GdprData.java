@@ -118,7 +118,7 @@ public class GdprData extends QueryFactoryHolder {
 
     public Optional<String> getUserData(User user) {
         return builder(String.class)
-                .query("SELECT repbot_schema.aggregate_user_data(?)")
+                .query("SELECT aggregate_user_data(?)")
                 .paramsBuilder(stmt -> stmt.setLong(user.getIdLong()))
                 .readRow(rs -> rs.getString(1))
                 .firstSync();
