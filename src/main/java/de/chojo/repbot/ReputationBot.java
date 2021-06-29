@@ -11,6 +11,7 @@ import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.commands.Channel;
+import de.chojo.repbot.commands.Gdpr;
 import de.chojo.repbot.commands.Help;
 import de.chojo.repbot.commands.Info;
 import de.chojo.repbot.commands.Invite;
@@ -35,6 +36,7 @@ import de.chojo.repbot.listener.ReactionListener;
 import de.chojo.repbot.listener.StateListener;
 import de.chojo.repbot.listener.VoiceStateListener;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;
+import de.chojo.repbot.service.GdprService;
 import de.chojo.repbot.service.PresenceService;
 import de.chojo.repbot.service.RepBotCachePolicy;
 import de.chojo.repbot.service.ReputationService;
@@ -169,13 +171,14 @@ public class ReputationBot {
         // init services
         var roleAssigner = new RoleAssigner(dataSource);
         var reputationService = new ReputationService(dataSource, contextResolver, roleAssigner, configuration.magicImage(), localizer);
+        var reporterService = GdprService.of(shardManager, dataSource, repBotWorker);
 
         // init listener and services
         var reactionListener = new ReactionListener(dataSource, localizer, reputationService);
         var reputationVoteListener = new ReputationVoteListener(reputationService, localizer);
         var messageListener = new MessageListener(dataSource, configuration, repBotCachePolicy, reputationVoteListener,
                 reputationService, contextResolver, messageAnalyzer, statistic);
-        var stateListener = StateListener.of(localizer, dataSource, configuration, repBotWorker);
+        var stateListener = StateListener.of(localizer, dataSource, configuration);
         var voiceStateListener = VoiceStateListener.of(dataSource, repBotWorker);
         var logListener = LogListener.create(repBotWorker);
 
@@ -210,7 +213,8 @@ public class ReputationBot {
                         new Invite(localizer, configuration),
                         Info.create(localizer, configuration),
                         new Log(shardManager, dataSource, localizer),
-                        Setup.of(dataSource, localizer)
+                        Setup.of(dataSource, localizer),
+                        new Gdpr(dataSource, localizer)
                 )
                 .withInvalidArgumentProvider(((loc, command) -> Help.getCommandHelp(command, loc)))
                 .withLocalizer(localizer)

@@ -24,7 +24,7 @@ import java.util.regex.Pattern;
 public class RepSettings extends SimpleCommand {
     private final GuildData data;
     private final Localizer loc;
-    private final Pattern emotePattern = Pattern.compile("<:.*?:(?<id>[0-9]*?)>");
+    private final Pattern emotePattern = Pattern.compile("<a?:.*?:(?<id>[0-9]*?)>");
 
     public RepSettings(DataSource source, Localizer localizer) {
         super("repsettings",
