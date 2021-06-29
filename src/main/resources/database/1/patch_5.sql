@@ -51,8 +51,10 @@ $BODY$;
 
 CREATE TABLE IF NOT EXISTS repbot_schema.gdpr_log
 (
-    user_id  BIGINT NOT NULL,
-    received TIMESTAMP
+    user_id   BIGINT                  NOT NULL,
+    received  timestamp,
+    tries     INTEGER   DEFAULT 0,
+    requested TIMESTAMP DEFAULT now() NOT NULL
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS gdpr_log_user_id_uindex
