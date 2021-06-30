@@ -57,7 +57,7 @@ BEGIN
              SELECT jsonb_build_object(
                             'user', user_id,
                             'received', received,
-                            'attemts', attempts,
+                            'attempts', attempts,
                             'requested', requested
                         ) AS gdpr
              FROM gdpr_log l
