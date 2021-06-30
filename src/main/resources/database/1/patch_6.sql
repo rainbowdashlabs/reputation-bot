@@ -47,7 +47,7 @@ BEGIN
                             jsonb_build_object(
                                     'guild', guild_id,
                                     'user', user_id,
-                                    'delete_after', delete_after::text
+                                    'delete_after', delete_after::TEXT
                                 )
                         ) AS cleanup
              FROM repbot_schema.cleanup_schedule c
@@ -56,26 +56,24 @@ BEGIN
          gdpr_log AS (
              SELECT jsonb_build_object(
                             'user', user_id,
-                            'received', received,
+                            'received', now()::TEXT,
                             'attempts', attempts,
                             'requested', requested
                         ) AS gdpr
-             FROM gdpr_log l
+             FROM repbot_schema.gdpr_log l
              WHERE l.user_id = _user_id
          )
-    SELECT jsonb_pretty(
-                   jsonb_build_object(
-                           'reputation', coalesce(rep, '[]'::JSONB),
-                           'voice_activity', coalesce(voice, '[]'::JSONB),
-                           'cleanup_tasks', coalesce(cleanup, '[]'::jsonb),
-                           'gdpr_log', coalesce(gdpr_log, '{}'::jsonb)
-                       )
+    SELECT jsonb_build_object(
+                   'reputation', coalesce(rep, '[]'::JSONB),
+                   'voice_activity', coalesce(voice, '[]'::JSONB),
+                   'cleanup_tasks', coalesce(cleanup, '[]'::JSONB),
+                   'gdpr_log', coalesce(gdpr, '{}'::JSONB)
                )
     FROM reputation,
          voice_activity,
          cleanup_tasks,
          gdpr_log
     INTO _result;
-    RETURN _result;
+    RETURN jsonb_pretty(_result);
 END;
 $BODY$;
