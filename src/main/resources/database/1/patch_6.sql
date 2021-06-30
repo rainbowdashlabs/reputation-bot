@@ -1,5 +1,5 @@
-alter table repbot_schema.gdpr_log
-    rename column tries to attemts;
+ALTER TABLE repbot_schema.gdpr_log
+    RENAME COLUMN tries TO attempts;
 
 DROP FUNCTION repbot_schema.aggregate_user_data(bigint);
 
@@ -42,26 +42,26 @@ BEGIN
              WHERE user_id_1 = _user_id
                 OR user_id_2 = _user_id
          ),
-         cleanup_tasks as (
-             select jsonb_agg(
+         cleanup_tasks AS (
+             SELECT jsonb_agg(
                             jsonb_build_object(
                                     'guild', guild_id,
                                     'user', user_id,
                                     'delete_after', delete_after::text
                                 )
-                        ) as cleanup
-             from repbot_schema.cleanup_schedule c
-             where c.user_id = _user_id
+                        ) AS cleanup
+             FROM repbot_schema.cleanup_schedule c
+             WHERE c.user_id = _user_id
          ),
-         gdpr_log as (
-             select jsonb_build_object(
+         gdpr_log AS (
+             SELECT jsonb_build_object(
                             'user', user_id,
                             'received', received,
-                            'attemts', attemts,
+                            'attemts', attempts,
                             'requested', requested
-                        ) as gdpr
-             from gdpr_log l
-             where l.user_id = _user_id
+                        ) AS gdpr
+             FROM gdpr_log l
+             WHERE l.user_id = _user_id
          )
     SELECT jsonb_pretty(
                    jsonb_build_object(
