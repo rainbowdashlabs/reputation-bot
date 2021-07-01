@@ -4,16 +4,12 @@ import de.chojo.jdautil.localization.util.Language;
 import de.chojo.repbot.data.util.DbUtil;
 import de.chojo.repbot.data.wrapper.GuildSettingUpdate;
 import de.chojo.repbot.data.wrapper.GuildSettings;
-import de.chojo.repbot.data.wrapper.RemovalTask;
 import de.chojo.repbot.data.wrapper.ReputationRole;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
 import de.chojo.sqlutil.wrapper.QueryBuilderConfig;
-import de.chojo.sqlutil.wrapper.stage.ResultStage;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.entities.User;
 import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
@@ -352,5 +348,32 @@ public class GuildData extends QueryFactoryHolder {
                         """)
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setLong(role.getIdLong()))
                 .update().executeSync() > 0;
+    }
+
+    public List<Long> guildUserIds(Guild guild) {
+        return builder(Long.class)
+                .query("""
+                        SELECT
+                        	user_id as user_id
+                        FROM
+                        	(
+                        		SELECT
+                        			donor_id AS user_id
+                        		FROM
+                        			reputation_log
+                        		WHERE guild_id = ?
+                        		UNION
+                        		DISTINCT
+                        		SELECT
+                        			receiver_id AS user_id
+                        		FROM
+                        			reputation_log
+                        		WHERE guild_id = ?
+                        	) users
+                        WHERE user_id != 0
+                         """)
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setLong(guild.getIdLong()))
+                .readRow(rs -> rs.getLong("user_id"))
+                .allSync();
     }
 }
