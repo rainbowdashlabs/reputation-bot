@@ -102,6 +102,7 @@ public class ReputationData extends QueryFactoryHolder {
                         from
                             user_reputation
                         WHERE guild_id = ?
+                            AND reputation != 0
                         ORDER BY reputation DESC
                         OFFSET ?
                         LIMIT ?;

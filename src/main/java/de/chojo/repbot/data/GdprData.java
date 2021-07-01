@@ -141,7 +141,7 @@ public class GdprData extends QueryFactoryHolder {
 
     public void markAsFailed(long user) {
         builder()
-                .query("UPDATE gdpr_log SET tries = tries + 1 where user_id = ?")
+                .query("UPDATE gdpr_log SET attempts = attempts + 1 WHERE user_id = ?")
                 .paramsBuilder(stmt -> stmt.setLong(user))
                 .update()
                 .executeSync();
