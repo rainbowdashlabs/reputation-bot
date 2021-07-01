@@ -14,6 +14,7 @@ import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.util.TextGenerator;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageHistory;
@@ -41,11 +42,12 @@ public class Scan extends SimpleCommand {
     public static final int INTERVAL_MS = 2000;
     private static final int SCAN_THREADS = 10;
     private static final Logger log = getLogger(Scan.class);
+    private final ThreadGroup scanner = new ThreadGroup("Scanner");
     private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(SCAN_THREADS + 1,
             runnable -> {
-                var t = new Thread(runnable, "Scanner");
-                t.setUncaughtExceptionHandler((thread, err) -> log.error("Unhandled exception in Scanner Thread {}.", thread.getId(), err));
-                return t;
+                var thr = new Thread(scanner, runnable);
+                thr.setUncaughtExceptionHandler((thread, err) -> log.error("Unhandled exception in Scanner Thread {}.", thread.getId(), err));
+                return thr;
             });
     private final GuildData guildData;
     private final ReputationData reputationData;
@@ -176,7 +178,12 @@ public class Scan extends SimpleCommand {
                 messages = (int) event.getOption("number_messages").getAsLong();
             }
             if (event.getOption("channel") != null) {
-                event.getOption("channel").getAsGuildChannel();
+                var guildChannel = event.getOption("channel").getAsGuildChannel();
+                if (guildChannel.getType() == ChannelType.TEXT) {
+                    event.reply(loc.localize("error.invalidChannel")).queue();
+                    return;
+                }
+                channel = (TextChannel) guildChannel;
             }
             scanChannel(event, channel, Math.max(messages, 0));
         }
@@ -328,7 +335,7 @@ public class Scan extends SimpleCommand {
                     switch (result.type()) {
                         case FUZZY, MENTION, ANSWER -> {
                             if (Verifier.equalSnowflake(donator, resultReceiver.getReference())) continue;
-                            if (reputationData.logReputation(guild, donator, resultReceiver.getReference().getUser(), message, refMessage, result.type())) {
+                            if (reputationData.logReputation(guild, guild.isMember(donator) ? donator : null, resultReceiver.getReference().getUser(), message, refMessage, result.type())) {
                                 hit();
                             }
                         }
