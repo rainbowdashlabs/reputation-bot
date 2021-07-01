@@ -48,6 +48,7 @@ public class Prune extends SimpleCommand {
             var optUser = DiscordResolver.getUser(eventWrapper.getJda().getShardManager(), user.get());
             if (optUser.isPresent()) {
                 gdprService.cleanupGuildUser(eventWrapper.getGuild(), optUser.get().getIdLong());
+                eventWrapper.reply(localizer.localize("command.prune.sub.user.removed")).queue();
                 return true;
             }
             eventWrapper.replyErrorAndDelete(localizer.localize("error.userNotFound", eventWrapper.getGuild()), 10);
