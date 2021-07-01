@@ -45,9 +45,9 @@ public class Scan extends SimpleCommand {
     private final ThreadGroup scanner = new ThreadGroup("Scanner");
     private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(SCAN_THREADS + 1,
             runnable -> {
-                var thr = new Thread(scanner, runnable);
-                thr.setUncaughtExceptionHandler((thread, err) -> log.error("Unhandled exception in Scanner Thread {}.", thread.getId(), err));
-                return thr;
+                var thread = new Thread(scanner, runnable);
+                thread.setUncaughtExceptionHandler((thr, err) -> log.error("Unhandled exception in Scanner Thread {}.", thr.getId(), err));
+                return thread;
             });
     private final GuildData guildData;
     private final ReputationData reputationData;
