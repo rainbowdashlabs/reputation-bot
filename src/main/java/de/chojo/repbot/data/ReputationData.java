@@ -39,7 +39,7 @@ public class ReputationData extends QueryFactoryHolder {
      * @param type       type of reputation
      * @return true if the statement was logged.
      */
-    public boolean logReputation(Guild guild, User donor, User receiver, Message message, @Nullable Message refMessage, ThankType type) {
+    public boolean logReputation(Guild guild, @Nullable User donor, User receiver, Message message, @Nullable Message refMessage, ThankType type) {
         var success = builder()
                 .query("""
                         INSERT INTO
@@ -47,7 +47,7 @@ public class ReputationData extends QueryFactoryHolder {
                             ON CONFLICT(guild_id, donor_id, receiver_id, message_id)
                                 DO NOTHING;
                         """)
-                .paramsBuilder(b -> b.setLong(guild.getIdLong()).setLong(donor.getIdLong()).setLong(receiver.getIdLong())
+                .paramsBuilder(b -> b.setLong(guild.getIdLong()).setLong(donor == null ? 0 : donor.getIdLong()).setLong(receiver.getIdLong())
                         .setLong(message.getIdLong()).setLong(refMessage == null ? null : refMessage.getIdLong())
                         .setLong(message.getChannel().getIdLong()).setString(type.name()))
                 .insert().executeSync() > 0;
