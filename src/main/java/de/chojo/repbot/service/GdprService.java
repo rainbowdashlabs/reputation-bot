@@ -1,6 +1,10 @@
 package de.chojo.repbot.service;
 
 import de.chojo.repbot.data.GdprData;
+import de.chojo.repbot.data.GuildData;
+import de.chojo.repbot.data.wrapper.RemovalTask;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.PrivateChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -10,43 +14,51 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class GdprService implements Runnable {
     private static final Logger log = getLogger(GdprService.class);
     private final ShardManager shardManager;
-    private final GdprData data;
+    private final GdprData gdprData;
+    private final GuildData guildData;
+    private ExecutorService executorService;
 
-    private GdprService(ShardManager shardManager, DataSource data) {
+    private GdprService(ShardManager shardManager, DataSource dataSource, ExecutorService executorService) {
         this.shardManager = shardManager;
-        this.data = new GdprData(data);
+        this.gdprData = new GdprData(dataSource);
+        this.guildData = new GuildData(dataSource);
+        this.executorService = executorService;
     }
 
-    public static GdprService of(ShardManager shardManager, DataSource data, ScheduledExecutorService executorService) {
-        var service = new GdprService(shardManager, data);
-        executorService.scheduleAtFixedRate(service, 10, 60, TimeUnit.MINUTES);
+    public static GdprService of(ShardManager shardManager, DataSource data,
+                                 ScheduledExecutorService scheduledExecutorService) {
+        var service = new GdprService(shardManager, data, scheduledExecutorService);
+        scheduledExecutorService.scheduleAtFixedRate(service, 10, 60, TimeUnit.MINUTES);
         return service;
     }
 
     @Override
     public void run() {
-        var reportRequests = data.getReportRequests();
+        var reportRequests = gdprData.getReportRequests();
 
         for (var id : reportRequests) {
             var result = resolveUserRequest(id);
             if (result) {
-                data.markAsSend(id);
+                gdprData.markAsSend(id);
             } else {
-                data.markAsFailed(id);
+                gdprData.markAsFailed(id);
             }
         }
 
-        data.cleanupRequests();
+        gdprData.cleanupRequests();
 
-        data.getRemovalTasks().forEach(data::executeRemovalTask);
+        gdprData.getRemovalTasks().forEach(gdprData::executeRemovalTask);
     }
 
     private boolean resolveUserRequest(Long userId) {
@@ -74,7 +86,7 @@ public class GdprService implements Runnable {
             return false;
         }
 
-        var userData = data.getUserData(user);
+        var userData = gdprData.getUserData(user);
 
         if (userData.isEmpty()) {
             log.info("Could not process gdpr request for user {}. Data aggregation failed.", userId);
@@ -104,5 +116,24 @@ public class GdprService implements Runnable {
             return false;
         }
         return true;
+    }
+
+    public CompletableFuture<Integer> cleanupGuildUsers(Guild guild) {
+        return CompletableFuture.supplyAsync(() -> {
+            var savedIds = guildData.guildUserIds(guild);
+            var memberIds = guild.loadMembers().get()
+                    .stream()
+                    .map(ISnowflake::getIdLong)
+                    .collect(Collectors.toList());
+            var collect = savedIds.stream().filter(id -> !memberIds.contains(id)).collect(Collectors.toList());
+            for (var id : collect) gdprData.executeRemovalTask(new RemovalTask(-1, guild.getIdLong(), id));
+            return collect.size();
+        }, executorService);
+    }
+
+    public CompletableFuture<Void> cleanupGuildUser(Guild guild, Long user) {
+        return CompletableFuture.runAsync(() ->
+                        gdprData.executeRemovalTask(new RemovalTask(-1, guild.getIdLong(), user)),
+                executorService);
     }
 }

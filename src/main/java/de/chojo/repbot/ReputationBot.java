@@ -18,6 +18,7 @@ import de.chojo.repbot.commands.Invite;
 import de.chojo.repbot.commands.Locale;
 import de.chojo.repbot.commands.Log;
 import de.chojo.repbot.commands.Prefix;
+import de.chojo.repbot.commands.Prune;
 import de.chojo.repbot.commands.RepSettings;
 import de.chojo.repbot.commands.Reputation;
 import de.chojo.repbot.commands.Roles;
@@ -171,7 +172,7 @@ public class ReputationBot {
         // init services
         var roleAssigner = new RoleAssigner(dataSource);
         var reputationService = new ReputationService(dataSource, contextResolver, roleAssigner, configuration.magicImage(), localizer);
-        var reporterService = GdprService.of(shardManager, dataSource, repBotWorker);
+        var gdprService = GdprService.of(shardManager, dataSource, repBotWorker);
 
         // init listener and services
         var reactionListener = new ReactionListener(dataSource, localizer, reputationService);
@@ -214,7 +215,8 @@ public class ReputationBot {
                         Info.create(localizer, configuration),
                         new Log(shardManager, dataSource, localizer),
                         Setup.of(dataSource, localizer),
-                        new Gdpr(dataSource, localizer)
+                        new Gdpr(dataSource, localizer),
+                        new Prune(gdprService, localizer)
                 )
                 .withInvalidArgumentProvider(((loc, command) -> Help.getCommandHelp(command, loc)))
                 .withLocalizer(localizer)
