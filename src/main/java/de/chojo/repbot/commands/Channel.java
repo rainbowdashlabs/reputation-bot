@@ -102,7 +102,7 @@ public class Channel extends SimpleCommand {
             return;
         }
         var whitelist = event.getOption("whitelist").getAsBoolean();
-        guildData.isChannelWhitelist(event.getGuild(), whitelist);
+        guildData.setChannelListType(event.getGuild(), whitelist);
         event.reply(loc.localize("command.channel.sub.whitelist." + whitelist, event.getGuild())).queue();
     }
 
@@ -120,7 +120,7 @@ public class Channel extends SimpleCommand {
             return true;
         }
         var whitelist = optBool.get();
-        guildData.isChannelWhitelist(eventWrapper.getGuild(), whitelist);
+        guildData.setChannelListType(eventWrapper.getGuild(), whitelist);
         eventWrapper.reply(loc.localize("command.channel.sub.whitelist." + whitelist, eventWrapper.getGuild())).queue();
         return false;
     }

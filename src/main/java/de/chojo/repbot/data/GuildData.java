@@ -10,7 +10,6 @@ import de.chojo.sqlutil.wrapper.QueryBuilderConfig;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
-import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
 import javax.sql.DataSource;
@@ -18,8 +17,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
-
-import static org.slf4j.LoggerFactory.getLogger;
 
 public class GuildData extends QueryFactoryHolder {
     public GuildData(DataSource source) {
@@ -377,7 +374,7 @@ public class GuildData extends QueryFactoryHolder {
                 .allSync();
     }
 
-    public void isChannelWhitelist(Guild guild, boolean whitelist) {
+    public void setChannelListType(Guild guild, boolean whitelist) {
         builder().query("""
                 INSERT INTO guild_bot_settings(guild_id, channel_whitelist) VALUES (?,?)
                     ON CONFLICT(guild_id)
