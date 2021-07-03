@@ -85,20 +85,18 @@ public class ReputationService {
             default -> throw new IllegalStateException("Unexpected value: " + type);
         }
 
-        Set<User> recentUsers;
+        Set<Member> recentMember;
         if (type == ThankType.REACTION) {
             // Check if user was recently seen in this channel.
-            recentUsers = contextResolver.getCombinedContext(guild.getMember(donor), message, settings)
-                    .stream()
-                    .map(Member::getUser)
-                    .collect(Collectors.toSet());
+            recentMember = contextResolver.getCombinedContext(guild.getMember(donor), message, settings);
         } else {
-            recentUsers = contextResolver.getCombinedContext(message, settings)
-                    .stream()
-                    .map(Member::getUser)
-                    .collect(Collectors.toSet());
+            recentMember = contextResolver.getCombinedContext(message, settings);
         }
-        if (!recentUsers.contains(receiver)) return false;
+        var recenUser = recentMember.stream()
+                .map(Member::getUser)
+                .collect(Collectors.toSet());
+
+        if (!recenUser.contains(receiver)) return false;
 
         // block non vote channel
         if (!settings.isReputationChannel(message.getTextChannel())) return false;
