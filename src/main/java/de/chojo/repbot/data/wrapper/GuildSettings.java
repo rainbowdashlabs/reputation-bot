@@ -35,10 +35,11 @@ public class GuildSettings {
     private final int cooldown;
     private final Long managerRole;
     private final Set<String> reactions;
+    private final boolean channelWhitelist;
 
     public GuildSettings(Guild guild, String prefix, String[] thankwords, int maxMessageAge, int minMessages, String reaction,
                          boolean reactionActive, boolean answerActive, boolean mentionActive, boolean fuzzyActive,
-                         Long[] activeChannel, int cooldown, Long managerRole, String[] reactions) {
+                         Long[] activeChannel, int cooldown, Long managerRole, String[] reactions, boolean channelWhitelist) {
         this.guild = guild;
         this.prefix = prefix;
         this.thankwords = thankwords;
@@ -53,8 +54,8 @@ public class GuildSettings {
         this.cooldown = cooldown;
         this.managerRole = managerRole;
         this.reactions = Set.of(reactions);
+        this.channelWhitelist = channelWhitelist;
     }
-
     public Pattern thankwordPattern() {
         if (thankwords.length == 0) return Pattern.compile("");
         var twPattern = Arrays.stream(this.thankwords)
@@ -65,7 +66,10 @@ public class GuildSettings {
     }
 
     public boolean isReputationChannel(TextChannel channel) {
-        return activeChannel.contains(channel.getIdLong());
+        if (channelWhitelist) {
+            return activeChannel.contains(channel.getIdLong());
+        }
+        return !activeChannel.contains(channel.getIdLong());
     }
 
     public boolean isReaction(MessageReaction.ReactionEmote reactionEmote) {
@@ -169,5 +173,8 @@ public class GuildSettings {
                 })
                 .filter(Objects::nonNull)
                 .collect(Collectors.toList());
+    }
+    public boolean isChannelWhitelist() {
+        return channelWhitelist;
     }
 }

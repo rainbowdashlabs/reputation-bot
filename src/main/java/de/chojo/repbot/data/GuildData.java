@@ -10,7 +10,6 @@ import de.chojo.sqlutil.wrapper.QueryBuilderConfig;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
-import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
 import javax.sql.DataSource;
@@ -19,11 +18,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
 public class GuildData extends QueryFactoryHolder {
-    private static final Logger log = getLogger(GuildData.class);
-
     public GuildData(DataSource source) {
         super(source, QueryBuilderConfig.builder().build());
     }
@@ -50,7 +45,8 @@ public class GuildData extends QueryFactoryHolder {
                             fuzzy_active,
                             active_channels,
                             cooldown,
-                            manager_role
+                            manager_role,
+                            channel_whitelist
                         FROM
                             guild_settings
                         WHERE
@@ -70,7 +66,8 @@ public class GuildData extends QueryFactoryHolder {
                         DbUtil.arrayToArray(row, "active_channels", new Long[0]),
                         row.getInt("cooldown"),
                         row.getLong("manager_role"),
-                        DbUtil.arrayToArray(row, "reactions", new String[0])))
+                        DbUtil.arrayToArray(row, "reactions", new String[0]),
+                        row.getBoolean("channel_whitelist")))
                 .firstSync();
     }
 
@@ -224,7 +221,7 @@ public class GuildData extends QueryFactoryHolder {
      */
     public boolean removeReputationRole(Guild guild, Role role) {
         return builder()
-                .query("DELETE FROM guild_ranks WHERE guild_id =? AND role_id = ?;")
+                .query("DELETE FROM guild_ranks WHERE guild_id = ? AND role_id = ?;")
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setLong(role.getIdLong()))
                 .update().executeSync() > 0;
     }
@@ -398,5 +395,17 @@ public class GuildData extends QueryFactoryHolder {
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setString(reaction))
                 .update()
                 .executeSync() > 0;
+    }
+
+    public void setChannelListType(Guild guild, boolean whitelist) {
+        builder().query("""
+                INSERT INTO guild_bot_settings(guild_id, channel_whitelist) VALUES (?,?)
+                    ON CONFLICT(guild_id)
+                        DO UPDATE
+                            SET channel_whitelist = excluded.channel_whitelist
+                """)
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setBoolean(whitelist))
+                .update()
+                .executeSync();
     }
 }
