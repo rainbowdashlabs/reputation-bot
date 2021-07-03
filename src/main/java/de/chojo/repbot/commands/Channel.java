@@ -8,6 +8,7 @@ import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
+import de.chojo.repbot.util.FilterUtil;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.IMentionable;
@@ -36,6 +37,7 @@ public class Channel extends SimpleCommand {
                                 .add(OptionType.CHANNEL, "channel", "channel", true)
                                 .build()
                         )
+                        .add("addall", "command.channel.sub.addAll")
                         .add("remove", "command.channel.sub.remove", argsBuilder()
                                 .add(OptionType.CHANNEL, "channel", "channel", true)
                                 .build()
@@ -68,6 +70,9 @@ public class Channel extends SimpleCommand {
         if ("whitelist".equalsIgnoreCase(subCmd)) {
             return whitelist(messageEventWrapper, commandContext.subContext(subCmd));
         }
+        if ("addAll".equalsIgnoreCase(subCmd)) {
+            return addAll(messageEventWrapper);
+        }
         if ("list".equalsIgnoreCase(subCmd)) {
             return list(messageEventWrapper);
         }
@@ -88,6 +93,9 @@ public class Channel extends SimpleCommand {
         }
         if ("whitelist".equalsIgnoreCase(subCmd)) {
             whitelist(event);
+        }
+        if ("addAll".equalsIgnoreCase(subCmd)) {
+            addAll(event);
         }
         if ("list".equalsIgnoreCase(subCmd)) {
             list(event);
@@ -155,6 +163,17 @@ public class Channel extends SimpleCommand {
         eventWrapper.reply(
                 eventWrapper.localize("command.channel.sub.add.added",
                         Replacement.create("CHANNEL", addedChannel))).queue();
+        return true;
+    }
+
+    private void addAll(SlashCommandEvent event) {
+        FilterUtil.getAccessableTextChannel(event.getGuild()).forEach(c -> guildData.addChannel(event.getGuild(), c));
+        event.reply(loc.localize("command.channel.sub.addAll.added", event.getGuild())).queue();
+    }
+
+    private boolean addAll(MessageEventWrapper eventWrapper) {
+        FilterUtil.getAccessableTextChannel(eventWrapper.getGuild()).forEach(c -> guildData.addChannel(eventWrapper.getGuild(), c));
+        eventWrapper.reply(loc.localize("command.channel.sub.addAll.added", eventWrapper.getGuild())).queue();
         return true;
     }
 

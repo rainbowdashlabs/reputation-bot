@@ -23,6 +23,7 @@ import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.serialization.ThankwordsContainer;
+import de.chojo.repbot.util.FilterUtil;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -47,6 +48,7 @@ public class Setup extends SimpleCommand {
     private final Localizer localizer;
     private final GuildData guildData;
     private final ThankwordsContainer thankwordsContainer;
+
 
     public Setup(Localizer localizer, DataSource dataSource,
                  ThankwordsContainer thankwordsContainer) {
@@ -204,7 +206,12 @@ public class Setup extends SimpleCommand {
             c.reply(localizer.localize("command.setup.dialog.setupComplete", c.getGuild()))
                     .queue();
             return Result.finish();
-        }));
+        })).add(Button.primary("all", "command.setup.dialog.channels.allChannel"), c -> {
+            var guild = c.getGuild();
+            FilterUtil.getAccessableTextChannel(guild).forEach(channel -> guildData.addChannel(guild, channel));
+            c.reply(localizer.localize("command.channel.sub.addAll.added", guild)).queue();
+            return Result.finish();
+        });
     }
 
     private Result handleChannels(ConversationContext context) {
