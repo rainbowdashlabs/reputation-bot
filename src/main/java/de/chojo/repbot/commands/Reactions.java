@@ -30,10 +30,9 @@ public class Reactions extends SimpleCommand {
     public Reactions(DataSource dataSource, ILocalizer loc) {
         super("reactions", null, "command.reaction.description",
                 subCommandBuilder()
-                        .add("main", "command.reaction.sub.main",
-                                argsBuilder()
-                                        .add(OptionType.STRING, "emote", "emote", true)
-                                        .build())
+                        .add("main", "command.reaction.sub.main", argsBuilder()
+                                .add(OptionType.STRING, "emote", "emote", true)
+                                .build())
                         .add("add", "command.reaction.sub.add", argsBuilder()
                                 .add(OptionType.STRING, "emote", "emote", true)
                                 .build())
