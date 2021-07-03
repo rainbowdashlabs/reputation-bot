@@ -24,7 +24,6 @@ import java.util.regex.Pattern;
 public class RepSettings extends SimpleCommand {
     private final GuildData data;
     private final Localizer loc;
-    private final Pattern emotePattern = Pattern.compile("<a?:.*?:(?<id>[0-9]*?)>");
 
     public RepSettings(DataSource source, Localizer localizer) {
         super("repsettings",
@@ -40,10 +39,6 @@ public class RepSettings extends SimpleCommand {
                         )
                         .add("minmessages", "command.repSettings.sub.minMessages", argsBuilder()
                                 .add(OptionType.INTEGER, "messages", "messages")
-                                .build()
-                        )
-                        .add("reaction", "command.repSettings.sub.reaction", argsBuilder()
-                                .add(OptionType.STRING, "emote", "emote")
                                 .build()
                         )
                         .add("reactions", "command.repSettings.sub.reactions", argsBuilder()
@@ -94,11 +89,6 @@ public class RepSettings extends SimpleCommand {
             return minMessages(eventWrapper, context.subContext(subcmd), guildSettings);
         }
 
-        if ("reaction".equalsIgnoreCase(subcmd)) {
-            return reaction(eventWrapper, context.subContext(subcmd), guildSettings);
-
-        }
-
         if ("reactions".equalsIgnoreCase(subcmd)) {
             return reactions(eventWrapper, context.subContext(subcmd), guildSettings);
 
@@ -144,14 +134,8 @@ public class RepSettings extends SimpleCommand {
             minMessages(event, guildSettings);
         }
 
-        if ("reaction".equalsIgnoreCase(subcmd)) {
-            reaction(event, guildSettings);
-
-        }
-
         if ("reactions".equalsIgnoreCase(subcmd)) {
             reactions(event, guildSettings);
-
         }
 
         if ("answer".equalsIgnoreCase(subcmd)) {
@@ -161,12 +145,10 @@ public class RepSettings extends SimpleCommand {
 
         if ("mention".equalsIgnoreCase(subcmd)) {
             mention(event, guildSettings);
-
         }
 
         if ("fuzzy".equalsIgnoreCase(subcmd)) {
             fuzzy(event, guildSettings);
-
         }
 
         if ("cooldown".equalsIgnoreCase(subcmd)) {
@@ -181,7 +163,6 @@ public class RepSettings extends SimpleCommand {
 
     private void sendSettings(SlashCommandEvent event, GuildSettings guildSettings) {
         event.replyEmbeds(getSettings(event.getGuild(), guildSettings)).queue();
-        return;
     }
 
     private MessageEmbed getSettings(Guild guild, GuildSettings guildSettings) {
@@ -378,99 +359,6 @@ public class RepSettings extends SimpleCommand {
         }
     }
 
-    private boolean reaction(MessageEventWrapper eventWrapper, CommandContext context, GuildSettings guildSettings) {
-        if (context.argsEmpty()) {
-            if (guildSettings.reactionIsEmote()) {
-                eventWrapper.getGuild().retrieveEmoteById(guildSettings.reaction())
-                        .flatMap(e -> eventWrapper.reply(eventWrapper.localize("command.repSettings.sub.reaction.get.emote",
-                                Replacement.create("EMOTE", e.getAsMention()))))
-                        .onErrorFlatMap(
-                                err -> eventWrapper.reply(eventWrapper.localize("command.repSettings.sub.reaction.get.error"))
-                        ).queue();
-                return true;
-            }
-            eventWrapper.reply(eventWrapper.localize("command.repSettings.sub.reaction.get.emoji",
-                    Replacement.create("EMOJI", guildSettings.reaction()))).queue();
-            return true;
-        }
-
-        var emote = context.argString(0).get();
-        var matcher = emotePattern.matcher(emote);
-        if (!matcher.find()) {
-            eventWrapper.reply("Checking Emote").flatMap(origM -> origM.addReaction(emote)
-                    .onErrorFlatMap(err -> origM.editMessage("").map(x -> null))
-                    .map(succ -> {
-                        if (data.updateMessageSettings(GuildSettingUpdate.builder(eventWrapper.getGuild()).reaction(emote).build())) {
-                            return origM.editMessage(loc.localize("command.repSettings.sub.reaction.set.emoji",
-                                    Replacement.create("EMOJI", emote)));
-                        }
-                        return null;
-                    })).queue();
-            return true;
-        }
-        var id = matcher.group("id");
-        var emoteById = eventWrapper.getGuild().getEmoteById(id);
-        if (emoteById == null) {
-            eventWrapper.reply(eventWrapper.localize("command.repSettings.error.emojiNotFound")).queue();
-            return true;
-        }
-
-        if (data.updateMessageSettings(GuildSettingUpdate.builder(eventWrapper.getGuild()).reaction(id).build())) {
-            eventWrapper.reply(loc.localize("command.repSettings.sub.reaction.set.emote",
-                    Replacement.create("EMOTE", emoteById.getAsMention()))).queue();
-        }
-        return true;
-    }
-
-    private void reaction(SlashCommandEvent event, GuildSettings guildSettings) {
-        var loc = this.loc.getContextLocalizer(event.getGuild());
-        if (event.getOptions().isEmpty()) {
-            if (guildSettings.reactionIsEmote()) {
-                event.getGuild().retrieveEmoteById(guildSettings.reaction())
-                        .flatMap(e -> event.reply(
-                                loc.localize("command.repSettings.sub.reaction.get.emote",
-                                        Replacement.create("EMOTE", e.getAsMention()))))
-                        .onErrorFlatMap(
-                                err -> event.reply(loc.localize("command.repSettings.sub.reaction.get.error")))
-                        .queue();
-                return;
-            }
-            event.reply(loc.localize("command.repSettings.sub.reaction.get.emoji",
-                    Replacement.create("EMOJI", guildSettings.reaction()))).queue();
-            return;
-        }
-
-        var emote = event.getOption("emote").getAsString();
-
-        var matcher = emotePattern.matcher(emote);
-        if (!matcher.find()) {
-            event.reply("Checking Emote")
-                    .flatMap(InteractionHook::retrieveOriginal)
-                    .flatMap(origM -> origM.addReaction(emote)
-                            .onErrorFlatMap(err -> origM.editMessage(loc.localize("command.repSettings.error.emojiNotFound")).map(x -> null))
-                            .map(succ -> {
-                                if (data.updateMessageSettings(GuildSettingUpdate.builder(event.getGuild()).reaction(emote).build())) {
-                                    origM.editMessage(loc.localize("command.repSettings.sub.reaction.set.emoji",
-                                            Replacement.create("EMOJI", emote))).queue();
-                                }
-                                return null;
-                            }))
-                    .queue();
-
-            return;
-        }
-        var id = matcher.group("id");
-        var emoteById = event.getGuild().getEmoteById(id);
-        if (emoteById == null) {
-            event.reply("command.repSettings.error.emojiNotFound").setEphemeral(true).queue();
-            return;
-        }
-
-        if (data.updateMessageSettings(GuildSettingUpdate.builder(event.getGuild()).reaction(id).build())) {
-            event.reply(loc.localize("command.repSettings.sub.reaction.set.emote",
-                    Replacement.create("EMOTE", emoteById.getAsMention()))).flatMap(InteractionHook::retrieveOriginal).flatMap(m2 -> m2.addReaction(emoteById)).queue();
-        }
-    }
 
     private boolean maxMessageAge(MessageEventWrapper eventWrapper, CommandContext context, GuildSettings guildSettings) {
         if (context.argsEmpty()) {
