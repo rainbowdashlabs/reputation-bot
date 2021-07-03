@@ -14,12 +14,10 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import javax.sql.DataSource;
 import java.awt.Color;
-import java.util.regex.Pattern;
 
 public class RepSettings extends SimpleCommand {
     private final GuildData data;
