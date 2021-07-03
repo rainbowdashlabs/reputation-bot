@@ -24,6 +24,8 @@ import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.serialization.ThankwordsContainer;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.components.Button;
@@ -204,7 +206,16 @@ public class Setup extends SimpleCommand {
             c.reply(localizer.localize("command.setup.dialog.setupComplete", c.getGuild()))
                     .queue();
             return Result.finish();
-        }));
+        })).add(Button.primary("all", "command.setup.dialog.channels.allChannel"), c ->{
+            var guild = c.getGuild();
+            var self = guild.getSelfMember();
+            guild.getTextChannels().stream()
+                    .filter(textChannel -> self.hasPermission(textChannel, Permission.MESSAGE_READ)
+                            && self.hasPermission(textChannel, Permission.MESSAGE_WRITE))
+                    .forEach(textChannel -> guildData.addChannel(guild, textChannel));
+            c.reply(localizer.localize("command.channel.sub.addAll.added", guild)).queue();
+            return Result.finish();
+        });
     }
 
     private Result handleChannels(ConversationContext context) {
