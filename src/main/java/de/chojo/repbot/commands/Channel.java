@@ -8,9 +8,9 @@ import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
+import de.chojo.repbot.data.wrapper.RepBotWrapper;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.ChannelType;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -127,22 +127,16 @@ public class Channel extends SimpleCommand {
     }
 
     private void addAll(SlashCommandEvent event) {
-        addAllChannel(event.getGuild());
+        RepBotWrapper.of(event.getGuild(), guildData).addAllChannelsICanReadAndWrite();
         event.reply(loc.localize("command.channel.sub.addAll.added", event.getGuild())).queue();
     }
 
     private boolean addAll(MessageEventWrapper eventWrapper) {
-        addAllChannel(eventWrapper.getGuild());
+        RepBotWrapper.of(eventWrapper.getGuild(), guildData).addAllChannelsICanReadAndWrite();
         eventWrapper.reply(loc.localize("command.channel.sub.addAll.added", eventWrapper.getGuild())).queue();
         return true;
     }
 
-    private void addAllChannel(Guild guild) {
-        guild.getTextChannels().stream()
-                .filter(textChannel -> guild.getSelfMember().hasPermission(textChannel, Permission.MESSAGE_READ)
-                        && guild.getSelfMember().hasPermission(textChannel, Permission.MESSAGE_WRITE))
-                .forEach(textChannel -> guildData.addChannel(guild, textChannel));
-    }
 
     private void remove(SlashCommandEvent event) {
         var channel = event.getOption("channel").getAsMessageChannel();

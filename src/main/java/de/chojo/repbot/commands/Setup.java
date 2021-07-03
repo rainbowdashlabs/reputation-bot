@@ -22,10 +22,9 @@ import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
+import de.chojo.repbot.data.wrapper.RepBotWrapper;
 import de.chojo.repbot.serialization.ThankwordsContainer;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.components.Button;
@@ -49,6 +48,7 @@ public class Setup extends SimpleCommand {
     private final Localizer localizer;
     private final GuildData guildData;
     private final ThankwordsContainer thankwordsContainer;
+
 
     public Setup(Localizer localizer, DataSource dataSource,
                  ThankwordsContainer thankwordsContainer) {
@@ -208,11 +208,8 @@ public class Setup extends SimpleCommand {
             return Result.finish();
         })).add(Button.primary("all", "command.setup.dialog.channels.allChannel"), c ->{
             var guild = c.getGuild();
-            var self = guild.getSelfMember();
-            guild.getTextChannels().stream()
-                    .filter(textChannel -> self.hasPermission(textChannel, Permission.MESSAGE_READ)
-                            && self.hasPermission(textChannel, Permission.MESSAGE_WRITE))
-                    .forEach(textChannel -> guildData.addChannel(guild, textChannel));
+            var botWrapper = RepBotWrapper.of(guild, guildData);
+            botWrapper.addAllChannelsICanReadAndWrite();
             c.reply(localizer.localize("command.channel.sub.addAll.added", guild)).queue();
             return Result.finish();
         });
