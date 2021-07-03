@@ -19,6 +19,7 @@ import de.chojo.repbot.commands.Locale;
 import de.chojo.repbot.commands.Log;
 import de.chojo.repbot.commands.Prefix;
 import de.chojo.repbot.commands.Prune;
+import de.chojo.repbot.commands.Reactions;
 import de.chojo.repbot.commands.RepSettings;
 import de.chojo.repbot.commands.Reputation;
 import de.chojo.repbot.commands.Roles;
@@ -216,7 +217,8 @@ public class ReputationBot {
                         new Log(shardManager, dataSource, localizer),
                         Setup.of(dataSource, localizer),
                         new Gdpr(dataSource, localizer),
-                        new Prune(gdprService, localizer)
+                        new Prune(gdprService, localizer),
+                        new Reactions(dataSource, localizer)
                 )
                 .withInvalidArgumentProvider(((loc, command) -> Help.getCommandHelp(command, loc)))
                 .withLocalizer(localizer)
