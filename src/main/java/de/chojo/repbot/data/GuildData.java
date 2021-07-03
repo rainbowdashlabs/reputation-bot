@@ -38,6 +38,7 @@ public class GuildData extends QueryFactoryHolder {
                             max_message_age,
                             min_messages,
                             reaction,
+                            reactions,
                             reactions_active,
                             answer_active,
                             mention_active,
@@ -65,6 +66,7 @@ public class GuildData extends QueryFactoryHolder {
                         DbUtil.arrayToArray(row, "active_channels", new Long[0]),
                         row.getInt("cooldown"),
                         row.getLong("manager_role"),
+                        DbUtil.arrayToArray(row, "reactions", new String[0]),
                         row.getBoolean("channel_whitelist")))
                 .firstSync();
     }
@@ -372,6 +374,27 @@ public class GuildData extends QueryFactoryHolder {
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setLong(guild.getIdLong()))
                 .readRow(rs -> rs.getLong("user_id"))
                 .allSync();
+    }
+
+    public boolean addReaction(Guild guild, String reaction) {
+        builder().query("""
+                INSERT INTO guild_reactions(guild_id, reaction) VALUES (?,?)
+                    ON CONFLICT(guild_id, reaction)
+                        DO NOTHING;
+                """)
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setString(reaction))
+                .update()
+                .executeSync();
+        return true;
+    }
+
+    public boolean removeReaction(Guild guild, String reaction) {
+        return builder().query("""
+                DELETE FROM guild_reactions WHERE guild_id = ? AND reaction = ?;
+                """)
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setString(reaction))
+                .update()
+                .executeSync() > 0;
     }
 
     public void setChannelListType(Guild guild, boolean whitelist) {
