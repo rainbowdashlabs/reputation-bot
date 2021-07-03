@@ -137,7 +137,6 @@ public class Channel extends SimpleCommand {
         return true;
     }
 
-
     private void remove(SlashCommandEvent event) {
         var channel = event.getOption("channel").getAsMessageChannel();
         if (channel == null || channel.getType() != ChannelType.TEXT) {
