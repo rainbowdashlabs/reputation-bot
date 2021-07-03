@@ -19,7 +19,6 @@ import java.awt.Color;
 import java.util.stream.Collectors;
 
 public class TopReputation extends SimpleCommand {
-    private static final int BAR_SIZE = 20;
     private static final int TOP_PAGE_SIZE = 10;
     private final ReputationData reputationData;
     private final Localizer loc;
@@ -57,7 +56,7 @@ public class TopReputation extends SimpleCommand {
         var rankString = ranking.stream().map(rank -> rank.fancyString((int) maxRank)).collect(Collectors.joining("\n"));
 
         return new LocalizedEmbedBuilder(loc, guild)
-                .setTitle(loc.localize("command.reputation.sub.top.ranking", guild,
+                .setTitle(loc.localize("command.top.title", guild,
                         Replacement.create("GUILD", guild.getName())))
                 .setDescription(rankString)
                 .setColor(Color.CYAN)

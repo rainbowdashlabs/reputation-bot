@@ -27,20 +27,20 @@ public class Reactions extends SimpleCommand {
     private final GuildData guildData;
     private final ILocalizer loc;
 
-    protected Reactions(DataSource dataSource, ILocalizer loc) {
-        super("reactions", null, "Manage reactions",
+    public Reactions(DataSource dataSource, ILocalizer loc) {
+        super("reactions", null, "command.reaction.description",
                 subCommandBuilder()
-                        .add("main", "Set the main emote",
+                        .add("main", "command.reaction.sub.main",
                                 argsBuilder()
                                         .add(OptionType.STRING, "emote", "emote", true)
                                         .build())
-                        .add("add", "Add a emote as reputation emote", argsBuilder()
+                        .add("add", "command.reaction.sub.add", argsBuilder()
                                 .add(OptionType.STRING, "emote", "emote", true)
                                 .build())
-                        .add("remove", "Remove a emote as reputation emote", argsBuilder()
+                        .add("remove", "command.reaction.sub.remove", argsBuilder()
                                 .add(OptionType.STRING, "emote", "emote")
                                 .build())
-                        .add("info", "Information about currentlz used emotes")
+                        .add("info", "command.reaction.sub.info")
                         .build(), Permission.ADMINISTRATOR);
         this.loc = loc;
         this.guildData = new GuildData(dataSource);
@@ -87,10 +87,6 @@ public class Reactions extends SimpleCommand {
         if ("info".equalsIgnoreCase(cmd)) {
             info(event);
         }
-
-        var guildSettings = guildData.getGuildSettings(event.getGuild());
-        if (guildSettings.isEmpty()) return;
-        event.replyEmbeds(getInfoEmbed(guildSettings.get())).queue();
     }
 
     private boolean info(MessageEventWrapper eventWrapper) {
@@ -109,12 +105,12 @@ public class Reactions extends SimpleCommand {
 
     private MessageEmbed getInfoEmbed(GuildSettings settings) {
         var mainEmote = settings.reactionMention(settings.guild());
-        var emotes = String.join(",", settings.reactionMention(settings.guild()));
+        var emotes = String.join(" ", settings.getAdditionalReactionMentions(settings.guild()));
 
         return new LocalizedEmbedBuilder(loc, settings.guild())
-                .setTitle("Registered emotes")
-                .addField("Main Emote", mainEmote, true)
-                .addField("Additional Emotes", emotes, true)
+                .setTitle("command.reaction.sub.info.title")
+                .addField("command.reaction.sub.info.main", mainEmote, true)
+                .addField("command.reaction.sub.info.additional", emotes, true)
                 .build();
     }
 
@@ -201,7 +197,8 @@ public class Reactions extends SimpleCommand {
                             Replacement.create("EMOTE", result.mention))).queue();
                 }
             }
-            case NOT_FOUND, UNKNOWN_EMOJI -> message.editMessage(loc.localize("command.repSettings.error.emojiNotFound", guild)).queue();
+            case NOT_FOUND -> message.editMessage(loc.localize("command.reaction.sub.reaction.get.error", guild)).queue();
+            case UNKNOWN_EMOJI -> message.editMessage(loc.localize("command.reaction.error.emojiNotFound", guild)).queue();
         }
     }
 
@@ -220,7 +217,8 @@ public class Reactions extends SimpleCommand {
                             Replacement.create("EMOTE", result.mention))).queue();
                 }
             }
-            case NOT_FOUND, UNKNOWN_EMOJI -> message.editMessage(loc.localize("command.repSettings.error.emojiNotFound", guild)).queue();
+            case NOT_FOUND -> message.editMessage(loc.localize("command.reaction.sub.reaction.get.error", guild)).queue();
+            case UNKNOWN_EMOJI -> message.editMessage(loc.localize("command.reaction.error.emojiNotFound", guild)).queue();
         }
     }
 
@@ -230,7 +228,7 @@ public class Reactions extends SimpleCommand {
             try {
                 message.addReaction(emote).complete();
             } catch (ErrorResponseException e) {
-                return new EmojiCheckResult(null, "", CheckResult.NOT_FOUND);
+                return new EmojiCheckResult(null, "", CheckResult.UNKNOWN_EMOJI);
             }
             return new EmojiCheckResult(emote, "", CheckResult.EMOJI_FOUND);
         }
