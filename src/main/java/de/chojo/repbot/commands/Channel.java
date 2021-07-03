@@ -42,6 +42,9 @@ public class Channel extends SimpleCommand {
                                 .add(OptionType.CHANNEL, "channel", "channel", true)
                                 .build()
                         )
+                        .add("whitelist", "Use channel list as whitelist", argsBuilder()
+                                .add(OptionType.BOOLEAN, "whitelist", "true to use list as whitelist", false)
+                                .build())
                         .add("list", "command.channel.sub.list")
                         .build(),
                 Permission.MANAGE_SERVER);
@@ -58,11 +61,14 @@ public class Channel extends SimpleCommand {
         if ("set".equalsIgnoreCase(subCmd)) {
             return set(messageEventWrapper, commandContext.subContext(subCmd));
         }
+        if ("add".equalsIgnoreCase(subCmd)) {
+            return add(messageEventWrapper, commandContext.subContext(subCmd));
+        }
         if ("remove".equalsIgnoreCase(subCmd)) {
             return remove(messageEventWrapper, commandContext.subContext(subCmd));
         }
-        if ("add".equalsIgnoreCase(subCmd)) {
-            return add(messageEventWrapper, commandContext.subContext(subCmd));
+        if ("whitelist".equalsIgnoreCase(subCmd)) {
+            return whitelist(messageEventWrapper, commandContext.subContext(subCmd));
         }
         if ("addAll".equalsIgnoreCase(subCmd)) {
             return addAll(messageEventWrapper);
@@ -79,11 +85,14 @@ public class Channel extends SimpleCommand {
         if ("set".equalsIgnoreCase(subCmd)) {
             set(event);
         }
+        if ("add".equalsIgnoreCase(subCmd)) {
+            add(event);
+        }
         if ("remove".equalsIgnoreCase(subCmd)) {
             remove(event);
         }
-        if ("add".equalsIgnoreCase(subCmd)) {
-            add(event);
+        if ("whitelist".equalsIgnoreCase(subCmd)) {
+            whitelist(event);
         }
         if ("addAll".equalsIgnoreCase(subCmd)) {
             addAll(event);
@@ -91,6 +100,37 @@ public class Channel extends SimpleCommand {
         if ("list".equalsIgnoreCase(subCmd)) {
             list(event);
         }
+    }
+
+    private void whitelist(SlashCommandEvent event) {
+        if (event.getOptions().isEmpty()) {
+            var guildSettings = guildData.getGuildSettings(event.getGuild());
+            var channelWhitelist = guildSettings.get().isChannelWhitelist();
+            event.reply(loc.localize("command.channel.sub.whitelist." + channelWhitelist, event.getGuild())).queue();
+            return;
+        }
+        var whitelist = event.getOption("whitelist").getAsBoolean();
+        guildData.setChannelListType(event.getGuild(), whitelist);
+        event.reply(loc.localize("command.channel.sub.whitelist." + whitelist, event.getGuild())).queue();
+    }
+
+    private boolean whitelist(MessageEventWrapper eventWrapper, CommandContext subContext) {
+        if (subContext.argsEmpty()) {
+            var guildSettings = guildData.getGuildSettings(eventWrapper.getGuild());
+            var channelWhitelist = guildSettings.get().isChannelWhitelist();
+            eventWrapper.reply(loc.localize("command.channel.sub.whitelist." + channelWhitelist, eventWrapper.getGuild())).queue();
+            return true;
+        }
+        var optBool = subContext.argBoolean(0);
+        if (optBool.isEmpty()) {
+            eventWrapper.replyErrorAndDelete(loc.localize("error.notABoolean", eventWrapper.getGuild(),
+                    Replacement.create("INPUT", subContext.argString(0).get())), 10);
+            return true;
+        }
+        var whitelist = optBool.get();
+        guildData.setChannelListType(eventWrapper.getGuild(), whitelist);
+        eventWrapper.reply(loc.localize("command.channel.sub.whitelist." + whitelist, eventWrapper.getGuild())).queue();
+        return false;
     }
 
     private void add(SlashCommandEvent event) {
@@ -177,8 +217,8 @@ public class Channel extends SimpleCommand {
                 .getValidTextChannelsById(
                         event.getGuild(), new ArrayList<>(settings.activeChannel()))
                 .stream().map(IMentionable::getAsMention).collect(Collectors.joining(", "));
-        event.reply(loc.localize("command.channel.sub.list.list",
-                Replacement.create("CHANNEL", channelNames))).queue();
+        var message = "command.channel.sub.list." + (settings.isChannelWhitelist() ? "whitelist" : "blacklist");
+        event.reply(loc.localize(message, Replacement.create("CHANNEL", channelNames))).queue();
     }
 
     private boolean list(MessageEventWrapper eventWrapper) {
@@ -190,8 +230,8 @@ public class Channel extends SimpleCommand {
                 .getValidTextChannelsById(
                         eventWrapper.getGuild(), new ArrayList<>(settings.activeChannel()))
                 .stream().map(IMentionable::getAsMention).collect(Collectors.joining(", "));
-        eventWrapper.reply(eventWrapper.localize("command.channel.sub.list.list",
-                Replacement.create("CHANNEL", channelNames))).queue();
+        var message = "command.channel.sub.list." + (settings.isChannelWhitelist() ? "whitelist" : "blacklist");
+        eventWrapper.reply(eventWrapper.localize(message, Replacement.create("CHANNEL", channelNames))).queue();
         return true;
     }
 
