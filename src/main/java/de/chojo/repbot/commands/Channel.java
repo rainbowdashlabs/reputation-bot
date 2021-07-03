@@ -8,7 +8,7 @@ import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
-import de.chojo.repbot.data.wrapper.RepBotWrapper;
+import de.chojo.repbot.util.FilterUtil;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.IMentionable;
@@ -127,12 +127,12 @@ public class Channel extends SimpleCommand {
     }
 
     private void addAll(SlashCommandEvent event) {
-        RepBotWrapper.of(event.getGuild(), guildData).addAllChannelsICanReadAndWrite();
+        FilterUtil.getAccessableTextChannel(event.getGuild()).forEach(c -> guildData.addChannel(event.getGuild(), c));
         event.reply(loc.localize("command.channel.sub.addAll.added", event.getGuild())).queue();
     }
 
     private boolean addAll(MessageEventWrapper eventWrapper) {
-        RepBotWrapper.of(eventWrapper.getGuild(), guildData).addAllChannelsICanReadAndWrite();
+        FilterUtil.getAccessableTextChannel(eventWrapper.getGuild()).forEach(c -> guildData.addChannel(eventWrapper.getGuild(), c));
         eventWrapper.reply(loc.localize("command.channel.sub.addAll.added", eventWrapper.getGuild())).queue();
         return true;
     }
