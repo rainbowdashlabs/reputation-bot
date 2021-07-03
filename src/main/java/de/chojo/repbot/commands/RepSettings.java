@@ -169,7 +169,6 @@ public class RepSettings extends SimpleCommand {
                 .appendDescription(loc.localize("command.repSettings.embed.descr", guild,
                         Replacement.create("MAX_AGE", guildSettings.maxMessageAge()),
                         Replacement.create("MIN_MESSAGES", guildSettings.minMessages()),
-                        Replacement.create("REACTION", guildSettings.reactionMention(guild)),
                         Replacement.create("REACTION_ACTIVE", guildSettings.isReactionActive()),
                         Replacement.create("ANSWER_ACTIVE", guildSettings.isAnswerActive()),
                         Replacement.create("MENTION_ACTIVE", guildSettings.isMentionActive()),
