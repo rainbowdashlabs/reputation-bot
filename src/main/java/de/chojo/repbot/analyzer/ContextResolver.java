@@ -61,9 +61,9 @@ public class ContextResolver {
      * @return list of members which have written in this channel
      */
     @NotNull
-    public Set<Member> getChannelContext(Message message, GuildSettings settings) {
+    public Set<Member> getChannelContext(User target, Message message, GuildSettings settings) {
         try {
-            return messageContextCache.get(message.getIdLong(), () -> retrieveChannelContext(message, settings))
+            return messageContextCache.get(message.getIdLong(), () -> retrieveChannelContext(target, message, settings))
                     .stream()
                     .map(id -> message.getGuild().retrieveMemberById(id).onErrorMap(e -> null).complete())
                     .filter(Objects::nonNull)
@@ -74,7 +74,7 @@ public class ContextResolver {
         return Collections.emptySet();
     }
 
-    private Set<Long> retrieveChannelContext(Message message, GuildSettings settings) {
+    private Set<Long> retrieveChannelContext(User target, Message message, GuildSettings settings) {
         var history = message.getChannel().getHistoryBefore(message, configuration.analyzerSettings().historySize()).complete();
         List<Message> retrievedHistory = new ArrayList<>();
         // add user message
@@ -87,15 +87,15 @@ public class ContextResolver {
 
         var result = new LinkedHashSet<Long>();
 
-        result.addAll(getRecentAuthors(retrievedHistory, message.getAuthor(), message.getGuild(), settings));
-        result.addAll(getLatestAuthors(retrievedHistory, message.getAuthor(), message.getGuild(), settings));
+        result.addAll(getRecentAuthors(retrievedHistory, target, message.getGuild(), settings));
+        result.addAll(getLatestAuthors(retrievedHistory, target, message.getGuild(), settings));
         return result;
     }
 
-    private Set<Long> getLatestAuthors(List<Message> messages, User author, Guild guild, GuildSettings settings) {
+    private Set<Long> getLatestAuthors(List<Message> messages, User target, Guild guild, GuildSettings settings) {
         var maxAge = Instant.now().minus(configuration.analyzerSettings().latestMaxHours(), ChronoUnit.HOURS);
 
-        var oldest = findOldestMessageByAuthor(author, messages, maxAge);
+        var oldest = findOldestMessageByTarget(target, messages, maxAge);
 
         // add users of the last recent messages
         return getMemberAfter(messages.stream().limit(settings == null ? configuration.analyzerSettings().historySize() : settings.minMessages()), guild, oldest);
@@ -104,7 +104,7 @@ public class ContextResolver {
     private Set<Long> getRecentAuthors(List<Message> messages, User author, Guild guild, GuildSettings settings) {
         var maxAge = Instant.now().minus(settings == null ? Long.MAX_VALUE : settings.maxMessageAge(), ChronoUnit.MINUTES);
         // find the oldest message in the history written by the message author which is newer than the max message age.
-        var oldest = findOldestMessageByAuthor(author, messages, maxAge);
+        var oldest = findOldestMessageByTarget(author, messages, maxAge);
 
         return getMemberAfter(messages.stream(), guild, oldest);
     }
@@ -121,7 +121,7 @@ public class ContextResolver {
 
     }
 
-    private Instant findOldestMessageByAuthor(User author, List<Message> messages, Instant maxAge) {
+    private Instant findOldestMessageByTarget(User author, List<Message> messages, Instant maxAge) {
         return messages.stream()
                 .filter(m -> Verifier.equalSnowflake(m.getAuthor(), author))
                 .map(m -> m.getTimeCreated().toInstant())
@@ -130,9 +130,9 @@ public class ContextResolver {
                 .orElse(maxAge);
     }
 
-    public Set<Member> getVoiceContext(Message message, @Nullable GuildSettings settings) {
+    public Set<Member> getVoiceContext(Member target, Message message, @Nullable GuildSettings settings) {
         try {
-            return voiceContextCache.get(message.getIdLong(), () -> retrieveVoiceContext(message, settings))
+            return voiceContextCache.get(message.getIdLong(), () -> retrieveVoiceContext(target, message, settings))
                     .stream()
                     .map(id -> message.getGuild().retrieveMemberById(id).onErrorMap(e -> null).complete())
                     .filter(Objects::nonNull)
@@ -143,10 +143,9 @@ public class ContextResolver {
         return Collections.emptySet();
     }
 
-    private Set<Long> retrieveVoiceContext(Message message, @Nullable GuildSettings settings) {
+    private Set<Long> retrieveVoiceContext(Member target, Message message, @Nullable GuildSettings settings) {
         Set<Long> members = new LinkedHashSet<>();
-        if (message.getMember() == null) return Collections.emptySet();
-        var voiceState = message.getMember().getVoiceState();
+        var voiceState = target.getVoiceState();
         if (voiceState == null) return Collections.emptySet();
         if (voiceState.inVoiceChannel()) {
             var voice = voiceState.getChannel().getMembers()
@@ -155,7 +154,7 @@ public class ContextResolver {
                     .collect(Collectors.toSet());
             members.addAll(voice);
         }
-        var pastUser = voiceData.getPastUser(message.getAuthor(), message.getGuild(),
+        var pastUser = voiceData.getPastUser(target.getUser(), message.getGuild(),
                 settings == null ? 0 : settings.maxMessageAge(), configuration.analyzerSettings().voiceMembers());
         return pastUser.stream()
                 .map(id -> message.getGuild().retrieveMemberById(id).onErrorMap(throwable -> null).complete())
@@ -164,9 +163,13 @@ public class ContextResolver {
     }
 
     public Set<Member> getCombinedContext(Message message, @Nullable GuildSettings settings) {
+        return getCombinedContext(message.getMember(), message, settings);
+    }
+
+    public Set<Member> getCombinedContext(Member target, Message message, @Nullable GuildSettings settings) {
         Set<Member> members = new LinkedHashSet<>();
-        members.addAll(getChannelContext(message, settings));
-        members.addAll(getVoiceContext(message, settings));
+        members.addAll(getChannelContext(target.getUser(), message, settings));
+        members.addAll(getVoiceContext(target, message, settings));
         return members;
     }
 }

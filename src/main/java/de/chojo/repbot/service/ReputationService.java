@@ -21,6 +21,7 @@ import java.awt.Color;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -36,7 +37,7 @@ public class ReputationService {
     private final ILocalizer localizer;
     private Instant lastEasterEggSent = Instant.EPOCH;
 
-    public ReputationService(DataSource dataSource,ContextResolver contextResolver, RoleAssigner assigner, MagicImage magicImage, ILocalizer localizer) {
+    public ReputationService(DataSource dataSource, ContextResolver contextResolver, RoleAssigner assigner, MagicImage magicImage, ILocalizer localizer) {
         this.reputationData = new ReputationData(dataSource);
         this.guildData = new GuildData(dataSource);
         this.assigner = assigner;
@@ -84,11 +85,19 @@ public class ReputationService {
             default -> throw new IllegalStateException("Unexpected value: " + type);
         }
 
-        // Check if user was recently seen in this channel.
-        var recentUsers = contextResolver.getCombinedContext(message, settings)
-                .stream()
-                .map(Member::getUser)
-                .collect(Collectors.toSet());
+        Set<User> recentUsers;
+        if (type == ThankType.REACTION) {
+            // Check if user was recently seen in this channel.
+            recentUsers = contextResolver.getCombinedContext(guild.getMember(donor), message, settings)
+                    .stream()
+                    .map(Member::getUser)
+                    .collect(Collectors.toSet());
+        } else {
+            recentUsers = contextResolver.getCombinedContext(message, settings)
+                    .stream()
+                    .map(Member::getUser)
+                    .collect(Collectors.toSet());
+        }
         if (!recentUsers.contains(receiver)) return false;
 
         // block non vote channel
