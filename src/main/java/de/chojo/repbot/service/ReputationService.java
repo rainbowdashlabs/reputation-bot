@@ -92,11 +92,11 @@ public class ReputationService {
         } else {
             recentMember = contextResolver.getCombinedContext(message, settings);
         }
-        var recenUser = recentMember.stream()
+        var recentUser = recentMember.stream()
                 .map(Member::getUser)
                 .collect(Collectors.toSet());
 
-        if (!recenUser.contains(receiver)) return false;
+        if (!recentUser.contains(receiver)) return false;
 
         // block non vote channel
         if (!settings.isReputationChannel(message.getTextChannel())) return false;
