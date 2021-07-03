@@ -1,18 +1,17 @@
-DROP materialized view IF EXISTS repbot_schema.data_statistics;
+DROP MATERIALIZED VIEW IF EXISTS repbot_schema.data_statistics;
 
-create materialized view repbot_schema.data_statistics as
-(
-SELECT (Select count(1) from repbot_schema.guild_settings) as guilds,
-       (select count(1) from repbot_schema.active_channel) as channel,
-       (select count(1) from repbot_schema.reputation_log) as total_reputation,
-       (select count(1)
-        from repbot_schema.reputation_log
-        where received > now() - '1 DAY'::INTERVAL)        as today_reputation,
-       (select count(1)
-        from repbot_schema.reputation_log
-        where received > now() - '1 WEEK'::INTERVAL)       as weekly_reputation,
-       (select count(1) / 4
-        from repbot_schema.reputation_log
-        where received > now() - '4 WEEK'::INTERVAL)       as weekly_avg_reputation );
+CREATE MATERIALIZED VIEW repbot_schema.data_statistics AS(
+SELECT (SELECT COUNT(1) FROM repbot_schema.guild_settings) AS guilds,
+       (SELECT COUNT(1) FROM repbot_schema.active_channel) AS channel,
+       (SELECT COUNT(1) FROM repbot_schema.reputation_log) AS total_reputation,
+       (SELECT COUNT(1)
+        FROM repbot_schema.reputation_log
+        WHERE received > NOW() - '1 DAY'::INTERVAL)        AS today_reputation,
+       (SELECT COUNT(1)
+        FROM repbot_schema.reputation_log
+        WHERE received > NOW() - '1 WEEK'::INTERVAL)       AS weekly_reputation,
+       (SELECT COUNT(1) / 4
+        FROM repbot_schema.reputation_log
+        WHERE received > NOW() - '4 WEEK'::INTERVAL)       AS weekly_avg_reputation );
 
-refresh materialized view repbot_schema.data_statistics;
+REFRESH MATERIALIZED VIEW repbot_schema.data_statistics;
