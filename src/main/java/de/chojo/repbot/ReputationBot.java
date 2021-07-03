@@ -160,7 +160,8 @@ public class ReputationBot {
 
     private void initLocalization() {
         localizer = Localizer.builder(Language.ENGLISH)
-                .addLanguage(Language.GERMAN)
+                .addLanguage(Language.GERMAN, Language.of("es_ES", "Español"), Language.of("fr_FR", "Français"),
+                        Language.of("pt_PT", "Português"))
                 .withLanguageProvider(guild -> new GuildData(dataSource).getLanguage(guild))
                 .withBundlePath("locale")
                 .build();
@@ -177,8 +178,8 @@ public class ReputationBot {
 
         // init listener and services
         var reactionListener = new ReactionListener(dataSource, localizer, reputationService);
-        var reputationVoteListener = new ReputationVoteListener(reputationService, localizer);
-        var messageListener = new MessageListener(dataSource, configuration, repBotCachePolicy, reputationVoteListener,
+        var voteListener = new ReputationVoteListener(reputationService, localizer);
+        var messageListener = new MessageListener(dataSource, configuration, repBotCachePolicy, voteListener,
                 reputationService, contextResolver, messageAnalyzer, statistic);
         var stateListener = StateListener.of(localizer, dataSource, configuration);
         var voiceStateListener = VoiceStateListener.of(dataSource, repBotWorker);
@@ -186,7 +187,7 @@ public class ReputationBot {
 
         shardManager.addEventListener(
                 reactionListener,
-                reputationVoteListener,
+                voteListener,
                 messageListener,
                 stateListener,
                 voiceStateListener,
