@@ -2,12 +2,28 @@
   "defaults": {
     "English": [
       "thx",
-      "thank(s)?"
+      "thank[sx]?",
+      "ty",
+      "tyvm",
+      "tysm"
     ],
     "Deutsch": [
-      "dank(e)?",
-      "dankeschön",
-      "dange"
+      "dan[kg]e?",
+      "dankeschön"
+    ],
+    "Español": [
+      "agradezco",
+      "agradecid[oa]s?",
+      "gracias"
+    ],
+    "Français": [
+      "(?:re)?merci"
+    ],
+    "Português": [
+      "obrigad[oa]s?",
+      "obrigadíssim[oa]",
+      "agradecid[oa]",
+      "grat[oa]"
     ]
   }
 }

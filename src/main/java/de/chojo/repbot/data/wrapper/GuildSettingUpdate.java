@@ -1,8 +1,7 @@
 package de.chojo.repbot.data.wrapper;
 
 import net.dv8tion.jda.api.entities.Guild;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class GuildSettingUpdate {
     private final Guild guild;
@@ -22,11 +21,14 @@ public class GuildSettingUpdate {
     private final Integer cooldown;
     @Nullable
     private Integer minMessages;
+    @Nullable
+    private Boolean whitelist;
 
     private GuildSettingUpdate(Guild guild, @Nullable Integer maxMessageAge, @Nullable String reaction,
-                               @Nullable Boolean reactionsActive, @Nullable Boolean answerActive, @Nullable Boolean mentionActive,
-                               @Nullable Boolean fuzzyActive, @Nullable Integer cooldown) {
-
+                               @Nullable Boolean reactionsActive, @Nullable Boolean answerActive,
+                               @Nullable Boolean mentionActive, @Nullable Boolean fuzzyActive,
+                               @Nullable Integer cooldown, @Nullable Integer minMessages,
+                               @Nullable Boolean whitelist) {
         this.guild = guild;
         this.maxMessageAge = maxMessageAge;
         this.reaction = reaction;
@@ -35,6 +37,8 @@ public class GuildSettingUpdate {
         this.mentionActive = mentionActive;
         this.fuzzyActive = fuzzyActive;
         this.cooldown = cooldown;
+        this.minMessages = minMessages;
+        this.whitelist = whitelist;
     }
 
     public static Builder builder(Guild guild) {
@@ -85,6 +89,11 @@ public class GuildSettingUpdate {
         return minMessages;
     }
 
+    @Nullable
+    public Boolean whitelist() {
+        return whitelist;
+    }
+
     public static class Builder {
         private final Guild guild;
         @Nullable
@@ -103,6 +112,8 @@ public class GuildSettingUpdate {
         private Boolean fuzzyActive;
         @Nullable
         private Integer cooldown;
+        @Nullable
+        private Boolean whitelist;
 
         public Builder(Guild guild) {
             this.guild = guild;
@@ -148,8 +159,14 @@ public class GuildSettingUpdate {
             return this;
         }
 
+        public Builder whitelist(@Nullable Boolean whitelist) {
+            this.whitelist = whitelist;
+            return this;
+        }
+
         public GuildSettingUpdate build() {
-            return new GuildSettingUpdate(guild, maxMessageAge, reaction, reactionsActive, answerActive, mentionActive, fuzzyActive, cooldown);
+            return new GuildSettingUpdate(guild, maxMessageAge, reaction, reactionsActive, answerActive, mentionActive, fuzzyActive,
+                    cooldown, minMessages, whitelist);
         }
     }
 }
