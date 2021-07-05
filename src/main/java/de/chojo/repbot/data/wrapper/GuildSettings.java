@@ -5,10 +5,13 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.TextChannel;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.OptionalLong;
 import java.util.Set;
@@ -31,11 +34,12 @@ public class GuildSettings {
     private final Set<Long> activeChannel;
     private final int cooldown;
     private final Long managerRole;
+    private final Set<String> reactions;
     private final boolean channelWhitelist;
 
     public GuildSettings(Guild guild, String prefix, String[] thankwords, int maxMessageAge, int minMessages, String reaction,
                          boolean reactionActive, boolean answerActive, boolean mentionActive, boolean fuzzyActive,
-                         Long[] activeChannel, int cooldown, Long managerRole, boolean channelWhitelist) {
+                         Long[] activeChannel, int cooldown, Long managerRole, String[] reactions, boolean channelWhitelist) {
         this.guild = guild;
         this.prefix = prefix;
         this.thankwords = thankwords;
@@ -49,9 +53,9 @@ public class GuildSettings {
         this.activeChannel = Set.of(activeChannel);
         this.cooldown = cooldown;
         this.managerRole = managerRole;
+        this.reactions = Set.of(reactions);
         this.channelWhitelist = channelWhitelist;
     }
-
     public Pattern thankwordPattern() {
         if (thankwords.length == 0) return Pattern.compile("");
         var twPattern = Arrays.stream(this.thankwords)
@@ -70,9 +74,16 @@ public class GuildSettings {
 
     public boolean isReaction(MessageReaction.ReactionEmote reactionEmote) {
         if (reactionEmote.isEmoji()) {
-            return reactionEmote.getEmoji().equals(reaction);
+            return isReaction(reactionEmote.getEmoji());
         }
-        return reactionEmote.getId().equals(reaction);
+        return isReaction(reactionEmote.getId());
+    }
+
+    private boolean isReaction(String reaction) {
+        if (this.reaction.equals(reaction)) {
+            return true;
+        }
+        return reactions.contains(reaction);
     }
 
     public boolean reactionIsEmote() {
@@ -88,11 +99,12 @@ public class GuildSettings {
         return Optional.ofNullable(prefix);
     }
 
+    @Nullable
     public String reactionMention(Guild guild) {
         if (!reactionIsEmote()) {
             return reaction;
         }
-        return guild.retrieveEmoteById(reaction).complete().getAsMention();
+        return guild.retrieveEmoteById(reaction).onErrorFlatMap(n -> null).complete().getAsMention();
     }
 
     public OptionalLong managerRole() {
@@ -150,6 +162,18 @@ public class GuildSettings {
         return minMessages;
     }
 
+    public List<String> getAdditionalReactionMentions(Guild guild) {
+        return reactions.stream()
+                .map(reaction -> {
+                    if (Verifier.isValidId(reaction)) {
+                        var asMention = guild.retrieveEmoteById(reaction).onErrorFlatMap(n -> null).complete();
+                        return asMention == null ? null : asMention.getAsMention();
+                    }
+                    return reaction;
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
+    }
     public boolean isChannelWhitelist() {
         return channelWhitelist;
     }
