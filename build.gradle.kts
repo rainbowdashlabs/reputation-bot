@@ -1,5 +1,4 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
 
 plugins {
     id("com.github.johnrengelman.shadow") version "7.0.0"
@@ -82,7 +81,6 @@ tasks {
             events("passed", "skipped", "failed")
         }
     }
-
     named<ShadowJar>("shadowJar") {
         mergeServiceFiles()
         manifest {
