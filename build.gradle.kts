@@ -1,4 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import com.github.jengelman.gradle.plugins.shadow.tasks.ConfigureShadowRelocation
 
 plugins {
     id("com.github.johnrengelman.shadow") version "7.0.0"
@@ -81,22 +82,12 @@ tasks {
             events("passed", "skipped", "failed")
         }
     }
+
     named<ShadowJar>("shadowJar") {
         mergeServiceFiles()
         manifest {
             attributes(mapOf("Main-Class" to "de.chojo.repbot.ReputationBot"))
         }
-
-        relocate("club.", "dependencies.club.")
-        relocate("com.", "dependencies.com.")
-        relocate("de.chojo.jdautil.", "dependencies.de.chojo.jdautil.")
-        relocate("de.chojo.sqlutil.", "dependencies.de.chojo.sqlutil.")
-        relocate("gnu.", "dependencies.gnu.")
-        relocate("net.", "dependencies.net.")
-        relocate("okhttp3.", "dependencies.okhttp3.")
-        relocate("okio.", "dependencies.okio.")
-        relocate("org.", "dependencies.org.")
-        relocate("tomp2p.", "dependencies.tomp2p.")
     }
 
     build {
