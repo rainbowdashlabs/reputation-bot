@@ -7,16 +7,13 @@ import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.service.ReputationService;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveAllEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEmoteEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
-import net.dv8tion.jda.api.exceptions.ErrorHandler;
-import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.requests.ErrorResponse;
-import net.dv8tion.jda.api.requests.RestAction;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
@@ -72,7 +69,7 @@ public class ReactionListener extends ListenerAdapter {
                     Replacement.create("DONOR", event.getUser().getAsMention()), Replacement.create("RECEIVER", receiver.getAsMention())))
                     .mention(event.getUser())
                     .onErrorFlatMap(err -> null)
-                    .map(m -> m.delete().queueAfter(30, TimeUnit.SECONDS)).queue();
+                    .delay(30, TimeUnit.SECONDS).flatMap(Message::delete).queue();
         }
     }
 
@@ -94,7 +91,7 @@ public class ReactionListener extends ListenerAdapter {
         if (reputationData.removeReputation(event.getUserIdLong(), event.getMessageIdLong(), ThankType.REACTION)) {
             event.getChannel().sendMessage(localizer.localize("listener.reaction.removal", event.getGuild(),
                     Replacement.create("DONOR", User.fromId(event.getUserId()).getAsMention())))
-                    .map(m -> m.delete().queueAfter(30, TimeUnit.SECONDS)).queue();
+                    .delay(30, TimeUnit.SECONDS).flatMap(Message::delete).queue();
         }
     }
 
