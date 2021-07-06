@@ -16,7 +16,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class RepBotCachePolicy implements MemberCachePolicy, Runnable {
     public static final int CACHE_DURATION = 30;
-    private static final Logger log = getLogger(RepBotCachePolicy.class);
     private final HashMap<Long, Instant> seen = new HashMap<>();
     private final Scan scan;
 
@@ -48,13 +47,11 @@ public class RepBotCachePolicy implements MemberCachePolicy, Runnable {
 
         if (!seen.containsKey(member.getIdLong())) {
             seen.put(member.getIdLong(), Instant.now());
-            log.trace("Requested user {} for the first time. Caching for some time.", member.getIdLong());
             return true;
         }
 
         if (seen.get(member.getIdLong()).isBefore(oldest())) {
-            var remove = seen.remove(member.getIdLong());
-            log.trace("Removing {} from cache. Havent seen for {} minutes.", member.getIdLong(), remove.until(Instant.now(), ChronoUnit.MINUTES));
+            seen.remove(member.getIdLong());
             return false;
         }
         return true;

@@ -1,6 +1,7 @@
 package de.chojo.repbot.data.updater;
 
-import de.chojo.repbot.config.Configuration;
+import de.chojo.jdautil.container.Pair;
+import de.chojo.repbot.commands.Info;
 import org.slf4j.Logger;
 
 import javax.sql.DataSource;
@@ -14,23 +15,31 @@ import java.util.stream.Collectors;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class SqlUpdater {
-    public static final int MAJOR = 1;
-    public static final int PATCH = 8;
+    private final int major;
+    private final int patch;
     private static final Logger log = getLogger(SqlUpdater.class);
     private final DataSource source;
     private final String versionTable;
     private final String[] schemas;
     private final QueryReplacement[] replacements;
 
-    private SqlUpdater(DataSource source, String versionTable, QueryReplacement[] replacements, String[] schemas) {
+    private SqlUpdater(DataSource source, String versionTable, QueryReplacement[] replacements, String[] schemas, Pair<Integer, Integer> version) {
         this.source = source;
         this.versionTable = versionTable;
         this.replacements = replacements;
         this.schemas = schemas;
+        this.major = version.first;
+        this.patch = version.second;
     }
 
-    public static SqlUpdaterBuilder builder(DataSource dataSource) {
-        return new SqlUpdaterBuilder(dataSource);
+    public static SqlUpdaterBuilder builder(DataSource dataSource) throws IOException {
+        var version = "";
+        try (var in = Info.class.getClassLoader().getResourceAsStream("database/version")) {
+            version = new String(in.readAllBytes()).trim();
+        }
+
+        var ver = version.split("\\.");
+        return new SqlUpdaterBuilder(dataSource, Pair.of(Integer.parseInt(ver[0]), Integer.parseInt(ver[1])));
     }
 
     public void init() throws IOException, SQLException {
@@ -38,7 +47,7 @@ public class SqlUpdater {
 
         var versionInfo = getVersionInfo();
 
-        if (versionInfo.version() == MAJOR && versionInfo.patch() == PATCH) {
+        if (versionInfo.version() == major && versionInfo.patch() == patch) {
             log.info("Database is up to date. No update is required! Version {} Patch {}",
                     versionInfo.version(), versionInfo.patch());
             return;
@@ -61,6 +70,7 @@ public class SqlUpdater {
     }
 
     private void performUpdate(Patch patch) throws SQLException {
+        log.info("Applying patch.");
         try (var conn = source.getConnection()) {
             try (var statement = conn.prepareStatement(adjust(patch.query()))) {
                 statement.execute();
@@ -69,6 +79,7 @@ public class SqlUpdater {
             log.error("Database update failed", e);
             throw e;
         }
+        log.info("Patch applied.");
         updateVersion(patch.major(), patch.patch());
         if (patch.patch() != 0) {
             log.info("Deployed patch {}.{} to database.", patch.major(), patch.patch());
@@ -106,13 +117,13 @@ public class SqlUpdater {
             }
 
             if (!isSetup) {
-                log.info("Setup database with version {}", MAJOR);
+                log.info("Setup database with version {}", major);
                 var setup = getSetup();
                 try (var stmt = conn.prepareStatement(adjust(setup))) {
                     stmt.execute();
                     log.info("Initial setup complete. Ready to patch.");
                 }
-                updateVersion(MAJOR, 0);
+                updateVersion(major, 0);
             }
         }
     }
@@ -162,12 +173,12 @@ public class SqlUpdater {
     private List<Patch> getPatchesFrom(int major, int patch) throws IOException {
         List<Patch> patches = new ArrayList<>();
         var currPatch = patch;
-        for (var currMajor = major; currMajor <= MAJOR; currMajor++) {
-            while (currPatch < PATCH) {
+        for (var currMajor = major; currMajor <= this.major; currMajor++) {
+            while (currPatch < this.patch) {
                 currPatch++;
                 if (patchExists(currMajor, currPatch)) {
                     patches.add(new Patch(major, currPatch, loadPatch(currMajor, currPatch)));
-                } else if (currMajor != MAJOR) {
+                } else if (currMajor != this.major) {
                     patches.add(new Patch(major + 1, 0, getMigrationFromVersion(major)));
                     currPatch = 0;
                     break;
@@ -197,7 +208,7 @@ public class SqlUpdater {
     }
 
     private String getSetup() throws IOException {
-        return loadFromResource(MAJOR, "setup.sql");
+        return loadFromResource(major, "setup.sql");
     }
 
     private boolean tableExists(String table) {
@@ -256,13 +267,14 @@ public class SqlUpdater {
 
     public static class SqlUpdaterBuilder {
         private final DataSource source;
-        private Configuration configuration;
+        private Pair<Integer, Integer> version;
         private String versionTable = "version";
         private QueryReplacement[] replacements = new QueryReplacement[0];
         private String[] schemas = new String[0];
 
-        public SqlUpdaterBuilder(DataSource dataSource) {
+        public SqlUpdaterBuilder(DataSource dataSource, Pair<Integer, Integer> version) {
             this.source = dataSource;
+            this.version = version;
         }
 
         public SqlUpdaterBuilder setVersionTable(String versionTable) {
@@ -281,7 +293,7 @@ public class SqlUpdater {
         }
 
         public void execute() throws SQLException, IOException {
-            var sqlUpdater = new SqlUpdater(source, versionTable, replacements, schemas);
+            var sqlUpdater = new SqlUpdater(source, versionTable, replacements, schemas, version);
             sqlUpdater.init();
         }
     }

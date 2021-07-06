@@ -58,7 +58,7 @@ public class Info extends SimpleCommand {
     public static Info create(Localizer localizer, Configuration configuration) {
         var version = "undefined";
         try (var in = Info.class.getClassLoader().getResourceAsStream("version")) {
-            version = new String(in.readAllBytes());
+            version = new String(in.readAllBytes()).trim();
         } catch (IOException e) {
             log.error("Could not determine version.");
         }
