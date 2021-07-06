@@ -39,7 +39,7 @@ public class SqlUpdater {
         }
 
         var ver = version.split("\\.");
-        return new SqlUpdaterBuilder(dataSource, Pair.of(Integer.valueOf(ver[0]), Integer.valueOf(ver[1])));
+        return new SqlUpdaterBuilder(dataSource, Pair.of(Integer.parseInt(ver[0]), Integer.parseInt(ver[1])));
     }
 
     public void init() throws IOException, SQLException {
