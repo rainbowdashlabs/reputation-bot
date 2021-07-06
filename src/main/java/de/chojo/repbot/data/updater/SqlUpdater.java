@@ -38,7 +38,7 @@ public class SqlUpdater {
             version = new String(in.readAllBytes()).trim();
         }
 
-        String[] ver = version.split("\\.");
+        var ver = version.split("\\.");
         return new SqlUpdaterBuilder(dataSource, Pair.of(Integer.valueOf(ver[0]), Integer.valueOf(ver[1])));
     }
 
