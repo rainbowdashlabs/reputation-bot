@@ -80,8 +80,9 @@ public class Prune extends SimpleCommand {
 
             user = event.getOption("userid");
             if (user != null) {
-                if (Verifier.isValidId(user.getAsString())) {
-                    gdprService.cleanupGuildUser(event.getGuild(), user.getAsUser().getIdLong());
+                var idRaw = Verifier.getIdRaw(user.getAsString());
+                if (idRaw.isPresent()) {
+                    gdprService.cleanupGuildUser(event.getGuild(), Long.valueOf(idRaw.get()));
                     event.reply(localizer.localize("command.prune.sub.user.removed")).queue();
                     return;
                 }
