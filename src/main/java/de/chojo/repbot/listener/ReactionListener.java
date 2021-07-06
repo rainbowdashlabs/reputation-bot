@@ -12,7 +12,11 @@ import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEve
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveAllEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEmoteEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
+import net.dv8tion.jda.api.exceptions.ErrorHandler;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.requests.ErrorResponse;
+import net.dv8tion.jda.api.requests.RestAction;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
@@ -67,7 +71,8 @@ public class ReactionListener extends ListenerAdapter {
             event.getChannel().sendMessage(localizer.localize("listener.reaction.confirmation", event.getGuild(),
                     Replacement.create("DONOR", event.getUser().getAsMention()), Replacement.create("RECEIVER", receiver.getAsMention())))
                     .mention(event.getUser())
-                    .queue(m -> m.delete().queueAfter(30, TimeUnit.SECONDS));
+                    .onErrorFlatMap(err -> null)
+                    .map(m -> m.delete().queueAfter(30, TimeUnit.SECONDS)).queue();
         }
     }
 
@@ -89,7 +94,7 @@ public class ReactionListener extends ListenerAdapter {
         if (reputationData.removeReputation(event.getUserIdLong(), event.getMessageIdLong(), ThankType.REACTION)) {
             event.getChannel().sendMessage(localizer.localize("listener.reaction.removal", event.getGuild(),
                     Replacement.create("DONOR", User.fromId(event.getUserId()).getAsMention())))
-                    .queue(m -> m.delete().queueAfter(30, TimeUnit.SECONDS));
+                    .map(m -> m.delete().queueAfter(30, TimeUnit.SECONDS)).queue();
         }
     }
 
