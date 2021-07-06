@@ -15,7 +15,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class SqlUpdater {
     public static final int MAJOR = 1;
-    public static final int PATCH = 8;
+    public static final int PATCH = 9;
     private static final Logger log = getLogger(SqlUpdater.class);
     private final DataSource source;
     private final String versionTable;
