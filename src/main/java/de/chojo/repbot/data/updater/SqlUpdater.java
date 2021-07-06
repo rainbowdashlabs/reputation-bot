@@ -28,8 +28,8 @@ public class SqlUpdater {
         this.versionTable = versionTable;
         this.replacements = replacements;
         this.schemas = schemas;
-        major = version.first;
-        patch = version.second;
+        this.major = version.first;
+        this.patch = version.second;
     }
 
     public static SqlUpdaterBuilder builder(DataSource dataSource) throws IOException {
