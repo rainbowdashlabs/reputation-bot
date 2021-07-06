@@ -21,6 +21,8 @@ public class StatisticData extends QueryFactoryHolder {
         return builder(DataStatistic.class).queryWithoutParams("""
                 SELECT
                 	guilds,
+                	active_guilds,
+                	active_channel,
                 	channel,
                 	total_reputation,
                 	today_reputation,
@@ -28,13 +30,13 @@ public class StatisticData extends QueryFactoryHolder {
                 	weekly_avg_reputation
                 FROM
                 	data_statistics;
-                """).readRow(rs -> new DataStatistic(rs.getInt("guilds"), rs.getInt("channel"),
-                rs.getInt("total_reputation"), rs.getInt("today_reputation"), rs.getInt("weekly_reputation"),
-                rs.getInt("weekly_avg_reputation")))
-        .firstSync();
+                """).readRow(rs -> new DataStatistic(rs.getInt("guilds"), rs.getInt("active_guilds"),
+                rs.getInt("active_channel"), rs.getInt("channel"), rs.getInt("total_reputation"),
+                rs.getInt("today_reputation"), rs.getInt("weekly_reputation"), rs.getInt("weekly_avg_reputation")))
+                .firstSync();
     }
 
-    public void refreshStatistics(){
+    public void refreshStatistics() {
         builder().queryWithoutParams("REFRESH MATERIALIZED VIEW data_statistics").update().executeSync();
     }
 }

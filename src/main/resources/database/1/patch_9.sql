@@ -1,3 +1,27 @@
+DROP MATERIALIZED VIEW repbot_schema.data_statistics;
+CREATE MATERIALIZED VIEW repbot_schema.data_statistics AS
+SELECT (SELECT COUNT(1) AS count
+        FROM repbot_schema.message_settings)            AS guilds,
+       (SELECT COUNT(1)
+        FROM (SELECT DISTINCT guild_id
+              FROM repbot_schema.active_channel) c)     AS active_guilds,
+       (SELECT COUNT(1)
+        FROM repbot_schema.active_channel)              AS active_channel,
+       (SELECT COUNT(1) AS count
+        FROM repbot_schema.active_channel)              AS channel,
+       (SELECT COUNT(1) AS count
+        FROM repbot_schema.reputation_log)              AS total_reputation,
+       (SELECT COUNT(1) AS count
+        FROM repbot_schema.reputation_log
+        WHERE received > (NOW() - '1 day'::INTERVAL))   AS today_reputation,
+       (SELECT COUNT(1) AS count
+        FROM repbot_schema.reputation_log
+        WHERE received > (NOW() - '7 days'::INTERVAL))  AS weekly_reputation,
+       (SELECT COUNT(1) / 4
+        FROM repbot_schema.reputation_log
+        WHERE received > (NOW() - '28 days'::INTERVAL)) AS weekly_avg_reputation;
+REFRESH MATERIALIZED VIEW repbot_schema.data_statistics;
+
 DROP VIEW repbot_schema.guild_settings;
 CREATE OR REPLACE VIEW repbot_schema.guild_settings AS
 SELECT ms.guild_id,
@@ -30,23 +54,3 @@ FROM repbot_schema.message_settings ms
                            ARRAY_AGG(tw.reaction) AS reactions
                     FROM repbot_schema.guild_reactions tw
                     GROUP BY tw.guild_id) r ON ms.guild_id = r.guild_id;
-
-DROP MATERIALIZED VIEW repbot_schema.data_statistics;
-CREATE MATERIALIZED VIEW repbot_schema.data_statistics AS
-SELECT (SELECT COUNT(1) AS count
-        FROM repbot_schema.message_settings)                             AS guilds,
-       (SELECT COUNT(1) AS count
-        FROM repbot_schema.active_channel)                             AS channel,
-       (SELECT COUNT(1) AS count
-        FROM repbot_schema.reputation_log)                             AS total_reputation,
-       (SELECT COUNT(1) AS count
-        FROM repbot_schema.reputation_log
-        WHERE reputation_log.received > (NOW() - '1 day'::INTERVAL))   AS today_reputation,
-       (SELECT COUNT(1) AS count
-        FROM repbot_schema.reputation_log
-        WHERE reputation_log.received > (NOW() - '7 days'::INTERVAL))  AS weekly_reputation,
-       (SELECT COUNT(1) / 4
-        FROM repbot_schema.reputation_log
-        WHERE reputation_log.received > (NOW() - '28 days'::INTERVAL)) AS weekly_avg_reputation;
-
-REFRESH MATERIALIZED VIEW repbot_schema.data_statistics;
