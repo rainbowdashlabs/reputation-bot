@@ -7,6 +7,7 @@ import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.service.ReputationService;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveAllEvent;
@@ -67,7 +68,8 @@ public class ReactionListener extends ListenerAdapter {
             event.getChannel().sendMessage(localizer.localize("listener.reaction.confirmation", event.getGuild(),
                     Replacement.create("DONOR", event.getUser().getAsMention()), Replacement.create("RECEIVER", receiver.getAsMention())))
                     .mention(event.getUser())
-                    .queue(m -> m.delete().queueAfter(30, TimeUnit.SECONDS));
+                    .onErrorFlatMap(err -> null)
+                    .delay(30, TimeUnit.SECONDS).flatMap(Message::delete).queue();
         }
     }
 
@@ -89,7 +91,7 @@ public class ReactionListener extends ListenerAdapter {
         if (reputationData.removeReputation(event.getUserIdLong(), event.getMessageIdLong(), ThankType.REACTION)) {
             event.getChannel().sendMessage(localizer.localize("listener.reaction.removal", event.getGuild(),
                     Replacement.create("DONOR", User.fromId(event.getUserId()).getAsMention())))
-                    .queue(m -> m.delete().queueAfter(30, TimeUnit.SECONDS));
+                    .delay(30, TimeUnit.SECONDS).flatMap(Message::delete).queue();
         }
     }
 

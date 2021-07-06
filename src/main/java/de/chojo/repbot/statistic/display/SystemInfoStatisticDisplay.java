@@ -21,7 +21,8 @@ public class SystemInfoStatisticDisplay implements EmbedDisplay {
     public void appendTo(EmbedBuilder embedBuilder) {
         embedBuilder.setTitle("System Info")
                 .appendDescription(
-                        String.format("Watching %s guilds on %s shard/s",
-                                dataStatistic.guilds(), shardCountStatistic.shardCount()));
+                        String.format("Watching %s guilds on %s shard/s\n%s active channel on %s active guilds.",
+                                dataStatistic.guilds(), shardCountStatistic.shardCount(),
+                                dataStatistic.activeChannel(), dataStatistic.activeGuilds()));
     }
 }

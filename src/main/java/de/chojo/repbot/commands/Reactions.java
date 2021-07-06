@@ -37,7 +37,7 @@ public class Reactions extends SimpleCommand {
                                 .add(OptionType.STRING, "emote", "emote", true)
                                 .build())
                         .add("remove", "command.reaction.sub.remove", argsBuilder()
-                                .add(OptionType.STRING, "emote", "emote")
+                                .add(OptionType.STRING, "emote", "emote", true)
                                 .build())
                         .add("info", "command.reaction.sub.info")
                         .build(), Permission.ADMINISTRATOR);

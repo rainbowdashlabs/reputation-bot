@@ -51,8 +51,7 @@ public class TopReputation extends SimpleCommand {
 
     private MessageEmbed top(Guild guild, int page) {
         var ranking = reputationData.getRanking(guild, TOP_PAGE_SIZE, page);
-
-        var maxRank = ranking.get(Math.max(ranking.size() - 1, 0)).rank();
+        var maxRank = ranking.isEmpty() ? 0 : ranking.get(ranking.size() - 1).rank();
         var rankString = ranking.stream().map(rank -> rank.fancyString((int) maxRank)).collect(Collectors.joining("\n"));
 
         return new LocalizedEmbedBuilder(loc, guild)

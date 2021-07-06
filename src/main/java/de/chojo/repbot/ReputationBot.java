@@ -5,9 +5,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import de.chojo.jdautil.botlist.BotlistReporter;
 import de.chojo.jdautil.command.dispatching.CommandHub;
 import de.chojo.jdautil.localization.Localizer;
-import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.Language;
-import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.commands.Channel;
@@ -45,10 +43,10 @@ import de.chojo.repbot.service.ReputationService;
 import de.chojo.repbot.service.RoleAssigner;
 import de.chojo.repbot.statistic.Statistic;
 import de.chojo.repbot.util.LogNotify;
-import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.TextChannel;
+import de.chojo.repbot.util.PermissionErrorHandler;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
@@ -168,6 +166,14 @@ public class ReputationBot {
     }
 
     private void initBot() {
+        RestAction.setDefaultFailure(throwable -> {
+            if (throwable instanceof InsufficientPermissionException) {
+                PermissionErrorHandler.handle((InsufficientPermissionException) throwable, shardManager, localizer, configuration);
+                return;
+            }
+            log.error(LogNotify.NOTIFY_ADMIN, "Unhandled exception occured: ", throwable);
+        });
+
         var statistic = Statistic.of(shardManager, dataSource, repBotWorker);
         PresenceService.start(shardManager, configuration, statistic, repBotWorker);
 
@@ -234,29 +240,7 @@ public class ReputationBot {
                 })
                 .withCommandErrorHandler((context, throwable) -> {
                     if (throwable instanceof InsufficientPermissionException) {
-                        var permissionException = (InsufficientPermissionException) throwable;
-                        var permission = permissionException.getPermission();
-                        var errorMessage = localizer.localize("error.missingPermission", context.guild(),
-                                Replacement.create("PERM", permission.getName(), Format.BOLD));
-                        if (context.guild().getSelfMember().hasPermission(permission)) {
-                            errorMessage += "\n" + localizer.localize("error.missingPermissionChannel", context.guild(),
-                                    Replacement.createMention((TextChannel) context.channel()));
-                        } else {
-                            errorMessage += "\n" + localizer.localize("error.missingPermissionGuild", context.guild());
-                        }
-                        if (permissionException.getPermission() != Permission.MESSAGE_WRITE) {
-                            context.channel().sendMessage(errorMessage).queue();
-                            return;
-                        }
-                        // botlists always have permission issues. We will ignore them and wont try to notify anyone...
-                        if (configuration.botlist().isBotlistGuild(permissionException.getGuildId())) return;
-                        var ownerId = context.guild().getOwnerIdLong();
-                        var finalErrorMessage = errorMessage;
-                        context.guild().retrieveMemberById(ownerId)
-                                .flatMap(member -> member.getUser().openPrivateChannel())
-                                .flatMap(privateChannel -> privateChannel.sendMessage(finalErrorMessage))
-                                .onErrorMap(t -> null)
-                                .queue();
+                        PermissionErrorHandler.handle((InsufficientPermissionException) throwable, shardManager, localizer, configuration);
                         return;
                     }
                     log.error(LogNotify.NOTIFY_ADMIN, "Command execution of {} failed\n{}", context.command().command(), context.args(), throwable);
