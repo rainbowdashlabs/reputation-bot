@@ -11,6 +11,7 @@ import de.chojo.repbot.listener.voting.ReputationVoteListener;
 import de.chojo.repbot.service.RepBotCachePolicy;
 import de.chojo.repbot.service.ReputationService;
 import de.chojo.repbot.statistic.Statistic;
+import de.chojo.repbot.util.EmojiDebug;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageBulkDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
@@ -91,12 +92,15 @@ public class MessageListener extends ListenerAdapter {
 
         statistic.messageAnalyzed(event.getJDA());
 
-        var donator = analyzerResult.donator();
-
         if (analyzerResult.type() == ThankType.NO_MATCH) return;
+
+        if (settings.isEmojiDebug()) event.getMessage().addReaction(EmojiDebug.FOUND_THANKWORD).queue();
 
         var resultType = analyzerResult.type();
         var resolveNoTarget = true;
+
+        var donator = analyzerResult.donator();
+
         for (var result : analyzerResult.receivers()) {
             var refMessage = analyzerResult.referenceMessage();
             switch (resultType) {
@@ -124,14 +128,20 @@ public class MessageListener extends ListenerAdapter {
     private void resolveNoTarget(Message message, GuildSettings settings) {
         var recentMembers = contextResolver.getCombinedContext(message, settings);
         recentMembers.remove(message.getMember());
-        if (recentMembers.isEmpty()) return;
+        if (recentMembers.isEmpty()) {
+            if(settings.isEmojiDebug()) message.addReaction(EmojiDebug.EMPTY_CONTEXT).queue();
+            return;
+        }
 
         var members = recentMembers.stream()
                 .filter(receiver -> reputationService.canVote(message.getAuthor(), receiver.getUser(), message.getGuild(), settings))
                 .limit(10)
                 .collect(Collectors.toList());
 
-        if (members.isEmpty()) return;
+        if (members.isEmpty()) {
+            if (settings.isEmojiDebug()) message.addReaction(EmojiDebug.ONLY_COOLDOWN).queue();
+            return;
+        }
 
         reputationVoteListener.registerVote(message, members);
     }
