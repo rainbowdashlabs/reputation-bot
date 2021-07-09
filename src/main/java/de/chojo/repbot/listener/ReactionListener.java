@@ -49,7 +49,11 @@ public class ReactionListener extends ListenerAdapter {
 
         var message = event.getChannel()
                 .retrieveMessageById(event.getMessageId())
-                .timeout(10, TimeUnit.SECONDS).complete();
+                .timeout(10, TimeUnit.SECONDS)
+                .onErrorMap(err -> null)
+                .complete();
+
+        if(message == null) return;
 
         var receiver = message.getAuthor();
 
@@ -69,7 +73,10 @@ public class ReactionListener extends ListenerAdapter {
                     Replacement.create("DONOR", event.getUser().getAsMention()), Replacement.create("RECEIVER", receiver.getAsMention())))
                     .mention(event.getUser())
                     .onErrorFlatMap(err -> null)
-                    .delay(30, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                    .delay(30, TimeUnit.SECONDS)
+                    .flatMap(Message::delete)
+                    .onErrorMap(err -> null)
+                    .queue();
         }
     }
 
