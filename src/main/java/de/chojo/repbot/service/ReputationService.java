@@ -68,6 +68,9 @@ public class ReputationService {
         if (optGuildSettings.isEmpty()) return false;
         var settings = optGuildSettings.get();
 
+        // block non vote channel
+        if (!settings.isReputationChannel(message.getTextChannel())) return false;
+
         // force settings
         switch (type) {
             case FUZZY -> {
@@ -130,7 +133,7 @@ public class ReputationService {
                 message.reply(new EmbedBuilder()
                         .setImage(magicImage.magicImageLink())
                         .setColor(Color.RED).build())
-                        .queue(message1 -> message1.delete().queueAfter(
+                        .queue(msg -> msg.delete().queueAfter(
                                 magicImage.magicImageDeleteSchedule(), TimeUnit.SECONDS));
             }
             return false;
