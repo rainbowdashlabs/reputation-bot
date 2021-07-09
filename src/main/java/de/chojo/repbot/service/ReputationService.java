@@ -68,7 +68,7 @@ public class ReputationService {
         if (optGuildSettings.isEmpty()) return false;
         var settings = optGuildSettings.get();
 
-        // block non vote channel
+        // block non reputation channel
         if (!settings.isReputationChannel(message.getTextChannel())) return false;
 
         // force settings

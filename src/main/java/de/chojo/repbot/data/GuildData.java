@@ -145,7 +145,7 @@ public class GuildData extends QueryFactoryHolder {
      *
      * @param guild      guild
      * @param emojiDebug set to true to enable debug
-     * @return true if the language was changed
+     * @return true if the emoji debug state was changed
      */
     public boolean setEmojiDebug(Guild guild, boolean emojiDebug) {
         return builder()
@@ -154,7 +154,7 @@ public class GuildData extends QueryFactoryHolder {
                             guild_bot_settings(guild_id, emoji_debug) VALUES (?,?)
                             ON CONFLICT(guild_id)
                                 DO UPDATE
-                                    SET language = excluded.language;
+                                    SET emoji_debug = excluded.emoji_debug;
                         """)
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setBoolean(emojiDebug))
                 .update().executeSync() > 0;
