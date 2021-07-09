@@ -116,7 +116,6 @@ public class MessageListener extends ListenerAdapter {
                 }
                 case ANSWER -> {
                     if (!settings.isAnswerActive()) continue;
-                    if (!settings.isFreshMessage(refMessage)) continue;
                     reputationService.submitReputation(guild, donator, result.getReference().getUser(), message, refMessage, resultType);
                     resolveNoTarget = false;
                 }
