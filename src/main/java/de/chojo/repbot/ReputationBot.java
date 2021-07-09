@@ -183,7 +183,7 @@ public class ReputationBot {
         var gdprService = GdprService.of(shardManager, dataSource, repBotWorker);
 
         // init listener and services
-        var reactionListener = new ReactionListener(dataSource, localizer, reputationService);
+        var reactionListener = new ReactionListener(dataSource, localizer, reputationService, configuration);
         var voteListener = new ReputationVoteListener(reputationService, localizer);
         var messageListener = new MessageListener(dataSource, configuration, repBotCachePolicy, voteListener,
                 reputationService, contextResolver, messageAnalyzer, statistic);

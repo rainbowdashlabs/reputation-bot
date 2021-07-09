@@ -11,15 +11,33 @@ import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.sharding.ShardManager;
 
 public class PermissionErrorHandler {
-    public static void handle(InsufficientPermissionException permissionException, ShardManager shardManager, ILocalizer localizer, Configuration configuration) {
+    public static void handle(InsufficientPermissionException permissionException, ShardManager shardManager,
+                              ILocalizer localizer, Configuration configuration) {
         var permission = permissionException.getPermission();
         var guildById = shardManager.getGuildById(permissionException.getGuildId());
         var channel = (TextChannel) permissionException.getChannel(guildById.getJDA());
         if (channel == null) return;
-        sendPermissionError(guildById, channel, permission, localizer, configuration);
+        sendPermissionError(channel, permission, localizer, configuration);
     }
 
-    public static void sendPermissionError(Guild guild, TextChannel channel, Permission permission, ILocalizer localizer, Configuration configuration) {
+    public static void handle(InsufficientPermissionException permissionException, Guild guild, ILocalizer localizer,
+                              Configuration configuration) {
+        var permission = permissionException.getPermission();
+        var channel = (TextChannel) permissionException.getChannel(guild.getJDA());
+        if (channel == null) return;
+        sendPermissionError(channel, permission, localizer, configuration);
+    }
+
+    public static void handle(InsufficientPermissionException permissionException, TextChannel channel,
+                              ILocalizer localizer, Configuration configuration) {
+        var permission = permissionException.getPermission();
+        if (channel == null) return;
+        sendPermissionError(channel, permission, localizer, configuration);
+    }
+
+    public static void sendPermissionError(TextChannel channel, Permission permission, ILocalizer localizer,
+                                           Configuration configuration) {
+        var guild = channel.getGuild();
         var errorMessage = localizer.localize("error.missingPermission", guild,
                 Replacement.create("PERM", permission.getName(), Format.BOLD));
         if (guild.getSelfMember().hasPermission(permission)) {
@@ -28,7 +46,7 @@ public class PermissionErrorHandler {
         } else {
             errorMessage += "\n" + localizer.localize("error.missingPermissionGuild", guild);
         }
-        if (permission != Permission.MESSAGE_WRITE) {
+        if (permission != Permission.MESSAGE_WRITE && permission != Permission.VIEW_CHANNEL) {
             channel.sendMessage(errorMessage).queue();
             return;
         }
@@ -67,5 +85,24 @@ public class PermissionErrorHandler {
                 throw new InsufficientPermissionException(guild, permission);
             }
         }
+    }
+
+    /**
+     * Checks if the self user has the permissions in this channel and sends an permission error if one is missing.
+     *
+     * @param channel       channel to check
+     * @param localizer     localizer
+     * @param configuration configuration
+     * @param permissions   permissions to check
+     * @return true if a permission was missing and a message was send
+     */
+    public static boolean assertAndHandle(TextChannel channel, ILocalizer localizer, Configuration configuration, Permission... permissions) {
+        try {
+            assertPermissions(channel, permissions);
+        } catch (InsufficientPermissionException e) {
+            handle(e, channel, localizer, configuration);
+            return true;
+        }
+        return false;
     }
 }

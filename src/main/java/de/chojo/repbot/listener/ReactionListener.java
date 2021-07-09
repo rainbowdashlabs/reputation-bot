@@ -3,9 +3,12 @@ package de.chojo.repbot.listener;
 import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.analyzer.ThankType;
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.service.ReputationService;
+import de.chojo.repbot.util.PermissionErrorHandler;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -13,6 +16,7 @@ import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEve
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveAllEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEmoteEvent;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -28,12 +32,14 @@ public class ReactionListener extends ListenerAdapter {
     private final ReputationData reputationData;
     private final Localizer localizer;
     private final ReputationService reputationService;
+    private final Configuration configuration;
 
-    public ReactionListener(DataSource dataSource, Localizer localizer, ReputationService reputationService) {
+    public ReactionListener(DataSource dataSource, Localizer localizer, ReputationService reputationService, Configuration configuration) {
         guildData = new GuildData(dataSource);
         reputationData = new ReputationData(dataSource);
         this.localizer = localizer;
         this.reputationService = reputationService;
+        this.configuration = configuration;
     }
 
     @Override
@@ -47,13 +53,19 @@ public class ReactionListener extends ListenerAdapter {
         if (!guildSettings.isReactionActive()) return;
         if (!guildSettings.isReaction(event.getReaction().getReactionEmote())) return;
 
-        var message = event.getChannel()
-                .retrieveMessageById(event.getMessageId())
-                .timeout(10, TimeUnit.SECONDS)
-                .onErrorMap(err -> null)
-                .complete();
+        Message message;
+        try {
+            message = event.getChannel()
+                    .retrieveMessageById(event.getMessageId())
+                    .timeout(10, TimeUnit.SECONDS)
+                    .onErrorMap(err -> null)
+                    .complete();
+        } catch (InsufficientPermissionException e) {
+            PermissionErrorHandler.handle(e, event.getGuild(), localizer, configuration);
+            return;
+        }
 
-        if(message == null) return;
+        if (message == null) return;
 
         var receiver = message.getAuthor();
 
@@ -68,6 +80,11 @@ public class ReactionListener extends ListenerAdapter {
             if (newReceiver == null) return;
             receiver = newReceiver.getUser();
         }
+
+        if (PermissionErrorHandler.assertAndHandle(event.getChannel(), localizer, configuration, Permission.MESSAGE_WRITE)) {
+            return;
+        }
+
         if (reputationService.submitReputation(event.getGuild(), event.getUser(), receiver, message, null, ThankType.REACTION)) {
             event.getChannel().sendMessage(localizer.localize("listener.reaction.confirmation", event.getGuild(),
                     Replacement.create("DONOR", event.getUser().getAsMention()), Replacement.create("RECEIVER", receiver.getAsMention())))
