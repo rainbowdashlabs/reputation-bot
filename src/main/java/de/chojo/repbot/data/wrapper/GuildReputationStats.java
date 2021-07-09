@@ -6,14 +6,14 @@ public class GuildReputationStats {
     private final int todayReputation;
     private final long topChannelId;
 
-    public GuildReputationStats(int totalRepuation, int weekReputation, int todayReputation, long topChannelId) {
-        this.totalRepuation = totalRepuation;
+    public GuildReputationStats(int totalReputation, int weekReputation, int todayReputation, long topChannelId) {
+        this.totalRepuation = totalReputation;
         this.weekReputation = weekReputation;
         this.todayReputation = todayReputation;
         this.topChannelId = topChannelId;
     }
 
-    public int totalRepuation() {
+    public int totalReputation() {
         return totalRepuation;
     }
 

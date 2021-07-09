@@ -58,7 +58,7 @@ public class Dashboard extends SimpleCommand {
                 .setThumbnail(guild.getIconUrl() == null ? guild.getSelfMember().getUser().getAvatarUrl() : guild.getIconUrl())
                 .setColor(Colors.Pastel.BLUE)
                 .addField("command.dashboard.topUser", top3, false)
-                .addField("command.dashboard.totalReputation", String.valueOf(stats.totalRepuation()), true)
+                .addField("command.dashboard.totalReputation", String.valueOf(stats.totalReputation()), true)
                 .addField("command.dashboard.weekReputation", String.valueOf(stats.weekReputation()), true)
                 .addField("command.dashboard.todayReputation", String.valueOf(stats.todayReputation()), true)
                 .addField("command.dashboard.topChannel", MentionUtil.channel(stats.topChannelId()), true)
