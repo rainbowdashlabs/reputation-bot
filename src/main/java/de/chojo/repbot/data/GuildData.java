@@ -46,7 +46,8 @@ public class GuildData extends QueryFactoryHolder {
                             active_channels,
                             cooldown,
                             manager_role,
-                            channel_whitelist
+                            channel_whitelist,
+                            emoji_debug
                         FROM
                             guild_settings
                         WHERE
@@ -67,7 +68,8 @@ public class GuildData extends QueryFactoryHolder {
                         row.getInt("cooldown"),
                         row.getLong("manager_role"),
                         DbUtil.arrayToArray(row, "reactions", new String[0]),
-                        row.getBoolean("channel_whitelist")))
+                        row.getBoolean("channel_whitelist"),
+                        row.getBoolean("emoji_debug")))
                 .firstSync();
     }
 
@@ -135,6 +137,26 @@ public class GuildData extends QueryFactoryHolder {
                                     SET language = excluded.language;
                         """)
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setString(language == null ? null : language.getCode()))
+                .update().executeSync() > 0;
+    }
+
+    /**
+     * Set the language for a guild
+     *
+     * @param guild      guild
+     * @param emojiDebug set to true to enable debug
+     * @return true if the language was changed
+     */
+    public boolean setEmojiDebug(Guild guild, boolean emojiDebug) {
+        return builder()
+                .query("""
+                        INSERT INTO
+                            guild_bot_settings(guild_id, emoji_debug) VALUES (?,?)
+                            ON CONFLICT(guild_id)
+                                DO UPDATE
+                                    SET language = excluded.language;
+                        """)
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setBoolean(emojiDebug))
                 .update().executeSync() > 0;
     }
 
