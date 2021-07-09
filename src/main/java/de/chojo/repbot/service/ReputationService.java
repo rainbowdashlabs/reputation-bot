@@ -67,6 +67,9 @@ public class ReputationService {
         if (optGuildSettings.isEmpty()) return false;
         var settings = optGuildSettings.get();
 
+        if(!settings.hasDonorRole(guild.getMember(donor))) return false;
+        if(!settings.hasReceiverRole(guild.getMember(receiver))) return false;
+
         // force settings
         switch (type) {
             case FUZZY -> {
