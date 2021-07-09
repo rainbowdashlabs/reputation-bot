@@ -141,7 +141,7 @@ public class GuildData extends QueryFactoryHolder {
     }
 
     /**
-     * Set the language for a guild
+     * Set if emoji debug is enabled for a guild
      *
      * @param guild      guild
      * @param emojiDebug set to true to enable debug
