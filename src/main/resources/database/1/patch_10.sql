@@ -16,9 +16,9 @@ CREATE TABLE IF NOT EXISTS repbot_schema.donor_roles
 CREATE UNIQUE INDEX IF NOT EXISTS donor_roles_guild_id_role_id_uindex
     ON repbot_schema.donor_roles (guild_id, role_id);
 
-DROP VIEW repbot_schema.guild_settings;
+DROP VIEW IF EXISTS repbot_schema.guild_settings;
 
-DROP FUNCTION repbot_schema.get_guild_settings(_guild_id BIGINT);
+DROP FUNCTION IF EXISTS repbot_schema.get_guild_settings(_guild_id BIGINT);
 CREATE OR REPLACE FUNCTION repbot_schema.get_guild_settings(_guild_id BIGINT)
     RETURNS TABLE
             (
@@ -124,6 +124,3 @@ BEGIN
              donor_roles don;
 END;
 $BODY$;
-
-SELECT *
-FROM get_guild_settings(853250161915985958)
