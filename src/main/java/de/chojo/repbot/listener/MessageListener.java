@@ -65,13 +65,13 @@ public class MessageListener extends ListenerAdapter {
     @Override
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
         if (event.getAuthor().isBot() || event.isWebhookMessage()) return;
-        repBotCachePolicy.seen(event.getMember());
         var guild = event.getGuild();
         var optGuildSettings = guildData.getGuildSettings(guild);
         if (optGuildSettings.isEmpty()) return;
         var settings = optGuildSettings.get();
 
         if (!settings.isReputationChannel(event.getChannel())) return;
+        repBotCachePolicy.seen(event.getMember());
 
         var thankwordPattern = settings.thankwordPattern();
 
