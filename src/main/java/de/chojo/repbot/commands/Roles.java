@@ -83,7 +83,7 @@ public class Roles extends SimpleCommand {
             return managerRole(eventWrapper, context.subContext(subCmd));
         }
 
-        if(StringUtil.contains(subCmd, "add", "remove", "addDonor", "addReceiver", "removeDonor", "removeReceiver")){
+        if (StringUtil.contains(subCmd, "add", "remove", "addDonor", "addReceiver", "removeDonor", "removeReceiver")) {
             context.parseQuoted();
             var roleString = context.argString(0);
             if (context.argsEmpty() || roleString.isEmpty()) return false;
