@@ -24,16 +24,18 @@ WORKDIR /extractDependencies
 # Copy everything from unzip stage
 COPY --from=unzip source/ ./
 # Remove all unwanted files as they are copied in an own layer
-RUN rm Log4j*
-RUN rm log4j2.xml
-RUN rm META-INF/ -r
-RUN rm locale*
-RUN rm database/ -r
-RUN rm Thankswords.json
-RUN rm version
-RUN rm de/chojo/repbot -r
+RUN rm -r \
+        Log4j* \
+        log4j2.xml \
+        META-INF/ \
+        locale* \
+        database/ \
+        Thankswords.json \
+        version \
+        de/chojo/repbot \
+        *.jar
 
-FROM openjdk:15-alpine
+FROM adoptopenjdk/openjdk16:alpine-jre
 WORKDIR /application
 ENV TERM xterm-256color
 # Copy all dependencies
