@@ -24,6 +24,7 @@ import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.serialization.ThankwordsContainer;
 import de.chojo.repbot.util.FilterUtil;
+import de.chojo.repbot.util.PermissionErrorHandler;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
@@ -48,7 +49,6 @@ public class Setup extends SimpleCommand {
     private final Localizer localizer;
     private final GuildData guildData;
     private final ThankwordsContainer thankwordsContainer;
-
 
     public Setup(Localizer localizer, DataSource dataSource,
                  ThankwordsContainer thankwordsContainer) {
@@ -81,9 +81,9 @@ public class Setup extends SimpleCommand {
 
     @Override
     public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
+        PermissionErrorHandler.assertPermissions(event.getTextChannel(), Permission.MESSAGE_READ, Permission.MESSAGE_WRITE);
         event.reply(localizer.localize("command.setup.dialog.starting", event.getGuild())).queue();
-        context.conversationService().startDialog(event.getUser(), event.getTextChannel(),
-                getConversation());
+        context.conversationService().startDialog(event.getUser(), event.getTextChannel(), getConversation());
     }
 
     private Conversation getConversation() {
