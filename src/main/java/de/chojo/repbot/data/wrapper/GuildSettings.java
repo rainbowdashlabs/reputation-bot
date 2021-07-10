@@ -39,11 +39,12 @@ public class GuildSettings {
     private final boolean channelWhitelist;
     private final Set<Long> donorRoles;
     private final Set<Long> receiverRoles;
+    private final boolean emojiDebug;
 
     public GuildSettings(Guild guild, String prefix, String[] thankwords, int maxMessageAge, int minMessages, String reaction,
                          boolean reactionActive, boolean answerActive, boolean mentionActive, boolean fuzzyActive,
                          Long[] activeChannel, int cooldown, Long managerRole, String[] reactions, boolean channelWhitelist,
-                         Long[] donorRoles, Long[] receiverRoles) {
+                         Long[] donorRoles, Long[] receiverRoles, boolean emojiDebug) {
         this.guild = guild;
         this.prefix = prefix;
         this.thankwords = thankwords;
@@ -61,6 +62,7 @@ public class GuildSettings {
         this.channelWhitelist = channelWhitelist;
         this.donorRoles = Set.of(donorRoles);
         this.receiverRoles = Set.of(receiverRoles);
+        this.emojiDebug = emojiDebug;
     }
 
     public Pattern thankwordPattern() {
@@ -140,6 +142,10 @@ public class GuildSettings {
 
     public String[] thankwords() {
         return thankwords;
+    }
+
+    public boolean isEmojiDebug() {
+        return emojiDebug;
     }
 
     /**

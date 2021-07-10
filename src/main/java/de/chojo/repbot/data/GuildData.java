@@ -48,7 +48,8 @@ public class GuildData extends QueryFactoryHolder {
                             manager_role,
                             channel_whitelist,
                             donor_roles,
-                            receiver_roles
+                            receiver_roles,
+                            emoji_debug
                         FROM
                             get_guild_settings(?)
                         """)
@@ -69,7 +70,8 @@ public class GuildData extends QueryFactoryHolder {
                         DbUtil.arrayToArray(row, "reactions", new String[0]),
                         row.getBoolean("channel_whitelist"),
                         DbUtil.arrayToArray(row, "donor_roles", new Long[0]),
-                        DbUtil.arrayToArray(row, "receiver_roles", new Long[0])))
+                        DbUtil.arrayToArray(row, "receiver_roles", new Long[0]),
+                        row.getBoolean("emoji_debug")))
                 .firstSync();
     }
 
@@ -137,6 +139,26 @@ public class GuildData extends QueryFactoryHolder {
                                     SET language = excluded.language;
                         """)
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setString(language == null ? null : language.getCode()))
+                .update().executeSync() > 0;
+    }
+
+    /**
+     * Set if emoji debug is enabled for a guild
+     *
+     * @param guild      guild
+     * @param emojiDebug set to true to enable debug
+     * @return true if the emoji debug state was changed
+     */
+    public boolean setEmojiDebug(Guild guild, boolean emojiDebug) {
+        return builder()
+                .query("""
+                        INSERT INTO
+                            guild_bot_settings(guild_id, emoji_debug) VALUES (?,?)
+                            ON CONFLICT(guild_id)
+                                DO UPDATE
+                                    SET emoji_debug = excluded.emoji_debug;
+                        """)
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setBoolean(emojiDebug))
                 .update().executeSync() > 0;
     }
 

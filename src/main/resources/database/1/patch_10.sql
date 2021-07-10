@@ -1,3 +1,5 @@
+-- add reputation receiver and donor roles
+
 CREATE TABLE IF NOT EXISTS repbot_schema.receiver_roles
 (
     guild_id BIGINT NOT NULL,
@@ -16,6 +18,12 @@ CREATE TABLE IF NOT EXISTS repbot_schema.donor_roles
 CREATE UNIQUE INDEX IF NOT EXISTS donor_roles_guild_id_role_id_uindex
     ON repbot_schema.donor_roles (guild_id, role_id);
 
+
+-- add emoji debug setting
+ALTER TABLE repbot_schema.guild_bot_settings
+    ADD IF NOT EXISTS emoji_debug BOOLEAN DEFAULT TRUE NOT NULL;
+
+-- replace guild settings view bz function
 DROP VIEW IF EXISTS repbot_schema.guild_settings;
 
 DROP FUNCTION IF EXISTS repbot_schema.get_guild_settings(_guild_id BIGINT);
@@ -122,5 +130,41 @@ BEGIN
              guild_reactions r,
              receiver_roles rec,
              donor_roles don;
+END;
+$BODY$;
+
+CREATE OR REPLACE FUNCTION repbot_schema.get_guild_stats(_guild_id BIGINT)
+    RETURNS TABLE
+            (
+                total_reputation BIGINT,
+                week_reputation  BIGINT,
+                today_reputation BIGINT,
+                top_channel      BIGINT
+            )
+    LANGUAGE plpgsql
+    ROWS 1
+    COST 100
+AS
+$BODY$
+BEGIN
+    RETURN QUERY
+        SELECT (SELECT COUNT(1)
+                FROM repbot_schema.reputation_log
+                WHERE guild_id = _guild_id) AS total_repuation,
+               (SELECT COUNT(1)
+                FROM repbot_schema.reputation_log
+                WHERE received > (NOW() - '7 days'::INTERVAL)
+                  AND guild_id = _guild_id) AS week_reputation,
+               (SELECT COUNT(1) AS count
+                FROM repbot_schema.reputation_log
+                WHERE received > (NOW() - '1 day'::INTERVAL)
+                    AND guild_id = _guild_id),
+               (SELECT channel_id
+                FROM (SELECT COUNT(1) AS count, channel_id
+                      FROM repbot_schema.reputation_log
+                      WHERE guild_id = _guild_id
+                      GROUP BY channel_id
+                      ORDER BY count
+                      LIMIT 1) counts) as top_channel;
 END;
 $BODY$;

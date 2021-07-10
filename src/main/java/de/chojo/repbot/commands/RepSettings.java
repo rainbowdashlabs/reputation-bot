@@ -58,6 +58,10 @@ public class RepSettings extends SimpleCommand {
                                 .add(OptionType.INTEGER, "minutes", "minutes")
                                 .build()
                         )
+                        .add("emojidebug", "command.repSettings.sub.emojidebug", argsBuilder()
+                                .add(OptionType.BOOLEAN, "minutes", "active")
+                                .build()
+                        )
                         .build(),
                 Permission.MANAGE_SERVER);
         data = new GuildData(source);
@@ -109,6 +113,9 @@ public class RepSettings extends SimpleCommand {
 
         if ("cooldown".equalsIgnoreCase(subcmd)) {
             return cooldown(eventWrapper, context.subContext(subcmd), guildSettings);
+        }
+        if ("emojidebug".equalsIgnoreCase(subcmd)) {
+            return emojidebug(eventWrapper, context.subContext(subcmd), guildSettings);
 
         }
         return false;
@@ -151,6 +158,9 @@ public class RepSettings extends SimpleCommand {
 
         if ("cooldown".equalsIgnoreCase(subcmd)) {
             cooldown(event, guildSettings);
+        }
+        if ("emojidebug".equalsIgnoreCase(subcmd)) {
+            emojidebug(event, guildSettings);
         }
     }
 
@@ -426,6 +436,43 @@ public class RepSettings extends SimpleCommand {
         if (data.updateMessageSettings(GuildSettingUpdate.builder(event.getGuild()).minMessages((int) minMessages).build())) {
             event.reply(loc.localize("command.repSettings.sub.minMessages.get",
                     Replacement.create("AMOUNT", minMessages))).queue();
+        }
+    }
+
+    private boolean emojidebug(MessageEventWrapper eventWrapper, CommandContext context, GuildSettings guildSettings) {
+        if (context.argsEmpty()) {
+            eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), guildSettings.isEmojiDebug(),
+                    "command.repSettings.sub.emojidebug.true", "command.repSettings.sub.emojidebug.false")
+                    + "\n" + loc.localize("command.repSettings.sub.emojidebug.explain", eventWrapper.getGuild())).queue();
+            return true;
+        }
+        var optEmojiDebug = context.argBoolean(0);
+
+        if (optEmojiDebug.isEmpty()) {
+            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.notABoolean",
+                    Replacement.create("INPUT", context.argString(0))), 30);
+            return false;
+        }
+
+        if (data.setEmojiDebug(eventWrapper.getGuild(), optEmojiDebug.get())) {
+            eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), optEmojiDebug.get(),
+                    "command.repSettings.sub.emojidebug.true", "command.repSettings.sub.emojidebug.false")).queue();
+        }
+        return true;
+    }
+
+    private void emojidebug(SlashCommandEvent event, GuildSettings guildSettings) {
+        if (event.getOptions().isEmpty()) {
+            event.reply(getBooleanMessage(event.getGuild(), guildSettings.isEmojiDebug(),
+                    "command.repSettings.sub.emojidebug.true", "command.repSettings.sub.emojidebug.false")
+                    + "\n" + loc.localize("command.repSettings.sub.emojidebug.explain", event.getGuild())).queue();
+            return;
+        }
+        var emojidebug = event.getOption("reactions").getAsBoolean();
+
+        if (data.setEmojiDebug(event.getGuild(), emojidebug)) {
+            event.reply(getBooleanMessage(event.getGuild(), emojidebug,
+                    "command.repSettings.sub.emojidebug.true", "command.repSettings.sub.emojidebug.false")).queue();
         }
     }
 
