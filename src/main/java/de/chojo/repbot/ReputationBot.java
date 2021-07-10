@@ -3,6 +3,7 @@ package de.chojo.repbot;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import de.chojo.jdautil.botlist.BotlistReporter;
+import de.chojo.jdautil.botlist.BotlistService;
 import de.chojo.jdautil.command.dispatching.CommandHub;
 import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Language;
@@ -26,6 +27,7 @@ import de.chojo.repbot.commands.Setup;
 import de.chojo.repbot.commands.Thankwords;
 import de.chojo.repbot.commands.TopReputation;
 import de.chojo.repbot.config.Configuration;
+import de.chojo.repbot.config.elements.Botlist;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.updater.QueryReplacement;
 import de.chojo.repbot.data.updater.SqlUpdater;
@@ -134,7 +136,7 @@ public class ReputationBot {
     private void initBotList() {
         var botlist = configuration.botlist();
         if (!botlist.isSubmit()) return;
-        BotlistReporter.build(shardManager)
+        BotlistService.build(shardManager)
                 .forDiscordBotListCOM(botlist.discordBotlistCom())
                 .forDiscordBotsGG(botlist.discordBotsGg())
                 .forTopGG(botlist.topGg())

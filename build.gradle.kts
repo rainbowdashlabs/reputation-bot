@@ -24,7 +24,7 @@ dependencies {
     implementation("net.dv8tion", "JDA", "4.2.1_269") {
         exclude(module = "opus-java")
     }
-    implementation("de.chojo", "cjda-util", "1.5.0-DEV")
+    implementation("de.chojo", "cjda-util", "1.5.2-DEV")
 
     // database
     implementation("org.postgresql", "postgresql", "42.2.19")
