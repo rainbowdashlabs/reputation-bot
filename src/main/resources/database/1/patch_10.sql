@@ -1,40 +1,137 @@
+-- add reputation receiver and donor roles
+
+CREATE TABLE IF NOT EXISTS repbot_schema.receiver_roles
+(
+    guild_id BIGINT NOT NULL,
+    role_id  BIGINT NOT NULL
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS receiver_roles_guild_id_role_id_uindex
+    ON repbot_schema.receiver_roles (guild_id, role_id);
+
+CREATE TABLE IF NOT EXISTS repbot_schema.donor_roles
+(
+    guild_id BIGINT NOT NULL,
+    role_id  BIGINT NOT NULL
+);
+
+CREATE UNIQUE INDEX IF NOT EXISTS donor_roles_guild_id_role_id_uindex
+    ON repbot_schema.donor_roles (guild_id, role_id);
+
+
+-- add emoji debug setting
 ALTER TABLE repbot_schema.guild_bot_settings
     ADD IF NOT EXISTS emoji_debug BOOLEAN DEFAULT TRUE NOT NULL;
 
-DROP VIEW repbot_schema.guild_settings;
-CREATE OR REPLACE VIEW repbot_schema.guild_settings AS
-SELECT ms.guild_id,
-       ms.max_message_age,
-       ms.reaction,
-       r.reactions,
-       ms.reactions_active,
-       ms.answer_active,
-       ms.mention_active,
-       ms.fuzzy_active,
-       ms.min_messages,
-       gbs.prefix,
-       gbs.language,
-       t.thankswords,
-       ac.active_channels,
-       ms.cooldown,
-       gbs.manager_role,
-       gbs.channel_whitelist,
-       gbs.emoji_debug
-FROM repbot_schema.message_settings ms
-         LEFT JOIN repbot_schema.guild_bot_settings gbs ON ms.guild_id = gbs.guild_id
-         LEFT JOIN (SELECT tw.guild_id,
-                           ARRAY_AGG(tw.thankword) AS thankswords
-                    FROM repbot_schema.thankwords tw
-                    GROUP BY tw.guild_id) t ON ms.guild_id = t.guild_id
-         LEFT JOIN (SELECT active_channel.guild_id,
-                           ARRAY_AGG(active_channel.channel_id) AS active_channels
-                    FROM repbot_schema.active_channel
-                    GROUP BY active_channel.guild_id) ac ON ms.guild_id = ac.guild_id
-         LEFT JOIN (SELECT tw.guild_id,
-                           ARRAY_AGG(tw.reaction) AS reactions
-                    FROM repbot_schema.guild_reactions tw
-                    GROUP BY tw.guild_id) r ON ms.guild_id = r.guild_id;
+-- replace guild settings view bz function
+DROP VIEW IF EXISTS repbot_schema.guild_settings;
 
+DROP FUNCTION IF EXISTS repbot_schema.get_guild_settings(_guild_id BIGINT);
+CREATE OR REPLACE FUNCTION repbot_schema.get_guild_settings(_guild_id BIGINT)
+    RETURNS TABLE
+            (
+                guild_id          BIGINT,
+                max_message_age   INT,
+                reaction          TEXT,
+                reactions         TEXT[],
+                reactions_active  BOOLEAN,
+                answer_active     BOOLEAN,
+                mention_active    BOOLEAN,
+                fuzzy_active      BOOLEAN,
+                min_messages      INTEGER,
+                prefix            VARCHAR,
+                language          TEXT,
+                thankswords       VARCHAR[],
+                active_channels   BIGINT[],
+                cooldown          INTEGER,
+                manager_role      BIGINT,
+                channel_whitelist BOOLEAN,
+                receiver_roles    BIGINT[],
+                donor_roles       BIGINT[],
+                emoji_debug       BOOLEAN
+            )
+    ROWS 1
+    COST 100
+    LANGUAGE plpgsql
+AS
+$BODY$
+BEGIN
+
+    RETURN QUERY
+        WITH message_settings AS (
+            SELECT s.max_message_age,
+                   s.reaction,
+                   s.reactions_active,
+                   s.answer_active,
+                   s.mention_active,
+                   s.fuzzy_active,
+                   s.cooldown,
+                   s.min_messages
+            FROM repbot_schema.message_settings s
+            WHERE s.guild_id = _guild_id
+        ),
+             bot_settings AS (
+                 SELECT s.prefix,
+                        s.language,
+                        s.manager_role,
+                        s.channel_whitelist,
+                        s.emoji_debug
+                 FROM repbot_schema.guild_bot_settings s
+                 WHERE s.guild_id = _guild_id
+             ),
+             thankwords AS (
+                 SELECT ARRAY_AGG(t.thankword) AS thankswords
+                 FROM repbot_schema.thankwords t
+                 WHERE t.guild_id = _guild_id
+             ),
+             active_channel AS (
+                 SELECT ARRAY_AGG(c.channel_id) AS active_channels
+                 FROM repbot_schema.active_channel c
+                 WHERE c.guild_id = _guild_id
+             ),
+             guild_reactions AS (
+                 SELECT ARRAY_AGG(r.reaction) AS reactions
+                 FROM repbot_schema.guild_reactions r
+                 WHERE r.guild_id = _guild_id
+             ),
+             receiver_roles AS (
+                 SELECT ARRAY_AGG(r.role_id) AS receiver_roles
+                 FROM repbot_schema.receiver_roles r
+                 WHERE r.guild_id = _guild_id
+             ),
+             donor_roles AS (
+                 SELECT ARRAY_AGG(r.role_id) AS donor_roles
+                 FROM repbot_schema.donor_roles r
+                 WHERE r.guild_id = _guild_id
+             )
+        SELECT _guild_id,
+               mes.max_message_age,
+               mes.reaction,
+               r.reactions,
+               mes.reactions_active,
+               mes.answer_active,
+               mes.mention_active,
+               mes.fuzzy_active,
+               mes.min_messages,
+               bot.prefix,
+               bot.language,
+               t.thankswords,
+               c.active_channels,
+               mes.cooldown,
+               bot.manager_role,
+               bot.channel_whitelist,
+               rec.receiver_roles,
+               don.donor_roles,
+               bot.emoji_debug
+        FROM message_settings mes,
+             bot_settings bot,
+             thankwords t,
+             active_channel c,
+             guild_reactions r,
+             receiver_roles rec,
+             donor_roles don;
+END;
+$BODY$;
 
 CREATE OR REPLACE FUNCTION repbot_schema.get_guild_stats(_guild_id BIGINT)
     RETURNS TABLE

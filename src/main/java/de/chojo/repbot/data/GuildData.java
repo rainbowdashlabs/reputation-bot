@@ -47,11 +47,11 @@ public class GuildData extends QueryFactoryHolder {
                             cooldown,
                             manager_role,
                             channel_whitelist,
+                            donor_roles,
+                            receiver_roles,
                             emoji_debug
                         FROM
-                            guild_settings
-                        WHERE
-                            guild_id = ?;
+                            get_guild_settings(?)
                         """)
                 .params(stmt -> stmt.setLong(1, guild.getIdLong()))
                 .readRow(row -> new GuildSettings(guild,
@@ -69,6 +69,8 @@ public class GuildData extends QueryFactoryHolder {
                         row.getLong("manager_role"),
                         DbUtil.arrayToArray(row, "reactions", new String[0]),
                         row.getBoolean("channel_whitelist"),
+                        DbUtil.arrayToArray(row, "donor_roles", new Long[0]),
+                        DbUtil.arrayToArray(row, "receiver_roles", new Long[0]),
                         row.getBoolean("emoji_debug")))
                 .firstSync();
     }
@@ -296,6 +298,30 @@ public class GuildData extends QueryFactoryHolder {
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
                 .readRow(this::buildRole).allSync();
     }
+
+    public void addDonorRole(Guild guild, Role role) {
+        builder().query("INSERT INTO donor_roles(guild_id, role_id) VALUES (?,?) ON CONFLICT DO NOTHING")
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setLong(role.getIdLong()))
+                .update().executeSync();
+    }
+    public void addReceiverRole(Guild guild, Role role) {
+        builder().query("INSERT INTO receiver_roles(guild_id, role_id) VALUES (?,?) ON CONFLICT DO NOTHING")
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setLong(role.getIdLong()))
+                .update().executeSync();
+    }
+
+    public void removeDonorRole(Guild guild, Role role) {
+        builder().query("DELETE FROM donor_roles WHERE guild_id = ? AND role_id = ?")
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setLong(role.getIdLong()))
+                .update().executeSync();
+    }
+
+    public void removeReceiverRole(Guild guild, Role role) {
+        builder().query("DELETE FROM donor_roles WHERE guild_id = ? AND role_id = ?")
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setLong(role.getIdLong()))
+                .update().executeSync();
+    }
+
 
     public boolean updateMessageSettings(GuildSettingUpdate update) {
         return builder()

@@ -71,6 +71,9 @@ public class ReputationService {
         // block non reputation channel
         if (!settings.isReputationChannel(message.getTextChannel())) return false;
 
+        if(!settings.hasDonorRole(guild.getMember(donor))) return false;
+        if(!settings.hasReceiverRole(guild.getMember(receiver))) return false;
+
         // force settings
         switch (type) {
             case FUZZY -> {

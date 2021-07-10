@@ -73,6 +73,8 @@ public class MessageListener extends ListenerAdapter {
         if (!settings.isReputationChannel(event.getChannel())) return;
         repBotCachePolicy.seen(event.getMember());
 
+        if (!settings.hasDonorRole(event.getMember())) return;
+
         var thankwordPattern = settings.thankwordPattern();
 
         var message = event.getMessage();
