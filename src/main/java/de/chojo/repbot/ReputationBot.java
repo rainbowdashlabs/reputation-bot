@@ -9,6 +9,7 @@ import de.chojo.jdautil.localization.util.Language;
 import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.commands.Channel;
+import de.chojo.repbot.commands.Dashboard;
 import de.chojo.repbot.commands.Gdpr;
 import de.chojo.repbot.commands.Help;
 import de.chojo.repbot.commands.Info;
@@ -183,7 +184,7 @@ public class ReputationBot {
         var gdprService = GdprService.of(shardManager, dataSource, repBotWorker);
 
         // init listener and services
-        var reactionListener = new ReactionListener(dataSource, localizer, reputationService);
+        var reactionListener = new ReactionListener(dataSource, localizer, reputationService, configuration);
         var voteListener = new ReputationVoteListener(reputationService, localizer);
         var messageListener = new MessageListener(dataSource, configuration, repBotCachePolicy, voteListener,
                 reputationService, contextResolver, messageAnalyzer, statistic);
@@ -225,7 +226,8 @@ public class ReputationBot {
                         Setup.of(dataSource, localizer),
                         new Gdpr(dataSource, localizer),
                         new Prune(gdprService, localizer),
-                        new Reactions(dataSource, localizer)
+                        new Reactions(dataSource, localizer),
+                        new Dashboard(dataSource, localizer)
                 )
                 .withInvalidArgumentProvider(((loc, command) -> Help.getCommandHelp(command, loc)))
                 .withLocalizer(localizer)
