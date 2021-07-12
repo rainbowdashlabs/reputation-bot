@@ -8,6 +8,7 @@ import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
+import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.util.FilterUtil;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.ChannelType;
@@ -212,27 +213,24 @@ public class Channel extends SimpleCommand {
         var guildSettings = guildData.getGuildSettings(event.getGuild());
         if (guildSettings.isEmpty()) return;
 
-        var settings = guildSettings.get();
-        var channelNames = DiscordResolver
-                .getValidTextChannelsById(
-                        event.getGuild(), new ArrayList<>(settings.activeChannel()))
-                .stream().map(IMentionable::getAsMention).collect(Collectors.joining(", "));
-        var message = "command.channel.sub.list." + (settings.isChannelWhitelist() ? "whitelist" : "blacklist");
-        event.reply(loc.localize(message, Replacement.create("CHANNEL", channelNames))).queue();
+        event.reply(getChannelList(guildSettings.get())).queue();
     }
 
     private boolean list(MessageEventWrapper eventWrapper) {
         var guildSettings = guildData.getGuildSettings(eventWrapper.getGuild());
         if (guildSettings.isEmpty()) return true;
 
-        var settings = guildSettings.get();
+        eventWrapper.reply(getChannelList(guildSettings.get())).queue();
+        return true;
+    }
+
+    private String getChannelList(GuildSettings settings){
         var channelNames = DiscordResolver
                 .getValidTextChannelsById(
-                        eventWrapper.getGuild(), new ArrayList<>(settings.activeChannel()))
+                        settings.guild(), new ArrayList<>(settings.activeChannel()))
                 .stream().map(IMentionable::getAsMention).collect(Collectors.joining(", "));
         var message = "command.channel.sub.list." + (settings.isChannelWhitelist() ? "whitelist" : "blacklist");
-        eventWrapper.reply(eventWrapper.localize(message, Replacement.create("CHANNEL", channelNames))).queue();
-        return true;
+        return loc.localize(message, settings.guild(), Replacement.create("CHANNEL", channelNames));
     }
 
     private void set(SlashCommandEvent event) {
@@ -242,9 +240,10 @@ public class Channel extends SimpleCommand {
             return;
         }
 
+        event.deferReply().queue();
         guildData.clearChannel(event.getGuild());
         guildData.addChannel(event.getGuild(), channel);
-        event.reply(loc.localize("command.channel.sub.set.set",
+        event.getHook().editOriginal(loc.localize("command.channel.sub.set.set",
                 Replacement.create("CHANNEL", ((TextChannel) channel).getAsMention()))).queue();
     }
 
