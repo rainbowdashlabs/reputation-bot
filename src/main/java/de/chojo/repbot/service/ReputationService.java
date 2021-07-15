@@ -89,6 +89,9 @@ public class ReputationService {
             case REACTION -> {
                 if (!settings.isReactionActive()) return false;
             }
+            case EMBED -> {
+                //TODO: allow enabling and disable embed reputation?
+            }
             default -> throw new IllegalStateException("Unexpected value: " + type);
         }
 
