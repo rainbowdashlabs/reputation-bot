@@ -6,6 +6,7 @@ public class Links {
     private String invite = "https://discord.com/oauth2/authorize?client_id=834843896579489794&scope=bot&permissions=1342532672";
     private String support = "";
     private String website = "";
+    private String faq = "";
 
     public String tos() {
         return tos;
@@ -21,5 +22,9 @@ public class Links {
 
     public String website() {
         return website;
+    }
+
+    public String faq() {
+        return faq;
     }
 }
