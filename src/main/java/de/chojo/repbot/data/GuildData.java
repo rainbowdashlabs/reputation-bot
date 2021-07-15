@@ -317,7 +317,7 @@ public class GuildData extends QueryFactoryHolder {
     }
 
     public void removeReceiverRole(Guild guild, Role role) {
-        builder().query("DELETE FROM donor_roles WHERE guild_id = ? AND role_id = ?")
+        builder().query("DELETE FROM receiver_roles WHERE guild_id = ? AND role_id = ?")
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setLong(role.getIdLong()))
                 .update().executeSync();
     }
