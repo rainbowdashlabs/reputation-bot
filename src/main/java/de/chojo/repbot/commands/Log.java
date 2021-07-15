@@ -205,13 +205,13 @@ public class Log extends SimpleCommand {
 
     private String createJumpLink(Guild guild, ReputationLogEntry log) {
         var loc = this.loc.getContextLocalizer(guild);
-        var jump = loc.localize("words.jumpMarker",
+        var jump = loc.localize("words.link",
                 Replacement.create("TARGET", "$words.message$"),
                 Replacement.create("URL", log.getMessageJumpLink()));
 
         String refJump = null;
         if (log.hasRefMessage()) {
-            refJump = loc.localize("words.jumpMarker",
+            refJump = loc.localize("words.link",
                     Replacement.create("TARGET", "$words.refMessage$"),
                     Replacement.create("URL", log.getMessageJumpLink()));
         }

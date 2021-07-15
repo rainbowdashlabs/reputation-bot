@@ -16,9 +16,11 @@ import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.util.Colors;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.PropertyKey;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -73,6 +75,12 @@ public class Info extends SimpleCommand {
         return true;
     }
 
+    @Override
+    public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
+        var eventWrapper = MessageEventWrapper.create(event);
+        event.replyEmbeds(getResponse(eventWrapper)).queue();
+    }
+
     @NotNull
     private MessageEmbed getResponse(MessageEventWrapper eventWrapper) {
         if (contributors == null || lastFetch.isBefore(Instant.now().minus(5, ChronoUnit.MINUTES))) {
@@ -99,19 +107,26 @@ public class Info extends SimpleCommand {
                 .addField("command.info.art", ART, true)
                 .addField("command.info.source", SOURCE, true)
                 .addField("command.info.version", version, true)
-                .addField("", "**" + localizer.localize("command.info.links", eventWrapper.getGuild(),
-                        Replacement.create("INVITE", configuration.links().invite()),
-                        Replacement.create("SUPPORT", configuration.links().support()),
-                        Replacement.create("TOS", configuration.links().tos()),
-                        Replacement.create("WEBSITE", configuration.links().website())) + "**", false)
+                .addField("", "**" + getLinks(eventWrapper.getGuild()) + "**", false)
                 .setColor(Colors.Pastel.BLUE)
                 .build();
     }
 
-    @Override
-    public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
-        var eventWrapper = MessageEventWrapper.create(event);
-        event.replyEmbeds(getResponse(eventWrapper)).queue();
+    private String getLinks(Guild guild) {
+        var links = List.of(
+                getLink(guild, "command.info.inviteMe", configuration.links().invite()),
+                getLink(guild, "command.info.support", configuration.links().support()),
+                getLink(guild, "command.info.tos", configuration.links().tos()),
+                getLink(guild, "command.info.website", configuration.links().website()),
+                getLink(guild, "command.info.faq", configuration.links().faq())
+        );
+        return String.join(" ᠅ ", links);
+    }
+
+    private String getLink(Guild guild, @PropertyKey(resourceBundle = "locale") String target, String url) {
+        return localizer.localize("words.link", guild,
+                Replacement.create("TARGET", String.format("$%s$", target)),
+                Replacement.create("URL", url));
     }
 
 
