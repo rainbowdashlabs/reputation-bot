@@ -5,7 +5,9 @@ import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.repbot.analyzer.ThankType;
+import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.service.ReputationService;
+import de.chojo.repbot.util.EmojiDebug;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -77,7 +79,7 @@ public class ReputationVoteListener extends ListenerAdapter {
         }
     }
 
-    public void registerVote(Message message, List<Member> members) {
+    public void registerVote(Message message, List<Member> members, GuildSettings settings) {
         var builder = new LocalizedEmbedBuilder(loc, message.getGuild())
                 .setTitle("listener.messages.request.title")
                 .setDescription("listener.messages.request.descr")
@@ -90,6 +92,8 @@ public class ReputationVoteListener extends ListenerAdapter {
             var id = "vote:" + member.getIdLong();
             components.put(id, new VoteComponent(member, Button.of(ButtonStyle.PRIMARY, id, member.getEffectiveName())));
         }
+
+        if (settings.isEmojiDebug()) message.addReaction(EmojiDebug.PROMPTED).queue();
 
         var collect = components.values().stream().map(VoteComponent::component).collect(Collectors.toUnmodifiableList());
 

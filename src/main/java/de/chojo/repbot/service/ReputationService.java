@@ -111,6 +111,11 @@ public class ReputationService {
             return false;
         }
 
+        if (!recentUser.contains(donor)) {
+            if (settings.isEmojiDebug()) message.addReaction(EmojiDebug.DONOR_NOT_IN_CONTEXT).queue();
+            return false;
+        }
+
 
         if (!canVote(donor, receiver, guild, settings)) {
             if (settings.isEmojiDebug()) message.addReaction(EmojiDebug.ONLY_COOLDOWN).queue();
@@ -166,13 +171,21 @@ public class ReputationService {
     }
 
     public boolean canVote(User donor, User receiver, Guild guild, GuildSettings settings) {
+        var donorM = guild.getMember(donor);
+        var receiverM = guild.getMember(receiver);
+
+        if (donorM == null || receiverM == null) return false;
+
         // block cooldown
-        var lastRatedDuration = reputationData.getLastRatedDuration(guild, donor, receiver, ChronoUnit.MINUTES);
-        if (lastRatedDuration < settings.cooldown()) return false;
+        var lastRated = reputationData.getLastRatedDuration(guild, donor, receiver, ChronoUnit.MINUTES);
+        if (lastRated < settings.cooldown()) return false;
+
+        if (!settings.hasReceiverRole(receiverM)) return false;
+        if (!settings.hasDonorRole(donorM)) return false;
 
         // block rep4rep
-        var lastRatedEachDuration = reputationData.getLastRatedDuration(guild, receiver, donor, ChronoUnit.MINUTES);
-        return lastRatedEachDuration >= settings.cooldown();
+        lastRated = reputationData.getLastRatedDuration(guild, receiver, donor, ChronoUnit.MINUTES);
+        return lastRated >= settings.cooldown();
     }
 
     public boolean canVote(User donor, User receiver, Guild guild) {
