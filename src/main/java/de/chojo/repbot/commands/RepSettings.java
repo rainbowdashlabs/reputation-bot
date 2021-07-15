@@ -62,7 +62,7 @@ public class RepSettings extends SimpleCommand {
                                 .build()
                         )
                         .add("emojidebug", "command.repSettings.sub.emojidebug", argsBuilder()
-                                .add(OptionType.BOOLEAN, "minutes", "active")
+                                .add(OptionType.BOOLEAN, "active", "active")
                                 .build()
                         )
                         .build(),
@@ -480,7 +480,7 @@ public class RepSettings extends SimpleCommand {
                     + "\n" + loc.localize(emojiExplanation(), event.getGuild())).queue();
             return;
         }
-        var emojidebug = event.getOption("reactions").getAsBoolean();
+        var emojidebug = event.getOption("active").getAsBoolean();
 
         if (data.setEmojiDebug(event.getGuild(), emojidebug)) {
             event.reply(getBooleanMessage(event.getGuild(), emojidebug,
