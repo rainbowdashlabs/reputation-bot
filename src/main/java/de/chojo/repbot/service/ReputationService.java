@@ -71,8 +71,8 @@ public class ReputationService {
         // block non reputation channel
         if (!settings.isReputationChannel(message.getTextChannel())) return false;
 
-        if(!settings.hasDonorRole(guild.getMember(donor))) return false;
-        if(!settings.hasReceiverRole(guild.getMember(receiver))) return false;
+        if (!settings.hasDonorRole(guild.getMember(donor))) return false;
+        if (!settings.hasReceiverRole(guild.getMember(receiver))) return false;
 
         // force settings
         switch (type) {
@@ -88,6 +88,9 @@ public class ReputationService {
             }
             case REACTION -> {
                 if (!settings.isReactionActive()) return false;
+            }
+            case EMBED -> {
+                //TODO: allow enabling and disable embed reputation?
             }
             default -> throw new IllegalStateException("Unexpected value: " + type);
         }
