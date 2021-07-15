@@ -1,5 +1,3 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-
 plugins {
     id("com.github.johnrengelman.shadow") version "7.0.0"
     java
@@ -46,7 +44,7 @@ dependencies {
 
     // unit testing
     testImplementation(platform("org.junit:junit-bom:5.7.1"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.junit.jupiter", "junit-jupiter")
 }
 
 
@@ -68,9 +66,11 @@ tasks {
             duplicatesStrategy = DuplicatesStrategy.INCLUDE
         }
     }
+
     compileJava {
         options.encoding = "UTF-8"
     }
+
     javadoc {
         options.encoding = "UTF-8"
     }
@@ -81,7 +81,8 @@ tasks {
             events("passed", "skipped", "failed")
         }
     }
-    named<ShadowJar>("shadowJar") {
+
+    shadowJar{
         mergeServiceFiles()
         manifest {
             attributes(mapOf("Main-Class" to "de.chojo.repbot.ReputationBot"))
