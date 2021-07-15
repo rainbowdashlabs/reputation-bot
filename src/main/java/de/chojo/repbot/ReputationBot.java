@@ -111,8 +111,6 @@ public class ReputationBot {
 
         initLocalization();
 
-        initAnalyzer();
-
         log.info("Initializing JDA");
         try {
             initJDA();
@@ -125,11 +123,6 @@ public class ReputationBot {
         initBot();
 
         initBotList();
-    }
-
-    private void initAnalyzer() {
-        contextResolver = new ContextResolver(dataSource, configuration);
-        messageAnalyzer = new MessageAnalyzer(contextResolver, configuration);
     }
 
     private void initBotList() {
@@ -176,6 +169,10 @@ public class ReputationBot {
         });
 
         var statistic = Statistic.of(shardManager, dataSource, repBotWorker);
+
+        contextResolver = new ContextResolver(dataSource, configuration);
+        messageAnalyzer = new MessageAnalyzer(contextResolver, configuration, statistic);
+
         PresenceService.start(shardManager, configuration, statistic, repBotWorker);
 
         // init services
@@ -187,7 +184,7 @@ public class ReputationBot {
         var reactionListener = new ReactionListener(dataSource, localizer, reputationService, configuration);
         var voteListener = new ReputationVoteListener(reputationService, localizer);
         var messageListener = new MessageListener(dataSource, configuration, repBotCachePolicy, voteListener,
-                reputationService, contextResolver, messageAnalyzer, statistic);
+                reputationService, contextResolver, messageAnalyzer);
         var stateListener = StateListener.of(localizer, dataSource, configuration);
         var voiceStateListener = VoiceStateListener.of(dataSource, repBotWorker);
         var logListener = LogListener.create(repBotWorker);

@@ -10,7 +10,6 @@ import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;
 import de.chojo.repbot.service.RepBotCachePolicy;
 import de.chojo.repbot.service.ReputationService;
-import de.chojo.repbot.statistic.Statistic;
 import de.chojo.repbot.util.EmojiDebug;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageBulkDeleteEvent;
@@ -36,18 +35,16 @@ public class MessageListener extends ListenerAdapter {
     private final ReputationService reputationService;
     private final ContextResolver contextResolver;
     private final MessageAnalyzer messageAnalyzer;
-    private final Statistic statistic;
 
     public MessageListener(DataSource dataSource, Configuration configuration, RepBotCachePolicy repBotCachePolicy,
                            ReputationVoteListener reputationVoteListener, ReputationService reputationService,
-                           ContextResolver contextResolver, MessageAnalyzer messageAnalyzer, Statistic statistic) {
+                           ContextResolver contextResolver, MessageAnalyzer messageAnalyzer) {
         guildData = new GuildData(dataSource);
         reputationData = new ReputationData(dataSource);
         this.configuration = configuration;
         this.repBotCachePolicy = repBotCachePolicy;
         this.reputationVoteListener = reputationVoteListener;
         this.reputationService = reputationService;
-        this.statistic = statistic;
         this.contextResolver = contextResolver;
         this.messageAnalyzer = messageAnalyzer;
     }
@@ -90,9 +87,7 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        var analyzerResult = messageAnalyzer.processMessage(thankwordPattern, message, settings, true, 3);
-
-        statistic.messageAnalyzed(event.getJDA());
+        var analyzerResult = messageAnalyzer.processMessage(settings.thankwordPattern(), message, settings, true, 3);
 
         if (analyzerResult.type() == ThankType.NO_MATCH) return;
 
