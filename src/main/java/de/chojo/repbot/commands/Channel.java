@@ -10,6 +10,7 @@ import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.util.FilterUtil;
+import de.chojo.repbot.util.StringUtil;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.IMentionable;
@@ -59,14 +60,19 @@ public class Channel extends SimpleCommand {
         if (optsubCmd.isEmpty()) return false;
         var subCmd = optsubCmd.get();
 
-        if ("set".equalsIgnoreCase(subCmd)) {
-            return set(messageEventWrapper, commandContext.subContext(subCmd));
-        }
-        if ("add".equalsIgnoreCase(subCmd)) {
-            return add(messageEventWrapper, commandContext.subContext(subCmd));
-        }
-        if ("remove".equalsIgnoreCase(subCmd)) {
-            return remove(messageEventWrapper, commandContext.subContext(subCmd));
+        if (StringUtil.contains(subCmd, "set", "add", "remove")) {
+            var context = commandContext.subContext(subCmd);
+            if (context.argsEmpty()) return false;
+
+            if ("set".equalsIgnoreCase(subCmd)) {
+                return set(messageEventWrapper, context);
+            }
+            if ("add".equalsIgnoreCase(subCmd)) {
+                return add(messageEventWrapper, context);
+            }
+            if ("remove".equalsIgnoreCase(subCmd)) {
+                return remove(messageEventWrapper, context);
+            }
         }
         if ("whitelist".equalsIgnoreCase(subCmd)) {
             return whitelist(messageEventWrapper, commandContext.subContext(subCmd));
@@ -148,8 +154,6 @@ public class Channel extends SimpleCommand {
     }
 
     private boolean add(MessageEventWrapper eventWrapper, CommandContext context) {
-        if (context.argsEmpty()) return false;
-
         var args = context.args();
         var validTextChannels = DiscordResolver.getValidTextChannels(eventWrapper.getGuild(), args);
         if (validTextChannels.isEmpty()) {
@@ -224,7 +228,7 @@ public class Channel extends SimpleCommand {
         return true;
     }
 
-    private String getChannelList(GuildSettings settings){
+    private String getChannelList(GuildSettings settings) {
         var channelNames = DiscordResolver
                 .getValidTextChannelsById(
                         settings.guild(), new ArrayList<>(settings.activeChannel()))
