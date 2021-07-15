@@ -72,8 +72,6 @@ public class MessageListener extends ListenerAdapter {
 
         if (!settings.hasDonorRole(event.getMember())) return;
 
-        var thankwordPattern = settings.thankwordPattern();
-
         var message = event.getMessage();
 
         var prefix = settings.prefix().orElse(configuration.baseSettings().defaultPrefix());
@@ -125,7 +123,7 @@ public class MessageListener extends ListenerAdapter {
         var recentMembers = contextResolver.getCombinedContext(message, settings);
         recentMembers.remove(message.getMember());
         if (recentMembers.isEmpty()) {
-            if(settings.isEmojiDebug()) message.addReaction(EmojiDebug.EMPTY_CONTEXT).queue();
+            if (settings.isEmojiDebug()) message.addReaction(EmojiDebug.EMPTY_CONTEXT).queue();
             return;
         }
 
@@ -139,6 +137,6 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        reputationVoteListener.registerVote(message, members);
+        reputationVoteListener.registerVote(message, members, settings);
     }
 }
