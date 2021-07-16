@@ -30,7 +30,7 @@ public class Prefix extends SimpleCommand {
                 "command.prefix.description",
                 subCommandBuilder()
                         .add("set", "command.prefix.sub.set", argsBuilder()
-                                .add(OptionType.STRING, "prefix", "prefix")
+                                .add(OptionType.STRING, "prefix", "prefix", true)
                                 .build()
                         )
                         .add("reset", "command.prefix.sub.reset")

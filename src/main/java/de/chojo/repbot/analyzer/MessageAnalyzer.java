@@ -6,6 +6,7 @@ import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.jdautil.parsing.WeightedEntry;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.wrapper.GuildSettings;
+import de.chojo.repbot.statistic.Statistic;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageType;
@@ -33,10 +34,12 @@ public class MessageAnalyzer {
             .maximumSize(100000)
             .build();
     private final Configuration configuration;
+    private Statistic statistic;
 
-    public MessageAnalyzer(ContextResolver resolver, Configuration configuration) {
+    public MessageAnalyzer(ContextResolver resolver, Configuration configuration, Statistic statistic) {
         contextResolver = resolver;
         this.configuration = configuration;
+        this.statistic = statistic;
     }
 
 
@@ -61,6 +64,7 @@ public class MessageAnalyzer {
     }
 
     private AnalyzerResult analyze(Pattern pattern, Message message, @Nullable GuildSettings settings, boolean limitTargets, int limit) {
+        statistic.messageAnalyzed(settings.guild().getJDA());
         if (pattern.pattern().isBlank()) return AnalyzerResult.noMatch();
         var contentRaw = message.getContentRaw();
 
