@@ -2,7 +2,7 @@ package de.chojo.repbot;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import de.chojo.jdautil.botlist.BotlistReporter;
+import de.chojo.jdautil.botlist.BotlistService;
 import de.chojo.jdautil.command.dispatching.CommandHub;
 import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Language;
@@ -45,7 +45,10 @@ import de.chojo.repbot.service.RoleAssigner;
 import de.chojo.repbot.statistic.Statistic;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.repbot.util.PermissionErrorHandler;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
@@ -128,11 +131,24 @@ public class ReputationBot {
     private void initBotList() {
         var botlist = configuration.botlist();
         if (!botlist.isSubmit()) return;
-        BotlistReporter.build(shardManager)
+        BotlistService.build(shardManager)
                 .forDiscordBotListCOM(botlist.discordBotlistCom())
                 .forDiscordBotsGG(botlist.discordBotsGg())
                 .forTopGG(botlist.topGg())
+                .forBotlistMe(botlist.botListMe())
                 .withExecutorService(repBotWorker)
+                .withVoteService(builder -> builder
+                        .withVoteWeebhooks(botlist.host(), botlist.port())
+                        .onVote(voteData -> shardManager
+                                .retrieveUserById(voteData.userId())
+                                .flatMap(User::openPrivateChannel)
+                                .flatMap(channel -> channel.sendMessage("Thanks for voting <3"))
+                                .queue(message -> log.debug("Vote received"),
+                                        err -> ErrorResponseException.ignore(ErrorResponse.UNKNOWN_USER,
+                                                ErrorResponse.CANNOT_SEND_TO_USER))
+                        )
+                        .build()
+                )
                 .build();
     }
 
