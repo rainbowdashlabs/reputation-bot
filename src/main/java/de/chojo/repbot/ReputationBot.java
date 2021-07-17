@@ -66,7 +66,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -139,7 +138,7 @@ public class ReputationBot {
                 .forBotlistMe(botlist.botListMe())
                 .withExecutorService(repBotWorker)
                 .withVoteService(builder -> builder
-                        .withVoteWeebhooks("localhost", 8000)
+                        .withVoteWeebhooks(botlist.host(), botlist.port())
                         .onVote(voteData -> shardManager
                                 .retrieveUserById(voteData.userId())
                                 .flatMap(User::openPrivateChannel)

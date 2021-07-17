@@ -5,6 +5,8 @@ import de.chojo.jdautil.botlist.BotListConfig;
 @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
 public class Botlist {
     private boolean submit;
+    private String host = "0.0.0.0";
+    private int port = 8888;
     private BotListConfig topGg = new BotListConfig("top.gg", "", "", 264445053596991498L, "", "");
     private BotListConfig discordBotsGg = new BotListConfig("discord.bots.gg", "", "", 110373943822540800L, "", "");
     private BotListConfig discordBotlistCom = new BotListConfig("discordbotlist.com", "", "", 450100127256936458L, "", "");
@@ -42,5 +44,13 @@ public class Botlist {
 
     public BotListConfig[] botlists() {
         return new BotListConfig[]{topGg, discordBotsGg, discordBotlistCom, botListMe};
+    }
+
+    public String host() {
+        return host;
+    }
+
+    public int port() {
+        return port;
     }
 }
