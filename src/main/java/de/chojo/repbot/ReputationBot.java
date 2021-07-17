@@ -2,7 +2,6 @@ package de.chojo.repbot;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import de.chojo.jdautil.botlist.BotlistReporter;
 import de.chojo.jdautil.botlist.BotlistService;
 import de.chojo.jdautil.command.dispatching.CommandHub;
 import de.chojo.jdautil.localization.Localizer;
@@ -27,7 +26,6 @@ import de.chojo.repbot.commands.Setup;
 import de.chojo.repbot.commands.Thankwords;
 import de.chojo.repbot.commands.TopReputation;
 import de.chojo.repbot.config.Configuration;
-import de.chojo.repbot.config.elements.Botlist;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.updater.QueryReplacement;
 import de.chojo.repbot.data.updater.SqlUpdater;
