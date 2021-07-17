@@ -10,14 +10,17 @@ import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.wrapper.GuildSettingUpdate;
 import de.chojo.repbot.data.wrapper.GuildSettings;
+import de.chojo.repbot.util.EmojiDebug;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
+import org.jetbrains.annotations.PropertyKey;
 
 import javax.sql.DataSource;
 import java.awt.Color;
+import java.util.List;
 
 public class RepSettings extends SimpleCommand {
     private final GuildData data;
@@ -56,6 +59,10 @@ public class RepSettings extends SimpleCommand {
                         )
                         .add("cooldown", "command.repSettings.sub.cooldown", argsBuilder()
                                 .add(OptionType.INTEGER, "minutes", "minutes")
+                                .build()
+                        )
+                        .add("emojidebug", "command.repSettings.sub.emojidebug", argsBuilder()
+                                .add(OptionType.BOOLEAN, "active", "active")
                                 .build()
                         )
                         .build(),
@@ -109,6 +116,9 @@ public class RepSettings extends SimpleCommand {
 
         if ("cooldown".equalsIgnoreCase(subcmd)) {
             return cooldown(eventWrapper, context.subContext(subcmd), guildSettings);
+        }
+        if ("emojidebug".equalsIgnoreCase(subcmd)) {
+            return emojidebug(eventWrapper, context.subContext(subcmd), guildSettings);
 
         }
         return false;
@@ -152,6 +162,9 @@ public class RepSettings extends SimpleCommand {
         if ("cooldown".equalsIgnoreCase(subcmd)) {
             cooldown(event, guildSettings);
         }
+        if ("emojidebug".equalsIgnoreCase(subcmd)) {
+            emojidebug(event, guildSettings);
+        }
     }
 
     private boolean sendSettings(MessageEventWrapper eventWrapper, GuildSettings guildSettings) {
@@ -164,19 +177,28 @@ public class RepSettings extends SimpleCommand {
     }
 
     private MessageEmbed getSettings(Guild guild, GuildSettings guildSettings) {
+        var setting = List.of(
+                getSetting("command.repSettings.embed.descr.maxMessageAge", guildSettings.maxMessageAge()),
+                getSetting("command.repSettings.embed.descr.minMessages", guildSettings.minMessages()),
+                getSetting("command.repSettings.embed.descr.byReaction", guildSettings.isReactionActive()),
+                getSetting("command.repSettings.embed.descr.byAnswer", guildSettings.isAnswerActive()),
+                getSetting("command.repSettings.embed.descr.byMention", guildSettings.isMentionActive()),
+                getSetting("command.repSettings.embed.descr.byFuzzy", guildSettings.isFuzzyActive()),
+                getSetting("command.repSettings.embed.descr.cooldown", guildSettings.cooldown()),
+                getSetting("command.repSettings.embed.descr.emojidebug", guildSettings.isEmojiDebug())
+        );
+
+        var settings = String.join("\n", setting);
+
         return new LocalizedEmbedBuilder(loc, guild)
                 .setTitle("command.repSettings.embed.title")
-                .appendDescription(loc.localize("command.repSettings.embed.descr", guild,
-                        Replacement.create("MAX_AGE", guildSettings.maxMessageAge()),
-                        Replacement.create("MIN_MESSAGES", guildSettings.minMessages()),
-                        Replacement.create("REACTION_ACTIVE", guildSettings.isReactionActive()),
-                        Replacement.create("ANSWER_ACTIVE", guildSettings.isAnswerActive()),
-                        Replacement.create("MENTION_ACTIVE", guildSettings.isMentionActive()),
-                        Replacement.create("FUZZY_ACTIVE", guildSettings.isFuzzyActive()),
-                        Replacement.create("COOLDOWN", guildSettings.cooldown())
-                ))
+                .appendDescription(loc.localize(settings, guild))
                 .setColor(Color.GREEN)
                 .build();
+    }
+
+    private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, Object object) {
+        return String.format("$%s$: %s", locale, object);
     }
 
     private boolean cooldown(MessageEventWrapper eventWrapper, CommandContext context, GuildSettings guildSettings) {
@@ -427,6 +449,61 @@ public class RepSettings extends SimpleCommand {
             event.reply(loc.localize("command.repSettings.sub.minMessages.get",
                     Replacement.create("AMOUNT", minMessages))).queue();
         }
+    }
+
+    private boolean emojidebug(MessageEventWrapper eventWrapper, CommandContext context, GuildSettings guildSettings) {
+        if (context.argsEmpty()) {
+            eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), guildSettings.isEmojiDebug(),
+                    "command.repSettings.sub.emojidebug.true", "command.repSettings.sub.emojidebug.false")
+                    + "\n" + loc.localize(emojiExplanation(), eventWrapper.getGuild())).queue();
+            return true;
+        }
+        var optEmojiDebug = context.argBoolean(0);
+
+        if (optEmojiDebug.isEmpty()) {
+            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.notABoolean",
+                    Replacement.create("INPUT", context.argString(0))), 30);
+            return false;
+        }
+
+        if (data.setEmojiDebug(eventWrapper.getGuild(), optEmojiDebug.get())) {
+            eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), optEmojiDebug.get(),
+                    "command.repSettings.sub.emojidebug.true", "command.repSettings.sub.emojidebug.false")).queue();
+        }
+        return true;
+    }
+
+    private void emojidebug(SlashCommandEvent event, GuildSettings guildSettings) {
+        if (event.getOptions().isEmpty()) {
+            event.reply(getBooleanMessage(event.getGuild(), guildSettings.isEmojiDebug(),
+                    "command.repSettings.sub.emojidebug.true", "command.repSettings.sub.emojidebug.false")
+                    + "\n" + loc.localize(emojiExplanation(), event.getGuild())).queue();
+            return;
+        }
+        var emojidebug = event.getOption("active").getAsBoolean();
+
+        if (data.setEmojiDebug(event.getGuild(), emojidebug)) {
+            event.reply(getBooleanMessage(event.getGuild(), emojidebug,
+                    "command.repSettings.sub.emojidebug.true", "command.repSettings.sub.emojidebug.false")).queue();
+        }
+    }
+
+    private String emojiExplanation() {
+        var emojis = List.of(
+                String.format("$%s$", "command.repSettings.sub.emojidebug.explain.title"),
+                emojiString(EmojiDebug.FOUND_THANKWORD, "command.repSettings.sub.emojidebug.explain.found"),
+                emojiString(EmojiDebug.ONLY_COOLDOWN, "command.repSettings.sub.emojidebug.explain.cooldown"),
+                emojiString(EmojiDebug.EMPTY_CONTEXT, "command.repSettings.sub.emojidebug.explain.noReceiver"),
+                emojiString(EmojiDebug.TARGET_NOT_IN_CONTEXT, "command.repSettings.sub.emojidebug.explain.noRecentMessages"),
+                emojiString(EmojiDebug.DONOR_NOT_IN_CONTEXT, "command.repSettings.sub.emojidebug.explain.noDonor"),
+                emojiString(EmojiDebug.TOO_OLD, "command.repSettings.sub.emojidebug.explain.tooOld"),
+                emojiString(EmojiDebug.PROMPTED, "command.repSettings.sub.emojidebug.explain.prompted")
+        );
+        return String.join("\n", emojis);
+    }
+
+    private String emojiString(String emoji, @PropertyKey(resourceBundle = "locale") String code) {
+        return String.format("%s ➜ $%s$", emoji, code);
     }
 
     private String getBooleanMessage(Guild guild, boolean value, String whenTrue, String whenFalse) {

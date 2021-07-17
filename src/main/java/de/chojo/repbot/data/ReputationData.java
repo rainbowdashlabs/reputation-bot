@@ -1,6 +1,7 @@
 package de.chojo.repbot.data;
 
 import de.chojo.repbot.analyzer.ThankType;
+import de.chojo.repbot.data.wrapper.GuildReputationStats;
 import de.chojo.repbot.data.wrapper.ReputationLogEntry;
 import de.chojo.repbot.data.wrapper.ReputationUser;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
@@ -99,7 +100,7 @@ public class ReputationData extends QueryFactoryHolder {
                             rank,
                             user_id,
                             reputation
-                        from
+                        FROM
                             user_reputation
                         WHERE guild_id = ?
                             AND reputation != 0
@@ -122,7 +123,7 @@ public class ReputationData extends QueryFactoryHolder {
     public Optional<ReputationUser> getReputation(Guild guild, User user) {
         return builder(ReputationUser.class)
                 .query("""
-                        SELECT rank, user_id, reputation from user_reputation where guild_id = ? and user_id = ?;
+                        SELECT rank, user_id, reputation FROM user_reputation WHERE guild_id = ? AND user_id = ?;
                         """)
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setLong(user.getIdLong()))
                 .readRow(this::buildUser).firstSync();
@@ -143,7 +144,7 @@ public class ReputationData extends QueryFactoryHolder {
      */
     public void removeMessage(long messageId) {
         builder()
-                .query("DELETE FROM reputation_log where message_id = ?;")
+                .query("DELETE FROM reputation_log WHERE message_id = ?;")
                 .paramsBuilder(stmt -> stmt.setLong(messageId))
                 .update().execute();
     }
@@ -182,7 +183,7 @@ public class ReputationData extends QueryFactoryHolder {
                             cause
                         FROM
                             reputation_log
-                        where
+                        WHERE
                             message_id = ?;
                         """)
                 .params(stmt -> stmt.setLong(1, message.getIdLong()))
@@ -211,7 +212,7 @@ public class ReputationData extends QueryFactoryHolder {
                             cause
                         FROM
                             reputation_log
-                        where
+                        WHERE
                             receiver_id = ?
                             AND guild_id = ?
                         ORDER BY received DESC
@@ -243,7 +244,7 @@ public class ReputationData extends QueryFactoryHolder {
                             cause
                         FROM
                             reputation_log
-                        where
+                        WHERE
                             donor_id = ?
                             AND guild_id = ?
                         ORDER BY received DESC
@@ -275,7 +276,7 @@ public class ReputationData extends QueryFactoryHolder {
                             cause
                         FROM
                             reputation_log
-                        where
+                        WHERE
                             message_id = ?
                             AND guild_id = ?
                         ORDER BY received DESC
@@ -311,7 +312,7 @@ public class ReputationData extends QueryFactoryHolder {
                 .query("""
                         DELETE FROM
                             reputation_log
-                        where
+                        WHERE
                             message_id = ?
                             AND donor_id = ?
                             AND cause = ?;
@@ -319,5 +320,17 @@ public class ReputationData extends QueryFactoryHolder {
                 .paramsBuilder(stmt -> stmt.setLong(message).setLong(user).setString(type.name()))
                 .update()
                 .executeSync() > 0;
+    }
+
+    public Optional<GuildReputationStats> getGuildReputationStats(Guild guild) {
+        return builder(GuildReputationStats.class)
+                .query("SELECT total_reputation, week_reputation, today_reputation, top_channel FROM get_guild_stats(?)")
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
+                .readRow(rs -> new GuildReputationStats(
+                        rs.getInt("total_reputation"),
+                        rs.getInt("week_reputation"),
+                        rs.getInt("today_reputation"),
+                        rs.getLong("top_channel")
+                )).firstSync();
     }
 }

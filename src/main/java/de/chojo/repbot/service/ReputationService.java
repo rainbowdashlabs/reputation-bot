@@ -9,6 +9,7 @@ import de.chojo.repbot.config.elements.MagicImage;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
+import de.chojo.repbot.util.EmojiDebug;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -67,6 +68,12 @@ public class ReputationService {
         if (optGuildSettings.isEmpty()) return false;
         var settings = optGuildSettings.get();
 
+        // block non reputation channel
+        if (!settings.isReputationChannel(message.getTextChannel())) return false;
+
+        if (!settings.hasDonorRole(guild.getMember(donor))) return false;
+        if (!settings.hasReceiverRole(guild.getMember(receiver))) return false;
+
         // force settings
         switch (type) {
             case FUZZY -> {
@@ -82,6 +89,9 @@ public class ReputationService {
             case REACTION -> {
                 if (!settings.isReactionActive()) return false;
             }
+            case EMBED -> {
+                //TODO: allow enabling and disable embed reputation?
+            }
             default -> throw new IllegalStateException("Unexpected value: " + type);
         }
 
@@ -96,22 +106,35 @@ public class ReputationService {
                 .map(Member::getUser)
                 .collect(Collectors.toSet());
 
-        if (!recentUser.contains(receiver)) return false;
+        if (!recentUser.contains(receiver)) {
+            if (settings.isEmojiDebug()) message.addReaction(EmojiDebug.TARGET_NOT_IN_CONTEXT).queue();
+            return false;
+        }
 
-        // block non vote channel
-        if (!settings.isReputationChannel(message.getTextChannel())) return false;
+        if (!recentUser.contains(donor)) {
+            if (settings.isEmojiDebug()) message.addReaction(EmojiDebug.DONOR_NOT_IN_CONTEXT).queue();
+            return false;
+        }
 
-        if (!canVote(donor, receiver, guild, settings)) return false;
+
+        if (!canVote(donor, receiver, guild, settings)) {
+            if (settings.isEmojiDebug()) message.addReaction(EmojiDebug.ONLY_COOLDOWN).queue();
+            return false;
+        }
 
         // block outdated ref message
         if (refMessage != null) {
-            var until = refMessage.getTimeCreated().toInstant().until(Instant.now(), ChronoUnit.MINUTES);
-            if (until > settings.maxMessageAge()) return false;
+            if (!settings.isFreshMessage(refMessage)) {
+                if (settings.isEmojiDebug()) message.addReaction(EmojiDebug.TOO_OLD).queue();
+                return false;
+            }
         }
 
         // block outdated message
-        var until = message.getTimeCreated().toInstant().until(Instant.now(), ChronoUnit.MINUTES);
-        if (until > settings.maxMessageAge()) return false;
+        if (!settings.isFreshMessage(message)) {
+            if (settings.isEmojiDebug()) message.addReaction(EmojiDebug.TOO_OLD).queue();
+            return false;
+        }
 
         // block self vote
         if (Verifier.equalSnowflake(receiver, donor)) {
@@ -121,7 +144,7 @@ public class ReputationService {
                 message.reply(new EmbedBuilder()
                         .setImage(magicImage.magicImageLink())
                         .setColor(Color.RED).build())
-                        .queue(message1 -> message1.delete().queueAfter(
+                        .queue(msg -> msg.delete().queueAfter(
                                 magicImage.magicImageDeleteSchedule(), TimeUnit.SECONDS));
             }
             return false;
@@ -148,13 +171,21 @@ public class ReputationService {
     }
 
     public boolean canVote(User donor, User receiver, Guild guild, GuildSettings settings) {
+        var donorM = guild.getMember(donor);
+        var receiverM = guild.getMember(receiver);
+
+        if (donorM == null || receiverM == null) return false;
+
         // block cooldown
-        var lastRatedDuration = reputationData.getLastRatedDuration(guild, donor, receiver, ChronoUnit.MINUTES);
-        if (lastRatedDuration < settings.cooldown()) return false;
+        var lastRated = reputationData.getLastRatedDuration(guild, donor, receiver, ChronoUnit.MINUTES);
+        if (lastRated < settings.cooldown()) return false;
+
+        if (!settings.hasReceiverRole(receiverM)) return false;
+        if (!settings.hasDonorRole(donorM)) return false;
 
         // block rep4rep
-        var lastRatedEachDuration = reputationData.getLastRatedDuration(guild, receiver, donor, ChronoUnit.MINUTES);
-        return lastRatedEachDuration >= settings.cooldown();
+        lastRated = reputationData.getLastRatedDuration(guild, receiver, donor, ChronoUnit.MINUTES);
+        return lastRated >= settings.cooldown();
     }
 
     public boolean canVote(User donor, User receiver, Guild guild) {

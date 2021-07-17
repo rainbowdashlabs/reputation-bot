@@ -1,5 +1,3 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-
 plugins {
     id("com.github.johnrengelman.shadow") version "7.0.0"
     java
@@ -7,7 +5,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "1.3.1"
+version = "1.4.2"
 
 val log4jVersion = "2.14.0"
 val lombokVersion = "1.18.20"
@@ -24,6 +22,7 @@ dependencies {
     implementation("net.dv8tion", "JDA", "4.2.1_269") {
         exclude(module = "opus-java")
     }
+
     implementation("de.chojo", "cjda-util", "1.5.3-DEV")
 
     // database
@@ -46,7 +45,7 @@ dependencies {
 
     // unit testing
     testImplementation(platform("org.junit:junit-bom:5.7.1"))
-    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("org.junit.jupiter", "junit-jupiter")
 }
 
 
@@ -68,9 +67,11 @@ tasks {
             duplicatesStrategy = DuplicatesStrategy.INCLUDE
         }
     }
+
     compileJava {
         options.encoding = "UTF-8"
     }
+
     javadoc {
         options.encoding = "UTF-8"
     }
@@ -81,7 +82,8 @@ tasks {
             events("passed", "skipped", "failed")
         }
     }
-    named<ShadowJar>("shadowJar") {
+
+    shadowJar{
         mergeServiceFiles()
         manifest {
             attributes(mapOf("Main-Class" to "de.chojo.repbot.ReputationBot"))
