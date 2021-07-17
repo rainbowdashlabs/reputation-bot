@@ -45,7 +45,10 @@ import de.chojo.repbot.service.RoleAssigner;
 import de.chojo.repbot.statistic.Statistic;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.repbot.util.PermissionErrorHandler;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
@@ -63,6 +66,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -132,7 +136,20 @@ public class ReputationBot {
                 .forDiscordBotListCOM(botlist.discordBotlistCom())
                 .forDiscordBotsGG(botlist.discordBotsGg())
                 .forTopGG(botlist.topGg())
+                .forBotlistMe(botlist.botListMe())
                 .withExecutorService(repBotWorker)
+                .withVoteService(builder -> builder
+                        .withVoteWeebhooks("localhost", 8000)
+                        .onVote(voteData -> shardManager
+                                .retrieveUserById(voteData.userId())
+                                .flatMap(User::openPrivateChannel)
+                                .flatMap(channel -> channel.sendMessage("Thanks for voting <3"))
+                                .queue(message -> log.debug("Vote received"),
+                                        err -> ErrorResponseException.ignore(ErrorResponse.UNKNOWN_USER,
+                                                ErrorResponse.CANNOT_SEND_TO_USER))
+                        )
+                        .build()
+                )
                 .build();
     }
 

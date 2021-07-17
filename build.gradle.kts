@@ -23,7 +23,7 @@ dependencies {
         exclude(module = "opus-java")
     }
 
-    implementation("de.chojo", "cjda-util", "1.5.3-DEV")
+    implementation("de.chojo", "cjda-util", "1.5.5-DEV")
 
     // database
     implementation("org.postgresql", "postgresql", "42.2.19")
