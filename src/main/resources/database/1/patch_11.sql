@@ -56,7 +56,6 @@ BEGIN
 END;
 $BODY$;
 
-DROP VIEW IF EXISTS repbot_schema.user_reputation;
 CREATE OR REPLACE VIEW repbot_schema.user_reputation(rank, guild_id, user_id, reputation, donated) AS
 SELECT ROW_NUMBER() OVER (PARTITION BY rank.guild_id ORDER BY rank.reputation DESC) AS rank,
        rank.guild_id,
