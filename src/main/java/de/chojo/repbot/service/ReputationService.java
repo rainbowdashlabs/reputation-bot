@@ -102,27 +102,31 @@ public class ReputationService {
         } else {
             recentMember = contextResolver.getCombinedContext(message, settings);
         }
+
         var recentUser = recentMember.stream()
                 .map(Member::getUser)
                 .collect(Collectors.toSet());
 
+        // Abuse Protection: target context
         if (!recentUser.contains(receiver)) {
             if (settings.isEmojiDebug()) message.addReaction(EmojiDebug.TARGET_NOT_IN_CONTEXT).queue();
             return false;
         }
 
+        // Abuse Protection: donor context
         if (!recentUser.contains(donor)) {
             if (settings.isEmojiDebug()) message.addReaction(EmojiDebug.DONOR_NOT_IN_CONTEXT).queue();
             return false;
         }
 
-
+        // Abuse protection: Cooldown
         if (!canVote(donor, receiver, guild, settings)) {
             if (settings.isEmojiDebug()) message.addReaction(EmojiDebug.ONLY_COOLDOWN).queue();
             return false;
         }
 
         // block outdated ref message
+        // Abuse protection: Message age
         if (refMessage != null) {
             if (!settings.isFreshMessage(refMessage)) {
                 if (settings.isEmojiDebug()) message.addReaction(EmojiDebug.TOO_OLD).queue();
@@ -131,6 +135,7 @@ public class ReputationService {
         }
 
         // block outdated message
+        // Abuse protection: Message age
         if (!settings.isFreshMessage(message)) {
             if (settings.isEmojiDebug()) message.addReaction(EmojiDebug.TOO_OLD).queue();
             return false;
