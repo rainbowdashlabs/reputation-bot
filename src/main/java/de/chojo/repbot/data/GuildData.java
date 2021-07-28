@@ -5,11 +5,7 @@ import de.chojo.repbot.data.wrapper.GuildSettingUpdate;
 import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.data.wrapper.ReputationRole;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
-<<<<<<< Updated upstream
-=======
 import de.chojo.sqlutil.conversion.ArrayConverter;
-import de.chojo.sqlutil.exceptions.ExceptionTransformer;
->>>>>>> Stashed changes
 import de.chojo.sqlutil.wrapper.QueryBuilderConfig;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
