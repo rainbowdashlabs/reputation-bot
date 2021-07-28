@@ -182,13 +182,13 @@ public class GdprData extends QueryFactoryHolder {
         } else if (task.guildId() == 0) {
             builder = builder().query("DELETE FROM reputation_log WHERE receiver_id = ?;")
                     .paramsBuilder(stmt -> stmt.setLong(task.userId()))
-                    .append().query("UPDATE reputation_log SET donor_id = 0 WHERE donor_id = ?;")
+                    .append().query("UPDATE reputation_log SET donor_id = NULL WHERE donor_id = ?;")
                     .paramsBuilder(stmt -> stmt.setLong(task.userId()));
-            log.trace("Removed Data of user user {}", task.userId());
+            log.trace("Removed Data of user {}", task.userId());
         } else {
             builder = builder().query("DELETE FROM reputation_log WHERE guild_id = ? AND receiver_id = ?;")
                     .paramsBuilder(stmt -> stmt.setLong(task.guildId()).setLong(task.userId()))
-                    .append().query("UPDATE reputation_log SET donor_id = 0 WHERE guild_id = ? AND donor_id = ?;")
+                    .append().query("UPDATE reputation_log SET donor_id = NULL WHERE guild_id = ? AND donor_id = ?;")
                     .paramsBuilder(stmt -> stmt.setLong(task.guildId()).setLong(task.userId()));
             log.trace("Removed user reputation from guild {} of user {}", task.guildId(), task.userId());
         }
