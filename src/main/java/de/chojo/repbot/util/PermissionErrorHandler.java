@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import net.dv8tion.jda.internal.utils.PermissionUtil;
 
 public class PermissionErrorHandler {
     public static void handle(InsufficientPermissionException permissionException, ShardManager shardManager,
@@ -46,7 +47,8 @@ public class PermissionErrorHandler {
         } else {
             errorMessage += "\n" + localizer.localize("error.missingPermissionGuild", guild);
         }
-        if (permission != Permission.MESSAGE_WRITE && permission != Permission.VIEW_CHANNEL) {
+        if (permission != Permission.MESSAGE_WRITE && permission != Permission.VIEW_CHANNEL
+                && PermissionUtil.checkPermission(channel, channel.getGuild().getSelfMember(), Permission.MESSAGE_WRITE, Permission.VIEW_CHANNEL)) {
             channel.sendMessage(errorMessage).queue();
             return;
         }
