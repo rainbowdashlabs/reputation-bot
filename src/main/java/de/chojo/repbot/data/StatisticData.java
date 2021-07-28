@@ -1,20 +1,28 @@
 package de.chojo.repbot.data;
 
 import de.chojo.repbot.statistic.element.DataStatistic;
+import de.chojo.repbot.util.LogNotify;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
+import de.chojo.sqlutil.exceptions.ExceptionTransformer;
 import de.chojo.sqlutil.wrapper.QueryBuilderConfig;
+import org.slf4j.Logger;
 
 import javax.sql.DataSource;
 import java.util.Optional;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class StatisticData extends QueryFactoryHolder {
+    private static final Logger log = getLogger(StatisticData.class);
     /**
      * Create a new StatisticData
      *
      * @param dataSource datasource
      */
     public StatisticData(DataSource dataSource) {
-        super(dataSource, QueryBuilderConfig.builder().build());
+        super(dataSource, QueryBuilderConfig.builder().withExceptionHandler(e ->
+                        log.error(LogNotify.NOTIFY_ADMIN, ExceptionTransformer.prettyException("Query execution failed", e), e))
+                .build());
     }
 
     public Optional<DataStatistic> getStatistic() {
