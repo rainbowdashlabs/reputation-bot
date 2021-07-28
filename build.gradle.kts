@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "1.4.2"
+version = "1.4.3"
 
 val log4jVersion = "2.14.0"
 val lombokVersion = "1.18.20"
@@ -19,7 +19,7 @@ repositories {
 
 dependencies {
     // discord
-    implementation("net.dv8tion", "JDA", "4.2.1_269") {
+    implementation("net.dv8tion", "JDA", "4.3.0_299") {
         exclude(module = "opus-java")
     }
 
