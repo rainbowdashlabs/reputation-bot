@@ -1,18 +1,27 @@
 package de.chojo.repbot.data;
 
+import de.chojo.repbot.util.LogNotify;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
+import de.chojo.sqlutil.exceptions.ExceptionTransformer;
 import de.chojo.sqlutil.wrapper.QueryBuilderConfig;
 import de.chojo.sqlutil.wrapper.stage.ResultStage;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
+import org.slf4j.Logger;
 
 import javax.sql.DataSource;
 import java.util.List;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class VoiceData extends QueryFactoryHolder {
+    private static final Logger log = getLogger(VoiceData.class);
+
     public VoiceData(DataSource dataSource) {
-        super(dataSource, QueryBuilderConfig.builder().build());
+        super(dataSource, QueryBuilderConfig.builder().withExceptionHandler(e ->
+                        log.error(LogNotify.NOTIFY_ADMIN, ExceptionTransformer.prettyException("Query execution failed", e), e))
+                .build());
     }
 
     /**
@@ -28,11 +37,11 @@ public class VoiceData extends QueryFactoryHolder {
         for (var user : seen) {
             var otherId = user.getIdLong();
             resultStage = builder.query("""
-                    INSERT INTO voice_activity(relation_key, guild_id, user_id_1, user_id_2) VALUES (?,?,?,?)
-                        ON CONFLICT(relation_key, guild_id)
-                            DO UPDATE
-                                set seen = now()
-                    """)
+                            INSERT INTO voice_activity(relation_key, guild_id, user_id_1, user_id_2) VALUES (?,?,?,?)
+                                ON CONFLICT(relation_key, guild_id)
+                                    DO UPDATE
+                                        SET seen = NOW()
+                            """)
                     .paramsBuilder(stmt -> stmt.setLong(baseId ^ otherId).setLong(source.getGuild().getIdLong())
                             .setLong(baseId).setLong(otherId));
         }
@@ -61,7 +70,7 @@ public class VoiceData extends QueryFactoryHolder {
                          AND (user_id_1 = ?
                             OR user_id_2 = ?
                          )
-                         AND seen > now() - (? || 'minute')::interval
+                         AND seen > NOW() - (? || 'minute')::interval
                         ORDER BY
                             seen DESC
                         LIMIT ?;
@@ -81,7 +90,7 @@ public class VoiceData extends QueryFactoryHolder {
     public void cleanup() {
         builder()
                 .queryWithoutParams("""
-                        DELETE FROM voice_activity WHERE seen < now() - '12 hours'::interval
+                        DELETE FROM voice_activity WHERE seen < NOW() - '12 hours'::interval
                         """)
                 .update().execute();
     }
