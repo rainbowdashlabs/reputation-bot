@@ -1,12 +1,12 @@
 package de.chojo.repbot.data;
 
 import de.chojo.jdautil.localization.util.Language;
-import de.chojo.repbot.data.util.DbUtil;
 import de.chojo.repbot.data.wrapper.GuildSettingUpdate;
 import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.data.wrapper.ReputationRole;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
+import de.chojo.sqlutil.conversion.ArrayConverter;
 import de.chojo.sqlutil.exceptions.ExceptionTransformer;
 import de.chojo.sqlutil.wrapper.QueryBuilderConfig;
 import net.dv8tion.jda.api.entities.Guild;
@@ -64,7 +64,7 @@ public class GuildData extends QueryFactoryHolder {
                 .params(stmt -> stmt.setLong(1, guild.getIdLong()))
                 .readRow(row -> new GuildSettings(guild,
                         row.getString("prefix"),
-                        DbUtil.arrayToArray(row, "thankswords", new String[0]),
+                        ArrayConverter.toArray(row, "thankswords", new String[0]),
                         row.getInt("max_message_age"),
                         row.getInt("min_messages"),
                         row.getString("reaction"),
@@ -72,13 +72,13 @@ public class GuildData extends QueryFactoryHolder {
                         row.getBoolean("answer_active"),
                         row.getBoolean("mention_active"),
                         row.getBoolean("fuzzy_active"),
-                        DbUtil.arrayToArray(row, "active_channels", new Long[0]),
+                        ArrayConverter.toArray(row, "active_channels", new Long[0]),
                         row.getInt("cooldown"),
                         row.getLong("manager_role"),
-                        DbUtil.arrayToArray(row, "reactions", new String[0]),
+                        ArrayConverter.toArray(row, "reactions", new String[0]),
                         row.getBoolean("channel_whitelist"),
-                        DbUtil.arrayToArray(row, "donor_roles", new Long[0]),
-                        DbUtil.arrayToArray(row, "receiver_roles", new Long[0]),
+                        ArrayConverter.toArray(row, "donor_roles", new Long[0]),
+                        ArrayConverter.toArray(row, "receiver_roles", new Long[0]),
                         row.getBoolean("emoji_debug")))
                 .firstSync();
     }
