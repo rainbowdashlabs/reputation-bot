@@ -5,11 +5,14 @@ import de.chojo.repbot.data.util.DbUtil;
 import de.chojo.repbot.data.wrapper.GuildSettingUpdate;
 import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.data.wrapper.ReputationRole;
+import de.chojo.repbot.util.LogNotify;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
+import de.chojo.sqlutil.exceptions.ExceptionTransformer;
 import de.chojo.sqlutil.wrapper.QueryBuilderConfig;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
+import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
 import javax.sql.DataSource;
@@ -18,9 +21,14 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class GuildData extends QueryFactoryHolder {
-    public GuildData(DataSource source) {
-        super(source, QueryBuilderConfig.builder().build());
+    private static final Logger log = getLogger(GuildData.class);
+    public GuildData(DataSource dataSource) {
+        super(dataSource, QueryBuilderConfig.builder().withExceptionHandler(e ->
+                        log.error(LogNotify.NOTIFY_ADMIN, ExceptionTransformer.prettyException("Query execution failed", e), e))
+                .build());
     }
 
     /**
