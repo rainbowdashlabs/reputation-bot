@@ -209,9 +209,14 @@ public class ReputationBot {
                 reactionListener,
                 voteListener,
                 messageListener,
-                stateListener,
                 voiceStateListener,
                 logListener);
+        if (!configuration.migration().isActive()) {
+            shardManager.addEventListener(stateListener);
+        } else {
+            log.error("The bot is running in migration mode!");
+        }
+
         if (configuration.baseSettings().isInternalCommands()) {
             shardManager.addEventListener(new InternalCommandListener(configuration, statistic));
         }

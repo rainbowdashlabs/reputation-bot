@@ -55,6 +55,8 @@ public class StateListener extends ListenerAdapter {
                 break;
             }
         }
+
+        guildData.migrated(event.getGuild());
     }
 
     @Override
