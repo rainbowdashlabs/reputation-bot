@@ -98,7 +98,7 @@ public class SelfCleanupService implements Runnable {
         guild.retrieveMemberById(guild.getOwnerIdLong())
                 .flatMap(member -> member.getUser().openPrivateChannel())
                 .flatMap(privateChannel -> privateChannel.sendMessageEmbeds(embed))
-                .onErrorMap(err ->null)
+                .onErrorMap(err -> null)
                 .complete();
 
         for (var channel : guild.getTextChannels()) {
