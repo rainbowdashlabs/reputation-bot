@@ -7,7 +7,9 @@ import de.chojo.repbot.config.elements.Botlist;
 import de.chojo.repbot.config.elements.Database;
 import de.chojo.repbot.config.elements.Links;
 import de.chojo.repbot.config.elements.MagicImage;
+import de.chojo.repbot.config.elements.Migration;
 import de.chojo.repbot.config.elements.PresenceSettings;
+import de.chojo.repbot.config.elements.SelfCleanup;
 import de.chojo.repbot.config.elements.TestMode;
 
 @SuppressWarnings("FieldMayBeFinal")
@@ -21,6 +23,8 @@ public class ConfigFile {
     private Badges badges = new Badges();
     private Links links = new Links();
     private Botlist botlist = new Botlist();
+    private SelfCleanup selfcleanup = new SelfCleanup();
+    private Migration migration = new Migration();
 
     public BaseSettings baseSettings() {
         return baseSettings;
@@ -29,6 +33,7 @@ public class ConfigFile {
     public PresenceSettings presence() {
         return presenceSettings;
     }
+
     public AnalyzerSettings analyzerSettings() {
         return analyzerSettings;
     }
@@ -55,5 +60,13 @@ public class ConfigFile {
 
     public Botlist botlist() {
         return botlist;
+    }
+
+    public SelfCleanup selfCleanup() {
+        return selfcleanup;
+    }
+
+    public Migration migration() {
+        return migration;
     }
 }

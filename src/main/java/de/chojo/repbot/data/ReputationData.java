@@ -4,7 +4,9 @@ import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.data.wrapper.GuildReputationStats;
 import de.chojo.repbot.data.wrapper.ReputationLogEntry;
 import de.chojo.repbot.data.wrapper.ReputationUser;
+import de.chojo.repbot.util.LogNotify;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
+import de.chojo.sqlutil.exceptions.ExceptionTransformer;
 import de.chojo.sqlutil.wrapper.QueryBuilderConfig;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
@@ -25,8 +27,10 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ReputationData extends QueryFactoryHolder {
     private static final Logger log = getLogger(ReputationData.class);
 
-    public ReputationData(DataSource source) {
-        super(source, QueryBuilderConfig.builder().build());
+    public ReputationData(DataSource dataSource) {
+        super(dataSource, QueryBuilderConfig.builder().withExceptionHandler(e ->
+                        log.error(LogNotify.NOTIFY_ADMIN, ExceptionTransformer.prettyException("Query execution failed", e), e))
+                .build());
     }
 
     /**

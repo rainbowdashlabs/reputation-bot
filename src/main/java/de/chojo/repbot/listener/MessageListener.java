@@ -10,7 +10,9 @@ import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;
 import de.chojo.repbot.service.RepBotCachePolicy;
 import de.chojo.repbot.service.ReputationService;
+import de.chojo.repbot.util.Colors;
 import de.chojo.repbot.util.EmojiDebug;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageBulkDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
@@ -88,6 +90,23 @@ public class MessageListener extends ListenerAdapter {
         var analyzerResult = messageAnalyzer.processMessage(settings.thankwordPattern(), message, settings, true, 3);
 
         if (analyzerResult.type() == ThankType.NO_MATCH) return;
+
+        if (configuration.migration().isActive()) {
+            var activeMigrations = guildData.getActiveMigrations(configuration.migration().maxMigrationsPeriod());
+            if (activeMigrations < configuration.migration().maxMigrations()) {
+                guildData.promptMigration(event.getGuild());
+            }
+            if (guildData.migrationActive(event.getGuild())) {
+                var embed = new EmbedBuilder()
+                        .setTitle("⚠ Please migrate to the new version ⚠", configuration.links().invite())
+                        .setDescription(configuration.migration().migrationMessage())
+                        .setAuthor("→ Click here to invite the new bot instance ←", configuration.links().invite())
+                        .setColor(Colors.Strong.RED)
+                        .build();
+                event.getChannel().sendMessageEmbeds(embed).queue();
+            }
+            return;
+        }
 
         if (settings.isEmojiDebug()) event.getMessage().addReaction(EmojiDebug.FOUND_THANKWORD).queue();
 

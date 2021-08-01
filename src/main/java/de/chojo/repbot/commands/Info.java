@@ -30,6 +30,7 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -107,6 +108,7 @@ public class Info extends SimpleCommand {
                 .addField("command.info.art", ART, true)
                 .addField("command.info.source", SOURCE, true)
                 .addField("command.info.version", version, true)
+                .addField("command.info.supportMe", getVoting(eventWrapper.getGuild()), true)
                 .addField("", "**" + getLinks(eventWrapper.getGuild()) + "**", false)
                 .setColor(Colors.Pastel.BLUE)
                 .build();
@@ -127,6 +129,22 @@ public class Info extends SimpleCommand {
         return localizer.localize("words.link", guild,
                 Replacement.create("TARGET", String.format("$%s$", target)),
                 Replacement.create("URL", url));
+    }
+
+    private String getUntranslatedLink(Guild guild, String target, String url) {
+        return localizer.localize("words.link", guild,
+                Replacement.create("TARGET", target),
+                Replacement.create("URL", url));
+    }
+
+    private String getVoting(Guild guild) {
+        List<String> voteLinks = new ArrayList<>();
+
+        for (var botlist : configuration.botlist().botlists()) {
+            if (botlist.voteUrl().isEmpty()) continue;
+            voteLinks.add(getUntranslatedLink(guild, botlist.name(), botlist.profileUrl() + "?ref=repbot"));
+        }
+        return String.join(" ᠅ ", voteLinks);
     }
 
 

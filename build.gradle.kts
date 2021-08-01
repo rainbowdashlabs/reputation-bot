@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "1.4.2"
+version = "1.4.3"
 
 val log4jVersion = "2.14.0"
 val lombokVersion = "1.18.20"
@@ -19,10 +19,11 @@ repositories {
 
 dependencies {
     // discord
-    implementation("net.dv8tion", "JDA", "4.2.1_269") {
+    implementation("net.dv8tion", "JDA", "4.3.0_299") {
         exclude(module = "opus-java")
     }
-    implementation("de.chojo", "cjda-util", "1.5.1-DEV")
+
+    implementation("de.chojo", "cjda-util", "1.5.5-DEV")
 
     // database
     implementation("org.postgresql", "postgresql", "42.2.19")
@@ -39,7 +40,7 @@ dependencies {
 
     // utils
     implementation("org.apache.commons", "commons-lang3", "3.12.0")
-    implementation("de.chojo", "sql-util", "1.0.1")
+    implementation("de.chojo", "sql-util", "1.0.4")
     implementation("com.google.guava","guava","30.1.1-jre")
 
     // unit testing
