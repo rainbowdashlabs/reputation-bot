@@ -50,7 +50,7 @@ public class StateListener extends ListenerAdapter {
         var selfMember = event.getGuild().getSelfMember();
         for (var channel : event.getGuild().getTextChannels()) {
             if (selfMember.hasPermission(channel, Permission.VIEW_CHANNEL)
-                    && selfMember.hasPermission(channel, Permission.MESSAGE_WRITE)) {
+                && selfMember.hasPermission(channel, Permission.MESSAGE_WRITE)) {
                 channel.sendMessage(localizer.localize("message.welcome", event.getGuild())).queue();
                 break;
             }
@@ -61,7 +61,9 @@ public class StateListener extends ListenerAdapter {
 
     @Override
     public void onGuildLeave(@NotNull GuildLeaveEvent event) {
-        gdprData.queueGuildDeletion(event.getGuild());
+        if (!configuration.migration().isActive()) {
+            gdprData.queueGuildDeletion(event.getGuild());
+        }
     }
 
     @Override
