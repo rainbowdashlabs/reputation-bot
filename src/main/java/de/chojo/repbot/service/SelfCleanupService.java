@@ -13,6 +13,9 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import org.slf4j.Logger;
 
 import javax.sql.DataSource;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -45,7 +48,10 @@ public class SelfCleanupService implements Runnable {
 
         for (var guild : shardManager.getGuilds()) {
             var optGuildSettings = guildData.getGuildSettings(guild);
-            if (optGuildSettings.isEmpty()) continue;
+            if (optGuildSettings.isEmpty()) {
+                promptCleanup(guild);
+                continue;
+            }
             var settings = optGuildSettings.get();
             if (settings.activeChannel().isEmpty() && settings.isChannelWhitelist()) {
                 promptCleanup(guild);
@@ -62,9 +68,13 @@ public class SelfCleanupService implements Runnable {
 
     private void promptCleanup(Guild guild) {
         var selfMember = guild.getSelfMember();
-        if (selfMember.getTimeJoined().isAfter(configuration.selfCleanup().getPromptDaysOffset())) return;
         if (configuration.botlist().isBotlistGuild(guild.getIdLong())) return;
         if (guildData.getCleanupPromptTime(guild).isPresent()) return;
+        if (selfMember.getTimeJoined().isAfter(configuration.selfCleanup().getPromptDaysOffset())) {
+            log.debug("Bot is unconfigured for {} days",
+                    Math.abs(Duration.between(selfMember.getTimeJoined(), LocalDateTime.now().atZone(ZoneOffset.UTC)).toDays()));
+            return;
+        }
         guildData.selfCleanupPrompt(guild);
 
         var embed = new LocalizedEmbedBuilder(localizer, guild)
@@ -78,8 +88,11 @@ public class SelfCleanupService implements Runnable {
     }
 
     private void notifyCleanup(Guild guild) {
-        if (guildData.getCleanupPromptTime(guild).get().isAfter(configuration.selfCleanup().getLeaveDaysOffset()))
+        if (guildData.getCleanupPromptTime(guild).get().isAfter(configuration.selfCleanup().getLeaveDaysOffset())){
+            log.debug("Prompt was send {} days ago",
+                    Math.abs(Duration.between(guildData.getCleanupPromptTime(guild).get(), LocalDateTime.now().atZone(ZoneOffset.UTC)).toDays()));
             return;
+        }
 
         var embed = new LocalizedEmbedBuilder(localizer, guild)
                 .setTitle("selfCleanup.leave.title")

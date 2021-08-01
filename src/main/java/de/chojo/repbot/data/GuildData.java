@@ -476,14 +476,6 @@ public class GuildData extends QueryFactoryHolder {
                 .update().executeSync();
     }
 
-    public void promptMigration(Guild guild) {
-        builder().query("""
-                        INSERT INTO migrations(guild_id) VALUES(?) ON CONFLICT DO NOTHING
-                        """)
-                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
-                .update().executeSync();
-    }
-
     public Optional<LocalDateTime> getCleanupPromptTime(Guild guild) {
         return builder(LocalDateTime.class)
                 .query("""
@@ -506,6 +498,14 @@ public class GuildData extends QueryFactoryHolder {
     public void cleanupDone(Guild guild) {
         builder(Boolean.class).query("""
                                 DELETE FROM self_cleanup WHERE guild_id = ?
+                        """)
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
+                .update().executeSync();
+    }
+
+    public void promptMigration(Guild guild) {
+        builder().query("""
+                        INSERT INTO migrations(guild_id) VALUES(?) ON CONFLICT DO NOTHING
                         """)
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
                 .update().executeSync();
