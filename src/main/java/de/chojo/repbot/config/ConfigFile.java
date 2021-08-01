@@ -7,6 +7,7 @@ import de.chojo.repbot.config.elements.Botlist;
 import de.chojo.repbot.config.elements.Database;
 import de.chojo.repbot.config.elements.Links;
 import de.chojo.repbot.config.elements.MagicImage;
+import de.chojo.repbot.config.elements.Migration;
 import de.chojo.repbot.config.elements.PresenceSettings;
 import de.chojo.repbot.config.elements.TestMode;
 
@@ -21,6 +22,7 @@ public class ConfigFile {
     private Badges badges = new Badges();
     private Links links = new Links();
     private Botlist botlist = new Botlist();
+    private Migration migration = new Migration();
 
     public BaseSettings baseSettings() {
         return baseSettings;
@@ -55,5 +57,9 @@ public class ConfigFile {
 
     public Botlist botlist() {
         return botlist;
+    }
+
+    public Migration migration() {
+        return migration;
     }
 }

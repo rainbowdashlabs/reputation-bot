@@ -12,6 +12,7 @@ import de.chojo.repbot.config.elements.Botlist;
 import de.chojo.repbot.config.elements.Database;
 import de.chojo.repbot.config.elements.Links;
 import de.chojo.repbot.config.elements.MagicImage;
+import de.chojo.repbot.config.elements.Migration;
 import de.chojo.repbot.config.elements.PresenceSettings;
 import de.chojo.repbot.config.elements.TestMode;
 import de.chojo.repbot.config.exception.ConfigurationException;
@@ -120,5 +121,9 @@ public class Configuration {
 
     public PresenceSettings presence() {
         return configFile.presence();
+    }
+
+    public Migration migration() {
+        return configFile.migration();
     }
 }
