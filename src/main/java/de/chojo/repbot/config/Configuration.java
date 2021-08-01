@@ -13,6 +13,7 @@ import de.chojo.repbot.config.elements.Database;
 import de.chojo.repbot.config.elements.Links;
 import de.chojo.repbot.config.elements.MagicImage;
 import de.chojo.repbot.config.elements.PresenceSettings;
+import de.chojo.repbot.config.elements.SelfCleanup;
 import de.chojo.repbot.config.elements.TestMode;
 import de.chojo.repbot.config.exception.ConfigurationException;
 import org.slf4j.Logger;
@@ -33,6 +34,7 @@ public class Configuration {
     private Configuration() {
         objectMapper = new ObjectMapper()
                 .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
+                .setVisibility(PropertyAccessor.GETTER, JsonAutoDetect.Visibility.NONE)
                 .setDefaultPrettyPrinter(new DefaultPrettyPrinter())
                 .configure(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS, true);
     }
@@ -53,7 +55,7 @@ public class Configuration {
         try {
             save();
         } catch (IOException e) {
-            log.error("Could not save config.");
+            log.error("Could not save config.", e);
         }
     }
 
@@ -120,5 +122,9 @@ public class Configuration {
 
     public PresenceSettings presence() {
         return configFile.presence();
+    }
+
+    public SelfCleanup selfCleanup() {
+        return configFile.selfCleanup();
     }
 }

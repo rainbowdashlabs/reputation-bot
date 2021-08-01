@@ -34,6 +34,7 @@ import de.chojo.repbot.listener.InternalCommandListener;
 import de.chojo.repbot.listener.LogListener;
 import de.chojo.repbot.listener.MessageListener;
 import de.chojo.repbot.listener.ReactionListener;
+import de.chojo.repbot.listener.SelfCleanupService;
 import de.chojo.repbot.listener.StateListener;
 import de.chojo.repbot.listener.VoiceStateListener;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;
@@ -195,6 +196,7 @@ public class ReputationBot {
         var roleAssigner = new RoleAssigner(dataSource);
         var reputationService = new ReputationService(dataSource, contextResolver, roleAssigner, configuration.magicImage(), localizer);
         var gdprService = GdprService.of(shardManager, dataSource, repBotWorker);
+        SelfCleanupService.create(shardManager, localizer, dataSource, configuration, repBotWorker);
 
         // init listener and services
         var reactionListener = new ReactionListener(dataSource, localizer, reputationService, configuration);
@@ -212,6 +214,7 @@ public class ReputationBot {
                 stateListener,
                 voiceStateListener,
                 logListener);
+
         if (configuration.baseSettings().isInternalCommands()) {
             shardManager.addEventListener(new InternalCommandListener(configuration, statistic));
         }
