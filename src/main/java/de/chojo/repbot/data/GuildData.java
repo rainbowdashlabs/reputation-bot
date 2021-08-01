@@ -476,9 +476,18 @@ public class GuildData extends QueryFactoryHolder {
                 .update().executeSync();
     }
 
+    public void promptMigration(Guild guild) {
+        builder().query("""
+                        INSERT INTO migrations(guild_id) VALUES(?) ON CONFLICT DO NOTHING
+                        """)
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
+                .update().executeSync();
+    }
+
     public Optional<LocalDateTime> getCleanupPromptTime(Guild guild) {
-        return builder(LocalDateTime.class).query("""
-                                SELECT prompted FROM self_cleanup WHERE guild_id = ?
+        return builder(LocalDateTime.class)
+                .query("""
+                        SELECT prompted FROM self_cleanup WHERE guild_id = ?
                         """)
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
                 .readRow(rs -> rs.getTimestamp("prompted").toLocalDateTime())
@@ -500,5 +509,31 @@ public class GuildData extends QueryFactoryHolder {
                         """)
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
                 .update().executeSync();
+    }
+
+    public boolean migrationActive(Guild guild) {
+        return builder(Boolean.class).query("""
+                        SELECT EXISTS(SELECT 1 FROM migrations WHERE guild_id = ?) AS exists
+                        """)
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
+                .readRow(rs -> rs.getBoolean("exists"))
+                .firstSync().get();
+    }
+
+    public int getActiveMigrations(int days) {
+        return builder(Integer.class).query("""
+                        SELECT COUNT(1) FROM migrations WHERE prompted > NOW() - ?::interval
+                        """)
+                .paramsBuilder(stmt -> stmt.setString(days + "days"))
+                .readRow(rs -> rs.getInt("count"))
+                .firstSync().get();
+    }
+
+    public void migrated(Guild guild) {
+        builder(Integer.class).query("""
+                        UPDATE migrations SET migrated = NOW() WHERE guild_id = ?
+                        """)
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
+                .update().execute();
     }
 }

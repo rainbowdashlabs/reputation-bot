@@ -55,11 +55,15 @@ public class StateListener extends ListenerAdapter {
                 break;
             }
         }
+
+        guildData.migrated(event.getGuild());
     }
 
     @Override
     public void onGuildLeave(@NotNull GuildLeaveEvent event) {
-        gdprData.queueGuildDeletion(event.getGuild());
+        if (!configuration.migration().isActive()) {
+            gdprData.queueGuildDeletion(event.getGuild());
+        }
     }
 
     @Override
