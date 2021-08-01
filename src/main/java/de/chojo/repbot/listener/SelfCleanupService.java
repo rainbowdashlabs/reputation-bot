@@ -63,6 +63,7 @@ public class SelfCleanupService implements Runnable {
     private void promptCleanup(Guild guild) {
         var selfMember = guild.getSelfMember();
         if (selfMember.getTimeJoined().isAfter(configuration.selfCleanup().getPromptDaysOffset())) return;
+        if (configuration.botlist().isBotlistGuild(guild.getOwnerIdLong())) return;
         if (guildData.getCleanupPromptTime(guild).isPresent()) return;
         guildData.selfCleanupPrompt(guild);
 
