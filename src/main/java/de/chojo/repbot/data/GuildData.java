@@ -18,6 +18,7 @@ import javax.annotation.Nullable;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -467,9 +468,44 @@ public class GuildData extends QueryFactoryHolder {
                 .executeSync();
     }
 
+    public void selfCleanupPrompt(Guild guild) {
+        builder().query("""
+                        INSERT INTO self_cleanup(guild_id) VALUES(?)
+                        """)
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
+                .update().executeSync();
+    }
+
     public void promptMigration(Guild guild) {
         builder().query("""
                         INSERT INTO migrations(guild_id) VALUES(?) ON CONFLICT DO NOTHING
+                        """)
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
+                .update().executeSync();
+    }
+
+    public Optional<LocalDateTime> getCleanupPromptTime(Guild guild) {
+        return builder(LocalDateTime.class)
+                .query("""
+                        SELECT prompted FROM self_cleanup WHERE guild_id = ?
+                        """)
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
+                .readRow(rs -> rs.getTimestamp("prompted").toLocalDateTime())
+                .firstSync();
+    }
+
+    public List<Long> getCleanupList() {
+        return builder(Long.class)
+                .queryWithoutParams("""
+                                    SELECT guild_id FROM self_cleanup;
+                        """)
+                .readRow(stmt -> stmt.getLong("guild_id"))
+                .allSync();
+    }
+
+    public void cleanupDone(Guild guild) {
+        builder(Boolean.class).query("""
+                                DELETE FROM self_cleanup WHERE guild_id = ?
                         """)
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
                 .update().executeSync();
