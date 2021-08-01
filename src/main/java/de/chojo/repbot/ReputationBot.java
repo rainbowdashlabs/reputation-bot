@@ -34,7 +34,7 @@ import de.chojo.repbot.listener.InternalCommandListener;
 import de.chojo.repbot.listener.LogListener;
 import de.chojo.repbot.listener.MessageListener;
 import de.chojo.repbot.listener.ReactionListener;
-import de.chojo.repbot.listener.SelfCleanupService;
+import de.chojo.repbot.service.SelfCleanupService;
 import de.chojo.repbot.listener.StateListener;
 import de.chojo.repbot.listener.VoiceStateListener;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;

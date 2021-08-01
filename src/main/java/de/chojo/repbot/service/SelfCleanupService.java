@@ -1,4 +1,4 @@
-package de.chojo.repbot.listener;
+package de.chojo.repbot.service;
 
 import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
