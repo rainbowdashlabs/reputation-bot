@@ -392,6 +392,9 @@ public class GuildData extends QueryFactoryHolder {
         builder()
                 .query("INSERT INTO message_settings(guild_id) VALUES (?) ON CONFLICT DO NOTHING;")
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
+                .append()
+                .query("INSERT INTO guild_bot_settings(guild_id) VALUES(?) ON CONFLICT DO NOTHING")
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
                 .update().executeSync();
     }
 
