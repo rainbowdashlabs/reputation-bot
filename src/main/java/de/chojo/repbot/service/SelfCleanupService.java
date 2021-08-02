@@ -88,7 +88,7 @@ public class SelfCleanupService implements Runnable {
     }
 
     private void notifyCleanup(Guild guild) {
-        if (guildData.getCleanupPromptTime(guild).get().isAfter(configuration.selfCleanup().getLeaveDaysOffset())){
+        if (guildData.getCleanupPromptTime(guild).get().isAfter(configuration.selfCleanup().getLeaveDaysOffset())) {
             log.debug("Prompt was send {} days ago",
                     Math.abs(Duration.between(guildData.getCleanupPromptTime(guild).get(), LocalDateTime.now().atZone(ZoneOffset.UTC)).toDays()));
             return;

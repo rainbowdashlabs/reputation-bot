@@ -104,8 +104,8 @@ public class MessageListener extends ListenerAdapter {
                         .setColor(Colors.Strong.RED)
                         .build();
                 event.getChannel().sendMessageEmbeds(embed).queue();
+                return;
             }
-            return;
         }
 
         if (settings.isEmojiDebug()) event.getMessage().addReaction(EmojiDebug.FOUND_THANKWORD).queue();
