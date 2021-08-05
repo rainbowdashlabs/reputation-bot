@@ -4,6 +4,7 @@ import club.minnced.discord.webhook.WebhookClient;
 import club.minnced.discord.webhook.WebhookClientBuilder;
 import club.minnced.discord.webhook.send.WebhookEmbed;
 import club.minnced.discord.webhook.send.WebhookEmbedBuilder;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import okhttp3.OkHttpClient;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -137,32 +138,39 @@ public final class DiscordWebhookAppender extends AbstractAppender {
 
     @Override
     public void append(LogEvent logEvent) {
+        var source = logEvent.getSource();
         // TODO: this shit seems to cause recursive logging calls
+        var title = logEvent.getLevel().name();
         var eb = new WebhookEmbedBuilder()
-                .setTitle(new WebhookEmbed.EmbedTitle(logEvent.getLevel().name(), null))
+                .setTitle(new WebhookEmbed.EmbedTitle(title, null))
                 .setTimestamp(Instant.ofEpochMilli(logEvent.getInstant().getEpochMillisecond()))
                 .setColor(resolveColor(logEvent.getLevel()).getRGB())
                 .setFooter(new WebhookEmbed.EmbedFooter(
-                        logEvent.getLoggerName() + "@" + logEvent.getThreadName(), null));
+                        source.getFileName() + "#" + source.getMethodName() + ":" + source.getLineNumber() + "@" + logEvent.getThreadName() + "-" + logEvent.getThreadId(), null));
 
-        var desc = StringUtils.abbreviate(logEvent.getMessage().getFormattedMessage(), MAX_CONTENT_LENGTH);
+        var descr = StringUtils.abbreviate(logEvent.getMessage().getFormattedMessage(), MAX_CONTENT_LENGTH);
+        eb.setDescription(descr);
 
         // append throwable if attached
         var throwable = logEvent.getThrown();
         if (throwable != null) {
-            var remainingCharacters = MAX_CONTENT_LENGTH - desc.length();
-
             // the linebreaks and code blocks also require some characters (we hardcode this value)
-            remainingCharacters -= "\n\n``````".length();
-
-            if (remainingCharacters > 0) {
-                var exceptionText = ExceptionUtils.getStackTrace(throwable);
-                var abbrev = StringUtils.abbreviate(exceptionText, remainingCharacters - 3);
-                desc += String.format("\n\n```%s```", abbrev);
+            var lineChars = "\n\nst``````".length();
+            var strippedException = StringUtils.strip(ExceptionUtils.getStackTrace(throwable));
+            var chunks = strippedException.split("Caused by:");
+            var exceptionLength = strippedException.length() + chunks.length * lineChars;
+            var embedLenght = MessageEmbed.EMBED_MAX_LENGTH_BOT - descr.length() - title.length();
+            var abbreviate = exceptionLength >= embedLenght;
+            var abbreviateChars = Math.abs(MessageEmbed.EMBED_MAX_LENGTH_BOT - (exceptionLength + embedLenght)) / chunks.length;
+            var first = true;
+            for (var chunk : chunks) {
+                var fieldTitle = first ? throwable.getClass().getSimpleName() : "Caused by";
+                var text = abbreviate ? StringUtils.abbreviate(chunk, "...", abbreviateChars - 3) : chunk;
+                text = String.format("```st%n%s%n```", text);
+                eb.addField(new WebhookEmbed.EmbedField(false, fieldTitle, text));
+                first = false;
             }
         }
-
-        eb.setDescription(desc);
 
         // add to buffer
         add(eb.build());

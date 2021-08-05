@@ -102,6 +102,7 @@ public class LogListener extends ListenerAdapter implements Runnable {
                 })
                 .filter(Objects::nonNull)
                 .collect(Collectors.joining("\n"));
+        if(message.isBlank()) return;
 
         log.warn(LogNotify.NOTIFY_ADMIN, message);
     }
