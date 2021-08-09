@@ -103,6 +103,7 @@ public class SelfCleanupService implements Runnable {
         notifyGuild(guild, embed);
         guild.leave().queue();
         log.info(LogNotify.STATUS, "Left guild caused by self cleanup.");
+        guildData.cleanupDone(guild);
     }
 
 
