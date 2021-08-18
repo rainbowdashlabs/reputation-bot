@@ -10,8 +10,10 @@ import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
+import de.chojo.repbot.util.PermissionErrorHandler;
 import de.chojo.repbot.util.TextGenerator;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.ChannelType;
@@ -56,9 +58,10 @@ public class Scan extends SimpleCommand {
     private final Set<Long> cancel = new HashSet<>();
     private final Queue<ScanProcess> finished = new ArrayDeque<>();
     private final Queue<ScanProcess> canceled = new ArrayDeque<>();
-    private final MessageAnalyzer messageAnalyzer;
+    private MessageAnalyzer messageAnalyzer;
+    private final Configuration configuration;
 
-    public Scan(DataSource dataSource, MessageAnalyzer messageAnalyzer, Localizer localizer) {
+    public Scan(DataSource dataSource, Localizer localizer, Configuration configuration) {
         super("scan",
                 null,
                 "command.scan.description",
@@ -74,12 +77,12 @@ public class Scan extends SimpleCommand {
         guildData = new GuildData(dataSource);
         reputationData = new ReputationData(dataSource);
         loc = localizer;
+        this.configuration = configuration;
         executorService.scheduleAtFixedRate(() -> {
             Thread.currentThread().setName("Scan Backsync");
             finishTasks();
             finishCanceledTasks();
         }, 1, 1, TimeUnit.SECONDS);
-        this.messageAnalyzer = messageAnalyzer;
     }
 
     @Override
@@ -246,7 +249,7 @@ public class Scan extends SimpleCommand {
                         Replacement.create("SCANNED", scan.scanned()),
                         Replacement.create("HITS", scan.hits())))
                 .build();
-        scan.resultChannel().sendMessage(embed).reference(scan.progressMessage()).queue();
+        scan.resultChannel().sendMessageEmbeds(embed).reference(scan.progressMessage()).queue();
     }
 
     private void finishCanceledTasks() {
@@ -259,7 +262,7 @@ public class Scan extends SimpleCommand {
                         Replacement.create("SCANNED", scan.scanned()),
                         Replacement.create("HITS", scan.hits())))
                 .build();
-        scan.resultChannel().sendMessage(embed).reference(scan.progressMessage()).queue();
+        scan.resultChannel().sendMessageEmbeds(embed).reference(scan.progressMessage()).queue();
     }
 
     public boolean isRunning(Guild guild) {
@@ -274,6 +277,10 @@ public class Scan extends SimpleCommand {
     public void finishScan(ScanProcess scanProcess) {
         activeScans.remove(scanProcess.guild().getIdLong());
         finished.add(scanProcess);
+    }
+
+    public void lateInit(MessageAnalyzer messageAnalyzer) {
+        this.messageAnalyzer = messageAnalyzer;
     }
 
     private static class ScanProcess {

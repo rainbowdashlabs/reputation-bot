@@ -34,7 +34,7 @@ public class MessageAnalyzer {
             .maximumSize(100000)
             .build();
     private final Configuration configuration;
-    private Statistic statistic;
+    private final Statistic statistic;
 
     public MessageAnalyzer(ContextResolver resolver, Configuration configuration, Statistic statistic) {
         contextResolver = resolver;
@@ -54,7 +54,7 @@ public class MessageAnalyzer {
      * @param limit        limit for returned matches in the analyzer result
      * @return analyzer results
      */
-    public AnalyzerResult processMessage(Pattern pattern, Message message, @Nullable GuildSettings settings, boolean limitTargets, int limit) {
+    public AnalyzerResult processMessage(Pattern pattern, @NotNull Message message, @Nullable GuildSettings settings, boolean limitTargets, int limit) {
         try {
             return resultCache.get(message.getIdLong(), () -> analyze(pattern, message, settings, limitTargets, limit));
         } catch (ExecutionException e) {
@@ -64,7 +64,7 @@ public class MessageAnalyzer {
     }
 
     private AnalyzerResult analyze(Pattern pattern, Message message, @Nullable GuildSettings settings, boolean limitTargets, int limit) {
-        statistic.messageAnalyzed(settings.guild().getJDA());
+        statistic.messageAnalyzed(message.getJDA());
         if (pattern.pattern().isBlank()) return AnalyzerResult.noMatch();
         var contentRaw = message.getContentRaw();
 

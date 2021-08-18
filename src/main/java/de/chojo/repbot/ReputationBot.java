@@ -191,6 +191,7 @@ public class ReputationBot {
         messageAnalyzer = new MessageAnalyzer(contextResolver, configuration, statistic);
 
         PresenceService.start(shardManager, configuration, statistic, repBotWorker);
+        scan.lateInit(messageAnalyzer);
 
         // init services
         var roleAssigner = new RoleAssigner(dataSource);
@@ -288,7 +289,7 @@ public class ReputationBot {
     }
 
     private void initJDA() throws LoginException {
-        scan = new Scan(dataSource, messageAnalyzer, localizer);
+        scan = new Scan(dataSource, localizer, configuration);
         repBotCachePolicy = new RepBotCachePolicy(scan);
         shardManager = DefaultShardManagerBuilder.createDefault(configuration.baseSettings().token())
                 .enableIntents(
