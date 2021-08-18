@@ -179,7 +179,7 @@ public class Scan extends SimpleCommand {
             }
             if (event.getOption("channel") != null) {
                 var guildChannel = event.getOption("channel").getAsGuildChannel();
-                if (guildChannel.getType() == ChannelType.TEXT) {
+                if (guildChannel.getType() != ChannelType.TEXT) {
                     event.reply(loc.localize("error.invalidChannel")).queue();
                     return;
                 }
