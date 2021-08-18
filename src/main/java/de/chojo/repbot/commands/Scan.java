@@ -188,17 +188,26 @@ public class Scan extends SimpleCommand {
                 }
                 channel = (TextChannel) guildChannel;
             }
+
             scanChannel(event, channel, Math.max(messages, 0));
         }
     }
 
     private void scanChannel(MessageEventWrapper eventWrapper, TextChannel channel, int messageCount) {
+        if (PermissionErrorHandler.assertAndHandle(channel, loc, configuration,
+                Permission.MESSAGE_WRITE, Permission.MESSAGE_READ, Permission.VIEW_CHANNEL, Permission.MESSAGE_HISTORY)) {
+            return;
+        }
         var duration = DurationFormatUtils.formatDuration((long) messageCount / 100 * INTERVAL_MS, "mm:ss");
         eventWrapper.reply(eventWrapper.localize("command.scan.scheduling", Replacement.create("DURATION", duration))).queue();
         preSchedule(channel, messageCount);
     }
 
     private void scanChannel(SlashCommandEvent event, TextChannel channel, int messageCount) {
+        if (PermissionErrorHandler.assertAndHandle(channel, loc, configuration,
+                Permission.MESSAGE_WRITE, Permission.MESSAGE_READ, Permission.VIEW_CHANNEL, Permission.MESSAGE_HISTORY)) {
+            return;
+        }
         var duration = DurationFormatUtils.formatDuration((long) messageCount / 100 * INTERVAL_MS, "mm:ss");
         event.reply(loc.localize("command.scan.scheduling", event.getGuild(), Replacement.create("DURATION", duration))).queue();
         preSchedule(channel, messageCount);
