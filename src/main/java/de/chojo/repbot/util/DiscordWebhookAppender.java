@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 
 import static net.dv8tion.jda.api.entities.Message.MAX_CONTENT_LENGTH;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -41,6 +42,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public final class DiscordWebhookAppender extends AbstractAppender {
     private static final Logger log = getLogger(DiscordWebhookAppender.class);
     private static final int FLUSH_INTERVAL = 5 * 1000; // TODO: make configurable
+    private static final Pattern CLEANER = Pattern.compile("^\\s*", Pattern.MULTILINE);
 
     private static final int MAX_EMBED = 10; // discord allows up to 10 embeds per call
     private static final int MAX_EMBED_CHARS = 6000;
@@ -160,9 +162,10 @@ public final class DiscordWebhookAppender extends AbstractAppender {
         if (throwable != null) {
             // the linebreaks and code blocks also require some characters (we hardcode this value)
             var lineChars = "\n\nst``````".length();
-            var strippedException = StringUtils.strip(ExceptionUtils.getStackTrace(throwable)).replaceAll("^\s+?", "");
+            var strippedException = StringUtils.strip(ExceptionUtils.getStackTrace(throwable));
+            strippedException = CLEANER.matcher(strippedException).replaceAll("");
             // split exceptions on causes
-            var chunks = strippedException.split("Caused by:");
+            var chunks = strippedException.split("Caused by: ");
             var chunkLength = chunks.length * (lineChars + "Caused by:".length() + 10);
             // calc the total exception length with line breaks
             var exceptionLength = strippedException.length() + chunkLength;
@@ -179,7 +182,7 @@ public final class DiscordWebhookAppender extends AbstractAppender {
             var first = true;
             for (var chunk : chunks) {
                 var fieldTitle = first ? throwable.getClass().getSimpleName() : "Caused by";
-                var text = StringUtils.abbreviate(chunk, abbreviateChars);
+                var text = StringUtils.abbreviate(chunk, abbreviateChars - lineChars);
                 text = String.format("```st%n%s%n```", text);
                 eb.addField(new WebhookEmbed.EmbedField(false, fieldTitle, text));
                 first = false;
