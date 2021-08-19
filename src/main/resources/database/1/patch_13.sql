@@ -1,13 +1,13 @@
 CREATE TABLE IF NOT EXISTS repbot_schema.abuse_protection
 (
-    guild_id        BIGINT               NOT NULL
+    guild_id         BIGINT               NOT NULL
         CONSTRAINT abuse_protection_pk
             PRIMARY KEY,
-    min_messages    INTEGER DEFAULT 10   NOT NULL,
-    max_message_age INTEGER DEFAULT 30   NOT NULL,
-    target_context  BOOLEAN DEFAULT TRUE NOT NULL,
-    donor_context   BOOLEAN DEFAULT TRUE NOT NULL,
-    cooldown        INTEGER DEFAULT 30   NOT NULL
+    min_messages     INTEGER DEFAULT 10   NOT NULL,
+    max_message_age  INTEGER DEFAULT 30   NOT NULL,
+    receiver_context BOOLEAN DEFAULT TRUE NOT NULL,
+    donor_context    BOOLEAN DEFAULT TRUE NOT NULL,
+    cooldown         INTEGER DEFAULT 30   NOT NULL
 );
 
 INSERT INTO repbot_schema.abuse_protection(
@@ -40,7 +40,7 @@ CREATE TABLE repbot_schema.thank_settings
 );
 
 INSERT INTO repbot_schema.thank_settings(
-    SELECT m.guild_id, m.reaction, coalesce(s.channel_whitelist, TRUE)
+    SELECT m.guild_id, m.reaction, COALESCE(s.channel_whitelist, TRUE)
     FROM repbot_schema.message_settings m
              LEFT JOIN repbot_schema.guild_settings s ON m.guild_id = s.guild_id
 );
