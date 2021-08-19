@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "1.4.3"
+version = "1.5.0"
 
 val log4jVersion = "2.14.0"
 val lombokVersion = "1.18.20"
