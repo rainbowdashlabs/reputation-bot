@@ -49,6 +49,9 @@ public class RepSettings extends SimpleCommand {
                         .add("fuzzy", "command.repSettings.sub.fuzzy", argsBuilder()
                                 .add(OptionType.BOOLEAN, "fuzzy", "fuzzy").build()
                         )
+                        .add("embed", "command.repSettings.sub.embed", argsBuilder()
+                                .add(OptionType.BOOLEAN, "embed", "embed").build()
+                        )
                         .add("emojidebug", "command.repSettings.sub.emojidebug", argsBuilder()
                                 .add(OptionType.BOOLEAN, "active", "active")
                                 .build()
@@ -87,6 +90,10 @@ public class RepSettings extends SimpleCommand {
             return fuzzy(eventWrapper, context.subContext(subcmd), guildSettings);
         }
 
+        if ("embed".equalsIgnoreCase(subcmd)) {
+            return embed(eventWrapper, context.subContext(subcmd), guildSettings);
+        }
+
         if ("emojidebug".equalsIgnoreCase(subcmd)) {
             return emojidebug(eventWrapper, context.subContext(subcmd), guildSettings);
         }
@@ -118,6 +125,10 @@ public class RepSettings extends SimpleCommand {
             fuzzy(event, guildSettings);
         }
 
+        if ("embed".equalsIgnoreCase(subcmd)) {
+            embed(event, guildSettings);
+        }
+
         if ("emojidebug".equalsIgnoreCase(subcmd)) {
             emojidebug(event, guildSettings);
         }
@@ -139,8 +150,7 @@ public class RepSettings extends SimpleCommand {
                 getSetting("command.repSettings.embed.descr.byAnswer", messageSettings.isAnswerActive()),
                 getSetting("command.repSettings.embed.descr.byMention", messageSettings.isMentionActive()),
                 getSetting("command.repSettings.embed.descr.byFuzzy", messageSettings.isFuzzyActive()),
-                //TODO: implement embed active setting
-                getSetting("command.repSettings.embed.descr.byFuzzy", messageSettings.isEmbedActive()),
+                getSetting("command.repSettings.embed.descr.byEmbed", messageSettings.isEmbedActive()),
                 getSetting("command.repSettings.embed.descr.emojidebug", guildSettings.generalSettings().isEmojiDebug())
         );
 
@@ -267,6 +277,43 @@ public class RepSettings extends SimpleCommand {
         if (guildData.updateMessageSettings(event.getGuild(), guildSettings.messageSettings())) {
             event.reply(getBooleanMessage(event.getGuild(), answer,
                     "command.repSettings.sub.answer.true", "command.repSettings.sub.answer.false")).queue();
+        }
+    }
+
+    private boolean embed(MessageEventWrapper eventWrapper, CommandContext context, GuildSettings guildSettings) {
+        if (context.argsEmpty()) {
+            eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), guildSettings.messageSettings().isEmbedActive(),
+                    "command.repSettings.sub.embed.true", "command.repSettings.sub.embed.false")).queue();
+            return true;
+        }
+        var optEmbed = context.argBoolean(0);
+
+        if (optEmbed.isEmpty()) {
+            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.notABoolean",
+                    Replacement.create("INPUT", context.argString(0))), 30);
+            return false;
+        }
+
+        guildSettings.messageSettings().embedActive(optEmbed.get());
+        if (guildData.updateMessageSettings(eventWrapper.getGuild(), guildSettings.messageSettings())) {
+            eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), optEmbed.get(),
+                    "command.repSettings.sub.embed.true", "command.repSettings.sub.embed.false")).queue();
+        }
+        return true;
+    }
+
+    private void embed(SlashCommandEvent event, GuildSettings guildSettings) {
+        if (event.getOptions().isEmpty()) {
+            event.reply(getBooleanMessage(event.getGuild(), guildSettings.messageSettings().isAnswerActive(),
+                    "command.repSettings.sub.embed.true", "command.repSettings.sub.embed.false")).queue();
+            return;
+        }
+        var embed = event.getOption("embed").getAsBoolean();
+
+        guildSettings.messageSettings().embedActive(embed);
+        if (guildData.updateMessageSettings(event.getGuild(), guildSettings.messageSettings())) {
+            event.reply(getBooleanMessage(event.getGuild(), embed,
+                    "command.repSettings.sub.embed.true", "command.repSettings.sub.embed.false")).queue();
         }
     }
 

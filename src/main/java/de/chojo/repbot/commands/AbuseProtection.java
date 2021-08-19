@@ -119,22 +119,24 @@ public class AbuseProtection extends SimpleCommand {
     }
 
     private void donorContext(SlashCommandEvent event, GuildSettings guildSettings) {
-        var loc = this.loc.getContextLocalizer(event.getGuild());
         if (event.getOptions().isEmpty()) {
-            event.reply(loc.localize("command.abuseProtection.sub.donorContext." + guildSettings.abuseSettings().isDonorContext())).queue();
+            event.reply(getBooleanMessage(event.getGuild(), guildSettings.abuseSettings().isDonorContext(),
+                    "command.abuseProtection.sub.donorContext.true", "command.abuseProtection.sub.donorContext.false")).queue();
             return;
         }
         var state = event.getOption("state").getAsBoolean();
 
         guildSettings.abuseSettings().donorContext(state);
         if (guildData.updateAbuseSettings(event.getGuild(), guildSettings.abuseSettings())) {
-            event.reply(loc.localize("command.abuseProtection.sub.donorContext." + state)).queue();
+            event.reply(getBooleanMessage(event.getGuild(), state,
+                    "command.abuseProtection.sub.donorContext.true", "command.abuseProtection.sub.donorContext.false")).queue();
         }
     }
 
     private boolean donorContext(MessageEventWrapper eventWrapper, CommandContext context, GuildSettings guildSettings) {
         if (context.argsEmpty()) {
-            eventWrapper.reply(eventWrapper.localize("command.abuseProtection.sub.donorContext." + guildSettings.abuseSettings().isDonorContext())).queue();
+            eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), guildSettings.abuseSettings().isDonorContext(),
+                    "command.abuseProtection.sub.donorContext.true", "command.abuseProtection.sub.donorContext.false")).queue();
             return true;
         }
         var state = context.argBoolean(0);
@@ -146,28 +148,31 @@ public class AbuseProtection extends SimpleCommand {
 
         guildSettings.abuseSettings().donorContext(state.get());
         if (guildData.updateAbuseSettings(eventWrapper.getGuild(), guildSettings.abuseSettings())) {
-            eventWrapper.reply(loc.localize("command.abuseProtection.sub.donorContext." + state)).queue();
+            eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), guildSettings.abuseSettings().isDonorContext(),
+                    "command.abuseProtection.sub.donorContext.true", "command.abuseProtection.sub.donorContext.false")).queue();
         }
         return true;
     }
 
     private void receiverContext(SlashCommandEvent event, GuildSettings guildSettings) {
-        var loc = this.loc.getContextLocalizer(event.getGuild());
         if (event.getOptions().isEmpty()) {
-            event.reply(loc.localize("command.abuseProtection.sub.receiverContext." + guildSettings.abuseSettings().isDonorContext())).queue();
+            event.reply(getBooleanMessage(event.getGuild(), guildSettings.abuseSettings().isReceiverContext(),
+                    "command.abuseProtection.sub.receiverContext.true", "command.abuseProtection.sub.receiverContext.false")).queue();
             return;
         }
         var state = event.getOption("state").getAsBoolean();
 
         guildSettings.abuseSettings().donorContext(state);
         if (guildData.updateAbuseSettings(event.getGuild(), guildSettings.abuseSettings())) {
-            event.reply(loc.localize("command.abuseProtection.sub.receiverContext." + state)).queue();
+            event.reply(getBooleanMessage(event.getGuild(), guildSettings.abuseSettings().isReceiverContext(),
+                    "command.abuseProtection.sub.receiverContext.true", "command.abuseProtection.sub.receiverContext.false")).queue();
         }
     }
 
     private boolean receiverContext(MessageEventWrapper eventWrapper, CommandContext context, GuildSettings guildSettings) {
         if (context.argsEmpty()) {
-            eventWrapper.reply(eventWrapper.localize("command.abuseProtection.sub.receiverContext." + guildSettings.abuseSettings().isDonorContext())).queue();
+            eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), guildSettings.abuseSettings().isReceiverContext(),
+                    "command.abuseProtection.sub.receiverContext.true", "command.abuseProtection.sub.receiverContext.false")).queue();
             return true;
         }
         var state = context.argBoolean(0);
@@ -179,7 +184,8 @@ public class AbuseProtection extends SimpleCommand {
 
         guildSettings.abuseSettings().donorContext(state.get());
         if (guildData.updateAbuseSettings(eventWrapper.getGuild(), guildSettings.abuseSettings())) {
-            eventWrapper.reply(loc.localize("command.abuseProtection.sub.receiverContext." + state)).queue();
+            eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), guildSettings.abuseSettings().isReceiverContext(),
+                    "command.abuseProtection.sub.receiverContext.true", "command.abuseProtection.sub.receiverContext.false")).queue();
         }
         return true;
     }
@@ -329,5 +335,9 @@ public class AbuseProtection extends SimpleCommand {
 
     private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, Object object) {
         return String.format("$%s$: %s", locale, object);
+    }
+
+    private String getBooleanMessage(Guild guild, boolean value, String whenTrue, String whenFalse) {
+        return loc.localize(value ? whenTrue : whenFalse, guild);
     }
 }
