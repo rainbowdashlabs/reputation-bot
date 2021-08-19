@@ -21,6 +21,11 @@ public class AbuseSettings {
     }
 
     public AbuseSettings() {
+        cooldown = 30;
+        maxMessageAge = 30;
+        minMessages = 10;
+        donorContext = true;
+        receiverContext = true;
     }
 
     public int cooldown() {
