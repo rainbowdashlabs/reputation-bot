@@ -8,6 +8,7 @@ import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Language;
 import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
+import de.chojo.repbot.commands.AbuseProtection;
 import de.chojo.repbot.commands.Channel;
 import de.chojo.repbot.commands.Dashboard;
 import de.chojo.repbot.commands.Gdpr;
@@ -30,6 +31,7 @@ import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.updater.QueryReplacement;
 import de.chojo.repbot.data.updater.SqlUpdater;
+import de.chojo.repbot.data.wrapper.AbuseSettings;
 import de.chojo.repbot.listener.InternalCommandListener;
 import de.chojo.repbot.listener.LogListener;
 import de.chojo.repbot.listener.MessageListener;
@@ -247,16 +249,15 @@ public class ReputationBot {
                         new Gdpr(dataSource, localizer),
                         new Prune(gdprService, localizer),
                         new Reactions(dataSource, localizer),
-                        new Dashboard(dataSource, localizer)
+                        new Dashboard(dataSource, localizer),
+                        new AbuseProtection(dataSource, localizer)
                 )
                 .withInvalidArgumentProvider(((loc, command) -> Help.getCommandHelp(command, loc)))
                 .withLocalizer(localizer)
                 .withPermissionCheck((wrapper, command) -> {
                     if (wrapper.getMember().hasPermission(command.permission())) return true;
-                    var guildSettings = data.getGuildSettings(wrapper.getGuild());
-                    if (guildSettings.isEmpty()) return false;
-                    var settings = guildSettings.get();
-                    var roleById = wrapper.getGuild().getRoleById(settings.managerRole().orElse(0));
+                    var settings = data.getGuildSettings(wrapper.getGuild());
+                    var roleById = wrapper.getGuild().getRoleById(settings.generalSettings().managerRole().orElse(0));
                     if (roleById == null) return false;
                     return wrapper.getMember().getRoles().contains(roleById);
                 })

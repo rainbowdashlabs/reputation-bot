@@ -65,29 +65,27 @@ public class MessageListener extends ListenerAdapter {
     public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
         if (event.getAuthor().isBot() || event.isWebhookMessage()) return;
         var guild = event.getGuild();
-        var optGuildSettings = guildData.getGuildSettings(guild);
-        if (optGuildSettings.isEmpty()) return;
-        var settings = optGuildSettings.get();
+        var settings = guildData.getGuildSettings(guild);
 
-        if (!settings.isReputationChannel(event.getChannel())) return;
+        if (!settings.thankSettings().isReputationChannel(event.getChannel())) return;
         repBotCachePolicy.seen(event.getMember());
 
-        if (!settings.hasDonorRole(event.getMember())) return;
+        if (!settings.thankSettings().hasDonorRole(event.getMember())) return;
 
         var message = event.getMessage();
 
-        var prefix = settings.prefix().orElse(configuration.baseSettings().defaultPrefix());
+        var prefix = settings.generalSettings().prefix().orElse(configuration.baseSettings().defaultPrefix());
         if (prefix.startsWith("re:")) {
             var compile = Pattern.compile(prefix.substring(3));
             if (compile.matcher(message.getContentRaw()).find()) return;
         } else {
             if (message.getContentRaw().startsWith(prefix)) return;
         }
-        if (message.getContentRaw().startsWith(settings.prefix().orElse(configuration.baseSettings().defaultPrefix()))) {
+        if (message.getContentRaw().startsWith(settings.generalSettings().prefix().orElse(configuration.baseSettings().defaultPrefix()))) {
             return;
         }
 
-        var analyzerResult = messageAnalyzer.processMessage(settings.thankwordPattern(), message, settings, true, 3);
+        var analyzerResult = messageAnalyzer.processMessage(settings.thankSettings().thankwordPattern(), message, settings, true, 3);
 
         if (analyzerResult.type() == ThankType.NO_MATCH) return;
 
@@ -108,7 +106,7 @@ public class MessageListener extends ListenerAdapter {
             }
         }
 
-        if (settings.isEmojiDebug()) event.getMessage().addReaction(EmojiDebug.FOUND_THANKWORD).queue();
+        if (settings.generalSettings().isEmojiDebug()) event.getMessage().addReaction(EmojiDebug.FOUND_THANKWORD).queue();
 
         var resultType = analyzerResult.type();
         var resolveNoTarget = true;
@@ -119,30 +117,30 @@ public class MessageListener extends ListenerAdapter {
             var refMessage = analyzerResult.referenceMessage();
             switch (resultType) {
                 case FUZZY -> {
-                    if (!settings.isFuzzyActive()) continue;
+                    if (!settings.messageSettings().isFuzzyActive()) continue;
                     reputationService.submitReputation(guild, donator, result.getReference().getUser(), message, refMessage, resultType);
                     resolveNoTarget = false;
                 }
                 case MENTION -> {
-                    if (!settings.isMentionActive()) continue;
+                    if (!settings.messageSettings().isMentionActive()) continue;
                     reputationService.submitReputation(guild, donator, result.getReference().getUser(), message, refMessage, resultType);
                     resolveNoTarget = false;
                 }
                 case ANSWER -> {
-                    if (!settings.isAnswerActive()) continue;
+                    if (!settings.messageSettings().isAnswerActive()) continue;
                     reputationService.submitReputation(guild, donator, result.getReference().getUser(), message, refMessage, resultType);
                     resolveNoTarget = false;
                 }
             }
         }
-        if (resolveNoTarget) resolveNoTarget(message, settings);
+        if (resolveNoTarget && settings.messageSettings().isEmbedActive()) resolveNoTarget(message, settings);
     }
 
     private void resolveNoTarget(Message message, GuildSettings settings) {
         var recentMembers = contextResolver.getCombinedContext(message, settings);
         recentMembers.remove(message.getMember());
         if (recentMembers.isEmpty()) {
-            if (settings.isEmojiDebug()) message.addReaction(EmojiDebug.EMPTY_CONTEXT).queue();
+            if (settings.generalSettings().isEmojiDebug()) message.addReaction(EmojiDebug.EMPTY_CONTEXT).queue();
             return;
         }
 
@@ -152,7 +150,7 @@ public class MessageListener extends ListenerAdapter {
                 .collect(Collectors.toList());
 
         if (members.isEmpty()) {
-            if (settings.isEmojiDebug()) message.addReaction(EmojiDebug.ONLY_COOLDOWN).queue();
+            if (settings.generalSettings().isEmojiDebug()) message.addReaction(EmojiDebug.ONLY_COOLDOWN).queue();
             return;
         }
 

@@ -219,12 +219,10 @@ public class Thankwords extends SimpleCommand {
 
     @Nullable
     private String getGuildPattern(Guild guild) {
-        var optGuildSettings = data.getGuildSettings(guild);
-        if (optGuildSettings.isEmpty()) return null;
 
-        var guildSettings = optGuildSettings.get();
+        var guildSettings = data.getGuildSettings(guild);
 
-        var pattern = Arrays.stream(guildSettings.thankwords())
+        var pattern = Arrays.stream(guildSettings.thankSettings().thankwords())
                 .map(w -> StringUtils.wrap(w, "`"))
                 .collect(Collectors.joining(", "));
         return pattern;
@@ -232,11 +230,8 @@ public class Thankwords extends SimpleCommand {
 
     private boolean check(SlashCommandEvent event) {
         var loc = this.loc.getContextLocalizer(event.getGuild());
-        var optGuildSettings = data.getGuildSettings(event.getGuild());
-        if (optGuildSettings.isEmpty()) return false;
 
-
-        var guildSettings = optGuildSettings.get();
+        var guildSettings = data.getGuildSettings(event.getGuild());
         var messageId = event.getOption("message").getAsString();
 
         if (!Verifier.isValidId(messageId)) {
@@ -245,7 +240,7 @@ public class Thankwords extends SimpleCommand {
         }
 
         var message = event.getChannel().retrieveMessageById(messageId).complete();
-        var result = messageAnalyzer.processMessage(guildSettings.thankwordPattern(), message, guildSettings, true, 3);
+        var result = messageAnalyzer.processMessage(guildSettings.thankSettings().thankwordPattern(), message, guildSettings, true, 3);
         var builder = new LocalizedEmbedBuilder(this.loc, event.getGuild());
         if (result.receivers().isEmpty()) {
             event.reply(loc.localize("command.thankwords.sub.check.match.noMatch")).queue();
@@ -263,12 +258,9 @@ public class Thankwords extends SimpleCommand {
     }
 
     private boolean check(MessageEventWrapper eventWrapper) {
-        var optGuildSettings = data.getGuildSettings(eventWrapper.getGuild());
-        if (optGuildSettings.isEmpty()) return false;
+        var guildSettings = data.getGuildSettings(eventWrapper.getGuild());
 
-        var guildSettings = optGuildSettings.get();
-
-        var result = messageAnalyzer.processMessage(guildSettings.thankwordPattern(), eventWrapper.getMessage(), guildSettings, true, 3);
+        var result = messageAnalyzer.processMessage(guildSettings.thankSettings().thankwordPattern(), eventWrapper.getMessage(), guildSettings, true, 3);
         var builder = new LocalizedEmbedBuilder(eventWrapper);
         if (result.receivers().isEmpty()) {
             eventWrapper.reply(eventWrapper.localize("command.thankwords.sub.check.match.noMatch")).queue();

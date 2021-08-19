@@ -93,7 +93,7 @@ public class ReputationVoteListener extends ListenerAdapter {
             components.put(id, new VoteComponent(member, Button.of(ButtonStyle.PRIMARY, id, member.getEffectiveName())));
         }
 
-        if (settings.isEmojiDebug()) message.addReaction(EmojiDebug.PROMPTED).queue();
+        if (settings.generalSettings().isEmojiDebug()) message.addReaction(EmojiDebug.PROMPTED).queue();
 
         var collect = components.values().stream().map(VoteComponent::component).collect(Collectors.toUnmodifiableList());
 

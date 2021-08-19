@@ -11,6 +11,7 @@ import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
+import de.chojo.repbot.data.wrapper.ThankSettings;
 import de.chojo.repbot.util.StringUtil;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
@@ -157,9 +158,7 @@ public class Roles extends SimpleCommand {
 
     private boolean managerRole(MessageEventWrapper eventWrapper, CommandContext subContext) {
         if (subContext.argsEmpty()) {
-            var guildSettings = data.getGuildSettings(eventWrapper.getGuild());
-            if (guildSettings.isEmpty()) return true;
-            var settings = guildSettings.get();
+            var settings = data.getGuildSettings(eventWrapper.getGuild());
             eventWrapper.reply(getManagerRoleMessage(eventWrapper.getGuild(), settings)).queue();
             return true;
         }
@@ -178,10 +177,7 @@ public class Roles extends SimpleCommand {
     private void managerRole(SlashCommandEvent event) {
         var loc = this.loc.getContextLocalizer(event.getGuild());
         if (event.getOptions().isEmpty()) {
-            var guildSettings = data.getGuildSettings(event.getGuild());
-            if (guildSettings.isEmpty()) return;
-
-            var settings = guildSettings.get();
+            var settings = data.getGuildSettings(event.getGuild());
             event.reply(getManagerRoleMessage(event.getGuild(), settings)).allowedMentions(Collections.emptyList()).queue();
             return;
         }
@@ -194,8 +190,8 @@ public class Roles extends SimpleCommand {
     }
 
     private String getManagerRoleMessage(Guild guild, GuildSettings settings) {
-        if (settings.managerRole().isPresent()) {
-            var roleById = guild.getRoleById(settings.managerRole().getAsLong());
+        if (settings.generalSettings().managerRole().isPresent()) {
+            var roleById = guild.getRoleById(settings.generalSettings().managerRole().getAsLong());
             if (roleById != null) {
                 return loc.localize("command.roles.sub.managerRole.current", guild,
                         Replacement.createMention(roleById));
@@ -270,15 +266,17 @@ public class Roles extends SimpleCommand {
                 .filter(role -> role.getRole(guild) != null)
                 .map(role -> role.reputation() + " ➜ " + role.getRole(guild).getAsMention())
                 .collect(Collectors.joining("\n"));
-        var guildSettings = data.getGuildSettings(guild).get();
+        var guildSettings = data.getGuildSettings(guild);
 
         var builder = new LocalizedEmbedBuilder(loc, guild)
                 .setTitle("Role Info");
 
         builder.addField("Reputation Roles", reputationRoles, true);
 
-        if (!guildSettings.donorRoles().isEmpty()) {
-            var donorRoles = guildSettings.donorRoles()
+        var thankSettings = guildSettings.thankSettings();
+
+        if (!thankSettings.donorRoles().isEmpty()) {
+            var donorRoles = thankSettings.donorRoles()
                     .stream()
                     .map(guild::getRoleById)
                     .filter(Objects::nonNull)
@@ -287,8 +285,8 @@ public class Roles extends SimpleCommand {
 
             builder.addField("Donor Roles", donorRoles, true);
         }
-        if (!guildSettings.receiverRoles().isEmpty()) {
-            var receiverRoles = guildSettings.receiverRoles()
+        if (!thankSettings.receiverRoles().isEmpty()) {
+            var receiverRoles = thankSettings.receiverRoles()
                     .stream()
                     .map(guild::getRoleById)
                     .filter(Objects::nonNull)
