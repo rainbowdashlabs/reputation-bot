@@ -47,13 +47,8 @@ public class SelfCleanupService implements Runnable {
         if (!configuration.selfCleanup().isActive()) return;
 
         for (var guild : shardManager.getGuilds()) {
-            var optGuildSettings = guildData.getGuildSettings(guild);
-            if (optGuildSettings.isEmpty()) {
-                promptCleanup(guild);
-                continue;
-            }
-            var settings = optGuildSettings.get();
-            if (settings.activeChannel().isEmpty() && settings.isChannelWhitelist()) {
+            var settings = guildData.getGuildSettings(guild);
+            if (settings.thankSettings().activeChannel().isEmpty() && settings.thankSettings().isChannelWhitelist()) {
                 promptCleanup(guild);
                 continue;
             }

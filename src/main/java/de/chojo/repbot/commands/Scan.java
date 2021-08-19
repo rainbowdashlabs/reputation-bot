@@ -215,10 +215,7 @@ public class Scan extends SimpleCommand {
 
     private void preSchedule(TextChannel channel, int messageCount) {
         var history = channel.getHistory();
-
-        var guildSettings = guildData.getGuildSettings(channel.getGuild());
-        if (guildSettings.isEmpty()) return;
-        var pattern = guildSettings.get().thankwordPattern();
+        var pattern = guildData.getGuildSettings(channel.getGuild()).thankSettings().thankwordPattern();
 
         schedule(history, pattern, channel, messageCount);
     }

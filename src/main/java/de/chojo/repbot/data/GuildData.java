@@ -1,9 +1,12 @@
 package de.chojo.repbot.data;
 
 import de.chojo.jdautil.localization.util.Language;
-import de.chojo.repbot.data.wrapper.GuildSettingUpdate;
+import de.chojo.repbot.data.wrapper.AbuseSettings;
+import de.chojo.repbot.data.wrapper.GeneralSettings;
 import de.chojo.repbot.data.wrapper.GuildSettings;
+import de.chojo.repbot.data.wrapper.MessageSettings;
 import de.chojo.repbot.data.wrapper.ReputationRole;
+import de.chojo.repbot.data.wrapper.ThankSettings;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
 import de.chojo.sqlutil.conversion.ArrayConverter;
@@ -21,6 +24,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -39,50 +43,127 @@ public class GuildData extends QueryFactoryHolder {
      * @param guild guild
      * @return guild settings if present
      */
-    public Optional<GuildSettings> getGuildSettings(Guild guild) {
-        return builder(GuildSettings.class)
+    public GuildSettings getGuildSettings(Guild guild) {
+        var generalSettings = getGeneralSettings(guild);
+        var messageSettings = getMessageSettings(guild);
+        var abuseSettings = getAbuseSettings(guild);
+        var thankSettings = getThankSettings(guild);
+
+        return new GuildSettings(guild,
+                generalSettings.join().orElse(new GeneralSettings()),
+                messageSettings.join().orElse(new MessageSettings()),
+                abuseSettings.join().orElse(new AbuseSettings()),
+                thankSettings.join().orElse(new ThankSettings()));
+    }
+
+    private CompletableFuture<Optional<AbuseSettings>> getAbuseSettings(Guild guild) {
+        return builder(AbuseSettings.class)
+                .query("""
+                        SELECT
+                            min_messages,
+                            max_message_age,
+                            receiver_context,
+                            donor_context,
+                            cooldown
+                        FROM
+                            abuse_protection
+                        WHERE guild_id = ?;
+                        """)
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
+                .readRow(this::buildAbuseSettings)
+                .first();
+
+    }
+
+    private CompletableFuture<Optional<GeneralSettings>> getGeneralSettings(Guild guild) {
+        return builder(GeneralSettings.class)
                 .query("""
                         SELECT
                             prefix,
-                            thankswords,
-                            max_message_age,
-                            min_messages,
-                            reaction,
-                            reactions,
+                            emoji_debug,
+                            manager_role
+                        FROM
+                            guild_settings
+                        WHERE guild_id = ?;
+                        """)
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
+                .readRow(this::buildGeneralSettings)
+                .first();
+
+    }
+
+    private CompletableFuture<Optional<MessageSettings>> getMessageSettings(Guild guild) {
+        return builder(MessageSettings.class)
+                .query("""
+                        SELECT
                             reactions_active,
                             answer_active,
                             mention_active,
                             fuzzy_active,
-                            active_channels,
-                            cooldown,
-                            manager_role,
-                            channel_whitelist,
-                            donor_roles,
-                            receiver_roles,
-                            emoji_debug
+                            embed_active
                         FROM
-                            get_guild_settings(?)
+                            message_settings
+                        WHERE guild_id = ?;
                         """)
-                .params(stmt -> stmt.setLong(1, guild.getIdLong()))
-                .readRow(row -> new GuildSettings(guild,
-                        row.getString("prefix"),
-                        ArrayConverter.toArray(row, "thankswords", new String[0]),
-                        row.getInt("max_message_age"),
-                        row.getInt("min_messages"),
-                        row.getString("reaction"),
-                        row.getBoolean("reactions_active"),
-                        row.getBoolean("answer_active"),
-                        row.getBoolean("mention_active"),
-                        row.getBoolean("fuzzy_active"),
-                        ArrayConverter.toArray(row, "active_channels", new Long[0]),
-                        row.getInt("cooldown"),
-                        row.getLong("manager_role"),
-                        ArrayConverter.toArray(row, "reactions", new String[0]),
-                        row.getBoolean("channel_whitelist"),
-                        ArrayConverter.toArray(row, "donor_roles", new Long[0]),
-                        ArrayConverter.toArray(row, "receiver_roles", new Long[0]),
-                        row.getBoolean("emoji_debug")))
-                .firstSync();
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
+                .readRow(this::buildMessageSettings)
+                .first();
+    }
+
+    private CompletableFuture<Optional<ThankSettings>> getThankSettings(Guild guild) {
+        return builder(ThankSettings.class)
+                .query("""
+                        SELECT
+                            reaction,
+                            reactions,
+                            thankswords,
+                            active_channels,
+                            channel_whitelist,
+                            receiver_roles,
+                            donor_roles
+                        FROM
+                            get_thank_settings(?);
+                        """)
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
+                .readRow(this::buildThankSettings)
+                .first();
+    }
+
+    private AbuseSettings buildAbuseSettings(ResultSet rs) throws SQLException {
+        return new AbuseSettings(
+                rs.getInt("cooldown"),
+                rs.getInt("max_message_age"),
+                rs.getInt("min_messages"),
+                rs.getBoolean("donor_context"),
+                rs.getBoolean("receiver_context"));
+    }
+
+    private GeneralSettings buildGeneralSettings(ResultSet rs) throws SQLException {
+        return new GeneralSettings(
+                rs.getString("prefix"),
+                rs.getBoolean("emoji_debug"),
+                rs.getLong("manager_role"));
+    }
+
+    private MessageSettings buildMessageSettings(ResultSet rs) throws SQLException {
+        return new MessageSettings(
+                rs.getBoolean("reactions_active"),
+                rs.getBoolean("answer_active"),
+                rs.getBoolean("mention_active"),
+                rs.getBoolean("fuzzy_active"),
+                rs.getBoolean("embed_active"));
+    }
+
+    private ThankSettings buildThankSettings(ResultSet row) throws SQLException {
+        return new ThankSettings(
+                row.getString("reaction"),
+                ArrayConverter.toArray(row, "reactions", new String[0]),
+                ArrayConverter.toArray(row, "thankswords", new String[0]),
+                ArrayConverter.toArray(row, "active_channels", new Long[0]),
+                row.getBoolean("channel_whitelist"),
+                ArrayConverter.toArray(row, "donor_roles", new Long[0]),
+                ArrayConverter.toArray(row, "receiver_roles", new Long[0])
+        );
     }
 
     /**
@@ -92,7 +173,7 @@ public class GuildData extends QueryFactoryHolder {
      * @return prefix if set
      */
     public Optional<String> getPrefix(Guild guild) {
-        return builder(String.class).query("SELECT prefix FROM guild_bot_settings WHERE guild_id = ?;")
+        return builder(String.class).query("SELECT prefix FROM guild_settings WHERE guild_id = ?;")
                 .params(stmt -> stmt.setLong(1, guild.getIdLong()))
                 .readRow(row -> row.getString(1))
                 .firstSync();
@@ -109,7 +190,7 @@ public class GuildData extends QueryFactoryHolder {
         return builder()
                        .query("""
                                INSERT INTO
-                                   guild_bot_settings(guild_id, prefix) VALUES (?,?)
+                                   guild_settings(guild_id, prefix) VALUES (?,?)
                                    ON CONFLICT(guild_id)
                                        DO UPDATE
                                            SET prefix = excluded.prefix;
@@ -126,7 +207,7 @@ public class GuildData extends QueryFactoryHolder {
      */
     public Optional<String> getLanguage(Guild guild) {
         return builder(String.class)
-                .query("SELECT language FROM guild_bot_settings WHERE guild_id = ?;")
+                .query("SELECT language FROM guild_settings WHERE guild_id = ?;")
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
                 .readRow(rs -> rs.getString(1))
                 .firstSync();
@@ -143,7 +224,7 @@ public class GuildData extends QueryFactoryHolder {
         return builder()
                        .query("""
                                INSERT INTO
-                                   guild_bot_settings(guild_id, language) VALUES (?,?)
+                                   guild_settings(guild_id, language) VALUES (?,?)
                                    ON CONFLICT(guild_id)
                                        DO UPDATE
                                            SET language = excluded.language;
@@ -163,7 +244,7 @@ public class GuildData extends QueryFactoryHolder {
         return builder()
                        .query("""
                                INSERT INTO
-                                   guild_bot_settings(guild_id, emoji_debug) VALUES (?,?)
+                                   guild_settings(guild_id, emoji_debug) VALUES (?,?)
                                    ON CONFLICT(guild_id)
                                        DO UPDATE
                                            SET emoji_debug = excluded.emoji_debug;
@@ -334,25 +415,40 @@ public class GuildData extends QueryFactoryHolder {
     }
 
 
-    public boolean updateMessageSettings(GuildSettingUpdate update) {
+    public boolean updateMessageSettings(Guild guild, MessageSettings settings) {
         return builder()
                        .query("""
                                UPDATE
                                    message_settings
-                               SET max_message_age = COALESCE(?, max_message_age),
-                                   min_messages = COALESCE(?, min_messages),
-                                   reaction = COALESCE(?, reaction),
-                                   reactions_active = COALESCE(?, reactions_active),
-                                   answer_active = COALESCE(?, answer_active),
-                                   mention_active = COALESCE(?, mention_active),
-                                   fuzzy_active = COALESCE(?, fuzzy_active),
-                                   cooldown = COALESCE(?, cooldown)
+                               SET reactions_active = ?,
+                                   answer_active = ?,
+                                   mention_active = ?,
+                                   fuzzy_active = ?,
+                                   embed_active = ?
+                                WHERE guild_id = ?;
+                               """)
+                       .paramsBuilder(stmt -> stmt
+                               .setBoolean(settings.isReactionActive()).setBoolean(settings.isAnswerActive())
+                               .setBoolean(settings.isMentionActive()).setBoolean(settings.isFuzzyActive())
+                               .setBoolean(settings.isEmbedActive()).setLong(guild.getIdLong()))
+                       .update().executeSync() > 0;
+    }
+
+    public boolean updateAbuseSettings(Guild guild, AbuseSettings update) {
+        return builder()
+                       .query("""
+                               UPDATE
+                                   abuse_protection
+                               SET max_message_age = ?,
+                                   min_messages = ?,
+                                   cooldown = ?,
+                                   receiver_context = ?,
+                                   donor_context = ?
                                WHERE guild_id = ?;
                                """)
-                       .paramsBuilder(stmt -> stmt.setInt(update.maxMessageAge()).setInt(update.minMessages()).setString(update.reaction())
-                               .setBoolean(update.reactionsActive()).setBoolean(update.answerActive())
-                               .setBoolean(update.mentionActive()).setBoolean(update.fuzzyActive()).setInt(update.cooldown())
-                               .setLong(update.guild().getIdLong()))
+                       .paramsBuilder(stmt -> stmt.setInt(update.maxMessageAge()).setInt(update.minMessages())
+                               .setInt(update.cooldown()).setBoolean(update.isDonorContext())
+                               .setBoolean(update.isReceiverContext()).setLong(guild.getIdLong()))
                        .update().executeSync() > 0;
     }
 
@@ -393,7 +489,10 @@ public class GuildData extends QueryFactoryHolder {
                 .query("INSERT INTO message_settings(guild_id) VALUES (?) ON CONFLICT DO NOTHING;")
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
                 .append()
-                .query("INSERT INTO guild_bot_settings(guild_id) VALUES(?) ON CONFLICT DO NOTHING")
+                .query("INSERT INTO abuse_protection(guild_id) VALUES (?) ON CONFLICT DO NOTHING;")
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
+                .append()
+                .query("INSERT INTO guild_settings(guild_id) VALUES(?) ON CONFLICT DO NOTHING")
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
                 .update().executeSync();
     }
@@ -402,7 +501,7 @@ public class GuildData extends QueryFactoryHolder {
         return builder()
                        .query("""
                                INSERT INTO
-                                   guild_bot_settings(guild_id, manager_role) VALUES (?,?)
+                                   guild_settings(guild_id, manager_role) VALUES (?,?)
                                    ON CONFLICT(guild_id)
                                        DO UPDATE
                                            SET manager_role = excluded.manager_role;
@@ -461,7 +560,7 @@ public class GuildData extends QueryFactoryHolder {
 
     public void setChannelListType(Guild guild, boolean whitelist) {
         builder().query("""
-                        INSERT INTO guild_bot_settings(guild_id, channel_whitelist) VALUES (?,?)
+                        INSERT INTO thank_settings(guild_id, channel_whitelist) VALUES (?,?)
                             ON CONFLICT(guild_id)
                                 DO UPDATE
                                     SET channel_whitelist = excluded.channel_whitelist
@@ -469,6 +568,18 @@ public class GuildData extends QueryFactoryHolder {
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setBoolean(whitelist))
                 .update()
                 .executeSync();
+    }
+
+    public boolean setMainReaction(Guild guild, String reaction) {
+        return builder().query("""
+                        INSERT INTO thank_settings(guild_id, reaction) VALUES (?,?)
+                            ON CONFLICT(guild_id)
+                                DO UPDATE
+                                    SET reaction = excluded.reaction
+                        """)
+                       .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setString(reaction))
+                       .update()
+                       .executeSync() > 0;
     }
 
     public void selfCleanupPrompt(Guild guild) {

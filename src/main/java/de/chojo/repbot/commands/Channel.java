@@ -112,7 +112,7 @@ public class Channel extends SimpleCommand {
     private void whitelist(SlashCommandEvent event) {
         if (event.getOptions().isEmpty()) {
             var guildSettings = guildData.getGuildSettings(event.getGuild());
-            var channelWhitelist = guildSettings.get().isChannelWhitelist();
+            var channelWhitelist = guildSettings.thankSettings().isChannelWhitelist();
             event.reply(loc.localize("command.channel.sub.whitelist." + channelWhitelist, event.getGuild())).queue();
             return;
         }
@@ -124,7 +124,7 @@ public class Channel extends SimpleCommand {
     private boolean whitelist(MessageEventWrapper eventWrapper, CommandContext subContext) {
         if (subContext.argsEmpty()) {
             var guildSettings = guildData.getGuildSettings(eventWrapper.getGuild());
-            var channelWhitelist = guildSettings.get().isChannelWhitelist();
+            var channelWhitelist = guildSettings.thankSettings().isChannelWhitelist();
             eventWrapper.reply(loc.localize("command.channel.sub.whitelist." + channelWhitelist, eventWrapper.getGuild())).queue();
             return true;
         }
@@ -214,26 +214,20 @@ public class Channel extends SimpleCommand {
     }
 
     private void list(SlashCommandEvent event) {
-        var guildSettings = guildData.getGuildSettings(event.getGuild());
-        if (guildSettings.isEmpty()) return;
-
-        event.reply(getChannelList(guildSettings.get())).queue();
+        event.reply(getChannelList(guildData.getGuildSettings(event.getGuild()))).queue();
     }
 
     private boolean list(MessageEventWrapper eventWrapper) {
-        var guildSettings = guildData.getGuildSettings(eventWrapper.getGuild());
-        if (guildSettings.isEmpty()) return true;
-
-        eventWrapper.reply(getChannelList(guildSettings.get())).queue();
+        eventWrapper.reply(getChannelList(guildData.getGuildSettings(eventWrapper.getGuild()))).queue();
         return true;
     }
 
     private String getChannelList(GuildSettings settings) {
         var channelNames = DiscordResolver
                 .getValidTextChannelsById(
-                        settings.guild(), new ArrayList<>(settings.activeChannel()))
+                        settings.guild(), new ArrayList<>(settings.thankSettings().activeChannel()))
                 .stream().map(IMentionable::getAsMention).collect(Collectors.joining(", "));
-        var message = "command.channel.sub.list." + (settings.isChannelWhitelist() ? "whitelist" : "blacklist");
+        var message = "command.channel.sub.list." + (settings.thankSettings().isChannelWhitelist() ? "whitelist" : "blacklist");
         return loc.localize(message, settings.guild(), Replacement.create("CHANNEL", channelNames));
     }
 

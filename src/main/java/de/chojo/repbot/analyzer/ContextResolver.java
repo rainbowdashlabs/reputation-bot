@@ -98,11 +98,11 @@ public class ContextResolver {
         var oldest = findOldestMessageByTarget(target, messages, maxAge);
 
         // add users of the last recent messages
-        return getMemberAfter(messages.stream().limit(settings == null ? configuration.analyzerSettings().historySize() : settings.minMessages()), guild, oldest);
+        return getMemberAfter(messages.stream().limit(settings == null ? configuration.analyzerSettings().historySize() : settings.abuseSettings().minMessages()), guild, oldest);
     }
 
     private Set<Long> getRecentAuthors(List<Message> messages, User author, Guild guild, GuildSettings settings) {
-        var maxAge = Instant.now().minus(settings == null ? Long.MAX_VALUE : settings.maxMessageAge(), ChronoUnit.MINUTES);
+        var maxAge = Instant.now().minus(settings == null ? Long.MAX_VALUE : settings.abuseSettings().maxMessageAge(), ChronoUnit.MINUTES);
         // find the oldest message in the history written by the message author which is newer than the max message age.
         var oldest = findOldestMessageByTarget(author, messages, maxAge);
 
@@ -155,7 +155,7 @@ public class ContextResolver {
             members.addAll(voice);
         }
         var pastUser = voiceData.getPastUser(target.getUser(), message.getGuild(),
-                settings == null ? 0 : settings.maxMessageAge(), configuration.analyzerSettings().voiceMembers());
+                settings == null ? 0 : settings.abuseSettings().minMessages(), configuration.analyzerSettings().voiceMembers());
         return pastUser.stream()
                 .map(id -> message.getGuild().retrieveMemberById(id).onErrorMap(throwable -> null).complete())
                 .map(Member::getIdLong)

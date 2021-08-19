@@ -253,10 +253,8 @@ public class ReputationBot {
                 .withLocalizer(localizer)
                 .withPermissionCheck((wrapper, command) -> {
                     if (wrapper.getMember().hasPermission(command.permission())) return true;
-                    var guildSettings = data.getGuildSettings(wrapper.getGuild());
-                    if (guildSettings.isEmpty()) return false;
-                    var settings = guildSettings.get();
-                    var roleById = wrapper.getGuild().getRoleById(settings.managerRole().orElse(0));
+                    var settings = data.getGuildSettings(wrapper.getGuild());
+                    var roleById = wrapper.getGuild().getRoleById(settings.generalSettings().managerRole().orElse(0));
                     if (roleById == null) return false;
                     return wrapper.getMember().getRoles().contains(roleById);
                 })

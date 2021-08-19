@@ -64,33 +64,35 @@ public class ReputationService {
         // block bots
         if (receiver.isBot()) return false;
 
-        var optGuildSettings = guildData.getGuildSettings(guild);
-        if (optGuildSettings.isEmpty()) return false;
-        var settings = optGuildSettings.get();
+        var settings = guildData.getGuildSettings(guild);
+        var messageSettings = settings.messageSettings();
+        var thankSettings = settings.thankSettings();
+        var generalSettings = settings.generalSettings();
+        var abuseSettings = settings.abuseSettings();
 
         // block non reputation channel
-        if (!settings.isReputationChannel(message.getTextChannel())) return false;
+        if (!thankSettings.isReputationChannel(message.getTextChannel())) return false;
 
-        if (!settings.hasDonorRole(guild.getMember(donor))) return false;
-        if (!settings.hasReceiverRole(guild.getMember(receiver))) return false;
+        if (!thankSettings.hasDonorRole(guild.getMember(donor))) return false;
+        if (!thankSettings.hasReceiverRole(guild.getMember(receiver))) return false;
 
         // force settings
         switch (type) {
             case FUZZY -> {
-                if (!settings.isFuzzyActive()) return false;
+                if (!messageSettings.isFuzzyActive()) return false;
             }
             case MENTION -> {
-                if (!settings.isMentionActive()) return false;
+                if (!messageSettings.isMentionActive()) return false;
             }
             case ANSWER -> {
-                if (!settings.isAnswerActive()) return false;
+                if (!messageSettings.isAnswerActive()) return false;
 
             }
             case REACTION -> {
-                if (!settings.isReactionActive()) return false;
+                if (!messageSettings.isReactionActive()) return false;
             }
             case EMBED -> {
-                //TODO: allow enabling and disable embed reputation?
+                if (!messageSettings.isEmbedActive()) return false;
             }
             default -> throw new IllegalStateException("Unexpected value: " + type);
         }
@@ -108,47 +110,47 @@ public class ReputationService {
                 .collect(Collectors.toSet());
 
         // Abuse Protection: target context
-        if (!recentUser.contains(receiver)) {
-            if (settings.isEmojiDebug()) message.addReaction(EmojiDebug.TARGET_NOT_IN_CONTEXT).queue();
+        if (!recentUser.contains(receiver) && abuseSettings.isReceiverContext()) {
+            if (generalSettings.isEmojiDebug()) message.addReaction(EmojiDebug.TARGET_NOT_IN_CONTEXT).queue();
             return false;
         }
 
         // Abuse Protection: donor context
-        if (!recentUser.contains(donor)) {
-            if (settings.isEmojiDebug()) message.addReaction(EmojiDebug.DONOR_NOT_IN_CONTEXT).queue();
+        if (!recentUser.contains(donor) && abuseSettings.isDonorContext()) {
+            if (generalSettings.isEmojiDebug()) message.addReaction(EmojiDebug.DONOR_NOT_IN_CONTEXT).queue();
             return false;
         }
 
         // Abuse protection: Cooldown
         if (!canVote(donor, receiver, guild, settings)) {
-            if (settings.isEmojiDebug()) message.addReaction(EmojiDebug.ONLY_COOLDOWN).queue();
+            if (generalSettings.isEmojiDebug()) message.addReaction(EmojiDebug.ONLY_COOLDOWN).queue();
             return false;
         }
 
         // block outdated ref message
         // Abuse protection: Message age
         if (refMessage != null) {
-            if (!settings.isFreshMessage(refMessage)) {
-                if (settings.isEmojiDebug()) message.addReaction(EmojiDebug.TOO_OLD).queue();
+            if (!abuseSettings.isFreshMessage(refMessage)) {
+                if (generalSettings.isEmojiDebug()) message.addReaction(EmojiDebug.TOO_OLD).queue();
                 return false;
             }
         }
 
         // block outdated message
         // Abuse protection: Message age
-        if (!settings.isFreshMessage(message)) {
-            if (settings.isEmojiDebug()) message.addReaction(EmojiDebug.TOO_OLD).queue();
+        if (!abuseSettings.isFreshMessage(message)) {
+            if (generalSettings.isEmojiDebug()) message.addReaction(EmojiDebug.TOO_OLD).queue();
             return false;
         }
 
         // block self vote
         if (Verifier.equalSnowflake(receiver, donor)) {
             if (lastEasterEggSent.until(Instant.now(), ChronoUnit.MINUTES) > magicImage.magicImageCooldown()
-                    && ThreadLocalRandom.current().nextInt(magicImage.magicImagineChance()) == 0) {
+                && ThreadLocalRandom.current().nextInt(magicImage.magicImagineChance()) == 0) {
                 lastEasterEggSent = Instant.now();
-                message.reply(new EmbedBuilder()
-                        .setImage(magicImage.magicImageLink())
-                        .setColor(Color.RED).build())
+                message.replyEmbeds(new EmbedBuilder()
+                                .setImage(magicImage.magicImageLink())
+                                .setColor(Color.RED).build())
                         .queue(msg -> msg.delete().queueAfter(
                                 magicImage.magicImageDeleteSchedule(), TimeUnit.SECONDS));
             }
@@ -183,20 +185,13 @@ public class ReputationService {
 
         // block cooldown
         var lastRated = reputationData.getLastRatedDuration(guild, donor, receiver, ChronoUnit.MINUTES);
-        if (lastRated < settings.cooldown()) return false;
+        if (lastRated < settings.abuseSettings().cooldown()) return false;
 
-        if (!settings.hasReceiverRole(receiverM)) return false;
-        if (!settings.hasDonorRole(donorM)) return false;
+        if (!settings.thankSettings().hasReceiverRole(receiverM)) return false;
+        if (!settings.thankSettings().hasDonorRole(donorM)) return false;
 
         // block rep4rep
         lastRated = reputationData.getLastRatedDuration(guild, receiver, donor, ChronoUnit.MINUTES);
-        return lastRated >= settings.cooldown();
-    }
-
-    public boolean canVote(User donor, User receiver, Guild guild) {
-        var optGuildSettings = guildData.getGuildSettings(guild);
-        if (optGuildSettings.isEmpty()) return false;
-        var settings = optGuildSettings.get();
-        return canVote(donor, receiver, guild, settings);
+        return lastRated >= settings.abuseSettings().cooldown();
     }
 }
