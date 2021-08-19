@@ -14,7 +14,7 @@ public class GeneralSettings {
     public GeneralSettings() {
         prefix = null;
         emojiDebug = true;
-        managerRole =0;
+        managerRole = 0;
     }
 
     public GeneralSettings(String prefix, boolean emojiDebug, long managerRole) {

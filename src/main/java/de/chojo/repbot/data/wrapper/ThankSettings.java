@@ -33,7 +33,7 @@ public class ThankSettings {
         reactions = Collections.emptySet();
         thankwords = new String[0];
         activeChannel = Collections.emptySet();
-        channelWhitelist =true;
+        channelWhitelist = true;
         donorRoles = Collections.emptySet();
         receiverRoles = Collections.emptySet();
     }
