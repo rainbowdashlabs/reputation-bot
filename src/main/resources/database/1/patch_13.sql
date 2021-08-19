@@ -40,7 +40,7 @@ CREATE TABLE repbot_schema.thank_settings
 );
 
 INSERT INTO repbot_schema.thank_settings(
-    SELECT m.guild_id, m.reaction, s.channel_whitelist
+    SELECT m.guild_id, m.reaction, coalesce(s.channel_whitelist, TRUE)
     FROM repbot_schema.message_settings m
              LEFT JOIN repbot_schema.guild_settings s ON m.guild_id = s.guild_id
 );
