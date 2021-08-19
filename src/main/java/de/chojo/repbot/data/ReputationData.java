@@ -46,16 +46,16 @@ public class ReputationData extends QueryFactoryHolder {
      */
     public boolean logReputation(Guild guild, @Nullable User donor, User receiver, Message message, @Nullable Message refMessage, ThankType type) {
         var success = builder()
-                .query("""
-                        INSERT INTO
-                        reputation_log(guild_id, donor_id, receiver_id, message_id, ref_message_id, channel_id, cause) VALUES(?,?,?,?,?,?,?)
-                            ON CONFLICT(guild_id, donor_id, receiver_id, message_id)
-                                DO NOTHING;
-                        """)
-                .paramsBuilder(b -> b.setLong(guild.getIdLong()).setLong(donor == null ? 0 : donor.getIdLong()).setLong(receiver.getIdLong())
-                        .setLong(message.getIdLong()).setLong(refMessage == null ? null : refMessage.getIdLong())
-                        .setLong(message.getChannel().getIdLong()).setString(type.name()))
-                .insert().executeSync() > 0;
+                              .query("""
+                                      INSERT INTO
+                                      reputation_log(guild_id, donor_id, receiver_id, message_id, ref_message_id, channel_id, cause) VALUES(?,?,?,?,?,?,?)
+                                          ON CONFLICT(guild_id, donor_id, receiver_id, message_id)
+                                              DO NOTHING;
+                                      """)
+                              .paramsBuilder(b -> b.setLong(guild.getIdLong()).setLong(donor == null ? 0 : donor.getIdLong()).setLong(receiver.getIdLong())
+                                      .setLong(message.getIdLong()).setLong(refMessage == null ? null : refMessage.getIdLong())
+                                      .setLong(message.getChannel().getIdLong()).setString(type.name()))
+                              .insert().executeSync() > 0;
         if (success) {
             log.debug("{} received one reputation from {} for message {}", receiver.getName(), donor.getName(), message.getIdLong());
         }
@@ -313,17 +313,17 @@ public class ReputationData extends QueryFactoryHolder {
      */
     public boolean removeReputation(long user, long message, ThankType type) {
         return builder()
-                .query("""
-                        DELETE FROM
-                            reputation_log
-                        WHERE
-                            message_id = ?
-                            AND donor_id = ?
-                            AND cause = ?;
-                        """)
-                .paramsBuilder(stmt -> stmt.setLong(message).setLong(user).setString(type.name()))
-                .update()
-                .executeSync() > 0;
+                       .query("""
+                               DELETE FROM
+                                   reputation_log
+                               WHERE
+                                   message_id = ?
+                                   AND donor_id = ?
+                                   AND cause = ?;
+                               """)
+                       .paramsBuilder(stmt -> stmt.setLong(message).setLong(user).setString(type.name()))
+                       .update()
+                       .executeSync() > 0;
     }
 
     public Optional<GuildReputationStats> getGuildReputationStats(Guild guild) {

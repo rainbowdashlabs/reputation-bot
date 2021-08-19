@@ -24,14 +24,21 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class Statistic implements Runnable {
     private static final Logger log = getLogger(Statistic.class);
     private final Map<Integer, long[]> analyzedMessages = new HashMap<>();
-    private int currentMin = 0;
     private final ShardManager shardManager;
     private final StatisticData statisticData;
+    private int currentMin;
 
     private Statistic(ShardManager shardManager, DataSource dataSource) {
         this.shardManager = shardManager;
         this.statisticData = new StatisticData(dataSource);
         getSystemStatistic();
+    }
+
+    public static Statistic of(ShardManager shardManager, DataSource dataSource, ScheduledExecutorService service) {
+        var statistic = new Statistic(shardManager, dataSource);
+        service.scheduleAtFixedRate(statistic, 0, 1, TimeUnit.MINUTES);
+        service.scheduleAtFixedRate(statistic::refreshStatistics, 1, 30, TimeUnit.MINUTES);
+        return statistic;
     }
 
     private int minute() {
@@ -43,7 +50,7 @@ public class Statistic implements Runnable {
         getShardMessageStats(shardId)[currentMin]++;
     }
 
-    private long[] getShardMessageStats(int shardId){
+    private long[] getShardMessageStats(int shardId) {
         return analyzedMessages.computeIfAbsent(shardId, k -> new long[60]);
     }
 
@@ -88,13 +95,6 @@ public class Statistic implements Runnable {
 
     private long arraySum(long[] array) {
         return Arrays.stream(array).sum();
-    }
-
-    public static Statistic of(ShardManager shardManager, DataSource dataSource, ScheduledExecutorService service) {
-        var statistic = new Statistic(shardManager, dataSource);
-        service.scheduleAtFixedRate(statistic, 0, 1, TimeUnit.MINUTES);
-        service.scheduleAtFixedRate(statistic::refreshStatistics, 1, 30, TimeUnit.MINUTES);
-        return statistic;
     }
 
     private void refreshStatistics() {

@@ -8,6 +8,7 @@ import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Language;
 import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
+import de.chojo.repbot.commands.AbuseProtection;
 import de.chojo.repbot.commands.Channel;
 import de.chojo.repbot.commands.Dashboard;
 import de.chojo.repbot.commands.Gdpr;
@@ -34,7 +35,6 @@ import de.chojo.repbot.listener.InternalCommandListener;
 import de.chojo.repbot.listener.LogListener;
 import de.chojo.repbot.listener.MessageListener;
 import de.chojo.repbot.listener.ReactionListener;
-import de.chojo.repbot.service.SelfCleanupService;
 import de.chojo.repbot.listener.StateListener;
 import de.chojo.repbot.listener.VoiceStateListener;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;
@@ -43,6 +43,7 @@ import de.chojo.repbot.service.PresenceService;
 import de.chojo.repbot.service.RepBotCachePolicy;
 import de.chojo.repbot.service.ReputationService;
 import de.chojo.repbot.service.RoleAssigner;
+import de.chojo.repbot.service.SelfCleanupService;
 import de.chojo.repbot.statistic.Statistic;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.repbot.util.PermissionErrorHandler;
@@ -247,16 +248,15 @@ public class ReputationBot {
                         new Gdpr(dataSource, localizer),
                         new Prune(gdprService, localizer),
                         new Reactions(dataSource, localizer),
-                        new Dashboard(dataSource, localizer)
+                        new Dashboard(dataSource, localizer),
+                        new AbuseProtection(dataSource, localizer)
                 )
                 .withInvalidArgumentProvider(((loc, command) -> Help.getCommandHelp(command, loc)))
                 .withLocalizer(localizer)
                 .withPermissionCheck((wrapper, command) -> {
                     if (wrapper.getMember().hasPermission(command.permission())) return true;
-                    var guildSettings = data.getGuildSettings(wrapper.getGuild());
-                    if (guildSettings.isEmpty()) return false;
-                    var settings = guildSettings.get();
-                    var roleById = wrapper.getGuild().getRoleById(settings.managerRole().orElse(0));
+                    var settings = data.getGuildSettings(wrapper.getGuild());
+                    var roleById = wrapper.getGuild().getRoleById(settings.generalSettings().managerRole().orElse(0));
                     if (roleById == null) return false;
                     return wrapper.getMember().getRoles().contains(roleById);
                 })

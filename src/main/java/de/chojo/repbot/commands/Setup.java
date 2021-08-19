@@ -88,10 +88,10 @@ public class Setup extends SimpleCommand {
 
     private Conversation getConversation() {
         var builder = ConversationBuilder.builder(
-                Step.button("**$command.setup.dialog.welcome$**\n$command.setup.dialog.continueToProceed$",
-                        buttons -> buttons
-                                .add(Button.success("continue", "word.continue"), c -> Result.proceed(1)))
-                        .build())
+                        Step.button("**$command.setup.dialog.welcome$**\n$command.setup.dialog.continueToProceed$",
+                                        buttons -> buttons
+                                                .add(Button.success("continue", "word.continue"), c -> Result.proceed(1)))
+                                .build())
                 .addStep(1, buildSelectLanguage())
                 .addStep(2, buildManagerRole())
                 .addStep(3, buildRoles())
@@ -120,10 +120,10 @@ public class Setup extends SimpleCommand {
 
     private Step buildManagerRole() {
         return Step.message("command.setup.dialog.managerRole",
-                context -> {
-                    var role = DiscordResolver.getRole(context.getGuild(), context.getContentRaw());
-                    return role.map(role1 -> handleManageRole(context, role1)).orElse(Result.fail());
-                })
+                        context -> {
+                            var role = DiscordResolver.getRole(context.getGuild(), context.getContentRaw());
+                            return role.map(role1 -> handleManageRole(context, role1)).orElse(Result.fail());
+                        })
                 .button(buttons -> buttons
                         .add(new ComponenAction(Button.danger("skip", "word.skip"), c -> Result.proceed(3))))
                 .build();
@@ -132,7 +132,7 @@ public class Setup extends SimpleCommand {
     private Result handleManageRole(ConversationContext context, Role role) {
         guildData.setManagerRole(context.getGuild(), role);
         context.reply(localizer.localize("command.roles.sub.managerRole.set", context.getGuild(),
-                Replacement.createMention(role)))
+                        Replacement.createMention(role)))
                 .allowedMentions(Collections.emptyList())
                 .queue();
         return Result.proceed(3);
@@ -165,15 +165,15 @@ public class Setup extends SimpleCommand {
     private Result responseRolesSubAdded(ConversationContext context, Role role, Integer reputation) {
         guildData.addReputationRole(context.getGuild(), role, reputation);
         context.reply(localizer.localize("command.roles.sub.add.added", context.getGuild(),
-                Replacement.createMention(role),
-                Replacement.create("POINTS", reputation, Format.BOLD)))
+                        Replacement.createMention(role),
+                        Replacement.create("POINTS", reputation, Format.BOLD)))
                 .queue();
         return Result.freeze();
     }
 
     private Step buildLoadDefaults() {
         return Step.button("command.setup.dialog.loadDefaults",
-                this::buildLoadDefaultsButton)
+                        this::buildLoadDefaultsButton)
                 .build();
     }
 
@@ -187,7 +187,7 @@ public class Setup extends SimpleCommand {
                         var wordsJoined = words.stream().map(w -> StringUtils.wrap(w, "`"))
                                 .collect(Collectors.joining(", "));
                         context.reply(
-                                localizer.localize("command.thankwords.sub.loadDefault.added") + wordsJoined)
+                                        localizer.localize("command.thankwords.sub.loadDefault.added") + wordsJoined)
                                 .queue();
                         return Result.freeze();
                     });
@@ -224,8 +224,8 @@ public class Setup extends SimpleCommand {
                 })
                 .collect(Collectors.joining(", "));
         context.reply(
-                localizer.localize("command.channel.sub.add.added", context.getGuild(),
-                        Replacement.create("CHANNEL", addedChannel)))
+                        localizer.localize("command.channel.sub.add.added", context.getGuild(),
+                                Replacement.create("CHANNEL", addedChannel)))
                 .allowedMentions(Collections.emptyList())
                 .queue();
         return Result.freeze();

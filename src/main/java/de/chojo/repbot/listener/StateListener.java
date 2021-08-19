@@ -4,7 +4,7 @@ import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GdprData;
 import de.chojo.repbot.data.GuildData;
-import de.chojo.repbot.data.wrapper.GuildSettingUpdate;
+import de.chojo.repbot.data.wrapper.GuildSettings;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.channel.text.TextChannelDeleteEvent;
@@ -88,11 +88,10 @@ public class StateListener extends ListenerAdapter {
 
     @Override
     public void onEmoteRemoved(@NotNull EmoteRemovedEvent event) {
-        var guildSettings = guildData.getGuildSettings(event.getGuild());
-        if (guildSettings.isEmpty()) return;
-        if (!guildSettings.get().reactionIsEmote()) return;
-        if (!guildSettings.get().reaction().equals(event.getEmote().getId())) return;
-        guildData.updateMessageSettings(GuildSettingUpdate.builder(event.getGuild()).reaction("✅").build());
+        GuildSettings guildSettings = guildData.getGuildSettings(event.getGuild());
+        if (!guildSettings.thankSettings().reactionIsEmote()) return;
+        if (!guildSettings.thankSettings().reaction().equals(event.getEmote().getId())) return;
+        guildData.setMainReaction(event.getGuild(), "🏅");
     }
 
     @Override

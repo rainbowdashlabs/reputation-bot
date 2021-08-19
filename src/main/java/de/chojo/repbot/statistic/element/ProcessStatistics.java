@@ -28,6 +28,16 @@ public class ProcessStatistics implements ReplacementProvider, EmbedDisplay {
         this.threads = threads;
     }
 
+    public static ProcessStatistics create() {
+        var instance = Runtime.getRuntime();
+        var total = instance.totalMemory() / MB;
+        var free = instance.freeMemory() / MB;
+        var used = total - free / MB;
+        var max = instance.maxMemory() / MB;
+
+        return new ProcessStatistics(total, free, used, max, Thread.activeCount());
+    }
+
     public long total() {
         return total;
     }
@@ -46,16 +56,6 @@ public class ProcessStatistics implements ReplacementProvider, EmbedDisplay {
 
     public long threads() {
         return threads;
-    }
-
-    public static ProcessStatistics create() {
-        var instance = Runtime.getRuntime();
-        var total = instance.totalMemory() / MB;
-        var free = instance.freeMemory() / MB;
-        var used = total - free / MB;
-        var max = instance.maxMemory() / MB;
-
-        return new ProcessStatistics(total, free, used, max, Thread.activeCount());
     }
 
     public long uptime() {

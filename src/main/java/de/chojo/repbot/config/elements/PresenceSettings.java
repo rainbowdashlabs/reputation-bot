@@ -10,7 +10,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
 public class PresenceSettings {
-    private boolean active = false;
+    private boolean active;
     private int interval = 5;
     private List<Presence> status = List.of(
             Presence.of(Activity.ActivityType.WATCHING, "%guild_count% guilds!"),
@@ -20,7 +20,7 @@ public class PresenceSettings {
             Presence.of(Activity.ActivityType.WATCHING, "%today_rep% Reputation today!"),
             Presence.of(Activity.ActivityType.WATCHING, "%weekly_avg_rep% Reputation per week!"),
             Presence.of(Activity.ActivityType.LISTENING, "%analyzed_messages% messages during the last hour!")
-            );
+    );
 
     public boolean isActive() {
         return active;

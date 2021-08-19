@@ -172,7 +172,7 @@ public class GdprData extends QueryFactoryHolder {
         if (task.userId() == 0) {
             builder = builder().query("DELETE FROM reputation_log WHERE guild_id = ?;")
                     .paramsBuilder(stmt -> stmt.setLong(task.guildId()))
-                    .append().query("DELETE FROM guild_bot_settings WHERE guild_id = ?;")
+                    .append().query("DELETE FROM guild_settings WHERE guild_id = ?;")
                     .paramsBuilder(stmt -> stmt.setLong(task.guildId()))
                     .append().query("DELETE FROM active_channel WHERE guild_id = ?;")
                     .paramsBuilder(stmt -> stmt.setLong(task.guildId()))

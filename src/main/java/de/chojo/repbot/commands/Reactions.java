@@ -8,7 +8,6 @@ import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
-import de.chojo.repbot.data.wrapper.GuildSettingUpdate;
 import de.chojo.repbot.data.wrapper.GuildSettings;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
@@ -89,22 +88,18 @@ public class Reactions extends SimpleCommand {
     }
 
     private boolean info(MessageEventWrapper eventWrapper) {
-        var guildSettings = guildData.getGuildSettings(eventWrapper.getGuild());
-        if (guildSettings.isEmpty()) return true;
-        eventWrapper.reply(getInfoEmbed(guildSettings.get())).queue();
+        eventWrapper.reply(getInfoEmbed(guildData.getGuildSettings(eventWrapper.getGuild()))).queue();
         return true;
     }
 
     private boolean info(SlashCommandEvent event) {
-        var guildSettings = guildData.getGuildSettings(event.getGuild());
-        if (guildSettings.isEmpty()) return true;
-        event.replyEmbeds(getInfoEmbed(guildSettings.get())).queue();
+        event.replyEmbeds(getInfoEmbed(guildData.getGuildSettings(event.getGuild()))).queue();
         return true;
     }
 
     private MessageEmbed getInfoEmbed(GuildSettings settings) {
-        var mainEmote = settings.reactionMention(settings.guild());
-        var emotes = String.join(" ", settings.getAdditionalReactionMentions(settings.guild()));
+        var mainEmote = settings.thankSettings().reactionMention(settings.guild());
+        var emotes = String.join(" ", settings.thankSettings().getAdditionalReactionMentions(settings.guild()));
 
         return new LocalizedEmbedBuilder(loc, settings.guild())
                 .setTitle("command.reaction.sub.info.title")
@@ -185,13 +180,13 @@ public class Reactions extends SimpleCommand {
         var result = checkEmoji(message, emote);
         switch (result.result) {
             case EMOJI_FOUND -> {
-                if (guildData.updateMessageSettings(GuildSettingUpdate.builder(guild).reaction(emote).build())) {
+                if (guildData.setMainReaction(guild, emote)) {
                     message.editMessage(loc.localize("command.reaction.sub.main.set", guild,
                             Replacement.create("EMOTE", result.mention))).queue();
                 }
             }
             case EMOTE_FOUND -> {
-                if (guildData.updateMessageSettings(GuildSettingUpdate.builder(guild).reaction(result.id).build())) {
+                if (guildData.setMainReaction(guild, result.id)) {
                     message.editMessage(loc.localize("command.reaction.sub.main.set", guild,
                             Replacement.create("EMOTE", result.mention))).queue();
                 }
@@ -240,7 +235,11 @@ public class Reactions extends SimpleCommand {
         return new EmojiCheckResult(emoteById.getAsMention(), emoteById.getId(), CheckResult.EMOTE_FOUND);
     }
 
-    private class EmojiCheckResult {
+    private enum CheckResult {
+        EMOJI_FOUND, EMOTE_FOUND, NOT_FOUND, UNKNOWN_EMOJI
+    }
+
+    private static class EmojiCheckResult {
         private final String mention;
         private final String id;
         private final CheckResult result;
@@ -250,9 +249,5 @@ public class Reactions extends SimpleCommand {
             this.id = id;
             this.result = result;
         }
-    }
-
-    private enum CheckResult {
-        EMOJI_FOUND, EMOTE_FOUND, NOT_FOUND, UNKNOWN_EMOJI
     }
 }

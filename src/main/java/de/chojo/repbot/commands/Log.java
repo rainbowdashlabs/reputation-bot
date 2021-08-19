@@ -134,7 +134,7 @@ public class Log extends SimpleCommand {
     private MessageEmbed sendUserLog(Guild guild, User user, String title, String log) {
         return new LocalizedEmbedBuilder(loc, guild)
                 .setAuthor(loc.localize(title, guild,
-                        Replacement.create("USER", user.getAsTag())),
+                                Replacement.create("USER", user.getAsTag())),
                         null, user.getEffectiveAvatarUrl())
                 .setDescription(log)
                 .build();

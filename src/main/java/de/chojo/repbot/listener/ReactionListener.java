@@ -32,8 +32,8 @@ import java.util.concurrent.TimeUnit;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ReactionListener extends ListenerAdapter {
+    private static final int REACTION_COOLDOWN = 30;
     private static final Logger log = getLogger(ReactionListener.class);
-    public static final int REACTION_COOLDOWN = 30;
     private final GuildData guildData;
     private final ReputationData reputationData;
     private final Localizer localizer;
@@ -52,13 +52,11 @@ public class ReactionListener extends ListenerAdapter {
     @Override
     public void onGuildMessageReactionAdd(@NotNull GuildMessageReactionAddEvent event) {
         if (event.getUser().isBot()) return;
-        var optGuildSettings = guildData.getGuildSettings(event.getGuild());
-        if (optGuildSettings.isEmpty()) return;
-        var guildSettings = optGuildSettings.get();
+        var guildSettings = guildData.getGuildSettings(event.getGuild());
 
-        if (!guildSettings.isReputationChannel(event.getChannel())) return;
-        if (!guildSettings.isReactionActive()) return;
-        if (!guildSettings.isReaction(event.getReaction().getReactionEmote())) return;
+        if (!guildSettings.thankSettings().isReputationChannel(event.getChannel())) return;
+        if (!guildSettings.messageSettings().isReactionActive()) return;
+        if (!guildSettings.thankSettings().isReaction(event.getReaction().getReactionEmote())) return;
 
         if (isCooldown(event.getMember())) return;
 
@@ -98,7 +96,7 @@ public class ReactionListener extends ListenerAdapter {
         if (reputationService.submitReputation(event.getGuild(), event.getUser(), receiver, message, null, ThankType.REACTION)) {
             reacted(event.getMember());
             event.getChannel().sendMessage(localizer.localize("listener.reaction.confirmation", event.getGuild(),
-                    Replacement.create("DONOR", event.getUser().getAsMention()), Replacement.create("RECEIVER", receiver.getAsMention())))
+                            Replacement.create("DONOR", event.getUser().getAsMention()), Replacement.create("RECEIVER", receiver.getAsMention())))
                     .mention(event.getUser())
                     .onErrorFlatMap(err -> null)
                     .delay(30, TimeUnit.SECONDS)
@@ -110,22 +108,18 @@ public class ReactionListener extends ListenerAdapter {
 
     @Override
     public void onGuildMessageReactionRemoveEmote(@NotNull GuildMessageReactionRemoveEmoteEvent event) {
-        var optGuildSettings = guildData.getGuildSettings(event.getGuild());
-        if (optGuildSettings.isEmpty()) return;
-        var guildSettings = optGuildSettings.get();
-        if (!guildSettings.isReaction(event.getReactionEmote())) return;
+        var guildSettings = guildData.getGuildSettings(event.getGuild());
+        if (!guildSettings.thankSettings().isReaction(event.getReactionEmote())) return;
         reputationData.removeMessage(event.getMessageIdLong());
     }
 
     @Override
     public void onGuildMessageReactionRemove(@NotNull GuildMessageReactionRemoveEvent event) {
-        var optGuildSettings = guildData.getGuildSettings(event.getGuild());
-        if (optGuildSettings.isEmpty()) return;
-        var guildSettings = optGuildSettings.get();
-        if (!guildSettings.isReaction(event.getReactionEmote())) return;
+        var guildSettings = guildData.getGuildSettings(event.getGuild());
+        if (!guildSettings.thankSettings().isReaction(event.getReactionEmote())) return;
         if (reputationData.removeReputation(event.getUserIdLong(), event.getMessageIdLong(), ThankType.REACTION)) {
             event.getChannel().sendMessage(localizer.localize("listener.reaction.removal", event.getGuild(),
-                    Replacement.create("DONOR", User.fromId(event.getUserId()).getAsMention())))
+                            Replacement.create("DONOR", User.fromId(event.getUserId()).getAsMention())))
                     .delay(30, TimeUnit.SECONDS).flatMap(Message::delete).queue();
         }
     }
