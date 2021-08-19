@@ -11,7 +11,6 @@ import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
-import de.chojo.repbot.data.wrapper.ThankSettings;
 import de.chojo.repbot.util.StringUtil;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
@@ -184,7 +183,7 @@ public class Roles extends SimpleCommand {
         var role = event.getOption("role").getAsRole();
         if (data.setManagerRole(event.getGuild(), role)) {
             event.reply(loc.localize("command.roles.sub.managerRole.set",
-                    Replacement.createMention(role)))
+                            Replacement.createMention(role)))
                     .allowedMentions(Collections.emptyList()).queue();
         }
     }
@@ -247,7 +246,7 @@ public class Roles extends SimpleCommand {
 
         if (data.addReputationRole(event.getGuild(), role, reputation)) {
             event.reply(loc.localize("command.roles.sub.add.added", event.getGuild(),
-                    Replacement.createMention("ROLE", role), Replacement.create("POINTS", reputation)))
+                            Replacement.createMention("ROLE", role), Replacement.create("POINTS", reputation)))
                     .allowedMentions(Collections.emptyList()).queue();
         }
     }
@@ -328,19 +327,19 @@ public class Roles extends SimpleCommand {
 
     private void addDonor(SlashCommandEvent event, Role role) {
         data.addDonorRole(event.getGuild(), role);
-        event.reply(loc.localize("command.roles.sub.addDonor.add",event.getGuild(),
+        event.reply(loc.localize("command.roles.sub.addDonor.add", event.getGuild(),
                 Replacement.createMention(role))).allowedMentions(Collections.emptyList()).queue();
     }
 
     private void addReceiver(SlashCommandEvent event, Role role) {
         data.addReceiverRole(event.getGuild(), role);
-        event.reply(loc.localize("command.roles.sub.addReceiver.add",event.getGuild(),
+        event.reply(loc.localize("command.roles.sub.addReceiver.add", event.getGuild(),
                 Replacement.createMention(role))).allowedMentions(Collections.emptyList()).queue();
     }
 
     private void removeDonor(SlashCommandEvent event, Role role) {
         data.removeDonorRole(event.getGuild(), role);
-        event.reply(loc.localize("command.roles.sub.removeDonor.remove",event.getGuild(),
+        event.reply(loc.localize("command.roles.sub.removeDonor.remove", event.getGuild(),
                 Replacement.createMention(role))).allowedMentions(Collections.emptyList()).queue();
     }
 

@@ -4,15 +4,12 @@ import de.chojo.repbot.commands.Scan;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
-
-import static org.slf4j.LoggerFactory.getLogger;
 
 public class RepBotCachePolicy implements MemberCachePolicy, Runnable {
     public static final int CACHE_DURATION = 30;

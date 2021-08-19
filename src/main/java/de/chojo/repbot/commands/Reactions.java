@@ -235,6 +235,10 @@ public class Reactions extends SimpleCommand {
         return new EmojiCheckResult(emoteById.getAsMention(), emoteById.getId(), CheckResult.EMOTE_FOUND);
     }
 
+    private enum CheckResult {
+        EMOJI_FOUND, EMOTE_FOUND, NOT_FOUND, UNKNOWN_EMOJI
+    }
+
     private static class EmojiCheckResult {
         private final String mention;
         private final String id;
@@ -245,9 +249,5 @@ public class Reactions extends SimpleCommand {
             this.id = id;
             this.result = result;
         }
-    }
-
-    private enum CheckResult {
-        EMOJI_FOUND, EMOTE_FOUND, NOT_FOUND, UNKNOWN_EMOJI
     }
 }

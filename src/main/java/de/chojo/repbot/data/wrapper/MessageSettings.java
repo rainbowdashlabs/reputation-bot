@@ -1,7 +1,5 @@
 package de.chojo.repbot.data.wrapper;
 
-import java.util.Set;
-
 public class MessageSettings {
     private boolean reactionActive;
     private boolean answerActive;

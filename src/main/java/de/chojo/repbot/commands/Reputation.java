@@ -93,7 +93,7 @@ public class Reputation extends SimpleCommand {
         var build = new LocalizedEmbedBuilder(loc, member.getGuild())
                 .setAuthor(
                         (reputation.rank() != 0 ? "#" + reputation.rank() + " " : "")
-                                + loc.localize("command.reputation.profile.title",
+                        + loc.localize("command.reputation.profile.title",
                                 member.getGuild(),
                                 Replacement.create("NAME", member.getEffectiveName())), null, member.getUser().getEffectiveAvatarUrl())
                 .addField("words.level", level, true)

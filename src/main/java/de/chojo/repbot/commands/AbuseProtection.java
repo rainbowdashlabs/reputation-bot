@@ -8,7 +8,6 @@ import de.chojo.jdautil.wrapper.CommandContext;
 import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
-import de.chojo.repbot.data.wrapper.AbuseSettings;
 import de.chojo.repbot.data.wrapper.GuildSettings;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
@@ -82,11 +81,11 @@ public class AbuseProtection extends SimpleCommand {
         if ("cooldown".equalsIgnoreCase(subcmd)) {
             return cooldown(eventWrapper, context.subContext(subcmd), guildSettings);
         }
-        
+
         if ("donorContext".equalsIgnoreCase(subcmd)) {
             return donorContext(eventWrapper, context.subContext(subcmd), guildSettings);
         }
-        
+
         if ("receiverContext".equalsIgnoreCase(subcmd)) {
             return receiverContext(eventWrapper, context.subContext(subcmd), guildSettings);
         }
@@ -113,11 +112,11 @@ public class AbuseProtection extends SimpleCommand {
         if ("cooldown".equalsIgnoreCase(subcmd)) {
             cooldown(event, guildSettings);
         }
-        
+
         if ("donorContext".equalsIgnoreCase(subcmd)) {
             donorContext(event, guildSettings);
         }
-        
+
         if ("receiverContext".equalsIgnoreCase(subcmd)) {
             receiverContext(event, guildSettings);
         }

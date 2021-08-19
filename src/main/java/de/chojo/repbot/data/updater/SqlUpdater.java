@@ -15,9 +15,9 @@ import java.util.stream.Collectors;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class SqlUpdater {
+    private static final Logger log = getLogger(SqlUpdater.class);
     private final int major;
     private final int patch;
-    private static final Logger log = getLogger(SqlUpdater.class);
     private final DataSource source;
     private final String versionTable;
     private final String[] schemas;
@@ -267,7 +267,7 @@ public class SqlUpdater {
 
     public static class SqlUpdaterBuilder {
         private final DataSource source;
-        private Pair<Integer, Integer> version;
+        private final Pair<Integer, Integer> version;
         private String versionTable = "version";
         private QueryReplacement[] replacements = new QueryReplacement[0];
         private String[] schemas = new String[0];

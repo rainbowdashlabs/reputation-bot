@@ -118,8 +118,8 @@ public class Help extends SimpleCommand {
         var cmd = event.getOption("command").getAsString();
         var command = hub.getCommand(cmd);
         if (command.isEmpty() ||
-                (!eventWrapper.getMember().hasPermission(command.get().permission())
-                        && command.get().permission() != Permission.UNKNOWN)) {
+            (!eventWrapper.getMember().hasPermission(command.get().permission())
+             && command.get().permission() != Permission.UNKNOWN)) {
             event.reply(eventWrapper.localize("error.commandNotFound"))
                     .delay(Duration.ofSeconds(10))
                     .flatMap(InteractionHook::deleteOriginal)

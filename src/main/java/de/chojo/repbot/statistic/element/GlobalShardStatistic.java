@@ -3,7 +3,6 @@ package de.chojo.repbot.statistic.element;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.statistic.ReplacementProvider;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 

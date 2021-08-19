@@ -1,9 +1,9 @@
 package de.chojo.repbot.statistic.element;
 
-import java.util.List;
-
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.statistic.ReplacementProvider;
+
+import java.util.List;
 
 public class DataStatistic implements ReplacementProvider {
     private final int guilds;

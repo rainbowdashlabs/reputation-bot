@@ -106,7 +106,8 @@ public class MessageListener extends ListenerAdapter {
             }
         }
 
-        if (settings.generalSettings().isEmojiDebug()) event.getMessage().addReaction(EmojiDebug.FOUND_THANKWORD).queue();
+        if (settings.generalSettings().isEmojiDebug())
+            event.getMessage().addReaction(EmojiDebug.FOUND_THANKWORD).queue();
 
         var resultType = analyzerResult.type();
         var resolveNoTarget = true;

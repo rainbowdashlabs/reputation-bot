@@ -284,7 +284,7 @@ public class Thankwords extends SimpleCommand {
                         loc.localize("command.thankwords.sub.check.result",
                                 Replacement.create("DONATOR", result.donator().getAsMention()),
                                 Replacement.create("RECEIVER", receiver.getReference().getAsMention())) + "\n"
-                                + loc.localize("command.thankwords.sub.check.confidence",
+                        + loc.localize("command.thankwords.sub.check.confidence",
                                 Replacement.create("SCORE", String.format("%.3f", receiver.getWeight()))),
                         false);
                 case MENTION -> builder.addField("command.thankwords.sub.check.match.mention",
@@ -297,7 +297,7 @@ public class Thankwords extends SimpleCommand {
                             loc.localize("command.thankwords.sub.check.result",
                                     Replacement.create("DONATOR", result.donator().getAsMention()),
                                     Replacement.create("RECEIVER", receiver.getReference().getAsMention())) + "\n"
-                                    + loc.localize("command.thankwords.sub.check.reference",
+                            + loc.localize("command.thankwords.sub.check.reference",
                                     Replacement.create("URL", result.referenceMessage().getJumpUrl())),
                             false);
 
@@ -307,7 +307,7 @@ public class Thankwords extends SimpleCommand {
                                     loc.localize("command.thankwords.sub.check.result",
                                             Replacement.create("DONATOR", result.donator().getAsMention()),
                                             Replacement.create("RECEIVER", receiver.getReference().getAsMention())) + "\n"
-                                            + loc.localize("command.thankwords.sub.check.reference",
+                                    + loc.localize("command.thankwords.sub.check.reference",
                                             Replacement.create("URL", result.referenceMessage().getJumpUrl())));
                     return match.build();
                 }
@@ -320,7 +320,7 @@ public class Thankwords extends SimpleCommand {
     private boolean loadDefaults(MessageEventWrapper eventWrapper, CommandContext context) {
         if (context.argsEmpty()) {
             eventWrapper.reply(eventWrapper.localize("command.thankwords.sub.loadDefault.available")
-                    + " " + String.join(", ", thankwordsContainer.getAvailableLanguages())).queue();
+                               + " " + String.join(", ", thankwordsContainer.getAvailableLanguages())).queue();
             return true;
         }
         var language = context.argString(0).get();
@@ -345,7 +345,7 @@ public class Thankwords extends SimpleCommand {
         var languageOption = slashCommandEvent.getOption("language");
         if (languageOption == null) {
             slashCommandEvent.reply(loc.localize("command.thankwords.sub.loadDefault.available")
-                    + " " + String.join(", ", thankwordsContainer.getAvailableLanguages())).queue();
+                                    + " " + String.join(", ", thankwordsContainer.getAvailableLanguages())).queue();
             return true;
         }
         var language = languageOption.getAsString();

@@ -1,10 +1,10 @@
 package de.chojo.repbot.statistic.element;
 
-import java.util.List;
-
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.statistic.ReplacementProvider;
 import net.dv8tion.jda.api.JDA;
+
+import java.util.List;
 
 public class ShardStatistic implements ReplacementProvider {
     private final int shard;

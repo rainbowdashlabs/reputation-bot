@@ -14,6 +14,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class StatisticData extends QueryFactoryHolder {
     private static final Logger log = getLogger(StatisticData.class);
+
     /**
      * Create a new StatisticData
      *
@@ -27,20 +28,20 @@ public class StatisticData extends QueryFactoryHolder {
 
     public Optional<DataStatistic> getStatistic() {
         return builder(DataStatistic.class).queryWithoutParams("""
-                SELECT
-                	guilds,
-                	active_guilds,
-                	active_channel,
-                	channel,
-                	total_reputation,
-                	today_reputation,
-                	weekly_reputation,
-                	weekly_avg_reputation
-                FROM
-                	data_statistics;
-                """).readRow(rs -> new DataStatistic(rs.getInt("guilds"), rs.getInt("active_guilds"),
-                rs.getInt("active_channel"), rs.getInt("channel"), rs.getInt("total_reputation"),
-                rs.getInt("today_reputation"), rs.getInt("weekly_reputation"), rs.getInt("weekly_avg_reputation")))
+                        SELECT
+                        	guilds,
+                        	active_guilds,
+                        	active_channel,
+                        	channel,
+                        	total_reputation,
+                        	today_reputation,
+                        	weekly_reputation,
+                        	weekly_avg_reputation
+                        FROM
+                        	data_statistics;
+                        """).readRow(rs -> new DataStatistic(rs.getInt("guilds"), rs.getInt("active_guilds"),
+                        rs.getInt("active_channel"), rs.getInt("channel"), rs.getInt("total_reputation"),
+                        rs.getInt("today_reputation"), rs.getInt("weekly_reputation"), rs.getInt("weekly_avg_reputation")))
                 .firstSync();
     }
 

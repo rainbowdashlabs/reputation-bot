@@ -101,10 +101,10 @@ public class ReputationVoteListener extends ListenerAdapter {
 
         message.reply(builder.build())
                 .setActionRows(componentRows).queue(voteMessage -> {
-            voteRequests.put(voteMessage.getIdLong(), new VoteRequest(message.getMember(), builder, voteMessage, message, components, Math.min(3, members.size())));
-            voteMessage.delete().queueAfter(1, TimeUnit.MINUTES, submit -> voteRequests.remove(voteMessage.getIdLong()),
-                    ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
-        });
+                    voteRequests.put(voteMessage.getIdLong(), new VoteRequest(message.getMember(), builder, voteMessage, message, components, Math.min(3, members.size())));
+                    voteMessage.delete().queueAfter(1, TimeUnit.MINUTES, submit -> voteRequests.remove(voteMessage.getIdLong()),
+                            ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
+                });
     }
 
     private List<ActionRow> getComponentRows(List<Component> components) {

@@ -58,8 +58,8 @@ public class Scan extends SimpleCommand {
     private final Set<Long> cancel = new HashSet<>();
     private final Queue<ScanProcess> finished = new ArrayDeque<>();
     private final Queue<ScanProcess> canceled = new ArrayDeque<>();
-    private MessageAnalyzer messageAnalyzer;
     private final Configuration configuration;
+    private MessageAnalyzer messageAnalyzer;
 
     public Scan(DataSource dataSource, Localizer localizer, Configuration configuration) {
         super("scan",
