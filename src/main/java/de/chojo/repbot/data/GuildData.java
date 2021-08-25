@@ -494,6 +494,9 @@ public class GuildData extends QueryFactoryHolder {
                 .append()
                 .query("INSERT INTO guild_settings(guild_id) VALUES(?) ON CONFLICT DO NOTHING")
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
+                .append()
+                .query("INSERT INTO thank_settings(guild_id) VALUES(?) ON CONFLICT DO NOTHING")
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
                 .update().executeSync();
     }
 
