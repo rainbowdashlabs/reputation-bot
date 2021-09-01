@@ -1,5 +1,6 @@
 package de.chojo.repbot.listener;
 
+import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.analyzer.ThankType;
@@ -116,8 +117,9 @@ public class MessageListener extends ListenerAdapter {
             }
         }
 
-        if (settings.generalSettings().isEmojiDebug())
-            event.getMessage().addReaction(EmojiDebug.FOUND_THANKWORD).queue();
+        if (settings.generalSettings().isEmojiDebug()) {
+            Messages.markMessage(event.getMessage(), EmojiDebug.FOUND_THANKWORD);
+        }
 
         var resultType = analyzerResult.type();
         var resolveNoTarget = true;
@@ -151,7 +153,7 @@ public class MessageListener extends ListenerAdapter {
         var recentMembers = contextResolver.getCombinedContext(message, settings);
         recentMembers.remove(message.getMember());
         if (recentMembers.isEmpty()) {
-            if (settings.generalSettings().isEmojiDebug()) message.addReaction(EmojiDebug.EMPTY_CONTEXT).queue();
+            if (settings.generalSettings().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.EMPTY_CONTEXT);
             return;
         }
 
@@ -161,7 +163,7 @@ public class MessageListener extends ListenerAdapter {
                 .collect(Collectors.toList());
 
         if (members.isEmpty()) {
-            if (settings.generalSettings().isEmojiDebug()) message.addReaction(EmojiDebug.ONLY_COOLDOWN).queue();
+            if (settings.generalSettings().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.ONLY_COOLDOWN);
             return;
         }
 

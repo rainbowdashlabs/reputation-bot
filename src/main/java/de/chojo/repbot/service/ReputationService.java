@@ -112,19 +112,19 @@ public class ReputationService {
 
         // Abuse Protection: target context
         if (!recentUser.contains(receiver) && abuseSettings.isReceiverContext()) {
-            if (generalSettings.isEmojiDebug()) message.addReaction(EmojiDebug.TARGET_NOT_IN_CONTEXT).queue();
+            if (generalSettings.isEmojiDebug()) Messages.markMessage(message, EmojiDebug.TARGET_NOT_IN_CONTEXT);
             return false;
         }
 
         // Abuse Protection: donor context
         if (!recentUser.contains(donor) && abuseSettings.isDonorContext()) {
-            if (generalSettings.isEmojiDebug()) message.addReaction(EmojiDebug.DONOR_NOT_IN_CONTEXT).queue();
+            if (generalSettings.isEmojiDebug()) Messages.markMessage(message, EmojiDebug.DONOR_NOT_IN_CONTEXT);
             return false;
         }
 
         // Abuse protection: Cooldown
         if (!canVote(donor, receiver, guild, settings)) {
-            if (generalSettings.isEmojiDebug()) message.addReaction(EmojiDebug.ONLY_COOLDOWN).queue();
+            if (generalSettings.isEmojiDebug()) Messages.markMessage(message, EmojiDebug.ONLY_COOLDOWN);
             return false;
         }
 
@@ -132,7 +132,7 @@ public class ReputationService {
         // Abuse protection: Message age
         if (refMessage != null) {
             if (!abuseSettings.isFreshMessage(refMessage)) {
-                if (generalSettings.isEmojiDebug()) message.addReaction(EmojiDebug.TOO_OLD).queue();
+                if (generalSettings.isEmojiDebug()) Messages.markMessage(message, EmojiDebug.TOO_OLD);
                 return false;
             }
         }
@@ -140,7 +140,7 @@ public class ReputationService {
         // block outdated message
         // Abuse protection: Message age
         if (!abuseSettings.isFreshMessage(message)) {
-            if (generalSettings.isEmojiDebug()) message.addReaction(EmojiDebug.TOO_OLD).queue();
+            if (generalSettings.isEmojiDebug()) Messages.markMessage(message, EmojiDebug.TOO_OLD);
             return false;
         }
 
