@@ -60,7 +60,7 @@ public class ReputationVoteListener extends ListenerAdapter {
         var voteRequest = voteRequests.get(event.getMessageIdLong());
         if (!Verifier.equalSnowflake(voteRequest.member(), event.getMember())) {
             event.getHook().sendMessage(loc.localize("error.notYourEmbed", event.getGuild())).setEphemeral(true)
-                    .queue(message -> {
+                .queue(message -> {
                     }, throwable -> ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
             return;
         }

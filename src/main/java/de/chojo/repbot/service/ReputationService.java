@@ -28,8 +28,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static de.chojo.repbot.util.Messages.markMessage;
-
 public class ReputationService {
     private final ReputationData reputationData;
     private final GuildData guildData;
@@ -161,7 +159,7 @@ public class ReputationService {
         // try to log reputation
         if (reputationData.logReputation(guild, donor, receiver, message, refMessage, type)) {
             // mark messages
-            markMessage(message, refMessage, settings);
+            Messages.markMessage(message, refMessage, settings);
             // update role
             try {
                 assigner.update(guild.getMember(receiver));
