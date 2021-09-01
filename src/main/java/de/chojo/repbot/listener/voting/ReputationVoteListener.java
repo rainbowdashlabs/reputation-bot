@@ -76,7 +76,7 @@ public class ReputationVoteListener extends ListenerAdapter {
             voteRequest.voted();
             voteRequest.remove(event.getButton().getId());
             voteRequest.voteMessage().
-                    editMessage(voteRequest.getNewEmbed(loc.localize("listener.messages.request.descrThank"
+                    editMessageEmbeds(voteRequest.getNewEmbed(loc.localize("listener.messages.request.descrThank"
                             , event.getGuild(), Replacement.create("MORE", voteRequest.remainingVotes()))))
                     .setActionRows(getComponentRows(voteRequest.components()))
                     .queue();
