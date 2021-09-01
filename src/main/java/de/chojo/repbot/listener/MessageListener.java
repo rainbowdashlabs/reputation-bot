@@ -12,7 +12,10 @@ import de.chojo.repbot.service.RepBotCachePolicy;
 import de.chojo.repbot.service.ReputationService;
 import de.chojo.repbot.util.Colors;
 import de.chojo.repbot.util.EmojiDebug;
+import de.chojo.repbot.util.Messages;
+import de.chojo.repbot.util.PermissionErrorHandler;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageBulkDeleteEvent;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
@@ -29,6 +32,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class MessageListener extends ListenerAdapter {
     private static final Logger log = getLogger(MessageListener.class);
+    private final ILocalizer localizer;
     private final Configuration configuration;
     private final GuildData guildData;
     private final ReputationData reputationData;
@@ -38,9 +42,10 @@ public class MessageListener extends ListenerAdapter {
     private final ContextResolver contextResolver;
     private final MessageAnalyzer messageAnalyzer;
 
-    public MessageListener(DataSource dataSource, Configuration configuration, RepBotCachePolicy repBotCachePolicy,
+    public MessageListener(ILocalizer localizer, DataSource dataSource, Configuration configuration, RepBotCachePolicy repBotCachePolicy,
                            ReputationVoteListener reputationVoteListener, ReputationService reputationService,
                            ContextResolver contextResolver, MessageAnalyzer messageAnalyzer) {
+        this.localizer = localizer;
         guildData = new GuildData(dataSource);
         reputationData = new ReputationData(dataSource);
         this.configuration = configuration;
@@ -88,6 +93,11 @@ public class MessageListener extends ListenerAdapter {
         var analyzerResult = messageAnalyzer.processMessage(settings.thankSettings().thankwordPattern(), message, settings, true, 3);
 
         if (analyzerResult.type() == ThankType.NO_MATCH) return;
+
+        if (PermissionErrorHandler.assertAndHandle(event.getChannel(), localizer, configuration,
+                Permission.MESSAGE_WRITE, Permission.MESSAGE_ADD_REACTION, Permission.MESSAGE_EMBED_LINKS)) {
+            return;
+        }
 
         if (configuration.migration().isActive()) {
             var activeMigrations = guildData.getActiveMigrations(configuration.migration().maxMigrationsPeriod());

@@ -10,6 +10,7 @@ import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.util.EmojiDebug;
+import de.chojo.repbot.util.Messages;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -27,7 +28,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static de.chojo.repbot.util.MessageUtil.markMessage;
+import static de.chojo.repbot.util.Messages.markMessage;
 
 public class ReputationService {
     private final ReputationData reputationData;
