@@ -10,6 +10,7 @@ import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.util.EmojiDebug;
+import de.chojo.repbot.util.Messages;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -26,8 +27,6 @@ import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
-import static de.chojo.repbot.util.MessageUtil.markMessage;
 
 public class ReputationService {
     private final ReputationData reputationData;
@@ -111,19 +110,19 @@ public class ReputationService {
 
         // Abuse Protection: target context
         if (!recentUser.contains(receiver) && abuseSettings.isReceiverContext()) {
-            if (generalSettings.isEmojiDebug()) message.addReaction(EmojiDebug.TARGET_NOT_IN_CONTEXT).queue();
+            if (generalSettings.isEmojiDebug()) Messages.markMessage(message, EmojiDebug.TARGET_NOT_IN_CONTEXT);
             return false;
         }
 
         // Abuse Protection: donor context
         if (!recentUser.contains(donor) && abuseSettings.isDonorContext()) {
-            if (generalSettings.isEmojiDebug()) message.addReaction(EmojiDebug.DONOR_NOT_IN_CONTEXT).queue();
+            if (generalSettings.isEmojiDebug()) Messages.markMessage(message, EmojiDebug.DONOR_NOT_IN_CONTEXT);
             return false;
         }
 
         // Abuse protection: Cooldown
         if (!canVote(donor, receiver, guild, settings)) {
-            if (generalSettings.isEmojiDebug()) message.addReaction(EmojiDebug.ONLY_COOLDOWN).queue();
+            if (generalSettings.isEmojiDebug()) Messages.markMessage(message, EmojiDebug.ONLY_COOLDOWN);
             return false;
         }
 
@@ -131,7 +130,7 @@ public class ReputationService {
         // Abuse protection: Message age
         if (refMessage != null) {
             if (!abuseSettings.isFreshMessage(refMessage)) {
-                if (generalSettings.isEmojiDebug()) message.addReaction(EmojiDebug.TOO_OLD).queue();
+                if (generalSettings.isEmojiDebug()) Messages.markMessage(message, EmojiDebug.TOO_OLD);
                 return false;
             }
         }
@@ -139,7 +138,7 @@ public class ReputationService {
         // block outdated message
         // Abuse protection: Message age
         if (!abuseSettings.isFreshMessage(message)) {
-            if (generalSettings.isEmojiDebug()) message.addReaction(EmojiDebug.TOO_OLD).queue();
+            if (generalSettings.isEmojiDebug()) Messages.markMessage(message, EmojiDebug.TOO_OLD);
             return false;
         }
 
@@ -160,7 +159,7 @@ public class ReputationService {
         // try to log reputation
         if (reputationData.logReputation(guild, donor, receiver, message, refMessage, type)) {
             // mark messages
-            markMessage(message, refMessage, settings);
+            Messages.markMessage(message, refMessage, settings);
             // update role
             try {
                 assigner.update(guild.getMember(receiver));
