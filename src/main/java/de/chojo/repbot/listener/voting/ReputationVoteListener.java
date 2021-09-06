@@ -72,6 +72,8 @@ public class ReputationVoteListener extends ListenerAdapter {
 
         var target = voteRequest.getTarget(event.getButton().getId());
 
+        if(!voteRequest.canVote()) return;
+
         if (reputationService.submitReputation(event.getGuild(), event.getUser(), target.get().getUser(), voteRequest.refMessage(), null, ThankType.EMBED)) {
             voteRequest.voted();
             voteRequest.remove(event.getButton().getId());
