@@ -171,7 +171,7 @@ public class ReputationBot {
     private void initLocalization() {
         localizer = Localizer.builder(Language.ENGLISH)
                 .addLanguage(Language.GERMAN, Language.of("es_ES", "Español"), Language.of("fr_FR", "Français"),
-                        Language.of("pt_PT", "Português"))
+                        Language.of("pt_PT", "Português"), Language.of("ru_RU", "Русский"))
                 .withLanguageProvider(guild -> new GuildData(dataSource).getLanguage(guild))
                 .withBundlePath("locale")
                 .build();
