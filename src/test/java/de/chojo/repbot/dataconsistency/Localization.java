@@ -51,9 +51,7 @@ public class Localization {
                 Assertions.assertTrue(localeReplacements.containsAll(defReplacements),
                         "Missing replacement key in " + id
                         + ". Expected \"" + String.join(", ", defReplacements) + "\". Actual \"" + String.join(", ", localeReplacements) + "\"");
-                System.out.printf("Checked %s%n", key);
             }
-            System.out.printf("Checked Locale %s%n", resourceBundle.getLocale());
         }
     }
 
