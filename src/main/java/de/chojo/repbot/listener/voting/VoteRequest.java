@@ -71,4 +71,8 @@ public class VoteRequest {
     public void remove(String id) {
         voteTargets.remove(id);
     }
+
+    public boolean canVote() {
+        return remainingVotes > 0;
+    }
 }

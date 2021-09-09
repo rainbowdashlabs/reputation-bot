@@ -31,7 +31,7 @@ public class SelfCleanupService implements Runnable {
     private SelfCleanupService(ShardManager shardManager, ILocalizer localizer, DataSource dataSource, Configuration configuration) {
         this.shardManager = shardManager;
         this.localizer = localizer;
-        this.guildData = new GuildData(dataSource);
+        guildData = new GuildData(dataSource);
         this.configuration = configuration;
     }
 

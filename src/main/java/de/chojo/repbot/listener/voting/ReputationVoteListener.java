@@ -5,9 +5,13 @@ import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.repbot.analyzer.ThankType;
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.service.ReputationService;
 import de.chojo.repbot.util.EmojiDebug;
+import de.chojo.repbot.util.Messages;
+import de.chojo.repbot.util.PermissionErrorHandler;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -36,11 +40,13 @@ public class ReputationVoteListener extends ListenerAdapter {
     private static final Pattern VOTE = Pattern.compile("vote:(?<id>[0-9]*?)");
     private final ReputationService reputationService;
     private final ILocalizer loc;
+    private final Configuration configuration;
     private final Map<Long, VoteRequest> voteRequests = new HashMap<>();
 
-    public ReputationVoteListener(ReputationService reputationService, ILocalizer localizer) {
+    public ReputationVoteListener(ReputationService reputationService, ILocalizer localizer, Configuration configuration) {
         this.reputationService = reputationService;
-        this.loc = localizer;
+        loc = localizer;
+        this.configuration = configuration;
     }
 
     @Override
@@ -53,7 +59,9 @@ public class ReputationVoteListener extends ListenerAdapter {
         if (!matcher.find()) return;
         var voteRequest = voteRequests.get(event.getMessageIdLong());
         if (!Verifier.equalSnowflake(voteRequest.member(), event.getMember())) {
-            event.getHook().sendMessage(loc.localize("error.notYourEmbed", event.getGuild())).setEphemeral(true).queue();
+            event.getHook().sendMessage(loc.localize("error.notYourEmbed", event.getGuild())).setEphemeral(true)
+                    .queue(message -> {
+                    }, throwable -> ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
             return;
         }
         if ("vote:delete".equals(event.getButton().getId())) {
@@ -64,11 +72,13 @@ public class ReputationVoteListener extends ListenerAdapter {
 
         var target = voteRequest.getTarget(event.getButton().getId());
 
+        if (!voteRequest.canVote()) return;
+
         if (reputationService.submitReputation(event.getGuild(), event.getUser(), target.get().getUser(), voteRequest.refMessage(), null, ThankType.EMBED)) {
             voteRequest.voted();
             voteRequest.remove(event.getButton().getId());
             voteRequest.voteMessage().
-                    editMessage(voteRequest.getNewEmbed(loc.localize("listener.messages.request.descrThank"
+                    editMessageEmbeds(voteRequest.getNewEmbed(loc.localize("listener.messages.request.descrThank"
                             , event.getGuild(), Replacement.create("MORE", voteRequest.remainingVotes()))))
                     .setActionRows(getComponentRows(voteRequest.components()))
                     .queue();
@@ -80,6 +90,10 @@ public class ReputationVoteListener extends ListenerAdapter {
     }
 
     public void registerVote(Message message, List<Member> members, GuildSettings settings) {
+        if (PermissionErrorHandler.assertAndHandle(message.getTextChannel(), loc, configuration, Permission.MESSAGE_WRITE, Permission.MESSAGE_EMBED_LINKS)) {
+            return;
+        }
+
         var builder = new LocalizedEmbedBuilder(loc, message.getGuild())
                 .setTitle("listener.messages.request.title")
                 .setDescription("listener.messages.request.descr")
@@ -93,13 +107,14 @@ public class ReputationVoteListener extends ListenerAdapter {
             components.put(id, new VoteComponent(member, Button.of(ButtonStyle.PRIMARY, id, member.getEffectiveName())));
         }
 
-        if (settings.generalSettings().isEmojiDebug()) message.addReaction(EmojiDebug.PROMPTED).queue();
+        if (settings.generalSettings().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.PROMPTED);
 
         var collect = components.values().stream().map(VoteComponent::component).collect(Collectors.toUnmodifiableList());
 
         var componentRows = getComponentRows(collect);
 
-        message.reply(builder.build())
+
+        message.replyEmbeds(builder.build())
                 .setActionRows(componentRows).queue(voteMessage -> {
                     voteRequests.put(voteMessage.getIdLong(), new VoteRequest(message.getMember(), builder, voteMessage, message, components, Math.min(3, members.size())));
                     voteMessage.delete().queueAfter(1, TimeUnit.MINUTES, submit -> voteRequests.remove(voteMessage.getIdLong()),

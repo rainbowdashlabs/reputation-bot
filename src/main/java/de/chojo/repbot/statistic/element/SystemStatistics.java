@@ -23,11 +23,11 @@ public class SystemStatistics implements ReplacementProvider, EmbedDisplay {
                             List<ShardStatistic> shardStatistics) {
         this.processStatistics = processStatistics;
         this.dataStatistic = dataStatistic;
-        this.shardCountStatistic = new ShardCountStatistic(shardStatistics);
+        shardCountStatistic = new ShardCountStatistic(shardStatistics);
         aggregatedShards = new GlobalShardStatistic(shardStatistics);
-        this.globalInfoStatisticDisplay = new GlobalInfoStatisticDisplay(aggregatedShards,
+        globalInfoStatisticDisplay = new GlobalInfoStatisticDisplay(aggregatedShards,
                 dataStatistic);
-        this.systemInfoStatisticDisplay = new SystemInfoStatisticDisplay(shardCountStatistic,
+        systemInfoStatisticDisplay = new SystemInfoStatisticDisplay(shardCountStatistic,
                 dataStatistic);
 
     }

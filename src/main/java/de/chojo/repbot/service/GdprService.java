@@ -31,8 +31,8 @@ public class GdprService implements Runnable {
 
     private GdprService(ShardManager shardManager, DataSource dataSource, ExecutorService executorService) {
         this.shardManager = shardManager;
-        this.gdprData = new GdprData(dataSource);
-        this.guildData = new GuildData(dataSource);
+        gdprData = new GdprData(dataSource);
+        guildData = new GuildData(dataSource);
         this.executorService = executorService;
     }
 

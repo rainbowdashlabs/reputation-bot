@@ -41,7 +41,7 @@ public class Reactions extends SimpleCommand {
                         .add("info", "command.reaction.sub.info")
                         .build(), Permission.ADMINISTRATOR);
         this.loc = loc;
-        this.guildData = new GuildData(dataSource);
+        guildData = new GuildData(dataSource);
     }
 
     @Override

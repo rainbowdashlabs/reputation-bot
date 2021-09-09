@@ -202,8 +202,8 @@ public class ReputationBot {
 
         // init listener and services
         var reactionListener = new ReactionListener(dataSource, localizer, reputationService, configuration);
-        var voteListener = new ReputationVoteListener(reputationService, localizer);
-        var messageListener = new MessageListener(dataSource, configuration, repBotCachePolicy, voteListener,
+        var voteListener = new ReputationVoteListener(reputationService, localizer, configuration);
+        var messageListener = new MessageListener(localizer, dataSource, configuration, repBotCachePolicy, voteListener,
                 reputationService, contextResolver, messageAnalyzer);
         var stateListener = StateListener.of(localizer, dataSource, configuration);
         var voiceStateListener = VoiceStateListener.of(dataSource, repBotWorker);
