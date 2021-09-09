@@ -13,10 +13,10 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 public class Localization {
-    public Language[] languages = {Language.ENGLISH, Language.GERMAN,
+    private static final Language[] languages = {Language.ENGLISH, Language.GERMAN,
             Language.of("es_ES", "Español"), Language.of("fr_FR", "Français"),
             Language.of("ru_RU", "Russian")};
-    public Pattern replacements = Pattern.compile("%[a-zA-Z0-9.]+?%");
+    private static final Pattern replacements = Pattern.compile("%[a-zA-Z0-9.]+?%");
 
     @Test
     public void checkKeys() {
