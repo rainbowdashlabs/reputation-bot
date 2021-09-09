@@ -55,7 +55,7 @@ public class Setup extends SimpleCommand {
         super("setup", null, "command.setup.description", (SimpleArgument[]) null,
                 Permission.ADMINISTRATOR);
         this.localizer = localizer;
-        this.guildData = new GuildData(dataSource);
+        guildData = new GuildData(dataSource);
         this.thankwordsContainer = thankwordsContainer;
     }
 

@@ -63,7 +63,7 @@ public class Thankwords extends SimpleCommand {
                         ).build(),
                 Permission.MANAGE_SERVER);
         this.data = data;
-        this.loc = localizer;
+        loc = localizer;
         this.thankwordsContainer = thankwordsContainer;
         this.messageAnalyzer = messageAnalyzer;
     }

@@ -54,7 +54,7 @@ public class Log extends SimpleCommand {
                         .build(),
                 Permission.ADMINISTRATOR);
         this.shardManager = shardManager;
-        this.reputationData = new ReputationData(dataSource);
+        reputationData = new ReputationData(dataSource);
         this.loc = loc;
     }
 

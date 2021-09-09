@@ -307,13 +307,13 @@ public class Scan extends SimpleCommand {
         public ScanProcess(MessageAnalyzer messageAnalyzer, Localizer localizer, Message progressMessage, MessageHistory history, Pattern pattern, int calls, ReputationData data) {
             this.messageAnalyzer = messageAnalyzer;
             loc = localizer;
-            this.guild = progressMessage.getGuild();
-            this.resultChannel = progressMessage.getTextChannel();
+            guild = progressMessage.getGuild();
+            resultChannel = progressMessage.getTextChannel();
             this.progressMessage = progressMessage;
             this.history = history;
             this.pattern = pattern;
             this.calls = Math.min(Math.max(0, calls), 100000);
-            this.callsLeft = this.calls;
+            callsLeft = this.calls;
             reputationData = data;
         }
 

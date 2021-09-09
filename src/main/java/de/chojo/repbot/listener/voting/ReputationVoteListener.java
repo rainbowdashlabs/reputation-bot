@@ -45,7 +45,7 @@ public class ReputationVoteListener extends ListenerAdapter {
 
     public ReputationVoteListener(ReputationService reputationService, ILocalizer localizer, Configuration configuration) {
         this.reputationService = reputationService;
-        this.loc = localizer;
+        loc = localizer;
         this.configuration = configuration;
     }
 
@@ -60,7 +60,7 @@ public class ReputationVoteListener extends ListenerAdapter {
         var voteRequest = voteRequests.get(event.getMessageIdLong());
         if (!Verifier.equalSnowflake(voteRequest.member(), event.getMember())) {
             event.getHook().sendMessage(loc.localize("error.notYourEmbed", event.getGuild())).setEphemeral(true)
-                .queue(message -> {
+                    .queue(message -> {
                     }, throwable -> ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
             return;
         }
@@ -72,7 +72,7 @@ public class ReputationVoteListener extends ListenerAdapter {
 
         var target = voteRequest.getTarget(event.getButton().getId());
 
-        if(!voteRequest.canVote()) return;
+        if (!voteRequest.canVote()) return;
 
         if (reputationService.submitReputation(event.getGuild(), event.getUser(), target.get().getUser(), voteRequest.refMessage(), null, ThankType.EMBED)) {
             voteRequest.voted();

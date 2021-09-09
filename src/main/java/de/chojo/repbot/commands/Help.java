@@ -40,7 +40,7 @@ public class Help extends SimpleCommand {
                         .build(),
                 exclusiveHelp ? Permission.ADMINISTRATOR : Permission.UNKNOWN);
         this.hub = hub;
-        this.loc = localizer;
+        loc = localizer;
     }
 
     public static MessageEmbed getCommandHelp(SimpleCommand command, ContextLocalizer loc) {

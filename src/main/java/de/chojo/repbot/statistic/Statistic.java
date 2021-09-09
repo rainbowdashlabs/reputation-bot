@@ -30,7 +30,7 @@ public class Statistic implements Runnable {
 
     private Statistic(ShardManager shardManager, DataSource dataSource) {
         this.shardManager = shardManager;
-        this.statisticData = new StatisticData(dataSource);
+        statisticData = new StatisticData(dataSource);
         getSystemStatistic();
     }
 

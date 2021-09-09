@@ -64,7 +64,7 @@ public class ThankSettings {
 
     public Pattern thankwordPattern() {
         if (thankwords.length == 0) return Pattern.compile("");
-        var twPattern = Arrays.stream(this.thankwords)
+        var twPattern = Arrays.stream(thankwords)
                 .map(t -> String.format(THANKWORD, t))
                 .collect(Collectors.joining("|"));
         return Pattern.compile(String.format(PATTERN, twPattern),

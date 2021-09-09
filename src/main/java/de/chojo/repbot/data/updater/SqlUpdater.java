@@ -28,8 +28,8 @@ public class SqlUpdater {
         this.versionTable = versionTable;
         this.replacements = replacements;
         this.schemas = schemas;
-        this.major = version.first;
-        this.patch = version.second;
+        major = version.first;
+        patch = version.second;
     }
 
     public static SqlUpdaterBuilder builder(DataSource dataSource) throws IOException {
@@ -273,7 +273,7 @@ public class SqlUpdater {
         private String[] schemas = new String[0];
 
         public SqlUpdaterBuilder(DataSource dataSource, Pair<Integer, Integer> version) {
-            this.source = dataSource;
+            source = dataSource;
             this.version = version;
         }
 

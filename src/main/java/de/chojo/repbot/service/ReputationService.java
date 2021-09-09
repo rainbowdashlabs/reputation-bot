@@ -38,8 +38,8 @@ public class ReputationService {
     private Instant lastEasterEggSent = Instant.EPOCH;
 
     public ReputationService(DataSource dataSource, ContextResolver contextResolver, RoleAssigner assigner, MagicImage magicImage, ILocalizer localizer) {
-        this.reputationData = new ReputationData(dataSource);
-        this.guildData = new GuildData(dataSource);
+        reputationData = new ReputationData(dataSource);
+        guildData = new GuildData(dataSource);
         this.assigner = assigner;
         this.magicImage = magicImage;
         this.contextResolver = contextResolver;

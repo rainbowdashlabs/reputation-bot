@@ -14,7 +14,7 @@ public class VoiceStateListener extends ListenerAdapter implements Runnable {
     private final VoiceData voiceData;
 
     public VoiceStateListener(DataSource dataSource) {
-        this.voiceData = new VoiceData(dataSource);
+        voiceData = new VoiceData(dataSource);
     }
 
     public static VoiceStateListener of(DataSource dataSource, ScheduledExecutorService repBotWorker) {

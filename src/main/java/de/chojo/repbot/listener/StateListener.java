@@ -32,7 +32,7 @@ public class StateListener extends ListenerAdapter {
     private StateListener(ILocalizer localizer, DataSource dataSource, Configuration configuration) {
         this.localizer = localizer;
         guildData = new GuildData(dataSource);
-        this.gdprData = new GdprData(dataSource);
+        gdprData = new GdprData(dataSource);
         this.configuration = configuration;
     }
 

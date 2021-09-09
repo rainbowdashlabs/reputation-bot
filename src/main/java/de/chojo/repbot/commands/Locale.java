@@ -31,7 +31,7 @@ public class Locale extends SimpleCommand {
                         .add("list", "command.locale.sub.list")
                         .build(),
                 Permission.MANAGE_SERVER);
-        this.data = new GuildData(dataSource);
+        data = new GuildData(dataSource);
         this.loc = loc;
     }
 
