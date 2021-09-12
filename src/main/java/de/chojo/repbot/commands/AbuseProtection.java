@@ -45,7 +45,7 @@ public class AbuseProtection extends SimpleCommand {
                                 .build()
                         )
                         .add("donorcontext", "command.abuseProtection.sub.donorContext", argsBuilder()
-                                .add(OptionType.INTEGER, "state", "state")
+                                .add(OptionType.BOOLEAN, "state", "state")
                                 .build()
                         )
                         .add("receivercontext", "command.abuseProtection.sub.receiverContext", argsBuilder()
