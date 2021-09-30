@@ -71,14 +71,20 @@ public class Thankwords extends SimpleCommand {
     public static Thankwords of(MessageAnalyzer messageAnalyzer, DataSource dataSource, Localizer localizer) {
         ThankwordsContainer thankwordsContainer;
         try {
-            thankwordsContainer = new ObjectMapper()
-                    .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
-                    .readValue(Thankwords.class.getClassLoader().getResourceAsStream("Thankswords.json"), ThankwordsContainer.class);
+            thankwordsContainer = loadContainer();
         } catch (IOException e) {
             thankwordsContainer = null;
             log.error("Could not read thankwords", e);
         }
         return new Thankwords(messageAnalyzer, new GuildData(dataSource), localizer, thankwordsContainer);
+    }
+
+    public static ThankwordsContainer loadContainer() throws IOException {
+        try (var input = Thankwords.class.getClassLoader().getResourceAsStream("Thankswords.json")) {
+            return new ObjectMapper()
+                    .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
+                    .readValue(input, ThankwordsContainer.class);
+        }
     }
 
     @Override
