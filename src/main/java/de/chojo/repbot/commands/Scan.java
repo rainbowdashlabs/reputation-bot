@@ -236,7 +236,18 @@ public class Scan extends SimpleCommand {
             canceled.add(scan);
             return;
         }
-        if (scan.scan()) {
+
+        // TODO: Remove once all issues seem to be resolved
+        boolean scanResult;
+        try {
+            scanResult = scan.scan();
+        } catch (Exception e) {
+            log.error("Critical error while scanning", e);
+            finishScan(scan);
+            return;
+        }
+
+        if (scanResult) {
             executorService.schedule(() -> processScan(scan), Math.max(0, INTERVAL_MS - scan.getTime()), TimeUnit.MILLISECONDS);
         } else {
             finishScan(scan);
