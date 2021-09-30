@@ -11,6 +11,7 @@ import de.chojo.sqlutil.wrapper.QueryBuilderConfig;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
@@ -44,7 +45,7 @@ public class ReputationData extends QueryFactoryHolder {
      * @param type       type of reputation
      * @return true if the statement was logged.
      */
-    public boolean logReputation(Guild guild, @Nullable User donor, User receiver, Message message, @Nullable Message refMessage, ThankType type) {
+    public boolean logReputation(Guild guild, @Nullable User donor, @NotNull User receiver, @NotNull Message message, @Nullable Message refMessage, ThankType type) {
         var success = builder()
                               .query("""
                                       INSERT INTO
@@ -57,7 +58,7 @@ public class ReputationData extends QueryFactoryHolder {
                                       .setLong(message.getChannel().getIdLong()).setString(type.name()))
                               .insert().executeSync() > 0;
         if (success) {
-            log.debug("{} received one reputation from {} for message {}", receiver.getName(), donor.getName(), message.getIdLong());
+            log.debug("{} received one reputation from {} for message {}", receiver.getName(), donor != null ? donor.getName() : "unkown", message.getIdLong());
         }
         return success;
     }
