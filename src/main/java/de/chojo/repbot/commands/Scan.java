@@ -43,9 +43,10 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class Scan extends SimpleCommand {
     public static final int INTERVAL_MS = 2000;
     private static final int SCAN_THREADS = 10;
+    private static final long THREAD_MAX_SEEN_SECONDS = 30L;
     private static final Logger log = getLogger(Scan.class);
     private final ThreadGroup scanner = new ThreadGroup("Scanner");
-    private final ScheduledExecutorService executorService = Executors.newScheduledThreadPool(SCAN_THREADS + 1,
+    private final ScheduledExecutorService worker = Executors.newScheduledThreadPool(SCAN_THREADS + 1,
             runnable -> {
                 var thread = new Thread(scanner, runnable);
                 thread.setUncaughtExceptionHandler((thr, err) -> log.error("Unhandled exception in Scanner Thread {}.", thr.getId(), err));
@@ -54,7 +55,7 @@ public class Scan extends SimpleCommand {
     private final GuildData guildData;
     private final ReputationData reputationData;
     private final Localizer loc;
-    private final Set<Long> activeScans = new HashSet<>();
+    private final Set<ScanProcess> activeScans = new HashSet<>();
     private final Set<Long> cancel = new HashSet<>();
     private final Queue<ScanProcess> finished = new ArrayDeque<>();
     private final Queue<ScanProcess> canceled = new ArrayDeque<>();
@@ -78,11 +79,24 @@ public class Scan extends SimpleCommand {
         reputationData = new ReputationData(dataSource);
         loc = localizer;
         this.configuration = configuration;
-        executorService.scheduleAtFixedRate(() -> {
+        worker.scheduleAtFixedRate(() -> {
             Thread.currentThread().setName("Scan Backsync");
             finishTasks();
             finishCanceledTasks();
+            checkStuckTasks();
         }, 1, 1, TimeUnit.SECONDS);
+    }
+
+    private void checkStuckTasks() {
+        for (var activeScan : activeScans) {
+            if (activeScan.lastSeen().isAfter(Instant.now().minus(THREAD_MAX_SEEN_SECONDS, ChronoUnit.SECONDS))) {
+                continue;
+            }
+            if (activeScan.interrupt()) {
+                log.warn("Scan thread was stuck and interrupted. Scan was canceled on guild {}", activeScan.guild().getIdLong());
+                cancelScan(activeScan.guild());
+            }
+        }
     }
 
     @Override
@@ -95,7 +109,7 @@ public class Scan extends SimpleCommand {
         if (context.argsEmpty()) return false;
         var subCmd = context.argString(0).get();
         if ("cancel".equalsIgnoreCase(subCmd)) {
-            if (!activeScans.contains(eventWrapper.getGuild().getIdLong())) {
+            if (!isActive(eventWrapper.getGuild())) {
                 eventWrapper.replyErrorAndDelete(eventWrapper.localize("command.scan.sub.cancel.noTask"), 10);
                 return true;
             }
@@ -105,7 +119,7 @@ public class Scan extends SimpleCommand {
 
         if ("start".equalsIgnoreCase(subCmd)) {
             context = context.subContext(subCmd);
-            if (activeScans.contains(eventWrapper.getGuild().getIdLong())) {
+            if (isActive(eventWrapper.getGuild())) {
                 eventWrapper.replyErrorAndDelete(":stop_sign: " + eventWrapper.localize("command.scan.error.running"), 10);
                 return true;
             }
@@ -150,7 +164,7 @@ public class Scan extends SimpleCommand {
         var subCmd = event.getSubcommandName();
 
         if ("cancel".equalsIgnoreCase(subCmd)) {
-            if (!activeScans.contains(event.getGuild().getIdLong())) {
+            if (!isActive(event.getGuild())) {
                 event.reply(loc.localize("command.scan.sub.cancel.noTask")).setEphemeral(true).queue();
                 return;
             }
@@ -161,7 +175,7 @@ public class Scan extends SimpleCommand {
 
         if ("start".equalsIgnoreCase(subCmd)) {
 
-            if (activeScans.contains(event.getGuild().getIdLong())) {
+            if (isActive(event.getGuild())) {
                 event.reply(":stop_sign: " + loc.localize("command.scan.error.running")).setEphemeral(true).queue();
                 return;
             }
@@ -225,10 +239,25 @@ public class Scan extends SimpleCommand {
         var progressMessage = reportChannel.sendMessage(loc.localize("command.scan.progress",
                 Replacement.create("PERCENT", String.format("%.02f", 0d))) + " " + TextGenerator.progressBar(0, 40)).complete();
         var scanProcess = new ScanProcess(messageAnalyzer, this.loc, progressMessage, history, pattern, calls, reputationData);
-
-        activeScans.add(reportChannel.getGuild().getIdLong());
+        setActive(scanProcess);
         reportChannel.getGuild().loadMembers().get();
-        executorService.schedule(() -> processScan(scanProcess), 0, TimeUnit.SECONDS);
+        worker.schedule(() -> processScan(scanProcess), 0, TimeUnit.SECONDS);
+    }
+
+    private boolean isActive(Guild guild) {
+        return activeScans.stream().anyMatch(p -> p.guild().getIdLong() == guild.getIdLong());
+    }
+
+    public void setActive(ScanProcess process) {
+        activeScans.add(process);
+    }
+
+    public void setInactive(ScanProcess process) {
+        activeScans.remove(process);
+    }
+
+    public void setInactive(Guild guild) {
+        activeScans.removeIf(p -> p.guild().getIdLong() == guild.getIdLong());
     }
 
     private void processScan(ScanProcess scan) {
@@ -248,7 +277,7 @@ public class Scan extends SimpleCommand {
         }
 
         if (scanResult) {
-            executorService.schedule(() -> processScan(scan), Math.max(0, INTERVAL_MS - scan.getTime()), TimeUnit.MILLISECONDS);
+            worker.schedule(() -> processScan(scan), Math.max(0, INTERVAL_MS - scan.getTime()), TimeUnit.MILLISECONDS);
         } else {
             finishScan(scan);
         }
@@ -257,7 +286,7 @@ public class Scan extends SimpleCommand {
     private void finishTasks() {
         if (finished.isEmpty()) return;
         var scan = finished.poll();
-        activeScans.remove(scan.guild().getIdLong());
+        setInactive(scan);
         scan.progressMessage().editMessage(loc.localize("command.scan.progress", scan.guild(),
                 Replacement.create("PERCENT", String.format("%.02f", 100d))) + " " + TextGenerator.progressBar(1, 40)).queue();
         var embed = new LocalizedEmbedBuilder(loc, scan.guild())
@@ -272,7 +301,7 @@ public class Scan extends SimpleCommand {
     private void finishCanceledTasks() {
         if (canceled.isEmpty()) return;
         var scan = canceled.poll();
-        activeScans.remove(scan.guild().getIdLong());
+        setInactive(scan);
         var embed = new LocalizedEmbedBuilder(loc, scan.guild())
                 .setTitle("command.scan.canceled")
                 .setDescription(loc.localize("command.scan.result", scan.guild(),
@@ -283,16 +312,16 @@ public class Scan extends SimpleCommand {
     }
 
     public boolean isRunning(Guild guild) {
-        return activeScans.contains(guild.getIdLong());
+        return isActive(guild);
     }
 
     public void cancelScan(Guild guild) {
-        activeScans.remove(guild.getIdLong());
+        setInactive(guild);
         cancel.add(guild.getIdLong());
     }
 
     public void finishScan(ScanProcess scanProcess) {
-        activeScans.remove(scanProcess.guild().getIdLong());
+        setInactive(scanProcess);
         finished.add(scanProcess);
     }
 
@@ -314,6 +343,8 @@ public class Scan extends SimpleCommand {
         private int hits;
         private int callsLeft;
         private long time;
+        private Instant lastSeen;
+        private Thread currWorker;
 
         public ScanProcess(MessageAnalyzer messageAnalyzer, Localizer localizer, Message progressMessage, MessageHistory history, Pattern pattern, int calls, ReputationData data) {
             this.messageAnalyzer = messageAnalyzer;
@@ -337,12 +368,23 @@ public class Scan extends SimpleCommand {
         }
 
         public boolean scan() {
-            if (callsLeft == 0) return false;
+            if(currWorker != null) {
+                log.debug("Scanning takes to long. Skipping execution of scan to catch up");
+                return false;
+            }
+
+            currWorker = Thread.currentThread();
+            lastSeen = Instant.now();
+            if (callsLeft == 0) {
+                currWorker = null;
+                return false;
+            }
             var start = Instant.now();
             var size = history.size();
             var messages = history.retrievePast(Math.min(callsLeft, 100)).timeout(10, TimeUnit.SECONDS).complete();
             callsLeft -= Math.min(callsLeft, 100);
             if (size == history.size()) {
+                currWorker = null;
                 return false;
             }
 
@@ -372,7 +414,14 @@ public class Scan extends SimpleCommand {
             progressMessage.editMessage(loc.localize("command.scan.progress", guild,
                     Replacement.create("PERCENT", String.format("%.02f", progress * 100d))) + " " + TextGenerator.progressBar(progress, 40)).complete();
             time = Instant.now().until(start, ChronoUnit.MILLIS);
+            currWorker = null;
             return callsLeft > 0;
+        }
+
+        public boolean interrupt() {
+            if (currWorker == null) return false;
+            currWorker.interrupt();
+            return true;
         }
 
         public long getTime() {
@@ -397,6 +446,10 @@ public class Scan extends SimpleCommand {
 
         public TextChannel resultChannel() {
             return resultChannel;
+        }
+
+        public Instant lastSeen() {
+            return lastSeen;
         }
     }
 }
