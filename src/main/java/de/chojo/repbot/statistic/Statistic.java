@@ -73,7 +73,7 @@ public class Statistic implements Runnable {
         return new ShardStatistic(
                 shardId + 1,
                 jda.getStatus(),
-                analyzedMessages);
+                analyzedMessages, jda.getGuildCache().size());
     }
 
     public SystemStatistics getSystemStatistic() {
@@ -85,7 +85,7 @@ public class Statistic implements Runnable {
                         log.error("An error occured while building the system statistics", e);
                     }
                     return new ShardStatistic(jda.getShardInfo().getShardId(),
-                            JDA.Status.DISCONNECTED, 0);
+                            JDA.Status.DISCONNECTED, 0, jda.getGuildCache().size());
                 }).collect(Collectors.toList());
 
         return new SystemStatistics(ProcessStatistics.create(),

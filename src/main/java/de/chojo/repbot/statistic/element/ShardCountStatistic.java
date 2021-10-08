@@ -29,7 +29,7 @@ public class ShardCountStatistic implements ReplacementProvider, EmbedDisplay {
     public void appendTo(EmbedBuilder embedBuilder) {
         for (var shard : shardStatistics) {
             embedBuilder.addField("#" + shard.shard(),
-                    "Status: " + shard.status().name(), true);
+                    "Status: " + shard.status().name() +"\nGuilds:" + shard.guilds(), true);
         }
     }
 }
