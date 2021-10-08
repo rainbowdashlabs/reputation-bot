@@ -10,17 +10,20 @@ public class GeneralSettings {
     private final String prefix;
     private final boolean emojiDebug;
     private final long managerRole;
+    private final boolean stackRoles;
 
     public GeneralSettings() {
         prefix = null;
         emojiDebug = true;
         managerRole = 0;
+        stackRoles = false;
     }
 
-    public GeneralSettings(String prefix, boolean emojiDebug, long managerRole) {
+    public GeneralSettings(String prefix, boolean emojiDebug, long managerRole, boolean stackRoles) {
         this.prefix = prefix;
         this.emojiDebug = emojiDebug;
         this.managerRole = managerRole;
+        this.stackRoles = stackRoles;
     }
 
     public Optional<String> prefix() {
@@ -38,5 +41,9 @@ public class GeneralSettings {
 
     public boolean isEmojiDebug() {
         return emojiDebug;
+    }
+
+    public boolean isStackRoles() {
+        return stackRoles;
     }
 }
