@@ -81,7 +81,8 @@ public class GuildData extends QueryFactoryHolder {
                         SELECT
                             prefix,
                             emoji_debug,
-                            manager_role
+                            manager_role,
+                            stack_roles
                         FROM
                             guild_settings
                         WHERE guild_id = ?;
@@ -142,7 +143,8 @@ public class GuildData extends QueryFactoryHolder {
         return new GeneralSettings(
                 rs.getString("prefix"),
                 rs.getBoolean("emoji_debug"),
-                rs.getLong("manager_role"));
+                rs.getLong("manager_role"),
+                rs.getBoolean("stack_roles"));
     }
 
     private MessageSettings buildMessageSettings(ResultSet rs) throws SQLException {
@@ -341,7 +343,7 @@ public class GuildData extends QueryFactoryHolder {
                        .update().executeSync() > 0;
     }
 
-    public Optional<ReputationRole> getCurrentReputationRole(Guild guild, long reputation) {
+    public List<ReputationRole> getCurrentReputationRole(Guild guild, long reputation, boolean stack) {
         return builder(ReputationRole.class)
                 .query("""
                         SELECT
@@ -352,10 +354,10 @@ public class GuildData extends QueryFactoryHolder {
                         WHERE guild_id = ?
                             AND reputation <= ?
                         ORDER BY reputation DESC
-                        LIMIT 1;
-                        """)
+                        LIMIT %s;
+                        """, stack ? "ALL" : "1")
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setLong(reputation))
-                .readRow(this::buildRole).firstSync();
+                .readRow(this::buildRole).allSync();
     }
 
     public Optional<ReputationRole> getNextReputationRole(Guild guild, long reputation) {
@@ -510,6 +512,19 @@ public class GuildData extends QueryFactoryHolder {
                                            SET manager_role = excluded.manager_role;
                                """)
                        .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setLong(role.getIdLong()))
+                       .update().executeSync() > 0;
+    }
+
+    public boolean setRoleStacking(Guild guild, boolean state) {
+        return builder()
+                       .query("""
+                               INSERT INTO
+                                   guild_settings(guild_id, stack_roles) VALUES (?,?)
+                                   ON CONFLICT(guild_id)
+                                       DO UPDATE
+                                           SET manager_role = excluded.manager_role;
+                               """)
+                       .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setBoolean(state))
                        .update().executeSync() > 0;
     }
 
