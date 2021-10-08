@@ -30,7 +30,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Roles extends SimpleCommand {
-    private final GuildData data;
+    private final GuildData guildData;
     private final ILocalizer loc;
     private final RoleAssigner roleAssigner;
     private final Set<Long> running = new HashSet<>();
@@ -72,9 +72,12 @@ public class Roles extends SimpleCommand {
                                 .build()
                         )
                         .add("list", "command.roles.sub.list")
+                        .add("stackroles", "command.roles.sub.stackRoles", argsBuilder()
+                                .add(OptionType.BOOLEAN, "stack", "stack")
+                                .build())
                         .build(),
                 Permission.MANAGE_SERVER);
-        data = new GuildData(dataSource);
+        guildData = new GuildData(dataSource);
         this.loc = loc;
         this.roleAssigner = roleAssigner;
     }
@@ -93,7 +96,15 @@ public class Roles extends SimpleCommand {
             return managerRole(eventWrapper, context.subContext(subCmd));
         }
 
-        if (StringUtil.contains(subCmd, "add", "remove", "addDonor", "addReceiver", "removeDonor", "removeReceiver", "refresh")) {
+        if ("stackRoles".equalsIgnoreCase(subCmd)) {
+            return stackRoles(eventWrapper, context.subContext(subCmd));
+        }
+
+        if ("refresh".equalsIgnoreCase(subCmd)) {
+            return refresh(eventWrapper);
+        }
+
+        if (StringUtil.contains(subCmd, "add", "remove", "addDonor", "addReceiver", "removeDonor", "removeReceiver")) {
             context.parseQuoted();
             var roleString = context.argString(0);
             if (context.argsEmpty() || roleString.isEmpty()) return false;
@@ -125,10 +136,6 @@ public class Roles extends SimpleCommand {
             if ("removeReceiver".equalsIgnoreCase(subCmd)) {
                 return removeReceiver(eventWrapper, role.get());
             }
-
-            if ("refresh".equalsIgnoreCase(subCmd)) {
-                return refresh(eventWrapper);
-            }
         }
 
         return false;
@@ -157,6 +164,27 @@ public class Roles extends SimpleCommand {
                 }).thenRun(() -> {
                     running.remove(event.getGuild().getIdLong());
                 });
+        return true;
+    }
+
+    private boolean stackRoles(MessageEventWrapper eventWrapper, CommandContext context) {
+        var settings = guildData.getGuildSettings(eventWrapper.getGuild());
+        if (context.argsEmpty()) {
+            eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), settings.generalSettings().isStackRoles(),
+                    "command.roles.sub.stackRoles.stacked", "command.roles.sub.stackRoles.notStacked")).queue();
+            return true;
+        }
+        var state = context.argBoolean(0);
+        if (state.isEmpty()) {
+            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.notABoolean",
+                    Replacement.create("input", context.argString(0).get())), 10);
+            return true;
+        }
+
+        if (guildData.setRoleStacking(eventWrapper.getGuild(), state.get())) {
+            eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), state.get(),
+                    "command.roles.sub.stackRoles.stacked", "command.roles.sub.stackRoles.notStacked")).queue();
+        }
         return true;
     }
 
@@ -198,6 +226,10 @@ public class Roles extends SimpleCommand {
         if ("refresh".equalsIgnoreCase(subCmd)) {
             refresh(event);
         }
+
+        if ("stackRoles".equalsIgnoreCase(subCmd)) {
+            stackRoles(event);
+        }
     }
 
     private void refresh(SlashCommandEvent event) {
@@ -227,9 +259,24 @@ public class Roles extends SimpleCommand {
                 });
     }
 
+    private void stackRoles(SlashCommandEvent event) {
+        var settings = guildData.getGuildSettings(event.getGuild());
+        if (event.getOptions().isEmpty()) {
+            event.reply(getBooleanMessage(event.getGuild(), settings.generalSettings().isStackRoles(),
+                    "command.roles.sub.stackRoles.stacked", "command.roles.sub.stackRoles.notStacked")).queue();
+            return;
+        }
+        var state = event.getOption("stack").getAsBoolean();
+
+        if (guildData.setRoleStacking(event.getGuild(), state)) {
+            event.reply(getBooleanMessage(event.getGuild(), state,
+                    "command.roles.sub.stackRoles.stacked", "command.roles.sub.stackRoles.notStacked")).queue();
+        }
+    }
+
     private boolean managerRole(MessageEventWrapper eventWrapper, CommandContext subContext) {
         if (subContext.argsEmpty()) {
-            var settings = data.getGuildSettings(eventWrapper.getGuild());
+            var settings = guildData.getGuildSettings(eventWrapper.getGuild());
             eventWrapper.reply(getManagerRoleMessage(eventWrapper.getGuild(), settings)).queue();
             return true;
         }
@@ -238,7 +285,7 @@ public class Roles extends SimpleCommand {
             eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.invalidRole"), 10);
             return true;
         }
-        if (data.setManagerRole(eventWrapper.getGuild(), role.get())) {
+        if (guildData.setManagerRole(eventWrapper.getGuild(), role.get())) {
             eventWrapper.reply(eventWrapper.localize("command.roles.sub.managerRole.set",
                     Replacement.createMention(role.get()))).queue();
         }
@@ -248,12 +295,12 @@ public class Roles extends SimpleCommand {
     private void managerRole(SlashCommandEvent event) {
         var loc = this.loc.getContextLocalizer(event.getGuild());
         if (event.getOptions().isEmpty()) {
-            var settings = data.getGuildSettings(event.getGuild());
+            var settings = guildData.getGuildSettings(event.getGuild());
             event.reply(getManagerRoleMessage(event.getGuild(), settings)).allowedMentions(Collections.emptyList()).queue();
             return;
         }
         var role = event.getOption("role").getAsRole();
-        if (data.setManagerRole(event.getGuild(), role)) {
+        if (guildData.setManagerRole(event.getGuild(), role)) {
             event.reply(loc.localize("command.roles.sub.managerRole.set",
                             Replacement.createMention(role)))
                     .allowedMentions(Collections.emptyList()).queue();
@@ -272,7 +319,7 @@ public class Roles extends SimpleCommand {
     }
 
     private boolean remove(MessageEventWrapper eventWrapper, Role role) {
-        if (data.removeReputationRole(eventWrapper.getGuild(), role)) {
+        if (guildData.removeReputationRole(eventWrapper.getGuild(), role)) {
             eventWrapper.reply(eventWrapper.localize("command.roles.sub.remove.removed",
                     Replacement.create("ROLE", role.getName(), Format.BOLD))).queue();
             return true;
@@ -285,7 +332,7 @@ public class Roles extends SimpleCommand {
         var loc = this.loc.getContextLocalizer(event.getGuild());
         var role = event.getOption("role").getAsRole();
 
-        if (data.removeReputationRole(event.getGuild(), role)) {
+        if (guildData.removeReputationRole(event.getGuild(), role)) {
             event.reply(loc.localize("command.roles.sub.remove.removed",
                     Replacement.createMention("ROLE", role))).allowedMentions(Collections.emptyList()).queue();
             return;
@@ -300,7 +347,7 @@ public class Roles extends SimpleCommand {
             eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.roleAccess", Replacement.createMention(role)), 15);
             return true;
         }
-        if (data.addReputationRole(eventWrapper.getGuild(), role, reputation.get())) {
+        if (guildData.addReputationRole(eventWrapper.getGuild(), role, reputation.get())) {
             eventWrapper.reply(eventWrapper.localize("command.roles.sub.add.added",
                     Replacement.create("ROLE", role.getName(), Format.BOLD), Replacement.create("POINTS", reputation.get()))).queue();
         }
@@ -316,7 +363,7 @@ public class Roles extends SimpleCommand {
             return;
         }
 
-        if (data.addReputationRole(event.getGuild(), role, reputation)) {
+        if (guildData.addReputationRole(event.getGuild(), role, reputation)) {
             event.reply(loc.localize("command.roles.sub.add.added", event.getGuild(),
                             Replacement.createMention("ROLE", role), Replacement.create("POINTS", reputation)))
                     .allowedMentions(Collections.emptyList()).queue();
@@ -333,11 +380,11 @@ public class Roles extends SimpleCommand {
     }
 
     private MessageEmbed getRoleList(Guild guild) {
-        var reputationRoles = data.getReputationRoles(guild).stream()
+        var reputationRoles = guildData.getReputationRoles(guild).stream()
                 .filter(role -> role.getRole(guild) != null)
                 .map(role -> role.reputation() + " ➜ " + role.getRole(guild).getAsMention())
                 .collect(Collectors.joining("\n"));
-        var guildSettings = data.getGuildSettings(guild);
+        var guildSettings = guildData.getGuildSettings(guild);
 
         var builder = new LocalizedEmbedBuilder(loc, guild)
                 .setTitle("Role Info");
@@ -370,54 +417,58 @@ public class Roles extends SimpleCommand {
     }
 
     private boolean addDonor(MessageEventWrapper eventWrapper, Role role) {
-        data.addDonorRole(eventWrapper.getGuild(), role);
+        guildData.addDonorRole(eventWrapper.getGuild(), role);
         eventWrapper.reply(eventWrapper.localize("command.roles.sub.addDonor.add",
                 Replacement.createMention(role))).queue();
         return true;
     }
 
     private boolean addReceiver(MessageEventWrapper eventWrapper, Role role) {
-        data.addReceiverRole(eventWrapper.getGuild(), role);
+        guildData.addReceiverRole(eventWrapper.getGuild(), role);
         eventWrapper.reply(eventWrapper.localize("command.roles.sub.addReceiver.add",
                 Replacement.createMention(role))).queue();
         return false;
     }
 
     private boolean removeDonor(MessageEventWrapper eventWrapper, Role role) {
-        data.removeDonorRole(eventWrapper.getGuild(), role);
+        guildData.removeDonorRole(eventWrapper.getGuild(), role);
         eventWrapper.reply(eventWrapper.localize("command.roles.sub.removeDonor.remove",
                 Replacement.createMention(role))).queue();
         return false;
     }
 
     private boolean removeReceiver(MessageEventWrapper eventWrapper, Role role) {
-        data.removeReceiverRole(eventWrapper.getGuild(), role);
+        guildData.removeReceiverRole(eventWrapper.getGuild(), role);
         eventWrapper.reply(eventWrapper.localize("command.roles.sub.removeReceiver.remove",
                 Replacement.createMention(role))).queue();
         return false;
     }
 
     private void addDonor(SlashCommandEvent event, Role role) {
-        data.addDonorRole(event.getGuild(), role);
+        guildData.addDonorRole(event.getGuild(), role);
         event.reply(loc.localize("command.roles.sub.addDonor.add", event.getGuild(),
                 Replacement.createMention(role))).allowedMentions(Collections.emptyList()).queue();
     }
 
     private void addReceiver(SlashCommandEvent event, Role role) {
-        data.addReceiverRole(event.getGuild(), role);
+        guildData.addReceiverRole(event.getGuild(), role);
         event.reply(loc.localize("command.roles.sub.addReceiver.add", event.getGuild(),
                 Replacement.createMention(role))).allowedMentions(Collections.emptyList()).queue();
     }
 
     private void removeDonor(SlashCommandEvent event, Role role) {
-        data.removeDonorRole(event.getGuild(), role);
+        guildData.removeDonorRole(event.getGuild(), role);
         event.reply(loc.localize("command.roles.sub.removeDonor.remove", event.getGuild(),
                 Replacement.createMention(role))).allowedMentions(Collections.emptyList()).queue();
     }
 
     private void removeReceiver(SlashCommandEvent event, Role role) {
-        data.removeReceiverRole(event.getGuild(), role);
+        guildData.removeReceiverRole(event.getGuild(), role);
         event.reply(loc.localize("command.roles.sub.removeReceiver.remove", event.getGuild(),
                 Replacement.createMention(role))).allowedMentions(Collections.emptyList()).queue();
+    }
+
+    private String getBooleanMessage(Guild guild, boolean value, String whenTrue, String whenFalse) {
+        return loc.localize(value ? whenTrue : whenFalse, guild);
     }
 }
