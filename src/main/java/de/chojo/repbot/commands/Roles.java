@@ -72,7 +72,9 @@ public class Roles extends SimpleCommand {
                                 .build()
                         )
                         .add("list", "command.roles.sub.list")
-                        .add("stackroles", "command.roles.sub.stackRoles")
+                        .add("stackroles", "command.roles.sub.stackRoles", argsBuilder()
+                                .add(OptionType.BOOLEAN, "stack", "stack")
+                                .build())
                         .build(),
                 Permission.MANAGE_SERVER);
         guildData = new GuildData(dataSource);
@@ -264,7 +266,7 @@ public class Roles extends SimpleCommand {
                     "command.roles.sub.stackRoles.stacked", "command.roles.sub.stackRoles.notStacked")).queue();
             return;
         }
-        var state = event.getOption("state").getAsBoolean();
+        var state = event.getOption("stack").getAsBoolean();
 
         if (guildData.setRoleStacking(event.getGuild(), state)) {
             event.reply(getBooleanMessage(event.getGuild(), state,

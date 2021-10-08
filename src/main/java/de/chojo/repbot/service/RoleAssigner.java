@@ -47,7 +47,6 @@ public class RoleAssigner {
 
         if (member.getRoles().containsAll(roles)) return;
 
-
         for (var role : roles) {
             assertInteract(role, member.getGuild());
             if (!member.getRoles().contains(role))
