@@ -10,7 +10,7 @@ public class SelfCleanup {
     private boolean active = true;
     private int promptDays = 3;
     private int leaveDays = 3;
-    private int inactiveDays = 30;
+    private int inactiveDays = 90;
 
     public boolean isActive() {
         return active;
