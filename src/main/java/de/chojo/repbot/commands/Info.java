@@ -15,6 +15,7 @@ import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.util.Colors;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -91,13 +92,34 @@ public class Info extends SimpleCommand {
                     .header("User-Agent", "reputation-bot")
                     .build();
 
+            List<Contributor> contributors;
             try {
                 var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-                List<GithubProfile> contributorProfiles = mapper.readerForListOf(GithubProfile.class).readValue(response.body());
-                contributors = contributorProfiles.stream().map(GithubProfile::toString).collect(Collectors.joining(", "));
+                contributors = mapper.readerForListOf(Contributor.class).readValue(response.body());
             } catch (IOException | InterruptedException e) {
                 log.error("Could not read response", e);
+                return new EmbedBuilder().build();
             }
+
+            List<GithubProfile> profiles = new ArrayList<>();
+            for (var contributor : contributors) {
+                var profile = HttpRequest.newBuilder().GET()
+                        .uri(URI.create(contributor.url))
+                        .header("accept", "application/vnd.github.v3+json")
+                        .header("User-Agent", "reputation-bot")
+                        .build();
+
+                try {
+                    var response = client.send(profile, HttpResponse.BodyHandlers.ofString());
+                    profiles.add(mapper.readValue(response.body(), GithubProfile.class));
+                } catch (IOException | InterruptedException e) {
+                    log.error("Could not read response", e);
+                    return new EmbedBuilder().build();
+                }
+            }
+
+            this.contributors = profiles.stream().map(GithubProfile::toString).collect(Collectors.joining(", "));
+
             lastFetch = Instant.now();
         }
 
@@ -148,14 +170,22 @@ public class Info extends SimpleCommand {
     }
 
 
+    private static class Contributor {
+        private String login;
+        private String url;
+        @JsonProperty("html_url")
+        private String htmlUrl;
+    }
+
     private static class GithubProfile {
         private String login;
+        private String name;
         @JsonProperty("html_url")
         private String htmlUrl;
 
         @Override
         public String toString() {
-            return String.format("[%s](%s)", login, htmlUrl);
+            return String.format("[%s](%s)", name == null ? login : name, htmlUrl);
         }
     }
 }
