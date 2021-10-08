@@ -522,7 +522,7 @@ public class GuildData extends QueryFactoryHolder {
                                    guild_settings(guild_id, stack_roles) VALUES (?,?)
                                    ON CONFLICT(guild_id)
                                        DO UPDATE
-                                           SET manager_role = excluded.manager_role;
+                                           SET stack_roles = excluded.stack_roles;
                                """)
                        .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setBoolean(state))
                        .update().executeSync() > 0;
