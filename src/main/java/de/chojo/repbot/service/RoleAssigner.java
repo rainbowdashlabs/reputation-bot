@@ -12,15 +12,19 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.sql.DataSource;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 
 public class RoleAssigner {
     private final GuildData guildData;
     private final ReputationData reputationData;
+    private final ExecutorService worker;
 
-    public RoleAssigner(DataSource dataSource) {
+    public RoleAssigner(DataSource dataSource, ExecutorService worker) {
         guildData = new GuildData(dataSource);
         reputationData = new ReputationData(dataSource);
+        this.worker = worker;
     }
 
     public void update(@Nullable Member member) throws HierarchyException, RoleAccessException {
@@ -65,5 +69,13 @@ public class RoleAssigner {
         if (!guild.getSelfMember().canInteract(role)) {
             throw new RoleAccessException(role);
         }
+    }
+
+    public CompletableFuture<Void> updateBatch(Guild guild) {
+        return CompletableFuture.runAsync(() -> {
+            for (var member : guild.loadMembers().get()) {
+                update(member);
+            }
+        }, worker);
     }
 }

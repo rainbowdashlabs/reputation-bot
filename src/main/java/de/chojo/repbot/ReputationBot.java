@@ -195,7 +195,7 @@ public class ReputationBot {
         scan.lateInit(messageAnalyzer);
 
         // init services
-        var roleAssigner = new RoleAssigner(dataSource);
+        var roleAssigner = new RoleAssigner(dataSource, repBotWorker);
         var reputationService = new ReputationService(dataSource, contextResolver, roleAssigner, configuration.magicImage(), localizer);
         var gdprService = GdprService.of(shardManager, dataSource, repBotWorker);
         SelfCleanupService.create(shardManager, localizer, dataSource, configuration, repBotWorker);
@@ -235,7 +235,7 @@ public class ReputationBot {
                         new Channel(dataSource, localizer),
                         new Prefix(dataSource, configuration, localizer),
                         new Reputation(dataSource, localizer, configuration),
-                        new Roles(dataSource, localizer),
+                        new Roles(dataSource, localizer, roleAssigner),
                         new RepSettings(dataSource, localizer),
                         new TopReputation(dataSource, localizer),
                         Thankwords.of(messageAnalyzer, dataSource, localizer),
