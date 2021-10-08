@@ -70,4 +70,8 @@ SELECT
         FROM
             repbot_schema.reputation_log
         WHERE received > ( now() - '28 days'::INTERVAL )
-    ) AS weekly_avg_reputation;REFRESH MATERIALIZED VIEW repbot_schema.data_statistics;
+    ) AS weekly_avg_reputation;
+REFRESH MATERIALIZED VIEW repbot_schema.data_statistics;
+
+ALTER TABLE repbot_schema.guild_settings
+    ADD stack_roles BOOLEAN DEFAULT FALSE NOT NULL;
