@@ -11,6 +11,8 @@ import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
+import de.chojo.repbot.service.RoleAccessException;
+import de.chojo.repbot.service.RoleAssigner;
 import de.chojo.repbot.util.StringUtil;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
@@ -22,14 +24,18 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import javax.sql.DataSource;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class Roles extends SimpleCommand {
     private final GuildData data;
     private final ILocalizer loc;
+    private final RoleAssigner roleAssigner;
+    private final Set<Long> running = new HashSet<>();
 
-    public Roles(DataSource dataSource, ILocalizer loc) {
+    public Roles(DataSource dataSource, ILocalizer loc, RoleAssigner roleAssigner) {
         super("roles", new String[]{"role"},
                 "command.roles.description",
                 subCommandBuilder()
@@ -62,11 +68,15 @@ public class Roles extends SimpleCommand {
                                 .add(OptionType.ROLE, "role", "role", true)
                                 .build()
                         )
+                        .add("refresh", "command.roles.sub.refresh", argsBuilder()
+                                .build()
+                        )
                         .add("list", "command.roles.sub.list")
                         .build(),
                 Permission.MANAGE_SERVER);
         data = new GuildData(dataSource);
         this.loc = loc;
+        this.roleAssigner = roleAssigner;
     }
 
     @Override
@@ -83,7 +93,7 @@ public class Roles extends SimpleCommand {
             return managerRole(eventWrapper, context.subContext(subCmd));
         }
 
-        if (StringUtil.contains(subCmd, "add", "remove", "addDonor", "addReceiver", "removeDonor", "removeReceiver")) {
+        if (StringUtil.contains(subCmd, "add", "remove", "addDonor", "addReceiver", "removeDonor", "removeReceiver", "refresh")) {
             context.parseQuoted();
             var roleString = context.argString(0);
             if (context.argsEmpty() || roleString.isEmpty()) return false;
@@ -115,9 +125,39 @@ public class Roles extends SimpleCommand {
             if ("removeReceiver".equalsIgnoreCase(subCmd)) {
                 return removeReceiver(eventWrapper, role.get());
             }
+
+            if ("refresh".equalsIgnoreCase(subCmd)) {
+                return refresh(eventWrapper);
+            }
         }
 
         return false;
+    }
+
+    private boolean refresh(MessageEventWrapper event) {
+        if (running.contains(event.getGuild().getIdLong())) {
+            event.reply(loc.localize("command.roles.sub.refresh.running")).queue();
+            return true;
+        }
+
+        running.add(event.getGuild().getIdLong());
+
+        event.reply(loc.localize("command.roles.sub.refresh.started", event.getGuild())).queue();
+        roleAssigner
+                .updateBatch(event.getGuild())
+                .thenRun(() -> event.reply(loc.localize("command.roles.sub.refresh.finished", event.getGuild()))
+                        .queue())
+                .exceptionally(r -> {
+                    if (r instanceof RoleAccessException) {
+                        event.reply(loc.localize("error.roleAccess", event.getGuild(),
+                                        Replacement.createMention("ROLE", ((RoleAccessException) r).role())))
+                                .queue();
+                    }
+                    return null;
+                }).thenRun(() -> {
+                    running.remove(event.getGuild().getIdLong());
+                });
+        return true;
     }
 
     @Override
@@ -134,6 +174,7 @@ public class Roles extends SimpleCommand {
         if ("remove".equalsIgnoreCase(subCmd)) {
             remove(event);
         }
+
         if ("managerRole".equalsIgnoreCase(subCmd)) {
             managerRole(event);
         }
@@ -153,6 +194,37 @@ public class Roles extends SimpleCommand {
         if ("removeReceiver".equalsIgnoreCase(subCmd)) {
             removeReceiver(event, event.getOption("role").getAsRole());
         }
+
+        if ("refresh".equalsIgnoreCase(subCmd)) {
+            refresh(event);
+        }
+    }
+
+    private void refresh(SlashCommandEvent event) {
+        if (running.contains(event.getGuild().getIdLong())) {
+            event.reply(loc.localize("command.roles.sub.refresh.running")).queue();
+            return;
+        }
+
+        running.add(event.getGuild().getIdLong());
+
+        event.reply(loc.localize("command.roles.sub.refresh.started", event.getGuild())).queue();
+        roleAssigner
+                .updateBatch(event.getGuild())
+                .thenRun(() -> event.getHook()
+                        .editOriginal(loc.localize("command.roles.sub.refresh.finished", event.getGuild()))
+                        .queue())
+                .exceptionally(r -> {
+                    if (r instanceof RoleAccessException) {
+                        event.getHook()
+                                .editOriginal(loc.localize("error.roleAccess", event.getGuild(),
+                                        Replacement.createMention("ROLE", ((RoleAccessException) r).role())))
+                                .queue();
+                    }
+                    return null;
+                }).thenRun(() -> {
+                    running.remove(event.getGuild().getIdLong());
+                });
     }
 
     private boolean managerRole(MessageEventWrapper eventWrapper, CommandContext subContext) {

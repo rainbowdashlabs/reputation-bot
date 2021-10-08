@@ -2,7 +2,7 @@ package de.chojo.repbot.service;
 
 import net.dv8tion.jda.api.entities.Role;
 
-public class RoleAccessException extends Exception {
+public class RoleAccessException extends RuntimeException {
     private final Role role;
 
     /**
