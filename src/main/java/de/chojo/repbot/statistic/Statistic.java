@@ -73,7 +73,8 @@ public class Statistic implements Runnable {
         return new ShardStatistic(
                 shardId + 1,
                 jda.getStatus(),
-                analyzedMessages, jda.getGuildCache().size());
+                analyzedMessages, 
+                jda.getGuildCache().size());
     }
 
     public SystemStatistics getSystemStatistic() {
