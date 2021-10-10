@@ -10,11 +10,13 @@ public class ShardStatistic implements ReplacementProvider {
     private final int shard;
     private final JDA.Status status;
     private final long analyzedMessages;
+    private final long guilds;
 
-    public ShardStatistic(int shard, JDA.Status status, long analyzedMessages) {
+    public ShardStatistic(int shard, JDA.Status status, long analyzedMessages, long guilds) {
         this.shard = shard;
         this.status = status;
         this.analyzedMessages = analyzedMessages;
+        this.guilds = guilds;
     }
 
     public int shard() {
@@ -32,6 +34,10 @@ public class ShardStatistic implements ReplacementProvider {
     @Override
     public List<Replacement> replacements() {
         return List.of(Replacement.create("analyzed_messages_shard", analyzedMessages), Replacement.create("shard_status", status.name()),
-                Replacement.create("shard_id", shard));
+                Replacement.create("shard_id", shard), Replacement.create("shard_guilds", guilds));
+    }
+
+    public long guilds() {
+        return guilds;
     }
 }
