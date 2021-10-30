@@ -1,14 +1,13 @@
 plugins {
-    id("com.github.johnrengelman.shadow") version "7.0.0"
+    id("com.github.johnrengelman.shadow") version "7.1.0"
     java
     `maven-publish`
 }
 
 group = "de.chojo"
-version = "1.5.2"
+version = "1.5.3"
 
 val log4jVersion = "2.14.0"
-val lombokVersion = "1.18.20"
 
 
 repositories {
@@ -19,14 +18,14 @@ repositories {
 
 dependencies {
     // discord
-    implementation("net.dv8tion", "JDA", "4.3.0_307") {
+    implementation("net.dv8tion", "JDA", "4.3.0_339") {
         exclude(module = "opus-java")
     }
 
     implementation("de.chojo", "cjda-util", "1.5.5-DEV")
 
     // database
-    implementation("org.postgresql", "postgresql", "42.2.19")
+    implementation("org.postgresql", "postgresql", "42.3.1")
     implementation("com.zaxxer", "HikariCP", "4.0.3")
 
     // Serialization
@@ -40,7 +39,7 @@ dependencies {
 
     // utils
     implementation("org.apache.commons", "commons-lang3", "3.12.0")
-    implementation("de.chojo", "sql-util", "1.0.4")
+    implementation("de.chojo", "sql-util", "1.1.5")
     implementation("com.google.guava","guava","30.1.1-jre")
 
     // unit testing

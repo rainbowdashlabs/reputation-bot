@@ -300,8 +300,8 @@ public class ReputationData extends QueryFactoryHolder {
                 rs.getLong("receiver_id"),
                 rs.getLong("message_id"),
                 rs.getLong("ref_message_id"),
-                ThankType.valueOf(rs.getString("cause"))
-        );
+                ThankType.valueOf(rs.getString("cause")),
+                rs.getTimestamp("received").toLocalDateTime());
     }
 
     /**
@@ -337,5 +337,26 @@ public class ReputationData extends QueryFactoryHolder {
                         rs.getInt("today_reputation"),
                         rs.getLong("top_channel")
                 )).firstSync();
+    }
+
+    public Optional<ReputationLogEntry> getLatestReputation(Guild guild) {
+        return builder(ReputationLogEntry.class)
+                .query("""
+                        SELECT
+                            guild_id,
+                            donor_id,
+                            receiver_id,
+                            message_id,
+                            received,
+                            ref_message_id,
+                            channel_id,
+                            cause
+                        FROM reputation_log
+                        WHERE guild_id = ?
+                        ORDER BY received DESC
+                        LIMIT 1;
+                        """).paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
+                .readRow(this::buildLogEntry)
+                .firstSync();
     }
 }

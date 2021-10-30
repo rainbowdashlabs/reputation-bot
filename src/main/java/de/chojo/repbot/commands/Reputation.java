@@ -23,6 +23,7 @@ import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import javax.sql.DataSource;
+import java.util.Optional;
 
 public class Reputation extends SimpleCommand {
     private static final int BAR_SIZE = 20;
@@ -77,8 +78,10 @@ public class Reputation extends SimpleCommand {
     }
 
     private MessageEmbed getUserRepEmbed(Member member, ReputationUser reputation) {
-        var current = guildData.getCurrentReputationRole(member.getGuild(), reputation.reputation());
+        var roles = guildData.getCurrentReputationRole(member.getGuild(), reputation.reputation(), false);
         var next = guildData.getNextReputationRole(member.getGuild(), reputation.reputation());
+
+        var current = Optional.ofNullable(roles.isEmpty() ? null : roles.get(0));
 
         var currentRoleRep = current.map(ReputationRole::reputation).orElse(0L);
         var nextRoleRep = next.map(ReputationRole::reputation).orElse(currentRoleRep);
@@ -89,7 +92,7 @@ public class Reputation extends SimpleCommand {
         var level = current.map(r -> r.getRole(member.getGuild())).map(IMentionable::getAsMention).orElse("none");
 
         var currProgress = String.valueOf(reputation.reputation() - currentRoleRep);
-        var nextLevel = nextRoleRep.equals(currentRoleRep) ? "\uA74E" : String.valueOf(nextRoleRep - currentRoleRep);
+        var nextLevel = nextRoleRep.equals(currentRoleRep) ? "Ꝏ" : String.valueOf(nextRoleRep - currentRoleRep);
         var build = new LocalizedEmbedBuilder(loc, member.getGuild())
                 .setAuthor(
                         (reputation.rank() != 0 ? "#" + reputation.rank() + " " : "")

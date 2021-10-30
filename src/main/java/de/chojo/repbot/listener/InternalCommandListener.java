@@ -59,7 +59,7 @@ public class InternalCommandListener extends ListenerAdapter {
             var builder = new EmbedBuilder();
             var systemStatistic = statistic.getSystemStatistic();
             systemStatistic.appendTo(builder);
-            event.getMessage().reply(builder.build()).queue();
+            event.getMessage().replyEmbeds(builder.build()).queue();
         }
     }
 }

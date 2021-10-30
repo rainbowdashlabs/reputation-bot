@@ -5,6 +5,7 @@ import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
+import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.util.LogNotify;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
@@ -14,6 +15,7 @@ import org.slf4j.Logger;
 
 import javax.sql.DataSource;
 import java.time.Duration;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.concurrent.ScheduledExecutorService;
@@ -26,12 +28,14 @@ public class SelfCleanupService implements Runnable {
     private final ShardManager shardManager;
     private final ILocalizer localizer;
     private final GuildData guildData;
+    private final ReputationData reputationData;
     private final Configuration configuration;
 
     private SelfCleanupService(ShardManager shardManager, ILocalizer localizer, DataSource dataSource, Configuration configuration) {
         this.shardManager = shardManager;
         this.localizer = localizer;
         guildData = new GuildData(dataSource);
+        reputationData = new ReputationData(dataSource);
         this.configuration = configuration;
     }
 
@@ -48,7 +52,11 @@ public class SelfCleanupService implements Runnable {
 
         for (var guild : shardManager.getGuilds()) {
             var settings = guildData.getGuildSettings(guild);
-            if (settings.thankSettings().activeChannel().isEmpty() && settings.thankSettings().isChannelWhitelist()) {
+            var inactive = reputationData.getLatestReputation(guild)
+                    .map(r -> r.received().isBefore(configuration.selfCleanup().getInactiveDaysOffset()))
+                    .orElse(guild.getSelfMember().getTimeJoined().isBefore(LocalDateTime.now().minusDays(30).atOffset(ZoneOffset.UTC)));
+            var noChannel = settings.thankSettings().activeChannel().isEmpty() && settings.thankSettings().isChannelWhitelist();
+            if (noChannel || inactive) {
                 promptCleanup(guild);
                 continue;
             }
@@ -66,7 +74,7 @@ public class SelfCleanupService implements Runnable {
         if (configuration.botlist().isBotlistGuild(guild.getIdLong())) return;
         if (guildData.getCleanupPromptTime(guild).isPresent()) return;
         if (selfMember.getTimeJoined().isAfter(configuration.selfCleanup().getPromptDaysOffset())) {
-            log.debug("Bot is unconfigured for {} days",
+            log.debug("Bot is unconfigured  or unused for {} days",
                     Math.abs(Duration.between(selfMember.getTimeJoined(), LocalDateTime.now().atZone(ZoneOffset.UTC)).toDays()));
             return;
         }
@@ -75,7 +83,9 @@ public class SelfCleanupService implements Runnable {
         var embed = new LocalizedEmbedBuilder(localizer, guild)
                 .setTitle("selfCleanup.prompt.title")
                 .setDescription(localizer.localize("selfCleanup.prompt", guild,
-                        Replacement.create("DAYS", configuration.selfCleanup().leaveDays())))
+                        Replacement.create("DAYS", configuration.selfCleanup().leaveDays()),
+                        Replacement.create("INACTIVE_DAYS", configuration.selfCleanup().inactiveDays()),
+                        Replacement.create("DAYS_UNCONFIGURED", configuration.selfCleanup().promptDays())))
                 .build();
 
         notifyGuild(guild, embed);

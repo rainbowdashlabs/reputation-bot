@@ -2,6 +2,8 @@ package de.chojo.repbot.data.wrapper;
 
 import de.chojo.repbot.analyzer.ThankType;
 
+import java.time.LocalDateTime;
+
 public class ReputationLogEntry {
     private static final String PATH = "https://discord.com/channels/%s/%s/%s";
 
@@ -12,8 +14,9 @@ public class ReputationLogEntry {
     private final long messageId;
     private final long refMessageId;
     private final ThankType type;
+    private final LocalDateTime received;
 
-    public ReputationLogEntry(long guildId, long channelId, long donorId, long receiverId, long messageId, long refMessageId, ThankType type) {
+    public ReputationLogEntry(long guildId, long channelId, long donorId, long receiverId, long messageId, long refMessageId, ThankType type, LocalDateTime received) {
         this.guildId = guildId;
         this.channelId = channelId;
         this.donorId = donorId;
@@ -21,6 +24,7 @@ public class ReputationLogEntry {
         this.messageId = messageId;
         this.refMessageId = refMessageId;
         this.type = type;
+        this.received = received;
     }
 
     public String getMessageJumpLink() {
@@ -61,5 +65,9 @@ public class ReputationLogEntry {
 
     public ThankType type() {
         return type;
+    }
+
+    public LocalDateTime received() {
+        return received;
     }
 }
