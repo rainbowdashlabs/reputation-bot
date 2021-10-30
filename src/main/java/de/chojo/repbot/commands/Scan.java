@@ -13,6 +13,7 @@ import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
+import de.chojo.repbot.util.LogNotify;
 import de.chojo.repbot.util.PermissionErrorHandler;
 import de.chojo.repbot.util.TextGenerator;
 import net.dv8tion.jda.api.Permission;
@@ -80,7 +81,6 @@ public class Scan extends SimpleCommand {
         loc = localizer;
         this.configuration = configuration;
         worker.scheduleAtFixedRate(() -> {
-            Thread.currentThread().setName("Scan Backsync");
             finishTasks();
             finishCanceledTasks();
             checkStuckTasks();
@@ -271,7 +271,7 @@ public class Scan extends SimpleCommand {
         try {
             scanResult = scan.scan();
         } catch (Exception e) {
-            log.error("Critical error while scanning", e);
+            log.error(LogNotify.NOTIFY_ADMIN, "Critical error while scanning", e);
             finishScan(scan);
             return;
         }
@@ -368,7 +368,7 @@ public class Scan extends SimpleCommand {
         }
 
         public boolean scan() {
-            if(currWorker != null) {
+            if (currWorker != null) {
                 log.debug("Scanning takes to long. Skipping execution of scan to catch up");
                 return false;
             }
@@ -381,7 +381,7 @@ public class Scan extends SimpleCommand {
             }
             var start = Instant.now();
             var size = history.size();
-            var messages = history.retrievePast(Math.min(callsLeft, 100)).timeout(10, TimeUnit.SECONDS).complete();
+            var messages = history.retrievePast(Math.min(callsLeft, 100)).timeout(30, TimeUnit.SECONDS).complete();
             callsLeft -= Math.min(callsLeft, 100);
             if (size == history.size()) {
                 currWorker = null;
@@ -411,8 +411,10 @@ public class Scan extends SimpleCommand {
                 }
             }
             var progress = (calls - Math.max(callsLeft, 0)) / (double) calls;
+            var progressString =  String.format("%.02f", progress * 100d);
+            log.debug("Scan progress for guild {}: {}", guild.getIdLong(), progressString);
             progressMessage.editMessage(loc.localize("command.scan.progress", guild,
-                    Replacement.create("PERCENT", String.format("%.02f", progress * 100d))) + " " + TextGenerator.progressBar(progress, 40)).complete();
+                    Replacement.create("PERCENT", progressString)) + " " + TextGenerator.progressBar(progress, 40)).complete();
             time = Instant.now().until(start, ChronoUnit.MILLIS);
             currWorker = null;
             return callsLeft > 0;
