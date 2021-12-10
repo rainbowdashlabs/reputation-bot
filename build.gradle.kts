@@ -5,9 +5,9 @@ plugins {
 }
 
 group = "de.chojo"
-version = "1.5.3"
+version = "1.5.4"
 
-val log4jVersion = "2.14.0"
+val log4jVersion = "2.15.0"
 
 
 repositories {
