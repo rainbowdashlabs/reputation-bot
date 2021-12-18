@@ -40,7 +40,7 @@ dependencies {
     implementation("com.google.guava","guava","30.1.1-jre")
 
     // unit testing
-    testImplementation(platform("org.junit:junit-bom:5.7.1"))
+    testImplementation(platform("org.junit:junit-bom:5.8.2"))
     testImplementation("org.junit.jupiter", "junit-jupiter")
 }
 
