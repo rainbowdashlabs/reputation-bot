@@ -7,9 +7,6 @@ plugins {
 group = "de.chojo"
 version = "1.5.5"
 
-val log4jVersion = "2.16.0"
-
-
 repositories {
     maven("https://eldonexus.de/repository/maven-public")
     maven("https://eldonexus.de/repository/maven-proxies")
@@ -33,8 +30,8 @@ dependencies {
 
     // Logging
     implementation("org.slf4j", "slf4j-api", "1.7.30")
-    implementation("org.apache.logging.log4j", "log4j-core", log4jVersion)
-    implementation("org.apache.logging.log4j", "log4j-slf4j-impl", log4jVersion)
+    implementation("org.apache.logging.log4j", "log4j-core", "2.17.0")
+    implementation("org.apache.logging.log4j", "log4j-slf4j-impl", "2.17.0")
     implementation("club.minnced", "discord-webhooks", "0.5.8")
 
     // utils
