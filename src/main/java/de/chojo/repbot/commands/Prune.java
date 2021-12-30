@@ -3,10 +3,7 @@ package de.chojo.repbot.commands;
 import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.util.Replacement;
-import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.jdautil.parsing.Verifier;
-import de.chojo.jdautil.wrapper.CommandContext;
-import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.service.GdprService;
 import net.dv8tion.jda.api.Permission;
@@ -29,41 +26,6 @@ public class Prune extends SimpleCommand {
                 Permission.ADMINISTRATOR);
         gdprService = service;
         this.localizer = localizer;
-    }
-
-    @Override
-    public boolean onCommand(MessageEventWrapper eventWrapper, CommandContext context) {
-        if (context.argsEmpty()) return false;
-
-        var cmd = context.argString(0).get();
-
-        if ("user".equalsIgnoreCase(cmd)) {
-            var user = context.argString(1);
-            if (user.isEmpty()) return false;
-            if (Verifier.isValidId(user.get())) {
-                gdprService.cleanupGuildUser(eventWrapper.getGuild(), Long.valueOf(user.get()));
-                eventWrapper.reply(localizer.localize("command.prune.sub.user.removed")).queue();
-                return true;
-            }
-            var optUser = DiscordResolver.getUser(eventWrapper.getJda().getShardManager(), user.get());
-            if (optUser.isPresent()) {
-                gdprService.cleanupGuildUser(eventWrapper.getGuild(), optUser.get().getIdLong());
-                eventWrapper.reply(localizer.localize("command.prune.sub.user.removed")).queue();
-                return true;
-            }
-            eventWrapper.replyErrorAndDelete(localizer.localize("error.userNotFound", eventWrapper.getGuild()), 10);
-            return true;
-        }
-
-        if ("guild".equalsIgnoreCase(cmd)) {
-            eventWrapper.reply(localizer.localize("command.prune.sub.guild.started", eventWrapper.getGuild())).queue();
-            gdprService.cleanupGuildUsers(eventWrapper.getGuild()).thenAccept(amount -> {
-                eventWrapper.reply(localizer.localize("command.prune.sub.guild.done", eventWrapper.getGuild(),
-                        Replacement.create("AMOUNT", amount))).queue();
-            });
-            return true;
-        }
-        return false;
     }
 
     @Override

@@ -5,8 +5,6 @@ import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.text.TextFormatting;
-import de.chojo.jdautil.wrapper.CommandContext;
-import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
 import net.dv8tion.jda.api.Permission;
@@ -36,26 +34,6 @@ public class Locale extends SimpleCommand {
     }
 
     @Override
-    public boolean onCommand(MessageEventWrapper eventWrapper, CommandContext context) {
-        if (context.argsEmpty()) {
-            var guildLocale = loc.getGuildLocale(eventWrapper.getGuild());
-            eventWrapper.reply(eventWrapper.localize("command.locale.current",
-                    Replacement.create("LOCALE", guildLocale.getLanguage()))).queue();
-            return true;
-        }
-
-        var subCmd = context.argString(0).get();
-        if ("set".equalsIgnoreCase(subCmd)) {
-            return set(eventWrapper, context.subContext(subCmd));
-        }
-        if ("list".equalsIgnoreCase(subCmd)) {
-            return list(eventWrapper);
-        }
-
-        return false;
-    }
-
-    @Override
     public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
         var subCmd = event.getSubcommandName();
         if ("set".equalsIgnoreCase(subCmd)) {
@@ -66,51 +44,25 @@ public class Locale extends SimpleCommand {
         }
     }
 
-    private boolean set(MessageEventWrapper eventWrapper, CommandContext context) {
-        if (context.argsEmpty()) return false;
-        var language = loc.getLanguage(context.argString(0).get());
-        if (language.isEmpty()) {
-            eventWrapper.replyErrorAndDelete(eventWrapper.localize("command.locale.error.invalidLocale"), 10);
-            return true;
-        }
-        if (data.setLanguage(eventWrapper.getGuild(), language.get())) {
-            eventWrapper.reply(eventWrapper.localize("command.locale.sub.set.set",
-                    Replacement.create("LOCALE", language.get().getLanguage(), Format.CODE))).queue();
-        }
-        return true;
-    }
-
-    private boolean list(MessageEventWrapper eventWrapper) {
-        var languages = loc.getLanguages();
-        var builder = TextFormatting.getTableBuilder(languages,
-                eventWrapper.localize("words.language"), eventWrapper.localize("words.code"));
-        languages.forEach(l -> builder.setNextRow(l.getLanguage(), l.getCode()));
-        eventWrapper.reply(eventWrapper.localize("command.locale.sub.list.list") + "\n" + builder).queue();
-        return true;
-
-    }
-
-    private boolean set(SlashCommandEvent event) {
+    private void set(SlashCommandEvent event) {
         var loc = this.loc.getContextLocalizer(event.getGuild());
         var language = this.loc.getLanguage(event.getOption("language").getAsString());
         if (language.isEmpty()) {
             event.reply(loc.localize("command.locale.error.invalidLocale")).setEphemeral(true).queue();
-            return true;
+            return;
         }
         if (data.setLanguage(event.getGuild(), language.get())) {
             event.reply(loc.localize("command.locale.sub.set.set",
                     Replacement.create("LOCALE", language.get().getLanguage(), Format.CODE))).queue();
         }
-        return true;
     }
 
-    private boolean list(SlashCommandEvent event) {
+    private void list(SlashCommandEvent event) {
         var loc = this.loc.getContextLocalizer(event.getGuild());
         var languages = this.loc.getLanguages();
         var builder = TextFormatting.getTableBuilder(languages,
                 loc.localize("words.language"), loc.localize("words.code"));
         languages.forEach(l -> builder.setNextRow(l.getLanguage(), l.getCode()));
         event.reply(loc.localize("command.locale.sub.list.list") + "\n" + builder).queue();
-        return true;
     }
 }

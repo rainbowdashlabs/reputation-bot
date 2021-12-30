@@ -90,7 +90,7 @@ public class ReputationVoteListener extends ListenerAdapter {
     }
 
     public void registerVote(Message message, List<Member> members, GuildSettings settings) {
-        if (PermissionErrorHandler.assertAndHandle(message.getTextChannel(), loc, configuration, Permission.MESSAGE_WRITE, Permission.MESSAGE_EMBED_LINKS)) {
+        if (PermissionErrorHandler.assertAndHandle(message.getTextChannel(), loc, configuration, Permission.MESSAGE_SEND, Permission.MESSAGE_EMBED_LINKS)) {
             return;
         }
 

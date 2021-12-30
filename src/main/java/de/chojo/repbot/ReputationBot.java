@@ -225,12 +225,8 @@ public class ReputationBot {
         }
 
         var data = new GuildData(dataSource);
-        var hubBuilder = CommandHub.builder(shardManager, configuration.baseSettings().defaultPrefix())
-                .receiveGuildCommands()
-                .receiveGuildMessagesUpdates()
+        var hubBuilder = CommandHub.builder(shardManager)
                 .withConversationSystem()
-                .withPrefixResolver(data::getPrefix)
-                .withSlashCommands()
                 .withCommands(
                         new Channel(dataSource, localizer),
                         new Prefix(dataSource, configuration, localizer),
@@ -251,7 +247,6 @@ public class ReputationBot {
                         new Dashboard(dataSource, localizer),
                         new AbuseProtection(dataSource, localizer)
                 )
-                .withInvalidArgumentProvider(((loc, command) -> Help.getCommandHelp(command, loc)))
                 .withLocalizer(localizer)
                 .withPermissionCheck((wrapper, command) -> {
                     if (wrapper.getMember().hasPermission(command.permission())) return true;
@@ -267,9 +262,6 @@ public class ReputationBot {
                     }
                     log.error(LogNotify.NOTIFY_ADMIN, "Command execution of {} failed\n{}", context.command().command(), context.args(), throwable);
                 });
-        if (configuration.testMode().isTestMode()) {
-            hubBuilder.onlyGuildCommands(configuration.testMode().testGuilds());
-        }
         var hub = hubBuilder.build();
         hub.registerCommands(new Help(hub, localizer, configuration.baseSettings().isExclusiveHelp()));
     }

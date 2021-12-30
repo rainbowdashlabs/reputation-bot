@@ -3,7 +3,6 @@ package de.chojo.repbot.config.elements;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
-import java.time.temporal.ChronoUnit;
 
 @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
 public class SelfCleanup {

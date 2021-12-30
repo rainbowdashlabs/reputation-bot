@@ -8,8 +8,6 @@ import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
-import de.chojo.jdautil.wrapper.CommandContext;
-import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -81,35 +79,9 @@ public class Help extends SimpleCommand {
     }
 
     @Override
-    public boolean onCommand(MessageEventWrapper eventWrapper, CommandContext context) {
-        if (context.argsEmpty()) {
-            var message = getAllCommandsEmbed(eventWrapper);
-            eventWrapper.reply(message).queue();
-            return true;
-        }
-
-        var cmd = context.argString(0).get();
-
-        var command = hub.getCommand(cmd);
-        if (command.isEmpty()) {
-            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.commandNotFound"), 10);
-            return true;
-        }
-
-        if (!eventWrapper.getMember().hasPermission(command.get().permission())) {
-            return true;
-        }
-
-        eventWrapper.reply(getCommandHelp(command.get(), loc.getContextLocalizer(eventWrapper.getGuild()))).queue();
-        return true;
-    }
-
-    @Override
     public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
-        var eventWrapper = MessageEventWrapper.create(event);
-
         if (event.getOptions().isEmpty()) {
-            var message = getAllCommandsEmbed(eventWrapper);
+            var message = getAllCommandsEmbed(event);
             event.replyEmbeds(message).queue();
             return;
         }
@@ -118,27 +90,27 @@ public class Help extends SimpleCommand {
         var cmd = event.getOption("command").getAsString();
         var command = hub.getCommand(cmd);
         if (command.isEmpty() ||
-            (!eventWrapper.getMember().hasPermission(command.get().permission())
+            (!event.getMember().hasPermission(command.get().permission())
              && command.get().permission() != Permission.UNKNOWN)) {
-            event.reply(eventWrapper.localize("error.commandNotFound"))
+            event.reply(loc.localize("error.commandNotFound", event))
                     .delay(Duration.ofSeconds(10))
                     .flatMap(InteractionHook::deleteOriginal)
                     .queue();
             return;
         }
 
-        event.reply(wrap(getCommandHelp(command.get(), loc.getContextLocalizer(eventWrapper.getGuild())))).queue();
+        event.reply(wrap(getCommandHelp(command.get(), loc.getContextLocalizer(event.getGuild())))).queue();
     }
 
     @NotNull
-    private MessageEmbed getAllCommandsEmbed(MessageEventWrapper eventWrapper) {
+    private MessageEmbed getAllCommandsEmbed(SlashCommandEvent event) {
         var commands = hub.getCommands().stream()
-                .filter(c -> hub.canExecute(eventWrapper, c))
+                .filter(c -> hub.canExecute(event, c))
                 .map(c -> "`" + c.command() + "`")
                 .collect(Collectors.joining(", "));
-        return new LocalizedEmbedBuilder(loc, eventWrapper)
+        return new LocalizedEmbedBuilder(loc, event)
                 .setTitle("command.help.list.title")
-                .setDescription(eventWrapper.localize("command.help.list.list",
+                .setDescription(loc.localize("command.help.list.list", event,
                         Replacement.create("COMMAND", "help <command>", Format.CODE)))
                 .addField("", commands, false)
                 .build();

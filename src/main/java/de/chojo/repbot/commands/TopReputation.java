@@ -4,8 +4,6 @@ import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
-import de.chojo.jdautil.wrapper.CommandContext;
-import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.ReputationData;
 import net.dv8tion.jda.api.Permission;
@@ -33,13 +31,6 @@ public class TopReputation extends SimpleCommand {
                 Permission.UNKNOWN);
         reputationData = new ReputationData(dataSource);
         loc = localizer;
-    }
-
-    @Override
-    public boolean onCommand(MessageEventWrapper eventWrapper, CommandContext context) {
-        var page = context.argInt(0).orElse(1);
-        eventWrapper.reply(top(eventWrapper.getGuild(), page)).queue();
-        return true;
     }
 
     @Override

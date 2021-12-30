@@ -5,8 +5,6 @@ import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.util.MentionUtil;
-import de.chojo.jdautil.wrapper.CommandContext;
-import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.util.Colors;
@@ -31,12 +29,6 @@ public class Dashboard extends SimpleCommand {
                 Permission.UNKNOWN);
         reputationData = new ReputationData(dataSource);
         this.localizer = localizer;
-    }
-
-    @Override
-    public boolean onCommand(MessageEventWrapper eventWrapper, CommandContext context) {
-        eventWrapper.reply(getDashboard(eventWrapper.getGuild())).queue();
-        return true;
     }
 
     @Override

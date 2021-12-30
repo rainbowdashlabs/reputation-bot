@@ -4,8 +4,6 @@ import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.Replacement;
-import de.chojo.jdautil.wrapper.CommandContext;
-import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
@@ -42,23 +40,6 @@ public class Prefix extends SimpleCommand {
     }
 
     @Override
-    public boolean onCommand(MessageEventWrapper eventWrapper, CommandContext context) {
-        var optSubCmd = context.argString(0);
-        if (optSubCmd.isPresent()) {
-            var subCmd = optSubCmd.get();
-            if ("set".equalsIgnoreCase(subCmd)) {
-                return set(eventWrapper, context.subContext(subCmd));
-            }
-
-            if ("reset".equalsIgnoreCase(subCmd)) {
-                return reset(eventWrapper);
-            }
-            return false;
-        }
-        return get(eventWrapper);
-    }
-
-    @Override
     public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
         var subCmd = event.getSubcommandName();
         if ("set".equalsIgnoreCase(subCmd)) {
@@ -71,14 +52,6 @@ public class Prefix extends SimpleCommand {
         if ("reset".equalsIgnoreCase(subCmd)) {
             reset(event);
         }
-    }
-
-    private boolean reset(MessageEventWrapper eventWrapper) {
-        var response = changePrefix(eventWrapper.getGuild(), configuration.baseSettings().defaultPrefix());
-        if (response != null) {
-            eventWrapper.reply(response).queue();
-        }
-        return true;
     }
 
     private void reset(SlashCommandEvent event) {
@@ -96,18 +69,6 @@ public class Prefix extends SimpleCommand {
         }
 
         return null;
-    }
-
-    private boolean set(MessageEventWrapper eventWrapper, CommandContext subContext) {
-        var optArg = subContext.argString(0);
-        if (optArg.isEmpty()) return false;
-        var prefix = optArg.get();
-
-        var response = set(prefix, eventWrapper.getGuild());
-        if (response != null) {
-            eventWrapper.reply(response).queue();
-        }
-        return true;
     }
 
     @Nullable
@@ -133,13 +94,4 @@ public class Prefix extends SimpleCommand {
         }
         return changePrefix(guild, prefix);
     }
-
-    private boolean get(MessageEventWrapper eventWrapper) {
-        var prefix = data.getPrefix(eventWrapper.getGuild()).orElse(configuration.baseSettings().defaultPrefix());
-        eventWrapper.reply(eventWrapper.localize("command.prefix.show",
-                Replacement.create("PREFIX", prefix, Format.CODE))).queue();
-        return true;
-    }
-
-
 }

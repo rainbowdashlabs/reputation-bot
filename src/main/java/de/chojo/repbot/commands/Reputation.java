@@ -5,9 +5,6 @@ import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
-import de.chojo.jdautil.parsing.DiscordResolver;
-import de.chojo.jdautil.wrapper.CommandContext;
-import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
@@ -44,29 +41,6 @@ public class Reputation extends SimpleCommand {
         guildData = new GuildData(dataSource);
         loc = localizer;
         this.configuration = configuration;
-    }
-
-    @Override
-    public boolean onCommand(MessageEventWrapper eventWrapper, CommandContext context) {
-        if (context.argsEmpty()) {
-            var reputation = reputationData.getReputation(eventWrapper.getGuild(), eventWrapper.getAuthor()).orElse(ReputationUser.empty(eventWrapper.getAuthor()));
-            eventWrapper.reply(getUserRepEmbed(eventWrapper.getMember(), reputation)).queue();
-            return true;
-        }
-
-        var optSubComd = context.argString(0);
-        if (optSubComd.isEmpty()) {
-            return false;
-        }
-        var subCmd = optSubComd.get();
-        var guildMember = DiscordResolver.getGuildMember(eventWrapper.getGuild(), subCmd);
-        if (guildMember.isEmpty()) {
-            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.userNotFound"), 10);
-            return true;
-        }
-        var reputation = reputationData.getReputation(eventWrapper.getGuild(), guildMember.get().getUser()).orElse(ReputationUser.empty(eventWrapper.getAuthor()));
-        eventWrapper.reply(getUserRepEmbed(guildMember.get(), reputation)).queue();
-        return true;
     }
 
     @Override

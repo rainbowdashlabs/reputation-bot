@@ -4,8 +4,6 @@ import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
-import de.chojo.jdautil.wrapper.CommandContext;
-import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
@@ -45,30 +43,6 @@ public class Reactions extends SimpleCommand {
     }
 
     @Override
-    public boolean onCommand(MessageEventWrapper eventWrapper, CommandContext context) {
-        if (context.argsEmpty()) return false;
-
-        var cmd = context.argString(0).get();
-
-        if ("main".equalsIgnoreCase(cmd)) {
-            return reaction(eventWrapper, context.subContext(cmd));
-        }
-
-        if ("add".equalsIgnoreCase(cmd)) {
-            return add(eventWrapper, context.subContext(cmd));
-        }
-        if ("remove".equalsIgnoreCase(cmd)) {
-            return remove(eventWrapper, context.subContext(cmd));
-        }
-        if ("info".equalsIgnoreCase(cmd)) {
-            return info(eventWrapper);
-        }
-
-
-        return false;
-    }
-
-    @Override
     public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
         var cmd = event.getSubcommandName();
 
@@ -87,11 +61,6 @@ public class Reactions extends SimpleCommand {
         }
     }
 
-    private boolean info(MessageEventWrapper eventWrapper) {
-        eventWrapper.reply(getInfoEmbed(guildData.getGuildSettings(eventWrapper.getGuild()))).queue();
-        return true;
-    }
-
     private boolean info(SlashCommandEvent event) {
         event.replyEmbeds(getInfoEmbed(guildData.getGuildSettings(event.getGuild()))).queue();
         return true;
@@ -108,14 +77,6 @@ public class Reactions extends SimpleCommand {
                 .build();
     }
 
-
-    private boolean reaction(MessageEventWrapper event, CommandContext context) {
-        var emote = context.argString(0).get();
-        var message = event.reply(loc.localize("command.reaction.checking", event.getGuild())).complete();
-        handleSetCheckResult(event.getGuild(), message, emote);
-        return true;
-    }
-
     private void reaction(SlashCommandEvent event) {
         var emote = event.getOption("emote").getAsString();
         var message = event.reply(loc.localize("command.reaction.checking", event.getGuild()))
@@ -123,38 +84,11 @@ public class Reactions extends SimpleCommand {
         handleSetCheckResult(event.getGuild(), message, emote);
     }
 
-    private boolean add(MessageEventWrapper event, CommandContext context) {
-        var emote = context.argString(0).get();
-        var message = event.reply(loc.localize("command.reaction.checking", event.getGuild())).complete();
-        handleAddCheckResult(event.getGuild(), message, emote);
-        return true;
-    }
-
     private void add(SlashCommandEvent event) {
         var emote = event.getOption("emote").getAsString();
         var message = event.reply(loc.localize("command.reaction.checking", event.getGuild()))
                 .flatMap(InteractionHook::retrieveOriginal).complete();
         handleAddCheckResult(event.getGuild(), message, emote);
-    }
-
-    private boolean remove(MessageEventWrapper event, CommandContext context) {
-        var emote = context.argString(0).get();
-        var matcher = EMOTE_PATTERN.matcher(emote);
-        if (matcher.find()) {
-            if (guildData.removeReaction(event.getGuild(), matcher.group("id"))) {
-                event.reply(loc.localize("command.reaction.sub.remove.removed", event.getGuild())).queue();
-                return true;
-            }
-            event.replyErrorAndDelete(loc.localize("command.reaction.sub.remove.notFound", event.getGuild()), 10);
-            return true;
-        }
-
-        if (guildData.removeReaction(event.getGuild(), emote)) {
-            event.reply(loc.localize("command.reaction.sub.remove.removed", event.getGuild())).queue();
-            return true;
-        }
-        event.replyErrorAndDelete(loc.localize("command.reaction.sub.remove.notFound", event.getGuild()), 10);
-        return true;
     }
 
     private void remove(SlashCommandEvent event) {

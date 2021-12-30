@@ -19,8 +19,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.MessageBulkDeleteEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageDeleteEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -58,7 +58,7 @@ public class MessageListener extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildMessageDelete(@NotNull GuildMessageDeleteEvent event) {
+    public void onMessageDelete(@NotNull MessageDeleteEvent event) {
         reputationData.removeMessage(event.getMessageIdLong());
     }
 
@@ -68,12 +68,12 @@ public class MessageListener extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildMessageReceived(@NotNull GuildMessageReceivedEvent event) {
+    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (event.getAuthor().isBot() || event.isWebhookMessage()) return;
         var guild = event.getGuild();
         var settings = guildData.getGuildSettings(guild);
 
-        if (!settings.thankSettings().isReputationChannel(event.getChannel())) return;
+        if (!settings.thankSettings().isReputationChannel(event.getTextChannel())) return;
         repBotCachePolicy.seen(event.getMember());
 
         if (!settings.thankSettings().hasDonorRole(event.getMember())) return;
@@ -95,8 +95,8 @@ public class MessageListener extends ListenerAdapter {
 
         if (analyzerResult.type() == ThankType.NO_MATCH) return;
 
-        if (PermissionErrorHandler.assertAndHandle(event.getChannel(), localizer, configuration,
-                Permission.MESSAGE_WRITE, Permission.MESSAGE_ADD_REACTION, Permission.MESSAGE_EMBED_LINKS)) {
+        if (PermissionErrorHandler.assertAndHandle(event.getTextChannel(), localizer, configuration,
+                Permission.MESSAGE_SEND, Permission.MESSAGE_ADD_REACTION, Permission.MESSAGE_EMBED_LINKS)) {
             return;
         }
 

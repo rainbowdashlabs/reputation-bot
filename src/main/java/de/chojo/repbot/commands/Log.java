@@ -4,11 +4,7 @@ import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
-import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.jdautil.parsing.ValueParser;
-import de.chojo.jdautil.parsing.Verifier;
-import de.chojo.jdautil.wrapper.CommandContext;
-import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.data.wrapper.ReputationLogEntry;
@@ -59,30 +55,6 @@ public class Log extends SimpleCommand {
     }
 
     @Override
-    public boolean onCommand(MessageEventWrapper eventWrapper, CommandContext context) {
-        if (context.argsArray().length <= 1) return false;
-        var cmd = context.argString(0).get();
-        if ("received".equalsIgnoreCase(cmd) || "donated".equalsIgnoreCase(cmd)) {
-            var userArg = context.argString(1).get();
-            var optUser = Verifier.getIdRaw(userArg)
-                    .map(c -> eventWrapper.getGuild().retrieveMemberById(c).complete().getUser())
-                    .or(() -> DiscordResolver.getUser(shardManager, userArg));
-            if (optUser.isEmpty()) {
-                eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.userNotFound"), 15);
-                return true;
-            }
-            if ("received".equalsIgnoreCase(cmd)) {
-                return received(eventWrapper, context.subContext(cmd), optUser.get());
-            }
-            return donated(eventWrapper, context.subContext(cmd), optUser.get());
-        }
-        if ("message".equalsIgnoreCase(cmd)) {
-            return message(eventWrapper, context.subContext(cmd));
-        }
-        return false;
-    }
-
-    @Override
     public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
         var cmd = event.getSubcommandName();
         if ("received".equalsIgnoreCase(cmd)) {
@@ -108,18 +80,6 @@ public class Log extends SimpleCommand {
                 .build();
     }
 
-    private boolean message(MessageEventWrapper eventWrapper, CommandContext subContext) {
-        var optMessageId = subContext.argLong(0);
-
-        if (optMessageId.isEmpty()) {
-            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.invalidMessage"), 15);
-            return false;
-        }
-
-        eventWrapper.reply(getMessageLog(eventWrapper.getGuild(), optMessageId.get())).queue();
-        return true;
-    }
-
     private void message(SlashCommandEvent event) {
         event.getOption("message_id");
         var optMessageId = ValueParser.parseLong(event.getOption("message_id").getAsString());
@@ -140,13 +100,6 @@ public class Log extends SimpleCommand {
                 .build();
     }
 
-    private boolean donated(MessageEventWrapper eventWrapper, CommandContext context, User user) {
-        var limit = context.argInt(1).orElse(10);
-        eventWrapper.reply(sendUserLog(eventWrapper.getGuild(), user, "command.log.donatedLog",
-                getDonatedLog(user, eventWrapper.getGuild(), limit))).queue();
-        return true;
-    }
-
     private void donated(SlashCommandEvent event, User user) {
         var limit = Optional.ofNullable(event.getOption("count")).map(OptionMapping::getAsLong).orElse(10L);
         event.reply(wrap(sendUserLog(event.getGuild(), user, "command.log.donatedLog",
@@ -156,13 +109,6 @@ public class Log extends SimpleCommand {
     private String getDonatedLog(User user, Guild guild, int limit) {
         var userDonatedLog = reputationData.getUserDonatedLog(user, guild, Math.max(5, Math.min(limit, 50)));
         return mapUserLogEntry(guild, userDonatedLog, ReputationLogEntry::receiverId);
-    }
-
-    private boolean received(MessageEventWrapper eventWrapper, CommandContext context, User user) {
-        var limit = context.argInt(1).orElse(10);
-        eventWrapper.reply(sendUserLog(eventWrapper.getGuild(), user, "command.log.receivedLog",
-                getReceivedLog(user, eventWrapper.getGuild(), limit))).queue();
-        return true;
     }
 
     private void received(SlashCommandEvent event, User user) {

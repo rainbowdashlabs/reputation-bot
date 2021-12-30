@@ -2,7 +2,6 @@ package de.chojo.repbot.service;
 
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
-import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.data.wrapper.ReputationRole;
 import de.chojo.repbot.data.wrapper.ReputationUser;
 import net.dv8tion.jda.api.entities.Guild;
@@ -13,9 +12,9 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.sql.DataSource;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class RoleAssigner {

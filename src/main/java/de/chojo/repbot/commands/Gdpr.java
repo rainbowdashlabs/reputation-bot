@@ -2,8 +2,6 @@ package de.chojo.repbot.commands;
 
 import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.ILocalizer;
-import de.chojo.jdautil.wrapper.CommandContext;
-import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GdprData;
 import net.dv8tion.jda.api.Permission;
@@ -26,36 +24,6 @@ public class Gdpr extends SimpleCommand {
                 Permission.UNKNOWN);
         this.localizer = localizer;
         gdprData = new GdprData(dataSource);
-    }
-
-    @Override
-    public boolean onCommand(MessageEventWrapper eventWrapper, CommandContext context) {
-        if (context.argsEmpty()) {
-            return false;
-        }
-
-        var cmd = context.argString(0).get();
-        if ("request".equalsIgnoreCase(cmd)) {
-            var request = gdprData.request(eventWrapper.getAuthor());
-            if (request) {
-                eventWrapper.reply(localizer.localize("command.gdpr.sub.request.received", eventWrapper.getGuild())).queue();
-            } else {
-                eventWrapper.reply(localizer.localize("command.gdpr.sub.request.requested", eventWrapper.getGuild())).queue();
-            }
-            return true;
-        }
-
-        if ("delete".equalsIgnoreCase(cmd)) {
-            var success = gdprData.queueUserDeletion(eventWrapper.getAuthor());
-            if (success) {
-                eventWrapper.reply(localizer.localize("command.gdpr.sub.delete.received", eventWrapper.getGuild())).queue();
-            } else {
-                eventWrapper.reply(localizer.localize("command.gdpr.sub.delete.scheduled", eventWrapper.getGuild())).queue();
-            }
-            return true;
-        }
-
-        return false;
     }
 
     @Override

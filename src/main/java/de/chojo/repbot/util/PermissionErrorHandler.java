@@ -47,8 +47,8 @@ public class PermissionErrorHandler {
         } else {
             errorMessage += "\n" + localizer.localize("error.missingPermissionGuild", guild);
         }
-        if (permission != Permission.MESSAGE_WRITE && permission != Permission.VIEW_CHANNEL
-            && PermissionUtil.checkPermission(channel, channel.getGuild().getSelfMember(), Permission.MESSAGE_WRITE, Permission.VIEW_CHANNEL)) {
+        if (permission != Permission.MESSAGE_SEND && permission != Permission.VIEW_CHANNEL
+            && PermissionUtil.checkPermission(channel, channel.getGuild().getSelfMember(), Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL)) {
             channel.sendMessage(errorMessage).queue();
             return;
         }

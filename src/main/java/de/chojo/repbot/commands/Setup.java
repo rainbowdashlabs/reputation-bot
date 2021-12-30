@@ -18,8 +18,6 @@ import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.ArgumentUtil;
 import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.jdautil.parsing.ValueParser;
-import de.chojo.jdautil.wrapper.CommandContext;
-import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.serialization.ThankwordsContainer;
@@ -74,14 +72,8 @@ public class Setup extends SimpleCommand {
     }
 
     @Override
-    public boolean onCommand(MessageEventWrapper eventWrapper, CommandContext context) {
-        context.startDialog(eventWrapper, getConversation());
-        return true;
-    }
-
-    @Override
     public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
-        PermissionErrorHandler.assertPermissions(event.getTextChannel(), Permission.MESSAGE_READ, Permission.MESSAGE_WRITE);
+        PermissionErrorHandler.assertPermissions(event.getTextChannel(), Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL);
         event.reply(localizer.localize("command.setup.dialog.starting", event.getGuild())).queue();
         context.conversationService().startDialog(event.getUser(), event.getTextChannel(), getConversation());
     }
