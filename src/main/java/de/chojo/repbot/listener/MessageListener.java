@@ -67,7 +67,7 @@ public class MessageListener extends ListenerAdapter {
             var thread = ((ThreadChannel) event.getChannel());
             var settings = guildData.getGuildSettings(event.getGuild());
             if (settings.thankSettings().isReputationChannel(thread.getParentChannel())) {
-                thread.getParentMessageChannel();
+                thread.join().queue();
             }
         }
     }
@@ -118,7 +118,7 @@ public class MessageListener extends ListenerAdapter {
 
         if (analyzerResult.type() == ThankType.NO_MATCH) return;
 
-        if (PermissionErrorHandler.assertAndHandle(event.getTextChannel(), localizer, configuration,
+        if (PermissionErrorHandler.assertAndHandle(event.getGuildChannel(), localizer, configuration,
                 Permission.MESSAGE_SEND, Permission.MESSAGE_ADD_REACTION, Permission.MESSAGE_EMBED_LINKS)) {
             return;
         }
