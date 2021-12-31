@@ -54,7 +54,7 @@ public class ReactionListener extends ListenerAdapter {
         if (event.getUser().isBot()) return;
         var guildSettings = guildData.getGuildSettings(event.getGuild());
 
-        if (!guildSettings.thankSettings().isReputationChannel(event.getTextChannel())) return;
+        if (!guildSettings.thankSettings().isReputationChannel(event.getChannel())) return;
         if (!guildSettings.messageSettings().isReactionActive()) return;
         if (!guildSettings.thankSettings().isReaction(event.getReaction().getReactionEmote())) return;
 

@@ -1,6 +1,7 @@
 package de.chojo.repbot.commands;
 
 import de.chojo.jdautil.command.SimpleCommand;
+import de.chojo.jdautil.command.dispatching.CommandHub;
 import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.Replacement;
@@ -16,6 +17,7 @@ import javax.sql.DataSource;
 public class Locale extends SimpleCommand {
     private final GuildData data;
     private final Localizer loc;
+    private CommandHub<SimpleCommand> commandHub;
 
     public Locale(DataSource dataSource, Localizer loc) {
         super("locale",
@@ -54,6 +56,7 @@ public class Locale extends SimpleCommand {
         if (data.setLanguage(event.getGuild(), language.get())) {
             event.reply(loc.localize("command.locale.sub.set.set",
                     Replacement.create("LOCALE", language.get().getLanguage(), Format.CODE))).queue();
+            commandHub.refreshGuildCommands(event.getGuild());
         }
     }
 
@@ -64,5 +67,9 @@ public class Locale extends SimpleCommand {
                 loc.localize("words.language"), loc.localize("words.code"));
         languages.forEach(l -> builder.setNextRow(l.getLanguage(), l.getCode()));
         event.reply(loc.localize("command.locale.sub.list.list") + "\n" + builder).queue();
+    }
+
+    public void addCommandHub(CommandHub<SimpleCommand> commandHub){
+        this.commandHub = commandHub;
     }
 }

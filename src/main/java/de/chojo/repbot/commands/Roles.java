@@ -9,6 +9,7 @@ import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.service.RoleAccessException;
 import de.chojo.repbot.service.RoleAssigner;
+import de.chojo.repbot.util.Permissions;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.IMentionable;
@@ -16,6 +17,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.sharding.ShardManager;
 
 import javax.sql.DataSource;
 import java.util.Collections;
@@ -28,9 +30,10 @@ public class Roles extends SimpleCommand {
     private final GuildData guildData;
     private final ILocalizer loc;
     private final RoleAssigner roleAssigner;
+    private final ShardManager shardManager;
     private final Set<Long> running = new HashSet<>();
 
-    public Roles(DataSource dataSource, ILocalizer loc, RoleAssigner roleAssigner) {
+    public Roles(DataSource dataSource, ILocalizer loc, RoleAssigner roleAssigner, ShardManager shardManager) {
         super("roles", new String[]{"role"},
                 "command.roles.description",
                 subCommandBuilder()
@@ -75,6 +78,7 @@ public class Roles extends SimpleCommand {
         guildData = new GuildData(dataSource);
         this.loc = loc;
         this.roleAssigner = roleAssigner;
+        this.shardManager = shardManager;
     }
 
     @Override
@@ -175,12 +179,14 @@ public class Roles extends SimpleCommand {
             event.reply(loc.localize("command.roles.sub.managerRole.set",
                             Replacement.createMention(role)))
                     .allowedMentions(Collections.emptyList()).queue();
+
+            Permissions.buildGuildPriviledges(guildData, shardManager);
         }
     }
 
     private String getManagerRoleMessage(Guild guild, GuildSettings settings) {
         if (settings.generalSettings().managerRole().isPresent()) {
-            var roleById = guild.getRoleById(settings.generalSettings().managerRole().getAsLong());
+            var roleById = guild.getRoleById(settings.generalSettings().managerRole().get());
             if (roleById != null) {
                 return loc.localize("command.roles.sub.managerRole.current", guild,
                         Replacement.createMention(roleById));

@@ -1,10 +1,13 @@
 package de.chojo.repbot.data.wrapper;
 
 import de.chojo.jdautil.parsing.Verifier;
+import net.dv8tion.jda.api.entities.Channel;
+import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.ThreadChannel;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -71,7 +74,11 @@ public class ThankSettings {
                 Pattern.CASE_INSENSITIVE + Pattern.MULTILINE + Pattern.DOTALL + Pattern.COMMENTS);
     }
 
-    public boolean isReputationChannel(TextChannel channel) {
+    public boolean isReputationChannel(Channel channel) {
+        if(channel.getType() == ChannelType.GUILD_PUBLIC_THREAD){
+            channel = ((ThreadChannel) channel).getParentMessageChannel();
+        }
+
         if (channelWhitelist) {
             return activeChannel.contains(channel.getIdLong());
         }

@@ -17,7 +17,11 @@ import de.chojo.repbot.util.Messages;
 import de.chojo.repbot.util.PermissionErrorHandler;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageType;
+import net.dv8tion.jda.api.entities.ThreadChannel;
+import net.dv8tion.jda.api.events.channel.ChannelCreateEvent;
 import net.dv8tion.jda.api.events.message.MessageBulkDeleteEvent;
 import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -58,6 +62,17 @@ public class MessageListener extends ListenerAdapter {
     }
 
     @Override
+    public void onChannelCreate(@NotNull ChannelCreateEvent event) {
+        if (event.getChannelType() == ChannelType.GUILD_PUBLIC_THREAD) {
+            var thread = ((ThreadChannel) event.getChannel());
+            var settings = guildData.getGuildSettings(event.getGuild());
+            if (settings.thankSettings().isReputationChannel(thread.getParentChannel())) {
+                thread.getParentMessageChannel();
+            }
+        }
+    }
+
+    @Override
     public void onMessageDelete(@NotNull MessageDeleteEvent event) {
         reputationData.removeMessage(event.getMessageIdLong());
     }
@@ -73,7 +88,15 @@ public class MessageListener extends ListenerAdapter {
         var guild = event.getGuild();
         var settings = guildData.getGuildSettings(guild);
 
-        if (!settings.thankSettings().isReputationChannel(event.getTextChannel())) return;
+        if (!event.isFromGuild()) {
+            return;
+        }
+
+        if (event.getMessage().getType() != MessageType.DEFAULT && event.getMessage().getType() != MessageType.INLINE_REPLY) {
+            return;
+        }
+
+        if (!settings.thankSettings().isReputationChannel(event.getChannel())) return;
         repBotCachePolicy.seen(event.getMember());
 
         if (!settings.thankSettings().hasDonorRole(event.getMember())) return;
