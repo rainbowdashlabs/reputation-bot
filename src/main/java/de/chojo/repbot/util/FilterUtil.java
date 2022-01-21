@@ -20,7 +20,7 @@ public final class FilterUtil {
      * @return list of accessable text channel
      */
     public static List<TextChannel> getAccessableTextChannel(Guild guild) {
-        return filterChannelByPermission(guild, Permission.MESSAGE_READ, Permission.MESSAGE_WRITE);
+        return filterChannelByPermission(guild, Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND);
     }
 
     public static List<TextChannel> filterChannelByPermission(Guild guild, Permission... permissions) {

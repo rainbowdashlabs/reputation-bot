@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 
 import javax.sql.DataSource;
 import java.time.Duration;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.concurrent.ScheduledExecutorService;
@@ -89,7 +88,7 @@ public class SelfCleanupService implements Runnable {
                 .build();
 
         notifyGuild(guild, embed);
-        log.info(LogNotify.STATUS, "Promptet guild self cleanup.");
+        log.info(LogNotify.STATUS, "Prompted guild self cleanup.");
     }
 
     private void notifyCleanup(Guild guild) {
@@ -111,7 +110,6 @@ public class SelfCleanupService implements Runnable {
         guildData.cleanupDone(guild);
     }
 
-
     private void notifyGuild(Guild guild, MessageEmbed embed) {
         var selfMember = guild.getSelfMember();
         guild.retrieveMemberById(guild.getOwnerIdLong())
@@ -121,7 +119,7 @@ public class SelfCleanupService implements Runnable {
                 .complete();
 
         for (var channel : guild.getTextChannels()) {
-            if (selfMember.hasPermission(channel, Permission.VIEW_CHANNEL, Permission.MESSAGE_WRITE)) {
+            if (selfMember.hasPermission(channel, Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND)) {
                 channel.sendMessageEmbeds(embed).complete();
                 break;
             }

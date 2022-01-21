@@ -12,6 +12,7 @@ import de.chojo.sqlutil.base.QueryFactoryHolder;
 import de.chojo.sqlutil.conversion.ArrayConverter;
 import de.chojo.sqlutil.exceptions.ExceptionTransformer;
 import de.chojo.sqlutil.wrapper.QueryBuilderConfig;
+import net.dv8tion.jda.api.entities.Channel;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
@@ -276,7 +277,7 @@ public class GuildData extends QueryFactoryHolder {
      * @param channel channel
      * @return true if the channel was removed
      */
-    public boolean removeChannel(Guild guild, MessageChannel channel) {
+    public boolean removeChannel(Guild guild, Channel channel) {
         return builder()
                        .query("DELETE FROM active_channel WHERE guild_id = ? AND channel_id = ?;")
                        .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setLong(channel.getIdLong()))

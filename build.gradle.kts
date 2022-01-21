@@ -15,11 +15,11 @@ repositories {
 
 dependencies {
     // discord
-    implementation("net.dv8tion", "JDA", "4.3.0_339") {
+    implementation("net.dv8tion", "JDA", "5.0.0-alpha.4") {
         exclude(module = "opus-java")
     }
 
-    implementation("de.chojo", "cjda-util", "1.5.5")
+    implementation("de.chojo", "cjda-util", "2.0.1")
 
     // database
     implementation("org.postgresql", "postgresql", "42.3.1")
@@ -30,8 +30,8 @@ dependencies {
 
     // Logging
     implementation("org.slf4j", "slf4j-api", "1.7.30")
-    implementation("org.apache.logging.log4j", "log4j-core", "2.17.0")
-    implementation("org.apache.logging.log4j", "log4j-slf4j-impl", "2.17.0")
+    implementation("org.apache.logging.log4j", "log4j-core", "2.17.1")
+    implementation("org.apache.logging.log4j", "log4j-slf4j-impl", "2.17.1")
     implementation("club.minnced", "discord-webhooks", "0.5.8")
 
     // utils

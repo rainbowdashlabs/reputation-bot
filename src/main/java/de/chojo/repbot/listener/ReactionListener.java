@@ -14,10 +14,10 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveAllEvent;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEmoteEvent;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionRemoveEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveAllEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEmoteEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -50,7 +50,7 @@ public class ReactionListener extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildMessageReactionAdd(@NotNull GuildMessageReactionAddEvent event) {
+    public void onMessageReactionAdd(@NotNull MessageReactionAddEvent event) {
         if (event.getUser().isBot()) return;
         var guildSettings = guildData.getGuildSettings(event.getGuild());
 
@@ -88,7 +88,7 @@ public class ReactionListener extends ListenerAdapter {
             receiver = newReceiver.getUser();
         }
 
-        if (PermissionErrorHandler.assertAndHandle(event.getChannel(), localizer, configuration, Permission.MESSAGE_WRITE)) {
+        if (PermissionErrorHandler.assertAndHandle(event.getTextChannel(), localizer, configuration, Permission.MESSAGE_SEND)) {
             return;
         }
 
@@ -106,15 +106,16 @@ public class ReactionListener extends ListenerAdapter {
         }
     }
 
+
     @Override
-    public void onGuildMessageReactionRemoveEmote(@NotNull GuildMessageReactionRemoveEmoteEvent event) {
+    public void onMessageReactionRemoveEmote(@NotNull MessageReactionRemoveEmoteEvent event) {
         var guildSettings = guildData.getGuildSettings(event.getGuild());
         if (!guildSettings.thankSettings().isReaction(event.getReactionEmote())) return;
         reputationData.removeMessage(event.getMessageIdLong());
     }
 
     @Override
-    public void onGuildMessageReactionRemove(@NotNull GuildMessageReactionRemoveEvent event) {
+    public void onMessageReactionRemove(@NotNull MessageReactionRemoveEvent event) {
         var guildSettings = guildData.getGuildSettings(event.getGuild());
         if (!guildSettings.thankSettings().isReaction(event.getReactionEmote())) return;
         if (reputationData.removeReputation(event.getUserIdLong(), event.getMessageIdLong(), ThankType.REACTION)) {
@@ -125,7 +126,7 @@ public class ReactionListener extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildMessageReactionRemoveAll(@NotNull GuildMessageReactionRemoveAllEvent event) {
+    public void onMessageReactionRemoveAll(@NotNull MessageReactionRemoveAllEvent event) {
         reputationData.removeMessage(event.getMessageIdLong());
     }
 

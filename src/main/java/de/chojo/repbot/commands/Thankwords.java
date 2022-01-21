@@ -9,8 +9,6 @@ import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.Verifier;
-import de.chojo.jdautil.wrapper.CommandContext;
-import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.data.GuildData;
@@ -88,28 +86,6 @@ public class Thankwords extends SimpleCommand {
     }
 
     @Override
-    public boolean onCommand(MessageEventWrapper eventWrapper, CommandContext context) {
-        if (context.argsEmpty()) return false;
-        var subCmd = context.argString(0).get();
-        if ("add".equalsIgnoreCase(subCmd)) {
-            return add(eventWrapper, context.subContext(subCmd));
-        }
-        if ("remove".equalsIgnoreCase(subCmd)) {
-            return remove(eventWrapper, context.subContext(subCmd));
-        }
-        if ("list".equalsIgnoreCase(subCmd)) {
-            return list(eventWrapper);
-        }
-        if ("check".equalsIgnoreCase(subCmd)) {
-            return check(eventWrapper);
-        }
-        if ("loaddefaults".equalsIgnoreCase(subCmd)) {
-            return loadDefaults(eventWrapper, context.subContext(subCmd));
-        }
-        return false;
-    }
-
-    @Override
     public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
         var subCmd = event.getSubcommandName();
         if ("add".equalsIgnoreCase(subCmd)) {
@@ -129,23 +105,6 @@ public class Thankwords extends SimpleCommand {
         }
     }
 
-    private boolean add(MessageEventWrapper eventWrapper, CommandContext context) {
-        if (context.argsEmpty()) return false;
-
-        var pattern = context.argString(0).get();
-        try {
-            Pattern.compile(pattern);
-        } catch (PatternSyntaxException e) {
-            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.invalidRegex"), 30);
-            return true;
-        }
-        if (data.addThankWord(eventWrapper.getGuild(), pattern)) {
-            eventWrapper.reply(eventWrapper.localize("command.thankwords.sub.add.added",
-                    Replacement.create("REGEX", pattern, Format.CODE))).queue();
-        }
-        return true;
-    }
-
     private boolean add(SlashCommandEvent event) {
         var loc = this.loc.getContextLocalizer(event.getGuild());
         var pattern = event.getOption("pattern").getAsString();
@@ -161,25 +120,6 @@ public class Thankwords extends SimpleCommand {
             event.reply(loc.localize("command.thankwords.sub.add.added",
                     Replacement.create("REGEX", pattern, Format.CODE))).queue();
         }
-        return true;
-    }
-
-    private boolean remove(MessageEventWrapper eventWrapper, CommandContext context) {
-        if (context.argsEmpty()) return false;
-
-        var pattern = context.argString(0).get();
-        try {
-            Pattern.compile(pattern);
-        } catch (PatternSyntaxException e) {
-            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.invalidRegex"), 30);
-            return true;
-        }
-        if (data.removeThankWord(eventWrapper.getGuild(), pattern)) {
-            eventWrapper.reply(eventWrapper.localize("command.thankwords.sub.remove.removed",
-                    Replacement.create("PATTERN", pattern, Format.CODE))).queue();
-            return true;
-        }
-        eventWrapper.replyErrorAndDelete(eventWrapper.localize("command.thankwords.error.patternNotFound"), 10);
         return true;
     }
 
@@ -202,14 +142,6 @@ public class Thankwords extends SimpleCommand {
         event.reply(loc.localize("command.thankwords.error.patternNotFound"))
                 .setEphemeral(true)
                 .queue();
-        return true;
-    }
-
-    private boolean list(MessageEventWrapper eventWrapper) {
-        var pattern = getGuildPattern(eventWrapper.getGuild());
-        if (pattern == null) return false;
-
-        eventWrapper.reply(eventWrapper.localize("command.thankwords.sub.list.list") + "\n" + pattern).queue();
         return true;
     }
 
@@ -263,26 +195,6 @@ public class Thankwords extends SimpleCommand {
         return true;
     }
 
-    private boolean check(MessageEventWrapper eventWrapper) {
-        var guildSettings = data.getGuildSettings(eventWrapper.getGuild());
-
-        var result = messageAnalyzer.processMessage(guildSettings.thankSettings().thankwordPattern(), eventWrapper.getMessage(), guildSettings, true, 3);
-        var builder = new LocalizedEmbedBuilder(eventWrapper);
-        if (result.receivers().isEmpty()) {
-            eventWrapper.reply(eventWrapper.localize("command.thankwords.sub.check.match.noMatch")).queue();
-            return true;
-        }
-
-        var processResult = processMessage(eventWrapper.getGuild(), result, builder);
-        if (processResult != null) {
-            eventWrapper.reply(processResult).queue();
-            return true;
-        }
-
-        eventWrapper.reply(builder.build()).queue();
-        return true;
-    }
-
     private MessageEmbed processMessage(Guild guild, de.chojo.repbot.analyzer.AnalyzerResult result, LocalizedEmbedBuilder builder) {
         for (var receiver : result.receivers()) {
             switch (result.type()) {
@@ -321,28 +233,6 @@ public class Thankwords extends SimpleCommand {
         }
 
         return null;
-    }
-
-    private boolean loadDefaults(MessageEventWrapper eventWrapper, CommandContext context) {
-        if (context.argsEmpty()) {
-            eventWrapper.reply(eventWrapper.localize("command.thankwords.sub.loadDefault.available")
-                               + " " + String.join(", ", thankwordsContainer.getAvailableLanguages())).queue();
-            return true;
-        }
-        var language = context.argString(0).get();
-        var words = thankwordsContainer.get(language.toLowerCase(Locale.ROOT));
-        if (words == null) {
-            eventWrapper.replyErrorAndDelete(eventWrapper.localize("command.locale.error.invalidLocale"), 10);
-            return true;
-        }
-        for (var word : words) {
-            data.addThankWord(eventWrapper.getGuild(), word);
-        }
-
-        var wordsJoined = words.stream().map(w -> StringUtils.wrap(w, "`")).collect(Collectors.joining(", "));
-
-        eventWrapper.reply(eventWrapper.localize("command.thankwords.sub.loadDefault.added") + wordsJoined).queue();
-        return true;
     }
 
     private boolean loadDefaults(SlashCommandEvent slashCommandEvent) {
