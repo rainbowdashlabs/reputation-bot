@@ -19,9 +19,11 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.StringJoiner;
 import java.util.function.Function;
 
 public class Log extends SimpleCommand {
@@ -74,10 +76,19 @@ public class Log extends SimpleCommand {
 
         var log = mapMessageLogEntry(guild, messageLog);
 
-        return new LocalizedEmbedBuilder(this.loc, guild)
-                .setAuthor(loc.localize("command.log.messageLog", Replacement.create("ID", messageId)))
-                .setDescription(log)
-                .build();
+        var builder = new LocalizedEmbedBuilder(this.loc, guild)
+                .setAuthor(loc.localize("command.log.messageLog", Replacement.create("ID", messageId)));
+        buildFields(log, builder);
+        return builder.build();
+    }
+
+    private void buildFields(List<String> entries, LocalizedEmbedBuilder embedBuilder) {
+        var joiner = new StringJoiner("\n");
+        for (var entry : entries) {
+            if (joiner.length() + entry.length() > MessageEmbed.DESCRIPTION_MAX_LENGTH) break;
+            joiner.add(entry);
+        }
+        embedBuilder.setDescription(joiner.toString());
     }
 
     private void message(SlashCommandEvent event) {
@@ -91,13 +102,13 @@ public class Log extends SimpleCommand {
         event.replyEmbeds(getMessageLog(event.getGuild(), event.getOption("message_id").getAsLong())).queue();
     }
 
-    private MessageEmbed sendUserLog(Guild guild, User user, String title, String log) {
-        return new LocalizedEmbedBuilder(loc, guild)
+    private MessageEmbed sendUserLog(Guild guild, User user, String title, List<String> log) {
+        var builder =  new LocalizedEmbedBuilder(loc, guild)
                 .setAuthor(loc.localize(title, guild,
                                 Replacement.create("USER", user.getAsTag())),
-                        null, user.getEffectiveAvatarUrl())
-                .setDescription(log)
-                .build();
+                        null, user.getEffectiveAvatarUrl());
+        buildFields(log, builder);
+        return builder.build();
     }
 
     private void donated(SlashCommandEvent event, User user) {
@@ -106,7 +117,7 @@ public class Log extends SimpleCommand {
                 getDonatedLog(user, event.getGuild(), limit.intValue())))).queue();
     }
 
-    private String getDonatedLog(User user, Guild guild, int limit) {
+    private List<String> getDonatedLog(User user, Guild guild, int limit) {
         var userDonatedLog = reputationData.getUserDonatedLog(user, guild, Math.max(5, Math.min(limit, 50)));
         return mapUserLogEntry(guild, userDonatedLog, ReputationLogEntry::receiverId);
     }
@@ -117,12 +128,12 @@ public class Log extends SimpleCommand {
                 getReceivedLog(user, event.getGuild(), limit.intValue())))).queue();
     }
 
-    private String getReceivedLog(User user, Guild guild, int limit) {
+    private List<String> getReceivedLog(User user, Guild guild, int limit) {
         var userDonatedLog = reputationData.getUserReceivedLog(user, guild, Math.max(5, Math.min(limit, 50)));
         return mapUserLogEntry(guild, userDonatedLog, ReputationLogEntry::donorId);
     }
 
-    private String mapUserLogEntry(Guild wrapper, List<ReputationLogEntry> logEntries, Function<ReputationLogEntry, Long> userId) {
+    private List<String> mapUserLogEntry(Guild wrapper, List<ReputationLogEntry> logEntries, Function<ReputationLogEntry, Long> userId) {
         var loc = this.loc.getContextLocalizer(wrapper);
         List<String> entries = new ArrayList<>();
         for (var logEntry : logEntries) {
@@ -131,11 +142,11 @@ public class Log extends SimpleCommand {
             entries.add(String.format("**%s** %s %s",
                     thankType, User.fromId(userId.apply(logEntry)).getAsMention(), jumpLink));
         }
-        return String.join("\n", entries);
+        return entries;
     }
 
-    private String mapMessageLogEntry(Guild guild, List<ReputationLogEntry> logEntries) {
-        if (logEntries.isEmpty()) return "";
+    private List<String> mapMessageLogEntry(Guild guild, List<ReputationLogEntry> logEntries) {
+        if (logEntries.isEmpty()) return Collections.emptyList();
 
         var loc = this.loc.getContextLocalizer(guild);
 
@@ -146,7 +157,7 @@ public class Log extends SimpleCommand {
             entries.add(String.format("**%s** %s ➜ %s **|** %s",
                     thankType, User.fromId(logEntry.donorId()).getAsMention(), User.fromId(logEntry.receiverId()).getAsMention(), jumpLink));
         }
-        return String.join("\n", entries);
+        return entries;
     }
 
     private String createJumpLink(Guild guild, ReputationLogEntry log) {
