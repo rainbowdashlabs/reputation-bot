@@ -47,6 +47,10 @@ public class Reputation extends SimpleCommand {
     public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
         var userOption = event.getOption("user");
         var member = userOption != null ? userOption.getAsMember() : event.getMember();
+        if (member == null) {
+            event.reply(loc.localize("error.userNotFound")).queue();
+            return;
+        }
         var reputation = reputationData.getReputation(event.getGuild(), member.getUser()).orElse(ReputationUser.empty(event.getUser()));
         event.replyEmbeds(getUserRepEmbed(member, reputation)).queue();
     }
