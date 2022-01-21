@@ -3,7 +3,6 @@ package de.chojo.repbot;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import de.chojo.jdautil.botlist.BotlistService;
-import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.command.dispatching.CommandHub;
 import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Language;
@@ -33,6 +32,7 @@ import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.updater.QueryReplacement;
 import de.chojo.repbot.data.updater.SqlUpdater;
 import de.chojo.repbot.listener.InternalCommandListener;
+import de.chojo.repbot.listener.LegacyCommandListener;
 import de.chojo.repbot.listener.LogListener;
 import de.chojo.repbot.listener.MessageListener;
 import de.chojo.repbot.listener.ReactionListener;
@@ -49,14 +49,9 @@ import de.chojo.repbot.statistic.Statistic;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.repbot.util.PermissionErrorHandler;
 import de.chojo.repbot.util.Permissions;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
-import net.dv8tion.jda.api.interactions.commands.privileges.CommandPrivilege;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.requests.RestAction;
@@ -70,18 +65,11 @@ import org.slf4j.Logger;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
-import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -264,12 +252,11 @@ public class ReputationBot {
                         new AbuseProtection(dataSource, localizer)
                 )
                 .withLocalizer(localizer)
-                .withPermissionCheck((wrapper, command) -> {
-                    if (wrapper.getMember().hasPermission(command.permission())) return true;
-                    var settings = data.getGuildSettings(wrapper.getGuild());
-                    var roleById = wrapper.getGuild().getRoleById(settings.generalSettings().managerRole().orElse(0L));
-                    if (roleById == null) return false;
-                    return wrapper.getMember().getRoles().contains(roleById);
+                .withPermissionCheck((event, command) -> {
+                    if (event.getMember().hasPermission(command.permission())) return true;
+                    var settings = data.getGuildSettings(event.getGuild());
+                    var roleId = settings.generalSettings().managerRole().orElse(0L);
+                    return event.getMember().getRoles().stream().anyMatch(role -> role.getIdLong() == roleId);
                 })
                 .withCommandErrorHandler((context, throwable) -> {
                     if (throwable instanceof InsufficientPermissionException) {
@@ -281,6 +268,7 @@ public class ReputationBot {
         var hub = hubBuilder.build();
 
         locale.addCommandHub(hub);
+        shardManager.addEventListener(new LegacyCommandListener(shardManager, localizer, dataSource, hub));
 
         var guildData = new GuildData(dataSource);
 
