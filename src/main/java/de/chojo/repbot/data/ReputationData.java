@@ -359,4 +359,45 @@ public class ReputationData extends QueryFactoryHolder {
                 .readRow(this::buildLogEntry)
                 .firstSync();
     }
+
+    public List<ReputationUser> getWeekRanking(Guild guild, int pageSize, int page) {
+        return builder(ReputationUser.class)
+                .query("""
+                        SELECT
+                            rank,
+                            user_id,
+                            reputation
+                        FROM
+                            user_reputation_week
+                        WHERE guild_id = ?
+                            AND reputation != 0
+                        ORDER BY reputation DESC
+                        OFFSET ?
+                        LIMIT ?;
+                        """)
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setInt((page - 1) * pageSize).setInt(pageSize))
+                .readRow(row -> new ReputationUser(row.getLong("rank"), row.getLong("user_id"), row.getLong("reputation")))
+                .allSync();
+    }
+
+    public List<ReputationUser> getMonthRanking(Guild guild, int pageSize, int page) {
+        return builder(ReputationUser.class)
+                .query("""
+                        SELECT
+                            rank,
+                            user_id,
+                            reputation
+                        FROM
+                            user_reputation_month
+                        WHERE guild_id = ?
+                            AND reputation != 0
+                        ORDER BY reputation DESC
+                        OFFSET ?
+                        LIMIT ?;
+                        """)
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setInt((page - 1) * pageSize).setInt(pageSize))
+                .readRow(row -> new ReputationUser(row.getLong("rank"), row.getLong("user_id"), row.getLong("reputation")))
+                .allSync();
+
+    }
 }

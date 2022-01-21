@@ -26,7 +26,9 @@ import de.chojo.repbot.commands.Roles;
 import de.chojo.repbot.commands.Scan;
 import de.chojo.repbot.commands.Setup;
 import de.chojo.repbot.commands.Thankwords;
-import de.chojo.repbot.commands.TopReputation;
+import de.chojo.repbot.commands.Top;
+import de.chojo.repbot.commands.TopMonth;
+import de.chojo.repbot.commands.TopWeek;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.updater.QueryReplacement;
@@ -237,7 +239,9 @@ public class ReputationBot {
                         new Reputation(dataSource, localizer, configuration),
                         new Roles(dataSource, localizer, roleAssigner, shardManager),
                         new RepSettings(dataSource, localizer),
-                        new TopReputation(dataSource, localizer),
+                        new Top(dataSource, localizer),
+                        new TopWeek(dataSource, localizer),
+                        new TopMonth(dataSource, localizer),
                         Thankwords.of(messageAnalyzer, dataSource, localizer),
                         scan,
                         locale,
