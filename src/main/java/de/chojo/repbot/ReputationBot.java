@@ -12,7 +12,6 @@ import de.chojo.repbot.commands.AbuseProtection;
 import de.chojo.repbot.commands.Channel;
 import de.chojo.repbot.commands.Dashboard;
 import de.chojo.repbot.commands.Gdpr;
-import de.chojo.repbot.commands.Help;
 import de.chojo.repbot.commands.Info;
 import de.chojo.repbot.commands.Invite;
 import de.chojo.repbot.commands.Locale;
@@ -277,8 +276,6 @@ public class ReputationBot {
         var guildData = new GuildData(dataSource);
 
         Permissions.buildGuildPriviledges(guildData, shardManager);
-
-        hub.registerCommands(new Help(hub, localizer, configuration.baseSettings().isExclusiveHelp()));
     }
 
     private void initShutdownHook() {
