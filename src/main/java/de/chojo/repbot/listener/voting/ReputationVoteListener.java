@@ -81,7 +81,7 @@ public class ReputationVoteListener extends ListenerAdapter {
                     editMessageEmbeds(voteRequest.getNewEmbed(loc.localize("listener.messages.request.descrThank"
                             , event.getGuild(), Replacement.create("MORE", voteRequest.remainingVotes()))))
                     .setActionRows(getComponentRows(voteRequest.components()))
-                    .queue();
+                    .queue(suc -> {}, ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
             if (voteRequest.remainingVotes() == 0) {
                 voteRequest.voteMessage().delete().queueAfter(5, TimeUnit.SECONDS,
                         suc -> voteRequests.remove(voteRequest.voteMessage().getIdLong()), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
