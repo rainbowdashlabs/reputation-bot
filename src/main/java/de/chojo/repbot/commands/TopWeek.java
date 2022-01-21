@@ -25,7 +25,7 @@ public class TopWeek extends SimpleCommand {
 
     public TopWeek(DataSource dataSource, Localizer localizer) {
         super("topweek",
-                new String[]{"reptop"},
+                null,
                 "command.reputation.description",
                 argsBuilder()
                         .add(OptionType.INTEGER, "page", "page")

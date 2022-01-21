@@ -21,7 +21,7 @@ public class TopMonth extends SimpleCommand {
 
     public TopMonth(DataSource dataSource, Localizer localizer) {
         super("topmonth",
-                new String[]{"reptop"},
+                null,
                 "command.reputation.description",
                 argsBuilder()
                         .add(OptionType.INTEGER, "page", "page")
