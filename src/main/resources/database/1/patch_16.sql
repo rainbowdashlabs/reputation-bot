@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW user_reputation_week(rank, guild_id, user_id, reputation, donated) AS
+CREATE OR REPLACE VIEW repbot_schema.user_reputation_week(rank, guild_id, user_id, reputation, donated) AS
 SELECT ROW_NUMBER() OVER (PARTITION BY rank.guild_id ORDER BY rank.reputation DESC) AS rank,
        rank.guild_id,
        rank.user_id,
@@ -30,7 +30,7 @@ FROM (SELECT log.guild_id,
                         WHERE clean.guild_id = log.guild_id
                           AND clean.user_id = log.user_id))) rank;
 
-CREATE OR REPLACE VIEW user_reputation_month(rank, guild_id, user_id, reputation, donated) AS
+CREATE OR REPLACE VIEW repbot_schema.user_reputation_month(rank, guild_id, user_id, reputation, donated) AS
 SELECT ROW_NUMBER() OVER (PARTITION BY rank.guild_id ORDER BY rank.reputation DESC) AS rank,
        rank.guild_id,
        rank.user_id,
