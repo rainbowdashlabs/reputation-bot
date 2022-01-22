@@ -180,7 +180,7 @@ public class Roles extends SimpleCommand {
                             Replacement.createMention(role)))
                     .allowedMentions(Collections.emptyList()).queue();
 
-            Permissions.buildGuildPriviledges(guildData, shardManager);
+            Permissions.buildGuildPriviledges(guildData, event.getGuild());
         }
     }
 
