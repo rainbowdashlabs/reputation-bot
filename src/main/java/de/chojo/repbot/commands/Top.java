@@ -48,15 +48,25 @@ public class Top extends SimpleCommand {
         return buildTop(ranking, loc, guild);
     }
 
-    public static MessageEmbed buildTop(List<ReputationUser> ranking, ILocalizer loc, Guild guild){
-        var maxRank = ranking.isEmpty() ? 0 : ranking.get(ranking.size() - 1).rank();
+    public static MessageEmbed buildTop(List<ReputationUser> ranking, ILocalizer loc, Guild guild) {
+        if(ranking.isEmpty()) {
+            return createBaseBuilder(loc, guild)
+                    .setDescription("*" + loc.localize("command.top.empty", guild) + "*")
+                    .build();
+        }
+
+        var maxRank = ranking.get(ranking.size() - 1).rank();
         var rankString = ranking.stream().map(rank -> rank.fancyString((int) maxRank)).collect(Collectors.joining("\n"));
 
+        return createBaseBuilder(loc, guild)
+                .setDescription(rankString)
+                .build();
+    }
+
+    private static LocalizedEmbedBuilder createBaseBuilder(ILocalizer loc, Guild guild) {
         return new LocalizedEmbedBuilder(loc, guild)
                 .setTitle(loc.localize("command.top.title", guild,
                         Replacement.create("GUILD", guild.getName())))
-                .setDescription(rankString)
-                .setColor(Color.CYAN)
-                .build();
+                .setColor(Color.CYAN);
     }
 }
