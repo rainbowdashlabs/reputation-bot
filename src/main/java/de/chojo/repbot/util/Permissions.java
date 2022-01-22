@@ -63,7 +63,7 @@ public final class Permissions {
             commandPrivileges.put(adminCommand.getId(), privileges);
         }
 
-        log.debug("Update done. Set restricted commands to {} priviledges", commandPrivileges.size());
+        log.debug("Update done. Set restricted commands to {} priviledges", privileges.size());
         guild.updateCommandPrivileges(commandPrivileges).queue();
     }
 }
