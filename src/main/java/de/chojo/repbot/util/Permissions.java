@@ -5,7 +5,9 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.interactions.commands.privileges.CommandPrivilege;
+import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.slf4j.Logger;
 
@@ -29,13 +31,24 @@ public final class Permissions {
 
     public static void buildGuildPriviledges(GuildData guildData, ShardManager shardManager) {
         for (JDA shard : shardManager.getShards()) {
+            log.debug("Refreshing command priviledges for {} guild on shard {}", shard.getGuilds().size(), shard.getShardInfo().getShardId());
             for (Guild guild : shard.getGuilds()) {
-                try {
-                    buildGuildPriviledges(guildData, guild);
-                } catch (Exception e) {
-                    log.error(LogNotify.NOTIFY_ADMIN, "Could not update guild priviledges for guild {}", Guilds.prettyName(guild), e);
-                }
+                buildGuildPriviledgesSilent(guildData, guild);
             }
+        }
+    }
+
+    public static void buildGuildPriviledgesSilent(GuildData guildData, Guild guild){
+        try {
+            buildGuildPriviledges(guildData, guild);
+        }catch (ErrorResponseException e){
+            if (e.getErrorResponse() == ErrorResponse.MISSING_ACCESS) {
+                log.debug("Missing access on slash commands for guild {}", Guilds.prettyName(guild));
+                return;
+            }
+            log.error(LogNotify.NOTIFY_ADMIN, "Error on updating slash commands", e);
+        } catch (Exception e) {
+            log.error(LogNotify.NOTIFY_ADMIN, "Could not update guild priviledges for guild {}", Guilds.prettyName(guild), e);
         }
     }
 
