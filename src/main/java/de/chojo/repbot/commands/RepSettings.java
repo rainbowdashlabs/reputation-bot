@@ -3,9 +3,6 @@ package de.chojo.repbot.commands;
 import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
-import de.chojo.jdautil.localization.util.Replacement;
-import de.chojo.jdautil.wrapper.CommandContext;
-import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
@@ -62,44 +59,6 @@ public class RepSettings extends SimpleCommand {
     }
 
     @Override
-    public boolean onCommand(MessageEventWrapper eventWrapper, CommandContext context) {
-        if (context.argsEmpty()) {
-            return false;
-        }
-
-        var guildSettings = guildData.getGuildSettings(eventWrapper.getGuild());
-        var subcmd = context.argString(0).get();
-        if ("info".equalsIgnoreCase(subcmd)) {
-            return sendSettings(eventWrapper, guildSettings);
-        }
-
-        if ("reactions".equalsIgnoreCase(subcmd)) {
-            return reactions(eventWrapper, context.subContext(subcmd), guildSettings);
-        }
-
-        if ("answer".equalsIgnoreCase(subcmd)) {
-            return answer(eventWrapper, context.subContext(subcmd), guildSettings);
-        }
-
-        if ("mention".equalsIgnoreCase(subcmd)) {
-            return mention(eventWrapper, context.subContext(subcmd), guildSettings);
-        }
-
-        if ("fuzzy".equalsIgnoreCase(subcmd)) {
-            return fuzzy(eventWrapper, context.subContext(subcmd), guildSettings);
-        }
-
-        if ("embed".equalsIgnoreCase(subcmd)) {
-            return embed(eventWrapper, context.subContext(subcmd), guildSettings);
-        }
-
-        if ("emojidebug".equalsIgnoreCase(subcmd)) {
-            return emojidebug(eventWrapper, context.subContext(subcmd), guildSettings);
-        }
-        return false;
-    }
-
-    @Override
     public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
         var guildSettings = guildData.getGuildSettings(event.getGuild());
 
@@ -133,36 +92,8 @@ public class RepSettings extends SimpleCommand {
         }
     }
 
-    private boolean sendSettings(MessageEventWrapper eventWrapper, GuildSettings guildSettings) {
-        eventWrapper.reply(getSettings(eventWrapper.getGuild(), guildSettings)).queue();
-        return true;
-    }
-
     private void sendSettings(SlashCommandEvent event, GuildSettings guildSettings) {
         event.replyEmbeds(getSettings(event.getGuild(), guildSettings)).queue();
-    }
-
-    private boolean fuzzy(MessageEventWrapper eventWrapper, CommandContext context, GuildSettings guildSettings) {
-        var messageSettings = guildSettings.messageSettings();
-        if (context.argsEmpty()) {
-            eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), messageSettings.isFuzzyActive(),
-                    "command.repSettings.sub.fuzzy.true", "command.repSettings.sub.fuzzy.false")).queue();
-            return true;
-        }
-        var optFuzzy = context.argBoolean(0);
-
-        if (optFuzzy.isEmpty()) {
-            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.notABoolean",
-                    Replacement.create("INPUT", context.argString(0))), 30);
-            return false;
-        }
-
-        messageSettings.fuzzyActive(optFuzzy.get());
-        if (guildData.updateMessageSettings(eventWrapper.getGuild(), messageSettings)) {
-            eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), optFuzzy.get(),
-                    "command.repSettings.sub.fuzzy.true", "command.repSettings.sub.fuzzy.false")).queue();
-        }
-        return true;
     }
 
     private void fuzzy(SlashCommandEvent event, GuildSettings guildSettings) {
@@ -181,29 +112,6 @@ public class RepSettings extends SimpleCommand {
         }
     }
 
-    private boolean mention(MessageEventWrapper eventWrapper, CommandContext context, GuildSettings guildSettings) {
-        var messageSettings = guildSettings.messageSettings();
-        if (context.argsEmpty()) {
-            eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), messageSettings.isAnswerActive(),
-                    "command.repSettings.sub.mention.true", "command.repSettings.sub.mention.false")).queue();
-            return true;
-        }
-        var optMention = context.argBoolean(0);
-
-        if (optMention.isEmpty()) {
-            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.notABoolean",
-                    Replacement.create("INPUT", context.argString(0))), 30);
-            return false;
-        }
-
-        messageSettings.mentionActive(optMention.get());
-        if (guildData.updateMessageSettings(eventWrapper.getGuild(), messageSettings)) {
-            eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), optMention.get(),
-                    "command.repSettings.sub.mention.true", "command.repSettings.sub.mention.false")).queue();
-        }
-        return true;
-    }
-
     private boolean mention(SlashCommandEvent event, GuildSettings guildSettings) {
         var messageSettings = guildSettings.messageSettings();
         if (event.getOptions().isEmpty()) {
@@ -217,29 +125,6 @@ public class RepSettings extends SimpleCommand {
         if (guildData.updateMessageSettings(event.getGuild(), messageSettings)) {
             event.reply(getBooleanMessage(event.getGuild(), mention,
                     "command.repSettings.sub.mention.true", "command.repSettings.sub.mention.false")).queue();
-        }
-        return true;
-    }
-
-    private boolean answer(MessageEventWrapper eventWrapper, CommandContext context, GuildSettings guildSettings) {
-        var messageSettings = guildSettings.messageSettings();
-        if (context.argsEmpty()) {
-            eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), messageSettings.isAnswerActive(),
-                    "command.repSettings.sub.answer.true", "command.repSettings.sub.answer.false")).queue();
-            return true;
-        }
-        var optAnswer = context.argBoolean(0);
-
-        if (optAnswer.isEmpty()) {
-            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.notABoolean",
-                    Replacement.create("INPUT", context.argString(0))), 30);
-            return false;
-        }
-
-        messageSettings.answerActive(optAnswer.get());
-        if (guildData.updateMessageSettings(eventWrapper.getGuild(), messageSettings)) {
-            eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), optAnswer.get(),
-                    "command.repSettings.sub.answer.true", "command.repSettings.sub.answer.false")).queue();
         }
         return true;
     }
@@ -260,29 +145,6 @@ public class RepSettings extends SimpleCommand {
         }
     }
 
-    private boolean embed(MessageEventWrapper eventWrapper, CommandContext context, GuildSettings guildSettings) {
-        var messageSettings = guildSettings.messageSettings();
-        if (context.argsEmpty()) {
-            eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), messageSettings.isEmbedActive(),
-                    "command.repSettings.sub.embed.true", "command.repSettings.sub.embed.false")).queue();
-            return true;
-        }
-        var optEmbed = context.argBoolean(0);
-
-        if (optEmbed.isEmpty()) {
-            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.notABoolean",
-                    Replacement.create("INPUT", context.argString(0))), 30);
-            return false;
-        }
-
-        messageSettings.embedActive(optEmbed.get());
-        if (guildData.updateMessageSettings(eventWrapper.getGuild(), messageSettings)) {
-            eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), optEmbed.get(),
-                    "command.repSettings.sub.embed.true", "command.repSettings.sub.embed.false")).queue();
-        }
-        return true;
-    }
-
     private void embed(SlashCommandEvent event, GuildSettings guildSettings) {
         var messageSettings = guildSettings.messageSettings();
         if (event.getOptions().isEmpty()) {
@@ -299,29 +161,6 @@ public class RepSettings extends SimpleCommand {
         }
     }
 
-    private boolean reactions(MessageEventWrapper eventWrapper, CommandContext context, GuildSettings guildSettings) {
-        var messageSettings = guildSettings.messageSettings();
-        if (context.argsEmpty()) {
-            eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), messageSettings.isReactionActive(),
-                    "command.repSettings.sub.reactions.true", "command.repSettings.sub.reactions.false")).queue();
-            return true;
-        }
-        var optReactions = context.argBoolean(0);
-
-        if (optReactions.isEmpty()) {
-            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.notABoolean",
-                    Replacement.create("INPUT", context.argString(0))), 30);
-            return false;
-        }
-
-        messageSettings.reactionActive(optReactions.get());
-        if (guildData.updateMessageSettings(eventWrapper.getGuild(), messageSettings)) {
-            eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), optReactions.get(),
-                    "command.repSettings.sub.reactions.true", "command.repSettings.sub.reactions.false")).queue();
-        }
-        return true;
-    }
-
     private void reactions(SlashCommandEvent event, GuildSettings guildSettings) {
         var messageSettings = guildSettings.messageSettings();
         if (event.getOptions().isEmpty()) {
@@ -336,29 +175,6 @@ public class RepSettings extends SimpleCommand {
             event.reply(getBooleanMessage(event.getGuild(), reactions,
                     "command.repSettings.sub.reactions.true", "command.repSettings.sub.reactions.false")).queue();
         }
-    }
-
-    private boolean emojidebug(MessageEventWrapper eventWrapper, CommandContext context, GuildSettings guildSettings) {
-        var generalSettings = guildSettings.generalSettings();
-        if (context.argsEmpty()) {
-            eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), generalSettings.isEmojiDebug(),
-                    "command.repSettings.sub.emojidebug.true", "command.repSettings.sub.emojidebug.false")
-                               + "\n" + loc.localize(emojiExplanation(), eventWrapper.getGuild())).queue();
-            return true;
-        }
-        var optEmojiDebug = context.argBoolean(0);
-
-        if (optEmojiDebug.isEmpty()) {
-            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.notABoolean",
-                    Replacement.create("INPUT", context.argString(0))), 30);
-            return false;
-        }
-
-        if (guildData.setEmojiDebug(eventWrapper.getGuild(), optEmojiDebug.get())) {
-            eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), optEmojiDebug.get(),
-                    "command.repSettings.sub.emojidebug.true", "command.repSettings.sub.emojidebug.false")).queue();
-        }
-        return true;
     }
 
     private void emojidebug(SlashCommandEvent event, GuildSettings guildSettings) {

@@ -81,7 +81,7 @@ public class ReputationVoteListener extends ListenerAdapter {
                     editMessageEmbeds(voteRequest.getNewEmbed(loc.localize("listener.messages.request.descrThank"
                             , event.getGuild(), Replacement.create("MORE", voteRequest.remainingVotes()))))
                     .setActionRows(getComponentRows(voteRequest.components()))
-                    .queue();
+                    .queue(suc -> {}, ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
             if (voteRequest.remainingVotes() == 0) {
                 voteRequest.voteMessage().delete().queueAfter(5, TimeUnit.SECONDS,
                         suc -> voteRequests.remove(voteRequest.voteMessage().getIdLong()), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
@@ -90,7 +90,7 @@ public class ReputationVoteListener extends ListenerAdapter {
     }
 
     public void registerVote(Message message, List<Member> members, GuildSettings settings) {
-        if (PermissionErrorHandler.assertAndHandle(message.getTextChannel(), loc, configuration, Permission.MESSAGE_WRITE, Permission.MESSAGE_EMBED_LINKS)) {
+        if (PermissionErrorHandler.assertAndHandle(message.getGuildChannel(), loc, configuration, Permission.MESSAGE_SEND, Permission.MESSAGE_EMBED_LINKS)) {
             return;
         }
 

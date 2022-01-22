@@ -10,8 +10,6 @@ import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
-import de.chojo.jdautil.wrapper.CommandContext;
-import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.util.Colors;
@@ -71,20 +69,12 @@ public class Info extends SimpleCommand {
 
 
     @Override
-    public boolean onCommand(MessageEventWrapper eventWrapper, CommandContext context) {
-        eventWrapper.reply(getResponse(eventWrapper))
-                .queue();
-        return true;
-    }
-
-    @Override
     public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
-        var eventWrapper = MessageEventWrapper.create(event);
-        event.replyEmbeds(getResponse(eventWrapper)).queue();
+        event.replyEmbeds(getResponse(event)).queue();
     }
 
     @NotNull
-    private MessageEmbed getResponse(MessageEventWrapper eventWrapper) {
+    private MessageEmbed getResponse(SlashCommandEvent event) {
         if (contributors == null || lastFetch.isBefore(Instant.now().minus(5, ChronoUnit.MINUTES))) {
             var request = HttpRequest.newBuilder().GET()
                     .uri(URI.create("https://api.github.com/repos/rainbowdashlabs/reputation-bot/contributors?anon=1"))
@@ -123,15 +113,15 @@ public class Info extends SimpleCommand {
             lastFetch = Instant.now();
         }
 
-        return new LocalizedEmbedBuilder(localizer, eventWrapper)
+        return new LocalizedEmbedBuilder(localizer, event)
                 .setTitle("command.info.embedTitle")
-                .setThumbnail(eventWrapper.getJda().getSelfUser().getEffectiveAvatarUrl())
+                .setThumbnail(event.getJDA().getSelfUser().getEffectiveAvatarUrl())
                 .addField("command.info.contributor", contributors, false)
                 .addField("command.info.art", ART, true)
                 .addField("command.info.source", SOURCE, true)
                 .addField("command.info.version", version, true)
-                .addField("command.info.supportMe", getVoting(eventWrapper.getGuild()), true)
-                .addField("", "**" + getLinks(eventWrapper.getGuild()) + "**", false)
+                .addField("command.info.supportMe", getVoting(event.getGuild()), true)
+                .addField("", "**" + getLinks(event.getGuild()) + "**", false)
                 .setColor(Colors.Pastel.BLUE)
                 .build();
     }
@@ -168,7 +158,6 @@ public class Info extends SimpleCommand {
         }
         return String.join(" ᠅ ", voteLinks);
     }
-
 
     private static class Contributor {
         private String login;

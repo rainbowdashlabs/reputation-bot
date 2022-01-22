@@ -147,7 +147,7 @@ public class ContextResolver {
         Set<Long> members = new LinkedHashSet<>();
         var voiceState = target.getVoiceState();
         if (voiceState == null) return Collections.emptySet();
-        if (voiceState.inVoiceChannel()) {
+        if (voiceState.inAudioChannel()) {
             var voice = voiceState.getChannel().getMembers()
                     .stream()
                     .map(Member::getIdLong)

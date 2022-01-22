@@ -7,7 +7,7 @@ import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.ReadyEvent;
-import net.dv8tion.jda.api.events.channel.text.TextChannelDeleteEvent;
+import net.dv8tion.jda.api.events.channel.ChannelDeleteEvent;
 import net.dv8tion.jda.api.events.emote.EmoteRemovedEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
@@ -50,7 +50,7 @@ public class StateListener extends ListenerAdapter {
         var selfMember = event.getGuild().getSelfMember();
         for (var channel : event.getGuild().getTextChannels()) {
             if (selfMember.hasPermission(channel, Permission.VIEW_CHANNEL)
-                && selfMember.hasPermission(channel, Permission.MESSAGE_WRITE)) {
+                && selfMember.hasPermission(channel, Permission.MESSAGE_SEND)) {
                 channel.sendMessage(localizer.localize("message.welcome", event.getGuild())).queue();
                 break;
             }
@@ -82,7 +82,7 @@ public class StateListener extends ListenerAdapter {
     }
 
     @Override
-    public void onTextChannelDelete(@NotNull TextChannelDeleteEvent event) {
+    public void onChannelDelete(@NotNull ChannelDeleteEvent event) {
         guildData.removeChannel(event.getGuild(), event.getChannel());
     }
 

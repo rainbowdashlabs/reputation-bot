@@ -2,18 +2,14 @@ package de.chojo.repbot.commands;
 
 import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.ILocalizer;
-import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
-import de.chojo.jdautil.parsing.DiscordResolver;
-import de.chojo.jdautil.wrapper.CommandContext;
-import de.chojo.jdautil.wrapper.MessageEventWrapper;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.service.RoleAccessException;
 import de.chojo.repbot.service.RoleAssigner;
-import de.chojo.repbot.util.StringUtil;
+import de.chojo.repbot.util.Permissions;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.IMentionable;
@@ -21,6 +17,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.sharding.ShardManager;
 
 import javax.sql.DataSource;
 import java.util.Collections;
@@ -33,9 +30,10 @@ public class Roles extends SimpleCommand {
     private final GuildData guildData;
     private final ILocalizer loc;
     private final RoleAssigner roleAssigner;
+    private final ShardManager shardManager;
     private final Set<Long> running = new HashSet<>();
 
-    public Roles(DataSource dataSource, ILocalizer loc, RoleAssigner roleAssigner) {
+    public Roles(DataSource dataSource, ILocalizer loc, RoleAssigner roleAssigner, ShardManager shardManager) {
         super("roles", new String[]{"role"},
                 "command.roles.description",
                 subCommandBuilder()
@@ -80,112 +78,7 @@ public class Roles extends SimpleCommand {
         guildData = new GuildData(dataSource);
         this.loc = loc;
         this.roleAssigner = roleAssigner;
-    }
-
-    @Override
-    public boolean onCommand(MessageEventWrapper eventWrapper, CommandContext context) {
-        if (context.argsEmpty()) return false;
-
-        var subCmd = context.argString(0).get();
-
-        if ("list".equalsIgnoreCase(subCmd)) {
-            return list(eventWrapper);
-        }
-
-        if ("managerRole".equalsIgnoreCase(subCmd)) {
-            return managerRole(eventWrapper, context.subContext(subCmd));
-        }
-
-        if ("stackRoles".equalsIgnoreCase(subCmd)) {
-            return stackRoles(eventWrapper, context.subContext(subCmd));
-        }
-
-        if ("refresh".equalsIgnoreCase(subCmd)) {
-            return refresh(eventWrapper);
-        }
-
-        if (StringUtil.contains(subCmd, "add", "remove", "addDonor", "addReceiver", "removeDonor", "removeReceiver")) {
-            context.parseQuoted();
-            var roleString = context.argString(0);
-            if (context.argsEmpty() || roleString.isEmpty()) return false;
-
-            var role = DiscordResolver.getRole(eventWrapper.getGuild(), roleString.get());
-            if (role.isEmpty()) {
-                eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.invalidRole"), 10);
-                return true;
-            }
-
-            if ("add".equalsIgnoreCase(subCmd)) {
-                return add(eventWrapper, context.subContext(subCmd), role.get());
-            }
-
-            if ("remove".equalsIgnoreCase(subCmd)) {
-                return remove(eventWrapper, role.get());
-            }
-            if ("addDonor".equalsIgnoreCase(subCmd)) {
-                return addDonor(eventWrapper, role.get());
-            }
-
-            if ("addReceiver".equalsIgnoreCase(subCmd)) {
-                return addReceiver(eventWrapper, role.get());
-            }
-            if ("removeDonor".equalsIgnoreCase(subCmd)) {
-                return removeDonor(eventWrapper, role.get());
-            }
-
-            if ("removeReceiver".equalsIgnoreCase(subCmd)) {
-                return removeReceiver(eventWrapper, role.get());
-            }
-        }
-
-        return false;
-    }
-
-    private boolean refresh(MessageEventWrapper event) {
-        if (running.contains(event.getGuild().getIdLong())) {
-            event.reply(loc.localize("command.roles.sub.refresh.running")).queue();
-            return true;
-        }
-
-        running.add(event.getGuild().getIdLong());
-
-        event.reply(loc.localize("command.roles.sub.refresh.started", event.getGuild())).queue();
-        roleAssigner
-                .updateBatch(event.getGuild())
-                .thenRun(() -> event.reply(loc.localize("command.roles.sub.refresh.finished", event.getGuild()))
-                        .queue())
-                .exceptionally(r -> {
-                    if (r instanceof RoleAccessException) {
-                        event.reply(loc.localize("error.roleAccess", event.getGuild(),
-                                        Replacement.createMention("ROLE", ((RoleAccessException) r).role())))
-                                .queue();
-                    }
-                    return null;
-                }).thenRun(() -> {
-                    running.remove(event.getGuild().getIdLong());
-                });
-        return true;
-    }
-
-    private boolean stackRoles(MessageEventWrapper eventWrapper, CommandContext context) {
-        var settings = guildData.getGuildSettings(eventWrapper.getGuild());
-        if (context.argsEmpty()) {
-            eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), settings.generalSettings().isStackRoles(),
-                    "command.roles.sub.stackRoles.stacked", "command.roles.sub.stackRoles.notStacked")).queue();
-            return true;
-        }
-        var state = context.argBoolean(0);
-        if (state.isEmpty()) {
-            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.notABoolean",
-                    Replacement.create("input", context.argString(0).get())), 10);
-            return true;
-        }
-
-        if (guildData.setRoleStacking(eventWrapper.getGuild(), state.get())) {
-            eventWrapper.reply(getBooleanMessage(eventWrapper.getGuild(), state.get(),
-                    "command.roles.sub.stackRoles.stacked", "command.roles.sub.stackRoles.notStacked")).queue();
-        }
-        return true;
+        this.shardManager = shardManager;
     }
 
     @Override
@@ -274,24 +167,6 @@ public class Roles extends SimpleCommand {
         }
     }
 
-    private boolean managerRole(MessageEventWrapper eventWrapper, CommandContext subContext) {
-        if (subContext.argsEmpty()) {
-            var settings = guildData.getGuildSettings(eventWrapper.getGuild());
-            eventWrapper.reply(getManagerRoleMessage(eventWrapper.getGuild(), settings)).queue();
-            return true;
-        }
-        var role = DiscordResolver.getRole(eventWrapper.getGuild(), subContext.argString(0).get());
-        if (role.isEmpty()) {
-            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.invalidRole"), 10);
-            return true;
-        }
-        if (guildData.setManagerRole(eventWrapper.getGuild(), role.get())) {
-            eventWrapper.reply(eventWrapper.localize("command.roles.sub.managerRole.set",
-                    Replacement.createMention(role.get()))).queue();
-        }
-        return true;
-    }
-
     private void managerRole(SlashCommandEvent event) {
         var loc = this.loc.getContextLocalizer(event.getGuild());
         if (event.getOptions().isEmpty()) {
@@ -304,28 +179,20 @@ public class Roles extends SimpleCommand {
             event.reply(loc.localize("command.roles.sub.managerRole.set",
                             Replacement.createMention(role)))
                     .allowedMentions(Collections.emptyList()).queue();
+
+            Permissions.buildGuildPriviledges(guildData, shardManager);
         }
     }
 
     private String getManagerRoleMessage(Guild guild, GuildSettings settings) {
         if (settings.generalSettings().managerRole().isPresent()) {
-            var roleById = guild.getRoleById(settings.generalSettings().managerRole().getAsLong());
+            var roleById = guild.getRoleById(settings.generalSettings().managerRole().get());
             if (roleById != null) {
                 return loc.localize("command.roles.sub.managerRole.current", guild,
                         Replacement.createMention(roleById));
             }
         }
         return loc.localize("command.roles.sub.managerRole.noRole", guild);
-    }
-
-    private boolean remove(MessageEventWrapper eventWrapper, Role role) {
-        if (guildData.removeReputationRole(eventWrapper.getGuild(), role)) {
-            eventWrapper.reply(eventWrapper.localize("command.roles.sub.remove.removed",
-                    Replacement.create("ROLE", role.getName(), Format.BOLD))).queue();
-            return true;
-        }
-        eventWrapper.replyErrorAndDelete(eventWrapper.localize("command.roles.sub.remove.notARepRole"), 10);
-        return true;
     }
 
     private void remove(SlashCommandEvent event) {
@@ -338,20 +205,6 @@ public class Roles extends SimpleCommand {
             return;
         }
         event.reply(loc.localize("command.roles.sub.remove.notARepRole")).setEphemeral(true).queue();
-    }
-
-    private boolean add(MessageEventWrapper eventWrapper, CommandContext commandContext, Role role) {
-        var reputation = commandContext.argLong(1);
-        if (commandContext.argsEmpty() || reputation.isEmpty()) return false;
-        if (!eventWrapper.getGuild().getSelfMember().canInteract(role)) {
-            eventWrapper.replyErrorAndDelete(eventWrapper.localize("error.roleAccess", Replacement.createMention(role)), 15);
-            return true;
-        }
-        if (guildData.addReputationRole(eventWrapper.getGuild(), role, reputation.get())) {
-            eventWrapper.reply(eventWrapper.localize("command.roles.sub.add.added",
-                    Replacement.create("ROLE", role.getName(), Format.BOLD), Replacement.create("POINTS", reputation.get()))).queue();
-        }
-        return true;
     }
 
     private void add(SlashCommandEvent event) {
@@ -368,11 +221,6 @@ public class Roles extends SimpleCommand {
                             Replacement.createMention("ROLE", role), Replacement.create("POINTS", reputation)))
                     .allowedMentions(Collections.emptyList()).queue();
         }
-    }
-
-    private boolean list(MessageEventWrapper eventWrapper) {
-        eventWrapper.reply(getRoleList(eventWrapper.getGuild())).queue();
-        return true;
     }
 
     private void list(SlashCommandEvent event) {
@@ -414,34 +262,6 @@ public class Roles extends SimpleCommand {
             builder.addField("Receiver Roles", receiverRoles, true);
         }
         return builder.build();
-    }
-
-    private boolean addDonor(MessageEventWrapper eventWrapper, Role role) {
-        guildData.addDonorRole(eventWrapper.getGuild(), role);
-        eventWrapper.reply(eventWrapper.localize("command.roles.sub.addDonor.add",
-                Replacement.createMention(role))).queue();
-        return true;
-    }
-
-    private boolean addReceiver(MessageEventWrapper eventWrapper, Role role) {
-        guildData.addReceiverRole(eventWrapper.getGuild(), role);
-        eventWrapper.reply(eventWrapper.localize("command.roles.sub.addReceiver.add",
-                Replacement.createMention(role))).queue();
-        return false;
-    }
-
-    private boolean removeDonor(MessageEventWrapper eventWrapper, Role role) {
-        guildData.removeDonorRole(eventWrapper.getGuild(), role);
-        eventWrapper.reply(eventWrapper.localize("command.roles.sub.removeDonor.remove",
-                Replacement.createMention(role))).queue();
-        return false;
-    }
-
-    private boolean removeReceiver(MessageEventWrapper eventWrapper, Role role) {
-        guildData.removeReceiverRole(eventWrapper.getGuild(), role);
-        eventWrapper.reply(eventWrapper.localize("command.roles.sub.removeReceiver.remove",
-                Replacement.createMention(role))).queue();
-        return false;
     }
 
     private void addDonor(SlashCommandEvent event, Role role) {

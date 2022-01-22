@@ -35,8 +35,8 @@ public class GeneralSettings {
         return member.getRoles().stream().anyMatch(role -> role.getIdLong() == managerRole);
     }
 
-    public OptionalLong managerRole() {
-        return managerRole == 0 ? OptionalLong.empty() : OptionalLong.of(managerRole);
+    public Optional<Long> managerRole() {
+        return managerRole == 0 ? Optional.empty() : Optional.of(managerRole);
     }
 
     public boolean isEmojiDebug() {

@@ -1,11 +1,11 @@
 plugins {
-    id("com.github.johnrengelman.shadow") version "7.1.0"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
     java
     `maven-publish`
 }
 
 group = "de.chojo"
-version = "1.5.5"
+version = "1.6.0"
 
 repositories {
     maven("https://eldonexus.de/repository/maven-public")
@@ -15,11 +15,11 @@ repositories {
 
 dependencies {
     // discord
-    implementation("net.dv8tion", "JDA", "4.3.0_339") {
+    implementation("net.dv8tion", "JDA", "5.0.0-alpha.4") {
         exclude(module = "opus-java")
     }
 
-    implementation("de.chojo", "cjda-util", "1.5.5")
+    implementation("de.chojo", "cjda-util", "2.0.1")
 
     // database
     implementation("org.postgresql", "postgresql", "42.3.1")
@@ -30,8 +30,8 @@ dependencies {
 
     // Logging
     implementation("org.slf4j", "slf4j-api", "1.7.30")
-    implementation("org.apache.logging.log4j", "log4j-core", "2.17.0")
-    implementation("org.apache.logging.log4j", "log4j-slf4j-impl", "2.17.0")
+    implementation("org.apache.logging.log4j", "log4j-core", "2.17.1")
+    implementation("org.apache.logging.log4j", "log4j-slf4j-impl", "2.17.1")
     implementation("club.minnced", "discord-webhooks", "0.5.8")
 
     // utils
@@ -40,7 +40,7 @@ dependencies {
     implementation("com.google.guava","guava","30.1.1-jre")
 
     // unit testing
-    testImplementation(platform("org.junit:junit-bom:5.7.1"))
+    testImplementation(platform("org.junit:junit-bom:5.8.2"))
     testImplementation("org.junit.jupiter", "junit-jupiter")
 }
 

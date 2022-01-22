@@ -12,7 +12,6 @@ import de.chojo.repbot.commands.AbuseProtection;
 import de.chojo.repbot.commands.Channel;
 import de.chojo.repbot.commands.Dashboard;
 import de.chojo.repbot.commands.Gdpr;
-import de.chojo.repbot.commands.Help;
 import de.chojo.repbot.commands.Info;
 import de.chojo.repbot.commands.Invite;
 import de.chojo.repbot.commands.Locale;
@@ -26,12 +25,15 @@ import de.chojo.repbot.commands.Roles;
 import de.chojo.repbot.commands.Scan;
 import de.chojo.repbot.commands.Setup;
 import de.chojo.repbot.commands.Thankwords;
-import de.chojo.repbot.commands.TopReputation;
+import de.chojo.repbot.commands.Top;
+import de.chojo.repbot.commands.TopMonth;
+import de.chojo.repbot.commands.TopWeek;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.updater.QueryReplacement;
 import de.chojo.repbot.data.updater.SqlUpdater;
 import de.chojo.repbot.listener.InternalCommandListener;
+import de.chojo.repbot.listener.LegacyCommandListener;
 import de.chojo.repbot.listener.LogListener;
 import de.chojo.repbot.listener.MessageListener;
 import de.chojo.repbot.listener.ReactionListener;
@@ -47,6 +49,7 @@ import de.chojo.repbot.service.SelfCleanupService;
 import de.chojo.repbot.statistic.Statistic;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.repbot.util.PermissionErrorHandler;
+import de.chojo.repbot.util.Permissions;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
@@ -80,7 +83,7 @@ public class ReputationBot {
     private final ThreadGroup workerGroup = new ThreadGroup("Scheduled Worker");
     private final ThreadGroup hikariGroup = new ThreadGroup("Hikari Worker");
     private final ThreadGroup jdaGroup = new ThreadGroup("JDA Worker");
-    private final ExecutorService eventThreads = Executors.newFixedThreadPool(50, createThreadFactory(eventGroup));
+    private final ExecutorService eventThreads = Executors.newFixedThreadPool(20, createThreadFactory(eventGroup));
     private final ScheduledExecutorService repBotWorker = Executors.newScheduledThreadPool(3, createThreadFactory(workerGroup));
     private ShardManager shardManager;
     private HikariDataSource dataSource;
@@ -225,22 +228,22 @@ public class ReputationBot {
         }
 
         var data = new GuildData(dataSource);
-        var hubBuilder = CommandHub.builder(shardManager, configuration.baseSettings().defaultPrefix())
-                .receiveGuildCommands()
-                .receiveGuildMessagesUpdates()
+        var locale = new Locale(dataSource, localizer);
+        var hubBuilder = CommandHub.builder(shardManager)
                 .withConversationSystem()
-                .withPrefixResolver(data::getPrefix)
-                .withSlashCommands()
+                .useGuildCommands()
                 .withCommands(
                         new Channel(dataSource, localizer),
                         new Prefix(dataSource, configuration, localizer),
                         new Reputation(dataSource, localizer, configuration),
-                        new Roles(dataSource, localizer, roleAssigner),
+                        new Roles(dataSource, localizer, roleAssigner, shardManager),
                         new RepSettings(dataSource, localizer),
-                        new TopReputation(dataSource, localizer),
+                        new Top(dataSource, localizer),
+                        new TopWeek(dataSource, localizer),
+                        new TopMonth(dataSource, localizer),
                         Thankwords.of(messageAnalyzer, dataSource, localizer),
                         scan,
-                        new Locale(dataSource, localizer),
+                        locale,
                         new Invite(localizer, configuration),
                         Info.create(localizer, configuration),
                         new Log(shardManager, dataSource, localizer),
@@ -251,14 +254,12 @@ public class ReputationBot {
                         new Dashboard(dataSource, localizer),
                         new AbuseProtection(dataSource, localizer)
                 )
-                .withInvalidArgumentProvider(((loc, command) -> Help.getCommandHelp(command, loc)))
                 .withLocalizer(localizer)
-                .withPermissionCheck((wrapper, command) -> {
-                    if (wrapper.getMember().hasPermission(command.permission())) return true;
-                    var settings = data.getGuildSettings(wrapper.getGuild());
-                    var roleById = wrapper.getGuild().getRoleById(settings.generalSettings().managerRole().orElse(0));
-                    if (roleById == null) return false;
-                    return wrapper.getMember().getRoles().contains(roleById);
+                .withPermissionCheck((event, command) -> {
+                    if (event.getMember().hasPermission(command.permission())) return true;
+                    var settings = data.getGuildSettings(event.getGuild());
+                    var roleId = settings.generalSettings().managerRole().orElse(0L);
+                    return event.getMember().getRoles().stream().anyMatch(role -> role.getIdLong() == roleId);
                 })
                 .withCommandErrorHandler((context, throwable) -> {
                     if (throwable instanceof InsufficientPermissionException) {
@@ -267,11 +268,14 @@ public class ReputationBot {
                     }
                     log.error(LogNotify.NOTIFY_ADMIN, "Command execution of {} failed\n{}", context.command().command(), context.args(), throwable);
                 });
-        if (configuration.testMode().isTestMode()) {
-            hubBuilder.onlyGuildCommands(configuration.testMode().testGuilds());
-        }
         var hub = hubBuilder.build();
-        hub.registerCommands(new Help(hub, localizer, configuration.baseSettings().isExclusiveHelp()));
+
+        locale.addCommandHub(hub);
+        shardManager.addEventListener(new LegacyCommandListener(shardManager, localizer, dataSource, hub));
+
+        var guildData = new GuildData(dataSource);
+
+        Permissions.buildGuildPriviledges(guildData, shardManager);
     }
 
     private void initShutdownHook() {

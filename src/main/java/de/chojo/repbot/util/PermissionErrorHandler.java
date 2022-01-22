@@ -5,7 +5,9 @@ import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.config.Configuration;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Channel;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -29,26 +31,26 @@ public class PermissionErrorHandler {
         sendPermissionError(channel, permission, localizer, configuration);
     }
 
-    public static void handle(InsufficientPermissionException permissionException, TextChannel channel,
+    public static void handle(InsufficientPermissionException permissionException, GuildMessageChannel channel,
                               ILocalizer localizer, Configuration configuration) {
         var permission = permissionException.getPermission();
         if (channel == null) return;
         sendPermissionError(channel, permission, localizer, configuration);
     }
 
-    public static void sendPermissionError(TextChannel channel, Permission permission, ILocalizer localizer,
+    public static void sendPermissionError(GuildMessageChannel channel, Permission permission, ILocalizer localizer,
                                            Configuration configuration) {
         var guild = channel.getGuild();
         var errorMessage = localizer.localize("error.missingPermission", guild,
                 Replacement.create("PERM", permission.getName(), Format.BOLD));
         if (guild.getSelfMember().hasPermission(permission)) {
             errorMessage += "\n" + localizer.localize("error.missingPermissionChannel", guild,
-                    Replacement.createMention(channel));
+                    Replacement.createMention("CHANNEL", channel));
         } else {
             errorMessage += "\n" + localizer.localize("error.missingPermissionGuild", guild);
         }
-        if (permission != Permission.MESSAGE_WRITE && permission != Permission.VIEW_CHANNEL
-            && PermissionUtil.checkPermission(channel, channel.getGuild().getSelfMember(), Permission.MESSAGE_WRITE, Permission.VIEW_CHANNEL)) {
+        if (permission != Permission.MESSAGE_SEND && permission != Permission.VIEW_CHANNEL
+            && PermissionUtil.checkPermission(channel.getPermissionContainer(), channel.getGuild().getSelfMember(), Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL)) {
             channel.sendMessage(errorMessage).queue();
             return;
         }
@@ -71,7 +73,7 @@ public class PermissionErrorHandler {
      * @param permissions permissions to check
      * @throws InsufficientPermissionException when the bot user doesnt have a permission
      */
-    public static void assertPermissions(TextChannel channel, Permission... permissions) throws InsufficientPermissionException {
+    public static void assertPermissions(GuildMessageChannel channel, Permission... permissions) throws InsufficientPermissionException {
         var self = channel.getGuild().getSelfMember();
         for (var permission : permissions) {
             if (!self.hasPermission(channel, permission)) {
@@ -98,7 +100,7 @@ public class PermissionErrorHandler {
      * @param permissions   permissions to check
      * @return true if a permission was missing and a message was send
      */
-    public static boolean assertAndHandle(TextChannel channel, ILocalizer localizer, Configuration configuration, Permission... permissions) {
+    public static boolean assertAndHandle(GuildMessageChannel channel, ILocalizer localizer, Configuration configuration, Permission... permissions) {
         try {
             assertPermissions(channel, permissions);
         } catch (InsufficientPermissionException e) {

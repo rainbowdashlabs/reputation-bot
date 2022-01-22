@@ -70,7 +70,7 @@ public class ReputationService {
         var abuseSettings = settings.abuseSettings();
 
         // block non reputation channel
-        if (!thankSettings.isReputationChannel(message.getTextChannel())) return false;
+        if (!thankSettings.isReputationChannel(message.getChannel())) return false;
 
         if (!thankSettings.hasDonorRole(guild.getMember(donor))) return false;
         if (!thankSettings.hasReceiverRole(guild.getMember(receiver))) return false;
