@@ -30,12 +30,16 @@ public final class Permissions {
     public static void buildGuildPriviledges(GuildData guildData, ShardManager shardManager) {
         for (JDA shard : shardManager.getShards()) {
             for (Guild guild : shard.getGuilds()) {
-                buildGuildPriviledges(guildData, guild);
+                try {
+                    buildGuildPriviledges(guildData, guild);
+                } catch (Exception e) {
+                    log.error(LogNotify.NOTIFY_ADMIN, "Could not update guild priviledges for guild {}", Guilds.prettyName(guild), e);
+                }
             }
         }
     }
 
-    public static void buildGuildPriviledges(GuildData guildData, Guild guild){
+    public static void buildGuildPriviledges(GuildData guildData, Guild guild) {
         var settings = guildData.getGuildSettings(guild);
         var optRole = settings.generalSettings().managerRole().map(guild::getRoleById);
         List<Role> roles;
@@ -64,6 +68,6 @@ public final class Permissions {
         }
 
         log.debug("Update done. Set restricted commands to {} priviledges", privileges.size());
-        guild.updateCommandPrivileges(commandPrivileges).queue();
+        guild.updateCommandPrivileges(commandPrivileges).complete();
     }
 }
