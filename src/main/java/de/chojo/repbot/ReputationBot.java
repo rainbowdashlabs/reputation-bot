@@ -228,7 +228,7 @@ public class ReputationBot {
         }
 
         var data = new GuildData(dataSource);
-        var locale = new Locale(dataSource, localizer);
+        var locale = new Locale(dataSource, localizer, repBotWorker);
         var hubBuilder = CommandHub.builder(shardManager)
                 .withConversationSystem()
                 .useGuildCommands()
