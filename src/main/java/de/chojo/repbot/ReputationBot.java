@@ -208,7 +208,7 @@ public class ReputationBot {
         var voteListener = new ReputationVoteListener(reputationService, localizer, configuration);
         var messageListener = new MessageListener(localizer, dataSource, configuration, repBotCachePolicy, voteListener,
                 reputationService, contextResolver, messageAnalyzer);
-        var stateListener = StateListener.of(localizer, dataSource, configuration);
+        var stateListener = StateListener.of(localizer, dataSource, configuration, repBotWorker);
         var voiceStateListener = VoiceStateListener.of(dataSource, repBotWorker);
         var logListener = LogListener.create(repBotWorker);
 
