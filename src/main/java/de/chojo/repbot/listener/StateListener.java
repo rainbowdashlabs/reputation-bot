@@ -5,6 +5,7 @@ import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GdprData;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
+import de.chojo.repbot.util.Permissions;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.channel.ChannelDeleteEvent;
@@ -20,6 +21,9 @@ import org.slf4j.Logger;
 
 import javax.sql.DataSource;
 
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class StateListener extends ListenerAdapter {
@@ -28,16 +32,18 @@ public class StateListener extends ListenerAdapter {
     private final GdprData gdprData;
     private final ILocalizer localizer;
     private final Configuration configuration;
+    private final ScheduledExecutorService executorService;
 
-    private StateListener(ILocalizer localizer, DataSource dataSource, Configuration configuration) {
+    private StateListener(ILocalizer localizer, DataSource dataSource, Configuration configuration, ScheduledExecutorService executorService) {
         this.localizer = localizer;
         guildData = new GuildData(dataSource);
         gdprData = new GdprData(dataSource);
         this.configuration = configuration;
+        this.executorService = executorService;
     }
 
-    public static StateListener of(ILocalizer localizer, DataSource dataSource, Configuration configuration) {
-        return new StateListener(localizer, dataSource, configuration);
+    public static StateListener of(ILocalizer localizer, DataSource dataSource, Configuration configuration, ScheduledExecutorService executorService) {
+        return new StateListener(localizer, dataSource, configuration, executorService);
     }
 
     @Override
@@ -51,7 +57,8 @@ public class StateListener extends ListenerAdapter {
         for (var channel : event.getGuild().getTextChannels()) {
             if (selfMember.hasPermission(channel, Permission.VIEW_CHANNEL)
                 && selfMember.hasPermission(channel, Permission.MESSAGE_SEND)) {
-                channel.sendMessage(localizer.localize("message.welcome", event.getGuild())).queue();
+                executorService.schedule(() -> Permissions.buildGuildPriviledges(guildData, event.getGuild()), 5, TimeUnit.SECONDS);
+                channel.sendMessage(localizer.localize("message.welcome", event.getGuild())).queueAfter(5, TimeUnit.SECONDS);
                 break;
             }
         }

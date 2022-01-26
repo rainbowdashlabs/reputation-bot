@@ -8,18 +8,22 @@ import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.text.TextFormatting;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
+import de.chojo.repbot.util.Permissions;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import javax.sql.DataSource;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class Locale extends SimpleCommand {
-    private final GuildData data;
+    private final GuildData guildData;
     private final Localizer loc;
     private CommandHub<SimpleCommand> commandHub;
+    private ScheduledExecutorService executorService;
 
-    public Locale(DataSource dataSource, Localizer loc) {
+    public Locale(DataSource dataSource, Localizer loc, ScheduledExecutorService executorService) {
         super("locale",
                 null,
                 "command.locale.description",
@@ -31,8 +35,9 @@ public class Locale extends SimpleCommand {
                         .add("list", "command.locale.sub.list")
                         .build(),
                 Permission.MANAGE_SERVER);
-        data = new GuildData(dataSource);
+        guildData = new GuildData(dataSource);
         this.loc = loc;
+        this.executorService = executorService;
     }
 
     @Override
@@ -53,10 +58,11 @@ public class Locale extends SimpleCommand {
             event.reply(loc.localize("command.locale.error.invalidLocale")).setEphemeral(true).queue();
             return;
         }
-        if (data.setLanguage(event.getGuild(), language.get())) {
+        if (guildData.setLanguage(event.getGuild(), language.get())) {
             event.reply(loc.localize("command.locale.sub.set.set",
                     Replacement.create("LOCALE", language.get().getLanguage(), Format.CODE))).queue();
             commandHub.refreshGuildCommands(event.getGuild());
+            executorService.schedule(() -> Permissions.buildGuildPriviledgesSilent(guildData, event.getGuild()), 5, TimeUnit.SECONDS);
         }
     }
 
