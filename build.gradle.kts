@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "1.6.0"
+version = "1.6.1"
 
 repositories {
     maven("https://eldonexus.de/repository/maven-public")
@@ -19,7 +19,7 @@ dependencies {
         exclude(module = "opus-java")
     }
 
-    implementation("de.chojo", "cjda-util", "2.0.2")
+    implementation("de.chojo", "cjda-util", "2.0.3")
 
     // database
     implementation("org.postgresql", "postgresql", "42.3.1")
