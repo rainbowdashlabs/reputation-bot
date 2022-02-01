@@ -88,7 +88,7 @@ public class ReactionListener extends ListenerAdapter {
             receiver = newReceiver.getUser();
         }
 
-        if (PermissionErrorHandler.assertAndHandle(event.getTextChannel(), localizer, configuration, Permission.MESSAGE_SEND)) {
+        if (PermissionErrorHandler.assertAndHandle(event.getGuildChannel(), localizer, configuration, Permission.MESSAGE_SEND)) {
             return;
         }
 
