@@ -22,5 +22,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - name: Remove allowed us-ascii files before check
+        run: rm src/main/resources/locale.properties src/main/resources/locale_en_US.properties # This needs improvement
       - name: Enforce UTF-8 for resource bundles
         run: find src/main/resources/locale* -type f -exec file --mime {} \; | grep -v charset=utf-8; test $? -eq 1
