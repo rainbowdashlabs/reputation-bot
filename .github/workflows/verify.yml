@@ -16,3 +16,11 @@ jobs:
         run: ./gradlew --build-cache build
       - name: Test with Gradle
         run: ./gradlew test --info
+
+  enforce-encoding:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Enforce UTF-8 for resource bundles
+        run: find src/main/resources/locale* -type f -exec file --mime {} \; | grep -v charset=utf-8; test $? -eq 1
