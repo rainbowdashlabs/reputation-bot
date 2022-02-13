@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -57,7 +57,7 @@ public class Log extends SimpleCommand {
     }
 
     @Override
-    public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
+    public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
         var cmd = event.getSubcommandName();
         if ("received".equalsIgnoreCase(cmd)) {
             received(event, event.getOption("user").getAsUser());
@@ -91,7 +91,7 @@ public class Log extends SimpleCommand {
         embedBuilder.setDescription(joiner.toString());
     }
 
-    private void message(SlashCommandEvent event) {
+    private void message(SlashCommandInteractionEvent event) {
         event.getOption("message_id");
         var optMessageId = ValueParser.parseLong(event.getOption("message_id").getAsString());
         if (optMessageId.isEmpty()) {
@@ -111,7 +111,7 @@ public class Log extends SimpleCommand {
         return builder.build();
     }
 
-    private void donated(SlashCommandEvent event, User user) {
+    private void donated(SlashCommandInteractionEvent event, User user) {
         var limit = Optional.ofNullable(event.getOption("count")).map(OptionMapping::getAsLong).orElse(10L);
         event.reply(wrap(sendUserLog(event.getGuild(), user, "command.log.donatedLog",
                 getDonatedLog(user, event.getGuild(), limit.intValue())))).queue();
@@ -122,7 +122,7 @@ public class Log extends SimpleCommand {
         return mapUserLogEntry(guild, userDonatedLog, ReputationLogEntry::receiverId);
     }
 
-    private void received(SlashCommandEvent event, User user) {
+    private void received(SlashCommandInteractionEvent event, User user) {
         var limit = Optional.ofNullable(event.getOption("count")).map(OptionMapping::getAsLong).orElse(10L);
         event.reply(wrap(sendUserLog(event.getGuild(), user, "command.log.receivedLog",
                 getReceivedLog(user, event.getGuild(), limit.intValue())))).queue();

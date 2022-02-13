@@ -10,7 +10,7 @@ import de.chojo.repbot.data.wrapper.GuildSettings;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import org.jetbrains.annotations.PropertyKey;
 
@@ -57,7 +57,7 @@ public class AbuseProtection extends SimpleCommand {
     }
 
     @Override
-    public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
+    public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
         var guildSettings = guildData.getGuildSettings(event.getGuild());
 
         var subcmd = event.getSubcommandName();
@@ -86,7 +86,7 @@ public class AbuseProtection extends SimpleCommand {
         }
     }
 
-    private void donorContext(SlashCommandEvent event, GuildSettings guildSettings) {
+    private void donorContext(SlashCommandInteractionEvent event, GuildSettings guildSettings) {
         var abuseSettings = guildSettings.abuseSettings();
         if (event.getOptions().isEmpty()) {
             event.reply(getBooleanMessage(event.getGuild(), abuseSettings.isDonorContext(),
@@ -102,7 +102,7 @@ public class AbuseProtection extends SimpleCommand {
         }
     }
 
-    private void receiverContext(SlashCommandEvent event, GuildSettings guildSettings) {
+    private void receiverContext(SlashCommandInteractionEvent event, GuildSettings guildSettings) {
         var abuseSettings = guildSettings.abuseSettings();
         if (event.getOptions().isEmpty()) {
             event.reply(getBooleanMessage(event.getGuild(), abuseSettings.isReceiverContext(),
@@ -118,7 +118,7 @@ public class AbuseProtection extends SimpleCommand {
         }
     }
 
-    private void maxMessageAge(SlashCommandEvent event, GuildSettings guildSettings) {
+    private void maxMessageAge(SlashCommandInteractionEvent event, GuildSettings guildSettings) {
         var abuseSettings = guildSettings.abuseSettings();
         var loc = this.loc.getContextLocalizer(event.getGuild());
         if (event.getOptions().isEmpty()) {
@@ -136,7 +136,7 @@ public class AbuseProtection extends SimpleCommand {
         }
     }
 
-    private void minMessages(SlashCommandEvent event, GuildSettings guildSettings) {
+    private void minMessages(SlashCommandInteractionEvent event, GuildSettings guildSettings) {
         var abuseSettings = guildSettings.abuseSettings();
         var loc = this.loc.getContextLocalizer(event.getGuild());
         if (event.getOptions().isEmpty()) {
@@ -154,7 +154,7 @@ public class AbuseProtection extends SimpleCommand {
         }
     }
 
-    private void cooldown(SlashCommandEvent event, GuildSettings guildSettings) {
+    private void cooldown(SlashCommandInteractionEvent event, GuildSettings guildSettings) {
         var abuseSettings = guildSettings.abuseSettings();
         var loc = this.loc.getContextLocalizer(event.getGuild());
         if (event.getOptions().isEmpty()) {
@@ -171,7 +171,7 @@ public class AbuseProtection extends SimpleCommand {
         }
     }
 
-    private void sendSettings(SlashCommandEvent event, GuildSettings guildSettings) {
+    private void sendSettings(SlashCommandInteractionEvent event, GuildSettings guildSettings) {
         event.replyEmbeds(getSettings(event.getGuild(), guildSettings)).queue();
     }
 

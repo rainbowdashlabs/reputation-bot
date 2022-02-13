@@ -25,9 +25,9 @@ import de.chojo.repbot.util.FilterUtil;
 import de.chojo.repbot.util.PermissionErrorHandler;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
-import net.dv8tion.jda.api.interactions.components.Button;
-import net.dv8tion.jda.api.interactions.components.ButtonStyle;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -72,7 +72,7 @@ public class Setup extends SimpleCommand {
     }
 
     @Override
-    public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
+    public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
         PermissionErrorHandler.assertPermissions(event.getTextChannel(), Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL);
         event.reply(localizer.localize("command.setup.dialog.starting", event.getGuild())).queue();
         context.conversationService().startDialog(event.getUser(), event.getTextChannel(), getConversation());

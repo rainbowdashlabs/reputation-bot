@@ -15,13 +15,13 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Emoji;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.events.interaction.ButtonClickEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.components.ActionComponent;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
-import net.dv8tion.jda.api.interactions.components.Button;
-import net.dv8tion.jda.api.interactions.components.ButtonStyle;
-import net.dv8tion.jda.api.interactions.components.Component;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
+import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,7 +36,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class ReputationVoteListener extends ListenerAdapter {
-    private static final Component DELETE = Button.of(ButtonStyle.DANGER, "vote:delete", Emoji.fromUnicode("🗑️"));
+    private static final ActionComponent DELETE = Button.of(ButtonStyle.DANGER, "vote:delete", Emoji.fromUnicode("🗑️"));
     private static final Pattern VOTE = Pattern.compile("vote:(?<id>[0-9]*?)");
     private final ReputationService reputationService;
     private final ILocalizer loc;
@@ -50,7 +50,7 @@ public class ReputationVoteListener extends ListenerAdapter {
     }
 
     @Override
-    public void onButtonClick(@NotNull ButtonClickEvent event) {
+    public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
         if (!voteRequests.containsKey(event.getMessageIdLong())) return;
         if (event.getButton() == null || event.getButton().getId() == null) return;
         event.deferEdit().queue();
@@ -122,7 +122,7 @@ public class ReputationVoteListener extends ListenerAdapter {
                 });
     }
 
-    private List<ActionRow> getComponentRows(List<Component> components) {
+    private List<ActionRow> getComponentRows(List<ActionComponent> components) {
         var rows = new ArrayList<ActionRow>();
         var from = 0;
         var to = 5;

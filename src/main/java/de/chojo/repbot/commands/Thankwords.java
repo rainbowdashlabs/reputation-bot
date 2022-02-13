@@ -16,7 +16,7 @@ import de.chojo.repbot.serialization.ThankwordsContainer;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
@@ -86,7 +86,7 @@ public class Thankwords extends SimpleCommand {
     }
 
     @Override
-    public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
+    public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
         var subCmd = event.getSubcommandName();
         if ("add".equalsIgnoreCase(subCmd)) {
             add(event);
@@ -105,7 +105,7 @@ public class Thankwords extends SimpleCommand {
         }
     }
 
-    private boolean add(SlashCommandEvent event) {
+    private boolean add(SlashCommandInteractionEvent event) {
         var loc = this.loc.getContextLocalizer(event.getGuild());
         var pattern = event.getOption("pattern").getAsString();
         try {
@@ -123,7 +123,7 @@ public class Thankwords extends SimpleCommand {
         return true;
     }
 
-    private boolean remove(SlashCommandEvent event) {
+    private boolean remove(SlashCommandInteractionEvent event) {
         var loc = this.loc.getContextLocalizer(event.getGuild());
         var pattern = event.getOption("pattern").getAsString();
         try {
@@ -145,7 +145,7 @@ public class Thankwords extends SimpleCommand {
         return true;
     }
 
-    private boolean list(SlashCommandEvent event) {
+    private boolean list(SlashCommandInteractionEvent event) {
         var loc = this.loc.getContextLocalizer(event.getGuild());
 
         var pattern = getGuildPattern(event.getGuild());
@@ -166,7 +166,7 @@ public class Thankwords extends SimpleCommand {
         return pattern;
     }
 
-    private boolean check(SlashCommandEvent event) {
+    private boolean check(SlashCommandInteractionEvent event) {
         var loc = this.loc.getContextLocalizer(event.getGuild());
 
         var guildSettings = data.getGuildSettings(event.getGuild());
@@ -235,7 +235,7 @@ public class Thankwords extends SimpleCommand {
         return null;
     }
 
-    private boolean loadDefaults(SlashCommandEvent slashCommandEvent) {
+    private boolean loadDefaults(SlashCommandInteractionEvent slashCommandEvent) {
         var loc = this.loc.getContextLocalizer(slashCommandEvent.getGuild());
 
         var languageOption = slashCommandEvent.getOption("language");

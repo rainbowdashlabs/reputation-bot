@@ -5,7 +5,7 @@ import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GdprData;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import javax.sql.DataSource;
 
@@ -27,7 +27,7 @@ public class Gdpr extends SimpleCommand {
     }
 
     @Override
-    public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
+    public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
         if ("request".equalsIgnoreCase(event.getSubcommandName())) {
             var request = gdprData.request(event.getUser());
             if (request) {
