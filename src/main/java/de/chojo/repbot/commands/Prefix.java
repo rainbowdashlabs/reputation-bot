@@ -9,7 +9,7 @@ import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import org.jetbrains.annotations.Nullable;
 
@@ -40,7 +40,7 @@ public class Prefix extends SimpleCommand {
     }
 
     @Override
-    public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
+    public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
         var subCmd = event.getSubcommandName();
         if ("set".equalsIgnoreCase(subCmd)) {
             var response = set(event.getOption("prefix").getAsString(), event.getGuild());
@@ -54,7 +54,7 @@ public class Prefix extends SimpleCommand {
         }
     }
 
-    private void reset(SlashCommandEvent event) {
+    private void reset(SlashCommandInteractionEvent event) {
         var response = changePrefix(event.getGuild(), configuration.baseSettings().defaultPrefix());
         if (response != null) {
             event.reply(response).queue();

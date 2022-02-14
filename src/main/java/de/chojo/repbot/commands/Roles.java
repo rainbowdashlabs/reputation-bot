@@ -15,7 +15,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.sharding.ShardManager;
 
@@ -82,7 +82,7 @@ public class Roles extends SimpleCommand {
     }
 
     @Override
-    public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
+    public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
         var subCmd = event.getSubcommandName();
         if ("list".equalsIgnoreCase(subCmd)) {
             list(event);
@@ -125,7 +125,7 @@ public class Roles extends SimpleCommand {
         }
     }
 
-    private void refresh(SlashCommandEvent event) {
+    private void refresh(SlashCommandInteractionEvent event) {
         if (running.contains(event.getGuild().getIdLong())) {
             event.reply(loc.localize("command.roles.sub.refresh.running")).queue();
             return;
@@ -152,7 +152,7 @@ public class Roles extends SimpleCommand {
                 });
     }
 
-    private void stackRoles(SlashCommandEvent event) {
+    private void stackRoles(SlashCommandInteractionEvent event) {
         var settings = guildData.getGuildSettings(event.getGuild());
         if (event.getOptions().isEmpty()) {
             event.reply(getBooleanMessage(event.getGuild(), settings.generalSettings().isStackRoles(),
@@ -167,7 +167,7 @@ public class Roles extends SimpleCommand {
         }
     }
 
-    private void managerRole(SlashCommandEvent event) {
+    private void managerRole(SlashCommandInteractionEvent event) {
         var loc = this.loc.getContextLocalizer(event.getGuild());
         if (event.getOptions().isEmpty()) {
             var settings = guildData.getGuildSettings(event.getGuild());
@@ -195,7 +195,7 @@ public class Roles extends SimpleCommand {
         return loc.localize("command.roles.sub.managerRole.noRole", guild);
     }
 
-    private void remove(SlashCommandEvent event) {
+    private void remove(SlashCommandInteractionEvent event) {
         var loc = this.loc.getContextLocalizer(event.getGuild());
         var role = event.getOption("role").getAsRole();
 
@@ -207,7 +207,7 @@ public class Roles extends SimpleCommand {
         event.reply(loc.localize("command.roles.sub.remove.notARepRole")).setEphemeral(true).queue();
     }
 
-    private void add(SlashCommandEvent event) {
+    private void add(SlashCommandInteractionEvent event) {
         var role = event.getOption("role").getAsRole();
         var reputation = event.getOption("reputation").getAsLong();
         if (!event.getGuild().getSelfMember().canInteract(role)) {
@@ -223,7 +223,7 @@ public class Roles extends SimpleCommand {
         }
     }
 
-    private void list(SlashCommandEvent event) {
+    private void list(SlashCommandInteractionEvent event) {
         event.replyEmbeds(getRoleList(event.getGuild())).allowedMentions(Collections.emptyList()).queue();
     }
 
@@ -264,25 +264,25 @@ public class Roles extends SimpleCommand {
         return builder.build();
     }
 
-    private void addDonor(SlashCommandEvent event, Role role) {
+    private void addDonor(SlashCommandInteractionEvent event, Role role) {
         guildData.addDonorRole(event.getGuild(), role);
         event.reply(loc.localize("command.roles.sub.addDonor.add", event.getGuild(),
                 Replacement.createMention(role))).allowedMentions(Collections.emptyList()).queue();
     }
 
-    private void addReceiver(SlashCommandEvent event, Role role) {
+    private void addReceiver(SlashCommandInteractionEvent event, Role role) {
         guildData.addReceiverRole(event.getGuild(), role);
         event.reply(loc.localize("command.roles.sub.addReceiver.add", event.getGuild(),
                 Replacement.createMention(role))).allowedMentions(Collections.emptyList()).queue();
     }
 
-    private void removeDonor(SlashCommandEvent event, Role role) {
+    private void removeDonor(SlashCommandInteractionEvent event, Role role) {
         guildData.removeDonorRole(event.getGuild(), role);
         event.reply(loc.localize("command.roles.sub.removeDonor.remove", event.getGuild(),
                 Replacement.createMention(role))).allowedMentions(Collections.emptyList()).queue();
     }
 
-    private void removeReceiver(SlashCommandEvent event, Role role) {
+    private void removeReceiver(SlashCommandInteractionEvent event, Role role) {
         guildData.removeReceiverRole(event.getGuild(), role);
         event.reply(loc.localize("command.roles.sub.removeReceiver.remove", event.getGuild(),
                 Replacement.createMention(role))).allowedMentions(Collections.emptyList()).queue();

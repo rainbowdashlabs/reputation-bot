@@ -75,7 +75,7 @@ public final class Permissions {
 
         var adminCommands = guild.retrieveCommands().complete().stream().filter(c -> !c.isDefaultEnabled()).collect(Collectors.toList());
 
-        Map<String, Collection<? extends CommandPrivilege>> commandPrivileges = new HashMap<>();
+        Map<String, Collection<CommandPrivilege>> commandPrivileges = new HashMap<>();
         for (var adminCommand : adminCommands) {
             commandPrivileges.put(adminCommand.getId(), privileges);
         }

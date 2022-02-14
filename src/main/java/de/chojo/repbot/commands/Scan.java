@@ -19,7 +19,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageHistory;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.slf4j.Logger;
@@ -97,7 +97,7 @@ public class Scan extends SimpleCommand {
     }
 
     @Override
-    public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
+    public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
         var loc = this.loc.getContextLocalizer(event.getGuild());
         if (!event.getGuild().getSelfMember().hasPermission(Permission.MESSAGE_HISTORY)) {
             event.reply(loc.localize("command.scan.error.history")).setEphemeral(true).queue();
@@ -150,7 +150,7 @@ public class Scan extends SimpleCommand {
         }
     }
 
-    private void scanChannel(SlashCommandEvent event, TextChannel channel, int messageCount) {
+    private void scanChannel(SlashCommandInteractionEvent event, TextChannel channel, int messageCount) {
         if (PermissionErrorHandler.assertAndHandle(channel, loc, configuration,
                 Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL, Permission.VIEW_CHANNEL, Permission.MESSAGE_HISTORY)) {
             return;

@@ -11,7 +11,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
@@ -43,7 +43,7 @@ public class Reactions extends SimpleCommand {
     }
 
     @Override
-    public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
+    public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
         var cmd = event.getSubcommandName();
 
         if ("main".equalsIgnoreCase(cmd)) {
@@ -61,7 +61,7 @@ public class Reactions extends SimpleCommand {
         }
     }
 
-    private boolean info(SlashCommandEvent event) {
+    private boolean info(SlashCommandInteractionEvent event) {
         event.replyEmbeds(getInfoEmbed(guildData.getGuildSettings(event.getGuild()))).queue();
         return true;
     }
@@ -77,21 +77,21 @@ public class Reactions extends SimpleCommand {
                 .build();
     }
 
-    private void reaction(SlashCommandEvent event) {
+    private void reaction(SlashCommandInteractionEvent event) {
         var emote = event.getOption("emote").getAsString();
         var message = event.reply(loc.localize("command.reaction.checking", event.getGuild()))
                 .flatMap(InteractionHook::retrieveOriginal).complete();
         handleSetCheckResult(event.getGuild(), message, emote);
     }
 
-    private void add(SlashCommandEvent event) {
+    private void add(SlashCommandInteractionEvent event) {
         var emote = event.getOption("emote").getAsString();
         var message = event.reply(loc.localize("command.reaction.checking", event.getGuild()))
                 .flatMap(InteractionHook::retrieveOriginal).complete();
         handleAddCheckResult(event.getGuild(), message, emote);
     }
 
-    private void remove(SlashCommandEvent event) {
+    private void remove(SlashCommandInteractionEvent event) {
         var emote = event.getOption("emote").getAsString();
         var matcher = EMOTE_PATTERN.matcher(emote);
         if (matcher.find()) {

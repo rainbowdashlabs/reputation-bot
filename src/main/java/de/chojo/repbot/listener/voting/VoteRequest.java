@@ -4,6 +4,7 @@ import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.interactions.components.ActionComponent;
 import net.dv8tion.jda.api.interactions.components.Component;
 
 import java.util.List;
@@ -60,7 +61,7 @@ public class VoteRequest {
         return voteTargets;
     }
 
-    public List<Component> components() {
+    public List<ActionComponent> components() {
         return voteTargets.values().stream().map(VoteComponent::component).collect(Collectors.toUnmodifiableList());
     }
 

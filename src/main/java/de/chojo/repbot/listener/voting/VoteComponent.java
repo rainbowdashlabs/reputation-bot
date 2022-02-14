@@ -1,14 +1,14 @@
 package de.chojo.repbot.listener.voting;
 
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.interactions.components.Component;
+import net.dv8tion.jda.api.interactions.components.ActionComponent;
 
 
 public class VoteComponent {
     Member member;
-    Component component;
+    ActionComponent component;
 
-    public VoteComponent(Member member, Component component) {
+    public VoteComponent(Member member, ActionComponent component) {
         this.member = member;
         this.component = component;
     }
@@ -17,7 +17,7 @@ public class VoteComponent {
         return member;
     }
 
-    public Component component() {
+    public ActionComponent component() {
         return component;
     }
 }
