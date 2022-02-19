@@ -35,7 +35,7 @@ public class TopMonth extends SimpleCommand {
     public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
         var page = event.getOption("page");
         var l = page == null ? 1 : page.getAsLong();
-        event.replyEmbeds(top(event.getGuild(), (int) l)).queue();
+        event.replyEmbeds(top(event.getGuild(), (int) Math.max(1, l))).queue();
     }
 
     private MessageEmbed top(Guild guild, int page) {
