@@ -3,6 +3,9 @@ package de.chojo.repbot.util;
 import de.chojo.repbot.data.wrapper.GuildSettings;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
+import net.dv8tion.jda.api.requests.ErrorResponse;
+import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.internal.utils.PermissionUtil;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -34,7 +37,7 @@ public class Messages {
 
     public static void markMessage(Message message, String emoji) {
         if (PermissionUtil.checkPermission(message.getGuildChannel().getPermissionContainer(), message.getGuild().getSelfMember(), Permission.MESSAGE_ADD_REACTION)) {
-            message.addReaction(emoji).queue();
+            message.addReaction(emoji).queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
         }
     }
 }
