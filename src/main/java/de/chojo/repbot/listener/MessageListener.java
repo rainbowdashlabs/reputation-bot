@@ -74,6 +74,7 @@ public class MessageListener extends ListenerAdapter {
 
     @Override
     public void onMessageDelete(@NotNull MessageDeleteEvent event) {
+        if(!event.isFromGuild()) return;
         reputationData.removeMessage(event.getMessageIdLong());
     }
 
@@ -84,13 +85,9 @@ public class MessageListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        if (event.getAuthor().isBot() || event.isWebhookMessage()) return;
+        if (event.getAuthor().isBot() || event.isWebhookMessage() || !event.isFromGuild()) return;
         var guild = event.getGuild();
         var settings = guildData.getGuildSettings(guild);
-
-        if (!event.isFromGuild()) {
-            return;
-        }
 
         if (event.getMessage().getType() != MessageType.DEFAULT && event.getMessage().getType() != MessageType.INLINE_REPLY) {
             return;
