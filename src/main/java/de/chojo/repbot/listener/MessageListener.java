@@ -74,7 +74,6 @@ public class MessageListener extends ListenerAdapter {
 
     @Override
     public void onMessageDelete(@NotNull MessageDeleteEvent event) {
-        if(!event.isFromGuild()) return;
         reputationData.removeMessage(event.getMessageIdLong());
     }
 

@@ -54,8 +54,7 @@ public class ReactionListener extends ListenerAdapter {
 
     @Override
     public void onMessageReactionAdd(@NotNull MessageReactionAddEvent event) {
-        if (event.getUser().isBot()) return;
-        if(!event.isFromGuild()) return;
+        if (event.getUser().isBot() || !event.isFromGuild()) return;
         var guildSettings = guildData.getGuildSettings(event.getGuild());
 
         if (!guildSettings.thankSettings().isReputationChannel(event.getChannel())) return;
@@ -113,7 +112,7 @@ public class ReactionListener extends ListenerAdapter {
 
     @Override
     public void onMessageReactionRemoveEmote(@NotNull MessageReactionRemoveEmoteEvent event) {
-        if(!event.isFromGuild()) return;
+        if (!event.isFromGuild()) return;
         var guildSettings = guildData.getGuildSettings(event.getGuild());
         if (!guildSettings.thankSettings().isReaction(event.getReactionEmote())) return;
         reputationData.removeMessage(event.getMessageIdLong());
@@ -121,7 +120,7 @@ public class ReactionListener extends ListenerAdapter {
 
     @Override
     public void onMessageReactionRemove(@NotNull MessageReactionRemoveEvent event) {
-        if(!event.isFromGuild()) return;
+        if (!event.isFromGuild()) return;
         var guildSettings = guildData.getGuildSettings(event.getGuild());
         if (!guildSettings.thankSettings().isReaction(event.getReactionEmote())) return;
         if (reputationData.removeReputation(event.getUserIdLong(), event.getMessageIdLong(), ThankType.REACTION)) {
@@ -134,7 +133,6 @@ public class ReactionListener extends ListenerAdapter {
 
     @Override
     public void onMessageReactionRemoveAll(@NotNull MessageReactionRemoveAllEvent event) {
-        if(!event.isFromGuild()) return;
         reputationData.removeMessage(event.getMessageIdLong());
     }
 
