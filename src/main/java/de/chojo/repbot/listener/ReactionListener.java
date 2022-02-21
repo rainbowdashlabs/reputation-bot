@@ -18,8 +18,11 @@ import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveAllEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEmoteEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.requests.ErrorResponse;
+import net.dv8tion.jda.api.requests.RestAction;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
@@ -51,7 +54,7 @@ public class ReactionListener extends ListenerAdapter {
 
     @Override
     public void onMessageReactionAdd(@NotNull MessageReactionAddEvent event) {
-        if (event.getUser().isBot()) return;
+        if (event.getUser().isBot() || !event.isFromGuild()) return;
         var guildSettings = guildData.getGuildSettings(event.getGuild());
 
         if (!guildSettings.thankSettings().isReputationChannel(event.getChannel())) return;
@@ -109,6 +112,7 @@ public class ReactionListener extends ListenerAdapter {
 
     @Override
     public void onMessageReactionRemoveEmote(@NotNull MessageReactionRemoveEmoteEvent event) {
+        if (!event.isFromGuild()) return;
         var guildSettings = guildData.getGuildSettings(event.getGuild());
         if (!guildSettings.thankSettings().isReaction(event.getReactionEmote())) return;
         reputationData.removeMessage(event.getMessageIdLong());
@@ -116,12 +120,14 @@ public class ReactionListener extends ListenerAdapter {
 
     @Override
     public void onMessageReactionRemove(@NotNull MessageReactionRemoveEvent event) {
+        if (!event.isFromGuild()) return;
         var guildSettings = guildData.getGuildSettings(event.getGuild());
         if (!guildSettings.thankSettings().isReaction(event.getReactionEmote())) return;
         if (reputationData.removeReputation(event.getUserIdLong(), event.getMessageIdLong(), ThankType.REACTION)) {
             event.getChannel().sendMessage(localizer.localize("listener.reaction.removal", event.getGuild(),
                             Replacement.create("DONOR", User.fromId(event.getUserId()).getAsMention())))
-                    .delay(30, TimeUnit.SECONDS).flatMap(Message::delete).queue();
+                    .delay(30, TimeUnit.SECONDS).flatMap(Message::delete)
+                    .queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
         }
     }
 

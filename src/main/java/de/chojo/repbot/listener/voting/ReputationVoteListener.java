@@ -23,6 +23,7 @@ import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import net.dv8tion.jda.api.requests.ErrorResponse;
+import net.dv8tion.jda.api.requests.RestAction;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.Color;
@@ -60,12 +61,11 @@ public class ReputationVoteListener extends ListenerAdapter {
         var voteRequest = voteRequests.get(event.getMessageIdLong());
         if (!Verifier.equalSnowflake(voteRequest.member(), event.getMember())) {
             event.getHook().sendMessage(loc.localize("error.notYourEmbed", event.getGuild())).setEphemeral(true)
-                    .queue(message -> {
-                    }, throwable -> ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
+                    .queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
             return;
         }
         if ("vote:delete".equals(event.getButton().getId())) {
-            event.getMessage().delete().queue();
+            event.getMessage().delete().queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
             voteRequests.remove(event.getMessageIdLong());
             return;
         }
