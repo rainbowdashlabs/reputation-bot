@@ -1,4 +1,5 @@
 {
+  "baseBranches": ["development"],
   "extends": [
     "config:base"
   ]
