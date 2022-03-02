@@ -3,5 +3,17 @@
   "labels": ["dependencies"],
   "extends": [
     "config:base"
+  ],
+  "packageRules": [
+    {
+      "groupName": "log4j",
+      "matchPackagePrefixes": ["org.apache.logging.log4j"]
+    }
+  ],
+  "reviewers": [
+    "dlsf",
+    "RainbowDashLabs",
+    "Taucher2003",
+    "yannicklamprecht"
   ]
 }
