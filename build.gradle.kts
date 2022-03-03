@@ -26,7 +26,7 @@ dependencies {
     implementation("com.zaxxer", "HikariCP", "4.0.3")
 
     // Serialization
-    implementation("com.fasterxml.jackson.core", "jackson-databind", "2.12.3")
+    implementation("com.fasterxml.jackson.core", "jackson-databind", "2.13.1")
 
     // Logging
     implementation("org.slf4j", "slf4j-api", "1.7.36")
