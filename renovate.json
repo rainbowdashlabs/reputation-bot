@@ -1,5 +1,6 @@
 {
   "baseBranches": ["development"],
+  "dependencyDashboard": true,
   "labels": ["dependencies"],
   "extends": [
     "config:base"
@@ -15,5 +16,7 @@
     "RainbowDashLabs",
     "Taucher2003",
     "yannicklamprecht"
-  ]
+  ],
+  "prConcurrentLimit": 3,
+  "prHourlyLimit": 10
 }
