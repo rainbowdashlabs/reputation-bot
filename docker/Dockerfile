@@ -13,13 +13,13 @@ RUN ./gradlew clean build --no-daemon > /dev/null 2>&1 || true
 COPY src/ src/
 RUN ./gradlew shadowJar --no-daemon
 
-FROM openjdk:15-jdk-alpine AS unzip
+FROM openjdk:19-jdk-alpine AS unzip
 WORKDIR /source
 COPY --from=build source/build/libs/rep-bot-*-all.jar app.jar
 # Extract jar
 RUN jar -xf app.jar
 
-FROM openjdk:15-alpine AS extractDependencies
+FROM openjdk:19-alpine AS extractDependencies
 WORKDIR /extractDependencies
 # Copy everything from unzip stage
 COPY --from=unzip source/ ./
