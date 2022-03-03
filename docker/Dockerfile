@@ -1,4 +1,4 @@
-FROM gradle:7.1-jdk16 AS build
+FROM gradle:7.2-jdk16 AS build
 WORKDIR /source
 # Copy all build relevant files
 COPY gradle/wrapper/gradle-wrapper.properties gradle/wrapper/gradle-wrapper.properties
