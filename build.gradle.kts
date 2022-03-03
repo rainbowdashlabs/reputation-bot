@@ -15,7 +15,7 @@ repositories {
 
 dependencies {
     // discord
-    implementation("net.dv8tion", "JDA", "5.0.0-alpha.5") {
+    implementation("net.dv8tion", "JDA", "5.0.0-alpha.9") {
         exclude(module = "opus-java")
     }
 
