@@ -36,7 +36,7 @@ RUN rm -r \
         *.jar
 
 FROM adoptopenjdk/openjdk16:alpine-jre
-WORKDIR /application
+WORKDIR /
 ENV TERM xterm-256color
 # Copy all dependencies
 COPY --from=extractDependencies extractDependencies/ ./
@@ -55,4 +55,4 @@ COPY --from=unzip source/de/chojo/repbot de/chojo/repbot
 # Add start script
 ADD docker/start.sh start.sh
 RUN chmod +x start.sh
-ENTRYPOINT ["./start.sh"]
+ENTRYPOINT ["sh", "start.sh"]
