@@ -55,4 +55,4 @@ COPY --from=unzip source/de/chojo/repbot de/chojo/repbot
 # Add start script
 ADD docker/start.sh start.sh
 RUN chmod +x start.sh
-ENTRYPOINT ["./start.sh"]
+CMD ["./start.sh"]
