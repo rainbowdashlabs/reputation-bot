@@ -9,7 +9,7 @@ import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.config.Configuration;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class Invite extends SimpleCommand {
@@ -23,12 +23,12 @@ public class Invite extends SimpleCommand {
     }
 
     @Override
-    public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
+    public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
         event.replyEmbeds(getResponse(event)).queue();
     }
 
     @NotNull
-    private MessageEmbed getResponse(SlashCommandEvent event) {
+    private MessageEmbed getResponse(SlashCommandInteractionEvent event) {
         return new LocalizedEmbedBuilder(localizer, event)
                 .setTitle("command.invite.title")
                 .setDescription(localizer.localize("command.invite.click",

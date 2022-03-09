@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "1.6.2"
+version = "1.6.3"
 
 repositories {
     maven("https://eldonexus.de/repository/maven-public")
@@ -15,29 +15,29 @@ repositories {
 
 dependencies {
     // discord
-    implementation("net.dv8tion", "JDA", "5.0.0-alpha.4") {
+    implementation("net.dv8tion", "JDA", "5.0.0-alpha.5") {
         exclude(module = "opus-java")
     }
 
-    implementation("de.chojo", "cjda-util", "2.0.3")
+    implementation("de.chojo", "cjda-util", "2.0.3-alpha.5")
 
     // database
-    implementation("org.postgresql", "postgresql", "42.3.1")
+    implementation("org.postgresql", "postgresql", "42.3.3")
     implementation("com.zaxxer", "HikariCP", "4.0.3")
 
     // Serialization
-    implementation("com.fasterxml.jackson.core", "jackson-databind", "2.12.3")
+    implementation("com.fasterxml.jackson.core", "jackson-databind", "2.13.1")
 
     // Logging
-    implementation("org.slf4j", "slf4j-api", "1.7.30")
-    implementation("org.apache.logging.log4j", "log4j-core", "2.17.1")
-    implementation("org.apache.logging.log4j", "log4j-slf4j-impl", "2.17.1")
-    implementation("club.minnced", "discord-webhooks", "0.5.8")
+    implementation("org.slf4j", "slf4j-api", "1.7.36")
+    implementation("org.apache.logging.log4j", "log4j-core", "2.17.2")
+    implementation("org.apache.logging.log4j", "log4j-slf4j-impl", "2.17.2")
+    implementation("club.minnced", "discord-webhooks", "0.7.5")
 
     // utils
     implementation("org.apache.commons", "commons-lang3", "3.12.0")
-    implementation("de.chojo", "sql-util", "1.1.5")
-    implementation("com.google.guava","guava","30.1.1-jre")
+    implementation("de.chojo", "sql-util", "1.1.6")
+    implementation("com.google.guava","guava","31.1-jre")
 
     // unit testing
     testImplementation(platform("org.junit:junit-bom:5.8.2"))

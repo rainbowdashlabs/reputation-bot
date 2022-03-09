@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import javax.sql.DataSource;
@@ -52,7 +52,7 @@ public class Channel extends SimpleCommand {
     }
 
     @Override
-    public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
+    public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
         var subCmd = event.getSubcommandName();
         if ("set".equalsIgnoreCase(subCmd)) {
             set(event);
@@ -74,7 +74,7 @@ public class Channel extends SimpleCommand {
         }
     }
 
-    private void whitelist(SlashCommandEvent event) {
+    private void whitelist(SlashCommandInteractionEvent event) {
         if (event.getOptions().isEmpty()) {
             var guildSettings = guildData.getGuildSettings(event.getGuild());
             var channelWhitelist = guildSettings.thankSettings().isChannelWhitelist();
@@ -86,7 +86,7 @@ public class Channel extends SimpleCommand {
         event.reply(loc.localize("command.channel.sub.whitelist." + whitelist, event.getGuild())).queue();
     }
 
-    private void add(SlashCommandEvent event) {
+    private void add(SlashCommandInteractionEvent event) {
         var channel = event.getOption("channel").getAsMessageChannel();
         if (channel == null || channel.getType() != ChannelType.TEXT) {
             event.reply(loc.localize("error.invalidChannel")).setEphemeral(true).queue();
@@ -99,12 +99,12 @@ public class Channel extends SimpleCommand {
                         Replacement.create("CHANNEL", ((TextChannel) channel).getAsMention()))).queue();
     }
 
-    private void addAll(SlashCommandEvent event) {
+    private void addAll(SlashCommandInteractionEvent event) {
         FilterUtil.getAccessableTextChannel(event.getGuild()).forEach(c -> guildData.addChannel(event.getGuild(), c));
         event.reply(loc.localize("command.channel.sub.addAll.added", event.getGuild())).queue();
     }
 
-    private void remove(SlashCommandEvent event) {
+    private void remove(SlashCommandInteractionEvent event) {
         var channel = event.getOption("channel").getAsMessageChannel();
         if (channel == null || channel.getType() != ChannelType.TEXT) {
             event.reply(loc.localize("error.invalidChannel")).setEphemeral(true).queue();
@@ -116,7 +116,7 @@ public class Channel extends SimpleCommand {
                 Replacement.create("CHANNEL", ((TextChannel) channel).getAsMention()))).queue();
     }
 
-    private void list(SlashCommandEvent event) {
+    private void list(SlashCommandInteractionEvent event) {
         event.reply(getChannelList(guildData.getGuildSettings(event.getGuild()))).queue();
     }
 
@@ -129,7 +129,7 @@ public class Channel extends SimpleCommand {
         return loc.localize(message, settings.guild(), Replacement.create("CHANNEL", channelNames));
     }
 
-    private void set(SlashCommandEvent event) {
+    private void set(SlashCommandInteractionEvent event) {
         var channel = event.getOption("channel").getAsMessageChannel();
         if (channel == null || channel.getType() != ChannelType.TEXT) {
             event.reply(loc.localize("error.invalidChannel")).setEphemeral(true).queue();

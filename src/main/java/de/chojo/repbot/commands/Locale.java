@@ -10,7 +10,7 @@ import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.util.Permissions;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import javax.sql.DataSource;
@@ -41,7 +41,7 @@ public class Locale extends SimpleCommand {
     }
 
     @Override
-    public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
+    public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
         var subCmd = event.getSubcommandName();
         if ("set".equalsIgnoreCase(subCmd)) {
             set(event);
@@ -51,7 +51,7 @@ public class Locale extends SimpleCommand {
         }
     }
 
-    private void set(SlashCommandEvent event) {
+    private void set(SlashCommandInteractionEvent event) {
         var loc = this.loc.getContextLocalizer(event.getGuild());
         var language = this.loc.getLanguage(event.getOption("language").getAsString());
         if (language.isEmpty()) {
@@ -66,7 +66,7 @@ public class Locale extends SimpleCommand {
         }
     }
 
-    private void list(SlashCommandEvent event) {
+    private void list(SlashCommandInteractionEvent event) {
         var loc = this.loc.getContextLocalizer(event.getGuild());
         var languages = this.loc.getLanguages();
         var builder = TextFormatting.getTableBuilder(languages,

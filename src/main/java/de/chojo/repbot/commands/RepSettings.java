@@ -10,7 +10,7 @@ import de.chojo.repbot.util.EmojiDebug;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import org.jetbrains.annotations.PropertyKey;
 
@@ -59,7 +59,7 @@ public class RepSettings extends SimpleCommand {
     }
 
     @Override
-    public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
+    public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
         var guildSettings = guildData.getGuildSettings(event.getGuild());
 
         var subcmd = event.getSubcommandName();
@@ -92,11 +92,11 @@ public class RepSettings extends SimpleCommand {
         }
     }
 
-    private void sendSettings(SlashCommandEvent event, GuildSettings guildSettings) {
+    private void sendSettings(SlashCommandInteractionEvent event, GuildSettings guildSettings) {
         event.replyEmbeds(getSettings(event.getGuild(), guildSettings)).queue();
     }
 
-    private void fuzzy(SlashCommandEvent event, GuildSettings guildSettings) {
+    private void fuzzy(SlashCommandInteractionEvent event, GuildSettings guildSettings) {
         var messageSettings = guildSettings.messageSettings();
         if (event.getOptions().isEmpty()) {
             event.reply(getBooleanMessage(event.getGuild(), messageSettings.isFuzzyActive(),
@@ -112,7 +112,7 @@ public class RepSettings extends SimpleCommand {
         }
     }
 
-    private boolean mention(SlashCommandEvent event, GuildSettings guildSettings) {
+    private boolean mention(SlashCommandInteractionEvent event, GuildSettings guildSettings) {
         var messageSettings = guildSettings.messageSettings();
         if (event.getOptions().isEmpty()) {
             event.reply(getBooleanMessage(event.getGuild(), messageSettings.isAnswerActive(),
@@ -129,7 +129,7 @@ public class RepSettings extends SimpleCommand {
         return true;
     }
 
-    private void answer(SlashCommandEvent event, GuildSettings guildSettings) {
+    private void answer(SlashCommandInteractionEvent event, GuildSettings guildSettings) {
         var messageSettings = guildSettings.messageSettings();
         if (event.getOptions().isEmpty()) {
             event.reply(getBooleanMessage(event.getGuild(), messageSettings.isAnswerActive(),
@@ -145,7 +145,7 @@ public class RepSettings extends SimpleCommand {
         }
     }
 
-    private void embed(SlashCommandEvent event, GuildSettings guildSettings) {
+    private void embed(SlashCommandInteractionEvent event, GuildSettings guildSettings) {
         var messageSettings = guildSettings.messageSettings();
         if (event.getOptions().isEmpty()) {
             event.reply(getBooleanMessage(event.getGuild(), messageSettings.isAnswerActive(),
@@ -161,7 +161,7 @@ public class RepSettings extends SimpleCommand {
         }
     }
 
-    private void reactions(SlashCommandEvent event, GuildSettings guildSettings) {
+    private void reactions(SlashCommandInteractionEvent event, GuildSettings guildSettings) {
         var messageSettings = guildSettings.messageSettings();
         if (event.getOptions().isEmpty()) {
             event.reply(getBooleanMessage(event.getGuild(), messageSettings.isReactionActive(),
@@ -177,7 +177,7 @@ public class RepSettings extends SimpleCommand {
         }
     }
 
-    private void emojidebug(SlashCommandEvent event, GuildSettings guildSettings) {
+    private void emojidebug(SlashCommandInteractionEvent event, GuildSettings guildSettings) {
         var generalSettings = guildSettings.generalSettings();
         if (event.getOptions().isEmpty()) {
             event.reply(getBooleanMessage(event.getGuild(), generalSettings.isEmojiDebug(),

@@ -7,7 +7,7 @@ import de.chojo.repbot.data.ReputationData;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import javax.sql.DataSource;
@@ -32,10 +32,10 @@ public class TopMonth extends SimpleCommand {
     }
 
     @Override
-    public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
+    public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
         var page = event.getOption("page");
         var l = page == null ? 1 : page.getAsLong();
-        event.replyEmbeds(top(event.getGuild(), (int) l)).queue();
+        event.replyEmbeds(top(event.getGuild(), (int) Math.max(1, l))).queue();
     }
 
     private MessageEmbed top(Guild guild, int page) {

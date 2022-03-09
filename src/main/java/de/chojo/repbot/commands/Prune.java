@@ -7,7 +7,7 @@ import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.service.GdprService;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.events.interaction.SlashCommandEvent;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 public class Prune extends SimpleCommand {
@@ -29,7 +29,7 @@ public class Prune extends SimpleCommand {
     }
 
     @Override
-    public void onSlashCommand(SlashCommandEvent event, SlashCommandContext context) {
+    public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
         var cmd = event.getSubcommandName();
 
         if ("user".equalsIgnoreCase(cmd)) {

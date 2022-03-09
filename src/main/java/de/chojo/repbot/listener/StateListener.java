@@ -53,11 +53,12 @@ public class StateListener extends ListenerAdapter {
 
         if (configuration.botlist().isBotlistGuild(event.getGuild().getIdLong())) return;
 
+        executorService.schedule(() -> Permissions.buildGuildPriviledges(guildData, event.getGuild()), 5, TimeUnit.SECONDS);
+
         var selfMember = event.getGuild().getSelfMember();
         for (var channel : event.getGuild().getTextChannels()) {
             if (selfMember.hasPermission(channel, Permission.VIEW_CHANNEL)
                 && selfMember.hasPermission(channel, Permission.MESSAGE_SEND)) {
-                executorService.schedule(() -> Permissions.buildGuildPriviledges(guildData, event.getGuild()), 5, TimeUnit.SECONDS);
                 channel.sendMessage(localizer.localize("message.welcome", event.getGuild())).queueAfter(5, TimeUnit.SECONDS);
                 break;
             }
