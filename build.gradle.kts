@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "1.6.2"
+version = "1.6.3"
 
 repositories {
     maven("https://eldonexus.de/repository/maven-public")
@@ -26,7 +26,7 @@ dependencies {
     implementation("com.zaxxer", "HikariCP", "4.0.3")
 
     // Serialization
-    implementation("com.fasterxml.jackson.core", "jackson-databind", "2.13.1")
+    implementation("com.fasterxml.jackson.core", "jackson-databind", "2.13.2")
 
     // Logging
     implementation("org.slf4j", "slf4j-api", "1.7.36")
