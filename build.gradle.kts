@@ -32,7 +32,7 @@ dependencies {
     implementation("org.slf4j", "slf4j-api", "1.7.36")
     implementation("org.apache.logging.log4j", "log4j-core", "2.17.2")
     implementation("org.apache.logging.log4j", "log4j-slf4j-impl", "2.17.2")
-    implementation("club.minnced", "discord-webhooks", "0.7.5")
+    implementation("club.minnced", "discord-webhooks", "0.8.0")
 
     // utils
     implementation("org.apache.commons", "commons-lang3", "3.12.0")
