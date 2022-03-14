@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "1.6.2"
+version = "1.6.3"
 
 repositories {
     maven("https://eldonexus.de/repository/maven-public")
@@ -26,13 +26,13 @@ dependencies {
     implementation("com.zaxxer", "HikariCP", "5.0.1")
 
     // Serialization
-    implementation("com.fasterxml.jackson.core", "jackson-databind", "2.13.1")
+    implementation("com.fasterxml.jackson.core", "jackson-databind", "2.13.2")
 
     // Logging
     implementation("org.slf4j", "slf4j-api", "1.7.36")
     implementation("org.apache.logging.log4j", "log4j-core", "2.17.2")
     implementation("org.apache.logging.log4j", "log4j-slf4j-impl", "2.17.2")
-    implementation("club.minnced", "discord-webhooks", "0.7.5")
+    implementation("club.minnced", "discord-webhooks", "0.8.0")
 
     // utils
     implementation("org.apache.commons", "commons-lang3", "3.12.0")
