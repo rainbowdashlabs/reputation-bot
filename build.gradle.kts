@@ -23,7 +23,7 @@ dependencies {
 
     // database
     implementation("org.postgresql", "postgresql", "42.3.3")
-    implementation("com.zaxxer", "HikariCP", "4.0.3")
+    implementation("com.zaxxer", "HikariCP", "5.0.1")
 
     // Serialization
     implementation("com.fasterxml.jackson.core", "jackson-databind", "2.13.2")
