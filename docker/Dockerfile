@@ -36,7 +36,7 @@ RUN rm -r \
         *.jar
 
 FROM eclipse-temurin:17-jre-alpine
-WORKDIR /application
+WORKDIR /
 ENV TERM xterm-256color
 # Copy all dependencies
 COPY --from=extractDependencies extractDependencies/ ./
@@ -55,4 +55,4 @@ COPY --from=unzip source/de/chojo/repbot de/chojo/repbot
 # Add start script
 ADD docker/start.sh start.sh
 RUN chmod +x start.sh
-CMD ["./start.sh"]
+CMD ["sh", "start.sh"]
