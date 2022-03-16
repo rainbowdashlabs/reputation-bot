@@ -8,26 +8,7 @@ import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Language;
 import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
-import de.chojo.repbot.commands.AbuseProtection;
-import de.chojo.repbot.commands.Channel;
-import de.chojo.repbot.commands.Dashboard;
-import de.chojo.repbot.commands.Gdpr;
-import de.chojo.repbot.commands.Info;
-import de.chojo.repbot.commands.Invite;
-import de.chojo.repbot.commands.Locale;
-import de.chojo.repbot.commands.Log;
-import de.chojo.repbot.commands.Prefix;
-import de.chojo.repbot.commands.Prune;
-import de.chojo.repbot.commands.Reactions;
-import de.chojo.repbot.commands.RepSettings;
-import de.chojo.repbot.commands.Reputation;
-import de.chojo.repbot.commands.Roles;
-import de.chojo.repbot.commands.Scan;
-import de.chojo.repbot.commands.Setup;
-import de.chojo.repbot.commands.Thankwords;
-import de.chojo.repbot.commands.Top;
-import de.chojo.repbot.commands.TopMonth;
-import de.chojo.repbot.commands.TopWeek;
+import de.chojo.repbot.commands.*;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.updater.QueryReplacement;
@@ -252,7 +233,8 @@ public class ReputationBot {
                         new Prune(gdprService, localizer),
                         new Reactions(dataSource, localizer),
                         new Dashboard(dataSource, localizer),
-                        new AbuseProtection(dataSource, localizer)
+                        new AbuseProtection(dataSource, localizer),
+                        new Debug(dataSource, localizer)
                 )
                 .withLocalizer(localizer)
                 .withPermissionCheck((event, command) -> {

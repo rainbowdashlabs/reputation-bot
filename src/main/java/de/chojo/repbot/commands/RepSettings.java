@@ -195,26 +195,12 @@ public class RepSettings extends SimpleCommand {
 
     private MessageEmbed getSettings(Guild guild, GuildSettings guildSettings) {
         var messageSettings = guildSettings.messageSettings();
-        var setting = List.of(
-                getSetting("command.repSettings.embed.descr.byReaction", messageSettings.isReactionActive()),
-                getSetting("command.repSettings.embed.descr.byAnswer", messageSettings.isAnswerActive()),
-                getSetting("command.repSettings.embed.descr.byMention", messageSettings.isMentionActive()),
-                getSetting("command.repSettings.embed.descr.byFuzzy", messageSettings.isFuzzyActive()),
-                getSetting("command.repSettings.embed.descr.byEmbed", messageSettings.isEmbedActive()),
-                getSetting("command.repSettings.embed.descr.emojidebug", guildSettings.generalSettings().isEmojiDebug())
-        );
-
-        var settings = String.join("\n", setting);
 
         return new LocalizedEmbedBuilder(loc, guild)
                 .setTitle("command.repSettings.embed.title")
-                .appendDescription(loc.localize(settings, guild))
+                .appendDescription(loc.localize(messageSettings.toLocalizedString(guildSettings), guild))
                 .setColor(Color.GREEN)
                 .build();
-    }
-
-    private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, Object object) {
-        return String.format("$%s$: %s", locale, object);
     }
 
     private String emojiExplanation() {
