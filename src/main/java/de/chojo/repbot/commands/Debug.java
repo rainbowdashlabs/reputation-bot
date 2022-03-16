@@ -34,12 +34,12 @@ public class Debug extends SimpleCommand {
                         Replacement.create("GUILD", Guilds.prettyName(event.getGuild()))
                 ))
                 .addField("word.messageSettings", localizer.localize(
-                        guildSettings.messageSettings().toLocalizedString(guildSettings), event),
+                                guildSettings.messageSettings().toLocalizedString(guildSettings), event),
                         false
                 )
                 .addField("word.thankWords", thankWords, true)
                 .addField("command.debug.channelActive", String.valueOf(
-                        guildSettings.thankSettings().isReputationChannel(event.getTextChannel())),
+                                guildSettings.thankSettings().isReputationChannel(event.getTextChannel())),
                         true
                 )
                 .build()).queue();
