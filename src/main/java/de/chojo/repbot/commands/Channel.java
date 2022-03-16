@@ -31,6 +31,10 @@ public class Channel extends SimpleCommand {
                 .addSubCommand("list_type", "command.channel.sub.listType", argsBuilder()
                         .add(SimpleArgument.string("type", "command.channel.sub.listType.arg.type").withAutoComplete()))
                 .addSubCommand("list", "command.channel.sub.list")
+                .addSubCommand("anouncement", "Define announcements", argsBuilder()
+                        .add(SimpleArgument.bool( "active", "Define state"))
+                        .add(SimpleArgument.channel("channel", ""))
+                        .add(SimpleArgument.bool("same_channel", "")))
                 .withPermission());
         this.guilds = guilds;
     }
@@ -57,6 +61,13 @@ public class Channel extends SimpleCommand {
         if ("list".equalsIgnoreCase(subCmd)) {
             list(event, context, channels);
         }
+        if ("announcement".equals(subCmd)) {
+            announcements(event);
+        }
+    }
+
+    private void announcements(SlashCommandInteractionEvent event) {
+
     }
 
     private void whitelist(SlashCommandInteractionEvent event, SlashCommandContext context, Channels channels) {
