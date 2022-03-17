@@ -11,6 +11,7 @@ import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.commands.AbuseProtection;
 import de.chojo.repbot.commands.Channel;
 import de.chojo.repbot.commands.Dashboard;
+import de.chojo.repbot.commands.Debug;
 import de.chojo.repbot.commands.Gdpr;
 import de.chojo.repbot.commands.Info;
 import de.chojo.repbot.commands.Invite;
@@ -252,7 +253,8 @@ public class ReputationBot {
                         new Prune(gdprService, localizer),
                         new Reactions(dataSource, localizer),
                         new Dashboard(dataSource, localizer),
-                        new AbuseProtection(dataSource, localizer)
+                        new AbuseProtection(dataSource, localizer),
+                        new Debug(dataSource, localizer)
                 )
                 .withLocalizer(localizer)
                 .withPermissionCheck((event, command) -> {

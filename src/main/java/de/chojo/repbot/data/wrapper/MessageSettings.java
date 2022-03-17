@@ -1,5 +1,9 @@
 package de.chojo.repbot.data.wrapper;
 
+import org.jetbrains.annotations.PropertyKey;
+
+import java.util.List;
+
 public class MessageSettings {
     private boolean reactionActive;
     private boolean answerActive;
@@ -61,5 +65,22 @@ public class MessageSettings {
 
     public void fuzzyActive(boolean fuzzyActive) {
         this.fuzzyActive = fuzzyActive;
+    }
+
+    public String toLocalizedString(GuildSettings guildSettings) {
+        var setting = List.of(
+                getSetting("command.repSettings.embed.descr.byReaction", isReactionActive()),
+                getSetting("command.repSettings.embed.descr.byAnswer", isAnswerActive()),
+                getSetting("command.repSettings.embed.descr.byMention", isMentionActive()),
+                getSetting("command.repSettings.embed.descr.byFuzzy", isFuzzyActive()),
+                getSetting("command.repSettings.embed.descr.byEmbed", isEmbedActive()),
+                getSetting("command.repSettings.embed.descr.emojidebug", guildSettings.generalSettings().isEmojiDebug())
+        );
+
+        return String.join("\n", setting);
+    }
+
+    private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, Object object) {
+        return String.format("$%s$: %s", locale, object);
     }
 }
