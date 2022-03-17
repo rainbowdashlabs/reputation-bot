@@ -6,6 +6,7 @@ import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
+import de.chojo.repbot.util.Colors;
 import de.chojo.repbot.util.Guilds;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -42,6 +43,7 @@ public class Debug extends SimpleCommand {
                                 guildSettings.thankSettings().isReputationChannel(event.getTextChannel())),
                         true
                 )
+                .setColor(Colors.Pastel.DARK_PINK)
                 .build()).queue();
     }
 }
