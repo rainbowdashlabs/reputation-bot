@@ -93,7 +93,7 @@ public class Info extends SimpleCommand {
 
             List<GithubProfile> profiles = new ArrayList<>();
             for (var contributor : contributors) {
-                if(ContributorType.BOT.equals(contributor.type)) continue;
+                if (ContributorType.BOT == contributor.type) continue;
 
                 var profile = HttpRequest.newBuilder().GET()
                         .uri(URI.create(contributor.url))
