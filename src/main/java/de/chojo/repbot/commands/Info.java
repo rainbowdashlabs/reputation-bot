@@ -93,6 +93,8 @@ public class Info extends SimpleCommand {
 
             List<GithubProfile> profiles = new ArrayList<>();
             for (var contributor : contributors) {
+                if(ContributorType.BOT.equals(contributor.type)) continue;
+
                 var profile = HttpRequest.newBuilder().GET()
                         .uri(URI.create(contributor.url))
                         .header("accept", "application/vnd.github.v3+json")
@@ -164,6 +166,14 @@ public class Info extends SimpleCommand {
         private String url;
         @JsonProperty("html_url")
         private String htmlUrl;
+        private ContributorType type;
+    }
+
+    private enum ContributorType {
+        @JsonProperty("User")
+        USER,
+        @JsonProperty("Bot")
+        BOT
     }
 
     private static class GithubProfile {
