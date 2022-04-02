@@ -3,6 +3,7 @@ package de.chojo.repbot.commands;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.chojo.jdautil.command.CommandMeta;
 import de.chojo.jdautil.command.SimpleArgument;
 import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.conversation.Conversation;
@@ -50,8 +51,7 @@ public class Setup extends SimpleCommand {
 
     public Setup(Localizer localizer, DataSource dataSource,
                  ThankwordsContainer thankwordsContainer) {
-        super("setup", null, "command.setup.description", (SimpleArgument[]) null,
-                Permission.ADMINISTRATOR);
+        super(CommandMeta.builder("setup", "command.setup.description").withPermission());
         this.localizer = localizer;
         guildData = new GuildData(dataSource);
         this.thankwordsContainer = thankwordsContainer;

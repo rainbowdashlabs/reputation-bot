@@ -19,7 +19,7 @@ dependencies {
         exclude(module = "opus-java")
     }
 
-    implementation("de.chojo", "cjda-util", "2.1.1+alpha.9")
+    implementation("de.chojo", "cjda-util", "2.2.3+alpha.9")
 
     // database
     implementation("org.postgresql", "postgresql", "42.3.3")
@@ -49,7 +49,7 @@ java {
     withSourcesJar()
     withJavadocJar()
 
-    sourceCompatibility = JavaVersion.VERSION_15
+    sourceCompatibility = JavaVersion.VERSION_17
 }
 
 tasks {

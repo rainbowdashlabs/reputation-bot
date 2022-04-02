@@ -1,7 +1,8 @@
 package de.chojo.repbot.commands;
 
+import de.chojo.jdautil.command.CommandMeta;
+import de.chojo.jdautil.command.SimpleArgument;
 import de.chojo.jdautil.command.SimpleCommand;
-import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
@@ -9,15 +10,11 @@ import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.service.RoleAccessException;
 import de.chojo.repbot.service.RoleAssigner;
-import de.chojo.repbot.util.Permissions;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.sharding.ShardManager;
 
 import javax.sql.DataSource;
 import java.util.Collections;
@@ -28,213 +25,185 @@ import java.util.stream.Collectors;
 
 public class Roles extends SimpleCommand {
     private final GuildData guildData;
-    private final ILocalizer loc;
     private final RoleAssigner roleAssigner;
-    private final ShardManager shardManager;
     private final Set<Long> running = new HashSet<>();
 
-    public Roles(DataSource dataSource, ILocalizer loc, RoleAssigner roleAssigner, ShardManager shardManager) {
-        super("roles", new String[]{"role"},
-                "command.roles.description",
-                subCommandBuilder()
-                        .add("managerrole", "command.roles.sub.managerRole", argsBuilder()
-                                .add(OptionType.ROLE, "role", "role")
-                                .build()
-                        )
-                        .add("add", "command.roles.sub.add", argsBuilder()
-                                .add(OptionType.ROLE, "role", "role", true)
-                                .add(OptionType.INTEGER, "reputation", "reputation", true)
-                                .build()
-                        )
-                        .add("remove", "command.roles.sub.remove", argsBuilder()
-                                .add(OptionType.ROLE, "role", "role", true)
-                                .build()
-                        )
-                        .add("adddonor", "command.roles.sub.addDonor", argsBuilder()
-                                .add(OptionType.ROLE, "role", "role", true)
-                                .build()
-                        )
-                        .add("addreceiver", "command.roles.sub.addReceiver", argsBuilder()
-                                .add(OptionType.ROLE, "role", "role", true)
-                                .build()
-                        )
-                        .add("removedonor", "command.roles.sub.removeDonor", argsBuilder()
-                                .add(OptionType.ROLE, "role", "role", true)
-                                .build()
-                        )
-                        .add("removereceiver", "command.roles.sub.removeReceiver", argsBuilder()
-                                .add(OptionType.ROLE, "role", "role", true)
-                                .build()
-                        )
-                        .add("refresh", "command.roles.sub.refresh", argsBuilder()
-                                .build()
-                        )
-                        .add("list", "command.roles.sub.list")
-                        .add("stackroles", "command.roles.sub.stackRoles", argsBuilder()
-                                .add(OptionType.BOOLEAN, "stack", "stack")
-                                .build())
-                        .build(),
-                Permission.MANAGE_SERVER);
+    public Roles(DataSource dataSource, RoleAssigner roleAssigner) {
+        super(CommandMeta.builder("roles", "command.roles.description")
+                        .addSubCommand("managerrole", "command.roles.sub.managerRole", argsBuilder()
+                                .add(SimpleArgument.role("role", "role")))
+                        .addSubCommand("add", "command.roles.sub.add", argsBuilder()
+                                .add(SimpleArgument.role("role", "role").asRequired())
+                                .add(SimpleArgument.integer("reputation", "reputation").asRequired()))
+                        .addSubCommand("remove", "command.roles.sub.remove", argsBuilder()
+                                .add(SimpleArgument.role("role", "role").asRequired()))
+                        .addSubCommand("adddonor", "command.roles.sub.addDonor", argsBuilder()
+                                .add(SimpleArgument.role("role", "role").asRequired()))
+                        .addSubCommand("addreceiver", "command.roles.sub.addReceiver", argsBuilder()
+                                .add(SimpleArgument.role("role", "role").asRequired()))
+                        .addSubCommand("removedonor", "command.roles.sub.removeDonor", argsBuilder()
+                                .add(SimpleArgument.role("role", "role").asRequired()))
+                        .addSubCommand("removereceiver", "command.roles.sub.removeReceiver", argsBuilder()
+                                .add(SimpleArgument.role("role", "role").asRequired()))
+                        .addSubCommand("refresh", "command.roles.sub.refresh")
+                        .addSubCommand("list", "command.roles.sub.list")
+                        .addSubCommand("stackroles", "command.roles.sub.stackRoles", argsBuilder()
+                                .add(SimpleArgument.bool("stack", "stack")))
+                        .withPermission());
         guildData = new GuildData(dataSource);
-        this.loc = loc;
         this.roleAssigner = roleAssigner;
-        this.shardManager = shardManager;
     }
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
         var subCmd = event.getSubcommandName();
         if ("list".equalsIgnoreCase(subCmd)) {
-            list(event);
+            list(event, context);
         }
 
         if ("add".equalsIgnoreCase(subCmd)) {
-            add(event);
+            add(event, context);
         }
 
         if ("remove".equalsIgnoreCase(subCmd)) {
-            remove(event);
+            remove(event, context);
         }
 
         if ("managerRole".equalsIgnoreCase(subCmd)) {
-            managerRole(event);
+            managerRole(event, context);
         }
 
         if ("addDonor".equalsIgnoreCase(subCmd)) {
-            addDonor(event, event.getOption("role").getAsRole());
+            addDonor(event, context,event.getOption("role").getAsRole());
         }
 
         if ("addReceiver".equalsIgnoreCase(subCmd)) {
-            addReceiver(event, event.getOption("role").getAsRole());
+            addReceiver(event, context, event.getOption("role").getAsRole());
         }
 
         if ("removeDonor".equalsIgnoreCase(subCmd)) {
-            removeDonor(event, event.getOption("role").getAsRole());
+            removeDonor(event, context,  event.getOption("role").getAsRole());
         }
 
         if ("removeReceiver".equalsIgnoreCase(subCmd)) {
-            removeReceiver(event, event.getOption("role").getAsRole());
+            removeReceiver(event, context, event.getOption("role").getAsRole());
         }
 
         if ("refresh".equalsIgnoreCase(subCmd)) {
-            refresh(event);
+            refresh(event, context);
         }
 
         if ("stackRoles".equalsIgnoreCase(subCmd)) {
-            stackRoles(event);
+            stackRoles(event, context);
         }
     }
 
-    private void refresh(SlashCommandInteractionEvent event) {
+    private void refresh(SlashCommandInteractionEvent event, SlashCommandContext context) {
         if (running.contains(event.getGuild().getIdLong())) {
-            event.reply(loc.localize("command.roles.sub.refresh.running")).queue();
+            event.reply(context.localize("command.roles.sub.refresh.running")).queue();
             return;
         }
 
         running.add(event.getGuild().getIdLong());
 
-        event.reply(loc.localize("command.roles.sub.refresh.started", event.getGuild())).queue();
+        event.reply(context.localize("command.roles.sub.refresh.started")).queue();
         roleAssigner
                 .updateBatch(event.getGuild())
                 .thenRun(() -> event.getHook()
-                        .editOriginal(loc.localize("command.roles.sub.refresh.finished", event.getGuild()))
+                        .editOriginal(context.localize("command.roles.sub.refresh.finished"))
                         .queue())
                 .exceptionally(r -> {
                     if (r instanceof RoleAccessException) {
                         event.getHook()
-                                .editOriginal(loc.localize("error.roleAccess", event.getGuild(),
+                                .editOriginal(context.localize("error.roleAccess",
                                         Replacement.createMention("ROLE", ((RoleAccessException) r).role())))
                                 .queue();
                     }
                     return null;
-                }).thenRun(() -> {
-                    running.remove(event.getGuild().getIdLong());
-                });
+                }).thenRun(() -> running.remove(event.getGuild().getIdLong()));
     }
 
-    private void stackRoles(SlashCommandInteractionEvent event) {
+    private void stackRoles(SlashCommandInteractionEvent event, SlashCommandContext context) {
         var settings = guildData.getGuildSettings(event.getGuild());
         if (event.getOptions().isEmpty()) {
-            event.reply(getBooleanMessage(event.getGuild(), settings.generalSettings().isStackRoles(),
+            event.reply(getBooleanMessage(context, settings.generalSettings().isStackRoles(),
                     "command.roles.sub.stackRoles.stacked", "command.roles.sub.stackRoles.notStacked")).queue();
             return;
         }
         var state = event.getOption("stack").getAsBoolean();
 
         if (guildData.setRoleStacking(event.getGuild(), state)) {
-            event.reply(getBooleanMessage(event.getGuild(), state,
+            event.reply(getBooleanMessage(context, state,
                     "command.roles.sub.stackRoles.stacked", "command.roles.sub.stackRoles.notStacked")).queue();
         }
     }
 
-    private void managerRole(SlashCommandInteractionEvent event) {
-        var loc = this.loc.getContextLocalizer(event.getGuild());
+    private void managerRole(SlashCommandInteractionEvent event, SlashCommandContext context) {
         if (event.getOptions().isEmpty()) {
             var settings = guildData.getGuildSettings(event.getGuild());
-            event.reply(getManagerRoleMessage(event.getGuild(), settings)).allowedMentions(Collections.emptyList()).queue();
+            event.reply(getManagerRoleMessage(context,event.getGuild(), settings)).allowedMentions(Collections.emptyList()).queue();
             return;
         }
         var role = event.getOption("role").getAsRole();
         if (guildData.setManagerRole(event.getGuild(), role)) {
-            event.reply(loc.localize("command.roles.sub.managerRole.set",
+            event.reply(context.localize("command.roles.sub.managerRole.set",
                             Replacement.createMention(role)))
                     .allowedMentions(Collections.emptyList()).queue();
 
-            Permissions.buildGuildPriviledges(guildData, event.getGuild());
+            context.commandHub().buildGuildPrivileges(event.getGuild());
         }
     }
 
-    private String getManagerRoleMessage(Guild guild, GuildSettings settings) {
+    private String getManagerRoleMessage(SlashCommandContext context,Guild guild, GuildSettings settings) {
         if (settings.generalSettings().managerRole().isPresent()) {
             var roleById = guild.getRoleById(settings.generalSettings().managerRole().get());
             if (roleById != null) {
-                return loc.localize("command.roles.sub.managerRole.current", guild,
+                return context.localize("command.roles.sub.managerRole.current",
                         Replacement.createMention(roleById));
             }
         }
-        return loc.localize("command.roles.sub.managerRole.noRole", guild);
+        return context.localize("command.roles.sub.managerRole.noRole");
     }
 
-    private void remove(SlashCommandInteractionEvent event) {
-        var loc = this.loc.getContextLocalizer(event.getGuild());
+    private void remove(SlashCommandInteractionEvent event, SlashCommandContext context) {
         var role = event.getOption("role").getAsRole();
 
         if (guildData.removeReputationRole(event.getGuild(), role)) {
-            event.reply(loc.localize("command.roles.sub.remove.removed",
+            event.reply(context.localize("command.roles.sub.remove.removed",
                     Replacement.createMention("ROLE", role))).allowedMentions(Collections.emptyList()).queue();
             return;
         }
-        event.reply(loc.localize("command.roles.sub.remove.notARepRole")).setEphemeral(true).queue();
+        event.reply(context.localize("command.roles.sub.remove.notARepRole")).setEphemeral(true).queue();
     }
 
-    private void add(SlashCommandInteractionEvent event) {
+    private void add(SlashCommandInteractionEvent event, SlashCommandContext context) {
         var role = event.getOption("role").getAsRole();
         var reputation = event.getOption("reputation").getAsLong();
         if (!event.getGuild().getSelfMember().canInteract(role)) {
-            event.reply(loc.localize("error.roleAccess", event.getGuild(),
+            event.reply(context.localize("error.roleAccess",
                     Replacement.createMention(role))).setEphemeral(true).queue();
             return;
         }
 
         if (guildData.addReputationRole(event.getGuild(), role, reputation)) {
-            event.reply(loc.localize("command.roles.sub.add.added", event.getGuild(),
+            event.reply(context.localize("command.roles.sub.add.added",
                             Replacement.createMention("ROLE", role), Replacement.create("POINTS", reputation)))
                     .allowedMentions(Collections.emptyList()).queue();
         }
     }
 
-    private void list(SlashCommandInteractionEvent event) {
-        event.replyEmbeds(getRoleList(event.getGuild())).allowedMentions(Collections.emptyList()).queue();
+    private void list(SlashCommandInteractionEvent event, SlashCommandContext context) {
+        event.replyEmbeds(getRoleList(context, event.getGuild())).allowedMentions(Collections.emptyList()).queue();
     }
 
-    private MessageEmbed getRoleList(Guild guild) {
+    private MessageEmbed getRoleList(SlashCommandContext context, Guild guild) {
         var reputationRoles = guildData.getReputationRoles(guild).stream()
                 .filter(role -> role.getRole(guild) != null)
                 .map(role -> role.reputation() + " ➜ " + role.getRole(guild).getAsMention())
                 .collect(Collectors.joining("\n"));
         var guildSettings = guildData.getGuildSettings(guild);
 
-        var builder = new LocalizedEmbedBuilder(loc, guild)
+        var builder = new LocalizedEmbedBuilder(context.localizer())
                 .setTitle("Role Info");
 
         builder.addField("Reputation Roles", reputationRoles, true);
@@ -264,31 +233,31 @@ public class Roles extends SimpleCommand {
         return builder.build();
     }
 
-    private void addDonor(SlashCommandInteractionEvent event, Role role) {
+    private void addDonor(SlashCommandInteractionEvent event, SlashCommandContext context, Role role) {
         guildData.addDonorRole(event.getGuild(), role);
-        event.reply(loc.localize("command.roles.sub.addDonor.add", event.getGuild(),
+        event.reply(context.localize("command.roles.sub.addDonor.add",
                 Replacement.createMention(role))).allowedMentions(Collections.emptyList()).queue();
     }
 
-    private void addReceiver(SlashCommandInteractionEvent event, Role role) {
+    private void addReceiver(SlashCommandInteractionEvent event, SlashCommandContext context, Role role) {
         guildData.addReceiverRole(event.getGuild(), role);
-        event.reply(loc.localize("command.roles.sub.addReceiver.add", event.getGuild(),
+        event.reply(context.localize("command.roles.sub.addReceiver.add",
                 Replacement.createMention(role))).allowedMentions(Collections.emptyList()).queue();
     }
 
-    private void removeDonor(SlashCommandInteractionEvent event, Role role) {
+    private void removeDonor(SlashCommandInteractionEvent event, SlashCommandContext context, Role role) {
         guildData.removeDonorRole(event.getGuild(), role);
-        event.reply(loc.localize("command.roles.sub.removeDonor.remove", event.getGuild(),
+        event.reply(context.localize("command.roles.sub.removeDonor.remove",
                 Replacement.createMention(role))).allowedMentions(Collections.emptyList()).queue();
     }
 
-    private void removeReceiver(SlashCommandInteractionEvent event, Role role) {
+    private void removeReceiver(SlashCommandInteractionEvent event, SlashCommandContext context, Role role) {
         guildData.removeReceiverRole(event.getGuild(), role);
-        event.reply(loc.localize("command.roles.sub.removeReceiver.remove", event.getGuild(),
+        event.reply(context.localize("command.roles.sub.removeReceiver.remove",
                 Replacement.createMention(role))).allowedMentions(Collections.emptyList()).queue();
     }
 
-    private String getBooleanMessage(Guild guild, boolean value, String whenTrue, String whenFalse) {
-        return loc.localize(value ? whenTrue : whenFalse, guild);
+    private String getBooleanMessage(SlashCommandContext context, boolean value, String whenTrue, String whenFalse) {
+        return context.localize(value ? whenTrue : whenFalse);
     }
 }
