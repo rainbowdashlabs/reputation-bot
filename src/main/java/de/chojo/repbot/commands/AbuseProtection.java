@@ -119,7 +119,7 @@ public class AbuseProtection extends SimpleCommand {
         }
     }
 
-    private void minMessages(SlashCommandInteractionEvent event,SlashCommandContext context, GuildSettings guildSettings) {
+    private void minMessages(SlashCommandInteractionEvent event, SlashCommandContext context, GuildSettings guildSettings) {
         var abuseSettings = guildSettings.abuseSettings();
         if (event.getOptions().isEmpty()) {
             event.reply(context.localize("command.abuseProtection.sub.minMessages.get",
@@ -136,7 +136,7 @@ public class AbuseProtection extends SimpleCommand {
         }
     }
 
-    private void cooldown(SlashCommandInteractionEvent event,SlashCommandContext context, GuildSettings guildSettings) {
+    private void cooldown(SlashCommandInteractionEvent event, SlashCommandContext context, GuildSettings guildSettings) {
         var abuseSettings = guildSettings.abuseSettings();
         if (event.getOptions().isEmpty()) {
             event.reply(context.localize("command.abuseProtection.sub.cooldown.get",

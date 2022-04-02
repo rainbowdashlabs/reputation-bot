@@ -188,7 +188,7 @@ public class Thankwords extends SimpleCommand {
                         false, Replacement.create("DONATOR", result.donator().getAsMention()),
                         Replacement.create("RECEIVER", receiver.getReference().getAsMention()));
                 case ANSWER -> builder.addField("command.thankwords.sub.check.match.answer",
-                        "$command.thankwords.sub.check.result$" + "\n"+"$command.thankwords.sub.check.reference$",
+                        "$command.thankwords.sub.check.result$\n$command.thankwords.sub.check.reference$",
                         false, Replacement.create("URL", result.referenceMessage().getJumpUrl()),
                         Replacement.create("DONATOR", result.donator().getAsMention()),
                         Replacement.create("RECEIVER", receiver.getReference().getAsMention()));

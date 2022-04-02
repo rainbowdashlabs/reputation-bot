@@ -54,8 +54,8 @@ public class Top extends SimpleCommand {
                 .build();
     }
 
-    private static LocalizedEmbedBuilder createBaseBuilder(SlashCommandContext loc, Guild guild) {
-        return new LocalizedEmbedBuilder(loc.localizer())
+    private static LocalizedEmbedBuilder createBaseBuilder(SlashCommandContext context, Guild guild) {
+        return new LocalizedEmbedBuilder(context.localizer())
                 .setTitle("command.top.title", Replacement.create("GUILD", guild.getName()))
                 .setColor(Color.CYAN);
     }
