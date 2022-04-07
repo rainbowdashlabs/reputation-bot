@@ -13,13 +13,13 @@ RUN ./gradlew clean build --no-daemon > /dev/null 2>&1 || true
 COPY src/ src/
 RUN ./gradlew shadowJar --no-daemon
 
-FROM openjdk:15-jdk-alpine AS unzip
+FROM eclipse-temurin:17-jdk-alpine AS unzip
 WORKDIR /source
 COPY --from=build source/build/libs/rep-bot-*-all.jar app.jar
 # Extract jar
 RUN jar -xf app.jar
 
-FROM openjdk:15-alpine AS extractDependencies
+FROM eclipse-temurin:17-jre-alpine AS extractDependencies
 WORKDIR /extractDependencies
 # Copy everything from unzip stage
 COPY --from=unzip source/ ./
@@ -35,8 +35,8 @@ RUN rm -r \
         de/chojo/repbot \
         *.jar
 
-FROM adoptopenjdk/openjdk16:alpine-jre
-WORKDIR /application
+FROM eclipse-temurin:17-jre-alpine
+WORKDIR /
 ENV TERM xterm-256color
 # Copy all dependencies
 COPY --from=extractDependencies extractDependencies/ ./
@@ -55,4 +55,4 @@ COPY --from=unzip source/de/chojo/repbot de/chojo/repbot
 # Add start script
 ADD docker/start.sh start.sh
 RUN chmod +x start.sh
-ENTRYPOINT ["./start.sh"]
+CMD ["sh", "start.sh"]

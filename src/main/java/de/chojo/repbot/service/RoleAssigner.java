@@ -40,8 +40,6 @@ public class RoleAssigner {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
 
-        if (roles.isEmpty()) return;
-
         cleanMemberRoles(member, roles);
 
         if (member.getRoles().containsAll(roles)) return;
