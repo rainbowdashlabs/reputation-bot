@@ -231,7 +231,7 @@ public class ReputationBot {
                         new Invite(configuration),
                         Info.create(configuration),
                         new Log(dataSource),
-                        Setup.of(dataSource, localizer),
+                        Setup.of(dataSource),
                         new Gdpr(dataSource),
                         new Prune(gdprService),
                         new Reactions(dataSource),

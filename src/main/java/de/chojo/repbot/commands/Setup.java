@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.chojo.jdautil.command.CommandMeta;
-import de.chojo.jdautil.command.SimpleArgument;
 import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.conversation.Conversation;
 import de.chojo.jdautil.conversation.builder.ConversationBuilder;
@@ -13,7 +12,6 @@ import de.chojo.jdautil.conversation.elements.ComponenAction;
 import de.chojo.jdautil.conversation.elements.ConversationContext;
 import de.chojo.jdautil.conversation.elements.Result;
 import de.chojo.jdautil.conversation.elements.Step;
-import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.ArgumentUtil;
@@ -45,19 +43,17 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class Setup extends SimpleCommand {
 
     private static final Logger log = getLogger(Setup.class);
-    private final Localizer localizer;
     private final GuildData guildData;
     private final ThankwordsContainer thankwordsContainer;
 
-    public Setup(Localizer localizer, DataSource dataSource,
+    public Setup(DataSource dataSource,
                  ThankwordsContainer thankwordsContainer) {
         super(CommandMeta.builder("setup", "command.setup.description").withPermission());
-        this.localizer = localizer;
         guildData = new GuildData(dataSource);
         this.thankwordsContainer = thankwordsContainer;
     }
 
-    public static Setup of(DataSource dataSource, Localizer localizer) {
+    public static Setup of(DataSource dataSource) {
         ThankwordsContainer thankwordsContainer;
         try {
             thankwordsContainer = new ObjectMapper()
@@ -68,23 +64,23 @@ public class Setup extends SimpleCommand {
             thankwordsContainer = null;
             log.error("Could not read thankwords", e);
         }
-        return new Setup(localizer, dataSource, thankwordsContainer);
+        return new Setup(dataSource, thankwordsContainer);
     }
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
         PermissionErrorHandler.assertPermissions(event.getTextChannel(), Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL);
-        event.reply(localizer.localize("command.setup.dialog.starting", event.getGuild())).queue();
-        context.conversationService().startDialog(event.getUser(), event.getTextChannel(), getConversation());
+        event.reply(context.localize("command.setup.dialog.starting")).queue();
+        context.conversationService().startDialog(event.getUser(), event.getTextChannel(), getConversation(context));
     }
 
-    private Conversation getConversation() {
+    private Conversation getConversation(SlashCommandContext context) {
         var builder = ConversationBuilder.builder(
                         Step.button("**$command.setup.dialog.welcome$**\n$command.setup.dialog.continueToProceed$",
                                         buttons -> buttons
                                                 .add(Button.success("continue", "word.continue"), c -> Result.proceed(1)))
                                 .build())
-                .addStep(1, buildSelectLanguage())
+                .addStep(1, buildSelectLanguage(context))
                 .addStep(2, buildManagerRole())
                 .addStep(3, buildRoles())
                 .addStep(4, buildLoadDefaults())
@@ -93,17 +89,17 @@ public class Setup extends SimpleCommand {
         return builder.build();
     }
 
-    private Step buildSelectLanguage() {
-        return Step.button("command.setup.dialog.selectLanguage", this::buildLanguageButtons)
+    private Step buildSelectLanguage(SlashCommandContext context) {
+        return Step.button("command.setup.dialog.selectLanguage", b -> buildLanguageButtons(b, context))
                 .build();
     }
 
-    private void buildLanguageButtons(ButtonDialog buttons) {
-        for (var language : localizer.getLanguages()) {
+    private void buildLanguageButtons(ButtonDialog buttons, SlashCommandContext context) {
+        for (var language : context.localizer().localizer().languages()) {
             buttons.add(Button.of(ButtonStyle.PRIMARY, language.getCode(), language.getLanguage()),
-                    c -> {
-                        guildData.setLanguage(c.getGuild(), language);
-                        c.reply(localizer.localize("command.locale.sub.set.set", c.getGuild(),
+                    con -> {
+                        guildData.setLanguage(con.getGuild(), language);
+                        con.reply(con.localize("command.locale.sub.set.set",
                                 Replacement.create("LOCALE", language.getLanguage()))).queue();
                         return Result.proceed(2);
                     });
@@ -123,7 +119,7 @@ public class Setup extends SimpleCommand {
 
     private Result handleManageRole(ConversationContext context, Role role) {
         guildData.setManagerRole(context.getGuild(), role);
-        context.reply(localizer.localize("command.roles.sub.managerRole.set", context.getGuild(),
+        context.reply(context.localize("command.roles.sub.managerRole.set",
                         Replacement.createMention(role)))
                 .allowedMentions(Collections.emptyList())
                 .queue();
@@ -156,7 +152,7 @@ public class Setup extends SimpleCommand {
     @NotNull
     private Result responseRolesSubAdded(ConversationContext context, Role role, Integer reputation) {
         guildData.addReputationRole(context.getGuild(), role, reputation);
-        context.reply(localizer.localize("command.roles.sub.add.added", context.getGuild(),
+        context.reply(context.localize("command.roles.sub.add.added",
                         Replacement.createMention(role),
                         Replacement.create("POINTS", reputation, Format.BOLD)))
                 .queue();
@@ -178,8 +174,7 @@ public class Setup extends SimpleCommand {
                         words.forEach(word -> guildData.addThankWord(context.getGuild(), word));
                         var wordsJoined = words.stream().map(w -> StringUtils.wrap(w, "`"))
                                 .collect(Collectors.joining(", "));
-                        context.reply(
-                                        localizer.localize("command.thankwords.sub.loadDefault.added") + wordsJoined)
+                        context.reply(context.localize("command.thankwords.sub.loadDefault.added") + wordsJoined)
                                 .queue();
                         return Result.freeze();
                     });
@@ -195,13 +190,13 @@ public class Setup extends SimpleCommand {
 
     private void buildChannelsButton(ButtonDialog buttons) {
         buttons.add(new ComponenAction(Button.success("done", "word.done"), c -> {
-            c.reply(localizer.localize("command.setup.dialog.setupComplete", c.getGuild()))
+            c.reply(c.localize("command.setup.dialog.setupComplete"))
                     .queue();
             return Result.finish();
         })).add(Button.primary("all", "command.setup.dialog.channels.allChannel"), c -> {
             var guild = c.getGuild();
             FilterUtil.getAccessableTextChannel(guild).forEach(channel -> guildData.addChannel(guild, channel));
-            c.reply(localizer.localize("command.channel.sub.addAll.added", guild)).queue();
+            c.reply(c.localize("command.channel.sub.addAll.added")).queue();
             return Result.finish();
         });
     }
@@ -216,7 +211,7 @@ public class Setup extends SimpleCommand {
                 })
                 .collect(Collectors.joining(", "));
         context.reply(
-                        localizer.localize("command.channel.sub.add.added", context.getGuild(),
+                        context.localize("command.channel.sub.add.added",
                                 Replacement.create("CHANNEL", addedChannel)))
                 .allowedMentions(Collections.emptyList())
                 .queue();
@@ -225,7 +220,7 @@ public class Setup extends SimpleCommand {
 
     @NotNull
     private Result responseInvalid(ConversationContext context, String s) {
-        context.reply(localizer.localize(s, context.getGuild())).queue();
+        context.reply(context.localize(s)).queue();
         return Result.freeze();
     }
 }
