@@ -24,14 +24,14 @@ public class Reactions extends SimpleCommand {
 
     public Reactions(DataSource dataSource) {
         super(CommandMeta.builder("reactions", "command.reaction.description")
-                        .addSubCommand("main", "command.reaction.sub.main", argsBuilder()
-                                .add(SimpleArgument.string("emote", "emote").asRequired()))
-                        .addSubCommand("add", "command.reaction.sub.add", argsBuilder()
-                                .add(SimpleArgument.string("emote", "emote").asRequired()))
-                        .addSubCommand("remove", "command.reaction.sub.remove", argsBuilder()
-                                .add(SimpleArgument.string("emote", "emote")))
-                        .addSubCommand("info", "command.reaction.sub.info")
-                        .withPermission());
+                .addSubCommand("main", "command.reaction.sub.main", argsBuilder()
+                        .add(SimpleArgument.string("emote", "command.reaction.sub.main.arg.emote").asRequired()))
+                .addSubCommand("add", "command.reaction.sub.add", argsBuilder()
+                        .add(SimpleArgument.string("emote", "command.reaction.sub.add.arg.emote").asRequired().withAutoComplete()))
+                .addSubCommand("remove", "command.reaction.sub.remove", argsBuilder()
+                        .add(SimpleArgument.string("emote", "command.reaction.sub.remove.arg.emote")))
+                .addSubCommand("info", "command.reaction.sub.info")
+                .withPermission());
         guildData = new GuildData(dataSource);
     }
 

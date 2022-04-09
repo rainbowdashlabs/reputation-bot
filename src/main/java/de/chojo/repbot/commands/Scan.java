@@ -64,9 +64,9 @@ public class Scan extends SimpleCommand {
 
     public Scan(DataSource dataSource, Configuration configuration) {
         super(CommandMeta.builder("scan", "command.scan.description")
-                .addSubCommand("start", "command.scan.description", argsBuilder()
-                        .add(SimpleArgument.channel("channel", "channel"))
-                        .add(SimpleArgument.integer("number_messages", "number_messages")))
+                .addSubCommand("start", "command.scan.sub.start", argsBuilder()
+                        .add(SimpleArgument.channel("channel", "command.scan.sub.start.arg.numberMessages"))
+                        .add(SimpleArgument.integer("number_messages", "command.scan.sub.start.arg.channel")))
                 .addSubCommand("cancel", "command.scan.sub.cancel")
                 .withPermission());
         guildData = new GuildData(dataSource);

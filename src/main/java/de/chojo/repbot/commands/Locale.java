@@ -21,7 +21,7 @@ public class Locale extends SimpleCommand {
     public Locale(DataSource dataSource, ScheduledExecutorService executorService) {
         super(CommandMeta.builder("locale", "command.locale.description")
                 .addSubCommand("set", "command.locale.sub.set", argsBuilder()
-                        .add(SimpleArgument.string("language", "language").asRequired()))
+                        .add(SimpleArgument.string("language", "command.locale.sub.set.arg.language").asRequired().withAutoComplete()))
                 .addSubCommand("list", "command.locale.sub.list")
                 .withPermission());
         guildData = new GuildData(dataSource);

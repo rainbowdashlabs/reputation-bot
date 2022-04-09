@@ -33,23 +33,23 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class Thankwords extends SimpleCommand {
 
     private static final Logger log = getLogger(Thankwords.class);
-    private final GuildData data;
+    private final GuildData guildData;
     private final ThankwordsContainer thankwordsContainer;
     private final MessageAnalyzer messageAnalyzer;
 
-    private Thankwords(MessageAnalyzer messageAnalyzer, GuildData data, ThankwordsContainer thankwordsContainer) {
+    private Thankwords(MessageAnalyzer messageAnalyzer, GuildData guildData, ThankwordsContainer thankwordsContainer) {
         super(CommandMeta.builder("thankwords", "command.thankwords.description")
                 .addSubCommand("add", "command.thankwords.sub.add", argsBuilder()
-                        .add(SimpleArgument.string("pattern", "pattern").asRequired()))
+                        .add(SimpleArgument.string("pattern", "command.thankwords.sub.add.arg.pattern").asRequired()))
                 .addSubCommand("remove", "pattern", argsBuilder()
-                        .add(SimpleArgument.string("pattern", "pattern").asRequired()))
+                        .add(SimpleArgument.string("pattern", "command.thankwords.sub.remove.arg.pattern").asRequired().withAutoComplete()))
                 .addSubCommand("list", "command.thankwords.sub.list")
                 .addSubCommand("check", "command.thankwords.sub.check", argsBuilder()
-                        .add(SimpleArgument.string("message", "message").asRequired()))
+                        .add(SimpleArgument.string("message", "command.thankwords.sub.check.arg.message").asRequired()))
                 .addSubCommand("loaddefault", "command.thankwords.sub.loadDefault", argsBuilder()
-                        .add(SimpleArgument.string("language", "language")))
+                        .add(SimpleArgument.string("language", "command.thankwords.sub.loadDefault.arg.language").withAutoComplete()))
                 .withPermission());
-        this.data = data;
+        this.guildData = guildData;
         this.thankwordsContainer = thankwordsContainer;
         this.messageAnalyzer = messageAnalyzer;
     }

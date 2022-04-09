@@ -23,17 +23,17 @@ public class RepSettings extends SimpleCommand {
         super(CommandMeta.builder("repsettings", "command.repSettings.description")
                 .addSubCommand("info", "command.repSettings.sub.info")
                 .addSubCommand("reactions", "command.repSettings.sub.reactions", argsBuilder()
-                        .add(SimpleArgument.bool("reactions", "reactions")))
+                        .add(SimpleArgument.bool("reactions", "command.repSettings.sub.reactions.arg.reactions")))
                 .addSubCommand("answer", "command.repSettings.sub.answer", argsBuilder()
-                        .add(SimpleArgument.bool("answer", "answer")))
+                        .add(SimpleArgument.bool("answer", "command.repSettings.sub.answer.arg.answer")))
                 .addSubCommand("mention", "command.repSettings.sub.mention", argsBuilder()
-                        .add(SimpleArgument.bool("mention", "mention")))
+                        .add(SimpleArgument.bool("mention", "command.repSettings.sub.mention.arg.mention")))
                 .addSubCommand("fuzzy", "command.repSettings.sub.fuzzy", argsBuilder()
-                        .add(SimpleArgument.bool("fuzzy", "fuzzy")))
+                        .add(SimpleArgument.bool("fuzzy", "command.repSettings.sub.fuzzy.arg.fuzzy")))
                 .addSubCommand("embed", "command.repSettings.sub.embed", argsBuilder()
-                        .add(SimpleArgument.bool("embed", "embed")))
+                        .add(SimpleArgument.bool("embed", "command.repSettings.sub.embed.arg.embed")))
                 .addSubCommand("emojidebug", "command.repSettings.sub.emojidebug", argsBuilder()
-                        .add(SimpleArgument.bool("active", "active")))
+                        .add(SimpleArgument.bool("active", "command.repSettings.sub.emojidebug.arg.active")))
                 .withPermission());
         guildData = new GuildData(source);
     }

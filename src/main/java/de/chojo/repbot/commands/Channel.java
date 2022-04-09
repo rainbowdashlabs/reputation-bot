@@ -25,14 +25,14 @@ public class Channel extends SimpleCommand {
     public Channel(DataSource dataSource) {
         super(CommandMeta.builder("channel", "command.channel.description")
                 .addSubCommand("set", "command.channel.sub.set", argsBuilder()
-                        .add(SimpleArgument.channel("channel", "channel").asRequired()))
+                        .add(SimpleArgument.channel("channel", "command.channel.sub.set.arg.channel").asRequired()))
                 .addSubCommand("add", "command.channel.sub.add", argsBuilder()
-                        .add(SimpleArgument.channel("channel", "channel").asRequired()))
+                        .add(SimpleArgument.channel("channel", "command.channel.sub.add.arg.channel").asRequired()))
                 .addSubCommand("addall", "command.channel.sub.addAll")
                 .addSubCommand("remove", "command.channel.sub.remove", argsBuilder()
-                        .add(SimpleArgument.channel("channel", "channel").asRequired()))
-                .addSubCommand("whitelist", "Use channel list as whitelist", argsBuilder()
-                        .add(SimpleArgument.bool("whitelist", "true to use list as whitelist")))
+                        .add(SimpleArgument.channel("channel", "command.channel.sub.remove.arg.channel").asRequired()))
+                .addSubCommand("list_type", "command.channel.sub.listType", argsBuilder()
+                        .add(SimpleArgument.bool("type", "command.channel.sub.listType.arg.type").withAutoComplete()))
                 .addSubCommand("list", "command.channel.sub.list")
                 .withPermission());
         guildData = new GuildData(dataSource);
@@ -68,9 +68,9 @@ public class Channel extends SimpleCommand {
             event.reply(context.localize("command.channel.sub.whitelist." + channelWhitelist)).queue();
             return;
         }
-        var whitelist = event.getOption("whitelist").getAsBoolean();
+        var whitelist = "whitelist".equalsIgnoreCase(event.getOption("type").getAsString());
         guildData.setChannelListType(event.getGuild(), whitelist);
-        event.reply(context.localize("command.channel.sub.whitelist." + whitelist)).queue();
+        event.reply(context.localize("command.channel.sub.listType." + whitelist)).queue();
     }
 
     private void add(SlashCommandInteractionEvent event, SlashCommandContext context) {
