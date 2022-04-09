@@ -4,11 +4,15 @@ import de.chojo.jdautil.command.CommandMeta;
 import de.chojo.jdautil.command.SimpleArgument;
 import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.util.Format;
+import de.chojo.jdautil.localization.util.Language;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.text.TextFormatting;
+import de.chojo.jdautil.util.Completion;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
+import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.AutoCompleteQuery;
 
 import javax.sql.DataSource;
 import java.util.concurrent.ScheduledExecutorService;
@@ -21,7 +25,7 @@ public class Locale extends SimpleCommand {
     public Locale(DataSource dataSource, ScheduledExecutorService executorService) {
         super(CommandMeta.builder("locale", "command.locale.description")
                 .addSubCommand("set", "command.locale.sub.set", argsBuilder()
-                        .add(SimpleArgument.string("language", "language").asRequired()))
+                        .add(SimpleArgument.string("language", "command.locale.sub.set.arg.language").asRequired().withAutoComplete()))
                 .addSubCommand("list", "command.locale.sub.list")
                 .withPermission());
         guildData = new GuildData(dataSource);
@@ -59,5 +63,13 @@ public class Locale extends SimpleCommand {
                 context.localize("words.language"), context.localize("words.code"));
         languages.forEach(l -> builder.setNextRow(l.getLanguage(), l.getCode()));
         event.reply(context.localize("command.locale.sub.list.list") + "\n" + builder).queue();
+    }
+
+    @Override
+    public void onAutoComplete(CommandAutoCompleteInteractionEvent event, SlashCommandContext context) {
+        var option = event.getFocusedOption();
+        if ("language".equalsIgnoreCase(option.getName())) {
+            event.replyChoices(Completion.complete(option.getValue(), context.localizer().localizer().languages(), Language::getLanguage)).queue();
+        }
     }
 }

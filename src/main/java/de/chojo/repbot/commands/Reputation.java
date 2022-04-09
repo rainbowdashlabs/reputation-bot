@@ -29,7 +29,7 @@ public class Reputation extends SimpleCommand {
 
     public Reputation(DataSource dataSource, Configuration configuration) {
         super(CommandMeta.builder("rep", "command.reputation.description")
-                .addArgument(SimpleArgument.user("user", "user")));
+                .addArgument(SimpleArgument.user("user", "command.reputation.description.arg.user")));
         reputationData = new ReputationData(dataSource);
         guildData = new GuildData(dataSource);
         this.configuration = configuration;

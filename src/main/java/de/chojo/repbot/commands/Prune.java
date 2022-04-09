@@ -16,8 +16,8 @@ public class Prune extends SimpleCommand {
     public Prune(GdprService service) {
         super(CommandMeta.builder("prune", "command.prune.description")
                 .addSubCommand("user", "command.prune.sub.user", argsBuilder()
-                        .add(SimpleArgument.user("user", "user"))
-                        .add(SimpleArgument.string("userid", "user id")))
+                        .add(SimpleArgument.user("user", "command.prune.sub.user.arg.user"))
+                        .add(SimpleArgument.string("userid", "command.prune.sub.user.arg.userId")))
                 .addSubCommand("guild", "command.prune.sub.guild")
                 .withPermission());
         gdprService = service;

@@ -5,17 +5,20 @@ import de.chojo.jdautil.command.SimpleArgument;
 import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
+import de.chojo.jdautil.util.Choice;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 
 import javax.sql.DataSource;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class Reactions extends SimpleCommand {
@@ -24,14 +27,14 @@ public class Reactions extends SimpleCommand {
 
     public Reactions(DataSource dataSource) {
         super(CommandMeta.builder("reactions", "command.reaction.description")
-                        .addSubCommand("main", "command.reaction.sub.main", argsBuilder()
-                                .add(SimpleArgument.string("emote", "emote").asRequired()))
-                        .addSubCommand("add", "command.reaction.sub.add", argsBuilder()
-                                .add(SimpleArgument.string("emote", "emote").asRequired()))
-                        .addSubCommand("remove", "command.reaction.sub.remove", argsBuilder()
-                                .add(SimpleArgument.string("emote", "emote")))
-                        .addSubCommand("info", "command.reaction.sub.info")
-                        .withPermission());
+                .addSubCommand("main", "command.reaction.sub.main", argsBuilder()
+                        .add(SimpleArgument.string("emote", "command.reaction.sub.main.arg.emote").asRequired()))
+                .addSubCommand("add", "command.reaction.sub.add", argsBuilder()
+                        .add(SimpleArgument.string("emote", "command.reaction.sub.add.arg.emote").asRequired().withAutoComplete()))
+                .addSubCommand("remove", "command.reaction.sub.remove", argsBuilder()
+                        .add(SimpleArgument.string("emote", "command.reaction.sub.remove.arg.emote")))
+                .addSubCommand("info", "command.reaction.sub.info")
+                .withPermission());
         guildData = new GuildData(dataSource);
     }
 
@@ -80,7 +83,7 @@ public class Reactions extends SimpleCommand {
         var emote = event.getOption("emote").getAsString();
         var message = event.reply(context.localize("command.reaction.checking"))
                 .flatMap(InteractionHook::retrieveOriginal).complete();
-        handleAddCheckResult(event.getGuild(),context, message, emote);
+        handleAddCheckResult(event.getGuild(), context, message, emote);
     }
 
     private void remove(SlashCommandInteractionEvent event, SlashCommandContext context) {
@@ -159,6 +162,19 @@ public class Reactions extends SimpleCommand {
         }
         message.addReaction(emoteById).queue();
         return new EmojiCheckResult(emoteById.getAsMention(), emoteById.getId(), CheckResult.EMOTE_FOUND);
+    }
+
+    @Override
+    public void onAutoComplete(CommandAutoCompleteInteractionEvent event, SlashCommandContext slashCommandContext) {
+        if ("emote".equals(event.getFocusedOption().getName()) && "remove".equals(event.getSubcommandName())) {
+            var reactions = guildData.getGuildSettings(event.getGuild())
+                    .thankSettings()
+                    .reactions().stream()
+                    .limit(25)
+                    .map(Choice::toChoice)
+                    .toList();
+            event.replyChoices(reactions).queue();
+        }
     }
 
     private enum CheckResult {

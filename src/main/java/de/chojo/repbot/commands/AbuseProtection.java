@@ -27,15 +27,15 @@ public class AbuseProtection extends SimpleCommand {
         super(CommandMeta.builder("abuseprotection", "command.abuseProtection.description")
                 .addSubCommand("info", "command.abuseProtection.sub.info")
                 .addSubCommand("maxmessageage", "command.abuseProtection.sub.maxMessageAge", argsBuilder()
-                        .add(SimpleArgument.integer("minutes", "minutes")))
+                        .add(SimpleArgument.integer("minutes", "command.abuseProtection.sub.maxMessageAge.arg.minutes")))
                 .addSubCommand("minmessages", "command.abuseProtection.sub.minMessages", argsBuilder()
-                        .add(SimpleArgument.integer("messages", "messages")))
+                        .add(SimpleArgument.integer("messages", "command.abuseProtection.sub.minMessages.arg.messages")))
                 .addSubCommand("cooldown", "command.abuseProtection.sub.cooldown", argsBuilder()
-                        .add(SimpleArgument.integer("minutes", "minutes")))
+                        .add(SimpleArgument.integer("minutes", "command.abuseProtection.sub.cooldown.arg.minutes")))
                 .addSubCommand("donorcontext", "command.abuseProtection.sub.donorContext", argsBuilder()
-                        .add(SimpleArgument.bool("state", "state")))
+                        .add(SimpleArgument.bool("state", "command.abuseProtection.sub.donorContext.arg.state")))
                 .addSubCommand("receivercontext", "command.abuseProtection.sub.receiverContext", argsBuilder()
-                        .add(SimpleArgument.bool("state", "state")))
+                        .add(SimpleArgument.bool("state", "command.abuseProtection.sub.receiverContext.arg.state")))
                 .withPermission());
         guildData = new GuildData(source);
     }
