@@ -3,7 +3,6 @@ package de.chojo.repbot.commands;
 import de.chojo.jdautil.command.CommandMeta;
 import de.chojo.jdautil.command.SimpleArgument;
 import de.chojo.jdautil.command.SimpleCommand;
-import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.ReputationData;
 import net.dv8tion.jda.api.entities.Guild;
@@ -17,13 +16,11 @@ import static de.chojo.repbot.commands.Top.buildTop;
 public class TopWeek extends SimpleCommand {
     private static final int TOP_PAGE_SIZE = 10;
     private final ReputationData reputationData;
-    private final Localizer loc;
 
-    public TopWeek(DataSource dataSource, Localizer localizer) {
+    public TopWeek(DataSource dataSource) {
         super(CommandMeta.builder("topweek","command.reputation.description")
                         .addArgument(SimpleArgument.integer("page", "page")));
         reputationData = new ReputationData(dataSource);
-        loc = localizer;
     }
 
     @Override

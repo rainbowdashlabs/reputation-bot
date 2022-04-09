@@ -54,9 +54,8 @@ public class Reactions extends SimpleCommand {
         }
     }
 
-    private boolean info(SlashCommandInteractionEvent event, SlashCommandContext context) {
+    private void info(SlashCommandInteractionEvent event, SlashCommandContext context) {
         event.replyEmbeds(getInfoEmbed(guildData.getGuildSettings(event.getGuild()), context)).queue();
-        return true;
     }
 
     private MessageEmbed getInfoEmbed(GuildSettings settings, SlashCommandContext context) {

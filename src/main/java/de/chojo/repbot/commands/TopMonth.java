@@ -19,13 +19,11 @@ import static de.chojo.repbot.commands.Top.buildTop;
 public class TopMonth extends SimpleCommand {
     private static final int TOP_PAGE_SIZE = 10;
     private final ReputationData reputationData;
-    private final Localizer loc;
 
-    public TopMonth(DataSource dataSource, Localizer localizer) {
+    public TopMonth(DataSource dataSource) {
         super(CommandMeta.builder("topmonth","command.reputation.description")
                         .addArgument(SimpleArgument.integer("page", "page")));
         reputationData = new ReputationData(dataSource);
-        loc = localizer;
     }
 
     @Override

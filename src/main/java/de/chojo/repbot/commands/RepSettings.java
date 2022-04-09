@@ -92,12 +92,12 @@ public class RepSettings extends SimpleCommand {
         }
     }
 
-    private boolean mention(SlashCommandInteractionEvent event, SlashCommandContext context, GuildSettings guildSettings) {
+    private void mention(SlashCommandInteractionEvent event, SlashCommandContext context, GuildSettings guildSettings) {
         var messageSettings = guildSettings.messageSettings();
         if (event.getOptions().isEmpty()) {
             event.reply(getBooleanMessage(context, messageSettings.isAnswerActive(),
                     "command.repSettings.sub.mention.true", "command.repSettings.sub.mention.false")).queue();
-            return true;
+            return;
         }
         var mention = event.getOption("mention").getAsBoolean();
 
@@ -106,7 +106,6 @@ public class RepSettings extends SimpleCommand {
             event.reply(getBooleanMessage(context, mention,
                     "command.repSettings.sub.mention.true", "command.repSettings.sub.mention.false")).queue();
         }
-        return true;
     }
 
     private void answer(SlashCommandInteractionEvent event, SlashCommandContext context, GuildSettings guildSettings) {

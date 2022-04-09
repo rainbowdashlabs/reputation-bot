@@ -67,7 +67,7 @@ public class Prefix extends SimpleCommand {
             return context.localize("error.prefixTooLong");
         }
         if (prefix.startsWith("re:")) {
-            if (prefix.equalsIgnoreCase("re:")) {
+            if ("re:".equalsIgnoreCase(prefix)) {
                 context.localize("error.invalidRegex");
             }
             var substring = prefix.substring(3);

@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Locale extends SimpleCommand {
     private final GuildData guildData;
-    private ScheduledExecutorService executorService;
+    private final ScheduledExecutorService executorService;
 
     public Locale(DataSource dataSource, ScheduledExecutorService executorService) {
         super(CommandMeta.builder("locale", "command.locale.description")

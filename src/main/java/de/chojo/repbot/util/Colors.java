@@ -26,6 +26,10 @@ public final class Colors {
         public static final Color DARK_PINK = new Color(179, 57, 130);
         public static final Color PINK = new Color(201, 103, 177);
         public static final Color LIGHT_PINK = new Color(209, 138, 192);
+
+        private Pastel() {
+            throw new UnsupportedOperationException("This is a utility class.");
+        }
     }
 
     /**
@@ -48,5 +52,13 @@ public final class Colors {
         public static final Color DARK_PINK = new Color(219, 0, 102);
         public static final Color PINK = new Color(255, 0, 132);
         public static final Color LIGHT_PINK = new Color(255, 117, 198);
+
+        private Strong() {
+            throw new UnsupportedOperationException("This is a utility class.");
+        }
+    }
+
+    private Colors() {
+        throw new UnsupportedOperationException("This is a utility class.");
     }
 }

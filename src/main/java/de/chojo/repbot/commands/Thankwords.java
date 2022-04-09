@@ -15,7 +15,6 @@ import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.serialization.ThankwordsContainer;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
@@ -94,7 +93,7 @@ public class Thankwords extends SimpleCommand {
         }
     }
 
-    private boolean add(SlashCommandInteractionEvent event, SlashCommandContext context) {
+    private void add(SlashCommandInteractionEvent event, SlashCommandContext context) {
         var pattern = event.getOption("pattern").getAsString();
         try {
             Pattern.compile(pattern);
@@ -102,16 +101,15 @@ public class Thankwords extends SimpleCommand {
             event.reply(context.localize("error.invalidRegex"))
                     .setEphemeral(true)
                     .queue();
-            return true;
+            return;
         }
         if (data.addThankWord(event.getGuild(), pattern)) {
             event.reply(context.localize("command.thankwords.sub.add.added",
                     Replacement.create("REGEX", pattern, Format.CODE))).queue();
         }
-        return true;
     }
 
-    private boolean remove(SlashCommandInteractionEvent event, SlashCommandContext context) {
+    private void remove(SlashCommandInteractionEvent event, SlashCommandContext context) {
         var pattern = event.getOption("pattern").getAsString();
         try {
             Pattern.compile(pattern);
@@ -119,25 +117,23 @@ public class Thankwords extends SimpleCommand {
             event.reply(context.localize("error.invalidRegex"))
                     .setEphemeral(true)
                     .queue();
-            return true;
+            return;
         }
         if (data.removeThankWord(event.getGuild(), pattern)) {
             event.reply(context.localize("command.thankwords.sub.remove.removed",
                     Replacement.create("PATTERN", pattern, Format.CODE))).queue();
-            return true;
+            return;
         }
         event.reply(context.localize("command.thankwords.error.patternNotFound"))
                 .setEphemeral(true)
                 .queue();
-        return true;
     }
 
-    private boolean list(SlashCommandInteractionEvent event, SlashCommandContext context) {
+    private void list(SlashCommandInteractionEvent event, SlashCommandContext context) {
         var pattern = getGuildPattern(event.getGuild());
-        if (pattern == null) return false;
+        if (pattern == null) return;
 
         event.reply(context.localize("command.thankwords.sub.list.list") + "\n" + pattern).queue();
-        return true;
     }
 
     @Nullable
@@ -145,32 +141,30 @@ public class Thankwords extends SimpleCommand {
 
         var guildSettings = data.getGuildSettings(guild);
 
-        var pattern = Arrays.stream(guildSettings.thankSettings().thankwords())
+        return Arrays.stream(guildSettings.thankSettings().thankwords())
                 .map(w -> StringUtils.wrap(w, "`"))
                 .collect(Collectors.joining(", "));
-        return pattern;
     }
 
-    private boolean check(SlashCommandInteractionEvent event, SlashCommandContext context) {
+    private void check(SlashCommandInteractionEvent event, SlashCommandContext context) {
         var guildSettings = data.getGuildSettings(event.getGuild());
         var messageId = event.getOption("message").getAsString();
 
         if (!Verifier.isValidId(messageId)) {
             event.reply(context.localize("error.invalidMessage")).queue();
-            return true;
+            return;
         }
 
         var message = event.getChannel().retrieveMessageById(messageId).complete();
         var result = messageAnalyzer.processMessage(guildSettings.thankSettings().thankwordPattern(), message, guildSettings, true, 3);
         if (result.receivers().isEmpty()) {
             event.reply(context.localize("command.thankwords.sub.check.match.noMatch")).queue();
-            return true;
+            return;
         }
 
         var builder = new LocalizedEmbedBuilder(context.localizer());
         processMessage(result, builder);
         event.replyEmbeds(builder.build()).queue();
-        return true;
     }
 
     private void processMessage(de.chojo.repbot.analyzer.AnalyzerResult result, LocalizedEmbedBuilder builder) {
@@ -196,12 +190,12 @@ public class Thankwords extends SimpleCommand {
         }
     }
 
-    private boolean loadDefaults(SlashCommandInteractionEvent slashCommandEvent, SlashCommandContext context) {
+    private void loadDefaults(SlashCommandInteractionEvent slashCommandEvent, SlashCommandContext context) {
         var languageOption = slashCommandEvent.getOption("language");
         if (languageOption == null) {
             slashCommandEvent.reply(context.localize("command.thankwords.sub.loadDefault.available")
                                     + " " + String.join(", ", thankwordsContainer.getAvailableLanguages())).queue();
-            return true;
+            return;
         }
         var language = languageOption.getAsString();
         var words = thankwordsContainer.get(language.toLowerCase(Locale.ROOT));
@@ -209,7 +203,7 @@ public class Thankwords extends SimpleCommand {
             slashCommandEvent.reply(context.localize("command.locale.error.invalidLocale"))
                     .setEphemeral(true)
                     .queue();
-            return true;
+            return;
         }
         for (var word : words) {
             data.addThankWord(slashCommandEvent.getGuild(), word);
@@ -218,6 +212,5 @@ public class Thankwords extends SimpleCommand {
         var wordsJoined = words.stream().map(w -> StringUtils.wrap(w, "`")).collect(Collectors.joining(", "));
 
         slashCommandEvent.reply(context.localize("command.thankwords.sub.loadDefault.added") + wordsJoined).queue();
-        return true;
     }
 }

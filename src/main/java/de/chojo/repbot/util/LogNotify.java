@@ -4,7 +4,11 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Marker;
 import org.slf4j.MarkerFactory;
 
-public class LogNotify {
+public final class LogNotify {
+    private LogNotify() {
+        throw new UnsupportedOperationException("This is a utility class.");
+    }
+
     /**
      * Will be send to error-log channel.
      */
