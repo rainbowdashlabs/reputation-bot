@@ -2,7 +2,6 @@ package de.chojo.repbot.commands;
 
 import de.chojo.jdautil.command.CommandMeta;
 import de.chojo.jdautil.command.SimpleCommand;
-import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.util.MentionUtil;
@@ -10,7 +9,6 @@ import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.util.Colors;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -35,7 +33,7 @@ public class Dashboard extends SimpleCommand {
         var optStats = reputationData.getGuildReputationStats(guild);
         if (optStats.isEmpty()) return new EmbedBuilder().setTitle("None").build();
         var stats = optStats.get();
-        var top3 = reputationData.getRanking(guild, 5, 1).stream()
+        var top3 = reputationData.getRanking(guild, 5).page(0).stream()
                 .map(r -> r.fancyString(5))
                 .collect(Collectors.joining("\n"));
 
