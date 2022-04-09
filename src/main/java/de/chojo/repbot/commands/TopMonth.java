@@ -1,5 +1,7 @@
 package de.chojo.repbot.commands;
 
+import de.chojo.jdautil.command.CommandMeta;
+import de.chojo.jdautil.command.SimpleArgument;
 import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
@@ -17,29 +19,22 @@ import static de.chojo.repbot.commands.Top.buildTop;
 public class TopMonth extends SimpleCommand {
     private static final int TOP_PAGE_SIZE = 10;
     private final ReputationData reputationData;
-    private final Localizer loc;
 
-    public TopMonth(DataSource dataSource, Localizer localizer) {
-        super("topmonth",
-                null,
-                "command.reputation.description",
-                argsBuilder()
-                        .add(OptionType.INTEGER, "page", "page")
-                        .build(),
-                Permission.UNKNOWN);
+    public TopMonth(DataSource dataSource) {
+        super(CommandMeta.builder("topmonth","command.reputation.description")
+                        .addArgument(SimpleArgument.integer("page", "page")));
         reputationData = new ReputationData(dataSource);
-        loc = localizer;
     }
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
         var page = event.getOption("page");
         var l = page == null ? 1 : page.getAsLong();
-        event.replyEmbeds(top(event.getGuild(), (int) Math.max(1, l))).queue();
+        event.replyEmbeds(top(context, event.getGuild(), (int) Math.max(1, l))).queue();
     }
 
-    private MessageEmbed top(Guild guild, int page) {
+    private MessageEmbed top(SlashCommandContext context, Guild guild, int page) {
         var ranking = reputationData.getMonthRanking(guild, TOP_PAGE_SIZE, page);
-        return buildTop(ranking, loc, guild);
+        return buildTop(ranking, context, guild);
     }
 }

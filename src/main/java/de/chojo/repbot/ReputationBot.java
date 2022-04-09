@@ -50,7 +50,6 @@ import de.chojo.repbot.service.SelfCleanupService;
 import de.chojo.repbot.statistic.Statistic;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.repbot.util.PermissionErrorHandler;
-import de.chojo.repbot.util.Permissions;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
@@ -67,6 +66,7 @@ import org.slf4j.Logger;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -204,22 +204,6 @@ public class ReputationBot {
         var gdprService = GdprService.of(shardManager, dataSource, repBotWorker);
         SelfCleanupService.create(shardManager, localizer, dataSource, configuration, repBotWorker);
 
-        // init listener and services
-        var reactionListener = new ReactionListener(dataSource, localizer, reputationService, configuration);
-        var voteListener = new ReputationVoteListener(reputationService, localizer, configuration);
-        var messageListener = new MessageListener(localizer, dataSource, configuration, repBotCachePolicy, voteListener,
-                reputationService, contextResolver, messageAnalyzer);
-        var stateListener = StateListener.of(localizer, dataSource, configuration, repBotWorker);
-        var voiceStateListener = VoiceStateListener.of(dataSource, repBotWorker);
-        var logListener = LogListener.create(repBotWorker);
-
-        shardManager.addEventListener(
-                reactionListener,
-                voteListener,
-                messageListener,
-                voiceStateListener,
-                logListener,
-                stateListener);
         if (configuration.migration().isActive()) {
             log.warn("The bot is running in migration mode!");
         }
@@ -228,56 +212,62 @@ public class ReputationBot {
             shardManager.addEventListener(new InternalCommandListener(configuration, statistic));
         }
 
-        var data = new GuildData(dataSource);
-        var locale = new Locale(dataSource, localizer, repBotWorker);
-        var hubBuilder = CommandHub.builder(shardManager)
+        var guildData = new GuildData(dataSource);
+        var hub = CommandHub.builder(shardManager)
                 .withConversationSystem()
                 .useGuildCommands()
                 .withCommands(
-                        new Channel(dataSource, localizer),
-                        new Prefix(dataSource, configuration, localizer),
-                        new Reputation(dataSource, localizer, configuration),
-                        new Roles(dataSource, localizer, roleAssigner, shardManager),
-                        new RepSettings(dataSource, localizer),
-                        new Top(dataSource, localizer),
-                        new TopWeek(dataSource, localizer),
-                        new TopMonth(dataSource, localizer),
-                        Thankwords.of(messageAnalyzer, dataSource, localizer),
+                        new Channel(dataSource),
+                        new Prefix(dataSource, configuration),
+                        new Reputation(dataSource, configuration),
+                        new Roles(dataSource, roleAssigner),
+                        new RepSettings(dataSource),
+                        new Top(dataSource),
+                        new TopWeek(dataSource),
+                        new TopMonth(dataSource),
+                        Thankwords.of(messageAnalyzer, dataSource),
                         scan,
-                        locale,
-                        new Invite(localizer, configuration),
-                        Info.create(localizer, configuration),
-                        new Log(shardManager, dataSource, localizer),
-                        Setup.of(dataSource, localizer),
-                        new Gdpr(dataSource, localizer),
-                        new Prune(gdprService, localizer),
-                        new Reactions(dataSource, localizer),
-                        new Dashboard(dataSource, localizer),
-                        new AbuseProtection(dataSource, localizer),
-                        new Debug(dataSource, localizer)
-                )
+                        new Locale(dataSource, repBotWorker),
+                        new Invite(configuration),
+                        Info.create(configuration),
+                        new Log(dataSource),
+                        Setup.of(dataSource),
+                        new Gdpr(dataSource),
+                        new Prune(gdprService),
+                        new Reactions(dataSource),
+                        new Dashboard(dataSource),
+                        new AbuseProtection(dataSource),
+                        new Debug(dataSource))
                 .withLocalizer(localizer)
-                .withPermissionCheck((event, command) -> {
-                    if (event.getMember().hasPermission(command.permission())) return true;
-                    var settings = data.getGuildSettings(event.getGuild());
-                    var roleId = settings.generalSettings().managerRole().orElse(0L);
-                    return event.getMember().getRoles().stream().anyMatch(role -> role.getIdLong() == roleId);
-                })
                 .withCommandErrorHandler((context, throwable) -> {
                     if (throwable instanceof InsufficientPermissionException) {
                         PermissionErrorHandler.handle((InsufficientPermissionException) throwable, shardManager, localizer, configuration);
                         return;
                     }
-                    log.error(LogNotify.NOTIFY_ADMIN, "Command execution of {} failed\n{}", context.command().command(), context.args(), throwable);
-                });
-        var hub = hubBuilder.build();
+                    log.error(LogNotify.NOTIFY_ADMIN, "Command execution of {} failed\n{}", context.command().meta().name(), context.args(), throwable);
+                })
+                .withManagerRole(guild -> Collections.singletonList(guildData.getGuildSettings(guild).generalSettings().managerRole().orElse(0L)))
+                .build();
 
-        locale.addCommandHub(hub);
+        // init listener and services
+        var reactionListener = new ReactionListener(dataSource, localizer, reputationService, configuration);
+        var voteListener = new ReputationVoteListener(reputationService, localizer, configuration);
+        var messageListener = new MessageListener(localizer, dataSource, configuration, repBotCachePolicy, voteListener,
+                reputationService, contextResolver, messageAnalyzer);
+        var voiceStateListener = VoiceStateListener.of(dataSource, repBotWorker);
+        var logListener = LogListener.create(repBotWorker);
+        var stateListener = StateListener.of(hub, localizer, dataSource, configuration, repBotWorker);
+
+        shardManager.addEventListener(
+                reactionListener,
+                voteListener,
+                messageListener,
+                voiceStateListener,
+                logListener,
+                stateListener);
+
         shardManager.addEventListener(new LegacyCommandListener(shardManager, localizer, dataSource, hub));
 
-        var guildData = new GuildData(dataSource);
-
-        Permissions.buildGuildPriviledges(guildData, shardManager);
     }
 
     private void initShutdownHook() {
@@ -295,7 +285,7 @@ public class ReputationBot {
     }
 
     private void initJDA() throws LoginException {
-        scan = new Scan(dataSource, localizer, configuration);
+        scan = new Scan(dataSource, configuration);
         repBotCachePolicy = new RepBotCachePolicy(scan);
         shardManager = DefaultShardManagerBuilder.createDefault(configuration.baseSettings().token())
                 .enableIntents(

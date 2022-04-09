@@ -1,5 +1,6 @@
 package de.chojo.repbot.commands;
 
+import de.chojo.jdautil.command.CommandMeta;
 import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
@@ -19,24 +20,18 @@ import java.util.stream.Collectors;
 
 public class Dashboard extends SimpleCommand {
     private final ReputationData reputationData;
-    private final ILocalizer localizer;
 
-    public Dashboard(DataSource dataSource, ILocalizer localizer) {
-        super("dashboard",
-                new String[]{"guildinfo"},
-                "command.dashboard.description",
-                subCommandBuilder().build(),
-                Permission.UNKNOWN);
+    public Dashboard(DataSource dataSource) {
+        super(CommandMeta.builder("dashboard", "command.dashboard.description"));
         reputationData = new ReputationData(dataSource);
-        this.localizer = localizer;
     }
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
-        event.replyEmbeds(getDashboard(event.getGuild())).queue();
+        event.replyEmbeds(getDashboard(event.getGuild(), context)).queue();
     }
 
-    private MessageEmbed getDashboard(Guild guild) {
+    private MessageEmbed getDashboard(Guild guild, SlashCommandContext context) {
         var optStats = reputationData.getGuildReputationStats(guild);
         if (optStats.isEmpty()) return new EmbedBuilder().setTitle("None").build();
         var stats = optStats.get();
@@ -44,9 +39,9 @@ public class Dashboard extends SimpleCommand {
                 .map(r -> r.fancyString(5))
                 .collect(Collectors.joining("\n"));
 
-        return new LocalizedEmbedBuilder(localizer, guild)
-                .setTitle(localizer.localize("command.dashboard.title", guild,
-                        Replacement.create("GUILD", guild.getName())))
+        return new LocalizedEmbedBuilder(context.localizer())
+                .setTitle("command.dashboard.title",
+                        Replacement.create("GUILD", guild.getName()))
                 .setThumbnail(guild.getIconUrl() == null ? guild.getSelfMember().getUser().getAvatarUrl() : guild.getIconUrl())
                 .setColor(Colors.Pastel.BLUE)
                 .addField("command.dashboard.topUser", top3, false)

@@ -1,7 +1,8 @@
 package de.chojo.repbot.commands;
 
+import de.chojo.jdautil.command.CommandMeta;
+import de.chojo.jdautil.command.SimpleArgument;
 import de.chojo.jdautil.command.SimpleCommand;
-import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
@@ -12,12 +13,10 @@ import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.data.wrapper.ReputationRole;
 import de.chojo.repbot.data.wrapper.ReputationUser;
 import de.chojo.repbot.util.TextGenerator;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
 
 import javax.sql.DataSource;
 import java.util.Optional;
@@ -26,20 +25,13 @@ public class Reputation extends SimpleCommand {
     private static final int BAR_SIZE = 20;
     private final ReputationData reputationData;
     private final GuildData guildData;
-    private final Localizer loc;
     private final Configuration configuration;
 
-    public Reputation(DataSource dataSource, Localizer localizer, Configuration configuration) {
-        super("rep",
-                new String[]{"reputation"},
-                "command.reputation.description",
-                argsBuilder()
-                        .add(OptionType.USER, "user", "user")
-                        .build(),
-                Permission.UNKNOWN);
+    public Reputation(DataSource dataSource, Configuration configuration) {
+        super(CommandMeta.builder("rep", "command.reputation.description")
+                .addArgument(SimpleArgument.user("user", "user")));
         reputationData = new ReputationData(dataSource);
         guildData = new GuildData(dataSource);
-        loc = localizer;
         this.configuration = configuration;
     }
 
@@ -48,14 +40,14 @@ public class Reputation extends SimpleCommand {
         var userOption = event.getOption("user");
         var member = userOption != null ? userOption.getAsMember() : event.getMember();
         if (member == null) {
-            event.reply(loc.localize("error.userNotFound")).queue();
+            event.reply(context.localize("error.userNotFound")).queue();
             return;
         }
         var reputation = reputationData.getReputation(event.getGuild(), member.getUser()).orElse(ReputationUser.empty(event.getUser()));
-        event.replyEmbeds(getUserRepEmbed(member, reputation)).queue();
+        event.replyEmbeds(getUserRepEmbed(context, member, reputation)).queue();
     }
 
-    private MessageEmbed getUserRepEmbed(Member member, ReputationUser reputation) {
+    private MessageEmbed getUserRepEmbed(SlashCommandContext context, Member member, ReputationUser reputation) {
         var roles = guildData.getCurrentReputationRole(member.getGuild(), reputation.reputation(), false);
         var next = guildData.getNextReputationRole(member.getGuild(), reputation.reputation());
 
@@ -71,14 +63,12 @@ public class Reputation extends SimpleCommand {
 
         var currProgress = String.valueOf(reputation.reputation() - currentRoleRep);
         var nextLevel = nextRoleRep.equals(currentRoleRep) ? "Ꝏ" : String.valueOf(nextRoleRep - currentRoleRep);
-        var build = new LocalizedEmbedBuilder(loc, member.getGuild())
-                .setAuthor(
-                        (reputation.rank() != 0 ? "#" + reputation.rank() + " " : "")
-                        + loc.localize("command.reputation.profile.title",
-                                member.getGuild(),
-                                Replacement.create("NAME", member.getEffectiveName())), null, member.getUser().getEffectiveAvatarUrl())
+        var build = new LocalizedEmbedBuilder(context.localizer())
+                .setAuthor((reputation.rank() != 0 ? "#" + reputation.rank() + " " : "")
+                           + "$command.reputation.profile.title$", null, member.getUser().getEffectiveAvatarUrl(),
+                        Replacement.create("NAME", member.getEffectiveName()))
                 .addField("words.level", level, true)
-                .addField(loc.localize("words.reputation", member.getGuild()), Format.BOLD.apply(String.valueOf(reputation.reputation())), true)
+                .addField("words.reputation", Format.BOLD.apply(String.valueOf(reputation.reputation())), true)
                 .addField("command.reputation.profile.nextLevel", currProgress + "/" + nextLevel + "  " + progressBar, false)
                 .setColor(member.getColor());
         var badge = configuration.badges().badge((int) reputation.rank());

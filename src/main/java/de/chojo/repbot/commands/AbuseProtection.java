@@ -1,5 +1,7 @@
 package de.chojo.repbot.commands;
 
+import de.chojo.jdautil.command.CommandMeta;
+import de.chojo.jdautil.command.SimpleArgument;
 import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
@@ -19,41 +21,23 @@ import java.awt.Color;
 import java.util.List;
 
 public class AbuseProtection extends SimpleCommand {
-    private final ILocalizer loc;
     private final GuildData guildData;
 
-    public AbuseProtection(DataSource source, ILocalizer localizer) {
-        super("abuseprotection",
-                new String[]{"ap"},
-                "command.abuseProtection.description",
-                subCommandBuilder()
-                        .add("info", "command.abuseProtection.sub.info", argsBuilder()
-                                .build()
-                        )
-                        .add("maxmessageage", "command.abuseProtection.sub.maxMessageAge", argsBuilder()
-                                .add(OptionType.INTEGER, "minutes", "minutes")
-                                .build()
-                        )
-                        .add("minmessages", "command.abuseProtection.sub.minMessages", argsBuilder()
-                                .add(OptionType.INTEGER, "messages", "messages")
-                                .build()
-                        )
-                        .add("cooldown", "command.abuseProtection.sub.cooldown", argsBuilder()
-                                .add(OptionType.INTEGER, "minutes", "minutes")
-                                .build()
-                        )
-                        .add("donorcontext", "command.abuseProtection.sub.donorContext", argsBuilder()
-                                .add(OptionType.BOOLEAN, "state", "state")
-                                .build()
-                        )
-                        .add("receivercontext", "command.abuseProtection.sub.receiverContext", argsBuilder()
-                                .add(OptionType.BOOLEAN, "state", "state")
-                                .build()
-                        )
-                        .build(),
-                Permission.MANAGE_SERVER);
+    public AbuseProtection(DataSource source) {
+        super(CommandMeta.builder("abuseprotection", "command.abuseProtection.description")
+                .addSubCommand("info", "command.abuseProtection.sub.info")
+                .addSubCommand("maxmessageage", "command.abuseProtection.sub.maxMessageAge", argsBuilder()
+                        .add(SimpleArgument.integer("minutes", "minutes")))
+                .addSubCommand("minmessages", "command.abuseProtection.sub.minMessages", argsBuilder()
+                        .add(SimpleArgument.integer("messages", "messages")))
+                .addSubCommand("cooldown", "command.abuseProtection.sub.cooldown", argsBuilder()
+                        .add(SimpleArgument.integer("minutes", "minutes")))
+                .addSubCommand("donorcontext", "command.abuseProtection.sub.donorContext", argsBuilder()
+                        .add(SimpleArgument.bool("state", "state")))
+                .addSubCommand("receivercontext", "command.abuseProtection.sub.receiverContext", argsBuilder()
+                        .add(SimpleArgument.bool("state", "state")))
+                .withPermission());
         guildData = new GuildData(source);
-        loc = localizer;
     }
 
     @Override
@@ -62,34 +46,34 @@ public class AbuseProtection extends SimpleCommand {
 
         var subcmd = event.getSubcommandName();
         if ("info".equalsIgnoreCase(subcmd)) {
-            sendSettings(event, guildSettings);
+            sendSettings(event, context, guildSettings);
         }
 
         if ("maxMessageAge".equalsIgnoreCase(subcmd)) {
-            maxMessageAge(event, guildSettings);
+            maxMessageAge(event, context, guildSettings);
         }
 
         if ("minMessages".equalsIgnoreCase(subcmd)) {
-            minMessages(event, guildSettings);
+            minMessages(event, context, guildSettings);
         }
 
         if ("cooldown".equalsIgnoreCase(subcmd)) {
-            cooldown(event, guildSettings);
+            cooldown(event, context, guildSettings);
         }
 
         if ("donorContext".equalsIgnoreCase(subcmd)) {
-            donorContext(event, guildSettings);
+            donorContext(event, context, guildSettings);
         }
 
         if ("receiverContext".equalsIgnoreCase(subcmd)) {
-            receiverContext(event, guildSettings);
+            receiverContext(event, context, guildSettings);
         }
     }
 
-    private void donorContext(SlashCommandInteractionEvent event, GuildSettings guildSettings) {
+    private void donorContext(SlashCommandInteractionEvent event, SlashCommandContext context, GuildSettings guildSettings) {
         var abuseSettings = guildSettings.abuseSettings();
         if (event.getOptions().isEmpty()) {
-            event.reply(getBooleanMessage(event.getGuild(), abuseSettings.isDonorContext(),
+            event.reply(getBooleanMessage(context, abuseSettings.isDonorContext(),
                     "command.abuseProtection.sub.donorContext.true", "command.abuseProtection.sub.donorContext.false")).queue();
             return;
         }
@@ -97,15 +81,15 @@ public class AbuseProtection extends SimpleCommand {
 
         abuseSettings.donorContext(state);
         if (guildData.updateAbuseSettings(event.getGuild(), abuseSettings)) {
-            event.reply(getBooleanMessage(event.getGuild(), state,
+            event.reply(getBooleanMessage(context, state,
                     "command.abuseProtection.sub.donorContext.true", "command.abuseProtection.sub.donorContext.false")).queue();
         }
     }
 
-    private void receiverContext(SlashCommandInteractionEvent event, GuildSettings guildSettings) {
+    private void receiverContext(SlashCommandInteractionEvent event, SlashCommandContext context, GuildSettings guildSettings) {
         var abuseSettings = guildSettings.abuseSettings();
         if (event.getOptions().isEmpty()) {
-            event.reply(getBooleanMessage(event.getGuild(), abuseSettings.isReceiverContext(),
+            event.reply(getBooleanMessage(context, abuseSettings.isReceiverContext(),
                     "command.abuseProtection.sub.receiverContext.true", "command.abuseProtection.sub.receiverContext.false")).queue();
             return;
         }
@@ -113,16 +97,15 @@ public class AbuseProtection extends SimpleCommand {
 
         abuseSettings.donorContext(state);
         if (guildData.updateAbuseSettings(event.getGuild(), abuseSettings)) {
-            event.reply(getBooleanMessage(event.getGuild(), abuseSettings.isReceiverContext(),
+            event.reply(getBooleanMessage(context, abuseSettings.isReceiverContext(),
                     "command.abuseProtection.sub.receiverContext.true", "command.abuseProtection.sub.receiverContext.false")).queue();
         }
     }
 
-    private void maxMessageAge(SlashCommandInteractionEvent event, GuildSettings guildSettings) {
+    private void maxMessageAge(SlashCommandInteractionEvent event, SlashCommandContext context, GuildSettings guildSettings) {
         var abuseSettings = guildSettings.abuseSettings();
-        var loc = this.loc.getContextLocalizer(event.getGuild());
         if (event.getOptions().isEmpty()) {
-            event.reply(loc.localize("command.abuseProtection.sub.maxMessageAge.get",
+            event.reply(context.localize("command.abuseProtection.sub.maxMessageAge.get",
                     Replacement.create("MINUTES", abuseSettings.maxMessageAge()))).queue();
             return;
         }
@@ -131,16 +114,15 @@ public class AbuseProtection extends SimpleCommand {
         age = Math.max(0L, age);
         abuseSettings.maxMessageAge((int) age);
         if (guildData.updateAbuseSettings(event.getGuild(), abuseSettings)) {
-            event.reply(loc.localize("command.abuseProtection.sub.maxMessageAge.get",
+            event.reply(context.localize("command.abuseProtection.sub.maxMessageAge.get",
                     Replacement.create("MINUTES", age))).queue();
         }
     }
 
-    private void minMessages(SlashCommandInteractionEvent event, GuildSettings guildSettings) {
+    private void minMessages(SlashCommandInteractionEvent event, SlashCommandContext context, GuildSettings guildSettings) {
         var abuseSettings = guildSettings.abuseSettings();
-        var loc = this.loc.getContextLocalizer(event.getGuild());
         if (event.getOptions().isEmpty()) {
-            event.reply(loc.localize("command.abuseProtection.sub.minMessages.get",
+            event.reply(context.localize("command.abuseProtection.sub.minMessages.get",
                     Replacement.create("AMOUNT", abuseSettings.minMessages()))).queue();
             return;
         }
@@ -149,16 +131,15 @@ public class AbuseProtection extends SimpleCommand {
         minMessages = Math.max(0, Math.min(minMessages, 100));
         abuseSettings.minMessages((int) minMessages);
         if (guildData.updateAbuseSettings(event.getGuild(), abuseSettings)) {
-            event.reply(loc.localize("command.abuseProtection.sub.minMessages.get",
+            event.reply(context.localize("command.abuseProtection.sub.minMessages.get",
                     Replacement.create("AMOUNT", minMessages))).queue();
         }
     }
 
-    private void cooldown(SlashCommandInteractionEvent event, GuildSettings guildSettings) {
+    private void cooldown(SlashCommandInteractionEvent event, SlashCommandContext context, GuildSettings guildSettings) {
         var abuseSettings = guildSettings.abuseSettings();
-        var loc = this.loc.getContextLocalizer(event.getGuild());
         if (event.getOptions().isEmpty()) {
-            event.reply(loc.localize("command.abuseProtection.sub.cooldown.get",
+            event.reply(context.localize("command.abuseProtection.sub.cooldown.get",
                     Replacement.create("MINUTES", abuseSettings.cooldown()))).queue();
             return;
         }
@@ -166,16 +147,16 @@ public class AbuseProtection extends SimpleCommand {
 
         abuseSettings.cooldown((int) cooldown);
         if (guildData.updateAbuseSettings(event.getGuild(), abuseSettings)) {
-            event.reply(loc.localize("command.abuseProtection.sub.cooldown.set",
+            event.reply(context.localize("command.abuseProtection.sub.cooldown.set",
                     Replacement.create("MINUTES", cooldown))).queue();
         }
     }
 
-    private void sendSettings(SlashCommandInteractionEvent event, GuildSettings guildSettings) {
-        event.replyEmbeds(getSettings(event.getGuild(), guildSettings)).queue();
+    private void sendSettings(SlashCommandInteractionEvent event, SlashCommandContext context, GuildSettings guildSettings) {
+        event.replyEmbeds(getSettings(context, guildSettings)).queue();
     }
 
-    private MessageEmbed getSettings(Guild guild, GuildSettings guildSettings) {
+    private MessageEmbed getSettings(SlashCommandContext context, GuildSettings guildSettings) {
         var cooldown = guildSettings.abuseSettings();
         var setting = List.of(
                 getSetting("command.abuseProtection.embed.descr.maxMessageAge", cooldown.maxMessageAge()),
@@ -187,9 +168,9 @@ public class AbuseProtection extends SimpleCommand {
 
         var settings = String.join("\n", setting);
 
-        return new LocalizedEmbedBuilder(loc, guild)
+        return new LocalizedEmbedBuilder(context.localizer())
                 .setTitle("command.abuseProtection.embed.title")
-                .appendDescription(loc.localize(settings, guild))
+                .appendDescription(settings)
                 .setColor(Color.GREEN)
                 .build();
     }
@@ -198,7 +179,7 @@ public class AbuseProtection extends SimpleCommand {
         return String.format("$%s$: %s", locale, object);
     }
 
-    private String getBooleanMessage(Guild guild, boolean value, String whenTrue, String whenFalse) {
-        return loc.localize(value ? whenTrue : whenFalse, guild);
+    private String getBooleanMessage(SlashCommandContext context, boolean value, String whenTrue, String whenFalse) {
+        return context.localize(value ? whenTrue : whenFalse);
     }
 }
