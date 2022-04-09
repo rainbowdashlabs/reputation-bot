@@ -5,6 +5,7 @@ import de.chojo.jdautil.command.SimpleArgument;
 import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
+import de.chojo.jdautil.pagination.bag.PrivatePageBag;
 import de.chojo.jdautil.parsing.ValueParser;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.ReputationData;
@@ -16,16 +17,19 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 import javax.sql.DataSource;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.StringJoiner;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 public class Log extends SimpleCommand {
     private final ReputationData reputationData;
+    private static final int PAGE_SIZE = 15;
 
     public Log(DataSource dataSource) {
         super(CommandMeta.builder("log", "command.log.description")
@@ -83,10 +87,10 @@ public class Log extends SimpleCommand {
             return;
         }
 
-        event.replyEmbeds(getMessageLog(context, event.getGuild(), event.getOption("message_id").getAsLong())).queue();
+        event.replyEmbeds(getMessageLog(context, event.getGuild(), event.getOption("message_id").getAsLong())).setEphemeral(true).queue();
     }
 
-    private MessageEmbed sendUserLog(SlashCommandContext context, User user, String title, List<String> log) {
+    private MessageEmbed userLogEmbed(SlashCommandContext context, User user, String title, List<String> log) {
         var builder = new LocalizedEmbedBuilder(context.localizer())
                 .setAuthor(title, null, user.getEffectiveAvatarUrl(), Replacement.create("USER", user.getAsTag()));
         buildFields(log, builder);
@@ -94,25 +98,25 @@ public class Log extends SimpleCommand {
     }
 
     private void donated(SlashCommandInteractionEvent event, SlashCommandContext context, User user) {
-        var limit = Optional.ofNullable(event.getOption("count")).map(OptionMapping::getAsLong).orElse(10L);
-        event.reply(wrap(sendUserLog(context, user, "command.log.donatedLog",
-                getDonatedLog(context, user, event.getGuild(), limit.intValue())))).queue();
-    }
-
-    private List<String> getDonatedLog(SlashCommandContext context, User user, Guild guild, int limit) {
-        var userDonatedLog = reputationData.getUserDonatedLog(user, guild, Math.max(5, Math.min(limit, 50)));
-        return mapUserLogEntry(context, userDonatedLog, ReputationLogEntry::receiverId);
+        var logAccess = reputationData.getUserDonatedLog(user, event.getGuild(), PAGE_SIZE);
+        context.registerPage(new PrivatePageBag(logAccess.pages(), event.getUser().getIdLong()) {
+            @Override
+            public CompletableFuture<MessageEmbed> buildPage() {
+                return CompletableFuture.supplyAsync(() -> userLogEmbed(context, user, "command.log.donatedLog",
+                        mapUserLogEntry(context, logAccess.page(current()), ReputationLogEntry::receiverId)));
+            }
+        }, true);
     }
 
     private void received(SlashCommandInteractionEvent event, SlashCommandContext context, User user) {
-        var limit = Optional.ofNullable(event.getOption("count")).map(OptionMapping::getAsLong).orElse(10L);
-        event.reply(wrap(sendUserLog(context, user, "command.log.receivedLog",
-                getReceivedLog(user, context, event.getGuild(), limit.intValue())))).queue();
-    }
-
-    private List<String> getReceivedLog(User user, SlashCommandContext context, Guild guild, int limit) {
-        var userDonatedLog = reputationData.getUserReceivedLog(user, guild, Math.max(5, Math.min(limit, 50)));
-        return mapUserLogEntry(context, userDonatedLog, ReputationLogEntry::donorId);
+        var logAccess = reputationData.getUserReceivedLog(user, event.getGuild(), PAGE_SIZE);
+        context.registerPage(new PrivatePageBag(logAccess.pages(), event.getUser().getIdLong()) {
+            @Override
+            public CompletableFuture<MessageEmbed> buildPage() {
+                return CompletableFuture.supplyAsync(() -> userLogEmbed(context, user, "command.log.receivedLog",
+                        mapUserLogEntry(context, logAccess.page(current()), ReputationLogEntry::donorId)));
+            }
+        }, true);
     }
 
     private List<String> mapUserLogEntry(SlashCommandContext context, List<ReputationLogEntry> logEntries, Function<ReputationLogEntry, Long> userId) {
@@ -120,7 +124,7 @@ public class Log extends SimpleCommand {
         for (var logEntry : logEntries) {
             var thankType = context.localize("thankType." + logEntry.type().name().toLowerCase(Locale.ROOT));
             var jumpLink = createJumpLink(context, logEntry);
-            entries.add(String.format("**%s** %s %s",
+            entries.add(String.format("%s **%s** %s %s", logEntry.timestamp(),
                     thankType, User.fromId(userId.apply(logEntry)).getAsMention(), jumpLink));
         }
         return entries;
@@ -133,7 +137,7 @@ public class Log extends SimpleCommand {
         for (var logEntry : logEntries) {
             var jumpLink = createJumpLink(context, logEntry);
             var thankType = context.localize("thankType." + logEntry.type().name().toLowerCase(Locale.ROOT));
-            entries.add(String.format("**%s** %s ➜ %s **|** %s",
+            entries.add(String.format("%s **%s** %s ➜ %s **|** %s", logEntry.timestamp(),
                     thankType, User.fromId(logEntry.donorId()).getAsMention(), User.fromId(logEntry.receiverId()).getAsMention(), jumpLink));
         }
         return entries;

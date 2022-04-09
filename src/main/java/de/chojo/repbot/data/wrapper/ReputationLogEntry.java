@@ -70,4 +70,9 @@ public class ReputationLogEntry {
     public LocalDateTime received() {
         return received;
     }
+
+    public String timestamp(){
+        var timestamp = ((messageId() >> 22) + 1420070400000L) / 1000;
+        return String.format("<t:%s:d> <t:%s:t>", timestamp, timestamp);
+    }
 }
