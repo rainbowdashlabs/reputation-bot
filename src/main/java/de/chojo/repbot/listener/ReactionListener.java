@@ -2,6 +2,7 @@ package de.chojo.repbot.listener;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.analyzer.ThankType;
@@ -39,12 +40,12 @@ public class ReactionListener extends ListenerAdapter {
     private static final Logger log = getLogger(ReactionListener.class);
     private final GuildData guildData;
     private final ReputationData reputationData;
-    private final Localizer localizer;
+    private final ILocalizer localizer;
     private final ReputationService reputationService;
     private final Configuration configuration;
     private final Cache<Long, Instant> lastReaction = CacheBuilder.newBuilder().expireAfterAccess(60, TimeUnit.SECONDS).build();
 
-    public ReactionListener(DataSource dataSource, Localizer localizer, ReputationService reputationService, Configuration configuration) {
+    public ReactionListener(DataSource dataSource, ILocalizer localizer, ReputationService reputationService, Configuration configuration) {
         guildData = new GuildData(dataSource);
         reputationData = new ReputationData(dataSource);
         this.localizer = localizer;

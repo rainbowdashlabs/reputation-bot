@@ -11,27 +11,20 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 import javax.sql.DataSource;
 
-import static de.chojo.repbot.commands.Top.buildTop;
+import static de.chojo.repbot.commands.Top.registerPage;
 
 public class TopWeek extends SimpleCommand {
     private static final int TOP_PAGE_SIZE = 10;
     private final ReputationData reputationData;
 
     public TopWeek(DataSource dataSource) {
-        super(CommandMeta.builder("topweek","command.reputation.description")
-                        .addArgument(SimpleArgument.integer("page", "page")));
+        super(CommandMeta.builder("topweek","command.reputation.description"));
         reputationData = new ReputationData(dataSource);
     }
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
-        var page = event.getOption("page");
-        var l = page == null ? 1 : page.getAsLong();
-        event.replyEmbeds(top(context, event.getGuild(), (int) Math.max(1, l))).queue();
-    }
-
-    private MessageEmbed top(SlashCommandContext context, Guild guild, int page) {
-        var ranking = reputationData.getWeekRanking(guild, TOP_PAGE_SIZE, page);
-        return buildTop(ranking, context, guild);
+        var ranking = reputationData.getWeekRanking(event.getGuild(), TOP_PAGE_SIZE);
+        registerPage(ranking, event, context);
     }
 }

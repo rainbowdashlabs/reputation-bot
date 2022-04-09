@@ -1,6 +1,7 @@
 package de.chojo.repbot.data;
 
 import de.chojo.repbot.analyzer.ThankType;
+import de.chojo.repbot.data.wrapper.GuildRanking;
 import de.chojo.repbot.data.wrapper.GuildReputationStats;
 import de.chojo.repbot.data.wrapper.ReputationLogEntry;
 import de.chojo.repbot.data.wrapper.ReputationUser;
@@ -88,34 +89,6 @@ public class ReputationData extends QueryFactoryHolder {
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setLong(donor.getIdLong()).setLong(receiver.getIdLong()))
                 .readRow(row -> row.getTimestamp("received").toInstant())
                 .firstSync();
-    }
-
-    /**
-     * Get the ranking of the guild.
-     *
-     * @param guild    guild
-     * @param pageSize the size of a page
-     * @param page     the number of the page. zero based
-     * @return a sorted list of reputation users
-     */
-    public List<ReputationUser> getRanking(Guild guild, int pageSize, int page) {
-        return builder(ReputationUser.class)
-                .query("""
-                        SELECT
-                            rank,
-                            user_id,
-                            reputation
-                        FROM
-                            user_reputation
-                        WHERE guild_id = ?
-                            AND reputation != 0
-                        ORDER BY reputation DESC
-                        OFFSET ?
-                        LIMIT ?;
-                        """)
-                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setInt((page - 1) * pageSize).setInt(pageSize))
-                .readRow(row -> new ReputationUser(row.getLong("rank"), row.getLong("user_id"), row.getLong("reputation")))
-                .allSync();
     }
 
     /**
@@ -360,27 +333,88 @@ public class ReputationData extends QueryFactoryHolder {
                 .firstSync();
     }
 
-    public List<ReputationUser> getWeekRanking(Guild guild, int pageSize, int page) {
-        return builder(ReputationUser.class)
-                .query("""
-                        SELECT
-                            rank,
-                            user_id,
-                            reputation
-                        FROM
-                            user_reputation_week
-                        WHERE guild_id = ?
-                            AND reputation != 0
-                        ORDER BY reputation DESC
-                        OFFSET ?
-                        LIMIT ?;
-                        """)
-                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setInt((page - 1) * pageSize).setInt(pageSize))
-                .readRow(row -> new ReputationUser(row.getLong("rank"), row.getLong("user_id"), row.getLong("reputation")))
-                .allSync();
+    private int getRankingPageCount(Guild guild, int pageSize) {
+        return getPageCount(guild, pageSize, "user_reputation");
     }
 
-    public List<ReputationUser> getMonthRanking(Guild guild, int pageSize, int page) {
+    private Integer getWeekRankingPageCount(Guild guild, int pageSize) {
+        return getPageCount(guild, pageSize, "user_reputation_week");
+    }
+
+    private Integer getMonthRankingPageCount(Guild guild, int pageSize) {
+        return getPageCount(guild, pageSize, "user_reputation_month");
+    }
+
+    private Integer getPageCount(Guild guild, int pageSize, String table) {
+        return builder(Integer.class)
+                .query("""
+                        SELECT
+                            CEIL(COUNT(1)::NUMERIC / ?) AS count
+                        FROM
+                            %s
+                        WHERE guild_id = ?
+                            AND reputation != 0;
+                        """, table)
+                .paramsBuilder(stmt -> stmt.setInt(pageSize).setLong(guild.getIdLong()))
+                .readRow(row -> row.getInt("count"))
+                .firstSync()
+                .orElse(1);
+    }
+
+    /**
+     * Get the ranking of the guild.
+     *
+     * @param guild    guild
+     * @param pageSize the size of a page
+     * @return a sorted list of reputation users
+     */
+    public GuildRanking getRanking(Guild guild, int pageSize) {
+        return new GuildRanking(() -> getRankingPageCount(guild, pageSize), page -> getRankingPage(guild, pageSize, page));
+    }
+
+    /**
+     * Get the weekly ranking of the guild.
+     *
+     * @param guild    guild
+     * @param pageSize the size of a page
+     * @return a sorted list of reputation users
+     */
+    public GuildRanking getWeekRanking(Guild guild, int pageSize) {
+        return new GuildRanking(() -> getWeekRankingPageCount(guild, pageSize), page -> getWeekRankingPage(guild, pageSize, page));
+    }
+
+    /**
+     * Get the monthly ranking of the guild.
+     *
+     * @param guild    guild
+     * @param pageSize the size of a page
+     * @return a sorted list of reputation users
+     */
+    public GuildRanking getMonthRanking(Guild guild, int pageSize) {
+        return new GuildRanking(() -> getMonthRankingPageCount(guild, pageSize), page -> getMonthRankingPage(guild, pageSize, page));
+    }
+
+    /**
+     * Get the ranking of the guild.
+     *
+     * @param guild    guild
+     * @param pageSize the size of a page
+     * @param page     the number of the page. zero based
+     * @return a sorted list of reputation users
+     */
+    private List<ReputationUser> getRankingPage(Guild guild, int pageSize, int page) {
+        return getRankingPage(guild, pageSize, page, "user_reputation");
+    }
+
+    private List<ReputationUser> getWeekRankingPage(Guild guild, int pageSize, int page) {
+        return getRankingPage(guild, pageSize, page, "user_reputation_week");
+    }
+
+    private List<ReputationUser> getMonthRankingPage(Guild guild, int pageSize, int page) {
+        return getRankingPage(guild, pageSize, page, "user_reputation_month");
+    }
+
+    private List<ReputationUser> getRankingPage(Guild guild, int pageSize, int page, String table) {
         return builder(ReputationUser.class)
                 .query("""
                         SELECT
@@ -388,16 +422,15 @@ public class ReputationData extends QueryFactoryHolder {
                             user_id,
                             reputation
                         FROM
-                            user_reputation_month
+                            %s
                         WHERE guild_id = ?
                             AND reputation != 0
                         ORDER BY reputation DESC
                         OFFSET ?
                         LIMIT ?;
-                        """)
-                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setInt((page - 1) * pageSize).setInt(pageSize))
+                        """, table)
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setInt(page * pageSize).setInt(pageSize))
                 .readRow(row -> new ReputationUser(row.getLong("rank"), row.getLong("user_id"), row.getLong("reputation")))
                 .allSync();
-
     }
 }

@@ -5,16 +5,18 @@ import de.chojo.jdautil.command.SimpleArgument;
 import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
+import de.chojo.jdautil.pagination.bag.PageBag;
+import de.chojo.jdautil.pagination.bag.PrivatePageBag;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.ReputationData;
-import de.chojo.repbot.data.wrapper.ReputationUser;
+import de.chojo.repbot.data.wrapper.GuildRanking;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import javax.sql.DataSource;
 import java.awt.Color;
-import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class Top extends SimpleCommand {
@@ -22,36 +24,39 @@ public class Top extends SimpleCommand {
     private final ReputationData reputationData;
 
     public Top(DataSource dataSource) {
-        super(CommandMeta.builder("top","command.reputation.description")
-                        .addArgument(SimpleArgument.integer("page", "page")));
+        super(CommandMeta.builder("top", "command.reputation.description"));
         reputationData = new ReputationData(dataSource);
     }
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
-        var page = event.getOption("page");
-        var l = page == null ? 1 : page.getAsLong();
-        event.replyEmbeds(top(context, event.getGuild(), (int) Math.max(1, l))).queue();
+        var ranking = reputationData.getRanking(event.getGuild(), TOP_PAGE_SIZE);
+        registerPage(ranking, event, context);
     }
 
-    private MessageEmbed top(SlashCommandContext context, Guild guild, int page) {
-        var ranking = reputationData.getRanking(guild, TOP_PAGE_SIZE, page);
-        return buildTop(ranking, context, guild);
-    }
 
-    public static MessageEmbed buildTop(List<ReputationUser> ranking, SlashCommandContext context, Guild guild) {
-        if(ranking.isEmpty()) {
-            return createBaseBuilder(context, guild)
-                    .setDescription("*" + context.localize("command.top.empty") + "*")
-                    .build();
-        }
+    public static void registerPage(GuildRanking guildRanking, SlashCommandInteractionEvent event, SlashCommandContext context) {
+        context.registerPage(new PageBag(guildRanking.pages()) {
+            @Override
+            public CompletableFuture<MessageEmbed> buildPage() {
+                return CompletableFuture.supplyAsync(() -> {
+                    var ranking = guildRanking.page(current());
 
-        var maxRank = ranking.get(ranking.size() - 1).rank();
-        var rankString = ranking.stream().map(rank -> rank.fancyString((int) maxRank)).collect(Collectors.joining("\n"));
+                    if (ranking.isEmpty()) {
+                        return createBaseBuilder(context, event.getGuild())
+                                .setDescription("*" + context.localize("command.top.empty") + "*")
+                                .build();
+                    }
 
-        return createBaseBuilder(context, guild)
-                .setDescription(rankString)
-                .build();
+                    var maxRank = ranking.get(ranking.size() - 1).rank();
+                    var rankString = ranking.stream().map(rank -> rank.fancyString((int) maxRank)).collect(Collectors.joining("\n"));
+
+                    return createBaseBuilder(context, event.getGuild())
+                            .setDescription(rankString)
+                            .build();
+                });
+            }
+        }, true);
     }
 
     private static LocalizedEmbedBuilder createBaseBuilder(SlashCommandContext context, Guild guild) {

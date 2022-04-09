@@ -4,6 +4,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import de.chojo.jdautil.botlist.BotlistService;
 import de.chojo.jdautil.command.dispatching.CommandHub;
+import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Language;
 import de.chojo.repbot.analyzer.ContextResolver;
@@ -89,7 +90,7 @@ public class ReputationBot {
     private ShardManager shardManager;
     private HikariDataSource dataSource;
     private Configuration configuration;
-    private Localizer localizer;
+    private ILocalizer localizer;
     private Scan scan;
     private RepBotCachePolicy repBotCachePolicy;
     private ContextResolver contextResolver;
@@ -247,6 +248,7 @@ public class ReputationBot {
                     log.error(LogNotify.NOTIFY_ADMIN, "Command execution of {} failed\n{}", context.command().meta().name(), context.args(), throwable);
                 })
                 .withManagerRole(guild -> Collections.singletonList(guildData.getGuildSettings(guild).generalSettings().managerRole().orElse(0L)))
+                .withPagination(pageServiceBuilder -> pageServiceBuilder.withLocalizer(localizer).previousText("pages.previous").nextText("pages.next"))
                 .build();
 
         // init listener and services
