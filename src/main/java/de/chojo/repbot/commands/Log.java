@@ -34,11 +34,9 @@ public class Log extends SimpleCommand {
     public Log(DataSource dataSource) {
         super(CommandMeta.builder("log", "command.log.description")
                 .addSubCommand("received", "command.log.sub.received", argsBuilder()
-                        .add(SimpleArgument.user("user", "command.log.sub.received.arg.user").asRequired())
-                        .add(SimpleArgument.integer("count", "command.log.sub.received.arg.count")))
+                        .add(SimpleArgument.user("user", "command.log.sub.received.arg.user").asRequired()))
                 .addSubCommand("donated", "command.log.sub.donated", argsBuilder()
-                        .add(SimpleArgument.user("user", "command.log.sub.donated.arg.user").asRequired())
-                        .add(SimpleArgument.integer("count", "command.log.sub.donated.arg.count")))
+                        .add(SimpleArgument.user("user", "command.log.sub.donated.arg.user").asRequired()))
                 .addSubCommand("message", "command.log.sub.message", argsBuilder()
                         .add(SimpleArgument.string("message_id", "command.log.sub.message.arg.messageId").asRequired()))
                 .withPermission());
