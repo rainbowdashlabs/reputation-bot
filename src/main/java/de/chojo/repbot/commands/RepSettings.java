@@ -8,14 +8,18 @@ import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.util.EmojiDebug;
+import net.dv8tion.jda.api.MessageBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
 import org.jetbrains.annotations.PropertyKey;
 
 import javax.sql.DataSource;
 import java.awt.Color;
 import java.util.List;
 
+//TODO: Replace with select menu to manage states
 public class RepSettings extends SimpleCommand {
     private final GuildData guildData;
 

@@ -10,12 +10,15 @@ import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.Verifier;
+import de.chojo.jdautil.util.Completion;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.serialization.ThankwordsContainer;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.AutoCompleteQuery;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -103,7 +106,7 @@ public class Thankwords extends SimpleCommand {
                     .queue();
             return;
         }
-        if (data.addThankWord(event.getGuild(), pattern)) {
+        if (guildData.addThankWord(event.getGuild(), pattern)) {
             event.reply(context.localize("command.thankwords.sub.add.added",
                     Replacement.create("REGEX", pattern, Format.CODE))).queue();
         }
@@ -119,7 +122,7 @@ public class Thankwords extends SimpleCommand {
                     .queue();
             return;
         }
-        if (data.removeThankWord(event.getGuild(), pattern)) {
+        if (guildData.removeThankWord(event.getGuild(), pattern)) {
             event.reply(context.localize("command.thankwords.sub.remove.removed",
                     Replacement.create("PATTERN", pattern, Format.CODE))).queue();
             return;
@@ -139,7 +142,7 @@ public class Thankwords extends SimpleCommand {
     @Nullable
     private String getGuildPattern(Guild guild) {
 
-        var guildSettings = data.getGuildSettings(guild);
+        var guildSettings = guildData.getGuildSettings(guild);
 
         return Arrays.stream(guildSettings.thankSettings().thankwords())
                 .map(w -> StringUtils.wrap(w, "`"))
@@ -147,7 +150,7 @@ public class Thankwords extends SimpleCommand {
     }
 
     private void check(SlashCommandInteractionEvent event, SlashCommandContext context) {
-        var guildSettings = data.getGuildSettings(event.getGuild());
+        var guildSettings = guildData.getGuildSettings(event.getGuild());
         var messageId = event.getOption("message").getAsString();
 
         if (!Verifier.isValidId(messageId)) {
@@ -206,11 +209,24 @@ public class Thankwords extends SimpleCommand {
             return;
         }
         for (var word : words) {
-            data.addThankWord(slashCommandEvent.getGuild(), word);
+            guildData.addThankWord(slashCommandEvent.getGuild(), word);
         }
 
         var wordsJoined = words.stream().map(w -> StringUtils.wrap(w, "`")).collect(Collectors.joining(", "));
 
         slashCommandEvent.reply(context.localize("command.thankwords.sub.loadDefault.added") + wordsJoined).queue();
+    }
+
+    @Override
+    public void onAutoComplete(CommandAutoCompleteInteractionEvent event, SlashCommandContext slashCommandContext) {
+        var option = event.getFocusedOption();
+        var cmd = event.getSubcommandName();
+        if ("remove".equals(cmd) && "pattern".equals(option.getName())) {
+            var thankwords = guildData.getGuildSettings(event.getGuild()).thankSettings().thankwords();
+            event.replyChoices(Completion.complete(option.getValue(), thankwords)).queue();
+        }
+        if ("loaddefault".equals(cmd) && "language".equals(option.getName())) {
+            event.replyChoices(Completion.complete(option.getValue(), thankwordsContainer.getAvailableLanguages())).queue();
+        }
     }
 }

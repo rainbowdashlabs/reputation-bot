@@ -3,16 +3,16 @@ package de.chojo.repbot.commands;
 import de.chojo.jdautil.command.CommandMeta;
 import de.chojo.jdautil.command.SimpleArgument;
 import de.chojo.jdautil.command.SimpleCommand;
-import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.DiscordResolver;
+import de.chojo.jdautil.util.Completion;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.util.FilterUtil;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.IMentionable;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import javax.sql.DataSource;
@@ -50,7 +50,7 @@ public class Channel extends SimpleCommand {
         if ("remove".equalsIgnoreCase(subCmd)) {
             remove(event, context);
         }
-        if ("whitelist".equalsIgnoreCase(subCmd)) {
+        if ("list_type".equalsIgnoreCase(subCmd)) {
             whitelist(event, context);
         }
         if ("addAll".equalsIgnoreCase(subCmd)) {
@@ -128,5 +128,12 @@ public class Channel extends SimpleCommand {
         guildData.addChannel(event.getGuild(), channel);
         event.getHook().editOriginal(context.localize("command.channel.sub.set.set",
                 Replacement.create("CHANNEL", channel.getAsMention()))).queue();
+    }
+
+    @Override
+    public void onAutoComplete(CommandAutoCompleteInteractionEvent event, SlashCommandContext slashCommandContext) {
+        if ("type".equals(event.getFocusedOption().getName())) {
+            event.replyChoices(Completion.complete(event.getFocusedOption().getValue(), "whitelist", "blacklist")).queue();
+        }
     }
 }
