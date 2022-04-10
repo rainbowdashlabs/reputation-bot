@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 public class ReputationLogEntry {
     private static final String PATH = "https://discord.com/channels/%s/%s/%s";
+    private static final long DISCORD_EPOCH = 1420070400000L;
 
     private final long guildId;
     private final long channelId;
@@ -72,7 +73,7 @@ public class ReputationLogEntry {
     }
 
     public String timestamp(){
-        var timestamp = ((messageId() >> 22) + 1420070400000L) / 1000;
+        var timestamp = ((messageId() >> 22) + DISCORD_EPOCH) / 1000;
         return String.format("<t:%s:d> <t:%s:t>", timestamp, timestamp);
     }
 }
