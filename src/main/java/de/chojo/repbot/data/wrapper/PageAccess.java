@@ -14,7 +14,7 @@ public class PageAccess<T> {
     }
 
     /**
-     * The amount of pages in the ranking
+     * The amount of pages which can be accessed.
      * @return page amount
      */
     public int pages() {
@@ -22,10 +22,10 @@ public class PageAccess<T> {
     }
 
     /**
-     * Get the page
+     * Get the page.
      *
      * @param page page on zero based index
-     * @return a list containing all entried for the page
+     * @return a list containing all entries for the page
      */
     public List<T> page(int page) {
         return pageSupplier.apply(page);
