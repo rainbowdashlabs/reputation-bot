@@ -19,6 +19,32 @@ jobs:
       - name: Test with Gradle
         run: ./gradlew test --info
 
+  docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: gradle/wrapper-validation-action@v1
+      - name: Build Image
+        run: docker build . -f docker/Dockerfile -t ghcr.io/rainbowdashlabs/reputation-bot:${{ github.sha }}
+      - name: Login to Registry
+        if: github.ref_name == 'main' || github.ref_name == 'development' || github.ref_type == 'tag'
+        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login -u $ --password-stdin ghcr.io
+      - name: Push image
+        if: github.ref_name == 'main' || github.ref_name == 'development' || github.ref_type == 'tag'
+        run: |
+          docker push ghcr.io/rainbowdashlabs/reputation-bot:${{ github.sha }}
+      - name: Tag & Push branch image
+        if: github.ref_name == 'main' || github.ref_name == 'development' || github.ref_type == 'tag'
+        run: |
+          docker image tag ghcr.io/rainbowdashlabs/reputation-bot:${{ github.sha }} ghcr.io/rainbowdashlabs/reputation-bot:${{ github.ref_name }}
+          docker push ghcr.io/rainbowdashlabs/reputation-bot:${{ github.ref_name }}
+      - name: Tag & Push latest image
+        if: github.ref_name == 'main'
+        run: |
+          docker image tag ghcr.io/rainbowdashlabs/reputation-bot:${{ github.sha }} ghcr.io/rainbowdashlabs/reputation-bot:latest
+          docker push ghcr.io/rainbowdashlabs/reputation-bot:latest
+
   enforce-encoding:
     runs-on: ubuntu-latest
 
