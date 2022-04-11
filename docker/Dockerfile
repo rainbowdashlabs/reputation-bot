@@ -13,7 +13,7 @@ RUN ./gradlew clean build --no-daemon > /dev/null 2>&1 || true
 COPY src/ src/
 RUN ./gradlew shadowJar --no-daemon
 
-FROM eclipse-temurin:17-jdk-alpine AS unzip
+FROM eclipse-temurin:18-jdk-alpine AS unzip
 WORKDIR /source
 COPY --from=build source/build/libs/rep-bot-*-all.jar app.jar
 # Extract jar
