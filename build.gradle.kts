@@ -34,12 +34,12 @@ dependencies {
     testImplementation("org.junit.jupiter", "junit-jupiter")
 }
 
-
 java {
+    toolchain{
+        languageVersion.set(JavaLanguageVersion.of(18))
+    }
     withSourcesJar()
     withJavadocJar()
-
-    sourceCompatibility = JavaVersion.VERSION_17
 }
 
 tasks {
