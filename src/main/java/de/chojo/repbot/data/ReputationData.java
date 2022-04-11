@@ -1,7 +1,9 @@
 package de.chojo.repbot.data;
 
 import de.chojo.repbot.analyzer.ThankType;
+import de.chojo.repbot.data.wrapper.GuildRanking;
 import de.chojo.repbot.data.wrapper.GuildReputationStats;
+import de.chojo.repbot.data.wrapper.ReputationLogAccess;
 import de.chojo.repbot.data.wrapper.ReputationLogEntry;
 import de.chojo.repbot.data.wrapper.ReputationUser;
 import de.chojo.repbot.util.LogNotify;
@@ -91,34 +93,6 @@ public class ReputationData extends QueryFactoryHolder {
     }
 
     /**
-     * Get the ranking of the guild.
-     *
-     * @param guild    guild
-     * @param pageSize the size of a page
-     * @param page     the number of the page. zero based
-     * @return a sorted list of reputation users
-     */
-    public List<ReputationUser> getRanking(Guild guild, int pageSize, int page) {
-        return builder(ReputationUser.class)
-                .query("""
-                        SELECT
-                            rank,
-                            user_id,
-                            reputation
-                        FROM
-                            user_reputation
-                        WHERE guild_id = ?
-                            AND reputation != 0
-                        ORDER BY reputation DESC
-                        OFFSET ?
-                        LIMIT ?;
-                        """)
-                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setInt((page - 1) * pageSize).setInt(pageSize))
-                .readRow(row -> new ReputationUser(row.getLong("rank"), row.getLong("user_id"), row.getLong("reputation")))
-                .allSync();
-    }
-
-    /**
      * Get the reputation user.
      *
      * @param guild guild
@@ -200,31 +174,25 @@ public class ReputationData extends QueryFactoryHolder {
      *
      * @param user  user
      * @param guild guild
-     * @param count amount of log entries to retrieve
      * @return sorted list of entries. the most recent first.
      */
-    public List<ReputationLogEntry> getUserReceivedLog(User user, Guild guild, int count) {
-        return builder(ReputationLogEntry.class)
-                .query("""
-                        SELECT
-                            guild_id,
-                            donor_id,
-                            receiver_id,
-                            message_id,
-                            received,
-                            ref_message_id,
-                            channel_id,
-                            cause
-                        FROM
-                            reputation_log
-                        WHERE
-                            receiver_id = ?
-                            AND guild_id = ?
-                        ORDER BY received DESC
-                        LIMIT ?;
-                        """)
-                .paramsBuilder(stmt -> stmt.setLong(user.getIdLong()).setLong(guild.getIdLong()).setInt(count))
-                .readRow(this::buildLogEntry).allSync();
+    public ReputationLogAccess getUserReceivedLog(User user, Guild guild, int pageSize) {
+        return new ReputationLogAccess(() -> getUserReceivedLogPages(user, guild, pageSize), page -> getUserReceivedLogPage(user, guild, pageSize, page));
+    }
+
+    public ReputationLogAccess getUserDonatedLog(User user, Guild guild, int pageSize) {
+        return new ReputationLogAccess(() -> getUserDonatedLogPages(user, guild, pageSize), page -> getUserDonatedLogPage(user, guild, pageSize, page));
+    }
+
+    /**
+     * Get the last log entries for reputation received by the user.
+     *
+     * @param user  user
+     * @param guild guild
+     * @return sorted list of entries. the most recent first.
+     */
+    private List<ReputationLogEntry> getUserReceivedLogPage(User user, Guild guild, int pageSize, int page) {
+        return getLog(guild, "receiver_id", user.getIdLong(), pageSize, page);
     }
 
     /**
@@ -232,31 +200,10 @@ public class ReputationData extends QueryFactoryHolder {
      *
      * @param user  user
      * @param guild guild
-     * @param count amount of log entries to retrieve
      * @return sorted list of entries. the most recent first.
      */
-    public List<ReputationLogEntry> getUserDonatedLog(User user, Guild guild, int count) {
-        return builder(ReputationLogEntry.class)
-                .query("""
-                        SELECT
-                            guild_id,
-                            donor_id,
-                            receiver_id,
-                            message_id,
-                            received,
-                            ref_message_id,
-                            channel_id,
-                            cause
-                        FROM
-                            reputation_log
-                        WHERE
-                            donor_id = ?
-                            AND guild_id = ?
-                        ORDER BY received DESC
-                        LIMIT ?;
-                        """)
-                .paramsBuilder(stmt -> stmt.setLong(user.getIdLong()).setLong(guild.getIdLong()).setInt(count))
-                .readRow(this::buildLogEntry).allSync();
+    private List<ReputationLogEntry> getUserDonatedLogPage(User user, Guild guild, int pageSize, int page) {
+        return getLog(guild, "donor_id", user.getIdLong(), pageSize, page);
     }
 
     /**
@@ -264,10 +211,13 @@ public class ReputationData extends QueryFactoryHolder {
      *
      * @param messageId message id
      * @param guild     guild
-     * @param count     amount of log entries to retrieve
      * @return sorted list of entries. the most recent first.
      */
     public List<ReputationLogEntry> getMessageLog(long messageId, Guild guild, int count) {
+        return getLog(guild, "message_id", messageId, count, 0);
+    }
+
+    public List<ReputationLogEntry> getLog(Guild guild, String column, long id, int pageSize, int page) {
         return builder(ReputationLogEntry.class)
                 .query("""
                         SELECT
@@ -282,14 +232,39 @@ public class ReputationData extends QueryFactoryHolder {
                         FROM
                             reputation_log
                         WHERE
-                            message_id = ?
+                            %s = ?
                             AND guild_id = ?
                         ORDER BY received DESC
+                        OFFSET ?
                         LIMIT ?;
-                        """)
-                .paramsBuilder(stmt -> stmt.setLong(messageId).setLong(guild.getIdLong()).setInt(count))
+                        """, column)
+                .paramsBuilder(stmt -> stmt.setLong(id).setLong(guild.getIdLong()).setInt(page * pageSize).setInt(pageSize))
                 .readRow(this::buildLogEntry)
                 .allSync();
+    }
+
+    private int getUserDonatedLogPages(User user, Guild guild, int pageSize) {
+        return getLogPages(guild, "donor_id", user.getIdLong(), pageSize);
+    }
+
+    private int getUserReceivedLogPages(User user, Guild guild, int pageSize) {
+        return getLogPages(guild, "receiver_id", user.getIdLong(), pageSize);
+    }
+
+    private int getLogPages(Guild guild, String column, long id, int pageSize) {
+        return builder(Integer.class)
+                .query("""
+                        SELECT
+                            CEIL(COUNT(1)::NUMERIC / ?) AS count
+                        FROM
+                            reputation_log
+                        WHERE guild_id = ?
+                            AND %s = ?;
+                        """, column)
+                .paramsBuilder(stmt -> stmt.setInt(pageSize).setLong(guild.getIdLong()).setLong(id))
+                .readRow(row -> row.getInt("count"))
+                .firstSync()
+                .orElse(1);
     }
 
     private ReputationLogEntry buildLogEntry(ResultSet rs) throws SQLException {
@@ -360,27 +335,88 @@ public class ReputationData extends QueryFactoryHolder {
                 .firstSync();
     }
 
-    public List<ReputationUser> getWeekRanking(Guild guild, int pageSize, int page) {
-        return builder(ReputationUser.class)
-                .query("""
-                        SELECT
-                            rank,
-                            user_id,
-                            reputation
-                        FROM
-                            user_reputation_week
-                        WHERE guild_id = ?
-                            AND reputation != 0
-                        ORDER BY reputation DESC
-                        OFFSET ?
-                        LIMIT ?;
-                        """)
-                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setInt((page - 1) * pageSize).setInt(pageSize))
-                .readRow(row -> new ReputationUser(row.getLong("rank"), row.getLong("user_id"), row.getLong("reputation")))
-                .allSync();
+    private int getRankingPageCount(Guild guild, int pageSize) {
+        return getPageCount(guild, pageSize, "user_reputation");
     }
 
-    public List<ReputationUser> getMonthRanking(Guild guild, int pageSize, int page) {
+    private Integer getWeekRankingPageCount(Guild guild, int pageSize) {
+        return getPageCount(guild, pageSize, "user_reputation_week");
+    }
+
+    private Integer getMonthRankingPageCount(Guild guild, int pageSize) {
+        return getPageCount(guild, pageSize, "user_reputation_month");
+    }
+
+    private Integer getPageCount(Guild guild, int pageSize, String table) {
+        return builder(Integer.class)
+                .query("""
+                        SELECT
+                            CEIL(COUNT(1)::NUMERIC / ?) AS count
+                        FROM
+                            %s
+                        WHERE guild_id = ?
+                            AND reputation != 0;
+                        """, table)
+                .paramsBuilder(stmt -> stmt.setInt(pageSize).setLong(guild.getIdLong()))
+                .readRow(row -> row.getInt("count"))
+                .firstSync()
+                .orElse(1);
+    }
+
+    /**
+     * Get the ranking of the guild.
+     *
+     * @param guild    guild
+     * @param pageSize the size of a page
+     * @return a sorted list of reputation users
+     */
+    public GuildRanking getRanking(Guild guild, int pageSize) {
+        return new GuildRanking(() -> getRankingPageCount(guild, pageSize), page -> getRankingPage(guild, pageSize, page));
+    }
+
+    /**
+     * Get the weekly ranking of the guild.
+     *
+     * @param guild    guild
+     * @param pageSize the size of a page
+     * @return a sorted list of reputation users
+     */
+    public GuildRanking getWeekRanking(Guild guild, int pageSize) {
+        return new GuildRanking(() -> getWeekRankingPageCount(guild, pageSize), page -> getWeekRankingPage(guild, pageSize, page));
+    }
+
+    /**
+     * Get the monthly ranking of the guild.
+     *
+     * @param guild    guild
+     * @param pageSize the size of a page
+     * @return a sorted list of reputation users
+     */
+    public GuildRanking getMonthRanking(Guild guild, int pageSize) {
+        return new GuildRanking(() -> getMonthRankingPageCount(guild, pageSize), page -> getMonthRankingPage(guild, pageSize, page));
+    }
+
+    /**
+     * Get the ranking of the guild.
+     *
+     * @param guild    guild
+     * @param pageSize the size of a page
+     * @param page     the number of the page. zero based
+     * @return a sorted list of reputation users
+     */
+    private List<ReputationUser> getRankingPage(Guild guild, int pageSize, int page) {
+        return getRankingPage(guild, pageSize, page, "user_reputation");
+    }
+
+    private List<ReputationUser> getWeekRankingPage(Guild guild, int pageSize, int page) {
+        return getRankingPage(guild, pageSize, page, "user_reputation_week");
+    }
+
+    private List<ReputationUser> getMonthRankingPage(Guild guild, int pageSize, int page) {
+        return getRankingPage(guild, pageSize, page, "user_reputation_month");
+    }
+
+    private List<ReputationUser> getRankingPage(Guild guild, int pageSize, int page, String table) {
         return builder(ReputationUser.class)
                 .query("""
                         SELECT
@@ -388,16 +424,15 @@ public class ReputationData extends QueryFactoryHolder {
                             user_id,
                             reputation
                         FROM
-                            user_reputation_month
+                            %s
                         WHERE guild_id = ?
                             AND reputation != 0
                         ORDER BY reputation DESC
                         OFFSET ?
                         LIMIT ?;
-                        """)
-                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setInt((page - 1) * pageSize).setInt(pageSize))
+                        """, table)
+                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setInt(page * pageSize).setInt(pageSize))
                 .readRow(row -> new ReputationUser(row.getLong("rank"), row.getLong("user_id"), row.getLong("reputation")))
                 .allSync();
-
     }
 }

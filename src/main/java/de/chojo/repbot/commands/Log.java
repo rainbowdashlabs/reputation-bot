@@ -1,83 +1,69 @@
 package de.chojo.repbot.commands;
 
+import de.chojo.jdautil.command.CommandMeta;
+import de.chojo.jdautil.command.SimpleArgument;
 import de.chojo.jdautil.command.SimpleCommand;
-import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
+import de.chojo.jdautil.pagination.bag.PrivatePageBag;
 import de.chojo.jdautil.parsing.ValueParser;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.data.wrapper.ReputationLogEntry;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
-import net.dv8tion.jda.api.sharding.ShardManager;
 
 import javax.sql.DataSource;
+import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.StringJoiner;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 public class Log extends SimpleCommand {
-    private final ShardManager shardManager;
     private final ReputationData reputationData;
-    private final Localizer loc;
+    private static final int PAGE_SIZE = 15;
 
-    public Log(ShardManager shardManager, DataSource dataSource, Localizer loc) {
-        super("log",
-                null,
-                "command.log.description", subCommandBuilder()
-                        .add("received", "command.log.sub.received", argsBuilder()
-                                .add(OptionType.USER, "user", "user", true)
-                                .add(OptionType.INTEGER, "count", "count")
-                                .build()
-                        )
-                        .add("donated", "command.log.sub.donated", argsBuilder()
-                                .add(OptionType.USER, "user", "user", true)
-                                .add(OptionType.INTEGER, "count", "count")
-                                .build()
-                        )
-                        .add("message", "command.log.sub.message", argsBuilder()
-                                .add(OptionType.STRING, "message_id", "message_id", true)
-                                .build()
-                        )
-                        .build(),
-                Permission.ADMINISTRATOR);
-        this.shardManager = shardManager;
+    public Log(DataSource dataSource) {
+        super(CommandMeta.builder("log", "command.log.description")
+                .addSubCommand("received", "command.log.sub.received", argsBuilder()
+                        .add(SimpleArgument.user("user", "command.log.sub.received.arg.user").asRequired()))
+                .addSubCommand("donated", "command.log.sub.donated", argsBuilder()
+                        .add(SimpleArgument.user("user", "command.log.sub.donated.arg.user").asRequired()))
+                .addSubCommand("message", "command.log.sub.message", argsBuilder()
+                        .add(SimpleArgument.string("message_id", "command.log.sub.message.arg.messageId").asRequired()))
+                .withPermission());
         reputationData = new ReputationData(dataSource);
-        this.loc = loc;
     }
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
         var cmd = event.getSubcommandName();
         if ("received".equalsIgnoreCase(cmd)) {
-            received(event, event.getOption("user").getAsUser());
+            received(event, context, event.getOption("user").getAsUser());
         }
         if ("donated".equalsIgnoreCase(cmd)) {
-            donated(event, event.getOption("user").getAsUser());
+            donated(event, context, event.getOption("user").getAsUser());
         }
         if ("message".equalsIgnoreCase(cmd)) {
-            message(event);
+            message(event, context);
         }
     }
 
-    private MessageEmbed getMessageLog(Guild guild, long messageId) {
-        var loc = this.loc.getContextLocalizer(guild);
+    private MessageEmbed getMessageLog(SlashCommandContext context, Guild guild, long messageId) {
         var messageLog = reputationData.getMessageLog(messageId, guild, 50);
 
-        var log = mapMessageLogEntry(guild, messageLog);
+        var log = mapMessageLogEntry(context, messageLog);
 
-        var builder = new LocalizedEmbedBuilder(this.loc, guild)
-                .setAuthor(loc.localize("command.log.messageLog", Replacement.create("ID", messageId)));
+        var builder = new LocalizedEmbedBuilder(context.localizer())
+                .setAuthor("command.log.messageLog", Replacement.create("ID", messageId));
         buildFields(log, builder);
         return builder.build();
     }
@@ -91,84 +77,78 @@ public class Log extends SimpleCommand {
         embedBuilder.setDescription(joiner.toString());
     }
 
-    private void message(SlashCommandInteractionEvent event) {
+    private void message(SlashCommandInteractionEvent event, SlashCommandContext context) {
         event.getOption("message_id");
         var optMessageId = ValueParser.parseLong(event.getOption("message_id").getAsString());
         if (optMessageId.isEmpty()) {
-            event.reply(loc.localize("error.invalidMessage", event.getGuild())).setEphemeral(true).queue();
+            event.reply(context.localize("error.invalidMessage")).setEphemeral(true).queue();
             return;
         }
 
-        event.replyEmbeds(getMessageLog(event.getGuild(), event.getOption("message_id").getAsLong())).queue();
+        event.replyEmbeds(getMessageLog(context, event.getGuild(), event.getOption("message_id").getAsLong())).setEphemeral(true).queue();
     }
 
-    private MessageEmbed sendUserLog(Guild guild, User user, String title, List<String> log) {
-        var builder =  new LocalizedEmbedBuilder(loc, guild)
-                .setAuthor(loc.localize(title, guild,
-                                Replacement.create("USER", user.getAsTag())),
-                        null, user.getEffectiveAvatarUrl());
+    private MessageEmbed userLogEmbed(SlashCommandContext context, User user, String title, List<String> log) {
+        var builder = new LocalizedEmbedBuilder(context.localizer())
+                .setAuthor(title, null, user.getEffectiveAvatarUrl(), Replacement.create("USER", user.getAsTag()));
         buildFields(log, builder);
         return builder.build();
     }
 
-    private void donated(SlashCommandInteractionEvent event, User user) {
-        var limit = Optional.ofNullable(event.getOption("count")).map(OptionMapping::getAsLong).orElse(10L);
-        event.reply(wrap(sendUserLog(event.getGuild(), user, "command.log.donatedLog",
-                getDonatedLog(user, event.getGuild(), limit.intValue())))).queue();
+    private void donated(SlashCommandInteractionEvent event, SlashCommandContext context, User user) {
+        var logAccess = reputationData.getUserDonatedLog(user, event.getGuild(), PAGE_SIZE);
+        context.registerPage(new PrivatePageBag(logAccess.pages(), event.getUser().getIdLong()) {
+            @Override
+            public CompletableFuture<MessageEmbed> buildPage() {
+                return CompletableFuture.supplyAsync(() -> userLogEmbed(context, user, "command.log.donatedLog",
+                        mapUserLogEntry(context, logAccess.page(current()), ReputationLogEntry::receiverId)));
+            }
+        }, true);
     }
 
-    private List<String> getDonatedLog(User user, Guild guild, int limit) {
-        var userDonatedLog = reputationData.getUserDonatedLog(user, guild, Math.max(5, Math.min(limit, 50)));
-        return mapUserLogEntry(guild, userDonatedLog, ReputationLogEntry::receiverId);
+    private void received(SlashCommandInteractionEvent event, SlashCommandContext context, User user) {
+        var logAccess = reputationData.getUserReceivedLog(user, event.getGuild(), PAGE_SIZE);
+        context.registerPage(new PrivatePageBag(logAccess.pages(), event.getUser().getIdLong()) {
+            @Override
+            public CompletableFuture<MessageEmbed> buildPage() {
+                return CompletableFuture.supplyAsync(() -> userLogEmbed(context, user, "command.log.receivedLog",
+                        mapUserLogEntry(context, logAccess.page(current()), ReputationLogEntry::donorId)));
+            }
+        }, true);
     }
 
-    private void received(SlashCommandInteractionEvent event, User user) {
-        var limit = Optional.ofNullable(event.getOption("count")).map(OptionMapping::getAsLong).orElse(10L);
-        event.reply(wrap(sendUserLog(event.getGuild(), user, "command.log.receivedLog",
-                getReceivedLog(user, event.getGuild(), limit.intValue())))).queue();
-    }
-
-    private List<String> getReceivedLog(User user, Guild guild, int limit) {
-        var userDonatedLog = reputationData.getUserReceivedLog(user, guild, Math.max(5, Math.min(limit, 50)));
-        return mapUserLogEntry(guild, userDonatedLog, ReputationLogEntry::donorId);
-    }
-
-    private List<String> mapUserLogEntry(Guild wrapper, List<ReputationLogEntry> logEntries, Function<ReputationLogEntry, Long> userId) {
-        var loc = this.loc.getContextLocalizer(wrapper);
+    private List<String> mapUserLogEntry(SlashCommandContext context, List<ReputationLogEntry> logEntries, Function<ReputationLogEntry, Long> userId) {
         List<String> entries = new ArrayList<>();
         for (var logEntry : logEntries) {
-            var thankType = loc.localize("thankType." + logEntry.type().name().toLowerCase(Locale.ROOT));
-            var jumpLink = createJumpLink(wrapper, logEntry);
-            entries.add(String.format("**%s** %s %s",
+            var thankType = context.localize("thankType." + logEntry.type().name().toLowerCase(Locale.ROOT));
+            var jumpLink = createJumpLink(context, logEntry);
+            entries.add(String.format("%s **%s** %s %s", logEntry.timestamp(),
                     thankType, User.fromId(userId.apply(logEntry)).getAsMention(), jumpLink));
         }
         return entries;
     }
 
-    private List<String> mapMessageLogEntry(Guild guild, List<ReputationLogEntry> logEntries) {
+    private List<String> mapMessageLogEntry(SlashCommandContext context, List<ReputationLogEntry> logEntries) {
         if (logEntries.isEmpty()) return Collections.emptyList();
-
-        var loc = this.loc.getContextLocalizer(guild);
 
         List<String> entries = new ArrayList<>();
         for (var logEntry : logEntries) {
-            var jumpLink = createJumpLink(guild, logEntry);
-            var thankType = loc.localize("thankType." + logEntry.type().name().toLowerCase(Locale.ROOT));
-            entries.add(String.format("**%s** %s ➜ %s **|** %s",
+            var jumpLink = createJumpLink(context, logEntry);
+            var thankType = context.localize("thankType." + logEntry.type().name().toLowerCase(Locale.ROOT));
+            entries.add(String.format("%s **%s** %s ➜ %s **|** %s", logEntry.timestamp(),
                     thankType, User.fromId(logEntry.donorId()).getAsMention(), User.fromId(logEntry.receiverId()).getAsMention(), jumpLink));
         }
         return entries;
     }
 
-    private String createJumpLink(Guild guild, ReputationLogEntry log) {
-        var loc = this.loc.getContextLocalizer(guild);
-        var jump = loc.localize("words.link",
+    private String createJumpLink(SlashCommandContext context, ReputationLogEntry log) {
+        var jump = context.localize("words.link",
                 Replacement.create("TARGET", "$words.message$"),
                 Replacement.create("URL", log.getMessageJumpLink()));
 
         String refJump = null;
         if (log.hasRefMessage()) {
-            refJump = loc.localize("words.link",
+            refJump = context.localize("words.link",
                     Replacement.create("TARGET", "$words.refMessage$"),
                     Replacement.create("URL", log.getMessageJumpLink()));
         }

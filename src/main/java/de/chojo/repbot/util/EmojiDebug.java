@@ -1,6 +1,10 @@
 package de.chojo.repbot.util;
 
-public class EmojiDebug {
+public final class EmojiDebug {
+    private EmojiDebug() {
+        throw new UnsupportedOperationException("This is a utility class.");
+    }
+
     public static final String FOUND_THANKWORD = "👀";
     public static final String ONLY_COOLDOWN = "💤";
     public static final String EMPTY_CONTEXT = "🔍";

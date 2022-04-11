@@ -13,7 +13,11 @@ import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.internal.utils.PermissionUtil;
 
-public class PermissionErrorHandler {
+public final class PermissionErrorHandler {
+    private PermissionErrorHandler() {
+        throw new UnsupportedOperationException("This is a utility class.");
+    }
+
     public static void handle(InsufficientPermissionException permissionException, ShardManager shardManager,
                               ILocalizer localizer, Configuration configuration) {
         var permission = permissionException.getPermission();

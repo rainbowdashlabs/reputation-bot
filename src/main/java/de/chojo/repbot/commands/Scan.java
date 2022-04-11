@@ -1,6 +1,10 @@
 package de.chojo.repbot.commands;
 
+import de.chojo.jdautil.command.CommandMeta;
+import de.chojo.jdautil.command.SimpleArgument;
 import de.chojo.jdautil.command.SimpleCommand;
+import de.chojo.jdautil.localization.ContextLocalizer;
+import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
@@ -20,7 +24,6 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageHistory;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.OptionType;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.slf4j.Logger;
 
@@ -52,7 +55,6 @@ public class Scan extends SimpleCommand {
             });
     private final GuildData guildData;
     private final ReputationData reputationData;
-    private final Localizer loc;
     private final Set<ScanProcess> activeScans = new HashSet<>();
     private final Set<Long> cancel = new HashSet<>();
     private final Queue<ScanProcess> finished = new ArrayDeque<>();
@@ -60,22 +62,15 @@ public class Scan extends SimpleCommand {
     private final Configuration configuration;
     private MessageAnalyzer messageAnalyzer;
 
-    public Scan(DataSource dataSource, Localizer localizer, Configuration configuration) {
-        super("scan",
-                null,
-                "command.scan.description",
-                subCommandBuilder()
-                        .add("start", "command.scan.description", argsBuilder()
-                                .add(OptionType.CHANNEL, "channel", "channel")
-                                .add(OptionType.INTEGER, "number_messages", "number_messages")
-                                .build()
-                        )
-                        .add("cancel", "command.scan.sub.cancel")
-                        .build(),
-                Permission.MANAGE_SERVER);
+    public Scan(DataSource dataSource, Configuration configuration) {
+        super(CommandMeta.builder("scan", "command.scan.description")
+                .addSubCommand("start", "command.scan.sub.start", argsBuilder()
+                        .add(SimpleArgument.channel("channel", "command.scan.sub.start.arg.numberMessages"))
+                        .add(SimpleArgument.integer("number_messages", "command.scan.sub.start.arg.channel")))
+                .addSubCommand("cancel", "command.scan.sub.cancel")
+                .withPermission());
         guildData = new GuildData(dataSource);
         reputationData = new ReputationData(dataSource);
-        loc = localizer;
         this.configuration = configuration;
         worker.scheduleAtFixedRate(() -> {
             finishTasks();
@@ -98,9 +93,8 @@ public class Scan extends SimpleCommand {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
-        var loc = this.loc.getContextLocalizer(event.getGuild());
         if (!event.getGuild().getSelfMember().hasPermission(Permission.MESSAGE_HISTORY)) {
-            event.reply(loc.localize("command.scan.error.history")).setEphemeral(true).queue();
+            event.reply(context.localize("command.scan.error.history")).setEphemeral(true).queue();
             return;
         }
 
@@ -108,10 +102,10 @@ public class Scan extends SimpleCommand {
 
         if ("cancel".equalsIgnoreCase(subCmd)) {
             if (!isActive(event.getGuild())) {
-                event.reply(loc.localize("command.scan.sub.cancel.noTask")).setEphemeral(true).queue();
+                event.reply(context.localize("command.scan.sub.cancel.noTask")).setEphemeral(true).queue();
                 return;
             }
-            event.reply(loc.localize("command.scan.canceling")).queue();
+            event.reply(context.localize("command.scan.canceling")).queue();
             cancelScan(event.getGuild());
             return;
         }
@@ -119,17 +113,17 @@ public class Scan extends SimpleCommand {
         if ("start".equalsIgnoreCase(subCmd)) {
 
             if (isActive(event.getGuild())) {
-                event.reply(":stop_sign: " + loc.localize("command.scan.error.running")).setEphemeral(true).queue();
+                event.reply(":stop_sign: " + context.localize("command.scan.error.running")).setEphemeral(true).queue();
                 return;
             }
 
             if (activeScans.size() >= SCAN_THREADS) {
-                event.reply(":stop_sign: " + loc.localize("command.scan.error.queueFull")).setEphemeral(true).queue();
+                event.reply(":stop_sign: " + context.localize("command.scan.error.queueFull")).setEphemeral(true).queue();
                 return;
             }
 
             if (event.getOptions().isEmpty()) {
-                scanChannel(event, event.getTextChannel(), 30000);
+                scanChannel(event, context, event.getTextChannel(), 30000);
                 return;
             }
             var messages = 30000;
@@ -140,38 +134,37 @@ public class Scan extends SimpleCommand {
             if (event.getOption("channel") != null) {
                 var guildChannel = event.getOption("channel").getAsGuildChannel();
                 if (guildChannel.getType() != ChannelType.TEXT) {
-                    event.reply(loc.localize("error.invalidChannel")).queue();
+                    event.reply(context.localize("error.invalidChannel")).queue();
                     return;
                 }
                 channel = (TextChannel) guildChannel;
             }
 
-            scanChannel(event, channel, Math.max(messages, 0));
+            scanChannel(event, context, channel, Math.max(messages, 0));
         }
     }
 
-    private void scanChannel(SlashCommandInteractionEvent event, TextChannel channel, int messageCount) {
-        if (PermissionErrorHandler.assertAndHandle(channel, loc, configuration,
+    private void scanChannel(SlashCommandInteractionEvent event, SlashCommandContext context, TextChannel channel, int messageCount) {
+        if (PermissionErrorHandler.assertAndHandle(channel, context.localizer().localizer(), configuration,
                 Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL, Permission.VIEW_CHANNEL, Permission.MESSAGE_HISTORY)) {
             return;
         }
         var duration = DurationFormatUtils.formatDuration((long) messageCount / 100 * INTERVAL_MS, "mm:ss");
-        event.reply(loc.localize("command.scan.scheduling", event.getGuild(), Replacement.create("DURATION", duration))).queue();
-        preSchedule(channel, messageCount);
+        event.reply(context.localize("command.scan.scheduling", Replacement.create("DURATION", duration))).queue();
+        preSchedule(context, channel, messageCount);
     }
 
-    private void preSchedule(TextChannel channel, int messageCount) {
+    private void preSchedule(SlashCommandContext context, TextChannel channel, int messageCount) {
         var history = channel.getHistory();
         var pattern = guildData.getGuildSettings(channel.getGuild()).thankSettings().thankwordPattern();
 
-        schedule(history, pattern, channel, messageCount);
+        schedule(history, context, pattern, channel, messageCount);
     }
 
-    private void schedule(MessageHistory history, Pattern pattern, TextChannel reportChannel, int calls) {
-        var loc = this.loc.getContextLocalizer(reportChannel.getGuild());
-        var progressMessage = reportChannel.sendMessage(loc.localize("command.scan.progress",
+    private void schedule(MessageHistory history, SlashCommandContext context, Pattern pattern, TextChannel reportChannel, int calls) {
+        var progressMessage = reportChannel.sendMessage(context.localize("command.scan.progress",
                 Replacement.create("PERCENT", String.format("%.02f", 0d))) + " " + TextGenerator.progressBar(0, 40)).complete();
-        var scanProcess = new ScanProcess(messageAnalyzer, this.loc, progressMessage, history, pattern, calls, reputationData);
+        var scanProcess = new ScanProcess(messageAnalyzer, context.localizer(), progressMessage, history, pattern, calls, reputationData);
         setActive(scanProcess);
         reportChannel.getGuild().loadMembers().get();
         worker.schedule(() -> processScan(scanProcess), 0, TimeUnit.SECONDS);
@@ -220,13 +213,13 @@ public class Scan extends SimpleCommand {
         if (finished.isEmpty()) return;
         var scan = finished.poll();
         setInactive(scan);
-        scan.progressMessage().editMessage(loc.localize("command.scan.progress", scan.guild(),
+        scan.progressMessage().editMessage(scan.loc.localize("command.scan.progress",
                 Replacement.create("PERCENT", String.format("%.02f", 100d))) + " " + TextGenerator.progressBar(1, 40)).queue();
-        var embed = new LocalizedEmbedBuilder(loc, scan.guild())
+        var embed = new LocalizedEmbedBuilder(scan.loc)
                 .setTitle("command.scan.completed")
-                .setDescription(loc.localize("command.scan.result", scan.guild(),
+                .setDescription("command.scan.result",
                         Replacement.create("SCANNED", scan.scanned()),
-                        Replacement.create("HITS", scan.hits())))
+                        Replacement.create("HITS", scan.hits()))
                 .build();
         scan.resultChannel().sendMessageEmbeds(embed).reference(scan.progressMessage()).queue();
     }
@@ -235,11 +228,11 @@ public class Scan extends SimpleCommand {
         if (canceled.isEmpty()) return;
         var scan = canceled.poll();
         setInactive(scan);
-        var embed = new LocalizedEmbedBuilder(loc, scan.guild())
+        var embed = new LocalizedEmbedBuilder(scan.loc)
                 .setTitle("command.scan.canceled")
-                .setDescription(loc.localize("command.scan.result", scan.guild(),
+                .setDescription("command.scan.result",
                         Replacement.create("SCANNED", scan.scanned()),
-                        Replacement.create("HITS", scan.hits())))
+                        Replacement.create("HITS", scan.hits()))
                 .build();
         scan.resultChannel().sendMessageEmbeds(embed).reference(scan.progressMessage()).queue();
     }
@@ -264,7 +257,7 @@ public class Scan extends SimpleCommand {
 
     private static class ScanProcess {
         private final MessageAnalyzer messageAnalyzer;
-        private final Localizer loc;
+        private final ContextLocalizer loc;
         private final Guild guild;
         private final TextChannel resultChannel;
         private final Message progressMessage;
@@ -279,7 +272,7 @@ public class Scan extends SimpleCommand {
         private Instant lastSeen;
         private Thread currWorker;
 
-        public ScanProcess(MessageAnalyzer messageAnalyzer, Localizer localizer, Message progressMessage, MessageHistory history, Pattern pattern, int calls, ReputationData data) {
+        public ScanProcess(MessageAnalyzer messageAnalyzer, ContextLocalizer localizer, Message progressMessage, MessageHistory history, Pattern pattern, int calls, ReputationData data) {
             this.messageAnalyzer = messageAnalyzer;
             loc = localizer;
             guild = progressMessage.getGuild();
@@ -346,7 +339,7 @@ public class Scan extends SimpleCommand {
             var progress = (calls - Math.max(callsLeft, 0)) / (double) calls;
             var progressString = String.format("%.02f", progress * 100d);
             log.debug("Scan progress for guild {}: {}", guild.getIdLong(), progressString);
-            progressMessage.editMessage(loc.localize("command.scan.progress", guild,
+            progressMessage.editMessage(loc.localize("command.scan.progress",
                     Replacement.create("PERCENT", progressString)) + " " + TextGenerator.progressBar(progress, 40)).complete();
             time = Instant.now().until(start, ChronoUnit.MILLIS);
             currWorker = null;

@@ -1,11 +1,10 @@
 package de.chojo.repbot.listener;
 
+import de.chojo.jdautil.command.dispatching.CommandHub;
 import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GdprData;
 import de.chojo.repbot.data.GuildData;
-import de.chojo.repbot.data.wrapper.GuildSettings;
-import de.chojo.repbot.util.Permissions;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.channel.ChannelDeleteEvent;
@@ -20,7 +19,6 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import javax.sql.DataSource;
-
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -30,11 +28,13 @@ public class StateListener extends ListenerAdapter {
     private static final Logger log = getLogger(StateListener.class);
     private final GuildData guildData;
     private final GdprData gdprData;
+    private final CommandHub<?> commandHub;
     private final ILocalizer localizer;
     private final Configuration configuration;
     private final ScheduledExecutorService executorService;
 
-    private StateListener(ILocalizer localizer, DataSource dataSource, Configuration configuration, ScheduledExecutorService executorService) {
+    private StateListener(CommandHub<?> commandHub, ILocalizer localizer, DataSource dataSource, Configuration configuration, ScheduledExecutorService executorService) {
+        this.commandHub = commandHub;
         this.localizer = localizer;
         guildData = new GuildData(dataSource);
         gdprData = new GdprData(dataSource);
@@ -42,8 +42,8 @@ public class StateListener extends ListenerAdapter {
         this.executorService = executorService;
     }
 
-    public static StateListener of(ILocalizer localizer, DataSource dataSource, Configuration configuration, ScheduledExecutorService executorService) {
-        return new StateListener(localizer, dataSource, configuration, executorService);
+    public static StateListener of(CommandHub<?> commandHub, ILocalizer localizer, DataSource dataSource, Configuration configuration, ScheduledExecutorService executorService) {
+        return new StateListener(commandHub, localizer, dataSource, configuration, executorService);
     }
 
     @Override
@@ -53,7 +53,7 @@ public class StateListener extends ListenerAdapter {
 
         if (configuration.botlist().isBotlistGuild(event.getGuild().getIdLong())) return;
 
-        executorService.schedule(() -> Permissions.buildGuildPriviledges(guildData, event.getGuild()), 5, TimeUnit.SECONDS);
+        executorService.schedule(() -> commandHub.buildGuildPrivileges(event.getGuild()), 5, TimeUnit.SECONDS);
 
         var selfMember = event.getGuild().getSelfMember();
         for (var channel : event.getGuild().getTextChannels()) {
@@ -96,7 +96,7 @@ public class StateListener extends ListenerAdapter {
 
     @Override
     public void onEmoteRemoved(@NotNull EmoteRemovedEvent event) {
-        GuildSettings guildSettings = guildData.getGuildSettings(event.getGuild());
+        var guildSettings = guildData.getGuildSettings(event.getGuild());
         if (!guildSettings.thankSettings().reactionIsEmote()) return;
         if (!guildSettings.thankSettings().reaction().equals(event.getEmote().getId())) return;
         guildData.setMainReaction(event.getGuild(), "🏅");
