@@ -89,20 +89,20 @@ public class GdprService implements Runnable {
         var userData = gdprData.getUserData(user);
 
         if (userData.isEmpty()) {
-            log.info("Could not process gdpr request for user {}. Data aggregation failed.", userId);
+            log.warn("Could not process gdpr request for user {}. Data aggregation failed.", userId);
             return false;
         }
         Path tempFile;
         try {
             tempFile = Files.createTempFile("repbot_gdpr", ".json");
         } catch (IOException e) {
-            log.info("Coult not create temp file", e);
+            log.warn("Coult not create temp file", e);
             return false;
         }
         try {
             Files.writeString(tempFile, userData.get());
         } catch (IOException e) {
-            log.info("Could not write to temp file", e);
+            log.warn("Could not write to temp file", e);
             return false;
         }
 
@@ -112,7 +112,7 @@ public class GdprService implements Runnable {
                     .addFile(tempFile.toFile())
                     .complete();
         } catch (RuntimeException e) {
-            log.info("Could not send gdpr data to user {}. File sending failed.", userId);
+            log.warn("Could not send gdpr data to user {}. File sending failed.", userId, e);
             return false;
         }
         return true;
