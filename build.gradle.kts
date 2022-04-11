@@ -14,12 +14,9 @@ repositories {
 }
 
 dependencies {
-    // discord
-    implementation("net.dv8tion", "JDA", "5.0.0-alpha.5") {
-        exclude(module = "opus-java")
+    implementation("de.chojo", "cjda-util", "2.3.0+alpha.9"){
+        exclude(group = "club.minnced", module = "opus-java")
     }
-
-    implementation("de.chojo", "cjda-util", "2.3.0+alpha.9")
 
     // database
     implementation("org.postgresql", "postgresql", "42.3.3")
