@@ -23,7 +23,7 @@ dependencies {
 
     // database
     implementation("org.postgresql", "postgresql", "42.3.3")
-    implementation("com.zaxxer", "HikariCP", "5.0.1")
+    implementation("de.chojo", "sql-util", "1.2.1")
 
     // Logging
     implementation("org.slf4j", "slf4j-api", "1.7.36")
@@ -33,7 +33,6 @@ dependencies {
 
     // utils
     implementation("org.apache.commons", "commons-lang3", "3.12.0")
-    implementation("de.chojo", "sql-util", "1.2.1")
     implementation("com.google.guava","guava","31.1-jre")
 
     // unit testing
