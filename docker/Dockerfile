@@ -1,4 +1,4 @@
-FROM gradle:7.4-jdk17 AS build
+FROM gradle:7.4-jdk18 AS build
 WORKDIR /source
 # Copy all build relevant files
 COPY gradle/wrapper/gradle-wrapper.properties gradle/wrapper/gradle-wrapper.properties
@@ -19,7 +19,7 @@ COPY --from=build source/build/libs/rep-bot-*-all.jar app.jar
 # Extract jar
 RUN jar -xf app.jar
 
-FROM eclipse-temurin:17-jre-alpine AS extractDependencies
+FROM eclipse-temurin:18-alpine AS extractDependencies
 WORKDIR /extractDependencies
 # Copy everything from unzip stage
 COPY --from=unzip source/ ./
@@ -35,7 +35,7 @@ RUN rm -r \
         de/chojo/repbot \
         *.jar
 
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:18-alpine
 WORKDIR /
 ENV TERM xterm-256color
 # Copy all dependencies
