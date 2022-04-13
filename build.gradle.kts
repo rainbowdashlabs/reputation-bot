@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "1.6.4"
+version = "1.6.5"
 
 repositories {
     maven("https://eldonexus.de/repository/maven-public")
@@ -14,19 +14,14 @@ repositories {
 }
 
 dependencies {
-    // discord
-    implementation("net.dv8tion", "JDA", "5.0.0-alpha.5") {
-        exclude(module = "opus-java")
+    //discord
+    implementation("de.chojo", "cjda-util", "2.3.1+alpha.9"){
+        exclude(group = "club.minnced", module = "opus-java")
     }
-
-    implementation("de.chojo", "cjda-util", "2.3.0+alpha.9")
 
     // database
     implementation("org.postgresql", "postgresql", "42.3.3")
-    implementation("com.zaxxer", "HikariCP", "5.0.1")
-
-    // Serialization
-    implementation("com.fasterxml.jackson.core", "jackson-databind", "2.13.2")
+    implementation("de.chojo", "sql-util", "1.2.1")
 
     // Logging
     implementation("org.slf4j", "slf4j-api", "1.7.36")
@@ -34,22 +29,17 @@ dependencies {
     implementation("org.apache.logging.log4j", "log4j-slf4j-impl", "2.17.2")
     implementation("club.minnced", "discord-webhooks", "0.8.0")
 
-    // utils
-    implementation("org.apache.commons", "commons-lang3", "3.12.0")
-    implementation("de.chojo", "sql-util", "1.2.1")
-    implementation("com.google.guava","guava","31.1-jre")
-
     // unit testing
     testImplementation(platform("org.junit:junit-bom:5.8.2"))
     testImplementation("org.junit.jupiter", "junit-jupiter")
 }
 
-
 java {
+    toolchain{
+        languageVersion.set(JavaLanguageVersion.of(18))
+    }
     withSourcesJar()
     withJavadocJar()
-
-    sourceCompatibility = JavaVersion.VERSION_17
 }
 
 tasks {

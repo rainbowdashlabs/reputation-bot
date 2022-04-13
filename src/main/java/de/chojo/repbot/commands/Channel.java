@@ -32,7 +32,7 @@ public class Channel extends SimpleCommand {
                 .addSubCommand("remove", "command.channel.sub.remove", argsBuilder()
                         .add(SimpleArgument.channel("channel", "command.channel.sub.remove.arg.channel").asRequired()))
                 .addSubCommand("list_type", "command.channel.sub.listType", argsBuilder()
-                        .add(SimpleArgument.bool("type", "command.channel.sub.listType.arg.type").withAutoComplete()))
+                        .add(SimpleArgument.string("type", "command.channel.sub.listType.arg.type").withAutoComplete()))
                 .addSubCommand("list", "command.channel.sub.list")
                 .withPermission());
         guildData = new GuildData(dataSource);
