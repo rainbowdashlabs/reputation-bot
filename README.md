@@ -30,9 +30,9 @@ only scan one channel at a time.
 
 Use the docker compose file in the docker directory. Otherwise do the stuff below.
 
-Build from source. You probably need to build my library on localhost currently because jitci hates gradle.
+Build from source. No specific setup besides a JDK with an appropriate version is required to compile the bot yourself.
 
-You will need a PostgreSQL database and Java 15 or higher. Copy the log4j config from resources to your wished
+You will need a PostgreSQL database and Java 18 or higher. Copy the log4j config from resources to your wished
 destination. I suggest a config directory
 
 Start the bot with the following parameter. You may change the path.

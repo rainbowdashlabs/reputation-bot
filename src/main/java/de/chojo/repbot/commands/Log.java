@@ -103,6 +103,12 @@ public class Log extends SimpleCommand {
                 return CompletableFuture.supplyAsync(() -> userLogEmbed(context, user, "command.log.donatedLog",
                         mapUserLogEntry(context, logAccess.page(current()), ReputationLogEntry::receiverId)));
             }
+
+            @Override
+            public CompletableFuture<MessageEmbed> buildEmptyPage() {
+                return CompletableFuture.completedFuture(userLogEmbed(context, user, "command.log.donatedLog",
+                        mapUserLogEntry(context, Collections.emptyList(), ReputationLogEntry::receiverId)));
+            }
         }, true);
     }
 
@@ -113,6 +119,12 @@ public class Log extends SimpleCommand {
             public CompletableFuture<MessageEmbed> buildPage() {
                 return CompletableFuture.supplyAsync(() -> userLogEmbed(context, user, "command.log.receivedLog",
                         mapUserLogEntry(context, logAccess.page(current()), ReputationLogEntry::donorId)));
+            }
+
+            @Override
+            public CompletableFuture<MessageEmbed> buildEmptyPage() {
+                return CompletableFuture.completedFuture(userLogEmbed(context, user, "command.log.receivedLog",
+                        mapUserLogEntry(context, Collections.emptyList(), ReputationLogEntry::donorId)));
             }
         }, true);
     }
