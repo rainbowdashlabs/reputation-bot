@@ -42,12 +42,6 @@ public class Top extends SimpleCommand {
                 return CompletableFuture.supplyAsync(() -> {
                     var ranking = guildRanking.page(current());
 
-                    if (ranking.isEmpty()) {
-                        return createBaseBuilder(context, event.getGuild())
-                                .setDescription("*" + context.localize("command.top.empty") + "*")
-                                .build();
-                    }
-
                     var maxRank = ranking.get(ranking.size() - 1).rank();
                     var rankString = ranking.stream().map(rank -> rank.fancyString((int) maxRank)).collect(Collectors.joining("\n"));
 
@@ -55,6 +49,13 @@ public class Top extends SimpleCommand {
                             .setDescription(rankString)
                             .build();
                 });
+            }
+
+            @Override
+            public CompletableFuture<MessageEmbed> buildEmptyPage() {
+                return CompletableFuture.completedFuture(createBaseBuilder(context, event.getGuild())
+                        .setDescription("*" + context.localize("command.top.empty") + "*")
+                        .build());
             }
         }, true);
     }
