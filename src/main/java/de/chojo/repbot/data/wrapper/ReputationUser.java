@@ -1,5 +1,6 @@
 package de.chojo.repbot.data.wrapper;
 
+import de.chojo.jdautil.util.MentionUtil;
 import net.dv8tion.jda.api.entities.User;
 import org.apache.commons.lang3.StringUtils;
 
@@ -18,14 +19,10 @@ public class ReputationUser {
         return new ReputationUser(0, user.getIdLong(), 0);
     }
 
-    public User userFromId() {
-        return User.fromId(userId);
-    }
-
     public String fancyString(int maxRank) {
         var length = String.valueOf(maxRank).length();
         var rank = StringUtils.rightPad(String.valueOf(this.rank), length);
-        return "`" + rank + "` **|** " + userFromId().getAsMention() + " ➜ " + reputation;
+        return "`" + rank + "` **|** " + MentionUtil.user(userId) + " ➜ " + reputation;
     }
 
     public long rank() {
