@@ -33,7 +33,7 @@ Each user will have its own reputation profile. The top users get some nice badg
 
 # Roles
 
-You can define multiple roles which a user will get when he has a minimum amount of reputation.\
+You can define multiple roles which a user will get when he has a minimum amount of reputation.  
 These are displayed as level.
 
 ![A list of roles](https://chojos.lewds.de/2cGkWYgzVE.png)
@@ -44,7 +44,7 @@ The whole system is designed to be as abuse proof as possible.
 
 ## Backthanking
 
-If a user A received reputation from user B, neither A nor B can thank eachother for a fixed time defined as cooldown.\
+If a user A received reputation from user B, neither A nor B can thank eachother for a fixed time defined as cooldown.  
 User B can still thank user C or any other user. Cooldown is measured between users not global.
 
 ## Outdated Messages
