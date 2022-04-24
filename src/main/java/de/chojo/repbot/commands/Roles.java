@@ -5,6 +5,7 @@ import de.chojo.jdautil.command.SimpleArgument;
 import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
+import de.chojo.jdautil.util.Futures;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.wrapper.GuildSettings;
@@ -15,41 +16,48 @@ import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import org.apache.commons.lang3.time.DurationFormatUtils;
+import org.slf4j.Logger;
 
 import javax.sql.DataSource;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class Roles extends SimpleCommand {
+    private static final Logger log = getLogger(Roles.class);
     private final GuildData guildData;
     private final RoleAssigner roleAssigner;
     private final Set<Long> running = new HashSet<>();
 
     public Roles(DataSource dataSource, RoleAssigner roleAssigner) {
         super(CommandMeta.builder("roles", "command.roles.description")
-                        .addSubCommand("managerrole", "command.roles.sub.managerRole", argsBuilder()
-                                .add(SimpleArgument.role("role", "command.roles.sub.managerRole.arg.role")))
-                        .addSubCommand("add", "command.roles.sub.add", argsBuilder()
-                                .add(SimpleArgument.role("role", "command.roles.sub.add.arg.role").asRequired())
-                                .add(SimpleArgument.integer("reputation", "command.roles.sub.add.arg.reputation").asRequired()))
-                        .addSubCommand("remove", "command.roles.sub.remove", argsBuilder()
-                                .add(SimpleArgument.role("role", "command.roles.sub.remove.arg.role").asRequired()))
-                        .addSubCommand("adddonor", "command.roles.sub.addDonor", argsBuilder()
-                                .add(SimpleArgument.role("role", "command.roles.sub.addDonor.arg.role").asRequired()))
-                        .addSubCommand("addreceiver", "command.roles.sub.addReceiver", argsBuilder()
-                                .add(SimpleArgument.role("role", "command.roles.sub.addReceiver.arg.role").asRequired()))
-                        .addSubCommand("removedonor", "command.roles.sub.removeDonor", argsBuilder()
-                                .add(SimpleArgument.role("role", "command.roles.sub.removeDonor.arg.role").asRequired()))
-                        .addSubCommand("removereceiver", "command.roles.sub.removeReceiver", argsBuilder()
-                                .add(SimpleArgument.role("role", "command.roles.sub.removeReceiver.arg.role").asRequired()))
-                        .addSubCommand("refresh", "command.roles.sub.refresh")
-                        .addSubCommand("list", "command.roles.sub.list")
-                        .addSubCommand("stackroles", "command.roles.sub.stackRoles", argsBuilder()
-                                .add(SimpleArgument.bool("stack", "command.roles.sub.stackRoles.arg.stack")))
-                        .withPermission());
+                .addSubCommand("managerrole", "command.roles.sub.managerRole", argsBuilder()
+                        .add(SimpleArgument.role("role", "command.roles.sub.managerRole.arg.role")))
+                .addSubCommand("add", "command.roles.sub.add", argsBuilder()
+                        .add(SimpleArgument.role("role", "command.roles.sub.add.arg.role").asRequired())
+                        .add(SimpleArgument.integer("reputation", "command.roles.sub.add.arg.reputation").asRequired()))
+                .addSubCommand("remove", "command.roles.sub.remove", argsBuilder()
+                        .add(SimpleArgument.role("role", "command.roles.sub.remove.arg.role").asRequired()))
+                .addSubCommand("adddonor", "command.roles.sub.addDonor", argsBuilder()
+                        .add(SimpleArgument.role("role", "command.roles.sub.addDonor.arg.role").asRequired()))
+                .addSubCommand("addreceiver", "command.roles.sub.addReceiver", argsBuilder()
+                        .add(SimpleArgument.role("role", "command.roles.sub.addReceiver.arg.role").asRequired()))
+                .addSubCommand("removedonor", "command.roles.sub.removeDonor", argsBuilder()
+                        .add(SimpleArgument.role("role", "command.roles.sub.removeDonor.arg.role").asRequired()))
+                .addSubCommand("removereceiver", "command.roles.sub.removeReceiver", argsBuilder()
+                        .add(SimpleArgument.role("role", "command.roles.sub.removeReceiver.arg.role").asRequired()))
+                .addSubCommand("refresh", "command.roles.sub.refresh")
+                .addSubCommand("list", "command.roles.sub.list")
+                .addSubCommand("stackroles", "command.roles.sub.stackRoles", argsBuilder()
+                        .add(SimpleArgument.bool("stack", "command.roles.sub.stackRoles.arg.stack")))
+                .withPermission());
         guildData = new GuildData(dataSource);
         this.roleAssigner = roleAssigner;
     }
@@ -74,7 +82,7 @@ public class Roles extends SimpleCommand {
         }
 
         if ("addDonor".equalsIgnoreCase(subCmd)) {
-            addDonor(event, context,event.getOption("role").getAsRole());
+            addDonor(event, context, event.getOption("role").getAsRole());
         }
 
         if ("addReceiver".equalsIgnoreCase(subCmd)) {
@@ -82,7 +90,7 @@ public class Roles extends SimpleCommand {
         }
 
         if ("removeDonor".equalsIgnoreCase(subCmd)) {
-            removeDonor(event, context,  event.getOption("role").getAsRole());
+            removeDonor(event, context, event.getOption("role").getAsRole());
         }
 
         if ("removeReceiver".equalsIgnoreCase(subCmd)) {
@@ -107,20 +115,31 @@ public class Roles extends SimpleCommand {
         running.add(event.getGuild().getIdLong());
 
         event.reply(context.localize("command.roles.sub.refresh.started")).queue();
+        var start = Instant.now();
         roleAssigner
                 .updateBatch(event.getGuild())
-                .thenRun(() -> event.getHook()
-                        .editOriginal(context.localize("command.roles.sub.refresh.finished"))
-                        .queue())
-                .exceptionally(r -> {
-                    if (r instanceof RoleAccessException) {
+                .whenComplete(Futures.whenComplete(res -> {
+                    var duration = DurationFormatUtils.formatDuration(start.until(Instant.now(), ChronoUnit.MILLIS), "mm:ss");
+                    log.debug("Update of roles took: {}.", duration);
+                    if (event.getHook().isExpired()) {
+                        log.debug("Interaction hook is expired. Using fallback message.");
+                        event.getChannel()
+                                .sendMessage(context.localize("command.roles.sub.refresh.finished"))
+                                .queue();
+                        return;
+                    }
+                    event.getHook()
+                            .editOriginal(context.localize("command.roles.sub.refresh.finished"))
+                            .queue();
+                }, err -> {
+                    if (err instanceof RoleAccessException roleException) {
                         event.getHook()
                                 .editOriginal(context.localize("error.roleAccess",
-                                        Replacement.createMention("ROLE", ((RoleAccessException) r).role())))
+                                        Replacement.createMention("ROLE", roleException.role())))
                                 .queue();
                     }
-                    return null;
-                }).thenRun(() -> running.remove(event.getGuild().getIdLong()));
+                }))
+                .thenRun(() -> running.remove(event.getGuild().getIdLong()));
     }
 
     private void stackRoles(SlashCommandInteractionEvent event, SlashCommandContext context) {
@@ -141,7 +160,7 @@ public class Roles extends SimpleCommand {
     private void managerRole(SlashCommandInteractionEvent event, SlashCommandContext context) {
         if (event.getOptions().isEmpty()) {
             var settings = guildData.getGuildSettings(event.getGuild());
-            event.reply(getManagerRoleMessage(context,event.getGuild(), settings)).allowedMentions(Collections.emptyList()).queue();
+            event.reply(getManagerRoleMessage(context, event.getGuild(), settings)).allowedMentions(Collections.emptyList()).queue();
             return;
         }
         var role = event.getOption("role").getAsRole();
@@ -154,7 +173,7 @@ public class Roles extends SimpleCommand {
         }
     }
 
-    private String getManagerRoleMessage(SlashCommandContext context,Guild guild, GuildSettings settings) {
+    private String getManagerRoleMessage(SlashCommandContext context, Guild guild, GuildSettings settings) {
         if (settings.generalSettings().managerRole().isPresent()) {
             var roleById = guild.getRoleById(settings.generalSettings().managerRole().get());
             if (roleById != null) {
