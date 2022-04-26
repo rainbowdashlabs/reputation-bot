@@ -40,23 +40,68 @@ every personal data I need to provide this service in the best possible quality.
 
 This list is without any guarantees for completeness or currency
 
-- Users in voice channels  
-  We do this to allow you to give users reputation which shared a voice channel with you recently.
-  This data is deleted after 12 hours
-- Settings of your guild  
-  The settings of your guild will be stored for the whole time the bot is on your guild. If you remove the bot your data
-  will be deleted after 14 days.
-- Reputation data  
-  For each given reputation we store the id of the guild, channel, message, donor, receiver and a thank type
-  This is done to allow logging and aggregating of the data for rankings.  
-  This data will be deleted after 14 days if the bot is no longer on the guild.  
-  You personal data will be deleted 14 days after you left the server.  
-  Your received reputation will be deleted completely. Your user id will be removed from any given reputation. Given
-  reputation will not be removed.
-- GDPR Data  
-  When you request your data we will save your id, request time and the time we delivered the data to you. This data
-  will be deleted after 90 days. We do this to keep track of delivered data and to find any errors or unfullfilled
-  requests. We do this as well to verify that you received your data.
+### Users in voice channels
+**Discord data:**  
+`user id`, `guild id`  
+
+**What:**  
+We store the `user ids` of users which shared a voice channel in a guild recently.
+
+**Why:**  
+We do this to allow users to give users reputation which shared a voice channel with them recently.  
+
+**Deletion:**  
+12 hours
+
+### Guild Settings
+**Discord data:**  
+`guild id`, `channel id`, `role id`, `emote id`
+
+**What:**  
+We store the guild id, together with the settings of the guild
+
+**Why:**  
+`guild id`: The guild id is required to identify the guild the settings are saved for.  
+`channel id`: The channels where reputation is allowed to be given.    
+`role id`: The roles which users get assigned when reaching a reputation goal.  
+`emote id`: The emotes which give reputation or should be added on reputation receival.
+
+**Deletion:**  
+14 days after removal of the bot from the guild
+
+### Reputation Log
+
+**Discord Data:**  
+`guild id`, `channel id`, `message id`, `user id`
+
+**Why:**  
+The reputation log is required to compute the total and rolling reputation amount of users. It contains one entry 
+per given reputation.
+
+`guild id`, `channel id`, `message id`: This data is required to create jump links to the message which triggered 
+a reputation donation. This is important for server owners or managers to keep track of the bot behaviour.  
+`user id`: The user id of the receiver and donor. We require the donor to prevent the users from backthanking and to 
+enforce the cooldown between users. The receiver is required to compile leaderboards.
+
+**Deletion:**  
+Instantly after deletion of the message or the trigger which triggered the reputation donation.
+14 days after the receiver left the guild.
+14 days after the donor left the guild the donor id will be removed from the reputation entry.
+
+### GDPR data
+
+**Discord Data:**  
+`user id`
+
+**Why:**  
+We save this data to keep track of data requests.
+
+`user id`: We save the id of the user who requested his data. This is required to track 
+if the user received the data already and to facilitate some rate limit to avoid users requesting their data over 
+and over again to overload our system.
+
+**Deletion:**  
+90 days after the receiver received their data.
 
 ## Deleting or requesting your data 
 
