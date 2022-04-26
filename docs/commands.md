@@ -1,6 +1,6 @@
 # Commands
 
-(Outdated)
+The command list is outdated. Use the slash commands in discord to see the available commands.
 
 User commands are:
 

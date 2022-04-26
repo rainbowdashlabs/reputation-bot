@@ -13,6 +13,3 @@ After this, there are some optional steps you may want to take a look at.
 - Set the legacy prefix. All slash commands also exists as legacy text commands.
 - Use the `/repsettings` command to tweak your settings.
 - User the `/thankwords check` command to check if a message would give reputation.
-
-## Abuse protection
-TBD

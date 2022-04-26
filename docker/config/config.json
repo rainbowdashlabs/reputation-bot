@@ -1,0 +1,120 @@
+{
+  "baseSettings" : {
+    "token" : "",
+    "defaultPrefix" : "!",
+    "exclusiveHelp" : false,
+    "internalCommands" : false,
+    "botOwner" : [ ]
+  },
+  "presenceSettings" : {
+    "active" : false,
+    "interval" : 5,
+    "status" : [ {
+      "type" : "WATCHING",
+      "text" : "%guild_count% guilds!"
+    }, {
+      "type" : "LISTENING",
+      "text" : "%channel_count% channels!"
+    }, {
+      "type" : "WATCHING",
+      "text" : "%total_rep% Reputations!"
+    }, {
+      "type" : "WATCHING",
+      "text" : "%weekly_rep% Reputation this week!"
+    }, {
+      "type" : "WATCHING",
+      "text" : "%today_rep% Reputation today!"
+    }, {
+      "type" : "WATCHING",
+      "text" : "%weekly_avg_rep% Reputation per week!"
+    }, {
+      "type" : "LISTENING",
+      "text" : "%analyzed_messages% messages during the last hour!"
+    } ]
+  },
+  "analyzerSettings" : {
+    "historySize" : 100,
+    "voiceMembers" : 10,
+    "latestMaxHours" : 12,
+    "minFuzzyScore" : 0.9
+  },
+  "database" : {
+    "host" : "localhost",
+    "port" : "5432",
+    "database" : "db",
+    "schema" : "repbot",
+    "user" : "user",
+    "password" : "pw",
+    "poolSize" : 5
+  },
+  "magicImage" : {
+    "magicImageLink" : "",
+    "magicImagineChance" : 10,
+    "magicImageCooldown" : 30,
+    "magicImageDeleteSchedule" : 60
+  },
+  "testMode" : {
+    "testMode" : false,
+    "testGuilds" : [ 0 ]
+  },
+  "badges" : {
+    "enables" : true,
+    "badges" : [ ]
+  },
+  "links" : {
+    "tos" : "",
+    "invite" : "https://discord.com/oauth2/authorize?client_id=834843896579489794&scope=bot&permissions=1342532672",
+    "support" : "",
+    "website" : "",
+    "faq" : ""
+  },
+  "botlist" : {
+    "submit" : false,
+    "host" : "0.0.0.0",
+    "port" : 8888,
+    "topGg" : {
+      "name" : "top.gg",
+      "statsToken" : "",
+      "voteToken" : "",
+      "guildId" : 264445053596991498,
+      "profileUrl" : "",
+      "voteUrl" : ""
+    },
+    "discordBotsGg" : {
+      "name" : "discord.bots.gg",
+      "statsToken" : "",
+      "voteToken" : "",
+      "guildId" : 110373943822540800,
+      "profileUrl" : "",
+      "voteUrl" : ""
+    },
+    "discordBotlistCom" : {
+      "name" : "discordbotlist.com",
+      "statsToken" : "",
+      "voteToken" : "",
+      "guildId" : 450100127256936458,
+      "profileUrl" : "",
+      "voteUrl" : ""
+    },
+    "botListMe" : {
+      "name" : "discordbotlist.com",
+      "statsToken" : "",
+      "voteToken" : "",
+      "guildId" : 698637043240009738,
+      "profileUrl" : "",
+      "voteUrl" : ""
+    }
+  },
+  "selfcleanup" : {
+    "active" : true,
+    "promptDays" : 3,
+    "leaveDays" : 3,
+    "inactiveDays" : 90
+  },
+  "migration" : {
+    "active" : false,
+    "migrationMessage" : "Please migrate",
+    "maxMigrations" : 3,
+    "maxMigrationsPeriod" : 7
+  }
+}

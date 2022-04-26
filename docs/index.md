@@ -1,64 +1,64 @@
-# Reputation Bot - Your community driven Level System
+Welcome on the Reputation Bot website. We provide all information about the bot, setup and usage here.
+
+## Goal of the Reputation Bot
 
 The Reputation Bot was created for communities where the main focus is on mutual help between users.
 
 Normal level systems, which are based on pure activity are not able to reflect how much a user contributes to the
-community. User which have a lot of knowledge have the same level like users which asks a lot of questions all the time.
+community. User which have a lot of knowledge and are helping all the time have the same level like users which asks a
+lot of questions all the time. Thats where the Reputation Bot comes in handy.
 
-The reputation bot changes this and allows users to give eachother reputation when they say something like "Thank you".
+## How does it work
 
-The bot will then try to determine the receiver of the thank phrase or ask the user directly:
+The bot gets triggered by so called "thankwords". These are user defined words (We provide reasonable default 
+settings for every supported language) which usually are something like "Thanks" or "thx" or something completely 
+different.
 
-![Image of a text with a confirmation request.](https://chojos.lewds.de/vOz0UrEc6t.png)
+On receiving the thankword the bot will perform several check, which might lead to giving reputation to a
+identified target. If the bot cant identify a target it will question the user which used the thankword to give
+reputation to a available user.
 
-As an alternative user can also use a custom emote to thank a user.
+We decided against a command for giving rep for multiple reasons:
 
-![Image of a reaction on a message](https://chojos.lewds.de/9VJzOVuIr3.png)
+1. Users nearly always write some thank phrase anyway, which we can use to identify targets.
+2. Actively asking the user to give reputation, will remind him and make it easy to give reputation. This is less 
+   work for the user. It is important to make it as easy as possible.
+3. A command would be an actively reminded action by the user and can be considered as additional work besides 
+   thanking the person who helped.
+4. The bot is not disruptive and deletes his messages afterwards to keep the channel clean.
 
-Another method is to answer on the message with a thank phrase.
+All in all we want to make it as easy and intuitive as possible to give reputation. It should be a no brainer for 
+the users to use and should cause as less additional actions as possible.
 
-![](https://chojos.lewds.de/VvTRamr6Il.png)
-
-You can also mention the user instead. This can be done via mention or with some kind of fuzzy matching.
-
-![](https://chojos.lewds.de/jp05ifXGet.png)
-
-Which version you want to allow can be defined in the settings.
+To see the different ways to give reputation have a look at our extra [page](give_reputation.md)
 
 # Reputation Profile
 
 Each user will have its own reputation profile. The top users get some nice badges on it.
 
-![Reputation profile with badge](https://chojos.lewds.de/191hvsKNFp.png)
+![Reputation profile with badge](resources/profile.png)
 
 # Roles
 
 You can define multiple roles which a user will get when he has a minimum amount of reputation.  
 These are displayed as level.
 
-![A list of roles](https://chojos.lewds.de/2cGkWYgzVE.png)
+![A list of roles](resources/roles.png)
 
-# Absuse protection
+# Toplists
 
-The whole system is designed to be as abuse proof as possible.
+We provide three different toplists
 
-## Backthanking
+- Total
+- Month
+- Week
 
-If a user A received reputation from user B, neither A nor B can thank eachother for a fixed time defined as cooldown.  
-User B can still thank user C or any other user. Cooldown is measured between users not global.
+The month and week toplists are a roling sum of reputations during the last 30 or 7 days.
 
-## Outdated Messages
+# Get help
 
-Users cant thank other users on outdated messages which are older than a time defined by `maxmessageage`.
+Join our discord if you need help, have questions or ideas for a new feature.
 
-## Ghost Reputation
-
-If a user thanks someone and deleted its messages the reputation will be removed as well.
-
-## Context sensitive
-
-User A can only thank user B when B has at least one message after the first message of user A in the channel. This also
-takes the `maxmessageage` into account. User A can also thank B if the share or have shared a voice channel in
-the `maxmessageage`.
+<iframe src="https://discord.com/widget?id=853250161915985958&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
 
 # You can invite the bot with this [link](https://discord.com/api/oauth2/authorize?client_id=871322553698906142&permissions=1342532672&scope=bot%20applications.commands).

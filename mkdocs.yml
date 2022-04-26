@@ -12,6 +12,8 @@ nav:
   - Home: index.md
   - Get the bot: invite.md
   - Setup: setup.md
+  - Giving Reputation: give_reputation.md
+  - Abuse Protection: abuse_protection.md
   - Commands: commands.md
   - FAQ: faq.md
   - ToS and Privacy: tos-privacy.md
