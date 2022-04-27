@@ -3,6 +3,7 @@
 You have two option when you want the bot.
 
 ## Public instance
+
 You can use our public instance which is managed and updated by us.
 
 [Click here to invite the bot on your server](https://discord.com/api/oauth2/authorize?client_id=871322553698906142&permissions=1342532672&scope=bot%20applications.commands)
@@ -10,9 +11,11 @@ You can use our public instance which is managed and updated by us.
 ## Self hosting
 
 ### Docker
+
 Use the docker compose file in the docker directory.
 
 ### Normal hosting
+
 Build from source. No specific setup besides a JDK with an appropriate version is required to compile the bot yourself.
 
 You will need a PostgreSQL database and Java 18 or higher. Copy the log4j config from resources to your wished

@@ -21,7 +21,7 @@ User B: Thank you # (4)
 
 1. User A can't receive reputation because he has no message after the question
 2. This is the inital question. This adds User B to the donor context, which contains users eligible to give reputation
-3. A possible answer for the question. This adds User A to the receiver context, which contains users eligible to 
+3. A possible answer for the question. This adds User C to the receiver context, which contains users eligible to 
    receive reputation
 4. The message which will trigger the reputation embed
 

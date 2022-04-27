@@ -14,12 +14,11 @@ again and vice versa.
 However User A can thank any other user during this time, as well as User B.
 
 ## Receiver and Donor Context
-
-
 To determine which users are eligible to receive and donate reputation we build a context for every message which 
 contains a thankword.
 
 ### Receiver context
+
 Setting: `recieverContext`, `maxMessageAge` and `minMessages`
 
 The receiver context defines which user can receive reputation in the thank message. To find these users we search 
@@ -29,13 +28,14 @@ hours old). All users which have written a message after this are eligible to re
 We will also add the users which wrote the last x messages defined by `minMessages` as long as these are not older 
 than 12 hours.
 
-Users which share or shared a voice channel in the `minMessageAge` minutes are also added to the receiver context.
+Users which share or shared a voice channel in the `maxMessageAge` minutes are also added to the receiver context.
 
 ### Donor context
+
 Setting: `donorContext` and `maxMessageAge`
 
-The donor context checks if the user has at least one more message in the `minMessageAge` in the channel. 
-Additionally we check if the user was in a voice channel currently or in the `minMessageAge` minutes.
+The donor context checks if the user has at least one more message in the `maxMessageAge` in the channel. 
+Additionally we check if the user was in a voice channel currently or in the `maxMessageAge` minutes.
 
 ## Outdated messages
 

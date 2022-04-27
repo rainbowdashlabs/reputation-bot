@@ -41,6 +41,7 @@ every personal data I need to provide this service in the best possible quality.
 This list is without any guarantees for completeness or currency
 
 ### Users in voice channels
+
 **Discord data:**  
 `user id`, `guild id`  
 
@@ -54,6 +55,7 @@ We do this to allow users to give users reputation which shared a voice channel 
 12 hours
 
 ### Guild Settings
+
 **Discord data:**  
 `guild id`, `channel id`, `role id`, `emote id`
 
