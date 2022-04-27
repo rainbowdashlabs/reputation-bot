@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "1.6.6"
+version = "1.6.7"
 
 repositories {
     maven("https://eldonexus.de/repository/maven-public")
