@@ -16,6 +16,9 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
+import net.dv8tion.jda.api.requests.ErrorResponse;
+import net.dv8tion.jda.api.requests.RestAction;
 import org.jetbrains.annotations.Nullable;
 
 import javax.sql.DataSource;
@@ -147,11 +150,15 @@ public class ReputationService {
             if (lastEasterEggSent.until(Instant.now(), ChronoUnit.MINUTES) > magicImage.magicImageCooldown()
                 && ThreadLocalRandom.current().nextInt(magicImage.magicImagineChance()) == 0) {
                 lastEasterEggSent = Instant.now();
+                //TODO: Escape unknown channel 5
                 message.replyEmbeds(new EmbedBuilder()
                                 .setImage(magicImage.magicImageLink())
                                 .setColor(Color.RED).build())
                         .queue(msg -> msg.delete().queueAfter(
-                                magicImage.magicImageDeleteSchedule(), TimeUnit.SECONDS));
+                                magicImage.magicImageDeleteSchedule(), TimeUnit.SECONDS,
+                                RestAction.getDefaultSuccess(),
+                                ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE, ErrorResponse.UNKNOWN_CHANNEL))
+                        );
             }
             return false;
         }

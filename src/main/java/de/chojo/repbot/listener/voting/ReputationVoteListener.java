@@ -119,8 +119,9 @@ public class ReputationVoteListener extends ListenerAdapter {
         message.replyEmbeds(builder.build())
                 .setActionRows(componentRows).queue(voteMessage -> {
                     voteRequests.put(voteMessage.getIdLong(), new VoteRequest(message.getMember(), builder, voteMessage, message, components, Math.min(3, members.size())));
-                    voteMessage.delete().queueAfter(1, TimeUnit.MINUTES, submit -> voteRequests.remove(voteMessage.getIdLong()),
-                            ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
+                    voteMessage.delete().queueAfter(1, TimeUnit.MINUTES,
+                            submit -> voteRequests.remove(voteMessage.getIdLong()),
+                            ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE, ErrorResponse.UNKNOWN_CHANNEL));
                 });
     }
 

@@ -1,0 +1,71 @@
+site_name: Reputation Bot - Your community driven level system
+site_url: https://rainbowdashlabs.github.io/reputation-bot/
+site_description: Everything you need to know about the reputation bot
+repo_url: https://github.com/RainbowDashLabs/reputation-bot
+repo_name: Reputation Bot
+plugins:
+  - git-revision-date-localized:
+      type: date
+      fallback_to_build_date: true
+      enable_creation_date: true
+nav:
+  - Home: index.md
+  - Get the bot: invite.md
+  - Setup: setup.md
+  - Giving Reputation: give_reputation.md
+  - Abuse Protection: abuse_protection.md
+  - Commands: commands.md
+  - FAQ: faq.md
+  - ToS and Privacy: tos-privacy.md
+theme:
+  features:
+    - navigation.instant
+    - navigation.tracking
+    #    - navigation.expand
+    #    - navigation.tabs
+    #    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.indexes
+    - navigation.top
+    - content.code.annotate
+  language: en
+  name: material
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: pink
+      accent: light blue
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: pink
+      accent: light blue
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to light mode
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+extra:
+  social:
+    - icon: fontawesome/solid/magnifying-glass
+      name: TOS & Privacy
+      link: https://rainbowdashlabs.github.io/reputation-bot/tos-privacy
+    - icon: material/android-messages
+      name: Invite
+      link: https://discord.com/api/oauth2/authorize?client_id=871322553698906142&permissions=1342532672&scope=bot%20applications.commands
+    - icon: material/chat
+      name: Support
+      link: https://discord.gg/5DrGmz7pHj
+    - icon: fontawesome/solid/question
+      name: FAQ
+      link: https://rainbowdashlabs.github.io/reputation-bot/faq
