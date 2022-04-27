@@ -22,7 +22,7 @@ contains a thankword.
 Setting: `recieverContext`, `maxMessageAge` and `minMessages`
 
 The receiver context defines which user can receive reputation in the thank message. To find these users we search 
-the latest message of the user which wrote the thank message inside the `maxMessageAge` (Max 100 messages and 12 
+the oldest message of the user which wrote the thank message inside the `maxMessageAge` (Max 100 messages and 12 
 hours old). All users which have written a message after this are eligible to receive reputation.
 
 We will also add the users which wrote the last x messages defined by `minMessages` as long as these are not older 
