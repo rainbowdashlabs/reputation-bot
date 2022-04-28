@@ -240,6 +240,7 @@ public class ReputationBot {
                         new AbuseProtection(dataSource),
                         new Debug(dataSource))
                 .withLocalizer(localizer)
+                .withPermissionCheck((event, meta) -> true)
                 .withCommandErrorHandler((context, throwable) -> {
                     if (throwable instanceof InsufficientPermissionException) {
                         PermissionErrorHandler.handle((InsufficientPermissionException) throwable, shardManager, localizer, configuration);
@@ -247,7 +248,6 @@ public class ReputationBot {
                     }
                     log.error(LogNotify.NOTIFY_ADMIN, "Command execution of {} failed\n{}", context.command().meta().name(), context.args(), throwable);
                 })
-                .withManagerRole(guild -> Collections.singletonList(guildData.getGuildSettings(guild).generalSettings().managerRole().orElse(0L)))
                 .withPagination(pageServiceBuilder -> pageServiceBuilder.withLocalizer(localizer).previousText("pages.previous").nextText("pages.next"))
                 .build();
 

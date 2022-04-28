@@ -1,8 +1,8 @@
 # Setup
 
-Setup is easy.
-
-Just execute the `/setup` command and follow the instructions.
+1. Head to Server Settings -> Integrations. Click to manage the reputation bot and add at least one role which 
+   should be allowed to manage the bot.
+2. Execute the `/setup` command and follow the instructions, which will guide you through the basic setup
 
 After this, there are some optional steps you may want to take a look at.
 

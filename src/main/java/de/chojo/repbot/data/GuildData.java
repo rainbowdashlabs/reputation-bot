@@ -82,7 +82,6 @@ public class GuildData extends QueryFactoryHolder {
                         SELECT
                             prefix,
                             emoji_debug,
-                            manager_role,
                             stack_roles
                         FROM
                             guild_settings
@@ -144,7 +143,6 @@ public class GuildData extends QueryFactoryHolder {
         return new GeneralSettings(
                 rs.getString("prefix"),
                 rs.getBoolean("emoji_debug"),
-                rs.getLong("manager_role"),
                 rs.getBoolean("stack_roles"));
     }
 
