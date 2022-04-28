@@ -8,7 +8,6 @@ import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.util.Futures;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
-import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.repbot.service.RoleAccessException;
 import de.chojo.repbot.service.RoleAssigner;
 import net.dv8tion.jda.api.entities.Guild;
@@ -38,8 +37,6 @@ public class Roles extends SimpleCommand {
 
     public Roles(DataSource dataSource, RoleAssigner roleAssigner) {
         super(CommandMeta.builder("roles", "command.roles.description")
-                .addSubCommand("managerrole", "command.roles.sub.managerRole", argsBuilder()
-                        .add(SimpleArgument.role("role", "command.roles.sub.managerRole.arg.role")))
                 .addSubCommand("add", "command.roles.sub.add", argsBuilder()
                         .add(SimpleArgument.role("role", "command.roles.sub.add.arg.role").asRequired())
                         .add(SimpleArgument.integer("reputation", "command.roles.sub.add.arg.reputation").asRequired()))
@@ -75,10 +72,6 @@ public class Roles extends SimpleCommand {
 
         if ("remove".equalsIgnoreCase(subCmd)) {
             remove(event, context);
-        }
-
-        if ("managerRole".equalsIgnoreCase(subCmd)) {
-            managerRole(event, context);
         }
 
         if ("addDonor".equalsIgnoreCase(subCmd)) {
@@ -155,33 +148,6 @@ public class Roles extends SimpleCommand {
             event.reply(getBooleanMessage(context, state,
                     "command.roles.sub.stackRoles.stacked", "command.roles.sub.stackRoles.notStacked")).queue();
         }
-    }
-
-    private void managerRole(SlashCommandInteractionEvent event, SlashCommandContext context) {
-        if (event.getOptions().isEmpty()) {
-            var settings = guildData.getGuildSettings(event.getGuild());
-            event.reply(getManagerRoleMessage(context, event.getGuild(), settings)).allowedMentions(Collections.emptyList()).queue();
-            return;
-        }
-        var role = event.getOption("role").getAsRole();
-        if (guildData.setManagerRole(event.getGuild(), role)) {
-            event.reply(context.localize("command.roles.sub.managerRole.set",
-                            Replacement.createMention(role)))
-                    .allowedMentions(Collections.emptyList()).queue();
-
-            context.commandHub().buildGuildPrivileges(event.getGuild());
-        }
-    }
-
-    private String getManagerRoleMessage(SlashCommandContext context, Guild guild, GuildSettings settings) {
-        if (settings.generalSettings().managerRole().isPresent()) {
-            var roleById = guild.getRoleById(settings.generalSettings().managerRole().get());
-            if (roleById != null) {
-                return context.localize("command.roles.sub.managerRole.current",
-                        Replacement.createMention(roleById));
-            }
-        }
-        return context.localize("command.roles.sub.managerRole.noRole");
     }
 
     private void remove(SlashCommandInteractionEvent event, SlashCommandContext context) {
