@@ -81,7 +81,6 @@ public class Setup extends SimpleCommand {
                                                 .add(Button.success("continue", "word.continue"), c -> Result.proceed(1)))
                                 .build())
                 .addStep(1, buildSelectLanguage(context))
-                .addStep(2, buildManagerRole())
                 .addStep(3, buildRoles())
                 .addStep(4, buildLoadDefaults())
                 .addStep(5, buildChannels());
@@ -101,29 +100,9 @@ public class Setup extends SimpleCommand {
                         guildData.setLanguage(con.getGuild(), language);
                         con.reply(con.localize("command.locale.sub.set.set",
                                 Replacement.create("LOCALE", language.getLanguage()))).queue();
-                        return Result.proceed(2);
+                        return Result.proceed(3);
                     });
         }
-    }
-
-    private Step buildManagerRole() {
-        return Step.message("command.setup.dialog.managerRole",
-                        context -> {
-                            var role = DiscordResolver.getRole(context.getGuild(), context.getContentRaw());
-                            return role.map(role1 -> handleManageRole(context, role1)).orElse(Result.fail());
-                        })
-                .button(buttons -> buttons
-                        .add(new ComponenAction(Button.danger("skip", "word.skip"), c -> Result.proceed(3))))
-                .build();
-    }
-
-    private Result handleManageRole(ConversationContext context, Role role) {
-        guildData.setManagerRole(context.getGuild(), role);
-        context.reply(context.localize("command.roles.sub.managerRole.set",
-                        Replacement.createMention(role)))
-                .allowedMentions(Collections.emptyList())
-                .queue();
-        return Result.proceed(3);
     }
 
     private Step buildRoles() {
