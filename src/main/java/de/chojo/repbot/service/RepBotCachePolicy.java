@@ -1,5 +1,6 @@
 package de.chojo.repbot.service;
 
+import de.chojo.repbot.commands.Roles;
 import de.chojo.repbot.commands.Scan;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
@@ -16,8 +17,11 @@ public class RepBotCachePolicy implements MemberCachePolicy, Runnable {
     private final HashMap<Long, Instant> seen = new HashMap<>();
     private final Scan scan;
 
-    public RepBotCachePolicy(Scan scan) {
+    private final Roles roles;
+
+    public RepBotCachePolicy(Scan scan, Roles roles) {
         this.scan = scan;
+        this.roles = roles;
     }
 
     public void seen(Member member) {
@@ -39,6 +43,10 @@ public class RepBotCachePolicy implements MemberCachePolicy, Runnable {
         }
 
         if (scan.isRunning(member.getGuild())) {
+            return true;
+        }
+
+        if (roles.refreshActive(member.getGuild())) {
             return true;
         }
 

@@ -67,12 +67,12 @@ import org.slf4j.Logger;
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -95,6 +95,8 @@ public class ReputationBot {
     private RepBotCachePolicy repBotCachePolicy;
     private ContextResolver contextResolver;
     private MessageAnalyzer messageAnalyzer;
+    private Roles roles;
+    private RoleAssigner roleAssigner;
 
     public static void main(String[] args) throws SQLException, IOException {
         ReputationBot.instance = new ReputationBot();
@@ -133,6 +135,10 @@ public class ReputationBot {
         initBot();
 
         initBotList();
+
+        shardManager.getGuildById(519849671284490240L).retrieveCommands().queueAfter(10, TimeUnit.SECONDS, cmd -> {
+            cmd.forEach(cm -> log.info("{} is enabled: {}", cm.getName(), cm.isDefaultEnabled()));
+        });
     }
 
     private void initBotList() {
@@ -200,7 +206,6 @@ public class ReputationBot {
         scan.lateInit(messageAnalyzer);
 
         // init services
-        var roleAssigner = new RoleAssigner(dataSource, repBotWorker);
         var reputationService = new ReputationService(dataSource, contextResolver, roleAssigner, configuration.magicImage(), localizer);
         var gdprService = GdprService.of(shardManager, dataSource, repBotWorker);
         SelfCleanupService.create(shardManager, localizer, dataSource, configuration, repBotWorker);
@@ -213,7 +218,6 @@ public class ReputationBot {
             shardManager.addEventListener(new InternalCommandListener(configuration, statistic));
         }
 
-        var guildData = new GuildData(dataSource);
         var hub = CommandHub.builder(shardManager)
                 .withConversationSystem()
                 .useGuildCommands()
@@ -221,7 +225,7 @@ public class ReputationBot {
                         new Channel(dataSource),
                         new Prefix(dataSource, configuration),
                         new Reputation(dataSource, configuration),
-                        new Roles(dataSource, roleAssigner),
+                        roles,
                         new RepSettings(dataSource),
                         new Top(dataSource),
                         new TopWeek(dataSource),
@@ -287,8 +291,10 @@ public class ReputationBot {
     }
 
     private void initJDA() throws LoginException {
+        roleAssigner = new RoleAssigner(dataSource, repBotWorker);
         scan = new Scan(dataSource, configuration);
-        repBotCachePolicy = new RepBotCachePolicy(scan);
+        roles = new Roles(dataSource, roleAssigner);
+        repBotCachePolicy = new RepBotCachePolicy(scan, roles);
         shardManager = DefaultShardManagerBuilder.createDefault(configuration.baseSettings().token())
                 .enableIntents(
                         // Required to retrieve reputation emotes

@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.exceptions.HierarchyException;
+import net.dv8tion.jda.api.utils.concurrent.Task;
 import org.jetbrains.annotations.Nullable;
 
 import javax.sql.DataSource;
@@ -57,8 +58,7 @@ public class RoleAssigner {
                 .stream()
                 .map(ReputationRole::roleId)
                 .map(guild::getRoleById)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                .filter(Objects::nonNull).toList();
         for (var role : reputationRoles) {
             assertInteract(role, member.getGuild());
             if (roles.contains(role)) continue;
@@ -72,11 +72,7 @@ public class RoleAssigner {
         }
     }
 
-    public CompletableFuture<Void> updateBatch(Guild guild) {
-        return CompletableFuture.runAsync(() -> {
-            for (var member : guild.loadMembers().get()) {
-                update(member);
-            }
-        }, worker);
+    public Task<Void> updateBatch(Guild guild) {
+        return guild.loadMembers(this::update);
     }
 }
