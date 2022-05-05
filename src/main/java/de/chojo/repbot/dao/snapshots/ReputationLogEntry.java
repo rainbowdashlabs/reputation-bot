@@ -1,10 +1,14 @@
-package de.chojo.repbot.data.wrapper;
+package de.chojo.repbot.dao.snapshots;
 
 import de.chojo.repbot.analyzer.ThankType;
+import de.chojo.sqlutil.base.QueryFactoryHolder;
 
+import javax.sql.DataSource;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 
-public class ReputationLogEntry {
+public class ReputationLogEntry extends QueryFactoryHolder {
     private static final String PATH = "https://discord.com/channels/%s/%s/%s";
     private static final long DISCORD_EPOCH = 1420070400000L;
 
@@ -17,7 +21,8 @@ public class ReputationLogEntry {
     private final ThankType type;
     private final LocalDateTime received;
 
-    public ReputationLogEntry(long guildId, long channelId, long donorId, long receiverId, long messageId, long refMessageId, ThankType type, LocalDateTime received) {
+    public ReputationLogEntry(DataSource dataSource, long guildId, long channelId, long donorId, long receiverId, long messageId, long refMessageId, ThankType type, LocalDateTime received) {
+        super(dataSource);
         this.guildId = guildId;
         this.channelId = channelId;
         this.donorId = donorId;
@@ -26,6 +31,18 @@ public class ReputationLogEntry {
         this.refMessageId = refMessageId;
         this.type = type;
         this.received = received;
+    }
+
+    public static ReputationLogEntry build(DataSource dataSource, ResultSet rs) throws SQLException {
+        return new ReputationLogEntry(dataSource,
+                rs.getLong("guild_id"),
+                rs.getLong("channel_id"),
+                rs.getLong("donor_id"),
+                rs.getLong("receiver_id"),
+                rs.getLong("message_id"),
+                rs.getLong("ref_message_id"),
+                ThankType.valueOf(rs.getString("cause")),
+                rs.getTimestamp("received").toLocalDateTime());
     }
 
     public String getMessageJumpLink() {
@@ -75,5 +92,15 @@ public class ReputationLogEntry {
     public String timestamp() {
         var timestamp = ((messageId() >> 22) + DISCORD_EPOCH) / 1000;
         return String.format("<t:%s:d> <t:%s:t>", timestamp, timestamp);
+    }
+
+    /**
+     * Removes all reputations associated with the message
+     */
+    public void delete() {
+        builder()
+                .query("DELETE FROM reputation_log WHERE message_id = ?;")
+                .paramsBuilder(stmt -> stmt.setLong(messageId))
+                .update().execute();
     }
 }

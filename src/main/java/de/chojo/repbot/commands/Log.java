@@ -9,7 +9,7 @@ import de.chojo.jdautil.pagination.bag.PrivatePageBag;
 import de.chojo.jdautil.parsing.ValueParser;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.ReputationData;
-import de.chojo.repbot.data.wrapper.ReputationLogEntry;
+import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;

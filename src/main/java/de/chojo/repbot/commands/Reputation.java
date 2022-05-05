@@ -11,7 +11,7 @@ import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.data.wrapper.ReputationRole;
-import de.chojo.repbot.data.wrapper.ReputationUser;
+import de.chojo.repbot.dao.snapshots.ReputationUser;
 import de.chojo.repbot.util.TextGenerator;
 import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.entities.Member;

@@ -1,15 +1,12 @@
 package de.chojo.repbot.data;
 
-import de.chojo.jdautil.localization.util.Language;
-import de.chojo.repbot.data.wrapper.AbuseSettings;
-import de.chojo.repbot.data.wrapper.GeneralSettings;
+import de.chojo.repbot.dao.access.settings.GeneralSettings;
 import de.chojo.repbot.data.wrapper.GuildSettings;
-import de.chojo.repbot.data.wrapper.MessageSettings;
+import de.chojo.repbot.dao.access.settings.MessageSettings;
 import de.chojo.repbot.data.wrapper.ReputationRole;
-import de.chojo.repbot.data.wrapper.ThankSettings;
+import de.chojo.repbot.dao.access.settings.ThankSettings;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
-import de.chojo.sqlutil.conversion.ArrayConverter;
 import de.chojo.sqlutil.exceptions.ExceptionTransformer;
 import de.chojo.sqlutil.wrapper.QueryBuilderConfig;
 import net.dv8tion.jda.api.entities.Channel;
@@ -18,14 +15,12 @@ import net.dv8tion.jda.api.entities.MessageChannel;
 import net.dv8tion.jda.api.entities.Role;
 import org.slf4j.Logger;
 
-import javax.annotation.Nullable;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -52,187 +47,11 @@ public class GuildData extends QueryFactoryHolder {
 
         return new GuildSettings(guild,
                 generalSettings.join().orElse(new GeneralSettings()),
-                messageSettings.join().orElse(new MessageSettings()),
+                messageSettings.join().orElse(new MessageSettings(settings, rs.getBoolean("reactions_active"), rs.getBoolean("answer_active"), rs.getBoolean("mention_active"), rs.getBoolean("fuzzy_active"), rs.getBoolean("embed_active"))),
                 abuseSettings.join().orElse(new AbuseSettings()),
                 thankSettings.join().orElse(new ThankSettings()));
     }
 
-    private CompletableFuture<Optional<AbuseSettings>> getAbuseSettings(Guild guild) {
-        return builder(AbuseSettings.class)
-                .query("""
-                        SELECT
-                            min_messages,
-                            max_message_age,
-                            receiver_context,
-                            donor_context,
-                            cooldown
-                        FROM
-                            abuse_protection
-                        WHERE guild_id = ?;
-                        """)
-                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
-                .readRow(this::buildAbuseSettings)
-                .first();
-
-    }
-
-    private CompletableFuture<Optional<GeneralSettings>> getGeneralSettings(Guild guild) {
-        return builder(GeneralSettings.class)
-                .query("""
-                        SELECT
-                            prefix,
-                            emoji_debug,
-                            stack_roles
-                        FROM
-                            guild_settings
-                        WHERE guild_id = ?;
-                        """)
-                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
-                .readRow(this::buildGeneralSettings)
-                .first();
-
-    }
-
-    private CompletableFuture<Optional<MessageSettings>> getMessageSettings(Guild guild) {
-        return builder(MessageSettings.class)
-                .query("""
-                        SELECT
-                            reactions_active,
-                            answer_active,
-                            mention_active,
-                            fuzzy_active,
-                            embed_active
-                        FROM
-                            message_settings
-                        WHERE guild_id = ?;
-                        """)
-                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
-                .readRow(this::buildMessageSettings)
-                .first();
-    }
-
-    private CompletableFuture<Optional<ThankSettings>> getThankSettings(Guild guild) {
-        return builder(ThankSettings.class)
-                .query("""
-                        SELECT
-                            reaction,
-                            reactions,
-                            thankswords,
-                            active_channels,
-                            channel_whitelist,
-                            receiver_roles,
-                            donor_roles
-                        FROM
-                            get_thank_settings(?);
-                        """)
-                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
-                .readRow(this::buildThankSettings)
-                .first();
-    }
-
-    private AbuseSettings buildAbuseSettings(ResultSet rs) throws SQLException {
-        return new AbuseSettings(
-                rs.getInt("cooldown"),
-                rs.getInt("max_message_age"),
-                rs.getInt("min_messages"),
-                rs.getBoolean("donor_context"),
-                rs.getBoolean("receiver_context"));
-    }
-
-    private GeneralSettings buildGeneralSettings(ResultSet rs) throws SQLException {
-        return new GeneralSettings(
-                rs.getString("prefix"),
-                rs.getBoolean("emoji_debug"),
-                rs.getBoolean("stack_roles"));
-    }
-
-    private MessageSettings buildMessageSettings(ResultSet rs) throws SQLException {
-        return new MessageSettings(
-                rs.getBoolean("reactions_active"),
-                rs.getBoolean("answer_active"),
-                rs.getBoolean("mention_active"),
-                rs.getBoolean("fuzzy_active"),
-                rs.getBoolean("embed_active"));
-    }
-
-    private ThankSettings buildThankSettings(ResultSet row) throws SQLException {
-        return new ThankSettings(
-                row.getString("reaction"),
-                ArrayConverter.toArray(row, "reactions", new String[0]),
-                ArrayConverter.toArray(row, "thankswords", new String[0]),
-                ArrayConverter.toArray(row, "active_channels", new Long[0]),
-                row.getBoolean("channel_whitelist"),
-                ArrayConverter.toArray(row, "donor_roles", new Long[0]),
-                ArrayConverter.toArray(row, "receiver_roles", new Long[0])
-        );
-    }
-
-    /**
-     * Get the prefix of the guild.
-     *
-     * @param guild guild
-     * @return prefix if set
-     */
-    public Optional<String> getPrefix(Guild guild) {
-        return builder(String.class).query("SELECT prefix FROM guild_settings WHERE guild_id = ?;")
-                .params(stmt -> stmt.setLong(1, guild.getIdLong()))
-                .readRow(row -> row.getString(1))
-                .firstSync();
-    }
-
-    /**
-     * Set the prefix for a guild.
-     *
-     * @param guild  guild
-     * @param prefix prefix. may be null
-     * @return true if prefix was changed
-     */
-    public boolean setPrefix(Guild guild, @Nullable String prefix) {
-        return builder()
-                       .query("""
-                               INSERT INTO
-                                   guild_settings(guild_id, prefix) VALUES (?,?)
-                                   ON CONFLICT(guild_id)
-                                       DO UPDATE
-                                           SET prefix = excluded.prefix;
-                               """)
-                       .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setString(prefix))
-                       .update().executeSync() > 0;
-    }
-
-    /**
-     * Get the language of the guild if set.
-     *
-     * @param guild guild
-     * @return language as string if set
-     */
-    public Optional<String> getLanguage(Guild guild) {
-        return builder(String.class)
-                .query("SELECT language FROM guild_settings WHERE guild_id = ?;")
-                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()))
-                .readRow(rs -> rs.getString(1))
-                .firstSync();
-    }
-
-    /**
-     * Set the language for a guild
-     *
-     * @param guild    guild
-     * @param language language. May be null
-     * @return true if the language was changed
-     */
-    public boolean setLanguage(Guild guild, @Nullable Language language) {
-        return builder()
-                       .query("""
-                               INSERT INTO
-                                   guild_settings(guild_id, language) VALUES (?,?)
-                                   ON CONFLICT(guild_id)
-                                       DO UPDATE
-                                           SET language = excluded.language;
-                               """)
-                       .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setString(language == null ? null : language.getCode()))
-                       .update().executeSync() > 0;
-    }
 
     /**
      * Set if emoji debug is enabled for a guild

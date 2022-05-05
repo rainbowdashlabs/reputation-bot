@@ -1,5 +1,8 @@
 package de.chojo.repbot.data.wrapper;
 
+import de.chojo.repbot.dao.access.settings.GeneralSettings;
+import de.chojo.repbot.dao.access.settings.MessageSettings;
+import de.chojo.repbot.dao.access.settings.ThankSettings;
 import net.dv8tion.jda.api.entities.Guild;
 
 public class GuildSettings {

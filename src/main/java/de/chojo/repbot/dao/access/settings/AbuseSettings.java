@@ -1,18 +1,23 @@
-package de.chojo.repbot.data.wrapper;
+package de.chojo.repbot.dao.access.settings;
 
+import de.chojo.sqlutil.base.QueryFactoryHolder;
 import net.dv8tion.jda.api.entities.Message;
 
+import javax.sql.DataSource;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-public class AbuseSettings {
+public class AbuseSettings extends QueryFactoryHolder {
     private int cooldown;
     private int maxMessageAge;
     private int minMessages;
     private boolean donorContext;
     private boolean receiverContext;
 
-    public AbuseSettings(int cooldown, int maxMessageAge, int minMessages, boolean donorContext, boolean receiverContext) {
+    public AbuseSettings(DataSource dataSource, int cooldown, int maxMessageAge, int minMessages, boolean donorContext, boolean receiverContext) {
+        super(dataSource);
         this.cooldown = cooldown;
         this.maxMessageAge = maxMessageAge;
         this.minMessages = minMessages;
@@ -20,12 +25,8 @@ public class AbuseSettings {
         this.receiverContext = receiverContext;
     }
 
-    public AbuseSettings() {
-        cooldown = 30;
-        maxMessageAge = 30;
-        minMessages = 10;
-        donorContext = true;
-        receiverContext = true;
+    public AbuseSettings(DataSource dataSource) {
+        this(dataSource, 30, 30, 10, true, true);
     }
 
     public int cooldown() {
@@ -73,4 +74,14 @@ public class AbuseSettings {
         var until = message.getTimeCreated().toInstant().until(Instant.now(), ChronoUnit.MINUTES);
         return until < maxMessageAge();
     }
+
+    public static AbuseSettings build(DataSource dataSource, ResultSet rs) throws SQLException {
+        return new AbuseSettings(dataSource,
+                rs.getInt("cooldown"),
+                rs.getInt("max_message_age"),
+                rs.getInt("min_messages"),
+                rs.getBoolean("donor_context"),
+                rs.getBoolean("receiver_context"));
+    }
+
 }

@@ -3,7 +3,7 @@ package de.chojo.repbot.service;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.data.wrapper.ReputationRole;
-import de.chojo.repbot.data.wrapper.ReputationUser;
+import de.chojo.repbot.dao.snapshots.ReputationUser;
 import de.chojo.repbot.util.Guilds;
 import de.chojo.repbot.util.Roles;
 import net.dv8tion.jda.api.entities.Guild;

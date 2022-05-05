@@ -1,6 +1,9 @@
-package de.chojo.repbot.data.wrapper;
+package de.chojo.repbot.dao.access.settings;
 
 import de.chojo.jdautil.parsing.Verifier;
+import de.chojo.repbot.dao.components.GuildHolder;
+import de.chojo.sqlutil.base.QueryFactoryHolder;
+import de.chojo.sqlutil.conversion.ArrayConverter;
 import net.dv8tion.jda.api.entities.Channel;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Guild;
@@ -9,17 +12,19 @@ import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.ThreadChannel;
 import org.jetbrains.annotations.Nullable;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class ThankSettings {
+public class ThankSettings extends QueryFactoryHolder implements GuildHolder {
     private static final String THANKWORD = "((?:^|\\b)%s(?:$|\\b))";
     private static final String PATTERN = "(?i)(%s)";
+    private Settings settings;
     private final String reaction;
     private final Set<String> reactions;
     private final String[] thankwords;
@@ -28,24 +33,20 @@ public class ThankSettings {
     private final Set<Long> donorRoles;
     private final Set<Long> receiverRoles;
 
-    public ThankSettings() {
-        reaction = null;
-        reactions = Collections.emptySet();
-        thankwords = new String[0];
-        activeChannel = Collections.emptySet();
-        channelWhitelist = true;
-        donorRoles = Collections.emptySet();
-        receiverRoles = Collections.emptySet();
+    public ThankSettings(Settings settings) {
+        this(settings, null, new String[0], new String[0], new Long[0], true, new Long[0], new Long[0])
     }
 
-    public ThankSettings(String reaction, String[] reactions, String[] thankwords, Long[] activeChannel, boolean channelWhitelist, Long[] donorRoles, Long[] receiverRoles) {
+    public ThankSettings(Settings settings, String reaction, String[] reactions, String[] thankwords, Long[] activeChannel, boolean channelWhitelist, Long[] donorRoles, Long[] receiverRoles) {
+        super(settings);
+        this.settings = settings;
         this.reaction = reaction == null ? "✅" : reaction;
-        this.reactions = Set.of(reactions);
+        this.reactions = Arrays.stream(reactions).collect(Collectors.toSet());
         this.thankwords = thankwords;
-        this.activeChannel = Set.of(activeChannel);
+        this.activeChannel = Arrays.stream(activeChannel).collect(Collectors.toSet());
         this.channelWhitelist = channelWhitelist;
-        this.donorRoles = Set.of(donorRoles);
-        this.receiverRoles = Set.of(receiverRoles);
+        this.donorRoles = Arrays.stream(donorRoles).collect(Collectors.toSet());
+        this.receiverRoles = Arrays.stream(receiverRoles).collect(Collectors.toSet());
     }
 
     public String reaction() {
@@ -151,5 +152,22 @@ public class ThankSettings {
 
     public Set<Long> receiverRoles() {
         return receiverRoles;
+    }
+
+    public static  ThankSettings build(Settings settings, ResultSet row) throws SQLException {
+        return new ThankSettings(settings,
+                row.getString("reaction"),
+                ArrayConverter.toArray(row, "reactions", new String[0]),
+                ArrayConverter.toArray(row, "thankswords", new String[0]),
+                ArrayConverter.toArray(row, "active_channels", new Long[0]),
+                row.getBoolean("channel_whitelist"),
+                ArrayConverter.toArray(row, "donor_roles", new Long[0]),
+                ArrayConverter.toArray(row, "receiver_roles", new Long[0])
+        );
+    }
+
+    @Override
+    public Guild guild() {
+        return settings.guild();
     }
 }
