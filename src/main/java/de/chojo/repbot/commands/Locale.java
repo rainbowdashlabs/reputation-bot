@@ -12,7 +12,6 @@ import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.AutoCompleteQuery;
 
 import javax.sql.DataSource;
 import java.util.concurrent.ScheduledExecutorService;

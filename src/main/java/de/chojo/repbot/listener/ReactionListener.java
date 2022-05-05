@@ -3,7 +3,6 @@ package de.chojo.repbot.listener;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import de.chojo.jdautil.localization.ILocalizer;
-import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.config.Configuration;

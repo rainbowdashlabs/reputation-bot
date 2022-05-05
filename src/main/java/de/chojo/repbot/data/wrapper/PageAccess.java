@@ -15,6 +15,7 @@ public class PageAccess<T> {
 
     /**
      * The amount of pages which can be accessed.
+     *
      * @return page amount
      */
     public int pages() {

@@ -1,10 +1,6 @@
 package de.chojo.repbot.data.wrapper;
 
-import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Member;
-
 import java.util.Optional;
-import java.util.OptionalLong;
 
 public class GeneralSettings {
     private final String prefix;

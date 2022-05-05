@@ -5,11 +5,11 @@ import de.chojo.jdautil.command.SimpleArgument;
 import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
-import de.chojo.jdautil.util.Futures;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.service.RoleAccessException;
 import de.chojo.repbot.service.RoleAssigner;
+import de.chojo.repbot.util.Guilds;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -111,9 +111,9 @@ public class Roles extends SimpleCommand {
         var start = Instant.now();
         roleAssigner
                 .updateBatch(event.getGuild())
-                .whenComplete(Futures.whenComplete(res -> {
+                .onSuccess(res -> {
                     var duration = DurationFormatUtils.formatDuration(start.until(Instant.now(), ChronoUnit.MILLIS), "mm:ss");
-                    log.debug("Update of roles took: {}.", duration);
+                    log.info("Update of roles on {} took {}.", Guilds.prettyName(event.getGuild()), duration);
                     if (event.getHook().isExpired()) {
                         log.debug("Interaction hook is expired. Using fallback message.");
                         event.getChannel()
@@ -124,15 +124,17 @@ public class Roles extends SimpleCommand {
                     event.getHook()
                             .editOriginal(context.localize("command.roles.sub.refresh.finished"))
                             .queue();
-                }, err -> {
+                    running.remove(event.getGuild().getIdLong());
+                }).onError(err -> {
+                    log.warn("Update of role failed on guild {}", Guilds.prettyName(event.getGuild()), err);
                     if (err instanceof RoleAccessException roleException) {
                         event.getHook()
                                 .editOriginal(context.localize("error.roleAccess",
                                         Replacement.createMention("ROLE", roleException.role())))
                                 .queue();
                     }
-                }))
-                .thenRun(() -> running.remove(event.getGuild().getIdLong()));
+                    running.remove(event.getGuild().getIdLong());
+                });
     }
 
     private void stackRoles(SlashCommandInteractionEvent event, SlashCommandContext context) {
@@ -244,5 +246,9 @@ public class Roles extends SimpleCommand {
 
     private String getBooleanMessage(SlashCommandContext context, boolean value, String whenTrue, String whenFalse) {
         return context.localize(value ? whenTrue : whenFalse);
+    }
+
+    public boolean refreshActive(Guild guild) {
+        return running.contains(guild.getIdLong());
     }
 }

@@ -6,7 +6,6 @@ import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageReaction;
-import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.entities.ThreadChannel;
 import org.jetbrains.annotations.Nullable;
 
@@ -75,7 +74,7 @@ public class ThankSettings {
     }
 
     public boolean isReputationChannel(Channel channel) {
-        if(channel.getType() == ChannelType.GUILD_PUBLIC_THREAD){
+        if (channel.getType() == ChannelType.GUILD_PUBLIC_THREAD) {
             channel = ((ThreadChannel) channel).getParentMessageChannel();
         }
 

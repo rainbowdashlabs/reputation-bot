@@ -2,7 +2,6 @@ package de.chojo.repbot.commands;
 
 import de.chojo.jdautil.command.CommandMeta;
 import de.chojo.jdautil.command.SimpleCommand;
-import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.GdprData;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
