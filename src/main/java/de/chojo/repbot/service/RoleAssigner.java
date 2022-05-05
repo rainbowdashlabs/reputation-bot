@@ -67,8 +67,10 @@ public class RoleAssigner {
         for (var role : reputationRoles) {
             assertInteract(role, member.getGuild());
             if (roles.contains(role)) continue;
-            log.debug("Removing role {} on {}", Roles.prettyName(role), Guilds.prettyName(guild));
-            guild.removeRoleFromMember(member, role).complete();
+            if (member.getRoles().contains(role)) {
+                log.debug("Removing role {} on {}", Roles.prettyName(role), Guilds.prettyName(guild));
+                guild.removeRoleFromMember(member, role).complete();
+            }
         }
     }
 
