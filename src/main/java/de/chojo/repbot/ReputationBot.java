@@ -291,7 +291,7 @@ public class ReputationBot {
     }
 
     private void initJDA() throws LoginException {
-        roleAssigner = new RoleAssigner(dataSource, repBotWorker);
+        roleAssigner = new RoleAssigner(dataSource);
         scan = new Scan(dataSource, configuration);
         roles = new Roles(dataSource, roleAssigner);
         repBotCachePolicy = new RepBotCachePolicy(scan, roles);
