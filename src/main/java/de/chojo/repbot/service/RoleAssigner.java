@@ -4,32 +4,37 @@ import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
 import de.chojo.repbot.data.wrapper.ReputationRole;
 import de.chojo.repbot.data.wrapper.ReputationUser;
+import de.chojo.repbot.util.Guilds;
+import de.chojo.repbot.util.Roles;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.exceptions.HierarchyException;
+import net.dv8tion.jda.api.utils.concurrent.Task;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
 
 import javax.sql.DataSource;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class RoleAssigner {
+    private static final Logger log = getLogger(RoleAssigner.class);
     private final GuildData guildData;
     private final ReputationData reputationData;
-    private final ExecutorService worker;
 
-    public RoleAssigner(DataSource dataSource, ExecutorService worker) {
+    public RoleAssigner(DataSource dataSource) {
         guildData = new GuildData(dataSource);
         reputationData = new ReputationData(dataSource);
-        this.worker = worker;
     }
 
-    public void update(@Nullable Member member) throws HierarchyException, RoleAccessException {
+    public void update(@Nullable Member member) throws RoleAccessException {
         if (member == null) return;
+        log.debug("Updating {} on {}", member.getId(), Guilds.prettyName(member.getGuild()));
         var guild = member.getGuild();
         var reputation = reputationData.getReputation(guild, member.getUser()).orElse(ReputationUser.empty(member.getUser()));
         var settings = guildData.getGuildSettings(member.getGuild());
@@ -42,12 +47,14 @@ public class RoleAssigner {
 
         cleanMemberRoles(member, roles);
 
-        if (member.getRoles().containsAll(roles)) return;
+        if (new HashSet<>(member.getRoles()).containsAll(roles)) return;
 
         for (var role : roles) {
             assertInteract(role, member.getGuild());
-            if (!member.getRoles().contains(role))
+            if (!member.getRoles().contains(role)) {
+                log.debug("Assigning role {} on {}", Roles.prettyName(role), Guilds.prettyName(guild));
                 guild.addRoleToMember(member, role).complete();
+            }
         }
     }
 
@@ -57,11 +64,11 @@ public class RoleAssigner {
                 .stream()
                 .map(ReputationRole::roleId)
                 .map(guild::getRoleById)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                .filter(Objects::nonNull).toList();
         for (var role : reputationRoles) {
             assertInteract(role, member.getGuild());
             if (roles.contains(role)) continue;
+            log.debug("Removing role {} on {}", Roles.prettyName(role), Guilds.prettyName(guild));
             guild.removeRoleFromMember(member, role).complete();
         }
     }
@@ -72,11 +79,8 @@ public class RoleAssigner {
         }
     }
 
-    public CompletableFuture<Void> updateBatch(Guild guild) {
-        return CompletableFuture.runAsync(() -> {
-            for (var member : guild.loadMembers().get()) {
-                update(member);
-            }
-        }, worker);
+    public Task<Void> updateBatch(Guild guild) {
+        log.info("Started batch update for guild {}", Guilds.prettyName(guild));
+        return guild.loadMembers(this::update);
     }
 }
