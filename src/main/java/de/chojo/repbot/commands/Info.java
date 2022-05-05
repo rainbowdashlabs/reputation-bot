@@ -13,7 +13,6 @@ import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.util.Colors;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.jetbrains.annotations.NotNull;
@@ -136,7 +135,7 @@ public class Info extends SimpleCommand {
     }
 
     private String getLink(SlashCommandContext context, @PropertyKey(resourceBundle = "locale") String target, String url) {
-        return context.localize("words.link",                Replacement.create("TARGET", String.format("$%s$", target)),
+        return context.localize("words.link", Replacement.create("TARGET", String.format("$%s$", target)),
                 Replacement.create("URL", url));
     }
 
@@ -156,19 +155,19 @@ public class Info extends SimpleCommand {
         return String.join(" ᠅ ", voteLinks);
     }
 
+    private enum ContributorType {
+        @JsonProperty("User")
+        USER,
+        @JsonProperty("Bot")
+        BOT
+    }
+
     private static class Contributor {
         private String login;
         private String url;
         @JsonProperty("html_url")
         private String htmlUrl;
         private ContributorType type;
-    }
-
-    private enum ContributorType {
-        @JsonProperty("User")
-        USER,
-        @JsonProperty("Bot")
-        BOT
     }
 
     private static class GithubProfile {

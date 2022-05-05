@@ -72,7 +72,7 @@ public class ReputationLogEntry {
         return received;
     }
 
-    public String timestamp(){
+    public String timestamp() {
         var timestamp = ((messageId() >> 22) + DISCORD_EPOCH) / 1000;
         return String.format("<t:%s:d> <t:%s:t>", timestamp, timestamp);
     }

@@ -72,7 +72,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -135,10 +134,6 @@ public class ReputationBot {
         initBot();
 
         initBotList();
-
-        shardManager.getGuildById(519849671284490240L).retrieveCommands().queueAfter(10, TimeUnit.SECONDS, cmd -> {
-            cmd.forEach(cm -> log.info("{} is enabled: {}", cm.getName(), cm.isDefaultEnabled()));
-        });
     }
 
     private void initBotList() {

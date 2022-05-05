@@ -13,11 +13,11 @@ import org.slf4j.Logger;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public final class Messages {
+    private static final Logger log = getLogger(Messages.class);
+
     private Messages() {
         throw new UnsupportedOperationException("This is a utility class.");
     }
-
-    private static final Logger log = getLogger(Messages.class);
 
     public static void markMessage(Message message, @Nullable Message refMessage, GuildSettings settings) {
         if (settings.thankSettings().reactionIsEmote()) {

@@ -14,22 +14,19 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 import javax.sql.DataSource;
-import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 import java.util.StringJoiner;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 
 public class Log extends SimpleCommand {
-    private final ReputationData reputationData;
     private static final int PAGE_SIZE = 15;
+    private final ReputationData reputationData;
 
     public Log(DataSource dataSource) {
         super(CommandMeta.builder("log", "command.log.description")

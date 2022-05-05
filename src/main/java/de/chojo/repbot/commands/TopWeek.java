@@ -1,12 +1,9 @@
 package de.chojo.repbot.commands;
 
 import de.chojo.jdautil.command.CommandMeta;
-import de.chojo.jdautil.command.SimpleArgument;
 import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.data.ReputationData;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import javax.sql.DataSource;
@@ -18,7 +15,7 @@ public class TopWeek extends SimpleCommand {
     private final ReputationData reputationData;
 
     public TopWeek(DataSource dataSource) {
-        super(CommandMeta.builder("topweek","command.reputation.description"));
+        super(CommandMeta.builder("topweek", "command.reputation.description"));
         reputationData = new ReputationData(dataSource);
     }
 

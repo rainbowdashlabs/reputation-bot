@@ -5,7 +5,6 @@ import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.config.Configuration;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.Channel;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.TextChannel;

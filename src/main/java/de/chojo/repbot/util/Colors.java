@@ -6,6 +6,10 @@ import java.awt.Color;
  * Contains static color objects for {@link Pastel} colors and {@link Strong} colors.
  */
 public final class Colors {
+    private Colors() {
+        throw new UnsupportedOperationException("This is a utility class.");
+    }
+
     /**
      * Contains pastel color objects.
      */
@@ -56,9 +60,5 @@ public final class Colors {
         private Strong() {
             throw new UnsupportedOperationException("This is a utility class.");
         }
-    }
-
-    private Colors() {
-        throw new UnsupportedOperationException("This is a utility class.");
     }
 }

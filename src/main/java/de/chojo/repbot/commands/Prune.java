@@ -3,7 +3,6 @@ package de.chojo.repbot.commands;
 import de.chojo.jdautil.command.CommandMeta;
 import de.chojo.jdautil.command.SimpleArgument;
 import de.chojo.jdautil.command.SimpleCommand;
-import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
