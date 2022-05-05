@@ -20,7 +20,7 @@ dependencies {
     }
 
     // database
-    implementation("org.postgresql", "postgresql", "42.3.4")
+    implementation("org.postgresql", "postgresql", "42.3.5")
     implementation("de.chojo", "sql-util", "1.2.3")
 
     // Logging
