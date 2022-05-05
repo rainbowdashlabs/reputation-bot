@@ -18,7 +18,6 @@ import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 
 import javax.sql.DataSource;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 public class Reactions extends SimpleCommand {
@@ -160,7 +159,11 @@ public class Reactions extends SimpleCommand {
         if (emoteById == null) {
             return new EmojiCheckResult("", "", CheckResult.NOT_FOUND);
         }
-        message.addReaction(emoteById).queue();
+        try {
+            message.addReaction(emoteById).queue();
+        } catch (IllegalArgumentException e) {
+            return new EmojiCheckResult(null, "", CheckResult.NOT_FOUND);
+        }
         return new EmojiCheckResult(emoteById.getAsMention(), emoteById.getId(), CheckResult.EMOTE_FOUND);
     }
 
