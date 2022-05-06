@@ -7,23 +7,23 @@ import org.apache.commons.lang3.StringUtils;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ReputationUser {
+public class RepProfile {
     private final long rank;
     private final Long userId;
     private final long reputation;
 
-    public ReputationUser(long rank, Long userId, long reputation) {
+    public RepProfile(long rank, Long userId, long reputation) {
         this.rank = rank;
         this.userId = userId;
         this.reputation = reputation;
     }
 
-    public static ReputationUser empty(User user) {
-        return new ReputationUser(0, user.getIdLong(), 0);
+    public static RepProfile empty(User user) {
+        return new RepProfile(0, user.getIdLong(), 0);
     }
 
-    public static ReputationUser build(ResultSet rs) throws SQLException {
-        return new ReputationUser(
+    public static RepProfile build(ResultSet rs) throws SQLException {
+        return new RepProfile(
                 rs.getLong("rank"),
                 rs.getLong("user_id"),
                 rs.getLong("reputation")

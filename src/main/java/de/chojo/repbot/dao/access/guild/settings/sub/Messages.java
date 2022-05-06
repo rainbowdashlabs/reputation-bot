@@ -1,8 +1,11 @@
-package de.chojo.repbot.dao.access.settings;
+package de.chojo.repbot.dao.access.guild.settings.sub;
 
+import de.chojo.jdautil.consumer.ThrowingConsumer;
+import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
+import de.chojo.sqlutil.wrapper.ParamBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import org.jetbrains.annotations.PropertyKey;
 
@@ -10,7 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class MessageSettings extends QueryFactoryHolder implements GuildHolder {
+public class Messages extends QueryFactoryHolder implements GuildHolder {
     private Settings settings;
     private boolean reactionActive;
     private boolean answerActive;
@@ -18,11 +21,11 @@ public class MessageSettings extends QueryFactoryHolder implements GuildHolder {
     private boolean fuzzyActive;
     private boolean embedActive;
 
-    public MessageSettings(Settings settings) {
+    public Messages(Settings settings) {
         this(settings, true, true, true, true, true);
     }
 
-    public MessageSettings(Settings settings, boolean reactionActive, boolean answerActive, boolean mentionActive, boolean fuzzyActive, boolean embedActive) {
+    public Messages(Settings settings, boolean reactionActive, boolean answerActive, boolean mentionActive, boolean fuzzyActive, boolean embedActive) {
         super(settings);
         this.settings = settings;
         this.reactionActive = reactionActive;
@@ -32,8 +35,8 @@ public class MessageSettings extends QueryFactoryHolder implements GuildHolder {
         this.embedActive = embedActive;
     }
 
-    public static MessageSettings build(Settings settings, ResultSet rs) throws SQLException {
-        return new MessageSettings(settings,
+    public static Messages build(Settings settings, ResultSet rs) throws SQLException {
+        return new Messages(settings,
                 rs.getBoolean("reactions_active"),
                 rs.getBoolean("answer_active"),
                 rs.getBoolean("mention_active"),
@@ -62,6 +65,7 @@ public class MessageSettings extends QueryFactoryHolder implements GuildHolder {
     }
 
     public void embedActive(boolean embedActive) {
+
         this.embedActive = embedActive;
     }
 
@@ -101,5 +105,19 @@ public class MessageSettings extends QueryFactoryHolder implements GuildHolder {
     @Override
     public Guild guild() {
         return settings.guild();
+    }
+
+    private boolean set(String parameter, ThrowingConsumer<ParamBuilder, SQLException> builder) {
+        return builder()
+                       .query("""
+                               INSERT INTO message_settings(guild_id, %s) VALUES (?, ?)
+                               ON CONFLICT(guild_id)
+                                   DO UPDATE SET %s = excluded.%s;
+                               """, parameter, parameter, parameter)
+                       .paramsBuilder(stmts -> {
+                           stmts.setLong(guildId());
+                           builder.accept(stmts);
+                       }).insert()
+                       .executeSync() > 0;
     }
 }

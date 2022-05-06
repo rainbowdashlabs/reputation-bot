@@ -10,8 +10,8 @@ import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
-import de.chojo.repbot.data.wrapper.ReputationRole;
-import de.chojo.repbot.dao.snapshots.ReputationUser;
+import de.chojo.repbot.dao.snapshots.ReputationRank;
+import de.chojo.repbot.dao.snapshots.RepProfile;
 import de.chojo.repbot.util.TextGenerator;
 import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.entities.Member;
@@ -43,18 +43,18 @@ public class Reputation extends SimpleCommand {
             event.reply(context.localize("error.userNotFound")).queue();
             return;
         }
-        var reputation = reputationData.getReputation(event.getGuild(), member.getUser()).orElse(ReputationUser.empty(event.getUser()));
+        var reputation = reputationData.getReputation(event.getGuild(), member.getUser()).orElse(RepProfile.empty(event.getUser()));
         event.replyEmbeds(getUserRepEmbed(context, member, reputation)).queue();
     }
 
-    private MessageEmbed getUserRepEmbed(SlashCommandContext context, Member member, ReputationUser reputation) {
+    private MessageEmbed getUserRepEmbed(SlashCommandContext context, Member member, RepProfile reputation) {
         var roles = guildData.getCurrentReputationRole(member.getGuild(), reputation.reputation(), false);
         var next = guildData.getNextReputationRole(member.getGuild(), reputation.reputation());
 
         var current = Optional.ofNullable(roles.isEmpty() ? null : roles.get(0));
 
-        var currentRoleRep = current.map(ReputationRole::reputation).orElse(0L);
-        var nextRoleRep = next.map(ReputationRole::reputation).orElse(currentRoleRep);
+        var currentRoleRep = current.map(ReputationRank::reputation).orElse(0L);
+        var nextRoleRep = next.map(ReputationRank::reputation).orElse(currentRoleRep);
         var progess = (double) (reputation.reputation() - currentRoleRep) / (double) (nextRoleRep - currentRoleRep);
 
         var progressBar = TextGenerator.progressBar(progess, BAR_SIZE);

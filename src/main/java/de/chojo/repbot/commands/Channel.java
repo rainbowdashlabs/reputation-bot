@@ -110,7 +110,7 @@ public class Channel extends SimpleCommand {
     private String getChannelList(GuildSettings settings, SlashCommandContext context) {
         var channelNames = DiscordResolver
                 .getValidTextChannelsById(
-                        settings.guild(), new ArrayList<>(settings.thankSettings().activeChannel()))
+                        settings.guild(), new ArrayList<>(settings.thankSettings().channels()))
                 .stream().map(IMentionable::getAsMention).collect(Collectors.joining(", "));
         var message = "command.channel.sub.list." + (settings.thankSettings().isChannelWhitelist() ? "whitelist" : "blacklist");
         return context.localize(message, Replacement.create("CHANNEL", channelNames));

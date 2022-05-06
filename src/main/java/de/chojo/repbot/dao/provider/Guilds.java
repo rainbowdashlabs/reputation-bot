@@ -2,7 +2,7 @@ package de.chojo.repbot.dao.provider;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import de.chojo.repbot.dao.access.RepGuild;
+import de.chojo.repbot.dao.access.guild.RepGuild;
 import net.dv8tion.jda.api.entities.Guild;
 import org.slf4j.Logger;
 

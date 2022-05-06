@@ -41,7 +41,7 @@ public class LegacyCommandListener extends ListenerAdapter {
 
         var guildSettings = guildData.getGuildSettings(event.getGuild());
         var contentRaw = event.getMessage().getContentRaw();
-        var prefix = guildSettings.generalSettings().prefix().orElse("!");
+        var prefix = guildSettings.generalSettings().language().orElse("!");
 
         var splitted = contentRaw.split(" ");
         var user = DiscordResolver.getUser(shardManager, splitted[0]);

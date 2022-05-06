@@ -1,9 +1,11 @@
-package de.chojo.repbot.dao.access.reputation;
+package de.chojo.repbot.dao.access.guild.reputation.sub;
 
 import de.chojo.repbot.analyzer.ThankType;
+import de.chojo.repbot.dao.access.guild.reputation.Reputation;
+import de.chojo.repbot.dao.access.reputation.Reputation;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.dao.components.MemberHolder;
-import de.chojo.repbot.dao.snapshots.ReputationUser;
+import de.chojo.repbot.dao.snapshots.RepProfile;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -123,16 +125,16 @@ public class RepUser extends QueryFactoryHolder implements GuildHolder, MemberHo
      *
      * @return the reputation user
      */
-    public Optional<ReputationUser> getReputation() {
-        return builder(ReputationUser.class)
+    public RepProfile profile() {
+        return builder(RepProfile.class)
                 .query("""
                         SELECT rank, user_id, reputation FROM user_reputation WHERE guild_id = ? AND user_id = ?;
                         """)
                 .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(userId()))
-                .readRow(ReputationUser::build)
-                .firstSync();
+                .readRow(RepProfile::build)
+                .firstSync()
+                .orElseGet(() -> RepProfile.empty(user()));
     }
-
 
 
     @Override

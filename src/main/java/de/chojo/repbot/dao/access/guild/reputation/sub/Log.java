@@ -1,5 +1,6 @@
-package de.chojo.repbot.dao.access.reputation;
+package de.chojo.repbot.dao.access.guild.reputation.sub;
 
+import de.chojo.repbot.dao.access.reputation.Reputation;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 import de.chojo.repbot.data.wrapper.ReputationLogAccess;

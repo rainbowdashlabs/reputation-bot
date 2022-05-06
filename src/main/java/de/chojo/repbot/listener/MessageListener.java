@@ -99,14 +99,14 @@ public class MessageListener extends ListenerAdapter {
 
         var message = event.getMessage();
 
-        var prefix = settings.generalSettings().prefix().orElse(configuration.baseSettings().defaultPrefix());
+        var prefix = settings.generalSettings().language().orElse(configuration.baseSettings().defaultPrefix());
         if (prefix.startsWith("re:")) {
             var compile = Pattern.compile(prefix.substring(3));
             if (compile.matcher(message.getContentRaw()).find()) return;
         } else {
             if (message.getContentRaw().startsWith(prefix)) return;
         }
-        if (message.getContentRaw().startsWith(settings.generalSettings().prefix().orElse(configuration.baseSettings().defaultPrefix()))) {
+        if (message.getContentRaw().startsWith(settings.generalSettings().language().orElse(configuration.baseSettings().defaultPrefix()))) {
             return;
         }
 

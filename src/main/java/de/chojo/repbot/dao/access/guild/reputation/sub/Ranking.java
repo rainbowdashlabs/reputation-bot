@@ -1,7 +1,8 @@
-package de.chojo.repbot.dao.access.reputation;
+package de.chojo.repbot.dao.access.guild.reputation.sub;
 
+import de.chojo.repbot.dao.access.reputation.Reputation;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.repbot.dao.snapshots.ReputationUser;
+import de.chojo.repbot.dao.snapshots.RepProfile;
 import de.chojo.repbot.data.wrapper.GuildRanking;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
 import net.dv8tion.jda.api.entities.Guild;
@@ -85,20 +86,20 @@ public class Ranking extends QueryFactoryHolder implements GuildHolder {
      * @param page     the number of the page. zero based
      * @return a sorted list of reputation users
      */
-    private List<ReputationUser> getRankingPage(Guild guild, int pageSize, int page) {
+    private List<RepProfile> getRankingPage(Guild guild, int pageSize, int page) {
         return getRankingPage(guild, pageSize, page, "user_reputation");
     }
 
-    private List<ReputationUser> getWeekRankingPage(Guild guild, int pageSize, int page) {
+    private List<RepProfile> getWeekRankingPage(Guild guild, int pageSize, int page) {
         return getRankingPage(guild, pageSize, page, "user_reputation_week");
     }
 
-    private List<ReputationUser> getMonthRankingPage(Guild guild, int pageSize, int page) {
+    private List<RepProfile> getMonthRankingPage(Guild guild, int pageSize, int page) {
         return getRankingPage(guild, pageSize, page, "user_reputation_month");
     }
 
-    private List<ReputationUser> getRankingPage(Guild guild, int pageSize, int page, String table) {
-        return builder(ReputationUser.class)
+    private List<RepProfile> getRankingPage(Guild guild, int pageSize, int page, String table) {
+        return builder(RepProfile.class)
                 .query("""
                         SELECT
                             rank,
@@ -113,7 +114,7 @@ public class Ranking extends QueryFactoryHolder implements GuildHolder {
                         LIMIT ?;
                         """, table)
                 .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setInt(page * pageSize).setInt(pageSize))
-                .readRow(row -> new ReputationUser(row.getLong("rank"), row.getLong("user_id"), row.getLong("reputation")))
+                .readRow(row -> new RepProfile(row.getLong("rank"), row.getLong("user_id"), row.getLong("reputation")))
                 .allSync();
     }
 

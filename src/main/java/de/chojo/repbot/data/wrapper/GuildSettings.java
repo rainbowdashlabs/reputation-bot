@@ -1,24 +1,24 @@
 package de.chojo.repbot.data.wrapper;
 
-import de.chojo.repbot.dao.access.settings.GeneralSettings;
-import de.chojo.repbot.dao.access.settings.MessageSettings;
-import de.chojo.repbot.dao.access.settings.ThankSettings;
+import de.chojo.repbot.dao.access.guild.settings.sub.General;
+import de.chojo.repbot.dao.access.guild.settings.sub.Messages;
+import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import net.dv8tion.jda.api.entities.Guild;
 
 public class GuildSettings {
     private final Guild guild;
-    private final GeneralSettings generalSettings;
-    private final MessageSettings messageSettings;
+    private final General generalSettings;
+    private final Messages messageSettings;
     private final AbuseSettings abuseSettings;
-    private final ThankSettings thankSettings;
+    private final Thanking thankSettings;
 
 
-    public GuildSettings(Guild guild, GeneralSettings generalSettings, MessageSettings messageSettings, AbuseSettings abuseSettings, ThankSettings thankSettings) {
+    public GuildSettings(Guild guild, General general, Messages messages, AbuseSettings abuseSettings, Thanking thanking) {
         this.guild = guild;
-        this.generalSettings = generalSettings;
-        this.messageSettings = messageSettings;
+        this.generalSettings = general;
+        this.messageSettings = messages;
         this.abuseSettings = abuseSettings;
-        this.thankSettings = thankSettings;
+        this.thankSettings = thanking;
     }
 
 
@@ -30,15 +30,15 @@ public class GuildSettings {
         return abuseSettings;
     }
 
-    public GeneralSettings generalSettings() {
+    public General generalSettings() {
         return generalSettings;
     }
 
-    public MessageSettings messageSettings() {
+    public Messages messageSettings() {
         return messageSettings;
     }
 
-    public ThankSettings thankSettings() {
+    public Thanking thankSettings() {
         return thankSettings;
     }
 }

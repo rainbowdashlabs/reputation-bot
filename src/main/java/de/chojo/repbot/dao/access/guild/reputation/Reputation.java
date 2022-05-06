@@ -1,6 +1,6 @@
-package de.chojo.repbot.dao.access.reputation;
+package de.chojo.repbot.dao.access.guild.reputation;
 
-import de.chojo.repbot.dao.access.RepGuild;
+import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.data.wrapper.GuildReputationStats;
 import de.chojo.sqlutil.base.QueryFactoryHolder;

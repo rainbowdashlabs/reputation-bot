@@ -2,8 +2,8 @@ package de.chojo.repbot.service;
 
 import de.chojo.repbot.data.GuildData;
 import de.chojo.repbot.data.ReputationData;
-import de.chojo.repbot.data.wrapper.ReputationRole;
-import de.chojo.repbot.dao.snapshots.ReputationUser;
+import de.chojo.repbot.dao.snapshots.ReputationRank;
+import de.chojo.repbot.dao.snapshots.RepProfile;
 import de.chojo.repbot.util.Guilds;
 import de.chojo.repbot.util.Roles;
 import net.dv8tion.jda.api.entities.Guild;
@@ -35,7 +35,7 @@ public class RoleAssigner {
         if (member == null) return;
         log.debug("Updating {} on {}", member.getId(), Guilds.prettyName(member.getGuild()));
         var guild = member.getGuild();
-        var reputation = reputationData.getReputation(guild, member.getUser()).orElse(ReputationUser.empty(member.getUser()));
+        var reputation = reputationData.getReputation(guild, member.getUser()).orElse(RepProfile.empty(member.getUser()));
         var settings = guildData.getGuildSettings(member.getGuild());
 
         var roles = guildData.getCurrentReputationRole(guild, reputation.reputation(), settings.generalSettings().isStackRoles())
@@ -61,7 +61,7 @@ public class RoleAssigner {
         var guild = member.getGuild();
         var reputationRoles = guildData.getReputationRoles(guild)
                 .stream()
-                .map(ReputationRole::roleId)
+                .map(ReputationRank::roleId)
                 .map(guild::getRoleById)
                 .filter(Objects::nonNull).toList();
         for (var role : reputationRoles) {
