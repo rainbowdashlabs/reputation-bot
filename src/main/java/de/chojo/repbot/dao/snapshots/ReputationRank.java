@@ -11,6 +11,11 @@ import org.jetbrains.annotations.Nullable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+/**
+ * Representing a repuration rank.
+ * <p>
+ * A rank is {@link Comparable} and will be sorted from highest reputation to lowest.
+ */
 public class ReputationRank extends QueryFactoryHolder implements GuildHolder, Comparable<ReputationRank> {
     private final long roleId;
     private final long reputation;
@@ -71,6 +76,14 @@ public class ReputationRank extends QueryFactoryHolder implements GuildHolder, C
 
     @Override
     public int compareTo(@NotNull ReputationRank o) {
-        return Long.compare(reputation, o.reputation);
+        return Long.compare(o.reputation, reputation);
+    }
+
+    @Override
+    public String toString() {
+        return "ReputationRank{" +
+               "roleId=" + roleId +
+               ", reputation=" + reputation +
+               '}';
     }
 }

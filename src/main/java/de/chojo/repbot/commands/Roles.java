@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -191,6 +192,7 @@ public class Roles extends SimpleCommand {
 
         var reputationRoles = ranks.ranks()
                 .stream()
+                .sorted(Comparator.reverseOrder())
                 .filter(role -> role.getRole(guild) != null)
                 .map(role -> role.reputation() + " ➜ " + role.getRole(guild).getAsMention())
                 .collect(Collectors.joining("\n"));

@@ -11,6 +11,7 @@ import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -43,10 +44,10 @@ public class Log extends SimpleCommand {
     public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
         var cmd = event.getSubcommandName();
         if ("received".equalsIgnoreCase(cmd)) {
-            received(event, context, event.getOption("user").getAsUser());
+            received(event, context, event.getOption("user").getAsMember());
         }
         if ("donated".equalsIgnoreCase(cmd)) {
-            donated(event, context, event.getOption("user").getAsUser());
+            donated(event, context, event.getOption("user").getAsMember());
         }
         if ("message".equalsIgnoreCase(cmd)) {
             message(event, context);
@@ -84,15 +85,15 @@ public class Log extends SimpleCommand {
         event.replyEmbeds(getMessageLog(context, event.getGuild(), event.getOption("message_id").getAsLong())).setEphemeral(true).queue();
     }
 
-    private MessageEmbed userLogEmbed(SlashCommandContext context, User user, String title, List<String> log) {
+    private MessageEmbed userLogEmbed(SlashCommandContext context, Member user, String title, List<String> log) {
         var builder = new LocalizedEmbedBuilder(context.localizer())
-                .setAuthor(title, null, user.getEffectiveAvatarUrl(), Replacement.create("USER", user.getAsTag()));
+                .setAuthor(title, null, user.getEffectiveAvatarUrl(), Replacement.create("USER", user.getEffectiveName()));
         buildFields(log, builder);
         return builder.build();
     }
 
-    private void donated(SlashCommandInteractionEvent event, SlashCommandContext context, User user) {
-        var logAccess = guilds.guild(event.getGuild()).reputation().log().userDonatedLog(user, PAGE_SIZE);
+    private void donated(SlashCommandInteractionEvent event, SlashCommandContext context, Member user) {
+        var logAccess = guilds.guild(event.getGuild()).reputation().log().userDonatedLog(user.getUser(), PAGE_SIZE);
         context.registerPage(new PrivatePageBag(logAccess.pages(), event.getUser().getIdLong()) {
             @Override
             public CompletableFuture<MessageEmbed> buildPage() {
@@ -108,8 +109,8 @@ public class Log extends SimpleCommand {
         }, true);
     }
 
-    private void received(SlashCommandInteractionEvent event, SlashCommandContext context, User user) {
-        var logAccess = guilds.guild(event.getGuild()).reputation().log().getUserReceivedLog(user, PAGE_SIZE);
+    private void received(SlashCommandInteractionEvent event, SlashCommandContext context, Member user) {
+        var logAccess = guilds.guild(event.getGuild()).reputation().log().getUserReceivedLog(user.getUser(), PAGE_SIZE);
         context.registerPage(new PrivatePageBag(logAccess.pages(), event.getUser().getIdLong()) {
             @Override
             public CompletableFuture<MessageEmbed> buildPage() {

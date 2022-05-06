@@ -34,7 +34,7 @@ public class RepUser extends QueryFactoryHolder implements GuildHolder, MemberHo
         gdpr = new Gdpr(this);
         this.reputation = reputation;
         this.member = member;
-        user = null;
+        user = member.getUser();
     }
 
     public RepUser(Reputation reputation, User user) {
@@ -133,7 +133,7 @@ public class RepUser extends QueryFactoryHolder implements GuildHolder, MemberHo
      * @return the time since the last vote in the requested time unit or  {@link Long#MAX_VALUE} if no entry was found.
      */
     public Duration getLastRatedDuration(User other) {
-        return getLastReputation(other).map(last -> Duration.between(last, Instant.now())).orElseGet(() -> Duration.of(1, ChronoUnit.YEARS));
+        return getLastReputation(other).map(last -> Duration.between(last, Instant.now())).orElseGet(() -> Duration.ofDays(365));
     }
 
     /**

@@ -51,6 +51,7 @@ import de.chojo.repbot.util.PermissionErrorHandler;
 import de.chojo.sqlutil.databases.SqlType;
 import de.chojo.sqlutil.datasource.DataSourceCreator;
 import de.chojo.sqlutil.updater.QueryReplacement;
+import de.chojo.sqlutil.wrapper.QueryBuilderConfig;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
@@ -172,6 +173,13 @@ public class ReputationBot {
                 .setVersionTable(schema + ".repbot_version")
                 .setSchemas(schema)
                 .execute();
+
+        var logger = getLogger("DbLogger");
+        QueryBuilderConfig.setDefault(QueryBuilderConfig.builder()
+                        .withExceptionHandler(err -> logger.error("An error occured during a database request", err))
+                        .withExecutor(repBotWorker)
+                .build());
+
         this.guilds = new Guilds(dataSource);
         this.gdpr = new de.chojo.repbot.dao.access.Gdpr(dataSource);
         this.cleanup = new Cleanup(dataSource);

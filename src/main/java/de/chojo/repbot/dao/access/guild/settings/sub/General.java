@@ -18,15 +18,15 @@ public class General extends QueryFactoryHolder implements GuildHolder {
     private final AtomicBoolean stackRoles;
     private String language;
     private boolean emojiDebug;
-    private Settings settings;
+    private final Settings settings;
 
     public General(Settings settings) {
         this(settings, null, true, false);
-        this.settings = settings;
     }
 
     public General(Settings settings, String language, boolean emojiDebug, boolean stackRoles) {
         super(settings);
+        this.settings = settings;
         this.language = language;
         this.emojiDebug = emojiDebug;
         this.stackRoles = new AtomicBoolean(stackRoles);

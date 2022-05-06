@@ -102,4 +102,11 @@ public class RepGuild extends QueryFactoryHolder implements GuildHolder {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public String toString() {
+        return "RepGuild{" +
+               "guild=" + guild +
+               '}';
+    }
 }
