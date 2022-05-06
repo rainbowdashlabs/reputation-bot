@@ -1,6 +1,5 @@
 package de.chojo.repbot;
 
-import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import de.chojo.jdautil.botlist.BotlistService;
 import de.chojo.jdautil.command.dispatching.CommandHub;
@@ -32,8 +31,6 @@ import de.chojo.repbot.commands.TopMonth;
 import de.chojo.repbot.commands.TopWeek;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.data.GuildData;
-import de.chojo.repbot.data.updater.QueryReplacement;
-import de.chojo.repbot.data.updater.SqlUpdater;
 import de.chojo.repbot.listener.InternalCommandListener;
 import de.chojo.repbot.listener.LegacyCommandListener;
 import de.chojo.repbot.listener.LogListener;
@@ -51,6 +48,9 @@ import de.chojo.repbot.service.SelfCleanupService;
 import de.chojo.repbot.statistic.Statistic;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.repbot.util.PermissionErrorHandler;
+import de.chojo.sqlutil.databases.SqlType;
+import de.chojo.sqlutil.datasource.DataSourceCreator;
+import de.chojo.sqlutil.updater.QueryReplacement;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
@@ -61,13 +61,11 @@ import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.apache.logging.log4j.LogManager;
-import org.postgresql.ds.PGSimpleDataSource;
 import org.slf4j.Logger;
 
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -161,17 +159,17 @@ public class ReputationBot {
     }
 
     private void initDatabase() throws SQLException, IOException {
-        var connectionPool = getConnectionPool(false);
+        dataSource = getConnectionPool(true);
 
+        var updatePool = getConnectionPool(false);
         var schema = configuration.database().schema();
-        SqlUpdater.builder(connectionPool)
+        de.chojo.sqlutil.updater.SqlUpdater.builder(updatePool, SqlType.POSTGRES)
                 .setReplacements(new QueryReplacement("repbot_schema", schema))
                 .setVersionTable(schema + ".repbot_version")
                 .setSchemas(schema)
                 .execute();
-        connectionPool.close();
+        updatePool.close();
 
-        dataSource = getConnectionPool(true);
     }
 
     private void initLocalization() {
@@ -315,21 +313,20 @@ public class ReputationBot {
 
     private HikariDataSource getConnectionPool(boolean withSchema) {
         var db = configuration.database();
-        var props = new Properties();
-        props.setProperty("dataSourceClassName", PGSimpleDataSource.class.getName());
-        props.setProperty("dataSource.serverName", db.host());
-        props.setProperty("dataSource.portNumber", db.port());
-        props.setProperty("dataSource.user", db.user());
-        props.setProperty("dataSource.password", db.password());
-        props.setProperty("dataSource.databaseName", db.database());
-
-        var config = new HikariConfig(props);
-        config.setMaximumPoolSize(db.poolSize());
+        var configurationStage = DataSourceCreator.create(SqlType.POSTGRES)
+                .configure(config -> config
+                        .host(db.host())
+                        .port(db.port())
+                        .user(db.user())
+                        .password(db.password())
+                        .database(db.database()))
+                .create()
+                .withMaximumPoolSize(db.poolSize())
+                .withThreadFactory(createThreadFactory(hikariGroup));
         if (withSchema) {
-            config.setSchema(db.schema());
+            configurationStage.forSchema(db.schema());
         }
-        config.setThreadFactory(createThreadFactory(hikariGroup));
 
-        return new HikariDataSource(config);
+        return configurationStage.build();
     }
 }
