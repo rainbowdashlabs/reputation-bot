@@ -10,8 +10,8 @@ import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.config.Configuration;
-import de.chojo.repbot.data.GuildData;
-import de.chojo.repbot.data.ReputationData;
+import de.chojo.repbot.dao.access.guild.reputation.Reputation;
+import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.repbot.util.PermissionErrorHandler;
 import de.chojo.repbot.util.TextGenerator;
@@ -25,7 +25,6 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.slf4j.Logger;
 
-import javax.sql.DataSource;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayDeque;
@@ -51,8 +50,7 @@ public class Scan extends SimpleCommand {
                 thread.setUncaughtExceptionHandler((thr, err) -> log.error("Unhandled exception in Scanner Thread {}.", thr.getId(), err));
                 return thread;
             });
-    private final GuildData guildData;
-    private final ReputationData reputationData;
+    private final Guilds guilds;
     private final Set<ScanProcess> activeScans = new HashSet<>();
     private final Set<Long> cancel = new HashSet<>();
     private final Queue<ScanProcess> finished = new ArrayDeque<>();
@@ -60,15 +58,14 @@ public class Scan extends SimpleCommand {
     private final Configuration configuration;
     private MessageAnalyzer messageAnalyzer;
 
-    public Scan(DataSource dataSource, Configuration configuration) {
+    public Scan(Guilds guilds, Configuration configuration) {
         super(CommandMeta.builder("scan", "command.scan.description")
                 .addSubCommand("start", "command.scan.sub.start", argsBuilder()
                         .add(SimpleArgument.channel("channel", "command.scan.sub.start.arg.numberMessages"))
                         .add(SimpleArgument.integer("number_messages", "command.scan.sub.start.arg.channel")))
                 .addSubCommand("cancel", "command.scan.sub.cancel")
                 .withPermission());
-        guildData = new GuildData(dataSource);
-        reputationData = new ReputationData(dataSource);
+        this.guilds = guilds;
         this.configuration = configuration;
         worker.scheduleAtFixedRate(() -> {
             finishTasks();
@@ -154,7 +151,7 @@ public class Scan extends SimpleCommand {
 
     private void preSchedule(SlashCommandContext context, TextChannel channel, int messageCount) {
         var history = channel.getHistory();
-        var pattern = guildData.getGuildSettings(channel.getGuild()).thankSettings().thankwordPattern();
+        var pattern = guilds.guild(channel.getGuild()).settings().thanking().thankwords().thankwordPattern();
 
         schedule(history, context, pattern, channel, messageCount);
     }
@@ -162,7 +159,7 @@ public class Scan extends SimpleCommand {
     private void schedule(MessageHistory history, SlashCommandContext context, Pattern pattern, TextChannel reportChannel, int calls) {
         var progressMessage = reportChannel.sendMessage(context.localize("command.scan.progress",
                 Replacement.create("PERCENT", String.format("%.02f", 0d))) + " " + TextGenerator.progressBar(0, 40)).complete();
-        var scanProcess = new ScanProcess(messageAnalyzer, context.localizer(), progressMessage, history, pattern, calls, reputationData);
+        var scanProcess = new ScanProcess(messageAnalyzer, context.localizer(), progressMessage, history, pattern, calls, guilds);
         setActive(scanProcess);
         reportChannel.getGuild().loadMembers().get();
         worker.schedule(() -> processScan(scanProcess), 0, TimeUnit.SECONDS);
@@ -262,7 +259,7 @@ public class Scan extends SimpleCommand {
         private final MessageHistory history;
         private final Pattern pattern;
         private final int calls;
-        private final ReputationData reputationData;
+        private final Guilds guilds;
         private int scanned;
         private int hits;
         private int callsLeft;
@@ -270,7 +267,7 @@ public class Scan extends SimpleCommand {
         private Instant lastSeen;
         private Thread currWorker;
 
-        public ScanProcess(MessageAnalyzer messageAnalyzer, ContextLocalizer localizer, Message progressMessage, MessageHistory history, Pattern pattern, int calls, ReputationData data) {
+        public ScanProcess(MessageAnalyzer messageAnalyzer, ContextLocalizer localizer, Message progressMessage, MessageHistory history, Pattern pattern, int calls, Guilds data) {
             this.messageAnalyzer = messageAnalyzer;
             loc = localizer;
             guild = progressMessage.getGuild();
@@ -280,7 +277,7 @@ public class Scan extends SimpleCommand {
             this.pattern = pattern;
             this.calls = Math.min(Math.max(0, calls), 100000);
             callsLeft = this.calls;
-            reputationData = data;
+            guilds = data;
         }
 
         public void countScan() {
@@ -321,11 +318,13 @@ public class Scan extends SimpleCommand {
 
                 var donator = result.donator();
                 var refMessage = result.referenceMessage();
+                var reputation = guilds.guild(guild).reputation();
                 for (var resultReceiver : result.receivers()) {
                     switch (result.type()) {
                         case FUZZY, MENTION, ANSWER -> {
                             if (Verifier.equalSnowflake(donator, resultReceiver.getReference())) continue;
-                            if (reputationData.logReputation(guild, guild.isMember(donator) ? donator : null, resultReceiver.getReference().getUser(), message, refMessage, result.type())) {
+                            if (reputation.user(resultReceiver.getReference().getUser())
+                                    .addReputation(guild.isMember(donator) ? donator : null, message, refMessage, result.type())) {
                                 hit();
                             }
                         }

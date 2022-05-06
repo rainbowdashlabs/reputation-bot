@@ -18,7 +18,7 @@ import de.chojo.jdautil.parsing.ArgumentUtil;
 import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.jdautil.parsing.ValueParser;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
-import de.chojo.repbot.data.GuildData;
+import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.serialization.ThankwordsContainer;
 import de.chojo.repbot.util.FilterUtil;
 import de.chojo.repbot.util.PermissionErrorHandler;
@@ -31,7 +31,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
@@ -43,17 +42,16 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class Setup extends SimpleCommand {
 
     private static final Logger log = getLogger(Setup.class);
-    private final GuildData guildData;
+    private final Guilds guilds;
     private final ThankwordsContainer thankwordsContainer;
 
-    public Setup(DataSource dataSource,
-                 ThankwordsContainer thankwordsContainer) {
+    public Setup(Guilds guilds, ThankwordsContainer thankwordsContainer) {
         super(CommandMeta.builder("setup", "command.setup.description").withPermission());
-        guildData = new GuildData(dataSource);
+        this.guilds = guilds;
         this.thankwordsContainer = thankwordsContainer;
     }
 
-    public static Setup of(DataSource dataSource) {
+    public static Setup of(Guilds guilds) {
         ThankwordsContainer thankwordsContainer;
         try {
             thankwordsContainer = new ObjectMapper()
@@ -64,7 +62,7 @@ public class Setup extends SimpleCommand {
             thankwordsContainer = null;
             log.error("Could not read thankwords", e);
         }
-        return new Setup(dataSource, thankwordsContainer);
+        return new Setup(guilds, thankwordsContainer);
     }
 
     @Override
@@ -97,7 +95,7 @@ public class Setup extends SimpleCommand {
         for (var language : context.localizer().localizer().languages()) {
             buttons.add(Button.of(ButtonStyle.PRIMARY, language.getCode(), language.getLanguage()),
                     con -> {
-                        guildData.setLanguage(con.getGuild(), language);
+                        guilds.guild(con.getGuild()).settings().general().language(language);
                         con.reply(con.localize("command.locale.sub.set.set",
                                 Replacement.create("LOCALE", language.getLanguage()))).queue();
                         return Result.proceed(3);
@@ -130,7 +128,7 @@ public class Setup extends SimpleCommand {
 
     @NotNull
     private Result responseRolesSubAdded(ConversationContext context, Role role, Integer reputation) {
-        guildData.addReputationRole(context.getGuild(), role, reputation);
+        guilds.guild(context.getGuild()).settings().ranks().add(role, reputation);
         context.reply(context.localize("command.roles.sub.add.added",
                         Replacement.createMention(role),
                         Replacement.create("POINTS", reputation, Format.BOLD)))
@@ -150,7 +148,7 @@ public class Setup extends SimpleCommand {
             buttons.add(Button.of(ButtonStyle.PRIMARY, language, language),
                     context -> {
                         var words = thankwordsContainer.get(language.toLowerCase(Locale.ROOT));
-                        words.forEach(word -> guildData.addThankWord(context.getGuild(), word));
+                        words.forEach(word -> guilds.guild(context.getGuild()).settings().thanking().thankwords().add(word));
                         var wordsJoined = words.stream().map(w -> StringUtils.wrap(w, "`"))
                                 .collect(Collectors.joining(", "));
                         context.reply(context.localize("command.thankwords.sub.loadDefault.added") + wordsJoined)
@@ -174,7 +172,8 @@ public class Setup extends SimpleCommand {
             return Result.finish();
         })).add(Button.primary("all", "command.setup.dialog.channels.allChannel"), c -> {
             var guild = c.getGuild();
-            FilterUtil.getAccessableTextChannel(guild).forEach(channel -> guildData.addChannel(guild, channel));
+            FilterUtil.getAccessableTextChannel(guild).forEach(channel -> guilds
+                    .guild(guild).settings().thanking().channels().add(channel));
             c.reply(c.localize("command.channel.sub.addAll.added")).queue();
             return Result.finish();
         });
@@ -182,11 +181,11 @@ public class Setup extends SimpleCommand {
 
     private Result handleChannels(ConversationContext context) {
         var args = context.getContentRaw().replaceAll("\\s+", " ").split("\\s");
-        var channel = DiscordResolver.getTextChannels(context.getGuild(), List.of(args));
-        var addedChannel = channel.stream()
-                .map(c -> {
-                    guildData.addChannel(context.getGuild(), c);
-                    return c.getAsMention();
+        var channels = DiscordResolver.getTextChannels(context.getGuild(), List.of(args));
+        var addedChannel = channels.stream()
+                .map(channel -> {
+                    guilds.guild(context.getGuild()).settings().thanking().channels().add(channel);
+                    return channel.getAsMention();
                 })
                 .collect(Collectors.joining(", "));
         context.reply(

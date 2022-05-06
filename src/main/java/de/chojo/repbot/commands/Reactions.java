@@ -7,8 +7,8 @@ import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.util.Choice;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
-import de.chojo.repbot.data.GuildData;
-import de.chojo.repbot.data.wrapper.GuildSettings;
+import de.chojo.repbot.dao.access.guild.settings.Settings;
+import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -17,14 +17,13 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 
-import javax.sql.DataSource;
 import java.util.regex.Pattern;
 
 public class Reactions extends SimpleCommand {
     private static final Pattern EMOTE_PATTERN = Pattern.compile("<a?:.*?:(?<id>[0-9]*?)>");
-    private final GuildData guildData;
+    private final Guilds guilds;
 
-    public Reactions(DataSource dataSource) {
+    public Reactions(Guilds guilds) {
         super(CommandMeta.builder("reactions", "command.reaction.description")
                 .addSubCommand("main", "command.reaction.sub.main", argsBuilder()
                         .add(SimpleArgument.string("emote", "command.reaction.sub.main.arg.emote").asRequired()))
@@ -34,7 +33,7 @@ public class Reactions extends SimpleCommand {
                         .add(SimpleArgument.string("emote", "command.reaction.sub.remove.arg.emote")))
                 .addSubCommand("info", "command.reaction.sub.info")
                 .withPermission());
-        guildData = new GuildData(dataSource);
+        this.guilds = guilds;
     }
 
     @Override
@@ -57,16 +56,17 @@ public class Reactions extends SimpleCommand {
     }
 
     private void info(SlashCommandInteractionEvent event, SlashCommandContext context) {
-        event.replyEmbeds(getInfoEmbed(guildData.getGuildSettings(event.getGuild()), context)).queue();
+        event.replyEmbeds(getInfoEmbed(guilds.guild(event.getGuild()).settings(), context)).queue();
     }
 
-    private MessageEmbed getInfoEmbed(GuildSettings settings, SlashCommandContext context) {
-        var mainEmote = settings.thankSettings().reactionMention(settings.guild());
-        var emotes = String.join(" ", settings.thankSettings().getAdditionalReactionMentions(settings.guild()));
+    private MessageEmbed getInfoEmbed(Settings settings, SlashCommandContext context) {
+        var reactions = settings.thanking().reactions();
+        var mainEmote = reactions.reactionMention();
+        var emotes = String.join(" ", reactions.getAdditionalReactionMentions());
 
         return new LocalizedEmbedBuilder(context.localizer())
                 .setTitle("command.reaction.sub.info.title")
-                .addField("command.reaction.sub.info.main", mainEmote, true)
+                .addField("command.reaction.sub.info.main", mainEmote.orElse("words.unknown"), true)
                 .addField("command.reaction.sub.info.additional", emotes, true)
                 .build();
     }
@@ -86,10 +86,11 @@ public class Reactions extends SimpleCommand {
     }
 
     private void remove(SlashCommandInteractionEvent event, SlashCommandContext context) {
+        var reactions = guilds.guild(event.getGuild()).settings().thanking().reactions();
         var emote = event.getOption("emote").getAsString();
         var matcher = EMOTE_PATTERN.matcher(emote);
         if (matcher.find()) {
-            if (guildData.removeReaction(event.getGuild(), matcher.group("id"))) {
+            if (reactions.remove(matcher.group("id"))) {
                 event.reply(context.localize("command.reaction.sub.remove.removed")).queue();
                 return;
             }
@@ -97,7 +98,7 @@ public class Reactions extends SimpleCommand {
             return;
         }
 
-        if (guildData.removeReaction(event.getGuild(), emote)) {
+        if (reactions.remove(emote)) {
             event.reply(context.localize("command.reaction.sub.remove.removed")).queue();
             return;
         }
@@ -105,16 +106,17 @@ public class Reactions extends SimpleCommand {
     }
 
     private void handleSetCheckResult(Guild guild, SlashCommandContext context, Message message, String emote) {
+        var reactions = guilds.guild(guild).settings().thanking().reactions();
         var result = checkEmoji(message, emote);
         switch (result.result) {
             case EMOJI_FOUND -> {
-                if (guildData.setMainReaction(guild, emote)) {
+                if (reactions.mainReaction(emote)) {
                     message.editMessage(context.localize("command.reaction.sub.main.set",
                             Replacement.create("EMOTE", result.mention))).queue();
                 }
             }
             case EMOTE_FOUND -> {
-                if (guildData.setMainReaction(guild, result.id)) {
+                if (reactions.mainReaction(result.id)) {
                     message.editMessage(context.localize("command.reaction.sub.main.set",
                             Replacement.create("EMOTE", result.mention))).queue();
                 }
@@ -125,16 +127,17 @@ public class Reactions extends SimpleCommand {
     }
 
     private void handleAddCheckResult(Guild guild, SlashCommandContext context, Message message, String emote) {
+        var reactions = guilds.guild(guild).settings().thanking().reactions();
         var result = checkEmoji(message, emote);
         switch (result.result) {
             case EMOJI_FOUND -> {
-                if (guildData.addReaction(guild, emote)) {
+                if (reactions.add(emote)) {
                     message.editMessage(context.localize("command.reaction.sub.add.add",
                             Replacement.create("EMOTE", result.mention))).queue();
                 }
             }
             case EMOTE_FOUND -> {
-                if (guildData.addReaction(guild, result.id)) {
+                if (reactions.add(result.id)) {
                     message.editMessage(context.localize("command.reaction.sub.add.add",
                             Replacement.create("EMOTE", result.mention))).queue();
                 }
@@ -169,10 +172,10 @@ public class Reactions extends SimpleCommand {
 
     @Override
     public void onAutoComplete(CommandAutoCompleteInteractionEvent event, SlashCommandContext slashCommandContext) {
+        var react = guilds.guild(event.getGuild()).settings().thanking().reactions();
         if ("emote".equals(event.getFocusedOption().getName()) && "remove".equals(event.getSubcommandName())) {
-            var reactions = guildData.getGuildSettings(event.getGuild())
-                    .thankSettings()
-                    .reactions().stream()
+            var reactions = react.reactions()
+                    .stream()
                     .limit(25)
                     .map(Choice::toChoice)
                     .toList();

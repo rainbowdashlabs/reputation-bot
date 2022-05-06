@@ -7,22 +7,21 @@ import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.jdautil.util.Completion;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
-import de.chojo.repbot.data.GuildData;
-import de.chojo.repbot.data.wrapper.GuildSettings;
+import de.chojo.repbot.dao.access.guild.settings.sub.thanking.Channels;
+import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.util.FilterUtil;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class Channel extends SimpleCommand {
-    private final GuildData guildData;
+    private final Guilds guilds;
 
-    public Channel(DataSource dataSource) {
+    public Channel(Guilds guilds) {
         super(CommandMeta.builder("channel", "command.channel.description")
                 .addSubCommand("set", "command.channel.sub.set", argsBuilder()
                         .add(SimpleArgument.channel("channel", "command.channel.sub.set.arg.channel").asRequired()))
@@ -35,88 +34,83 @@ public class Channel extends SimpleCommand {
                         .add(SimpleArgument.string("type", "command.channel.sub.listType.arg.type").withAutoComplete()))
                 .addSubCommand("list", "command.channel.sub.list")
                 .withPermission());
-        guildData = new GuildData(dataSource);
+        this.guilds = guilds;
     }
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
         var subCmd = event.getSubcommandName();
+        Channels channels = guilds.guild(event.getGuild()).settings().thanking().channels();
         if ("set".equalsIgnoreCase(subCmd)) {
-            set(event, context);
+            set(event, context, channels);
         }
         if ("add".equalsIgnoreCase(subCmd)) {
-            add(event, context);
+            add(event, context, channels);
         }
         if ("remove".equalsIgnoreCase(subCmd)) {
-            remove(event, context);
+            remove(event, context, channels);
         }
         if ("list_type".equalsIgnoreCase(subCmd)) {
-            whitelist(event, context);
+            whitelist(event, context, channels);
         }
         if ("addAll".equalsIgnoreCase(subCmd)) {
-            addAll(event, context);
+            addAll(event, context, channels);
         }
         if ("list".equalsIgnoreCase(subCmd)) {
-            list(event, context);
+            list(event, context, channels);
         }
     }
 
-    private void whitelist(SlashCommandInteractionEvent event, SlashCommandContext context) {
+    private void whitelist(SlashCommandInteractionEvent event, SlashCommandContext context, Channels channels) {
         if (event.getOptions().isEmpty()) {
-            var guildSettings = guildData.getGuildSettings(event.getGuild());
-            var channelWhitelist = guildSettings.thankSettings().isChannelWhitelist();
-            event.reply(context.localize("command.channel.sub.whitelist." + channelWhitelist)).queue();
+            event.reply(context.localize("command.channel.sub.whitelist." + channels.isChannelWhitelist())).queue();
             return;
         }
         var whitelist = "whitelist".equalsIgnoreCase(event.getOption("type").getAsString());
-        guildData.setChannelListType(event.getGuild(), whitelist);
+        channels.listType(whitelist);
         event.reply(context.localize("command.channel.sub.listType." + whitelist)).queue();
     }
 
-    private void add(SlashCommandInteractionEvent event, SlashCommandContext context) {
+    private void add(SlashCommandInteractionEvent event, SlashCommandContext context, Channels channels) {
         var channel = event.getOption("channel").getAsMessageChannel();
         if (channel == null || channel.getType() != ChannelType.TEXT) {
             event.reply(context.localize("error.invalidChannel")).setEphemeral(true).queue();
             return;
         }
-
-        guildData.addChannel(event.getGuild(), channel);
+        channels.add(channel);
         event.reply(
                 context.localize("command.channel.sub.add.added",
                         Replacement.create("CHANNEL", channel.getAsMention()))).queue();
     }
 
-    private void addAll(SlashCommandInteractionEvent event, SlashCommandContext context) {
-        FilterUtil.getAccessableTextChannel(event.getGuild()).forEach(c -> guildData.addChannel(event.getGuild(), c));
+    private void addAll(SlashCommandInteractionEvent event, SlashCommandContext context, Channels channels) {
+        FilterUtil.getAccessableTextChannel(event.getGuild()).forEach(channels::add);
         event.reply(context.localize("command.channel.sub.addAll.added")).queue();
     }
 
-    private void remove(SlashCommandInteractionEvent event, SlashCommandContext context) {
+    private void remove(SlashCommandInteractionEvent event, SlashCommandContext context, Channels channels) {
         var channel = event.getOption("channel").getAsMessageChannel();
         if (channel == null || channel.getType() != ChannelType.TEXT) {
             event.reply(context.localize("error.invalidChannel")).setEphemeral(true).queue();
             return;
         }
-        guildData.removeChannel(event.getGuild(), channel);
+        channels.remove(channel);
 
         event.reply(context.localize("command.channel.sub.remove.removed",
                 Replacement.create("CHANNEL", channel.getAsMention()))).queue();
     }
 
-    private void list(SlashCommandInteractionEvent event, SlashCommandContext context) {
-        event.reply(getChannelList(guildData.getGuildSettings(event.getGuild()), context)).queue();
+    private void list(SlashCommandInteractionEvent event, SlashCommandContext context, Channels channels) {
+        event.reply(getChannelList(channels, context)).queue();
     }
 
-    private String getChannelList(GuildSettings settings, SlashCommandContext context) {
-        var channelNames = DiscordResolver
-                .getValidTextChannelsById(
-                        settings.guild(), new ArrayList<>(settings.thankSettings().channels()))
-                .stream().map(IMentionable::getAsMention).collect(Collectors.joining(", "));
-        var message = "command.channel.sub.list." + (settings.thankSettings().isChannelWhitelist() ? "whitelist" : "blacklist");
+    private String getChannelList(Channels channels, SlashCommandContext context) {
+        var channelNames = channels.channels().stream().map(IMentionable::getAsMention).collect(Collectors.joining(", "));
+        var message = "command.channel.sub.list." + (channels.isChannelWhitelist() ? "whitelist" : "blacklist");
         return context.localize(message, Replacement.create("CHANNEL", channelNames));
     }
 
-    private void set(SlashCommandInteractionEvent event, SlashCommandContext context) {
+    private void set(SlashCommandInteractionEvent event, SlashCommandContext context, Channels channels) {
         var channel = event.getOption("channel").getAsMessageChannel();
         if (channel == null || channel.getType() != ChannelType.TEXT) {
             event.reply(context.localize("error.invalidChannel")).setEphemeral(true).queue();
@@ -124,8 +118,8 @@ public class Channel extends SimpleCommand {
         }
 
         event.deferReply().queue();
-        guildData.clearChannel(event.getGuild());
-        guildData.addChannel(event.getGuild(), channel);
+        channels.clear();
+        channels.add(channel);
         event.getHook().editOriginal(context.localize("command.channel.sub.set.set",
                 Replacement.create("CHANNEL", channel.getAsMention()))).queue();
     }

@@ -5,22 +5,21 @@ import de.chojo.jdautil.command.SimpleArgument;
 import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
-import de.chojo.repbot.data.GuildData;
-import de.chojo.repbot.data.wrapper.GuildSettings;
+import de.chojo.repbot.dao.access.guild.settings.Settings;
+import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.util.EmojiDebug;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.jetbrains.annotations.PropertyKey;
 
-import javax.sql.DataSource;
 import java.awt.Color;
 import java.util.List;
 
 //TODO: Replace with select menu to manage states
 public class RepSettings extends SimpleCommand {
-    private final GuildData guildData;
+    private final Guilds guilds;
 
-    public RepSettings(DataSource source) {
+    public RepSettings(Guilds guilds) {
         super(CommandMeta.builder("repsettings", "command.repSettings.description")
                 .addSubCommand("info", "command.repSettings.sub.info")
                 .addSubCommand("reactions", "command.repSettings.sub.reactions", argsBuilder()
@@ -36,12 +35,12 @@ public class RepSettings extends SimpleCommand {
                 .addSubCommand("emojidebug", "command.repSettings.sub.emojidebug", argsBuilder()
                         .add(SimpleArgument.bool("active", "command.repSettings.sub.emojidebug.arg.active")))
                 .withPermission());
-        guildData = new GuildData(source);
+        this.guilds = guilds;
     }
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
-        var guildSettings = guildData.getGuildSettings(event.getGuild());
+        var guildSettings = guilds.guild(event.getGuild()).settings();
 
         var subcmd = event.getSubcommandName();
         if ("info".equalsIgnoreCase(subcmd)) {
@@ -73,12 +72,12 @@ public class RepSettings extends SimpleCommand {
         }
     }
 
-    private void sendSettings(SlashCommandInteractionEvent event, SlashCommandContext context, GuildSettings guildSettings) {
+    private void sendSettings(SlashCommandInteractionEvent event, SlashCommandContext context, Settings guildSettings) {
         event.replyEmbeds(getSettings(context, guildSettings)).queue();
     }
 
-    private void fuzzy(SlashCommandInteractionEvent event, SlashCommandContext context, GuildSettings guildSettings) {
-        var messageSettings = guildSettings.messageSettings();
+    private void fuzzy(SlashCommandInteractionEvent event, SlashCommandContext context, Settings guildSettings) {
+        var messageSettings = guildSettings.messages();
         if (event.getOptions().isEmpty()) {
             event.reply(getBooleanMessage(context, messageSettings.isFuzzyActive(),
                     "command.repSettings.sub.fuzzy.true", "command.repSettings.sub.fuzzy.false")).queue();
@@ -86,15 +85,15 @@ public class RepSettings extends SimpleCommand {
         }
         var fuzzy = event.getOption("fuzzy").getAsBoolean();
 
-        messageSettings.fuzzyActive(fuzzy);
-        if (guildData.updateMessageSettings(event.getGuild(), messageSettings)) {
+        ;
+        if (messageSettings.fuzzyActive(fuzzy)) {
             event.reply(getBooleanMessage(context, fuzzy,
                     "command.repSettings.sub.fuzzy.true", "command.repSettings.sub.fuzzy.false")).queue();
         }
     }
 
-    private void mention(SlashCommandInteractionEvent event, SlashCommandContext context, GuildSettings guildSettings) {
-        var messageSettings = guildSettings.messageSettings();
+    private void mention(SlashCommandInteractionEvent event, SlashCommandContext context, Settings guildSettings) {
+        var messageSettings = guildSettings.messages();
         if (event.getOptions().isEmpty()) {
             event.reply(getBooleanMessage(context, messageSettings.isAnswerActive(),
                     "command.repSettings.sub.mention.true", "command.repSettings.sub.mention.false")).queue();
@@ -102,15 +101,15 @@ public class RepSettings extends SimpleCommand {
         }
         var mention = event.getOption("mention").getAsBoolean();
 
-        messageSettings.mentionActive(mention);
-        if (guildData.updateMessageSettings(event.getGuild(), messageSettings)) {
+        ;
+        if (messageSettings.mentionActive(mention)) {
             event.reply(getBooleanMessage(context, mention,
                     "command.repSettings.sub.mention.true", "command.repSettings.sub.mention.false")).queue();
         }
     }
 
-    private void answer(SlashCommandInteractionEvent event, SlashCommandContext context, GuildSettings guildSettings) {
-        var messageSettings = guildSettings.messageSettings();
+    private void answer(SlashCommandInteractionEvent event, SlashCommandContext context, Settings guildSettings) {
+        var messageSettings = guildSettings.messages();
         if (event.getOptions().isEmpty()) {
             event.reply(getBooleanMessage(context, messageSettings.isAnswerActive(),
                     "command.repSettings.sub.answer.true", "command.repSettings.sub.answer.false")).queue();
@@ -118,15 +117,14 @@ public class RepSettings extends SimpleCommand {
         }
         var answer = event.getOption("answer").getAsBoolean();
 
-        messageSettings.answerActive(answer);
-        if (guildData.updateMessageSettings(event.getGuild(), messageSettings)) {
+        if (messageSettings.answerActive(answer)) {
             event.reply(getBooleanMessage(context, answer,
                     "command.repSettings.sub.answer.true", "command.repSettings.sub.answer.false")).queue();
         }
     }
 
-    private void embed(SlashCommandInteractionEvent event, SlashCommandContext context, GuildSettings guildSettings) {
-        var messageSettings = guildSettings.messageSettings();
+    private void embed(SlashCommandInteractionEvent event, SlashCommandContext context, Settings guildSettings) {
+        var messageSettings = guildSettings.messages();
         if (event.getOptions().isEmpty()) {
             event.reply(getBooleanMessage(context, messageSettings.isAnswerActive(),
                     "command.repSettings.sub.embed.true", "command.repSettings.sub.embed.false")).queue();
@@ -134,15 +132,14 @@ public class RepSettings extends SimpleCommand {
         }
         var embed = event.getOption("embed").getAsBoolean();
 
-        messageSettings.embedActive(embed);
-        if (guildData.updateMessageSettings(event.getGuild(), messageSettings)) {
+        if (messageSettings.embedActive(embed)) {
             event.reply(getBooleanMessage(context, embed,
                     "command.repSettings.sub.embed.true", "command.repSettings.sub.embed.false")).queue();
         }
     }
 
-    private void reactions(SlashCommandInteractionEvent event, SlashCommandContext context, GuildSettings guildSettings) {
-        var messageSettings = guildSettings.messageSettings();
+    private void reactions(SlashCommandInteractionEvent event, SlashCommandContext context, Settings guildSettings) {
+        var messageSettings = guildSettings.messages();
         if (event.getOptions().isEmpty()) {
             event.reply(getBooleanMessage(context, messageSettings.isReactionActive(),
                     "command.repSettings.sub.reactions.true", "command.repSettings.sub.reactions.false")).queue();
@@ -150,15 +147,14 @@ public class RepSettings extends SimpleCommand {
         }
         var reactions = event.getOption("reactions").getAsBoolean();
 
-        messageSettings.reactionActive(reactions);
-        if (guildData.updateMessageSettings(event.getGuild(), messageSettings)) {
+        if (messageSettings.reactionActive(reactions)) {
             event.reply(getBooleanMessage(context, reactions,
                     "command.repSettings.sub.reactions.true", "command.repSettings.sub.reactions.false")).queue();
         }
     }
 
-    private void emojidebug(SlashCommandInteractionEvent event, SlashCommandContext context, GuildSettings guildSettings) {
-        var generalSettings = guildSettings.generalSettings();
+    private void emojidebug(SlashCommandInteractionEvent event, SlashCommandContext context, Settings guildSettings) {
+        var generalSettings = guildSettings.general();
         if (event.getOptions().isEmpty()) {
             event.reply(getBooleanMessage(context, generalSettings.isEmojiDebug(),
                     "command.repSettings.sub.emojidebug.true", "command.repSettings.sub.emojidebug.false")
@@ -167,18 +163,18 @@ public class RepSettings extends SimpleCommand {
         }
         var emojidebug = event.getOption("active").getAsBoolean();
 
-        if (guildData.setEmojiDebug(event.getGuild(), emojidebug)) {
+        if (generalSettings.emojiDebug(emojidebug)) {
             event.reply(getBooleanMessage(context, emojidebug,
                     "command.repSettings.sub.emojidebug.true", "command.repSettings.sub.emojidebug.false")).queue();
         }
     }
 
-    private MessageEmbed getSettings(SlashCommandContext context, GuildSettings guildSettings) {
-        var messageSettings = guildSettings.messageSettings();
+    private MessageEmbed getSettings(SlashCommandContext context, Settings guildSettings) {
+        var messageSettings = guildSettings.messages();
 
         return new LocalizedEmbedBuilder(context.localizer())
                 .setTitle("command.repSettings.embed.title")
-                .appendDescription(messageSettings.toLocalizedString(guildSettings))
+                .appendDescription(messageSettings.toLocalizedString())
                 .setColor(Color.GREEN)
                 .build();
     }

@@ -6,22 +6,21 @@ import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.util.MentionUtil;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
-import de.chojo.repbot.data.ReputationData;
+import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.util.Colors;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-import javax.sql.DataSource;
 import java.util.stream.Collectors;
 
 public class Dashboard extends SimpleCommand {
-    private final ReputationData reputationData;
+    private final Guilds guilds;
 
-    public Dashboard(DataSource dataSource) {
+    public Dashboard(Guilds guilds) {
         super(CommandMeta.builder("dashboard", "command.dashboard.description"));
-        reputationData = new ReputationData(dataSource);
+        this.guilds = guilds;
     }
 
     @Override
@@ -30,10 +29,11 @@ public class Dashboard extends SimpleCommand {
     }
 
     private MessageEmbed getDashboard(Guild guild, SlashCommandContext context) {
-        var optStats = reputationData.getGuildReputationStats(guild);
+        var reputation = guilds.guild(guild).reputation();
+        var optStats = reputation.stats();
         if (optStats.isEmpty()) return new EmbedBuilder().setTitle("None").build();
         var stats = optStats.get();
-        var top3 = reputationData.getRanking(guild, 5).page(0).stream()
+        var top3 = reputation.ranking().total(5).page(0).stream()
                 .map(r -> r.fancyString(5))
                 .collect(Collectors.joining("\n"));
 
