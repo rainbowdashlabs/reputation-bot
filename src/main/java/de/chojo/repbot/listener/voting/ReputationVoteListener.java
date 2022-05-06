@@ -6,7 +6,7 @@ import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.config.Configuration;
-import de.chojo.repbot.data.wrapper.GuildSettings;
+import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.service.ReputationService;
 import de.chojo.repbot.util.EmojiDebug;
 import de.chojo.repbot.util.Messages;
@@ -92,7 +92,7 @@ public class ReputationVoteListener extends ListenerAdapter {
         }
     }
 
-    public void registerVote(Message message, List<Member> members, GuildSettings settings) {
+    public void registerVote(Message message, List<Member> members, Settings settings) {
         if (PermissionErrorHandler.assertAndHandle(message.getGuildChannel(), loc, configuration, Permission.MESSAGE_SEND, Permission.MESSAGE_EMBED_LINKS)) {
             return;
         }
@@ -110,7 +110,7 @@ public class ReputationVoteListener extends ListenerAdapter {
             components.put(id, new VoteComponent(member, Button.of(ButtonStyle.PRIMARY, id, member.getEffectiveName())));
         }
 
-        if (settings.generalSettings().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.PROMPTED);
+        if (settings.general().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.PROMPTED);
 
         var collect = components.values().stream().map(VoteComponent::component).collect(Collectors.toUnmodifiableList());
 

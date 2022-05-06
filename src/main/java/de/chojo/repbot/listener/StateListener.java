@@ -3,10 +3,8 @@ package de.chojo.repbot.listener;
 import de.chojo.jdautil.command.dispatching.CommandHub;
 import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.repbot.config.Configuration;
-import de.chojo.repbot.data.GdprData;
-import de.chojo.repbot.data.GuildData;
+import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.channel.ChannelDeleteEvent;
 import net.dv8tion.jda.api.events.emote.EmoteRemovedEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
@@ -18,38 +16,29 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
-import javax.sql.DataSource;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class StateListener extends ListenerAdapter {
     private static final Logger log = getLogger(StateListener.class);
-    private final GuildData guildData;
-    private final GdprData gdprData;
-    private final CommandHub<?> commandHub;
+    private final Guilds guilds;
     private final ILocalizer localizer;
     private final Configuration configuration;
-    private final ScheduledExecutorService executorService;
 
-    private StateListener(CommandHub<?> commandHub, ILocalizer localizer, DataSource dataSource, Configuration configuration, ScheduledExecutorService executorService) {
-        this.commandHub = commandHub;
+    private StateListener(Guilds guilds, ILocalizer localizer, Configuration configuration) {
+        this.guilds = guilds;
         this.localizer = localizer;
-        guildData = new GuildData(dataSource);
-        gdprData = new GdprData(dataSource);
         this.configuration = configuration;
-        this.executorService = executorService;
     }
 
-    public static StateListener of(CommandHub<?> commandHub, ILocalizer localizer, DataSource dataSource, Configuration configuration, ScheduledExecutorService executorService) {
-        return new StateListener(commandHub, localizer, dataSource, configuration, executorService);
+    public static StateListener of(ILocalizer localizer, Guilds guilds, Configuration configuration) {
+        return new StateListener(guilds, localizer, configuration);
     }
 
     @Override
     public void onGuildJoin(@NotNull GuildJoinEvent event) {
-        guildData.initGuild(event.getGuild());
-        gdprData.dequeueGuildDeletion(event.getGuild());
+        guilds.guild(event.getGuild()).gdpr().dequeueDeletion();
 
         if (configuration.botlist().isBotlistGuild(event.getGuild().getIdLong())) return;
 
@@ -62,46 +51,41 @@ public class StateListener extends ListenerAdapter {
             }
         }
 
-        guildData.migrated(event.getGuild());
+        guilds.guild(event.getGuild()).migration().migrated();
     }
 
     @Override
     public void onGuildLeave(@NotNull GuildLeaveEvent event) {
         if (!configuration.migration().isActive()) {
-            gdprData.queueGuildDeletion(event.getGuild());
+            guilds.guild(event.getGuild()).gdpr().queueDeletion();
         }
     }
 
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
-        gdprData.dequeueGuildUserDeletion(event.getMember());
+        guilds.guild(event.getGuild()).reputation().user(event.getMember()).gdpr().dequeueDeletion();
     }
 
     @Override
     public void onGuildMemberRemove(@NotNull GuildMemberRemoveEvent event) {
-        gdprData.queueGuildUserDeletion(event.getUser(), event.getGuild());
+        guilds.guild(event.getGuild()).reputation().user(event.getUser()).gdpr().queueDeletion();
     }
 
     @Override
     public void onRoleDelete(@NotNull RoleDeleteEvent event) {
-        guildData.removeReputationRole(event.getGuild(), event.getRole());
+        guilds.guild(event.getGuild()).settings().ranks().remove(event.getRole());
     }
 
     @Override
     public void onChannelDelete(@NotNull ChannelDeleteEvent event) {
-        guildData.removeChannel(event.getGuild(), event.getChannel());
+        guilds.guild(event.getGuild()).settings().thanking().channels().remove(event.getChannel());
     }
 
     @Override
     public void onEmoteRemoved(@NotNull EmoteRemovedEvent event) {
-        var guildSettings = guildData.getGuildSettings(event.getGuild());
-        if (!guildSettings.thankSettings().reactionIsEmote()) return;
-        if (!guildSettings.thankSettings().reaction().equals(event.getEmote().getId())) return;
-        guildData.setMainReaction(event.getGuild(), "🏅");
-    }
-
-    @Override
-    public void onReady(@NotNull ReadyEvent event) {
-        event.getJDA().getGuildCache().forEach(guildData::initGuild);
+        var guildSettings = guilds.guild(event.getGuild()).settings();
+        if (!guildSettings.thanking().reactions().reactionIsEmote()) return;
+        if (!guildSettings.thanking().reactions().mainReaction().equals(event.getEmote().getId())) return;
+        guildSettings.thanking().reactions().mainReaction("🏅");
     }
 }

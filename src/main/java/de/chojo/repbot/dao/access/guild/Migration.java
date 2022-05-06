@@ -5,7 +5,7 @@ import de.chojo.sqlutil.base.QueryFactoryHolder;
 import net.dv8tion.jda.api.entities.Guild;
 
 public class Migration extends QueryFactoryHolder implements GuildHolder {
-    private RepGuild repGuild;
+    private final RepGuild repGuild;
 
     public Migration(RepGuild repGuild) {
         super(repGuild);

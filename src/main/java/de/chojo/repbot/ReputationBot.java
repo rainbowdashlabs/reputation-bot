@@ -17,7 +17,6 @@ import de.chojo.repbot.commands.Info;
 import de.chojo.repbot.commands.Invite;
 import de.chojo.repbot.commands.Locale;
 import de.chojo.repbot.commands.Log;
-import de.chojo.repbot.commands.Prefix;
 import de.chojo.repbot.commands.Prune;
 import de.chojo.repbot.commands.Reactions;
 import de.chojo.repbot.commands.RepSettings;
@@ -30,9 +29,10 @@ import de.chojo.repbot.commands.Top;
 import de.chojo.repbot.commands.TopMonth;
 import de.chojo.repbot.commands.TopWeek;
 import de.chojo.repbot.config.Configuration;
-import de.chojo.repbot.data.GuildData;
+import de.chojo.repbot.dao.access.Cleanup;
+import de.chojo.repbot.dao.access.Migration;
+import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.listener.InternalCommandListener;
-import de.chojo.repbot.listener.LegacyCommandListener;
 import de.chojo.repbot.listener.LogListener;
 import de.chojo.repbot.listener.MessageListener;
 import de.chojo.repbot.listener.ReactionListener;
@@ -94,6 +94,10 @@ public class ReputationBot {
     private MessageAnalyzer messageAnalyzer;
     private Roles roles;
     private RoleAssigner roleAssigner;
+    private Guilds guilds;
+    private de.chojo.repbot.dao.access.Gdpr gdpr;
+    private Cleanup cleanup;
+    private Migration migration;
 
     public static void main(String[] args) throws SQLException, IOException {
         ReputationBot.instance = new ReputationBot();
@@ -168,6 +172,10 @@ public class ReputationBot {
                 .setVersionTable(schema + ".repbot_version")
                 .setSchemas(schema)
                 .execute();
+        this.guilds = new Guilds(dataSource);
+        this.gdpr = new de.chojo.repbot.dao.access.Gdpr(dataSource);
+        this.cleanup = new Cleanup(dataSource);
+        this.migration = new Migration(dataSource);
         updatePool.close();
 
     }
@@ -176,7 +184,7 @@ public class ReputationBot {
         localizer = Localizer.builder(Language.ENGLISH)
                 .addLanguage(Language.GERMAN, Language.of("es_ES", "Español"), Language.of("fr_FR", "Français"),
                         Language.of("pt_PT", "Português"), Language.of("ru_RU", "Русский"))
-                .withLanguageProvider(guild -> new GuildData(dataSource).getLanguage(guild))
+                .withLanguageProvider(guild -> guilds.guild(guild).settings().general().language())
                 .withBundlePath("locale")
                 .build();
     }
@@ -199,9 +207,9 @@ public class ReputationBot {
         scan.lateInit(messageAnalyzer);
 
         // init services
-        var reputationService = new ReputationService(dataSource, contextResolver, roleAssigner, configuration.magicImage(), localizer);
-        var gdprService = GdprService.of(shardManager, dataSource, repBotWorker);
-        SelfCleanupService.create(shardManager, localizer, dataSource, configuration, repBotWorker);
+        var reputationService = new ReputationService(guilds, contextResolver, roleAssigner, configuration.magicImage(), localizer);
+        var gdprService = GdprService.of(shardManager, guilds, gdpr, repBotWorker);
+        SelfCleanupService.create(shardManager, localizer, guilds, cleanup, configuration, repBotWorker);
 
         if (configuration.migration().isActive()) {
             log.warn("The bot is running in migration mode!");
@@ -215,27 +223,26 @@ public class ReputationBot {
                 .withConversationSystem()
                 .useGuildCommands()
                 .withCommands(
-                        new Channel(dataSource),
-                        new Prefix(dataSource, configuration),
-                        new Reputation(dataSource, configuration),
+                        new Channel(guilds),
+                        new Reputation(guilds, configuration),
                         roles,
-                        new RepSettings(dataSource),
-                        new Top(dataSource),
-                        new TopWeek(dataSource),
-                        new TopMonth(dataSource),
-                        Thankwords.of(messageAnalyzer, dataSource),
+                        new RepSettings(guilds),
+                        new Top(guilds),
+                        new TopWeek(guilds),
+                        new TopMonth(guilds),
+                        Thankwords.of(messageAnalyzer, guilds),
                         scan,
-                        new Locale(dataSource, repBotWorker),
+                        new Locale(guilds, repBotWorker),
                         new Invite(configuration),
                         Info.create(configuration),
-                        new Log(dataSource),
-                        Setup.of(dataSource),
-                        new Gdpr(dataSource),
+                        new Log(guilds),
+                        Setup.of(guilds),
+                        new Gdpr(gdpr),
                         new Prune(gdprService),
-                        new Reactions(dataSource),
-                        new Dashboard(dataSource),
-                        new AbuseProtection(dataSource),
-                        new Debug(dataSource))
+                        new Reactions(guilds),
+                        new Dashboard(guilds),
+                        new AbuseProtection(guilds),
+                        new Debug(guilds))
                 .withLocalizer(localizer)
                 .withPermissionCheck((event, meta) -> true)
                 .withCommandErrorHandler((context, throwable) -> {
@@ -249,13 +256,13 @@ public class ReputationBot {
                 .build();
 
         // init listener and services
-        var reactionListener = new ReactionListener(dataSource, localizer, reputationService, configuration);
+        var reactionListener = new ReactionListener(guilds, localizer, reputationService, configuration);
         var voteListener = new ReputationVoteListener(reputationService, localizer, configuration);
-        var messageListener = new MessageListener(localizer, dataSource, configuration, repBotCachePolicy, voteListener,
+        var messageListener = new MessageListener(localizer, configuration, guilds, migration, repBotCachePolicy, voteListener,
                 reputationService, contextResolver, messageAnalyzer);
         var voiceStateListener = VoiceStateListener.of(dataSource, repBotWorker);
         var logListener = LogListener.create(repBotWorker);
-        var stateListener = StateListener.of(hub, localizer, dataSource, configuration, repBotWorker);
+        var stateListener = StateListener.of(localizer, guilds, configuration);
 
         shardManager.addEventListener(
                 reactionListener,
@@ -264,9 +271,6 @@ public class ReputationBot {
                 voiceStateListener,
                 logListener,
                 stateListener);
-
-        shardManager.addEventListener(new LegacyCommandListener(shardManager, localizer, dataSource, hub));
-
     }
 
     private void initShutdownHook() {
@@ -284,9 +288,9 @@ public class ReputationBot {
     }
 
     private void initJDA() throws LoginException {
-        roleAssigner = new RoleAssigner(dataSource);
-        scan = new Scan(dataSource, configuration);
-        roles = new Roles(dataSource, roleAssigner);
+        roleAssigner = new RoleAssigner(guilds);
+        scan = new Scan(guilds, configuration);
+        roles = new Roles(guilds, roleAssigner);
         repBotCachePolicy = new RepBotCachePolicy(scan, roles);
         shardManager = DefaultShardManagerBuilder.createDefault(configuration.baseSettings().token())
                 .enableIntents(

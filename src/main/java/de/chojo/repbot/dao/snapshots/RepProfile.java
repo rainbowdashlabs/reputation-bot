@@ -7,16 +7,10 @@ import org.apache.commons.lang3.StringUtils;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class RepProfile {
-    private final long rank;
-    private final Long userId;
-    private final long reputation;
-
-    public RepProfile(long rank, Long userId, long reputation) {
-        this.rank = rank;
-        this.userId = userId;
-        this.reputation = reputation;
-    }
+/**
+ * Snapshot of a user reputation profile.
+ */
+public record RepProfile(long rank, Long userId, long reputation) {
 
     public static RepProfile empty(User user) {
         return new RepProfile(0, user.getIdLong(), 0);
@@ -34,17 +28,5 @@ public class RepProfile {
         var length = String.valueOf(maxRank).length();
         var rank = StringUtils.rightPad(String.valueOf(this.rank), length);
         return "`" + rank + "` **|** " + MentionUtil.user(userId) + " ➜ " + reputation;
-    }
-
-    public long rank() {
-        return rank;
-    }
-
-    public Long userId() {
-        return userId;
-    }
-
-    public long reputation() {
-        return reputation;
     }
 }

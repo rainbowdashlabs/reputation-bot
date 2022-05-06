@@ -1,6 +1,7 @@
 package de.chojo.repbot.dao.snapshots;
 
 import de.chojo.repbot.analyzer.ThankType;
+import de.chojo.repbot.dao.access.guild.reputation.sub.Log;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
 
 import javax.sql.DataSource;
@@ -8,10 +9,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
+/**
+ * A log entry representing a single reputation.
+ */
 public class ReputationLogEntry extends QueryFactoryHolder {
     private static final String PATH = "https://discord.com/channels/%s/%s/%s";
     private static final long DISCORD_EPOCH = 1420070400000L;
-
     private final long guildId;
     private final long channelId;
     private final long donorId;
@@ -21,8 +24,8 @@ public class ReputationLogEntry extends QueryFactoryHolder {
     private final ThankType type;
     private final LocalDateTime received;
 
-    public ReputationLogEntry(DataSource dataSource, long guildId, long channelId, long donorId, long receiverId, long messageId, long refMessageId, ThankType type, LocalDateTime received) {
-        super(dataSource);
+    public ReputationLogEntry(Log log, long guildId, long channelId, long donorId, long receiverId, long messageId, long refMessageId, ThankType type, LocalDateTime received) {
+        super(log);
         this.guildId = guildId;
         this.channelId = channelId;
         this.donorId = donorId;
@@ -33,8 +36,8 @@ public class ReputationLogEntry extends QueryFactoryHolder {
         this.received = received;
     }
 
-    public static ReputationLogEntry build(DataSource dataSource, ResultSet rs) throws SQLException {
-        return new ReputationLogEntry(dataSource,
+    public static ReputationLogEntry build(Log log, ResultSet rs) throws SQLException {
+        return new ReputationLogEntry(log,
                 rs.getLong("guild_id"),
                 rs.getLong("channel_id"),
                 rs.getLong("donor_id"),
@@ -95,12 +98,22 @@ public class ReputationLogEntry extends QueryFactoryHolder {
     }
 
     /**
-     * Removes all reputations associated with the message
+     * Removes the log entry
      */
     public void delete() {
         builder()
-                .query("DELETE FROM reputation_log WHERE message_id = ?;")
-                .paramsBuilder(stmt -> stmt.setLong(messageId))
+                .query("DELETE FROM reputation_log WHERE message_id = ? AND receiver_id = ? and donor_id = ?;")
+                .paramsBuilder(stmt -> stmt.setLong(messageId).setLong(receiverId).setLong(donorId))
+                .update().execute();
+    }
+
+    /**
+     * Removes all reputations associated with the message
+     */
+    public void deleteAll() {
+        builder()
+                .query("DELETE FROM reputation_log WHERE message_id = ?")
+                .paramsBuilder(stmt -> stmt.setLong(messageId).setLong(receiverId))
                 .update().execute();
     }
 }

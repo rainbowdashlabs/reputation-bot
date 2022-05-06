@@ -3,12 +3,10 @@ package de.chojo.repbot.dao.access.guild.reputation.sub.user;
 import de.chojo.repbot.dao.access.guild.reputation.sub.RepUser;
 import de.chojo.repbot.dao.components.MemberHolder;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.User;
 
 public class Gdpr extends QueryFactoryHolder implements MemberHolder {
-    private RepUser repUser;
+    private final RepUser repUser;
 
     public Gdpr(RepUser repUser) {
         super(repUser);

@@ -14,7 +14,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 public class AbuseProtection extends QueryFactoryHolder implements GuildHolder {
-    private Settings settings;
+    private final Settings settings;
     private int cooldown;
     private int maxMessageAge;
     private int minMessages;
@@ -33,6 +33,15 @@ public class AbuseProtection extends QueryFactoryHolder implements GuildHolder {
 
     public AbuseProtection(Settings settings) {
         this(settings, 30, 30, 10, true, true);
+    }
+
+    public static AbuseProtection build(Settings dataSource, ResultSet rs) throws SQLException {
+        return new AbuseProtection(dataSource,
+                rs.getInt("cooldown"),
+                rs.getInt("max_message_age"),
+                rs.getInt("min_messages"),
+                rs.getBoolean("donor_context"),
+                rs.getBoolean("receiver_context"));
     }
 
     public int cooldown() {
@@ -58,7 +67,7 @@ public class AbuseProtection extends QueryFactoryHolder implements GuildHolder {
     public boolean cooldown(int cooldown) {
         var result = set("cooldown", stmt -> stmt.setInt(cooldown));
         if (result) {
-        this.cooldown = cooldown;
+            this.cooldown = cooldown;
         }
         return result;
     }
@@ -99,15 +108,6 @@ public class AbuseProtection extends QueryFactoryHolder implements GuildHolder {
         if (maxMessageAge == 0) return true;
         var until = message.getTimeCreated().toInstant().until(Instant.now(), ChronoUnit.MINUTES);
         return until < maxMessageAge();
-    }
-
-    public static AbuseProtection build(Settings dataSource, ResultSet rs) throws SQLException {
-        return new AbuseProtection(dataSource,
-                rs.getInt("cooldown"),
-                rs.getInt("max_message_age"),
-                rs.getInt("min_messages"),
-                rs.getBoolean("donor_context"),
-                rs.getBoolean("receiver_context"));
     }
 
     private boolean set(String parameter, ThrowingConsumer<ParamBuilder, SQLException> builder) {

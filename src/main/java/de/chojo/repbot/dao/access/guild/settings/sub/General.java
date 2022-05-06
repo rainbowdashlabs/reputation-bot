@@ -4,6 +4,7 @@ import de.chojo.jdautil.consumer.ThrowingConsumer;
 import de.chojo.jdautil.localization.util.Language;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
+import de.chojo.sqlutil.base.QueryFactoryHolder;
 import de.chojo.sqlutil.wrapper.ParamBuilder;
 import de.chojo.sqlutil.wrapper.QueryBuilderFactory;
 import net.dv8tion.jda.api.entities.Guild;
@@ -13,10 +14,10 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class General extends QueryBuilderFactory implements GuildHolder {
+public class General extends QueryFactoryHolder implements GuildHolder {
+    private final AtomicBoolean stackRoles;
     private String language;
     private boolean emojiDebug;
-    private final AtomicBoolean stackRoles;
     private Settings settings;
 
     public General(Settings settings) {

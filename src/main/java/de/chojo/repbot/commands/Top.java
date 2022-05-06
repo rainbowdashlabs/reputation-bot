@@ -7,7 +7,7 @@ import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.pagination.bag.PageBag;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.dao.provider.Guilds;
-import de.chojo.repbot.data.wrapper.GuildRanking;
+import de.chojo.repbot.dao.pagination.GuildRanking;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;

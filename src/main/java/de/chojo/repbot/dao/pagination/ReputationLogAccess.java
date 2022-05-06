@@ -1,4 +1,4 @@
-package de.chojo.repbot.data.wrapper;
+package de.chojo.repbot.dao.pagination;
 
 import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 

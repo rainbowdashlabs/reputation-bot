@@ -2,10 +2,10 @@ package de.chojo.repbot.dao.access.guild.settings;
 
 import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.access.guild.settings.sub.AbuseProtection;
-import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.access.guild.settings.sub.General;
 import de.chojo.repbot.dao.access.guild.settings.sub.Messages;
 import de.chojo.repbot.dao.access.guild.settings.sub.Ranks;
+import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
 import net.dv8tion.jda.api.entities.Guild;
@@ -23,7 +23,7 @@ public class Settings extends QueryFactoryHolder implements GuildHolder {
         this.repGuild = repGuild;
     }
 
-    private AbuseProtection getAbuseSettings() {
+    public AbuseProtection abuseProtection() {
         if (abuseProtection != null) {
             return abuseProtection;
         }
@@ -46,7 +46,7 @@ public class Settings extends QueryFactoryHolder implements GuildHolder {
         return abuseProtection;
     }
 
-    private Messages messages() {
+    public Messages messages() {
         if (messages != null) {
             return messages;
         }
@@ -69,7 +69,7 @@ public class Settings extends QueryFactoryHolder implements GuildHolder {
         return messages;
     }
 
-    private General general() {
+    public General general() {
         if (general != null) {
             return general;
         }
@@ -90,7 +90,7 @@ public class Settings extends QueryFactoryHolder implements GuildHolder {
         return general;
     }
 
-    private Thanking thanking() {
+    public Thanking thanking() {
         if (thanking != null) {
             return thanking;
         }
@@ -114,7 +114,7 @@ public class Settings extends QueryFactoryHolder implements GuildHolder {
         return thanking;
     }
 
-    private Ranks ranks() {
+    public Ranks ranks() {
         if (ranks != null) {
             return ranks;
         }

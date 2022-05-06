@@ -2,7 +2,7 @@ package de.chojo.repbot.dao.access.guild.reputation.sub;
 
 import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.dao.access.guild.reputation.Reputation;
-import de.chojo.repbot.dao.access.reputation.Reputation;
+import de.chojo.repbot.dao.access.guild.reputation.sub.user.Gdpr;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.dao.components.MemberHolder;
 import de.chojo.repbot.dao.snapshots.RepProfile;
@@ -17,19 +17,35 @@ import org.slf4j.Logger;
 import javax.annotation.Nullable;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class RepUser extends QueryFactoryHolder implements GuildHolder, MemberHolder {
     private static final Logger log = getLogger(RepUser.class);
-    private Reputation reputation;
+    private final Reputation reputation;
+    private final Gdpr gdpr;
+    private final User user;
     private Member member;
 
     public RepUser(Reputation reputation, Member member) {
         super(reputation);
+        gdpr = new Gdpr(this);
         this.reputation = reputation;
         this.member = member;
+        user = null;
+    }
+
+    public RepUser(Reputation reputation, User user) {
+        super(reputation);
+        gdpr = new Gdpr(this);
+        this.reputation = reputation;
+        this.user = user;
+    }
+
+    public Gdpr gdpr() {
+        return gdpr;
     }
 
     /**
@@ -41,7 +57,7 @@ public class RepUser extends QueryFactoryHolder implements GuildHolder, MemberHo
      * @param type       type of reputation
      * @return true if the repuation was logged.
      */
-    public boolean add(@Nullable User donor, @NotNull Message message, @Nullable Message refMessage, ThankType type) {
+    public boolean addReputation(@Nullable User donor, @NotNull Message message, @Nullable Message refMessage, ThankType type) {
         var success = builder()
                               .query("""
                                       INSERT INTO
@@ -84,7 +100,7 @@ public class RepUser extends QueryFactoryHolder implements GuildHolder, MemberHo
 
 
     /**
-     * Get the last time where the the user gave reputation or received reputation to or from this user
+     * Get the last time where the the user gave reputation to the user or received reputation from this user
      *
      * @param other the other user
      * @return last timestamp as instant
@@ -116,8 +132,8 @@ public class RepUser extends QueryFactoryHolder implements GuildHolder, MemberHo
      * @param other receiver
      * @return the time since the last vote in the requested time unit or  {@link Long#MAX_VALUE} if no entry was found.
      */
-    public Optional<Duration> getLastRatedDuration(User other) {
-        return getLastReputation(other).map(last -> Duration.between(last, Instant.now()));
+    public Duration getLastRatedDuration(User other) {
+        return getLastReputation(other).map(last -> Duration.between(last, Instant.now())).orElseGet(() -> Duration.of(1, ChronoUnit.YEARS));
     }
 
     /**
@@ -126,6 +142,7 @@ public class RepUser extends QueryFactoryHolder implements GuildHolder, MemberHo
      * @return the reputation user
      */
     public RepProfile profile() {
+        // We probably dont want to cache the profile. There are just too many factors which can change the user reputation.
         return builder(RepProfile.class)
                 .query("""
                         SELECT rank, user_id, reputation FROM user_reputation WHERE guild_id = ? AND user_id = ?;
@@ -145,5 +162,15 @@ public class RepUser extends QueryFactoryHolder implements GuildHolder, MemberHo
     @Override
     public Member member() {
         return member;
+    }
+
+    @Override
+    public User user() {
+        return user;
+    }
+
+    public RepUser refresh(Member member) {
+        this.member = member;
+        return this;
     }
 }

@@ -16,8 +16,8 @@ import java.util.stream.Collectors;
 
 public class Reactions extends QueryFactoryHolder implements GuildHolder {
     private final Thanking thanking;
-    private String mainReaction;
     private final Set<String> reactions;
+    private String mainReaction;
 
     public Reactions(Thanking thanking, String mainReaction, Set<String> reactions) {
         super(thanking);
@@ -57,7 +57,7 @@ public class Reactions extends QueryFactoryHolder implements GuildHolder {
     }
 
     public String mainReaction() {
-        return mainReaction();
+        return mainReaction;
     }
 
     public List<String> getAdditionalReactionMentions() {
@@ -109,12 +109,16 @@ public class Reactions extends QueryFactoryHolder implements GuildHolder {
                                 DO UPDATE
                                     SET reaction = excluded.reaction
                         """)
-                                 .paramsBuilder(stmt -> stmt.setLong(guildId()).setString(reaction))
-                                 .update()
-                                 .executeSync() > 0;
+                             .paramsBuilder(stmt -> stmt.setLong(guildId()).setString(reaction))
+                             .update()
+                             .executeSync() > 0;
         if (result) {
             mainReaction = reaction;
         }
         return result;
+    }
+
+    public Set<String> reactions() {
+        return reactions;
     }
 }

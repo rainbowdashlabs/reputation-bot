@@ -5,7 +5,7 @@ import de.chojo.sqlutil.base.QueryFactoryHolder;
 import net.dv8tion.jda.api.entities.Guild;
 
 public class Gdpr extends QueryFactoryHolder implements GuildHolder {
-    private RepGuild repGuild;
+    private final RepGuild repGuild;
 
     public Gdpr(RepGuild repGuild) {
         super(repGuild);

@@ -28,6 +28,10 @@ public class Thankwords extends QueryFactoryHolder implements GuildHolder {
         return thanking.guild();
     }
 
+    public Set<String> words() {
+        return thankwords;
+    }
+
     public Pattern thankwordPattern() {
         if (thankwords.isEmpty()) return Pattern.compile("");
         var twPattern = thankwords.stream()

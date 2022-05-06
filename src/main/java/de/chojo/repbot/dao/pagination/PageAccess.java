@@ -1,4 +1,4 @@
-package de.chojo.repbot.data.wrapper;
+package de.chojo.repbot.dao.pagination;
 
 import java.util.List;
 import java.util.function.Function;

@@ -1,4 +1,4 @@
-package de.chojo.repbot.data;
+package de.chojo.repbot.dao.provider;
 
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
@@ -15,10 +15,10 @@ import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class VoiceData extends QueryFactoryHolder {
-    private static final Logger log = getLogger(VoiceData.class);
+public class Voice extends QueryFactoryHolder {
+    private static final Logger log = getLogger(Voice.class);
 
-    public VoiceData(DataSource dataSource) {
+    public Voice(DataSource dataSource) {
         super(dataSource, QueryBuilderConfig.builder().withExceptionHandler(e ->
                         log.error(LogNotify.NOTIFY_ADMIN, ExceptionTransformer.prettyException("Query execution failed", e), e))
                 .build());

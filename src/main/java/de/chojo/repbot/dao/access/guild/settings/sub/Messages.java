@@ -3,7 +3,6 @@ package de.chojo.repbot.dao.access.guild.settings.sub;
 import de.chojo.jdautil.consumer.ThrowingConsumer;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.repbot.data.wrapper.GuildSettings;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
 import de.chojo.sqlutil.wrapper.ParamBuilder;
 import net.dv8tion.jda.api.entities.Guild;
@@ -14,7 +13,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class Messages extends QueryFactoryHolder implements GuildHolder {
-    private Settings settings;
+    private final Settings settings;
     private boolean reactionActive;
     private boolean answerActive;
     private boolean mentionActive;
@@ -64,35 +63,54 @@ public class Messages extends QueryFactoryHolder implements GuildHolder {
         return embedActive;
     }
 
-    public void embedActive(boolean embedActive) {
-
-        this.embedActive = embedActive;
+    public boolean embedActive(boolean embedActive) {
+        var result = set("embed_active", stmt -> stmt.setBoolean(embedActive));
+        if (result) {
+            this.embedActive = embedActive;
+        }
+        return result;
     }
 
-    public void reactionActive(boolean reactionActive) {
-        this.reactionActive = reactionActive;
+    public boolean reactionActive(boolean reactionActive) {
+        var result = set("reaction_active", stmt -> stmt.setBoolean(reactionActive));
+        if (result) {
+            this.reactionActive = reactionActive;
+        }
+        return result;
     }
 
-    public void answerActive(boolean answerActive) {
-        this.answerActive = answerActive;
+    public boolean answerActive(boolean answerActive) {
+        var result = set("answer_active", stmt -> stmt.setBoolean(answerActive));
+        if (result) {
+            this.answerActive = answerActive;
+        }
+        return result;
     }
 
-    public void mentionActive(boolean mentionActive) {
-        this.mentionActive = mentionActive;
+    public boolean mentionActive(boolean mentionActive) {
+        var result = set("mention_active", stmt -> stmt.setBoolean(mentionActive));
+        if (result) {
+            this.mentionActive = mentionActive;
+        }
+        return result;
     }
 
-    public void fuzzyActive(boolean fuzzyActive) {
-        this.fuzzyActive = fuzzyActive;
+    public boolean fuzzyActive(boolean fuzzyActive) {
+        var result = set("fuzzy_active", stmt -> stmt.setBoolean(fuzzyActive));
+        if (result) {
+            this.fuzzyActive = fuzzyActive;
+        }
+        return result;
     }
 
-    public String toLocalizedString(GuildSettings guildSettings) {
+    public String toLocalizedString() {
         var setting = List.of(
                 getSetting("command.repSettings.embed.descr.byReaction", isReactionActive()),
                 getSetting("command.repSettings.embed.descr.byAnswer", isAnswerActive()),
                 getSetting("command.repSettings.embed.descr.byMention", isMentionActive()),
                 getSetting("command.repSettings.embed.descr.byFuzzy", isFuzzyActive()),
                 getSetting("command.repSettings.embed.descr.byEmbed", isEmbedActive()),
-                getSetting("command.repSettings.embed.descr.emojidebug", guildSettings.generalSettings().isEmojiDebug())
+                getSetting("command.repSettings.embed.descr.emojidebug", settings.general().isEmojiDebug())
         );
 
         return String.join("\n", setting);

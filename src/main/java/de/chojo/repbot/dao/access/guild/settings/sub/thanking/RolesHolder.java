@@ -13,8 +13,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public abstract class RolesHolder extends QueryFactoryHolder implements GuildHolder {
-    protected Thanking thanking;
     protected final Set<Long> roleIds;
+    protected Thanking thanking;
 
     public RolesHolder(Thanking thanking, Set<Long> roleIds) {
         super(thanking);

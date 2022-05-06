@@ -6,14 +6,15 @@ import de.chojo.sqlutil.base.QueryFactoryHolder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ReputationRank extends QueryFactoryHolder implements GuildHolder, Comparable<ReputationRank> {
-    private Ranks ranks;
     private final long roleId;
     private final long reputation;
+    private final Ranks ranks;
     private Role role;
 
     public ReputationRank(Ranks ranks, long roleId, long reputation) {
@@ -23,6 +24,14 @@ public class ReputationRank extends QueryFactoryHolder implements GuildHolder, C
         this.reputation = reputation;
     }
 
+    public static ReputationRank build(Ranks ranks, ResultSet rs) throws SQLException {
+        return new ReputationRank(ranks,
+                rs.getLong("role_id"),
+                rs.getLong("reputation")
+        );
+    }
+
+    @Nullable
     public Role getRole(Guild guild) {
         if (role == null) {
             role = guild.getRoleById(roleId);
@@ -42,17 +51,10 @@ public class ReputationRank extends QueryFactoryHolder implements GuildHolder, C
         return role;
     }
 
-    public static ReputationRank build(Ranks ranks, ResultSet rs) throws SQLException {
-        return new ReputationRank(ranks,
-                rs.getLong("role_id"),
-                rs.getLong("reputation")
-        );
-    }
-
     /**
      * Remove a reputation role.
      *
-     * @param role  role
+     * @param role role
      * @return true
      */
     public boolean remove(Role role) {

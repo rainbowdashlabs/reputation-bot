@@ -1,7 +1,7 @@
 package de.chojo.repbot.dao.access.guild.settings.sub;
 
+import de.chojo.repbot.dao.access.guild.reputation.sub.RepUser;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
-import de.chojo.repbot.dao.access.reputation.sub.RepUser;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.dao.snapshots.ReputationRank;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
@@ -16,10 +16,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Ranks extends QueryFactoryHolder implements GuildHolder {
 
 
-    private Settings settings;
-    private AtomicBoolean stackRoles;
-
     private final LinkedHashSet<ReputationRank> ranks = new LinkedHashSet<>();
+    private final Settings settings;
+    private final AtomicBoolean stackRoles;
 
     public Ranks(Settings settings, AtomicBoolean stackRoles) {
         super(settings);
@@ -68,6 +67,19 @@ public class Ranks extends QueryFactoryHolder implements GuildHolder {
         return result;
     }
 
+    /**
+     * Remove a reputation role.
+     *
+     * @param role role
+     * @return true
+     */
+    public boolean remove(Role role) {
+        return builder()
+                       .query("DELETE FROM guild_ranks WHERE guild_id = ? AND role_id = ?;")
+                       .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong()))
+                       .update().executeSync() > 0;
+    }
+
     public List<ReputationRank> ranks() {
         if (!ranks.isEmpty()) {
             return ranks.stream().sorted().toList();
@@ -92,13 +104,22 @@ public class Ranks extends QueryFactoryHolder implements GuildHolder {
     public List<ReputationRank> currentRanks(RepUser user) {
         var profile = user.profile();
         return ranks.stream()
-                .filter(rank -> rank.reputation() >= profile.reputation())
+                .filter(rank -> rank.reputation() <= profile.reputation())
                 .sorted()
                 .limit(stackRoles.get() ? Integer.MAX_VALUE : 1)
                 .toList();
     }
 
-    public Optional<ReputationRank> getNextReputationRole(RepUser user) {
+    public List<ReputationRank> currentRank(RepUser user) {
+        var profile = user.profile();
+        return ranks.stream()
+                .filter(rank -> rank.reputation() <= profile.reputation())
+                .sorted()
+                .limit(1)
+                .toList();
+    }
+
+    public Optional<ReputationRank> nextRank(RepUser user) {
         var profile = user.profile();
         return ranks.stream().filter(rank -> rank.reputation() > profile.reputation()).sorted().limit(1).findFirst();
     }

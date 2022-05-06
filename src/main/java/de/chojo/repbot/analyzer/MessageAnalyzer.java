@@ -5,7 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.jdautil.parsing.WeightedEntry;
 import de.chojo.repbot.config.Configuration;
-import de.chojo.repbot.data.wrapper.GuildSettings;
+import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.statistic.Statistic;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -54,7 +54,7 @@ public class MessageAnalyzer {
      * @param limit        limit for returned matches in the analyzer result
      * @return analyzer results
      */
-    public AnalyzerResult processMessage(Pattern pattern, @NotNull Message message, @Nullable GuildSettings settings, boolean limitTargets, int limit) {
+    public AnalyzerResult processMessage(Pattern pattern, @NotNull Message message, Settings settings, boolean limitTargets, int limit) {
         try {
             return resultCache.get(message.getIdLong(), () -> analyze(pattern, message, settings, limitTargets, limit));
         } catch (ExecutionException e) {
@@ -63,7 +63,7 @@ public class MessageAnalyzer {
         return AnalyzerResult.noMatch();
     }
 
-    private AnalyzerResult analyze(Pattern pattern, Message message, @Nullable GuildSettings settings, boolean limitTargets, int limit) {
+    private AnalyzerResult analyze(Pattern pattern, Message message, @Nullable Settings settings, boolean limitTargets, int limit) {
         statistic.messageAnalyzed(message.getJDA());
         if (pattern.pattern().isBlank()) return AnalyzerResult.noMatch();
         var contentRaw = message.getContentRaw();

@@ -7,7 +7,7 @@ import net.dv8tion.jda.api.entities.User;
 public interface MemberHolder extends UserHolder, GuildHolder {
     Member member();
 
-    default long memberId(){
+    default long memberId() {
         return member().getIdLong();
     }
 
@@ -17,7 +17,7 @@ public interface MemberHolder extends UserHolder, GuildHolder {
     }
 
     @Override
-    default Guild guild(){
+    default Guild guild() {
         return member().getGuild();
     }
 }
