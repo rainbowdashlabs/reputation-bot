@@ -192,7 +192,7 @@ public class Thankwords extends SimpleCommand {
         var languageOption = event.getOption("language");
         if (languageOption == null) {
             event.reply(context.localize("command.thankwords.sub.loadDefault.available")
-                                    + " " + String.join(", ", thankwordsContainer.getAvailableLanguages())).queue();
+                        + " " + String.join(", ", thankwordsContainer.getAvailableLanguages())).queue();
             return;
         }
         var language = languageOption.getAsString();

@@ -122,10 +122,10 @@ public class MessageAnalyzer {
         words.removeIf(String::isBlank);
 
         List<Integer> thankWordIndices = new ArrayList<>();
-        var i = 0;
+        var index = 0;
         for (var word : words) {
             if (thankPattern.matcher(word).find()) {
-                thankWordIndices.add(i);
+                thankWordIndices.add(index);
             }
         }
         List<WeightedEntry<Member>> users = new ArrayList<>();

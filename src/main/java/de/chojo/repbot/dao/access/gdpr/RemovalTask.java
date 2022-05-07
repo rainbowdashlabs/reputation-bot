@@ -23,6 +23,10 @@ public final class RemovalTask extends QueryFactoryHolder {
         this.userId = userId;
     }
 
+    public static RemovalTask build(Gdpr gdpr, ResultSet rs) throws SQLException {
+        return new RemovalTask(gdpr, rs.getLong("task_id"), rs.getLong("guild_id"), rs.getLong("user_id"));
+    }
+
     public void executeRemovalTask() {
         ResultStage<Void> builder;
         if (userId() == 0) {
@@ -68,10 +72,6 @@ public final class RemovalTask extends QueryFactoryHolder {
 
     public long userId() {
         return userId;
-    }
-
-    public static RemovalTask build(Gdpr gdpr, ResultSet rs) throws SQLException {
-        return new RemovalTask(gdpr, rs.getLong("task_id"), rs.getLong("guild_id"), rs.getLong("user_id"));
     }
 
 }

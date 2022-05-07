@@ -76,7 +76,7 @@ public class Setup extends SimpleCommand {
         var builder = ConversationBuilder.builder(
                         Step.button("**$command.setup.dialog.welcome$**\n$command.setup.dialog.continueToProceed$",
                                         buttons -> buttons
-                                                .add(Button.success("continue", "word.continue"), c -> Result.proceed(1)))
+                                                .add(Button.success("continue", "word.continue"), ctx -> Result.proceed(1)))
                                 .build())
                 .addStep(1, buildSelectLanguage(context))
                 .addStep(3, buildRoles())
@@ -87,7 +87,7 @@ public class Setup extends SimpleCommand {
     }
 
     private Step buildSelectLanguage(SlashCommandContext context) {
-        return Step.button("command.setup.dialog.selectLanguage", b -> buildLanguageButtons(b, context))
+        return Step.button("command.setup.dialog.selectLanguage", but -> buildLanguageButtons(but, context))
                 .build();
     }
 
@@ -107,7 +107,7 @@ public class Setup extends SimpleCommand {
         return Step
                 .message("command.setup.dialog.roles".stripIndent(), this::buildRolesButton)
                 .button(buttons -> buttons
-                        .add(Button.success("done", "word.done"), c -> Result.proceed(4)))
+                        .add(Button.success("done", "word.done"), ctx -> Result.proceed(4)))
                 .build();
     }
 
@@ -156,7 +156,7 @@ public class Setup extends SimpleCommand {
                         return Result.freeze();
                     });
         }
-        buttons.add(Button.success("done", "word.done"), c -> Result.proceed(5));
+        buttons.add(Button.success("done", "word.done"), ctx -> Result.proceed(5));
     }
 
     private Step buildChannels() {
@@ -166,15 +166,15 @@ public class Setup extends SimpleCommand {
     }
 
     private void buildChannelsButton(ButtonDialog buttons) {
-        buttons.add(new ComponenAction(Button.success("done", "word.done"), c -> {
-            c.reply(c.localize("command.setup.dialog.setupComplete"))
+        buttons.add(new ComponenAction(Button.success("done", "word.done"), ctx -> {
+            ctx.reply(ctx.localize("command.setup.dialog.setupComplete"))
                     .queue();
             return Result.finish();
-        })).add(Button.primary("all", "command.setup.dialog.channels.allChannel"), c -> {
-            var guild = c.getGuild();
+        })).add(Button.primary("all", "command.setup.dialog.channels.allChannel"), ctx -> {
+            var guild = ctx.getGuild();
             FilterUtil.getAccessableTextChannel(guild).forEach(channel -> guilds
                     .guild(guild).settings().thanking().channels().add(channel));
-            c.reply(c.localize("command.channel.sub.addAll.added")).queue();
+            ctx.reply(ctx.localize("command.channel.sub.addAll.added")).queue();
             return Result.finish();
         });
     }

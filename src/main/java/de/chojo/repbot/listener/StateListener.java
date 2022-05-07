@@ -1,6 +1,5 @@
 package de.chojo.repbot.listener;
 
-import de.chojo.jdautil.command.dispatching.CommandHub;
 import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.Guilds;
@@ -56,18 +55,20 @@ public class StateListener extends ListenerAdapter {
 
     @Override
     public void onGuildLeave(@NotNull GuildLeaveEvent event) {
-        if (!configuration.migration().isActive()) {
-            guilds.guild(event.getGuild()).gdpr().queueDeletion();
-        }
+        if (!configuration.migration().isActive()) return;
+        // Normally we want to delete all data of a guild after the bot left.
+        guilds.guild(event.getGuild()).gdpr().queueDeletion();
     }
 
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
+        // We want to abort deletion of user data if a user rejoins a guild during grace period
         guilds.guild(event.getGuild()).reputation().user(event.getMember()).gdpr().dequeueDeletion();
     }
 
     @Override
     public void onGuildMemberRemove(@NotNull GuildMemberRemoveEvent event) {
+        // When a user leaves a guild, there is no reason for us to keep their data.
         guilds.guild(event.getGuild()).reputation().user(event.getUser()).gdpr().queueDeletion();
     }
 

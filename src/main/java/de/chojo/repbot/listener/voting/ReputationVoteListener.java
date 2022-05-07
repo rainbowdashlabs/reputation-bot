@@ -112,7 +112,7 @@ public class ReputationVoteListener extends ListenerAdapter {
 
         if (settings.general().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.PROMPTED);
 
-        var collect = components.values().stream().map(VoteComponent::component).collect(Collectors.toUnmodifiableList());
+        var collect = components.values().stream().map(VoteComponent::component).toList();
 
         var componentRows = getComponentRows(collect);
 

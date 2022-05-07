@@ -53,7 +53,7 @@ public class Reactions extends QueryFactoryHolder implements GuildHolder {
         if (!reactionIsEmote()) {
             return Optional.ofNullable(mainReaction());
         }
-        return Optional.of(guild().retrieveEmoteById(mainReaction()).onErrorFlatMap(n -> null).complete()).map(Emote::getAsMention);
+        return Optional.of(guild().retrieveEmoteById(mainReaction()).onErrorFlatMap(err -> null).complete()).map(Emote::getAsMention);
     }
 
     public String mainReaction() {
@@ -64,7 +64,7 @@ public class Reactions extends QueryFactoryHolder implements GuildHolder {
         return reactions.stream()
                 .map(reaction -> {
                     if (Verifier.isValidId(reaction)) {
-                        var asMention = guild().retrieveEmoteById(reaction).onErrorFlatMap(n -> null).complete();
+                        var asMention = guild().retrieveEmoteById(reaction).onErrorFlatMap(err -> null).complete();
                         return asMention == null ? null : asMention.getAsMention();
                     }
                     return reaction;
@@ -85,7 +85,7 @@ public class Reactions extends QueryFactoryHolder implements GuildHolder {
         if (result) {
             reactions.add(reaction);
         }
-        return true;
+        return result;
     }
 
     public boolean remove(String reaction) {

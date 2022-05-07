@@ -10,7 +10,6 @@ import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.config.Configuration;
-import de.chojo.repbot.dao.access.guild.reputation.Reputation;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.repbot.util.PermissionErrorHandler;
@@ -158,7 +157,7 @@ public class Scan extends SimpleCommand {
 
     private void schedule(MessageHistory history, SlashCommandContext context, Pattern pattern, TextChannel reportChannel, int calls) {
         var progressMessage = reportChannel.sendMessage(context.localize("command.scan.progress",
-                Replacement.create("PERCENT", String.format("%.02f", 0d))) + " " + TextGenerator.progressBar(0, 40)).complete();
+                Replacement.create("PERCENT", String.format("%.02f", 0.0d))) + " " + TextGenerator.progressBar(0, 40)).complete();
         var scanProcess = new ScanProcess(messageAnalyzer, context.localizer(), progressMessage, history, pattern, calls, guilds);
         setActive(scanProcess);
         reportChannel.getGuild().loadMembers().get();
@@ -209,7 +208,7 @@ public class Scan extends SimpleCommand {
         var scan = finished.poll();
         setInactive(scan);
         scan.progressMessage().editMessage(scan.loc.localize("command.scan.progress",
-                Replacement.create("PERCENT", String.format("%.02f", 100d))) + " " + TextGenerator.progressBar(1, 40)).queue();
+                Replacement.create("PERCENT", String.format("%.02f", 100.0d))) + " " + TextGenerator.progressBar(1, 40)).queue();
         var embed = new LocalizedEmbedBuilder(scan.loc)
                 .setTitle("command.scan.completed")
                 .setDescription("command.scan.result",
@@ -267,7 +266,7 @@ public class Scan extends SimpleCommand {
         private Instant lastSeen;
         private Thread currWorker;
 
-        public ScanProcess(MessageAnalyzer messageAnalyzer, ContextLocalizer localizer, Message progressMessage, MessageHistory history, Pattern pattern, int calls, Guilds data) {
+        private ScanProcess(MessageAnalyzer messageAnalyzer, ContextLocalizer localizer, Message progressMessage, MessageHistory history, Pattern pattern, int calls, Guilds data) {
             this.messageAnalyzer = messageAnalyzer;
             loc = localizer;
             guild = progressMessage.getGuild();
@@ -334,7 +333,7 @@ public class Scan extends SimpleCommand {
                 }
             }
             var progress = (calls - Math.max(callsLeft, 0)) / (double) calls;
-            var progressString = String.format("%.02f", progress * 100d);
+            var progressString = String.format("%.02f", progress * 100.0d);
             log.debug("Scan progress for guild {}: {}", guild.getIdLong(), progressString);
             progressMessage.editMessage(loc.localize("command.scan.progress",
                     Replacement.create("PERCENT", progressString)) + " " + TextGenerator.progressBar(progress, 40)).complete();

@@ -13,7 +13,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.slf4j.Logger;
 
-import javax.sql.DataSource;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -27,8 +26,8 @@ public class SelfCleanupService implements Runnable {
     private final ShardManager shardManager;
     private final ILocalizer localizer;
     private final Guilds guilds;
-    private Cleanup cleanup;
     private final Configuration configuration;
+    private final Cleanup cleanup;
 
     private SelfCleanupService(ShardManager shardManager, ILocalizer localizer, Guilds guilds, Cleanup cleanup, Configuration configuration) {
         this.shardManager = shardManager;
@@ -38,10 +37,9 @@ public class SelfCleanupService implements Runnable {
         this.configuration = configuration;
     }
 
-    public static SelfCleanupService create(ShardManager shardManager, ILocalizer localizer, Guilds guilds, Cleanup cleanup, Configuration configuration, ScheduledExecutorService service) {
+    public static void create(ShardManager shardManager, ILocalizer localizer, Guilds guilds, Cleanup cleanup, Configuration configuration, ScheduledExecutorService service) {
         var selfCleanupService = new SelfCleanupService(shardManager, localizer, guilds, cleanup, configuration);
         service.scheduleAtFixedRate(selfCleanupService, 1, 60, TimeUnit.MINUTES);
-        return selfCleanupService;
     }
 
 

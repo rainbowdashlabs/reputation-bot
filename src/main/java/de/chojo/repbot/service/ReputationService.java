@@ -21,7 +21,6 @@ import net.dv8tion.jda.api.requests.RestAction;
 import org.jetbrains.annotations.Nullable;
 
 import java.awt.Color;
-import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
@@ -129,7 +128,7 @@ public class ReputationService {
         // block outdated ref message
         // Abuse protection: Message age
         if (refMessage != null) {
-            if (!abuseSettings.isFreshMessage(refMessage)) {
+            if (abuseSettings.isOldMessage(refMessage)) {
                 if (generalSettings.isEmojiDebug()) Messages.markMessage(message, EmojiDebug.TOO_OLD);
                 return false;
             }
@@ -137,7 +136,7 @@ public class ReputationService {
 
         // block outdated message
         // Abuse protection: Message age
-        if (!abuseSettings.isFreshMessage(message)) {
+        if (abuseSettings.isOldMessage(message)) {
             if (generalSettings.isEmojiDebug()) Messages.markMessage(message, EmojiDebug.TOO_OLD);
             return false;
         }

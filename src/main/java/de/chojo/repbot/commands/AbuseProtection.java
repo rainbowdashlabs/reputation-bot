@@ -90,8 +90,8 @@ public class AbuseProtection extends SimpleCommand {
         }
         var state = event.getOption("state").getAsBoolean();
 
-        if (abuseSettings.donorContext(state)) {
-            event.reply(getBooleanMessage(context, abuseSettings.isReceiverContext(),
+        if (abuseSettings.receiverContext(state)) {
+            event.reply(getBooleanMessage(context, state,
                     "command.abuseProtection.sub.receiverContext.true", "command.abuseProtection.sub.receiverContext.false")).queue();
         }
     }

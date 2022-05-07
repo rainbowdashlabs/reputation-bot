@@ -2,13 +2,12 @@ package de.chojo.repbot.dao.access.guild.reputation.sub;
 
 import de.chojo.repbot.dao.access.guild.reputation.Reputation;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 import de.chojo.repbot.dao.pagination.ReputationLogAccess;
+import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import org.postgresql.replication.ReplicationType;
 
 import java.util.List;
 import java.util.Optional;
@@ -141,35 +140,6 @@ public class Log extends QueryFactoryHolder implements GuildHolder {
                 .firstSync();
     }
 
-    /**
-     * Get the first log entry for a message.
-     *
-     * @param message message id
-     * @return a log entry if found
-     */
-    public Optional<ReputationLogEntry> getLogEntry(long message, ReplicationType type) {
-        return builder(ReputationLogEntry.class)
-                .query("""
-                        SELECT
-                            guild_id,
-                            donor_id,
-                            receiver_id,
-                            message_id,
-                            received,
-                            ref_message_id,
-                            channel_id,
-                            cause
-                        FROM
-                            reputation_log
-                        WHERE
-                            message_id = ?
-                            AND guild_id = ?
-                            AND cause = ?;
-                        """)
-                .paramsBuilder(stmt -> stmt.setLong(message).setLong(guildId()).setString(type.name()))
-                .readRow(r -> ReputationLogEntry.build(this, r))
-                .firstSync();
-    }
     /**
      * Get the log entries for a message.
      *

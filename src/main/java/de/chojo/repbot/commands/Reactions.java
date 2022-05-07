@@ -187,15 +187,6 @@ public class Reactions extends SimpleCommand {
         EMOJI_FOUND, EMOTE_FOUND, NOT_FOUND, UNKNOWN_EMOJI
     }
 
-    private static class EmojiCheckResult {
-        private final String mention;
-        private final String id;
-        private final CheckResult result;
-
-        public EmojiCheckResult(String mention, String id, CheckResult result) {
-            this.mention = mention;
-            this.id = id;
-            this.result = result;
-        }
+    private record EmojiCheckResult(String mention, String id, CheckResult result) {
     }
 }

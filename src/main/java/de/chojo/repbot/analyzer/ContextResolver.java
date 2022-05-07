@@ -82,7 +82,7 @@ public class ContextResolver {
         retrievedHistory.addAll(history.getRetrievedHistory());
         retrievedHistory = retrievedHistory.stream()
                 // Remove all bot messages. we wont need them anyway.
-                .filter(m -> !m.getAuthor().isBot())
+                .filter(mes -> !mes.getAuthor().isBot())
                 .collect(Collectors.toList());
 
         var result = new LinkedHashSet<Long>();
@@ -111,10 +111,10 @@ public class ContextResolver {
 
     private Set<Long> getMemberAfter(Stream<Message> messages, Guild guild, Instant oldest) {
         // filter message for only recent messages and after the first message of the user.
-        return messages.filter(m -> m.getTimeCreated().toInstant().isAfter(oldest))
+        return messages.filter(mes -> mes.getTimeCreated().toInstant().isAfter(oldest))
                 .map(Message::getAuthor)
                 .distinct()
-                .map(u -> guild.retrieveMemberById(u.getIdLong()).onErrorMap(m -> null).complete())
+                .map(u -> guild.retrieveMemberById(u.getIdLong()).onErrorMap(mes -> null).complete())
                 .filter(Objects::nonNull)
                 .map(Member::getIdLong)
                 .collect(Collectors.toSet());
@@ -123,8 +123,8 @@ public class ContextResolver {
 
     private Instant findOldestMessageByTarget(User author, List<Message> messages, Instant maxAge) {
         return messages.stream()
-                .filter(m -> Verifier.equalSnowflake(m.getAuthor(), author))
-                .map(m -> m.getTimeCreated().toInstant())
+                .filter(mes -> Verifier.equalSnowflake(mes.getAuthor(), author))
+                .map(mes -> mes.getTimeCreated().toInstant())
                 .filter(entry -> entry.isAfter(maxAge))
                 .min(Instant::compareTo)
                 .orElse(maxAge);

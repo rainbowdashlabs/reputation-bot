@@ -85,7 +85,6 @@ public class RepSettings extends SimpleCommand {
         }
         var fuzzy = event.getOption("fuzzy").getAsBoolean();
 
-        ;
         if (messageSettings.fuzzyActive(fuzzy)) {
             event.reply(getBooleanMessage(context, fuzzy,
                     "command.repSettings.sub.fuzzy.true", "command.repSettings.sub.fuzzy.false")).queue();
@@ -101,7 +100,6 @@ public class RepSettings extends SimpleCommand {
         }
         var mention = event.getOption("mention").getAsBoolean();
 
-        ;
         if (messageSettings.mentionActive(mention)) {
             event.reply(getBooleanMessage(context, mention,
                     "command.repSettings.sub.mention.true", "command.repSettings.sub.mention.false")).queue();

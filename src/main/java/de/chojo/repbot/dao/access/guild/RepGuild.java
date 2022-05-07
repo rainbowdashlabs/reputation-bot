@@ -18,8 +18,8 @@ public class RepGuild extends QueryFactoryHolder implements GuildHolder {
     private static final Cache<Long, Migration> MIGRATIONS = CacheBuilder.newBuilder().expireAfterAccess(2, TimeUnit.MINUTES).build();
     private static final Cache<Long, Gdpr> GDPR = CacheBuilder.newBuilder().expireAfterAccess(2, TimeUnit.MINUTES).build();
     private Guild guild;
-    private Reputation reputation;
-    private Settings settings;
+    private final Reputation reputation;
+    private final Settings settings;
 
     public RepGuild(DataSource dataSource, Guild guild) {
         super(dataSource);

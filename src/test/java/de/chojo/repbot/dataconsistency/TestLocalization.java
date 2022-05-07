@@ -6,13 +6,12 @@ import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-public class Localization {
+public class TestLocalization {
     private static final Language[] languages = {Language.ENGLISH, Language.GERMAN,
             Language.of("es_ES", "Español"), Language.of("fr_FR", "Français"),
             Language.of("ru_RU", "Russian")};

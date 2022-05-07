@@ -104,10 +104,10 @@ public class AbuseProtection extends QueryFactoryHolder implements GuildHolder {
         return result;
     }
 
-    public boolean isFreshMessage(Message message) {
-        if (maxMessageAge == 0) return true;
+    public boolean isOldMessage(Message message) {
+        if (maxMessageAge == 0) return false;
         var until = message.getTimeCreated().toInstant().until(Instant.now(), ChronoUnit.MINUTES);
-        return until < maxMessageAge();
+        return until >= maxMessageAge();
     }
 
     private boolean set(String parameter, ThrowingConsumer<ParamBuilder, SQLException> builder) {

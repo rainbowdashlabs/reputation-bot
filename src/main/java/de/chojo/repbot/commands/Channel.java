@@ -4,7 +4,6 @@ import de.chojo.jdautil.command.CommandMeta;
 import de.chojo.jdautil.command.SimpleArgument;
 import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.util.Replacement;
-import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.jdautil.util.Completion;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.dao.access.guild.settings.sub.thanking.Channels;
@@ -15,7 +14,6 @@ import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class Channel extends SimpleCommand {
@@ -40,7 +38,7 @@ public class Channel extends SimpleCommand {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
         var subCmd = event.getSubcommandName();
-        Channels channels = guilds.guild(event.getGuild()).settings().thanking().channels();
+        var channels = guilds.guild(event.getGuild()).settings().thanking().channels();
         if ("set".equalsIgnoreCase(subCmd)) {
             set(event, context, channels);
         }

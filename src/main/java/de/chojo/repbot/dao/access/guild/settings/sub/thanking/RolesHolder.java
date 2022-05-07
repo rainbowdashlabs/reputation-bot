@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 public abstract class RolesHolder extends QueryFactoryHolder implements GuildHolder {
     protected final Set<Long> roleIds;
-    protected Thanking thanking;
+    protected final Thanking thanking;
 
     public RolesHolder(Thanking thanking, Set<Long> roleIds) {
         super(thanking);
@@ -43,7 +43,7 @@ public abstract class RolesHolder extends QueryFactoryHolder implements GuildHol
     protected abstract String targetTable();
 
     public boolean add(Role role) {
-        boolean result = builder().query("INSERT INTO %s(guild_id, role_id) VALUES (?,?) ON CONFLICT(guild_id, role_id) DO NOTHING", targetTable())
+        var result = builder().query("INSERT INTO %s(guild_id, role_id) VALUES (?,?) ON CONFLICT(guild_id, role_id) DO NOTHING", targetTable())
                                  .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong()))
                                  .update()
                                  .executeSync() > 0;
@@ -54,7 +54,7 @@ public abstract class RolesHolder extends QueryFactoryHolder implements GuildHol
     }
 
     public boolean remove(Role role) {
-        boolean result = builder().query("DELETE FROM %s WHERE guild_id = ? AND role_id = ?", targetTable())
+        var result = builder().query("DELETE FROM %s WHERE guild_id = ? AND role_id = ?", targetTable())
                                  .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong()))
                                  .update()
                                  .executeSync() > 0;

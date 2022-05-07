@@ -6,7 +6,6 @@ import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
 import de.chojo.sqlutil.wrapper.ParamBuilder;
-import de.chojo.sqlutil.wrapper.QueryBuilderFactory;
 import net.dv8tion.jda.api.entities.Guild;
 
 import java.sql.ResultSet;
@@ -16,9 +15,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class General extends QueryFactoryHolder implements GuildHolder {
     private final AtomicBoolean stackRoles;
+    private final Settings settings;
     private String language;
     private boolean emojiDebug;
-    private final Settings settings;
 
     public General(Settings settings) {
         this(settings, null, true, false);

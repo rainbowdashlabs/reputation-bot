@@ -91,8 +91,6 @@ public class ReputationBot {
     private ILocalizer localizer;
     private Scan scan;
     private RepBotCachePolicy repBotCachePolicy;
-    private ContextResolver contextResolver;
-    private MessageAnalyzer messageAnalyzer;
     private Roles roles;
     private RoleAssigner roleAssigner;
     private Guilds guilds;
@@ -176,14 +174,14 @@ public class ReputationBot {
 
         var logger = getLogger("DbLogger");
         QueryBuilderConfig.setDefault(QueryBuilderConfig.builder()
-                        .withExceptionHandler(err -> logger.error("An error occured during a database request", err))
-                        .withExecutor(repBotWorker)
+                .withExceptionHandler(err -> logger.error("An error occured during a database request", err))
+                .withExecutor(repBotWorker)
                 .build());
 
-        this.guilds = new Guilds(dataSource);
-        this.gdpr = new de.chojo.repbot.dao.access.Gdpr(dataSource);
-        this.cleanup = new Cleanup(dataSource);
-        this.migration = new Migration(dataSource);
+        guilds = new Guilds(dataSource);
+        gdpr = new de.chojo.repbot.dao.access.Gdpr(dataSource);
+        cleanup = new Cleanup(dataSource);
+        migration = new Migration(dataSource);
         updatePool.close();
 
     }
@@ -208,8 +206,8 @@ public class ReputationBot {
 
         var statistic = Statistic.of(shardManager, dataSource, repBotWorker);
 
-        contextResolver = new ContextResolver(dataSource, configuration);
-        messageAnalyzer = new MessageAnalyzer(contextResolver, configuration, statistic);
+        var contextResolver = new ContextResolver(dataSource, configuration);
+        var messageAnalyzer = new MessageAnalyzer(contextResolver, configuration, statistic);
 
         PresenceService.start(shardManager, configuration, statistic, repBotWorker);
         scan.lateInit(messageAnalyzer);

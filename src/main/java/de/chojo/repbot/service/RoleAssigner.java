@@ -1,8 +1,6 @@
 package de.chojo.repbot.service;
 
-import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.snapshots.ReputationRank;
-import de.chojo.repbot.dao.snapshots.RepProfile;
 import de.chojo.repbot.util.Roles;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;

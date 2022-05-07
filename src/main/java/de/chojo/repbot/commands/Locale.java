@@ -59,7 +59,7 @@ public class Locale extends SimpleCommand {
         var languages = context.localizer().localizer().languages();
         var builder = TextFormatting.getTableBuilder(languages,
                 context.localize("words.language"), context.localize("words.code"));
-        languages.forEach(l -> builder.setNextRow(l.getLanguage(), l.getCode()));
+        languages.forEach(lang -> builder.setNextRow(lang.getLanguage(), lang.getCode()));
         event.reply(context.localize("command.locale.sub.list.list") + "\n" + builder).queue();
     }
 

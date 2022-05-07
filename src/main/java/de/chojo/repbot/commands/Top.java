@@ -6,8 +6,8 @@ import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.pagination.bag.PageBag;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
-import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.dao.pagination.GuildRanking;
+import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 public class Top extends SimpleCommand {
     private static final int TOP_PAGE_SIZE = 10;
-    private Guilds guilds;
+    private final Guilds guilds;
 
     public Top(Guilds guilds) {
         super(CommandMeta.builder("top", "command.reputation.description"));

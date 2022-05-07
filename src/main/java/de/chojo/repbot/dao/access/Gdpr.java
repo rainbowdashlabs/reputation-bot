@@ -50,6 +50,7 @@ public class Gdpr extends QueryFactoryHolder {
 
     /**
      * Get a list of {@link GdprUser}s which have requested their data.
+     *
      * @return list of users
      */
     public List<GdprUser> getReportRequests() {

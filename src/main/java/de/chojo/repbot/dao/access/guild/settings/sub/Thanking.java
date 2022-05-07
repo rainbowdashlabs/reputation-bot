@@ -17,9 +17,9 @@ import java.sql.SQLException;
 import java.util.HashSet;
 
 public class Thanking extends QueryFactoryHolder implements GuildHolder {
-    private String mainReaction;
+    private final String mainReaction;
     private final Settings settings;
-    private boolean channelWhitelist;
+    private final boolean channelWhitelist;
 
     private Channels channels;
     private DonorRoles donorRoles;
@@ -136,19 +136,5 @@ public class Thanking extends QueryFactoryHolder implements GuildHolder {
     @Override
     public Guild guild() {
         return settings.guild();
-    }
-
-    private boolean set(String parameter, ThrowingConsumer<ParamBuilder, SQLException> builder) {
-        return builder()
-                       .query("""
-                               INSERT INTO thank_settings(guild_id, %s) VALUES (?, ?)
-                               ON CONFLICT(guild_id)
-                                   DO UPDATE SET %s = excluded.%s;
-                               """, parameter, parameter, parameter)
-                       .paramsBuilder(stmts -> {
-                           stmts.setLong(guildId());
-                           builder.accept(stmts);
-                       }).insert()
-                       .executeSync() > 0;
     }
 }

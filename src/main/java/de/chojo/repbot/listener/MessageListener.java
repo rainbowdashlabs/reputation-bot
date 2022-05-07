@@ -6,7 +6,6 @@ import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.Migration;
-import de.chojo.repbot.dao.access.guild.reputation.sub.Log;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
@@ -32,8 +31,6 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import java.util.Optional;
-import java.util.function.Function;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -43,14 +40,14 @@ public class MessageListener extends ListenerAdapter {
     private final ILocalizer localizer;
     private final Configuration configuration;
     private final Guilds guilds;
-    private Migration migration;
     private final RepBotCachePolicy repBotCachePolicy;
     private final ReputationVoteListener reputationVoteListener;
     private final ReputationService reputationService;
     private final ContextResolver contextResolver;
     private final MessageAnalyzer messageAnalyzer;
+    private final Migration migration;
 
-    public MessageListener(ILocalizer localizer, Configuration configuration, Guilds guilds, Migration  migration, RepBotCachePolicy repBotCachePolicy,
+    public MessageListener(ILocalizer localizer, Configuration configuration, Guilds guilds, Migration migration, RepBotCachePolicy repBotCachePolicy,
                            ReputationVoteListener reputationVoteListener, ReputationService reputationService,
                            ContextResolver contextResolver, MessageAnalyzer messageAnalyzer) {
         this.localizer = localizer;

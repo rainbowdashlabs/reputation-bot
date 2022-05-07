@@ -1,8 +1,8 @@
 package de.chojo.repbot.service;
 
 import de.chojo.repbot.dao.access.Gdpr;
-import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.dao.access.gdpr.RemovalTask;
+import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -18,9 +18,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class GdprService implements Runnable {
     private static final Logger log = getLogger(GdprService.class);
     private final ShardManager shardManager;
-    private Guilds guilds;
-    private Gdpr gdpr;
     private final ExecutorService executorService;
+    private final Guilds guilds;
+    private final Gdpr gdpr;
 
     private GdprService(ShardManager shardManager, Guilds guilds, Gdpr gdpr, ExecutorService executorService) {
         this.shardManager = shardManager;
@@ -67,8 +67,8 @@ public class GdprService implements Runnable {
         }, executorService);
     }
 
-    public CompletableFuture<Void> cleanupGuildUser(Guild guild, Long user) {
-        return CompletableFuture.runAsync(() ->
+    public void cleanupGuildUser(Guild guild, Long user) {
+        CompletableFuture.runAsync(() ->
                         new RemovalTask(gdpr, -1, guild.getIdLong(), user).executeRemovalTask(),
                 executorService);
     }

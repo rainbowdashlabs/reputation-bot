@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import javax.annotation.Nullable;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -65,7 +64,7 @@ public class RepUser extends QueryFactoryHolder implements GuildHolder, MemberHo
                                           ON CONFLICT(guild_id, donor_id, receiver_id, message_id)
                                               DO NOTHING;
                                       """)
-                              .paramsBuilder(b -> b.setLong(guildId()).setLong(donor == null ? 0 : donor.getIdLong()).setLong(memberId())
+                              .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(donor == null ? 0 : donor.getIdLong()).setLong(memberId())
                                       .setLong(message.getIdLong()).setLong(refMessage == null ? null : refMessage.getIdLong())
                                       .setLong(message.getChannel().getIdLong()).setString(type.name()))
                               .insert()
@@ -74,28 +73,6 @@ public class RepUser extends QueryFactoryHolder implements GuildHolder, MemberHo
             log.debug("{} received one reputation from {} for message {}", member().getUser().getName(), donor != null ? donor.getName() : "unkown", message.getIdLong());
         }
         return success;
-    }
-
-    /**
-     * Remove reputation of a type from a message.
-     *
-     * @param message message
-     * @param type    type
-     * @return true if at least one entry was removed
-     */
-    public boolean removeReputation(long message, ThankType type) {
-        return builder()
-                       .query("""
-                               DELETE FROM
-                                   reputation_log
-                               WHERE
-                                   message_id = ?
-                                   AND donor_id = ?
-                                   AND cause = ?;
-                               """)
-                       .paramsBuilder(stmt -> stmt.setLong(message).setLong(userId()).setString(type.name()))
-                       .update()
-                       .executeSync() > 0;
     }
 
 

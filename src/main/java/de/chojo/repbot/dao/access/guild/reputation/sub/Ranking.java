@@ -2,8 +2,8 @@ package de.chojo.repbot.dao.access.guild.reputation.sub;
 
 import de.chojo.repbot.dao.access.guild.reputation.Reputation;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.repbot.dao.snapshots.RepProfile;
 import de.chojo.repbot.dao.pagination.GuildRanking;
+import de.chojo.repbot.dao.snapshots.RepProfile;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
 import net.dv8tion.jda.api.entities.Guild;
 

@@ -1,6 +1,6 @@
 package de.chojo.repbot.config.elements;
 
-@SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
+@SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal", "CanBeFinal"})
 public class Migration {
     private boolean active;
     private String migrationMessage = "Please migrate";

@@ -4,7 +4,6 @@ import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.dao.access.guild.reputation.sub.Log;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
 
-import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
@@ -102,7 +101,7 @@ public class ReputationLogEntry extends QueryFactoryHolder {
      */
     public void delete() {
         builder()
-                .query("DELETE FROM reputation_log WHERE message_id = ? AND receiver_id = ? and donor_id = ?;")
+                .query("DELETE FROM reputation_log WHERE message_id = ? AND receiver_id = ? AND donor_id = ?;")
                 .paramsBuilder(stmt -> stmt.setLong(messageId).setLong(receiverId).setLong(donorId))
                 .update().execute();
     }
