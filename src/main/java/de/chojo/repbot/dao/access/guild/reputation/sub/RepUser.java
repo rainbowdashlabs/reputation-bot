@@ -64,13 +64,13 @@ public class RepUser extends QueryFactoryHolder implements GuildHolder, MemberHo
                                           ON CONFLICT(guild_id, donor_id, receiver_id, message_id)
                                               DO NOTHING;
                                       """)
-                              .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(donor == null ? 0 : donor.getIdLong()).setLong(memberId())
+                              .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(donor == null ? 0 : donor.getIdLong()).setLong(userId())
                                       .setLong(message.getIdLong()).setLong(refMessage == null ? null : refMessage.getIdLong())
                                       .setLong(message.getChannel().getIdLong()).setString(type.name()))
                               .insert()
                               .executeSync() > 0;
         if (success) {
-            log.debug("{} received one reputation from {} for message {}", member().getUser().getName(), donor != null ? donor.getName() : "unkown", message.getIdLong());
+            log.debug("{} received one reputation from {} for message {}", user().getName(), donor != null ? donor.getName() : "unkown", message.getIdLong());
         }
         return success;
     }

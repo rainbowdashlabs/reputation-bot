@@ -259,7 +259,8 @@ public class Scan extends SimpleCommand {
         private final Pattern pattern;
         private final int calls;
         private final Guilds guilds;
-        private int scanned;
+        // This is the offset of two bot messages of the reputation bot.
+        private int scanned = -2;
         private int hits;
         private int callsLeft;
         private long time;
@@ -274,7 +275,8 @@ public class Scan extends SimpleCommand {
             this.progressMessage = progressMessage;
             this.history = history;
             this.pattern = pattern;
-            this.calls = Math.min(Math.max(0, calls), 100000);
+            // The history will already contain two messages of the bot at this point.
+            this.calls = Math.min(Math.max(0, calls + 2), 100000);
             callsLeft = this.calls;
             guilds = data;
         }
@@ -312,6 +314,7 @@ public class Scan extends SimpleCommand {
                 countScan();
 
                 if (message.getAuthor().isBot()) continue;
+
 
                 var result = messageAnalyzer.processMessage(pattern, message, null, false, 3);
 
