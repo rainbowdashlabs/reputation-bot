@@ -36,5 +36,4 @@ public class Gdpr extends QueryFactoryHolder implements GuildHolder {
                 .paramsBuilder(stmt -> stmt.setLong(guildId()))
                 .update().executeSync();
     }
-
 }

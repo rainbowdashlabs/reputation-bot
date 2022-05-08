@@ -18,12 +18,12 @@ import java.util.Set;
 public class Channels extends QueryFactoryHolder implements GuildHolder {
     private final Thanking thanking;
     private final Set<Long> channels;
-    private final boolean channelWhitelist;
+    private boolean whitelist;
 
-    public Channels(Thanking thanking, boolean channelWhitelist, Set<Long> channels) {
+    public Channels(Thanking thanking, boolean whitelist, Set<Long> channels) {
         super(thanking);
         this.thanking = thanking;
-        this.channelWhitelist = channelWhitelist;
+        this.whitelist = whitelist;
         this.channels = channels;
     }
 
@@ -37,7 +37,7 @@ public class Channels extends QueryFactoryHolder implements GuildHolder {
             channel = ((ThreadChannel) channel).getParentMessageChannel();
         }
 
-        if (isChannelWhitelist()) {
+        if (isWhitelist()) {
             return channels.contains(channel.getIdLong());
         }
         return !channels.contains(channel.getIdLong());
@@ -51,8 +51,8 @@ public class Channels extends QueryFactoryHolder implements GuildHolder {
         return channels;
     }
 
-    public boolean isChannelWhitelist() {
-        return channelWhitelist;
+    public boolean isWhitelist() {
+        return whitelist;
     }
 
     /**
@@ -109,14 +109,18 @@ public class Channels extends QueryFactoryHolder implements GuildHolder {
     }
 
     public boolean listType(boolean whitelist) {
-        return builder().query("""
+        var result = builder().query("""
                         INSERT INTO thank_settings(guild_id, channel_whitelist) VALUES (?,?)
                             ON CONFLICT(guild_id)
                                 DO UPDATE
                                     SET channel_whitelist = excluded.channel_whitelist
                         """)
-                       .paramsBuilder(stmt -> stmt.setLong(guildId()).setBoolean(whitelist))
-                       .update()
-                       .executeSync() > 0;
+                                 .paramsBuilder(stmt -> stmt.setLong(guildId()).setBoolean(whitelist))
+                                 .update()
+                                 .executeSync() > 0;
+        if (result) {
+            this.whitelist = whitelist;
+        }
+        return this.whitelist;
     }
 }

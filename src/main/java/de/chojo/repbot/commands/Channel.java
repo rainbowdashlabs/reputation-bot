@@ -61,12 +61,12 @@ public class Channel extends SimpleCommand {
 
     private void whitelist(SlashCommandInteractionEvent event, SlashCommandContext context, Channels channels) {
         if (event.getOptions().isEmpty()) {
-            event.reply(context.localize("command.channel.sub.whitelist." + channels.isChannelWhitelist())).queue();
+            event.reply(context.localize("command.channel.sub.whitelist." + channels.isWhitelist())).queue();
             return;
         }
         var whitelist = "whitelist".equalsIgnoreCase(event.getOption("type").getAsString());
-        channels.listType(whitelist);
-        event.reply(context.localize("command.channel.sub.listType." + whitelist)).queue();
+
+        event.reply(context.localize("command.channel.sub.listType." + channels.listType(whitelist))).queue();
     }
 
     private void add(SlashCommandInteractionEvent event, SlashCommandContext context, Channels channels) {
@@ -104,7 +104,7 @@ public class Channel extends SimpleCommand {
 
     private String getChannelList(Channels channels, SlashCommandContext context) {
         var channelNames = channels.channels().stream().map(IMentionable::getAsMention).collect(Collectors.joining(", "));
-        var message = "command.channel.sub.list." + (channels.isChannelWhitelist() ? "whitelist" : "blacklist");
+        var message = "command.channel.sub.list." + (channels.isWhitelist() ? "whitelist" : "blacklist");
         return context.localize(message, Replacement.create("CHANNEL", channelNames));
     }
 

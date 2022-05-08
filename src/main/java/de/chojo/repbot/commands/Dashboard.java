@@ -30,10 +30,8 @@ public class Dashboard extends SimpleCommand {
 
     private MessageEmbed getDashboard(Guild guild, SlashCommandContext context) {
         var reputation = guilds.guild(guild).reputation();
-        var optStats = reputation.stats();
-        if (optStats.isEmpty()) return new EmbedBuilder().setTitle("None").build();
-        var stats = optStats.get();
-        var top3 = reputation.ranking().total(5).page(0).stream()
+        var stats = reputation.stats();
+        var top = reputation.ranking().total(5).page(0).stream()
                 .map(r -> r.fancyString(5))
                 .collect(Collectors.joining("\n"));
 
@@ -42,7 +40,7 @@ public class Dashboard extends SimpleCommand {
                         Replacement.create("GUILD", guild.getName()))
                 .setThumbnail(guild.getIconUrl() == null ? guild.getSelfMember().getUser().getAvatarUrl() : guild.getIconUrl())
                 .setColor(Colors.Pastel.BLUE)
-                .addField("command.dashboard.topUser", top3, false)
+                .addField("command.dashboard.topUser", top, false)
                 .addField("command.dashboard.totalReputation", String.valueOf(stats.totalReputation()), true)
                 .addField("command.dashboard.weekReputation", String.valueOf(stats.weekReputation()), true)
                 .addField("command.dashboard.todayReputation", String.valueOf(stats.todayReputation()), true)

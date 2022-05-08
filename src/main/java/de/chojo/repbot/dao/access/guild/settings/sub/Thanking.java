@@ -1,6 +1,5 @@
 package de.chojo.repbot.dao.access.guild.settings.sub;
 
-import de.chojo.jdautil.consumer.ThrowingConsumer;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.access.guild.settings.sub.thanking.Channels;
 import de.chojo.repbot.dao.access.guild.settings.sub.thanking.DonorRoles;
@@ -9,7 +8,6 @@ import de.chojo.repbot.dao.access.guild.settings.sub.thanking.ReceiverRoles;
 import de.chojo.repbot.dao.access.guild.settings.sub.thanking.Thankwords;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
-import de.chojo.sqlutil.wrapper.ParamBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 
 import java.sql.ResultSet;
@@ -17,6 +15,7 @@ import java.sql.SQLException;
 import java.util.HashSet;
 
 public class Thanking extends QueryFactoryHolder implements GuildHolder {
+    private static final String DEFAULT_REACTION = "🏅";
     private final String mainReaction;
     private final Settings settings;
     private final boolean channelWhitelist;
@@ -28,13 +27,13 @@ public class Thanking extends QueryFactoryHolder implements GuildHolder {
     private Thankwords thankwords;
 
     public Thanking(Settings settings) {
-        this(settings, null, true);
+        this(settings, DEFAULT_REACTION, true);
     }
 
     public Thanking(Settings settings, String mainReaction, boolean channelWhitelist) {
         super(settings);
         this.settings = settings;
-        this.mainReaction = mainReaction == null ? "🏅" : mainReaction;
+        this.mainReaction = mainReaction;
         this.channelWhitelist = channelWhitelist;
     }
 

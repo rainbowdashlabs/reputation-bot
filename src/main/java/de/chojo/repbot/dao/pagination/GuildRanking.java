@@ -10,6 +10,4 @@ public class GuildRanking extends PageAccess<RepProfile> {
     public GuildRanking(Supplier<Integer> pagecount, Function<Integer, List<RepProfile>> pageSupplier) {
         super(pagecount, pageSupplier);
     }
-
-
 }

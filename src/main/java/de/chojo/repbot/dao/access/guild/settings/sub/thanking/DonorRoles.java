@@ -22,5 +22,4 @@ public class DonorRoles extends RolesHolder {
     protected String targetTable() {
         return "donor_roles";
     }
-
 }

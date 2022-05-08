@@ -8,8 +8,11 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class Cleanup extends QueryFactoryHolder implements GuildHolder {
+    private RepGuild repGuild;
+
     public Cleanup(RepGuild repGuild) {
         super(repGuild);
+        this.repGuild = repGuild;
     }
 
     public void selfCleanupPrompt() {
@@ -40,7 +43,6 @@ public class Cleanup extends QueryFactoryHolder implements GuildHolder {
 
     @Override
     public Guild guild() {
-        return null;
+        return repGuild.guild();
     }
-
 }

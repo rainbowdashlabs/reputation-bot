@@ -276,7 +276,7 @@ public class Scan extends SimpleCommand {
             this.history = history;
             this.pattern = pattern;
             // The history will already contain two messages of the bot at this point.
-            this.calls = Math.min(Math.max(0, calls + 2), 100000);
+            this.calls = Math.min(Math.max(0, calls + 2), 10000);
             callsLeft = this.calls;
             guilds = data;
         }
@@ -314,7 +314,6 @@ public class Scan extends SimpleCommand {
                 countScan();
 
                 if (message.getAuthor().isBot()) continue;
-
 
                 var result = messageAnalyzer.processMessage(pattern, message, null, false, 3);
 

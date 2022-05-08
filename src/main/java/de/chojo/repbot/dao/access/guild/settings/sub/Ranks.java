@@ -14,8 +14,6 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Ranks extends QueryFactoryHolder implements GuildHolder {
-
-
     private final LinkedHashSet<ReputationRank> ranks = new LinkedHashSet<>();
     private final Settings settings;
     private final AtomicBoolean stackRoles;
@@ -74,10 +72,15 @@ public class Ranks extends QueryFactoryHolder implements GuildHolder {
      * @return true
      */
     public boolean remove(Role role) {
-        return builder()
-                       .query("DELETE FROM guild_ranks WHERE guild_id = ? AND role_id = ?;")
-                       .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong()))
-                       .update().executeSync() > 0;
+        var result = builder()
+                             .query("DELETE FROM guild_ranks WHERE guild_id = ? AND role_id = ?;")
+                             .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong()))
+                             .update()
+                             .executeSync() > 0;
+        if (result) {
+            ranks.removeIf(r -> r.roleId() == role.getIdLong());
+        }
+        return result;
     }
 
     public List<ReputationRank> ranks() {

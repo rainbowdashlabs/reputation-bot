@@ -62,14 +62,12 @@ public class GdprService implements Runnable {
                     .stream()
                     .map(ISnowflake::getIdLong).toList();
             var collect = savedIds.stream().filter(id -> !memberIds.contains(id)).toList();
-            for (var id : collect) new RemovalTask(gdpr, -1, guild.getIdLong(), id);
+            for (var id : collect) RemovalTask.anonymExecute(gdpr, guild.getIdLong(), id);
             return collect.size();
         }, executorService);
     }
 
     public void cleanupGuildUser(Guild guild, Long user) {
-        CompletableFuture.runAsync(() ->
-                        new RemovalTask(gdpr, -1, guild.getIdLong(), user).executeRemovalTask(),
-                executorService);
+        CompletableFuture.runAsync(() -> RemovalTask.anonymExecute(gdpr, guild.getIdLong(), user), executorService);
     }
 }

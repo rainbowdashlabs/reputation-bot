@@ -68,15 +68,15 @@ public class Messages extends QueryFactoryHolder implements GuildHolder {
         if (result) {
             this.embedActive = embedActive;
         }
-        return result;
+        return this.embedActive;
     }
 
     public boolean reactionActive(boolean reactionActive) {
-        var result = set("reaction_active", stmt -> stmt.setBoolean(reactionActive));
+        var result = set("reactions_active", stmt -> stmt.setBoolean(reactionActive));
         if (result) {
             this.reactionActive = reactionActive;
         }
-        return result;
+        return this.reactionActive;
     }
 
     public boolean answerActive(boolean answerActive) {
@@ -84,7 +84,7 @@ public class Messages extends QueryFactoryHolder implements GuildHolder {
         if (result) {
             this.answerActive = answerActive;
         }
-        return result;
+        return this.answerActive;
     }
 
     public boolean mentionActive(boolean mentionActive) {
@@ -92,7 +92,7 @@ public class Messages extends QueryFactoryHolder implements GuildHolder {
         if (result) {
             this.mentionActive = mentionActive;
         }
-        return result;
+        return this.mentionActive;
     }
 
     public boolean fuzzyActive(boolean fuzzyActive) {
@@ -100,7 +100,7 @@ public class Messages extends QueryFactoryHolder implements GuildHolder {
         if (result) {
             this.fuzzyActive = fuzzyActive;
         }
-        return result;
+        return this.fuzzyActive;
     }
 
     public String toLocalizedString() {

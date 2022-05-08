@@ -15,7 +15,6 @@ import net.dv8tion.jda.api.entities.User;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
-import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -45,7 +44,7 @@ public class Reputation extends QueryFactoryHolder implements GuildHolder {
         return repGuild.guild();
     }
 
-    public Optional<GuildReputationStats> stats() {
+    public GuildReputationStats stats() {
         return builder(GuildReputationStats.class)
                 .query("SELECT total_reputation, week_reputation, today_reputation, top_channel FROM get_guild_stats(?)")
                 .paramsBuilder(stmt -> stmt.setLong(guildId()))
@@ -54,7 +53,8 @@ public class Reputation extends QueryFactoryHolder implements GuildHolder {
                         rs.getInt("week_reputation"),
                         rs.getInt("today_reputation"),
                         rs.getLong("top_channel")
-                )).firstSync();
+                )).firstSync()
+                .orElseGet(() -> new GuildReputationStats(0,0,0,0));
     }
 
     public RepUser user(@NotNull Member member) {

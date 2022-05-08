@@ -27,6 +27,10 @@ public final class RemovalTask extends QueryFactoryHolder {
         return new RemovalTask(gdpr, rs.getLong("task_id"), rs.getLong("guild_id"), rs.getLong("user_id"));
     }
 
+    public static void anonymExecute(QueryFactoryHolder holder, long guildId, long userId) {
+        new RemovalTask(holder, -1L, guildId, userId).executeRemovalTask();
+    }
+
     public void executeRemovalTask() {
         ResultStage<Void> builder;
         if (userId() == 0) {
@@ -73,5 +77,4 @@ public final class RemovalTask extends QueryFactoryHolder {
     public long userId() {
         return userId;
     }
-
 }

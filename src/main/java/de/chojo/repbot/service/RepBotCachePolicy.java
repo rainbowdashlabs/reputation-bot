@@ -42,10 +42,6 @@ public class RepBotCachePolicy implements MemberCachePolicy, Runnable {
             return true;
         }
 
-        if (member.getVoiceState().inAudioChannel()) {
-            return true;
-        }
-
         if (scan.isRunning(member.getGuild())) {
             return true;
         }

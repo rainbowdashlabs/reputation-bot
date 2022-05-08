@@ -85,10 +85,8 @@ public class RepSettings extends SimpleCommand {
         }
         var fuzzy = event.getOption("fuzzy").getAsBoolean();
 
-        if (messageSettings.fuzzyActive(fuzzy)) {
-            event.reply(getBooleanMessage(context, fuzzy,
-                    "command.repSettings.sub.fuzzy.true", "command.repSettings.sub.fuzzy.false")).queue();
-        }
+        event.reply(getBooleanMessage(context, messageSettings.fuzzyActive(fuzzy),
+                "command.repSettings.sub.fuzzy.true", "command.repSettings.sub.fuzzy.false")).queue();
     }
 
     private void mention(SlashCommandInteractionEvent event, SlashCommandContext context, Settings guildSettings) {
@@ -100,10 +98,8 @@ public class RepSettings extends SimpleCommand {
         }
         var mention = event.getOption("mention").getAsBoolean();
 
-        if (messageSettings.mentionActive(mention)) {
-            event.reply(getBooleanMessage(context, mention,
-                    "command.repSettings.sub.mention.true", "command.repSettings.sub.mention.false")).queue();
-        }
+        event.reply(getBooleanMessage(context, messageSettings.mentionActive(mention),
+                "command.repSettings.sub.mention.true", "command.repSettings.sub.mention.false")).queue();
     }
 
     private void answer(SlashCommandInteractionEvent event, SlashCommandContext context, Settings guildSettings) {
@@ -115,10 +111,8 @@ public class RepSettings extends SimpleCommand {
         }
         var answer = event.getOption("answer").getAsBoolean();
 
-        if (messageSettings.answerActive(answer)) {
-            event.reply(getBooleanMessage(context, answer,
-                    "command.repSettings.sub.answer.true", "command.repSettings.sub.answer.false")).queue();
-        }
+        event.reply(getBooleanMessage(context, messageSettings.answerActive(answer),
+                "command.repSettings.sub.answer.true", "command.repSettings.sub.answer.false")).queue();
     }
 
     private void embed(SlashCommandInteractionEvent event, SlashCommandContext context, Settings guildSettings) {
@@ -130,10 +124,8 @@ public class RepSettings extends SimpleCommand {
         }
         var embed = event.getOption("embed").getAsBoolean();
 
-        if (messageSettings.embedActive(embed)) {
-            event.reply(getBooleanMessage(context, embed,
-                    "command.repSettings.sub.embed.true", "command.repSettings.sub.embed.false")).queue();
-        }
+        event.reply(getBooleanMessage(context, messageSettings.embedActive(embed),
+                "command.repSettings.sub.embed.true", "command.repSettings.sub.embed.false")).queue();
     }
 
     private void reactions(SlashCommandInteractionEvent event, SlashCommandContext context, Settings guildSettings) {
@@ -145,10 +137,8 @@ public class RepSettings extends SimpleCommand {
         }
         var reactions = event.getOption("reactions").getAsBoolean();
 
-        if (messageSettings.reactionActive(reactions)) {
-            event.reply(getBooleanMessage(context, reactions,
-                    "command.repSettings.sub.reactions.true", "command.repSettings.sub.reactions.false")).queue();
-        }
+        event.reply(getBooleanMessage(context, messageSettings.reactionActive(reactions),
+                "command.repSettings.sub.reactions.true", "command.repSettings.sub.reactions.false")).queue();
     }
 
     private void emojidebug(SlashCommandInteractionEvent event, SlashCommandContext context, Settings guildSettings) {
@@ -161,10 +151,8 @@ public class RepSettings extends SimpleCommand {
         }
         var emojidebug = event.getOption("active").getAsBoolean();
 
-        if (generalSettings.emojiDebug(emojidebug)) {
-            event.reply(getBooleanMessage(context, emojidebug,
-                    "command.repSettings.sub.emojidebug.true", "command.repSettings.sub.emojidebug.false")).queue();
-        }
+        event.reply(getBooleanMessage(context, generalSettings.emojiDebug(emojidebug),
+                "command.repSettings.sub.emojidebug.true", "command.repSettings.sub.emojidebug.false")).queue();
     }
 
     private MessageEmbed getSettings(SlashCommandContext context, Settings guildSettings) {

@@ -52,7 +52,7 @@ public class SelfCleanupService implements Runnable {
             var inactive = guilds.guild(guild).reputation().log().getLatestReputation()
                     .map(r -> r.received().isBefore(configuration.selfCleanup().getInactiveDaysOffset()))
                     .orElse(guild.getSelfMember().getTimeJoined().isBefore(LocalDateTime.now().minusDays(30).atOffset(ZoneOffset.UTC)));
-            var noChannel = settings.thanking().channels().channels().isEmpty() && settings.thanking().channels().isChannelWhitelist();
+            var noChannel = settings.thanking().channels().channels().isEmpty() && settings.thanking().channels().isWhitelist();
             if (noChannel || inactive) {
                 promptCleanup(guild);
                 continue;

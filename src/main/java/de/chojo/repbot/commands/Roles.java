@@ -173,11 +173,11 @@ public class Roles extends SimpleCommand {
         }
 
         var ranks = guilds.guild(event.getGuild()).settings().ranks();
-        if (ranks.add(role, reputation)) {
-            event.reply(context.localize("command.roles.sub.add.added",
-                            Replacement.createMention("ROLE", role), Replacement.create("POINTS", reputation)))
-                    .allowedMentions(Collections.emptyList()).queue();
-        }
+        ranks.add(role, reputation);
+        event.reply(context.localize("command.roles.sub.add.added",
+                        Replacement.createMention("ROLE", role), Replacement.create("POINTS", reputation)))
+                .allowedMentions(Collections.emptyList()).queue();
+
     }
 
     private void list(SlashCommandInteractionEvent event, SlashCommandContext context) {

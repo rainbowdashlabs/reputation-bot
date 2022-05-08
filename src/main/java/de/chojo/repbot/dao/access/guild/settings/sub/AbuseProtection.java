@@ -35,8 +35,8 @@ public class AbuseProtection extends QueryFactoryHolder implements GuildHolder {
         this(settings, 30, 30, 10, true, true);
     }
 
-    public static AbuseProtection build(Settings dataSource, ResultSet rs) throws SQLException {
-        return new AbuseProtection(dataSource,
+    public static AbuseProtection build(Settings settings, ResultSet rs) throws SQLException {
+        return new AbuseProtection(settings,
                 rs.getInt("cooldown"),
                 rs.getInt("max_message_age"),
                 rs.getInt("min_messages"),
@@ -64,28 +64,28 @@ public class AbuseProtection extends QueryFactoryHolder implements GuildHolder {
         return receiverContext;
     }
 
-    public boolean cooldown(int cooldown) {
+    public int cooldown(int cooldown) {
         var result = set("cooldown", stmt -> stmt.setInt(cooldown));
         if (result) {
             this.cooldown = cooldown;
         }
-        return result;
+        return this.cooldown;
     }
 
-    public boolean maxMessageAge(int maxMessageAge) {
+    public int maxMessageAge(int maxMessageAge) {
         var result = set("max_message_age", stmt -> stmt.setInt(maxMessageAge));
         if (result) {
             this.maxMessageAge = maxMessageAge;
         }
-        return result;
+        return this.maxMessageAge;
     }
 
-    public boolean minMessages(int minMessages) {
+    public int minMessages(int minMessages) {
         var result = set("min_messages", stmt -> stmt.setInt(minMessages));
         if (result) {
             this.minMessages = minMessages;
         }
-        return result;
+        return this.minMessages;
     }
 
     public boolean donorContext(boolean donorContext) {
@@ -93,7 +93,7 @@ public class AbuseProtection extends QueryFactoryHolder implements GuildHolder {
         if (result) {
             this.donorContext = donorContext;
         }
-        return result;
+        return this.donorContext;
     }
 
     public boolean receiverContext(boolean receiverContext) {
@@ -101,7 +101,7 @@ public class AbuseProtection extends QueryFactoryHolder implements GuildHolder {
         if (result) {
             this.receiverContext = receiverContext;
         }
-        return result;
+        return this.receiverContext;
     }
 
     public boolean isOldMessage(Message message) {

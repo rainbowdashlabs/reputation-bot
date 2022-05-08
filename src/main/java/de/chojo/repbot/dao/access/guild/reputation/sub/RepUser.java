@@ -3,11 +3,9 @@ package de.chojo.repbot.dao.access.guild.reputation.sub;
 import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.dao.access.guild.reputation.Reputation;
 import de.chojo.repbot.dao.access.guild.reputation.sub.user.Gdpr;
-import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.dao.components.MemberHolder;
 import de.chojo.repbot.dao.snapshots.RepProfile;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -21,7 +19,7 @@ import java.util.Optional;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class RepUser extends QueryFactoryHolder implements GuildHolder, MemberHolder {
+public class RepUser extends QueryFactoryHolder implements MemberHolder {
     private static final Logger log = getLogger(RepUser.class);
     private final Reputation reputation;
     private final Gdpr gdpr;
@@ -107,7 +105,7 @@ public class RepUser extends QueryFactoryHolder implements GuildHolder, MemberHo
      * Get the time since the last reputation.
      *
      * @param other receiver
-     * @return the time since the last vote in the requested time unit or  {@link Long#MAX_VALUE} if no entry was found.
+     * @return the time since the last vote in the requested time unit or 1 year if no entry was found.
      */
     public Duration getLastRatedDuration(User other) {
         return getLastReputation(other).map(last -> Duration.between(last, Instant.now())).orElseGet(() -> Duration.ofDays(365));
@@ -128,12 +126,6 @@ public class RepUser extends QueryFactoryHolder implements GuildHolder, MemberHo
                 .readRow(RepProfile::build)
                 .firstSync()
                 .orElseGet(() -> RepProfile.empty(user()));
-    }
-
-
-    @Override
-    public Guild guild() {
-        return reputation.guild();
     }
 
     @Override
