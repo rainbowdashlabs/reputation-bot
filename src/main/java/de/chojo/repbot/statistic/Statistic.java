@@ -1,6 +1,5 @@
 package de.chojo.repbot.statistic;
 
-import de.chojo.repbot.data.StatisticData;
 import de.chojo.repbot.statistic.element.DataStatistic;
 import de.chojo.repbot.statistic.element.ProcessStatistics;
 import de.chojo.repbot.statistic.element.ShardStatistic;
@@ -25,12 +24,12 @@ public class Statistic implements Runnable {
     private static final Logger log = getLogger(Statistic.class);
     private final Map<Integer, long[]> analyzedMessages = new HashMap<>();
     private final ShardManager shardManager;
-    private final StatisticData statisticData;
+    private final de.chojo.repbot.dao.provider.Statistic statistic;
     private int currentMin;
 
     private Statistic(ShardManager shardManager, DataSource dataSource) {
         this.shardManager = shardManager;
-        statisticData = new StatisticData(dataSource);
+        statistic = new de.chojo.repbot.dao.provider.Statistic(dataSource);
         getSystemStatistic();
     }
 
@@ -90,7 +89,7 @@ public class Statistic implements Runnable {
                 }).collect(Collectors.toList());
 
         return new SystemStatistics(ProcessStatistics.create(),
-                statisticData.getStatistic().orElseGet(DataStatistic::new),
+                statistic.getStatistic().orElseGet(DataStatistic::new),
                 shardStatistics);
     }
 
@@ -99,6 +98,6 @@ public class Statistic implements Runnable {
     }
 
     private void refreshStatistics() {
-        statisticData.refreshStatistics();
+        statistic.refreshStatistics();
     }
 }

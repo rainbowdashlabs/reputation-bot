@@ -1,7 +1,7 @@
 package de.chojo.repbot.config.elements;
 
 
-@SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
+@SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal", "CanBeFinal"})
 public class Database {
     private String host = "localhost";
     private String port = "5432";

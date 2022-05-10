@@ -1,6 +1,6 @@
 package de.chojo.repbot.util;
 
-import de.chojo.repbot.data.wrapper.GuildSettings;
+import de.chojo.repbot.dao.access.guild.settings.Settings;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
@@ -19,9 +19,9 @@ public final class Messages {
         throw new UnsupportedOperationException("This is a utility class.");
     }
 
-    public static void markMessage(Message message, @Nullable Message refMessage, GuildSettings settings) {
-        if (settings.thankSettings().reactionIsEmote()) {
-            message.getGuild().retrieveEmoteById(settings.thankSettings().reaction()).queue(e -> {
+    public static void markMessage(Message message, @Nullable Message refMessage, Settings settings) {
+        if (settings.thanking().reactions().reactionIsEmote()) {
+            message.getGuild().retrieveEmoteById(settings.thanking().reactions().mainReaction()).queue(e -> {
                 message.addReaction(e).queue(emote -> {
                 }, err -> log.error("Could not add reaction emote", err));
                 if (refMessage != null) {
@@ -31,10 +31,10 @@ public final class Messages {
             }, err -> log.error("Could not resolve emoji.", err));
         } else {
             if (refMessage != null) {
-                message.addReaction(settings.thankSettings().reaction()).queue(e -> {
+                message.addReaction(settings.thanking().reactions().mainReaction()).queue(e -> {
                 }, err -> log.error("Could not add reaction emoji.", err));
             }
-            message.addReaction(settings.thankSettings().reaction()).queue(e -> {
+            message.addReaction(settings.thanking().reactions().mainReaction()).queue(e -> {
             }, err -> log.error("Could not add reaction emoji.", err));
         }
     }

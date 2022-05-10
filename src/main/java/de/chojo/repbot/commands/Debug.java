@@ -5,37 +5,36 @@ import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
-import de.chojo.repbot.data.GuildData;
+import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.util.Colors;
-import de.chojo.repbot.util.Guilds;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-import javax.sql.DataSource;
-import java.util.Arrays;
 import java.util.StringJoiner;
 
-public class Debug extends SimpleCommand {
-    private final GuildData data;
+import static de.chojo.repbot.util.Guilds.prettyName;
 
-    public Debug(DataSource dataSource) {
+public class Debug extends SimpleCommand {
+    private final Guilds guilds;
+
+    public Debug(Guilds guilds) {
         super(CommandMeta.builder("debug", "command.debug.description").withPermission());
-        data = new GuildData(dataSource);
+        this.guilds = guilds;
     }
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
-        var guildSettings = data.getGuildSettings(event.getGuild());
+        var settings = guilds.guild(event.getGuild()).settings();
 
         var joiner = new StringJoiner("`, `", "`", "`");
-        Arrays.stream(guildSettings.thankSettings().thankwords()).forEach(joiner::add);
+        settings.thanking().thankwords().words().forEach(joiner::add);
 
         event.replyEmbeds(new LocalizedEmbedBuilder(context.localizer())
                 .setTitle("command.debug.title",
-                        Replacement.create("GUILD", Guilds.prettyName(event.getGuild())))
-                .addField("word.messageSettings", guildSettings.messageSettings().toLocalizedString(guildSettings), false)
+                        Replacement.create("GUILD", prettyName(event.getGuild())))
+                .addField("word.messageSettings", settings.messages().toLocalizedString(), false)
                 .addField("word.thankWords", joiner.setEmptyValue("none").toString(), true)
                 .addField("command.debug.channelActive", String.valueOf(
-                                guildSettings.thankSettings().isReputationChannel(event.getTextChannel())),
+                                settings.thanking().channels().isEnabled(event.getTextChannel())),
                         true
                 )
                 .setColor(Colors.Pastel.DARK_PINK)
