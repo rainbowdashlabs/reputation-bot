@@ -50,10 +50,9 @@ public class Prune extends SimpleCommand {
 
         if ("guild".equalsIgnoreCase(cmd)) {
             event.reply(context.localize("command.prune.sub.guild.started")).queue();
-            gdprService.cleanupGuildUsers(event.getGuild()).thenAccept(amount -> {
-                event.getHook().editOriginal(context.localize("command.prune.sub.guild.done",
-                        Replacement.create("AMOUNT", amount))).queue();
-            });
+            gdprService.cleanupGuildUsers(event.getGuild())
+                    .thenAccept(amount -> event.getHook().editOriginal(context.localize("command.prune.sub.guild.done",
+                            Replacement.create("AMOUNT", amount))).queue());
         }
     }
 }

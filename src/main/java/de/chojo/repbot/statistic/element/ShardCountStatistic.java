@@ -8,13 +8,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import java.util.Collections;
 import java.util.List;
 
-public class ShardCountStatistic implements ReplacementProvider, EmbedDisplay {
-
-    private final List<ShardStatistic> shardStatistics;
-
-    public ShardCountStatistic(List<ShardStatistic> shardStatistics) {
-        this.shardStatistics = shardStatistics;
-    }
+public record ShardCountStatistic(List<ShardStatistic> shardStatistics) implements ReplacementProvider, EmbedDisplay {
 
     public int shardCount() {
         return shardStatistics.size();

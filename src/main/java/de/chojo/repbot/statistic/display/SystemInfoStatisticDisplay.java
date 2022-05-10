@@ -5,17 +5,8 @@ import de.chojo.repbot.statistic.element.DataStatistic;
 import de.chojo.repbot.statistic.element.ShardCountStatistic;
 import net.dv8tion.jda.api.EmbedBuilder;
 
-public class SystemInfoStatisticDisplay implements EmbedDisplay {
-
-    private final ShardCountStatistic shardCountStatistic;
-    private final DataStatistic dataStatistic;
-
-    public SystemInfoStatisticDisplay(
-            ShardCountStatistic shardCountStatistic,
-            DataStatistic dataStatistic) {
-        this.shardCountStatistic = shardCountStatistic;
-        this.dataStatistic = dataStatistic;
-    }
+public record SystemInfoStatisticDisplay(ShardCountStatistic shardCountStatistic,
+                                         DataStatistic dataStatistic) implements EmbedDisplay {
 
     @Override
     public void appendTo(EmbedBuilder embedBuilder) {

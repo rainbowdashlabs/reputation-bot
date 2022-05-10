@@ -6,24 +6,23 @@ import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.pagination.bag.PageBag;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
-import de.chojo.repbot.data.ReputationData;
-import de.chojo.repbot.data.wrapper.GuildRanking;
+import de.chojo.repbot.dao.pagination.GuildRanking;
+import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-import javax.sql.DataSource;
 import java.awt.Color;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class Top extends SimpleCommand {
     private static final int TOP_PAGE_SIZE = 10;
-    private final ReputationData reputationData;
+    private final Guilds guilds;
 
-    public Top(DataSource dataSource) {
+    public Top(Guilds guilds) {
         super(CommandMeta.builder("top", "command.reputation.description"));
-        reputationData = new ReputationData(dataSource);
+        this.guilds = guilds;
     }
 
     public static void registerPage(GuildRanking guildRanking, SlashCommandInteractionEvent event, SlashCommandContext context) {
@@ -59,7 +58,7 @@ public class Top extends SimpleCommand {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
-        var ranking = reputationData.getRanking(event.getGuild(), TOP_PAGE_SIZE);
+        var ranking = guilds.guild(event.getGuild()).reputation().ranking().total(TOP_PAGE_SIZE);
         registerPage(ranking, event, context);
     }
 }

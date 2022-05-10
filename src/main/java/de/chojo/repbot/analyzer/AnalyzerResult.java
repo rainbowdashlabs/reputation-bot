@@ -9,13 +9,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AnalyzerResult {
+public record AnalyzerResult(ThankType type, Message referenceMessage, User donator,
+                             List<WeightedEntry<Member>> receivers) {
     private static final AnalyzerResult NO_MATCH = new AnalyzerResult(ThankType.NO_MATCH, null, null, null);
     private static final AnalyzerResult NO_TARGET = new AnalyzerResult(ThankType.NO_MATCH, null, null, null);
-    private final ThankType type;
-    private final Message referenceMessage;
-    private final User donator;
-    private final List<WeightedEntry<Member>> receivers;
 
     public AnalyzerResult(ThankType type, Message referenceMessage, User donator, List<WeightedEntry<Member>> receivers) {
         this.type = type;
@@ -46,21 +43,5 @@ public class AnalyzerResult {
 
     public boolean isEmpty() {
         return receivers.isEmpty();
-    }
-
-    public ThankType type() {
-        return type;
-    }
-
-    public Message referenceMessage() {
-        return referenceMessage;
-    }
-
-    public User donator() {
-        return donator;
-    }
-
-    public List<WeightedEntry<Member>> receivers() {
-        return receivers;
     }
 }

@@ -9,25 +9,24 @@ import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.text.TextFormatting;
 import de.chojo.jdautil.util.Completion;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
-import de.chojo.repbot.data.GuildData;
+import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-import javax.sql.DataSource;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class Locale extends SimpleCommand {
-    private final GuildData guildData;
+    private final Guilds guilds;
     private final ScheduledExecutorService executorService;
 
-    public Locale(DataSource dataSource, ScheduledExecutorService executorService) {
+    public Locale(Guilds guilds, ScheduledExecutorService executorService) {
         super(CommandMeta.builder("locale", "command.locale.description")
                 .addSubCommand("set", "command.locale.sub.set", argsBuilder()
                         .add(SimpleArgument.string("language", "command.locale.sub.set.arg.language").asRequired().withAutoComplete()))
                 .addSubCommand("list", "command.locale.sub.list")
                 .withPermission());
-        guildData = new GuildData(dataSource);
+        this.guilds = guilds;
         this.executorService = executorService;
     }
 
@@ -48,7 +47,7 @@ public class Locale extends SimpleCommand {
             event.reply(context.localize("command.locale.error.invalidLocale")).setEphemeral(true).queue();
             return;
         }
-        if (guildData.setLanguage(event.getGuild(), language.get())) {
+        if (guilds.guild(event.getGuild()).settings().general().language(language.get())) {
             event.reply(context.localize("command.locale.sub.set.set",
                     Replacement.create("LOCALE", language.get().getLanguage(), Format.CODE))).queue();
             context.commandHub().refreshGuildCommands(event.getGuild());
@@ -60,7 +59,7 @@ public class Locale extends SimpleCommand {
         var languages = context.localizer().localizer().languages();
         var builder = TextFormatting.getTableBuilder(languages,
                 context.localize("words.language"), context.localize("words.code"));
-        languages.forEach(l -> builder.setNextRow(l.getLanguage(), l.getCode()));
+        languages.forEach(lang -> builder.setNextRow(lang.getLanguage(), lang.getCode()));
         event.reply(context.localize("command.locale.sub.list.list") + "\n" + builder).queue();
     }
 
