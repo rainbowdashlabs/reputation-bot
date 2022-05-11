@@ -1,0 +1,21 @@
+package de.chojo.repbot.dao.access;
+
+import de.chojo.sqlutil.base.QueryFactoryHolder;
+
+import javax.sql.DataSource;
+import java.util.List;
+
+public class Cleanup extends QueryFactoryHolder {
+    public Cleanup(DataSource dataSource) {
+        super(dataSource);
+    }
+
+    public List<Long> getCleanupList() {
+        return builder(Long.class)
+                .queryWithoutParams("""
+                                    SELECT guild_id FROM self_cleanup;
+                        """)
+                .readRow(stmt -> stmt.getLong("guild_id"))
+                .allSync();
+    }
+}

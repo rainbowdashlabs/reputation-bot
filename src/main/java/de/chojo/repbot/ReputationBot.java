@@ -1,6 +1,5 @@
 package de.chojo.repbot;
 
-import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import de.chojo.jdautil.botlist.BotlistService;
 import de.chojo.jdautil.command.dispatching.CommandHub;
@@ -18,7 +17,6 @@ import de.chojo.repbot.commands.Info;
 import de.chojo.repbot.commands.Invite;
 import de.chojo.repbot.commands.Locale;
 import de.chojo.repbot.commands.Log;
-import de.chojo.repbot.commands.Prefix;
 import de.chojo.repbot.commands.Prune;
 import de.chojo.repbot.commands.Reactions;
 import de.chojo.repbot.commands.RepSettings;
@@ -31,11 +29,10 @@ import de.chojo.repbot.commands.Top;
 import de.chojo.repbot.commands.TopMonth;
 import de.chojo.repbot.commands.TopWeek;
 import de.chojo.repbot.config.Configuration;
-import de.chojo.repbot.data.GuildData;
-import de.chojo.repbot.data.updater.QueryReplacement;
-import de.chojo.repbot.data.updater.SqlUpdater;
+import de.chojo.repbot.dao.access.Cleanup;
+import de.chojo.repbot.dao.access.Migration;
+import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.listener.InternalCommandListener;
-import de.chojo.repbot.listener.LegacyCommandListener;
 import de.chojo.repbot.listener.LogListener;
 import de.chojo.repbot.listener.MessageListener;
 import de.chojo.repbot.listener.ReactionListener;
@@ -51,6 +48,11 @@ import de.chojo.repbot.service.SelfCleanupService;
 import de.chojo.repbot.statistic.Statistic;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.repbot.util.PermissionErrorHandler;
+import de.chojo.sqlutil.databases.SqlType;
+import de.chojo.sqlutil.datasource.DataSourceCreator;
+import de.chojo.sqlutil.updater.QueryReplacement;
+import de.chojo.sqlutil.updater.SqlUpdater;
+import de.chojo.sqlutil.wrapper.QueryBuilderConfig;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
@@ -61,13 +63,11 @@ import net.dv8tion.jda.api.sharding.DefaultShardManagerBuilder;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.apache.logging.log4j.LogManager;
-import org.postgresql.ds.PGSimpleDataSource;
 import org.slf4j.Logger;
 
 import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -92,10 +92,12 @@ public class ReputationBot {
     private ILocalizer localizer;
     private Scan scan;
     private RepBotCachePolicy repBotCachePolicy;
-    private ContextResolver contextResolver;
-    private MessageAnalyzer messageAnalyzer;
     private Roles roles;
     private RoleAssigner roleAssigner;
+    private Guilds guilds;
+    private de.chojo.repbot.dao.access.Gdpr gdpr;
+    private Cleanup cleanup;
+    private Migration migration;
 
     public static void main(String[] args) throws SQLException, IOException {
         ReputationBot.instance = new ReputationBot();
@@ -161,24 +163,35 @@ public class ReputationBot {
     }
 
     private void initDatabase() throws SQLException, IOException {
-        var connectionPool = getConnectionPool(false);
+        dataSource = getConnectionPool(true);
 
+        var updatePool = getConnectionPool(false);
         var schema = configuration.database().schema();
-        SqlUpdater.builder(connectionPool)
+        SqlUpdater.builder(updatePool, SqlType.POSTGRES)
                 .setReplacements(new QueryReplacement("repbot_schema", schema))
                 .setVersionTable(schema + ".repbot_version")
                 .setSchemas(schema)
                 .execute();
-        connectionPool.close();
 
-        dataSource = getConnectionPool(true);
+        var logger = getLogger("DbLogger");
+        QueryBuilderConfig.setDefault(QueryBuilderConfig.builder()
+                .withExceptionHandler(err -> logger.error("An error occured during a database request", err))
+                .withExecutor(repBotWorker)
+                .build());
+
+        guilds = new Guilds(dataSource);
+        gdpr = new de.chojo.repbot.dao.access.Gdpr(dataSource);
+        cleanup = new Cleanup(dataSource);
+        migration = new Migration(dataSource);
+        updatePool.close();
+
     }
 
     private void initLocalization() {
         localizer = Localizer.builder(Language.ENGLISH)
                 .addLanguage(Language.GERMAN, Language.of("es_ES", "Español"), Language.of("fr_FR", "Français"),
                         Language.of("pt_PT", "Português"), Language.of("ru_RU", "Русский"))
-                .withLanguageProvider(guild -> new GuildData(dataSource).getLanguage(guild))
+                .withLanguageProvider(guild -> guilds.guild(guild).settings().general().language())
                 .withBundlePath("locale")
                 .build();
     }
@@ -194,16 +207,16 @@ public class ReputationBot {
 
         var statistic = Statistic.of(shardManager, dataSource, repBotWorker);
 
-        contextResolver = new ContextResolver(dataSource, configuration);
-        messageAnalyzer = new MessageAnalyzer(contextResolver, configuration, statistic);
+        var contextResolver = new ContextResolver(dataSource, configuration);
+        var messageAnalyzer = new MessageAnalyzer(contextResolver, configuration, statistic);
 
         PresenceService.start(shardManager, configuration, statistic, repBotWorker);
         scan.lateInit(messageAnalyzer);
 
         // init services
-        var reputationService = new ReputationService(dataSource, contextResolver, roleAssigner, configuration.magicImage(), localizer);
-        var gdprService = GdprService.of(shardManager, dataSource, repBotWorker);
-        SelfCleanupService.create(shardManager, localizer, dataSource, configuration, repBotWorker);
+        var reputationService = new ReputationService(guilds, contextResolver, roleAssigner, configuration.magicImage(), localizer);
+        var gdprService = GdprService.of(shardManager, guilds, gdpr, repBotWorker);
+        SelfCleanupService.create(shardManager, localizer, guilds, cleanup, configuration, repBotWorker);
 
         if (configuration.migration().isActive()) {
             log.warn("The bot is running in migration mode!");
@@ -217,27 +230,26 @@ public class ReputationBot {
                 .withConversationSystem()
                 .useGuildCommands()
                 .withCommands(
-                        new Channel(dataSource),
-                        new Prefix(dataSource, configuration),
-                        new Reputation(dataSource, configuration),
+                        new Channel(guilds),
+                        new Reputation(guilds, configuration),
                         roles,
-                        new RepSettings(dataSource),
-                        new Top(dataSource),
-                        new TopWeek(dataSource),
-                        new TopMonth(dataSource),
-                        Thankwords.of(messageAnalyzer, dataSource),
+                        new RepSettings(guilds),
+                        new Top(guilds),
+                        new TopWeek(guilds),
+                        new TopMonth(guilds),
+                        Thankwords.of(messageAnalyzer, guilds),
                         scan,
-                        new Locale(dataSource, repBotWorker),
+                        new Locale(guilds, repBotWorker),
                         new Invite(configuration),
                         Info.create(configuration),
-                        new Log(dataSource),
-                        Setup.of(dataSource),
-                        new Gdpr(dataSource),
+                        new Log(guilds),
+                        Setup.of(guilds),
+                        new Gdpr(gdpr),
                         new Prune(gdprService),
-                        new Reactions(dataSource),
-                        new Dashboard(dataSource),
-                        new AbuseProtection(dataSource),
-                        new Debug(dataSource))
+                        new Reactions(guilds),
+                        new Dashboard(guilds),
+                        new AbuseProtection(guilds),
+                        new Debug(guilds))
                 .withLocalizer(localizer)
                 .withPermissionCheck((event, meta) -> true)
                 .withCommandErrorHandler((context, throwable) -> {
@@ -251,13 +263,13 @@ public class ReputationBot {
                 .build();
 
         // init listener and services
-        var reactionListener = new ReactionListener(dataSource, localizer, reputationService, configuration);
+        var reactionListener = new ReactionListener(guilds, localizer, reputationService, configuration);
         var voteListener = new ReputationVoteListener(reputationService, localizer, configuration);
-        var messageListener = new MessageListener(localizer, dataSource, configuration, repBotCachePolicy, voteListener,
+        var messageListener = new MessageListener(localizer, configuration, guilds, migration, repBotCachePolicy, voteListener,
                 reputationService, contextResolver, messageAnalyzer);
         var voiceStateListener = VoiceStateListener.of(dataSource, repBotWorker);
         var logListener = LogListener.create(repBotWorker);
-        var stateListener = StateListener.of(hub, localizer, dataSource, configuration, repBotWorker);
+        var stateListener = StateListener.of(localizer, guilds, configuration);
 
         shardManager.addEventListener(
                 reactionListener,
@@ -266,9 +278,6 @@ public class ReputationBot {
                 voiceStateListener,
                 logListener,
                 stateListener);
-
-        shardManager.addEventListener(new LegacyCommandListener(shardManager, localizer, dataSource, hub));
-
     }
 
     private void initShutdownHook() {
@@ -286,9 +295,9 @@ public class ReputationBot {
     }
 
     private void initJDA() throws LoginException {
-        roleAssigner = new RoleAssigner(dataSource);
-        scan = new Scan(dataSource, configuration);
-        roles = new Roles(dataSource, roleAssigner);
+        roleAssigner = new RoleAssigner(guilds);
+        scan = new Scan(guilds, configuration);
+        roles = new Roles(guilds, roleAssigner);
         repBotCachePolicy = new RepBotCachePolicy(scan, roles);
         shardManager = DefaultShardManagerBuilder.createDefault(configuration.baseSettings().token())
                 .enableIntents(
@@ -315,21 +324,20 @@ public class ReputationBot {
 
     private HikariDataSource getConnectionPool(boolean withSchema) {
         var db = configuration.database();
-        var props = new Properties();
-        props.setProperty("dataSourceClassName", PGSimpleDataSource.class.getName());
-        props.setProperty("dataSource.serverName", db.host());
-        props.setProperty("dataSource.portNumber", db.port());
-        props.setProperty("dataSource.user", db.user());
-        props.setProperty("dataSource.password", db.password());
-        props.setProperty("dataSource.databaseName", db.database());
-
-        var config = new HikariConfig(props);
-        config.setMaximumPoolSize(db.poolSize());
+        var configurationStage = DataSourceCreator.create(SqlType.POSTGRES)
+                .configure(config -> config
+                        .host(db.host())
+                        .port(db.port())
+                        .user(db.user())
+                        .password(db.password())
+                        .database(db.database()))
+                .create()
+                .withMaximumPoolSize(db.poolSize())
+                .withThreadFactory(createThreadFactory(hikariGroup));
         if (withSchema) {
-            config.setSchema(db.schema());
+            configurationStage.forSchema(db.schema());
         }
-        config.setThreadFactory(createThreadFactory(hikariGroup));
 
-        return new HikariDataSource(config);
+        return configurationStage.build();
     }
 }

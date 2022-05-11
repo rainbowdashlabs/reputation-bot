@@ -24,6 +24,8 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -54,8 +56,8 @@ public class Info extends SimpleCommand {
 
     public static Info create(Configuration configuration) {
         var version = "undefined";
-        try (var in = Info.class.getClassLoader().getResourceAsStream("version")) {
-            version = new String(in.readAllBytes()).trim();
+        try (var input = Info.class.getClassLoader().getResourceAsStream("version")) {
+            version = new String(input.readAllBytes(), StandardCharsets.UTF_8).trim();
         } catch (IOException e) {
             log.error("Could not determine version.");
         }

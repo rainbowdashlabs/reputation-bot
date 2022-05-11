@@ -4,8 +4,8 @@ import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.config.Configuration;
-import de.chojo.repbot.data.GuildData;
-import de.chojo.repbot.data.ReputationData;
+import de.chojo.repbot.dao.access.Cleanup;
+import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.util.LogNotify;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
@@ -13,7 +13,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.slf4j.Logger;
 
-import javax.sql.DataSource;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -26,22 +25,21 @@ public class SelfCleanupService implements Runnable {
     private static final Logger log = getLogger(SelfCleanupService.class);
     private final ShardManager shardManager;
     private final ILocalizer localizer;
-    private final GuildData guildData;
-    private final ReputationData reputationData;
+    private final Guilds guilds;
     private final Configuration configuration;
+    private final Cleanup cleanup;
 
-    private SelfCleanupService(ShardManager shardManager, ILocalizer localizer, DataSource dataSource, Configuration configuration) {
+    private SelfCleanupService(ShardManager shardManager, ILocalizer localizer, Guilds guilds, Cleanup cleanup, Configuration configuration) {
         this.shardManager = shardManager;
         this.localizer = localizer;
-        guildData = new GuildData(dataSource);
-        reputationData = new ReputationData(dataSource);
+        this.guilds = guilds;
+        this.cleanup = cleanup;
         this.configuration = configuration;
     }
 
-    public static SelfCleanupService create(ShardManager shardManager, ILocalizer localizer, DataSource dataSource, Configuration configuration, ScheduledExecutorService service) {
-        var selfCleanupService = new SelfCleanupService(shardManager, localizer, dataSource, configuration);
+    public static void create(ShardManager shardManager, ILocalizer localizer, Guilds guilds, Cleanup cleanup, Configuration configuration, ScheduledExecutorService service) {
+        var selfCleanupService = new SelfCleanupService(shardManager, localizer, guilds, cleanup, configuration);
         service.scheduleAtFixedRate(selfCleanupService, 1, 60, TimeUnit.MINUTES);
-        return selfCleanupService;
     }
 
 
@@ -50,19 +48,19 @@ public class SelfCleanupService implements Runnable {
         if (!configuration.selfCleanup().isActive()) return;
 
         for (var guild : shardManager.getGuilds()) {
-            var settings = guildData.getGuildSettings(guild);
-            var inactive = reputationData.getLatestReputation(guild)
+            var settings = guilds.guild(guild).settings();
+            var inactive = guilds.guild(guild).reputation().log().getLatestReputation()
                     .map(r -> r.received().isBefore(configuration.selfCleanup().getInactiveDaysOffset()))
                     .orElse(guild.getSelfMember().getTimeJoined().isBefore(LocalDateTime.now().minusDays(30).atOffset(ZoneOffset.UTC)));
-            var noChannel = settings.thankSettings().activeChannel().isEmpty() && settings.thankSettings().isChannelWhitelist();
+            var noChannel = settings.thanking().channels().channels().isEmpty() && settings.thanking().channels().isWhitelist();
             if (noChannel || inactive) {
                 promptCleanup(guild);
                 continue;
             }
-            guildData.cleanupDone(guild);
+            guilds.guild(guild).cleanup().cleanupDone();
         }
 
-        for (var guildId : guildData.getCleanupList()) {
+        for (var guildId : cleanup.getCleanupList()) {
             var guild = shardManager.getGuildById(guildId);
             if (guild != null) notifyCleanup(guild);
         }
@@ -71,13 +69,13 @@ public class SelfCleanupService implements Runnable {
     private void promptCleanup(Guild guild) {
         var selfMember = guild.getSelfMember();
         if (configuration.botlist().isBotlistGuild(guild.getIdLong())) return;
-        if (guildData.getCleanupPromptTime(guild).isPresent()) return;
+        if (guilds.guild(guild).cleanup().getCleanupPromptTime().isPresent()) return;
         if (selfMember.getTimeJoined().isAfter(configuration.selfCleanup().getPromptDaysOffset())) {
             log.debug("Bot is unconfigured  or unused for {} days",
                     Math.abs(Duration.between(selfMember.getTimeJoined(), LocalDateTime.now().atZone(ZoneOffset.UTC)).toDays()));
             return;
         }
-        guildData.selfCleanupPrompt(guild);
+        guilds.guild(guild).cleanup().selfCleanupPrompt();
 
         var embed = new LocalizedEmbedBuilder(localizer, guild)
                 .setTitle("selfCleanup.prompt.title")
@@ -92,9 +90,9 @@ public class SelfCleanupService implements Runnable {
     }
 
     private void notifyCleanup(Guild guild) {
-        if (guildData.getCleanupPromptTime(guild).get().isAfter(configuration.selfCleanup().getLeaveDaysOffset())) {
+        if (guilds.guild(guild).cleanup().getCleanupPromptTime().get().isAfter(configuration.selfCleanup().getLeaveDaysOffset())) {
             log.debug("Prompt was send {} days ago",
-                    Math.abs(Duration.between(guildData.getCleanupPromptTime(guild).get(), LocalDateTime.now().atZone(ZoneOffset.UTC)).toDays()));
+                    Math.abs(Duration.between(guilds.guild(guild).cleanup().getCleanupPromptTime().get(), LocalDateTime.now().atZone(ZoneOffset.UTC)).toDays()));
             return;
         }
 
@@ -107,7 +105,7 @@ public class SelfCleanupService implements Runnable {
         notifyGuild(guild, embed);
         guild.leave().queue();
         log.info(LogNotify.STATUS, "Left guild caused by self cleanup.");
-        guildData.cleanupDone(guild);
+        guilds.guild(guild).cleanup().cleanupDone();
     }
 
     private void notifyGuild(Guild guild, MessageEmbed embed) {

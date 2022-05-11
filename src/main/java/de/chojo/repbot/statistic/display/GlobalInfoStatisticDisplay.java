@@ -5,17 +5,8 @@ import de.chojo.repbot.statistic.element.DataStatistic;
 import de.chojo.repbot.statistic.element.GlobalShardStatistic;
 import net.dv8tion.jda.api.EmbedBuilder;
 
-public class GlobalInfoStatisticDisplay implements EmbedDisplay {
-
-    private final GlobalShardStatistic globalShardStatistic;
-    private final DataStatistic dataStatistic;
-
-    public GlobalInfoStatisticDisplay(
-            GlobalShardStatistic globalShardStatistic,
-            DataStatistic dataStatistic) {
-        this.globalShardStatistic = globalShardStatistic;
-        this.dataStatistic = dataStatistic;
-    }
+public record GlobalInfoStatisticDisplay(GlobalShardStatistic globalShardStatistic,
+                                         DataStatistic dataStatistic) implements EmbedDisplay {
 
 
     @Override

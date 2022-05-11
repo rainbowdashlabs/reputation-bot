@@ -3,8 +3,10 @@ package de.chojo.repbot.config;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import de.chojo.repbot.config.elements.AnalyzerSettings;
 import de.chojo.repbot.config.elements.Badges;
 import de.chojo.repbot.config.elements.BaseSettings;
@@ -33,11 +35,13 @@ public class Configuration {
     private ConfigFile configFile;
 
     private Configuration() {
-        objectMapper = new ObjectMapper()
+        objectMapper = JsonMapper.builder()
+                .configure(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS, true)
+                .build()
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
                 .setVisibility(PropertyAccessor.GETTER, JsonAutoDetect.Visibility.NONE)
-                .setDefaultPrettyPrinter(new DefaultPrettyPrinter())
-                .configure(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS, true);
+                .setDefaultPrettyPrinter(new DefaultPrettyPrinter());
     }
 
     public static Configuration create() {
@@ -103,10 +107,6 @@ public class Configuration {
 
     public MagicImage magicImage() {
         return configFile.magicImage();
-    }
-
-    public TestMode testMode() {
-        return configFile.testMode();
     }
 
     public Badges badges() {
