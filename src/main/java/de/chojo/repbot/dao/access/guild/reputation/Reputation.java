@@ -66,7 +66,7 @@ public class Reputation extends QueryFactoryHolder implements GuildHolder {
         }
     }
 
-    public RepUser user(@NotNull User user) {
+    public RepUser user(User user) {
         try {
             return users.get(user.getIdLong(), () -> new RepUser(this, user));
         } catch (ExecutionException e) {
