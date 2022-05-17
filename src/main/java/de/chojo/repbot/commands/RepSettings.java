@@ -10,6 +10,8 @@ import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.util.EmojiDebug;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
 import org.jetbrains.annotations.PropertyKey;
 
 import java.awt.Color;
@@ -73,7 +75,52 @@ public class RepSettings extends SimpleCommand {
     }
 
     private void sendSettings(SlashCommandInteractionEvent event, SlashCommandContext context, Settings guildSettings) {
-        event.replyEmbeds(getSettings(context, guildSettings)).queue();
+        var reactions = SelectMenu.create("reactions")
+                .setPlaceholder("Set if reactions can give reputation")
+                .setRequiredRange(1, 1)
+                .addOption("enabled", "enabled")
+                .addOption("disabled", "disabled")
+                .build();
+        var answers = SelectMenu.create("answers")
+                .setPlaceholder("Set if answers can give reputation")
+                .setRequiredRange(1, 1)
+                .addOption("enabled", "enabled")
+                .addOption("disabled", "disabled")
+                .build();
+        var mention = SelectMenu.create("mention")
+                .setPlaceholder("Set if mention can give reputation")
+                .setRequiredRange(1, 1)
+                .addOption("enabled", "enabled")
+                .addOption("disabled", "disabled")
+                .build();
+        var fuzzy = SelectMenu.create("fuzzy")
+                .setPlaceholder("Set if fuzzy matches can give reputation")
+                .setRequiredRange(1, 1)
+                .addOption("enabled", "enabled")
+                .addOption("disabled", "disabled")
+                .build();
+        var embed = SelectMenu.create("embed")
+                .setPlaceholder("Set if embeds should be send to request targets")
+                .setRequiredRange(1, 1)
+                .addOption("enabled", "enabled", "enable this shit")
+                .addOption("disabled", "disabled")
+                .build();
+
+        var emojidebug = SelectMenu.create("embed")
+                .setPlaceholder("Set if explanatory emojis should be added to messages.")
+                .setRequiredRange(1, 1)
+                .addOption("enabled", "enabled", "enable this shit")
+                .addOption("disabled", "disabled")
+                .build();
+
+        event.replyEmbeds(getSettings(context, guildSettings))
+                .addActionRows(ActionRow.of(reactions))
+                .addActionRows(ActionRow.of(answers))
+                .addActionRows(ActionRow.of(mention))
+                .addActionRows(ActionRow.of(fuzzy))
+                .addActionRows(ActionRow.of(embed))
+                //.addActionRows(ActionRow.of(emojidebug))
+                .queue();
     }
 
     private void fuzzy(SlashCommandInteractionEvent event, SlashCommandContext context, Settings guildSettings) {
