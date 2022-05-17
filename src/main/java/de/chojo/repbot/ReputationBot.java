@@ -307,13 +307,11 @@ public class ReputationBot {
                         GatewayIntent.GUILD_MESSAGES,
                         // Required to resolve member without a direct mention
                         GatewayIntent.GUILD_MEMBERS,
-                        // For online status caching
-                        GatewayIntent.GUILD_PRESENCES)
+                        // Required to cache voice states for member relationships
+                        GatewayIntent.GUILD_VOICE_STATES)
                 .enableCache(
                         // Required for voice activity
-                        CacheFlag.VOICE_STATE,
-                        //Required for custom member cache
-                        CacheFlag.ONLINE_STATUS)
+                        CacheFlag.VOICE_STATE)
                 // we have our own shutdown hook
                 .setEnableShutdownHook(false)
                 .setMemberCachePolicy(repBotCachePolicy)
