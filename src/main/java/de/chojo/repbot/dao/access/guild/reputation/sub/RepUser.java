@@ -54,7 +54,7 @@ public class RepUser extends QueryFactoryHolder implements MemberHolder {
      * @param type       type of reputation
      * @return true if the repuation was logged.
      */
-    public boolean addReputation(@Nullable User donor, @NotNull Message message, @Nullable Message refMessage, ThankType type) {
+    public boolean addReputation(@Nullable Member donor, @NotNull Message message, @Nullable Message refMessage, ThankType type) {
         var success = builder()
                               .query("""
                                       INSERT INTO
@@ -68,7 +68,7 @@ public class RepUser extends QueryFactoryHolder implements MemberHolder {
                               .insert()
                               .executeSync() > 0;
         if (success) {
-            log.debug("{} received one reputation from {} for message {}", user().getName(), donor != null ? donor.getName() : "unkown", message.getIdLong());
+            log.debug("{} received one reputation from {} for message {}", user().getName(), donor != null ? donor.getEffectiveName() : "unkown", message.getIdLong());
         }
         return success;
     }
@@ -80,7 +80,7 @@ public class RepUser extends QueryFactoryHolder implements MemberHolder {
      * @param other the other user
      * @return last timestamp as instant
      */
-    public Optional<Instant> getLastReputation(User other) {
+    public Optional<Instant> getLastReputation(Member other) {
         return builder(Instant.class).
                 query("""
                         SELECT
@@ -107,7 +107,7 @@ public class RepUser extends QueryFactoryHolder implements MemberHolder {
      * @param other receiver
      * @return the time since the last vote in the requested time unit or 1 year if no entry was found.
      */
-    public Duration getLastRatedDuration(User other) {
+    public Duration getLastRatedDuration(Member other) {
         return getLastReputation(other).map(last -> Duration.between(last, Instant.now())).orElseGet(() -> Duration.ofDays(365));
     }
 

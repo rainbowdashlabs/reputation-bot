@@ -75,7 +75,7 @@ public class ReactionListener extends ListenerAdapter {
 
         if (message == null) return;
 
-        var receiver = message.getAuthor();
+        var receiver = message.getMember();
 
         var logEntry = repGuild.reputation().log().getLogEntry(message);
         if (logEntry.isPresent()) {
@@ -86,7 +86,7 @@ public class ReactionListener extends ListenerAdapter {
                 return;
             }
             if (newReceiver == null) return;
-            receiver = newReceiver.getUser();
+            receiver = newReceiver;
         }
 
         if (PermissionErrorHandler.assertAndHandle(event.getGuildChannel(), localizer, configuration, Permission.MESSAGE_SEND)) {
@@ -94,7 +94,7 @@ public class ReactionListener extends ListenerAdapter {
         }
 
 
-        if (reputationService.submitReputation(event.getGuild(), event.getUser(), receiver, message, null, ThankType.REACTION)) {
+        if (reputationService.submitReputation(event.getGuild(), event.getMember(), receiver, message, null, ThankType.REACTION)) {
             reacted(event.getMember());
             event.getChannel().sendMessage(localizer.localize("listener.reaction.confirmation", event.getGuild(),
                             Replacement.create("DONOR", event.getUser().getAsMention()), Replacement.create("RECEIVER", receiver.getAsMention())))

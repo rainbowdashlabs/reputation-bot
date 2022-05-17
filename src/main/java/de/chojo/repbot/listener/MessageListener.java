@@ -147,17 +147,17 @@ public class MessageListener extends ListenerAdapter {
             switch (resultType) {
                 case FUZZY -> {
                     if (!settings.messages().isFuzzyActive()) continue;
-                    reputationService.submitReputation(guild, donator, result.getReference().getUser(), message, refMessage, resultType);
+                    reputationService.submitReputation(guild, donator, result.getReference(), message, refMessage, resultType);
                     resolveNoTarget = false;
                 }
                 case MENTION -> {
                     if (!settings.messages().isMentionActive()) continue;
-                    reputationService.submitReputation(guild, donator, result.getReference().getUser(), message, refMessage, resultType);
+                    reputationService.submitReputation(guild, donator, result.getReference(), message, refMessage, resultType);
                     resolveNoTarget = false;
                 }
                 case ANSWER -> {
                     if (!settings.messages().isAnswerActive()) continue;
-                    reputationService.submitReputation(guild, donator, result.getReference().getUser(), message, refMessage, resultType);
+                    reputationService.submitReputation(guild, donator, result.getReference(), message, refMessage, resultType);
                     resolveNoTarget = false;
                 }
             }
@@ -167,14 +167,14 @@ public class MessageListener extends ListenerAdapter {
 
     private void resolveNoTarget(Message message, Settings settings) {
         var recentMembers = contextResolver.getCombinedContext(message, settings);
-        recentMembers.remove(message.getMember());
+        recentMembers.removeMember(message.getMember());
         if (recentMembers.isEmpty()) {
             if (settings.general().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.EMPTY_CONTEXT);
             return;
         }
 
-        var members = recentMembers.stream()
-                .filter(receiver -> reputationService.canVote(message.getAuthor(), receiver.getUser(), message.getGuild(), settings))
+        var members = recentMembers.members().stream()
+                .filter(receiver -> reputationService.canVote(message.getMember(), receiver, message.getGuild(), settings))
                 .limit(10)
                 .collect(Collectors.toList());
 

@@ -4,6 +4,7 @@ import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.repbot.analyzer.ContextResolver;
+import de.chojo.repbot.analyzer.MessageContext;
 import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.config.elements.MagicImage;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
@@ -14,7 +15,6 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.requests.RestAction;
@@ -24,10 +24,8 @@ import java.awt.Color;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
-import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 public class ReputationService {
     private final Guilds guilds;
@@ -58,9 +56,9 @@ public class ReputationService {
      * @param type       type of reputation source
      * @return true if the reputation was counted and is valid
      */
-    public boolean submitReputation(Guild guild, User donor, User receiver, Message message, @Nullable Message refMessage, ThankType type) {
+    public boolean submitReputation(Guild guild, Member donor, Member receiver, Message message, @Nullable Message refMessage, ThankType type) {
         // block bots
-        if (receiver.isBot()) return false;
+        if (receiver.getUser().isBot()) return false;
 
         var settings = guilds.guild(guild).settings();
         var messageSettings = settings.messages();
@@ -84,7 +82,6 @@ public class ReputationService {
             }
             case ANSWER -> {
                 if (!messageSettings.isAnswerActive()) return false;
-
             }
             case REACTION -> {
                 if (!messageSettings.isReactionActive()) return false;
@@ -95,26 +92,22 @@ public class ReputationService {
             default -> throw new IllegalStateException("Unexpected value: " + type);
         }
 
-        Set<Member> recentMember;
+        MessageContext context;
         if (type == ThankType.REACTION) {
             // Check if user was recently seen in this channel.
-            recentMember = contextResolver.getCombinedContext(guild.getMember(donor), message, settings);
+            context = contextResolver.getCombinedContext(guild.getMember(donor), message, settings);
         } else {
-            recentMember = contextResolver.getCombinedContext(message, settings);
+            context = contextResolver.getCombinedContext(message, settings);
         }
 
-        var recentUser = recentMember.stream()
-                .map(Member::getUser)
-                .collect(Collectors.toSet());
-
         // Abuse Protection: target context
-        if (!recentUser.contains(receiver) && abuseSettings.isReceiverContext()) {
+        if (!context.members().contains(receiver) && abuseSettings.isReceiverContext()) {
             if (generalSettings.isEmojiDebug()) Messages.markMessage(message, EmojiDebug.TARGET_NOT_IN_CONTEXT);
             return false;
         }
 
         // Abuse Protection: donor context
-        if (!recentUser.contains(donor) && abuseSettings.isDonorContext()) {
+        if (!context.members().contains(donor) && abuseSettings.isDonorContext()) {
             if (generalSettings.isEmojiDebug()) Messages.markMessage(message, EmojiDebug.DONOR_NOT_IN_CONTEXT);
             return false;
         }
@@ -128,7 +121,7 @@ public class ReputationService {
         // block outdated ref message
         // Abuse protection: Message age
         if (refMessage != null) {
-            if (abuseSettings.isOldMessage(refMessage)) {
+            if (abuseSettings.isOldMessage(refMessage) && !context.latestMessages(abuseSettings.minMessages()).contains(refMessage)) {
                 if (generalSettings.isEmojiDebug()) Messages.markMessage(message, EmojiDebug.TOO_OLD);
                 return false;
             }
@@ -179,7 +172,7 @@ public class ReputationService {
         return false;
     }
 
-    public boolean canVote(User donor, User receiver, Guild guild, Settings settings) {
+    public boolean canVote(Member donor, Member receiver, Guild guild, Settings settings) {
         var donorM = guild.getMember(donor);
         var receiverM = guild.getMember(receiver);
 
