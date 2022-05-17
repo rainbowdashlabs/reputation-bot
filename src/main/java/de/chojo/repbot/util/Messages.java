@@ -41,7 +41,7 @@ public final class Messages {
 
     public static void markMessage(Message message, String emoji) {
         if (PermissionUtil.checkPermission(message.getGuildChannel().getPermissionContainer(), message.getGuild().getSelfMember(), Permission.MESSAGE_ADD_REACTION)) {
-            message.addReaction(emoji).queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
+            message.addReaction(emoji).queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE, ErrorResponse.TOO_MANY_REACTIONS));
         }
     }
 }
