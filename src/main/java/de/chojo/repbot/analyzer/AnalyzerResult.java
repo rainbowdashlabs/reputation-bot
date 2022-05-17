@@ -3,7 +3,6 @@ package de.chojo.repbot.analyzer;
 import de.chojo.jdautil.parsing.WeightedEntry;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
 
 import java.util.Collections;
 import java.util.List;

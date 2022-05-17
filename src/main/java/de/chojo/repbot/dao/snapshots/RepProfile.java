@@ -1,7 +1,6 @@
 package de.chojo.repbot.dao.snapshots;
 
 import de.chojo.jdautil.util.MentionUtil;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import org.apache.commons.lang3.StringUtils;
 

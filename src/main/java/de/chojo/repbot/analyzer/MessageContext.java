@@ -19,7 +19,7 @@ public class MessageContext implements MemberHolder {
     private final Set<Message> rawMessages = new LinkedHashSet<>();
     private final Set<Message> contextMessages = new LinkedHashSet<>();
     private Message message;
-    private Member target;
+    private final Member target;
 
     public static MessageContext byMessage(Message message) {
         return new MessageContext(message, message.getMember());

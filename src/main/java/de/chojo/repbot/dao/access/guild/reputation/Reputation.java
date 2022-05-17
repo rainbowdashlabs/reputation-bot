@@ -54,7 +54,7 @@ public class Reputation extends QueryFactoryHolder implements GuildHolder {
                         rs.getInt("today_reputation"),
                         rs.getLong("top_channel")
                 )).firstSync()
-                .orElseGet(() -> new GuildReputationStats(0,0,0,0));
+                .orElseGet(() -> new GuildReputationStats(0, 0, 0, 0));
     }
 
     public RepUser user(@NotNull Member member) {
