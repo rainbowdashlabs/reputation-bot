@@ -30,10 +30,6 @@ public class RepBotCachePolicy implements MemberCachePolicy, Runnable {
 
     @Override
     public boolean cacheMember(@NotNull Member member) {
-        if (MemberCachePolicy.ONLINE.cacheMember(member)) {
-            return true;
-        }
-
         if (MemberCachePolicy.VOICE.cacheMember(member)) {
             return true;
         }
@@ -42,24 +38,29 @@ public class RepBotCachePolicy implements MemberCachePolicy, Runnable {
             return true;
         }
 
+        // Hold members during running scan
         if (scan.isRunning(member.getGuild())) {
             return true;
         }
 
+        // Hold members during role refresh
         if (roles.refreshActive(member.getGuild())) {
             return true;
         }
 
+        // We always want to keep members we see for the first time
         if (!seen.containsKey(member.getIdLong())) {
             seen.put(member.getIdLong(), Instant.now());
             return true;
         }
 
-        if (seen.get(member.getIdLong()).isBefore(oldest())) {
-            seen.remove(member.getIdLong());
-            return false;
+        // Check if we have seen this member recently
+        if (seen.get(member.getIdLong()).isAfter(oldest())) {
+            return true;
         }
-        return true;
+
+        seen.remove(member.getIdLong());
+        return false;
     }
 
     @Override
