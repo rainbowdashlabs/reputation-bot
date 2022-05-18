@@ -175,7 +175,7 @@ public class ReputationBot {
 
         var logger = getLogger("DbLogger");
         QueryBuilderConfig.setDefault(QueryBuilderConfig.builder()
-                .withExceptionHandler(err -> logger.error("An error occured during a database request", err))
+                .withExceptionHandler(err -> logger.error(LogNotify.NOTIFY_ADMIN, "An error occured during a database request", err))
                 .withExecutor(repBotWorker)
                 .build());
 
