@@ -8,6 +8,7 @@ import de.chojo.sqlutil.base.QueryFactoryHolder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 
+import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
@@ -106,7 +107,7 @@ public class Ranks extends QueryFactoryHolder implements GuildHolder {
 
     public List<ReputationRank> currentRanks(RepUser user) {
         var profile = user.profile();
-        return ranks.stream()
+        return ranks().stream()
                 .filter(rank -> rank.reputation() <= profile.reputation())
                 .sorted()
                 .limit(stackRoles.get() ? Integer.MAX_VALUE : 1)
@@ -115,7 +116,7 @@ public class Ranks extends QueryFactoryHolder implements GuildHolder {
 
     public List<ReputationRank> currentRank(RepUser user) {
         var profile = user.profile();
-        return ranks.stream()
+        return ranks().stream()
                 .filter(rank -> rank.reputation() <= profile.reputation())
                 .sorted()
                 .limit(1)
@@ -124,7 +125,7 @@ public class Ranks extends QueryFactoryHolder implements GuildHolder {
 
     public Optional<ReputationRank> nextRank(RepUser user) {
         var profile = user.profile();
-        return ranks.stream().filter(rank -> rank.reputation() > profile.reputation()).sorted().limit(1).findFirst();
+        return ranks().stream().filter(rank -> rank.reputation() > profile.reputation()).sorted(Comparator.reverseOrder()).limit(1).findFirst();
     }
 
     @Override
