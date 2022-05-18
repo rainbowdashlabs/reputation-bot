@@ -75,7 +75,7 @@ public class ReactionListener extends ListenerAdapter {
 
         if (message == null) return;
 
-        var receiver = message.getMember();
+        var receiver = event.getGuild().retrieveMember(message.getAuthor()).complete();
 
         var logEntry = repGuild.reputation().log().getLogEntry(message);
         if (logEntry.isPresent()) {

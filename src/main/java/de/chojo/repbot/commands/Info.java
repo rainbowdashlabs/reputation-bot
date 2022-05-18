@@ -29,6 +29,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -85,7 +86,7 @@ public class Info extends SimpleCommand {
                 contributors = mapper.readerForListOf(Contributor.class).readValue(response.body());
             } catch (IOException | InterruptedException e) {
                 log.error("Could not read response", e);
-                return new EmbedBuilder().build();
+                contributors = Collections.emptyList();
             }
 
             List<GithubProfile> profiles = new ArrayList<>();
@@ -103,12 +104,9 @@ public class Info extends SimpleCommand {
                     profiles.add(mapper.readValue(response.body(), GithubProfile.class));
                 } catch (IOException | InterruptedException e) {
                     log.error("Could not read response", e);
-                    return new EmbedBuilder().build();
                 }
             }
-
             this.contributors = profiles.stream().map(GithubProfile::toString).collect(Collectors.joining(", "));
-
             lastFetch = Instant.now();
         }
 
