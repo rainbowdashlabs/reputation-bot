@@ -27,7 +27,7 @@ public class Gdpr extends QueryFactoryHolder implements MemberHolder {
                                 ON CONFLICT(guild_id, user_id)
                                     DO NOTHING;
                         """)
-                .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(memberId()))
+                .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(userId()))
                 .update().executeSync();
     }
 
@@ -39,7 +39,7 @@ public class Gdpr extends QueryFactoryHolder implements MemberHolder {
                         WHERE guild_id = ?
                             AND user_id = ?;
                         """)
-                .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(memberId()))
+                .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(userId()))
                 .update().executeSync();
     }
 }

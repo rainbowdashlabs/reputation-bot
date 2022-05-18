@@ -6,6 +6,7 @@ import de.chojo.repbot.dao.access.guild.reputation.sub.user.Gdpr;
 import de.chojo.repbot.dao.components.MemberHolder;
 import de.chojo.repbot.dao.snapshots.RepProfile;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -95,8 +96,8 @@ public class RepUser extends QueryFactoryHolder implements MemberHolder {
                         LIMIT  1;
                         """)
                 .paramsBuilder(stmt -> stmt.setLong(reputation.guildId())
-                        .setLong(memberId()).setLong(other.getIdLong()).
-                        setLong(other.getIdLong()).setLong(memberId()))
+                        .setLong(userId()).setLong(other.getIdLong()).
+                        setLong(other.getIdLong()).setLong(userId()))
                 .readRow(row -> row.getTimestamp("received").toInstant())
                 .firstSync();
     }
@@ -136,6 +137,11 @@ public class RepUser extends QueryFactoryHolder implements MemberHolder {
     @Override
     public User user() {
         return user;
+    }
+
+    @Override
+    public Guild guild() {
+        return gdpr.guild();
     }
 
     public RepUser refresh(Member member) {
