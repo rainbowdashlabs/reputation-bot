@@ -141,7 +141,7 @@ public class RepUser extends QueryFactoryHolder implements MemberHolder {
 
     @Override
     public Guild guild() {
-        return gdpr.guild();
+        return reputation.guild();
     }
 
     public RepUser refresh(Member member) {
