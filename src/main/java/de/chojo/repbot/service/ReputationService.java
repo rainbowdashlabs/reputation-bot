@@ -4,45 +4,39 @@ import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.repbot.analyzer.ContextResolver;
+import de.chojo.repbot.analyzer.MessageContext;
 import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.config.elements.MagicImage;
-import de.chojo.repbot.data.GuildData;
-import de.chojo.repbot.data.ReputationData;
-import de.chojo.repbot.data.wrapper.GuildSettings;
+import de.chojo.repbot.dao.access.guild.settings.Settings;
+import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.util.EmojiDebug;
 import de.chojo.repbot.util.Messages;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.requests.RestAction;
 import org.jetbrains.annotations.Nullable;
 
-import javax.sql.DataSource;
 import java.awt.Color;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
-import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 public class ReputationService {
-    private final ReputationData reputationData;
-    private final GuildData guildData;
+    private final Guilds guilds;
     private final RoleAssigner assigner;
     private final MagicImage magicImage;
     private final ContextResolver contextResolver;
     private final ILocalizer localizer;
     private Instant lastEasterEggSent = Instant.EPOCH;
 
-    public ReputationService(DataSource dataSource, ContextResolver contextResolver, RoleAssigner assigner, MagicImage magicImage, ILocalizer localizer) {
-        reputationData = new ReputationData(dataSource);
-        guildData = new GuildData(dataSource);
+    public ReputationService(Guilds guilds, ContextResolver contextResolver, RoleAssigner assigner, MagicImage magicImage, ILocalizer localizer) {
+        this.guilds = guilds;
         this.assigner = assigner;
         this.magicImage = magicImage;
         this.contextResolver = contextResolver;
@@ -52,7 +46,7 @@ public class ReputationService {
     /**
      * Submit a reputation.
      * <p>
-     * This reputation will be checked by several factors based on the {@link GuildSettings}.
+     * This reputation will be checked by several factors based on the {@link de.chojo.repbot.dao.access.guild.settings.Settings}.
      *
      * @param guild      guild where the vote was given
      * @param donor      donor of the reputation
@@ -62,21 +56,21 @@ public class ReputationService {
      * @param type       type of reputation source
      * @return true if the reputation was counted and is valid
      */
-    public boolean submitReputation(Guild guild, User donor, User receiver, Message message, @Nullable Message refMessage, ThankType type) {
+    public boolean submitReputation(Guild guild, Member donor, Member receiver, Message message, @Nullable Message refMessage, ThankType type) {
         // block bots
-        if (receiver.isBot()) return false;
+        if (receiver.getUser().isBot()) return false;
 
-        var settings = guildData.getGuildSettings(guild);
-        var messageSettings = settings.messageSettings();
-        var thankSettings = settings.thankSettings();
-        var generalSettings = settings.generalSettings();
-        var abuseSettings = settings.abuseSettings();
+        var settings = guilds.guild(guild).settings();
+        var messageSettings = settings.messages();
+        var thankSettings = settings.thanking();
+        var generalSettings = settings.general();
+        var abuseSettings = settings.abuseProtection();
 
         // block non reputation channel
-        if (!thankSettings.isReputationChannel(message.getChannel())) return false;
+        if (!thankSettings.channels().isEnabled(message.getChannel())) return false;
 
-        if (!thankSettings.hasDonorRole(guild.getMember(donor))) return false;
-        if (!thankSettings.hasReceiverRole(guild.getMember(receiver))) return false;
+        if (!thankSettings.donorRoles().hasRole(guild.getMember(donor))) return false;
+        if (!thankSettings.receiverRoles().hasRole(guild.getMember(receiver))) return false;
 
         // force settings
         switch (type) {
@@ -88,7 +82,6 @@ public class ReputationService {
             }
             case ANSWER -> {
                 if (!messageSettings.isAnswerActive()) return false;
-
             }
             case REACTION -> {
                 if (!messageSettings.isReactionActive()) return false;
@@ -99,26 +92,22 @@ public class ReputationService {
             default -> throw new IllegalStateException("Unexpected value: " + type);
         }
 
-        Set<Member> recentMember;
+        MessageContext context;
         if (type == ThankType.REACTION) {
             // Check if user was recently seen in this channel.
-            recentMember = contextResolver.getCombinedContext(guild.getMember(donor), message, settings);
+            context = contextResolver.getCombinedContext(guild.getMember(donor), message, settings);
         } else {
-            recentMember = contextResolver.getCombinedContext(message, settings);
+            context = contextResolver.getCombinedContext(message, settings);
         }
 
-        var recentUser = recentMember.stream()
-                .map(Member::getUser)
-                .collect(Collectors.toSet());
-
         // Abuse Protection: target context
-        if (!recentUser.contains(receiver) && abuseSettings.isReceiverContext()) {
+        if (!context.members().contains(receiver) && abuseSettings.isReceiverContext()) {
             if (generalSettings.isEmojiDebug()) Messages.markMessage(message, EmojiDebug.TARGET_NOT_IN_CONTEXT);
             return false;
         }
 
         // Abuse Protection: donor context
-        if (!recentUser.contains(donor) && abuseSettings.isDonorContext()) {
+        if (!context.members().contains(donor) && abuseSettings.isDonorContext()) {
             if (generalSettings.isEmojiDebug()) Messages.markMessage(message, EmojiDebug.DONOR_NOT_IN_CONTEXT);
             return false;
         }
@@ -132,7 +121,7 @@ public class ReputationService {
         // block outdated ref message
         // Abuse protection: Message age
         if (refMessage != null) {
-            if (!abuseSettings.isFreshMessage(refMessage)) {
+            if (abuseSettings.isOldMessage(refMessage) && !context.latestMessages(abuseSettings.minMessages()).contains(refMessage)) {
                 if (generalSettings.isEmojiDebug()) Messages.markMessage(message, EmojiDebug.TOO_OLD);
                 return false;
             }
@@ -140,7 +129,7 @@ public class ReputationService {
 
         // block outdated message
         // Abuse protection: Message age
-        if (!abuseSettings.isFreshMessage(message)) {
+        if (abuseSettings.isOldMessage(message)) {
             if (generalSettings.isEmojiDebug()) Messages.markMessage(message, EmojiDebug.TOO_OLD);
             return false;
         }
@@ -164,7 +153,7 @@ public class ReputationService {
         }
 
         // try to log reputation
-        if (reputationData.logReputation(guild, donor, receiver, message, refMessage, type)) {
+        if (guilds.guild(guild).reputation().user(receiver).addReputation(donor, message, refMessage, type)) {
             // mark messages
             Messages.markMessage(message, refMessage, settings);
             // update role
@@ -183,21 +172,19 @@ public class ReputationService {
         return false;
     }
 
-    public boolean canVote(User donor, User receiver, Guild guild, GuildSettings settings) {
+    public boolean canVote(Member donor, Member receiver, Guild guild, Settings settings) {
         var donorM = guild.getMember(donor);
         var receiverM = guild.getMember(receiver);
 
         if (donorM == null || receiverM == null) return false;
 
         // block cooldown
-        var lastRated = reputationData.getLastRatedDuration(guild, donor, receiver, ChronoUnit.MINUTES);
-        if (lastRated < settings.abuseSettings().cooldown()) return false;
+        var lastRated = guilds.guild(guild).reputation().user(receiverM).getLastRatedDuration(receiver);
+        if (lastRated.toMinutes() < settings.abuseProtection().cooldown()) return false;
 
-        if (!settings.thankSettings().hasReceiverRole(receiverM)) return false;
-        if (!settings.thankSettings().hasDonorRole(donorM)) return false;
+        if (!settings.thanking().receiverRoles().hasRole(receiverM)) return false;
+        if (!settings.thanking().donorRoles().hasRole(donorM)) return false;
 
-        // block rep4rep
-        lastRated = reputationData.getLastRatedDuration(guild, receiver, donor, ChronoUnit.MINUTES);
-        return lastRated >= settings.abuseSettings().cooldown();
+        return lastRated.toMinutes() >= settings.abuseProtection().cooldown();
     }
 }

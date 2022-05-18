@@ -6,7 +6,7 @@ import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.config.Configuration;
-import de.chojo.repbot.data.wrapper.GuildSettings;
+import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.service.ReputationService;
 import de.chojo.repbot.util.EmojiDebug;
 import de.chojo.repbot.util.Messages;
@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class ReputationVoteListener extends ListenerAdapter {
     private static final ActionComponent DELETE = Button.of(ButtonStyle.DANGER, "vote:delete", Emoji.fromUnicode("🗑️"));
@@ -76,7 +75,7 @@ public class ReputationVoteListener extends ListenerAdapter {
 
         if (!voteRequest.canVote()) return;
 
-        if (reputationService.submitReputation(event.getGuild(), event.getUser(), target.get().getUser(), voteRequest.refMessage(), null, ThankType.EMBED)) {
+        if (reputationService.submitReputation(event.getGuild(), event.getMember(), target.get(), voteRequest.refMessage(), null, ThankType.EMBED)) {
             voteRequest.voted();
             voteRequest.remove(event.getButton().getId());
             voteRequest.voteMessage().
@@ -92,7 +91,7 @@ public class ReputationVoteListener extends ListenerAdapter {
         }
     }
 
-    public void registerVote(Message message, List<Member> members, GuildSettings settings) {
+    public void registerVote(Message message, List<Member> members, Settings settings) {
         if (PermissionErrorHandler.assertAndHandle(message.getGuildChannel(), loc, configuration, Permission.MESSAGE_SEND, Permission.MESSAGE_EMBED_LINKS)) {
             return;
         }
@@ -110,9 +109,9 @@ public class ReputationVoteListener extends ListenerAdapter {
             components.put(id, new VoteComponent(member, Button.of(ButtonStyle.PRIMARY, id, member.getEffectiveName())));
         }
 
-        if (settings.generalSettings().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.PROMPTED);
+        if (settings.general().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.PROMPTED);
 
-        var collect = components.values().stream().map(VoteComponent::component).collect(Collectors.toUnmodifiableList());
+        var collect = components.values().stream().map(VoteComponent::component).toList();
 
         var componentRows = getComponentRows(collect);
 

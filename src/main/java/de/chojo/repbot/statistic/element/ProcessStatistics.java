@@ -10,23 +10,11 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-public class ProcessStatistics implements ReplacementProvider, EmbedDisplay {
+public record ProcessStatistics(long total, long used, long free, long max,
+                                long threads) implements ReplacementProvider, EmbedDisplay {
 
     private static final int MB = 1024 * 1024;
     private static final Instant START = Instant.now();
-    private final long total;
-    private final long used;
-    private final long free;
-    private final long max;
-    private final long threads;
-
-    public ProcessStatistics(long total, long used, long free, long max, long threads) {
-        this.total = total;
-        this.used = used;
-        this.free = free;
-        this.max = max;
-        this.threads = threads;
-    }
 
     public static ProcessStatistics create() {
         var instance = Runtime.getRuntime();
@@ -36,26 +24,6 @@ public class ProcessStatistics implements ReplacementProvider, EmbedDisplay {
         var max = instance.maxMemory() / MB;
 
         return new ProcessStatistics(total, free, used, max, Thread.activeCount());
-    }
-
-    public long total() {
-        return total;
-    }
-
-    public long used() {
-        return used;
-    }
-
-    public long free() {
-        return free;
-    }
-
-    public long max() {
-        return max;
-    }
-
-    public long threads() {
-        return threads;
     }
 
     public long uptime() {

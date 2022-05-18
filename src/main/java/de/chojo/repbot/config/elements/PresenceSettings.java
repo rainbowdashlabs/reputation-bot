@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.entities.Activity;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
-@SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
+@SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal", "CanBeFinal"})
 public class PresenceSettings {
     private boolean active;
     private int interval = 5;
@@ -39,6 +39,7 @@ public class PresenceSettings {
         return interval;
     }
 
+    @SuppressWarnings("CanBeFinal")
     public static class Presence {
         private Activity.ActivityType type;
         private String text;
@@ -59,7 +60,7 @@ public class PresenceSettings {
 
         public String text(List<Replacement> replacements) {
             var message = text;
-            for (Replacement replacement : replacements) {
+            for (var replacement : replacements) {
                 message = replacement.invoke(message);
             }
             return message;

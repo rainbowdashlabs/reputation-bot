@@ -5,9 +5,10 @@ import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.config.Configuration;
-import de.chojo.repbot.data.GuildData;
-import de.chojo.repbot.data.ReputationData;
-import de.chojo.repbot.data.wrapper.GuildSettings;
+import de.chojo.repbot.dao.access.Migration;
+import de.chojo.repbot.dao.access.guild.settings.Settings;
+import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;
 import de.chojo.repbot.service.RepBotCachePolicy;
 import de.chojo.repbot.service.ReputationService;
@@ -29,8 +30,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
-import javax.sql.DataSource;
-import java.util.regex.Pattern;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -39,21 +39,21 @@ public class MessageListener extends ListenerAdapter {
     private static final Logger log = getLogger(MessageListener.class);
     private final ILocalizer localizer;
     private final Configuration configuration;
-    private final GuildData guildData;
-    private final ReputationData reputationData;
+    private final Guilds guilds;
     private final RepBotCachePolicy repBotCachePolicy;
     private final ReputationVoteListener reputationVoteListener;
     private final ReputationService reputationService;
     private final ContextResolver contextResolver;
     private final MessageAnalyzer messageAnalyzer;
+    private final Migration migration;
 
-    public MessageListener(ILocalizer localizer, DataSource dataSource, Configuration configuration, RepBotCachePolicy repBotCachePolicy,
+    public MessageListener(ILocalizer localizer, Configuration configuration, Guilds guilds, Migration migration, RepBotCachePolicy repBotCachePolicy,
                            ReputationVoteListener reputationVoteListener, ReputationService reputationService,
                            ContextResolver contextResolver, MessageAnalyzer messageAnalyzer) {
         this.localizer = localizer;
-        guildData = new GuildData(dataSource);
-        reputationData = new ReputationData(dataSource);
+        this.guilds = guilds;
         this.configuration = configuration;
+        this.migration = migration;
         this.repBotCachePolicy = repBotCachePolicy;
         this.reputationVoteListener = reputationVoteListener;
         this.reputationService = reputationService;
@@ -65,8 +65,8 @@ public class MessageListener extends ListenerAdapter {
     public void onChannelCreate(@NotNull ChannelCreateEvent event) {
         if (event.getChannelType() == ChannelType.GUILD_PUBLIC_THREAD) {
             var thread = ((ThreadChannel) event.getChannel());
-            var settings = guildData.getGuildSettings(event.getGuild());
-            if (settings.thankSettings().isReputationChannel(thread.getParentChannel())) {
+            var settings = guilds.guild(event.getGuild()).settings();
+            if (settings.thanking().channels().isEnabled(thread.getParentChannel())) {
                 thread.join().queue();
             }
         }
@@ -74,43 +74,40 @@ public class MessageListener extends ListenerAdapter {
 
     @Override
     public void onMessageDelete(@NotNull MessageDeleteEvent event) {
-        reputationData.removeMessage(event.getMessageIdLong());
+        guilds.guild(event.getGuild()).reputation().log()
+                .getLogEntry(event.getMessageIdLong())
+                .ifPresent(ReputationLogEntry::deleteAll);
     }
 
     @Override
     public void onMessageBulkDelete(@NotNull MessageBulkDeleteEvent event) {
-        event.getMessageIds().stream().map(Long::valueOf).forEach(reputationData::removeMessage);
+        var reputationLog = guilds.guild(event.getGuild()).reputation().log();
+        event.getMessageIds().stream().map(Long::valueOf)
+                .map(reputationLog::getLogEntry)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .forEach(ReputationLogEntry::deleteAll);
     }
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (event.getAuthor().isBot() || event.isWebhookMessage() || !event.isFromGuild()) return;
         var guild = event.getGuild();
-        var settings = guildData.getGuildSettings(guild);
+        var repGuild = guilds.guild(guild);
+        var settings = repGuild.settings();
 
         if (event.getMessage().getType() != MessageType.DEFAULT && event.getMessage().getType() != MessageType.INLINE_REPLY) {
             return;
         }
 
-        if (!settings.thankSettings().isReputationChannel(event.getChannel())) return;
+        if (!settings.thanking().channels().isEnabled(event.getChannel())) return;
         repBotCachePolicy.seen(event.getMember());
 
-        if (!settings.thankSettings().hasDonorRole(event.getMember())) return;
+        if (!settings.thanking().donorRoles().hasRole(event.getMember())) return;
 
         var message = event.getMessage();
 
-        var prefix = settings.generalSettings().prefix().orElse(configuration.baseSettings().defaultPrefix());
-        if (prefix.startsWith("re:")) {
-            var compile = Pattern.compile(prefix.substring(3));
-            if (compile.matcher(message.getContentRaw()).find()) return;
-        } else {
-            if (message.getContentRaw().startsWith(prefix)) return;
-        }
-        if (message.getContentRaw().startsWith(settings.generalSettings().prefix().orElse(configuration.baseSettings().defaultPrefix()))) {
-            return;
-        }
-
-        var analyzerResult = messageAnalyzer.processMessage(settings.thankSettings().thankwordPattern(), message, settings, true, 3);
+        var analyzerResult = messageAnalyzer.processMessage(settings.thanking().thankwords().thankwordPattern(), message, settings, true, 3);
 
         if (analyzerResult.type() == ThankType.NO_MATCH) return;
 
@@ -120,11 +117,11 @@ public class MessageListener extends ListenerAdapter {
         }
 
         if (configuration.migration().isActive()) {
-            var activeMigrations = guildData.getActiveMigrations(configuration.migration().maxMigrationsPeriod());
+            var activeMigrations = migration.getActiveMigrations(configuration.migration().maxMigrationsPeriod());
             if (activeMigrations < configuration.migration().maxMigrations()) {
-                guildData.promptMigration(event.getGuild());
+                repGuild.migration().promptMigration();
             }
-            if (guildData.migrationActive(event.getGuild())) {
+            if (repGuild.migration().migrationActive()) {
                 var embed = new EmbedBuilder()
                         .setTitle("⚠ Please migrate to the new version ⚠", configuration.links().invite())
                         .setDescription(configuration.migration().migrationMessage())
@@ -136,7 +133,7 @@ public class MessageListener extends ListenerAdapter {
             }
         }
 
-        if (settings.generalSettings().isEmojiDebug()) {
+        if (settings.general().isEmojiDebug()) {
             Messages.markMessage(event.getMessage(), EmojiDebug.FOUND_THANKWORD);
         }
 
@@ -149,40 +146,40 @@ public class MessageListener extends ListenerAdapter {
             var refMessage = analyzerResult.referenceMessage();
             switch (resultType) {
                 case FUZZY -> {
-                    if (!settings.messageSettings().isFuzzyActive()) continue;
-                    reputationService.submitReputation(guild, donator, result.getReference().getUser(), message, refMessage, resultType);
+                    if (!settings.messages().isFuzzyActive()) continue;
+                    reputationService.submitReputation(guild, donator, result.getReference(), message, refMessage, resultType);
                     resolveNoTarget = false;
                 }
                 case MENTION -> {
-                    if (!settings.messageSettings().isMentionActive()) continue;
-                    reputationService.submitReputation(guild, donator, result.getReference().getUser(), message, refMessage, resultType);
+                    if (!settings.messages().isMentionActive()) continue;
+                    reputationService.submitReputation(guild, donator, result.getReference(), message, refMessage, resultType);
                     resolveNoTarget = false;
                 }
                 case ANSWER -> {
-                    if (!settings.messageSettings().isAnswerActive()) continue;
-                    reputationService.submitReputation(guild, donator, result.getReference().getUser(), message, refMessage, resultType);
+                    if (!settings.messages().isAnswerActive()) continue;
+                    reputationService.submitReputation(guild, donator, result.getReference(), message, refMessage, resultType);
                     resolveNoTarget = false;
                 }
             }
         }
-        if (resolveNoTarget && settings.messageSettings().isEmbedActive()) resolveNoTarget(message, settings);
+        if (resolveNoTarget && settings.messages().isEmbedActive()) resolveNoTarget(message, settings);
     }
 
-    private void resolveNoTarget(Message message, GuildSettings settings) {
+    private void resolveNoTarget(Message message, Settings settings) {
         var recentMembers = contextResolver.getCombinedContext(message, settings);
-        recentMembers.remove(message.getMember());
+        recentMembers.removeMember(message.getMember());
         if (recentMembers.isEmpty()) {
-            if (settings.generalSettings().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.EMPTY_CONTEXT);
+            if (settings.general().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.EMPTY_CONTEXT);
             return;
         }
 
-        var members = recentMembers.stream()
-                .filter(receiver -> reputationService.canVote(message.getAuthor(), receiver.getUser(), message.getGuild(), settings))
+        var members = recentMembers.members().stream()
+                .filter(receiver -> reputationService.canVote(message.getMember(), receiver, message.getGuild(), settings))
                 .limit(10)
                 .collect(Collectors.toList());
 
         if (members.isEmpty()) {
-            if (settings.generalSettings().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.ONLY_COOLDOWN);
+            if (settings.general().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.ONLY_COOLDOWN);
             return;
         }
 

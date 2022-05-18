@@ -1,6 +1,6 @@
 package de.chojo.repbot.config.elements;
 
-@SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
+@SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal", "CanBeFinal"})
 public class TestMode {
     private boolean testMode;
     private long[] testGuilds = {0L};

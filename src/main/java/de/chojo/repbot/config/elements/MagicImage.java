@@ -1,7 +1,7 @@
 package de.chojo.repbot.config.elements;
 
 
-@SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
+@SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal", "CanBeFinal"})
 public class MagicImage {
     private String magicImageLink = "";
     private int magicImagineChance = 10;

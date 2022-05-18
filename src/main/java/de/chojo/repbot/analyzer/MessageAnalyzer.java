@@ -5,7 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.jdautil.parsing.WeightedEntry;
 import de.chojo.repbot.config.Configuration;
-import de.chojo.repbot.data.wrapper.GuildSettings;
+import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.statistic.Statistic;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -15,9 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
@@ -42,7 +40,6 @@ public class MessageAnalyzer {
         this.statistic = statistic;
     }
 
-
     /**
      * Analyze a message.
      *
@@ -54,7 +51,7 @@ public class MessageAnalyzer {
      * @param limit        limit for returned matches in the analyzer result
      * @return analyzer results
      */
-    public AnalyzerResult processMessage(Pattern pattern, @NotNull Message message, @Nullable GuildSettings settings, boolean limitTargets, int limit) {
+    public AnalyzerResult processMessage(Pattern pattern, @NotNull Message message, Settings settings, boolean limitTargets, int limit) {
         try {
             return resultCache.get(message.getIdLong(), () -> analyze(pattern, message, settings, limitTargets, limit));
         } catch (ExecutionException e) {
@@ -63,7 +60,7 @@ public class MessageAnalyzer {
         return AnalyzerResult.noMatch();
     }
 
-    private AnalyzerResult analyze(Pattern pattern, Message message, @Nullable GuildSettings settings, boolean limitTargets, int limit) {
+    private AnalyzerResult analyze(Pattern pattern, Message message, @Nullable Settings settings, boolean limitTargets, int limit) {
         statistic.messageAnalyzed(message.getJDA());
         if (pattern.pattern().isBlank()) return AnalyzerResult.noMatch();
         var contentRaw = message.getContentRaw();
@@ -83,18 +80,18 @@ public class MessageAnalyzer {
                 return AnalyzerResult.noMatch();
             }
 
-            return AnalyzerResult.answer(message.getAuthor(), user, referencedMessage);
+            return AnalyzerResult.answer(message.getMember(), user, referencedMessage);
         }
 
-        Set<Member> targets = Collections.emptySet();
+        var context = MessageContext.byMessage(message);
         if (limitTargets) {
-            targets = contextResolver.getCombinedContext(message, settings);
+            context = contextResolver.getCombinedContext(message, settings);
         }
 
         var mentionedMembers = message.getMentionedUsers();
         if (!mentionedMembers.isEmpty()) {
             if (mentionedMembers.size() > limit) {
-                return resolveMessage(message, pattern, targets, limitTargets, limit);
+                return resolveMessage(message, pattern, context, limitTargets, limit);
             }
 
             List<Member> members = new ArrayList<>();
@@ -109,23 +106,23 @@ public class MessageAnalyzer {
 
             if (members.isEmpty()) return AnalyzerResult.noMatch();
 
-            return AnalyzerResult.mention(message.getAuthor(), members);
+            return AnalyzerResult.mention(message.getMember(), members);
         }
-        return resolveMessage(message, pattern, targets, limitTargets, limit);
+        return resolveMessage(message, pattern, context, limitTargets, limit);
     }
 
 
-    private AnalyzerResult resolveMessage(Message message, Pattern thankPattern, @NotNull Set<Member> targets, boolean limitTargets, int limit) {
+    private AnalyzerResult resolveMessage(Message message, Pattern thankPattern, MessageContext targets, boolean limitTargets, int limit) {
         var contentRaw = message.getContentRaw();
 
         var words = new ArrayList<>(List.of(contentRaw.split("\\s")));
         words.removeIf(String::isBlank);
 
         List<Integer> thankWordIndices = new ArrayList<>();
-        var i = 0;
+        var index = 0;
         for (var word : words) {
             if (thankPattern.matcher(word).find()) {
-                thankWordIndices.add(i);
+                thankWordIndices.add(index);
             }
         }
         List<WeightedEntry<Member>> users = new ArrayList<>();
@@ -143,7 +140,7 @@ public class MessageAnalyzer {
             for (var word : resolve) {
                 List<WeightedEntry<Member>> weightedMembers;
                 if (limitTargets) {
-                    weightedMembers = DiscordResolver.fuzzyGuildTargetSearch(word, targets);
+                    weightedMembers = DiscordResolver.fuzzyGuildTargetSearch(word, targets.members());
                 } else {
                     weightedMembers = DiscordResolver.fuzzyGuildUserSearch(message.getGuild(), word);
                 }
@@ -158,8 +155,8 @@ public class MessageAnalyzer {
                 .sorted()
                 .limit(limit)
                 .collect(Collectors.toList());
-        if (members.isEmpty()) return AnalyzerResult.noTarget(message.getAuthor());
+        if (members.isEmpty()) return AnalyzerResult.noTarget(message.getMember());
 
-        return AnalyzerResult.fuzzy(message.getAuthor(), members);
+        return AnalyzerResult.fuzzy(message.getMember(), members);
     }
 }

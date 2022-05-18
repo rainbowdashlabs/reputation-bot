@@ -1,6 +1,6 @@
 package de.chojo.repbot.config.elements;
 
-@SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
+@SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal", "CanBeFinal"})
 public class AnalyzerSettings {
     private int historySize = 100;
     private int voiceMembers = 10;
