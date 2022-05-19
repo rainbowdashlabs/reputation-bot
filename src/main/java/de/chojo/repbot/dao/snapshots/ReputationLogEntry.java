@@ -112,7 +112,7 @@ public class ReputationLogEntry extends QueryFactoryHolder {
     public void deleteAll() {
         builder()
                 .query("DELETE FROM reputation_log WHERE message_id = ?")
-                .paramsBuilder(stmt -> stmt.setLong(messageId).setLong(receiverId))
+                .paramsBuilder(stmt -> stmt.setLong(messageId))
                 .update().execute();
     }
 }
