@@ -6,6 +6,7 @@ import de.chojo.jdautil.command.dispatching.CommandHub;
 import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.Language;
+import de.chojo.jdautil.util.Consumers;
 import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.commands.AbuseProtection;
@@ -259,6 +260,7 @@ public class ReputationBot {
                     }
                     log.error(LogNotify.NOTIFY_ADMIN, "Command execution of {} failed\n{}", context.command().meta().name(), context.args(), throwable);
                 })
+                .withMenuService(Consumers.empty())
                 .withPagination(pageServiceBuilder -> pageServiceBuilder.withLocalizer(localizer).previousText("pages.previous").nextText("pages.next"))
                 .build();
 

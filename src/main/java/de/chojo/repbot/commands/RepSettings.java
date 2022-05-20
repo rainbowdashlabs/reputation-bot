@@ -1,41 +1,33 @@
 package de.chojo.repbot.commands;
 
 import de.chojo.jdautil.command.CommandMeta;
-import de.chojo.jdautil.command.SimpleArgument;
 import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
+import de.chojo.jdautil.menus.EntryContext;
+import de.chojo.jdautil.menus.MenuAction;
+import de.chojo.jdautil.menus.entries.MenuEntry;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.util.EmojiDebug;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
 import org.jetbrains.annotations.PropertyKey;
 
 import java.awt.Color;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Consumer;
 
-//TODO: Replace with select menu to manage states
 public class RepSettings extends SimpleCommand {
     private final Guilds guilds;
 
     public RepSettings(Guilds guilds) {
         super(CommandMeta.builder("repsettings", "command.repSettings.description")
                 .addSubCommand("info", "command.repSettings.sub.info")
-                .addSubCommand("reactions", "command.repSettings.sub.reactions", argsBuilder()
-                        .add(SimpleArgument.bool("reactions", "command.repSettings.sub.reactions.arg.reactions")))
-                .addSubCommand("answer", "command.repSettings.sub.answer", argsBuilder()
-                        .add(SimpleArgument.bool("answer", "command.repSettings.sub.answer.arg.answer")))
-                .addSubCommand("mention", "command.repSettings.sub.mention", argsBuilder()
-                        .add(SimpleArgument.bool("mention", "command.repSettings.sub.mention.arg.mention")))
-                .addSubCommand("fuzzy", "command.repSettings.sub.fuzzy", argsBuilder()
-                        .add(SimpleArgument.bool("fuzzy", "command.repSettings.sub.fuzzy.arg.fuzzy")))
-                .addSubCommand("embed", "command.repSettings.sub.embed", argsBuilder()
-                        .add(SimpleArgument.bool("embed", "command.repSettings.sub.embed.arg.embed")))
-                .addSubCommand("emojidebug", "command.repSettings.sub.emojidebug", argsBuilder()
-                        .add(SimpleArgument.bool("active", "command.repSettings.sub.emojidebug.arg.active")))
+                .addSubCommand("emojidebug", "command.repSettings.sub.emojidebug")
                 .withPermission());
         this.guilds = guilds;
     }
@@ -49,157 +41,112 @@ public class RepSettings extends SimpleCommand {
             sendSettings(event, context, guildSettings);
         }
 
-        if ("reactions".equalsIgnoreCase(subcmd)) {
-            reactions(event, context, guildSettings);
-        }
-
-        if ("answer".equalsIgnoreCase(subcmd)) {
-            answer(event, context, guildSettings);
-        }
-
-        if ("mention".equalsIgnoreCase(subcmd)) {
-            mention(event, context, guildSettings);
-        }
-
-        if ("fuzzy".equalsIgnoreCase(subcmd)) {
-            fuzzy(event, context, guildSettings);
-        }
-
-        if ("embed".equalsIgnoreCase(subcmd)) {
-            embed(event, context, guildSettings);
-        }
-
         if ("emojidebug".equalsIgnoreCase(subcmd)) {
             emojidebug(event, context, guildSettings);
         }
     }
 
     private void sendSettings(SlashCommandInteractionEvent event, SlashCommandContext context, Settings guildSettings) {
-        var reactions = SelectMenu.create("reactions")
-                .setPlaceholder("Set if reactions can give reputation")
+        var settings = SelectMenu.create("settings")
+                .setPlaceholder("command.repSettings.embed.choose")
                 .setRequiredRange(1, 1)
-                .addOption("enabled", "enabled")
-                .addOption("disabled", "disabled")
+                .addOption("command.repSettings.embed.descr.byReaction", "reactions", "command.repSettings.sub.reactions.arg.reactions")
+                .addOption("command.repSettings.embed.descr.byAnswer", "answers", "command.repSettings.sub.answer.arg.answer")
+                .addOption("command.repSettings.embed.descr.byMention", "mention", "command.repSettings.sub.mention.arg.mention")
+                .addOption("command.repSettings.embed.descr.byFuzzy", "fuzzy", "command.repSettings.sub.fuzzy.arg.fuzzy")
+                .addOption("command.repSettings.embed.descr.byEmbed", "embed", "command.repSettings.sub.embed.arg.embed")
+                .addOption("command.repSettings.embed.descr.emojidebug", "emojidebug", "command.repSettings.sub.emojidebug.arg.active")
                 .build();
-        var answers = SelectMenu.create("answers")
-                .setPlaceholder("Set if answers can give reputation")
-                .setRequiredRange(1, 1)
-                .addOption("enabled", "enabled")
-                .addOption("disabled", "disabled")
-                .build();
-        var mention = SelectMenu.create("mention")
-                .setPlaceholder("Set if mention can give reputation")
-                .setRequiredRange(1, 1)
-                .addOption("enabled", "enabled")
-                .addOption("disabled", "disabled")
-                .build();
-        var fuzzy = SelectMenu.create("fuzzy")
-                .setPlaceholder("Set if fuzzy matches can give reputation")
-                .setRequiredRange(1, 1)
-                .addOption("enabled", "enabled")
-                .addOption("disabled", "disabled")
-                .build();
-        var embed = SelectMenu.create("embed")
-                .setPlaceholder("Set if embeds should be send to request targets")
-                .setRequiredRange(1, 1)
-                .addOption("enabled", "enabled", "enable this shit")
-                .addOption("disabled", "disabled")
-                .build();
+        var reactions = getMenu("reactions",
+                "command.repSettings.sub.reactions.arg.reactions",
+                "command.repSettings.sub.reactions.true",
+                "command.repSettings.sub.reactions.false",
+                guildSettings.messages().isReactionActive());
+        var answers = getMenu("answers",
+                "command.repSettings.sub.answer.arg.answer",
+                "command.repSettings.sub.answer.true",
+                "command.repSettings.sub.answer.false",
+                guildSettings.messages().isAnswerActive());
+        var mention = getMenu("mention",
+                "command.repSettings.sub.mention.arg.mention",
+                "command.repSettings.sub.mention.true",
+                "command.repSettings.sub.mention.false",
+                guildSettings.messages().isMentionActive());
+        var fuzzy = getMenu("fuzzy",
+                "command.repSettings.sub.fuzzy.arg.fuzzy",
+                "command.repSettings.sub.fuzzy.true",
+                "command.repSettings.sub.fuzzy.false",
+                guildSettings.messages().isFuzzyActive());
+        var embed = getMenu("embed",
+                "command.repSettings.sub.embed.arg.embed",
+                "command.repSettings.sub.embed.true",
+                "command.repSettings.sub.embed.false",
+                guildSettings.messages().isEmbedActive());
+        var emojidebug = getMenu("emojidebug",
+                "command.repSettings.sub.emojidebug.arg.active",
+                "command.repSettings.sub.emojidebug.true",
+                "command.repSettings.sub.emojidebug.false",
+                guildSettings.general().isEmojiDebug());
 
-        var emojidebug = SelectMenu.create("embed")
-                .setPlaceholder("Set if explanatory emojis should be added to messages.")
-                .setRequiredRange(1, 1)
-                .addOption("enabled", "enabled", "enable this shit")
-                .addOption("disabled", "disabled")
-                .build();
-
-        event.replyEmbeds(getSettings(context, guildSettings))
-                .addActionRows(ActionRow.of(reactions))
-                .addActionRows(ActionRow.of(answers))
-                .addActionRows(ActionRow.of(mention))
-                .addActionRows(ActionRow.of(fuzzy))
-                .addActionRows(ActionRow.of(embed))
-                //.addActionRows(ActionRow.of(emojidebug))
-                .queue();
+        context.registerMenu(MenuAction.forCallback(getSettings(context, guildSettings), event)
+                .addComponent(MenuEntry.of(settings, ctx -> {
+                    var option = ctx.event().getValues().get(0);
+                    var entry = ctx.container().entry(option).get();
+                    ctx.container().entries().forEach(MenuEntry::hidden);
+                    ctx.entry().visible(true);
+                    entry.visible(true);
+                    var copy = ctx.entry().component().createCopy();
+                    copy.setDefaultValues(Collections.singleton(option));
+                    ctx.entry().component(copy.build());
+                    ctx.refresh();
+                }))
+                .addComponent(MenuEntry.of(reactions, ctx -> {
+                    refresh(ctx, res -> guildSettings.messages().reactionActive(res), context, guildSettings);
+                }).hidden())
+                .addComponent(MenuEntry.of(answers, ctx -> {
+                    refresh(ctx, res -> guildSettings.messages().answerActive(res), context, guildSettings);
+                }).hidden())
+                .addComponent(MenuEntry.of(mention, ctx -> {
+                    refresh(ctx, res -> guildSettings.messages().mentionActive(res), context, guildSettings);
+                }).hidden())
+                .addComponent(MenuEntry.of(fuzzy, ctx -> {
+                    refresh(ctx, res -> guildSettings.messages().fuzzyActive(res), context, guildSettings);
+                }).hidden())
+                .addComponent(MenuEntry.of(embed, ctx -> {
+                    refresh(ctx, res -> guildSettings.messages().embedActive(res), context, guildSettings);
+                }).hidden())
+                .addComponent(MenuEntry.of(emojidebug, ctx -> {
+                    refresh(ctx, res -> guildSettings.general().emojiDebug(res), context, guildSettings);
+                }).hidden())
+                .asEphemeral()
+                .build());
     }
 
-    private void fuzzy(SlashCommandInteractionEvent event, SlashCommandContext context, Settings guildSettings) {
-        var messageSettings = guildSettings.messages();
-        if (event.getOptions().isEmpty()) {
-            event.reply(getBooleanMessage(context, messageSettings.isFuzzyActive(),
-                    "command.repSettings.sub.fuzzy.true", "command.repSettings.sub.fuzzy.false")).queue();
-            return;
-        }
-        var fuzzy = event.getOption("fuzzy").getAsBoolean();
-
-        event.reply(getBooleanMessage(context, messageSettings.fuzzyActive(fuzzy),
-                "command.repSettings.sub.fuzzy.true", "command.repSettings.sub.fuzzy.false")).queue();
+    private SelectMenu getMenu(String id, String placeholder, String enabledDescr, String disabledDescr, boolean state) {
+        return SelectMenu.create(id)
+                .setPlaceholder(placeholder)
+                .setRequiredRange(1, 1)
+                .addOption("words.enabled", "enabled", enabledDescr)
+                .addOption("words.disabled", "disabled", disabledDescr)
+                .setDefaultValues(Collections.singleton(state ? "enabled" : "disabled"))
+                .build();
     }
 
-    private void mention(SlashCommandInteractionEvent event, SlashCommandContext context, Settings guildSettings) {
-        var messageSettings = guildSettings.messages();
-        if (event.getOptions().isEmpty()) {
-            event.reply(getBooleanMessage(context, messageSettings.isAnswerActive(),
-                    "command.repSettings.sub.mention.true", "command.repSettings.sub.mention.false")).queue();
-            return;
-        }
-        var mention = event.getOption("mention").getAsBoolean();
-
-        event.reply(getBooleanMessage(context, messageSettings.mentionActive(mention),
-                "command.repSettings.sub.mention.true", "command.repSettings.sub.mention.false")).queue();
-    }
-
-    private void answer(SlashCommandInteractionEvent event, SlashCommandContext context, Settings guildSettings) {
-        var messageSettings = guildSettings.messages();
-        if (event.getOptions().isEmpty()) {
-            event.reply(getBooleanMessage(context, messageSettings.isAnswerActive(),
-                    "command.repSettings.sub.answer.true", "command.repSettings.sub.answer.false")).queue();
-            return;
-        }
-        var answer = event.getOption("answer").getAsBoolean();
-
-        event.reply(getBooleanMessage(context, messageSettings.answerActive(answer),
-                "command.repSettings.sub.answer.true", "command.repSettings.sub.answer.false")).queue();
-    }
-
-    private void embed(SlashCommandInteractionEvent event, SlashCommandContext context, Settings guildSettings) {
-        var messageSettings = guildSettings.messages();
-        if (event.getOptions().isEmpty()) {
-            event.reply(getBooleanMessage(context, messageSettings.isAnswerActive(),
-                    "command.repSettings.sub.embed.true", "command.repSettings.sub.embed.false")).queue();
-            return;
-        }
-        var embed = event.getOption("embed").getAsBoolean();
-
-        event.reply(getBooleanMessage(context, messageSettings.embedActive(embed),
-                "command.repSettings.sub.embed.true", "command.repSettings.sub.embed.false")).queue();
-    }
-
-    private void reactions(SlashCommandInteractionEvent event, SlashCommandContext context, Settings guildSettings) {
-        var messageSettings = guildSettings.messages();
-        if (event.getOptions().isEmpty()) {
-            event.reply(getBooleanMessage(context, messageSettings.isReactionActive(),
-                    "command.repSettings.sub.reactions.true", "command.repSettings.sub.reactions.false")).queue();
-            return;
-        }
-        var reactions = event.getOption("reactions").getAsBoolean();
-
-        event.reply(getBooleanMessage(context, messageSettings.reactionActive(reactions),
-                "command.repSettings.sub.reactions.true", "command.repSettings.sub.reactions.false")).queue();
+    private void refresh(EntryContext<SelectMenuInteractionEvent, SelectMenu> ctx, Consumer<Boolean> result, SlashCommandContext context, Settings guildSettings) {
+        var value = ctx.event().getValues().get(0);
+        var copy = ctx.entry().component().createCopy();
+        copy.setDefaultValues(Collections.singleton(value));
+        result.accept("enabled".equals(value));
+        var settings = getSettings(context, guildSettings);
+        ctx.entry().component(copy.build());
+        ctx.refresh(settings);
     }
 
     private void emojidebug(SlashCommandInteractionEvent event, SlashCommandContext context, Settings guildSettings) {
         var generalSettings = guildSettings.general();
-        if (event.getOptions().isEmpty()) {
-            event.reply(getBooleanMessage(context, generalSettings.isEmojiDebug(),
-                    "command.repSettings.sub.emojidebug.true", "command.repSettings.sub.emojidebug.false")
-                        + "\n" + context.localize(emojiExplanation())).queue();
-            return;
-        }
-        var emojidebug = event.getOption("active").getAsBoolean();
-
-        event.reply(getBooleanMessage(context, generalSettings.emojiDebug(emojidebug),
-                "command.repSettings.sub.emojidebug.true", "command.repSettings.sub.emojidebug.false")).queue();
+        event.reply(getBooleanMessage(context, generalSettings.isEmojiDebug(),
+                "command.repSettings.sub.emojidebug.true", "command.repSettings.sub.emojidebug.false")
+                    + "\n" + context.localize(emojiExplanation())).queue();
     }
 
     private MessageEmbed getSettings(SlashCommandContext context, Settings guildSettings) {
