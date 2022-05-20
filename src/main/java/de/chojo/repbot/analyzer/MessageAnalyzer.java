@@ -88,7 +88,7 @@ public class MessageAnalyzer {
             context = contextResolver.getCombinedContext(message, settings);
         }
 
-        var mentionedMembers = message.getMentionedUsers();
+        var mentionedMembers = message.getMentions().getUsers();
         if (!mentionedMembers.isEmpty()) {
             if (mentionedMembers.size() > limit) {
                 return resolveMessage(message, pattern, context, limitTargets, limit);
