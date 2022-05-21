@@ -15,7 +15,7 @@ repositories {
 
 dependencies {
     //discord
-    implementation("de.chojo", "cjda-util", "2.5.0+alpha.12-SNAPSHOT") {
+    implementation("de.chojo", "cjda-util", "2.5.0+alpha.12") {
         exclude(group = "club.minnced", module = "opus-java")
     }
 
