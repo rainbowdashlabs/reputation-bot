@@ -15,7 +15,7 @@ repositories {
 
 dependencies {
     //discord
-    implementation("de.chojo:cjda-util:2.3.4+alpha.12-DEV"){
+    implementation("de.chojo", "cjda-util", "2.5.0+alpha.12") {
         exclude(group = "club.minnced", module = "opus-java")
     }
 
@@ -35,7 +35,7 @@ dependencies {
 }
 
 java {
-    toolchain{
+    toolchain {
         languageVersion.set(JavaLanguageVersion.of(18))
     }
     withSourcesJar()
@@ -69,7 +69,7 @@ tasks {
         }
     }
 
-    shadowJar{
+    shadowJar {
         mergeServiceFiles()
         manifest {
             attributes(mapOf("Main-Class" to "de.chojo.repbot.ReputationBot"))
