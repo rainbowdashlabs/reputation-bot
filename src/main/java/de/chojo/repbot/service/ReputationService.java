@@ -179,7 +179,7 @@ public class ReputationService {
         if (donorM == null || receiverM == null) return false;
 
         // block cooldown
-        var lastRated = guilds.guild(guild).reputation().user(receiverM).getLastRatedDuration(receiver);
+        var lastRated = guilds.guild(guild).reputation().user(donorM).getLastRatedDuration(receiver);
         if (lastRated.toMinutes() < settings.abuseProtection().cooldown()) return false;
 
         if (!settings.thanking().receiverRoles().hasRole(receiverM)) return false;
