@@ -227,7 +227,7 @@ public class ReputationBot {
             shardManager.addEventListener(new InternalCommandListener(configuration, statistic));
         }
 
-        var hub = CommandHub.builder(shardManager)
+        CommandHub.builder(shardManager)
                 .withConversationSystem()
                 .useGuildCommands()
                 .withCommands(
@@ -260,7 +260,7 @@ public class ReputationBot {
                     }
                     log.error(LogNotify.NOTIFY_ADMIN, "Command execution of {} failed\n{}", context.command().meta().name(), context.args(), throwable);
                 })
-                .withMenuService(Consumers.empty())
+                .withDefaultMenuService()
                 .withPagination(pageServiceBuilder -> pageServiceBuilder.withLocalizer(localizer).previousText("pages.previous").nextText("pages.next"))
                 .build();
 
