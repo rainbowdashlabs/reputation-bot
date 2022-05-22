@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Objects;
@@ -83,11 +84,11 @@ public class MessageContext implements MemberHolder {
     }
 
     public Set<Message> rawMessages() {
-        return rawMessages;
+        return Collections.unmodifiableSet(rawMessages);
     }
 
     public Set<Message> contextMessages() {
-        return contextMessages;
+        return Collections.unmodifiableSet(contextMessages);
     }
 
     public Set<Message> latestMessages(int limit) {
@@ -108,7 +109,7 @@ public class MessageContext implements MemberHolder {
     }
 
     public Set<Member> members() {
-        return members;
+        return Collections.unmodifiableSet(members);
     }
 
     public Message message() {
@@ -116,13 +117,7 @@ public class MessageContext implements MemberHolder {
     }
 
     public Set<User> users() {
-        return users;
-    }
-
-    public void removeMember(Member member) {
-        members.remove(member);
-        users.remove(member.getUser());
-        userIds.remove(member.getIdLong());
+        return Collections.unmodifiableSet(users);
     }
 
     public boolean isEmpty() {
