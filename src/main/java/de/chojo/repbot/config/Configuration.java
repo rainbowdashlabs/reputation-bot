@@ -17,7 +17,6 @@ import de.chojo.repbot.config.elements.MagicImage;
 import de.chojo.repbot.config.elements.Migration;
 import de.chojo.repbot.config.elements.PresenceSettings;
 import de.chojo.repbot.config.elements.SelfCleanup;
-import de.chojo.repbot.config.elements.TestMode;
 import de.chojo.repbot.config.exception.ConfigurationException;
 import org.slf4j.Logger;
 

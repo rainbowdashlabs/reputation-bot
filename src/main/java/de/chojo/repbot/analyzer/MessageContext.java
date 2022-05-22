@@ -6,6 +6,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Objects;
@@ -18,8 +19,13 @@ public class MessageContext implements MemberHolder {
     private final Set<User> users = new HashSet<>();
     private final Set<Message> rawMessages = new LinkedHashSet<>();
     private final Set<Message> contextMessages = new LinkedHashSet<>();
-    private Message message;
     private final Member target;
+    private Message message;
+
+    private MessageContext(Message message, Member target) {
+        this.message = message;
+        this.target = target;
+    }
 
     public static MessageContext byMessage(Message message) {
         return new MessageContext(message, message.getMember());
@@ -29,39 +35,34 @@ public class MessageContext implements MemberHolder {
         return new MessageContext(message, member);
     }
 
-    private MessageContext(Message message, Member target) {
-        this.message = message;
-        this.target = target;
-    }
-
     public void addIds(Collection<Long> ids) {
-        this.userIds.addAll(ids);
+        userIds.addAll(ids);
     }
 
     public void addMembers(Collection<Member> members) {
         this.members.addAll(members);
-        this.users.addAll(members.stream().map(Member::getUser).toList());
+        users.addAll(members.stream().map(Member::getUser).toList());
     }
 
     public void addRawMessages(Collection<Message> messages) {
-        this.rawMessages.addAll(messages);
+        rawMessages.addAll(messages);
     }
 
     public void addContextMessages(Collection<Message> messages) {
-        this.contextMessages.addAll(messages);
+        contextMessages.addAll(messages);
     }
 
     public void addMember(Member member) {
-        this.members.add(member);
-        this.users.add(member.getUser());
+        members.add(member);
+        users.add(member.getUser());
     }
 
     public void addRawMessage(Message message) {
-        this.rawMessages.add(message);
+        rawMessages.add(message);
     }
 
     public void addContextMessage(Message message) {
-        this.contextMessages.add(message);
+        contextMessages.add(message);
     }
 
     public MessageContext combine(MessageContext context) {
@@ -83,11 +84,11 @@ public class MessageContext implements MemberHolder {
     }
 
     public Set<Message> rawMessages() {
-        return rawMessages;
+        return Collections.unmodifiableSet(rawMessages);
     }
 
     public Set<Message> contextMessages() {
-        return contextMessages;
+        return Collections.unmodifiableSet(contextMessages);
     }
 
     public Set<Message> latestMessages(int limit) {
@@ -108,7 +109,7 @@ public class MessageContext implements MemberHolder {
     }
 
     public Set<Member> members() {
-        return members;
+        return Collections.unmodifiableSet(members);
     }
 
     public Message message() {
@@ -116,13 +117,7 @@ public class MessageContext implements MemberHolder {
     }
 
     public Set<User> users() {
-        return users;
-    }
-
-    public void removeMember(Member member) {
-        members.remove(member);
-        users.remove(member.getUser());
-        userIds.remove(member.getIdLong());
+        return Collections.unmodifiableSet(users);
     }
 
     public boolean isEmpty() {

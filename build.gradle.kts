@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "1.6.10"
+version = "1.6.11"
 
 repositories {
     maven("https://eldonexus.de/repository/maven-public")
@@ -15,13 +15,13 @@ repositories {
 
 dependencies {
     //discord
-    implementation("de.chojo:cjda-util:2.3.4+alpha.11-SNAPSHOT"){
+    implementation("de.chojo", "cjda-util", "2.5.0+alpha.12") {
         exclude(group = "club.minnced", module = "opus-java")
     }
 
     // database
     implementation("org.postgresql", "postgresql", "42.3.5")
-    implementation("de.chojo", "sql-util", "1.4.2-DEV")
+    implementation("de.chojo", "sql-util", "1.4.3")
 
     // Logging
     implementation("org.slf4j", "slf4j-api", "1.7.36")
@@ -35,7 +35,7 @@ dependencies {
 }
 
 java {
-    toolchain{
+    toolchain {
         languageVersion.set(JavaLanguageVersion.of(18))
     }
     withSourcesJar()
@@ -69,7 +69,7 @@ tasks {
         }
     }
 
-    shadowJar{
+    shadowJar {
         mergeServiceFiles()
         manifest {
             attributes(mapOf("Main-Class" to "de.chojo.repbot.ReputationBot"))

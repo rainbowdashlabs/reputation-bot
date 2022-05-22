@@ -75,8 +75,8 @@ public class AbuseProtection extends SimpleCommand {
         }
         var state = event.getOption("state").getAsBoolean();
 
-            event.reply(getBooleanMessage(context, abuseSettings.donorContext(state),
-                    "command.abuseProtection.sub.donorContext.true", "command.abuseProtection.sub.donorContext.false")).queue();
+        event.reply(getBooleanMessage(context, abuseSettings.donorContext(state),
+                "command.abuseProtection.sub.donorContext.true", "command.abuseProtection.sub.donorContext.false")).queue();
     }
 
     private void receiverContext(SlashCommandInteractionEvent event, SlashCommandContext context, RepGuild guild) {
@@ -88,8 +88,8 @@ public class AbuseProtection extends SimpleCommand {
         }
         var state = event.getOption("state").getAsBoolean();
 
-            event.reply(getBooleanMessage(context, abuseSettings.receiverContext(state),
-                    "command.abuseProtection.sub.receiverContext.true", "command.abuseProtection.sub.receiverContext.false")).queue();
+        event.reply(getBooleanMessage(context, abuseSettings.receiverContext(state),
+                "command.abuseProtection.sub.receiverContext.true", "command.abuseProtection.sub.receiverContext.false")).queue();
     }
 
     private void maxMessageAge(SlashCommandInteractionEvent event, SlashCommandContext context, RepGuild guild) {
@@ -102,8 +102,8 @@ public class AbuseProtection extends SimpleCommand {
         var age = event.getOption("minutes").getAsLong();
 
         age = Math.max(0L, age);
-            event.reply(context.localize("command.abuseProtection.sub.maxMessageAge.get",
-                    Replacement.create("MINUTES", abuseSettings.maxMessageAge((int) age)))).queue();
+        event.reply(context.localize("command.abuseProtection.sub.maxMessageAge.get",
+                Replacement.create("MINUTES", abuseSettings.maxMessageAge((int) age)))).queue();
     }
 
     private void minMessages(SlashCommandInteractionEvent event, SlashCommandContext context, RepGuild guild) {
@@ -116,8 +116,8 @@ public class AbuseProtection extends SimpleCommand {
         var minMessages = event.getOption("messages").getAsLong();
 
         minMessages = Math.max(0, Math.min(minMessages, 100));
-            event.reply(context.localize("command.abuseProtection.sub.minMessages.get",
-                    Replacement.create("AMOUNT", abuseSettings.minMessages((int) minMessages)))).queue();
+        event.reply(context.localize("command.abuseProtection.sub.minMessages.get",
+                Replacement.create("AMOUNT", abuseSettings.minMessages((int) minMessages)))).queue();
     }
 
     private void cooldown(SlashCommandInteractionEvent event, SlashCommandContext context, RepGuild guild) {
@@ -129,8 +129,8 @@ public class AbuseProtection extends SimpleCommand {
         }
         var cooldown = event.getOption("minutes").getAsLong();
 
-            event.reply(context.localize("command.abuseProtection.sub.cooldown.set",
-                    Replacement.create("MINUTES", abuseSettings.cooldown((int) cooldown)))).queue();
+        event.reply(context.localize("command.abuseProtection.sub.cooldown.set",
+                Replacement.create("MINUTES", abuseSettings.cooldown((int) cooldown)))).queue();
     }
 
     private void sendSettings(SlashCommandInteractionEvent event, SlashCommandContext context, RepGuild guild) {

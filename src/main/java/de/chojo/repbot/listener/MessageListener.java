@@ -30,6 +30,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
+import java.util.LinkedHashSet;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -166,14 +167,15 @@ public class MessageListener extends ListenerAdapter {
     }
 
     private void resolveNoTarget(Message message, Settings settings) {
-        var recentMembers = contextResolver.getCombinedContext(message, settings);
-        recentMembers.removeMember(message.getMember());
+        var recentMembers = new LinkedHashSet<>(contextResolver.getCombinedContext(message, settings).members());
+        recentMembers.remove(message.getMember());
+
         if (recentMembers.isEmpty()) {
             if (settings.general().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.EMPTY_CONTEXT);
             return;
         }
 
-        var members = recentMembers.members().stream()
+        var members = recentMembers.stream()
                 .filter(receiver -> reputationService.canVote(message.getMember(), receiver, message.getGuild(), settings))
                 .limit(10)
                 .collect(Collectors.toList());

@@ -26,8 +26,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class Reactions extends SimpleCommand {
     private static final Pattern EMOTE_PATTERN = Pattern.compile("<a?:.*?:(?<id>[0-9]*?)>");
-    private final Guilds guilds;
     private static final Logger log = getLogger(Reactions.class);
+    private final Guilds guilds;
 
     public Reactions(Guilds guilds) {
         super(CommandMeta.builder("reactions", "command.reaction.description")
