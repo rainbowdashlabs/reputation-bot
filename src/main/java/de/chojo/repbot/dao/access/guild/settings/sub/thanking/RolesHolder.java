@@ -44,9 +44,9 @@ public abstract class RolesHolder extends QueryFactoryHolder implements GuildHol
 
     public boolean add(Role role) {
         var result = builder().query("INSERT INTO %s(guild_id, role_id) VALUES (?,?) ON CONFLICT(guild_id, role_id) DO NOTHING", targetTable())
-                                 .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong()))
-                                 .update()
-                                 .executeSync() > 0;
+                             .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong()))
+                             .update()
+                             .executeSync() > 0;
         if (result) {
             roleIds.add(role.getIdLong());
         }
@@ -55,9 +55,9 @@ public abstract class RolesHolder extends QueryFactoryHolder implements GuildHol
 
     public boolean remove(Role role) {
         var result = builder().query("DELETE FROM %s WHERE guild_id = ? AND role_id = ?", targetTable())
-                                 .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong()))
-                                 .update()
-                                 .executeSync() > 0;
+                             .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong()))
+                             .update()
+                             .executeSync() > 0;
         if (result) {
             roleIds.remove(role.getIdLong());
         }

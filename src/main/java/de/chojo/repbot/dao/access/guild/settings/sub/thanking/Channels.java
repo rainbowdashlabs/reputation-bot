@@ -115,9 +115,9 @@ public class Channels extends QueryFactoryHolder implements GuildHolder {
                                 DO UPDATE
                                     SET channel_whitelist = excluded.channel_whitelist
                         """)
-                                 .paramsBuilder(stmt -> stmt.setLong(guildId()).setBoolean(whitelist))
-                                 .update()
-                                 .executeSync() > 0;
+                             .paramsBuilder(stmt -> stmt.setLong(guildId()).setBoolean(whitelist))
+                             .update()
+                             .executeSync() > 0;
         if (result) {
             this.whitelist = whitelist;
         }

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public class Cleanup extends QueryFactoryHolder implements GuildHolder {
-    private RepGuild repGuild;
+    private final RepGuild repGuild;
 
     public Cleanup(RepGuild repGuild) {
         super(repGuild);

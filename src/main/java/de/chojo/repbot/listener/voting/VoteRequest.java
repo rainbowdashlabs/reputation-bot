@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.interactions.components.ActionComponent;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class VoteRequest {
     private final Member member;
