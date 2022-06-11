@@ -22,12 +22,11 @@ public class Channel extends SimpleCommand {
     public Channel(Guilds guilds) {
         super(CommandMeta.builder("channel", "command.channel.description")
                 .addSubCommand("set", "command.channel.sub.set", argsBuilder()
-                        .add(SimpleArgument.channel("channel", "command.channel.sub.set.arg.channel").asRequired()))
+                        .add(SimpleArgument.channel("channel", "command.channel.sub.set.arg.channel")))
                 .addSubCommand("add", "command.channel.sub.add", argsBuilder()
-                        .add(SimpleArgument.channel("channel", "command.channel.sub.add.arg.channel").asRequired()))
-                .addSubCommand("addall", "command.channel.sub.addAll")
+                        .add(SimpleArgument.channel("channel", "command.channel.sub.add.arg.channel")))
                 .addSubCommand("remove", "command.channel.sub.remove", argsBuilder()
-                        .add(SimpleArgument.channel("channel", "command.channel.sub.remove.arg.channel").asRequired()))
+                        .add(SimpleArgument.channel("channel", "command.channel.sub.remove.arg.channel")))
                 .addSubCommand("list_type", "command.channel.sub.listType", argsBuilder()
                         .add(SimpleArgument.string("type", "command.channel.sub.listType.arg.type").withAutoComplete()))
                 .addSubCommand("list", "command.channel.sub.list")
@@ -50,9 +49,6 @@ public class Channel extends SimpleCommand {
         }
         if ("list_type".equalsIgnoreCase(subCmd)) {
             whitelist(event, context, channels);
-        }
-        if ("addAll".equalsIgnoreCase(subCmd)) {
-            addAll(event, context, channels);
         }
         if ("list".equalsIgnoreCase(subCmd)) {
             list(event, context, channels);
@@ -79,11 +75,6 @@ public class Channel extends SimpleCommand {
         event.reply(
                 context.localize("command.channel.sub.add.added",
                         Replacement.create("CHANNEL", channel.getAsMention()))).queue();
-    }
-
-    private void addAll(SlashCommandInteractionEvent event, SlashCommandContext context, Channels channels) {
-        FilterUtil.getAccessableTextChannel(event.getGuild()).forEach(channels::add);
-        event.reply(context.localize("command.channel.sub.addAll.added")).queue();
     }
 
     private void remove(SlashCommandInteractionEvent event, SlashCommandContext context, Channels channels) {
