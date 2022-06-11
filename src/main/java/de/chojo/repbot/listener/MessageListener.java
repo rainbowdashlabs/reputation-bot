@@ -67,7 +67,7 @@ public class MessageListener extends ListenerAdapter {
         if (event.getChannelType() == ChannelType.GUILD_PUBLIC_THREAD) {
             var thread = ((ThreadChannel) event.getChannel());
             var settings = guilds.guild(event.getGuild()).settings();
-            if (settings.thanking().channels().isEnabled(thread.getParentChannel())) {
+            if (settings.thanking().channels().isEnabled(thread)) {
                 thread.join().queue();
             }
         }
@@ -101,7 +101,7 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        if (!settings.thanking().channels().isEnabled(event.getChannel())) return;
+        if (!settings.thanking().channels().isEnabled(event.getGuildChannel())) return;
         repBotCachePolicy.seen(event.getMember());
 
         if (!settings.thanking().donorRoles().hasRole(event.getMember())) return;

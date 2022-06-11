@@ -116,7 +116,7 @@ public class Channel extends SimpleCommand {
         }
 
         event.deferReply().queue();
-        channels.clear();
+        channels.clearChannel();
         channels.add(channel);
         event.getHook().editOriginal(context.localize("command.channel.sub.set.set",
                 Replacement.create("CHANNEL", channel.getAsMention()))).queue();

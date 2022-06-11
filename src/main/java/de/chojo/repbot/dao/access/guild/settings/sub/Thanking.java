@@ -57,7 +57,16 @@ public class Thanking extends QueryFactoryHolder implements GuildHolder {
                 .paramsBuilder(stmt -> stmt.setLong(guildId()))
                 .readRow(r -> r.getLong("channel_id"))
                 .allSync();
-        this.channels = new Channels(this, channelWhitelist, new HashSet<>(channels));
+        var categories = builder(Long.class)
+                .query("""
+                        SELECT channel_id
+                        FROM active_channel
+                        WHERE guild_id = ?
+                        """)
+                .paramsBuilder(stmt -> stmt.setLong(guildId()))
+                .readRow(r -> r.getLong("channel_id"))
+                .allSync();
+        this.channels = new Channels(this, channelWhitelist, new HashSet<>(channels), new HashSet<>(categories));
         return this.channels;
     }
 
