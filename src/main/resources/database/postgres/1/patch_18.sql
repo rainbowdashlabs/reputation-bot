@@ -1,4 +1,7 @@
+-- We need to drop the old view, because we change the view row layout.
 DROP VIEW repbot_schema.user_reputation_week;
+
+-- We add a rank donated and remove null user ids from log
 CREATE OR REPLACE VIEW repbot_schema.user_reputation_week(rank, rank_donated, guild_id, user_id, reputation, donated) AS
 SELECT ROW_NUMBER() OVER (PARTITION BY rank.guild_id ORDER BY rank.reputation DESC) AS rank,
        ROW_NUMBER() OVER (PARTITION BY rank.guild_id ORDER BY rank.donated DESC)    AS rank_donated,
@@ -34,7 +37,10 @@ FROM (SELECT log.guild_id,
                           AND clean.user_id = log.user_id))
         AND user_id IS NOT NULL) rank;
 
+-- We need to drop the old view, because we change the view row layout.
 DROP VIEW repbot_schema.user_reputation_month;
+
+-- We add a rank donated and remove null user ids from log
 CREATE OR REPLACE VIEW repbot_schema.user_reputation_month(rank, rank_donated, guild_id, user_id, reputation, donated) AS
 SELECT ROW_NUMBER() OVER (PARTITION BY rank.guild_id ORDER BY rank.reputation DESC) AS rank,
        ROW_NUMBER() OVER (PARTITION BY rank.guild_id ORDER BY rank.donated DESC)    AS rank_donated,
@@ -70,8 +76,13 @@ FROM (SELECT log.guild_id,
                           AND clean.user_id = log.user_id))
         AND user_id IS NOT NULL) rank;
 
+-- We drop global reputation here because it depends on user_reputation.
 DROP VIEW repbot_schema.global_user_reputation;
+
+-- We need to drop the old view, because we change the view row layout.
 DROP VIEW repbot_schema.user_reputation;
+
+-- We add a rank donated and remove null user ids from log
 CREATE OR REPLACE VIEW repbot_schema.user_reputation(rank, rank_donated, guild_id, user_id, reputation, donated) AS
 SELECT ROW_NUMBER() OVER (PARTITION BY rank.guild_id ORDER BY rank.reputation DESC) AS rank,
        ROW_NUMBER() OVER (PARTITION BY rank.guild_id ORDER BY rank.donated DESC)    AS rank_donated,
@@ -106,6 +117,7 @@ FROM (SELECT guild_id,
                          AND clean.user_id = log.user_id)
         AND user_id IS NOT NULL) rank;
 
+-- Adds a ranking for donated
 CREATE OR REPLACE VIEW repbot_schema.global_user_reputation(rank, rank_donated, user_id, reputation, donated) AS
 SELECT ROW_NUMBER() OVER (ORDER BY reputation DESC) AS rank,
        ROW_NUMBER() OVER (ORDER BY donated DESC)    AS rank_donated,
@@ -118,4 +130,6 @@ FROM (SELECT user_reputation.user_id,
       FROM repbot_schema.user_reputation
       GROUP BY user_reputation.user_id) rep;
 
+-- We still have some old entries which might have a 0 donor id instead of the null.
+-- We will finally remove this inconsistency.
 UPDATE repbot_schema.reputation_log SET donor_id = NULL WHERE donor_id = 0;
