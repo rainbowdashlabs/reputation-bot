@@ -128,7 +128,7 @@ public class Channel extends SimpleCommand {
         return new LocalizedEmbedBuilder(context.localizer())
                 .setTitle(channels.isWhitelist() ? "command.channel.sub.list.whitelist" : "command.channel.sub.list.blacklist")
                 .addField("words.channels", channelNames, false, Replacement.create("MORE", channels.channels().size() - 40))
-                .addField("words.category", categoryNames, false, Replacement.create("MORE", channels.channels().size() - 40))
+                .addField("words.categories", categoryNames, false, Replacement.create("MORE", channels.channels().size() - 40))
                 .build();
     }
 
