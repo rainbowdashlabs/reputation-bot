@@ -1,4 +1,4 @@
-CREATE TABLE repbot_schema.announcements
+CREATE TABLE IF NOT EXISTS repbot_schema.announcements
 (
     guild_id     BIGINT
         CONSTRAINT announcements_pk
