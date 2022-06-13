@@ -1,5 +1,6 @@
 package de.chojo.repbot.statistic;
 
+import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.statistic.element.DataStatistic;
 import de.chojo.repbot.statistic.element.ProcessStatistics;
 import de.chojo.repbot.statistic.element.ShardStatistic;
@@ -8,11 +9,6 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.slf4j.Logger;
 
-import javax.sql.DataSource;
-import java.time.LocalTime;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -20,54 +16,26 @@ import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class Statistic implements Runnable {
+public class Statistic {
     private static final Logger log = getLogger(Statistic.class);
-    private final Map<Integer, long[]> analyzedMessages = new HashMap<>();
     private final ShardManager shardManager;
-    private final de.chojo.repbot.dao.provider.Statistic statistic;
-    private int currentMin;
+    private final Metrics metrics;
 
-    private Statistic(ShardManager shardManager, DataSource dataSource) {
+    private Statistic(ShardManager shardManager, Metrics metrics) {
         this.shardManager = shardManager;
-        statistic = new de.chojo.repbot.dao.provider.Statistic(dataSource);
+        this.metrics = metrics;
         getSystemStatistic();
     }
 
-    public static Statistic of(ShardManager shardManager, DataSource dataSource, ScheduledExecutorService service) {
-        var statistic = new Statistic(shardManager, dataSource);
-        service.scheduleAtFixedRate(statistic, 0, 1, TimeUnit.MINUTES);
+    public static Statistic of(ShardManager shardManager, Metrics metrics, ScheduledExecutorService service) {
+        var statistic = new Statistic(shardManager, metrics);
         service.scheduleAtFixedRate(statistic::refreshStatistics, 1, 30, TimeUnit.MINUTES);
         return statistic;
     }
 
-    private int minute() {
-        return LocalTime.now().getMinute();
-    }
-
-    public void messageAnalyzed(JDA shard) {
-        var shardId = shard.getShardInfo().getShardId();
-        getShardMessageStats(shardId)[currentMin]++;
-    }
-
-    private long[] getShardMessageStats(int shardId) {
-        return analyzedMessages.computeIfAbsent(shardId, k -> new long[60]);
-    }
-
-    @Override
-    public void run() {
-        currentMin = minute();
-        resetMinute(analyzedMessages);
-    }
-
-    private void resetMinute(Map<Integer, long[]> map) {
-        for (var shardId = 0; shardId < shardManager.getShardsTotal(); shardId++) {
-            map.getOrDefault(shardId, new long[60])[currentMin] = 0;
-        }
-    }
-
     private ShardStatistic getShardStatistic(JDA jda) throws ExecutionException {
         var shardId = jda.getShardInfo().getShardId();
-        var analyzedMessages = arraySum(getShardMessageStats(shardId));
+        var analyzedMessages = metrics.messages().hour(1).join().count();
 
         return new ShardStatistic(
                 shardId + 1,
@@ -89,15 +57,11 @@ public class Statistic implements Runnable {
                 }).collect(Collectors.toList());
 
         return new SystemStatistics(ProcessStatistics.create(),
-                statistic.getStatistic().orElseGet(DataStatistic::new),
+                metrics.statistic().getStatistic().orElseGet(DataStatistic::new),
                 shardStatistics);
     }
 
-    private long arraySum(long[] array) {
-        return Arrays.stream(array).sum();
-    }
-
     private void refreshStatistics() {
-        statistic.refreshStatistics();
+        metrics.statistic().refreshStatistics();
     }
 }
