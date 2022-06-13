@@ -31,6 +31,7 @@ import de.chojo.repbot.commands.TopWeek;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.Cleanup;
 import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.listener.InternalCommandListener;
 import de.chojo.repbot.listener.LogListener;
 import de.chojo.repbot.listener.MessageListener;
@@ -201,11 +202,11 @@ public class ReputationBot {
             }
             log.error(LogNotify.NOTIFY_ADMIN, "Unhandled exception occured: ", throwable);
         });
-
-        var statistic = Statistic.of(shardManager, dataSource, repBotWorker);
+        var metrics = new Metrics(dataSource);
+        var statistic = Statistic.of(shardManager, metrics, repBotWorker);
 
         var contextResolver = new ContextResolver(dataSource, configuration);
-        var messageAnalyzer = new MessageAnalyzer(contextResolver, configuration, statistic);
+        var messageAnalyzer = new MessageAnalyzer(contextResolver, configuration, metrics);
 
         PresenceService.start(shardManager, configuration, statistic, repBotWorker);
         scan.lateInit(messageAnalyzer);
