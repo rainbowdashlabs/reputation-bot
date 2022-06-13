@@ -19,7 +19,7 @@ public class Commands extends QueryFactoryHolder {
         builder().query("""
                         INSERT INTO metrics_commands(day, command) VALUES (NOW()::date, ?)
                         ON CONFLICT(day,command)
-                            DO UPDATE SET count = count + 1
+                            DO UPDATE SET count = metrics_commands.count + 1
                         """)
                 .paramsBuilder(stmt -> stmt.setString(command))
                 .insert()
@@ -40,8 +40,8 @@ public class Commands extends QueryFactoryHolder {
                             command,
                             count
                         FROM %s
-                        WHERE %s = DATE_TRUNC('%s', NOW())::date - INTERVAL ?
-                        """, timeframe, table, timeframe).paramsBuilder(stmt -> stmt.setString(offset + " " + timeframe))
+                        WHERE %s = DATE_TRUNC('%s', NOW())::date - ?::INTERVAL
+                        """, timeframe, table, timeframe,timeframe).paramsBuilder(stmt -> stmt.setString(offset + " " + timeframe))
                 .readRow(rs -> CommandStatistic.build(rs, timeframe))
                 .all()
                 .thenApply(this::mapStatistics);

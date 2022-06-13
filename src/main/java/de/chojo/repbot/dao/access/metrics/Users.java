@@ -25,7 +25,7 @@ public class Users extends QueryFactoryHolder {
                             donor_count,
                             receiver_count
                         FROM %s
-                        WHERE %s = DATE_TRUNC('%s', NOW())::date - INTERVAL ?
+                        WHERE %s = DATE_TRUNC('%s', NOW())::date - ?::INTERVAL
                         """, timeframe, table, timeframe, timeframe).paramsBuilder(stmt -> stmt.setString(offset + " " + timeframe))
                 .readRow(rs -> UserStatistic.build(rs, timeframe))
                 .all();

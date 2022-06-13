@@ -175,7 +175,9 @@ public class ReputationBot {
 
         var logger = getLogger("DbLogger");
         QueryBuilderConfig.setDefault(QueryBuilderConfig.builder()
-                .withExceptionHandler(err -> logger.error(LogNotify.NOTIFY_ADMIN, "An error occured during a database request", err))
+                .withExceptionHandler(err -> {
+                    logger.error(LogNotify.NOTIFY_ADMIN, "An error occured during a database request", err);
+                })
                 .withExecutor(repBotWorker)
                 .build());
 
@@ -188,8 +190,11 @@ public class ReputationBot {
 
     private void initLocalization() {
         localizer = Localizer.builder(Language.ENGLISH)
-                .addLanguage(Language.GERMAN, Language.of("es_ES", "Español"), Language.of("fr_FR", "Français"),
-                        Language.of("pt_PT", "Português"), Language.of("ru_RU", "Русский"))
+                .addLanguage(Language.GERMAN,
+                        Language.of("es_ES", "Español"),
+                        Language.of("fr_FR", "Français"),
+                        Language.of("pt_PT", "Português"),
+                        Language.of("ru_RU", "Русский"))
                 .withLanguageProvider(guild -> guilds.guild(guild).settings().general().language())
                 .withBundlePath("locale")
                 .build();
@@ -256,7 +261,7 @@ public class ReputationBot {
                 })
                 .withDefaultMenuService()
                 .withPostCommandHook(result -> metrics.commands().logCommand(result.context().command().meta().name()))
-                .withPagination(pageServiceBuilder -> pageServiceBuilder.withLocalizer(localizer).previousText("pages.previous").nextText("pages.next"))
+                .withPagination(builder -> builder.withLocalizer(localizer).previousText("pages.previous").nextText("pages.next"))
                 .build();
 
         // init listener and services

@@ -42,7 +42,7 @@ public class Messages extends QueryFactoryHolder {
                         SELECT %s,
                             count
                         FROM %s
-                        WHERE %s = DATE_TRUNC('%s', NOW())::date - INTERVAL ?
+                        WHERE %s = DATE_TRUNC('%s', NOW())::DATE - ?::INTERVAL
                         """, timeframe, table, timeframe, timeframe).paramsBuilder(stmt -> stmt.setString(offset + " " + timeframe))
                 .readRow(rs -> new CountStatistics(rs.getDate(timeframe).toLocalDate(), rs.getInt("count")))
                 .first()
