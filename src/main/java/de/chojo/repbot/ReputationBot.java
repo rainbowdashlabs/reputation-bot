@@ -97,6 +97,7 @@ public class ReputationBot {
     private Guilds guilds;
     private de.chojo.repbot.dao.access.Gdpr gdpr;
     private Cleanup cleanup;
+    private Metrics metrics;
 
     public static void main(String[] args) throws SQLException, IOException {
         ReputationBot.instance = new ReputationBot();
@@ -202,7 +203,7 @@ public class ReputationBot {
             }
             log.error(LogNotify.NOTIFY_ADMIN, "Unhandled exception occured: ", throwable);
         });
-        var metrics = new Metrics(dataSource);
+        metrics = new Metrics(dataSource);
         var statistic = Statistic.of(shardManager, metrics, repBotWorker);
 
         var contextResolver = new ContextResolver(dataSource, configuration);
@@ -254,6 +255,7 @@ public class ReputationBot {
                     log.error(LogNotify.NOTIFY_ADMIN, "Command execution of {} failed\n{}", context.command().meta().name(), context.args(), throwable);
                 })
                 .withDefaultMenuService()
+                .withPostCommandHook(result -> metrics.commands().logCommand(result.context().command().meta().name()))
                 .withPagination(pageServiceBuilder -> pageServiceBuilder.withLocalizer(localizer).previousText("pages.previous").nextText("pages.next"))
                 .build();
 
