@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 
 public class Channel extends SimpleCommand {
     private final Guilds guilds;
+    private static final String MORE = String.format("$%s$", "command.channel.list.more");
 
     public Channel(Guilds guilds) {
         super(CommandMeta.builder("channel", "command.channel.description")
@@ -117,12 +118,12 @@ public class Channel extends SimpleCommand {
 
         var channelNames = channels.channels().stream().map(IMentionable::getAsMention).limit(40).collect(Collectors.joining(", "));
         if (channels.channels().size() > 40) {
-            channelNames += String.format("$%s$", "command.channel.list.more");
+            channelNames += MORE;
         }
 
         var categoryNames = channels.categories().stream().map(IMentionable::getAsMention).limit(40).collect(Collectors.joining(", "));
         if (channels.categories().size() > 40) {
-            categoryNames += String.format("$%s$", "command.channel.list.more");
+            categoryNames += MORE;
         }
 
         return new LocalizedEmbedBuilder(context.localizer())
