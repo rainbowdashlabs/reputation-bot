@@ -1,5 +1,6 @@
 package de.chojo.repbot.service;
 
+import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.dao.snapshots.ReputationRank;
 import de.chojo.repbot.util.Roles;
 import net.dv8tion.jda.api.entities.Guild;
@@ -11,6 +12,7 @@ import org.slf4j.Logger;
 
 import java.util.HashSet;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -19,14 +21,21 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class RoleAssigner {
     private static final Logger log = getLogger(RoleAssigner.class);
-    private final de.chojo.repbot.dao.provider.Guilds guilds;
+    private final Guilds guilds;
 
-    public RoleAssigner(de.chojo.repbot.dao.provider.Guilds guilds) {
+    public RoleAssigner(Guilds guilds) {
         this.guilds = guilds;
     }
 
-    public void update(@Nullable Member member) throws RoleAccessException {
-        if (member == null) return;
+    /**
+     * Updates the rank of the member.
+     *
+     * @param member member to update
+     * @return the new highest role of the member, if it changed.
+     * @throws RoleAccessException if the role cant be accessed
+     */
+    public Optional<ReputationRank> update(@Nullable Member member) throws RoleAccessException {
+        if (member == null) return Optional.empty();
         log.debug("Updating {} on {}", member.getId(), prettyName(member.getGuild()));
         var guild = member.getGuild();
         var repGuild = guilds.guild(member.getGuild());
@@ -39,35 +48,55 @@ public class RoleAssigner {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
 
-        cleanMemberRoles(member, roles);
+        var changed = cleanMemberRoles(member, roles);
 
-        if (new HashSet<>(member.getRoles()).containsAll(roles)) return;
+        changed = changed || addMemberRoles(member, roles);
 
-        for (var role : roles) {
-            assertInteract(role, member.getGuild());
-            if (!member.getRoles().contains(role)) {
-                log.debug("Assigning role {} on {}", Roles.prettyName(role), prettyName(guild));
-                guild.addRoleToMember(member, role).complete();
-            }
+        if (!changed) {
+            return Optional.empty();
         }
+
+        return settings.ranks().currentRank(reputation);
     }
 
-    private void cleanMemberRoles(Member member, Set<Role> roles) throws RoleAccessException {
+    private boolean cleanMemberRoles(Member member, Set<Role> roles) throws RoleAccessException {
         var guild = member.getGuild();
 
-        var reputationRoles = guilds.guild(member.getGuild()).settings().ranks().ranks()
+        var reputationRoles = guilds.guild(guild).settings().ranks().ranks()
                 .stream()
                 .map(ReputationRank::roleId)
                 .map(guild::getRoleById)
-                .filter(Objects::nonNull).toList();
+                .filter(Objects::nonNull)
+                .toList();
+        var changed = false;
+
         for (var role : reputationRoles) {
             assertInteract(role, member.getGuild());
             if (roles.contains(role)) continue;
             if (member.getRoles().contains(role)) {
                 log.debug("Removing role {} on {}", Roles.prettyName(role), prettyName(guild));
                 guild.removeRoleFromMember(member, role).complete();
+                changed = true;
             }
         }
+        return changed;
+    }
+
+    private boolean addMemberRoles(Member member, Set<Role> roles) {
+        var guild = member.getGuild();
+        if (new HashSet<>(member.getRoles()).containsAll(roles)) return false;
+
+        var changed = false;
+
+        for (var role : roles) {
+            assertInteract(role, guild);
+            if (!member.getRoles().contains(role)) {
+                log.debug("Assigning role {} on {}", Roles.prettyName(role), prettyName(guild));
+                guild.addRoleToMember(member, role).complete();
+                changed = true;
+            }
+        }
+        return changed;
     }
 
     private void assertInteract(Role role, Guild guild) throws RoleAccessException {

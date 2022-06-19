@@ -133,3 +133,13 @@ FROM (SELECT user_reputation.user_id,
 -- We still have some old entries which might have a 0 donor id instead of the null.
 -- We will finally remove this inconsistency.
 UPDATE repbot_schema.reputation_log SET donor_id = NULL WHERE donor_id = 0;
+
+CREATE TABLE IF NOT EXISTS repbot_schema.announcements
+(
+    guild_id     BIGINT
+        CONSTRAINT announcements_pk
+            PRIMARY KEY,
+    active       BOOLEAN DEFAULT FALSE NOT NULL,
+    same_channel BOOLEAN DEFAULT TRUE  NOT NULL,
+    channel_id   BIGINT
+);
