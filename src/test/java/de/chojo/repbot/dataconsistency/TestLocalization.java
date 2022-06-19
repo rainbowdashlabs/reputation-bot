@@ -12,8 +12,12 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 public class TestLocalization {
-    private static final Language[] languages = {Language.ENGLISH, Language.GERMAN,
-            Language.of("es_ES", "Español"), Language.of("fr_FR", "Français"),
+    private static final Language[] languages = {
+            Language.ENGLISH,
+            Language.GERMAN,
+            Language.of("es_ES", "Español"),
+            Language.of("fr_FR", "Français"),
+            Language.of("pt_PT", "Portuguese"),
             Language.of("ru_RU", "Russian")};
     private static final Pattern replacements = Pattern.compile("%[a-zA-Z0-9.]+?%");
 
