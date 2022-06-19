@@ -105,6 +105,15 @@ public class Ranks extends QueryFactoryHolder implements GuildHolder {
         return this.ranks.stream().sorted().toList();
     }
 
+    /**
+     * Gets all reputation ranks which should be assigned to the user.
+     *
+     * This will always contain zero or one role when {@link General#stackRoles()} is true.
+     *
+     * This will contain up to {@link #ranks()}.size() when {@link General#stackRoles()} is false.
+     * @param user user to check
+     * @return list of ranks
+     */
     public List<ReputationRank> currentRanks(RepUser user) {
         var profile = user.profile();
         return ranks().stream()
@@ -114,13 +123,13 @@ public class Ranks extends QueryFactoryHolder implements GuildHolder {
                 .toList();
     }
 
-    public List<ReputationRank> currentRank(RepUser user) {
+    public Optional<ReputationRank> currentRank(RepUser user) {
         var profile = user.profile();
         return ranks().stream()
                 .filter(rank -> rank.reputation() <= profile.reputation())
                 .sorted()
                 .limit(1)
-                .toList();
+                .findFirst();
     }
 
     public Optional<ReputationRank> nextRank(RepUser user) {
