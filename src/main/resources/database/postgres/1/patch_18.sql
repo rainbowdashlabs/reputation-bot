@@ -1,3 +1,14 @@
+CREATE TABLE IF NOT EXISTS repbot_schema.active_categories
+(
+    guild_id    BIGINT NOT NULL,
+    category_id BIGINT NOT NULL,
+    CONSTRAINT active_categories_pk
+        PRIMARY KEY (guild_id, category_id)
+);
+
+CREATE INDEX IF NOT EXISTS active_categories_guild_id_index
+    ON repbot_schema.active_categories (guild_id);
+
 -- We need to drop the old view, because we change the view row layout.
 DROP VIEW repbot_schema.user_reputation_week;
 
@@ -143,3 +154,4 @@ CREATE TABLE IF NOT EXISTS repbot_schema.announcements
     same_channel BOOLEAN DEFAULT TRUE  NOT NULL,
     channel_id   BIGINT
 );
+
