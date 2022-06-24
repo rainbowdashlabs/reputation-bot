@@ -223,7 +223,7 @@ public class ReputationBot {
         SelfCleanupService.create(shardManager, localizer, guilds, cleanup, configuration, repBotWorker);
 
         if (configuration.baseSettings().isInternalCommands()) {
-            shardManager.addEventListener(new InternalCommandListener(configuration, statistic));
+            shardManager.addEventListener(new InternalCommandListener(configuration, statistic, metrics));
         }
 
         CommandHub.builder(shardManager)

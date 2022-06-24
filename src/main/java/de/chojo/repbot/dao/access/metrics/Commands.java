@@ -34,7 +34,7 @@ public class Commands extends QueryFactoryHolder {
         return get("metrics_commands_month", "month", month);
     }
 
-    public CompletableFuture<CommandsStatistic> get(String table, String timeframe, int offset) {
+    private CompletableFuture<CommandsStatistic> get(String table, String timeframe, int offset) {
         return builder(CommandStatistic.class).query("""
                         SELECT %s,
                             command,

@@ -10,21 +10,30 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.IntStream;
 
-public record CommandsStatistic(LocalDate date, List<CommandStatistic> commands) implements ChartProvider {
+public record CountsStatistic(List<CountStatistics> stats) implements ChartProvider {
+
+
+    public CountStatistics get(int index) {
+        if (stats.isEmpty()) {
+            return new CountStatistics(LocalDate.MIN, 0);
+        }
+        return stats.get(index);
+    }
+
     @Override
     public byte[] getChart() {
         var categorySeries = new CategoryChartBuilder().width(800).height(600)
-                .title("Commands Statistic for " + date(date()))
-                .xAxisTitle("Command")
+                .title("User Statistics")
+                .xAxisTitle("Date")
                 .yAxisTitle("Count")
                 .theme(Styler.ChartTheme.Matlab)
                 .build();
-        categorySeries.setCustomXAxisTickLabelsFormatter(r -> commands.get(r.intValue()).command());
-        categorySeries.addSeries("Command",
-                        IntStream.range(0, commands.size()).mapToObj(Double::valueOf).toList(),
-                        commands.stream().map(CommandStatistic::count).map(Double::valueOf).toList())
+        categorySeries.setCustomXAxisTickLabelsFormatter(r -> date(stats.get(r.intValue()).date()));
+        categorySeries.addSeries("Counts",
+                        IntStream.range(0, stats.size()).mapToObj(Double::valueOf).toList(),
+                        stats.stream().map(CountStatistics::count).map(Double::valueOf).toList())
                 .setMarker(SeriesMarkers.NONE)
-                .setLabel("command");
+                .setLabel("Counts");
 
         try {
             return BitmapEncoder.getBitmapBytes(categorySeries, BitmapEncoder.BitmapFormat.PNG);

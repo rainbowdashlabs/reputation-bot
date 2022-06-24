@@ -35,7 +35,7 @@ public class Statistic {
 
     private ShardStatistic getShardStatistic(JDA jda) throws ExecutionException {
         var shardId = jda.getShardInfo().getShardId();
-        var analyzedMessages = metrics.messages().hour(1).join().count();
+        var analyzedMessages = metrics.messages().hour(1,1).join().get(0).count();
 
         return new ShardStatistic(
                 shardId + 1,
