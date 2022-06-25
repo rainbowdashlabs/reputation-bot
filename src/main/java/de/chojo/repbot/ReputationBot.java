@@ -30,7 +30,6 @@ import de.chojo.repbot.commands.TopMonth;
 import de.chojo.repbot.commands.TopWeek;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.Cleanup;
-import de.chojo.repbot.dao.access.Migration;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.listener.InternalCommandListener;
 import de.chojo.repbot.listener.LogListener;
@@ -97,7 +96,6 @@ public class ReputationBot {
     private Guilds guilds;
     private de.chojo.repbot.dao.access.Gdpr gdpr;
     private Cleanup cleanup;
-    private Migration migration;
 
     public static void main(String[] args) throws SQLException, IOException {
         ReputationBot.instance = new ReputationBot();
@@ -182,7 +180,6 @@ public class ReputationBot {
         guilds = new Guilds(dataSource);
         gdpr = new de.chojo.repbot.dao.access.Gdpr(dataSource);
         cleanup = new Cleanup(dataSource);
-        migration = new Migration(dataSource);
         updatePool.close();
 
     }
@@ -217,10 +214,6 @@ public class ReputationBot {
         var reputationService = new ReputationService(guilds, contextResolver, roleAssigner, configuration.magicImage(), localizer);
         var gdprService = GdprService.of(shardManager, guilds, gdpr, repBotWorker);
         SelfCleanupService.create(shardManager, localizer, guilds, cleanup, configuration, repBotWorker);
-
-        if (configuration.migration().isActive()) {
-            log.warn("The bot is running in migration mode!");
-        }
 
         if (configuration.baseSettings().isInternalCommands()) {
             shardManager.addEventListener(new InternalCommandListener(configuration, statistic));
@@ -266,7 +259,7 @@ public class ReputationBot {
         // init listener and services
         var reactionListener = new ReactionListener(guilds, localizer, reputationService, configuration);
         var voteListener = new ReputationVoteListener(reputationService, localizer, configuration);
-        var messageListener = new MessageListener(localizer, configuration, guilds, migration, repBotCachePolicy, voteListener,
+        var messageListener = new MessageListener(localizer, configuration, guilds, repBotCachePolicy, voteListener,
                 reputationService, contextResolver, messageAnalyzer);
         var voiceStateListener = VoiceStateListener.of(dataSource, repBotWorker);
         var logListener = LogListener.create(repBotWorker);

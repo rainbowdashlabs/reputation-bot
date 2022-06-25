@@ -155,3 +155,5 @@ CREATE TABLE IF NOT EXISTS repbot_schema.announcements
     channel_id   BIGINT
 );
 
+-- Finally get rid of this stupid migration mechanic
+DROP TABLE IF EXISTS repbot_schema.migrations;

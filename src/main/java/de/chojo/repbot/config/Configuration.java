@@ -14,7 +14,6 @@ import de.chojo.repbot.config.elements.Botlist;
 import de.chojo.repbot.config.elements.Database;
 import de.chojo.repbot.config.elements.Links;
 import de.chojo.repbot.config.elements.MagicImage;
-import de.chojo.repbot.config.elements.Migration;
 import de.chojo.repbot.config.elements.PresenceSettings;
 import de.chojo.repbot.config.elements.SelfCleanup;
 import de.chojo.repbot.config.exception.ConfigurationException;
@@ -126,9 +125,5 @@ public class Configuration {
 
     public SelfCleanup selfCleanup() {
         return configFile.selfCleanup();
-    }
-
-    public Migration migration() {
-        return configFile.migration();
     }
 }
