@@ -40,6 +40,12 @@ public record UsersStatistic(List<UserStatistic> stats) implements ChartProvider
                 .setMarker(SeriesMarkers.NONE)
                 .setLabel("Receivers");
 
+        categorySeries.addSeries("Total",
+                        sorted.stream().map(s -> TimeFormatter.date(s.date())).toList(),
+                        sorted.stream().map(UserStatistic::total).map(Double::valueOf).toList())
+                .setMarker(SeriesMarkers.NONE)
+                .setLabel("Total");
+
         try {
             return BitmapEncoder.getBitmapBytes(categorySeries, BitmapEncoder.BitmapFormat.PNG);
         } catch (IOException e) {

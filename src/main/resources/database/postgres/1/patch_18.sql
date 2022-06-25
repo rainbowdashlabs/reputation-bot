@@ -171,13 +171,13 @@ CREATE INDEX IF NOT EXISTS metrics_commands_day_index
     ON repbot_schema.metrics_commands (day);
 
 CREATE OR REPLACE VIEW repbot_schema.metrics_commands_week AS
-SELECT DATE_TRUNC('week', day)::DATE AS week, command, sum(count) as count
+SELECT DATE_TRUNC('week', day)::DATE AS week, command, SUM(count) AS count
 FROM repbot_schema.metrics_commands
 GROUP BY week, command;
 
 
 CREATE OR REPLACE VIEW repbot_schema.metrics_commands_month AS
-SELECT DATE_TRUNC('month', day)::DATE AS month, command, sum(count) as count
+SELECT DATE_TRUNC('month', day)::DATE AS month, command, SUM(count) AS count
 FROM repbot_schema.metrics_commands
 GROUP BY month, command;
 
@@ -222,33 +222,55 @@ WITH received AS (SELECT DATE_TRUNC('week', received)::DATE AS week,
                  GROUP BY week, donor_id),
      donated_count AS (SELECT week, COUNT(1)
                        FROM donated
-                       GROUP BY week)
+                       GROUP BY week),
+     total AS (SELECT *
+               FROM received
+               UNION
+               DISTINCT
+               SELECT *
+               FROM donated),
+     total_count AS (SELECT week, COUNT(1)
+                     FROM total
+                     GROUP BY week)
 SELECT d.week,
        r.count AS receiver_count,
-       d.count AS donor_count
+       d.count AS donor_count,
+       t.count AS total_count
 FROM received_count r
          FULL JOIN donated_count d ON r.week = d.week
+         FULL JOIN total_count t ON r.week = t.week
 ORDER BY week DESC;
 
 -- Monthly metrics about unique donors and receivers
 CREATE OR REPLACE VIEW repbot_schema.metrics_unique_users_month AS
 WITH received AS (SELECT DATE_TRUNC('month', received)::DATE AS month,
-                         receiver_id
+                         receiver_id                         AS id
                   FROM repbot_schema.reputation_log
-                  GROUP BY month, receiver_id),
+                  GROUP BY month, id),
      received_count AS (SELECT month, COUNT(1)
                         FROM received
                         GROUP BY month),
      donated AS (SELECT DATE_TRUNC('month', received)::DATE AS month,
-                        donor_id
+                        donor_id                            AS id
                  FROM repbot_schema.reputation_log
-                 GROUP BY month, donor_id),
+                 GROUP BY month, id),
      donated_count AS (SELECT month, COUNT(1)
                        FROM donated
-                       GROUP BY month)
+                       GROUP BY month),
+     total AS (SELECT *
+               FROM received
+               UNION
+               DISTINCT
+               SELECT *
+               FROM donated),
+     total_count AS (SELECT month, COUNT(1)
+                     FROM total
+                     GROUP BY month)
 SELECT d.month,
        r.count AS receiver_count,
-       d.count AS donor_count
+       d.count AS donor_count,
+       t.count AS total_count
 FROM received_count r
          FULL JOIN donated_count d ON r.month = d.month
+         FULL JOIN total_count t ON r.month = t.month
 ORDER BY month DESC;

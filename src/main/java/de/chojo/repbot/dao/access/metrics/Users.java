@@ -23,7 +23,8 @@ public class Users extends QueryFactoryHolder {
         return builder(UserStatistic.class).query("""
                         SELECT %s,
                             donor_count,
-                            receiver_count
+                            receiver_count,
+                            total_count
                         FROM %s
                         WHERE %s <= DATE_TRUNC(?, NOW())::date - ?::interval
                         ORDER BY %s DESC

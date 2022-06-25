@@ -12,10 +12,10 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
-public record UserStatistic(LocalDate date, int donors, int receivers) implements Comparable<UserStatistic> {
+public record UserStatistic(LocalDate date, int donors, int receivers, int total) implements Comparable<UserStatistic> {
     public static UserStatistic build(ResultSet rs, String dateKey) throws SQLException {
         return new UserStatistic(rs.getDate(dateKey).toLocalDate(),
-                rs.getInt("donor_count"), rs.getInt("receiver_count"));
+                rs.getInt("donor_count"), rs.getInt("receiver_count"), rs.getInt("total_count"));
     }
 
     @Override
