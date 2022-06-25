@@ -1,35 +1,42 @@
 package de.chojo.repbot.dao.snapshots.statistics;
 
+import de.chojo.repbot.util.TimeFormatter;
 import org.knowm.xchart.BitmapEncoder;
 import org.knowm.xchart.CategoryChartBuilder;
+import org.knowm.xchart.style.AxesChartStyler;
 import org.knowm.xchart.style.Styler;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.IntStream;
 
-public record UsersStatistic(List<UserStatistic> stats) implements ChartProvider{
+public record UsersStatistic(List<UserStatistic> stats) implements ChartProvider {
 
     @Override
-    public byte[] getChart() {
-        var categorySeries = new CategoryChartBuilder().width(800).height(600)
-                .title("User Statistics")
+    public byte[] getChart(String title) {
+        var categorySeries = new CategoryChartBuilder().width(1200).height(600)
+                .title(title)
                 .xAxisTitle("Date")
                 .yAxisTitle("Counts")
                 .theme(Styler.ChartTheme.Matlab)
                 .build();
 
-        categorySeries.setCustomXAxisTickLabelsFormatter(r -> date(stats.get(r.intValue()).date()));
+        var styler = categorySeries.getStyler();
+        styler.setXAxisLabelRotation(20);
+        styler.setXAxisLabelAlignmentVertical(AxesChartStyler.TextAlignment.Right);
+        styler.setXAxisLabelAlignment(AxesChartStyler.TextAlignment.Right);
+
+        var sorted = stats.stream().sorted().toList();
+
         categorySeries.addSeries("Donors",
-                        IntStream.range(0, stats.size()).mapToObj(Double::valueOf).toList(),
-                        stats.stream().map(UserStatistic::donors).map(Double::valueOf).toList())
+                        sorted.stream().map(s -> TimeFormatter.date(s.date())).toList(),
+                        sorted.stream().map(UserStatistic::donors).map(Double::valueOf).toList())
                 .setMarker(SeriesMarkers.NONE)
                 .setLabel("Donors");
 
         categorySeries.addSeries("Receivers",
-                        IntStream.range(0, stats.size()).mapToObj(Double::valueOf).toList(),
-                        stats.stream().map(UserStatistic::receivers).map(Double::valueOf).toList())
+                        sorted.stream().map(s -> TimeFormatter.date(s.date())).toList(),
+                        sorted.stream().map(UserStatistic::receivers).map(Double::valueOf).toList())
                 .setMarker(SeriesMarkers.NONE)
                 .setLabel("Receivers");
 

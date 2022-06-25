@@ -171,13 +171,13 @@ CREATE INDEX IF NOT EXISTS metrics_commands_day_index
     ON repbot_schema.metrics_commands (day);
 
 CREATE OR REPLACE VIEW repbot_schema.metrics_commands_week AS
-SELECT DATE_TRUNC('week', day)::DATE AS week, command, COUNT(1)
+SELECT DATE_TRUNC('week', day)::DATE AS week, command, sum(count) as count
 FROM repbot_schema.metrics_commands
 GROUP BY week, command;
 
 
 CREATE OR REPLACE VIEW repbot_schema.metrics_commands_month AS
-SELECT DATE_TRUNC('month', day)::DATE AS month, command, COUNT(1)
+SELECT DATE_TRUNC('month', day)::DATE AS month, command, sum(count) as count
 FROM repbot_schema.metrics_commands
 GROUP BY month, command;
 

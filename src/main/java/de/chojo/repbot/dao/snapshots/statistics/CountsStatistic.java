@@ -1,7 +1,9 @@
 package de.chojo.repbot.dao.snapshots.statistics;
 
+import de.chojo.repbot.util.TimeFormatter;
 import org.knowm.xchart.BitmapEncoder;
 import org.knowm.xchart.CategoryChartBuilder;
+import org.knowm.xchart.style.AxesChartStyler;
 import org.knowm.xchart.style.Styler;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 
@@ -21,17 +23,25 @@ public record CountsStatistic(List<CountStatistics> stats) implements ChartProvi
     }
 
     @Override
-    public byte[] getChart() {
-        var categorySeries = new CategoryChartBuilder().width(800).height(600)
-                .title("User Statistics")
+    public byte[] getChart(String title) {
+        var categorySeries = new CategoryChartBuilder().width(1200).height(600)
+                .title(title)
                 .xAxisTitle("Date")
                 .yAxisTitle("Count")
                 .theme(Styler.ChartTheme.Matlab)
                 .build();
-        categorySeries.setCustomXAxisTickLabelsFormatter(r -> date(stats.get(r.intValue()).date()));
+
+        var styler = categorySeries.getStyler();
+        styler.setLegendVisible(false);
+        styler.setXAxisLabelRotation(20);
+        styler.setXAxisLabelAlignmentVertical(AxesChartStyler.TextAlignment.Right);
+        styler.setXAxisLabelAlignment(AxesChartStyler.TextAlignment.Right);
+
+        var sorted = stats.stream().sorted().toList();
+
         categorySeries.addSeries("Counts",
-                        IntStream.range(0, stats.size()).mapToObj(Double::valueOf).toList(),
-                        stats.stream().map(CountStatistics::count).map(Double::valueOf).toList())
+                        sorted.stream().map(countStatistics -> TimeFormatter.date(countStatistics.date())).toList(),
+                        sorted.stream().map(CountStatistics::count).toList())
                 .setMarker(SeriesMarkers.NONE)
                 .setLabel("Counts");
 

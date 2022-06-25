@@ -1,14 +1,15 @@
 package de.chojo.repbot.listener;
 
+import de.chojo.jdautil.parsing.ArgumentUtil;
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.statistic.Statistic;
 import de.chojo.repbot.util.LogNotify;
+import de.chojo.repbot.util.TimeFormatter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.requests.restaction.MessageAction;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
@@ -70,19 +71,19 @@ public class InternalCommandListener extends ListenerAdapter {
             var reply = event.getMessage()
                     .reply("Metrics");
 
-            var commands = metrics.commands().month(1).join();
+            var commands = metrics.commands().week(1).join();
             if (!commands.commands().isEmpty()) {
-                reply.addFile(commands.getChart(), "commands.png");
+                reply.addFile(commands.getChart("Command statistic for week " + TimeFormatter.month(commands.date())), "commands.png");
             }
 
-            var messages = metrics.messages().week(1, 12).join();
+            var messages = metrics.messages().week(1, 24).join();
             if (!messages.stats().isEmpty()) {
-                reply.addFile(messages.getChart(), "messages.png");
+                reply.addFile(messages.getChart("Analyzed Messages per week"), "messages.png");
             }
 
-            var users = metrics.users().week(1, 12).join();
+            var users = metrics.users().week(1, 24).join();
             if (!users.stats().isEmpty()) {
-                reply.addFile(users.getChart(), "users.png");
+                reply.addFile(users.getChart("Active users per week"), "users.png");
             }
 
             reply.queue();

@@ -41,7 +41,8 @@ public class Commands extends QueryFactoryHolder {
                             count
                         FROM %s
                         WHERE %s = DATE_TRUNC('%s', NOW())::date - ?::INTERVAL
-                        """, timeframe, table, timeframe,timeframe).paramsBuilder(stmt -> stmt.setString(offset + " " + timeframe))
+                        """, timeframe, table, timeframe,timeframe)
+                .paramsBuilder(stmt -> stmt.setString(offset + " " + timeframe))
                 .readRow(rs -> CommandStatistic.build(rs, timeframe))
                 .all()
                 .thenApply(this::mapStatistics);
