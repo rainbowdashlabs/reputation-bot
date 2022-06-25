@@ -53,6 +53,7 @@ public class StateListener extends ListenerAdapter {
 
     @Override
     public void onGuildLeave(@NotNull GuildLeaveEvent event) {
+        // We want to delete all data of a guild after the bot left.
         guilds.guild(event.getGuild()).gdpr().queueDeletion();
     }
 
