@@ -76,6 +76,7 @@ public class Channels extends QueryFactoryHolder implements GuildHolder {
 
     public boolean isEnabledByCategory(@Nullable Category category) {
         if (category == null) return false;
+        if (categories.isEmpty()) return false;
         if (isWhitelist()) {
             return categories.contains(category.getIdLong());
         }
