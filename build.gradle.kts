@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "1.6.11"
+version = "1.7.0"
 
 repositories {
     maven("https://eldonexus.de/repository/maven-public")
@@ -20,8 +20,8 @@ dependencies {
     }
 
     // database
-    implementation("org.postgresql", "postgresql", "42.3.5")
-    implementation("de.chojo", "sql-util", "1.4.3")
+    implementation("org.postgresql", "postgresql", "42.4.0")
+    implementation("de.chojo", "sql-util", "1.4.6")
 
     // Logging
     implementation("org.slf4j", "slf4j-api", "1.7.36")
@@ -29,9 +29,12 @@ dependencies {
     implementation("org.apache.logging.log4j", "log4j-slf4j-impl", "2.17.2")
     implementation("club.minnced", "discord-webhooks", "0.8.0")
 
+    implementation("org.knowm.xchart", "xchart", "3.8.1")
+
     // unit testing
     testImplementation(platform("org.junit:junit-bom:5.8.2"))
     testImplementation("org.junit.jupiter", "junit-jupiter")
+    testImplementation("org.knowm.xchart", "xchart", "3.8.1")
 }
 
 java {

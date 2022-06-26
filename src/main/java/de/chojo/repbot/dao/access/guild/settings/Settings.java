@@ -7,6 +7,7 @@ import de.chojo.repbot.dao.access.guild.settings.sub.Messages;
 import de.chojo.repbot.dao.access.guild.settings.sub.Ranks;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
+import de.chojo.repbot.dao.pagination.Announcements;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
 import net.dv8tion.jda.api.entities.Guild;
 
@@ -17,6 +18,7 @@ public class Settings extends QueryFactoryHolder implements GuildHolder {
     private Messages messages;
     private Ranks ranks;
     private Thanking thanking;
+    private Announcements announcements;
 
     public Settings(RepGuild repGuild) {
         super(repGuild);
@@ -44,6 +46,27 @@ public class Settings extends QueryFactoryHolder implements GuildHolder {
                 .firstSync()
                 .orElseGet(() -> new AbuseProtection(this));
         return abuseProtection;
+    }
+
+    public Announcements announcements() {
+        if (announcements != null) {
+            return announcements;
+        }
+        announcements = builder(Announcements.class)
+                .query("""
+                        SELECT
+                            active,
+                            same_channel,
+                            channel_id
+                        FROM
+                            announcements
+                        WHERE guild_id = ?;
+                        """)
+                .paramsBuilder(stmt -> stmt.setLong(guildId()))
+                .readRow(rs -> Announcements.build(this, rs))
+                .firstSync()
+                .orElseGet(() -> new Announcements(this));
+        return announcements;
     }
 
     public Messages messages() {

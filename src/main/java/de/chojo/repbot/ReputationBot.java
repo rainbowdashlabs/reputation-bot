@@ -30,8 +30,8 @@ import de.chojo.repbot.commands.TopMonth;
 import de.chojo.repbot.commands.TopWeek;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.Cleanup;
-import de.chojo.repbot.dao.access.Migration;
 import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.listener.InternalCommandListener;
 import de.chojo.repbot.listener.LogListener;
 import de.chojo.repbot.listener.MessageListener;
@@ -97,7 +97,7 @@ public class ReputationBot {
     private Guilds guilds;
     private de.chojo.repbot.dao.access.Gdpr gdpr;
     private Cleanup cleanup;
-    private Migration migration;
+    private Metrics metrics;
 
     public static void main(String[] args) throws SQLException, IOException {
         ReputationBot.instance = new ReputationBot();
@@ -175,22 +175,26 @@ public class ReputationBot {
 
         var logger = getLogger("DbLogger");
         QueryBuilderConfig.setDefault(QueryBuilderConfig.builder()
-                .withExceptionHandler(err -> logger.error(LogNotify.NOTIFY_ADMIN, "An error occured during a database request", err))
+                .withExceptionHandler(err -> {
+                    logger.error(LogNotify.NOTIFY_ADMIN, "An error occured during a database request", err);
+                })
                 .withExecutor(repBotWorker)
                 .build());
 
         guilds = new Guilds(dataSource);
         gdpr = new de.chojo.repbot.dao.access.Gdpr(dataSource);
         cleanup = new Cleanup(dataSource);
-        migration = new Migration(dataSource);
         updatePool.close();
 
     }
 
     private void initLocalization() {
         localizer = Localizer.builder(Language.ENGLISH)
-                .addLanguage(Language.GERMAN, Language.of("es_ES", "Español"), Language.of("fr_FR", "Français"),
-                        Language.of("pt_PT", "Português"), Language.of("ru_RU", "Русский"))
+                .addLanguage(Language.GERMAN,
+                        Language.of("es_ES", "Español"),
+                        Language.of("fr_FR", "Français"),
+                        Language.of("pt_PT", "Português"),
+                        Language.of("ru_RU", "Русский"))
                 .withLanguageProvider(guild -> guilds.guild(guild).settings().general().language())
                 .withBundlePath("locale")
                 .build();
@@ -204,11 +208,11 @@ public class ReputationBot {
             }
             log.error(LogNotify.NOTIFY_ADMIN, "Unhandled exception occured: ", throwable);
         });
-
-        var statistic = Statistic.of(shardManager, dataSource, repBotWorker);
+        metrics = new Metrics(dataSource);
+        var statistic = Statistic.of(shardManager, metrics, repBotWorker);
 
         var contextResolver = new ContextResolver(dataSource, configuration);
-        var messageAnalyzer = new MessageAnalyzer(contextResolver, configuration, statistic);
+        var messageAnalyzer = new MessageAnalyzer(contextResolver, configuration, metrics);
 
         PresenceService.start(shardManager, configuration, statistic, repBotWorker);
         scan.lateInit(messageAnalyzer);
@@ -218,12 +222,8 @@ public class ReputationBot {
         var gdprService = GdprService.of(shardManager, guilds, gdpr, repBotWorker);
         SelfCleanupService.create(shardManager, localizer, guilds, cleanup, configuration, repBotWorker);
 
-        if (configuration.migration().isActive()) {
-            log.warn("The bot is running in migration mode!");
-        }
-
         if (configuration.baseSettings().isInternalCommands()) {
-            shardManager.addEventListener(new InternalCommandListener(configuration, statistic));
+            shardManager.addEventListener(new InternalCommandListener(configuration, statistic, metrics));
         }
 
         CommandHub.builder(shardManager)
@@ -260,13 +260,14 @@ public class ReputationBot {
                     log.error(LogNotify.NOTIFY_ADMIN, "Command execution of {} failed\n{}", context.command().meta().name(), context.args(), throwable);
                 })
                 .withDefaultMenuService()
-                .withPagination(pageServiceBuilder -> pageServiceBuilder.withLocalizer(localizer).previousText("pages.previous").nextText("pages.next"))
+                .withPostCommandHook(result -> metrics.commands().logCommand(result.context().command().meta().name()))
+                .withPagination(builder -> builder.withLocalizer(localizer).previousText("pages.previous").nextText("pages.next"))
                 .build();
 
         // init listener and services
         var reactionListener = new ReactionListener(guilds, localizer, reputationService, configuration);
         var voteListener = new ReputationVoteListener(reputationService, localizer, configuration);
-        var messageListener = new MessageListener(localizer, configuration, guilds, migration, repBotCachePolicy, voteListener,
+        var messageListener = new MessageListener(localizer, configuration, guilds, repBotCachePolicy, voteListener,
                 reputationService, contextResolver, messageAnalyzer);
         var voiceStateListener = VoiceStateListener.of(dataSource, repBotWorker);
         var logListener = LogListener.create(repBotWorker);

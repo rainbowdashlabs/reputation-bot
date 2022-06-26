@@ -5,7 +5,6 @@ import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.config.Configuration;
-import de.chojo.repbot.dao.access.Migration;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
@@ -46,15 +45,13 @@ public class MessageListener extends ListenerAdapter {
     private final ReputationService reputationService;
     private final ContextResolver contextResolver;
     private final MessageAnalyzer messageAnalyzer;
-    private final Migration migration;
 
-    public MessageListener(ILocalizer localizer, Configuration configuration, Guilds guilds, Migration migration, RepBotCachePolicy repBotCachePolicy,
+    public MessageListener(ILocalizer localizer, Configuration configuration, Guilds guilds, RepBotCachePolicy repBotCachePolicy,
                            ReputationVoteListener reputationVoteListener, ReputationService reputationService,
                            ContextResolver contextResolver, MessageAnalyzer messageAnalyzer) {
         this.localizer = localizer;
         this.guilds = guilds;
         this.configuration = configuration;
-        this.migration = migration;
         this.repBotCachePolicy = repBotCachePolicy;
         this.reputationVoteListener = reputationVoteListener;
         this.reputationService = reputationService;
@@ -67,7 +64,7 @@ public class MessageListener extends ListenerAdapter {
         if (event.getChannelType() == ChannelType.GUILD_PUBLIC_THREAD) {
             var thread = ((ThreadChannel) event.getChannel());
             var settings = guilds.guild(event.getGuild()).settings();
-            if (settings.thanking().channels().isEnabled(thread.getParentChannel())) {
+            if (settings.thanking().channels().isEnabled(thread)) {
                 thread.join().queue();
             }
         }
@@ -101,7 +98,7 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        if (!settings.thanking().channels().isEnabled(event.getChannel())) return;
+        if (!settings.thanking().channels().isEnabled(event.getGuildChannel())) return;
         repBotCachePolicy.seen(event.getMember());
 
         if (!settings.thanking().donorRoles().hasRole(event.getMember())) return;
@@ -115,23 +112,6 @@ public class MessageListener extends ListenerAdapter {
         if (PermissionErrorHandler.assertAndHandle(event.getGuildChannel(), localizer, configuration,
                 Permission.MESSAGE_SEND, Permission.MESSAGE_ADD_REACTION, Permission.MESSAGE_EMBED_LINKS)) {
             return;
-        }
-
-        if (configuration.migration().isActive()) {
-            var activeMigrations = migration.getActiveMigrations(configuration.migration().maxMigrationsPeriod());
-            if (activeMigrations < configuration.migration().maxMigrations()) {
-                repGuild.migration().promptMigration();
-            }
-            if (repGuild.migration().migrationActive()) {
-                var embed = new EmbedBuilder()
-                        .setTitle("⚠ Please migrate to the new version ⚠", configuration.links().invite())
-                        .setDescription(configuration.migration().migrationMessage())
-                        .setAuthor("→ Click here to invite the new bot instance ←", configuration.links().invite())
-                        .setColor(Colors.Strong.RED)
-                        .build();
-                event.getChannel().sendMessageEmbeds(embed).queue();
-                return;
-            }
         }
 
         if (settings.general().isEmojiDebug()) {

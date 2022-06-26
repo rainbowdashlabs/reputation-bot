@@ -1,9 +1,13 @@
 package de.chojo.repbot.listener;
 
+import de.chojo.jdautil.command.ArgumentBuilder;
+import de.chojo.jdautil.parsing.ArgumentUtil;
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.repbot.config.Configuration;
+import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.statistic.Statistic;
 import de.chojo.repbot.util.LogNotify;
+import de.chojo.repbot.util.TimeFormatter;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -18,10 +22,12 @@ public class InternalCommandListener extends ListenerAdapter {
     private static final Logger log = getLogger(InternalCommandListener.class);
     private final Configuration configuration;
     private final Statistic statistic;
+    private final Metrics metrics;
 
-    public InternalCommandListener(Configuration configuration, Statistic statistic) {
+    public InternalCommandListener(Configuration configuration, Statistic statistic, Metrics metrics) {
         this.configuration = configuration;
         this.statistic = statistic;
+        this.metrics = metrics;
     }
 
     @Override
@@ -60,6 +66,33 @@ public class InternalCommandListener extends ListenerAdapter {
             var systemStatistic = statistic.getSystemStatistic();
             systemStatistic.appendTo(builder);
             event.getMessage().replyEmbeds(builder.build()).queue();
+        }
+
+        if ("metrics".equalsIgnoreCase(args[0])) {
+            var reply = event.getMessage()
+                    .reply("Metrics");
+
+            var commands = metrics.commands().week(1).join();
+            if (!commands.commands().isEmpty()) {
+                reply.addFile(commands.getChart("Command statistic for week " + TimeFormatter.month(commands.date())), "commands.png");
+            }
+
+            var messages = metrics.messages().week(1, 24).join();
+            if (!messages.stats().isEmpty()) {
+                reply.addFile(messages.getChart("Analyzed Messages per week"), "messages_week.png");
+            }
+
+            messages = metrics.messages().day(2, 24*7).join();
+            if (!messages.stats().isEmpty()) {
+                reply.addFile(messages.getChart("Analyzed Messages per day"), "messages_day.png");
+            }
+
+            var users = metrics.users().week(1, 24).join();
+            if (!users.stats().isEmpty()) {
+                reply.addFile(users.getChart("Active users per week"), "users.png");
+            }
+
+            reply.queue();
         }
     }
 }

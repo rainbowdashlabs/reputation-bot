@@ -172,9 +172,8 @@ public class Setup extends SimpleCommand {
             return Result.finish();
         })).add(Button.primary("all", "command.setup.dialog.channels.allChannel"), ctx -> {
             var guild = ctx.getGuild();
-            FilterUtil.getAccessableTextChannel(guild).forEach(channel -> guilds
-                    .guild(guild).settings().thanking().channels().add(channel));
-            ctx.reply(ctx.localize("command.channel.sub.addAll.added")).queue();
+            guilds.guild(guild).settings().thanking().channels().listType(false);
+            ctx.reply(ctx.localize("command.channel.sub.list.blacklist")).queue();
             return Result.finish();
         });
     }

@@ -67,7 +67,7 @@ public class ReputationService {
         var abuseSettings = settings.abuseProtection();
 
         // block non reputation channel
-        if (!thankSettings.channels().isEnabled(message.getChannel())) return false;
+        if (!thankSettings.channels().isEnabled(message.getGuildChannel())) return false;
 
         if (!thankSettings.donorRoles().hasRole(guild.getMember(donor))) return false;
         if (!thankSettings.receiverRoles().hasRole(guild.getMember(receiver))) return false;
@@ -158,7 +158,23 @@ public class ReputationService {
             Messages.markMessage(message, refMessage, settings);
             // update role
             try {
-                assigner.update(guild.getMember(receiver));
+                var newRank = assigner.update(guild.getMember(receiver));
+
+                // Send level up message
+                newRank.ifPresent(rank -> {
+                    var announcements = guilds.guild(guild).settings().announcements();
+                    if (!announcements.isActive()) return;
+                    var channel = message.getChannel();
+                    if (!announcements.isSameChannel()) {
+                        channel = guild.getTextChannelById(announcements.channelId());
+                    }
+                    if (channel == null || rank.getRole(guild) == null) return;
+                    channel.sendMessage(localizer.localize("message.levelAnnouncement", guild,
+                                    Replacement.createMention(receiver), Replacement.createMention(rank.getRole(guild))))
+                            .allowedMentions(Collections.emptyList())
+                            .queue();
+                });
+
             } catch (RoleAccessException e) {
                 message.getChannel()
                         .sendMessage(localizer.localize("error.roleAccess", message.getGuild(),

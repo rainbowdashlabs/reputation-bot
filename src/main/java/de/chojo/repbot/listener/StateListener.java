@@ -49,14 +49,11 @@ public class StateListener extends ListenerAdapter {
                 break;
             }
         }
-
-        guilds.guild(event.getGuild()).migration().migrated();
     }
 
     @Override
     public void onGuildLeave(@NotNull GuildLeaveEvent event) {
-        if (configuration.migration().isActive()) return;
-        // Normally we want to delete all data of a guild after the bot left.
+        // We want to delete all data of a guild after the bot left.
         guilds.guild(event.getGuild()).gdpr().queueDeletion();
     }
 

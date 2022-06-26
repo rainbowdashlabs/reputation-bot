@@ -45,12 +45,10 @@ public class Reputation extends SimpleCommand {
 
     private MessageEmbed getUserRepEmbed(SlashCommandContext context, Member member, RepUser user) {
         var ranks = guilds.guild(member.getGuild()).settings().ranks();
-        var roles = ranks.currentRank(user);
+        var current = ranks.currentRank(user);
         var next = ranks.nextRank(user);
 
         var profile = user.profile();
-
-        var current = Optional.ofNullable(roles.isEmpty() ? null : roles.get(0));
 
         var currentRoleRep = current.map(ReputationRank::reputation).orElse(0L);
         var nextRoleRep = next.map(ReputationRank::reputation).orElse(currentRoleRep);
