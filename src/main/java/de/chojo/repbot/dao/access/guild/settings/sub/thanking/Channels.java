@@ -7,7 +7,6 @@ import de.chojo.sqlutil.base.QueryFactoryHolder;
 import net.dv8tion.jda.api.entities.BaseGuildMessageChannel;
 import net.dv8tion.jda.api.entities.Category;
 import net.dv8tion.jda.api.entities.Channel;
-import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.MessageChannel;
@@ -49,17 +48,17 @@ public class Channels extends QueryFactoryHolder implements GuildHolder {
     public boolean isEnabled(GuildMessageChannel channel) {
         BaseGuildMessageChannel baseChannel;
         if (channel instanceof ThreadChannel thread) {
-            if(thread.getParentChannel() instanceof BaseGuildMessageChannel bc){
+            if (thread.getParentChannel() instanceof BaseGuildMessageChannel bc) {
                 baseChannel = bc;
-            }else {
+            } else {
                 log.error("Thread was created in a non base guild channel, but in {}.", thread.getParentChannel().getClass().getName());
                 return false;
             }
         } else {
-            if(channel instanceof BaseGuildMessageChannel bc){
+            if (channel instanceof BaseGuildMessageChannel bc) {
                 baseChannel = bc;
-            }else {
-                log.error("Channel is a non base guild channel, but a {}.",channel.getClass().getName());
+            } else {
+                log.error("Channel is a non base guild channel, but a {}.", channel.getClass().getName());
                 return false;
             }
         }
@@ -68,6 +67,7 @@ public class Channels extends QueryFactoryHolder implements GuildHolder {
     }
 
     public boolean isEnabledByChannel(Channel channel) {
+        if (channels.isEmpty()) return false;
         if (isWhitelist()) {
             return channels.contains(channel.getIdLong());
         }
