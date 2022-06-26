@@ -15,7 +15,6 @@ import java.util.concurrent.TimeUnit;
 
 public class RepGuild extends QueryFactoryHolder implements GuildHolder {
     private static final Cache<Long, Cleanup> CLEANUPS = CacheBuilder.newBuilder().expireAfterAccess(2, TimeUnit.MINUTES).build();
-    private static final Cache<Long, Migration> MIGRATIONS = CacheBuilder.newBuilder().expireAfterAccess(2, TimeUnit.MINUTES).build();
     private static final Cache<Long, Gdpr> GDPR = CacheBuilder.newBuilder().expireAfterAccess(2, TimeUnit.MINUTES).build();
     private final Reputation reputation;
     private final Settings settings;
@@ -81,14 +80,6 @@ public class RepGuild extends QueryFactoryHolder implements GuildHolder {
 
     public Reputation reputation() {
         return reputation;
-    }
-
-    public Migration migration() {
-        try {
-            return MIGRATIONS.get(guildId(), () -> new Migration(this));
-        } catch (ExecutionException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public Settings settings() {
