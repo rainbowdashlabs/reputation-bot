@@ -1,4 +1,4 @@
-package de.chojo.repbot.dao.provider;
+package de.chojo.repbot.dao.access.metrics;
 
 import de.chojo.repbot.statistic.element.DataStatistic;
 import de.chojo.repbot.util.LogNotify;
@@ -13,17 +13,8 @@ import java.util.Optional;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Statistic extends QueryFactoryHolder {
-    private static final Logger log = getLogger(Statistic.class);
-
-    /**
-     * Create a new StatisticData
-     *
-     * @param dataSource datasource
-     */
-    public Statistic(DataSource dataSource) {
-        super(dataSource, QueryBuilderConfig.builder().withExceptionHandler(e ->
-                        log.error(LogNotify.NOTIFY_ADMIN, ExceptionTransformer.prettyException("Query execution failed", e), e))
-                .build());
+    public Statistic(QueryFactoryHolder factoryHolder) {
+        super(factoryHolder);
     }
 
     public Optional<DataStatistic> getStatistic() {
@@ -39,9 +30,15 @@ public class Statistic extends QueryFactoryHolder {
                         	weekly_avg_reputation
                         FROM
                         	data_statistics;
-                        """).readRow(rs -> new DataStatistic(rs.getInt("guilds"), rs.getInt("active_guilds"),
-                        rs.getInt("active_channel"), rs.getInt("channel"), rs.getInt("total_reputation"),
-                        rs.getInt("today_reputation"), rs.getInt("weekly_reputation"), rs.getInt("weekly_avg_reputation")))
+                        """).readRow(rs -> new DataStatistic(
+                        rs.getInt("guilds"),
+                        rs.getInt("active_guilds"),
+                        rs.getInt("active_channel"),
+                        rs.getInt("channel"),
+                        rs.getInt("total_reputation"),
+                        rs.getInt("today_reputation"),
+                        rs.getInt("weekly_reputation"),
+                        rs.getInt("weekly_avg_reputation")))
                 .firstSync();
     }
 

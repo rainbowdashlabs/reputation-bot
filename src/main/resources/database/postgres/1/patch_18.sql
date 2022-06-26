@@ -157,3 +157,120 @@ CREATE TABLE IF NOT EXISTS repbot_schema.announcements
 
 -- Finally get rid of this stupid migration mechanic
 DROP TABLE IF EXISTS repbot_schema.migrations;
+
+CREATE TABLE IF NOT EXISTS repbot_schema.metrics_commands
+(
+    day     DATE          NOT NULL,
+    command TEXT          NOT NULL,
+    count   INT DEFAULT 1 NOT NULL,
+    CONSTRAINT metrics_commands_pk
+        PRIMARY KEY (day, command)
+);
+
+CREATE INDEX IF NOT EXISTS metrics_commands_day_index
+    ON repbot_schema.metrics_commands (day);
+
+CREATE OR REPLACE VIEW repbot_schema.metrics_commands_week AS
+SELECT DATE_TRUNC('week', day)::DATE AS week, command, SUM(count) AS count
+FROM repbot_schema.metrics_commands
+GROUP BY week, command;
+
+
+CREATE OR REPLACE VIEW repbot_schema.metrics_commands_month AS
+SELECT DATE_TRUNC('month', day)::DATE AS month, command, SUM(count) AS count
+FROM repbot_schema.metrics_commands
+GROUP BY month, command;
+
+CREATE TABLE IF NOT EXISTS repbot_schema.metrics_message_analyzed
+(
+    hour  TIMESTAMP NOT NULL
+        CONSTRAINT metric_message_analyzed_pk
+            PRIMARY KEY,
+    count INT       NOT NULL
+);
+
+CREATE OR REPLACE VIEW repbot_schema.metrics_message_analyzed_day AS
+SELECT DATE_TRUNC('day', hour)::DATE AS day,
+       SUM(count)                    AS count
+FROM repbot_schema.metrics_message_analyzed
+GROUP BY day;
+
+CREATE OR REPLACE VIEW repbot_schema.metrics_message_analyzed_week AS
+SELECT DATE_TRUNC('week', hour)::DATE AS week,
+       SUM(count)                     AS count
+FROM repbot_schema.metrics_message_analyzed
+GROUP BY week;
+
+CREATE OR REPLACE VIEW repbot_schema.metrics_message_analyzed_month AS
+SELECT DATE_TRUNC('month', hour)::DATE AS month,
+       SUM(count)                      AS count
+FROM repbot_schema.metrics_message_analyzed
+GROUP BY month;
+
+-- Weekly metrics about unique donors and receivers
+CREATE OR REPLACE VIEW repbot_schema.metrics_unique_users_week AS
+WITH received AS (SELECT DATE_TRUNC('week', received)::DATE AS week,
+                         receiver_id
+                  FROM repbot_schema.reputation_log
+                  GROUP BY week, receiver_id),
+     received_count AS (SELECT week, COUNT(1)
+                        FROM received
+                        GROUP BY week),
+     donated AS (SELECT DATE_TRUNC('week', received)::DATE AS week,
+                        donor_id
+                 FROM repbot_schema.reputation_log
+                 GROUP BY week, donor_id),
+     donated_count AS (SELECT week, COUNT(1)
+                       FROM donated
+                       GROUP BY week),
+     total AS (SELECT *
+               FROM received
+               UNION
+               DISTINCT
+               SELECT *
+               FROM donated),
+     total_count AS (SELECT week, COUNT(1)
+                     FROM total
+                     GROUP BY week)
+SELECT d.week,
+       r.count AS receiver_count,
+       d.count AS donor_count,
+       t.count AS total_count
+FROM received_count r
+         FULL JOIN donated_count d ON r.week = d.week
+         FULL JOIN total_count t ON r.week = t.week
+ORDER BY week DESC;
+
+-- Monthly metrics about unique donors and receivers
+CREATE OR REPLACE VIEW repbot_schema.metrics_unique_users_month AS
+WITH received AS (SELECT DATE_TRUNC('month', received)::DATE AS month,
+                         receiver_id                         AS id
+                  FROM repbot_schema.reputation_log
+                  GROUP BY month, id),
+     received_count AS (SELECT month, COUNT(1)
+                        FROM received
+                        GROUP BY month),
+     donated AS (SELECT DATE_TRUNC('month', received)::DATE AS month,
+                        donor_id                            AS id
+                 FROM repbot_schema.reputation_log
+                 GROUP BY month, id),
+     donated_count AS (SELECT month, COUNT(1)
+                       FROM donated
+                       GROUP BY month),
+     total AS (SELECT *
+               FROM received
+               UNION
+               DISTINCT
+               SELECT *
+               FROM donated),
+     total_count AS (SELECT month, COUNT(1)
+                     FROM total
+                     GROUP BY month)
+SELECT d.month,
+       r.count AS receiver_count,
+       d.count AS donor_count,
+       t.count AS total_count
+FROM received_count r
+         FULL JOIN donated_count d ON r.month = d.month
+         FULL JOIN total_count t ON r.month = t.month
+ORDER BY month DESC;
