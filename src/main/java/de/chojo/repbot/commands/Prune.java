@@ -7,6 +7,7 @@ import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.service.GdprService;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class Prune extends SimpleCommand {
@@ -18,7 +19,7 @@ public class Prune extends SimpleCommand {
                         .add(SimpleArgument.user("user", "command.prune.sub.user.arg.user"))
                         .add(SimpleArgument.string("userid", "command.prune.sub.user.arg.userId")))
                 .addSubCommand("guild", "command.prune.sub.guild")
-                .withPermission());
+                .withPermission(Permission.MESSAGE_MANAGE));
         gdprService = service;
     }
 

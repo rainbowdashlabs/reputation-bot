@@ -46,7 +46,7 @@ public class Setup extends SimpleCommand {
     private final ThankwordsContainer thankwordsContainer;
 
     public Setup(Guilds guilds, ThankwordsContainer thankwordsContainer) {
-        super(CommandMeta.builder("setup", "command.setup.description").withPermission());
+        super(CommandMeta.builder("setup", "command.setup.description").adminCommand());
         this.guilds = guilds;
         this.thankwordsContainer = thankwordsContainer;
     }

@@ -17,7 +17,7 @@ public class Debug extends SimpleCommand {
     private final Guilds guilds;
 
     public Debug(Guilds guilds) {
-        super(CommandMeta.builder("debug", "command.debug.description").withPermission());
+        super(CommandMeta.builder("debug", "command.debug.description").adminCommand());
         this.guilds = guilds;
     }
 
