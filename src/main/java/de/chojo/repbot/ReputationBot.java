@@ -53,6 +53,7 @@ import de.chojo.sqlutil.datasource.DataSourceCreator;
 import de.chojo.sqlutil.updater.QueryReplacement;
 import de.chojo.sqlutil.updater.SqlUpdater;
 import de.chojo.sqlutil.wrapper.QueryBuilderConfig;
+import io.javalin.Javalin;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
@@ -98,6 +99,7 @@ public class ReputationBot {
     private de.chojo.repbot.dao.access.Gdpr gdpr;
     private Cleanup cleanup;
     private Metrics metrics;
+    private Javalin javalin;
 
     public static void main(String[] args) throws SQLException, IOException {
         ReputationBot.instance = new ReputationBot();
@@ -141,6 +143,7 @@ public class ReputationBot {
     private void initBotList() {
         var botlist = configuration.botlist();
         if (!botlist.isSubmit()) return;
+        javalin = Javalin.create().start(botlist.host(), botlist.port());
         BotlistService.build(shardManager)
                 .forDiscordBotListCOM(botlist.discordBotlistCom())
                 .forDiscordBotsGG(botlist.discordBotsGg())
@@ -148,7 +151,7 @@ public class ReputationBot {
                 .forBotlistMe(botlist.botListMe())
                 .withExecutorService(repBotWorker)
                 .withVoteService(builder -> builder
-                        .withVoteWeebhooks(botlist.host(), botlist.port())
+                        .withVoteWeebhooks(javalin)
                         .onVote(voteData -> shardManager
                                 .retrieveUserById(voteData.userId())
                                 .flatMap(User::openPrivateChannel)
