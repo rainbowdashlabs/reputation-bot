@@ -48,12 +48,18 @@ import de.chojo.repbot.service.SelfCleanupService;
 import de.chojo.repbot.statistic.Statistic;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.repbot.util.PermissionErrorHandler;
+import de.chojo.repbot.web.Api;
 import de.chojo.sqlutil.databases.SqlType;
 import de.chojo.sqlutil.datasource.DataSourceCreator;
 import de.chojo.sqlutil.updater.QueryReplacement;
 import de.chojo.sqlutil.updater.SqlUpdater;
 import de.chojo.sqlutil.wrapper.QueryBuilderConfig;
 import io.javalin.Javalin;
+import io.javalin.plugin.openapi.OpenApiOptions;
+import io.javalin.plugin.openapi.OpenApiPlugin;
+import io.javalin.plugin.openapi.ui.ReDocOptions;
+import io.javalin.plugin.openapi.ui.SwaggerOptions;
+import io.swagger.v3.oas.models.info.License;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
@@ -137,13 +143,31 @@ public class ReputationBot {
         log.info("Initializing bot.");
         initBot();
 
+
+        initApi();
+    }
+
+    private void initApi() {
+        var botlist = configuration.botlist();
+
+        var info = new io.swagger.v3.oas.models.info.Info().version("1.0").title("Reputation Bot API")
+                .description("Documentation for the Reputation Bot API")
+                .license(new License().name("GNU Affero General Public License v3.0")
+                        .url("https://github.com/RainbowDashLabs/reputation-bot/blob/master/LICENSE.md"));
+        var options = new OpenApiOptions(info)
+                .path("/json-docs")
+                .reDoc(new ReDocOptions("/redoc")) // endpoint for redoc
+                .swagger(new SwaggerOptions("/docs").title("Reputation Bot API"));
+
+        javalin = Javalin.create(config -> config.registerPlugin(new OpenApiPlugin(options)))
+                .start(botlist.host(), botlist.port());
+        new Api(javalin, metrics).init();
         initBotList();
     }
 
     private void initBotList() {
         var botlist = configuration.botlist();
         if (!botlist.isSubmit()) return;
-        javalin = Javalin.create().start(botlist.host(), botlist.port());
         BotlistService.build(shardManager)
                 .forDiscordBotListCOM(botlist.discordBotlistCom())
                 .forDiscordBotsGG(botlist.discordBotsGg())
