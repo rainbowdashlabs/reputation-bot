@@ -16,8 +16,8 @@ import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
 
 public class Reputation extends MetricsHolder {
-    public Reputation(Metrics metrics) {
-        super(metrics);
+    public Reputation(Metrics metrics, MetricCache cache) {
+        super(cache, metrics);
     }
 
     /*

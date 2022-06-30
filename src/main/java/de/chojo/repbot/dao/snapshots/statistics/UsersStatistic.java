@@ -1,8 +1,6 @@
 package de.chojo.repbot.dao.snapshots.statistics;
 
-import de.chojo.repbot.util.TimeFormatter;
 import org.knowm.xchart.BitmapEncoder;
-import org.knowm.xchart.CategoryChartBuilder;
 import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.XYSeries;
 import org.knowm.xchart.style.AxesChartStyler;
@@ -10,7 +8,6 @@ import org.knowm.xchart.style.Styler;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.Date;
@@ -61,7 +58,7 @@ public record UsersStatistic(List<UserStatistic> stats) implements ChartProvider
         }
     }
 
-    private Date toDate(LocalDate date){
-        return new Date(date.atStartOfDay().toEpochSecond(ZoneOffset.UTC) *1000);
+    private Date toDate(LocalDate date) {
+        return new Date(date.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000);
     }
 }

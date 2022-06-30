@@ -14,8 +14,8 @@ import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
 
 public class Users extends MetricsHolder {
-    public Users(Metrics metrics) {
-        super(metrics);
+    public Users(Metrics metrics, MetricCache cache) {
+        super(cache, metrics);
     }
 
     public void activeWeek(Context ctx) {

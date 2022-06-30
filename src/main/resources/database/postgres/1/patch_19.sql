@@ -81,6 +81,7 @@ BEGIN
 END;
 $BODY$;
 
+-- Correct wrong received timestamps caused by scans
 UPDATE repbot_schema.reputation_log
 SET received = repbot_schema.snowflake_to_unix_timestamp(message_id)
 WHERE received - repbot_schema.snowflake_to_unix_timestamp(message_id) > (INTERVAL '1 day');

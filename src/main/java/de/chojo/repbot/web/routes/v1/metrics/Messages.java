@@ -16,8 +16,8 @@ import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
 
 public class Messages extends MetricsHolder {
-    public Messages(Metrics metrics) {
-        super(metrics);
+    public Messages(Metrics metrics, MetricCache cache) {
+        super(cache, metrics);
     }
 
     public void countDay(Context ctx) {
@@ -86,7 +86,7 @@ public class Messages extends MetricsHolder {
                                 .result("200", CountsStatistic.class, "application/json")
                                 .pathParam("offset", Integer.class, p -> p.setDescription("day offset. 0 is current."))
                                 .pathParam("count", Integer.class, p -> p.setDescription("Amount of previously days in the chart.")),
-                        this::countDay));
+                        cache(this::countDay)));
                 get("week/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
                                 .operation(op -> {
                                     op.summary("Get the counts of analyzed messages per week.");
@@ -95,7 +95,7 @@ public class Messages extends MetricsHolder {
                                 .result("200", CountsStatistic.class, "application/json")
                                 .pathParam("offset", Integer.class, p -> p.setDescription("Week offset. 0 is current."))
                                 .pathParam("count", Integer.class, p -> p.setDescription("Amount of previously weeks in the chart.")),
-                        this::countWeek));
+                        cache(this::countWeek)));
                 get("month/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
                                 .operation(op -> {
                                     op.summary("Get the counts of analyzed messages per month.");
@@ -104,7 +104,7 @@ public class Messages extends MetricsHolder {
                                 .result("200", CountsStatistic.class, "application/json")
                                 .pathParam("offset", Integer.class, p -> p.setDescription("Month offset. 0 is current."))
                                 .pathParam("count", Integer.class, p -> p.setDescription("Amount of previously months in the chart.")),
-                        this::countMonth));
+                        cache(this::countMonth)));
             });
 
             path("total", () -> {

@@ -15,8 +15,8 @@ import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
 
 public class Commands extends MetricsHolder {
-    public Commands(Metrics metrics) {
-        super(metrics);
+    public Commands(Metrics metrics, MetricCache cache) {
+        super(cache, metrics);
     }
 
     public void usageWeek(Context ctx) {
@@ -67,7 +67,7 @@ public class Commands extends MetricsHolder {
                                 .result("200", CommandsStatistic.class, "application/json")
                                 .pathParam("offset", Integer.class, p -> p.setDescription("Week offset. 0 is current."))
                                 .pathParam("count", Integer.class, p -> p.setDescription("Amount of previously weeks in the chart.")),
-                        this::countWeek));
+                        cache(this::countWeek)));
                 get("month/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
                                 .operation(op -> {
                                     op.summary("Get the amount of exectued commands per month.");
@@ -76,7 +76,7 @@ public class Commands extends MetricsHolder {
                                 .result("200", CommandsStatistic.class, "application/json")
                                 .pathParam("offset", Integer.class, p -> p.setDescription("Month offset. 0 is current."))
                                 .pathParam("count", Integer.class, p -> p.setDescription("Amount of previously months in the chart.")),
-                        this::countMonth));
+                        cache(this::countMonth)));
             });
 
             path("usage", () -> {
@@ -89,7 +89,7 @@ public class Commands extends MetricsHolder {
                                 .pathParam("offset", Integer.class, p -> {
                                     p.setDescription("Week offset. 0 is current.");
                                 }),
-                        this::usageWeek));
+                        cache(this::usageWeek)));
                 get("month/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
                                 .operation(op -> {
                                     op.summary("Get command usages for a month.");
@@ -97,7 +97,7 @@ public class Commands extends MetricsHolder {
                                 .result("200", byte[].class, "image/png")
                                 .result("200", CommandsStatistic.class, "application/json")
                                 .pathParam("offset", Integer.class, p -> p.setDescription("Month offset. 0 is current.")),
-                        this::usageMonth));
+                        cache(this::usageMonth)));
             });
         });
     }
