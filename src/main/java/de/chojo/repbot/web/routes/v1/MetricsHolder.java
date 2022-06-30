@@ -44,7 +44,7 @@ public abstract class MetricsHolder implements RoutesBuilder {
             assertSize(offset, 0, max);
             return offset;
         } catch (NumberFormatException e) {
-            throw new ApiError(HttpCode.BAD_REQUEST, "Count is not a number. Got: " + param);
+            throw new ApiError(HttpCode.BAD_REQUEST, "Count is not a number, Got: " + param);
         }
     }
 
@@ -53,7 +53,7 @@ public abstract class MetricsHolder implements RoutesBuilder {
             throw new ApiError(HttpCode.BAD_REQUEST, String.format("Value %s is too small. Min: %s", value, min));
         }
         if (value > max) {
-            throw new ApiError(HttpCode.BAD_REQUEST, String.format("Value %s is too large. Max: %s", value, min));
+            throw new ApiError(HttpCode.BAD_REQUEST, String.format("Value %s is too large. Max: %s", value, max));
         }
     }
 }

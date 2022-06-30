@@ -120,6 +120,12 @@ public class ReputationBot {
         };
     }
 
+    /**
+     * Starts the bot.
+     *
+     * @throws SQLException If the database connection fails.
+     * @throws IOException  If the configuration file fails to load.
+     */
     private void start() throws SQLException, IOException {
         configuration = Configuration.create();
 
