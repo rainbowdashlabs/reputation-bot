@@ -80,7 +80,7 @@ public class Commands extends MetricsHolder {
             });
 
             path("usage", () -> {
-                get("week/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
+                get("week/{offset}", OpenApiBuilder.documented(OpenApiBuilder.document()
                                 .operation(op -> {
                                     op.summary("Get command usages for a week.");
                                 })
@@ -90,7 +90,7 @@ public class Commands extends MetricsHolder {
                                     p.setDescription("Week offset. 0 is current.");
                                 }),
                         cache(this::usageWeek)));
-                get("month/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
+                get("month/{offset}", OpenApiBuilder.documented(OpenApiBuilder.document()
                                 .operation(op -> {
                                     op.summary("Get command usages for a month.");
                                 })
