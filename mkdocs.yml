@@ -16,6 +16,7 @@ nav:
   - Abuse Protection: abuse_protection.md
   - Commands: commands.md
   - FAQ: faq.md
+  - Metrics: metrics.md
   - ToS and Privacy: tos-privacy.md
 theme:
   features:
