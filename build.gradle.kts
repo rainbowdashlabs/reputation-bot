@@ -20,7 +20,7 @@ dependencies {
     }
 
 
-    implementation("io.javalin", "javalin-bundle", "4.6.0") {
+    implementation("io.javalin", "javalin-bundle", "4.6.3") {
         exclude("ch.qos.logback")
     }
 
