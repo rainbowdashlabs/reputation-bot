@@ -25,7 +25,7 @@ public class Messages extends MetricsHolder {
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {
-            writeImage(ctx, stats.getChart("Reputation per day"));
+            writeImage(ctx, stats.getChart("Messages analyzed per day"));
         }
     }
 
@@ -34,7 +34,7 @@ public class Messages extends MetricsHolder {
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {
-            writeImage(ctx, stats.getChart("Reputation per week"));
+            writeImage(ctx, stats.getChart("Messages analyzed per week"));
         }
     }
 
@@ -43,7 +43,7 @@ public class Messages extends MetricsHolder {
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {
-            writeImage(ctx, stats.getChart("Reputation per month"));
+            writeImage(ctx, stats.getChart("Messages analyzed per month"));
         }
     }
 
@@ -52,7 +52,7 @@ public class Messages extends MetricsHolder {
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {
-            writeImage(ctx, stats.getChart("Total reputation per day"));
+            writeImage(ctx, stats.getChart("Total messages analyzed"));
         }
     }
 
@@ -61,7 +61,7 @@ public class Messages extends MetricsHolder {
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {
-            writeImage(ctx, stats.getChart("Total reputation per week"));
+            writeImage(ctx, stats.getChart("Total messages analyzed"));
         }
     }
 
@@ -70,7 +70,7 @@ public class Messages extends MetricsHolder {
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {
-            writeImage(ctx, stats.getChart("Total reputation per month"));
+            writeImage(ctx, stats.getChart("Total messages analyzed"));
         }
     }
 

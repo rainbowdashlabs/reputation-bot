@@ -12,14 +12,14 @@ import static io.javalin.apibuilder.ApiBuilder.before;
 
 public class Metrics implements RoutesBuilder {
 
-    public static final int MAX_DAY_OFFSET = 30;
-    public static final int MAX_WEEK_OFFSET = 24;
+    public static final int MAX_DAY_OFFSET = 60;
+    public static final int MAX_WEEK_OFFSET = 52;
     public static final int MAX_MONTH_OFFSET = 24;
     public static final int MAX_YEAR_OFFSET = 2;
 
-    public static final int MAX_DAYS = 90;
-    public static final int MAX_WEEKS = 52;
-    public static final int MAX_MONTH = 24;
+    public static final int MAX_DAYS = 120;
+    public static final int MAX_WEEKS = 104;
+    public static final int MAX_MONTH = 48;
     private final Reputation reputation;
     private final Commands commands;
     private final Messages messages;
