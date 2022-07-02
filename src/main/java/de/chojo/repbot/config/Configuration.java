@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import de.chojo.repbot.config.elements.AnalyzerSettings;
+import de.chojo.repbot.config.elements.Api;
 import de.chojo.repbot.config.elements.Badges;
 import de.chojo.repbot.config.elements.BaseSettings;
 import de.chojo.repbot.config.elements.Botlist;
@@ -125,5 +126,9 @@ public class Configuration {
 
     public SelfCleanup selfCleanup() {
         return configFile.selfCleanup();
+    }
+
+    public Api api() {
+        return configFile.api();
     }
 }

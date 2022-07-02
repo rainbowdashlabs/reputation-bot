@@ -1,6 +1,7 @@
 package de.chojo.repbot.config;
 
 import de.chojo.repbot.config.elements.AnalyzerSettings;
+import de.chojo.repbot.config.elements.Api;
 import de.chojo.repbot.config.elements.Badges;
 import de.chojo.repbot.config.elements.BaseSettings;
 import de.chojo.repbot.config.elements.Botlist;
@@ -20,6 +21,7 @@ public class ConfigFile {
     private Badges badges = new Badges();
     private Links links = new Links();
     private Botlist botlist = new Botlist();
+    private Api api = new Api();
     private SelfCleanup selfcleanup = new SelfCleanup();
     public BaseSettings baseSettings() {
         return baseSettings;
@@ -55,5 +57,9 @@ public class ConfigFile {
 
     public SelfCleanup selfCleanup() {
         return selfcleanup;
+    }
+
+    public Api api() {
+        return api;
     }
 }

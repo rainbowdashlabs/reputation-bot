@@ -154,7 +154,7 @@ public class ReputationBot {
     }
 
     private void initApi() {
-        var botlist = configuration.botlist();
+        var api = configuration.api();
 
         var info = new io.swagger.v3.oas.models.info.Info().version("1.0").title("Reputation Bot API")
                 .description("Documentation for the Reputation Bot API")
@@ -166,7 +166,7 @@ public class ReputationBot {
                 .swagger(new SwaggerOptions("/docs").title("Reputation Bot API"));
 
         javalin = Javalin.create(config -> config.registerPlugin(new OpenApiPlugin(options)))
-                .start(botlist.host(), botlist.port());
+                .start(api.host(), api.port());
         new Api(javalin, metrics).init();
         initBotList();
     }
