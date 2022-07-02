@@ -48,7 +48,7 @@ public class Users extends MetricsHolder {
                                 .result("200", UsersStatistic.class, "application/json")
                                 .pathParam("offset", Integer.class, p -> p.setDescription("Week offset. 0 is current."))
                                 .pathParam("count", Integer.class, p -> p.setDescription("Amount of previously weeks in the chart.")),
-                        this::activeWeek));
+                        cache(this::activeWeek)));
                 get("month/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
                                 .operation(op -> {
                                     op.summary("Get the amount of active users per month.");
@@ -57,7 +57,7 @@ public class Users extends MetricsHolder {
                                 .result("200", UsersStatistic.class, "application/json")
                                 .pathParam("offset", Integer.class, p -> p.setDescription("Month offset. 0 is current."))
                                 .pathParam("count", Integer.class, p -> p.setDescription("Amount of previously months in the chart.")),
-                        this::activeMonth));
+                        cache(this::activeMonth)));
             });
         });
     }

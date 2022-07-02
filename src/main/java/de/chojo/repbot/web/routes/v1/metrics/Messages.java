@@ -116,7 +116,7 @@ public class Messages extends MetricsHolder {
                                 .result("200", CountsStatistic.class, "application/json")
                                 .pathParam("offset", Integer.class, p -> p.setDescription("Day offset. 0 is current."))
                                 .pathParam("count", Integer.class, p -> p.setDescription("Amount of previously days in the chart.")),
-                        this::totalDay));
+                        cache(this::totalDay)));
                 get("week/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
                                 .operation(op -> {
                                     op.summary("Get the total count of analyzed messages in these weeks.");
@@ -125,7 +125,7 @@ public class Messages extends MetricsHolder {
                                 .result("200", CountsStatistic.class, "application/json")
                                 .pathParam("offset", Integer.class, p -> p.setDescription("Week offset. 0 is current."))
                                 .pathParam("count", Integer.class, p -> p.setDescription("Amount of previously weeks in the chart.")),
-                        this::totalWeek));
+                        cache(this::totalWeek)));
                 get("month/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
                                 .operation(op -> {
                                     op.summary("Get the total count of analyzed messages in these months.");
@@ -134,7 +134,7 @@ public class Messages extends MetricsHolder {
                                 .result("200", CountsStatistic.class, "application/json")
                                 .pathParam("offset", Integer.class, p -> p.setDescription("Month offset. 0 is current."))
                                 .pathParam("count", Integer.class, p -> p.setDescription("Amount of previously months in the chart.")),
-                        this::totalMonth));
+                        cache(this::totalMonth)));
             });
         });
     }

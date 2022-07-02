@@ -72,7 +72,6 @@ public class MetricCache implements RoutesBuilder {
             contentType = ctx.res.getContentType();
             try (var in = ctx.resultStream()) {
                 body = in.readAllBytes();
-                log.trace("wrote");
                 ctx.result(body);
             } catch (IOException e) {
                 log.error("Could not cache result", e);

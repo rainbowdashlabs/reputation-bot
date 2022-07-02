@@ -98,7 +98,7 @@ public class Reputation extends MetricsHolder {
                                 .result("200", CountsStatistic.class, "application/json")
                                 .pathParam("offset", Integer.class, p -> p.setDescription("Week offset. 0 is current."))
                                 .pathParam("count", Integer.class, p -> p.setDescription("Amount of previously weeks in the chart.")),
-                        this::countWeek));
+                        cache(this::countWeek)));
                 get("month/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
                                 .operation(op -> {
                                     op.summary("Get the counts of given reputation per month.");
@@ -107,7 +107,7 @@ public class Reputation extends MetricsHolder {
                                 .result("200", CountsStatistic.class, "application/json")
                                 .pathParam("offset", Integer.class, p -> p.setDescription("Month offset. 0 is current."))
                                 .pathParam("count", Integer.class, p -> p.setDescription("Amount of previously months in the chart.")),
-                        this::countMonth));
+                        cache(this::countMonth)));
             });
 
             path("total", () -> {
@@ -119,7 +119,7 @@ public class Reputation extends MetricsHolder {
                                 .result("200", CountsStatistic.class, "application/json")
                                 .pathParam("offset", Integer.class, p -> p.setDescription("Week offset. 0 is current."))
                                 .pathParam("count", Integer.class, p -> p.setDescription("Amount of previously weeks in the chart.")),
-                        this::totalWeek));
+                        cache(this::totalWeek)));
                 get("month/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
                                 .operation(op -> {
                                     op.summary("Get the total count of reputation in these months.");
@@ -128,7 +128,7 @@ public class Reputation extends MetricsHolder {
                                 .result("200", CountsStatistic.class, "application/json")
                                 .pathParam("offset", Integer.class, p -> p.setDescription("Month offset. 0 is current."))
                                 .pathParam("count", Integer.class, p -> p.setDescription("Amount of previously months in the chart.")),
-                        this::totalMonth));
+                        cache(this::totalMonth)));
             });
 
             path("dow", () -> {
@@ -139,7 +139,7 @@ public class Reputation extends MetricsHolder {
                                 .result("200", byte[].class, "image/png")
                                 .result("200", DowsStatistic.class, "application/json")
                                 .pathParam("offset", Integer.class, p -> p.setDescription("Week offset. 0 is current.")),
-                        this::dowWeek));
+                        cache(this::dowWeek)));
                 get("month/{offset}", OpenApiBuilder.documented(OpenApiBuilder.document()
                                 .operation(op -> {
                                     op.summary("Get average reputation per day of week in a month.");
@@ -147,7 +147,7 @@ public class Reputation extends MetricsHolder {
                                 .result("200", byte[].class, "image/png")
                                 .result("200", DowsStatistic.class, "application/json")
                                 .pathParam("offset", Integer.class, p -> p.setDescription("Month offset. 0 is current.")),
-                        this::dowMonth));
+                        cache(this::dowMonth)));
                 get("year/{offset}", OpenApiBuilder.documented(OpenApiBuilder.document()
                                 .operation(op -> {
                                     op.summary("Get average reputation per day of week in a year.");
@@ -155,7 +155,7 @@ public class Reputation extends MetricsHolder {
                                 .result("200", byte[].class, "image/png")
                                 .result("200", DowsStatistic.class, "application/json")
                                 .pathParam("offset", Integer.class, p -> p.setDescription("Year offset. 0 is current.")),
-                        this::dowYear));
+                        cache(this::dowYear)));
             });
         });
     }
