@@ -28,7 +28,7 @@ public class RepSettings extends SimpleCommand {
         super(CommandMeta.builder("repsettings", "command.repSettings.description")
                 .addSubCommand("info", "command.repSettings.sub.info")
                 .addSubCommand("emojidebug", "command.repSettings.sub.emojidebug")
-                .withPermission());
+                .adminCommand());
         this.guilds = guilds;
     }
 

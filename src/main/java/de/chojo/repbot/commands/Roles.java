@@ -9,6 +9,7 @@ import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.service.RoleAccessException;
 import de.chojo.repbot.service.RoleAssigner;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -53,7 +54,7 @@ public class Roles extends SimpleCommand {
                 .addSubCommand("list", "command.roles.sub.list")
                 .addSubCommand("stackroles", "command.roles.sub.stackRoles", argsBuilder()
                         .add(SimpleArgument.bool("stack", "command.roles.sub.stackRoles.arg.stack")))
-                .withPermission());
+                .withPermission(Permission.MANAGE_ROLES));
         this.guilds = guilds;
         this.roleAssigner = roleAssigner;
     }

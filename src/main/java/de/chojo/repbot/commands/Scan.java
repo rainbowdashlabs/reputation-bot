@@ -63,7 +63,7 @@ public class Scan extends SimpleCommand {
                         .add(SimpleArgument.channel("channel", "command.scan.sub.start.arg.numberMessages"))
                         .add(SimpleArgument.integer("number_messages", "command.scan.sub.start.arg.channel")))
                 .addSubCommand("cancel", "command.scan.sub.cancel")
-                .withPermission());
+                .adminCommand());
         this.guilds = guilds;
         this.configuration = configuration;
         worker.scheduleAtFixedRate(() -> {

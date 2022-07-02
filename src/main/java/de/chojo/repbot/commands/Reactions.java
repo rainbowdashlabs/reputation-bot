@@ -11,9 +11,10 @@ import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.ListedEmote;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
@@ -38,7 +39,7 @@ public class Reactions extends SimpleCommand {
                 .addSubCommand("remove", "command.reaction.sub.remove", argsBuilder()
                         .add(SimpleArgument.string("emote", "command.reaction.sub.remove.arg.emote").withAutoComplete().asRequired()))
                 .addSubCommand("info", "command.reaction.sub.info")
-                .withPermission());
+                .adminCommand());
         this.guilds = guilds;
     }
 
@@ -155,7 +156,7 @@ public class Reactions extends SimpleCommand {
         // Check for emote id
         if (Verifier.isValidId(emote)) {
             var emoteById = message.getGuild()
-                    .retrieveEmoteById(Verifier.getIdRaw(emote).get())
+                    .retrieveEmojiById(Verifier.getIdRaw(emote).get())
                     .onErrorMap(err -> null)
                     .complete();
             if (!canUse(emoteById, message)) {
@@ -165,7 +166,7 @@ public class Reactions extends SimpleCommand {
         }
 
         // Check for name
-        var emoteByName = message.getGuild().retrieveEmotes().complete().stream()
+        var emoteByName = message.getGuild().retrieveEmojis().complete().stream()
                 .filter(e -> e.getName().equals(emote))
                 .findFirst();
 
@@ -178,7 +179,7 @@ public class Reactions extends SimpleCommand {
 
         // check for unicode
         try {
-            message.addReaction(emote).complete();
+            message.addReaction(Emoji.fromUnicode(emote)).complete();
         } catch (ErrorResponseException e) {
 
             return new EmojiCheckResult(null, "", CheckResult.UNKNOWN_EMOJI);
@@ -186,7 +187,7 @@ public class Reactions extends SimpleCommand {
         return new EmojiCheckResult(emote, "", CheckResult.EMOJI_FOUND);
     }
 
-    private boolean canUse(ListedEmote emote, Message message) {
+    private boolean canUse(RichCustomEmoji emote, Message message) {
         if (emote == null) {
             return false;
         }

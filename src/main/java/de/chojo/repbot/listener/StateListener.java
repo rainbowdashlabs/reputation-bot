@@ -5,7 +5,7 @@ import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.channel.ChannelDeleteEvent;
-import net.dv8tion.jda.api.events.emote.EmoteRemovedEvent;
+import net.dv8tion.jda.api.events.emoji.EmojiRemovedEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
@@ -80,10 +80,10 @@ public class StateListener extends ListenerAdapter {
     }
 
     @Override
-    public void onEmoteRemoved(@NotNull EmoteRemovedEvent event) {
+    public void onEmojiRemoved(@NotNull EmojiRemovedEvent event) {
         var guildSettings = guilds.guild(event.getGuild()).settings();
         if (!guildSettings.thanking().reactions().reactionIsEmote()) return;
-        if (!guildSettings.thanking().reactions().mainReaction().equals(event.getEmote().getId())) return;
+        if (!guildSettings.thanking().reactions().mainReaction().equals(event.getEmoji().getId())) return;
         guildSettings.thanking().reactions().mainReaction("🏅");
     }
 }
