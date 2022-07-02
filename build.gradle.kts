@@ -19,6 +19,11 @@ dependencies {
         exclude(group = "club.minnced", module = "opus-java")
     }
 
+
+    implementation("io.javalin", "javalin-bundle", "4.6.0") {
+        exclude("ch.qos.logback")
+    }
+
     // database
     implementation("org.postgresql", "postgresql", "42.4.0")
     implementation("de.chojo", "sql-util", "1.4.6")

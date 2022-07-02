@@ -325,7 +325,7 @@ public class Scan extends SimpleCommand {
                         case FUZZY, MENTION, ANSWER -> {
                             if (Verifier.equalSnowflake(donator, resultReceiver.getReference())) continue;
                             if (reputation.user(resultReceiver.getReference().getUser())
-                                    .addReputation(donator != null && guild.isMember(donator) ? donator : null, message, refMessage, result.type())) {
+                                    .addOldReputation(donator != null && guild.isMember(donator) ? donator : null, message, refMessage, result.type())) {
                                 hit();
                             }
                         }

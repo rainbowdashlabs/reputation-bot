@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
-public record CountStatistics(LocalDate date, int count) implements Comparable<CountStatistics>{
+public record CountStatistics(LocalDate date, int count) implements Comparable<CountStatistics> {
 
     public static CountStatistics build(ResultSet rs, String dateKey) throws SQLException {
         return new CountStatistics(rs.getDate(dateKey).toLocalDate(),

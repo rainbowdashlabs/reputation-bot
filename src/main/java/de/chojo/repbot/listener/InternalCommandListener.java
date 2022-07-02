@@ -77,14 +77,29 @@ public class InternalCommandListener extends ListenerAdapter {
                 reply.addFile(commands.getChart("Command statistic for week " + TimeFormatter.month(commands.date())), "commands.png");
             }
 
-            var messages = metrics.messages().week(1, 24).join();
-            if (!messages.stats().isEmpty()) {
-                reply.addFile(messages.getChart("Analyzed Messages per week"), "messages_week.png");
+            var counts = metrics.reputation().week(1, 24).join();
+            if (!counts.stats().isEmpty()) {
+                reply.addFile(counts.getChart("Reputation counts per week"), "reputatation.png");
             }
 
-            messages = metrics.messages().day(2, 24*7).join();
-            if (!messages.stats().isEmpty()) {
-                reply.addFile(messages.getChart("Analyzed Messages per day"), "messages_day.png");
+            counts = metrics.reputation().totalWeek(1, 24).join();
+            if (!counts.stats().isEmpty()) {
+                reply.addFile(counts.getChart("Total reputation"), "total_reputation.png");
+            }
+
+            var dows = metrics.reputation().dowMonth(1).join();
+            if (!counts.stats().isEmpty()) {
+                reply.addFile(dows.getChart("Day of Week stats reputation"), "dow_reputation.png");
+            }
+
+            counts = metrics.messages().week(1, 24).join();
+            if (!counts.stats().isEmpty()) {
+                reply.addFile(counts.getChart("Analyzed Messages per week"), "messages_week.png");
+            }
+
+            counts = metrics.messages().day(2, 24*7).join();
+            if (!counts.stats().isEmpty()) {
+                reply.addFile(counts.getChart("Analyzed Messages per day"), "messages_day.png");
             }
 
             var users = metrics.users().week(1, 24).join();

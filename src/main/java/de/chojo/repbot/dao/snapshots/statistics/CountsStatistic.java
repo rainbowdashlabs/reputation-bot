@@ -1,9 +1,6 @@
 package de.chojo.repbot.dao.snapshots.statistics;
 
-import de.chojo.repbot.util.TimeFormatter;
 import org.knowm.xchart.BitmapEncoder;
-import org.knowm.xchart.CategoryChartBuilder;
-import org.knowm.xchart.XYChart;
 import org.knowm.xchart.XYChartBuilder;
 import org.knowm.xchart.style.AxesChartStyler;
 import org.knowm.xchart.style.Styler;
@@ -14,7 +11,6 @@ import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.IntStream;
 
 public record CountsStatistic(List<CountStatistics> stats) implements ChartProvider {
 
@@ -56,7 +52,7 @@ public record CountsStatistic(List<CountStatistics> stats) implements ChartProvi
         }
     }
 
-    private Date toDate(LocalDate date){
-        return new Date(date.atStartOfDay().toEpochSecond(ZoneOffset.UTC) *1000);
+    private Date toDate(LocalDate date) {
+        return new Date(date.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000);
     }
 }
