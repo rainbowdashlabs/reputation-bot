@@ -3,7 +3,10 @@ package de.chojo.repbot.web;
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.web.erros.ApiError;
 import io.javalin.Javalin;
+import io.javalin.http.util.RateLimiter;
 import org.slf4j.Logger;
+
+import java.util.concurrent.TimeUnit;
 
 import static io.javalin.apibuilder.ApiBuilder.before;
 import static io.javalin.apibuilder.ApiBuilder.path;
@@ -22,7 +25,10 @@ public class Api {
     public void init() {
         javalin.exception(ApiError.class, (err, ctx) -> ctx.result(err.getMessage()).status(err.status()));
         javalin.routes(() -> {
-            before(ctx -> log.debug("Received request on {}.", ctx.path()));
+            before(ctx -> {
+                log.debug("Received request on {}.", ctx.path());
+
+            });
 
             path("v1", () -> {
                 path("metrics", metrics::buildRoutes);

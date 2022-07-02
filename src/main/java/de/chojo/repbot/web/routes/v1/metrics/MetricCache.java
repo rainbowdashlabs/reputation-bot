@@ -5,6 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import de.chojo.repbot.web.routes.RoutesBuilder;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
+import io.javalin.http.util.RateLimiter;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -18,20 +19,27 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class MetricCache implements RoutesBuilder {
     private static final Logger log = getLogger(MetricCache.class);
+    private final RateLimiter rateLimiter;
     private final Cache<CacheKey, ResponseCache> cache = CacheBuilder.newBuilder()
             .expireAfterAccess(30, TimeUnit.MINUTES)
             .maximumSize(100)
             .build();
+
+    public MetricCache() {
+        rateLimiter = new RateLimiter(TimeUnit.MINUTES);
+    }
 
     public Handler cache(Handler supplier) {
         return ctx -> {
             var cacheKey = new CacheKey(ctx);
             var cacheValue = cache.getIfPresent(cacheKey);
             if (cacheValue != null) {
+                rateLimiter.incrementCounter(ctx, 60);
                 log.trace("Cache hit on {}.", ctx.path());
                 cacheValue.apply(ctx);
             } else {
                 log.trace("No cache value for {}.", ctx.path());
+                rateLimiter.incrementCounter(ctx, 30);
                 supplier.handle(ctx);
             }
         };
