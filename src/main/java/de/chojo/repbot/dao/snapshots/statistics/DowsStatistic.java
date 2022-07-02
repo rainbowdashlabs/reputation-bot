@@ -39,8 +39,8 @@ public record DowsStatistic(List<DowStatistics> stats) implements ChartProvider 
         // Check if all days are present
         if (stats.size() != 7) {
             var date = stats.isEmpty() ? getMonday() : stats.get(0).date();
-            var emptyDays = IntStream.rangeClosed(0, 6)
-                    .filter(dow -> stats.stream().anyMatch(day -> day.dow() == dow))
+            var emptyDays = IntStream.rangeClosed(1, 7)
+                    .filter(dow -> stats.stream().noneMatch(day -> day.dow() == dow))
                     .mapToObj(i -> new DowStatistics(date, i, 0))
                     .collect(Collectors.toCollection(ArrayList::new));
             stats.addAll(emptyDays);
