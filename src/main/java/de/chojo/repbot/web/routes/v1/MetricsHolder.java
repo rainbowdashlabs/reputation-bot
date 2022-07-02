@@ -49,7 +49,7 @@ public abstract class MetricsHolder implements RoutesBuilder {
         var param = context.pathParam("count");
         try {
             var offset = Integer.parseInt(param);
-            assertSize(offset, 0, max);
+            assertSize(offset, 2, max);
             return offset;
         } catch (NumberFormatException e) {
             throw new ApiError(HttpCode.BAD_REQUEST, "Count is not a number, Got: " + param);

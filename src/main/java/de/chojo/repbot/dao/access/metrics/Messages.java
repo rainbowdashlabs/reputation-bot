@@ -35,7 +35,7 @@ public class Messages extends QueryFactoryHolder {
     }
 
     public CompletableFuture<CountsStatistic> month(int month, int count) {
-        return get("metrics_unique_users_month", "month", month, count);
+        return get("metrics_message_analyzed_month", "month", month, count);
     }
 
     public CompletableFuture<CountsStatistic> totalDay(int day, int count) {

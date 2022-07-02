@@ -48,7 +48,7 @@ public class Messages extends MetricsHolder {
     }
 
     public void totalDay(Context ctx) {
-        var stats = metrics().messages().totalWeek(offset(ctx, MAX_DAY_OFFSET), count(ctx, MAX_DAYS)).join();
+        var stats = metrics().messages().totalDay(offset(ctx, MAX_DAY_OFFSET), count(ctx, MAX_DAYS)).join();
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {

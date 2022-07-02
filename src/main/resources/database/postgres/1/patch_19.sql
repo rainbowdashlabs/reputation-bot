@@ -38,17 +38,17 @@ SELECT month, SUM(count) OVER (ORDER BY month) AS count
 FROM repbot_schema.metrics_reputation_month m
 ORDER BY month DESC;
 
-CREATE OR REPLACE VIEW repbot_schema.metrics_messages_total_day AS
+CREATE OR REPLACE VIEW repbot_schema.metrics_messages_analyzed_total_day AS
 SELECT day, SUM(count) OVER (ORDER BY day) AS count
 FROM repbot_schema.metrics_message_analyzed_day m
 ORDER BY day DESC;
 
-CREATE OR REPLACE VIEW repbot_schema.metrics_messages_total_week AS
+CREATE OR REPLACE VIEW repbot_schema.metrics_messages_analyzed_total_week AS
 SELECT week, SUM(count) OVER (ORDER BY week) AS count
 FROM repbot_schema.metrics_message_analyzed_week m
 ORDER BY week DESC;
 
-CREATE OR REPLACE VIEW repbot_schema.metrics_messages_total_month AS
+CREATE OR REPLACE VIEW repbot_schema.metrics_messages_analyzed_total_month AS
 SELECT month, SUM(count) OVER (ORDER BY month) AS count
 FROM repbot_schema.metrics_message_analyzed_month m
 ORDER BY month DESC;

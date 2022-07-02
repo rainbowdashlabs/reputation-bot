@@ -8,7 +8,14 @@ import org.knowm.xchart.style.Styler;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 
 import java.io.IOException;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public record DowsStatistic(List<DowStatistics> stats) implements ChartProvider {
 
@@ -28,6 +35,17 @@ public record DowsStatistic(List<DowStatistics> stats) implements ChartProvider 
         styler.setXAxisLabelAlignment(AxesChartStyler.TextAlignment.Right);
         styler.setLegendVisible(false);
 
+        var stats = this.stats;
+        // Check if all days are present
+        if (stats.size() != 7) {
+            var date = stats.isEmpty() ? getMonday() : stats.get(0).date();
+            var emptyDays = IntStream.rangeClosed(0, 6)
+                    .filter(dow -> stats.stream().anyMatch(day -> day.dow() == dow))
+                    .mapToObj(i -> new DowStatistics(date, i, 0))
+                    .collect(Collectors.toCollection(ArrayList::new));
+            stats.addAll(emptyDays);
+        }
+
         var sorted = stats.stream().sorted().toList();
 
         categorySeries.addSeries("Counts",
@@ -41,5 +59,9 @@ public record DowsStatistic(List<DowStatistics> stats) implements ChartProvider 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private LocalDate getMonday() {
+        return LocalDate.now().with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
     }
 }
