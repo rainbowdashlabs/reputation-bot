@@ -85,3 +85,12 @@ $BODY$;
 UPDATE repbot_schema.reputation_log
 SET received = repbot_schema.snowflake_to_unix_timestamp(message_id)
 WHERE received - repbot_schema.snowflake_to_unix_timestamp(message_id) > (INTERVAL '1 day');
+
+-- Seems like the dev and live database got out of sync.
+-- This will bring them back on the same track
+ALTER TABLE repbot_schema.reputation_log ALTER COLUMN donor_id DROP NOT NULL;
+
+UPDATE repbot_schema.reputation_log SET donor_id = NULL WHERE donor_id = 0;
+
+CREATE INDEX IF NOT EXISTS reputation_log_guild_id_index
+    ON repbot_schema.reputation_log (guild_id);
