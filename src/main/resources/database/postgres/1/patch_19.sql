@@ -65,7 +65,7 @@ FROM repbot_schema.metrics_commands
 GROUP BY month
 ORDER BY month DESC;
 
-CREATE FUNCTION repbot_schema.snowflake_to_unix_timestamp(snowflake BIGINT) RETURNS TIMESTAMP
+CREATE OR REPLACE FUNCTION repbot_schema.snowflake_to_unix_timestamp(snowflake BIGINT) RETURNS TIMESTAMP
     LANGUAGE plpgsql
     PARALLEL SAFE
     IMMUTABLE
