@@ -284,7 +284,6 @@ public class ReputationBot {
                         new AbuseProtection(guilds),
                         new Debug(guilds))
                 .withLocalizer(localizer)
-                .withPermissionCheck((event, meta) -> true)
                 .withCommandErrorHandler((context, throwable) -> {
                     if (throwable instanceof InsufficientPermissionException) {
                         PermissionErrorHandler.handle((InsufficientPermissionException) throwable, shardManager, localizer, configuration);

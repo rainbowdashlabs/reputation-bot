@@ -39,7 +39,7 @@ public class Channel extends SimpleCommand {
                         .add(SimpleArgument.bool("active", "command.channel.sub.announcement.arg.active"))
                         .add(SimpleArgument.channel("channel", "command.channel.sub.announcement.arg.where"))
                         .add(SimpleArgument.string("where", "command.channel.sub.announcement.arg.channel").withAutoComplete()))
-                .withPermission());
+                .adminCommand());
         this.guilds = guilds;
     }
 

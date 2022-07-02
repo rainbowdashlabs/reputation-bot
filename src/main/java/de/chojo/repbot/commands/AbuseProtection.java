@@ -31,7 +31,7 @@ public class AbuseProtection extends SimpleCommand {
                         .add(SimpleArgument.bool("state", "command.abuseProtection.sub.donorContext.arg.state")))
                 .addSubCommand("receivercontext", "command.abuseProtection.sub.receiverContext", argsBuilder()
                         .add(SimpleArgument.bool("state", "command.abuseProtection.sub.receiverContext.arg.state")))
-                .withPermission());
+                .adminCommand());
         this.guilds = guilds;
     }
 
