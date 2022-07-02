@@ -4,14 +4,15 @@ import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.dao.snapshots.statistics.CountsStatistic;
 import de.chojo.repbot.dao.snapshots.statistics.DowsStatistic;
 import de.chojo.repbot.web.routes.v1.MetricsHolder;
+import de.chojo.repbot.web.routes.v1.MetricsRoute;
 import io.javalin.http.Context;
 import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 
-import static de.chojo.repbot.web.routes.v1.Metrics.MAX_MONTH;
-import static de.chojo.repbot.web.routes.v1.Metrics.MAX_MONTH_OFFSET;
-import static de.chojo.repbot.web.routes.v1.Metrics.MAX_WEEKS;
-import static de.chojo.repbot.web.routes.v1.Metrics.MAX_WEEK_OFFSET;
-import static de.chojo.repbot.web.routes.v1.Metrics.MAX_YEAR_OFFSET;
+import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_MONTH;
+import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_MONTH_OFFSET;
+import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_WEEKS;
+import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_WEEK_OFFSET;
+import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_YEAR_OFFSET;
 import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
 
@@ -96,8 +97,8 @@ public class Reputation extends MetricsHolder {
                                 })
                                 .result("200", byte[].class, "image/png")
                                 .result("200", CountsStatistic.class, "application/json")
-                                .pathParam("offset", Integer.class, p -> p.setDescription("Week offset. 0 is current."))
-                                .pathParam("count", Integer.class, p -> p.setDescription("Amount of previously weeks in the chart.")),
+                                .pathParam("offset", Integer.class, MetricsRoute::offsetWeekDoc)
+                                .pathParam("count", Integer.class, MetricsRoute::countWeekDoc),
                         cache(this::countWeek)));
                 get("month/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
                                 .operation(op -> {
@@ -105,8 +106,8 @@ public class Reputation extends MetricsHolder {
                                 })
                                 .result("200", byte[].class, "image/png")
                                 .result("200", CountsStatistic.class, "application/json")
-                                .pathParam("offset", Integer.class, p -> p.setDescription("Month offset. 0 is current."))
-                                .pathParam("count", Integer.class, p -> p.setDescription("Amount of previously months in the chart.")),
+                                .pathParam("offset", Integer.class,MetricsRoute::offsetMonthDoc)
+                                .pathParam("count", Integer.class, MetricsRoute::countMonthDoc),
                         cache(this::countMonth)));
             });
 
@@ -117,8 +118,8 @@ public class Reputation extends MetricsHolder {
                                 })
                                 .result("200", byte[].class, "image/png")
                                 .result("200", CountsStatistic.class, "application/json")
-                                .pathParam("offset", Integer.class, p -> p.setDescription("Week offset. 0 is current."))
-                                .pathParam("count", Integer.class, p -> p.setDescription("Amount of previously weeks in the chart.")),
+                                .pathParam("offset", Integer.class, MetricsRoute::offsetWeekDoc)
+                                .pathParam("count", Integer.class, MetricsRoute::countWeekDoc),
                         cache(this::totalWeek)));
                 get("month/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
                                 .operation(op -> {
@@ -126,8 +127,8 @@ public class Reputation extends MetricsHolder {
                                 })
                                 .result("200", byte[].class, "image/png")
                                 .result("200", CountsStatistic.class, "application/json")
-                                .pathParam("offset", Integer.class, p -> p.setDescription("Month offset. 0 is current."))
-                                .pathParam("count", Integer.class, p -> p.setDescription("Amount of previously months in the chart.")),
+                                .pathParam("offset", Integer.class, MetricsRoute::offsetMonthDoc)
+                                .pathParam("count", Integer.class, MetricsRoute::countMonthDoc),
                         cache(this::totalMonth)));
             });
 
@@ -138,7 +139,7 @@ public class Reputation extends MetricsHolder {
                                 })
                                 .result("200", byte[].class, "image/png")
                                 .result("200", DowsStatistic.class, "application/json")
-                                .pathParam("offset", Integer.class, p -> p.setDescription("Week offset. 0 is current.")),
+                                .pathParam("offset", Integer.class, MetricsRoute::offsetWeekDoc),
                         cache(this::dowWeek)));
                 get("month/{offset}", OpenApiBuilder.documented(OpenApiBuilder.document()
                                 .operation(op -> {
@@ -146,7 +147,7 @@ public class Reputation extends MetricsHolder {
                                 })
                                 .result("200", byte[].class, "image/png")
                                 .result("200", DowsStatistic.class, "application/json")
-                                .pathParam("offset", Integer.class, p -> p.setDescription("Month offset. 0 is current.")),
+                                .pathParam("offset", Integer.class, MetricsRoute::offsetMonthDoc),
                         cache(this::dowMonth)));
                 get("year/{offset}", OpenApiBuilder.documented(OpenApiBuilder.document()
                                 .operation(op -> {
@@ -154,7 +155,7 @@ public class Reputation extends MetricsHolder {
                                 })
                                 .result("200", byte[].class, "image/png")
                                 .result("200", DowsStatistic.class, "application/json")
-                                .pathParam("offset", Integer.class, p -> p.setDescription("Year offset. 0 is current.")),
+                                .pathParam("offset", Integer.class, MetricsRoute::offsetYearDoc),
                         cache(this::dowYear)));
             });
         });

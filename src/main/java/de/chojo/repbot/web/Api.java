@@ -2,11 +2,9 @@ package de.chojo.repbot.web;
 
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.web.erros.ApiError;
+import de.chojo.repbot.web.routes.v1.MetricsRoute;
 import io.javalin.Javalin;
-import io.javalin.http.util.RateLimiter;
 import org.slf4j.Logger;
-
-import java.util.concurrent.TimeUnit;
 
 import static io.javalin.apibuilder.ApiBuilder.before;
 import static io.javalin.apibuilder.ApiBuilder.path;
@@ -15,11 +13,11 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class Api {
     private static final Logger log = getLogger(Api.class);
     private final Javalin javalin;
-    private final de.chojo.repbot.web.routes.v1.Metrics metrics;
+    private final MetricsRoute metricsRoute;
 
     public Api(Javalin javalin, Metrics metrics) {
         this.javalin = javalin;
-        this.metrics = new de.chojo.repbot.web.routes.v1.Metrics(metrics);
+        this.metricsRoute = new MetricsRoute(metrics);
     }
 
     public void init() {
@@ -31,7 +29,7 @@ public class Api {
             });
 
             path("v1", () -> {
-                path("metrics", metrics::buildRoutes);
+                path("metrics", metricsRoute::buildRoutes);
             });
         });
     }
