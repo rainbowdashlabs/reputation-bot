@@ -59,6 +59,7 @@ import io.javalin.plugin.openapi.OpenApiOptions;
 import io.javalin.plugin.openapi.OpenApiPlugin;
 import io.javalin.plugin.openapi.ui.ReDocOptions;
 import io.javalin.plugin.openapi.ui.SwaggerOptions;
+import io.javalin.plugin.openapi.utils.OpenApiVersionUtil;
 import io.swagger.v3.oas.models.info.License;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
@@ -164,6 +165,7 @@ public class ReputationBot {
                 .path("/json-docs")
                 .reDoc(new ReDocOptions("/redoc")) // endpoint for redoc
                 .swagger(new SwaggerOptions("/docs").title("Reputation Bot API"));
+        OpenApiVersionUtil.INSTANCE.setLogWarnings(false);
 
         javalin = Javalin.create(config -> config.registerPlugin(new OpenApiPlugin(options)))
                 .start(api.host(), api.port());

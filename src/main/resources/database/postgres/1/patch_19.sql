@@ -5,13 +5,13 @@ GROUP BY week, dow
 ORDER BY week DESC, dow ASC;
 
 CREATE OR REPLACE VIEW repbot_schema.metrics_reputation_dow_month AS
-SELECT DATE_TRUNC('month', week)::DATE AS month, dow, AVG(count)::INTEGER AS count
+SELECT DATE_TRUNC('month', week)::DATE AS month, dow, AVG(count)::BIGINT AS count
 FROM repbot_schema.metrics_reputation_dow_week
 GROUP BY month, dow
 ORDER BY month DESC;
 
 CREATE OR REPLACE VIEW repbot_schema.metrics_reputation_dow_year AS
-SELECT DATE_TRUNC('year', week)::DATE AS year, dow, AVG(w.count)::INTEGER AS count
+SELECT DATE_TRUNC('year', week)::DATE AS year, dow, AVG(w.count)::BIGINT AS count
 FROM repbot_schema.metrics_reputation_dow_week w
 GROUP BY year, dow
 ORDER BY year DESC;

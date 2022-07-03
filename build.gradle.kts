@@ -15,13 +15,8 @@ repositories {
 
 dependencies {
     //discord
-    implementation("de.chojo", "cjda-util", "2.6.0+alpha.13") {
+    implementation("de.chojo", "cjda-util", "2.6.1+alpha.13-DEV") {
         exclude(group = "club.minnced", module = "opus-java")
-    }
-
-
-    implementation("io.javalin", "javalin-bundle", "4.6.0") {
-        exclude("ch.qos.logback")
     }
 
     // database
