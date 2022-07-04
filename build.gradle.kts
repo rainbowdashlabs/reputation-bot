@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "1.7.0"
+version = "1.7.1"
 
 repositories {
     maven("https://eldonexus.de/repository/maven-public")
@@ -15,7 +15,7 @@ repositories {
 
 dependencies {
     //discord
-    implementation("de.chojo", "cjda-util", "2.5.0+alpha.12") {
+    implementation("de.chojo", "cjda-util", "2.6.1+alpha.13") {
         exclude(group = "club.minnced", module = "opus-java")
     }
 
@@ -25,9 +25,9 @@ dependencies {
 
     // Logging
     implementation("org.slf4j", "slf4j-api", "1.7.36")
-    implementation("org.apache.logging.log4j", "log4j-core", "2.17.2")
-    implementation("org.apache.logging.log4j", "log4j-slf4j-impl", "2.17.2")
-    implementation("club.minnced", "discord-webhooks", "0.8.0")
+    implementation("org.apache.logging.log4j", "log4j-core", "2.18.0")
+    implementation("org.apache.logging.log4j", "log4j-slf4j-impl", "2.18.0")
+    implementation("club.minnced", "discord-webhooks", "0.8.2")
 
     implementation("org.knowm.xchart", "xchart", "3.8.1")
 

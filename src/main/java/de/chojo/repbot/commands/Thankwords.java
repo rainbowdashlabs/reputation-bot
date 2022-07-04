@@ -48,7 +48,7 @@ public class Thankwords extends SimpleCommand {
                         .add(SimpleArgument.string("message", "command.thankwords.sub.check.arg.message").asRequired()))
                 .addSubCommand("loaddefault", "command.thankwords.sub.loadDefault", argsBuilder()
                         .add(SimpleArgument.string("language", "command.thankwords.sub.loadDefault.arg.language").withAutoComplete()))
-                .withPermission());
+                .adminCommand());
         this.guilds = guilds;
         this.thankwordsContainer = thankwordsContainer;
         this.messageAnalyzer = messageAnalyzer;

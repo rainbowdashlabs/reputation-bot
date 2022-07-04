@@ -2,6 +2,8 @@ package de.chojo.repbot.dao.access.metrics;
 
 import de.chojo.repbot.dao.snapshots.statistics.CommandStatistic;
 import de.chojo.repbot.dao.snapshots.statistics.CommandsStatistic;
+import de.chojo.repbot.dao.snapshots.statistics.CountStatistics;
+import de.chojo.repbot.dao.snapshots.statistics.CountsStatistic;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
 
 import java.time.LocalDate;
@@ -32,6 +34,29 @@ public class Commands extends QueryFactoryHolder {
 
     public CompletableFuture<CommandsStatistic> month(int month) {
         return get("metrics_commands_month", "month", month);
+    }
+
+    public CompletableFuture<CountsStatistic> week(int week, int count) {
+        return get("metrics_commands_executed_week", "week", week, count);
+    }
+
+    public CompletableFuture<CountsStatistic> month(int month, int count) {
+        return get("metrics_commands_executed_month", "month", month, count);
+    }
+
+    private CompletableFuture<CountsStatistic> get(String table, String timeframe, int offset, int count) {
+        return builder(CountStatistics.class).query("""
+                        SELECT %s,
+                            count
+                        FROM %s
+                        WHERE %s <= DATE_TRUNC(?, NOW())::date - ?::interval
+                        ORDER BY %s DESC
+                        LIMIT ?
+                        """, timeframe, table, timeframe, timeframe)
+                .paramsBuilder(stmt -> stmt.setString(timeframe).setString(offset + " " + timeframe).setInt(count))
+                .readRow(rs -> CountStatistics.build(rs, timeframe))
+                .all()
+                .thenApply(CountsStatistic::new);
     }
 
     private CompletableFuture<CommandsStatistic> get(String table, String timeframe, int offset) {

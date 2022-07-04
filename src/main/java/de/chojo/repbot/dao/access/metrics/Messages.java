@@ -35,7 +35,19 @@ public class Messages extends QueryFactoryHolder {
     }
 
     public CompletableFuture<CountsStatistic> month(int month, int count) {
-        return get("metrics_unique_users_month", "month", month, count);
+        return get("metrics_message_analyzed_month", "month", month, count);
+    }
+
+    public CompletableFuture<CountsStatistic> totalDay(int day, int count) {
+        return get("metrics_messages_analyzed_total_day", "day", day, count);
+    }
+
+    public CompletableFuture<CountsStatistic> totalWeek(int week, int count) {
+        return get("metrics_messages_analyzed_total_week", "week", week, count);
+    }
+
+    public CompletableFuture<CountsStatistic> totalMonth(int month, int count) {
+        return get("metrics_messages_analyzed_total_month", "month", month, count);
     }
 
     private CompletableFuture<CountsStatistic> get(String table, String timeframe, int offset, int count) {

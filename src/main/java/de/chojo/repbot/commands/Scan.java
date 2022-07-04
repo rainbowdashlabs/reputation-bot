@@ -63,7 +63,7 @@ public class Scan extends SimpleCommand {
                         .add(SimpleArgument.channel("channel", "command.scan.sub.start.arg.numberMessages"))
                         .add(SimpleArgument.integer("number_messages", "command.scan.sub.start.arg.channel")))
                 .addSubCommand("cancel", "command.scan.sub.cancel")
-                .withPermission());
+                .adminCommand());
         this.guilds = guilds;
         this.configuration = configuration;
         worker.scheduleAtFixedRate(() -> {
@@ -325,7 +325,7 @@ public class Scan extends SimpleCommand {
                         case FUZZY, MENTION, ANSWER -> {
                             if (Verifier.equalSnowflake(donator, resultReceiver.getReference())) continue;
                             if (reputation.user(resultReceiver.getReference().getUser())
-                                    .addReputation(donator != null && guild.isMember(donator) ? donator : null, message, refMessage, result.type())) {
+                                    .addOldReputation(donator != null && guild.isMember(donator) ? donator : null, message, refMessage, result.type())) {
                                 hit();
                             }
                         }

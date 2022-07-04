@@ -16,7 +16,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveAllEvent;
-import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEmoteEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEmojiEvent;
 import net.dv8tion.jda.api.events.message.react.MessageReactionRemoveEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
@@ -57,7 +57,7 @@ public class ReactionListener extends ListenerAdapter {
 
         if (!guildSettings.thanking().channels().isEnabled(event.getGuildChannel())) return;
         if (!guildSettings.messages().isReactionActive()) return;
-        if (!guildSettings.thanking().reactions().isReaction(event.getReaction().getReactionEmote())) return;
+        if (!guildSettings.thanking().reactions().isReaction(event.getReaction())) return;
 
         if (isCooldown(event.getMember())) return;
 
@@ -109,10 +109,10 @@ public class ReactionListener extends ListenerAdapter {
 
 
     @Override
-    public void onMessageReactionRemoveEmote(@NotNull MessageReactionRemoveEmoteEvent event) {
+    public void onMessageReactionRemoveEmoji(@NotNull MessageReactionRemoveEmojiEvent event) {
         if (!event.isFromGuild()) return;
         var guildSettings = guilds.guild(event.getGuild()).settings();
-        if (!guildSettings.thanking().reactions().isReaction(event.getReactionEmote())) return;
+        if (!guildSettings.thanking().reactions().isReaction(event.getReaction())) return;
         guilds.guild(event.getGuild()).reputation().log().messageLog(event.getMessageIdLong(), 50).stream()
                 .filter(entry -> entry.type() == ThankType.REACTION)
                 .forEach(ReputationLogEntry::delete);
@@ -122,7 +122,7 @@ public class ReactionListener extends ListenerAdapter {
     public void onMessageReactionRemove(@NotNull MessageReactionRemoveEvent event) {
         if (!event.isFromGuild()) return;
         var guildSettings = guilds.guild(event.getGuild()).settings();
-        if (!guildSettings.thanking().reactions().isReaction(event.getReactionEmote())) return;
+        if (!guildSettings.thanking().reactions().isReaction(event.getReaction())) return;
         var entries = guilds.guild(event.getGuild()).reputation().log().messageLog(event.getMessageIdLong(), 50)
                 .stream().filter(entry -> entry.type() == ThankType.REACTION && entry.donorId() == event.getUserIdLong()).toList();
         entries.forEach(ReputationLogEntry::delete);

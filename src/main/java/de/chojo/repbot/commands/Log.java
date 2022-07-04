@@ -10,6 +10,7 @@ import de.chojo.jdautil.parsing.ValueParser;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -36,7 +37,7 @@ public class Log extends SimpleCommand {
                         .add(SimpleArgument.user("user", "command.log.sub.donated.arg.user").asRequired()))
                 .addSubCommand("message", "command.log.sub.message", argsBuilder()
                         .add(SimpleArgument.string("message_id", "command.log.sub.message.arg.messageId").asRequired()))
-                .withPermission());
+                .withPermission(Permission.MESSAGE_MANAGE));
         this.guilds = guilds;
     }
 

@@ -14,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import javax.annotation.Nullable;
+import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
@@ -66,6 +67,37 @@ public class RepUser extends QueryFactoryHolder implements MemberHolder {
                               .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(donor == null ? 0 : donor.getIdLong()).setLong(userId())
                                       .setLong(message.getIdLong()).setLong(refMessage == null ? null : refMessage.getIdLong())
                                       .setLong(message.getChannel().getIdLong()).setString(type.name()))
+                              .insert()
+                              .executeSync() > 0;
+        if (success) {
+            log.debug("{} received one reputation from {} for message {}", user().getName(), donor != null ? donor.getEffectiveName() : "unkown", message.getIdLong());
+        }
+        return success;
+    }
+
+    /**
+     * Log reputation for a user.
+     *
+     * The received date will be dated back to {@link Message#getTimeCreated()}.
+     *
+     * @param donor      donator of the reputation
+     * @param message    message to log
+     * @param refMessage reference message if available
+     * @param type       type of reputation
+     * @return true if the repuation was logged.
+     */
+    public boolean addOldReputation(@Nullable Member donor, @NotNull Message message, @Nullable Message refMessage, ThankType type) {
+        var success = builder()
+                              .query("""
+                                      INSERT INTO
+                                      reputation_log(guild_id, donor_id, receiver_id, message_id, ref_message_id, channel_id, cause, received) VALUES(?,?,?,?,?,?,?,?)
+                                          ON CONFLICT(guild_id, donor_id, receiver_id, message_id)
+                                              DO NOTHING;
+                                      """)
+                              .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(donor == null ? 0 : donor.getIdLong()).setLong(userId())
+                                      .setLong(message.getIdLong()).setLong(refMessage == null ? null : refMessage.getIdLong())
+                                      .setLong(message.getChannel().getIdLong()).setString(type.name())
+                                      .setTimestamp(Timestamp.from(message.getTimeCreated().toInstant())))
                               .insert()
                               .executeSync() > 0;
         if (success) {

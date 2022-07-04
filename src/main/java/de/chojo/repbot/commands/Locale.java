@@ -25,7 +25,7 @@ public class Locale extends SimpleCommand {
                 .addSubCommand("set", "command.locale.sub.set", argsBuilder()
                         .add(SimpleArgument.string("language", "command.locale.sub.set.arg.language").asRequired().withAutoComplete()))
                 .addSubCommand("list", "command.locale.sub.list")
-                .withPermission());
+                .adminCommand());
         this.guilds = guilds;
         this.executorService = executorService;
     }

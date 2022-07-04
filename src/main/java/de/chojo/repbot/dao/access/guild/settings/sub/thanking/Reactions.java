@@ -4,9 +4,10 @@ import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
-import net.dv8tion.jda.api.entities.Emote;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageReaction;
+import net.dv8tion.jda.api.entities.emoji.CustomEmoji;
+import net.dv8tion.jda.api.entities.emoji.UnicodeEmoji;
 
 import java.util.List;
 import java.util.Objects;
@@ -31,11 +32,14 @@ public class Reactions extends QueryFactoryHolder implements GuildHolder {
         return thanking.guild();
     }
 
-    public boolean isReaction(MessageReaction.ReactionEmote reactionEmote) {
-        if (reactionEmote.isEmoji()) {
-            return isReaction(reactionEmote.getEmoji());
+    public boolean isReaction(MessageReaction reaction) {
+        if (reaction.getEmoji() instanceof UnicodeEmoji emoji) {
+            return isReaction(emoji.getAsReactionCode());
         }
-        return isReaction(reactionEmote.getId());
+        if (reaction.getEmoji() instanceof CustomEmoji emoji) {
+            return isReaction(emoji.getId());
+        }
+        return false;
     }
 
     private boolean isReaction(String reaction) {
@@ -53,7 +57,7 @@ public class Reactions extends QueryFactoryHolder implements GuildHolder {
         if (!reactionIsEmote()) {
             return Optional.ofNullable(mainReaction());
         }
-        return Optional.of(guild().retrieveEmoteById(mainReaction()).onErrorFlatMap(err -> null).complete()).map(Emote::getAsMention);
+        return Optional.of(guild().retrieveEmojiById(mainReaction()).onErrorFlatMap(err -> null).complete()).map(CustomEmoji::getAsMention);
     }
 
     public String mainReaction() {
@@ -64,7 +68,7 @@ public class Reactions extends QueryFactoryHolder implements GuildHolder {
         return reactions.stream()
                 .map(reaction -> {
                     if (Verifier.isValidId(reaction)) {
-                        var asMention = guild().retrieveEmoteById(reaction).onErrorFlatMap(err -> null).complete();
+                        var asMention = guild().retrieveEmojiById(reaction).onErrorFlatMap(err -> null).complete();
                         return asMention == null ? null : asMention.getAsMention();
                     }
                     return reaction;
