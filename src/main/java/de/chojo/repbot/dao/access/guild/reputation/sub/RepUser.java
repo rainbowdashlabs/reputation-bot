@@ -1,24 +1,14 @@
 package de.chojo.repbot.dao.access.guild.reputation.sub;
 
-import de.chojo.jdautil.localization.ContextLocalizer;
-import de.chojo.jdautil.localization.util.Format;
-import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
-import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.analyzer.ThankType;
-import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.reputation.Reputation;
 import de.chojo.repbot.dao.access.guild.reputation.sub.user.Gdpr;
 import de.chojo.repbot.dao.components.MemberHolder;
 import de.chojo.repbot.dao.snapshots.RepProfile;
-import de.chojo.repbot.dao.snapshots.ReputationRank;
-import de.chojo.repbot.util.TextGenerator;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -215,7 +205,7 @@ public class RepUser extends QueryFactoryHolder implements MemberHolder {
                         WHERE guild_id = ? AND user_id = ?;
                         """)
                 .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(userId()))
-                .readRow(row-> RepProfile.buildProfile(this, row))
+                .readRow(row -> RepProfile.buildProfile(this, row))
                 .firstSync()
                 .orElseGet(() -> RepProfile.empty(this, user()));
     }

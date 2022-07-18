@@ -59,7 +59,7 @@ public class RepAdmin extends SimpleCommand {
         var set = event.getOption("set");
         if (set != null) {
             repUser.setReputation(set.getAsLong());
-            event.reply(context.localize("command.repadmin.sub.reputation.removed",
+            event.reply(context.localize("command.repadmin.sub.reputation.set",
                             Replacement.create("VALUE", set.getAsLong()), Replacement.createMention(user)))
                     .setEphemeral(true).queue();
             return;
@@ -68,7 +68,7 @@ public class RepAdmin extends SimpleCommand {
         var remove = event.getOption("remove");
         if (remove != null) {
             repUser.removeReputation(remove.getAsLong());
-            event.reply(context.localize("command.repadmin.sub.reputation.set",
+            event.reply(context.localize("command.repadmin.sub.reputation.removed",
                             Replacement.create("VALUE", remove.getAsLong()), Replacement.createMention(user)))
                     .setEphemeral(true).queue();
             return;
