@@ -1,14 +1,24 @@
 package de.chojo.repbot.dao.access.guild.reputation.sub;
 
+import de.chojo.jdautil.localization.ContextLocalizer;
+import de.chojo.jdautil.localization.util.Format;
+import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
+import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.analyzer.ThankType;
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.reputation.Reputation;
 import de.chojo.repbot.dao.access.guild.reputation.sub.user.Gdpr;
 import de.chojo.repbot.dao.components.MemberHolder;
 import de.chojo.repbot.dao.snapshots.RepProfile;
+import de.chojo.repbot.dao.snapshots.ReputationRank;
+import de.chojo.repbot.util.TextGenerator;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -48,6 +58,53 @@ public class RepUser extends QueryFactoryHolder implements MemberHolder {
     }
 
     /**
+     * Add an amount of reputation to the reputation count of the user
+     *
+     * @param amount amount to add. Can be negative to subtract.
+     * @return true if added
+     */
+    public boolean addReputation(long amount) {
+        return builder()
+                       .query("""
+                               INSERT INTO reputation_offset(guild_id, user_id, amount) VALUES (?,?,?)
+                                   ON CONFLICT(guild_id, user_id)
+                                       DO UPDATE SET amount = reputation_offset.amount + excluded.amount;
+                               """)
+                       .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(userId()).setLong(amount))
+                       .insert()
+                       .executeSync() > 0;
+    }
+
+    /**
+     * Removes an amount of reputation from the reputation count of the user.
+     *
+     * @param amount amount to remove
+     * @return true if changed
+     */
+    public boolean removeReputation(long amount) {
+        return addReputation(-amount);
+    }
+
+    /**
+     * Set the reputation offset to a value which will let the reputation of the user result in the entered amount.
+     *
+     * @param amount the reputation amount the user should have
+     * @return true if changed.
+     */
+    public boolean setReputation(long amount) {
+        var offset = amount - profile().rawReputation();
+        return builder()
+                       .query("""
+                               INSERT INTO reputation_offset(guild_id, user_id, amount) VALUES (?,?,?)
+                                   ON CONFLICT(guild_id, user_id)
+                                       DO UPDATE SET amount = excluded.amount;
+                               """)
+                       .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(userId()).setLong(offset))
+                       .insert()
+                       .executeSync() > 0;
+    }
+
+    /**
      * Log reputation for a user.
      *
      * @param donor      donator of the reputation
@@ -77,7 +134,7 @@ public class RepUser extends QueryFactoryHolder implements MemberHolder {
 
     /**
      * Log reputation for a user.
-     *
+     * <p>
      * The received date will be dated back to {@link Message#getTimeCreated()}.
      *
      * @param donor      donator of the reputation
@@ -153,12 +210,14 @@ public class RepUser extends QueryFactoryHolder implements MemberHolder {
         // We probably dont want to cache the profile. There are just too many factors which can change the user reputation.
         return builder(RepProfile.class)
                 .query("""
-                        SELECT rank, user_id, reputation FROM user_reputation WHERE guild_id = ? AND user_id = ?;
+                        SELECT rank, rank_donated, user_id, reputation, rep_offset, raw_reputation, donated
+                        FROM user_reputation
+                        WHERE guild_id = ? AND user_id = ?;
                         """)
                 .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(userId()))
-                .readRow(RepProfile::build)
+                .readRow(row-> RepProfile.buildProfile(this, row))
                 .firstSync()
-                .orElseGet(() -> RepProfile.empty(user()));
+                .orElseGet(() -> RepProfile.empty(this, user()));
     }
 
     @Override
@@ -179,5 +238,9 @@ public class RepUser extends QueryFactoryHolder implements MemberHolder {
     public RepUser refresh(Member member) {
         this.member = member;
         return this;
+    }
+
+    public Reputation reputation() {
+        return reputation;
     }
 }

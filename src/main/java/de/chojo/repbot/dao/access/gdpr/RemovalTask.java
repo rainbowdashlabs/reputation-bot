@@ -34,6 +34,7 @@ public final class RemovalTask extends QueryFactoryHolder {
     public void executeRemovalTask() {
         ResultStage<Void> builder;
         if (userId() == 0) {
+            // Remove guild
             builder = builder().query("DELETE FROM reputation_log WHERE guild_id = ?;")
                     .paramsBuilder(stmt -> stmt.setLong(guildId()))
                     .append().query("DELETE FROM guild_settings WHERE guild_id = ?;")
@@ -48,15 +49,21 @@ public final class RemovalTask extends QueryFactoryHolder {
                     .paramsBuilder(stmt -> stmt.setLong(guildId()));
             log.trace("Removed guild settings for {}", guildId());
         } else if (guildId() == 0) {
+            // Remove complete user
             builder = builder().query("DELETE FROM reputation_log WHERE receiver_id = ?;")
                     .paramsBuilder(stmt -> stmt.setLong(userId()))
                     .append().query("UPDATE reputation_log SET donor_id = NULL WHERE donor_id = ?;")
+                    .paramsBuilder(stmt -> stmt.setLong(userId()))
+                    .append().query("DELETE FROM reputation_offset WHERE user_id = ?;")
                     .paramsBuilder(stmt -> stmt.setLong(userId()));
             log.trace("Removed Data of user {}", userId());
         } else {
+            // Remove user from guild
             builder = builder().query("DELETE FROM reputation_log WHERE guild_id = ? AND receiver_id = ?;")
                     .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(userId()))
                     .append().query("UPDATE reputation_log SET donor_id = NULL WHERE guild_id = ? AND donor_id = ?;")
+                    .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(userId()))
+                    .append().query("DELETE FROM reputation_offset WHERE guild_id = ? AND user_id = ?;")
                     .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(userId()));
             log.trace("Removed user reputation from guild {} of user {}", guildId(), userId());
         }
