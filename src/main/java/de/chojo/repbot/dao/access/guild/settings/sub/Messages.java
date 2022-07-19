@@ -17,8 +17,7 @@ public class Messages extends QueryFactoryHolder implements GuildHolder {
     private boolean reactionConfirmation = true;
 
     public Messages(Settings settings) {
-        super(settings);
-        this.settings = settings;
+        this(settings, true);
     }
 
     public Messages(Settings settings, boolean reactionConfirmation) {
