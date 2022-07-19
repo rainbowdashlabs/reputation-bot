@@ -61,27 +61,27 @@ public class RepSettings extends SimpleCommand {
                 "command.repSettings.sub.reactions.arg.reactions",
                 "command.repSettings.sub.reactions.true",
                 "command.repSettings.sub.reactions.false",
-                guildSettings.messages().isReactionActive());
+                guildSettings.reputation().isReactionActive());
         var answers = getMenu("answers",
                 "command.repSettings.sub.answer.arg.answer",
                 "command.repSettings.sub.answer.true",
                 "command.repSettings.sub.answer.false",
-                guildSettings.messages().isAnswerActive());
+                guildSettings.reputation().isAnswerActive());
         var mention = getMenu("mention",
                 "command.repSettings.sub.mention.arg.mention",
                 "command.repSettings.sub.mention.true",
                 "command.repSettings.sub.mention.false",
-                guildSettings.messages().isMentionActive());
+                guildSettings.reputation().isMentionActive());
         var fuzzy = getMenu("fuzzy",
                 "command.repSettings.sub.fuzzy.arg.fuzzy",
                 "command.repSettings.sub.fuzzy.true",
                 "command.repSettings.sub.fuzzy.false",
-                guildSettings.messages().isFuzzyActive());
+                guildSettings.reputation().isFuzzyActive());
         var embed = getMenu("embed",
                 "command.repSettings.sub.embed.arg.embed",
                 "command.repSettings.sub.embed.true",
                 "command.repSettings.sub.embed.false",
-                guildSettings.messages().isEmbedActive());
+                guildSettings.reputation().isEmbedActive());
         var emojidebug = getMenu("emojidebug",
                 "command.repSettings.sub.emojidebug.arg.active",
                 "command.repSettings.sub.emojidebug.true",
@@ -101,19 +101,19 @@ public class RepSettings extends SimpleCommand {
                     ctx.refresh();
                 }))
                 .addComponent(MenuEntry.of(reactions, ctx -> {
-                    refresh(ctx, res -> guildSettings.messages().reactionActive(res), context, guildSettings);
+                    refresh(ctx, res -> guildSettings.reputation().reactionActive(res), context, guildSettings);
                 }).hidden())
                 .addComponent(MenuEntry.of(answers, ctx -> {
-                    refresh(ctx, res -> guildSettings.messages().answerActive(res), context, guildSettings);
+                    refresh(ctx, res -> guildSettings.reputation().answerActive(res), context, guildSettings);
                 }).hidden())
                 .addComponent(MenuEntry.of(mention, ctx -> {
-                    refresh(ctx, res -> guildSettings.messages().mentionActive(res), context, guildSettings);
+                    refresh(ctx, res -> guildSettings.reputation().mentionActive(res), context, guildSettings);
                 }).hidden())
                 .addComponent(MenuEntry.of(fuzzy, ctx -> {
-                    refresh(ctx, res -> guildSettings.messages().fuzzyActive(res), context, guildSettings);
+                    refresh(ctx, res -> guildSettings.reputation().fuzzyActive(res), context, guildSettings);
                 }).hidden())
                 .addComponent(MenuEntry.of(embed, ctx -> {
-                    refresh(ctx, res -> guildSettings.messages().embedActive(res), context, guildSettings);
+                    refresh(ctx, res -> guildSettings.reputation().embedActive(res), context, guildSettings);
                 }).hidden())
                 .addComponent(MenuEntry.of(emojidebug, ctx -> {
                     refresh(ctx, res -> guildSettings.general().emojiDebug(res), context, guildSettings);
@@ -150,7 +150,7 @@ public class RepSettings extends SimpleCommand {
     }
 
     private MessageEmbed getSettings(SlashCommandContext context, Settings guildSettings) {
-        var messageSettings = guildSettings.messages();
+        var messageSettings = guildSettings.reputation();
 
         return new LocalizedEmbedBuilder(context.localizer())
                 .setTitle("command.repSettings.embed.title")

@@ -61,7 +61,7 @@ public class ReputationService {
         if (receiver.getUser().isBot()) return false;
 
         var settings = guilds.guild(guild).settings();
-        var messageSettings = settings.messages();
+        var messageSettings = settings.reputation();
         var thankSettings = settings.thanking();
 
         // block non reputation channel

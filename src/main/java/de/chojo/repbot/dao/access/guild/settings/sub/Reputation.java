@@ -12,7 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class Messages extends QueryFactoryHolder implements GuildHolder {
+public class Reputation extends QueryFactoryHolder implements GuildHolder {
     private final Settings settings;
     private boolean reactionActive;
     private boolean answerActive;
@@ -20,11 +20,11 @@ public class Messages extends QueryFactoryHolder implements GuildHolder {
     private boolean fuzzyActive;
     private boolean embedActive;
 
-    public Messages(Settings settings) {
+    public Reputation(Settings settings) {
         this(settings, true, true, true, true, true);
     }
 
-    public Messages(Settings settings, boolean reactionActive, boolean answerActive, boolean mentionActive, boolean fuzzyActive, boolean embedActive) {
+    public Reputation(Settings settings, boolean reactionActive, boolean answerActive, boolean mentionActive, boolean fuzzyActive, boolean embedActive) {
         super(settings);
         this.settings = settings;
         this.reactionActive = reactionActive;
@@ -34,8 +34,8 @@ public class Messages extends QueryFactoryHolder implements GuildHolder {
         this.embedActive = embedActive;
     }
 
-    public static Messages build(Settings settings, ResultSet rs) throws SQLException {
-        return new Messages(settings,
+    public static Reputation build(Settings settings, ResultSet rs) throws SQLException {
+        return new Reputation(settings,
                 rs.getBoolean("reactions_active"),
                 rs.getBoolean("answer_active"),
                 rs.getBoolean("mention_active"),

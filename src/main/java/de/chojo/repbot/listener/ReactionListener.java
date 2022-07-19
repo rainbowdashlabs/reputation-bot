@@ -56,7 +56,7 @@ public class ReactionListener extends ListenerAdapter {
         var guildSettings = repGuild.settings();
 
         if (!guildSettings.thanking().channels().isEnabled(event.getGuildChannel())) return;
-        if (!guildSettings.messages().isReactionActive()) return;
+        if (!guildSettings.reputation().isReactionActive()) return;
         if (!guildSettings.thanking().reactions().isReaction(event.getReaction())) return;
 
         if (isCooldown(event.getMember())) return;

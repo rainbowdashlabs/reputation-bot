@@ -31,7 +31,7 @@ public class Debug extends SimpleCommand {
         event.replyEmbeds(new LocalizedEmbedBuilder(context.localizer())
                 .setTitle("command.debug.title",
                         Replacement.create("GUILD", prettyName(event.getGuild())))
-                .addField("word.messageSettings", settings.messages().toLocalizedString(), false)
+                .addField("word.messageSettings", settings.reputation().toLocalizedString(), false)
                 .addField("word.thankWords", joiner.setEmptyValue("none").toString(), true)
                 .addField("command.debug.channelActive", String.valueOf(
                                 settings.thanking().channels().isEnabled(event.getTextChannel())),
