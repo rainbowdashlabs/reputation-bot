@@ -36,6 +36,7 @@ public record CountsStatistic(List<CountStatistics> stats) implements ChartProvi
         styler.setXAxisLabelRotation(20);
         styler.setXAxisLabelAlignmentVertical(AxesChartStyler.TextAlignment.Right);
         styler.setXAxisLabelAlignment(AxesChartStyler.TextAlignment.Right);
+        styler.setYAxisDecimalPattern("##,###");
 
         var sorted = stats.stream().sorted().toList();
 
