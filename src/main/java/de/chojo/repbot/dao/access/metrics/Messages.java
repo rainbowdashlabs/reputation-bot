@@ -4,7 +4,6 @@ import de.chojo.repbot.dao.snapshots.statistics.CountStatistics;
 import de.chojo.repbot.dao.snapshots.statistics.CountsStatistic;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
 
-import java.time.LocalDate;
 import java.util.concurrent.CompletableFuture;
 
 public class Messages extends QueryFactoryHolder {

@@ -110,7 +110,7 @@ public class Ranking extends QueryFactoryHolder implements GuildHolder {
                         LIMIT ?;
                         """, table)
                 .paramsBuilder(stmt -> stmt.setLong(guildId()).setInt(page * pageSize).setInt(pageSize))
-                .readRow(row -> new RepProfile(row.getLong("rank"), row.getLong("user_id"), row.getLong("reputation")))
+                .readRow(RepProfile::buildReceivedRanking)
                 .allSync();
     }
 

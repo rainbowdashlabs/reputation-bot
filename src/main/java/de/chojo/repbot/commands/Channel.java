@@ -21,8 +21,8 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import java.util.stream.Collectors;
 
 public class Channel extends SimpleCommand {
-    private final Guilds guilds;
     private static final String MORE = String.format("$%s$", "command.channel.list.more");
+    private final Guilds guilds;
 
     public Channel(Guilds guilds) {
         super(CommandMeta.builder("channel", "command.channel.description")

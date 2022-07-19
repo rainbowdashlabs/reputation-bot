@@ -107,10 +107,11 @@ public class Ranks extends QueryFactoryHolder implements GuildHolder {
 
     /**
      * Gets all reputation ranks which should be assigned to the user.
-     *
+     * <p>
      * This will always contain zero or one role when {@link General#stackRoles()} is true.
-     *
+     * <p>
      * This will contain up to {@link #ranks()}.size() when {@link General#stackRoles()} is false.
+     *
      * @param user user to check
      * @return list of ranks
      */
