@@ -90,6 +90,10 @@ public class AbuseProtection extends SimpleCommand {
         if ("receiverLimit".equalsIgnoreCase(subcmd)) {
             receiverLimit(event, context, guild);
         }
+
+        if ("maxMessageReputation".equalsIgnoreCase(subcmd)) {
+            maxMessageReputation(event, context, guild);
+        }
     }
 
     private void donorLimit(SlashCommandInteractionEvent event, SlashCommandContext context, RepGuild guild) {

@@ -184,6 +184,9 @@ ALTER TABLE repbot_schema.abuse_protection
 ALTER TABLE repbot_schema.abuse_protection
     ADD max_received_hours INT DEFAULT 1 NOT NULL;
 
+ALTER TABLE repbot_schema.abuse_protection
+    ADD max_message_reputation INT DEFAULT 3 NOT NULL;
+
 CREATE TABLE IF NOT EXISTS repbot_schema.metrics_handled_interactions
 (
     hour  TIMESTAMP NOT NULL

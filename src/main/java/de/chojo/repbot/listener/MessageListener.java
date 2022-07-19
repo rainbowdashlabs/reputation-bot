@@ -105,7 +105,11 @@ public class MessageListener extends ListenerAdapter {
 
         var message = event.getMessage();
 
+<<<<<<< HEAD
         var analyzerResult = messageAnalyzer.processMessage(thank.thankwords().thankwordPattern(), message, settings, true, settings.abuseProtection().maxMessageReputation());
+=======
+        var analyzerResult = messageAnalyzer.processMessage(thank.thankwords().thankwordPattern(), message, settings, true,  settings.abuseProtection().maxMessageReputation());
+>>>>>>> baba061 (Make the max reputation per message configurable #149)
 
         if (analyzerResult.type() == ThankType.NO_MATCH) return;
 

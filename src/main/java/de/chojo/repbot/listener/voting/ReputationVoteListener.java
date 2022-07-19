@@ -128,7 +128,10 @@ public class ReputationVoteListener extends ListenerAdapter {
                     voteRequests.put(voteMessage.getIdLong(), new VoteRequest(message.getMember(), builder, voteMessage, message, components, Math.min(remaining, members.size())));
 =======
         var maxMessageReputation = guilds.guild(message.getGuild()).settings().abuseProtection().maxMessageReputation();
+<<<<<<< HEAD
 
+=======
+>>>>>>> baba061 (Make the max reputation per message configurable #149)
         var remaining = Math.min(maxMessageReputation, settings.abuseProtection().maxGivenHours() - settings.repGuild().reputation().user(message.getMember()).countReceived());
 
         if (remaining == 0) {
