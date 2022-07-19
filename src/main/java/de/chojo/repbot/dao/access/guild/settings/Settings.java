@@ -128,14 +128,9 @@ public class Settings extends QueryFactoryHolder implements GuildHolder {
                 .query("""
                         SELECT
                             reaction,
-                            reactions,
-                            thankswords,
-                            active_channels,
-                            channel_whitelist,
-                            receiver_roles,
-                            donor_roles
+                            channel_whitelist
                         FROM
-                            get_thank_settings(?);
+                            thank_settings;
                         """)
                 .paramsBuilder(stmt -> stmt.setLong(guildId()))
                 .readRow(rs -> Thanking.build(this, rs))

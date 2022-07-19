@@ -25,9 +25,10 @@ public class AbuseProtection extends QueryFactoryHolder implements GuildHolder {
     private int maxGivenHours;
     private int maxReceived;
     private int maxReceivedHours;
+    private int maxMessageReputation;
 
     public AbuseProtection(Settings settings, int cooldown, int maxMessageAge, int minMessages, boolean donorContext, boolean receiverContext,
-                           int maxGiven, int maxGivenHours, int maxReceived, int maxReceivedHours) {
+                           int maxGiven, int maxGivenHours, int maxReceived, int maxReceivedHours, int maxMessageReputation) {
         super(settings);
         this.settings = settings;
         this.cooldown = cooldown;
@@ -39,10 +40,11 @@ public class AbuseProtection extends QueryFactoryHolder implements GuildHolder {
         this.maxGivenHours = maxGivenHours;
         this.maxReceived = maxReceived;
         this.maxReceivedHours = maxReceivedHours;
+        this.maxMessageReputation = maxMessageReputation;
     }
 
     public AbuseProtection(Settings settings) {
-        this(settings, 30, 30, 10, true, true, 0, 1, 0, 1);
+        this(settings, 30, 30, 10, true, true, 0, 1, 0, 1, 3);
     }
 
     public static AbuseProtection build(Settings settings, ResultSet rs) throws SQLException {
@@ -55,7 +57,8 @@ public class AbuseProtection extends QueryFactoryHolder implements GuildHolder {
                 rs.getInt("max_given"),
                 rs.getInt("max_given_hours"),
                 rs.getInt("max_received"),
-                rs.getInt("max_received_hours"));
+                rs.getInt("max_received_hours"),
+                rs.getInt("max_message_reputation"));
     }
 
     public int cooldown() {
@@ -68,6 +71,10 @@ public class AbuseProtection extends QueryFactoryHolder implements GuildHolder {
 
     public int minMessages() {
         return minMessages;
+    }
+
+    public int maxMessageReputation() {
+        return maxMessageReputation;
     }
 
     public boolean isDonorContext() {
@@ -95,40 +102,35 @@ public class AbuseProtection extends QueryFactoryHolder implements GuildHolder {
     }
 
     public int cooldown(int cooldown) {
-        var result = set("cooldown", stmt -> stmt.setInt(cooldown));
-        if (result) {
+        if (set("cooldown", stmt -> stmt.setInt(cooldown))) {
             this.cooldown = cooldown;
         }
         return this.cooldown;
     }
 
     public int maxMessageAge(int maxMessageAge) {
-        var result = set("max_message_age", stmt -> stmt.setInt(maxMessageAge));
-        if (result) {
+        if (set("max_message_age", stmt -> stmt.setInt(maxMessageAge))) {
             this.maxMessageAge = maxMessageAge;
         }
         return this.maxMessageAge;
     }
 
     public int minMessages(int minMessages) {
-        var result = set("min_messages", stmt -> stmt.setInt(minMessages));
-        if (result) {
+        if (set("min_messages", stmt -> stmt.setInt(minMessages))) {
             this.minMessages = minMessages;
         }
         return this.minMessages;
     }
 
     public boolean donorContext(boolean donorContext) {
-        var result = set("donor_context", stmt -> stmt.setBoolean(donorContext));
-        if (result) {
+        if (set("donor_context", stmt -> stmt.setBoolean(donorContext))) {
             this.donorContext = donorContext;
         }
         return this.donorContext;
     }
 
     public boolean receiverContext(boolean receiverContext) {
-        var result = set("receiver_context", stmt -> stmt.setBoolean(receiverContext));
-        if (result) {
+        if (set("receiver_context", stmt -> stmt.setBoolean(receiverContext))) {
             this.receiverContext = receiverContext;
         }
         return this.receiverContext;
@@ -164,6 +166,12 @@ public class AbuseProtection extends QueryFactoryHolder implements GuildHolder {
             this.maxReceivedHours = maxReceivedHours;
         }
         return this.maxReceivedHours;
+    }
+
+    public int maxMessageReputation(int maxMessageReputation) {if (set("max_message_reputation", stmt -> stmt.setInt(maxMessageReputation))) {
+            this.maxMessageReputation = maxMessageReputation;
+        }
+        return this.maxMessageReputation;
     }
 
     public boolean isOldMessage(Message message) {

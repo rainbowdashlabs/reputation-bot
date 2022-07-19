@@ -161,6 +161,7 @@ $BODY$;
 
 <<<<<<< HEAD
 ALTER TABLE repbot_schema.abuse_protection
+<<<<<<< HEAD
     ADD max_given INT DEFAULT 0 NOT NULL;
 
 ALTER TABLE repbot_schema.abuse_protection
@@ -241,3 +242,6 @@ ALTER TABLE repbot_schema.message_settings
 
 ALTER TABLE IF EXISTS repbot_schema.message_settings
     RENAME TO reputation_settings;
+=======
+    ADD max_message_reputation INT DEFAULT 3 NOT NULL;
+>>>>>>> 412b2cf (Make the max reputation per message configurable #149)
