@@ -3,6 +3,7 @@ package de.chojo.repbot.dao.access.guild.settings;
 import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.access.guild.settings.sub.AbuseProtection;
 import de.chojo.repbot.dao.access.guild.settings.sub.General;
+import de.chojo.repbot.dao.access.guild.settings.sub.Messages;
 import de.chojo.repbot.dao.access.guild.settings.sub.Reputation;
 import de.chojo.repbot.dao.access.guild.settings.sub.Ranks;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
@@ -19,6 +20,7 @@ public class Settings extends QueryFactoryHolder implements GuildHolder {
     private Ranks ranks;
     private Thanking thanking;
     private Announcements announcements;
+    private Messages messages;
 
     public Settings(RepGuild repGuild) {
         super(repGuild);
@@ -139,6 +141,24 @@ public class Settings extends QueryFactoryHolder implements GuildHolder {
                 .firstSync()
                 .orElseGet(() -> new Thanking(this));
         return thanking;
+    }
+    public Messages messages() {
+        if (messages != null) {
+            return messages;
+        }
+        messages = builder(Messages.class)
+                .query("""
+                        SELECT
+                            reaction_confirmation
+                        FROM
+                            message_states
+                        WHERE guild_id = ?;
+                        """)
+                .paramsBuilder(stmt -> stmt.setLong(guildId()))
+                .readRow(rs -> Messages.build(this, rs))
+                .firstSync()
+                .orElseGet(() -> new Messages(this));
+        return messages;
     }
 
     public Ranks ranks() {

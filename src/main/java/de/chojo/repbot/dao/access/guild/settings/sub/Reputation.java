@@ -116,8 +116,8 @@ public class Reputation extends QueryFactoryHolder implements GuildHolder {
         return String.join("\n", setting);
     }
 
-    private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, Object object) {
-        return String.format("$%s$: %s", locale, object);
+    private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, boolean object) {
+        return String.format("$%s$: $%s$", locale, object ? "words.enabled" : "words.disabled");
     }
 
     @Override
