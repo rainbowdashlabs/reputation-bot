@@ -9,8 +9,11 @@ import java.time.LocalDate;
 public record CountStatistics(LocalDate date, int count) implements Comparable<CountStatistics> {
 
     public static CountStatistics build(ResultSet rs, String dateKey) throws SQLException {
+        return build(rs, "count", dateKey);
+    }
+    public static CountStatistics build(ResultSet rs, String countKey, String dateKey) throws SQLException {
         return new CountStatistics(rs.getDate(dateKey).toLocalDate(),
-                rs.getInt("count"));
+                rs.getInt(countKey));
     }
 
     @Override

@@ -5,6 +5,7 @@ import de.chojo.repbot.web.routes.v1.metrics.Commands;
 import de.chojo.repbot.web.routes.v1.metrics.Messages;
 import de.chojo.repbot.web.routes.v1.metrics.MetricCache;
 import de.chojo.repbot.web.routes.v1.metrics.Reputation;
+import de.chojo.repbot.web.routes.v1.metrics.Service;
 import de.chojo.repbot.web.routes.v1.metrics.Users;
 import io.swagger.v3.oas.models.parameters.Parameter;
 
@@ -23,6 +24,7 @@ public class MetricsRoute implements RoutesBuilder {
     private final Messages messages;
     private final Users users;
     private final MetricCache cache;
+    private final Service service;
 
     public MetricsRoute(de.chojo.repbot.dao.provider.Metrics metrics) {
         cache = new MetricCache();
@@ -30,6 +32,7 @@ public class MetricsRoute implements RoutesBuilder {
         commands = new Commands(metrics, cache);
         messages = new Messages(metrics, cache);
         users = new Users(metrics, cache);
+        service = new Service(metrics, cache);
     }
 
 
@@ -40,6 +43,7 @@ public class MetricsRoute implements RoutesBuilder {
         commands.buildRoutes();
         messages.buildRoutes();
         users.buildRoutes();
+        service.buildRoutes();
     }
 
     private static void offsetDoc(Parameter parameter, String resolution, int maxValue) {
