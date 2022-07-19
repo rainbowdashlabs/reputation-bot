@@ -59,14 +59,14 @@ public class Service extends QueryFactoryHolder {
                             failed,
                             success
                         FROM %s
-                        WHERE %s <= DATE_TRUNC(?, NOW())::date - ?::interval
+                        WHERE %s <= DATE_TRUNC(?, NOW()) - ?::interval
                         ORDER BY %s DESC
                         LIMIT ?
                         """, timeframe, table, timeframe, timeframe)
                 .paramsBuilder(stmt -> stmt.setString(timeframe).setString(offset + " " + timeframe).setInt(count))
                 .readRow(rs -> builder.add("count", CountStatistics.build(rs, "count", timeframe))
-                        .add("failed", CountStatistics.build(rs, "failed", timeframe))
                         .add("success", CountStatistics.build(rs, "success", timeframe))
+                        .add("failed", CountStatistics.build(rs, "failed", timeframe))
                 )
                 .all()
                 .thenApply(r -> builder.build());

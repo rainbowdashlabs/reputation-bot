@@ -9,6 +9,7 @@ import org.knowm.xchart.style.markers.SeriesMarkers;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
@@ -30,7 +31,6 @@ public record LabeledCountStatistic(Map<String, List<CountStatistics>> stats) im
         styler.setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
         styler.setXAxisLabelAlignmentVertical(AxesChartStyler.TextAlignment.Right);
         styler.setXAxisLabelAlignment(AxesChartStyler.TextAlignment.Right);
-        styler.setYAxisLogarithmic(true);
 
         for (var entry : stats.entrySet()) {
             var sorted = entry.getValue().stream().sorted().toList();
@@ -51,5 +51,8 @@ public record LabeledCountStatistic(Map<String, List<CountStatistics>> stats) im
 
     private Date toDate(LocalDate date) {
         return new Date(date.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000);
+    }
+    private Date toDate(LocalDateTime date) {
+        return new Date(date.toEpochSecond(ZoneOffset.UTC) * 1000);
     }
 }

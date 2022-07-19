@@ -8,6 +8,7 @@ import org.knowm.xchart.style.markers.SeriesMarkers;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
@@ -17,7 +18,7 @@ public record CountsStatistic(List<CountStatistics> stats) implements ChartProvi
 
     public CountStatistics get(int index) {
         if (stats.isEmpty()) {
-            return new CountStatistics(LocalDate.MIN, 0);
+            return new CountStatistics(LocalDateTime.MIN, 0);
         }
         return stats.get(index);
     }
@@ -52,7 +53,7 @@ public record CountsStatistic(List<CountStatistics> stats) implements ChartProvi
         }
     }
 
-    private Date toDate(LocalDate date) {
-        return new Date(date.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000);
+    private Date toDate(LocalDateTime date) {
+        return new Date(date.toEpochSecond(ZoneOffset.UTC) * 1000);
     }
 }
