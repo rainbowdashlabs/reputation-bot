@@ -232,7 +232,7 @@ public class RepUser extends QueryFactoryHolder implements MemberHolder {
      * @return amount of given reputation
      */
     public int countGiven() {
-        var hours = reputation().repGuild().settings().abuseProtection().maxReceivedHours();
+        var hours = reputation().repGuild().settings().abuseProtection().maxGivenHours();
         return builder(Integer.class)
                 .query("SELECT COUNT(1) FROM reputation_log WHERE received > NOW() - ?::INTERVAL AND donor_id = ?")
                 .paramsBuilder(stmt -> stmt.setString("%s hours".formatted(hours)).setLong(memberId()))
