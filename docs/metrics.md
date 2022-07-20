@@ -12,9 +12,12 @@ want more insights you can try out our [API](https://repbot.chojo.de/docs).
 
 ![](https://repbot.chojo.de/v1/metrics/reputation/count/month/1/24)
 
-![](https://repbot.chojo.de/v1/metrics/reputation/total/month/1/24)
+![](https://repbot.chojo.de/v1/metrics/reputation/total/month/0/24)
 
 ![](https://repbot.chojo.de/v1/metrics/reputation/dow/month/1)
+
+![](https://repbot.chojo.de/v1/metrics/reputation/type/total/month/0/48)
+
 
 ## Commands
 
@@ -28,7 +31,7 @@ want more insights you can try out our [API](https://repbot.chojo.de/docs).
 
 ![](https://repbot.chojo.de/v1/metrics/messages/count/week/1/52)
 
-![](https://repbot.chojo.de/v1/metrics/messages/total/week/1/52)
+![](https://repbot.chojo.de/v1/metrics/messages/total/week/0/52)
 
 ## Users
 
