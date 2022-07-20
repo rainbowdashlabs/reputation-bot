@@ -161,7 +161,6 @@ $BODY$;
 
 <<<<<<< HEAD
 ALTER TABLE repbot_schema.abuse_protection
-<<<<<<< HEAD
     ADD max_given INT DEFAULT 0 NOT NULL;
 
 ALTER TABLE repbot_schema.abuse_protection
@@ -241,7 +240,41 @@ ALTER TABLE repbot_schema.message_settings
     ADD skip_single_embed BOOLEAN DEFAULT FALSE NOT NULL;
 
 ALTER TABLE IF EXISTS repbot_schema.message_settings
-    RENAME TO reputation_settings;
-=======
     ADD max_message_reputation INT DEFAULT 3 NOT NULL;
->>>>>>> 412b2cf (Make the max reputation per message configurable #149)
+
+ALTER TABLE IF EXISTS repbot_schema.message_settings
+    RENAME TO reputation_settings;
+
+CREATE TABLE IF NOT EXISTS repbot_schema.metrics_handled_interactions
+(
+    hour  TIMESTAMP NOT NULL
+        CONSTRAINT metrics_handled_interactions_pk
+            PRIMARY KEY,
+    count INTEGER   NOT NULL DEFAULT 0,
+    failed INTEGER   NOT NULL DEFAULT 0,
+    success INTEGER   NOT NULL DEFAULT 0
+);
+
+CREATE OR REPLACE VIEW repbot_schema.metrics_handled_interactions_day AS
+SELECT DATE_TRUNC('day', hour)::DATE AS day,
+       SUM(count)                      AS count,
+       SUM(failed)                      AS failed,
+       SUM(success)                      AS success
+FROM repbot_schema.metrics_handled_interactions
+GROUP BY day;
+
+CREATE OR REPLACE VIEW repbot_schema.metrics_handled_interactions_week AS
+SELECT DATE_TRUNC('week', hour)::DATE AS week,
+       SUM(count)                      AS count,
+       SUM(failed)                      AS failed,
+       SUM(success)                      AS success
+FROM repbot_schema.metrics_handled_interactions
+GROUP BY week;
+
+CREATE OR REPLACE VIEW repbot_schema.metrics_handled_interactions_month AS
+SELECT DATE_TRUNC('month', hour)::DATE AS month,
+       SUM(count)                      AS count,
+       SUM(failed)                      AS failed,
+       SUM(success)                      AS success
+FROM repbot_schema.metrics_handled_interactions
+GROUP BY month;

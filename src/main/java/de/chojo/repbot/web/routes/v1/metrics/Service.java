@@ -1,7 +1,6 @@
 package de.chojo.repbot.web.routes.v1.metrics;
 
 import de.chojo.repbot.dao.provider.Metrics;
-import de.chojo.repbot.dao.snapshots.statistics.CountsStatistic;
 import de.chojo.repbot.dao.snapshots.statistics.LabeledCountStatistic;
 import de.chojo.repbot.web.routes.v1.MetricsHolder;
 import de.chojo.repbot.web.routes.v1.MetricsRoute;
