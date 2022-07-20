@@ -3,6 +3,7 @@ package de.chojo.repbot.listener;
 import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.Metrics;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.channel.ChannelDeleteEvent;
 import net.dv8tion.jda.api.events.emoji.EmojiRemovedEvent;
@@ -10,6 +11,7 @@ import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
+import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -24,15 +26,22 @@ public class StateListener extends ListenerAdapter {
     private final Guilds guilds;
     private final ILocalizer localizer;
     private final Configuration configuration;
+    private final Metrics metrics;
 
-    private StateListener(Guilds guilds, ILocalizer localizer, Configuration configuration) {
+    private StateListener(Guilds guilds, ILocalizer localizer, Configuration configuration, Metrics metrics) {
         this.guilds = guilds;
         this.localizer = localizer;
         this.configuration = configuration;
+        this.metrics = metrics;
     }
 
-    public static StateListener of(ILocalizer localizer, Guilds guilds, Configuration configuration) {
-        return new StateListener(guilds, localizer, configuration);
+    @Override
+    public void onGenericInteractionCreate(@NotNull GenericInteractionCreateEvent event) {
+        metrics.service().countInteraction();
+    }
+
+    public static StateListener of(ILocalizer localizer, Guilds guilds, Configuration configuration, Metrics metrics) {
+        return new StateListener(guilds, localizer, configuration, metrics);
     }
 
     @Override
