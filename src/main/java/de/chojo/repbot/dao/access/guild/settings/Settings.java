@@ -86,7 +86,8 @@ public class Settings extends QueryFactoryHolder implements GuildHolder {
                             answer_active,
                             mention_active,
                             fuzzy_active,
-                            embed_active
+                            embed_active,
+                            skip_single_embed
                         FROM
                             reputation_settings
                         WHERE guild_id = ?;

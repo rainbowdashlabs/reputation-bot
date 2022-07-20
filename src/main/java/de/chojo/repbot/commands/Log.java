@@ -130,7 +130,7 @@ public class Log extends SimpleCommand {
     private List<String> mapUserLogEntry(SlashCommandContext context, List<ReputationLogEntry> logEntries, Function<ReputationLogEntry, Long> userId) {
         List<String> entries = new ArrayList<>();
         for (var logEntry : logEntries) {
-            var thankType = context.localize("thankType." + logEntry.type().name().toLowerCase(Locale.ROOT));
+            var thankType = context.localize(logEntry.type().localizedName());
             var jumpLink = createJumpLink(context, logEntry);
             entries.add(String.format("%s **%s** %s %s", logEntry.timestamp(),
                     thankType, User.fromId(userId.apply(logEntry)).getAsMention(), jumpLink));
@@ -144,7 +144,7 @@ public class Log extends SimpleCommand {
         List<String> entries = new ArrayList<>();
         for (var logEntry : logEntries) {
             var jumpLink = createJumpLink(context, logEntry);
-            var thankType = context.localize("thankType." + logEntry.type().name().toLowerCase(Locale.ROOT));
+            var thankType = context.localize(logEntry.type().localizedName());
             entries.add(String.format("%s **%s** %s ➜ %s **|** %s", logEntry.timestamp(),
                     thankType, User.fromId(logEntry.donorId()).getAsMention(), User.fromId(logEntry.receiverId()).getAsMention(), jumpLink));
         }

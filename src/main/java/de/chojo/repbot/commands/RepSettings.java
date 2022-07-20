@@ -56,6 +56,7 @@ public class RepSettings extends SimpleCommand {
                 .addOption("command.repSettings.embed.descr.byFuzzy", "fuzzy", "command.repSettings.sub.fuzzy.arg.fuzzy")
                 .addOption("command.repSettings.embed.descr.byEmbed", "embed", "command.repSettings.sub.embed.arg.embed")
                 .addOption("command.repSettings.embed.descr.emojidebug", "emojidebug", "command.repSettings.sub.emojidebug.arg.active")
+                .addOption("command.repSettings.embed.descr.skipSingleEmbed", "directembed", "command.repSettings.sub.skipSingleEmbed.arg.active")
                 .build();
         var reactions = getMenu("reactions",
                 "command.repSettings.sub.reactions.arg.reactions",
@@ -87,6 +88,11 @@ public class RepSettings extends SimpleCommand {
                 "command.repSettings.sub.emojidebug.true",
                 "command.repSettings.sub.emojidebug.false",
                 guildSettings.general().isEmojiDebug());
+        var skipSingleEmbed = getMenu("directembed",
+                "command.repSettings.sub.skipSingleEmbed.arg.active",
+                "command.repSettings.sub.skipSingleEmbed.true",
+                "command.repSettings.sub.skipSingleEmbed.false",
+                guildSettings.messages().isSkipSingleEmbed());
 
         context.registerMenu(MenuAction.forCallback(getSettings(context, guildSettings), event)
                 .addComponent(MenuEntry.of(settings, ctx -> {
@@ -117,6 +123,9 @@ public class RepSettings extends SimpleCommand {
                 }).hidden())
                 .addComponent(MenuEntry.of(emojidebug, ctx -> {
                     refresh(ctx, res -> guildSettings.general().emojiDebug(res), context, guildSettings);
+                }).hidden())
+                .addComponent(MenuEntry.of(skipSingleEmbed, ctx -> {
+                    refresh(ctx, res -> guildSettings.messages().skipSingleEmbed(res), context, guildSettings);
                 }).hidden())
                 .asEphemeral()
                 .build());

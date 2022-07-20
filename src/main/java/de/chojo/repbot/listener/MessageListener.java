@@ -171,6 +171,11 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
+        if(members.size() == 1 && settings.messages().isSkipSingleEmbed()){
+            reputationService.submitReputation(message.getGuild(), message.getMember(), members.get(0), message, null, ThankType.DIRECT);
+            return;
+        }
+
         reputationVoteListener.registerVote(message, members, settings);
     }
 }

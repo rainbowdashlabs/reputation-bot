@@ -222,6 +222,9 @@ public class ReputationService {
             case EMBED -> {
                 if (!messageSettings.isEmbedActive()) return true;
             }
+            case DIRECT -> {
+                if (!messageSettings.isSkipSingleEmbed()) return false;
+            }
             default -> throw new IllegalStateException("Unexpected value: " + type);
         }
         return false;
