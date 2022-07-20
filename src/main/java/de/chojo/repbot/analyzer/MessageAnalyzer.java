@@ -64,7 +64,7 @@ public class MessageAnalyzer {
     private AnalyzerResult analyze(Pattern pattern, Message message, @Nullable Settings settings, boolean limitTargets, int limit) {
         metrics.messages().countMessage();
         if (pattern.pattern().isBlank()) return AnalyzerResult.noMatch();
-        var contentRaw = message.getContentRaw();
+        var contentRaw = message.getContentRaw().toLowerCase();
 
         if (!pattern.matcher(contentRaw).find()) return AnalyzerResult.noMatch();
         if (message.getType() == MessageType.INLINE_REPLY) {
