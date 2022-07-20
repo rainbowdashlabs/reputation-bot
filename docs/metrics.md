@@ -35,3 +35,9 @@ want more insights you can try out our [API](https://repbot.chojo.de/docs).
 ![](https://repbot.chojo.de/v1/metrics/users/active/week/1/52)
 
 ![](https://repbot.chojo.de/v1/metrics/users/active/month/1/24)
+
+## Service
+
+![](https://repbot.chojo.de/v1/metrics/service/count/hour/0/120)
+
+![](https://repbot.chojo.de/v1/metrics/service/count/week/0/104)
