@@ -31,6 +31,12 @@ public class AbuseProtection extends SimpleCommand {
                         .add(SimpleArgument.bool("state", "command.abuseProtection.sub.donorContext.arg.state")))
                 .addSubCommand("receivercontext", "command.abuseProtection.sub.receiverContext", argsBuilder()
                         .add(SimpleArgument.bool("state", "command.abuseProtection.sub.receiverContext.arg.state")))
+                .addSubCommand("donorlimit", "command.abuseProtection.sub.donorLimit", argsBuilder()
+                        .add(SimpleArgument.integer("limit", "command.abuseProtection.sub.donorLimit.arg.limit"))
+                        .add(SimpleArgument.integer("hours", "command.abuseProtection.sub.donorLimit.arg.hours")))
+                .addSubCommand("receiverlimit", "command.abuseProtection.sub.receiverLimit", argsBuilder()
+                        .add(SimpleArgument.integer("limit", "command.abuseProtection.sub.receiverLimit.arg.limit"))
+                        .add(SimpleArgument.integer("hours", "command.abuseProtection.sub.receiverLimit.arg.hours")))
                 .adminCommand());
         this.guilds = guilds;
     }
@@ -64,6 +70,62 @@ public class AbuseProtection extends SimpleCommand {
         if ("receiverContext".equalsIgnoreCase(subcmd)) {
             receiverContext(event, context, guild);
         }
+
+        if ("donorlimit".equalsIgnoreCase(subcmd)) {
+            donorLimit(event, context, guild);
+        }
+
+        if ("receiverLimit".equalsIgnoreCase(subcmd)) {
+            receiverLimit(event, context, guild);
+        }
+    }
+
+    private void donorLimit(SlashCommandInteractionEvent event, SlashCommandContext context, RepGuild guild) {
+        var protection = guild.settings().abuseProtection();
+        var limit = event.getOption("limit");
+        if (limit != null) {
+            protection.maxGiven(limit.getAsInt());
+        }
+
+        var hours = event.getOption("hours");
+        if (hours != null) {
+            protection.maxGivenHours(hours.getAsInt());
+        }
+
+        if (protection.maxGiven() == 0) {
+            event.reply(context.localize("command.abuseProtection.sub.donorLimit.disabled")).setEphemeral(true).queue();
+            return;
+        }
+
+        event.reply(context.localize("command.abuseProtection.sub.donorLimit.set",
+                        Replacement.create("AMOUNT", protection.maxGiven()),
+                        Replacement.create("HOURS", protection.maxGivenHours())))
+                .setEphemeral(true)
+                .queue();
+    }
+
+    private void receiverLimit(SlashCommandInteractionEvent event, SlashCommandContext context, RepGuild guild) {
+        var protection = guild.settings().abuseProtection();
+        var limit = event.getOption("limit");
+        if (limit != null) {
+            protection.maxReceived(limit.getAsInt());
+        }
+
+        var hours = event.getOption("hours");
+        if (hours != null) {
+            protection.maxReceivedHours(hours.getAsInt());
+        }
+
+        if (protection.maxReceived() == 0) {
+            event.reply(context.localize("command.abuseProtection.sub.receiverLimit.disabled")).setEphemeral(true).queue();
+            return;
+        }
+
+        event.reply(context.localize("command.abuseProtection.sub.receiverLimit.set",
+                        Replacement.create("AMOUNT", protection.maxReceived()),
+                        Replacement.create("HOURS", protection.maxReceivedHours())))
+                .setEphemeral(true)
+                .queue();
     }
 
     private void donorContext(SlashCommandInteractionEvent event, SlashCommandContext context, RepGuild guild) {

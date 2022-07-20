@@ -115,10 +115,16 @@ public class ReputationVoteListener extends ListenerAdapter {
 
         var componentRows = getComponentRows(collect);
 
+        var remaining = Math.min(3, settings.abuseProtection().maxGivenHours() - settings.repGuild().reputation().user(message.getMember()).countReceived());
+
+        if (remaining == 0) {
+            if (settings.general().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.DONOR_LIMIT);
+            return;
+        }
 
         message.replyEmbeds(builder.build())
                 .setActionRows(componentRows).queue(voteMessage -> {
-                    voteRequests.put(voteMessage.getIdLong(), new VoteRequest(message.getMember(), builder, voteMessage, message, components, Math.min(3, members.size())));
+                    voteRequests.put(voteMessage.getIdLong(), new VoteRequest(message.getMember(), builder, voteMessage, message, components, Math.min(remaining, members.size())));
                     voteMessage.delete().queueAfter(1, TimeUnit.MINUTES,
                             submit -> voteRequests.remove(voteMessage.getIdLong()),
                             ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE, ErrorResponse.UNKNOWN_CHANNEL));

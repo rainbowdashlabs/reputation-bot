@@ -159,6 +159,18 @@ BEGIN
 END;
 $BODY$;
 
+ALTER TABLE repbot_schema.abuse_protection
+    ADD max_given INT DEFAULT 0 NOT NULL;
+
+ALTER TABLE repbot_schema.abuse_protection
+    ADD max_given_hours INT DEFAULT 1 NOT NULL;
+
+ALTER TABLE repbot_schema.abuse_protection
+    ADD max_received INT DEFAULT 0 NOT NULL;
+
+ALTER TABLE repbot_schema.abuse_protection
+    ADD max_received_hours INT DEFAULT 1 NOT NULL;
+
 CREATE TABLE IF NOT EXISTS repbot_schema.metrics_handled_interactions
 (
     hour  TIMESTAMP NOT NULL

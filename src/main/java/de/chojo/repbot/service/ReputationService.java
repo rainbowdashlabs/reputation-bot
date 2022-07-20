@@ -63,8 +63,6 @@ public class ReputationService {
         var settings = guilds.guild(guild).settings();
         var messageSettings = settings.messages();
         var thankSettings = settings.thanking();
-        var generalSettings = settings.general();
-        var abuseSettings = settings.abuseProtection();
 
         // block non reputation channel
         if (!thankSettings.channels().isEnabled(message.getGuildChannel())) return false;
@@ -72,26 +70,18 @@ public class ReputationService {
         if (!thankSettings.donorRoles().hasRole(guild.getMember(donor))) return false;
         if (!thankSettings.receiverRoles().hasRole(guild.getMember(receiver))) return false;
 
-        // force settings
-        switch (type) {
-            case FUZZY -> {
-                if (!messageSettings.isFuzzyActive()) return false;
-            }
-            case MENTION -> {
-                if (!messageSettings.isMentionActive()) return false;
-            }
-            case ANSWER -> {
-                if (!messageSettings.isAnswerActive()) return false;
-            }
-            case REACTION -> {
-                if (!messageSettings.isReactionActive()) return false;
-            }
-            case EMBED -> {
-                if (!messageSettings.isEmbedActive()) return false;
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + type);
-        }
+        if (isTypeDisabled(type, messageSettings)) return false;
 
+        var context = getContext(guild, donor, message, type, settings);
+
+        if (isSelfVote(donor, receiver, message)) return false;
+
+        if (assertAbuseProtection(guild, donor, receiver, message, refMessage, context)) return false;
+
+        return log(guild, donor, receiver, message, refMessage, type, settings);
+    }
+
+    private MessageContext getContext(Guild guild, Member donor, Message message, ThankType type, Settings settings) {
         MessageContext context;
         if (type == ThankType.REACTION) {
             // Check if user was recently seen in this channel.
@@ -99,41 +89,63 @@ public class ReputationService {
         } else {
             context = contextResolver.getCombinedContext(message, settings);
         }
+        return context;
+    }
+
+    private boolean assertAbuseProtection(Guild guild, Member donor, Member receiver, Message message, @Nullable Message refMessage, MessageContext context) {
+        var settings = guilds.guild(guild).settings();
+        var addEmoji = settings.general().isEmojiDebug();
+        var abuseSettings = settings.abuseProtection();
 
         // Abuse Protection: target context
         if (!context.members().contains(receiver) && abuseSettings.isReceiverContext()) {
-            if (generalSettings.isEmojiDebug()) Messages.markMessage(message, EmojiDebug.TARGET_NOT_IN_CONTEXT);
-            return false;
+            if (addEmoji) Messages.markMessage(message, EmojiDebug.TARGET_NOT_IN_CONTEXT);
+            return true;
         }
 
         // Abuse Protection: donor context
         if (!context.members().contains(donor) && abuseSettings.isDonorContext()) {
-            if (generalSettings.isEmojiDebug()) Messages.markMessage(message, EmojiDebug.DONOR_NOT_IN_CONTEXT);
-            return false;
+            if (addEmoji) Messages.markMessage(message, EmojiDebug.DONOR_NOT_IN_CONTEXT);
+            return true;
         }
 
         // Abuse protection: Cooldown
         if (!canVote(donor, receiver, guild, settings)) {
-            if (generalSettings.isEmojiDebug()) Messages.markMessage(message, EmojiDebug.ONLY_COOLDOWN);
-            return false;
+            if (addEmoji) Messages.markMessage(message, EmojiDebug.ONLY_COOLDOWN);
+            return true;
         }
 
         // block outdated ref message
         // Abuse protection: Message age
         if (refMessage != null) {
             if (abuseSettings.isOldMessage(refMessage) && !context.latestMessages(abuseSettings.minMessages()).contains(refMessage)) {
-                if (generalSettings.isEmojiDebug()) Messages.markMessage(message, EmojiDebug.TOO_OLD);
-                return false;
+                if (addEmoji) Messages.markMessage(message, EmojiDebug.TOO_OLD);
+                return true;
             }
         }
 
         // block outdated message
         // Abuse protection: Message age
         if (abuseSettings.isOldMessage(message)) {
-            if (generalSettings.isEmojiDebug()) Messages.markMessage(message, EmojiDebug.TOO_OLD);
-            return false;
+            if (addEmoji) Messages.markMessage(message, EmojiDebug.TOO_OLD);
+            return true;
         }
 
+
+        if (abuseSettings.isReceiverLimit(receiver)) {
+            if (addEmoji) Messages.markMessage(message, EmojiDebug.RECEIVER_LIMIT);
+            return true;
+        }
+
+        if (abuseSettings.isDonorLimit(receiver)) {
+            if (addEmoji) Messages.markMessage(message, EmojiDebug.DONOR_LIMIT);
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean isSelfVote(Member donor, Member receiver, Message message) {
         // block self vote
         if (Verifier.equalSnowflake(receiver, donor)) {
             if (lastEasterEggSent.until(Instant.now(), ChronoUnit.MINUTES) > magicImage.magicImageCooldown()
@@ -149,9 +161,12 @@ public class ReputationService {
                                 ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE, ErrorResponse.UNKNOWN_CHANNEL))
                         );
             }
-            return false;
+            return true;
         }
+        return false;
+    }
 
+    private boolean log(Guild guild, Member donor, Member receiver, Message message, @Nullable Message refMessage, ThankType type, Settings settings) {
         // try to log reputation
         if (guilds.guild(guild).reputation().user(receiver).addReputation(donor, message, refMessage, type)) {
             // mark messages
@@ -185,6 +200,29 @@ public class ReputationService {
             return true;
         }
         // submit to database failed. Maybe this message was already voted by the user.
+        return false;
+    }
+
+    private boolean isTypeDisabled(ThankType type, de.chojo.repbot.dao.access.guild.settings.sub.Messages messageSettings) {
+        // force settings
+        switch (type) {
+            case FUZZY -> {
+                if (!messageSettings.isFuzzyActive()) return true;
+            }
+            case MENTION -> {
+                if (!messageSettings.isMentionActive()) return true;
+            }
+            case ANSWER -> {
+                if (!messageSettings.isAnswerActive()) return true;
+            }
+            case REACTION -> {
+                if (!messageSettings.isReactionActive()) return true;
+            }
+            case EMBED -> {
+                if (!messageSettings.isEmbedActive()) return true;
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + type);
+        }
         return false;
     }
 
