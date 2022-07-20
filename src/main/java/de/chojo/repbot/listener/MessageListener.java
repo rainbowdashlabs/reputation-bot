@@ -11,11 +11,9 @@ import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;
 import de.chojo.repbot.service.RepBotCachePolicy;
 import de.chojo.repbot.service.ReputationService;
-import de.chojo.repbot.util.Colors;
 import de.chojo.repbot.util.EmojiDebug;
 import de.chojo.repbot.util.Messages;
 import de.chojo.repbot.util.PermissionErrorHandler;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Message;
@@ -103,6 +101,7 @@ public class MessageListener extends ListenerAdapter {
 
         if (!settings.thanking().donorRoles().hasRole(event.getMember())) return;
 
+
         var message = event.getMessage();
 
         var analyzerResult = messageAnalyzer.processMessage(settings.thanking().thankwords().thankwordPattern(), message, settings, true, 3);
@@ -116,6 +115,13 @@ public class MessageListener extends ListenerAdapter {
 
         if (settings.general().isEmojiDebug()) {
             Messages.markMessage(event.getMessage(), EmojiDebug.FOUND_THANKWORD);
+        }
+
+        if (settings.abuseProtection().isDonorLimit(event.getMember())) {
+            if (settings.general().isEmojiDebug()) {
+                Messages.markMessage(event.getMessage(), EmojiDebug.DONOR_LIMIT);
+            }
+            return;
         }
 
         var resultType = analyzerResult.type();
@@ -157,6 +163,7 @@ public class MessageListener extends ListenerAdapter {
 
         var members = recentMembers.stream()
                 .filter(receiver -> reputationService.canVote(message.getMember(), receiver, message.getGuild(), settings))
+                .filter(receiver -> !settings.abuseProtection().isReceiverLimit(receiver))
                 .limit(10)
                 .collect(Collectors.toList());
 

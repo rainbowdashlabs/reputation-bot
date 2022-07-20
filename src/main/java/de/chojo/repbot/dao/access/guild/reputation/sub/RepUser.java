@@ -3,6 +3,7 @@ package de.chojo.repbot.dao.access.guild.reputation.sub;
 import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.dao.access.guild.reputation.Reputation;
 import de.chojo.repbot.dao.access.guild.reputation.sub.user.Gdpr;
+import de.chojo.repbot.dao.access.guild.settings.sub.AbuseProtection;
 import de.chojo.repbot.dao.components.MemberHolder;
 import de.chojo.repbot.dao.snapshots.RepProfile;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
@@ -208,6 +209,36 @@ public class RepUser extends QueryFactoryHolder implements MemberHolder {
                 .readRow(row -> RepProfile.buildProfile(this, row))
                 .firstSync()
                 .orElseGet(() -> RepProfile.empty(this, user()));
+    }
+
+    /**
+     * Get the amount of received reputation based on {@link AbuseProtection#maxReceivedHours()}
+     *
+     * @return amount of received reputation
+     */
+    public int countReceived() {
+        var hours = reputation().repGuild().settings().abuseProtection().maxReceivedHours();
+        return builder(Integer.class)
+                .query("SELECT COUNT(1) FROM reputation_log WHERE received > NOW() - ?::INTERVAL AND receiver_id = ?")
+                .paramsBuilder(stmt -> stmt.setString("%s hours".formatted(hours)).setLong(memberId()))
+                .readRow(rs -> rs.getInt(1))
+                .firstSync()
+                .orElse(0);
+    }
+
+    /**
+     * Get the amount of received reputation based on {@link AbuseProtection#maxGivenHours()}
+     *
+     * @return amount of given reputation
+     */
+    public int countGiven() {
+        var hours = reputation().repGuild().settings().abuseProtection().maxReceivedHours();
+        return builder(Integer.class)
+                .query("SELECT COUNT(1) FROM reputation_log WHERE received > NOW() - ?::INTERVAL AND donor_id = ?")
+                .paramsBuilder(stmt -> stmt.setString("%s hours".formatted(hours)).setLong(memberId()))
+                .readRow(rs -> rs.getInt(1))
+                .firstSync()
+                .orElse(0);
     }
 
     @Override

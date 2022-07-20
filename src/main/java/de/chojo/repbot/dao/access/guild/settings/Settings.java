@@ -36,7 +36,11 @@ public class Settings extends QueryFactoryHolder implements GuildHolder {
                             max_message_age,
                             receiver_context,
                             donor_context,
-                            cooldown
+                            cooldown,
+                            max_given,
+                            max_given_hours,
+                            max_received,
+                            max_received_hours
                         FROM
                             abuse_protection
                         WHERE guild_id = ?;
@@ -143,6 +147,10 @@ public class Settings extends QueryFactoryHolder implements GuildHolder {
         }
         ranks = new Ranks(this, general().stackRoles());
         return ranks;
+    }
+
+    public RepGuild repGuild() {
+        return repGuild;
     }
 
     @Override

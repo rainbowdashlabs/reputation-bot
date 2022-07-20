@@ -158,3 +158,15 @@ BEGIN
     RETURN jsonb_pretty(_result);
 END;
 $BODY$;
+
+ALTER TABLE repbot_schema.abuse_protection
+    ADD max_given INT DEFAULT 0 NOT NULL;
+
+ALTER TABLE repbot_schema.abuse_protection
+    ADD max_given_hours INT DEFAULT 1 NOT NULL;
+
+ALTER TABLE repbot_schema.abuse_protection
+    ADD max_received INT DEFAULT 0 NOT NULL;
+
+ALTER TABLE repbot_schema.abuse_protection
+    ADD max_received_hours INT DEFAULT 1 NOT NULL;
