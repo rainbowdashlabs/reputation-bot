@@ -41,7 +41,6 @@ public record LabeledCountStatistic(Map<String, List<CountStatistics>> stats) im
                     .setLabel(entry.getKey());
         }
 
-
         try {
             return BitmapEncoder.getBitmapBytes(categorySeries, BitmapEncoder.BitmapFormat.PNG);
         } catch (IOException e) {

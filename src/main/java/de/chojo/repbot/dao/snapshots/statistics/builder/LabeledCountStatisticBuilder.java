@@ -11,7 +11,6 @@ import java.util.Map;
 public class LabeledCountStatisticBuilder {
     private final Map<String, List<CountStatistics>> stats = new LinkedHashMap<>();
 
-
     public LabeledCountStatisticBuilder add(String label, CountStatistics statistic) {
         stats.computeIfAbsent(label, key -> new ArrayList<>()).add(statistic);
         return this;

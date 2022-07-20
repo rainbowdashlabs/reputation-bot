@@ -193,7 +193,6 @@ SELECT DATE_TRUNC('month', hour)::DATE AS month,
 FROM repbot_schema.metrics_handled_interactions
 GROUP BY month;
 
-
 CREATE OR REPLACE VIEW repbot_schema.metrics_reputation_type_week AS
 SELECT DATE_TRUNC('week', received)::DATE AS week, cause, COUNT(1) AS count
 FROM repbot_schema.reputation_log
