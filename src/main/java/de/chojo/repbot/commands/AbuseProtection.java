@@ -166,11 +166,11 @@ public class AbuseProtection extends SimpleCommand {
                     Replacement.create("VALUE", abuseSettings.maxMessageReputation()))).queue();
             return;
         }
-        var age = event.getOption("amount").getAsInt();
+        var maxRep = event.getOption("amount").getAsInt();
 
-        age = Math.max(1, age);
+        maxRep = Math.max(1, maxRep);
         event.reply(context.localize("command.abuseProtection.sub.maxMessageRep.get",
-                Replacement.create("VALUE", abuseSettings.maxMessageReputation(age)))).queue();
+                Replacement.create("VALUE", abuseSettings.maxMessageReputation(maxRep)))).queue();
     }
 
     private void maxMessageAge(SlashCommandInteractionEvent event, SlashCommandContext context, RepGuild guild) {
@@ -180,11 +180,11 @@ public class AbuseProtection extends SimpleCommand {
                     Replacement.create("MINUTES", abuseSettings.maxMessageAge()))).queue();
             return;
         }
-        var maxRep = event.getOption("minutes").getAsInt();
+        var age = event.getOption("minutes").getAsInt();
 
-        maxRep = Math.max(0, maxRep);
+        age = Math.max(0, age);
         event.reply(context.localize("command.abuseProtection.sub.maxMessageAge.get",
-                Replacement.create("MINUTES", abuseSettings.maxMessageAge((int) maxRep)))).queue();
+                Replacement.create("MINUTES", abuseSettings.maxMessageAge((int) age)))).queue();
     }
 
     private void minMessages(SlashCommandInteractionEvent event, SlashCommandContext context, RepGuild guild) {
