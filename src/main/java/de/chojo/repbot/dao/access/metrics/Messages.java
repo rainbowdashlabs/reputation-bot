@@ -54,7 +54,7 @@ public class Messages extends QueryFactoryHolder {
                         SELECT %s,
                             count
                         FROM %s
-                        WHERE %s <= DATE_TRUNC(?, NOW())::DATE - ?::INTERVAL
+                        WHERE %s <= DATE_TRUNC(?, NOW()) - ?::INTERVAL
                         ORDER BY %s DESC
                         LIMIT ?
                         """, timeframe, table, timeframe, timeframe)

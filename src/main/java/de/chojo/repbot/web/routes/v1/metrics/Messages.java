@@ -9,6 +9,8 @@ import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
 
 import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_DAYS;
 import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_DAY_OFFSET;
+import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_HOURS;
+import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_HOUR_OFFSET;
 import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_MONTH;
 import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_MONTH_OFFSET;
 import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_WEEKS;
@@ -21,6 +23,14 @@ public class Messages extends MetricsHolder {
         super(cache, metrics);
     }
 
+    public void countHour(Context ctx) {
+        var stats = metrics().messages().hour(offset(ctx, MAX_HOUR_OFFSET), count(ctx, MAX_HOURS)).join();
+        if ("application/json".equals(ctx.header("Accept"))) {
+            ctx.json(stats);
+        } else {
+            writeImage(ctx, stats.getChart("Messages analyzed per hour"));
+        }
+    }
     public void countDay(Context ctx) {
         var stats = metrics().messages().day(offset(ctx, MAX_DAY_OFFSET), count(ctx, MAX_DAYS)).join();
         if ("application/json".equals(ctx.header("Accept"))) {
@@ -79,6 +89,15 @@ public class Messages extends MetricsHolder {
     public void buildRoutes() {
         path("messages", () -> {
             path("count", () -> {
+                get("hour/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
+                                .operation(op -> {
+                                    op.summary("Get the counts of analyzed messages per hour.");
+                                })
+                                .result("200", byte[].class, "image/png")
+                                .result("200", CountsStatistic.class, "application/json")
+                                .pathParam("offset", Integer.class, MetricsRoute::offsetHourDoc)
+                                .pathParam("count", Integer.class, MetricsRoute::countHourDoc),
+                        cache(this::countHour)));
                 get("day/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
                                 .operation(op -> {
                                     op.summary("Get the counts of analyzed messages per day.");

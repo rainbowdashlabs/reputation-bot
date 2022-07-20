@@ -65,6 +65,7 @@ import io.swagger.v3.oas.models.info.License;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.requests.RestAction;
@@ -237,14 +238,27 @@ public class ReputationBot {
     }
 
     private void initBot() {
+        metrics = new Metrics(dataSource);
         RestAction.setDefaultFailure(throwable -> {
             if (throwable instanceof InsufficientPermissionException) {
                 PermissionErrorHandler.handle((InsufficientPermissionException) throwable, shardManager, localizer, configuration);
                 return;
             }
+            if (throwable instanceof ErrorResponseException e) {
+                if (e.getErrorResponse() == ErrorResponse.UNKNOWN_INTERACTION) {
+                    metrics.service().failedInteraction();
+                    log.debug("Interaction timed out", e);
+                    return;
+                }
+            }
             log.error(LogNotify.NOTIFY_ADMIN, "Unhandled exception occured: ", throwable);
         });
-        metrics = new Metrics(dataSource);
+
+        RestAction.setDefaultSuccess(suc -> {
+            if (suc instanceof InteractionHook) {
+                metrics.service().successfulInteraction();
+            }
+        });
         var statistic = Statistic.of(shardManager, metrics, repBotWorker);
 
         var contextResolver = new ContextResolver(dataSource, configuration);
@@ -307,7 +321,7 @@ public class ReputationBot {
                 reputationService, contextResolver, messageAnalyzer);
         var voiceStateListener = VoiceStateListener.of(dataSource, repBotWorker);
         var logListener = LogListener.create(repBotWorker);
-        var stateListener = StateListener.of(localizer, guilds, configuration);
+        var stateListener = StateListener.of(localizer, guilds, configuration, metrics);
 
         shardManager.addEventListener(
                 reactionListener,
