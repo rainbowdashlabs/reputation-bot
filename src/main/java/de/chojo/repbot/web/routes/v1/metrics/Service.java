@@ -2,6 +2,7 @@ package de.chojo.repbot.web.routes.v1.metrics;
 
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.dao.snapshots.statistics.CountsStatistic;
+import de.chojo.repbot.dao.snapshots.statistics.LabeledCountStatistic;
 import de.chojo.repbot.web.routes.v1.MetricsHolder;
 import de.chojo.repbot.web.routes.v1.MetricsRoute;
 import io.javalin.http.Context;
@@ -67,7 +68,7 @@ public class Service extends MetricsHolder {
                                     op.summary("Get the counts of handled interactions per hour.");
                                 })
                                 .result("200", byte[].class, "image/png")
-                                .result("200", CountsStatistic.class, "application/json")
+                                .result("200", LabeledCountStatistic.class, "application/json")
                                 .pathParam("offset", Integer.class, MetricsRoute::offsetHourDoc)
                                 .pathParam("count", Integer.class, MetricsRoute::countHourDoc),
                         cache(this::countHour)));
@@ -76,7 +77,7 @@ public class Service extends MetricsHolder {
                                     op.summary("Get the counts of handled interactions per day.");
                                 })
                                 .result("200", byte[].class, "image/png")
-                                .result("200", CountsStatistic.class, "application/json")
+                                .result("200", LabeledCountStatistic.class, "application/json")
                                 .pathParam("offset", Integer.class, MetricsRoute::offsetDayDoc)
                                 .pathParam("count", Integer.class, MetricsRoute::countDayDoc),
                         cache(this::countDay)));
@@ -85,7 +86,7 @@ public class Service extends MetricsHolder {
                                     op.summary("Get the counts of handled interactions per week.");
                                 })
                                 .result("200", byte[].class, "image/png")
-                                .result("200", CountsStatistic.class, "application/json")
+                                .result("200", LabeledCountStatistic.class, "application/json")
                                 .pathParam("offset", Integer.class, MetricsRoute::offsetWeekDoc)
                                 .pathParam("count", Integer.class,MetricsRoute::countWeekDoc),
                         cache(this::countWeek)));
@@ -94,7 +95,7 @@ public class Service extends MetricsHolder {
                                     op.summary("Get the counts of handled interactions per month.");
                                 })
                                 .result("200", byte[].class, "image/png")
-                                .result("200", CountsStatistic.class, "application/json")
+                                .result("200", LabeledCountStatistic.class, "application/json")
                                 .pathParam("offset", Integer.class, MetricsRoute::offsetMonthDoc)
                                 .pathParam("count", Integer.class, MetricsRoute::countMonthDoc),
                         cache(this::countMonth)));
