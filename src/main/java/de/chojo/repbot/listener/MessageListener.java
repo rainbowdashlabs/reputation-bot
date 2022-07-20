@@ -101,7 +101,6 @@ public class MessageListener extends ListenerAdapter {
 
         if (!settings.thanking().donorRoles().hasRole(event.getMember())) return;
 
-
         var message = event.getMessage();
 
         var analyzerResult = messageAnalyzer.processMessage(settings.thanking().thankwords().thankwordPattern(), message, settings, true, 3);
