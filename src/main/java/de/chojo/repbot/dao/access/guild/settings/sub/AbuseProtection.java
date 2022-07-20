@@ -136,6 +136,12 @@ public class AbuseProtection extends QueryFactoryHolder implements GuildHolder {
         return this.receiverContext;
     }
 
+    public int maxMessageReputation(int maxMessageReputation) {if (set("max_message_reputation", stmt -> stmt.setInt(maxMessageReputation))) {
+            this.maxMessageReputation = maxMessageReputation;
+        }
+        return this.maxMessageReputation;
+    }
+
     public int maxGiven(int maxGiven) {
         var result = set("max_given", stmt -> stmt.setInt(Math.max(maxGiven, 0)));
         if (result) {
@@ -166,12 +172,6 @@ public class AbuseProtection extends QueryFactoryHolder implements GuildHolder {
             this.maxReceivedHours = maxReceivedHours;
         }
         return this.maxReceivedHours;
-    }
-
-    public int maxMessageReputation(int maxMessageReputation) {if (set("max_message_reputation", stmt -> stmt.setInt(maxMessageReputation))) {
-            this.maxMessageReputation = maxMessageReputation;
-        }
-        return this.maxMessageReputation;
     }
 
     public boolean isOldMessage(Message message) {

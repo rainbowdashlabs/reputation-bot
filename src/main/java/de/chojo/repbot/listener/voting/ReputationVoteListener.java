@@ -129,11 +129,22 @@ public class ReputationVoteListener extends ListenerAdapter {
 =======
         var maxMessageReputation = guilds.guild(message.getGuild()).settings().abuseProtection().maxMessageReputation();
 
+        var remaining = Math.min(maxMessageReputation, settings.abuseProtection().maxGivenHours() - settings.repGuild().reputation().user(message.getMember()).countReceived());
+
+        if (remaining == 0) {
+            if (settings.general().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.DONOR_LIMIT);
+            return;
+        }
+
         message.replyEmbeds(builder.build())
                 .setActionRows(componentRows).queue(voteMessage -> {
+<<<<<<< HEAD
                     voteRequests.put(voteMessage.getIdLong(),
                             new VoteRequest(message.getMember(), builder, voteMessage, message, components, Math.min(maxMessageReputation, members.size())));
 >>>>>>> 412b2cf (Make the max reputation per message configurable #149)
+=======
+                    voteRequests.put(voteMessage.getIdLong(), new VoteRequest(message.getMember(), builder, voteMessage, message, components, Math.min(remaining, members.size())));
+>>>>>>> 5c73a17 (implement max reputation per hour/s #15 (#327))
                     voteMessage.delete().queueAfter(1, TimeUnit.MINUTES,
                             submit -> voteRequests.remove(voteMessage.getIdLong()),
                             ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE, ErrorResponse.UNKNOWN_CHANNEL));
