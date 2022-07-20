@@ -117,7 +117,10 @@ public class ReputationVoteListener extends ListenerAdapter {
 
         var remaining = Math.min(3, settings.abuseProtection().maxGivenHours() - settings.repGuild().reputation().user(message.getMember()).countReceived());
 
-        if (remaining == 0) return;
+        if (remaining == 0) {
+            if (settings.general().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.DONOR_LIMIT);
+            return;
+        }
 
         message.replyEmbeds(builder.build())
                 .setActionRows(componentRows).queue(voteMessage -> {
