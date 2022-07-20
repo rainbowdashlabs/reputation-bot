@@ -192,3 +192,25 @@ SELECT DATE_TRUNC('month', hour)::DATE AS month,
        SUM(success)                      AS success
 FROM repbot_schema.metrics_handled_interactions
 GROUP BY month;
+
+CREATE OR REPLACE VIEW repbot_schema.metrics_reputation_type_week AS
+SELECT DATE_TRUNC('week', received)::DATE AS week, cause, COUNT(1) AS count
+FROM repbot_schema.reputation_log
+GROUP BY week, cause
+ORDER BY week DESC;
+
+CREATE OR REPLACE VIEW repbot_schema.metrics_reputation_type_month AS
+SELECT DATE_TRUNC('month', received)::DATE AS month, cause, COUNT(1) AS count
+FROM repbot_schema.reputation_log
+GROUP BY month, cause
+ORDER BY month DESC;
+
+CREATE OR REPLACE VIEW repbot_schema.metrics_reputation_type_total_week AS
+SELECT week, cause, SUM(count) OVER (PARTITION BY cause ORDER BY week) AS count
+FROM repbot_schema.metrics_reputation_type_week m
+ORDER BY week DESC;
+
+CREATE OR REPLACE VIEW repbot_schema.metrics_reputation_type_total_month AS
+SELECT month, cause, SUM(count) OVER (PARTITION BY cause ORDER BY month) AS count
+FROM repbot_schema.metrics_reputation_type_month m
+ORDER BY month DESC;
