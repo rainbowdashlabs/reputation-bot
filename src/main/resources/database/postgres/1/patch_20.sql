@@ -159,7 +159,6 @@ BEGIN
 END;
 $BODY$;
 
-<<<<<<< HEAD
 ALTER TABLE repbot_schema.abuse_protection
     ADD max_given INT DEFAULT 0 NOT NULL;
 
@@ -236,8 +235,11 @@ CREATE TABLE IF NOT EXISTS repbot_schema.message_states
     reaction_confirmation BOOLEAN DEFAULT TRUE NOT NULL
 );
 
-ALTER TABLE repbot_schema.message_settings
+ALTER TABLE IF EXISTS repbot_schema.message_settings
     ADD skip_single_embed BOOLEAN DEFAULT FALSE NOT NULL;
 
 ALTER TABLE IF EXISTS repbot_schema.message_settings
     RENAME TO reputation_settings;
+
+ALTER TABLE repbot_schema.guild_settings
+    ADD reputation_mode TEXT DEFAULT 'TOTAL' NOT NULL;

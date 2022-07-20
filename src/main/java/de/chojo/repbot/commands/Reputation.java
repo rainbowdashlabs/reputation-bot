@@ -6,17 +6,20 @@ import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.service.RoleAssigner;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class Reputation extends SimpleCommand {
     private final Guilds guilds;
     private final Configuration configuration;
+    private final RoleAssigner roleAssigner;
 
-    public Reputation(Guilds guilds, Configuration configuration) {
+    public Reputation(Guilds guilds, Configuration configuration, RoleAssigner roleAssigner) {
         super(CommandMeta.builder("rep", "command.reputation.description")
                 .addArgument(SimpleArgument.user("user", "command.reputation.description.arg.user")));
         this.guilds = guilds;
         this.configuration = configuration;
+        this.roleAssigner = roleAssigner;
     }
 
     @Override
@@ -33,5 +36,6 @@ public class Reputation extends SimpleCommand {
                 .profile()
                 .publicProfile(configuration, context.localizer());
         event.replyEmbeds(reputation).queue();
+        roleAssigner.update(member);
     }
 }

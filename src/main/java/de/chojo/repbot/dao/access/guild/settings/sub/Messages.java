@@ -43,6 +43,60 @@ public class Messages extends QueryFactoryHolder implements GuildHolder {
         return reactionConfirmation;
     }
 
+    public boolean reactionActive(boolean reactionActive) {
+        var result = set("reactions_active", stmt -> stmt.setBoolean(reactionActive));
+        if (result) {
+            this.reactionActive = reactionActive;
+        }
+        return this.reactionActive;
+    }
+
+    public boolean answerActive(boolean answerActive) {
+        var result = set("answer_active", stmt -> stmt.setBoolean(answerActive));
+        if (result) {
+            this.answerActive = answerActive;
+        }
+        return this.answerActive;
+    }
+
+    public boolean mentionActive(boolean mentionActive) {
+        var result = set("mention_active", stmt -> stmt.setBoolean(mentionActive));
+        if (result) {
+            this.mentionActive = mentionActive;
+        }
+        return this.mentionActive;
+    }
+
+    public boolean fuzzyActive(boolean fuzzyActive) {
+        var result = set("fuzzy_active", stmt -> stmt.setBoolean(fuzzyActive));
+        if (result) {
+            this.fuzzyActive = fuzzyActive;
+        }
+        return this.fuzzyActive;
+    }
+
+    public String toLocalizedString() {
+        var setting = List.of(
+                getSetting("command.repSettings.embed.descr.byReaction", isReactionActive()),
+                getSetting("command.repSettings.embed.descr.byAnswer", isAnswerActive()),
+                getSetting("command.repSettings.embed.descr.byMention", isMentionActive()),
+                getSetting("command.repSettings.embed.descr.byFuzzy", isFuzzyActive()),
+                getSetting("command.repSettings.embed.descr.byEmbed", isEmbedActive()),
+                getSetting("command.repSettings.embed.descr.emojidebug", settings.general().isEmojiDebug()),
+                getSetting("command.repSettings.embed.descr.reputationMode", settings.general().reputationMode().localizedName())
+        );
+
+        return String.join("\n", setting);
+    }
+
+    private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, boolean object) {
+        return String.format("$%s$: $%s$", locale, object ? "words.enabled" : "words.disabled");
+    }
+
+    private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, String object) {
+        return String.format("$%s$: $%s$", locale, object);
+    }
+
     @Override
     public Guild guild() {
         return settings.guild();

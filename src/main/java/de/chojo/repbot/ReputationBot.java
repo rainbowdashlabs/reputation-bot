@@ -28,8 +28,6 @@ import de.chojo.repbot.commands.Scan;
 import de.chojo.repbot.commands.Setup;
 import de.chojo.repbot.commands.Thankwords;
 import de.chojo.repbot.commands.Top;
-import de.chojo.repbot.commands.TopMonth;
-import de.chojo.repbot.commands.TopWeek;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.Cleanup;
 import de.chojo.repbot.dao.provider.Guilds;
@@ -46,6 +44,7 @@ import de.chojo.repbot.service.PresenceService;
 import de.chojo.repbot.service.RepBotCachePolicy;
 import de.chojo.repbot.service.ReputationService;
 import de.chojo.repbot.service.RoleAssigner;
+import de.chojo.repbot.service.RoleUpdater;
 import de.chojo.repbot.service.SelfCleanupService;
 import de.chojo.repbot.statistic.Statistic;
 import de.chojo.repbot.util.LogNotify;
@@ -282,12 +281,10 @@ public class ReputationBot {
                 .useGuildCommands()
                 .withCommands(
                         new Channel(guilds),
-                        new Reputation(guilds, configuration),
+                        new Reputation(guilds, configuration, roleAssigner),
                         roles,
                         new RepSettings(guilds),
                         new Top(guilds),
-                        new TopWeek(guilds),
-                        new TopMonth(guilds),
                         Thankwords.of(messageAnalyzer, guilds),
                         scan,
                         new Locale(guilds, repBotWorker),
@@ -324,6 +321,7 @@ public class ReputationBot {
         var voiceStateListener = VoiceStateListener.of(dataSource, repBotWorker);
         var logListener = LogListener.create(repBotWorker);
         var stateListener = StateListener.of(localizer, guilds, configuration, metrics);
+        var roleUpdater = RoleUpdater.create(guilds, roleAssigner, repBotWorker);
 
         shardManager.addEventListener(
                 reactionListener,
@@ -331,7 +329,8 @@ public class ReputationBot {
                 messageListener,
                 voiceStateListener,
                 logListener,
-                stateListener);
+                stateListener,
+                roleUpdater);
     }
 
     private void initShutdownHook() {
