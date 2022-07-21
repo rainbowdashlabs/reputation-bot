@@ -226,3 +226,14 @@ CREATE OR REPLACE VIEW repbot_schema.metrics_reputation_type_total_month AS
 SELECT month, cause, SUM(count) OVER (PARTITION BY cause ORDER BY month) AS count
 FROM repbot_schema.metrics_reputation_type_month m
 ORDER BY month DESC;
+
+CREATE TABLE IF NOT EXISTS repbot_schema.message_states
+(
+    guild_id             BIGINT               NOT NULL
+        CONSTRAINT messages_pk
+            PRIMARY KEY,
+    reaction_confirmation BOOLEAN DEFAULT TRUE NOT NULL
+);
+
+ALTER TABLE IF EXISTS repbot_schema.message_settings
+    RENAME TO reputation_settings;

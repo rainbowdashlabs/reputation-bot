@@ -132,23 +132,23 @@ public class MessageListener extends ListenerAdapter {
             var refMessage = analyzerResult.referenceMessage();
             switch (resultType) {
                 case FUZZY -> {
-                    if (!settings.messages().isFuzzyActive()) continue;
+                    if (!settings.reputation().isFuzzyActive()) continue;
                     reputationService.submitReputation(guild, donator, result.getReference(), message, refMessage, resultType);
                     resolveNoTarget = false;
                 }
                 case MENTION -> {
-                    if (!settings.messages().isMentionActive()) continue;
+                    if (!settings.reputation().isMentionActive()) continue;
                     reputationService.submitReputation(guild, donator, result.getReference(), message, refMessage, resultType);
                     resolveNoTarget = false;
                 }
                 case ANSWER -> {
-                    if (!settings.messages().isAnswerActive()) continue;
+                    if (!settings.reputation().isAnswerActive()) continue;
                     reputationService.submitReputation(guild, donator, result.getReference(), message, refMessage, resultType);
                     resolveNoTarget = false;
                 }
             }
         }
-        if (resolveNoTarget && settings.messages().isEmbedActive()) resolveNoTarget(message, settings);
+        if (resolveNoTarget && settings.reputation().isEmbedActive()) resolveNoTarget(message, settings);
     }
 
     private void resolveNoTarget(Message message, Settings settings) {

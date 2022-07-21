@@ -17,6 +17,7 @@ import de.chojo.repbot.commands.Info;
 import de.chojo.repbot.commands.Invite;
 import de.chojo.repbot.commands.Locale;
 import de.chojo.repbot.commands.Log;
+import de.chojo.repbot.commands.Messages;
 import de.chojo.repbot.commands.Prune;
 import de.chojo.repbot.commands.Reactions;
 import de.chojo.repbot.commands.RepAdmin;
@@ -300,7 +301,8 @@ public class ReputationBot {
                         new Dashboard(guilds),
                         new AbuseProtection(guilds),
                         new Debug(guilds),
-                        new RepAdmin(guilds, configuration))
+                        new RepAdmin(guilds, configuration),
+                        new Messages(guilds))
                 .withLocalizer(localizer)
                 .withCommandErrorHandler((context, throwable) -> {
                     if (throwable instanceof InsufficientPermissionException) {
