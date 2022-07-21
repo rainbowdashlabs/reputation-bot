@@ -128,7 +128,7 @@ public class Reputation extends QueryFactoryHolder implements GuildHolder {
     private boolean set(String parameter, ThrowingConsumer<ParamBuilder, SQLException> builder) {
         return builder()
                        .query("""
-                               INSERT INTO message_settings(guild_id, %s) VALUES (?, ?)
+                               INSERT INTO reputation_settings(guild_id, %s) VALUES (?, ?)
                                ON CONFLICT(guild_id)
                                    DO UPDATE SET %s = excluded.%s;
                                """, parameter, parameter, parameter)

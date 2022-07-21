@@ -88,7 +88,7 @@ public class Settings extends QueryFactoryHolder implements GuildHolder {
                             fuzzy_active,
                             embed_active
                         FROM
-                            message_settings
+                            reputation_settings
                         WHERE guild_id = ?;
                         """)
                 .paramsBuilder(stmt -> stmt.setLong(guildId()))

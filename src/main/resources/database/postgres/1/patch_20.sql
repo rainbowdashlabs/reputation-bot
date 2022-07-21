@@ -234,3 +234,6 @@ CREATE TABLE IF NOT EXISTS repbot_schema.message_States
             PRIMARY KEY,
     reaction_confirmation BOOLEAN DEFAULT TRUE NOT NULL
 );
+
+ALTER TABLE IF EXISTS repbot_schema.message_settings
+    RENAME TO reputation_settings;
