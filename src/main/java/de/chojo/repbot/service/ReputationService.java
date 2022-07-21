@@ -8,6 +8,7 @@ import de.chojo.repbot.analyzer.MessageContext;
 import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.config.elements.MagicImage;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
+import de.chojo.repbot.dao.access.guild.settings.sub.Reputation;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.util.EmojiDebug;
 import de.chojo.repbot.util.Messages;
@@ -203,7 +204,7 @@ public class ReputationService {
         return false;
     }
 
-    private boolean isTypeDisabled(ThankType type, de.chojo.repbot.dao.access.guild.settings.sub.Messages messageSettings) {
+    private boolean isTypeDisabled(ThankType type, Reputation messageSettings) {
         // force settings
         switch (type) {
             case FUZZY -> {
