@@ -92,7 +92,7 @@ public class RepSettings extends SimpleCommand {
                 "command.repSettings.sub.skipSingleEmbed.arg.active",
                 "command.repSettings.sub.skipSingleEmbed.true",
                 "command.repSettings.sub.skipSingleEmbed.false",
-                guildSettings.messages().isSkipSingleEmbed());
+                guildSettings.reputation().isSkipSingleEmbed());
 
         context.registerMenu(MenuAction.forCallback(getSettings(context, guildSettings), event)
                 .addComponent(MenuEntry.of(settings, ctx -> {
@@ -125,7 +125,7 @@ public class RepSettings extends SimpleCommand {
                     refresh(ctx, res -> guildSettings.general().emojiDebug(res), context, guildSettings);
                 }).hidden())
                 .addComponent(MenuEntry.of(skipSingleEmbed, ctx -> {
-                    refresh(ctx, res -> guildSettings.messages().skipSingleEmbed(res), context, guildSettings);
+                    refresh(ctx, res -> guildSettings.reputation().skipSingleEmbed(res), context, guildSettings);
                 }).hidden())
                 .asEphemeral()
                 .build());

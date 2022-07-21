@@ -204,26 +204,26 @@ public class ReputationService {
         return false;
     }
 
-    private boolean isTypeDisabled(ThankType type, Reputation messageSettings) {
+    private boolean isTypeDisabled(ThankType type, Reputation reputation) {
         // force settings
         switch (type) {
             case FUZZY -> {
-                if (!messageSettings.isFuzzyActive()) return true;
+                if (!reputation.isFuzzyActive()) return true;
             }
             case MENTION -> {
-                if (!messageSettings.isMentionActive()) return true;
+                if (!reputation.isMentionActive()) return true;
             }
             case ANSWER -> {
-                if (!messageSettings.isAnswerActive()) return true;
+                if (!reputation.isAnswerActive()) return true;
             }
             case REACTION -> {
-                if (!messageSettings.isReactionActive()) return true;
+                if (!reputation.isReactionActive()) return true;
             }
             case EMBED -> {
-                if (!messageSettings.isEmbedActive()) return true;
+                if (!reputation.isEmbedActive()) return true;
             }
             case DIRECT -> {
-                if (!messageSettings.isSkipSingleEmbed()) return false;
+                if (!reputation.isSkipSingleEmbed()) return false;
             }
             default -> throw new IllegalStateException("Unexpected value: " + type);
         }

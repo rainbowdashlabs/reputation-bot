@@ -22,7 +22,7 @@ public class Reputation extends QueryFactoryHolder implements GuildHolder {
     private boolean skipSingleEmbed;
 
     public Reputation(Settings settings) {
-        this(settings, true, true, true, true, true);
+        this(settings, true, true, true, true, true, false);
     }
 
     public Reputation(Settings settings, boolean reactionActive, boolean answerActive, boolean mentionActive, boolean fuzzyActive, boolean embedActive, boolean skipSingleEmbed) {
@@ -69,7 +69,6 @@ public class Reputation extends QueryFactoryHolder implements GuildHolder {
     public boolean isSkipSingleEmbed() {
         return skipSingleEmbed;
     }
-
 
     public boolean embedActive(boolean embedActive) {
         var result = set("embed_active", stmt -> stmt.setBoolean(embedActive));
