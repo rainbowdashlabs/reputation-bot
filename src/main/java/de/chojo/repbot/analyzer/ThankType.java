@@ -10,16 +10,16 @@ public enum ThankType {
     NO_TARGET,
     NO_MATCH;
 
-    private final String localizedName;
+    private final String localeKey;
 
-    ThankType(String localizedName) {
-        this.localizedName = localizedName;
+    ThankType(String localeKey) {
+        this.localeKey = localeKey;
     }
     ThankType() {
-        localizedName = null;
+        localeKey = null;
     }
 
-    public String localizedName() {
-        return localizedName;
+    public String localeKey() {
+        return localeKey;
     }
 }
