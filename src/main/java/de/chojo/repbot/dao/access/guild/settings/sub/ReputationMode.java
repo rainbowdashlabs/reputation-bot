@@ -10,9 +10,9 @@ public enum ReputationMode {
     private final boolean supportsOffset;
     private final boolean autoRefresh;
 
-    ReputationMode(String tableName, String localizedName, boolean supportsOffset, boolean autoRefresh) {
+    ReputationMode(String tableName, String localeCode, boolean supportsOffset, boolean autoRefresh) {
         this.tableName = tableName;
-        this.localizedName = localizedName;
+        this.localizedName = localeCode;
         this.supportsOffset = supportsOffset;
         this.autoRefresh = autoRefresh;
     }
@@ -29,7 +29,7 @@ public enum ReputationMode {
         return autoRefresh;
     }
 
-    public String localizedName() {
+    public String localeCode() {
         return localizedName;
     }
 }

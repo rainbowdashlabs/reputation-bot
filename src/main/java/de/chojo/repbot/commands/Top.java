@@ -83,7 +83,7 @@ public class Top extends SimpleCommand {
     public void onAutoComplete(CommandAutoCompleteInteractionEvent event, SlashCommandContext slashCommandContext) {
         var option = event.getFocusedOption();
         if ("mode".equalsIgnoreCase(option.getName())) {
-            Completion.complete(option.getValue(), "total", "7 days", "30 days");
+            event.replyChoices(Completion.complete(option.getValue(), "total", "7 days", "30 days")).queue();
         }
     }
 }

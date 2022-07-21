@@ -98,10 +98,10 @@ public class RepSettings extends SimpleCommand {
         var reputationMode = SelectMenu.create("reputationmode")
                 .setPlaceholder("command.repSettings.sub.reputationMode")
                 .setRequiredRange(1, 1)
-                .addOption(ReputationMode.TOTAL.localizedName(), ReputationMode.TOTAL.name(), "command.repSettings.sub.reputationMode.total")
-                .addOption(ReputationMode.ROLLING_MONTH.localizedName(), ReputationMode.ROLLING_MONTH.name(), "command.repSettings.sub.reputationMode.rollingMonth")
-                .addOption(ReputationMode.ROLLING_WEEK.localizedName(), ReputationMode.ROLLING_WEEK.name(), "command.repSettings.sub.reputationMode.rollingWeek")
-                .setDefaultValues(Collections.singletonList(guildSettings.general().reputationMode().name().toLowerCase()))
+                .addOption(ReputationMode.TOTAL.localeCode(), ReputationMode.TOTAL.name(), "command.repSettings.sub.reputationMode.total")
+                .addOption(ReputationMode.ROLLING_MONTH.localeCode(), ReputationMode.ROLLING_MONTH.name(), "command.repSettings.sub.reputationMode.rollingMonth")
+                .addOption(ReputationMode.ROLLING_WEEK.localeCode(), ReputationMode.ROLLING_WEEK.name(), "command.repSettings.sub.reputationMode.rollingWeek")
+                .setDefaultValues(Collections.singletonList(guildSettings.general().reputationMode().name()))
                 .build();
 
         context.registerMenu(MenuAction.forCallback(getSettings(context, guildSettings), event)
@@ -142,7 +142,7 @@ public class RepSettings extends SimpleCommand {
                     var copy = ctx.entry().component().createCopy();
                     var mode = ReputationMode.valueOf(value);
                     mode = guildSettings.general().reputationMode(mode);
-                    copy.setDefaultValues(Collections.singleton(mode.name().toLowerCase()));
+                    copy.setDefaultValues(Collections.singleton(mode.name()));
                     var settingsEmbed = getSettings(context, guildSettings);
                     ctx.entry().component(copy.build());
                     ctx.refresh(settingsEmbed);
