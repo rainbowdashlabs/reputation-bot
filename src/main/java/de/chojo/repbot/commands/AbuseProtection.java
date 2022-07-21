@@ -184,7 +184,7 @@ public class AbuseProtection extends SimpleCommand {
 
         age = Math.max(0, age);
         event.reply(context.localize("command.abuseProtection.sub.maxMessageAge.get",
-                Replacement.create("MINUTES", abuseSettings.maxMessageAge((int) age)))).queue();
+                Replacement.create("MINUTES", abuseSettings.maxMessageAge(age)))).queue();
     }
 
     private void minMessages(SlashCommandInteractionEvent event, SlashCommandContext context, RepGuild guild) {
