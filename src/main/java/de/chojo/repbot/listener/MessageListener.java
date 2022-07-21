@@ -105,7 +105,7 @@ public class MessageListener extends ListenerAdapter {
 
         var message = event.getMessage();
 
-        var analyzerResult = messageAnalyzer.processMessage(thank.thankwords().thankwordPattern(), message, settings, true,  settings.abuseProtection().maxMessageReputation());
+        var analyzerResult = messageAnalyzer.processMessage(thank.thankwords().thankwordPattern(), message, settings, true, settings.abuseProtection().maxMessageReputation());
 
         if (analyzerResult.type() == ThankType.NO_MATCH) return;
 

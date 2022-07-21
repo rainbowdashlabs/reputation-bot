@@ -241,6 +241,7 @@ public class AbuseProtection extends SimpleCommand {
     private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, Object object) {
         return String.format("$%s$: %s", locale, object);
     }
+
     private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, boolean bool) {
         return String.format("$%s$: $%s$", locale, bool ? "words.enabled" : "words.disabled");
     }
