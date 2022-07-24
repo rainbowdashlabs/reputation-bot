@@ -108,7 +108,8 @@ public class Settings extends QueryFactoryHolder implements GuildHolder {
                         SELECT
                             language,
                             emoji_debug,
-                            stack_roles
+                            stack_roles,
+                            reputation_mode
                         FROM
                             guild_settings
                         WHERE guild_id = ?;

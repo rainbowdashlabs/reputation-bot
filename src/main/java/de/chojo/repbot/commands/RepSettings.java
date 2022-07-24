@@ -8,6 +8,7 @@ import de.chojo.jdautil.menus.MenuAction;
 import de.chojo.jdautil.menus.entries.MenuEntry;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
+import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.util.EmojiDebug;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -57,6 +58,7 @@ public class RepSettings extends SimpleCommand {
                 .addOption("command.repSettings.embed.descr.byEmbed", "embed", "command.repSettings.sub.embed.arg.embed")
                 .addOption("command.repSettings.embed.descr.emojidebug", "emojidebug", "command.repSettings.sub.emojidebug.arg.active")
                 .addOption("command.repSettings.embed.descr.skipSingleEmbed", "directembed", "command.repSettings.sub.skipSingleEmbed.arg.active")
+                .addOption("command.repSettings.embed.descr.reputationMode", "reputationmode", "command.repSettings.sub.reputationMode")
                 .build();
         var reactions = getMenu("reactions",
                 "command.repSettings.sub.reactions.arg.reactions",
@@ -93,6 +95,14 @@ public class RepSettings extends SimpleCommand {
                 "command.repSettings.sub.skipSingleEmbed.true",
                 "command.repSettings.sub.skipSingleEmbed.false",
                 guildSettings.reputation().isSkipSingleEmbed());
+        var reputationMode = SelectMenu.create("reputationmode")
+                .setPlaceholder("command.repSettings.sub.reputationMode")
+                .setRequiredRange(1, 1)
+                .addOption(ReputationMode.TOTAL.localeCode(), ReputationMode.TOTAL.name(), "command.repSettings.sub.reputationMode.total")
+                .addOption(ReputationMode.ROLLING_MONTH.localeCode(), ReputationMode.ROLLING_MONTH.name(), "command.repSettings.sub.reputationMode.rollingMonth")
+                .addOption(ReputationMode.ROLLING_WEEK.localeCode(), ReputationMode.ROLLING_WEEK.name(), "command.repSettings.sub.reputationMode.rollingWeek")
+                .setDefaultValues(Collections.singletonList(guildSettings.general().reputationMode().name()))
+                .build();
 
         context.registerMenu(MenuAction.forCallback(getSettings(context, guildSettings), event)
                 .addComponent(MenuEntry.of(settings, ctx -> {
@@ -127,6 +137,16 @@ public class RepSettings extends SimpleCommand {
                 .addComponent(MenuEntry.of(skipSingleEmbed, ctx -> {
                     refresh(ctx, res -> guildSettings.reputation().skipSingleEmbed(res), context, guildSettings);
                 }).hidden())
+                .addComponent(MenuEntry.of(reputationMode, ctx -> {
+                    var value = ctx.event().getValues().get(0);
+                    var copy = ctx.entry().component().createCopy();
+                    var mode = ReputationMode.valueOf(value);
+                    mode = guildSettings.general().reputationMode(mode);
+                    copy.setDefaultValues(Collections.singleton(mode.name()));
+                    var settingsEmbed = getSettings(context, guildSettings);
+                    ctx.entry().component(copy.build());
+                    ctx.refresh(settingsEmbed);
+                }).hidden())
                 .asEphemeral()
                 .build());
     }
@@ -141,7 +161,8 @@ public class RepSettings extends SimpleCommand {
                 .build();
     }
 
-    private void refresh(EntryContext<SelectMenuInteractionEvent, SelectMenu> ctx, Consumer<Boolean> result, SlashCommandContext context, Settings guildSettings) {
+    private void refresh(EntryContext<SelectMenuInteractionEvent, SelectMenu> ctx, Consumer<Boolean> result, SlashCommandContext
+            context, Settings guildSettings) {
         var value = ctx.event().getValues().get(0);
         var copy = ctx.entry().component().createCopy();
         copy.setDefaultValues(Collections.singleton(value));
