@@ -7,6 +7,7 @@ import de.chojo.repbot.dao.access.guild.settings.sub.AbuseProtection;
 import de.chojo.repbot.dao.components.MemberHolder;
 import de.chojo.repbot.dao.snapshots.RepProfile;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
+import de.chojo.sqlutil.wrapper.stage.StatementStage;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -198,17 +199,31 @@ public class RepUser extends QueryFactoryHolder implements MemberHolder {
      * @return the reputation user
      */
     public RepProfile profile() {
+        var mode = reputation.repGuild().settings().general().reputationMode();
         // We probably dont want to cache the profile. There are just too many factors which can change the user reputation.
-        return builder(RepProfile.class)
-                .query("""
-                        SELECT rank, rank_donated, user_id, reputation, rep_offset, raw_reputation, donated
-                        FROM user_reputation
-                        WHERE guild_id = ? AND user_id = ?;
-                        """)
-                .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(userId()))
+        var builder = builder(RepProfile.class);
+        StatementStage<RepProfile> query;
+        if (mode.isSupportsOffset()) {
+            query = builder
+                    .query("""
+                            SELECT rank, rank_donated, user_id, reputation, rep_offset, raw_reputation, donated
+                            FROM %s
+                            WHERE guild_id = ? AND user_id = ?;
+                            """, mode.tableName());
+        } else {
+            query = builder
+                    .query("""
+                            SELECT rank, rank_donated, user_id, reputation, 0 AS rep_offset, reputation AS raw_reputation, donated
+                            FROM %s
+                            WHERE guild_id = ? AND user_id = ?;
+                            """, mode.tableName());
+        }
+
+        return query.paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(userId()))
                 .readRow(row -> RepProfile.buildProfile(this, row))
                 .firstSync()
                 .orElseGet(() -> RepProfile.empty(this, user()));
+
     }
 
     /**

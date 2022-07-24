@@ -14,7 +14,7 @@ import java.util.List;
 
 public class Messages extends QueryFactoryHolder implements GuildHolder {
     private final Settings settings;
-    private boolean reactionConfirmation = true;
+    private boolean reactionConfirmation;
 
     public Messages(Settings settings) {
         this(settings, true);

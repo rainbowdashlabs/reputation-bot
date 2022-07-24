@@ -126,14 +126,18 @@ public class Reputation extends QueryFactoryHolder implements GuildHolder {
                 getSetting("command.repSettings.embed.descr.byFuzzy", isFuzzyActive()),
                 getSetting("command.repSettings.embed.descr.byEmbed", isEmbedActive()),
                 getSetting("command.repSettings.embed.descr.emojidebug", settings.general().isEmojiDebug()),
-                getSetting("command.repSettings.embed.descr.skipSingleEmbed", settings.reputation().isSkipSingleEmbed())
+                getSetting("command.repSettings.embed.descr.skipSingleEmbed", settings.reputation().isSkipSingleEmbed()),
+                getSetting("command.repSettings.embed.descr.reputationMode", settings.general().reputationMode().localeCode())
         );
 
         return String.join("\n", setting);
     }
 
     private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, boolean object) {
-        return String.format("$%s$: $%s$", locale, object ? "words.enabled" : "words.disabled");
+        return getSetting(locale, object ? "words.enabled" : "words.disabled");
+    }
+    private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, String object) {
+        return String.format("$%s$: $%s$", locale, object);
     }
 
     @Override

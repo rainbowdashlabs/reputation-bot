@@ -258,3 +258,6 @@ ALTER TABLE IF EXISTS repbot_schema.message_settings
 
 -- This function was decomissioned a long time ago but never removed
 DROP FUNCTION IF EXISTS repbot_schema.get_thank_settings(_guild_id BIGINT);
+
+ALTER TABLE repbot_schema.guild_settings
+    ADD reputation_mode TEXT DEFAULT 'TOTAL' NOT NULL;
