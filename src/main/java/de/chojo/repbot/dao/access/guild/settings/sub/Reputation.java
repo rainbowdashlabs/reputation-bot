@@ -19,12 +19,13 @@ public class Reputation extends QueryFactoryHolder implements GuildHolder {
     private boolean mentionActive;
     private boolean fuzzyActive;
     private boolean embedActive;
+    private boolean skipSingleEmbed;
 
     public Reputation(Settings settings) {
-        this(settings, true, true, true, true, true);
+        this(settings, true, true, true, true, true, false);
     }
 
-    public Reputation(Settings settings, boolean reactionActive, boolean answerActive, boolean mentionActive, boolean fuzzyActive, boolean embedActive) {
+    public Reputation(Settings settings, boolean reactionActive, boolean answerActive, boolean mentionActive, boolean fuzzyActive, boolean embedActive, boolean skipSingleEmbed) {
         super(settings);
         this.settings = settings;
         this.reactionActive = reactionActive;
@@ -32,6 +33,7 @@ public class Reputation extends QueryFactoryHolder implements GuildHolder {
         this.mentionActive = mentionActive;
         this.fuzzyActive = fuzzyActive;
         this.embedActive = embedActive;
+        this.skipSingleEmbed = skipSingleEmbed;
     }
 
     public static Reputation build(Settings settings, ResultSet rs) throws SQLException {
@@ -40,7 +42,8 @@ public class Reputation extends QueryFactoryHolder implements GuildHolder {
                 rs.getBoolean("answer_active"),
                 rs.getBoolean("mention_active"),
                 rs.getBoolean("fuzzy_active"),
-                rs.getBoolean("embed_active"));
+                rs.getBoolean("embed_active"),
+                rs.getBoolean("skip_single_embed"));
     }
 
     public boolean isReactionActive() {
@@ -61,6 +64,10 @@ public class Reputation extends QueryFactoryHolder implements GuildHolder {
 
     public boolean isEmbedActive() {
         return embedActive;
+    }
+
+    public boolean isSkipSingleEmbed() {
+        return skipSingleEmbed;
     }
 
     public boolean embedActive(boolean embedActive) {
@@ -103,6 +110,14 @@ public class Reputation extends QueryFactoryHolder implements GuildHolder {
         return this.fuzzyActive;
     }
 
+    public boolean skipSingleEmbed(boolean skipSingleEmbed) {
+        var result = set("skip_single_embed", stmt -> stmt.setBoolean(skipSingleEmbed));
+        if (result) {
+            this.skipSingleEmbed = skipSingleEmbed;
+        }
+        return this.skipSingleEmbed;
+    }
+
     public String toLocalizedString() {
         var setting = List.of(
                 getSetting("command.repSettings.embed.descr.byReaction", isReactionActive()),
@@ -110,7 +125,8 @@ public class Reputation extends QueryFactoryHolder implements GuildHolder {
                 getSetting("command.repSettings.embed.descr.byMention", isMentionActive()),
                 getSetting("command.repSettings.embed.descr.byFuzzy", isFuzzyActive()),
                 getSetting("command.repSettings.embed.descr.byEmbed", isEmbedActive()),
-                getSetting("command.repSettings.embed.descr.emojidebug", settings.general().isEmojiDebug())
+                getSetting("command.repSettings.embed.descr.emojidebug", settings.general().isEmojiDebug()),
+                getSetting("command.repSettings.embed.descr.skipSingleEmbed", settings.reputation().isSkipSingleEmbed())
         );
 
         return String.join("\n", setting);
