@@ -6,6 +6,7 @@ import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
+import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;
@@ -91,19 +92,20 @@ public class MessageListener extends ListenerAdapter {
         var guild = event.getGuild();
         var repGuild = guilds.guild(guild);
         var settings = repGuild.settings();
+        Thanking thank = settings.thanking();
 
         if (event.getMessage().getType() != MessageType.DEFAULT && event.getMessage().getType() != MessageType.INLINE_REPLY) {
             return;
         }
 
-        if (!settings.thanking().channels().isEnabled(event.getGuildChannel())) return;
+        if (!thank.channels().isEnabled(event.getGuildChannel())) return;
         repBotCachePolicy.seen(event.getMember());
 
-        if (!settings.thanking().donorRoles().hasRole(event.getMember())) return;
+        if (!thank.donorRoles().hasRole(event.getMember())) return;
 
         var message = event.getMessage();
 
-        var analyzerResult = messageAnalyzer.processMessage(settings.thanking().thankwords().thankwordPattern(), message, settings, true, 3);
+        var analyzerResult = messageAnalyzer.processMessage(thank.thankwords().thankwordPattern(), message, settings, true, settings.abuseProtection().maxMessageReputation());
 
         if (analyzerResult.type() == ThankType.NO_MATCH) return;
 

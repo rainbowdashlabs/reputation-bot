@@ -42,7 +42,8 @@ public class Settings extends QueryFactoryHolder implements GuildHolder {
                             max_given,
                             max_given_hours,
                             max_received,
-                            max_received_hours
+                            max_received_hours,
+                            max_message_reputation
                         FROM
                             abuse_protection
                         WHERE guild_id = ?;
@@ -129,14 +130,10 @@ public class Settings extends QueryFactoryHolder implements GuildHolder {
                 .query("""
                         SELECT
                             reaction,
-                            reactions,
-                            thankswords,
-                            active_channels,
-                            channel_whitelist,
-                            receiver_roles,
-                            donor_roles
+                            channel_whitelist
                         FROM
-                            get_thank_settings(?);
+                            thank_settings
+                        WHERE guild_id = ?;
                         """)
                 .paramsBuilder(stmt -> stmt.setLong(guildId()))
                 .readRow(rs -> Thanking.build(this, rs))

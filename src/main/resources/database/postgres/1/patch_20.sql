@@ -1,3 +1,4 @@
+-- Add a reputation offset for the total ranking
 CREATE TABLE repbot_schema.reputation_offset
 (
     guild_id BIGINT NOT NULL,
@@ -10,6 +11,7 @@ CREATE TABLE repbot_schema.reputation_offset
 CREATE INDEX reputation_offset_guild_id_index
     ON repbot_schema.reputation_offset (guild_id);
 
+-- Add the offset to the ranking
 DROP VIEW repbot_schema.user_reputation CASCADE;
 CREATE OR REPLACE VIEW repbot_schema.user_reputation
             (rank, rank_donated, guild_id, user_id, reputation, rep_offset, raw_reputation, donated) AS
@@ -58,6 +60,7 @@ FROM (SELECT raw_rep.guild_id,
                LEFT JOIN repbot_schema.reputation_offset o
                          ON raw_rep.guild_id = o.guild_id AND raw_rep.user_id = o.user_id) rank;
 
+-- Recreate global reputation because it depends on the user reputation
 CREATE OR REPLACE VIEW repbot_schema.global_user_reputation(rank, rank_donated, user_id, reputation, donated) AS
 SELECT ROW_NUMBER() OVER (ORDER BY reputation DESC) AS rank,
        ROW_NUMBER() OVER (ORDER BY donated DESC)    AS rank_donated,
@@ -71,6 +74,7 @@ FROM (SELECT user_reputation.user_id,
       FROM repbot_schema.user_reputation
       GROUP BY user_reputation.user_id) rep;
 
+-- Add new offset to user data
 CREATE OR REPLACE FUNCTION repbot_schema.aggregate_user_data(_user_id BIGINT)
     RETURNS TEXT
     LANGUAGE plpgsql
@@ -159,6 +163,7 @@ BEGIN
 END;
 $BODY$;
 
+-- Enhance abuse protection
 ALTER TABLE repbot_schema.abuse_protection
     ADD max_given INT DEFAULT 0 NOT NULL;
 
@@ -171,6 +176,10 @@ ALTER TABLE repbot_schema.abuse_protection
 ALTER TABLE repbot_schema.abuse_protection
     ADD max_received_hours INT DEFAULT 1 NOT NULL;
 
+ALTER TABLE repbot_schema.abuse_protection
+    ADD max_message_reputation INT DEFAULT 3 NOT NULL;
+
+-- Create metrics for interactions
 CREATE TABLE IF NOT EXISTS repbot_schema.metrics_handled_interactions
 (
     hour  TIMESTAMP NOT NULL
@@ -205,6 +214,7 @@ SELECT DATE_TRUNC('month', hour)::DATE AS month,
 FROM repbot_schema.metrics_handled_interactions
 GROUP BY month;
 
+-- Create metrics for reputation by type
 CREATE OR REPLACE VIEW repbot_schema.metrics_reputation_type_week AS
 SELECT DATE_TRUNC('week', received)::DATE AS week, cause, COUNT(1) AS count
 FROM repbot_schema.reputation_log
@@ -238,8 +248,16 @@ CREATE TABLE IF NOT EXISTS repbot_schema.message_states
 ALTER TABLE IF EXISTS repbot_schema.message_settings
     ADD skip_single_embed BOOLEAN DEFAULT FALSE NOT NULL;
 
+-- Add max message reputation
+ALTER TABLE IF EXISTS repbot_schema.message_settings
+    ADD max_message_reputation INT DEFAULT 3 NOT NULL;
+
+-- Rename for better consistency with dao
 ALTER TABLE IF EXISTS repbot_schema.message_settings
     RENAME TO reputation_settings;
+
+-- This function was decomissioned a long time ago but never removed
+DROP FUNCTION IF EXISTS repbot_schema.get_thank_settings(_guild_id BIGINT);
 
 ALTER TABLE repbot_schema.guild_settings
     ADD reputation_mode TEXT DEFAULT 'TOTAL' NOT NULL;
