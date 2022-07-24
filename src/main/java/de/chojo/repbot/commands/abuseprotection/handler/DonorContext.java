@@ -19,13 +19,13 @@ public class DonorContext implements SlashHandler, BooleanMessageMapper {
         var abuseSettings = guild.settings().abuseProtection();
         if (event.getOptions().isEmpty()) {
             event.reply(getBooleanMessage(context, abuseSettings.isDonorContext(),
-                    "command.abuseProtection.sub.donorContext.true", "command.abuseProtection.sub.donorContext.false")).queue();
+                    "command.abuseprotection.donorcontext.true", "command.abuseprotection.donorcontext.false")).queue();
             return;
         }
         var state = event.getOption("state").getAsBoolean();
 
         event.reply(getBooleanMessage(context, abuseSettings.donorContext(state),
-                "command.abuseProtection.sub.donorContext.true", "command.abuseProtection.sub.donorContext.false")).queue();
+                "command.abuseprotection.donorcontext.true", "command.abuseprotection.donorcontext.false")).queue();
 
     }
 }

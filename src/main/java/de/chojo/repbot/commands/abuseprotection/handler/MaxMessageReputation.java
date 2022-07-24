@@ -19,15 +19,14 @@ public class MaxMessageReputation implements SlashHandler {
         RepGuild guild = guilds.guild(event.getGuild());
         var abuseSettings = guild.settings().abuseProtection();
         if (event.getOptions().isEmpty()) {
-            event.reply(context.localize("command.abuseProtection.sub.maxMessageRep.get",
+            event.reply(context.localize("command.abuseprotection.maxmessagerep.get",
                     Replacement.create("VALUE", abuseSettings.maxMessageReputation()))).queue();
             return;
         }
         var maxRep = event.getOption("amount").getAsInt();
 
         maxRep = Math.max(1, maxRep);
-        event.reply(context.localize("command.abuseProtection.sub.maxMessageRep.get",
+        event.reply(context.localize("command.abuseprotection.maxmessagerep.get",
                 Replacement.create("VALUE", abuseSettings.maxMessageReputation(maxRep)))).queue();
-
     }
 }

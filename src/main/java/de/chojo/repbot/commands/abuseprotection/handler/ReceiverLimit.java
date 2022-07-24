@@ -29,15 +29,14 @@ public class ReceiverLimit implements SlashHandler {
         }
 
         if (protection.maxReceived() == 0) {
-            event.reply(context.localize("command.abuseProtection.sub.receiverLimit.disabled")).setEphemeral(true).queue();
+            event.reply(context.localize("command.abuseprotection.receiverlimit.disabled")).setEphemeral(true).queue();
             return;
         }
 
-        event.reply(context.localize("command.abuseProtection.sub.receiverLimit.set",
+        event.reply(context.localize("command.abuseprotection.receiverlimit.set",
                         Replacement.create("AMOUNT", protection.maxReceived()),
                         Replacement.create("HOURS", protection.maxReceivedHours())))
                 .setEphemeral(true)
                 .queue();
-
     }
 }

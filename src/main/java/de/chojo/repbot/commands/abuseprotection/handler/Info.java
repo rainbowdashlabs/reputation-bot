@@ -23,24 +23,23 @@ public class Info implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         RepGuild guild = guilds.guild(event.getGuild());
         event.replyEmbeds(getSettings(context, guild)).queue();
-
     }
 
     private MessageEmbed getSettings(EventContext context, RepGuild guild) {
         var abuseProt = guild.settings().abuseProtection();
         var setting = List.of(
-                getSetting("command.abuseProtection.embed.descr.maxMessageAge", abuseProt.maxMessageAge()),
-                getSetting("command.abuseProtection.embed.descr.minMessages", abuseProt.minMessages()),
-                getSetting("command.abuseProtection.embed.descr.cooldown", abuseProt.cooldown()),
-                getSetting("command.abuseProtection.embed.descr.donorContext", abuseProt.isDonorContext()),
-                getSetting("command.abuseProtection.embed.descr.receiverContext", abuseProt.isReceiverContext()),
-                getSetting("command.abuseProtection.embed.descr.maxMessageRep", abuseProt.maxMessageReputation())
+                getSetting("command.abuseprotection.info.embed.maxMessageAge", abuseProt.maxMessageAge()),
+                getSetting("command.abuseprotection.info.embed.minMessages", abuseProt.minMessages()),
+                getSetting("command.abuseprotection.info.embed.cooldown", abuseProt.cooldown()),
+                getSetting("command.abuseprotection.info.embed.donorContext", abuseProt.isDonorContext()),
+                getSetting("command.abuseprotection.info.embed.receiverContext", abuseProt.isReceiverContext()),
+                getSetting("command.abuseprotection.info.embed.maxMessageRep", abuseProt.maxMessageReputation())
         );
 
         var settings = String.join("\n", setting);
 
         return new LocalizedEmbedBuilder(context.guildLocalizer())
-                .setTitle("command.abuseProtection.embed.title")
+                .setTitle("command.abuseprotection.info.embed.title")
                 .appendDescription(settings)
                 .setColor(Color.GREEN)
                 .build();

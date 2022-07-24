@@ -29,11 +29,11 @@ public class DonorLimit implements SlashHandler {
         }
 
         if (protection.maxGiven() == 0) {
-            event.reply(context.localize("command.abuseProtection.sub.donorLimit.disabled")).setEphemeral(true).queue();
+            event.reply(context.localize("command.abuseprotection.donorlimit.disabled")).setEphemeral(true).queue();
             return;
         }
 
-        event.reply(context.localize("command.abuseProtection.sub.donorLimit.set",
+        event.reply(context.localize("command.abuseprotection.donorlimit.set",
                         Replacement.create("AMOUNT", protection.maxGiven()),
                         Replacement.create("HOURS", protection.maxGivenHours())))
                 .setEphemeral(true)

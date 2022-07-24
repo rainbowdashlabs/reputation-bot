@@ -19,13 +19,12 @@ public class ReceiverContext implements SlashHandler, BooleanMessageMapper {
         var abuseSettings = guild.settings().abuseProtection();
         if (event.getOptions().isEmpty()) {
             event.reply(getBooleanMessage(context, abuseSettings.isReceiverContext(),
-                    "command.abuseProtection.sub.receiverContext.true", "command.abuseProtection.sub.receiverContext.false")).queue();
+                    "command.abuseprotection.receivercontext.true", "command.abuseprotection.receivercontext.false")).queue();
             return;
         }
         var state = event.getOption("state").getAsBoolean();
 
         event.reply(getBooleanMessage(context, abuseSettings.receiverContext(state),
-                "command.abuseProtection.sub.receiverContext.true", "command.abuseProtection.sub.receiverContext.false")).queue();
-
+                "command.abuseprotection.receivercontext.true", "command.abuseprotection.receivercontext.false")).queue();
     }
 }
