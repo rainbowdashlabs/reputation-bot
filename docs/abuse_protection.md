@@ -54,5 +54,7 @@ By default the bot will limit given reputation to three users per message and em
 value with the `maxmessagereputation` setting
 
 ## Donor and Receiver limit
+Setting: `donorlimit` and `receiverlimit`
+
 You can limit the total given and received reputation of users with these settings. The time frame for the count is 
 given in hours. You could for example define that a user can give 10 reputation in 24 hours.
