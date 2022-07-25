@@ -1,5 +1,5 @@
 -- Add a reputation offset for the total ranking
-CREATE TABLE repbot_schema.reputation_offset
+CREATE TABLE IF NOT EXISTS repbot_schema.reputation_offset
 (
     guild_id BIGINT NOT NULL,
     user_id  BIGINT NOT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE repbot_schema.reputation_offset
         PRIMARY KEY (guild_id, user_id)
 );
 
-CREATE INDEX reputation_offset_guild_id_index
+CREATE INDEX IF NOT EXISTS reputation_offset_guild_id_index
     ON repbot_schema.reputation_offset (guild_id);
 
 -- Add the offset to the ranking
@@ -25,10 +25,12 @@ SELECT ROW_NUMBER() OVER (PARTITION BY rank.guild_id ORDER BY rank.reputation DE
        rank.donated
 FROM (SELECT raw_rep.guild_id,
              raw_rep.user_id,
-             -- apply offset
+             -- apply offset to the normal reputation.
+             -- This will require nearly no changes anywhere
              raw_rep.reputation + COALESCE(o.amount, 0) AS reputation,
+             -- We save the offset on the side and allow retrieval of it
              COALESCE(o.amount, 0)                      AS rep_offset,
-             -- save raw offset
+             -- save raw reputation without the offset.
              raw_rep.reputation                         AS raw_reputation,
              raw_rep.donated
       FROM (SELECT guild_id,
@@ -82,169 +84,168 @@ CREATE OR REPLACE FUNCTION repbot_schema.aggregate_user_data(_user_id BIGINT)
 AS
 $BODY$
 DECLARE
-    _result JSONB;
+    _result jsonb;
 BEGIN
-    WITH reputation AS (
-        SELECT jsonb_agg(
-                       jsonb_build_object(
-                               'guild', guild_id,
-                               'channel', channel_id,
-                               'donor', CASE WHEN donor_id = _user_id THEN _user_id END,
-                               'receiver', CASE WHEN receiver_id = _user_id THEN _user_id END,
-                               'message', message_id,
-                               'ref_message', ref_message_id,
-                               'cause', cause,
-                               'received', received::TEXT
-                           )
-                   ) AS rep
-        FROM repbot_schema.reputation_log l
-        WHERE l.receiver_id = _user_id
-           OR l.donor_id = _user_id
-    ),
-         reputation_offset AS (
-             SELECT jsonb_agg(
-                            jsonb_build_object(
-                                    'guild', guild_id,
-                                    'user', user_id,
-                                    'amount', amount
-                                )
-                        ) AS reputation_offset
-             FROM repbot_schema.reputation_offset
-             WHERE user_id = _user_id
-         ),
-         voice_activity AS (
-             SELECT jsonb_agg(
-                            jsonb_build_object(
-                                    'guild', guild_id,
-                                    'user_1', CASE WHEN user_id_1 = _user_id THEN _user_id END,
-                                    'user_2', CASE WHEN user_id_2 = _user_id THEN _user_id END,
-                                    'seen', seen::TEXT
-                                )
-                        ) AS voice
-             FROM repbot_schema.voice_activity
-             WHERE user_id_1 = _user_id
-                OR user_id_2 = _user_id
-         ),
-         cleanup_tasks AS (
-             SELECT jsonb_agg(
-                            jsonb_build_object(
-                                    'guild', guild_id,
-                                    'user', user_id,
-                                    'delete_after', delete_after::TEXT
-                                )
-                        ) AS cleanup
-             FROM repbot_schema.cleanup_schedule c
-             WHERE c.user_id = _user_id
-         ),
-         gdpr_log AS (
-             SELECT jsonb_build_object(
-                            'user', user_id,
-                            'received', now()::TEXT,
-                            'attempts', attempts,
-                            'requested', requested
-                        ) AS gdpr
-             FROM repbot_schema.gdpr_log l
-             WHERE l.user_id = _user_id
-         )
-    SELECT jsonb_build_object(
-                   'reputation', coalesce(rep, '[]'::JSONB),
-                   'voice_activity', coalesce(voice, '[]'::JSONB),
-                   'cleanup_tasks', coalesce(cleanup, '[]'::JSONB),
-                   'gdpr_log', coalesce(gdpr, '{}'::JSONB),
-                   'reputation_offset', coalesce(reputation_offset, '[]'::JSONB)
+    WITH reputation AS (SELECT JSONB_AGG(
+                                       JSONB_BUILD_OBJECT(
+                                               'guild', guild_id,
+                                               'channel', channel_id,
+                                               'donor', CASE WHEN donor_id = _user_id THEN _user_id END,
+                                               'receiver', CASE WHEN receiver_id = _user_id THEN _user_id END,
+                                               'message', message_id,
+                                               'ref_message', ref_message_id,
+                                               'cause', cause,
+                                               'received', received::TEXT
+                                           )
+                                   ) AS rep
+                        FROM repbot_schema.reputation_log l
+                        WHERE l.receiver_id = _user_id
+                           OR l.donor_id = _user_id),
+         reputation_offset AS (SELECT JSONB_AGG(
+                                              JSONB_BUILD_OBJECT(
+                                                      'guild', guild_id,
+                                                      'user', user_id,
+                                                      'amount', amount
+                                                  )
+                                          ) AS reputation_offset
+                               FROM repbot_schema.reputation_offset
+                               WHERE user_id = _user_id),
+         voice_activity AS (SELECT JSONB_AGG(
+                                           JSONB_BUILD_OBJECT(
+                                                   'guild', guild_id,
+                                                   'user_1', CASE WHEN user_id_1 = _user_id THEN _user_id END,
+                                                   'user_2', CASE WHEN user_id_2 = _user_id THEN _user_id END,
+                                                   'seen', seen::TEXT
+                                               )
+                                       ) AS voice
+                            FROM repbot_schema.voice_activity
+                            WHERE user_id_1 = _user_id
+                               OR user_id_2 = _user_id),
+         cleanup_tasks AS (SELECT JSONB_AGG(
+                                          JSONB_BUILD_OBJECT(
+                                                  'guild', guild_id,
+                                                  'user', user_id,
+                                                  'delete_after', delete_after::TEXT
+                                              )
+                                      ) AS cleanup
+                           FROM repbot_schema.cleanup_schedule c
+                           WHERE c.user_id = _user_id),
+         gdpr_log AS (SELECT JSONB_BUILD_OBJECT(
+                                     'user', user_id,
+                                     'received', NOW()::TEXT,
+                                     'attempts', attempts,
+                                     'requested', requested
+                                 ) AS gdpr
+                      FROM repbot_schema.gdpr_log l
+                      WHERE l.user_id = _user_id)
+    SELECT JSONB_BUILD_OBJECT(
+                   'reputation', COALESCE(rep, '[]'::jsonb),
+                   'voice_activity', COALESCE(voice, '[]'::jsonb),
+                   'cleanup_tasks', COALESCE(cleanup, '[]'::jsonb),
+                   'gdpr_log', COALESCE(gdpr, '{}'::jsonb),
+                   'reputation_offset', COALESCE(reputation_offset, '[]'::jsonb)
                )
     FROM reputation,
          voice_activity,
          cleanup_tasks,
-         gdpr_log
-         reputation_offset
+         gdpr_log reputation_offset
     INTO _result;
-    RETURN jsonb_pretty(_result);
+    RETURN JSONB_PRETTY(_result);
 END;
 $BODY$;
 
 -- Enhance abuse protection
 ALTER TABLE repbot_schema.abuse_protection
-    ADD max_given INT DEFAULT 0 NOT NULL;
+    ADD IF NOT EXISTS max_given INT DEFAULT 0 NOT NULL;
 
 ALTER TABLE repbot_schema.abuse_protection
-    ADD max_given_hours INT DEFAULT 1 NOT NULL;
+    ADD IF NOT EXISTS max_given_hours INT DEFAULT 1 NOT NULL;
 
 ALTER TABLE repbot_schema.abuse_protection
-    ADD max_received INT DEFAULT 0 NOT NULL;
+    ADD IF NOT EXISTS max_received INT DEFAULT 0 NOT NULL;
 
 ALTER TABLE repbot_schema.abuse_protection
-    ADD max_received_hours INT DEFAULT 1 NOT NULL;
+    ADD IF NOT EXISTS max_received_hours INT DEFAULT 1 NOT NULL;
 
 ALTER TABLE repbot_schema.abuse_protection
-    ADD max_message_reputation INT DEFAULT 3 NOT NULL;
+    ADD IF NOT EXISTS max_message_reputation INT DEFAULT 3 NOT NULL;
 
 -- Create metrics for interactions
 CREATE TABLE IF NOT EXISTS repbot_schema.metrics_handled_interactions
 (
-    hour  TIMESTAMP NOT NULL
+    hour    TIMESTAMP NOT NULL
         CONSTRAINT metrics_handled_interactions_pk
             PRIMARY KEY,
-    count INTEGER   NOT NULL DEFAULT 0,
-    failed INTEGER   NOT NULL DEFAULT 0,
+    count   INTEGER   NOT NULL DEFAULT 0,
+    failed  INTEGER   NOT NULL DEFAULT 0,
     success INTEGER   NOT NULL DEFAULT 0
 );
 
 CREATE OR REPLACE VIEW repbot_schema.metrics_handled_interactions_day AS
 SELECT DATE_TRUNC('day', hour)::DATE AS day,
-       SUM(count)                      AS count,
-       SUM(failed)                      AS failed,
-       SUM(success)                      AS success
+       SUM(count)                    AS count,
+       SUM(failed)                   AS failed,
+       SUM(success)                  AS success
 FROM repbot_schema.metrics_handled_interactions
 GROUP BY day;
 
 CREATE OR REPLACE VIEW repbot_schema.metrics_handled_interactions_week AS
 SELECT DATE_TRUNC('week', hour)::DATE AS week,
-       SUM(count)                      AS count,
-       SUM(failed)                      AS failed,
-       SUM(success)                      AS success
+       SUM(count)                     AS count,
+       SUM(failed)                    AS failed,
+       SUM(success)                   AS success
 FROM repbot_schema.metrics_handled_interactions
 GROUP BY week;
 
 CREATE OR REPLACE VIEW repbot_schema.metrics_handled_interactions_month AS
 SELECT DATE_TRUNC('month', hour)::DATE AS month,
        SUM(count)                      AS count,
-       SUM(failed)                      AS failed,
-       SUM(success)                      AS success
+       SUM(failed)                     AS failed,
+       SUM(success)                    AS success
 FROM repbot_schema.metrics_handled_interactions
 GROUP BY month;
 
 -- Create metrics for reputation by type
 CREATE OR REPLACE VIEW repbot_schema.metrics_reputation_type_week AS
-SELECT DATE_TRUNC('week', received)::DATE AS week, cause, COUNT(1) AS count
+SELECT DATE_TRUNC('week', received)::DATE AS week,
+       cause,
+       COUNT(1) AS count
 FROM repbot_schema.reputation_log
 GROUP BY week, cause
 ORDER BY week DESC;
 
 CREATE OR REPLACE VIEW repbot_schema.metrics_reputation_type_month AS
-SELECT DATE_TRUNC('month', received)::DATE AS month, cause, COUNT(1) AS count
+SELECT DATE_TRUNC('month', received)::DATE AS month,
+       cause,
+       COUNT(1) AS count
 FROM repbot_schema.reputation_log
 GROUP BY month, cause
 ORDER BY month DESC;
 
 CREATE OR REPLACE VIEW repbot_schema.metrics_reputation_type_total_week AS
-SELECT week, cause, SUM(count) OVER (PARTITION BY cause ORDER BY week) AS count
+SELECT week,
+       cause,
+       SUM(count) OVER (PARTITION BY cause ORDER BY week) AS count
 FROM repbot_schema.metrics_reputation_type_week m
 ORDER BY week DESC;
 
 CREATE OR REPLACE VIEW repbot_schema.metrics_reputation_type_total_month AS
-SELECT month, cause, SUM(count) OVER (PARTITION BY cause ORDER BY month) AS count
+SELECT month,
+       cause,
+       SUM(count) OVER (PARTITION BY cause ORDER BY month) AS count
 FROM repbot_schema.metrics_reputation_type_month m
 ORDER BY month DESC;
 
+-- Create table to define the state of several messages
 CREATE TABLE IF NOT EXISTS repbot_schema.message_states
 (
-    guild_id             BIGINT               NOT NULL
+    guild_id              BIGINT               NOT NULL
         CONSTRAINT messages_pk
             PRIMARY KEY,
     reaction_confirmation BOOLEAN DEFAULT TRUE NOT NULL
 );
 
+-- Allow skipping of an embed
 ALTER TABLE IF EXISTS repbot_schema.message_settings
     ADD skip_single_embed BOOLEAN DEFAULT FALSE NOT NULL;
 
@@ -259,5 +260,6 @@ ALTER TABLE IF EXISTS repbot_schema.message_settings
 -- This function was decomissioned a long time ago but never removed
 DROP FUNCTION IF EXISTS repbot_schema.get_thank_settings(_guild_id BIGINT);
 
+-- Add the reputation mode to the guild settings to allow different ranking modes.
 ALTER TABLE repbot_schema.guild_settings
-    ADD reputation_mode TEXT DEFAULT 'TOTAL' NOT NULL;
+    ADD IF NOT EXISTS reputation_mode TEXT DEFAULT 'TOTAL' NOT NULL;
