@@ -32,7 +32,8 @@ These messages can be send in the channel where the user received their reputati
 You can define these settings via the `channel announcement` command.
 
 ## Managing ways to give reputation
-The bot has several ways to give reputation. The active ways can be managed via the `repsettings`
+The bot has several ways to give reputation. The active ways can be managed via the `repsettings`. You can find 
+additional information on the [giving reputation page](./give_reputation.md)
 
 ### Mention
 When the bot detects a thankword and there is a mention in the message, the mentioned user or users will receive 
