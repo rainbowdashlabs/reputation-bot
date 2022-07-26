@@ -5,7 +5,7 @@
 2. Execute the `/setup` command and follow the instructions, which will guide you through the basic setup
 
 After this, there are some optional steps you may want to take a look at. You will find more in depth configuration 
-possibilities on the [configuration and customization page](./configuration.md)
+possibilities on the [configuration and customization page](configuration.md)
 
 - Use the `/scan` command to scan the messages in a channel for thank phrases. This will backfill your reputations. You
   can scan up to 100k messages in a channel. This will take some time and you can only scan one channel at a time. 

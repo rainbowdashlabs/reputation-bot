@@ -50,10 +50,12 @@ are older than `maxMessageAge` and not older than 12 hours and are one of the x 
 If a user thanks someone and deleted its messages the reputation will be removed as well.
 
 ## Max reputation per message
-By default the bot will limit given reputation to three users per message and embed request. you can change this 
-value with the `maxmessagereputation` setting
+
+By default the bot will limit given reputation to three users per message and embed request. You can change this 
+value with the `maxmessagereputation` setting.
 
 ## Donor and Receiver limit
+
 Setting: `donorlimit` and `receiverlimit`
 
 You can limit the total given and received reputation of users with these settings. The time frame for the count is 
