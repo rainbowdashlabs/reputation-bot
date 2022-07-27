@@ -12,6 +12,7 @@ nav:
   - Home: index.md
   - Get the bot: invite.md
   - Setup: setup.md
+  - Configuration and Customization: configuration.md
   - Giving Reputation: give_reputation.md
   - Abuse Protection: abuse_protection.md
   - Commands: commands.md
