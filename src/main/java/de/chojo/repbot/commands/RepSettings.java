@@ -8,6 +8,7 @@ import de.chojo.jdautil.menus.MenuAction;
 import de.chojo.jdautil.menus.entries.MenuEntry;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
+import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.util.EmojiDebug;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -56,37 +57,52 @@ public class RepSettings extends SimpleCommand {
                 .addOption("command.repSettings.embed.descr.byFuzzy", "fuzzy", "command.repSettings.sub.fuzzy.arg.fuzzy")
                 .addOption("command.repSettings.embed.descr.byEmbed", "embed", "command.repSettings.sub.embed.arg.embed")
                 .addOption("command.repSettings.embed.descr.emojidebug", "emojidebug", "command.repSettings.sub.emojidebug.arg.active")
+                .addOption("command.repSettings.embed.descr.skipSingleEmbed", "directembed", "command.repSettings.sub.skipSingleEmbed.arg.active")
+                .addOption("command.repSettings.embed.descr.reputationMode", "reputationmode", "command.repSettings.sub.reputationMode")
                 .build();
         var reactions = getMenu("reactions",
                 "command.repSettings.sub.reactions.arg.reactions",
                 "command.repSettings.sub.reactions.true",
                 "command.repSettings.sub.reactions.false",
-                guildSettings.messages().isReactionActive());
+                guildSettings.reputation().isReactionActive());
         var answers = getMenu("answers",
                 "command.repSettings.sub.answer.arg.answer",
                 "command.repSettings.sub.answer.true",
                 "command.repSettings.sub.answer.false",
-                guildSettings.messages().isAnswerActive());
+                guildSettings.reputation().isAnswerActive());
         var mention = getMenu("mention",
                 "command.repSettings.sub.mention.arg.mention",
                 "command.repSettings.sub.mention.true",
                 "command.repSettings.sub.mention.false",
-                guildSettings.messages().isMentionActive());
+                guildSettings.reputation().isMentionActive());
         var fuzzy = getMenu("fuzzy",
                 "command.repSettings.sub.fuzzy.arg.fuzzy",
                 "command.repSettings.sub.fuzzy.true",
                 "command.repSettings.sub.fuzzy.false",
-                guildSettings.messages().isFuzzyActive());
+                guildSettings.reputation().isFuzzyActive());
         var embed = getMenu("embed",
                 "command.repSettings.sub.embed.arg.embed",
                 "command.repSettings.sub.embed.true",
                 "command.repSettings.sub.embed.false",
-                guildSettings.messages().isEmbedActive());
+                guildSettings.reputation().isEmbedActive());
         var emojidebug = getMenu("emojidebug",
                 "command.repSettings.sub.emojidebug.arg.active",
                 "command.repSettings.sub.emojidebug.true",
                 "command.repSettings.sub.emojidebug.false",
                 guildSettings.general().isEmojiDebug());
+        var skipSingleEmbed = getMenu("directembed",
+                "command.repSettings.sub.skipSingleEmbed.arg.active",
+                "command.repSettings.sub.skipSingleEmbed.true",
+                "command.repSettings.sub.skipSingleEmbed.false",
+                guildSettings.reputation().isSkipSingleEmbed());
+        var reputationMode = SelectMenu.create("reputationmode")
+                .setPlaceholder("command.repSettings.sub.reputationMode")
+                .setRequiredRange(1, 1)
+                .addOption(ReputationMode.TOTAL.localeCode(), ReputationMode.TOTAL.name(), "command.repSettings.sub.reputationMode.total")
+                .addOption(ReputationMode.ROLLING_MONTH.localeCode(), ReputationMode.ROLLING_MONTH.name(), "command.repSettings.sub.reputationMode.rollingMonth")
+                .addOption(ReputationMode.ROLLING_WEEK.localeCode(), ReputationMode.ROLLING_WEEK.name(), "command.repSettings.sub.reputationMode.rollingWeek")
+                .setDefaultValues(Collections.singletonList(guildSettings.general().reputationMode().name()))
+                .build();
 
         context.registerMenu(MenuAction.forCallback(getSettings(context, guildSettings), event)
                 .addComponent(MenuEntry.of(settings, ctx -> {
@@ -101,22 +117,35 @@ public class RepSettings extends SimpleCommand {
                     ctx.refresh();
                 }))
                 .addComponent(MenuEntry.of(reactions, ctx -> {
-                    refresh(ctx, res -> guildSettings.messages().reactionActive(res), context, guildSettings);
+                    refresh(ctx, res -> guildSettings.reputation().reactionActive(res), context, guildSettings);
                 }).hidden())
                 .addComponent(MenuEntry.of(answers, ctx -> {
-                    refresh(ctx, res -> guildSettings.messages().answerActive(res), context, guildSettings);
+                    refresh(ctx, res -> guildSettings.reputation().answerActive(res), context, guildSettings);
                 }).hidden())
                 .addComponent(MenuEntry.of(mention, ctx -> {
-                    refresh(ctx, res -> guildSettings.messages().mentionActive(res), context, guildSettings);
+                    refresh(ctx, res -> guildSettings.reputation().mentionActive(res), context, guildSettings);
                 }).hidden())
                 .addComponent(MenuEntry.of(fuzzy, ctx -> {
-                    refresh(ctx, res -> guildSettings.messages().fuzzyActive(res), context, guildSettings);
+                    refresh(ctx, res -> guildSettings.reputation().fuzzyActive(res), context, guildSettings);
                 }).hidden())
                 .addComponent(MenuEntry.of(embed, ctx -> {
-                    refresh(ctx, res -> guildSettings.messages().embedActive(res), context, guildSettings);
+                    refresh(ctx, res -> guildSettings.reputation().embedActive(res), context, guildSettings);
                 }).hidden())
                 .addComponent(MenuEntry.of(emojidebug, ctx -> {
                     refresh(ctx, res -> guildSettings.general().emojiDebug(res), context, guildSettings);
+                }).hidden())
+                .addComponent(MenuEntry.of(skipSingleEmbed, ctx -> {
+                    refresh(ctx, res -> guildSettings.reputation().skipSingleEmbed(res), context, guildSettings);
+                }).hidden())
+                .addComponent(MenuEntry.of(reputationMode, ctx -> {
+                    var value = ctx.event().getValues().get(0);
+                    var copy = ctx.entry().component().createCopy();
+                    var mode = ReputationMode.valueOf(value);
+                    mode = guildSettings.general().reputationMode(mode);
+                    copy.setDefaultValues(Collections.singleton(mode.name()));
+                    var settingsEmbed = getSettings(context, guildSettings);
+                    ctx.entry().component(copy.build());
+                    ctx.refresh(settingsEmbed);
                 }).hidden())
                 .asEphemeral()
                 .build());
@@ -132,7 +161,8 @@ public class RepSettings extends SimpleCommand {
                 .build();
     }
 
-    private void refresh(EntryContext<SelectMenuInteractionEvent, SelectMenu> ctx, Consumer<Boolean> result, SlashCommandContext context, Settings guildSettings) {
+    private void refresh(EntryContext<SelectMenuInteractionEvent, SelectMenu> ctx, Consumer<Boolean> result, SlashCommandContext
+            context, Settings guildSettings) {
         var value = ctx.event().getValues().get(0);
         var copy = ctx.entry().component().createCopy();
         copy.setDefaultValues(Collections.singleton(value));
@@ -150,7 +180,7 @@ public class RepSettings extends SimpleCommand {
     }
 
     private MessageEmbed getSettings(SlashCommandContext context, Settings guildSettings) {
-        var messageSettings = guildSettings.messages();
+        var messageSettings = guildSettings.reputation();
 
         return new LocalizedEmbedBuilder(context.localizer())
                 .setTitle("command.repSettings.embed.title")
@@ -168,7 +198,9 @@ public class RepSettings extends SimpleCommand {
                 emojiString(EmojiDebug.TARGET_NOT_IN_CONTEXT, "command.repSettings.sub.emojidebug.explain.noRecentMessages"),
                 emojiString(EmojiDebug.DONOR_NOT_IN_CONTEXT, "command.repSettings.sub.emojidebug.explain.noDonor"),
                 emojiString(EmojiDebug.TOO_OLD, "command.repSettings.sub.emojidebug.explain.tooOld"),
-                emojiString(EmojiDebug.PROMPTED, "command.repSettings.sub.emojidebug.explain.prompted")
+                emojiString(EmojiDebug.PROMPTED, "command.repSettings.sub.emojidebug.explain.prompted"),
+                emojiString(EmojiDebug.DONOR_LIMIT, "command.repSettings.sub.emojidebug.explain.donorLimit"),
+                emojiString(EmojiDebug.RECEIVER_LIMIT, "command.repSettings.sub.emojidebug.explain.receiverLimit")
         );
         return String.join("\n", emojis);
     }

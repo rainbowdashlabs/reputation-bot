@@ -1,6 +1,7 @@
 package de.chojo.repbot.dao.access.guild.reputation.sub;
 
 import de.chojo.repbot.dao.access.guild.reputation.Reputation;
+import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.dao.pagination.GuildRanking;
 import de.chojo.repbot.dao.snapshots.RepProfile;
@@ -45,6 +46,19 @@ public class Ranking extends QueryFactoryHolder implements GuildHolder {
                 .orElse(1);
     }
 
+    public GuildRanking defaultRanking(int pageSize) {
+        return byMode(reputation.repGuild().settings().general().reputationMode(), pageSize);
+    }
+
+    public GuildRanking byMode(ReputationMode mode, int pageSize) {
+        return switch (mode) {
+            case TOTAL -> total(pageSize);
+            case ROLLING_WEEK -> week(pageSize);
+            case ROLLING_MONTH -> month(pageSize);
+            default -> throw new IllegalArgumentException("Unkown input " + mode);
+        };
+    }
+
     /**
      * Get the ranking of the guild.
      *
@@ -52,7 +66,7 @@ public class Ranking extends QueryFactoryHolder implements GuildHolder {
      * @return a sorted list of reputation users
      */
     public GuildRanking total(int pageSize) {
-        return new GuildRanking(() -> getRankingPageCount(pageSize), page -> getRankingPage(pageSize, page));
+        return new GuildRanking("command.top.total", () -> getRankingPageCount(pageSize), page -> getRankingPage(pageSize, page));
     }
 
     /**
@@ -62,7 +76,7 @@ public class Ranking extends QueryFactoryHolder implements GuildHolder {
      * @return a sorted list of reputation users
      */
     public GuildRanking week(int pageSize) {
-        return new GuildRanking(() -> getWeekRankingPageCount(pageSize), page -> getWeekRankingPage(pageSize, page));
+        return new GuildRanking("command.top.weekTitle", () -> getWeekRankingPageCount(pageSize), page -> getWeekRankingPage(pageSize, page));
     }
 
     /**
@@ -72,7 +86,7 @@ public class Ranking extends QueryFactoryHolder implements GuildHolder {
      * @return a sorted list of reputation users
      */
     public GuildRanking month(int pageSize) {
-        return new GuildRanking(() -> getMonthRankingPageCount(pageSize), page -> getMonthRankingPage(pageSize, page));
+        return new GuildRanking("command.top.monthTitle", () -> getMonthRankingPageCount(pageSize), page -> getMonthRankingPage(pageSize, page));
     }
 
     /**
@@ -110,7 +124,7 @@ public class Ranking extends QueryFactoryHolder implements GuildHolder {
                         LIMIT ?;
                         """, table)
                 .paramsBuilder(stmt -> stmt.setLong(guildId()).setInt(page * pageSize).setInt(pageSize))
-                .readRow(row -> new RepProfile(row.getLong("rank"), row.getLong("user_id"), row.getLong("reputation")))
+                .readRow(RepProfile::buildReceivedRanking)
                 .allSync();
     }
 

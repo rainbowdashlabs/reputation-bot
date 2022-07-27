@@ -1,16 +1,9 @@
 package de.chojo.repbot.dao.access.metrics;
 
 import de.chojo.repbot.statistic.element.DataStatistic;
-import de.chojo.repbot.util.LogNotify;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
-import de.chojo.sqlutil.exceptions.ExceptionTransformer;
-import de.chojo.sqlutil.wrapper.QueryBuilderConfig;
-import org.slf4j.Logger;
 
-import javax.sql.DataSource;
 import java.util.Optional;
-
-import static org.slf4j.LoggerFactory.getLogger;
 
 public class Statistic extends QueryFactoryHolder {
     public Statistic(QueryFactoryHolder factoryHolder) {

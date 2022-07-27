@@ -1,7 +1,7 @@
 version: '3.1'
 services:
   pgdatabase:
-    image: postgres:14.3
+    image: postgres:14.4
     environment:
       POSTGRES_USER: "root"
       POSTGRES_PASSWORD: "changeme"

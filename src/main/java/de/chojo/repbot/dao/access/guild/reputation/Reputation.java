@@ -78,4 +78,8 @@ public class Reputation extends QueryFactoryHolder implements GuildHolder {
     public Ranking ranking() {
         return ranking;
     }
+
+    public RepGuild repGuild() {
+        return repGuild;
+    }
 }

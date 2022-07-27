@@ -20,7 +20,6 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.StringJoiner;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
@@ -130,7 +129,7 @@ public class Log extends SimpleCommand {
     private List<String> mapUserLogEntry(SlashCommandContext context, List<ReputationLogEntry> logEntries, Function<ReputationLogEntry, Long> userId) {
         List<String> entries = new ArrayList<>();
         for (var logEntry : logEntries) {
-            var thankType = context.localize("thankType." + logEntry.type().name().toLowerCase(Locale.ROOT));
+            var thankType = context.localize(logEntry.type().localeKey());
             var jumpLink = createJumpLink(context, logEntry);
             entries.add(String.format("%s **%s** %s %s", logEntry.timestamp(),
                     thankType, User.fromId(userId.apply(logEntry)).getAsMention(), jumpLink));
@@ -144,7 +143,7 @@ public class Log extends SimpleCommand {
         List<String> entries = new ArrayList<>();
         for (var logEntry : logEntries) {
             var jumpLink = createJumpLink(context, logEntry);
-            var thankType = context.localize("thankType." + logEntry.type().name().toLowerCase(Locale.ROOT));
+            var thankType = context.localize(logEntry.type().localeKey());
             entries.add(String.format("%s **%s** %s ➜ %s **|** %s", logEntry.timestamp(),
                     thankType, User.fromId(logEntry.donorId()).getAsMention(), User.fromId(logEntry.receiverId()).getAsMention(), jumpLink));
         }

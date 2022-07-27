@@ -4,6 +4,7 @@ import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.access.guild.settings.sub.AbuseProtection;
 import de.chojo.repbot.dao.access.guild.settings.sub.General;
 import de.chojo.repbot.dao.access.guild.settings.sub.Messages;
+import de.chojo.repbot.dao.access.guild.settings.sub.Reputation;
 import de.chojo.repbot.dao.access.guild.settings.sub.Ranks;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
@@ -15,10 +16,11 @@ public class Settings extends QueryFactoryHolder implements GuildHolder {
     private final RepGuild repGuild;
     private AbuseProtection abuseProtection;
     private General general;
-    private Messages messages;
+    private Reputation reputation;
     private Ranks ranks;
     private Thanking thanking;
     private Announcements announcements;
+    private Messages messages;
 
     public Settings(RepGuild repGuild) {
         super(repGuild);
@@ -36,7 +38,12 @@ public class Settings extends QueryFactoryHolder implements GuildHolder {
                             max_message_age,
                             receiver_context,
                             donor_context,
-                            cooldown
+                            cooldown,
+                            max_given,
+                            max_given_hours,
+                            max_received,
+                            max_received_hours,
+                            max_message_reputation
                         FROM
                             abuse_protection
                         WHERE guild_id = ?;
@@ -69,27 +76,28 @@ public class Settings extends QueryFactoryHolder implements GuildHolder {
         return announcements;
     }
 
-    public Messages messages() {
-        if (messages != null) {
-            return messages;
+    public Reputation reputation() {
+        if (reputation != null) {
+            return reputation;
         }
-        messages = builder(Messages.class)
+        reputation = builder(Reputation.class)
                 .query("""
                         SELECT
                             reactions_active,
                             answer_active,
                             mention_active,
                             fuzzy_active,
-                            embed_active
+                            embed_active,
+                            skip_single_embed
                         FROM
-                            message_settings
+                            reputation_settings
                         WHERE guild_id = ?;
                         """)
                 .paramsBuilder(stmt -> stmt.setLong(guildId()))
-                .readRow(rs -> Messages.build(this, rs))
+                .readRow(rs -> Reputation.build(this, rs))
                 .firstSync()
-                .orElseGet(() -> new Messages(this));
-        return messages;
+                .orElseGet(() -> new Reputation(this));
+        return reputation;
     }
 
     public General general() {
@@ -101,7 +109,8 @@ public class Settings extends QueryFactoryHolder implements GuildHolder {
                         SELECT
                             language,
                             emoji_debug,
-                            stack_roles
+                            stack_roles,
+                            reputation_mode
                         FROM
                             guild_settings
                         WHERE guild_id = ?;
@@ -121,20 +130,34 @@ public class Settings extends QueryFactoryHolder implements GuildHolder {
                 .query("""
                         SELECT
                             reaction,
-                            reactions,
-                            thankswords,
-                            active_channels,
-                            channel_whitelist,
-                            receiver_roles,
-                            donor_roles
+                            channel_whitelist
                         FROM
-                            get_thank_settings(?);
+                            thank_settings
+                        WHERE guild_id = ?;
                         """)
                 .paramsBuilder(stmt -> stmt.setLong(guildId()))
                 .readRow(rs -> Thanking.build(this, rs))
                 .firstSync()
                 .orElseGet(() -> new Thanking(this));
         return thanking;
+    }
+    public Messages messages() {
+        if (messages != null) {
+            return messages;
+        }
+        messages = builder(Messages.class)
+                .query("""
+                        SELECT
+                            reaction_confirmation
+                        FROM
+                            message_states
+                        WHERE guild_id = ?;
+                        """)
+                .paramsBuilder(stmt -> stmt.setLong(guildId()))
+                .readRow(rs -> Messages.build(this, rs))
+                .firstSync()
+                .orElseGet(() -> new Messages(this));
+        return messages;
     }
 
     public Ranks ranks() {
@@ -143,6 +166,10 @@ public class Settings extends QueryFactoryHolder implements GuildHolder {
         }
         ranks = new Ranks(this, general().stackRoles());
         return ranks;
+    }
+
+    public RepGuild repGuild() {
+        return repGuild;
     }
 
     @Override

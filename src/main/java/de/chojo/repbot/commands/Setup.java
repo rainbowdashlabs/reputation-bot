@@ -20,7 +20,6 @@ import de.chojo.jdautil.parsing.ValueParser;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.serialization.ThankwordsContainer;
-import de.chojo.repbot.util.FilterUtil;
 import de.chojo.repbot.util.PermissionErrorHandler;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Role;

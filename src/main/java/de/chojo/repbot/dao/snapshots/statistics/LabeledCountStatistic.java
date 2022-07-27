@@ -2,6 +2,7 @@ package de.chojo.repbot.dao.snapshots.statistics;
 
 import org.knowm.xchart.BitmapEncoder;
 import org.knowm.xchart.XYChartBuilder;
+import org.knowm.xchart.XYSeries;
 import org.knowm.xchart.style.AxesChartStyler;
 import org.knowm.xchart.style.Styler;
 import org.knowm.xchart.style.markers.SeriesMarkers;
@@ -12,40 +13,33 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
-public record CountsStatistic(List<CountStatistics> stats) implements ChartProvider {
-
-
-    public CountStatistics get(int index) {
-        if (stats.isEmpty()) {
-            return new CountStatistics(LocalDateTime.MIN, 0);
-        }
-        return stats.get(index);
-    }
+public record LabeledCountStatistic(Map<String, List<CountStatistics>> stats) implements ChartProvider {
 
     @Override
     public byte[] getChart(String title) {
         var categorySeries = new XYChartBuilder().width(1200).height(600)
                 .title(title)
                 .xAxisTitle("Date")
-                .yAxisTitle("Count")
+                .yAxisTitle("Counts")
                 .theme(Styler.ChartTheme.Matlab)
                 .build();
 
         var styler = categorySeries.getStyler();
-        styler.setLegendVisible(false);
         styler.setXAxisLabelRotation(20);
+        styler.setDefaultSeriesRenderStyle(XYSeries.XYSeriesRenderStyle.Line);
         styler.setXAxisLabelAlignmentVertical(AxesChartStyler.TextAlignment.Right);
         styler.setXAxisLabelAlignment(AxesChartStyler.TextAlignment.Right);
-        styler.setYAxisDecimalPattern("##,###");
 
-        var sorted = stats.stream().sorted().toList();
-
-        categorySeries.addSeries("Counts",
-                        sorted.stream().map(countStatistics -> toDate(countStatistics.date())).toList(),
-                        sorted.stream().map(CountStatistics::count).toList())
-                .setMarker(SeriesMarkers.NONE)
-                .setLabel("Counts");
+        for (var entry : stats.entrySet()) {
+            var sorted = entry.getValue().stream().sorted().toList();
+            categorySeries.addSeries(entry.getKey(),
+                            sorted.stream().map(s -> toDate(s.date())).toList(),
+                            sorted.stream().map(CountStatistics::count).map(Double::valueOf).toList())
+                    .setMarker(SeriesMarkers.NONE)
+                    .setLabel(entry.getKey());
+        }
 
         try {
             return BitmapEncoder.getBitmapBytes(categorySeries, BitmapEncoder.BitmapFormat.PNG);
@@ -54,6 +48,9 @@ public record CountsStatistic(List<CountStatistics> stats) implements ChartProvi
         }
     }
 
+    private Date toDate(LocalDate date) {
+        return new Date(date.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000);
+    }
     private Date toDate(LocalDateTime date) {
         return new Date(date.toEpochSecond(ZoneOffset.UTC) * 1000);
     }

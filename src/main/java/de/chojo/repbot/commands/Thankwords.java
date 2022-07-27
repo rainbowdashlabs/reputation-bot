@@ -154,7 +154,7 @@ public class Thankwords extends SimpleCommand {
         }
 
         var message = event.getChannel().retrieveMessageById(messageId).complete();
-        var result = messageAnalyzer.processMessage(guildSettings.thankwordPattern(), message, settings, true, 3);
+        var result = messageAnalyzer.processMessage(guildSettings.thankwordPattern(), message, settings, true, settings.abuseProtection().maxMessageReputation());
         if (result.receivers().isEmpty()) {
             event.reply(context.localize("command.thankwords.sub.check.match.noMatch")).queue();
             return;

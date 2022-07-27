@@ -10,6 +10,7 @@ import net.dv8tion.jda.api.entities.Guild;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -18,24 +19,27 @@ public class General extends QueryFactoryHolder implements GuildHolder {
     private final Settings settings;
     private String language;
     private boolean emojiDebug;
+    private ReputationMode reputationMode;
 
     public General(Settings settings) {
-        this(settings, null, true, false);
+        this(settings, null, true, false, ReputationMode.TOTAL);
     }
 
-    public General(Settings settings, String language, boolean emojiDebug, boolean stackRoles) {
+    public General(Settings settings, String language, boolean emojiDebug, boolean stackRoles, ReputationMode reputationMode) {
         super(settings);
         this.settings = settings;
         this.language = language;
         this.emojiDebug = emojiDebug;
         this.stackRoles = new AtomicBoolean(stackRoles);
+        this.reputationMode = reputationMode;
     }
 
     public static General build(Settings settings, ResultSet rs) throws SQLException {
         return new General(settings,
                 rs.getString("language"),
                 rs.getBoolean("emoji_debug"),
-                rs.getBoolean("stack_roles"));
+                rs.getBoolean("stack_roles"),
+                ReputationMode.valueOf(rs.getString("reputation_mode")));
     }
 
     public boolean language(Language language) {
@@ -52,6 +56,14 @@ public class General extends QueryFactoryHolder implements GuildHolder {
             this.emojiDebug = emojiDebug;
         }
         return result;
+    }
+
+    public ReputationMode reputationMode(ReputationMode reputationMode) {
+        var result = set("reputation_mode", stmt -> stmt.setString(reputationMode.name()));
+        if (result) {
+            this.reputationMode = reputationMode;
+        }
+        return reputationMode;
     }
 
     public boolean stackRoles(boolean stackRoles) {
@@ -95,5 +107,9 @@ public class General extends QueryFactoryHolder implements GuildHolder {
                            builder.accept(stmts);
                        }).insert()
                        .executeSync() > 0;
+    }
+
+    public ReputationMode reputationMode() {
+        return reputationMode;
     }
 }

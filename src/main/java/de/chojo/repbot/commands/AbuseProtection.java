@@ -23,6 +23,8 @@ public class AbuseProtection extends SimpleCommand {
                 .addSubCommand("info", "command.abuseProtection.sub.info")
                 .addSubCommand("maxmessageage", "command.abuseProtection.sub.maxMessageAge", argsBuilder()
                         .add(SimpleArgument.integer("minutes", "command.abuseProtection.sub.maxMessageAge.arg.minutes")))
+                .addSubCommand("maxmessagereputation", "command.abuseProtection.sub.maxMessageRep", argsBuilder()
+                        .add(SimpleArgument.integer("amount", "command.abuseProtection.sub.maxMessageRep.arg.amount")))
                 .addSubCommand("minmessages", "command.abuseProtection.sub.minMessages", argsBuilder()
                         .add(SimpleArgument.integer("messages", "command.abuseProtection.sub.minMessages.arg.messages")))
                 .addSubCommand("cooldown", "command.abuseProtection.sub.cooldown", argsBuilder()
@@ -31,6 +33,12 @@ public class AbuseProtection extends SimpleCommand {
                         .add(SimpleArgument.bool("state", "command.abuseProtection.sub.donorContext.arg.state")))
                 .addSubCommand("receivercontext", "command.abuseProtection.sub.receiverContext", argsBuilder()
                         .add(SimpleArgument.bool("state", "command.abuseProtection.sub.receiverContext.arg.state")))
+                .addSubCommand("donorlimit", "command.abuseProtection.sub.donorLimit", argsBuilder()
+                        .add(SimpleArgument.integer("limit", "command.abuseProtection.sub.donorLimit.arg.limit"))
+                        .add(SimpleArgument.integer("hours", "command.abuseProtection.sub.donorLimit.arg.hours")))
+                .addSubCommand("receiverlimit", "command.abuseProtection.sub.receiverLimit", argsBuilder()
+                        .add(SimpleArgument.integer("limit", "command.abuseProtection.sub.receiverLimit.arg.limit"))
+                        .add(SimpleArgument.integer("hours", "command.abuseProtection.sub.receiverLimit.arg.hours")))
                 .adminCommand());
         this.guilds = guilds;
     }
@@ -64,6 +72,66 @@ public class AbuseProtection extends SimpleCommand {
         if ("receiverContext".equalsIgnoreCase(subcmd)) {
             receiverContext(event, context, guild);
         }
+
+        if ("donorlimit".equalsIgnoreCase(subcmd)) {
+            donorLimit(event, context, guild);
+        }
+
+        if ("receiverLimit".equalsIgnoreCase(subcmd)) {
+            receiverLimit(event, context, guild);
+        }
+
+        if ("maxMessageReputation".equalsIgnoreCase(subcmd)) {
+            maxMessageReputation(event, context, guild);
+        }
+    }
+
+    private void donorLimit(SlashCommandInteractionEvent event, SlashCommandContext context, RepGuild guild) {
+        var protection = guild.settings().abuseProtection();
+        var limit = event.getOption("limit");
+        if (limit != null) {
+            protection.maxGiven(limit.getAsInt());
+        }
+
+        var hours = event.getOption("hours");
+        if (hours != null) {
+            protection.maxGivenHours(hours.getAsInt());
+        }
+
+        if (protection.maxGiven() == 0) {
+            event.reply(context.localize("command.abuseProtection.sub.donorLimit.disabled")).setEphemeral(true).queue();
+            return;
+        }
+
+        event.reply(context.localize("command.abuseProtection.sub.donorLimit.set",
+                        Replacement.create("AMOUNT", protection.maxGiven()),
+                        Replacement.create("HOURS", protection.maxGivenHours())))
+                .setEphemeral(true)
+                .queue();
+    }
+
+    private void receiverLimit(SlashCommandInteractionEvent event, SlashCommandContext context, RepGuild guild) {
+        var protection = guild.settings().abuseProtection();
+        var limit = event.getOption("limit");
+        if (limit != null) {
+            protection.maxReceived(limit.getAsInt());
+        }
+
+        var hours = event.getOption("hours");
+        if (hours != null) {
+            protection.maxReceivedHours(hours.getAsInt());
+        }
+
+        if (protection.maxReceived() == 0) {
+            event.reply(context.localize("command.abuseProtection.sub.receiverLimit.disabled")).setEphemeral(true).queue();
+            return;
+        }
+
+        event.reply(context.localize("command.abuseProtection.sub.receiverLimit.set",
+                        Replacement.create("AMOUNT", protection.maxReceived()),
+                        Replacement.create("HOURS", protection.maxReceivedHours())))
+                .setEphemeral(true)
+                .queue();
     }
 
     private void donorContext(SlashCommandInteractionEvent event, SlashCommandContext context, RepGuild guild) {
@@ -92,6 +160,20 @@ public class AbuseProtection extends SimpleCommand {
                 "command.abuseProtection.sub.receiverContext.true", "command.abuseProtection.sub.receiverContext.false")).queue();
     }
 
+    private void maxMessageReputation(SlashCommandInteractionEvent event, SlashCommandContext context, RepGuild guild) {
+        var abuseSettings = guild.settings().abuseProtection();
+        if (event.getOptions().isEmpty()) {
+            event.reply(context.localize("command.abuseProtection.sub.maxMessageRep.get",
+                    Replacement.create("VALUE", abuseSettings.maxMessageReputation()))).queue();
+            return;
+        }
+        var maxRep = event.getOption("amount").getAsInt();
+
+        maxRep = Math.max(1, maxRep);
+        event.reply(context.localize("command.abuseProtection.sub.maxMessageRep.get",
+                Replacement.create("VALUE", abuseSettings.maxMessageReputation(maxRep)))).queue();
+    }
+
     private void maxMessageAge(SlashCommandInteractionEvent event, SlashCommandContext context, RepGuild guild) {
         var abuseSettings = guild.settings().abuseProtection();
         if (event.getOptions().isEmpty()) {
@@ -99,11 +181,11 @@ public class AbuseProtection extends SimpleCommand {
                     Replacement.create("MINUTES", abuseSettings.maxMessageAge()))).queue();
             return;
         }
-        var age = event.getOption("minutes").getAsLong();
+        var age = event.getOption("minutes").getAsInt();
 
-        age = Math.max(0L, age);
+        age = Math.max(0, age);
         event.reply(context.localize("command.abuseProtection.sub.maxMessageAge.get",
-                Replacement.create("MINUTES", abuseSettings.maxMessageAge((int) age)))).queue();
+                Replacement.create("MINUTES", abuseSettings.maxMessageAge(age)))).queue();
     }
 
     private void minMessages(SlashCommandInteractionEvent event, SlashCommandContext context, RepGuild guild) {
@@ -138,13 +220,14 @@ public class AbuseProtection extends SimpleCommand {
     }
 
     private MessageEmbed getSettings(SlashCommandContext context, RepGuild guild) {
-        var cooldown = guild.settings().abuseProtection();
+        var abuseProt = guild.settings().abuseProtection();
         var setting = List.of(
-                getSetting("command.abuseProtection.embed.descr.maxMessageAge", cooldown.maxMessageAge()),
-                getSetting("command.abuseProtection.embed.descr.minMessages", cooldown.minMessages()),
-                getSetting("command.abuseProtection.embed.descr.cooldown", cooldown.cooldown()),
-                getSetting("command.abuseProtection.embed.descr.donorContext", cooldown.isDonorContext()),
-                getSetting("command.abuseProtection.embed.descr.receiverContext", cooldown.isReceiverContext())
+                getSetting("command.abuseProtection.embed.descr.maxMessageAge", abuseProt.maxMessageAge()),
+                getSetting("command.abuseProtection.embed.descr.minMessages", abuseProt.minMessages()),
+                getSetting("command.abuseProtection.embed.descr.cooldown", abuseProt.cooldown()),
+                getSetting("command.abuseProtection.embed.descr.donorContext", abuseProt.isDonorContext()),
+                getSetting("command.abuseProtection.embed.descr.receiverContext", abuseProt.isReceiverContext()),
+                getSetting("command.abuseProtection.embed.descr.maxMessageRep", abuseProt.maxMessageReputation())
         );
 
         var settings = String.join("\n", setting);
@@ -158,6 +241,10 @@ public class AbuseProtection extends SimpleCommand {
 
     private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, Object object) {
         return String.format("$%s$: %s", locale, object);
+    }
+
+    private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, boolean bool) {
+        return String.format("$%s$: $%s$", locale, bool ? "words.enabled" : "words.disabled");
     }
 
     private String getBooleanMessage(SlashCommandContext context, boolean value, String whenTrue, String whenFalse) {

@@ -4,7 +4,6 @@ import de.chojo.repbot.dao.snapshots.statistics.CountStatistics;
 import de.chojo.repbot.dao.snapshots.statistics.CountsStatistic;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
 
-import java.time.LocalDate;
 import java.util.concurrent.CompletableFuture;
 
 public class Messages extends QueryFactoryHolder {
@@ -55,7 +54,7 @@ public class Messages extends QueryFactoryHolder {
                         SELECT %s,
                             count
                         FROM %s
-                        WHERE %s <= DATE_TRUNC(?, NOW())::DATE - ?::INTERVAL
+                        WHERE %s <= DATE_TRUNC(?, NOW()) - ?::INTERVAL
                         ORDER BY %s DESC
                         LIMIT ?
                         """, timeframe, table, timeframe, timeframe)

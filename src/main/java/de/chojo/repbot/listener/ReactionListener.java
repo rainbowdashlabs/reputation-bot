@@ -56,7 +56,7 @@ public class ReactionListener extends ListenerAdapter {
         var guildSettings = repGuild.settings();
 
         if (!guildSettings.thanking().channels().isEnabled(event.getGuildChannel())) return;
-        if (!guildSettings.messages().isReactionActive()) return;
+        if (!guildSettings.reputation().isReactionActive()) return;
         if (!guildSettings.thanking().reactions().isReaction(event.getReaction())) return;
 
         if (isCooldown(event.getMember())) return;
@@ -96,14 +96,16 @@ public class ReactionListener extends ListenerAdapter {
 
         if (reputationService.submitReputation(event.getGuild(), event.getMember(), receiver, message, null, ThankType.REACTION)) {
             reacted(event.getMember());
-            event.getChannel().sendMessage(localizer.localize("listener.reaction.confirmation", event.getGuild(),
-                            Replacement.create("DONOR", event.getUser().getAsMention()), Replacement.create("RECEIVER", receiver.getAsMention())))
-                    .mention(event.getUser())
-                    .onErrorFlatMap(err -> null)
-                    .delay(30, TimeUnit.SECONDS)
-                    .flatMap(Message::delete)
-                    .onErrorMap(err -> null)
-                    .queue();
+            if (guildSettings.messages().isReactionConfirmation()) {
+                event.getChannel().sendMessage(localizer.localize("listener.reaction.confirmation", event.getGuild(),
+                                Replacement.create("DONOR", event.getUser().getAsMention()), Replacement.create("RECEIVER", receiver.getAsMention())))
+                        .mention(event.getUser())
+                        .onErrorFlatMap(err -> null)
+                        .delay(30, TimeUnit.SECONDS)
+                        .flatMap(Message::delete)
+                        .onErrorMap(err -> null)
+                        .queue();
+            }
         }
     }
 
@@ -126,7 +128,7 @@ public class ReactionListener extends ListenerAdapter {
         var entries = guilds.guild(event.getGuild()).reputation().log().messageLog(event.getMessageIdLong(), 50)
                 .stream().filter(entry -> entry.type() == ThankType.REACTION && entry.donorId() == event.getUserIdLong()).toList();
         entries.forEach(ReputationLogEntry::delete);
-        if (!entries.isEmpty()) {
+        if (!entries.isEmpty() && guildSettings.messages().isReactionConfirmation()) {
             event.getChannel().sendMessage(localizer.localize("listener.reaction.removal", event.getGuild(),
                             Replacement.create("DONOR", User.fromId(event.getUserId()).getAsMention())))
                     .delay(30, TimeUnit.SECONDS).flatMap(Message::delete)

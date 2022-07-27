@@ -3,6 +3,7 @@ package de.chojo.repbot.dao.provider;
 import de.chojo.repbot.dao.access.metrics.Commands;
 import de.chojo.repbot.dao.access.metrics.Messages;
 import de.chojo.repbot.dao.access.metrics.Reputation;
+import de.chojo.repbot.dao.access.metrics.Service;
 import de.chojo.repbot.dao.access.metrics.Statistic;
 import de.chojo.repbot.dao.access.metrics.Users;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
@@ -15,6 +16,7 @@ public class Metrics extends QueryFactoryHolder {
     private final Users users;
     private final Statistic statistic;
     private final Reputation reputation;
+    private final Service service;
 
     public Metrics(DataSource dataSource) {
         super(dataSource);
@@ -23,6 +25,7 @@ public class Metrics extends QueryFactoryHolder {
         users = new Users(this);
         statistic = new Statistic(this);
         reputation = new Reputation(this);
+        service = new Service(this);
     }
 
     public Commands commands() {
@@ -43,5 +46,9 @@ public class Metrics extends QueryFactoryHolder {
 
     public Reputation reputation() {
         return reputation;
+    }
+
+    public Service service() {
+        return service;
     }
 }

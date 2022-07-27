@@ -17,8 +17,10 @@ import de.chojo.repbot.commands.Info;
 import de.chojo.repbot.commands.Invite;
 import de.chojo.repbot.commands.Locale;
 import de.chojo.repbot.commands.Log;
+import de.chojo.repbot.commands.Messages;
 import de.chojo.repbot.commands.Prune;
 import de.chojo.repbot.commands.Reactions;
+import de.chojo.repbot.commands.RepAdmin;
 import de.chojo.repbot.commands.RepSettings;
 import de.chojo.repbot.commands.Reputation;
 import de.chojo.repbot.commands.Roles;
@@ -26,8 +28,6 @@ import de.chojo.repbot.commands.Scan;
 import de.chojo.repbot.commands.Setup;
 import de.chojo.repbot.commands.Thankwords;
 import de.chojo.repbot.commands.Top;
-import de.chojo.repbot.commands.TopMonth;
-import de.chojo.repbot.commands.TopWeek;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.Cleanup;
 import de.chojo.repbot.dao.provider.Guilds;
@@ -44,6 +44,7 @@ import de.chojo.repbot.service.PresenceService;
 import de.chojo.repbot.service.RepBotCachePolicy;
 import de.chojo.repbot.service.ReputationService;
 import de.chojo.repbot.service.RoleAssigner;
+import de.chojo.repbot.service.RoleUpdater;
 import de.chojo.repbot.service.SelfCleanupService;
 import de.chojo.repbot.statistic.Statistic;
 import de.chojo.repbot.util.LogNotify;
@@ -64,6 +65,7 @@ import io.swagger.v3.oas.models.info.License;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.requests.RestAction;
@@ -236,14 +238,27 @@ public class ReputationBot {
     }
 
     private void initBot() {
+        metrics = new Metrics(dataSource);
         RestAction.setDefaultFailure(throwable -> {
             if (throwable instanceof InsufficientPermissionException) {
                 PermissionErrorHandler.handle((InsufficientPermissionException) throwable, shardManager, localizer, configuration);
                 return;
             }
+            if (throwable instanceof ErrorResponseException e) {
+                if (e.getErrorResponse() == ErrorResponse.UNKNOWN_INTERACTION) {
+                    metrics.service().failedInteraction();
+                    log.debug("Interaction timed out", e);
+                    return;
+                }
+            }
             log.error(LogNotify.NOTIFY_ADMIN, "Unhandled exception occured: ", throwable);
         });
-        metrics = new Metrics(dataSource);
+
+        RestAction.setDefaultSuccess(suc -> {
+            if (suc instanceof InteractionHook) {
+                metrics.service().successfulInteraction();
+            }
+        });
         var statistic = Statistic.of(shardManager, metrics, repBotWorker);
 
         var contextResolver = new ContextResolver(dataSource, configuration);
@@ -266,12 +281,10 @@ public class ReputationBot {
                 .useGuildCommands()
                 .withCommands(
                         new Channel(guilds),
-                        new Reputation(guilds, configuration),
+                        new Reputation(guilds, configuration, roleAssigner),
                         roles,
                         new RepSettings(guilds),
                         new Top(guilds),
-                        new TopWeek(guilds),
-                        new TopMonth(guilds),
                         Thankwords.of(messageAnalyzer, guilds),
                         scan,
                         new Locale(guilds, repBotWorker),
@@ -284,7 +297,9 @@ public class ReputationBot {
                         new Reactions(guilds),
                         new Dashboard(guilds),
                         new AbuseProtection(guilds),
-                        new Debug(guilds))
+                        new Debug(guilds),
+                        new RepAdmin(guilds, configuration),
+                        new Messages(guilds))
                 .withLocalizer(localizer)
                 .withCommandErrorHandler((context, throwable) -> {
                     if (throwable instanceof InsufficientPermissionException) {
@@ -300,12 +315,13 @@ public class ReputationBot {
 
         // init listener and services
         var reactionListener = new ReactionListener(guilds, localizer, reputationService, configuration);
-        var voteListener = new ReputationVoteListener(reputationService, localizer, configuration);
+        var voteListener = new ReputationVoteListener(guilds, reputationService, localizer, configuration);
         var messageListener = new MessageListener(localizer, configuration, guilds, repBotCachePolicy, voteListener,
                 reputationService, contextResolver, messageAnalyzer);
         var voiceStateListener = VoiceStateListener.of(dataSource, repBotWorker);
         var logListener = LogListener.create(repBotWorker);
-        var stateListener = StateListener.of(localizer, guilds, configuration);
+        var stateListener = StateListener.of(localizer, guilds, configuration, metrics);
+        var roleUpdater = RoleUpdater.create(guilds, roleAssigner, repBotWorker);
 
         shardManager.addEventListener(
                 reactionListener,
@@ -313,7 +329,8 @@ public class ReputationBot {
                 messageListener,
                 voiceStateListener,
                 logListener,
-                stateListener);
+                stateListener,
+                roleUpdater);
     }
 
     private void initShutdownHook() {

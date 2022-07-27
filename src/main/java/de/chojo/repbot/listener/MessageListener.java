@@ -6,16 +6,15 @@ import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
+import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;
 import de.chojo.repbot.service.RepBotCachePolicy;
 import de.chojo.repbot.service.ReputationService;
-import de.chojo.repbot.util.Colors;
 import de.chojo.repbot.util.EmojiDebug;
 import de.chojo.repbot.util.Messages;
 import de.chojo.repbot.util.PermissionErrorHandler;
-import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Message;
@@ -93,19 +92,20 @@ public class MessageListener extends ListenerAdapter {
         var guild = event.getGuild();
         var repGuild = guilds.guild(guild);
         var settings = repGuild.settings();
+        Thanking thank = settings.thanking();
 
         if (event.getMessage().getType() != MessageType.DEFAULT && event.getMessage().getType() != MessageType.INLINE_REPLY) {
             return;
         }
 
-        if (!settings.thanking().channels().isEnabled(event.getGuildChannel())) return;
+        if (!thank.channels().isEnabled(event.getGuildChannel())) return;
         repBotCachePolicy.seen(event.getMember());
 
-        if (!settings.thanking().donorRoles().hasRole(event.getMember())) return;
+        if (!thank.donorRoles().hasRole(event.getMember())) return;
 
         var message = event.getMessage();
 
-        var analyzerResult = messageAnalyzer.processMessage(settings.thanking().thankwords().thankwordPattern(), message, settings, true, 3);
+        var analyzerResult = messageAnalyzer.processMessage(thank.thankwords().thankwordPattern(), message, settings, true, settings.abuseProtection().maxMessageReputation());
 
         if (analyzerResult.type() == ThankType.NO_MATCH) return;
 
@@ -118,6 +118,13 @@ public class MessageListener extends ListenerAdapter {
             Messages.markMessage(event.getMessage(), EmojiDebug.FOUND_THANKWORD);
         }
 
+        if (settings.abuseProtection().isDonorLimit(event.getMember())) {
+            if (settings.general().isEmojiDebug()) {
+                Messages.markMessage(event.getMessage(), EmojiDebug.DONOR_LIMIT);
+            }
+            return;
+        }
+
         var resultType = analyzerResult.type();
         var resolveNoTarget = true;
 
@@ -127,23 +134,23 @@ public class MessageListener extends ListenerAdapter {
             var refMessage = analyzerResult.referenceMessage();
             switch (resultType) {
                 case FUZZY -> {
-                    if (!settings.messages().isFuzzyActive()) continue;
+                    if (!settings.reputation().isFuzzyActive()) continue;
                     reputationService.submitReputation(guild, donator, result.getReference(), message, refMessage, resultType);
                     resolveNoTarget = false;
                 }
                 case MENTION -> {
-                    if (!settings.messages().isMentionActive()) continue;
+                    if (!settings.reputation().isMentionActive()) continue;
                     reputationService.submitReputation(guild, donator, result.getReference(), message, refMessage, resultType);
                     resolveNoTarget = false;
                 }
                 case ANSWER -> {
-                    if (!settings.messages().isAnswerActive()) continue;
+                    if (!settings.reputation().isAnswerActive()) continue;
                     reputationService.submitReputation(guild, donator, result.getReference(), message, refMessage, resultType);
                     resolveNoTarget = false;
                 }
             }
         }
-        if (resolveNoTarget && settings.messages().isEmbedActive()) resolveNoTarget(message, settings);
+        if (resolveNoTarget && settings.reputation().isEmbedActive()) resolveNoTarget(message, settings);
     }
 
     private void resolveNoTarget(Message message, Settings settings) {
@@ -157,11 +164,17 @@ public class MessageListener extends ListenerAdapter {
 
         var members = recentMembers.stream()
                 .filter(receiver -> reputationService.canVote(message.getMember(), receiver, message.getGuild(), settings))
+                .filter(receiver -> !settings.abuseProtection().isReceiverLimit(receiver))
                 .limit(10)
                 .collect(Collectors.toList());
 
         if (members.isEmpty()) {
             if (settings.general().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.ONLY_COOLDOWN);
+            return;
+        }
+
+        if(members.size() == 1 && settings.reputation().isSkipSingleEmbed()){
+            reputationService.submitReputation(message.getGuild(), message.getMember(), members.get(0), message, null, ThankType.DIRECT);
             return;
         }
 
