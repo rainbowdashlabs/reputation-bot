@@ -48,9 +48,10 @@ public class RoleAssigner {
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet());
 
-        var changed = cleanMemberRoles(member, roles);
+        var removed = cleanMemberRoles(member, roles);
+        var added = addMemberRoles(member, roles);
 
-        changed = changed || addMemberRoles(member, roles);
+        var changed = removed || added;
 
         if (!changed) {
             return Optional.empty();
