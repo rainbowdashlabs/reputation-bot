@@ -16,9 +16,12 @@ import org.slf4j.Logger;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.EnumSet;
+import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static de.chojo.repbot.util.Guilds.prettyName;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class SelfCleanupService implements Runnable {
@@ -48,16 +51,57 @@ public class SelfCleanupService implements Runnable {
         if (!configuration.selfCleanup().isActive()) return;
 
         for (var guild : shardManager.getGuilds()) {
-            var settings = guilds.guild(guild).settings();
-            var inactive = guilds.guild(guild).reputation().log().getLatestReputation()
-                    .map(r -> r.received().isBefore(configuration.selfCleanup().getInactiveDaysOffset()))
-                    .orElse(guild.getSelfMember().getTimeJoined().isBefore(LocalDateTime.now().minusDays(30).atOffset(ZoneOffset.UTC)));
-            var noChannel = settings.thanking().channels().channels().isEmpty() && settings.thanking().channels().isWhitelist();
-            if (noChannel || inactive) {
+            var repGuild = guilds.guild(guild);
+
+            var joined = guild.getSelfMember().getTimeJoined();
+            if (joined.isAfter(configuration.selfCleanup().getInactiveDaysOffset().atOffset(ZoneOffset.UTC))) {
+                // The bot just joined. We give them some days.
+                continue;
+            }
+
+            Set<InactivityMarker> markers = EnumSet.noneOf(InactivityMarker.class);
+            // Check for latest reputation
+            var lastReputation = repGuild.reputation().log().getLatestReputation();
+            if (lastReputation.isEmpty()) {
+                if (lastReputation.get().received().isBefore(configuration.selfCleanup().getInactiveDaysOffset())) {
+                    markers.add(InactivityMarker.NO_REPUTATION);
+                }
+            } else {
+                // Reputation on guild. We don't care about the rest
+                repGuild.cleanup().cleanupDone();
+                continue;
+            }
+
+
+            var channels = repGuild.settings().thanking().channels();
+            if (channels.isWhitelist()) {
+                // Check if channel or categories are registered.
+                if (channels.channels().isEmpty()) {
+                    markers.add(InactivityMarker.NO_CHANNEL);
+                }
+
+                if (channels.categories().isEmpty()) {
+                    markers.add(InactivityMarker.NO_CATEGORIES);
+                }
+            }
+
+            if (markers.contains(InactivityMarker.NO_CHANNEL) && markers.contains(InactivityMarker.NO_CATEGORIES)) {
+                log.debug("No channels and categories registered on guild {}", prettyName(guild));
+                log.debug("Bot is unconfigured for {} days",
+                        Math.abs(Duration.between(joined, LocalDateTime.now().atZone(ZoneOffset.UTC)).toDays()));
                 promptCleanup(guild);
                 continue;
             }
-            guilds.guild(guild).cleanup().cleanupDone();
+
+            if (markers.contains(InactivityMarker.NO_REPUTATION)) {
+                log.debug("No reputation on guild {}", prettyName(guild));
+                log.debug("Bot is unused for {} days",
+                        Math.abs(Duration.between(lastReputation.get().received(), LocalDateTime.now().atZone(ZoneOffset.UTC)).toDays()));
+                promptCleanup(guild);
+                continue;
+            }
+
+            repGuild.cleanup().cleanupDone();
         }
 
         for (var guildId : cleanup.getCleanupList()) {
@@ -67,15 +111,12 @@ public class SelfCleanupService implements Runnable {
     }
 
     private void promptCleanup(Guild guild) {
-        var selfMember = guild.getSelfMember();
-        if (configuration.botlist().isBotlistGuild(guild.getIdLong())) return;
-        if (guilds.guild(guild).cleanup().getCleanupPromptTime().isPresent()) return;
-        if (selfMember.getTimeJoined().isAfter(configuration.selfCleanup().getPromptDaysOffset())) {
-            log.debug("Bot is unconfigured  or unused for {} days",
-                    Math.abs(Duration.between(selfMember.getTimeJoined(), LocalDateTime.now().atZone(ZoneOffset.UTC)).toDays()));
-            return;
-        }
-        guilds.guild(guild).cleanup().selfCleanupPrompt();
+        var repGuild = guilds.guild(guild);
+
+        // Check if a prompt was already send
+        if (repGuild.cleanup().getCleanupPromptTime().isPresent()) return;
+
+        repGuild.cleanup().selfCleanupPrompt();
 
         var embed = new LocalizedEmbedBuilder(localizer, guild)
                 .setTitle("selfCleanup.prompt.title")
@@ -90,9 +131,12 @@ public class SelfCleanupService implements Runnable {
     }
 
     private void notifyCleanup(Guild guild) {
-        if (guilds.guild(guild).cleanup().getCleanupPromptTime().get().isAfter(configuration.selfCleanup().getLeaveDaysOffset())) {
-            log.debug("Prompt was send {} days ago",
-                    Math.abs(Duration.between(guilds.guild(guild).cleanup().getCleanupPromptTime().get(), LocalDateTime.now().atZone(ZoneOffset.UTC)).toDays()));
+        var clean = guilds.guild(guild).cleanup();
+        if (clean.getCleanupPromptTime().get().isAfter(configuration.selfCleanup().getLeaveDaysOffset())) {
+            log.debug("Prompt was send {}/{} days ago on {}",
+                    Math.abs(Duration.between(clean.getCleanupPromptTime().get(), LocalDateTime.now().atZone(ZoneOffset.UTC)).toDays()),
+                    configuration.selfCleanup().getLeaveDaysOffset(),
+                    prettyName(guild));
             return;
         }
 
@@ -104,8 +148,8 @@ public class SelfCleanupService implements Runnable {
 
         notifyGuild(guild, embed);
         guild.leave().queue();
-        log.info(LogNotify.STATUS, "Left guild caused by self cleanup.");
-        guilds.guild(guild).cleanup().cleanupDone();
+        log.info(LogNotify.STATUS, "Leave on {} caused by self cleanup.", prettyName(guild));
+        clean.cleanupDone();
     }
 
     private void notifyGuild(Guild guild, MessageEmbed embed) {
@@ -122,5 +166,11 @@ public class SelfCleanupService implements Runnable {
                 break;
             }
         }
+    }
+
+    private enum InactivityMarker {
+        NO_REPUTATION,
+        NO_CHANNEL,
+        NO_CATEGORIES
     }
 }
