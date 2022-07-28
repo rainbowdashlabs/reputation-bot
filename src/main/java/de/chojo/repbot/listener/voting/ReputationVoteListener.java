@@ -28,6 +28,8 @@ import net.dv8tion.jda.api.requests.RestAction;
 import org.jetbrains.annotations.NotNull;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -83,10 +85,15 @@ public class ReputationVoteListener extends ListenerAdapter {
             voteRequest.voteMessage().
                     editMessageEmbeds(voteRequest.getNewEmbed(loc.localize("listener.messages.request.descrThank"
                             , event.getGuild(), Replacement.create("MORE", voteRequest.remainingVotes()))))
-                    .setActionRows(ActionRow.partitionOf(voteRequest.components()))
+                    .setActionRows(getComponentRows(voteRequest.components()))
                     .queue(suc -> {
                     }, ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
             if (voteRequest.remainingVotes() == 0) {
+                voteRequest.voteMessage()
+                        .editMessageEmbeds(voteRequest.getNewEmbed(loc.localize("listener.messages.request.descrThank"
+                                , event.getGuild(), Replacement.create("MORE", voteRequest.remainingVotes()))))
+                        .setActionRows(Collections.emptyList())
+                        .queue();
                 voteRequest.voteMessage().delete().queueAfter(5, TimeUnit.SECONDS,
                         suc -> voteRequests.remove(voteRequest.voteMessage().getIdLong()), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
             }
@@ -113,14 +120,19 @@ public class ReputationVoteListener extends ListenerAdapter {
 
         if (settings.general().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.PROMPTED);
 
-        var componentRows = ActionRow.partitionOf(components.values().stream().map(VoteComponent::component).toList());
+        var componentRows = getComponentRows(components.values().stream().map(VoteComponent::component).toList());
 
         var maxMessageReputation = guilds.guild(message.getGuild()).settings().abuseProtection().maxMessageReputation();
-        var remaining = Math.min(maxMessageReputation, settings.abuseProtection().maxGivenHours() - settings.repGuild().reputation().user(message.getMember()).countReceived());
 
-        if (remaining == 0) {
-            if (settings.general().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.DONOR_LIMIT);
-            return;
+        int remaining;
+        if (settings.abuseProtection().isDonorLimit()) {
+            remaining = Math.min(maxMessageReputation, settings.abuseProtection().maxGiven() - settings.repGuild().reputation().user(message.getMember()).countReceived());
+            if (remaining == 0) {
+                if (settings.general().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.DONOR_LIMIT);
+                return;
+            }
+        } else {
+            remaining = maxMessageReputation;
         }
 
         message.replyEmbeds(builder.build())
@@ -130,5 +142,13 @@ public class ReputationVoteListener extends ListenerAdapter {
                             submit -> voteRequests.remove(voteMessage.getIdLong()),
                             ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE, ErrorResponse.UNKNOWN_CHANNEL));
                 });
+    }
+
+
+    private List<ActionRow> getComponentRows(List<ActionComponent> components) {
+        var comp = new ArrayList<>(components);
+        comp.add(DELETE);
+
+        return ActionRow.partitionOf(comp);
     }
 }
