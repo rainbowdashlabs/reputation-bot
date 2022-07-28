@@ -120,14 +120,19 @@ public class ReputationVoteListener extends ListenerAdapter {
 
         if (settings.general().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.PROMPTED);
 
-        var componentRows = ActionRow.partitionOf(components.values().stream().map(VoteComponent::component).toList());
+        var componentRows = getComponentRows(components.values().stream().map(VoteComponent::component).toList());
 
         var maxMessageReputation = guilds.guild(message.getGuild()).settings().abuseProtection().maxMessageReputation();
-        var remaining = Math.min(maxMessageReputation, settings.abuseProtection().maxGivenHours() - settings.repGuild().reputation().user(message.getMember()).countReceived());
 
-        if (remaining == 0) {
-            if (settings.general().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.DONOR_LIMIT);
-            return;
+        int remaining;
+        if (settings.abuseProtection().isDonorLimit()) {
+            remaining = Math.min(maxMessageReputation, settings.abuseProtection().maxGiven() - settings.repGuild().reputation().user(message.getMember()).countReceived());
+            if (remaining == 0) {
+                if (settings.general().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.DONOR_LIMIT);
+                return;
+            }
+        } else {
+            remaining = maxMessageReputation;
         }
 
         message.replyEmbeds(builder.build())

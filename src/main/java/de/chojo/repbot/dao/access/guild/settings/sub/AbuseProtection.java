@@ -188,7 +188,7 @@ public class AbuseProtection extends QueryFactoryHolder implements GuildHolder {
      * @return true if the limit is reached
      */
     public boolean isDonorLimit(Member member) {
-        if (maxGiven == 0) return false;
+        if (!isDonorLimit()) return false;
         return settings.repGuild().reputation().user(member).countGiven() >= maxGiven;
     }
 
@@ -199,8 +199,16 @@ public class AbuseProtection extends QueryFactoryHolder implements GuildHolder {
      * @return true if the limit is reached
      */
     public boolean isReceiverLimit(Member member) {
-        if (maxGiven == 0) return false;
+        if (!isReceiverLimit()) return false;
         return settings.repGuild().reputation().user(member).countReceived() >= maxReceived;
+    }
+
+    public boolean isDonorLimit() {
+        return maxGiven != 0;
+    }
+
+    public boolean isReceiverLimit() {
+        return maxReceived != 0;
     }
 
     private boolean set(String parameter, ThrowingConsumer<ParamBuilder, SQLException> builder) {
