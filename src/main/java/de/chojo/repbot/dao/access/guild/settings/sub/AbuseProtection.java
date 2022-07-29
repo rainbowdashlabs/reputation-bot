@@ -139,7 +139,7 @@ public class AbuseProtection extends QueryFactoryHolder implements GuildHolder {
     public int maxGiven(int maxGiven) {
         var result = set("max_given", stmt -> stmt.setInt(Math.max(maxGiven, 0)));
         if (result) {
-            this.maxGiven = maxGiven;
+            this.maxGiven = Math.max(maxGiven, 0);
         }
         return this.maxGiven;
     }
@@ -147,7 +147,7 @@ public class AbuseProtection extends QueryFactoryHolder implements GuildHolder {
     public int maxGivenHours(int maxGivenHours) {
         var result = set("max_given_hours", stmt -> stmt.setInt(Math.max(maxGivenHours, 1)));
         if (result) {
-            this.maxGivenHours = maxGivenHours;
+            this.maxGivenHours = Math.max(maxGivenHours, 1);
         }
         return this.maxGivenHours;
     }
@@ -155,7 +155,7 @@ public class AbuseProtection extends QueryFactoryHolder implements GuildHolder {
     public int maxReceived(int maxReceived) {
         var result = set("max_received", stmt -> stmt.setInt(Math.max(maxReceived, 0)));
         if (result) {
-            this.maxReceived = maxReceived;
+            this.maxReceived = Math.max(maxReceived, 0);
         }
         return this.maxReceived;
     }
@@ -163,7 +163,7 @@ public class AbuseProtection extends QueryFactoryHolder implements GuildHolder {
     public int maxReceivedHours(int maxReceivedHours) {
         var result = set("max_received_hours", stmt -> stmt.setInt(Math.max(maxReceivedHours, 1)));
         if (result) {
-            this.maxReceivedHours = maxReceivedHours;
+            this.maxReceivedHours = Math.max(maxReceivedHours, 1);
         }
         return this.maxReceivedHours;
     }
@@ -188,7 +188,7 @@ public class AbuseProtection extends QueryFactoryHolder implements GuildHolder {
      * @return true if the limit is reached
      */
     public boolean isDonorLimit(Member member) {
-        if (maxGiven == 0) return false;
+        if (!isDonorLimit()) return false;
         return settings.repGuild().reputation().user(member).countGiven() >= maxGiven;
     }
 
@@ -199,8 +199,16 @@ public class AbuseProtection extends QueryFactoryHolder implements GuildHolder {
      * @return true if the limit is reached
      */
     public boolean isReceiverLimit(Member member) {
-        if (maxGiven == 0) return false;
+        if (!isReceiverLimit()) return false;
         return settings.repGuild().reputation().user(member).countReceived() >= maxReceived;
+    }
+
+    public boolean isDonorLimit() {
+        return maxGiven != 0;
+    }
+
+    public boolean isReceiverLimit() {
+        return maxReceived != 0;
     }
 
     private boolean set(String parameter, ThrowingConsumer<ParamBuilder, SQLException> builder) {
