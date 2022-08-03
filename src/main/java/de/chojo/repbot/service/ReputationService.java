@@ -20,6 +20,7 @@ import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.requests.RestAction;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
 
 import java.awt.Color;
 import java.time.Instant;
@@ -28,7 +29,10 @@ import java.util.Collections;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class ReputationService {
+    private static final Logger log = getLogger(ReputationService.class);
     private final Guilds guilds;
     private final RoleAssigner assigner;
     private final MagicImage magicImage;
@@ -58,8 +62,12 @@ public class ReputationService {
      * @return true if the reputation was counted and is valid
      */
     public boolean submitReputation(Guild guild, Member donor, Member receiver, Message message, @Nullable Message refMessage, ThankType type) {
+        log.trace("Submitting reputation for message {} of type {}", message.getIdLong(), type);
         // block bots
-        if (receiver.getUser().isBot()) return false;
+        if (receiver.getUser().isBot()) {
+            log.trace("Author of {} is bot.", message.getIdLong());
+            return false;
+        }
 
         var settings = guilds.guild(guild).settings();
         var messageSettings = settings.reputation();
@@ -71,11 +79,17 @@ public class ReputationService {
         if (!thankSettings.donorRoles().hasRole(guild.getMember(donor))) return false;
         if (!thankSettings.receiverRoles().hasRole(guild.getMember(receiver))) return false;
 
-        if (isTypeDisabled(type, messageSettings)) return false;
+        if (isTypeDisabled(type, messageSettings)) {
+            log.trace("Thank type {} for message {} is disabled",  type, message.getIdLong());
+            return false;
+        }
 
         var context = getContext(guild, donor, message, type, settings);
 
-        if (isSelfVote(donor, receiver, message)) return false;
+        if (isSelfVote(donor, receiver, message)) {
+            log.trace("Detected self vote on {}", message.getIdLong());
+            return false;
+        }
 
         if (assertAbuseProtection(guild, donor, receiver, message, refMessage, context)) return false;
 
@@ -100,18 +114,22 @@ public class ReputationService {
 
         // Abuse Protection: target context
         if (!context.members().contains(receiver) && abuseSettings.isReceiverContext()) {
+            log.trace("Receiver is not in context of {}", message.getIdLong());
             if (addEmoji) Messages.markMessage(message, EmojiDebug.TARGET_NOT_IN_CONTEXT);
             return true;
         }
 
         // Abuse Protection: donor context
         if (!context.members().contains(donor) && abuseSettings.isDonorContext()) {
+            log.trace("Donor is not in context of {}", message.getIdLong());
+            log.trace("Donor is not in context");
             if (addEmoji) Messages.markMessage(message, EmojiDebug.DONOR_NOT_IN_CONTEXT);
             return true;
         }
 
         // Abuse protection: Cooldown
         if (!canVote(donor, receiver, guild, settings)) {
+            log.trace("Cooldown active on {}", message.getIdLong());
             if (addEmoji) Messages.markMessage(message, EmojiDebug.ONLY_COOLDOWN);
             return true;
         }
@@ -120,6 +138,7 @@ public class ReputationService {
         // Abuse protection: Message age
         if (refMessage != null) {
             if (abuseSettings.isOldMessage(refMessage) && !context.latestMessages(abuseSettings.minMessages()).contains(refMessage)) {
+                log.trace("Reference message of {} is outdated", message.getIdLong());
                 if (addEmoji) Messages.markMessage(message, EmojiDebug.TOO_OLD);
                 return true;
             }
@@ -128,17 +147,20 @@ public class ReputationService {
         // block outdated message
         // Abuse protection: Message age
         if (abuseSettings.isOldMessage(message)) {
+            log.trace("Message of {} is outdated", message.getIdLong());
             if (addEmoji) Messages.markMessage(message, EmojiDebug.TOO_OLD);
             return true;
         }
 
 
         if (abuseSettings.isReceiverLimit(receiver)) {
+            log.trace("Receiver limit is reached active on {}", message.getIdLong());
             if (addEmoji) Messages.markMessage(message, EmojiDebug.RECEIVER_LIMIT);
             return true;
         }
 
-        if (abuseSettings.isDonorLimit(receiver)) {
+        if (abuseSettings.isDonorLimit(donor)) {
+            log.trace("Donor limit is reached active on {}", message.getIdLong());
             if (addEmoji) Messages.markMessage(message, EmojiDebug.DONOR_LIMIT);
             return true;
         }
@@ -169,39 +191,40 @@ public class ReputationService {
 
     private boolean log(Guild guild, Member donor, Member receiver, Message message, @Nullable Message refMessage, ThankType type, Settings settings) {
         // try to log reputation
-        if (guilds.guild(guild).reputation().user(receiver).addReputation(donor, message, refMessage, type)) {
-            // mark messages
-            Messages.markMessage(message, refMessage, settings);
-            // update role
-            try {
-                var newRank = assigner.update(guild.getMember(receiver));
+        if (!guilds.guild(guild).reputation().user(receiver).addReputation(donor, message, refMessage, type)) {// submit to database failed. Maybe this message was already voted by the user.
+            log.trace("Could not log reputation for message {}. An equal entry was already present.", message.getIdLong());
+            return false;
+        }
 
-                // Send level up message
-                newRank.ifPresent(rank -> {
-                    var announcements = guilds.guild(guild).settings().announcements();
-                    if (!announcements.isActive()) return;
-                    var channel = message.getChannel();
-                    if (!announcements.isSameChannel()) {
-                        channel = guild.getTextChannelById(announcements.channelId());
-                    }
-                    if (channel == null || rank.getRole(guild) == null) return;
-                    channel.sendMessage(localizer.localize("message.levelAnnouncement", guild,
-                                    Replacement.createMention(receiver), Replacement.createMention(rank.getRole(guild))))
-                            .allowedMentions(Collections.emptyList())
-                            .queue();
-                });
+        // mark messages
+        Messages.markMessage(message, refMessage, settings);
+        // update role
+        try {
+            var newRank = assigner.update(guild.getMember(receiver));
 
-            } catch (RoleAccessException e) {
-                message.getChannel()
-                        .sendMessage(localizer.localize("error.roleAccess", message.getGuild(),
-                                Replacement.createMention("ROLE", e.role())))
+            // Send level up message
+            newRank.ifPresent(rank -> {
+                var announcements = guilds.guild(guild).settings().announcements();
+                if (!announcements.isActive()) return;
+                var channel = message.getChannel();
+                if (!announcements.isSameChannel()) {
+                    channel = guild.getTextChannelById(announcements.channelId());
+                }
+                if (channel == null || rank.getRole(guild) == null) return;
+                channel.sendMessage(localizer.localize("message.levelAnnouncement", guild,
+                                Replacement.createMention(receiver), Replacement.createMention(rank.getRole(guild))))
                         .allowedMentions(Collections.emptyList())
                         .queue();
-            }
-            return true;
+            });
+
+        } catch (RoleAccessException e) {
+            message.getChannel()
+                    .sendMessage(localizer.localize("error.roleAccess", message.getGuild(),
+                            Replacement.createMention("ROLE", e.role())))
+                    .allowedMentions(Collections.emptyList())
+                    .queue();
         }
-        // submit to database failed. Maybe this message was already voted by the user.
-        return false;
+        return true;
     }
 
     private boolean isTypeDisabled(ThankType type, Reputation reputation) {
@@ -238,10 +261,19 @@ public class ReputationService {
 
         // block cooldown
         var lastRated = guilds.guild(guild).reputation().user(donorM).getLastRatedDuration(receiver);
-        if (lastRated.toMinutes() < settings.abuseProtection().cooldown()) return false;
+        if (lastRated.toMinutes() < settings.abuseProtection().cooldown()){
+            log.trace("The last rating is too recent");
+            return false;
+        }
 
-        if (!settings.thanking().receiverRoles().hasRole(receiverM)) return false;
-        if (!settings.thanking().donorRoles().hasRole(donorM)) return false;
+        if (!settings.thanking().receiverRoles().hasRole(receiverM)){
+            log.trace("The receiver does not have a receiver role.");
+            return false;
+        }
+        if (!settings.thanking().donorRoles().hasRole(donorM)) {
+            log.trace("The donor does not have a donor role.");
+            return false;
+        }
 
         return lastRated.toMinutes() >= settings.abuseProtection().cooldown();
     }

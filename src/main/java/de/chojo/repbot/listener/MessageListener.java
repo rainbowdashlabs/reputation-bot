@@ -109,6 +109,7 @@ public class MessageListener extends ListenerAdapter {
 
         if (analyzerResult.type() == ThankType.NO_MATCH) return;
 
+
         if (PermissionErrorHandler.assertAndHandle(event.getGuildChannel(), localizer, configuration,
                 Permission.MESSAGE_SEND, Permission.MESSAGE_ADD_REACTION, Permission.MESSAGE_EMBED_LINKS)) {
             return;
@@ -118,7 +119,10 @@ public class MessageListener extends ListenerAdapter {
             Messages.markMessage(event.getMessage(), EmojiDebug.FOUND_THANKWORD);
         }
 
+        log.trace("Found thankword in {}", event.getMessage().getIdLong());
+
         if (settings.abuseProtection().isDonorLimit(event.getMember())) {
+            log.trace("Donor reached limit on {}", event.getMessage().getIdLong());
             if (settings.general().isEmojiDebug()) {
                 Messages.markMessage(event.getMessage(), EmojiDebug.DONOR_LIMIT);
             }
@@ -150,14 +154,20 @@ public class MessageListener extends ListenerAdapter {
                 }
             }
         }
-        if (resolveNoTarget && settings.reputation().isEmbedActive()) resolveNoTarget(message, settings);
+        if (resolveNoTarget && settings.reputation().isEmbedActive()) {
+            resolveNoTarget(message, settings);
+        } else if (resolveNoTarget) {
+            log.trace("Message {} has no target, but embed is disabled", event.getMessage().getIdLong());
+        }
     }
 
     private void resolveNoTarget(Message message, Settings settings) {
+        log.trace("Resolving missing target for {}", message.getIdLong());
         var recentMembers = new LinkedHashSet<>(contextResolver.getCombinedContext(message, settings).members());
         recentMembers.remove(message.getMember());
 
         if (recentMembers.isEmpty()) {
+            log.trace("No recent members for {}", message.getIdLong());
             if (settings.general().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.EMPTY_CONTEXT);
             return;
         }
@@ -169,11 +179,13 @@ public class MessageListener extends ListenerAdapter {
                 .collect(Collectors.toList());
 
         if (members.isEmpty()) {
+            log.trace("None of the recent members can receive reputation {}", message.getIdLong());
             if (settings.general().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.ONLY_COOLDOWN);
             return;
         }
 
-        if(members.size() == 1 && settings.reputation().isSkipSingleEmbed()){
+        if (members.size() == 1 && settings.reputation().isSkipSingleEmbed()) {
+            log.trace("Found single target on {}. Skipping embed", message.getIdLong());
             reputationService.submitReputation(message.getGuild(), message.getMember(), members.get(0), message, null, ThankType.DIRECT);
             return;
         }
