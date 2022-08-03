@@ -74,10 +74,20 @@ public class ReputationService {
         var thankSettings = settings.thanking();
 
         // block non reputation channel
-        if (!thankSettings.channels().isEnabled(message.getGuildChannel())) return false;
+        if (!thankSettings.channels().isEnabled(message.getGuildChannel())){
+            log.trace("Channel of message {} is not enabled", message.getIdLong());
+            return false;
+        }
 
-        if (!thankSettings.donorRoles().hasRole(guild.getMember(donor))) return false;
-        if (!thankSettings.receiverRoles().hasRole(guild.getMember(receiver))) return false;
+        if (!thankSettings.donorRoles().hasRole(guild.getMember(donor))){
+            log.trace("Donor role is missing for message {}", message.getIdLong());
+            return false;
+        }
+
+        if (!thankSettings.receiverRoles().hasRole(guild.getMember(receiver))) {
+            log.trace("Receiver role is missing for message {}", message.getIdLong());
+            return false;
+        }
 
         if (isTypeDisabled(type, messageSettings)) {
             log.trace("Thank type {} for message {} is disabled",  type, message.getIdLong());
