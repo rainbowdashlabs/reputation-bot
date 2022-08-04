@@ -110,7 +110,7 @@ public class ReputationService {
         MessageContext context;
         if (type == ThankType.REACTION) {
             // Check if user was recently seen in this channel.
-            context = contextResolver.getCombinedContext(guild.getMember(donor), message, settings);
+            context = contextResolver.getCombinedContext(donor, message, settings);
         } else {
             context = contextResolver.getCombinedContext(message, settings);
         }
@@ -210,7 +210,7 @@ public class ReputationService {
         Messages.markMessage(message, refMessage, settings);
         // update role
         try {
-            var newRank = assigner.update(guild.getMember(receiver));
+            var newRank = assigner.update(receiver);
 
             // Send level up message
             newRank.ifPresent(rank -> {
@@ -264,27 +264,22 @@ public class ReputationService {
     }
 
     public boolean canVote(Member donor, Member receiver, Guild guild, Settings settings) {
-        var donorM = guild.getMember(donor);
-        var receiverM = guild.getMember(receiver);
-
-        if (donorM == null || receiverM == null) return false;
-
         // block cooldown
-        var lastRated = guilds.guild(guild).reputation().user(donorM).getLastRatedDuration(receiver);
+        var lastRated = guilds.guild(guild).reputation().user(donor).getLastRatedDuration(receiver);
         if (lastRated.toMinutes() < settings.abuseProtection().cooldown()){
-            log.trace("The last rating is too recent");
+            log.trace("The last rating is too recent. {}/{}", lastRated.toMinutes(), settings.abuseProtection().cooldown());
             return false;
         }
 
-        if (!settings.thanking().receiverRoles().hasRole(receiverM)){
+        if (!settings.thanking().receiverRoles().hasRole(receiver)){
             log.trace("The receiver does not have a receiver role.");
             return false;
         }
-        if (!settings.thanking().donorRoles().hasRole(donorM)) {
+        if (!settings.thanking().donorRoles().hasRole(donor)) {
             log.trace("The donor does not have a donor role.");
             return false;
         }
 
-        return lastRated.toMinutes() >= settings.abuseProtection().cooldown();
+        return true;
     }
 }
