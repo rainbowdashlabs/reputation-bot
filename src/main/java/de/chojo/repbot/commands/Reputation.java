@@ -36,6 +36,6 @@ public class Reputation extends SimpleCommand {
                 .profile()
                 .publicProfile(configuration, context.localizer());
         event.replyEmbeds(reputation).queue();
-        roleAssigner.update(member);
+        roleAssigner.updateReporting(member, event.getGuildChannel());
     }
 }
