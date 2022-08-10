@@ -74,12 +74,12 @@ public class ReputationService {
         var thankSettings = settings.thanking();
 
         // block non reputation channel
-        if (!thankSettings.channels().isEnabled(message.getGuildChannel())){
+        if (!thankSettings.channels().isEnabled(message.getGuildChannel())) {
             log.trace("Channel of message {} is not enabled", message.getIdLong());
             return false;
         }
 
-        if (!thankSettings.donorRoles().hasRole(guild.getMember(donor))){
+        if (!thankSettings.donorRoles().hasRole(guild.getMember(donor))) {
             log.trace("Donor role is missing for message {}", message.getIdLong());
             return false;
         }
@@ -90,7 +90,7 @@ public class ReputationService {
         }
 
         if (isTypeDisabled(type, messageSettings)) {
-            log.trace("Thank type {} for message {} is disabled",  type, message.getIdLong());
+            log.trace("Thank type {} for message {} is disabled", type, message.getIdLong());
             return false;
         }
 
@@ -209,31 +209,22 @@ public class ReputationService {
         // mark messages
         Messages.markMessage(message, refMessage, settings);
         // update role
-        try {
-            var newRank = assigner.update(guild.getMember(receiver));
+        var newRank = assigner.updateReporting(receiver, message.getGuildChannel());
 
-            // Send level up message
-            newRank.ifPresent(rank -> {
-                var announcements = guilds.guild(guild).settings().announcements();
-                if (!announcements.isActive()) return;
-                var channel = message.getChannel();
-                if (!announcements.isSameChannel()) {
-                    channel = guild.getTextChannelById(announcements.channelId());
-                }
-                if (channel == null || rank.getRole(guild) == null) return;
-                channel.sendMessage(localizer.localize("message.levelAnnouncement", guild,
-                                Replacement.createMention(receiver), Replacement.createMention(rank.getRole(guild))))
-                        .allowedMentions(Collections.emptyList())
-                        .queue();
-            });
-
-        } catch (RoleAccessException e) {
-            message.getChannel()
-                    .sendMessage(localizer.localize("error.roleAccess", message.getGuild(),
-                            Replacement.createMention("ROLE", e.role())))
+        // Send level up message
+        newRank.ifPresent(rank -> {
+            var announcements = guilds.guild(guild).settings().announcements();
+            if (!announcements.isActive()) return;
+            var channel = message.getChannel();
+            if (!announcements.isSameChannel()) {
+                channel = guild.getTextChannelById(announcements.channelId());
+            }
+            if (channel == null || rank.getRole(guild) == null) return;
+            channel.sendMessage(localizer.localize("message.levelAnnouncement", guild,
+                            Replacement.createMention(receiver), Replacement.createMention(rank.getRole(guild))))
                     .allowedMentions(Collections.emptyList())
                     .queue();
-        }
+        });
         return true;
     }
 
@@ -271,12 +262,12 @@ public class ReputationService {
 
         // block cooldown
         var lastRated = guilds.guild(guild).reputation().user(donorM).getLastRatedDuration(receiver);
-        if (lastRated.toMinutes() < settings.abuseProtection().cooldown()){
+        if (lastRated.toMinutes() < settings.abuseProtection().cooldown()) {
             log.trace("The last rating is too recent");
             return false;
         }
 
-        if (!settings.thanking().receiverRoles().hasRole(receiverM)){
+        if (!settings.thanking().receiverRoles().hasRole(receiverM)) {
             log.trace("The receiver does not have a receiver role.");
             return false;
         }
