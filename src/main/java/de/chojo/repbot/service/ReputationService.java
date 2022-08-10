@@ -90,7 +90,7 @@ public class ReputationService {
         }
 
         if (isTypeDisabled(type, messageSettings)) {
-            log.trace("Thank type {} for message {} is disabled",  type, message.getIdLong());
+            log.trace("Thank type {} for message {} is disabled", type, message.getIdLong());
             return false;
         }
 
@@ -209,31 +209,23 @@ public class ReputationService {
         // mark messages
         Messages.markMessage(message, refMessage, settings);
         // update role
-        try {
-            var newRank = assigner.update(receiver);
 
-            // Send level up message
-            newRank.ifPresent(rank -> {
-                var announcements = guilds.guild(guild).settings().announcements();
-                if (!announcements.isActive()) return;
-                var channel = message.getChannel();
-                if (!announcements.isSameChannel()) {
-                    channel = guild.getTextChannelById(announcements.channelId());
-                }
-                if (channel == null || rank.getRole(guild) == null) return;
-                channel.sendMessage(localizer.localize("message.levelAnnouncement", guild,
-                                Replacement.createMention(receiver), Replacement.createMention(rank.getRole(guild))))
-                        .allowedMentions(Collections.emptyList())
-                        .queue();
-            });
+        var newRank = assigner.updateReporting(receiver, message.getGuildChannel());
 
-        } catch (RoleAccessException e) {
-            message.getChannel()
-                    .sendMessage(localizer.localize("error.roleAccess", message.getGuild(),
-                            Replacement.createMention("ROLE", e.role())))
+        // Send level up message
+        newRank.ifPresent(rank -> {
+            var announcements = guilds.guild(guild).settings().announcements();
+            if (!announcements.isActive()) return;
+            var channel = message.getChannel();
+            if (!announcements.isSameChannel()) {
+                channel = guild.getTextChannelById(announcements.channelId());
+            }
+            if (channel == null || rank.getRole(guild) == null) return;
+            channel.sendMessage(localizer.localize("message.levelAnnouncement", guild,
+                            Replacement.createMention(receiver), Replacement.createMention(rank.getRole(guild))))
                     .allowedMentions(Collections.emptyList())
                     .queue();
-        }
+        });
         return true;
     }
 
