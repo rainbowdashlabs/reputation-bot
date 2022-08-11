@@ -11,7 +11,7 @@ import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.commands.abuseprotection.AbuseProtection;
 import de.chojo.repbot.commands.Channel;
-import de.chojo.repbot.commands.Dashboard;
+import de.chojo.repbot.commands.dashboard.Dashboard;
 import de.chojo.repbot.commands.Debug;
 import de.chojo.repbot.commands.Gdpr;
 import de.chojo.repbot.commands.Info;
