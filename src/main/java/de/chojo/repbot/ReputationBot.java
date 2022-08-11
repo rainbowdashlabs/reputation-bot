@@ -10,7 +10,7 @@ import de.chojo.jdautil.localization.util.Language;
 import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.commands.abuseprotection.AbuseProtection;
-import de.chojo.repbot.commands.Channel;
+import de.chojo.repbot.commands.channel.Channel;
 import de.chojo.repbot.commands.Dashboard;
 import de.chojo.repbot.commands.Debug;
 import de.chojo.repbot.commands.Gdpr;
