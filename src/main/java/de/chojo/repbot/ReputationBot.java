@@ -13,7 +13,7 @@ import de.chojo.repbot.commands.abuseprotection.AbuseProtection;
 import de.chojo.repbot.commands.Channel;
 import de.chojo.repbot.commands.Dashboard;
 import de.chojo.repbot.commands.Debug;
-import de.chojo.repbot.commands.Gdpr;
+import de.chojo.repbot.commands.gdpr.Gdpr;
 import de.chojo.repbot.commands.Info;
 import de.chojo.repbot.commands.Invite;
 import de.chojo.repbot.commands.Locale;
