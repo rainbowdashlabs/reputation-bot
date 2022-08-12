@@ -21,7 +21,7 @@ dependencies {
 
     // database
     implementation("org.postgresql", "postgresql", "42.4.1")
-    implementation("de.chojo", "sql-util", "1.4.6")
+    implementation("de.chojo", "sql-util", "1.5.0")
 
     // Logging
     implementation("org.slf4j", "slf4j-api", "1.7.36")
