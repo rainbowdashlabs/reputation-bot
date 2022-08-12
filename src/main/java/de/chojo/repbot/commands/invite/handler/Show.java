@@ -1,4 +1,4 @@
-package de.chojo.repbot.commands.invite;
+package de.chojo.repbot.commands.invite.handler;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
@@ -9,10 +9,10 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.jetbrains.annotations.NotNull;
 
-public class Handler implements SlashHandler {
+public class Show implements SlashHandler {
     private final Configuration configuration;
 
-    public Handler(Configuration configuration) {
+    public Show(Configuration configuration) {
         this.configuration = configuration;
     }
 
@@ -24,8 +24,8 @@ public class Handler implements SlashHandler {
     @NotNull
     private MessageEmbed getResponse(EventContext context) {
         return new LocalizedEmbedBuilder(context.guildLocalizer())
-                .setTitle("command.invite.title")
-                .setDescription("command.invite.click", Replacement.create("URL", configuration.links().invite()))
+                .setTitle("command.invite.message.title")
+                .setDescription("command.invite.message.click", Replacement.create("URL", configuration.links().invite()))
                 .build();
     }
 }
