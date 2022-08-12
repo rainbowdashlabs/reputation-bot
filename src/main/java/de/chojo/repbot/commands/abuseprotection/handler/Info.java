@@ -28,18 +28,18 @@ public class Info implements SlashHandler {
     private MessageEmbed getSettings(EventContext context, RepGuild guild) {
         var abuseProt = guild.settings().abuseProtection();
         var setting = List.of(
-                getSetting("command.abuseprotection.info.embed.maxMessageAge", abuseProt.maxMessageAge()),
-                getSetting("command.abuseprotection.info.embed.minMessages", abuseProt.minMessages()),
-                getSetting("command.abuseprotection.info.embed.cooldown", abuseProt.cooldown()),
-                getSetting("command.abuseprotection.info.embed.donorContext", abuseProt.isDonorContext()),
-                getSetting("command.abuseprotection.info.embed.receiverContext", abuseProt.isReceiverContext()),
-                getSetting("command.abuseprotection.info.embed.maxMessageRep", abuseProt.maxMessageReputation())
+                getSetting("command.abuseprotection.info.message.maxMessageAge", abuseProt.maxMessageAge()),
+                getSetting("command.abuseprotection.info.message.minMessages", abuseProt.minMessages()),
+                getSetting("command.abuseprotection.info.message.cooldown", abuseProt.cooldown()),
+                getSetting("command.abuseprotection.info.message.donorContext", abuseProt.isDonorContext()),
+                getSetting("command.abuseprotection.info.message.receiverContext", abuseProt.isReceiverContext()),
+                getSetting("command.abuseprotection.info.message.maxMessageRep", abuseProt.maxMessageReputation())
         );
 
         var settings = String.join("\n", setting);
 
         return new LocalizedEmbedBuilder(context.guildLocalizer())
-                .setTitle("command.abuseprotection.info.embed.title")
+                .setTitle("command.abuseprotection.info.message.title")
                 .appendDescription(settings)
                 .setColor(Color.GREEN)
                 .build();

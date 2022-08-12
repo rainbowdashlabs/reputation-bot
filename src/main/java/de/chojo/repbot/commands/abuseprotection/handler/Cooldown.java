@@ -19,13 +19,13 @@ public class Cooldown implements SlashHandler {
         RepGuild guild = guilds.guild(event.getGuild());
         var abuseSettings = guild.settings().abuseProtection();
         if (event.getOptions().isEmpty()) {
-            event.reply(context.localize("command.abuseprotection.cooldown.get",
+            event.reply(context.localize("command.abuseprotection.cooldown.message.get",
                     Replacement.create("MINUTES", abuseSettings.cooldown()))).queue();
             return;
         }
         var cooldown = event.getOption("minutes").getAsLong();
 
-        event.reply(context.localize("command.abuseprotection.cooldown.set",
+        event.reply(context.localize("command.abuseprotection.cooldown.message.set",
                 Replacement.create("MINUTES", abuseSettings.cooldown((int) cooldown)))).queue();
 
     }

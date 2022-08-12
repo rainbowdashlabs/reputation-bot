@@ -19,14 +19,14 @@ public class MinMessages implements SlashHandler {
         RepGuild guild = guilds.guild(event.getGuild());
         var abuseSettings = guild.settings().abuseProtection();
         if (event.getOptions().isEmpty()) {
-            event.reply(context.localize("command.abuseprotection.minmessages.get",
+            event.reply(context.localize("command.abuseprotection.minmessages.message.get",
                     Replacement.create("AMOUNT", abuseSettings.minMessages()))).queue();
             return;
         }
         var minMessages = event.getOption("messages").getAsLong();
 
         minMessages = Math.max(0, Math.min(minMessages, 100));
-        event.reply(context.localize("command.abuseprotection.minmessages.get",
+        event.reply(context.localize("command.abuseprotection.minmessages.message.get",
                 Replacement.create("AMOUNT", abuseSettings.minMessages((int) minMessages)))).queue();
     }
 }
