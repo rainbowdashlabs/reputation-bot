@@ -1,4 +1,4 @@
-package de.chojo.repbot.commands.debug;
+package de.chojo.repbot.commands.debug.handler;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
@@ -12,10 +12,10 @@ import java.util.StringJoiner;
 
 import static de.chojo.repbot.util.Guilds.prettyName;
 
-public class Handler implements SlashHandler {
+public class Show implements SlashHandler {
     private final Guilds guilds;
 
-    public Handler(Guilds guilds) {
+    public Show(Guilds guilds) {
         this.guilds = guilds;
     }
 
@@ -27,11 +27,11 @@ public class Handler implements SlashHandler {
         settings.thanking().thankwords().words().forEach(joiner::add);
 
         event.replyEmbeds(new LocalizedEmbedBuilder(context.guildLocalizer())
-                .setTitle("command.debug.title",
+                .setTitle("command.debug.message.title",
                         Replacement.create("GUILD", prettyName(event.getGuild())))
                 .addField("word.reputationSettings", settings.reputation().toLocalizedString(), false)
                 .addField("word.thankWords", joiner.setEmptyValue("none").toString(), true)
-                .addField("command.debug.channelActive", String.valueOf(
+                .addField("command.debug.message.channelactive", String.valueOf(
                                 settings.thanking().channels().isEnabled(event.getChannel().asTextChannel())),
                         true
                 )
