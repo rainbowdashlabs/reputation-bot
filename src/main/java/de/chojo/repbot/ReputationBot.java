@@ -16,7 +16,7 @@ import de.chojo.repbot.commands.Debug;
 import de.chojo.repbot.commands.Gdpr;
 import de.chojo.repbot.commands.Info;
 import de.chojo.repbot.commands.Invite;
-import de.chojo.repbot.commands.Locale;
+import de.chojo.repbot.commands.locale.Locale;
 import de.chojo.repbot.commands.Log;
 import de.chojo.repbot.commands.Messages;
 import de.chojo.repbot.commands.Prune;
@@ -288,7 +288,7 @@ public class ReputationBot {
                         new Top(guilds),
                         Thankwords.of(messageAnalyzer, guilds),
                         scan,
-                        new Locale(guilds, repBotWorker),
+                        new Locale(guilds),
                         new Invite(configuration),
                         Info.create(configuration),
                         new Log(guilds),
