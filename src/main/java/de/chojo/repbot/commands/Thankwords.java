@@ -198,7 +198,7 @@ public class Thankwords extends SimpleCommand {
         var language = languageOption.getAsString();
         var words = thankwordsContainer.get(language.toLowerCase(Locale.ROOT));
         if (words == null) {
-            event.reply(context.localize("command.locale.set.message.invalidLocale"))
+            event.reply(context.localize("command.locale.set.message.invalidlocale"))
                     .setEphemeral(true)
                     .queue();
             return;

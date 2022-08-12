@@ -27,7 +27,7 @@ public class Set implements SlashHandler {
         }
 
         if (locale == null || !context.guildLocalizer().localizer().languages().contains(locale)) {
-            event.reply(context.localize("command.locale.set.message.invalidLocale")).setEphemeral(true).queue();
+            event.reply(context.localize("command.locale.set.message.invalidlocale")).setEphemeral(true).queue();
             return;
         }
 
