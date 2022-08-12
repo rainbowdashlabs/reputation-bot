@@ -16,9 +16,9 @@ public class Request implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var request = gdpr.request(event.getUser()).queueRequest();
         if (request) {
-            event.reply(context.localize("command.gdpr.sub.request.received")).setEphemeral(true).queue();
+            event.reply(context.localize("command.gdpr.request.message.received")).setEphemeral(true).queue();
         } else {
-            event.reply(context.localize("command.gdpr.sub.request.requested")).setEphemeral(true).queue();
+            event.reply(context.localize("command.gdpr.request.message.requested")).setEphemeral(true).queue();
         }
     }
 }
