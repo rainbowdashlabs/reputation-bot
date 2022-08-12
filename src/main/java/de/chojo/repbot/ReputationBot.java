@@ -15,10 +15,17 @@ import de.chojo.repbot.commands.locale.Locale;
 import de.chojo.repbot.commands.invite.Invite;
 import de.chojo.repbot.commands.info.Info;
 import de.chojo.repbot.commands.Log;
+<<<<<<< HEAD
 import de.chojo.repbot.commands.prune.Prune;
 import de.chojo.repbot.commands.messages.Messages;
 import de.chojo.repbot.commands.Reactions;
 import de.chojo.repbot.commands.repadmin.RepAdmin;
+=======
+import de.chojo.repbot.commands.Messages;
+import de.chojo.repbot.commands.Prune;
+import de.chojo.repbot.commands.reactions.Reactions;
+import de.chojo.repbot.commands.RepAdmin;
+>>>>>>> 15137a0 (migrate reactions command)
 import de.chojo.repbot.commands.RepSettings;
 import de.chojo.repbot.commands.reputation.Reputation;
 import de.chojo.repbot.commands.Roles;
