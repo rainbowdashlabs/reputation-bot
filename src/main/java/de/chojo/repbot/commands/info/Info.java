@@ -2,6 +2,7 @@ package de.chojo.repbot.commands.info;
 
 import de.chojo.jdautil.interactions.slash.Slash;
 import de.chojo.jdautil.interactions.slash.provider.SlashCommand;
+import de.chojo.repbot.commands.info.handler.Show;
 import de.chojo.repbot.config.Configuration;
 import org.slf4j.Logger;
 
@@ -15,7 +16,7 @@ public class Info extends SlashCommand {
 
     private Info(String version, Configuration configuration) {
         super(Slash.of("info", "command.info.description")
-                .command(new Handler(version, configuration)));
+                .command(new Show(version, configuration)));
     }
 
     public static Info create(Configuration configuration) {

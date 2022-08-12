@@ -1,4 +1,4 @@
-package de.chojo.repbot.commands.info;
+package de.chojo.repbot.commands.info.handler;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -31,10 +31,10 @@ import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class Handler implements SlashHandler {
+public class Show implements SlashHandler {
     private static final String ART = "**SmartieFox ☆*:.｡.o(≧▽≦)o.｡.:*☆**\n[Twitter](https://twitter.com/smartiefoxart) [Twitch](https://www.twitch.tv/smartiefox)";
     private static final String SOURCE = "[rainbowdashlabs/reputation-bot](https://github.com/rainbowdashlabs/reputation-bot)";
-    private static final Logger log = getLogger(Handler.class);
+    private static final Logger log = getLogger(Show.class);
     private final HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
     private final ObjectMapper mapper = new ObjectMapper()
             .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
@@ -44,7 +44,7 @@ public class Handler implements SlashHandler {
     private final String version;
     private final Configuration configuration;
 
-    public Handler(String version, Configuration configuration) {
+    public Show(String version, Configuration configuration) {
         this.version = version;
         this.configuration = configuration;
     }
@@ -94,13 +94,13 @@ public class Handler implements SlashHandler {
         }
 
         return new LocalizedEmbedBuilder(context.guildLocalizer())
-                .setTitle("command.info.embedTitle")
+                .setTitle("command.info.message.title")
                 .setThumbnail(event.getJDA().getSelfUser().getEffectiveAvatarUrl())
-                .addField("command.info.contributor", contributors, false)
-                .addField("command.info.art", ART, true)
-                .addField("command.info.source", SOURCE, true)
-                .addField("command.info.version", version, true)
-                .addField("command.info.supportMe", getVoting(context), true)
+                .addField("command.info.message.contributor", contributors, false)
+                .addField("command.info.message.art", ART, true)
+                .addField("command.info.message.source", SOURCE, true)
+                .addField("command.info.message.version", version, true)
+                .addField("command.info.message.supportMe", getVoting(context), true)
                 .addField("", "**" + getLinks(context) + "**", false)
                 .setColor(Colors.Pastel.BLUE)
                 .build();
@@ -108,11 +108,11 @@ public class Handler implements SlashHandler {
 
     private String getLinks(EventContext context) {
         var links = List.of(
-                getLink(context, "command.info.inviteMe", configuration.links().invite()),
-                getLink(context, "command.info.support", configuration.links().support()),
-                getLink(context, "command.info.tos", configuration.links().tos()),
-                getLink(context, "command.info.website", configuration.links().website()),
-                getLink(context, "command.info.faq", configuration.links().faq())
+                getLink(context, "command.info.message.inviteme", configuration.links().invite()),
+                getLink(context, "command.info.message.support", configuration.links().support()),
+                getLink(context, "command.info.message.tos", configuration.links().tos()),
+                getLink(context, "command.info.message.website", configuration.links().website()),
+                getLink(context, "command.info.message.faq", configuration.links().faq())
         );
         return String.join(" ᠅ ", links);
     }
