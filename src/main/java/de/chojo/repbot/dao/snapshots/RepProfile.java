@@ -1,6 +1,7 @@
 package de.chojo.repbot.dao.snapshots;
 
 import de.chojo.jdautil.localization.ContextLocalizer;
+import de.chojo.jdautil.localization.LocalizationContext;
 import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
@@ -58,10 +59,10 @@ public record RepProfile(RepUser repUser, long rank, long rankDonated, long user
         return "`" + rank + "` **|** " + MentionUtil.user(userId) + " ➜ " + reputation;
     }
 
-    public MessageEmbed publicProfile(Configuration configuration, ContextLocalizer localizer) {
+    public MessageEmbed publicProfile(Configuration configuration, LocalizationContext localizer) {
         return getBaseBuilder(configuration, localizer).build();
     }
-    public MessageEmbed adminProfile(Configuration configuration, ContextLocalizer localizer) {
+    public MessageEmbed adminProfile(Configuration configuration, LocalizationContext localizer) {
         var build = getBaseBuilder(configuration, localizer);
         build.addField("words.rawReputation", String.valueOf(rawReputation()), true)
                 .addField("words.reputationOffset", String.valueOf(repOffset()), true)
@@ -69,7 +70,7 @@ public record RepProfile(RepUser repUser, long rank, long rankDonated, long user
         return build.build();
     }
 
-    private EmbedBuilder getBaseBuilder(Configuration configuration, ContextLocalizer localizer){
+    private EmbedBuilder getBaseBuilder(Configuration configuration, LocalizationContext localizer){
         var ranks = repUser.reputation().repGuild().settings().ranks();
         var current = ranks.currentRank(repUser);
         var next = ranks.nextRank(repUser);
