@@ -1,6 +1,5 @@
-package de.chojo.repbot.commands.dashboard;
+package de.chojo.repbot.commands.dashboard.handler;
 
-import de.chojo.jdautil.interactions.slash.provider.SlashCommand;
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
@@ -14,10 +13,10 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 import java.util.stream.Collectors;
 
-public class Handler implements SlashHandler {
+public class Show implements SlashHandler {
     private final Guilds guilds;
 
-    public Handler(Guilds guilds) {
+    public Show(Guilds guilds) {
         this.guilds = guilds;
     }
 
@@ -33,15 +32,15 @@ public class Handler implements SlashHandler {
                 .collect(Collectors.joining("\n"));
 
         return new LocalizedEmbedBuilder(context.guildLocalizer())
-                .setTitle("command.dashboard.title",
+                .setTitle("command.dashboard.message.title",
                         Replacement.create("GUILD", guild.getName()))
                 .setThumbnail(guild.getIconUrl() == null ? guild.getSelfMember().getUser().getAvatarUrl() : guild.getIconUrl())
                 .setColor(Colors.Pastel.BLUE)
-                .addField("command.dashboard.topUser", top, false)
-                .addField("command.dashboard.totalReputation", String.valueOf(stats.totalReputation()), true)
-                .addField("command.dashboard.weekReputation", String.valueOf(stats.weekReputation()), true)
-                .addField("command.dashboard.todayReputation", String.valueOf(stats.todayReputation()), true)
-                .addField("command.dashboard.topChannel", MentionUtil.channel(stats.topChannelId()), true)
+                .addField("command.dashboard.message.topUser", top, false)
+                .addField("command.dashboard.message.totalReputation", String.valueOf(stats.totalReputation()), true)
+                .addField("command.dashboard.message.weekReputation", String.valueOf(stats.weekReputation()), true)
+                .addField("command.dashboard.message.todayReputation", String.valueOf(stats.todayReputation()), true)
+                .addField("command.dashboard.message.topChannel", MentionUtil.channel(stats.topChannelId()), true)
                 .build();
     }
 }
