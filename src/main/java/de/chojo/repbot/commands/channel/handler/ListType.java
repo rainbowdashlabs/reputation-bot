@@ -18,12 +18,16 @@ public class ListType implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var channels = guilds.guild(event.getGuild()).settings().thanking().channels();
         if (event.getOptions().isEmpty()) {
-            event.reply(context.localize("command.channel.sub.whitelist." + channels.isWhitelist())).queue();
+            event.reply(context.localize(
+                    channels.isWhitelist() ? "command.channel.listType.message.whitelist" : "command.channel.listType.message.blacklist"))
+                    .queue();
             return;
         }
         var whitelist = "whitelist".equalsIgnoreCase(event.getOption("type").getAsString());
 
-        event.reply(context.localize("command.channel.sub.listType." + channels.listType(whitelist))).queue();
+        event.reply(context.localize(
+                channels.listType(whitelist) ? "command.channel.listType.message.whitelist" : "command.channel.listType.message.blacklist"))
+                .queue();
     }
 
     @Override

@@ -26,13 +26,13 @@ public class Add implements SlashHandler {
             var channel = event.getOption("channel").getAsChannel().asTextChannel();
             channels.add(channel);
             event.reply(
-                    context.localize("command.channel.sub.add.added",
+                    context.localize("command.channel.add.message.added",
                             Replacement.create("CHANNEL", channel.getAsMention()))).queue();
         } else {
             var channel = event.getOption("channel").getAsChannel().asCategory();
             channels.add(channel);
             event.reply(
-                    context.localize("command.channel.sub.add.added",
+                    context.localize("command.channel.add.message.added",
                             Replacement.create("CHANNEL", channel.getAsMention()))).queue();
         }
     }

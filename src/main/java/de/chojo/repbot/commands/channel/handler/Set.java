@@ -29,14 +29,14 @@ public class Set implements SlashHandler {
             channels.clearChannel();
             channels.add(channel);
             event.getHook().editOriginal(
-                    context.localize("command.channel.sub.set.set",
+                    context.localize("command.channel.set.message.set",
                             Replacement.create("CHANNEL", channel.getAsMention()))).queue();
         } else {
             var channel = event.getOption("channel").getAsChannel().asCategory();
             channels.clearCategories();
             channels.add(channel);
             event.getHook().editOriginal(
-                    context.localize("command.channel.sub.set.set",
+                    context.localize("command.channel.set.message.set",
                             Replacement.create("CHANNEL", channel.getAsMention()))).queue();
         }
     }

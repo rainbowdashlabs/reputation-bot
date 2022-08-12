@@ -172,7 +172,7 @@ public class Setup extends SimpleCommand {
         })).add(Button.primary("all", "command.setup.dialog.channels.allChannel"), ctx -> {
             var guild = ctx.getGuild();
             guilds.guild(guild).settings().thanking().channels().listType(false);
-            ctx.reply(ctx.localize("command.channel.sub.list.blacklist")).queue();
+            ctx.reply(ctx.localize("command.channel.list.message.blacklist")).queue();
             return Result.finish();
         });
     }
@@ -187,7 +187,7 @@ public class Setup extends SimpleCommand {
                 })
                 .collect(Collectors.joining(", "));
         context.reply(
-                        context.localize("command.channel.sub.add.added",
+                        context.localize("command.channel.add.message.added",
                                 Replacement.create("CHANNEL", addedChannel)))
                 .allowedMentions(Collections.emptyList())
                 .queue();

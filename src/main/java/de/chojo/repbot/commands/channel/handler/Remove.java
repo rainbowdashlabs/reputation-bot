@@ -26,13 +26,13 @@ public class Remove implements SlashHandler {
             var channel = event.getOption("channel").getAsChannel().asTextChannel();
             channels.remove(channel);
             event.reply(
-                    context.localize("command.channel.sub.remove.removed",
+                    context.localize("command.channel.remove.message.removed",
                             Replacement.create("CHANNEL", channel.getAsMention()))).queue();
         } else {
             var channel = event.getOption("channel").getAsChannel().asCategory();
             channels.remove(channel);
             event.reply(
-                    context.localize("command.channel.sub.remove.removed",
+                    context.localize("command.channel.remove.message.removed",
                             Replacement.create("CHANNEL", channel.getAsMention()))).queue();
         }
     }

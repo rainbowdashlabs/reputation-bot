@@ -18,9 +18,9 @@ public class State implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         Announcements announcements = guilds.guild(event.getGuild()).settings().announcements();
         if (announcements.active(event.getOption("active", OptionMapping::getAsBoolean))) {
-            event.reply(context.localize("command.channel.sub.announcement.active.true")).queue();
+            event.reply(context.localize("command.channel.announcement.state.message.active")).queue();
         } else {
-            event.reply(context.localize("command.channel.sub.announcement.active.false")).queue();
+            event.reply(context.localize("command.channel.announcement.state.message.inactive")).queue();
         }
     }
 }

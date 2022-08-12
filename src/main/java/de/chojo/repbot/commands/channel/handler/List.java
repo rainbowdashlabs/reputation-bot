@@ -13,7 +13,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import java.util.stream.Collectors;
 
 public class List implements SlashHandler {
-    private static final String MORE = String.format("$%s$", "command.channel.list.more");
+    private static final String MORE = String.format("$%s$", "command.channel.list.message.more");
     private final Guilds guilds;
 
     public List(Guilds guilds) {
@@ -39,7 +39,7 @@ public class List implements SlashHandler {
         }
 
         return new LocalizedEmbedBuilder(context.localizer())
-                .setTitle(channels.isWhitelist() ? "command.channel.sub.list.whitelist" : "command.channel.sub.list.blacklist")
+                .setTitle(channels.isWhitelist() ? "command.channel.list.message.whitelist" : "command.channel.list.message.blacklist")
                 .addField("words.channels", channelNames, false, Replacement.create("MORE", channels.channels().size() - 40))
                 .addField("words.categories", categoryNames, false, Replacement.create("MORE", channels.channels().size() - 40))
                 .build();
