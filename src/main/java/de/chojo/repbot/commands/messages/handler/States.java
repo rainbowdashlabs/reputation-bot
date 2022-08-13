@@ -1,59 +1,44 @@
-package de.chojo.repbot.commands;
+package de.chojo.repbot.commands.messages.handler;
 
-import de.chojo.jdautil.command.CommandMeta;
-import de.chojo.jdautil.command.SimpleCommand;
+import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.menus.EntryContext;
 import de.chojo.jdautil.menus.MenuAction;
 import de.chojo.jdautil.menus.entries.MenuEntry;
-import de.chojo.jdautil.wrapper.SlashCommandContext;
+import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.provider.Guilds;
-import de.chojo.repbot.util.EmojiDebug;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
-import org.jetbrains.annotations.PropertyKey;
 
 import java.awt.Color;
 import java.util.Collections;
-import java.util.List;
 import java.util.function.Consumer;
 
-public class Messages extends SimpleCommand {
+public class States implements SlashHandler {
     private final Guilds guilds;
 
-    public Messages(Guilds guilds) {
-        super(CommandMeta.builder("messages", "command.messages.description")
-                .addSubCommand("states", "command.messages.sub.states")
-                .adminCommand());
+    public States(Guilds guilds) {
         this.guilds = guilds;
     }
 
     @Override
-    public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
-        var guildSettings = guilds.guild(event.getGuild()).settings();
-
-        var subcmd = event.getSubcommandName();
-        if ("states".equalsIgnoreCase(subcmd)) {
-            sendSettings(event, context, guildSettings);
-        }
-    }
-
-    private void sendSettings(SlashCommandInteractionEvent event, SlashCommandContext context, Settings guildSettings) {
+    public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
+        var settings = guilds.guild(event.getGuild()).settings();
         var setting = SelectMenu.create("setting")
-                .setPlaceholder("command.messages.embed.choose")
+                .setPlaceholder("command.messages.states.message.choose")
                 .setRequiredRange(1, 1)
-                .addOption("command.messages.embed.reactionConfirmation", "reaction_confirmation", "command.messages.embed.reactionConfirmation.descr")
+                .addOption("command.messages.states.message.option.reactionconfirmation.name", "reaction_confirmation", "command.messages.states.message.option.reactionConfirmation.description")
                 .build();
         var reactions = getMenu("reaction_confirmation",
-                "command.messages.embed.reactionConfirmation",
-                "command.messages.embed.reactionConfirmation.true",
-                "command.messages.embed.reactionConfirmation.false",
-                guildSettings.reputation().isReactionActive());
+                "command.messages.states.message.option.reactionconfirmation.name",
+                "command.messages.states.message.choice.reactionConfirmation.true",
+                "command.messages.states.message.choice.reactionConfirmation.false",
+                settings.reputation().isReactionActive());
 
-        context.registerMenu(MenuAction.forCallback(getSettings(context, guildSettings), event)
+        context.registerMenu(MenuAction.forCallback(getSettings(context, settings), event)
                 .addComponent(MenuEntry.of(setting, ctx -> {
                     var option = ctx.event().getValues().get(0);
                     var entry = ctx.container().entry(option).get();
@@ -66,7 +51,7 @@ public class Messages extends SimpleCommand {
                     ctx.refresh();
                 }))
                 .addComponent(MenuEntry.of(reactions, ctx -> {
-                    refresh(ctx, res -> guildSettings.messages().reactionConfirmation(res), context, guildSettings);
+                    refresh(ctx, res -> settings.messages().reactionConfirmation(res), context, settings);
                 }).hidden())
                 .asEphemeral()
                 .build());
@@ -82,7 +67,7 @@ public class Messages extends SimpleCommand {
                 .build();
     }
 
-    private void refresh(EntryContext<SelectMenuInteractionEvent, SelectMenu> ctx, Consumer<Boolean> result, SlashCommandContext context, Settings guildSettings) {
+    private void refresh(EntryContext<SelectMenuInteractionEvent, SelectMenu> ctx, Consumer<Boolean> result, EventContext context, Settings guildSettings) {
         var value = ctx.event().getValues().get(0);
         var copy = ctx.entry().component().createCopy();
         copy.setDefaultValues(Collections.singleton(value));
@@ -92,11 +77,11 @@ public class Messages extends SimpleCommand {
         ctx.refresh(settings);
     }
 
-    private MessageEmbed getSettings(SlashCommandContext context, Settings guildSettings) {
+    private MessageEmbed getSettings(EventContext context, Settings guildSettings) {
         var messages = guildSettings.messages();
 
-        return new LocalizedEmbedBuilder(context.localizer())
-                .setTitle("command.messages.embed.title")
+        return new LocalizedEmbedBuilder(context.guildLocalizer())
+                .setTitle("command.messages.states.message.title")
                 .appendDescription(messages.toLocalizedString())
                 .setColor(Color.GREEN)
                 .build();
