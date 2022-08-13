@@ -11,7 +11,6 @@ public class Profile implements SlashHandler {
     private final Configuration configuration;
 
     public Profile(Guilds guilds, Configuration configuration) {
-
         this.guilds = guilds;
         this.configuration = configuration;
     }
