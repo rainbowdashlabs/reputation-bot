@@ -11,24 +11,24 @@ import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.commands.abuseprotection.AbuseProtection;
 import de.chojo.repbot.commands.Channel;
-import de.chojo.repbot.commands.Dashboard;
+import de.chojo.repbot.commands.dashboard.Dashboard;
 import de.chojo.repbot.commands.Debug;
-import de.chojo.repbot.commands.Gdpr;
+import de.chojo.repbot.commands.gdpr.Gdpr;
 import de.chojo.repbot.commands.Info;
-import de.chojo.repbot.commands.Invite;
-import de.chojo.repbot.commands.Locale;
+import de.chojo.repbot.commands.locale.Locale;
+import de.chojo.repbot.commands.invite.Invite;
 import de.chojo.repbot.commands.Log;
-import de.chojo.repbot.commands.Messages;
 import de.chojo.repbot.commands.prune.Prune;
+import de.chojo.repbot.commands.messages.Messages;
 import de.chojo.repbot.commands.Reactions;
 import de.chojo.repbot.commands.RepAdmin;
 import de.chojo.repbot.commands.RepSettings;
-import de.chojo.repbot.commands.Reputation;
+import de.chojo.repbot.commands.reputation.Reputation;
 import de.chojo.repbot.commands.Roles;
-import de.chojo.repbot.commands.Scan;
+import de.chojo.repbot.commands.scan.Scan;
 import de.chojo.repbot.commands.Setup;
 import de.chojo.repbot.commands.Thankwords;
-import de.chojo.repbot.commands.Top;
+import de.chojo.repbot.commands.top.Top;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.Cleanup;
 import de.chojo.repbot.dao.provider.Guilds;
@@ -288,7 +288,7 @@ public class ReputationBot {
                         new Top(guilds),
                         Thankwords.of(messageAnalyzer, guilds),
                         scan,
-                        new Locale(guilds, repBotWorker),
+                        new Locale(guilds),
                         new Invite(configuration),
                         Info.create(configuration),
                         new Log(guilds),
