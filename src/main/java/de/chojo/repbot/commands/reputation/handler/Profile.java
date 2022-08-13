@@ -1,29 +1,25 @@
-package de.chojo.repbot.commands;
+package de.chojo.repbot.commands.reputation.handler;
 
-import de.chojo.jdautil.command.CommandMeta;
-import de.chojo.jdautil.command.SimpleArgument;
-import de.chojo.jdautil.command.SimpleCommand;
-import de.chojo.jdautil.wrapper.SlashCommandContext;
+import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
+import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.service.RoleAssigner;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-public class Reputation extends SimpleCommand {
+public class Profile implements SlashHandler {
     private final Guilds guilds;
     private final Configuration configuration;
     private final RoleAssigner roleAssigner;
 
-    public Reputation(Guilds guilds, Configuration configuration, RoleAssigner roleAssigner) {
-        super(CommandMeta.builder("rep", "command.reputation.description")
-                .addArgument(SimpleArgument.user("user", "command.reputation.description.arg.user")));
+    public Profile(Guilds guilds, Configuration configuration, RoleAssigner roleAssigner) {
         this.guilds = guilds;
         this.configuration = configuration;
         this.roleAssigner = roleAssigner;
     }
 
     @Override
-    public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
+    public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var userOption = event.getOption("user");
         var member = userOption != null ? userOption.getAsMember() : event.getMember();
         if (member == null) {
@@ -34,7 +30,7 @@ public class Reputation extends SimpleCommand {
                 .reputation()
                 .user(member)
                 .profile()
-                .publicProfile(configuration, context.localizer());
+                .publicProfile(configuration, context.guildLocalizer());
         event.replyEmbeds(reputation).queue();
         roleAssigner.updateReporting(member, event.getGuildChannel());
     }
