@@ -18,7 +18,7 @@ import de.chojo.repbot.commands.Info;
 import de.chojo.repbot.commands.Invite;
 import de.chojo.repbot.commands.Locale;
 import de.chojo.repbot.commands.Log;
-import de.chojo.repbot.commands.Messages;
+import de.chojo.repbot.commands.messages.Messages;
 import de.chojo.repbot.commands.Prune;
 import de.chojo.repbot.commands.Reactions;
 import de.chojo.repbot.commands.RepAdmin;
