@@ -1,10 +1,5 @@
-package de.chojo.repbot.commands;
+package de.chojo.repbot.commands.setup.handler;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import de.chojo.jdautil.command.CommandMeta;
-import de.chojo.jdautil.command.SimpleCommand;
 import de.chojo.jdautil.conversation.Conversation;
 import de.chojo.jdautil.conversation.builder.ConversationBuilder;
 import de.chojo.jdautil.conversation.elements.ButtonDialog;
@@ -12,13 +7,13 @@ import de.chojo.jdautil.conversation.elements.ComponenAction;
 import de.chojo.jdautil.conversation.elements.ConversationContext;
 import de.chojo.jdautil.conversation.elements.Result;
 import de.chojo.jdautil.conversation.elements.Step;
+import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.ArgumentUtil;
 import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.jdautil.parsing.ValueParser;
-import de.chojo.jdautil.wrapper.SlashCommandContext;
-import de.chojo.repbot.commands.thankwords.Thankwords;
+import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.serialization.ThankwordsContainer;
 import de.chojo.repbot.util.PermissionErrorHandler;
@@ -29,52 +24,30 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
-public class Setup extends SimpleCommand {
-
-    private static final Logger log = getLogger(Setup.class);
+public class Start implements SlashHandler {
     private final Guilds guilds;
     private final ThankwordsContainer thankwordsContainer;
 
-    public Setup(Guilds guilds, ThankwordsContainer thankwordsContainer) {
-        super(CommandMeta.builder("setup", "command.setup.description").adminCommand());
+    public Start(Guilds guilds, ThankwordsContainer thankwordsContainer) {
         this.guilds = guilds;
         this.thankwordsContainer = thankwordsContainer;
     }
 
-    public static Setup of(Guilds guilds) {
-        ThankwordsContainer thankwordsContainer;
-        try {
-            thankwordsContainer = new ObjectMapper()
-                    .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
-                    .readValue(Thankwords.class.getClassLoader().getResourceAsStream("Thankswords.json"),
-                            ThankwordsContainer.class);
-        } catch (IOException e) {
-            thankwordsContainer = null;
-            log.error("Could not read thankwords", e);
-        }
-        return new Setup(guilds, thankwordsContainer);
-    }
-
     @Override
-    public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
-        PermissionErrorHandler.assertPermissions(event.getTextChannel(), Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL);
-        event.reply(context.localize("command.setup.dialog.starting")).queue();
-        context.conversationService().startDialog(event.getUser(), event.getTextChannel(), getConversation(context));
+    public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
+        PermissionErrorHandler.assertPermissions(event.getChannel().asTextChannel(), Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL);
+        event.reply(context.localize("command.setup.message.starting")).queue();
+        context.conversationService().startDialog(event.getUser(), event.getChannel().asTextChannel(), getConversation(context));
     }
-
-    private Conversation getConversation(SlashCommandContext context) {
+    private Conversation getConversation(EventContext context) {
         var builder = ConversationBuilder.builder(
-                        Step.button("**$command.setup.dialog.welcome$**\n$command.setup.dialog.continueToProceed$",
+                        Step.button("**$%s$**%n$%s$".formatted("command.setup.dialog.welcome", "command.setup.message.continueToProceed"),
                                         buttons -> buttons
                                                 .add(Button.success("continue", "word.continue"), ctx -> Result.proceed(1)))
                                 .build())
@@ -86,18 +59,18 @@ public class Setup extends SimpleCommand {
         return builder.build();
     }
 
-    private Step buildSelectLanguage(SlashCommandContext context) {
-        return Step.button("command.setup.dialog.selectLanguage", but -> buildLanguageButtons(but, context))
+    private Step buildSelectLanguage(EventContext context) {
+        return Step.button("command.setup.message.language", but -> buildLanguageButtons(but, context))
                 .build();
     }
 
-    private void buildLanguageButtons(ButtonDialog buttons, SlashCommandContext context) {
-        for (var language : context.localizer().localizer().languages()) {
-            buttons.add(Button.of(ButtonStyle.PRIMARY, language.getCode(), language.getLanguage()),
+    private void buildLanguageButtons(ButtonDialog buttons, EventContext context) {
+        for (var language : context.guildLocalizer().localizer().languages()) {
+            buttons.add(Button.of(ButtonStyle.PRIMARY, language.getLocale(), language.getNativeName()),
                     con -> {
                         guilds.guild(con.getGuild()).settings().general().language(language);
                         con.reply(con.localize("command.locale.set.message.set",
-                                Replacement.create("LOCALE", language.getLanguage()))).queue();
+                                Replacement.create("LOCALE", language.getNativeName()))).queue();
                         return Result.proceed(3);
                     });
         }
@@ -105,7 +78,7 @@ public class Setup extends SimpleCommand {
 
     private Step buildRoles() {
         return Step
-                .message("command.setup.dialog.roles".stripIndent(), this::buildRolesButton)
+                .message("command.setup.message.roles".stripIndent(), this::buildRolesButton)
                 .button(buttons -> buttons
                         .add(Button.success("done", "word.done"), ctx -> Result.proceed(4)))
                 .build();
@@ -114,7 +87,7 @@ public class Setup extends SimpleCommand {
     private Result buildRolesButton(ConversationContext context) {
         var args = ArgumentUtil.parseQuotedArgs(context.getContentRaw(), true);
         if (args.length != 2) {
-            return responseInvalid(context, "command.setup.dialog.rolesFormat");
+            return responseInvalid(context, "command.setup.message.rolesformat");
         }
         var role = DiscordResolver.getRole(context.getGuild(), args[0]);
         if (role.isEmpty()) {
@@ -137,7 +110,7 @@ public class Setup extends SimpleCommand {
     }
 
     private Step buildLoadDefaults() {
-        return Step.button("command.setup.dialog.loadDefaults",
+        return Step.button("command.setup.message.loadDefaults",
                         this::buildLoadDefaultsButton)
                 .build();
     }
@@ -160,17 +133,17 @@ public class Setup extends SimpleCommand {
     }
 
     private Step buildChannels() {
-        return Step.button("command.setup.dialog.channels", this::buildChannelsButton)
+        return Step.button("command.setup.message.channels", this::buildChannelsButton)
                 .message(this::handleChannels)
                 .build();
     }
 
     private void buildChannelsButton(ButtonDialog buttons) {
         buttons.add(new ComponenAction(Button.success("done", "word.done"), ctx -> {
-            ctx.reply(ctx.localize("command.setup.dialog.setupComplete"))
+            ctx.reply(ctx.localize("command.setup.message.complete"))
                     .queue();
             return Result.finish();
-        })).add(Button.primary("all", "command.setup.dialog.channels.allChannel"), ctx -> {
+        })).add(Button.primary("all", "command.setup.message.allchannel"), ctx -> {
             var guild = ctx.getGuild();
             guilds.guild(guild).settings().thanking().channels().listType(false);
             ctx.reply(ctx.localize("command.channel.list.message.blacklist")).queue();
