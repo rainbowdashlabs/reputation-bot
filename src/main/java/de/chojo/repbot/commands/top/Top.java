@@ -10,6 +10,6 @@ public class Top extends SlashCommand {
     public Top(Guilds guilds) {
         super(Slash.of("top", "command.reputation.description")
                 .command(new Show(guilds))
-                .argument(Argument.text("mode", "command.reputation.description.arg.mode").withAutoComplete()));
+                .argument(Argument.text("mode", "command.top.mode.description").withAutoComplete()));
     }
 }
