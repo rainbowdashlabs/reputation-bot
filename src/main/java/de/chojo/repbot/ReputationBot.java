@@ -28,7 +28,7 @@ import de.chojo.repbot.commands.Roles;
 import de.chojo.repbot.commands.Scan;
 import de.chojo.repbot.commands.Setup;
 import de.chojo.repbot.commands.Thankwords;
-import de.chojo.repbot.commands.Top;
+import de.chojo.repbot.commands.top.Top;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.Cleanup;
 import de.chojo.repbot.dao.provider.Guilds;
