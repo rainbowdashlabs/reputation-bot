@@ -95,7 +95,7 @@ public class Setup extends SimpleCommand {
             buttons.add(Button.of(ButtonStyle.PRIMARY, language.getCode(), language.getLanguage()),
                     con -> {
                         guilds.guild(con.getGuild()).settings().general().language(language);
-                        con.reply(con.localize("command.locale.sub.set.set",
+                        con.reply(con.localize("command.locale.set.message.set",
                                 Replacement.create("LOCALE", language.getLanguage()))).queue();
                         return Result.proceed(3);
                     });
