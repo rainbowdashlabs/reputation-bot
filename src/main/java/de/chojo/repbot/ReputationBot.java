@@ -25,7 +25,7 @@ import de.chojo.repbot.commands.RepAdmin;
 import de.chojo.repbot.commands.RepSettings;
 import de.chojo.repbot.commands.Reputation;
 import de.chojo.repbot.commands.Roles;
-import de.chojo.repbot.commands.Scan;
+import de.chojo.repbot.commands.scan.Scan;
 import de.chojo.repbot.commands.Setup;
 import de.chojo.repbot.commands.Thankwords;
 import de.chojo.repbot.commands.Top;
