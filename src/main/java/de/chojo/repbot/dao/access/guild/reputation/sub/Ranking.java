@@ -66,7 +66,7 @@ public class Ranking extends QueryFactoryHolder implements GuildHolder {
      * @return a sorted list of reputation users
      */
     public GuildRanking total(int pageSize) {
-        return new GuildRanking("command.top.total", () -> getRankingPageCount(pageSize), page -> getRankingPage(pageSize, page));
+        return new GuildRanking("command.top.message.total", () -> getRankingPageCount(pageSize), page -> getRankingPage(pageSize, page));
     }
 
     /**
@@ -76,7 +76,7 @@ public class Ranking extends QueryFactoryHolder implements GuildHolder {
      * @return a sorted list of reputation users
      */
     public GuildRanking week(int pageSize) {
-        return new GuildRanking("command.top.weekTitle", () -> getWeekRankingPageCount(pageSize), page -> getWeekRankingPage(pageSize, page));
+        return new GuildRanking("command.top.message.weekTitle", () -> getWeekRankingPageCount(pageSize), page -> getWeekRankingPage(pageSize, page));
     }
 
     /**
@@ -86,7 +86,7 @@ public class Ranking extends QueryFactoryHolder implements GuildHolder {
      * @return a sorted list of reputation users
      */
     public GuildRanking month(int pageSize) {
-        return new GuildRanking("command.top.monthTitle", () -> getMonthRankingPageCount(pageSize), page -> getMonthRankingPage(pageSize, page));
+        return new GuildRanking("command.top.message.monthTitle", () -> getMonthRankingPageCount(pageSize), page -> getMonthRankingPage(pageSize, page));
     }
 
     /**

@@ -1,11 +1,10 @@
-package de.chojo.repbot.commands;
+package de.chojo.repbot.commands.dashboard.handler;
 
-import de.chojo.jdautil.command.CommandMeta;
-import de.chojo.jdautil.command.SimpleCommand;
+import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.util.MentionUtil;
-import de.chojo.jdautil.wrapper.SlashCommandContext;
+import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.util.Colors;
 import net.dv8tion.jda.api.entities.Guild;
@@ -14,36 +13,34 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 import java.util.stream.Collectors;
 
-public class Dashboard extends SimpleCommand {
+public class Show implements SlashHandler {
     private final Guilds guilds;
 
-    public Dashboard(Guilds guilds) {
-        super(CommandMeta.builder("dashboard", "command.dashboard.description"));
+    public Show(Guilds guilds) {
         this.guilds = guilds;
     }
 
     @Override
-    public void onSlashCommand(SlashCommandInteractionEvent event, SlashCommandContext context) {
+    public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         event.replyEmbeds(getDashboard(event.getGuild(), context)).queue();
     }
-
-    private MessageEmbed getDashboard(Guild guild, SlashCommandContext context) {
+    private MessageEmbed getDashboard(Guild guild, EventContext context) {
         var reputation = guilds.guild(guild).reputation();
         var stats = reputation.stats();
         var top = reputation.ranking().total(5).page(0).stream()
                 .map(r -> r.fancyString(5))
                 .collect(Collectors.joining("\n"));
 
-        return new LocalizedEmbedBuilder(context.localizer())
-                .setTitle("command.dashboard.title",
+        return new LocalizedEmbedBuilder(context.guildLocalizer())
+                .setTitle("command.dashboard.message.title",
                         Replacement.create("GUILD", guild.getName()))
                 .setThumbnail(guild.getIconUrl() == null ? guild.getSelfMember().getUser().getAvatarUrl() : guild.getIconUrl())
                 .setColor(Colors.Pastel.BLUE)
-                .addField("command.dashboard.topUser", top, false)
-                .addField("command.dashboard.totalReputation", String.valueOf(stats.totalReputation()), true)
-                .addField("command.dashboard.weekReputation", String.valueOf(stats.weekReputation()), true)
-                .addField("command.dashboard.todayReputation", String.valueOf(stats.todayReputation()), true)
-                .addField("command.dashboard.topChannel", MentionUtil.channel(stats.topChannelId()), true)
+                .addField("command.dashboard.message.topUser", top, false)
+                .addField("command.dashboard.message.totalReputation", String.valueOf(stats.totalReputation()), true)
+                .addField("command.dashboard.message.weekReputation", String.valueOf(stats.weekReputation()), true)
+                .addField("command.dashboard.message.todayReputation", String.valueOf(stats.todayReputation()), true)
+                .addField("command.dashboard.message.topChannel", MentionUtil.channel(stats.topChannelId()), true)
                 .build();
     }
 }
