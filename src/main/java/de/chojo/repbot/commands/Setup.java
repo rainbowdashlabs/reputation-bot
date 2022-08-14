@@ -18,6 +18,7 @@ import de.chojo.jdautil.parsing.ArgumentUtil;
 import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.jdautil.parsing.ValueParser;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
+import de.chojo.repbot.commands.thankwords.Thankwords;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.serialization.ThankwordsContainer;
 import de.chojo.repbot.util.PermissionErrorHandler;
@@ -150,7 +151,7 @@ public class Setup extends SimpleCommand {
                         words.forEach(word -> guilds.guild(context.getGuild()).settings().thanking().thankwords().add(word));
                         var wordsJoined = words.stream().map(w -> StringUtils.wrap(w, "`"))
                                 .collect(Collectors.joining(", "));
-                        context.reply(context.localize("command.thankwords.sub.loadDefault.added") + wordsJoined)
+                        context.reply(context.localize("command.thankwords.loaddefault.message.added") + wordsJoined)
                                 .queue();
                         return Result.freeze();
                     });
