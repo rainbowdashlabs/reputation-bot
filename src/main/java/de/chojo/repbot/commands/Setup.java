@@ -129,7 +129,7 @@ public class Setup extends SimpleCommand {
     @NotNull
     private Result responseRolesSubAdded(ConversationContext context, Role role, Integer reputation) {
         guilds.guild(context.getGuild()).settings().ranks().add(role, reputation);
-        context.reply(context.localize("command.roles.sub.add.added",
+        context.reply(context.localize("command.roles.add.message.added",
                         Replacement.createMention(role),
                         Replacement.create("POINTS", reputation, Format.BOLD)))
                 .queue();
