@@ -15,7 +15,6 @@ public class Main implements SlashHandler {
     private final Guilds guilds;
 
     public Main(Guilds guilds) {
-
         this.guilds = guilds;
     }
 

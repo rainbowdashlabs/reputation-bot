@@ -12,7 +12,6 @@ public class Info implements SlashHandler {
     private final Guilds guilds;
 
     public Info(Guilds guilds) {
-
         this.guilds = guilds;
     }
 
