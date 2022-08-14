@@ -12,8 +12,8 @@ import java.util.regex.PatternSyntaxException;
 
 public class Add implements SlashHandler {
     private final Guilds guilds;
-    public Add(Guilds guilds) {
 
+    public Add(Guilds guilds) {
         this.guilds = guilds;
     }
 
