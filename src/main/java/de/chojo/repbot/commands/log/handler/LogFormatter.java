@@ -66,8 +66,6 @@ final class LogFormatter {
         buildFields(log, builder);
         return builder.build();
     }
-
-
     static void buildFields(List<String> entries, LocalizedEmbedBuilder embedBuilder) {
         var joiner = new StringJoiner("\n");
         for (var entry : entries) {
