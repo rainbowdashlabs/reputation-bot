@@ -56,8 +56,7 @@ public class Roles implements SlashProvider<Slash> {
                         .handler(new List(guilds)))
                 .subCommand(SubCommand.of("stackroles", "command.roles.stackroles.description")
                         .handler(new StackRoles(guilds))
-                        .argument(Argument.bool("stack", "command.roles.stackroles.stack.description")
-                        )
+                        .argument(Argument.bool("stack", "command.roles.stackroles.stack.description"))
                 ).build();
     }
 
