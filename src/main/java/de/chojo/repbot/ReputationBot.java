@@ -7,7 +7,7 @@ import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.Localizer;
 import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
-import de.chojo.repbot.commands.Channel;
+import de.chojo.repbot.commands.channel.Channel;
 import de.chojo.repbot.commands.dashboard.Dashboard;
 import de.chojo.repbot.commands.gdpr.Gdpr;
 import de.chojo.repbot.commands.debug.Debug;
