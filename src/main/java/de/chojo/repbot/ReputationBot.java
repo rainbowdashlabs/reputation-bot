@@ -2,33 +2,30 @@ package de.chojo.repbot;
 
 import com.zaxxer.hikari.HikariDataSource;
 import de.chojo.jdautil.botlist.BotlistService;
-import de.chojo.jdautil.command.dispatching.CommandHub;
 import de.chojo.jdautil.interactions.dispatching.InteractionHub;
 import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.Localizer;
-import de.chojo.jdautil.localization.util.Language;
 import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
-import de.chojo.repbot.commands.abuseprotection.AbuseProtection;
-import de.chojo.repbot.commands.Channel;
-import de.chojo.repbot.commands.Dashboard;
-import de.chojo.repbot.commands.Debug;
-import de.chojo.repbot.commands.Gdpr;
-import de.chojo.repbot.commands.Info;
-import de.chojo.repbot.commands.Invite;
-import de.chojo.repbot.commands.Locale;
-import de.chojo.repbot.commands.Log;
-import de.chojo.repbot.commands.Messages;
-import de.chojo.repbot.commands.Prune;
-import de.chojo.repbot.commands.Reactions;
-import de.chojo.repbot.commands.RepAdmin;
-import de.chojo.repbot.commands.RepSettings;
-import de.chojo.repbot.commands.Reputation;
+import de.chojo.repbot.commands.channel.Channel;
+import de.chojo.repbot.commands.dashboard.Dashboard;
+import de.chojo.repbot.commands.gdpr.Gdpr;
+import de.chojo.repbot.commands.debug.Debug;
+import de.chojo.repbot.commands.locale.Locale;
+import de.chojo.repbot.commands.invite.Invite;
+import de.chojo.repbot.commands.info.Info;
+import de.chojo.repbot.commands.prune.Prune;
+import de.chojo.repbot.commands.messages.Messages;
+import de.chojo.repbot.commands.log.Log;
+import de.chojo.repbot.commands.repadmin.RepAdmin;
+import de.chojo.repbot.commands.reactions.Reactions;
+import de.chojo.repbot.commands.reputation.Reputation;
+import de.chojo.repbot.commands.repsettings.RepSettings;
 import de.chojo.repbot.commands.Roles;
-import de.chojo.repbot.commands.Scan;
+import de.chojo.repbot.commands.scan.Scan;
 import de.chojo.repbot.commands.Setup;
-import de.chojo.repbot.commands.Thankwords;
-import de.chojo.repbot.commands.Top;
+import de.chojo.repbot.commands.top.Top;
+import de.chojo.repbot.commands.thankwords.Thankwords;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.Cleanup;
 import de.chojo.repbot.dao.provider.Guilds;
@@ -288,7 +285,7 @@ public class ReputationBot {
                         new Top(guilds),
                         Thankwords.of(messageAnalyzer, guilds),
                         scan,
-                        new Locale(guilds, repBotWorker),
+                        new Locale(guilds),
                         new Invite(configuration),
                         Info.create(configuration),
                         new Log(guilds),
