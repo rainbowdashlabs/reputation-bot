@@ -49,7 +49,7 @@ public class Info implements SlashHandler {
         return String.format("$%s$: %s", locale, object);
     }
 
-    private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, boolean bool) {
-        return String.format("$%s$: $%s$", locale, bool ? "words.enabled" : "words.disabled");
+    private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, boolean enabled) {
+        return String.format("$%s$: $%s$", locale, enabled ? "words.enabled" : "words.disabled");
     }
 }
