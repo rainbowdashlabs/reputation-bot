@@ -18,10 +18,11 @@ import java.util.Set;
 import static de.chojo.repbot.util.Guilds.prettyName;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class Refresh  implements SlashHandler {
+public class Refresh implements SlashHandler {
     private static final Logger log = getLogger(Refresh.class);
     private final RoleAssigner roleAssigner;
     private final Set<Long> running = new HashSet<>();
+
     public Refresh(RoleAssigner roleAssigner) {
         this.roleAssigner = roleAssigner;
     }

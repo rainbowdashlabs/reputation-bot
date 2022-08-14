@@ -8,7 +8,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 import java.util.Collections;
 
-public class AddDonor  implements SlashHandler {
+public class AddDonor implements SlashHandler {
     private final Guilds guilds;
 
     public AddDonor(Guilds guilds) {

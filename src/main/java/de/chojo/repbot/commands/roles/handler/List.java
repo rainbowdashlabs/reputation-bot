@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
-public class List  implements SlashHandler {
+public class List implements SlashHandler {
     private final Guilds guilds;
 
     public List(Guilds guilds) {
