@@ -19,7 +19,6 @@ import de.chojo.repbot.commands.prune.Prune;
 import de.chojo.repbot.commands.messages.Messages;
 import de.chojo.repbot.commands.repadmin.RepAdmin;
 import de.chojo.repbot.commands.reactions.Reactions;
-import de.chojo.repbot.commands.RepAdmin;
 import de.chojo.repbot.commands.RepSettings;
 import de.chojo.repbot.commands.reputation.Reputation;
 import de.chojo.repbot.commands.Roles;
