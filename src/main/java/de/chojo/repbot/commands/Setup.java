@@ -18,6 +18,7 @@ import de.chojo.jdautil.parsing.ArgumentUtil;
 import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.jdautil.parsing.ValueParser;
 import de.chojo.jdautil.wrapper.SlashCommandContext;
+import de.chojo.repbot.commands.thankwords.Thankwords;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.serialization.ThankwordsContainer;
 import de.chojo.repbot.util.PermissionErrorHandler;
@@ -95,7 +96,7 @@ public class Setup extends SimpleCommand {
             buttons.add(Button.of(ButtonStyle.PRIMARY, language.getCode(), language.getLanguage()),
                     con -> {
                         guilds.guild(con.getGuild()).settings().general().language(language);
-                        con.reply(con.localize("command.locale.sub.set.set",
+                        con.reply(con.localize("command.locale.set.message.set",
                                 Replacement.create("LOCALE", language.getLanguage()))).queue();
                         return Result.proceed(3);
                     });
@@ -150,7 +151,7 @@ public class Setup extends SimpleCommand {
                         words.forEach(word -> guilds.guild(context.getGuild()).settings().thanking().thankwords().add(word));
                         var wordsJoined = words.stream().map(w -> StringUtils.wrap(w, "`"))
                                 .collect(Collectors.joining(", "));
-                        context.reply(context.localize("command.thankwords.sub.loadDefault.added") + wordsJoined)
+                        context.reply(context.localize("command.thankwords.loaddefault.message.added") + wordsJoined)
                                 .queue();
                         return Result.freeze();
                     });
