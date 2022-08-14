@@ -14,7 +14,6 @@ public class List implements SlashHandler {
     private final Guilds guilds;
 
     public List(Guilds guilds) {
-
         this.guilds = guilds;
     }
 
@@ -25,6 +24,7 @@ public class List implements SlashHandler {
 
         event.reply(context.localize("command.thankwords.list.message.list") + "\n" + pattern).queue();
     }
+
     @Nullable
     private String getGuildPattern(Guild guild) {
         return guilds.guild(guild).settings().thanking().thankwords().words().stream()

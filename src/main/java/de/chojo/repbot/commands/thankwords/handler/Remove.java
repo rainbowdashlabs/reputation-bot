@@ -16,7 +16,6 @@ public class Remove implements SlashHandler {
     private final Guilds guilds;
 
     public Remove(Guilds guilds) {
-
         this.guilds = guilds;
     }
 

@@ -14,7 +14,6 @@ public class Check implements SlashHandler {
     private final MessageAnalyzer messageAnalyzer;
 
     public Check(Guilds guilds, MessageAnalyzer messageAnalyzer) {
-
         this.guilds = guilds;
         this.messageAnalyzer = messageAnalyzer;
     }

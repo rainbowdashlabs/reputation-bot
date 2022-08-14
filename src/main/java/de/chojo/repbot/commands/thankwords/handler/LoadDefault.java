@@ -17,7 +17,6 @@ public class LoadDefault implements SlashHandler {
     private final ThankwordsContainer thankwordsContainer;
 
     public LoadDefault(Guilds guilds, ThankwordsContainer thankwordsContainer) {
-
         this.guilds = guilds;
         this.thankwordsContainer = thankwordsContainer;
     }
