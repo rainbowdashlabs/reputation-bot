@@ -38,7 +38,7 @@ public class List implements SlashHandler {
             categoryNames += MORE;
         }
 
-        return new LocalizedEmbedBuilder(context.localizer())
+        return new LocalizedEmbedBuilder(context.guildLocalizer())
                 .setTitle(channels.isWhitelist() ? "command.channel.list.message.whitelist" : "command.channel.list.message.blacklist")
                 .addField("words.channels", channelNames, false, Replacement.create("MORE", channels.channels().size() - 40))
                 .addField("words.categories", categoryNames, false, Replacement.create("MORE", channels.channels().size() - 40))

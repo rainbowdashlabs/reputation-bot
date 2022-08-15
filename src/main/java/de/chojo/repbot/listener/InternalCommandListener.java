@@ -1,7 +1,5 @@
 package de.chojo.repbot.listener;
 
-import de.chojo.jdautil.command.ArgumentBuilder;
-import de.chojo.jdautil.parsing.ArgumentUtil;
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.Metrics;
@@ -97,7 +95,7 @@ public class InternalCommandListener extends ListenerAdapter {
                 reply.addFile(counts.getChart("Analyzed Messages per week"), "messages_week.png");
             }
 
-            counts = metrics.messages().day(2, 24*7).join();
+            counts = metrics.messages().day(2, 24 * 7).join();
             if (!counts.stats().isEmpty()) {
                 reply.addFile(counts.getChart("Analyzed Messages per day"), "messages_day.png");
             }
