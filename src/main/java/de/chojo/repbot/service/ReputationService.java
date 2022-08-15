@@ -215,7 +215,7 @@ public class ReputationService {
         newRank.ifPresent(rank -> {
             var announcements = guilds.guild(guild).settings().announcements();
             if (!announcements.isActive()) return;
-            var channel = message.getChannel();
+            var channel = message.getChannel().asTextChannel();
             if (!announcements.isSameChannel()) {
                 channel = guild.getTextChannelById(announcements.channelId());
             }

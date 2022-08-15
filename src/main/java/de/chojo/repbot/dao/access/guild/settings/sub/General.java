@@ -1,7 +1,6 @@
 package de.chojo.repbot.dao.access.guild.settings.sub;
 
 import de.chojo.jdautil.consumer.ThrowingConsumer;
-import de.chojo.jdautil.localization.util.Language;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.sqlutil.base.QueryFactoryHolder;
@@ -10,10 +9,8 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import org.jetbrains.annotations.Nullable;
 
-import javax.validation.constraints.Null;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
