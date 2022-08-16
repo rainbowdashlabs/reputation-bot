@@ -13,6 +13,7 @@ import de.chojo.repbot.dao.provider.Guilds;
 public class Reactions extends SlashCommand {
     public Reactions(Guilds guilds) {
         super(Slash.of("reactions", "command.reaction.description")
+                .guildOnly()
                 .adminCommand()
                 .subCommand(SubCommand.of("main", "command.reaction.main.description")
                         .handler(new Main(guilds))

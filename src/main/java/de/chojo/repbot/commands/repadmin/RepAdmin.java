@@ -16,6 +16,7 @@ public class RepAdmin extends SlashCommand {
 
     public RepAdmin(Guilds guilds, Configuration configuration) {
         super(Slash.of("repadmin", "command.repadmin.description")
+                .guildOnly()
                 .adminCommand()
                 .group(Group.of("reputation", "command.repadmin.reputation.description")
                         .subCommand(SubCommand.of("add", "command.repadmin.reputation.add.description")

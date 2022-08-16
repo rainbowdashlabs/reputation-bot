@@ -19,6 +19,7 @@ public class Channel extends SlashCommand {
     public Channel(Guilds guilds) {
         super(Slash.of("channel", "command.channel.description")
                 .adminCommand()
+                .guildOnly()
                 .subCommand(SubCommand.of("set", "command.channel.set.description")
                         .handler(new Set(guilds))
                         .argument(Argument.channel("channel", "command.channel.set.channel.description").asRequired()))

@@ -8,6 +8,7 @@ import de.chojo.repbot.dao.provider.Guilds;
 public class Dashboard extends SlashCommand {
     public Dashboard(Guilds guilds) {
         super(Slash.of("dashboard", "command.dashboard.description")
+                .guildOnly()
                 .command(new Show(guilds)));
     }
 }

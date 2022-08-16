@@ -9,6 +9,7 @@ import de.chojo.repbot.dao.provider.Guilds;
 public class Messages extends SlashCommand {
     public Messages(Guilds guilds) {
         super(Slash.of("messages", "command.messages.description")
+                .guildOnly()
                 .adminCommand()
                 .subCommand(SubCommand.of("states", "command.messages.states.description")
                         .handler(new States(guilds)))

@@ -19,7 +19,9 @@ public class Setup extends SlashCommand {
     private static final Logger log = getLogger(Setup.class);
 
     public Setup(Guilds guilds, ThankwordsContainer thankwordsContainer) {
-        super(Slash.of("setup", "command.setup.description").adminCommand()
+        super(Slash.of("setup", "command.setup.description")
+                .guildOnly()
+                .adminCommand()
                 .command(new Start(guilds, thankwordsContainer)));
     }
 

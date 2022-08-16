@@ -23,6 +23,7 @@ public class Scan implements SlashProvider<Slash> {
     @Override
     public Slash slash() {
         return Slash.of("scan", "command.scan.description")
+                .guildOnly()
                 .adminCommand()
                 .subCommand(SubCommand.of("start", "command.scan.start.description")
                         .handler(new Start(scanner))
