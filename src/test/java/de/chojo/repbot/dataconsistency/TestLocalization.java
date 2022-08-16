@@ -1,12 +1,12 @@
 package de.chojo.repbot.dataconsistency;
 
-import de.chojo.jdautil.localization.util.Language;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
@@ -26,9 +26,9 @@ public class TestLocalization {
 
     @Test
     public void checkKeys() {
-        Map<Language, ResourceBundle> resourceBundles = new HashMap<>();
+        Map<DiscordLocale, ResourceBundle> resourceBundles = new HashMap<>();
         for (var code : languages) {
-            var locale = code.toLocale();
+            var locale = Locale.forLanguageTag(code.getLocale());
             var bundle = ResourceBundle.getBundle("locale", locale);
             resourceBundles.put(code, bundle);
         }
@@ -41,10 +41,10 @@ public class TestLocalization {
         }
 
         Map<String, Set<String>> replacements = new HashMap<>();
-        var english = resourceBundles.get(Language.ENGLISH);
+        var english = resourceBundles.get(DiscordLocale.ENGLISH_US);
         for (var key : english.keySet()) {
             replacements.put(key, getReplacements(english.getString(key)));
-            Assertions.assertFalse(english.getString(key).isBlank(), "Blank string at " + key + "@" + Language.ENGLISH);
+            Assertions.assertFalse(english.getString(key).isBlank(), "Blank string at " + key + "@" + DiscordLocale.ENGLISH_US);
         }
 
         for (var resourceBundle : resourceBundles.values()) {
