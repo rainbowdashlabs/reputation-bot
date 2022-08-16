@@ -155,3 +155,5 @@ SELECT RANK() OVER (PARTITION BY guild_id ORDER BY reputation DESC) AS rank,
        reputation,
        donated
 FROM filtered_log rank;
+
+UPDATE repbot_schema.guild_settings SET language = replace(language, '_', '-');
