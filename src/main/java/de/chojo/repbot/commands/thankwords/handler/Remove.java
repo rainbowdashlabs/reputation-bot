@@ -35,7 +35,7 @@ public class Remove implements SlashHandler {
                     Replacement.create("PATTERN", pattern, Format.CODE))).queue();
             return;
         }
-        event.reply(context.localize("command.thankwords.remove.message.patternnotnound"))
+        event.reply(context.localize("command.thankwords.remove.message.patternnotfound"))
                 .setEphemeral(true)
                 .queue();
     }
