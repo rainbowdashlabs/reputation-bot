@@ -156,4 +156,11 @@ SELECT RANK() OVER (PARTITION BY guild_id ORDER BY reputation DESC) AS rank,
        donated
 FROM filtered_log rank;
 
+-- Replace underscore notation with dash notation
 UPDATE repbot_schema.guild_settings SET language = replace(language, '_', '-');
+
+-- Replace locale codes with new locale codes
+UPDATE repbot_schema.guild_settings SET language = 'pt-BR' WHERE language = 'pt-PT';
+UPDATE repbot_schema.guild_settings SET language = 'de' WHERE language = 'de-DE';
+UPDATE repbot_schema.guild_settings SET language = 'fr' WHERE language = 'fr-FR';
+UPDATE repbot_schema.guild_settings SET language = 'ru' WHERE language = 'ru-RU';
