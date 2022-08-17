@@ -27,6 +27,7 @@ public class Thankwords extends SlashCommand {
 
     private Thankwords(MessageAnalyzer messageAnalyzer, Guilds guilds, ThankwordsContainer thankwordsContainer) {
         super(Slash.of("thankwords", "command.thankwords.description")
+                .guildOnly()
                 .adminCommand()
                 .subCommand(SubCommand.of("add", "command.thankwords.add.description")
                         .handler(new Add(guilds))

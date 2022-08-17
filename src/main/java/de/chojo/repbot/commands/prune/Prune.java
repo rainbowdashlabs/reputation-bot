@@ -13,6 +13,7 @@ public class Prune extends SlashCommand {
 
     public Prune(GdprService service) {
         super(Slash.of("prune", "command.prune.description")
+                .guildOnly()
                 .withPermission(Permission.MESSAGE_MANAGE)
                 .subCommand(SubCommand.of("user", "command.prune.user.description")
                         .handler(new User(service))

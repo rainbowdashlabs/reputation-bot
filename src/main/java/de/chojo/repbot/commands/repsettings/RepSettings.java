@@ -11,6 +11,7 @@ public class RepSettings extends SlashCommand {
 
     public RepSettings(Guilds guilds) {
         super(Slash.of("repsettings", "command.repsettings.description")
+                .guildOnly()
                 .adminCommand()
                 .subCommand(SubCommand.of("info", "command.repsettings.info.description")
                         .handler(new Info(guilds)))

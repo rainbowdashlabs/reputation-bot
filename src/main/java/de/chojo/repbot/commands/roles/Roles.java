@@ -30,6 +30,7 @@ public class Roles implements SlashProvider<Slash> {
     @Override
     public Slash slash() {
         return Slash.of("roles", "command.roles.description")
+                .guildOnly()
                 .withPermission(Permission.MANAGE_ROLES)
                 .subCommand(SubCommand.of("add", "command.roles.add.description")
                         .handler(new Add(guilds))

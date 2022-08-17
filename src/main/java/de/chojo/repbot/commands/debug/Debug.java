@@ -9,6 +9,7 @@ public class Debug extends SlashCommand {
 
     public Debug(Guilds guilds) {
         super(Slash.of("debug", "command.debug.description")
+                .guildOnly()
                 .adminCommand()
                 .command(new Show(guilds)));
     }

@@ -19,6 +19,7 @@ public class AbuseProtection extends SlashCommand {
     public AbuseProtection(Guilds guilds) {
         super(Slash.of("abuseprotection", "command.abuseprotection.description")
                 .adminCommand()
+                .guildOnly()
                 .subCommand(SubCommand.of("info", "command.abuseprotection.info.description")
                         .handler(new Info(guilds)))
                 .subCommand(SubCommand.of("maxmessageage", "command.abuseprotection.maxmessageage.description")

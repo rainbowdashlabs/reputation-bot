@@ -12,6 +12,7 @@ import de.chojo.repbot.dao.provider.Guilds;
 public class Locale extends SlashCommand {
     public Locale(Guilds guilds) {
         super(Slash.of("locale", "command.locale.description")
+                .guildOnly()
                 .adminCommand()
                 .subCommand(SubCommand.of("set", "command.locale.set.description")
                         .handler(new Set(guilds))

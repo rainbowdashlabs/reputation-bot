@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.Permission;
 public class Log extends SlashCommand {
     public Log(Guilds guilds) {
         super(Slash.of("log", "command.log.description")
+                .guildOnly()
                 .withPermission(Permission.MESSAGE_MANAGE)
                 .subCommand(SubCommand.of("received", "command.log.received.description")
                         .handler(new Received(guilds))
