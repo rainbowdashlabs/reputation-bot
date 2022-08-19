@@ -19,7 +19,7 @@ import java.util.regex.Pattern;
 public class TestLocalization {
     private static final Pattern LOCALIZATION_CODE = Pattern.compile("\\$([a-zA-Z.]+?)\\$");
     private static final Pattern SIMPLE_LOCALIZATION_CODE = Pattern.compile("\"([a-zA-Z]+?\\.[a-zA-Z.]+)\"");
-    private static final Set<String> WHITELIST = Set.of("bot.config", "bot.testmode");
+    private static final Set<String> WHITELIST = Set.of("bot.config", "bot.testmode", "bot.cleancommands");
     private static final Set<String> WHITELIST_ENDS = Set.of(".gg", ".com", "bot.config", ".png", ".json");
 
     private static final DiscordLocale[] languages = {
@@ -81,7 +81,7 @@ public class TestLocalization {
     }
 
     @Test
-    public void detectMissingKeys() {
+    public void detectMissingKeys() throws IOException {
         var keys = ResourceBundle.getBundle("locale").keySet();
         List<Path> files;
         try (var stream = Files.walk(Path.of("src", "main", "java"))) {
@@ -89,9 +89,6 @@ public class TestLocalization {
                     .filter(p -> p.toFile().isFile())
                     .toList();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-            return;
         }
 
         var count = 0;
@@ -99,15 +96,9 @@ public class TestLocalization {
         Set<String> foundKeys = new HashSet<>();
 
         for (var file : files) {
-            int localCount = 0;
+            var localCount = 0;
             List<String> content;
-            try {
-                content = Files.readAllLines(file);
-            } catch (IOException e) {
-                System.out.println("Could not read file");
-                e.printStackTrace();
-                continue;
-            }
+            content = Files.readAllLines(file);
 
             for (var line : content) {
                 var matcher = SIMPLE_LOCALIZATION_CODE.matcher(line);
@@ -134,14 +125,14 @@ public class TestLocalization {
 
         keys.removeAll(foundKeys);
         System.out.println("Found " + keys.size() + " without any direct usage in the code.");
-        for (String key : keys) {
+        for (var key : keys) {
             System.out.println(key);
         }
     }
 
     private boolean whitelisted(String key) {
         if (WHITELIST.contains(key)) return true;
-        for (String end : WHITELIST_ENDS) {
+        for (var end : WHITELIST_ENDS) {
             if (key.endsWith(end)) return true;
         }
         return false;
