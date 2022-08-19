@@ -16,7 +16,7 @@ public class DonorLimit implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        RepGuild guild = guilds.guild(event.getGuild());
+        var guild = guilds.guild(event.getGuild());
         var protection = guild.settings().abuseProtection();
         var limit = event.getOption("limit");
         if (limit != null) {

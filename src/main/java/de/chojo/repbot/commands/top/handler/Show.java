@@ -26,24 +26,6 @@ public class Show implements SlashHandler {
         this.guilds = guilds;
     }
 
-    @Override
-    public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        var guild = guilds.guild(event.getGuild());
-        var reputationMode = guild.settings().general().reputationMode();
-        if (event.getOption("mode") != null) {
-            var mode = event.getOption("mode").getAsString();
-            reputationMode = switch (mode) {
-                case "total" -> ReputationMode.TOTAL;
-                case "7 days" -> ReputationMode.ROLLING_WEEK;
-                case "30 days" -> ReputationMode.ROLLING_MONTH;
-                default -> throw new IllegalStateException("Unexpected value: " + mode);
-            };
-        }
-
-        var ranking = guild.reputation().ranking().byMode(reputationMode, TOP_PAGE_SIZE);
-        registerPage(ranking, event, context);
-    }
-
     public static void registerPage(GuildRanking guildRanking, SlashCommandInteractionEvent event, EventContext context) {
         context.registerPage(new PageBag(guildRanking.pages()) {
             @Override
@@ -73,6 +55,24 @@ public class Show implements SlashHandler {
         return new LocalizedEmbedBuilder(context.guildLocalizer())
                 .setTitle(guildRanking.title(), Replacement.create("GUILD", guild.getName()))
                 .setColor(Color.CYAN);
+    }
+
+    @Override
+    public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
+        var guild = guilds.guild(event.getGuild());
+        var reputationMode = guild.settings().general().reputationMode();
+        if (event.getOption("mode") != null) {
+            var mode = event.getOption("mode").getAsString();
+            reputationMode = switch (mode) {
+                case "total" -> ReputationMode.TOTAL;
+                case "7 days" -> ReputationMode.ROLLING_WEEK;
+                case "30 days" -> ReputationMode.ROLLING_MONTH;
+                default -> throw new IllegalStateException("Unexpected value: " + mode);
+            };
+        }
+
+        var ranking = guild.reputation().ranking().byMode(reputationMode, TOP_PAGE_SIZE);
+        registerPage(ranking, event, context);
     }
 
     @Override

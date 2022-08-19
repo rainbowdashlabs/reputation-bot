@@ -7,7 +7,6 @@ import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import org.jetbrains.annotations.PropertyKey;
 
 import java.awt.Color;
 import java.util.List;

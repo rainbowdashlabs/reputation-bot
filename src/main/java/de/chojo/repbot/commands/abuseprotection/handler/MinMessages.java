@@ -16,7 +16,7 @@ public class MinMessages implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        RepGuild guild = guilds.guild(event.getGuild());
+        var guild = guilds.guild(event.getGuild());
         var abuseSettings = guild.settings().abuseProtection();
         if (event.getOptions().isEmpty()) {
             event.reply(context.localize("command.abuseprotection.minmessages.message.get",

@@ -96,27 +96,13 @@ public class Info implements SlashHandler {
                     ctx.entry().component(copy.build());
                     ctx.refresh();
                 }))
-                .addComponent(MenuEntry.of(reactions, ctx -> {
-                    refresh(ctx, res -> guildSettings.reputation().reactionActive(res), context, guildSettings);
-                }).hidden())
-                .addComponent(MenuEntry.of(answers, ctx -> {
-                    refresh(ctx, res -> guildSettings.reputation().answerActive(res), context, guildSettings);
-                }).hidden())
-                .addComponent(MenuEntry.of(mention, ctx -> {
-                    refresh(ctx, res -> guildSettings.reputation().mentionActive(res), context, guildSettings);
-                }).hidden())
-                .addComponent(MenuEntry.of(fuzzy, ctx -> {
-                    refresh(ctx, res -> guildSettings.reputation().fuzzyActive(res), context, guildSettings);
-                }).hidden())
-                .addComponent(MenuEntry.of(embed, ctx -> {
-                    refresh(ctx, res -> guildSettings.reputation().embedActive(res), context, guildSettings);
-                }).hidden())
-                .addComponent(MenuEntry.of(emojidebug, ctx -> {
-                    refresh(ctx, res -> guildSettings.general().emojiDebug(res), context, guildSettings);
-                }).hidden())
-                .addComponent(MenuEntry.of(skipSingleEmbed, ctx -> {
-                    refresh(ctx, res -> guildSettings.reputation().skipSingleEmbed(res), context, guildSettings);
-                }).hidden())
+                .addComponent(MenuEntry.of(reactions, ctx -> refresh(ctx, res -> guildSettings.reputation().reactionActive(res), context, guildSettings)).hidden())
+                .addComponent(MenuEntry.of(answers, ctx -> refresh(ctx, res -> guildSettings.reputation().answerActive(res), context, guildSettings)).hidden())
+                .addComponent(MenuEntry.of(mention, ctx -> refresh(ctx, res -> guildSettings.reputation().mentionActive(res), context, guildSettings)).hidden())
+                .addComponent(MenuEntry.of(fuzzy, ctx -> refresh(ctx, res -> guildSettings.reputation().fuzzyActive(res), context, guildSettings)).hidden())
+                .addComponent(MenuEntry.of(embed, ctx -> refresh(ctx, res -> guildSettings.reputation().embedActive(res), context, guildSettings)).hidden())
+                .addComponent(MenuEntry.of(emojidebug, ctx -> refresh(ctx, res -> guildSettings.general().emojiDebug(res), context, guildSettings)).hidden())
+                .addComponent(MenuEntry.of(skipSingleEmbed, ctx -> refresh(ctx, res -> guildSettings.reputation().skipSingleEmbed(res), context, guildSettings)).hidden())
                 .addComponent(MenuEntry.of(reputationMode, ctx -> {
                     var value = ctx.event().getValues().get(0);
                     var copy = ctx.entry().component().createCopy();

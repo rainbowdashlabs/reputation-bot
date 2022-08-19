@@ -24,6 +24,7 @@ public class Show implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         event.replyEmbeds(getDashboard(event.getGuild(), context)).queue();
     }
+
     private MessageEmbed getDashboard(Guild guild, EventContext context) {
         var reputation = guilds.guild(guild).reputation();
         var stats = reputation.stats();

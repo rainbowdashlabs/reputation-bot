@@ -48,9 +48,6 @@ public record LabeledCountStatistic(Map<String, List<CountStatistics>> stats) im
         }
     }
 
-    private Date toDate(LocalDate date) {
-        return new Date(date.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000);
-    }
     private Date toDate(LocalDateTime date) {
         return new Date(date.toEpochSecond(ZoneOffset.UTC) * 1000);
     }

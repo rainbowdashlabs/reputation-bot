@@ -48,7 +48,7 @@ public class Commands extends MetricsHolder {
     }
 
     public void countMonth(Context ctx) {
-        var stats = metrics().commands().week(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH)).join();
+        var stats = metrics().commands().month(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH)).join();
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {

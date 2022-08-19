@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import java.util.regex.Pattern;
 
 public class Remove implements SlashHandler {
-    private static final Pattern EMOTE_PATTERN = Pattern.compile("<a?:.*?:(?<id>[0-9]*?)>");
+    private static final Pattern EMOTE_PATTERN = Pattern.compile("<a?:.*?:(?<id>\\d*?)>");
 
     private final Guilds guilds;
 

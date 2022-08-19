@@ -7,7 +7,7 @@ import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.util.MentionUtil;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.reputation.sub.RepUser;
-import de.chojo.repbot.util.TextGenerator;
+import de.chojo.repbot.util.Text;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -80,7 +80,7 @@ public record RepProfile(RepUser repUser, long rank, long rankDonated, long user
         var nextRoleRep = next.map(ReputationRank::reputation).orElse(currentRoleRep);
         var progess = (double) (reputation() - currentRoleRep) / (double) (nextRoleRep - currentRoleRep);
 
-        var progressBar = TextGenerator.progressBar(progess, BAR_SIZE);
+        var progressBar = Text.progressBar(progess, BAR_SIZE);
 
         var level = current.map(r -> r.getRole(repUser.member().getGuild())).map(IMentionable::getAsMention).orElse("/");
 

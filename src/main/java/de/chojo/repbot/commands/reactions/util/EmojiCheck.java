@@ -6,7 +6,11 @@ import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 
-public class EmojiCheck {
+public final class EmojiCheck {
+    private EmojiCheck() {
+        throw new UnsupportedOperationException("This is a utility class.");
+    }
+
     public static EmojiCheckResult checkEmoji(Message message, String emote) {
         // Check for emote id
         if (Verifier.isValidId(emote)) {

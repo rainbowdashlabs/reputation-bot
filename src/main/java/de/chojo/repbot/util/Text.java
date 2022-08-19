@@ -32,12 +32,12 @@ public final class Text {
         return DATE_FORMATTER.format(date);
     }
 
-    public static String month(LocalDate date) {
+    public static String date(LocalDateTime date) {
         return DATE_FORMATTER.format(date);
     }
 
-    public static String date(LocalDateTime date) {
-        return DATE_FORMATTER.format(date);
+    public static String month(LocalDate date) {
+        return MONTH.format(date);
     }
 
     public static String dateTime(LocalDateTime dateTime) {

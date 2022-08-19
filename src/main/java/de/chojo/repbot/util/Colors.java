@@ -13,6 +13,7 @@ public final class Colors {
     /**
      * Contains pastel color objects.
      */
+    @SuppressWarnings("unused")
     public static final class Pastel {
         public static final Color LIGHT_RED = new Color(235, 145, 145);
         public static final Color RED = new Color(245, 93, 93);
@@ -39,6 +40,7 @@ public final class Colors {
     /**
      * Contains colors with strong colors.
      */
+    @SuppressWarnings("unused")
     public static final class Strong {
         public static final Color LIGHT_RED = new Color(255, 97, 97);
         public static final Color RED = new Color(255, 0, 0);

@@ -20,8 +20,8 @@ import java.util.regex.Pattern;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ScanProcess {
-    private static final Logger log = getLogger(ScanProcess.class);
     public static final int MAX_MESSAGES = 10000;
+    private static final Logger log = getLogger(ScanProcess.class);
     private final MessageAnalyzer messageAnalyzer;
     private final LocalizationContext loc;
     private final Guild guild;

@@ -7,7 +7,6 @@ import de.chojo.jdautil.parsing.WeightedEntry;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.provider.Metrics;
-import de.chojo.repbot.statistic.Statistic;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageType;

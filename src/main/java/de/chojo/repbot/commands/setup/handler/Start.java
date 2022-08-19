@@ -45,6 +45,7 @@ public class Start implements SlashHandler {
         event.reply(context.localize("command.setup.message.starting")).queue();
         context.conversationService().startDialog(event.getUser(), event.getChannel().asTextChannel(), getConversation(context));
     }
+
     private Conversation getConversation(EventContext context) {
         var builder = ConversationBuilder.builder(
                         Step.button("**$%s$**%n$%s$".formatted("command.setup.dialog.welcome", "command.setup.message.continueToProceed"),

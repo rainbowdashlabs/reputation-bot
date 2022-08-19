@@ -92,7 +92,7 @@ public class MessageListener extends ListenerAdapter {
         var guild = event.getGuild();
         var repGuild = guilds.guild(guild);
         var settings = repGuild.settings();
-        Thanking thank = settings.thanking();
+        var thank = settings.thanking();
 
         if (event.getMessage().getType() != MessageType.DEFAULT && event.getMessage().getType() != MessageType.INLINE_REPLY) {
             return;
