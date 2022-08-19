@@ -298,6 +298,7 @@ public class ReputationBot {
                         new RepAdmin(guilds, configuration),
                         new Messages(guilds))
                 .withLocalizer(localizer)
+                .cleanGuildCommands("true".equals(System.getProperty("bot.cleancommands", "false")))
                 .testMode("true".equals(System.getProperty("bot.testmode", "false")))
                 .withCommandErrorHandler((context, throwable) -> {
                     if (throwable instanceof InsufficientPermissionException) {
