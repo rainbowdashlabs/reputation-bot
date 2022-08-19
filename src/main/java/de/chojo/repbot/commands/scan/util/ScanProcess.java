@@ -5,7 +5,7 @@ import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.dao.provider.Guilds;
-import de.chojo.repbot.util.TextGenerator;
+import de.chojo.repbot.util.Text;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageHistory;
@@ -110,7 +110,7 @@ public class ScanProcess {
         var progressString = String.format("%.02f", progress * 100.0d);
         log.debug("Scan progress for guild {}: {}", guild.getIdLong(), progressString);
         progressMessage.editMessage(loc.localize("command.scan.scanner.message.progress",
-                Replacement.create("PERCENT", progressString)) + " " + TextGenerator.progressBar(progress, 40)).complete();
+                Replacement.create("PERCENT", progressString)) + " " + Text.progressBar(progress, 40)).complete();
         time = Instant.now().until(start, ChronoUnit.MILLIS);
         currWorker = null;
         return callsLeft > 0;

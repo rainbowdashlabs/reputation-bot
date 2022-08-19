@@ -5,7 +5,7 @@ import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.statistic.Statistic;
 import de.chojo.repbot.util.LogNotify;
-import de.chojo.repbot.util.TimeFormatter;
+import de.chojo.repbot.util.Text;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -72,7 +72,7 @@ public class InternalCommandListener extends ListenerAdapter {
 
             var commands = metrics.commands().week(1).join();
             if (!commands.commands().isEmpty()) {
-                reply.addFile(commands.getChart("Command statistic for week " + TimeFormatter.month(commands.date())), "commands.png");
+                reply.addFile(commands.getChart("Command statistic for week " + Text.month(commands.date())), "commands.png");
             }
 
             var counts = metrics.reputation().week(1, 24).join();

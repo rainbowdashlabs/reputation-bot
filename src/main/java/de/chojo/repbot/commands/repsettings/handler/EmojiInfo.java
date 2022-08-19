@@ -3,6 +3,7 @@ package de.chojo.repbot.commands.repsettings.handler;
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.util.Text;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.jetbrains.annotations.PropertyKey;
 
@@ -29,7 +30,7 @@ public class EmojiInfo implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var generalSettings = guilds.guild(event.getGuild()).settings().general();
-        event.reply(getBooleanMessage(context, generalSettings.isEmojiDebug(),
+        event.reply(Text.getBooleanMessage(context, generalSettings.isEmojiDebug(),
                 "command.repsettings.emojidebug.message.true", "command.repsettings.emojidebug.message.false")
                     + "\n" + context.localize(emojiExplanation())).queue();
     }
@@ -48,10 +49,6 @@ public class EmojiInfo implements SlashHandler {
                 emojiString(RECEIVER_LIMIT, "command.repsettings.emojidebug.message.receiverLimit")
         );
         return String.join("\n", emojis);
-    }
-
-    private String getBooleanMessage(EventContext context, boolean value, String whenTrue, String whenFalse) {
-        return context.localize(value ? whenTrue : whenFalse);
     }
 
     private String emojiString(String emoji, @PropertyKey(resourceBundle = "locale") String code) {

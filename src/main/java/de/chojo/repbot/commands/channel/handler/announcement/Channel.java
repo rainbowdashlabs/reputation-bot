@@ -25,6 +25,7 @@ public class Channel implements SlashHandler {
         }
 
         announcements.channel(channel.getAsChannel().asTextChannel());
-        event.reply(context.localize("command.channel.announcement.channel.message.set", Replacement.createMention(channel.getAsChannel().asTextChannel()))).queue();
+        event.reply(context.localize("command.channel.announcement.channel.message.set",
+                Replacement.createMention(channel.getAsChannel().asTextChannel()))).queue();
     }
 }
