@@ -53,7 +53,7 @@ final class LogFormatter {
         String refJump = null;
         if (log.hasRefMessage()) {
             refJump = context.localize("words.link",
-                    Replacement.create("TARGET", "$words.refMessage$"),
+                    Replacement.create("TARGET", "$%s$".formatted("words.refMessage")),
                     Replacement.create("URL", log.getMessageJumpLink()));
         }
 
