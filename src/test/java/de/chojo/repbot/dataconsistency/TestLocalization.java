@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -19,10 +20,11 @@ import java.util.regex.Pattern;
 public class TestLocalization {
     private static final Pattern LOCALIZATION_CODE = Pattern.compile("\\$([a-zA-Z.]+?)\\$");
     private static final Pattern SIMPLE_LOCALIZATION_CODE = Pattern.compile("\"([a-zA-Z]+?\\.[a-zA-Z.]+)\"");
+    private static final Pattern REPLACEMENTS = Pattern.compile("%[a-zA-Z\\d.]+?%");
     private static final Set<String> WHITELIST = Set.of("bot.config", "bot.testmode", "bot.cleancommands");
     private static final Set<String> WHITELIST_ENDS = Set.of(".gg", ".com", "bot.config", ".png", ".json");
 
-    private static final DiscordLocale[] languages = {
+    private static final DiscordLocale[] LOCALES = {
             DiscordLocale.ENGLISH_US,
             DiscordLocale.GERMAN,
             DiscordLocale.SPANISH,
@@ -31,18 +33,16 @@ public class TestLocalization {
             DiscordLocale.RUSSIAN
     };
 
-    private static final Pattern replacements = Pattern.compile("%[a-zA-Z0-9.]+?%");
 
     @Test
     public void checkKeys() {
-        Map<DiscordLocale, ResourceBundle> resourceBundles = new HashMap<>();
-        for (var code : languages) {
-            var locale = Locale.forLanguageTag(code.getLocale());
-            var bundle = ResourceBundle.getBundle("locale", locale);
+        Map<DiscordLocale, ResourceBundle> resourceBundles = new EnumMap<>(DiscordLocale.class);
+        for (var code : LOCALES) {
+            var bundle = ResourceBundle.getBundle("locale", Locale.forLanguageTag(code.getLocale()));
             resourceBundles.put(code, bundle);
         }
 
-        System.out.printf("Loaded %s languages!%n", languages.length);
+        System.out.printf("Loaded %s languages!%n", LOCALES.length);
 
         Set<String> keySet = new HashSet<>();
         for (var resourceBundle : resourceBundles.values()) {
@@ -59,13 +59,13 @@ public class TestLocalization {
 
         for (var resourceBundle : resourceBundles.values()) {
             for (var key : keySet) {
-                var id = key + "@" + resourceBundle.getLocale();
+                var keyLoc = key + "@" + resourceBundle.getLocale();
                 var locale = resourceBundle.getString(key);
-                Assertions.assertFalse(locale.isBlank(), "Blank or unlocalized key at " + id);
+                Assertions.assertFalse(locale.isBlank(), "Blank or unlocalized key at " + keyLoc);
                 var localeReplacements = getReplacements(locale);
                 var defReplacements = replacements.get(key);
                 Assertions.assertTrue(localeReplacements.containsAll(defReplacements),
-                        "Missing replacement key in " + id
+                        "Missing replacement key in " + keyLoc
                         + ". Expected \"" + String.join(", ", defReplacements) + "\". Actual \"" + String.join(", ", localeReplacements) + "\"");
             }
         }
@@ -73,7 +73,7 @@ public class TestLocalization {
 
     private Set<String> getReplacements(String message) {
         Set<String> found = new HashSet<>();
-        var matcher = replacements.matcher(message);
+        var matcher = REPLACEMENTS.matcher(message);
         while (matcher.find()) {
             found.add(matcher.group());
         }
@@ -88,7 +88,6 @@ public class TestLocalization {
             files = stream
                     .filter(p -> p.toFile().isFile())
                     .toList();
-
         }
 
         var count = 0;
