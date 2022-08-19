@@ -94,7 +94,9 @@ public class TestLocalization {
             return;
         }
 
-        int count = 0;
+        var count = 0;
+
+        Set<String> foundKeys = new HashSet<>();
 
         for (var file : files) {
             int localCount = 0;
@@ -113,6 +115,7 @@ public class TestLocalization {
                     count++;
                     localCount++;
                     var key = matcher.group(1);
+                    foundKeys.add(key);
                     Assertions.assertTrue(keys.contains(key) || whitelisted(key), "Found unkown key \"" + key + "\" in " + file);
                 }
 
@@ -121,12 +124,19 @@ public class TestLocalization {
                     count++;
                     localCount++;
                     var key = matcher.group(1);
+                    foundKeys.add(key);
                     Assertions.assertTrue(keys.contains(key) || whitelisted(key), "Found unkown key \"" + key + "\" in " + file);
                 }
             }
             System.out.println("Found " + localCount + " key in " + file);
         }
         System.out.println("Found a total of " + count + " keys in " + files.size() + " files.");
+
+        keys.removeAll(foundKeys);
+        System.out.println("Found " + keys.size() + " without any direct usage in the code.");
+        for (String key : keys) {
+            System.out.println(key);
+        }
     }
 
     private boolean whitelisted(String key) {
