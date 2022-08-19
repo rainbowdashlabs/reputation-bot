@@ -4,8 +4,12 @@ import net.dv8tion.jda.api.interactions.DiscordLocale;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -13,6 +17,11 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 public class TestLocalization {
+    private static final Pattern LOCALIZATION_CODE = Pattern.compile("\\$([a-zA-Z.]+?)\\$");
+    private static final Pattern SIMPLE_LOCALIZATION_CODE = Pattern.compile("\"([a-zA-Z]+?\\.[a-zA-Z.]+)\"");
+    private static final Set<String> WHITELIST = Set.of("bot.config", "bot.testmode");
+    private static final Set<String> WHITELIST_ENDS = Set.of(".gg", ".com", "bot.config", ".png", ".json");
+
     private static final DiscordLocale[] languages = {
             DiscordLocale.ENGLISH_US,
             DiscordLocale.GERMAN,
@@ -44,7 +53,8 @@ public class TestLocalization {
         var english = resourceBundles.get(DiscordLocale.ENGLISH_US);
         for (var key : english.keySet()) {
             replacements.put(key, getReplacements(english.getString(key)));
-            Assertions.assertFalse(english.getString(key).isBlank(), "Blank string at " + key + "@" + DiscordLocale.ENGLISH_US);
+            Assertions.assertFalse(english.getString(key)
+                                          .isBlank(), "Blank string at " + key + "@" + DiscordLocale.ENGLISH_US);
         }
 
         for (var resourceBundle : resourceBundles.values()) {
@@ -70,4 +80,60 @@ public class TestLocalization {
         return found;
     }
 
+    @Test
+    public void detectMissingKeys() {
+        var keys = ResourceBundle.getBundle("locale").keySet();
+        List<Path> files;
+        try (var stream = Files.walk(Path.of("src", "main", "java"))) {
+            files = stream
+                    .filter(p -> p.toFile().isFile())
+                    .toList();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+
+        int count = 0;
+
+        for (var file : files) {
+            int localCount = 0;
+            List<String> content;
+            try {
+                content = Files.readAllLines(file);
+            } catch (IOException e) {
+                System.out.println("Could not read file");
+                e.printStackTrace();
+                continue;
+            }
+
+            for (var line : content) {
+                var matcher = SIMPLE_LOCALIZATION_CODE.matcher(line);
+                while (matcher.find()) {
+                    count++;
+                    localCount++;
+                    var key = matcher.group(1);
+                    Assertions.assertTrue(keys.contains(key) || whitelisted(key), "Found unkown key \"" + key + "\" in " + file);
+                }
+
+                matcher = LOCALIZATION_CODE.matcher(line);
+                while (matcher.find()) {
+                    count++;
+                    localCount++;
+                    var key = matcher.group(1);
+                    Assertions.assertTrue(keys.contains(key) || whitelisted(key), "Found unkown key \"" + key + "\" in " + file);
+                }
+            }
+            System.out.println("Found " + localCount + " key in " + file);
+        }
+        System.out.println("Found a total of " + count + " keys in " + files.size() + " files.");
+    }
+
+    private boolean whitelisted(String key) {
+        if (WHITELIST.contains(key)) return true;
+        for (String end : WHITELIST_ENDS) {
+            if (key.endsWith(end)) return true;
+        }
+        return false;
+    }
 }

@@ -77,7 +77,7 @@ public class InternalCommandListener extends ListenerAdapter {
 
             var counts = metrics.reputation().week(1, 24).join();
             if (!counts.stats().isEmpty()) {
-                reply.addFile(counts.getChart("Reputation counts per week"), "reputatation.png");
+                reply.addFile(counts.getChart("Reputation counts per week"), "reputation.png");
             }
 
             counts = metrics.reputation().totalWeek(1, 24).join();

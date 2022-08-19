@@ -32,7 +32,7 @@ public class LoadDefault implements SlashHandler {
         var language = languageOption.getAsString();
         var words = thankwordsContainer.get(language.toLowerCase(Locale.ROOT));
         if (words == null) {
-            event.reply(context.localize("command.locale.error.invalidLocale"))
+            event.reply(context.localize("command.locale.set.message.invalidlocale"))
                     .setEphemeral(true)
                     .queue();
             return;
