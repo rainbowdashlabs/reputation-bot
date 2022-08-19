@@ -8,7 +8,7 @@ import de.chojo.repbot.dao.provider.Guilds;
 
 public class Top extends SlashCommand {
     public Top(Guilds guilds) {
-        super(Slash.of("top", "command.reputation.description")
+        super(Slash.of("top", "command.top.description")
                 .guildOnly()
                 .command(new Show(guilds))
                 .argument(Argument.text("mode", "command.top.mode.description").withAutoComplete()));

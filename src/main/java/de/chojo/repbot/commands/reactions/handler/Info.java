@@ -26,9 +26,9 @@ public class Info implements SlashHandler {
         var emotes = String.join(" ", reactions.getAdditionalReactionMentions());
 
         return new LocalizedEmbedBuilder(context.guildLocalizer())
-                .setTitle("command.reaction.info.message.title")
-                .addField("command.reaction.info.message.main", mainEmote.orElse("words.unknown"), true)
-                .addField("command.reaction.info.message.additional", emotes, true)
+                .setTitle("command.reactions.info.message.title")
+                .addField("command.reactions.info.message.main", mainEmote.orElse("words.unknown"), true)
+                .addField("command.reactions.info.message.additional", emotes, true)
                 .build();
     }
 

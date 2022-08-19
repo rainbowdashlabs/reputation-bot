@@ -10,10 +10,10 @@ import de.chojo.repbot.service.RoleAssigner;
 
 public class Reputation extends SlashCommand {
     public Reputation(Guilds guilds, Configuration configuration, RoleAssigner roleAssigner) {
-        super(Slash.of("rep", "command.reputation.description")
+        super(Slash.of("rep", "command.rep.description")
                 .guildOnly()
                 .command(new Profile(guilds, configuration, roleAssigner))
-                .argument(Argument.user("user", "command.reputation.user.description"))
+                .argument(Argument.user("user", "command.rep.user.description"))
         );
     }
 }

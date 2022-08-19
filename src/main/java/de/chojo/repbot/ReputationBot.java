@@ -298,6 +298,7 @@ public class ReputationBot {
                         new RepAdmin(guilds, configuration),
                         new Messages(guilds))
                 .withLocalizer(localizer)
+                .testMode("true".equals(System.getProperty("bot.testmode", "false")))
                 .withCommandErrorHandler((context, throwable) -> {
                     if (throwable instanceof InsufficientPermissionException) {
                         PermissionErrorHandler.handle((InsufficientPermissionException) throwable, shardManager, localizer, configuration);
