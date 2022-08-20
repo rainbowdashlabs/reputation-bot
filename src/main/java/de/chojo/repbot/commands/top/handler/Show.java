@@ -36,7 +36,7 @@ public class Show implements SlashHandler {
                 case "total" -> ReputationMode.TOTAL;
                 case "7 days" -> ReputationMode.ROLLING_WEEK;
                 case "30 days" -> ReputationMode.ROLLING_MONTH;
-                default -> throw new IllegalStateException("Unexpected value: " + mode);
+                default -> reputationMode;
             };
         }
 
