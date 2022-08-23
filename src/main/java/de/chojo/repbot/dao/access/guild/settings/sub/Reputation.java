@@ -120,14 +120,14 @@ public class Reputation extends QueryFactoryHolder implements GuildHolder {
 
     public String toLocalizedString() {
         var setting = List.of(
-                getSetting("command.repSettings.embed.descr.byReaction", isReactionActive()),
-                getSetting("command.repSettings.embed.descr.byAnswer", isAnswerActive()),
-                getSetting("command.repSettings.embed.descr.byMention", isMentionActive()),
-                getSetting("command.repSettings.embed.descr.byFuzzy", isFuzzyActive()),
-                getSetting("command.repSettings.embed.descr.byEmbed", isEmbedActive()),
-                getSetting("command.repSettings.embed.descr.emojidebug", settings.general().isEmojiDebug()),
-                getSetting("command.repSettings.embed.descr.skipSingleEmbed", settings.reputation().isSkipSingleEmbed()),
-                getSetting("command.repSettings.embed.descr.reputationMode", settings.general().reputationMode().localeCode())
+                getSetting("command.repsettings.info.message.option.byreaction.name", isReactionActive()),
+                getSetting("command.repsettings.info.message.option.byanswer.name", isAnswerActive()),
+                getSetting("command.repsettings.info.message.option.bymention.name", isMentionActive()),
+                getSetting("command.repsettings.info.message.option.byfuzzy.name", isFuzzyActive()),
+                getSetting("command.repsettings.info.message.option.byembed.name", isEmbedActive()),
+                getSetting("command.repsettings.info.message.option.emojidebug.name", settings.general().isEmojiDebug()),
+                getSetting("command.repsettings.info.message.option.skipsingleembed.name", settings.reputation().isSkipSingleEmbed()),
+                getSetting("command.repsettings.info.message.option.reputationmode.name", settings.general().reputationMode().localeCode())
         );
 
         return String.join("\n", setting);

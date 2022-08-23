@@ -48,11 +48,11 @@ public class ReputationLogEntry extends QueryFactoryHolder {
     }
 
     public String getMessageJumpLink() {
-        return String.format(PATH, guildId, channelId, messageId);
+        return String.format(PATH, guildId(), channelId(), messageId());
     }
 
-    public String getRedMessageJumpLink() {
-        return String.format(PATH, guildId, channelId, refMessageId);
+    public String getRefMessageJumpLink() {
+        return String.format(PATH, guildId(), channelId(), refMessageId());
     }
 
     public boolean hasRefMessage() {

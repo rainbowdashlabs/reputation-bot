@@ -44,7 +44,7 @@ public class RoleAssigner {
         try {
             return update(member);
         } catch (RoleAccessException e) {
-            channel.sendMessage(localizer.localize("error.roleAccess", channel,
+            channel.sendMessage(localizer.localize("error.roleAccess", channel.getGuild(),
                             Replacement.createMention("ROLE", e.role())))
                     .allowedMentions(Collections.emptyList())
                     .queue();

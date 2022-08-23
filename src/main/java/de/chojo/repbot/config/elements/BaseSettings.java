@@ -6,7 +6,6 @@ import java.util.List;
 @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal", "CanBeFinal", "MismatchedQueryAndUpdateOfCollection"})
 public class BaseSettings {
     private String token = "";
-    private boolean exclusiveHelp;
     private boolean internalCommands;
     private List<Long> botOwner = new ArrayList<>();
 
@@ -22,7 +21,4 @@ public class BaseSettings {
         return internalCommands;
     }
 
-    public boolean isExclusiveHelp() {
-        return exclusiveHelp;
-    }
 }

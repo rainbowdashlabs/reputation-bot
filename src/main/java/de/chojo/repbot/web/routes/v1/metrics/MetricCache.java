@@ -109,7 +109,7 @@ public class MetricCache implements RoutesBuilder {
 
         @Override
         public int hashCode() {
-            int result = route.hashCode();
+            var result = route.hashCode();
             result = 31 * result + (accept != null ? accept.hashCode() : 0);
             return result;
         }

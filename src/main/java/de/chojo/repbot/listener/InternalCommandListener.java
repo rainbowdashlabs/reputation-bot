@@ -1,13 +1,11 @@
 package de.chojo.repbot.listener;
 
-import de.chojo.jdautil.command.ArgumentBuilder;
-import de.chojo.jdautil.parsing.ArgumentUtil;
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.statistic.Statistic;
 import de.chojo.repbot.util.LogNotify;
-import de.chojo.repbot.util.TimeFormatter;
+import de.chojo.repbot.util.Text;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -74,12 +72,12 @@ public class InternalCommandListener extends ListenerAdapter {
 
             var commands = metrics.commands().week(1).join();
             if (!commands.commands().isEmpty()) {
-                reply.addFile(commands.getChart("Command statistic for week " + TimeFormatter.month(commands.date())), "commands.png");
+                reply.addFile(commands.getChart("Command statistic for week " + Text.month(commands.date())), "commands.png");
             }
 
             var counts = metrics.reputation().week(1, 24).join();
             if (!counts.stats().isEmpty()) {
-                reply.addFile(counts.getChart("Reputation counts per week"), "reputatation.png");
+                reply.addFile(counts.getChart("Reputation counts per week"), "reputation.png");
             }
 
             counts = metrics.reputation().totalWeek(1, 24).join();
@@ -97,7 +95,7 @@ public class InternalCommandListener extends ListenerAdapter {
                 reply.addFile(counts.getChart("Analyzed Messages per week"), "messages_week.png");
             }
 
-            counts = metrics.messages().day(2, 24*7).join();
+            counts = metrics.messages().day(2, 24 * 7).join();
             if (!counts.stats().isEmpty()) {
                 reply.addFile(counts.getChart("Analyzed Messages per day"), "messages_day.png");
             }
