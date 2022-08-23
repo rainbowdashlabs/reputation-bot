@@ -17,7 +17,7 @@ public class Channel implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        Announcements announcements = guilds.guild(event.getGuild()).settings().announcements();
+        var announcements = guilds.guild(event.getGuild()).settings().announcements();
         var channel = event.getOption("channel");
         if (channel.getChannelType() != ChannelType.TEXT) {
             event.reply(context.localize("error.onlyTextChannel")).setEphemeral(true).queue();
@@ -25,6 +25,7 @@ public class Channel implements SlashHandler {
         }
 
         announcements.channel(channel.getAsChannel().asTextChannel());
-        event.reply(context.localize("command.channel.announcement.channel.message.set", Replacement.createMention(channel.getAsChannel().asTextChannel()))).queue();
+        event.reply(context.localize("command.channel.announcement.channel.message.set",
+                Replacement.createMention(channel.getAsChannel().asTextChannel()))).queue();
     }
 }

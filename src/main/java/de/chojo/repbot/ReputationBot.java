@@ -212,9 +212,7 @@ public class ReputationBot {
 
         var logger = getLogger("DbLogger");
         QueryBuilderConfig.setDefault(QueryBuilderConfig.builder()
-                .withExceptionHandler(err -> {
-                    logger.error(LogNotify.NOTIFY_ADMIN, "An error occured during a database request", err);
-                })
+                .withExceptionHandler(err -> logger.error(LogNotify.NOTIFY_ADMIN, "An error occured during a database request", err))
                 .withExecutor(repBotWorker)
                 .build());
 
@@ -300,6 +298,8 @@ public class ReputationBot {
                         new RepAdmin(guilds, configuration),
                         new Messages(guilds))
                 .withLocalizer(localizer)
+                .cleanGuildCommands("true".equals(System.getProperty("bot.cleancommands", "false")))
+                .testMode("true".equals(System.getProperty("bot.testmode", "false")))
                 .withCommandErrorHandler((context, throwable) -> {
                     if (throwable instanceof InsufficientPermissionException) {
                         PermissionErrorHandler.handle((InsufficientPermissionException) throwable, shardManager, localizer, configuration);

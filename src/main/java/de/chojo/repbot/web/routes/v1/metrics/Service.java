@@ -60,45 +60,43 @@ public class Service extends MetricsHolder {
 
     @Override
     public void buildRoutes() {
-        path("service", () -> {
-            path("count", () -> {
-                get("hour/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
-                                .operation(op -> {
-                                    op.summary("Get the counts of handled interactions per hour.");
-                                })
-                                .result("200", byte[].class, "image/png")
-                                .result("200", LabeledCountStatistic.class, "application/json")
-                                .pathParam("offset", Integer.class, MetricsRoute::offsetHourDoc)
-                                .pathParam("count", Integer.class, MetricsRoute::countHourDoc),
-                        cache(this::countHour)));
-                get("day/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
-                                .operation(op -> {
-                                    op.summary("Get the counts of handled interactions per day.");
-                                })
-                                .result("200", byte[].class, "image/png")
-                                .result("200", LabeledCountStatistic.class, "application/json")
-                                .pathParam("offset", Integer.class, MetricsRoute::offsetDayDoc)
-                                .pathParam("count", Integer.class, MetricsRoute::countDayDoc),
-                        cache(this::countDay)));
-                get("week/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
-                                .operation(op -> {
-                                    op.summary("Get the counts of handled interactions per week.");
-                                })
-                                .result("200", byte[].class, "image/png")
-                                .result("200", LabeledCountStatistic.class, "application/json")
-                                .pathParam("offset", Integer.class, MetricsRoute::offsetWeekDoc)
-                                .pathParam("count", Integer.class,MetricsRoute::countWeekDoc),
-                        cache(this::countWeek)));
-                get("month/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
-                                .operation(op -> {
-                                    op.summary("Get the counts of handled interactions per month.");
-                                })
-                                .result("200", byte[].class, "image/png")
-                                .result("200", LabeledCountStatistic.class, "application/json")
-                                .pathParam("offset", Integer.class, MetricsRoute::offsetMonthDoc)
-                                .pathParam("count", Integer.class, MetricsRoute::countMonthDoc),
-                        cache(this::countMonth)));
-            });
-        });
+        path("service", () -> path("count", () -> {
+            get("hour/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
+                            .operation(op -> {
+                                op.summary("Get the counts of handled interactions per hour.");
+                            })
+                            .result("200", byte[].class, "image/png")
+                            .result("200", LabeledCountStatistic.class, "application/json")
+                            .pathParam("offset", Integer.class, MetricsRoute::offsetHourDoc)
+                            .pathParam("count", Integer.class, MetricsRoute::countHourDoc),
+                    cache(this::countHour)));
+            get("day/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
+                            .operation(op -> {
+                                op.summary("Get the counts of handled interactions per day.");
+                            })
+                            .result("200", byte[].class, "image/png")
+                            .result("200", LabeledCountStatistic.class, "application/json")
+                            .pathParam("offset", Integer.class, MetricsRoute::offsetDayDoc)
+                            .pathParam("count", Integer.class, MetricsRoute::countDayDoc),
+                    cache(this::countDay)));
+            get("week/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
+                            .operation(op -> {
+                                op.summary("Get the counts of handled interactions per week.");
+                            })
+                            .result("200", byte[].class, "image/png")
+                            .result("200", LabeledCountStatistic.class, "application/json")
+                            .pathParam("offset", Integer.class, MetricsRoute::offsetWeekDoc)
+                            .pathParam("count", Integer.class,MetricsRoute::countWeekDoc),
+                    cache(this::countWeek)));
+            get("month/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
+                            .operation(op -> {
+                                op.summary("Get the counts of handled interactions per month.");
+                            })
+                            .result("200", byte[].class, "image/png")
+                            .result("200", LabeledCountStatistic.class, "application/json")
+                            .pathParam("offset", Integer.class, MetricsRoute::offsetMonthDoc)
+                            .pathParam("count", Integer.class, MetricsRoute::countMonthDoc),
+                    cache(this::countMonth)));
+        }));
     }
 }

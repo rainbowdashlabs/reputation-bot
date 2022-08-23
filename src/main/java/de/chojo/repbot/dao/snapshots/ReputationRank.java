@@ -59,14 +59,15 @@ public class ReputationRank extends QueryFactoryHolder implements GuildHolder, C
     /**
      * Remove a reputation role.
      *
-     * @param role role
      * @return true
      */
-    public boolean remove(Role role) {
-        return builder()
-                       .query("DELETE FROM guild_ranks WHERE guild_id = ? AND role_id = ?;")
-                       .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong()))
-                       .update().executeSync() > 0;
+    public boolean remove() {
+        var success = builder()
+                            .query("DELETE FROM guild_ranks WHERE guild_id = ? AND role_id = ?;")
+                            .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(roleId))
+                            .update().executeSync() > 0;
+        ranks.refresh();
+        return success;
     }
 
     @Override

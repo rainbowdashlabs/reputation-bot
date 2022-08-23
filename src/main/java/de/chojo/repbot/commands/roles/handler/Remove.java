@@ -4,6 +4,7 @@ import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.snapshots.ReputationRank;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.util.Collections;
@@ -20,7 +21,7 @@ public class Remove implements SlashHandler {
         var ranks = guilds.guild(event.getGuild()).settings().ranks();
         var role = event.getOption("role").getAsRole();
 
-        if (ranks.remove(role)) {
+        if (ranks.rank(role).map(ReputationRank::remove).orElse(false)) {
             event.reply(context.localize("command.roles.remove.message.removed",
                     Replacement.createMention("ROLE", role))).allowedMentions(Collections.emptyList()).queue();
             return;

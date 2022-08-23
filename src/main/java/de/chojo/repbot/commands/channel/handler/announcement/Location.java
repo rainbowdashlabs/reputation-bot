@@ -18,7 +18,7 @@ public class Location implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        Announcements announcements = guilds.guild(event.getGuild()).settings().announcements();
+        var announcements = guilds.guild(event.getGuild()).settings().announcements();
         if (announcements.sameChannel("same channel".equalsIgnoreCase(event.getOption("where", OptionMapping::getAsString)))) {
             event.reply(context.localize("command.channel.announcement.location.message.samechannel")).queue();
         } else {

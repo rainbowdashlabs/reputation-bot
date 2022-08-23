@@ -9,7 +9,7 @@ import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.repbot.util.PermissionErrorHandler;
-import de.chojo.repbot.util.TextGenerator;
+import de.chojo.repbot.util.Text;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageHistory;
@@ -80,7 +80,7 @@ public class Scanner {
 
     private void schedule(MessageHistory history, EventContext context, Pattern pattern, TextChannel reportChannel, int calls) {
         var progressMessage = reportChannel.sendMessage(context.localize("command.scan.scanner.message.progress",
-                Replacement.create("PERCENT", String.format("%.02f", 0.0d))) + " " + TextGenerator.progressBar(0, 40)).complete();
+                Replacement.create("PERCENT", String.format("%.02f", 0.0d))) + " " + Text.progressBar(0, 40)).complete();
         var scanProcess = new ScanProcess(messageAnalyzer, context.guildLocalizer(), progressMessage, history, pattern, calls, guilds);
         setActive(scanProcess);
         reportChannel.getGuild().loadMembers().get();
@@ -131,7 +131,7 @@ public class Scanner {
         var scan = finished.poll();
         setInactive(scan);
         scan.progressMessage().editMessage(scan.loc().localize("command.scan.scanner.message.progress",
-                Replacement.create("PERCENT", String.format("%.02f", 100.0d))) + " " + TextGenerator.progressBar(1, 40)).queue();
+                Replacement.create("PERCENT", String.format("%.02f", 100.0d))) + " " + Text.progressBar(1, 40)).queue();
         var embed = new LocalizedEmbedBuilder(scan.loc())
                 .setTitle("command.scan.scanner.message.completed")
                 .setDescription("command.scan.scanner.message.result",

@@ -7,10 +7,11 @@ import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import org.jetbrains.annotations.PropertyKey;
 
 import java.awt.Color;
 import java.util.List;
+
+import static de.chojo.repbot.util.Text.getSetting;
 
 public class Info implements SlashHandler {
     private final Guilds guilds;
@@ -21,8 +22,7 @@ public class Info implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        RepGuild guild = guilds.guild(event.getGuild());
-        event.replyEmbeds(getSettings(context, guild)).queue();
+        event.replyEmbeds(getSettings(context, guilds.guild(event.getGuild()))).queue();
     }
 
     private MessageEmbed getSettings(EventContext context, RepGuild guild) {
@@ -43,13 +43,5 @@ public class Info implements SlashHandler {
                 .appendDescription(settings)
                 .setColor(Color.GREEN)
                 .build();
-    }
-
-    private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, Object object) {
-        return String.format("$%s$: %s", locale, object);
-    }
-
-    private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, boolean enabled) {
-        return String.format("$%s$: $%s$", locale, enabled ? "words.enabled" : "words.disabled");
     }
 }

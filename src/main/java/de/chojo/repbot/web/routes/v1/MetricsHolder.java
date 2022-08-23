@@ -1,7 +1,7 @@
 package de.chojo.repbot.web.routes.v1;
 
 import de.chojo.repbot.dao.provider.Metrics;
-import de.chojo.repbot.web.erros.ApiError;
+import de.chojo.repbot.web.erros.ApiException;
 import de.chojo.repbot.web.routes.RoutesBuilder;
 import de.chojo.repbot.web.routes.v1.metrics.MetricCache;
 import io.javalin.http.Context;
@@ -41,7 +41,7 @@ public abstract class MetricsHolder implements RoutesBuilder {
             assertSize(offset, 0, max);
             return offset;
         } catch (NumberFormatException e) {
-            throw new ApiError(HttpCode.BAD_REQUEST, "Offset is not a number, Got: " + param);
+            throw new ApiException(HttpCode.BAD_REQUEST, "Offset is not a number, Got: " + param);
         }
     }
 
@@ -52,16 +52,16 @@ public abstract class MetricsHolder implements RoutesBuilder {
             assertSize(offset, 2, max);
             return offset;
         } catch (NumberFormatException e) {
-            throw new ApiError(HttpCode.BAD_REQUEST, "Count is not a number, Got: " + param);
+            throw new ApiException(HttpCode.BAD_REQUEST, "Count is not a number, Got: " + param);
         }
     }
 
     private void assertSize(int value, int min, int max) {
         if (value < min) {
-            throw new ApiError(HttpCode.BAD_REQUEST, String.format("Value %s is too small. Min: %s", value, min));
+            throw new ApiException(HttpCode.BAD_REQUEST, String.format("Value %s is too small. Min: %s", value, min));
         }
         if (value > max) {
-            throw new ApiError(HttpCode.BAD_REQUEST, String.format("Value %s is too large. Max: %s", value, max));
+            throw new ApiException(HttpCode.BAD_REQUEST, String.format("Value %s is too large. Max: %s", value, max));
         }
     }
 

@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import java.util.regex.Pattern;
 
 public class Remove implements SlashHandler {
-    private static final Pattern EMOTE_PATTERN = Pattern.compile("<a?:.*?:(?<id>[0-9]*?)>");
+    private static final Pattern EMOTE_PATTERN = Pattern.compile("<a?:.*?:(?<id>\\d*?)>");
 
     private final Guilds guilds;
 
@@ -25,18 +25,18 @@ public class Remove implements SlashHandler {
         var matcher = EMOTE_PATTERN.matcher(emote);
         if (matcher.find()) {
             if (reactions.remove(matcher.group("id"))) {
-                event.reply(context.localize("command.reaction.remove.message.removed")).queue();
+                event.reply(context.localize("command.reactions.remove.message.removed")).queue();
                 return;
             }
-            event.reply(context.localize("command.reaction.remove.message.notfound")).setEphemeral(true).queue();
+            event.reply(context.localize("command.reactions.remove.message.notfound")).setEphemeral(true).queue();
             return;
         }
 
         if (reactions.remove(emote)) {
-            event.reply(context.localize("command.reaction.remove.message.removed")).queue();
+            event.reply(context.localize("command.reactions.remove.message.removed")).queue();
             return;
         }
-        event.reply(context.localize("command.reaction.remove.message.notfound")).setEphemeral(true).queue();
+        event.reply(context.localize("command.reactions.remove.message.notfound")).setEphemeral(true).queue();
     }
 
     @Override

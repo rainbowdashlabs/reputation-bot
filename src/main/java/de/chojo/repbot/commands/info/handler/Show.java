@@ -39,10 +39,10 @@ public class Show implements SlashHandler {
     private final ObjectMapper mapper = new ObjectMapper()
             .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    private String contributors;
-    private Instant lastFetch = Instant.MIN;
     private final String version;
     private final Configuration configuration;
+    private String contributors;
+    private Instant lastFetch = Instant.MIN;
 
     public Show(String version, Configuration configuration) {
         this.version = version;
@@ -138,6 +138,7 @@ public class Show implements SlashHandler {
         return String.join(" ᠅ ", voteLinks);
     }
 
+    @SuppressWarnings("unused")
     private enum ContributorType {
         @JsonProperty("User")
         USER,
@@ -145,6 +146,7 @@ public class Show implements SlashHandler {
         BOT
     }
 
+    @SuppressWarnings("unused")
     private static class Contributor {
         private String login;
         private String url;
@@ -153,6 +155,7 @@ public class Show implements SlashHandler {
         private ContributorType type;
     }
 
+    @SuppressWarnings("unused")
     private static class GithubProfile {
         private String login;
         private String name;

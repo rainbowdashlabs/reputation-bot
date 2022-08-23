@@ -50,9 +50,7 @@ public class States implements SlashHandler {
                     ctx.entry().component(copy.build());
                     ctx.refresh();
                 }))
-                .addComponent(MenuEntry.of(reactions, ctx -> {
-                    refresh(ctx, res -> settings.messages().reactionConfirmation(res), context, settings);
-                }).hidden())
+                .addComponent(MenuEntry.of(reactions, ctx -> refresh(ctx, res -> settings.messages().reactionConfirmation(res), context, settings)).hidden())
                 .asEphemeral()
                 .build());
     }

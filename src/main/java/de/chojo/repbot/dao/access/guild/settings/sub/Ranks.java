@@ -25,10 +25,6 @@ public class Ranks extends QueryFactoryHolder implements GuildHolder {
         this.stackRoles = stackRoles;
     }
 
-    public static Ranks build(Settings settings, AtomicBoolean stackRoles) {
-        return new Ranks(settings, stackRoles);
-    }
-
     /**
      * Add a reputation rank.
      * <p>
@@ -41,45 +37,29 @@ public class Ranks extends QueryFactoryHolder implements GuildHolder {
     public boolean add(Role role, long reputation) {
         var result = builder()
                              .query("""
-                                     DELETE FROM
-                                         guild_ranks
-                                     WHERE
-                                         guild_id = ?
-                                             AND (role_id = ?
-                                                 OR reputation = ?);
-                                     """)
-                             .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong()).setLong(reputation))
+                                    DELETE FROM
+                                        guild_ranks
+                                    WHERE
+                                        guild_id = ?
+                                            AND (role_id = ?
+                                                OR reputation = ?);
+                                    """)
+                             .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong())
+                                                        .setLong(reputation))
                              .append()
                              .query("""
-                                     INSERT INTO guild_ranks(guild_id, role_id, reputation) VALUES(?,?,?)
-                                         ON CONFLICT(guild_id, role_id)
-                                             DO UPDATE
-                                                 SET reputation = excluded.reputation,
-                                                     role_id = excluded.role_id;
-                                     """)
-                             .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong()).setLong(reputation))
+                                    INSERT INTO guild_ranks(guild_id, role_id, reputation) VALUES(?,?,?)
+                                        ON CONFLICT(guild_id, role_id)
+                                            DO UPDATE
+                                                SET reputation = excluded.reputation,
+                                                    role_id = excluded.role_id;
+                                    """)
+                             .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong())
+                                                        .setLong(reputation))
                              .update().executeSync() > 0;
         if (result) {
             ranks.removeIf(r -> r.roleId() == role.getIdLong() || reputation == r.reputation());
             ranks.add(new ReputationRank(this, role.getIdLong(), reputation));
-        }
-        return result;
-    }
-
-    /**
-     * Remove a reputation role.
-     *
-     * @param role role
-     * @return true
-     */
-    public boolean remove(Role role) {
-        var result = builder()
-                             .query("DELETE FROM guild_ranks WHERE guild_id = ? AND role_id = ?;")
-                             .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong()))
-                             .update()
-                             .executeSync() > 0;
-        if (result) {
-            ranks.removeIf(r -> r.roleId() == role.getIdLong());
         }
         return result;
     }
@@ -90,14 +70,14 @@ public class Ranks extends QueryFactoryHolder implements GuildHolder {
         }
         var ranks = builder(ReputationRank.class)
                 .query("""
-                        SELECT
-                            role_id,
-                            reputation
-                        FROM
-                            guild_ranks
-                        WHERE guild_id = ?
-                        ORDER BY reputation;
-                        """)
+                       SELECT
+                           role_id,
+                           reputation
+                       FROM
+                           guild_ranks
+                       WHERE guild_id = ?
+                       ORDER BY reputation;
+                       """)
                 .paramsBuilder(stmt -> stmt.setLong(guildId()))
                 .readRow(r -> ReputationRank.build(this, r))
                 .allSync();
@@ -118,28 +98,41 @@ public class Ranks extends QueryFactoryHolder implements GuildHolder {
     public List<ReputationRank> currentRanks(RepUser user) {
         var profile = user.profile();
         return ranks().stream()
-                .filter(rank -> rank.reputation() <= profile.reputation())
-                .sorted()
-                .limit(stackRoles.get() ? Integer.MAX_VALUE : 1)
-                .toList();
+                      .filter(rank -> rank.reputation() <= profile.reputation())
+                      .sorted()
+                      .limit(stackRoles.get() ? Integer.MAX_VALUE : 1)
+                      .toList();
     }
 
     public Optional<ReputationRank> currentRank(RepUser user) {
         var profile = user.profile();
         return ranks().stream()
-                .filter(rank -> rank.reputation() <= profile.reputation())
-                .sorted()
-                .limit(1)
-                .findFirst();
+                      .filter(rank -> rank.reputation() <= profile.reputation())
+                      .sorted()
+                      .limit(1)
+                      .findFirst();
     }
 
     public Optional<ReputationRank> nextRank(RepUser user) {
         var profile = user.profile();
-        return ranks().stream().filter(rank -> rank.reputation() > profile.reputation()).sorted(Comparator.reverseOrder()).limit(1).findFirst();
+        return ranks().stream().filter(rank -> rank.reputation() > profile.reputation())
+                      .sorted(Comparator.reverseOrder()).limit(1).findFirst();
     }
 
     @Override
     public Guild guild() {
         return settings.guild();
+    }
+
+    public Optional<ReputationRank> rank(Role role) {
+        return builder(ReputationRank.class)
+                .query("SELECT reputation FROM guild_ranks WHERE guild_id = ? AND role_id = ?")
+                .parameter(p -> p.setLong(guildId()).setLong(role.getIdLong()))
+                .readRow(row -> new ReputationRank(this, role.getIdLong(), row.getInt("reputation")))
+                .firstSync();
+    }
+
+    public void refresh() {
+        ranks.clear();
     }
 }

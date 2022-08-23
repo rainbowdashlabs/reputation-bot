@@ -21,7 +21,7 @@ public class Main implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var emote = event.getOption("emote").getAsString();
-        var message = event.reply(context.localize("command.reaction.message.checking"))
+        var message = event.reply(context.localize("command.reactions.message.checking"))
                 .flatMap(InteractionHook::retrieveOriginal).complete();
         handleSetCheckResult(event.getGuild(), context, message, emote);
     }
@@ -32,19 +32,19 @@ public class Main implements SlashHandler {
         switch (result.result()) {
             case EMOJI_FOUND -> {
                 if (reactions.mainReaction(emote)) {
-                    message.editMessage(context.localize("command.reaction.main.message.set",
+                    message.editMessage(context.localize("command.reactions.main.message.set",
                             Replacement.create("EMOTE", result.mention()))).queue();
                 }
             }
             case EMOTE_FOUND -> {
                 if (reactions.mainReaction(result.id())) {
-                    message.editMessage(context.localize("command.reaction.main.message.set",
+                    message.editMessage(context.localize("command.reactions.main.message.set",
                             Replacement.create("EMOTE", result.mention()))).queue();
                 }
             }
-            case NOT_FOUND -> message.editMessage(context.localize("command.reaction.message.notfound")).queue();
+            case NOT_FOUND -> message.editMessage(context.localize("command.reactions.message.notfound")).queue();
             case UNKNOWN_EMOJI ->
-                    message.editMessage(context.localize("command.reaction.message.emojinotfound")).queue();
+                    message.editMessage(context.localize("command.reactions.message.emojinotfound")).queue();
         }
     }
 }

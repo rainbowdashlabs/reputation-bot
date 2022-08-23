@@ -19,6 +19,5 @@ public class Guild implements SlashHandler {
         service.cleanupGuildUsers(event.getGuild())
                 .thenAccept(amount -> event.getHook().editOriginal(context.localize("command.prune.guild.message.done",
                         Replacement.create("AMOUNT", amount))).queue());
-
     }
 }
