@@ -64,7 +64,7 @@ public class Messages extends QueryFactoryHolder implements GuildHolder {
 
     public String toLocalizedString() {
         var setting = List.of(
-                getSetting("command.messages.embed.reactionConfirmation", isReactionConfirmation())
+                getSetting("command.messages.states.message.option.reactionconfirmation.name", isReactionConfirmation())
         );
 
         return String.join("\n", setting);

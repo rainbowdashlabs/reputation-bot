@@ -39,8 +39,8 @@ import java.util.regex.Pattern;
 
 public class ReputationVoteListener extends ListenerAdapter {
     private static final ActionComponent DELETE = Button.of(ButtonStyle.DANGER, "vote:delete", Emoji.fromUnicode("🗑️"));
-    private static final Pattern VOTE = Pattern.compile("vote:(?<id>[0-9]*?)");
-    private Guilds guilds;
+    private static final Pattern VOTE = Pattern.compile("vote:(?<id>\\d*?)");
+    private final Guilds guilds;
     private final ReputationService reputationService;
     private final ILocalizer loc;
     private final Configuration configuration;

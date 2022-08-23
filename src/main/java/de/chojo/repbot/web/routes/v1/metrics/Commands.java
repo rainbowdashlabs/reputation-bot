@@ -2,7 +2,7 @@ package de.chojo.repbot.web.routes.v1.metrics;
 
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.dao.snapshots.statistics.CommandsStatistic;
-import de.chojo.repbot.util.TimeFormatter;
+import de.chojo.repbot.util.Text;
 import de.chojo.repbot.web.routes.v1.MetricsHolder;
 import de.chojo.repbot.web.routes.v1.MetricsRoute;
 import io.javalin.http.Context;
@@ -25,7 +25,7 @@ public class Commands extends MetricsHolder {
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {
-            writeImage(ctx, stats.getChart("Command usage for week " + TimeFormatter.date(stats.date())));
+            writeImage(ctx, stats.getChart("Command usage for week " + Text.date(stats.date())));
         }
     }
 
@@ -34,7 +34,7 @@ public class Commands extends MetricsHolder {
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {
-            writeImage(ctx, stats.getChart("Command usage for month " + TimeFormatter.month(stats.date())));
+            writeImage(ctx, stats.getChart("Command usage for month " + Text.month(stats.date())));
         }
     }
 
@@ -48,7 +48,7 @@ public class Commands extends MetricsHolder {
     }
 
     public void countMonth(Context ctx) {
-        var stats = metrics().commands().week(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH)).join();
+        var stats = metrics().commands().month(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH)).join();
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {

@@ -134,8 +134,9 @@ public class SelfCleanupService implements Runnable {
         var clean = guilds.guild(guild).cleanup();
         if (clean.getCleanupPromptTime().get().isAfter(configuration.selfCleanup().getLeaveDaysOffset())) {
             log.debug("Prompt was send {}/{} days ago on {}",
-                    Math.abs(Duration.between(clean.getCleanupPromptTime().get(), LocalDateTime.now().atZone(ZoneOffset.UTC)).toDays()),
-                    configuration.selfCleanup().getLeaveDaysOffset(),
+                    Math.abs(Duration.between(clean.getCleanupPromptTime().get(),
+                            LocalDateTime.now().atZone(ZoneOffset.UTC)).toDays()),
+                    configuration.selfCleanup().leaveDays(),
                     prettyName(guild));
             return;
         }
