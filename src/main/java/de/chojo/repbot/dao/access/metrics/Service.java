@@ -26,13 +26,14 @@ public class Service extends QueryFactory {
     }
 
     private void logInteraction(String type) {
-        builder().queryWithoutParams("""
-                                     INSERT INTO metrics_handled_interactions(hour, %s) VALUES (DATE_TRUNC('hour', NOW()), 1)
-                                     ON CONFLICT(hour)
-                                         DO UPDATE SET %s = metrics_handled_interactions.%s + 1
-                                     """, type, type, type)
-                 .insert()
-                 .send();
+        builder()
+                .queryWithoutParams("""
+                                    INSERT INTO metrics_handled_interactions(hour, %s) VALUES (DATE_TRUNC('hour', NOW()), 1)
+                                    ON CONFLICT(hour)
+                                        DO UPDATE SET %s = metrics_handled_interactions.%s + 1
+                                    """, type, type, type)
+                .insert()
+                .send();
     }
 
     public CompletableFuture<LabeledCountStatistic> hour(int hour, int count) {
@@ -53,24 +54,25 @@ public class Service extends QueryFactory {
 
     private CompletableFuture<LabeledCountStatistic> get(String table, String timeframe, int offset, int count) {
         var builder = new LabeledCountStatisticBuilder();
-        return builder(LabeledCountStatisticBuilder.class).query("""
-                                                                 SELECT %s,
-                                                                     count,
-                                                                     failed,
-                                                                     success
-                                                                 FROM %s
-                                                                 WHERE %s <= DATE_TRUNC(?, NOW()) - ?::interval
-                                                                 ORDER BY %s DESC
-                                                                 LIMIT ?
-                                                                 """, timeframe, table, timeframe, timeframe)
-                                                          .parameter(stmt -> stmt.setString(timeframe)
-                                                                                 .setString(offset + " " + timeframe)
-                                                                                 .setInt(count))
-                                                          .readRow(rs -> builder.add("count", CountStatistics.build(rs, "count", timeframe))
-                                                                                .add("success", CountStatistics.build(rs, "success", timeframe))
-                                                                                .add("failed", CountStatistics.build(rs, "failed", timeframe))
-                                                          )
-                                                          .all()
-                                                          .thenApply(r -> builder.build());
+        return builder(LabeledCountStatisticBuilder.class)
+                .query("""
+                       SELECT %s,
+                           count,
+                           failed,
+                           success
+                       FROM %s
+                       WHERE %s <= DATE_TRUNC(?, NOW()) - ?::interval
+                       ORDER BY %s DESC
+                       LIMIT ?
+                       """, timeframe, table, timeframe, timeframe)
+                .parameter(stmt -> stmt.setString(timeframe)
+                                       .setString(offset + " " + timeframe)
+                                       .setInt(count))
+                .readRow(rs -> builder.add("count", CountStatistics.build(rs, "count", timeframe))
+                                      .add("success", CountStatistics.build(rs, "success", timeframe))
+                                      .add("failed", CountStatistics.build(rs, "failed", timeframe))
+                )
+                .all()
+                .thenApply(r -> builder.build());
     }
 }

@@ -18,14 +18,15 @@ public class Commands extends QueryFactory {
     }
 
     public void logCommand(String command) {
-        builder().query("""
-                        INSERT INTO metrics_commands(day, command) VALUES (NOW()::date, ?)
-                        ON CONFLICT(day,command)
-                            DO UPDATE SET count = metrics_commands.count + 1
-                        """)
-                 .parameter(stmt -> stmt.setString(command))
-                 .insert()
-                 .send();
+        builder()
+                .query("""
+                       INSERT INTO metrics_commands(day, command) VALUES (NOW()::date, ?)
+                       ON CONFLICT(day,command)
+                           DO UPDATE SET count = metrics_commands.count + 1
+                       """)
+                .parameter(stmt -> stmt.setString(command))
+                .insert()
+                .send();
     }
 
     public CompletableFuture<CommandsStatistic> week(int week) {
@@ -45,33 +46,35 @@ public class Commands extends QueryFactory {
     }
 
     private CompletableFuture<CountsStatistic> get(String table, String timeframe, int offset, int count) {
-        return builder(CountStatistics.class).query("""
-                                                    SELECT %s,
-                                                        count
-                                                    FROM %s
-                                                    WHERE %s <= DATE_TRUNC(?, NOW())::date - ?::interval
-                                                    ORDER BY %s DESC
-                                                    LIMIT ?
-                                                    """, timeframe, table, timeframe, timeframe)
-                                             .parameter(stmt -> stmt.setString(timeframe)
-                                                                    .setString(offset + " " + timeframe).setInt(count))
-                                             .readRow(rs -> CountStatistics.build(rs, timeframe))
-                                             .all()
-                                             .thenApply(CountsStatistic::new);
+        return builder(CountStatistics.class)
+                .query("""
+                       SELECT %s,
+                           count
+                       FROM %s
+                       WHERE %s <= DATE_TRUNC(?, NOW())::date - ?::interval
+                       ORDER BY %s DESC
+                       LIMIT ?
+                       """, timeframe, table, timeframe, timeframe)
+                .parameter(stmt -> stmt.setString(timeframe)
+                                       .setString(offset + " " + timeframe).setInt(count))
+                .readRow(rs -> CountStatistics.build(rs, timeframe))
+                .all()
+                .thenApply(CountsStatistic::new);
     }
 
     private CompletableFuture<CommandsStatistic> get(String table, String timeframe, int offset) {
-        return builder(CommandStatistic.class).query("""
-                                                     SELECT %s,
-                                                         command,
-                                                         count
-                                                     FROM %s
-                                                     WHERE %s = DATE_TRUNC('%s', NOW())::date - ?::INTERVAL
-                                                     """, timeframe, table, timeframe, timeframe)
-                                              .parameter(stmt -> stmt.setString(offset + " " + timeframe))
-                                              .readRow(rs -> CommandStatistic.build(rs, timeframe))
-                                              .all()
-                                              .thenApply(this::mapStatistics);
+        return builder(CommandStatistic.class)
+                .query("""
+                       SELECT %s,
+                           command,
+                           count
+                       FROM %s
+                       WHERE %s = DATE_TRUNC('%s', NOW())::date - ?::interval
+                       """, timeframe, table, timeframe, timeframe)
+                .parameter(stmt -> stmt.setString(offset + " " + timeframe))
+                .readRow(rs -> CommandStatistic.build(rs, timeframe))
+                .all()
+                .thenApply(this::mapStatistics);
     }
 
     private CommandsStatistic mapStatistics(List<CommandStatistic> commandStatistics) {

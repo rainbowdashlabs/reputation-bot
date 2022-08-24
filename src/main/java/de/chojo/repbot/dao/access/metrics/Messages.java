@@ -12,13 +12,14 @@ public class Messages extends QueryFactory {
     }
 
     public void countMessage() {
-        builder().queryWithoutParams("""
-                                     INSERT INTO metrics_message_analyzed(hour, count) VALUES (date_trunc('hour', now()), 1)
-                                     ON CONFLICT(hour)
-                                         DO UPDATE SET count = metrics_message_analyzed.count + 1
-                                     """)
-                 .insert()
-                 .send();
+        builder()
+                .queryWithoutParams("""
+                                    INSERT INTO metrics_message_analyzed(hour, count) VALUES (DATE_TRUNC('hour', NOW()), 1)
+                                    ON CONFLICT(hour)
+                                        DO UPDATE SET count = metrics_message_analyzed.count + 1
+                                    """)
+                .insert()
+                .send();
     }
 
     public CompletableFuture<CountsStatistic> hour(int hour, int count) {
@@ -54,7 +55,7 @@ public class Messages extends QueryFactory {
                                                     SELECT %s,
                                                         count
                                                     FROM %s
-                                                    WHERE %s <= DATE_TRUNC(?, NOW()) - ?::INTERVAL
+                                                    WHERE %s <= DATE_TRUNC(?, NOW()) - ?::interval
                                                     ORDER BY %s DESC
                                                     LIMIT ?
                                                     """, timeframe, table, timeframe, timeframe)

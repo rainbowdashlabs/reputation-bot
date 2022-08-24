@@ -209,7 +209,8 @@ public class Channels extends QueryFactory implements GuildHolder {
     }
 
     public boolean listType(boolean whitelist) {
-        var result = builder().query("""
+        var result = builder()
+                .query("""
                                      INSERT INTO thank_settings(guild_id, channel_whitelist) VALUES (?,?)
                                          ON CONFLICT(guild_id)
                                              DO UPDATE

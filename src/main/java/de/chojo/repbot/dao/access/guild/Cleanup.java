@@ -16,12 +16,13 @@ public class Cleanup extends QueryFactory implements GuildHolder {
     }
 
     public void selfCleanupPrompt() {
-        builder().query("""
-                        INSERT INTO self_cleanup(guild_id) VALUES(?)
-                        """)
-                 .parameter(stmt -> stmt.setLong(guildId()))
-                 .update()
-                 .sendSync();
+        builder()
+                .query("""
+                       INSERT INTO self_cleanup(guild_id) VALUES(?)
+                       """)
+                .parameter(stmt -> stmt.setLong(guildId()))
+                .update()
+                .sendSync();
     }
 
     public Optional<LocalDateTime> getCleanupPromptTime() {
@@ -35,12 +36,13 @@ public class Cleanup extends QueryFactory implements GuildHolder {
     }
 
     public void cleanupDone() {
-        builder(Boolean.class).query("""
-                                     DELETE FROM self_cleanup WHERE guild_id = ?
-                                     """)
-                              .parameter(stmt -> stmt.setLong(guildId()))
-                              .update()
-                              .sendSync();
+        builder(Boolean.class)
+                .query("""
+                       DELETE FROM self_cleanup WHERE guild_id = ?
+                       """)
+                .parameter(stmt -> stmt.setLong(guildId()))
+                .update()
+                .sendSync();
     }
 
     @Override

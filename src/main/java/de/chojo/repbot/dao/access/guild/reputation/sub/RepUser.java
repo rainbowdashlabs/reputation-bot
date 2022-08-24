@@ -244,7 +244,7 @@ public class RepUser extends QueryFactory implements MemberHolder {
     public int countReceived() {
         var hours = reputation().repGuild().settings().abuseProtection().maxReceivedHours();
         return builder(Integer.class)
-                .query("SELECT COUNT(1) FROM reputation_log WHERE received > NOW() - ?::INTERVAL AND receiver_id = ?")
+                .query("SELECT COUNT(1) FROM reputation_log WHERE received > NOW() - ?::interval AND receiver_id = ?")
                 .parameter(stmt -> stmt.setString("%s hours".formatted(hours)).setLong(memberId()))
                 .readRow(rs -> rs.getInt(1))
                 .firstSync()
@@ -259,7 +259,7 @@ public class RepUser extends QueryFactory implements MemberHolder {
     public int countGiven() {
         var hours = reputation().repGuild().settings().abuseProtection().maxGivenHours();
         return builder(Integer.class)
-                .query("SELECT COUNT(1) FROM reputation_log WHERE received > NOW() - ?::INTERVAL AND donor_id = ?")
+                .query("SELECT COUNT(1) FROM reputation_log WHERE received > NOW() - ?::interval AND donor_id = ?")
                 .parameter(stmt -> stmt.setString("%s hours".formatted(hours)).setLong(memberId()))
                 .readRow(rs -> rs.getInt(1))
                 .firstSync()

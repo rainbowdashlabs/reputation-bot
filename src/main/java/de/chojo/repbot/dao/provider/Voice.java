@@ -31,15 +31,16 @@ public class Voice extends QueryFactory {
         ResultStage<Void> resultStage = null;
         for (var user : seen) {
             var otherId = user.getIdLong();
-            resultStage = builder.query("""
-                                        INSERT INTO voice_activity(relation_key, guild_id, user_id_1, user_id_2) VALUES (?,?,?,?)
-                                            ON CONFLICT(relation_key, guild_id)
-                                                DO UPDATE
-                                                    SET seen = NOW()
-                                        """)
-                                 .parameter(stmt -> stmt.setLong(baseId ^ otherId)
-                                                        .setLong(source.getGuild().getIdLong())
-                                                        .setLong(baseId).setLong(otherId));
+            resultStage = builder
+                    .query("""
+                           INSERT INTO voice_activity(relation_key, guild_id, user_id_1, user_id_2) VALUES (?,?,?,?)
+                               ON CONFLICT(relation_key, guild_id)
+                                   DO UPDATE
+                                       SET seen = NOW()
+                           """)
+                    .parameter(stmt -> stmt.setLong(baseId ^ otherId)
+                                           .setLong(source.getGuild().getIdLong())
+                                           .setLong(baseId).setLong(otherId));
         }
         if (resultStage == null) return;
         resultStage.update()

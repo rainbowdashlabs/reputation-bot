@@ -80,7 +80,8 @@ public class Reactions extends QueryFactory implements GuildHolder {
     }
 
     public boolean add(String reaction) {
-        var result = builder().query("""
+        var result = builder()
+                .query("""
                                      INSERT INTO guild_reactions(guild_id, reaction) VALUES (?,?)
                                          ON CONFLICT(guild_id, reaction)
                                              DO NOTHING;
@@ -96,13 +97,14 @@ public class Reactions extends QueryFactory implements GuildHolder {
     }
 
     public boolean remove(String reaction) {
-        var result = builder().query("""
-                                     DELETE FROM guild_reactions WHERE guild_id = ? AND reaction = ?;
-                                     """)
-                              .parameter(stmt -> stmt.setLong(guildId()).setString(reaction))
-                              .update()
-                              .sendSync()
-                              .changed();
+        var result = builder()
+                .query("""
+                       DELETE FROM guild_reactions WHERE guild_id = ? AND reaction = ?;
+                       """)
+                .parameter(stmt -> stmt.setLong(guildId()).setString(reaction))
+                .update()
+                .sendSync()
+                .changed();
         if (result) {
             reactions.remove(reaction);
         }
@@ -111,16 +113,17 @@ public class Reactions extends QueryFactory implements GuildHolder {
     }
 
     public boolean mainReaction(String reaction) {
-        var result = builder().query("""
-                                     INSERT INTO thank_settings(guild_id, reaction) VALUES (?,?)
-                                         ON CONFLICT(guild_id)
-                                             DO UPDATE
-                                                 SET reaction = excluded.reaction
-                                     """)
-                              .parameter(stmt -> stmt.setLong(guildId()).setString(reaction))
-                              .update()
-                              .sendSync()
-                              .changed();
+        var result = builder()
+                .query("""
+                       INSERT INTO thank_settings(guild_id, reaction) VALUES (?,?)
+                           ON CONFLICT(guild_id)
+                               DO UPDATE
+                                   SET reaction = excluded.reaction
+                       """)
+                .parameter(stmt -> stmt.setLong(guildId()).setString(reaction))
+                .update()
+                .sendSync()
+                .changed();
         if (result) {
             mainReaction = reaction;
         }
