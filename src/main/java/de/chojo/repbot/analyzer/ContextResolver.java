@@ -42,8 +42,8 @@ public class ContextResolver {
             .expireAfterWrite(10, TimeUnit.SECONDS)
             .build();
 
-    public ContextResolver(DataSource dataSource, Configuration configuration) {
-        voiceData = new Voice(dataSource);
+    public ContextResolver(Voice voiceData, Configuration configuration) {
+        this.voiceData = voiceData;
         this.configuration = configuration;
     }
 
