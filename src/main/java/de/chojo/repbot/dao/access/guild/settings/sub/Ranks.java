@@ -4,7 +4,7 @@ import de.chojo.repbot.dao.access.guild.reputation.sub.RepUser;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.dao.snapshots.ReputationRank;
-import de.chojo.sqlutil.base.QueryFactoryHolder;
+import de.chojo.sadu.base.QueryFactory;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 
@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Ranks extends QueryFactoryHolder implements GuildHolder {
+public class Ranks extends QueryFactory implements GuildHolder {
     private final LinkedHashSet<ReputationRank> ranks = new LinkedHashSet<>();
     private final Settings settings;
     private final AtomicBoolean stackRoles;
@@ -44,8 +44,8 @@ public class Ranks extends QueryFactoryHolder implements GuildHolder {
                                             AND (role_id = ?
                                                 OR reputation = ?);
                                     """)
-                             .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong())
-                                                        .setLong(reputation))
+                             .parameter(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong())
+                                                    .setLong(reputation))
                              .append()
                              .query("""
                                     INSERT INTO guild_ranks(guild_id, role_id, reputation) VALUES(?,?,?)
@@ -54,9 +54,11 @@ public class Ranks extends QueryFactoryHolder implements GuildHolder {
                                                 SET reputation = excluded.reputation,
                                                     role_id = excluded.role_id;
                                     """)
-                             .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong())
-                                                        .setLong(reputation))
-                             .update().executeSync() > 0;
+                             .parameter(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong())
+                                                    .setLong(reputation))
+                             .update()
+                             .sendSync()
+                             .changed();
         if (result) {
             ranks.removeIf(r -> r.roleId() == role.getIdLong() || reputation == r.reputation());
             ranks.add(new ReputationRank(this, role.getIdLong(), reputation));
@@ -78,7 +80,7 @@ public class Ranks extends QueryFactoryHolder implements GuildHolder {
                        WHERE guild_id = ?
                        ORDER BY reputation;
                        """)
-                .paramsBuilder(stmt -> stmt.setLong(guildId()))
+                .parameter(stmt -> stmt.setLong(guildId()))
                 .readRow(r -> ReputationRank.build(this, r))
                 .allSync();
         this.ranks.addAll(ranks);

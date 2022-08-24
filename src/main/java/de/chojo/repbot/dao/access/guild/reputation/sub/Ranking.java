@@ -5,12 +5,12 @@ import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.dao.pagination.GuildRanking;
 import de.chojo.repbot.dao.snapshots.RepProfile;
-import de.chojo.sqlutil.base.QueryFactoryHolder;
+import de.chojo.sadu.base.QueryFactory;
 import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.List;
 
-public class Ranking extends QueryFactoryHolder implements GuildHolder {
+public class Ranking extends QueryFactory implements GuildHolder {
     private final Reputation reputation;
 
     public Ranking(Reputation reputation) {
@@ -33,14 +33,14 @@ public class Ranking extends QueryFactoryHolder implements GuildHolder {
     private Integer pages(int pageSize, String table) {
         return builder(Integer.class)
                 .query("""
-                        SELECT
-                            CEIL(COUNT(1)::numeric / ?) AS count
-                        FROM
-                            %s
-                        WHERE guild_id = ?
-                            AND reputation != 0;
-                        """, table)
-                .paramsBuilder(stmt -> stmt.setInt(pageSize).setLong(guildId()))
+                       SELECT
+                           CEIL(COUNT(1)::numeric / ?) AS count
+                       FROM
+                           %s
+                       WHERE guild_id = ?
+                           AND reputation != 0;
+                       """, table)
+                .parameter(stmt -> stmt.setInt(pageSize).setLong(guildId()))
                 .readRow(row -> row.getInt("count"))
                 .firstSync()
                 .orElse(1);
@@ -111,19 +111,19 @@ public class Ranking extends QueryFactoryHolder implements GuildHolder {
     private List<RepProfile> getRankingPage(int pageSize, int page, String table) {
         return builder(RepProfile.class)
                 .query("""
-                        SELECT
-                            rank,
-                            user_id,
-                            reputation
-                        FROM
-                            %s
-                        WHERE guild_id = ?
-                            AND reputation != 0
-                        ORDER BY reputation DESC
-                        OFFSET ?
-                        LIMIT ?;
-                        """, table)
-                .paramsBuilder(stmt -> stmt.setLong(guildId()).setInt(page * pageSize).setInt(pageSize))
+                       SELECT
+                           rank,
+                           user_id,
+                           reputation
+                       FROM
+                           %s
+                       WHERE guild_id = ?
+                           AND reputation != 0
+                       ORDER BY reputation DESC
+                       OFFSET ?
+                       LIMIT ?;
+                       """, table)
+                .parameter(stmt -> stmt.setLong(guildId()).setInt(page * pageSize).setInt(pageSize))
                 .readRow(RepProfile::buildReceivedRanking)
                 .allSync();
     }

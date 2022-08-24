@@ -6,12 +6,12 @@ import de.chojo.repbot.dao.snapshots.statistics.DowStatistics;
 import de.chojo.repbot.dao.snapshots.statistics.DowsStatistic;
 import de.chojo.repbot.dao.snapshots.statistics.LabeledCountStatistic;
 import de.chojo.repbot.dao.snapshots.statistics.builder.LabeledCountStatisticBuilder;
-import de.chojo.sqlutil.base.QueryFactoryHolder;
+import de.chojo.sadu.base.QueryFactory;
 
 import java.util.concurrent.CompletableFuture;
 
-public class Reputation extends QueryFactoryHolder {
-    public Reputation(QueryFactoryHolder factoryHolder) {
+public class Reputation extends QueryFactory {
+    public Reputation(QueryFactory factoryHolder) {
         super(factoryHolder);
     }
 
@@ -61,48 +61,52 @@ public class Reputation extends QueryFactoryHolder {
 
     private CompletableFuture<CountsStatistic> get(String table, String timeframe, int offset, int count) {
         return builder(CountStatistics.class).query("""
-                        SELECT %s,
-                            count
-                        FROM %s
-                        WHERE %s <= DATE_TRUNC(?, NOW())::date - ?::interval
-                        ORDER BY %s DESC
-                        LIMIT ?
-                        """, timeframe, table, timeframe, timeframe)
-                .paramsBuilder(stmt -> stmt.setString(timeframe).setString(offset + " " + timeframe).setInt(count))
-                .readRow(rs -> CountStatistics.build(rs, timeframe))
-                .all()
-                .thenApply(CountsStatistic::new);
+                                                    SELECT %s,
+                                                        count
+                                                    FROM %s
+                                                    WHERE %s <= DATE_TRUNC(?, NOW())::date - ?::interval
+                                                    ORDER BY %s DESC
+                                                    LIMIT ?
+                                                    """, timeframe, table, timeframe, timeframe)
+                                             .parameter(stmt -> stmt.setString(timeframe)
+                                                                    .setString(offset + " " + timeframe).setInt(count))
+                                             .readRow(rs -> CountStatistics.build(rs, timeframe))
+                                             .all()
+                                             .thenApply(CountsStatistic::new);
     }
 
     private CompletableFuture<LabeledCountStatistic> getType(String table, String timeframe, int offset, int count) {
         var builder = new LabeledCountStatisticBuilder();
         return builder(LabeledCountStatisticBuilder.class).query("""
-                        SELECT %s,
-                            cause,
-                            count
-                        FROM %s
-                        WHERE %s <= DATE_TRUNC(?, NOW())::date - ?::interval
-                        ORDER BY %s DESC
-                        LIMIT ?
-                        """, timeframe, table, timeframe, timeframe)
-                .paramsBuilder(stmt -> stmt.setString(timeframe).setString(offset + " " + timeframe).setInt(count))
-                .readRow(rs -> builder.add(rs.getString("cause"), CountStatistics.build(rs, timeframe)))
-                .all()
-                .thenApply(r -> builder.build());
+                                                                 SELECT %s,
+                                                                     cause,
+                                                                     count
+                                                                 FROM %s
+                                                                 WHERE %s <= DATE_TRUNC(?, NOW())::date - ?::interval
+                                                                 ORDER BY %s DESC
+                                                                 LIMIT ?
+                                                                 """, timeframe, table, timeframe, timeframe)
+                                                          .parameter(stmt -> stmt.setString(timeframe)
+                                                                                 .setString(offset + " " + timeframe)
+                                                                                 .setInt(count))
+                                                          .readRow(rs -> builder.add(rs.getString("cause"), CountStatistics.build(rs, timeframe)))
+                                                          .all()
+                                                          .thenApply(r -> builder.build());
     }
 
     private CompletableFuture<DowsStatistic> get(String table, String timeframe, int offset) {
         return builder(DowStatistics.class).query("""
-                        SELECT %s,
-                            dow,
-                            count
-                        FROM %s
-                        WHERE %s = DATE_TRUNC(?, NOW())::date - ?::interval
-                        ORDER BY %s DESC
-                        """, timeframe, table, timeframe, timeframe)
-                .paramsBuilder(stmt -> stmt.setString(timeframe).setString(offset + " " + timeframe))
-                .readRow(rs -> DowStatistics.build(rs, timeframe))
-                .all()
-                .thenApply(DowsStatistic::new);
+                                                  SELECT %s,
+                                                      dow,
+                                                      count
+                                                  FROM %s
+                                                  WHERE %s = DATE_TRUNC(?, NOW())::date - ?::interval
+                                                  ORDER BY %s DESC
+                                                  """, timeframe, table, timeframe, timeframe)
+                                           .parameter(stmt -> stmt.setString(timeframe)
+                                                                  .setString(offset + " " + timeframe))
+                                           .readRow(rs -> DowStatistics.build(rs, timeframe))
+                                           .all()
+                                           .thenApply(DowsStatistic::new);
     }
 }

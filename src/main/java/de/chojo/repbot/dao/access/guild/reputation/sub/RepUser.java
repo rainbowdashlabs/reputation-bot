@@ -6,8 +6,8 @@ import de.chojo.repbot.dao.access.guild.reputation.sub.user.Gdpr;
 import de.chojo.repbot.dao.access.guild.settings.sub.AbuseProtection;
 import de.chojo.repbot.dao.components.MemberHolder;
 import de.chojo.repbot.dao.snapshots.RepProfile;
-import de.chojo.sqlutil.base.QueryFactoryHolder;
-import de.chojo.sqlutil.wrapper.stage.StatementStage;
+import de.chojo.sadu.base.QueryFactory;
+import de.chojo.sadu.wrapper.stage.StatementStage;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -23,7 +23,7 @@ import java.util.Optional;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class RepUser extends QueryFactoryHolder implements MemberHolder {
+public class RepUser extends QueryFactory implements MemberHolder {
     private static final Logger log = getLogger(RepUser.class);
     private final Reputation reputation;
     private final Gdpr gdpr;
@@ -57,14 +57,15 @@ public class RepUser extends QueryFactoryHolder implements MemberHolder {
      */
     public boolean addReputation(long amount) {
         return builder()
-                       .query("""
-                               INSERT INTO reputation_offset(guild_id, user_id, amount) VALUES (?,?,?)
-                                   ON CONFLICT(guild_id, user_id)
-                                       DO UPDATE SET amount = reputation_offset.amount + excluded.amount;
-                               """)
-                       .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(userId()).setLong(amount))
-                       .insert()
-                       .executeSync() > 0;
+                .query("""
+                       INSERT INTO reputation_offset(guild_id, user_id, amount) VALUES (?,?,?)
+                           ON CONFLICT(guild_id, user_id)
+                               DO UPDATE SET amount = reputation_offset.amount + excluded.amount;
+                       """)
+                .parameter(stmt -> stmt.setLong(guildId()).setLong(userId()).setLong(amount))
+                .insert()
+                .sendSync()
+                .changed();
     }
 
     /**
@@ -86,14 +87,15 @@ public class RepUser extends QueryFactoryHolder implements MemberHolder {
     public boolean setReputation(long amount) {
         var offset = amount - profile().rawReputation();
         return builder()
-                       .query("""
-                               INSERT INTO reputation_offset(guild_id, user_id, amount) VALUES (?,?,?)
-                                   ON CONFLICT(guild_id, user_id)
-                                       DO UPDATE SET amount = excluded.amount;
-                               """)
-                       .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(userId()).setLong(offset))
-                       .insert()
-                       .executeSync() > 0;
+                .query("""
+                       INSERT INTO reputation_offset(guild_id, user_id, amount) VALUES (?,?,?)
+                           ON CONFLICT(guild_id, user_id)
+                               DO UPDATE SET amount = excluded.amount;
+                       """)
+                .parameter(stmt -> stmt.setLong(guildId()).setLong(userId()).setLong(offset))
+                .insert()
+                .sendSync()
+                .changed();
     }
 
     /**
@@ -107,17 +109,20 @@ public class RepUser extends QueryFactoryHolder implements MemberHolder {
      */
     public boolean addReputation(@Nullable Member donor, @NotNull Message message, @Nullable Message refMessage, ThankType type) {
         var success = builder()
-                              .query("""
-                                      INSERT INTO
-                                      reputation_log(guild_id, donor_id, receiver_id, message_id, ref_message_id, channel_id, cause) VALUES(?,?,?,?,?,?,?)
-                                          ON CONFLICT(guild_id, donor_id, receiver_id, message_id)
-                                              DO NOTHING;
-                                      """)
-                              .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(donor == null ? 0 : donor.getIdLong()).setLong(userId())
-                                      .setLong(message.getIdLong()).setLong(refMessage == null ? null : refMessage.getIdLong())
-                                      .setLong(message.getChannel().getIdLong()).setString(type.name()))
-                              .insert()
-                              .executeSync() > 0;
+                .query("""
+                       INSERT INTO
+                       reputation_log(guild_id, donor_id, receiver_id, message_id, ref_message_id, channel_id, cause) VALUES(?,?,?,?,?,?,?)
+                           ON CONFLICT(guild_id, donor_id, receiver_id, message_id)
+                               DO NOTHING;
+                       """)
+                .parameter(stmt -> stmt.setLong(guildId()).setLong(donor == null ? 0 : donor.getIdLong())
+                                       .setLong(userId())
+                                       .setLong(message.getIdLong())
+                                       .setLong(refMessage == null ? null : refMessage.getIdLong())
+                                       .setLong(message.getChannel().getIdLong()).setString(type.name()))
+                .insert()
+                .sendSync()
+                .changed();
         if (success) {
             log.debug("{} received one reputation from {} for message {}", user().getName(), donor != null ? donor.getEffectiveName() : "unkown", message.getIdLong());
         }
@@ -137,18 +142,22 @@ public class RepUser extends QueryFactoryHolder implements MemberHolder {
      */
     public boolean addOldReputation(@Nullable Member donor, @NotNull Message message, @Nullable Message refMessage, ThankType type) {
         var success = builder()
-                              .query("""
-                                      INSERT INTO
-                                      reputation_log(guild_id, donor_id, receiver_id, message_id, ref_message_id, channel_id, cause, received) VALUES(?,?,?,?,?,?,?,?)
-                                          ON CONFLICT(guild_id, donor_id, receiver_id, message_id)
-                                              DO NOTHING;
-                                      """)
-                              .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(donor == null ? 0 : donor.getIdLong()).setLong(userId())
-                                      .setLong(message.getIdLong()).setLong(refMessage == null ? null : refMessage.getIdLong())
-                                      .setLong(message.getChannel().getIdLong()).setString(type.name())
-                                      .setTimestamp(Timestamp.from(message.getTimeCreated().toInstant())))
-                              .insert()
-                              .executeSync() > 0;
+                .query("""
+                       INSERT INTO
+                       reputation_log(guild_id, donor_id, receiver_id, message_id, ref_message_id, channel_id, cause, received) VALUES(?,?,?,?,?,?,?,?)
+                           ON CONFLICT(guild_id, donor_id, receiver_id, message_id)
+                               DO NOTHING;
+                       """)
+                .parameter(stmt -> stmt.setLong(guildId()).setLong(donor == null ? 0 : donor.getIdLong())
+                                       .setLong(userId())
+                                       .setLong(message.getIdLong())
+                                       .setLong(refMessage == null ? null : refMessage.getIdLong())
+                                       .setLong(message.getChannel().getIdLong()).setString(type.name())
+                                       .setTimestamp(Timestamp.from(message.getTimeCreated()
+                                                                           .toInstant())))
+                .insert()
+                .sendSync()
+                .changed();
         if (success) {
             log.debug("{} received one reputation from {} for message {}", user().getName(), donor != null ? donor.getEffectiveName() : "unkown", message.getIdLong());
         }
@@ -165,20 +174,20 @@ public class RepUser extends QueryFactoryHolder implements MemberHolder {
     public Optional<Instant> getLastReputation(Member other) {
         return builder(Instant.class).
                 query("""
-                        SELECT
-                            received
-                        FROM
-                            reputation_log
-                        WHERE
-                            guild_id = ?
-                            AND ((donor_id = ? AND receiver_id = ?)
-                                OR (donor_id = ? AND receiver_id = ?))
-                        ORDER BY received DESC
-                        LIMIT  1;
-                        """)
-                .paramsBuilder(stmt -> stmt.setLong(reputation.guildId())
-                        .setLong(userId()).setLong(other.getIdLong()).
-                        setLong(other.getIdLong()).setLong(userId()))
+                      SELECT
+                          received
+                      FROM
+                          reputation_log
+                      WHERE
+                          guild_id = ?
+                          AND ((donor_id = ? AND receiver_id = ?)
+                              OR (donor_id = ? AND receiver_id = ?))
+                      ORDER BY received DESC
+                      LIMIT  1;
+                      """)
+                .parameter(stmt -> stmt.setLong(reputation.guildId())
+                                       .setLong(userId()).setLong(other.getIdLong()).
+                                       setLong(other.getIdLong()).setLong(userId()))
                 .readRow(row -> row.getTimestamp("received").toInstant())
                 .firstSync();
     }
@@ -190,7 +199,8 @@ public class RepUser extends QueryFactoryHolder implements MemberHolder {
      * @return the time since the last vote in the requested time unit or 1 year if no entry was found.
      */
     public Duration getLastRatedDuration(Member other) {
-        return getLastReputation(other).map(last -> Duration.between(last, Instant.now())).orElseGet(() -> Duration.ofDays(365));
+        return getLastReputation(other).map(last -> Duration.between(last, Instant.now()))
+                                       .orElseGet(() -> Duration.ofDays(365));
     }
 
     /**
@@ -206,23 +216,23 @@ public class RepUser extends QueryFactoryHolder implements MemberHolder {
         if (mode.isSupportsOffset()) {
             query = builder
                     .query("""
-                            SELECT rank, rank_donated, user_id, reputation, rep_offset, raw_reputation, donated
-                            FROM %s
-                            WHERE guild_id = ? AND user_id = ?;
-                            """, mode.tableName());
+                           SELECT rank, rank_donated, user_id, reputation, rep_offset, raw_reputation, donated
+                           FROM %s
+                           WHERE guild_id = ? AND user_id = ?;
+                           """, mode.tableName());
         } else {
             query = builder
                     .query("""
-                            SELECT rank, rank_donated, user_id, reputation, 0 AS rep_offset, reputation AS raw_reputation, donated
-                            FROM %s
-                            WHERE guild_id = ? AND user_id = ?;
-                            """, mode.tableName());
+                           SELECT rank, rank_donated, user_id, reputation, 0 AS rep_offset, reputation AS raw_reputation, donated
+                           FROM %s
+                           WHERE guild_id = ? AND user_id = ?;
+                           """, mode.tableName());
         }
 
-        return query.paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(userId()))
-                .readRow(row -> RepProfile.buildProfile(this, row))
-                .firstSync()
-                .orElseGet(() -> RepProfile.empty(this, user()));
+        return query.parameter(stmt -> stmt.setLong(guildId()).setLong(userId()))
+                    .readRow(row -> RepProfile.buildProfile(this, row))
+                    .firstSync()
+                    .orElseGet(() -> RepProfile.empty(this, user()));
 
     }
 
@@ -235,7 +245,7 @@ public class RepUser extends QueryFactoryHolder implements MemberHolder {
         var hours = reputation().repGuild().settings().abuseProtection().maxReceivedHours();
         return builder(Integer.class)
                 .query("SELECT COUNT(1) FROM reputation_log WHERE received > NOW() - ?::INTERVAL AND receiver_id = ?")
-                .paramsBuilder(stmt -> stmt.setString("%s hours".formatted(hours)).setLong(memberId()))
+                .parameter(stmt -> stmt.setString("%s hours".formatted(hours)).setLong(memberId()))
                 .readRow(rs -> rs.getInt(1))
                 .firstSync()
                 .orElse(0);
@@ -250,7 +260,7 @@ public class RepUser extends QueryFactoryHolder implements MemberHolder {
         var hours = reputation().repGuild().settings().abuseProtection().maxGivenHours();
         return builder(Integer.class)
                 .query("SELECT COUNT(1) FROM reputation_log WHERE received > NOW() - ?::INTERVAL AND donor_id = ?")
-                .paramsBuilder(stmt -> stmt.setString("%s hours".formatted(hours)).setLong(memberId()))
+                .parameter(stmt -> stmt.setString("%s hours".formatted(hours)).setLong(memberId()))
                 .readRow(rs -> rs.getInt(1))
                 .firstSync()
                 .orElse(0);

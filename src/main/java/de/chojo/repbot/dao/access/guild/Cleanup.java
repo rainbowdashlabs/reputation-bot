@@ -1,13 +1,13 @@
 package de.chojo.repbot.dao.access.guild;
 
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.sqlutil.base.QueryFactoryHolder;
+import de.chojo.sadu.base.QueryFactory;
 import net.dv8tion.jda.api.entities.Guild;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-public class Cleanup extends QueryFactoryHolder implements GuildHolder {
+public class Cleanup extends QueryFactory implements GuildHolder {
     private final RepGuild repGuild;
 
     public Cleanup(RepGuild repGuild) {
@@ -19,26 +19,28 @@ public class Cleanup extends QueryFactoryHolder implements GuildHolder {
         builder().query("""
                         INSERT INTO self_cleanup(guild_id) VALUES(?)
                         """)
-                .paramsBuilder(stmt -> stmt.setLong(guildId()))
-                .update().executeSync();
+                 .parameter(stmt -> stmt.setLong(guildId()))
+                 .update()
+                 .sendSync();
     }
 
     public Optional<LocalDateTime> getCleanupPromptTime() {
         return builder(LocalDateTime.class)
                 .query("""
-                        SELECT prompted FROM self_cleanup WHERE guild_id = ?
-                        """)
-                .paramsBuilder(stmt -> stmt.setLong(guildId()))
+                       SELECT prompted FROM self_cleanup WHERE guild_id = ?
+                       """)
+                .parameter(stmt -> stmt.setLong(guildId()))
                 .readRow(rs -> rs.getTimestamp("prompted").toLocalDateTime())
                 .firstSync();
     }
 
     public void cleanupDone() {
         builder(Boolean.class).query("""
-                                DELETE FROM self_cleanup WHERE guild_id = ?
-                        """)
-                .paramsBuilder(stmt -> stmt.setLong(guildId()))
-                .update().executeSync();
+                                     DELETE FROM self_cleanup WHERE guild_id = ?
+                                     """)
+                              .parameter(stmt -> stmt.setLong(guildId()))
+                              .update()
+                              .sendSync();
     }
 
     @Override

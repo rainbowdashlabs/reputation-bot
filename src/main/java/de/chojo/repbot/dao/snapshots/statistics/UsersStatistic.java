@@ -18,11 +18,11 @@ public record UsersStatistic(List<UserStatistic> stats) implements ChartProvider
     @Override
     public byte[] getChart(String title) {
         var categorySeries = new XYChartBuilder().width(1200).height(600)
-                .title(title)
-                .xAxisTitle("Date")
-                .yAxisTitle("Counts")
-                .theme(Styler.ChartTheme.Matlab)
-                .build();
+                                                 .title(title)
+                                                 .xAxisTitle("Date")
+                                                 .yAxisTitle("Counts")
+                                                 .theme(Styler.ChartTheme.Matlab)
+                                                 .build();
 
         var styler = categorySeries.getStyler();
         styler.setXAxisLabelRotation(20);
@@ -33,22 +33,22 @@ public record UsersStatistic(List<UserStatistic> stats) implements ChartProvider
         var sorted = stats.stream().sorted().toList();
 
         categorySeries.addSeries("Total",
-                        sorted.stream().map(s -> toDate(s.date())).toList(),
-                        sorted.stream().map(UserStatistic::total).map(Double::valueOf).toList())
-                .setMarker(SeriesMarkers.NONE)
-                .setLabel("Total");
+                              sorted.stream().map(s -> toDate(s.date())).toList(),
+                              sorted.stream().map(UserStatistic::total).map(Double::valueOf).toList())
+                      .setMarker(SeriesMarkers.NONE)
+                      .setLabel("Total");
 
         categorySeries.addSeries("Donors",
-                        sorted.stream().map(s -> toDate(s.date())).toList(),
-                        sorted.stream().map(UserStatistic::donors).map(Double::valueOf).toList())
-                .setMarker(SeriesMarkers.NONE)
-                .setLabel("Donors");
+                              sorted.stream().map(s -> toDate(s.date())).toList(),
+                              sorted.stream().map(UserStatistic::donors).map(Double::valueOf).toList())
+                      .setMarker(SeriesMarkers.NONE)
+                      .setLabel("Donors");
 
         categorySeries.addSeries("Receivers",
-                        sorted.stream().map(s -> toDate(s.date())).toList(),
-                        sorted.stream().map(UserStatistic::receivers).map(Double::valueOf).toList())
-                .setMarker(SeriesMarkers.NONE)
-                .setLabel("Receivers");
+                              sorted.stream().map(s -> toDate(s.date())).toList(),
+                              sorted.stream().map(UserStatistic::receivers).map(Double::valueOf).toList())
+                      .setMarker(SeriesMarkers.NONE)
+                      .setLabel("Receivers");
 
 
         try {

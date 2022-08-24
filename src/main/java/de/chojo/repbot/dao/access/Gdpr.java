@@ -2,7 +2,7 @@ package de.chojo.repbot.dao.access;
 
 import de.chojo.repbot.dao.access.gdpr.GdprUser;
 import de.chojo.repbot.dao.access.gdpr.RemovalTask;
-import de.chojo.sqlutil.base.QueryFactoryHolder;
+import de.chojo.sadu.base.QueryFactory;
 import net.dv8tion.jda.api.entities.User;
 import org.slf4j.Logger;
 
@@ -11,7 +11,7 @@ import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class Gdpr extends QueryFactoryHolder {
+public class Gdpr extends QueryFactory {
     private static final Logger log = getLogger(Gdpr.class);
 
     public Gdpr(DataSource dataSource) {
@@ -21,14 +21,14 @@ public class Gdpr extends QueryFactoryHolder {
     public List<RemovalTask> getRemovalTasks() {
         return builder(RemovalTask.class)
                 .queryWithoutParams("""
-                        SELECT
-                            task_id,
-                            user_id,
-                            guild_id
-                        FROM
-                            cleanup_schedule
-                        WHERE delete_after < NOW();
-                        """)
+                                    SELECT
+                                        task_id,
+                                        user_id,
+                                        guild_id
+                                    FROM
+                                        cleanup_schedule
+                                    WHERE delete_after < NOW();
+                                    """)
                 .readRow(rs -> RemovalTask.build(this, rs))
                 .allSync();
     }
@@ -36,12 +36,12 @@ public class Gdpr extends QueryFactoryHolder {
     public void cleanupRequests() {
         builder()
                 .queryWithoutParams("""
-                        DELETE FROM gdpr_log
-                        WHERE received IS NOT NULL
-                            AND received < NOW() - INTERVAL '90 DAYS';
-                        """)
+                                    DELETE FROM gdpr_log
+                                    WHERE received IS NOT NULL
+                                        AND received < NOW() - INTERVAL '90 DAYS';
+                                    """)
                 .update()
-                .executeSync();
+                .sendSync();
     }
 
     public GdprUser request(User user) {

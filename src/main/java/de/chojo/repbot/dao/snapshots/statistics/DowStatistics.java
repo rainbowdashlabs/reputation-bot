@@ -1,14 +1,14 @@
 package de.chojo.repbot.dao.snapshots.statistics;
 
+import de.chojo.sadu.wrapper.util.Row;
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 
 public record DowStatistics(LocalDate date, int dow, int count) implements Comparable<DowStatistics> {
 
-    public static DowStatistics build(ResultSet rs, String dateKey) throws SQLException {
+    public static DowStatistics build(Row rs, String dateKey) throws SQLException {
         return new DowStatistics(rs.getDate(dateKey).toLocalDate(), rs.getInt("dow"),
                 rs.getInt("count"));
     }
