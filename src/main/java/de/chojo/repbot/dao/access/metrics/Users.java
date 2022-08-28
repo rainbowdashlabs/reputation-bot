@@ -2,12 +2,12 @@ package de.chojo.repbot.dao.access.metrics;
 
 import de.chojo.repbot.dao.snapshots.statistics.UserStatistic;
 import de.chojo.repbot.dao.snapshots.statistics.UsersStatistic;
-import de.chojo.sqlutil.base.QueryFactoryHolder;
+import de.chojo.sadu.base.QueryFactory;
 
 import java.util.concurrent.CompletableFuture;
 
-public class Users extends QueryFactoryHolder {
-    public Users(QueryFactoryHolder factoryHolder) {
+public class Users extends QueryFactory {
+    public Users(QueryFactory factoryHolder) {
         super(factoryHolder);
     }
 
@@ -20,17 +20,19 @@ public class Users extends QueryFactoryHolder {
     }
 
     private CompletableFuture<UsersStatistic> get(String table, String timeframe, int offset, int count) {
-        return builder(UserStatistic.class).query("""
-                        SELECT %s,
-                            donor_count,
-                            receiver_count,
-                            total_count
-                        FROM %s
-                        WHERE %s <= DATE_TRUNC(?, NOW())::date - ?::interval
-                        ORDER BY %s DESC
-                        LIMIT ?
-                        """, timeframe, table, timeframe, timeframe)
-                .paramsBuilder(stmt -> stmt.setString(timeframe).setString(offset + " " + timeframe).setInt(count))
+        return builder(UserStatistic.class)
+                .query("""
+                       SELECT %s,
+                           donor_count,
+                           receiver_count,
+                           total_count
+                       FROM %s
+                       WHERE %s <= DATE_TRUNC(?, NOW())::date - ?::interval
+                       ORDER BY %s DESC
+                       LIMIT ?
+                       """, timeframe, table, timeframe, timeframe)
+                .parameter(stmt -> stmt.setString(timeframe)
+                                       .setString(offset + " " + timeframe).setInt(count))
                 .readRow(rs -> UserStatistic.build(rs, timeframe))
                 .all()
                 .thenApply(UsersStatistic::new);

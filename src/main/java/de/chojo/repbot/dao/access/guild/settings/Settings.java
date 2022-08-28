@@ -4,15 +4,15 @@ import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.access.guild.settings.sub.AbuseProtection;
 import de.chojo.repbot.dao.access.guild.settings.sub.General;
 import de.chojo.repbot.dao.access.guild.settings.sub.Messages;
-import de.chojo.repbot.dao.access.guild.settings.sub.Reputation;
 import de.chojo.repbot.dao.access.guild.settings.sub.Ranks;
+import de.chojo.repbot.dao.access.guild.settings.sub.Reputation;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.dao.pagination.Announcements;
-import de.chojo.sqlutil.base.QueryFactoryHolder;
+import de.chojo.sadu.base.QueryFactory;
 import net.dv8tion.jda.api.entities.Guild;
 
-public class Settings extends QueryFactoryHolder implements GuildHolder {
+public class Settings extends QueryFactory implements GuildHolder {
     private final RepGuild repGuild;
     private AbuseProtection abuseProtection;
     private General general;
@@ -33,22 +33,22 @@ public class Settings extends QueryFactoryHolder implements GuildHolder {
         }
         abuseProtection = builder(AbuseProtection.class)
                 .query("""
-                        SELECT
-                            min_messages,
-                            max_message_age,
-                            receiver_context,
-                            donor_context,
-                            cooldown,
-                            max_given,
-                            max_given_hours,
-                            max_received,
-                            max_received_hours,
-                            max_message_reputation
-                        FROM
-                            abuse_protection
-                        WHERE guild_id = ?;
-                        """)
-                .paramsBuilder(stmt -> stmt.setLong(guildId()))
+                       SELECT
+                           min_messages,
+                           max_message_age,
+                           receiver_context,
+                           donor_context,
+                           cooldown,
+                           max_given,
+                           max_given_hours,
+                           max_received,
+                           max_received_hours,
+                           max_message_reputation
+                       FROM
+                           abuse_protection
+                       WHERE guild_id = ?;
+                       """)
+                .parameter(stmt -> stmt.setLong(guildId()))
                 .readRow(rs -> AbuseProtection.build(this, rs))
                 .firstSync()
                 .orElseGet(() -> new AbuseProtection(this));
@@ -61,15 +61,15 @@ public class Settings extends QueryFactoryHolder implements GuildHolder {
         }
         announcements = builder(Announcements.class)
                 .query("""
-                        SELECT
-                            active,
-                            same_channel,
-                            channel_id
-                        FROM
-                            announcements
-                        WHERE guild_id = ?;
-                        """)
-                .paramsBuilder(stmt -> stmt.setLong(guildId()))
+                       SELECT
+                           active,
+                           same_channel,
+                           channel_id
+                       FROM
+                           announcements
+                       WHERE guild_id = ?;
+                       """)
+                .parameter(stmt -> stmt.setLong(guildId()))
                 .readRow(rs -> Announcements.build(this, rs))
                 .firstSync()
                 .orElseGet(() -> new Announcements(this));
@@ -82,18 +82,18 @@ public class Settings extends QueryFactoryHolder implements GuildHolder {
         }
         reputation = builder(Reputation.class)
                 .query("""
-                        SELECT
-                            reactions_active,
-                            answer_active,
-                            mention_active,
-                            fuzzy_active,
-                            embed_active,
-                            skip_single_embed
-                        FROM
-                            reputation_settings
-                        WHERE guild_id = ?;
-                        """)
-                .paramsBuilder(stmt -> stmt.setLong(guildId()))
+                       SELECT
+                           reactions_active,
+                           answer_active,
+                           mention_active,
+                           fuzzy_active,
+                           embed_active,
+                           skip_single_embed
+                       FROM
+                           reputation_settings
+                       WHERE guild_id = ?;
+                       """)
+                .parameter(stmt -> stmt.setLong(guildId()))
                 .readRow(rs -> Reputation.build(this, rs))
                 .firstSync()
                 .orElseGet(() -> new Reputation(this));
@@ -106,16 +106,16 @@ public class Settings extends QueryFactoryHolder implements GuildHolder {
         }
         general = builder(General.class)
                 .query("""
-                        SELECT
-                            language,
-                            emoji_debug,
-                            stack_roles,
-                            reputation_mode
-                        FROM
-                            guild_settings
-                        WHERE guild_id = ?;
-                        """)
-                .paramsBuilder(stmt -> stmt.setLong(guildId()))
+                       SELECT
+                           language,
+                           emoji_debug,
+                           stack_roles,
+                           reputation_mode
+                       FROM
+                           guild_settings
+                       WHERE guild_id = ?;
+                       """)
+                .parameter(stmt -> stmt.setLong(guildId()))
                 .readRow(rs -> General.build(this, rs))
                 .firstSync()
                 .orElseGet(() -> new General(this));
@@ -128,32 +128,33 @@ public class Settings extends QueryFactoryHolder implements GuildHolder {
         }
         thanking = builder(Thanking.class)
                 .query("""
-                        SELECT
-                            reaction,
-                            channel_whitelist
-                        FROM
-                            thank_settings
-                        WHERE guild_id = ?;
-                        """)
-                .paramsBuilder(stmt -> stmt.setLong(guildId()))
+                       SELECT
+                           reaction,
+                           channel_whitelist
+                       FROM
+                           thank_settings
+                       WHERE guild_id = ?;
+                       """)
+                .parameter(stmt -> stmt.setLong(guildId()))
                 .readRow(rs -> Thanking.build(this, rs))
                 .firstSync()
                 .orElseGet(() -> new Thanking(this));
         return thanking;
     }
+
     public Messages messages() {
         if (messages != null) {
             return messages;
         }
         messages = builder(Messages.class)
                 .query("""
-                        SELECT
-                            reaction_confirmation
-                        FROM
-                            message_states
-                        WHERE guild_id = ?;
-                        """)
-                .paramsBuilder(stmt -> stmt.setLong(guildId()))
+                       SELECT
+                           reaction_confirmation
+                       FROM
+                           message_states
+                       WHERE guild_id = ?;
+                       """)
+                .parameter(stmt -> stmt.setLong(guildId()))
                 .readRow(rs -> Messages.build(this, rs))
                 .firstSync()
                 .orElseGet(() -> new Messages(this));

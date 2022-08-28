@@ -25,11 +25,11 @@ public record CountsStatistic(List<CountStatistics> stats) implements ChartProvi
     @Override
     public byte[] getChart(String title) {
         var categorySeries = new XYChartBuilder().width(1200).height(600)
-                .title(title)
-                .xAxisTitle("Date")
-                .yAxisTitle("Count")
-                .theme(Styler.ChartTheme.Matlab)
-                .build();
+                                                 .title(title)
+                                                 .xAxisTitle("Date")
+                                                 .yAxisTitle("Count")
+                                                 .theme(Styler.ChartTheme.Matlab)
+                                                 .build();
 
         var styler = categorySeries.getStyler();
         styler.setLegendVisible(false);
@@ -41,10 +41,10 @@ public record CountsStatistic(List<CountStatistics> stats) implements ChartProvi
         var sorted = stats.stream().sorted().toList();
 
         categorySeries.addSeries("Counts",
-                        sorted.stream().map(countStatistics -> toDate(countStatistics.date())).toList(),
-                        sorted.stream().map(CountStatistics::count).toList())
-                .setMarker(SeriesMarkers.NONE)
-                .setLabel("Counts");
+                              sorted.stream().map(countStatistics -> toDate(countStatistics.date())).toList(),
+                              sorted.stream().map(CountStatistics::count).toList())
+                      .setMarker(SeriesMarkers.NONE)
+                      .setLabel("Counts");
 
         try {
             return BitmapEncoder.getBitmapBytes(categorySeries, BitmapEncoder.BitmapFormat.PNG);

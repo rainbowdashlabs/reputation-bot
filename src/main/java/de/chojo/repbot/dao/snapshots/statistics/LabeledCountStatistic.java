@@ -8,7 +8,6 @@ import org.knowm.xchart.style.Styler;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
@@ -20,11 +19,11 @@ public record LabeledCountStatistic(Map<String, List<CountStatistics>> stats) im
     @Override
     public byte[] getChart(String title) {
         var categorySeries = new XYChartBuilder().width(1200).height(600)
-                .title(title)
-                .xAxisTitle("Date")
-                .yAxisTitle("Counts")
-                .theme(Styler.ChartTheme.Matlab)
-                .build();
+                                                 .title(title)
+                                                 .xAxisTitle("Date")
+                                                 .yAxisTitle("Counts")
+                                                 .theme(Styler.ChartTheme.Matlab)
+                                                 .build();
 
         var styler = categorySeries.getStyler();
         styler.setXAxisLabelRotation(20);
@@ -35,10 +34,10 @@ public record LabeledCountStatistic(Map<String, List<CountStatistics>> stats) im
         for (var entry : stats.entrySet()) {
             var sorted = entry.getValue().stream().sorted().toList();
             categorySeries.addSeries(entry.getKey(),
-                            sorted.stream().map(s -> toDate(s.date())).toList(),
-                            sorted.stream().map(CountStatistics::count).map(Double::valueOf).toList())
-                    .setMarker(SeriesMarkers.NONE)
-                    .setLabel(entry.getKey());
+                                  sorted.stream().map(s -> toDate(s.date())).toList(),
+                                  sorted.stream().map(CountStatistics::count).map(Double::valueOf).toList())
+                          .setMarker(SeriesMarkers.NONE)
+                          .setLabel(entry.getKey());
         }
 
         try {

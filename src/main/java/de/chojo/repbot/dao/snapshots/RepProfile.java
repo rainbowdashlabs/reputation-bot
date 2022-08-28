@@ -8,13 +8,13 @@ import de.chojo.jdautil.util.MentionUtil;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.reputation.sub.RepUser;
 import de.chojo.repbot.util.Text;
+import de.chojo.sadu.wrapper.util.Row;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import org.apache.commons.lang3.StringUtils;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -29,7 +29,7 @@ public record RepProfile(RepUser repUser, long rank, long rankDonated, long user
         return new RepProfile(repuser, 0, user.getIdLong(), 0, 0, 0, 0, 0);
     }
 
-    public static RepProfile buildProfile(RepUser repuser, ResultSet rs) throws SQLException {
+    public static RepProfile buildProfile(RepUser repuser, Row rs) throws SQLException {
         return new RepProfile(repuser,
                 rs.getLong("rank"),
                 rs.getLong("rank_donated"),
@@ -41,7 +41,7 @@ public record RepProfile(RepUser repUser, long rank, long rankDonated, long user
         );
     }
 
-    public static RepProfile buildReceivedRanking(ResultSet rs) throws SQLException {
+    public static RepProfile buildReceivedRanking(Row rs) throws SQLException {
         return new RepProfile(null,
                 rs.getLong("rank"),
                 0,
@@ -66,8 +66,8 @@ public record RepProfile(RepUser repUser, long rank, long rankDonated, long user
     public MessageEmbed adminProfile(Configuration configuration, LocalizationContext localizer) {
         var build = getBaseBuilder(configuration, localizer);
         build.addField("words.rawReputation", String.valueOf(rawReputation()), true)
-                .addField("words.reputationOffset", String.valueOf(repOffset()), true)
-                .addField("words.donated", String.valueOf(donated()), true);
+             .addField("words.reputationOffset", String.valueOf(repOffset()), true)
+             .addField("words.donated", String.valueOf(donated()), true);
         return build.build();
     }
 
@@ -82,7 +82,8 @@ public record RepProfile(RepUser repUser, long rank, long rankDonated, long user
 
         var progressBar = Text.progressBar(progess, BAR_SIZE);
 
-        var level = current.map(r -> r.getRole(repUser.member().getGuild())).map(IMentionable::getAsMention).orElse("/");
+        var level = current.map(r -> r.getRole(repUser.member().getGuild())).map(IMentionable::getAsMention)
+                           .orElse("/");
 
         var currProgress = String.valueOf(reputation() - currentRoleRep);
         var nextLevel = nextRoleRep.equals(currentRoleRep) ? "Ꝏ" : String.valueOf(nextRoleRep - currentRoleRep);

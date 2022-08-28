@@ -46,7 +46,7 @@ public class Statistic {
     public SystemStatistics getSystemStatistic() {
         var shardStatistics = shardManager.getShardCache()
                                           .stream()
-                                          .map(jda -> getShardStatistic(jda))
+                                          .map(this::getShardStatistic)
                                           .collect(Collectors.toList());
 
         return new SystemStatistics(ProcessStatistics.create(),

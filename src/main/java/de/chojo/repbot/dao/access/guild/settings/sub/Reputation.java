@@ -3,16 +3,16 @@ package de.chojo.repbot.dao.access.guild.settings.sub;
 import de.chojo.jdautil.consumer.ThrowingConsumer;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.sqlutil.base.QueryFactoryHolder;
-import de.chojo.sqlutil.wrapper.ParamBuilder;
+import de.chojo.sadu.base.QueryFactory;
+import de.chojo.sadu.wrapper.util.ParamBuilder;
+import de.chojo.sadu.wrapper.util.Row;
 import net.dv8tion.jda.api.entities.Guild;
 import org.jetbrains.annotations.PropertyKey;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
-public class Reputation extends QueryFactoryHolder implements GuildHolder {
+public class Reputation extends QueryFactory implements GuildHolder {
     private final Settings settings;
     private boolean reactionActive;
     private boolean answerActive;
@@ -36,7 +36,7 @@ public class Reputation extends QueryFactoryHolder implements GuildHolder {
         this.skipSingleEmbed = skipSingleEmbed;
     }
 
-    public static Reputation build(Settings settings, ResultSet rs) throws SQLException {
+    public static Reputation build(Settings settings, Row rs) throws SQLException {
         return new Reputation(settings,
                 rs.getBoolean("reactions_active"),
                 rs.getBoolean("answer_active"),
@@ -125,9 +125,13 @@ public class Reputation extends QueryFactoryHolder implements GuildHolder {
                 getSetting("command.repsettings.info.message.option.bymention.name", isMentionActive()),
                 getSetting("command.repsettings.info.message.option.byfuzzy.name", isFuzzyActive()),
                 getSetting("command.repsettings.info.message.option.byembed.name", isEmbedActive()),
-                getSetting("command.repsettings.info.message.option.emojidebug.name", settings.general().isEmojiDebug()),
-                getSetting("command.repsettings.info.message.option.skipsingleembed.name", settings.reputation().isSkipSingleEmbed()),
-                getSetting("command.repsettings.info.message.option.reputationmode.name", settings.general().reputationMode().localeCode())
+                getSetting("command.repsettings.info.message.option.emojidebug.name", settings.general()
+                                                                                              .isEmojiDebug()),
+                getSetting("command.repsettings.info.message.option.skipsingleembed.name", settings.reputation()
+                                                                                                   .isSkipSingleEmbed()),
+                getSetting("command.repsettings.info.message.option.reputationmode.name", settings.general()
+                                                                                                  .reputationMode()
+                                                                                                  .localeCode())
         );
 
         return String.join("\n", setting);
@@ -136,6 +140,7 @@ public class Reputation extends QueryFactoryHolder implements GuildHolder {
     private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, boolean object) {
         return getSetting(locale, object ? "words.enabled" : "words.disabled");
     }
+
     private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, String object) {
         return String.format("$%s$: $%s$", locale, object);
     }
@@ -147,15 +152,16 @@ public class Reputation extends QueryFactoryHolder implements GuildHolder {
 
     private boolean set(String parameter, ThrowingConsumer<ParamBuilder, SQLException> builder) {
         return builder()
-                       .query("""
-                               INSERT INTO reputation_settings(guild_id, %s) VALUES (?, ?)
-                               ON CONFLICT(guild_id)
-                                   DO UPDATE SET %s = excluded.%s;
-                               """, parameter, parameter, parameter)
-                       .paramsBuilder(stmts -> {
-                           stmts.setLong(guildId());
-                           builder.accept(stmts);
-                       }).insert()
-                       .executeSync() > 0;
+                .query("""
+                       INSERT INTO reputation_settings(guild_id, %s) VALUES (?, ?)
+                       ON CONFLICT(guild_id)
+                           DO UPDATE SET %s = excluded.%s;
+                       """, parameter, parameter, parameter)
+                .parameter(stmts -> {
+                    stmts.setLong(guildId());
+                    builder.accept(stmts);
+                }).insert()
+                .sendSync()
+                .changed();
     }
 }

@@ -4,7 +4,7 @@ import de.chojo.repbot.dao.access.guild.reputation.Reputation;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.dao.pagination.ReputationLogAccess;
 import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
-import de.chojo.sqlutil.base.QueryFactoryHolder;
+import de.chojo.sadu.base.QueryFactory;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.entities.User;
 import java.util.List;
 import java.util.Optional;
 
-public class Log extends QueryFactoryHolder implements GuildHolder {
+public class Log extends QueryFactory implements GuildHolder {
     private final Reputation reputation;
 
     public Log(Reputation reputation) {
@@ -67,25 +67,25 @@ public class Log extends QueryFactoryHolder implements GuildHolder {
     private List<ReputationLogEntry> getLog(String column, long id, int pageSize, int page) {
         return builder(ReputationLogEntry.class)
                 .query("""
-                        SELECT
-                            guild_id,
-                            donor_id,
-                            receiver_id,
-                            message_id,
-                            received,
-                            ref_message_id,
-                            channel_id,
-                            cause
-                        FROM
-                            reputation_log
-                        WHERE
-                            %s = ?
-                            AND guild_id = ?
-                        ORDER BY received DESC
-                        OFFSET ?
-                        LIMIT ?;
-                        """, column)
-                .paramsBuilder(stmt -> stmt.setLong(id).setLong(guildId()).setInt(page * pageSize).setInt(pageSize))
+                       SELECT
+                           guild_id,
+                           donor_id,
+                           receiver_id,
+                           message_id,
+                           received,
+                           ref_message_id,
+                           channel_id,
+                           cause
+                       FROM
+                           reputation_log
+                       WHERE
+                           %s = ?
+                           AND guild_id = ?
+                       ORDER BY received DESC
+                       OFFSET ?
+                       LIMIT ?;
+                       """, column)
+                .parameter(stmt -> stmt.setLong(id).setLong(guildId()).setInt(page * pageSize).setInt(pageSize))
                 .readRow(r -> ReputationLogEntry.build(this, r))
                 .allSync();
     }
@@ -93,20 +93,20 @@ public class Log extends QueryFactoryHolder implements GuildHolder {
     public Optional<ReputationLogEntry> getLatestReputation() {
         return builder(ReputationLogEntry.class)
                 .query("""
-                        SELECT
-                            guild_id,
-                            donor_id,
-                            receiver_id,
-                            message_id,
-                            received,
-                            ref_message_id,
-                            channel_id,
-                            cause
-                        FROM reputation_log
-                        WHERE guild_id = ?
-                        ORDER BY received DESC
-                        LIMIT 1;
-                        """).paramsBuilder(stmt -> stmt.setLong(guildId()))
+                       SELECT
+                           guild_id,
+                           donor_id,
+                           receiver_id,
+                           message_id,
+                           received,
+                           ref_message_id,
+                           channel_id,
+                           cause
+                       FROM reputation_log
+                       WHERE guild_id = ?
+                       ORDER BY received DESC
+                       LIMIT 1;
+                       """).parameter(stmt -> stmt.setLong(guildId()))
                 .readRow(r -> ReputationLogEntry.build(this, r))
                 .firstSync();
     }
@@ -120,22 +120,22 @@ public class Log extends QueryFactoryHolder implements GuildHolder {
     public Optional<ReputationLogEntry> getLogEntry(long message) {
         return builder(ReputationLogEntry.class)
                 .query("""
-                        SELECT
-                            guild_id,
-                            donor_id,
-                            receiver_id,
-                            message_id,
-                            received,
-                            ref_message_id,
-                            channel_id,
-                            cause
-                        FROM
-                            reputation_log
-                        WHERE
-                            message_id = ?
-                            AND guild_id = ?;
-                        """)
-                .paramsBuilder(stmt -> stmt.setLong(message).setLong(guildId()))
+                       SELECT
+                           guild_id,
+                           donor_id,
+                           receiver_id,
+                           message_id,
+                           received,
+                           ref_message_id,
+                           channel_id,
+                           cause
+                       FROM
+                           reputation_log
+                       WHERE
+                           message_id = ?
+                           AND guild_id = ?;
+                       """)
+                .parameter(stmt -> stmt.setLong(message).setLong(guildId()))
                 .readRow(r -> ReputationLogEntry.build(this, r))
                 .firstSync();
     }
@@ -161,14 +161,14 @@ public class Log extends QueryFactoryHolder implements GuildHolder {
     private int getLogPages(String column, long id, int pageSize) {
         return builder(Integer.class)
                 .query("""
-                        SELECT
-                            CEIL(COUNT(1)::numeric / ?) AS count
-                        FROM
-                            reputation_log
-                        WHERE guild_id = ?
-                            AND %s = ?;
-                        """, column)
-                .paramsBuilder(stmt -> stmt.setInt(pageSize).setLong(guildId()).setLong(id))
+                       SELECT
+                           CEIL(COUNT(1)::numeric / ?) AS count
+                       FROM
+                           reputation_log
+                       WHERE guild_id = ?
+                           AND %s = ?;
+                       """, column)
+                .parameter(stmt -> stmt.setInt(pageSize).setLong(guildId()).setLong(id))
                 .readRow(row -> row.getInt("count"))
                 .firstSync()
                 .orElse(1);

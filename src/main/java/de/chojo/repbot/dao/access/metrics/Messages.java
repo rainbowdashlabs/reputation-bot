@@ -2,23 +2,24 @@ package de.chojo.repbot.dao.access.metrics;
 
 import de.chojo.repbot.dao.snapshots.statistics.CountStatistics;
 import de.chojo.repbot.dao.snapshots.statistics.CountsStatistic;
-import de.chojo.sqlutil.base.QueryFactoryHolder;
+import de.chojo.sadu.base.QueryFactory;
 
 import java.util.concurrent.CompletableFuture;
 
-public class Messages extends QueryFactoryHolder {
-    public Messages(QueryFactoryHolder factoryHolder) {
+public class Messages extends QueryFactory {
+    public Messages(QueryFactory factoryHolder) {
         super(factoryHolder);
     }
 
     public void countMessage() {
-        builder().queryWithoutParams("""
-                        INSERT INTO metrics_message_analyzed(hour, count) VALUES (date_trunc('hour', now()), 1)
-                        ON CONFLICT(hour)
-                            DO UPDATE SET count = metrics_message_analyzed.count + 1
-                        """)
+        builder()
+                .queryWithoutParams("""
+                                    INSERT INTO metrics_message_analyzed(hour, count) VALUES (DATE_TRUNC('hour', NOW()), 1)
+                                    ON CONFLICT(hour)
+                                        DO UPDATE SET count = metrics_message_analyzed.count + 1
+                                    """)
                 .insert()
-                .execute();
+                .send();
     }
 
     public CompletableFuture<CountsStatistic> hour(int hour, int count) {
@@ -51,16 +52,17 @@ public class Messages extends QueryFactoryHolder {
 
     private CompletableFuture<CountsStatistic> get(String table, String timeframe, int offset, int count) {
         return builder(CountStatistics.class).query("""
-                        SELECT %s,
-                            count
-                        FROM %s
-                        WHERE %s <= DATE_TRUNC(?, NOW()) - ?::INTERVAL
-                        ORDER BY %s DESC
-                        LIMIT ?
-                        """, timeframe, table, timeframe, timeframe)
-                .paramsBuilder(stmt -> stmt.setString(timeframe).setString(offset + " " + timeframe).setInt(count))
-                .readRow(rs -> CountStatistics.build(rs, timeframe))
-                .all()
-                .thenApply(CountsStatistic::new);
+                                                    SELECT %s,
+                                                        count
+                                                    FROM %s
+                                                    WHERE %s <= DATE_TRUNC(?, NOW()) - ?::interval
+                                                    ORDER BY %s DESC
+                                                    LIMIT ?
+                                                    """, timeframe, table, timeframe, timeframe)
+                                             .parameter(stmt -> stmt.setString(timeframe)
+                                                                    .setString(offset + " " + timeframe).setInt(count))
+                                             .readRow(rs -> CountStatistics.build(rs, timeframe))
+                                             .all()
+                                             .thenApply(CountsStatistic::new);
     }
 }
