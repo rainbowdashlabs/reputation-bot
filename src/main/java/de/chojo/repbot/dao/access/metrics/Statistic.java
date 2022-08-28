@@ -1,29 +1,30 @@
 package de.chojo.repbot.dao.access.metrics;
 
 import de.chojo.repbot.statistic.element.DataStatistic;
-import de.chojo.sqlutil.base.QueryFactoryHolder;
+import de.chojo.sadu.base.QueryFactory;
 
 import java.util.Optional;
 
-public class Statistic extends QueryFactoryHolder {
-    public Statistic(QueryFactoryHolder factoryHolder) {
+public class Statistic extends QueryFactory {
+    public Statistic(QueryFactory factoryHolder) {
         super(factoryHolder);
     }
 
     public Optional<DataStatistic> getStatistic() {
-        return builder(DataStatistic.class).queryWithoutParams("""
-                        SELECT
-                        	guilds,
-                        	active_guilds,
-                        	active_channel,
-                        	channel,
-                        	total_reputation,
-                        	today_reputation,
-                        	weekly_reputation,
-                        	weekly_avg_reputation
-                        FROM
-                        	data_statistics;
-                        """).readRow(rs -> new DataStatistic(
+        return builder(DataStatistic.class)
+                .queryWithoutParams("""
+                                    SELECT
+                                    	guilds,
+                                    	active_guilds,
+                                    	active_channel,
+                                    	channel,
+                                    	total_reputation,
+                                    	today_reputation,
+                                    	weekly_reputation,
+                                    	weekly_avg_reputation
+                                    FROM
+                                    	data_statistics;
+                                    """).readRow(rs -> new DataStatistic(
                         rs.getInt("guilds"),
                         rs.getInt("active_guilds"),
                         rs.getInt("active_channel"),
@@ -36,6 +37,8 @@ public class Statistic extends QueryFactoryHolder {
     }
 
     public void refreshStatistics() {
-        builder().queryWithoutParams("REFRESH MATERIALIZED VIEW data_statistics").update().executeSync();
+        builder().queryWithoutParams("REFRESH MATERIALIZED VIEW data_statistics")
+                 .update()
+                 .sendSync();
     }
 }

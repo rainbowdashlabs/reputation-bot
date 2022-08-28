@@ -15,7 +15,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class Guilds {
     private static final Logger log = getLogger(Guilds.class);
     private final DataSource dataSource;
-    private final Cache<Long, RepGuild> guilds = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES).build();
+    private final Cache<Long, RepGuild> guilds = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES)
+                                                             .build();
 
     public Guilds(DataSource dataSource) {
         this.dataSource = dataSource;

@@ -1,10 +1,7 @@
 package de.chojo.repbot.dao.provider;
 
-import de.chojo.repbot.util.LogNotify;
-import de.chojo.sqlutil.base.QueryFactoryHolder;
-import de.chojo.sqlutil.exceptions.ExceptionTransformer;
-import de.chojo.sqlutil.wrapper.QueryBuilderConfig;
-import de.chojo.sqlutil.wrapper.stage.ResultStage;
+import de.chojo.sadu.base.QueryFactory;
+import de.chojo.sadu.wrapper.stage.ResultStage;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
@@ -15,13 +12,11 @@ import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class Voice extends QueryFactoryHolder {
+public class Voice extends QueryFactory {
     private static final Logger log = getLogger(Voice.class);
 
     public Voice(DataSource dataSource) {
-        super(dataSource, QueryBuilderConfig.builder().withExceptionHandler(e ->
-                        log.error(LogNotify.NOTIFY_ADMIN, ExceptionTransformer.prettyException("Query execution failed", e), e))
-                .build());
+        super(dataSource);
     }
 
     /**
@@ -36,17 +31,20 @@ public class Voice extends QueryFactoryHolder {
         ResultStage<Void> resultStage = null;
         for (var user : seen) {
             var otherId = user.getIdLong();
-            resultStage = builder.query("""
-                            INSERT INTO voice_activity(relation_key, guild_id, user_id_1, user_id_2) VALUES (?,?,?,?)
-                                ON CONFLICT(relation_key, guild_id)
-                                    DO UPDATE
-                                        SET seen = NOW()
-                            """)
-                    .paramsBuilder(stmt -> stmt.setLong(baseId ^ otherId).setLong(source.getGuild().getIdLong())
-                            .setLong(baseId).setLong(otherId));
+            resultStage = builder
+                    .query("""
+                           INSERT INTO voice_activity(relation_key, guild_id, user_id_1, user_id_2) VALUES (?,?,?,?)
+                               ON CONFLICT(relation_key, guild_id)
+                                   DO UPDATE
+                                       SET seen = NOW()
+                           """)
+                    .parameter(stmt -> stmt.setLong(baseId ^ otherId)
+                                           .setLong(source.getGuild().getIdLong())
+                                           .setLong(baseId).setLong(otherId));
         }
         if (resultStage == null) return;
-        resultStage.update().executeSync();
+        resultStage.update()
+                   .sendSync();
     }
 
     /**
@@ -61,22 +59,22 @@ public class Voice extends QueryFactoryHolder {
     public List<Long> getPastUser(User user, Guild guild, int minutes, int limit) {
         return builder(Long.class)
                 .query("""
-                        SELECT
-                            user_id_1, user_id_2
-                        FROM
-                            voice_activity
-                        WHERE
-                         guild_id = ?
-                         AND (user_id_1 = ?
-                            OR user_id_2 = ?
-                         )
-                         AND seen > NOW() - (? || 'minute')::interval
-                        ORDER BY
-                            seen DESC
-                        LIMIT ?;
-                        """)
-                .paramsBuilder(stmt -> stmt.setLong(guild.getIdLong()).setLong(user.getIdLong()).setLong(user.getIdLong())
-                        .setInt(minutes).setInt(limit))
+                       SELECT
+                           user_id_1, user_id_2
+                       FROM
+                           voice_activity
+                       WHERE
+                        guild_id = ?
+                        AND (user_id_1 = ?
+                           OR user_id_2 = ?
+                        )
+                        AND seen > NOW() - (? || 'minute')::interval
+                       ORDER BY
+                           seen DESC
+                       LIMIT ?;
+                       """)
+                .parameter(stmt -> stmt.setLong(guild.getIdLong()).setLong(user.getIdLong()).setLong(user.getIdLong())
+                                       .setInt(minutes).setInt(limit))
                 .readRow(rs -> {
                     var id1 = rs.getLong("user_id_1");
                     var id2 = rs.getLong("user_id_2");
@@ -90,8 +88,9 @@ public class Voice extends QueryFactoryHolder {
     public void cleanup() {
         builder()
                 .queryWithoutParams("""
-                        DELETE FROM voice_activity WHERE seen < NOW() - '12 hours'::interval
-                        """)
-                .update().execute();
+                                    DELETE FROM voice_activity WHERE seen < NOW() - '12 hours'::interval
+                                    """)
+                .update()
+                .send();
     }
 }

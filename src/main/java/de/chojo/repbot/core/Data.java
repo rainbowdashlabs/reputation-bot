@@ -8,11 +8,11 @@ import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.dao.provider.Voice;
 import de.chojo.repbot.util.LogNotify;
-import de.chojo.sqlutil.databases.SqlType;
-import de.chojo.sqlutil.datasource.DataSourceCreator;
-import de.chojo.sqlutil.updater.QueryReplacement;
-import de.chojo.sqlutil.updater.SqlUpdater;
-import de.chojo.sqlutil.wrapper.QueryBuilderConfig;
+import de.chojo.sadu.databases.PostgreSql;
+import de.chojo.sadu.datasource.DataSourceCreator;
+import de.chojo.sadu.updater.QueryReplacement;
+import de.chojo.sadu.updater.SqlUpdater;
+import de.chojo.sadu.wrapper.QueryBuilderConfig;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -55,7 +55,7 @@ public class Data {
 
     private void updateDatabase() throws IOException, SQLException {
         var schema = configuration.database().schema();
-        SqlUpdater.builder(dataSource, SqlType.POSTGRES)
+        SqlUpdater.builder(dataSource, PostgreSql.get())
                 .setReplacements(new QueryReplacement("repbot_schema", schema))
                 .setVersionTable(schema + ".repbot_version")
                 .setSchemas(schema)
@@ -83,7 +83,7 @@ public class Data {
     private HikariDataSource getConnectionPool() {
         log.info("Creating connection pool.");
         var data = configuration.database();
-        return DataSourceCreator.create(SqlType.POSTGRES)
+        return DataSourceCreator.create(PostgreSql.get())
                 .configure(config -> config
                         .host(data.host())
                         .port(data.port())

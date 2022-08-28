@@ -1,10 +1,10 @@
 package de.chojo.repbot.dao.access.guild;
 
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.sqlutil.base.QueryFactoryHolder;
+import de.chojo.sadu.base.QueryFactory;
 import net.dv8tion.jda.api.entities.Guild;
 
-public class Gdpr extends QueryFactoryHolder implements GuildHolder {
+public class Gdpr extends QueryFactory implements GuildHolder {
     private final RepGuild repGuild;
 
     public Gdpr(RepGuild repGuild) {
@@ -20,20 +20,22 @@ public class Gdpr extends QueryFactoryHolder implements GuildHolder {
     public void queueDeletion() {
         builder()
                 .query("""
-                        INSERT INTO
-                            cleanup_schedule(guild_id)
-                            VALUES (?)
-                                ON CONFLICT(guild_id, user_id)
-                                    DO NOTHING;
-                        """)
-                .paramsBuilder(stmt -> stmt.setLong(guildId()))
-                .update().executeSync();
+                       INSERT INTO
+                           cleanup_schedule(guild_id)
+                           VALUES (?)
+                               ON CONFLICT(guild_id, user_id)
+                                   DO NOTHING;
+                       """)
+                .parameter(stmt -> stmt.setLong(guildId()))
+                .update()
+                .sendSync();
     }
 
     public void dequeueDeletion() {
         builder()
                 .query("DELETE FROM cleanup_schedule WHERE guild_id = ?;")
-                .paramsBuilder(stmt -> stmt.setLong(guildId()))
-                .update().executeSync();
+                .parameter(stmt -> stmt.setLong(guildId()))
+                .update()
+                .sendSync();
     }
 }

@@ -3,18 +3,18 @@ package de.chojo.repbot.dao.access.guild.settings.sub;
 import de.chojo.jdautil.consumer.ThrowingConsumer;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.sqlutil.base.QueryFactoryHolder;
-import de.chojo.sqlutil.wrapper.ParamBuilder;
+import de.chojo.sadu.base.QueryFactory;
+import de.chojo.sadu.wrapper.util.ParamBuilder;
+import de.chojo.sadu.wrapper.util.Row;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-public class AbuseProtection extends QueryFactoryHolder implements GuildHolder {
+public class AbuseProtection extends QueryFactory implements GuildHolder {
     private final Settings settings;
     private int cooldown;
     private int maxMessageAge;
@@ -47,7 +47,7 @@ public class AbuseProtection extends QueryFactoryHolder implements GuildHolder {
         this(settings, 30, 30, 10, true, true, 0, 1, 0, 1, 3);
     }
 
-    public static AbuseProtection build(Settings settings, ResultSet rs) throws SQLException {
+    public static AbuseProtection build(Settings settings, Row rs) throws SQLException {
         return new AbuseProtection(settings,
                 rs.getInt("cooldown"),
                 rs.getInt("max_message_age"),
@@ -213,16 +213,17 @@ public class AbuseProtection extends QueryFactoryHolder implements GuildHolder {
 
     private boolean set(String parameter, ThrowingConsumer<ParamBuilder, SQLException> builder) {
         return builder()
-                       .query("""
-                               INSERT INTO abuse_protection(guild_id, %s) VALUES (?, ?)
-                               ON CONFLICT(guild_id)
-                                   DO UPDATE SET %s = excluded.%s;
-                               """, parameter, parameter, parameter)
-                       .paramsBuilder(stmts -> {
-                           stmts.setLong(guildId());
-                           builder.accept(stmts);
-                       }).insert()
-                       .executeSync() > 0;
+                .query("""
+                       INSERT INTO abuse_protection(guild_id, %s) VALUES (?, ?)
+                       ON CONFLICT(guild_id)
+                           DO UPDATE SET %s = excluded.%s;
+                       """, parameter, parameter, parameter)
+                .parameter(stmts -> {
+                    stmts.setLong(guildId());
+                    builder.accept(stmts);
+                }).insert()
+                .sendSync()
+                .changed();
     }
 
     @Override

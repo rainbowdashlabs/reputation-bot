@@ -6,11 +6,11 @@ import de.chojo.repbot.dao.access.metrics.Reputation;
 import de.chojo.repbot.dao.access.metrics.Service;
 import de.chojo.repbot.dao.access.metrics.Statistic;
 import de.chojo.repbot.dao.access.metrics.Users;
-import de.chojo.sqlutil.base.QueryFactoryHolder;
+import de.chojo.sadu.base.QueryFactory;
 
 import javax.sql.DataSource;
 
-public class Metrics extends QueryFactoryHolder {
+public class Metrics extends QueryFactory {
     private final Commands commands;
     private final Messages messages;
     private final Users users;

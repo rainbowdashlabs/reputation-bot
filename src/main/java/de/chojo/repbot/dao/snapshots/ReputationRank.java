@@ -2,13 +2,13 @@ package de.chojo.repbot.dao.snapshots;
 
 import de.chojo.repbot.dao.access.guild.settings.sub.Ranks;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.sqlutil.base.QueryFactoryHolder;
+import de.chojo.sadu.base.QueryFactory;
+import de.chojo.sadu.wrapper.util.Row;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -16,7 +16,7 @@ import java.sql.SQLException;
  * <p>
  * A rank is {@link Comparable} and will be sorted from highest reputation to lowest.
  */
-public class ReputationRank extends QueryFactoryHolder implements GuildHolder, Comparable<ReputationRank> {
+public class ReputationRank extends QueryFactory implements GuildHolder, Comparable<ReputationRank> {
     private final long roleId;
     private final long reputation;
     private final Ranks ranks;
@@ -29,7 +29,7 @@ public class ReputationRank extends QueryFactoryHolder implements GuildHolder, C
         this.reputation = reputation;
     }
 
-    public static ReputationRank build(Ranks ranks, ResultSet rs) throws SQLException {
+    public static ReputationRank build(Ranks ranks, Row rs) throws SQLException {
         return new ReputationRank(ranks,
                 rs.getLong("role_id"),
                 rs.getLong("reputation")
@@ -63,9 +63,11 @@ public class ReputationRank extends QueryFactoryHolder implements GuildHolder, C
      */
     public boolean remove() {
         var success = builder()
-                            .query("DELETE FROM guild_ranks WHERE guild_id = ? AND role_id = ?;")
-                            .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(roleId))
-                            .update().executeSync() > 0;
+                .query("DELETE FROM guild_ranks WHERE guild_id = ? AND role_id = ?;")
+                .parameter(stmt -> stmt.setLong(guildId()).setLong(roleId))
+                .update()
+                .sendSync()
+                .changed();
         ranks.refresh();
         return success;
     }
