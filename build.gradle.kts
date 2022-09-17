@@ -28,8 +28,8 @@ dependencies {
 
     // Logging
     implementation("org.slf4j", "slf4j-api", "1.7.36")
-    implementation("org.apache.logging.log4j", "log4j-core", "2.18.0")
-    implementation("org.apache.logging.log4j", "log4j-slf4j-impl", "2.18.0")
+    implementation("org.apache.logging.log4j", "log4j-core", "2.19.0")
+    implementation("org.apache.logging.log4j", "log4j-slf4j-impl", "2.19.0")
     implementation("club.minnced", "discord-webhooks", "0.8.2")
 
     implementation("org.knowm.xchart", "xchart", "3.8.1")
