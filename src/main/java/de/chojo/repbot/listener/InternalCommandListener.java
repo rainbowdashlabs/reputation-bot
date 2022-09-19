@@ -9,6 +9,7 @@ import de.chojo.repbot.util.Text;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.utils.FileUpload;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
@@ -72,37 +73,37 @@ public class InternalCommandListener extends ListenerAdapter {
 
             var commands = metrics.commands().week(1).join();
             if (!commands.commands().isEmpty()) {
-                reply.addFile(commands.getChart("Command statistic for week " + Text.month(commands.date())), "commands.png");
+                reply.addFiles(FileUpload.fromData(commands.getChart("Command statistic for week " + Text.month(commands.date())), "commands.png"));
             }
 
             var counts = metrics.reputation().week(1, 24).join();
             if (!counts.stats().isEmpty()) {
-                reply.addFile(counts.getChart("Reputation counts per week"), "reputation.png");
+                reply.addFiles(FileUpload.fromData(counts.getChart("Reputation counts per week"), "reputation.png"));
             }
 
             counts = metrics.reputation().totalWeek(1, 24).join();
             if (!counts.stats().isEmpty()) {
-                reply.addFile(counts.getChart("Total reputation"), "total_reputation.png");
+                reply.addFiles(FileUpload.fromData(counts.getChart("Total reputation"), "total_reputation.png"));
             }
 
             var dows = metrics.reputation().dowMonth(1).join();
             if (!counts.stats().isEmpty()) {
-                reply.addFile(dows.getChart("Day of Week stats reputation"), "dow_reputation.png");
+                reply.addFiles(FileUpload.fromData(dows.getChart("Day of Week stats reputation"), "dow_reputation.png"));
             }
 
             counts = metrics.messages().week(1, 24).join();
             if (!counts.stats().isEmpty()) {
-                reply.addFile(counts.getChart("Analyzed Messages per week"), "messages_week.png");
+                reply.addFiles(FileUpload.fromData(counts.getChart("Analyzed Messages per week"), "messages_week.png"));
             }
 
             counts = metrics.messages().day(2, 24 * 7).join();
             if (!counts.stats().isEmpty()) {
-                reply.addFile(counts.getChart("Analyzed Messages per day"), "messages_day.png");
+                reply.addFiles(FileUpload.fromData(counts.getChart("Analyzed Messages per day"), "messages_day.png"));
             }
 
             var users = metrics.users().week(1, 24).join();
             if (!users.stats().isEmpty()) {
-                reply.addFile(users.getChart("Active users per week"), "users.png");
+                reply.addFiles(FileUpload.fromData(users.getChart("Active users per week"), "users.png"));
             }
 
             reply.queue();

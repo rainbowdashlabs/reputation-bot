@@ -6,9 +6,9 @@ import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.dao.snapshots.ReputationRank;
 import de.chojo.repbot.util.Roles;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.utils.concurrent.Task;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -46,7 +46,7 @@ public class RoleAssigner {
         } catch (RoleAccessException e) {
             channel.sendMessage(localizer.localize("error.roleAccess", channel.getGuild(),
                             Replacement.createMention("ROLE", e.role())))
-                    .allowedMentions(Collections.emptyList())
+                    .mention(Collections.emptyList())
                     .queue();
         }
         return Optional.empty();
