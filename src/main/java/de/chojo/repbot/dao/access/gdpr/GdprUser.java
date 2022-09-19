@@ -3,9 +3,10 @@ package de.chojo.repbot.dao.access.gdpr;
 import de.chojo.repbot.dao.access.Gdpr;
 import de.chojo.sadu.base.QueryFactory;
 import de.chojo.sadu.wrapper.util.Row;
-import net.dv8tion.jda.api.entities.PrivateChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import net.dv8tion.jda.api.utils.FileUpload;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -156,7 +157,7 @@ public class GdprUser extends QueryFactory {
         try {
             privateChannel
                     .sendMessage("Here is your requested data. You can request it again in 30 days.")
-                    .addFile(tempFile.toFile())
+                    .addFiles(FileUpload.fromData(tempFile.toFile()))
                     .complete();
         } catch (RuntimeException e) {
             log.warn("Could not send gdpr data to user {}. File sending failed.", userId, e);

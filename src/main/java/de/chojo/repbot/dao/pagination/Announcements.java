@@ -7,7 +7,7 @@ import de.chojo.sadu.base.QueryFactory;
 import de.chojo.sadu.wrapper.util.ParamBuilder;
 import de.chojo.sadu.wrapper.util.Row;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 import java.sql.SQLException;
 

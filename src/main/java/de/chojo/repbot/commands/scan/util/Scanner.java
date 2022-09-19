@@ -13,7 +13,7 @@ import de.chojo.repbot.util.Text;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageHistory;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.slf4j.Logger;
@@ -138,7 +138,7 @@ public class Scanner {
                         Replacement.create("SCANNED", scan.scanned()),
                         Replacement.create("HITS", scan.hits()))
                 .build();
-        scan.resultChannel().sendMessageEmbeds(embed).reference(scan.progressMessage()).queue();
+        scan.resultChannel().sendMessageEmbeds(embed).setMessageReference(scan.progressMessage()).queue();
     }
 
     private void finishCanceledTasks() {
@@ -151,7 +151,7 @@ public class Scanner {
                         Replacement.create("SCANNED", scan.scanned()),
                         Replacement.create("HITS", scan.hits()))
                 .build();
-        scan.resultChannel().sendMessageEmbeds(embed).reference(scan.progressMessage()).queue();
+        scan.resultChannel().sendMessageEmbeds(embed).setMessageReference(scan.progressMessage()).queue();
     }
 
     public boolean isRunning(Guild guild) {

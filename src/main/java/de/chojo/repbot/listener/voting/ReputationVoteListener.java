@@ -85,14 +85,14 @@ public class ReputationVoteListener extends ListenerAdapter {
             voteRequest.voteMessage().
                     editMessageEmbeds(voteRequest.getNewEmbed(loc.localize("listener.messages.request.descrThank"
                             , event.getGuild(), Replacement.create("MORE", voteRequest.remainingVotes()))))
-                    .setActionRows(getComponentRows(voteRequest.components()))
+                    .setComponents(getComponentRows(voteRequest.components()))
                     .queue(suc -> {
                     }, ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
             if (voteRequest.remainingVotes() == 0) {
                 voteRequest.voteMessage()
                         .editMessageEmbeds(voteRequest.getNewEmbed(loc.localize("listener.messages.request.descrThank"
                                 , event.getGuild(), Replacement.create("MORE", voteRequest.remainingVotes()))))
-                        .setActionRows(Collections.emptyList())
+                        .setComponents(Collections.emptyList())
                         .queue();
                 voteRequest.voteMessage().delete().queueAfter(5, TimeUnit.SECONDS,
                         suc -> voteRequests.remove(voteRequest.voteMessage().getIdLong()), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
@@ -136,7 +136,7 @@ public class ReputationVoteListener extends ListenerAdapter {
         }
 
         message.replyEmbeds(builder.build())
-                .setActionRows(componentRows).queue(voteMessage -> {
+                .addComponents(componentRows).queue(voteMessage -> {
                     voteRequests.put(voteMessage.getIdLong(), new VoteRequest(message.getMember(), builder, voteMessage, message, components, Math.min(remaining, members.size())));
                     voteMessage.delete().queueAfter(1, TimeUnit.MINUTES,
                             submit -> voteRequests.remove(voteMessage.getIdLong()),

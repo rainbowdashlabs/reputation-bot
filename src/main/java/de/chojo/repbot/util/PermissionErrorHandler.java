@@ -6,8 +6,8 @@ import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.config.Configuration;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.GuildMessageChannel;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.internal.utils.PermissionUtil;
@@ -95,13 +95,13 @@ public final class PermissionErrorHandler {
     }
 
     /**
-     * Checks if the self user has the permissions in this channel and sends an permission error if one is missing.
+     * Checks if the self user has the permissions in this channel and sends a permission error if one is missing.
      *
      * @param channel       channel to check
      * @param localizer     localizer
      * @param configuration configuration
      * @param permissions   permissions to check
-     * @return true if a permission was missing and a message was send
+     * @return true if a permission was missing and a message was sent
      */
     public static boolean assertAndHandle(GuildMessageChannel channel, ILocalizer localizer, Configuration configuration, Permission... permissions) {
         try {

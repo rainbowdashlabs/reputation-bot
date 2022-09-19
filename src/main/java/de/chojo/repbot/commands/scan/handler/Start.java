@@ -5,8 +5,8 @@ import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.commands.scan.util.ScanProcess;
 import de.chojo.repbot.commands.scan.util.Scanner;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.ChannelType;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class Start implements SlashHandler {
