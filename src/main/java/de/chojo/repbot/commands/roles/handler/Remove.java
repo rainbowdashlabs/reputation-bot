@@ -23,7 +23,7 @@ public class Remove implements SlashHandler {
 
         if (ranks.rank(role).map(ReputationRank::remove).orElse(false)) {
             event.reply(context.localize("command.roles.remove.message.removed",
-                    Replacement.createMention("ROLE", role))).allowedMentions(Collections.emptyList()).queue();
+                    Replacement.createMention("ROLE", role))).mention(Collections.emptyList()).queue();
             return;
         }
         event.reply(context.localize("command.roles.remove.message.noreprole")).setEphemeral(true).queue();

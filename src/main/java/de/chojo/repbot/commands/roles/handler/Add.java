@@ -29,6 +29,6 @@ public class Add implements SlashHandler {
         ranks.add(role, reputation);
         event.reply(context.localize("command.roles.add.message.added",
                         Replacement.createMention("ROLE", role), Replacement.create("POINTS", reputation)))
-                .allowedMentions(Collections.emptyList()).queue();
+                .mention(Collections.emptyList()).queue();
     }
 }
