@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildMessageChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
@@ -102,7 +103,7 @@ public class Channels extends QueryFactory implements GuildHolder {
      * @param channel channel
      * @return true if a channel was added
      */
-    public boolean add(MessageChannel channel) {
+    public boolean add(StandardGuildChannel channel) {
         var result = builder()
                 .query("INSERT INTO active_channel(guild_id, channel_id) VALUES(?,?) ON CONFLICT(guild_id, channel_id) DO NOTHING;")
                 .parameter(stmt -> stmt.setLong(guildId()).setLong(channel.getIdLong()))
