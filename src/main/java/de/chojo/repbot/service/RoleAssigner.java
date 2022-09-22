@@ -2,22 +2,29 @@ package de.chojo.repbot.service;
 
 import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.util.Replacement;
+import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.snapshots.RepProfile;
 import de.chojo.repbot.dao.snapshots.ReputationRank;
 import de.chojo.repbot.util.Roles;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
-import net.dv8tion.jda.api.utils.concurrent.Task;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import static de.chojo.repbot.util.Guilds.prettyName;
@@ -45,9 +52,9 @@ public class RoleAssigner {
             return update(member);
         } catch (RoleAccessException e) {
             channel.sendMessage(localizer.localize("error.roleAccess", channel.getGuild(),
-                            Replacement.createMention("ROLE", e.role())))
-                    .mention(Collections.emptyList())
-                    .queue();
+                           Replacement.createMention("ROLE", e.role())))
+                   .mention(Collections.emptyList())
+                   .queue();
         }
         return Optional.empty();
     }
@@ -83,10 +90,10 @@ public class RoleAssigner {
         var settings = repGuild.settings();
 
         var roles = settings.ranks().currentRanks(reputation)
-                .stream()
-                .map(r -> guild.getRoleById(r.roleId()))
-                .filter(Objects::nonNull)
-                .collect(Collectors.toSet());
+                            .stream()
+                            .map(r -> guild.getRoleById(r.roleId()))
+                            .filter(Objects::nonNull)
+                            .collect(Collectors.toSet());
 
         var removed = cleanMemberRoles(member, roles);
         var added = addMemberRoles(member, roles);
@@ -104,11 +111,11 @@ public class RoleAssigner {
         var guild = member.getGuild();
 
         var reputationRoles = guilds.guild(guild).settings().ranks().ranks()
-                .stream()
-                .map(ReputationRank::roleId)
-                .map(guild::getRoleById)
-                .filter(Objects::nonNull)
-                .toList();
+                                    .stream()
+                                    .map(ReputationRank::roleId)
+                                    .map(guild::getRoleById)
+                                    .filter(Objects::nonNull)
+                                    .toList();
         var changed = false;
 
         for (var role : reputationRoles) {
@@ -146,8 +153,31 @@ public class RoleAssigner {
         }
     }
 
-    public Task<Void> updateBatch(Guild guild) {
-        log.info("Started batch update for guild {}", prettyName(guild));
-        return guild.loadMembers(this::updateSilent);
+    public CompletableFuture<BatchUpdateResult> updateBatch(Guild guild, EventContext context, Message message) {
+        return CompletableFuture.supplyAsync(() -> {
+            log.info("Started batch update for guild {}", prettyName(guild));
+            var guildRanking = guilds.guild(guild).reputation().ranking().total(100);
+            var checked = new AtomicInteger(0);
+            var updated = new AtomicInteger(0);
+            var lastRefresh = new AtomicReference<>(Instant.now());
+            for (var page = 0; page < guildRanking.pages(); page++) {
+                for (var repProfile : guildRanking.page(page)) {
+                    repProfile.resolveMember(guild).ifPresent(member -> {
+                        var newRank = updateSilent(member);
+                        newRank.ifPresent(r -> updated.incrementAndGet());
+                        checked.incrementAndGet();
+
+                        if (lastRefresh.get().isAfter(Instant.now().minus(5, ChronoUnit.SECONDS))) return;
+                        message.editMessage(context.localize("command.roles.refresh.message.progress",
+                                       Replacement.create("CHECKED", checked.get()), Replacement.create("UPDATED", updated.get())))
+                               .queue();
+                    });
+                }
+            }
+            return new BatchUpdateResult(checked.get(), updated.get());
+        });
+    }
+
+    public record BatchUpdateResult(int checked, int updated) {
     }
 }
