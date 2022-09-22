@@ -10,12 +10,16 @@ import de.chojo.repbot.dao.access.guild.reputation.sub.RepUser;
 import de.chojo.repbot.util.Text;
 import de.chojo.sadu.wrapper.util.Row;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.IMentionable;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import org.apache.commons.lang3.StringUtils;
 
+import javax.annotation.Nullable;
 import java.sql.SQLException;
+import java.util.Optional;
 
 /**
  * Snapshot of a user reputation profile.
@@ -98,5 +102,13 @@ public record RepProfile(RepUser repUser, long rank, long rankDonated, long user
         var badge = configuration.badges().badge((int) rank());
         badge.ifPresent(build::setThumbnail);
         return build;
+    }
+
+    public Optional<Member> resolveMember(Guild guild) {
+        try {
+            return Optional.ofNullable(guild.retrieveMemberById(userId()).complete());
+        } catch (RuntimeException e) {
+            return Optional.empty();
+        }
     }
 }

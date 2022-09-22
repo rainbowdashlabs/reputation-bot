@@ -2,11 +2,13 @@ package de.chojo.repbot.commands.roles.handler;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.Replacement;
+import de.chojo.jdautil.util.Futures;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.service.RoleAccessException;
 import de.chojo.repbot.service.RoleAssigner;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.slf4j.Logger;
 
@@ -36,34 +38,29 @@ public class Refresh implements SlashHandler {
 
         running.add(event.getGuild().getIdLong());
 
-        event.reply(context.localize("command.roles.refresh.message.started")).queue();
+        var message = event.reply(context.localize("command.roles.refresh.message.started"))
+                           .flatMap(InteractionHook::retrieveOriginal)
+                           .complete();
         var start = Instant.now();
+
         roleAssigner
-                .updateBatch(event.getGuild())
-                .onSuccess(res -> {
+                .updateBatch(event.getGuild(), context, message)
+                .whenComplete(Futures.whenComplete(res -> {
                     var duration = DurationFormatUtils.formatDuration(start.until(Instant.now(), ChronoUnit.MILLIS), "mm:ss");
                     log.info("Update of roles on {} took {}.", prettyName(event.getGuild()), duration);
-                    if (event.getHook().isExpired()) {
-                        log.debug("Interaction hook is expired. Using fallback message.");
-                        event.getChannel()
-                                .sendMessage(context.localize("command.roles.refresh.message.finished"))
-                                .queue();
-                        return;
-                    }
-                    event.getHook()
-                            .editOriginal(context.localize("command.roles.refresh.message.finished"))
-                            .queue();
+                    message.editMessage(context.localize("command.roles.refresh.message.finished",
+                                   Replacement.create("CHECKED", res.checked()), Replacement.create("UPDATED", res.updated())))
+                           .queue();
                     running.remove(event.getGuild().getIdLong());
-                }).onError(err -> {
+                }, err -> {
                     log.warn("Update of role failed on guild {}", prettyName(event.getGuild()), err);
                     if (err instanceof RoleAccessException roleException) {
-                        event.getHook()
-                                .editOriginal(context.localize("error.roleAccess",
-                                        Replacement.createMention("ROLE", roleException.role())))
-                                .queue();
+                        message.editMessage(context.localize("error.roleAccess",
+                                       Replacement.createMention("ROLE", roleException.role())))
+                               .queue();
                     }
                     running.remove(event.getGuild().getIdLong());
-                });
+                }));
     }
 
     public boolean refreshActive(Guild guild) {
