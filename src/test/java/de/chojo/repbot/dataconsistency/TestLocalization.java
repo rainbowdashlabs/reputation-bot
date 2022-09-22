@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,6 +17,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class TestLocalization {
     private static final Pattern LOCALIZATION_CODE = Pattern.compile("\\$([a-zA-Z.]+?)\\$");
@@ -87,7 +89,14 @@ public class TestLocalization {
         try (var stream = Files.walk(Path.of("src", "main", "java"))) {
             files = stream
                     .filter(p -> p.toFile().isFile())
-                    .toList();
+                    .collect(Collectors.toCollection(ArrayList::new));
+        }
+
+        try (var stream = Files.walk(Path.of("src", "main", "resources"))) {
+            files.addAll(stream
+                    .filter(p -> p.toFile().isFile())
+                    .filter(p -> p.getFileName().startsWith("locale"))
+                    .toList());
         }
 
         var count = 0;
@@ -99,14 +108,17 @@ public class TestLocalization {
             List<String> content;
             content = Files.readAllLines(file);
 
+            var currentLine = 0;
+
             for (var line : content) {
+                currentLine++;
                 var matcher = SIMPLE_LOCALIZATION_CODE.matcher(line);
                 while (matcher.find()) {
                     count++;
                     localCount++;
                     var key = matcher.group(1);
                     foundKeys.add(key);
-                    Assertions.assertTrue(keys.contains(key) || whitelisted(key), "Found unkown key \"" + key + "\" in " + file);
+                    Assertions.assertTrue(keys.contains(key) || whitelisted(key), "Found unkown key \"" + key + "\" in " + file + " at line " + currentLine);
                 }
 
                 matcher = LOCALIZATION_CODE.matcher(line);
@@ -115,7 +127,7 @@ public class TestLocalization {
                     localCount++;
                     var key = matcher.group(1);
                     foundKeys.add(key);
-                    Assertions.assertTrue(keys.contains(key) || whitelisted(key), "Found unkown key \"" + key + "\" in " + file);
+                    Assertions.assertTrue(keys.contains(key) || whitelisted(key), "Found unkown key \"" + key + "\" in " + file + " at line " + currentLine);
                 }
             }
             System.out.println("Found " + localCount + " key in " + file);

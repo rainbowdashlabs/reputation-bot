@@ -41,9 +41,9 @@ public class Start implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        PermissionErrorHandler.assertPermissions(event.getChannel().asTextChannel(), Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL);
+        PermissionErrorHandler.assertPermissions(event.getChannel().asGuildMessageChannel(), Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL);
         event.reply(context.localize("command.setup.message.starting")).queue();
-        context.conversationService().startDialog(event.getUser(), event.getChannel().asTextChannel(), getConversation(context));
+        context.conversationService().startDialog(event.getUser(), event.getChannel().asGuildMessageChannel(), getConversation(context));
     }
 
     private Conversation getConversation(EventContext context) {

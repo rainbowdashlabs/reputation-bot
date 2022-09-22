@@ -4,14 +4,14 @@ import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.sadu.base.QueryFactory;
-import net.dv8tion.jda.api.entities.channel.concrete.Category;
-import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
-import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
-import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildMessageChannel;
+import net.dv8tion.jda.api.entities.channel.Channel;
+import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildMessageChannel;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -46,9 +46,9 @@ public class Channels extends QueryFactory implements GuildHolder {
     }
 
     public boolean isEnabled(GuildMessageChannel channel) {
-        StandardGuildMessageChannel baseChannel;
+        StandardGuildChannel baseChannel;
         if (channel instanceof ThreadChannel bc) {
-            baseChannel = bc.getParentMessageChannel().asTextChannel();
+            baseChannel = bc.getParentChannel().asStandardGuildChannel();
         } else {
             if (channel instanceof StandardGuildMessageChannel bc) {
                 baseChannel = bc;
@@ -61,7 +61,7 @@ public class Channels extends QueryFactory implements GuildHolder {
         return isEnabledByChannel(baseChannel) || isEnabledByCategory(baseChannel.getParentCategory());
     }
 
-    public boolean isEnabledByChannel(Channel channel) {
+    public boolean isEnabledByChannel(StandardGuildChannel channel) {
         if (channels.isEmpty()) return false;
         if (isWhitelist()) {
             return channels.contains(channel.getIdLong());
@@ -102,7 +102,7 @@ public class Channels extends QueryFactory implements GuildHolder {
      * @param channel channel
      * @return true if a channel was added
      */
-    public boolean add(MessageChannel channel) {
+    public boolean add(StandardGuildChannel channel) {
         var result = builder()
                 .query("INSERT INTO active_channel(guild_id, channel_id) VALUES(?,?) ON CONFLICT(guild_id, channel_id) DO NOTHING;")
                 .parameter(stmt -> stmt.setLong(guildId()).setLong(channel.getIdLong()))
@@ -211,15 +211,15 @@ public class Channels extends QueryFactory implements GuildHolder {
     public boolean listType(boolean whitelist) {
         var result = builder()
                 .query("""
-                                     INSERT INTO thank_settings(guild_id, channel_whitelist) VALUES (?,?)
-                                         ON CONFLICT(guild_id)
-                                             DO UPDATE
-                                                 SET channel_whitelist = excluded.channel_whitelist
-                                     """)
-                              .parameter(stmt -> stmt.setLong(guildId()).setBoolean(whitelist))
-                              .update()
-                              .sendSync()
-                              .changed();
+                       INSERT INTO thank_settings(guild_id, channel_whitelist) VALUES (?,?)
+                           ON CONFLICT(guild_id)
+                               DO UPDATE
+                                   SET channel_whitelist = excluded.channel_whitelist
+                       """)
+                .parameter(stmt -> stmt.setLong(guildId()).setBoolean(whitelist))
+                .update()
+                .sendSync()
+                .changed();
         if (result) {
             this.whitelist = whitelist;
         }

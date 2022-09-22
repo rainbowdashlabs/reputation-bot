@@ -130,7 +130,7 @@ public class Bot {
                                                          // Required to retrieve reputation emotes
                                                          GatewayIntent.GUILD_MESSAGE_REACTIONS,
                                                          // Required to scan for thankwords
-                                                         GatewayIntent.GUILD_MESSAGES,
+                                                         GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT,
                                                          // Required to resolve member without a direct mention
                                                          GatewayIntent.GUILD_MEMBERS,
                                                          // Required to cache voice states for member relationships
