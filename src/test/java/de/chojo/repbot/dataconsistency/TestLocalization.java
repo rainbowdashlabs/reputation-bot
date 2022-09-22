@@ -95,7 +95,7 @@ public class TestLocalization {
         try (var stream = Files.walk(Path.of("src", "main", "resources"))) {
             files.addAll(stream
                     .filter(p -> p.toFile().isFile())
-                         .filter(p -> p.getFileName().startsWith("locale"))
+                    .filter(p -> p.getFileName().startsWith("locale"))
                     .toList());
         }
 
