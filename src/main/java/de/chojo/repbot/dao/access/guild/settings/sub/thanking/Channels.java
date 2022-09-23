@@ -45,6 +45,11 @@ public class Channels extends QueryFactory implements GuildHolder {
         return thanking.guild();
     }
 
+    @Override
+    public long guildId() {
+        return thanking.guildId();
+    }
+
     public boolean isEnabled(GuildMessageChannel channel) {
         StandardGuildChannel baseChannel;
         if (channel instanceof ThreadChannel bc) {

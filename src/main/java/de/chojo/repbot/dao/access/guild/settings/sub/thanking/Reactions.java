@@ -32,6 +32,11 @@ public class Reactions extends QueryFactory implements GuildHolder {
         return thanking.guild();
     }
 
+    @Override
+    public long guildId() {
+        return thanking.guildId();
+    }
+
     public boolean isReaction(MessageReaction reaction) {
         if (reaction.getEmoji() instanceof UnicodeEmoji emoji) {
             return isReaction(emoji.getAsReactionCode());

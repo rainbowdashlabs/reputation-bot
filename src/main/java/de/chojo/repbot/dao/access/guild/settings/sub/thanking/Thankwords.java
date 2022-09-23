@@ -28,6 +28,11 @@ public class Thankwords extends QueryFactory implements GuildHolder {
         return thanking.guild();
     }
 
+    @Override
+    public long guildId() {
+        return thanking.guildId();
+    }
+
     public Set<String> words() {
         return thankwords;
     }

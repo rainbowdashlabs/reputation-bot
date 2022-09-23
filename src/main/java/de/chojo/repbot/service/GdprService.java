@@ -2,6 +2,7 @@ package de.chojo.repbot.service;
 
 import de.chojo.repbot.dao.access.Gdpr;
 import de.chojo.repbot.dao.access.gdpr.RemovalTask;
+import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.ISnowflake;
@@ -32,7 +33,7 @@ public class GdprService implements Runnable {
     public static GdprService of(ShardManager shardManager, Guilds guilds, Gdpr gdpr,
                                  ScheduledExecutorService scheduledExecutorService) {
         var service = new GdprService(shardManager, guilds, gdpr, scheduledExecutorService);
-        scheduledExecutorService.scheduleAtFixedRate(service, 10, 60, TimeUnit.MINUTES);
+        scheduledExecutorService.scheduleAtFixedRate(service, 1, 60, TimeUnit.MINUTES);
         return service;
     }
 
@@ -52,6 +53,8 @@ public class GdprService implements Runnable {
         gdpr.cleanupRequests();
 
         gdpr.getRemovalTasks().forEach(RemovalTask::executeRemovalTask);
+
+        cleanupGuilds();
     }
 
 
@@ -69,5 +72,17 @@ public class GdprService implements Runnable {
 
     public void cleanupGuildUser(Guild guild, Long user) {
         CompletableFuture.runAsync(() -> RemovalTask.anonymExecute(gdpr, guild.getIdLong(), user), executorService);
+    }
+
+    private void cleanupGuilds() {
+        for (var page : guilds.guilds(100)) {
+            for (var guild : page) {
+                if (shardManager.getGuildById(guild.guildId()) != null) {
+                    guild.gdpr().dequeueDeletion();
+                } else {
+                    guild.gdpr().queueDeletion();
+                }
+            }
+        }
     }
 }

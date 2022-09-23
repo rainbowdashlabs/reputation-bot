@@ -44,6 +44,11 @@ public class Reputation extends QueryFactory implements GuildHolder {
         return repGuild.guild();
     }
 
+    @Override
+    public long guildId() {
+        return repGuild().guildId();
+    }
+
     public GuildReputationStats stats() {
         return builder(GuildReputationStats.class)
                 .query("SELECT total_reputation, week_reputation, today_reputation, top_channel FROM get_guild_stats(?)")

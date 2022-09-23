@@ -14,7 +14,7 @@ import java.sql.SQLException;
 /**
  * Representing a repuration rank.
  * <p>
- * A rank is {@link Comparable} and will be sorted from highest reputation to lowest.
+ * A rank is {@link Comparable} and will be sorted from the highest reputation to lowest.
  */
 public class ReputationRank extends QueryFactory implements GuildHolder, Comparable<ReputationRank> {
     private final long roleId;
@@ -75,6 +75,11 @@ public class ReputationRank extends QueryFactory implements GuildHolder, Compara
     @Override
     public Guild guild() {
         return ranks.guild();
+    }
+
+    @Override
+    public long guildId() {
+        return ranks.guildId();
     }
 
     @Override
