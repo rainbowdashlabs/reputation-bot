@@ -19,21 +19,22 @@ public class ListType implements SlashHandler {
         var channels = guilds.guild(event.getGuild()).settings().thanking().channels();
         if (event.getOptions().isEmpty()) {
             event.reply(context.localize(
-                            channels.isWhitelist() ? "command.channel.listType.message.whitelist" : "command.channel.listType.message.blacklist"))
-                    .queue();
+                         channels.isWhitelist() ? "command.channel.listType.message.whitelist" : "command.channel.listType.message.blacklist"))
+                 .queue();
             return;
         }
         var whitelist = "whitelist".equalsIgnoreCase(event.getOption("type").getAsString());
 
         event.reply(context.localize(
-                        channels.listType(whitelist) ? "command.channel.listType.message.whitelist" : "command.channel.listType.message.blacklist"))
-                .queue();
+                     channels.listType(whitelist) ? "command.channel.listType.message.whitelist" : "command.channel.listType.message.blacklist"))
+             .queue();
     }
 
     @Override
     public void onAutoComplete(CommandAutoCompleteInteractionEvent event, EventContext context) {
         if ("type".equals(event.getFocusedOption().getName())) {
-            event.replyChoices(Completion.complete(event.getFocusedOption().getValue(), "whitelist", "blacklist")).queue();
+            event.replyChoices(Completion.complete(event.getFocusedOption().getValue(), "whitelist", "blacklist"))
+                 .queue();
         }
     }
 }

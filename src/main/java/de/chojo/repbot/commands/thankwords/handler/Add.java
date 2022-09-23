@@ -24,8 +24,8 @@ public class Add implements SlashHandler {
             Pattern.compile(pattern);
         } catch (PatternSyntaxException e) {
             event.reply(context.localize("error.invalidRegex"))
-                    .setEphemeral(true)
-                    .queue();
+                 .setEphemeral(true)
+                 .queue();
             return;
         }
         if (guilds.guild(event.getGuild()).settings().thanking().thankwords().add(pattern)) {

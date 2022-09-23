@@ -29,13 +29,14 @@ public class Show implements SlashHandler {
         var reputation = guilds.guild(guild).reputation();
         var stats = reputation.stats();
         var top = reputation.ranking().total(5).page(0).stream()
-                .map(r -> r.fancyString(5))
-                .collect(Collectors.joining("\n"));
+                            .map(r -> r.fancyString(5))
+                            .collect(Collectors.joining("\n"));
 
         return new LocalizedEmbedBuilder(context.guildLocalizer())
                 .setTitle("command.dashboard.message.title",
                         Replacement.create("GUILD", guild.getName()))
-                .setThumbnail(guild.getIconUrl() == null ? guild.getSelfMember().getUser().getAvatarUrl() : guild.getIconUrl())
+                .setThumbnail(guild.getIconUrl() == null ? guild.getSelfMember().getUser()
+                                                                .getAvatarUrl() : guild.getIconUrl())
                 .setColor(Colors.Pastel.BLUE)
                 .addField("command.dashboard.message.topUser", top, false)
                 .addField("command.dashboard.message.totalReputation", String.valueOf(stats.totalReputation()), true)

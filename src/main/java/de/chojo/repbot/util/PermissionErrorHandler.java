@@ -53,7 +53,8 @@ public final class PermissionErrorHandler {
             errorMessage += "\n" + localizer.localize("error.missingPermissionGuild", guild);
         }
         if (permission != Permission.MESSAGE_SEND && permission != Permission.VIEW_CHANNEL
-            && PermissionUtil.checkPermission(channel.getPermissionContainer(), channel.getGuild().getSelfMember(), Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL)) {
+            && PermissionUtil.checkPermission(channel.getPermissionContainer(), channel.getGuild()
+                                                                                       .getSelfMember(), Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL)) {
             channel.sendMessage(errorMessage).queue();
             return;
         }
@@ -63,10 +64,10 @@ public final class PermissionErrorHandler {
         var ownerId = guild.getOwnerIdLong();
         var finalErrorMessage = errorMessage;
         guild.retrieveMemberById(ownerId)
-                .flatMap(member -> member.getUser().openPrivateChannel())
-                .flatMap(privateChannel -> privateChannel.sendMessage(finalErrorMessage))
-                .onErrorMap(t -> null)
-                .queue();
+             .flatMap(member -> member.getUser().openPrivateChannel())
+             .flatMap(privateChannel -> privateChannel.sendMessage(finalErrorMessage))
+             .onErrorMap(t -> null)
+             .queue();
     }
 
     /**

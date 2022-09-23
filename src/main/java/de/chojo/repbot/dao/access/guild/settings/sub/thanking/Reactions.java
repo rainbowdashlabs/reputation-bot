@@ -82,14 +82,14 @@ public class Reactions extends QueryFactory implements GuildHolder {
     public boolean add(String reaction) {
         var result = builder()
                 .query("""
-                                     INSERT INTO guild_reactions(guild_id, reaction) VALUES (?,?)
-                                         ON CONFLICT(guild_id, reaction)
-                                             DO NOTHING;
-                                     """)
-                              .parameter(stmt -> stmt.setLong(guildId()).setString(reaction))
-                              .update()
-                              .sendSync()
-                              .changed();
+                       INSERT INTO guild_reactions(guild_id, reaction) VALUES (?,?)
+                           ON CONFLICT(guild_id, reaction)
+                               DO NOTHING;
+                       """)
+                .parameter(stmt -> stmt.setLong(guildId()).setString(reaction))
+                .update()
+                .sendSync()
+                .changed();
         if (result) {
             reactions.add(reaction);
         }

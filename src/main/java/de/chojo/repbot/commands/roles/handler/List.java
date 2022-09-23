@@ -30,11 +30,11 @@ public class List implements SlashHandler {
         var ranks = settings.ranks();
 
         var reputationRoles = ranks.ranks()
-                .stream()
-                .sorted(Comparator.reverseOrder())
-                .filter(role -> role.getRole(guild) != null)
-                .map(role -> role.reputation() + " ➜ " + role.getRole(guild).getAsMention())
-                .collect(Collectors.joining("\n"));
+                                   .stream()
+                                   .sorted(Comparator.reverseOrder())
+                                   .filter(role -> role.getRole(guild) != null)
+                                   .map(role -> role.reputation() + " ➜ " + role.getRole(guild).getAsMention())
+                                   .collect(Collectors.joining("\n"));
 
         var builder = new LocalizedEmbedBuilder(context.guildLocalizer())
                 .setTitle("command.roles.info.message.roleinfo");
@@ -45,19 +45,19 @@ public class List implements SlashHandler {
 
         if (!thankSettings.donorRoles().roles().isEmpty()) {
             var donorRoles = thankSettings.donorRoles()
-                    .roles()
-                    .stream()
-                    .map(IMentionable::getAsMention)
-                    .collect(Collectors.joining("\n"));
+                                          .roles()
+                                          .stream()
+                                          .map(IMentionable::getAsMention)
+                                          .collect(Collectors.joining("\n"));
 
             builder.addField("command.roles.info.message.donorroles", donorRoles, true);
         }
         if (!thankSettings.receiverRoles().roles().isEmpty()) {
             var receiverRoles = thankSettings.receiverRoles()
-                    .roles()
-                    .stream()
-                    .map(IMentionable::getAsMention)
-                    .collect(Collectors.joining("\n"));
+                                             .roles()
+                                             .stream()
+                                             .map(IMentionable::getAsMention)
+                                             .collect(Collectors.joining("\n"));
 
             builder.addField("command.roles.info.message.receiverroles", receiverRoles, true);
         }

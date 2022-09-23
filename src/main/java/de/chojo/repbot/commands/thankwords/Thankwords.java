@@ -34,15 +34,18 @@ public class Thankwords extends SlashCommand {
                         .argument(Argument.text("pattern", "command.thankwords.add.pattern.description").asRequired()))
                 .subCommand(SubCommand.of("remove", "command.thankwords.remove.description")
                         .handler(new Remove(guilds))
-                        .argument(Argument.text("pattern", "command.thankwords.remove.pattern.description").asRequired().withAutoComplete()))
+                        .argument(Argument.text("pattern", "command.thankwords.remove.pattern.description").asRequired()
+                                          .withAutoComplete()))
                 .subCommand(SubCommand.of("list", "command.thankwords.list.description")
                         .handler(new List(guilds)))
                 .subCommand(SubCommand.of("check", "command.thankwords.check.description")
                         .handler(new Check(guilds, messageAnalyzer))
-                        .argument(Argument.text("message", "command.thankwords.check.message.description").asRequired()))
+                        .argument(Argument.text("message", "command.thankwords.check.message.description")
+                                          .asRequired()))
                 .subCommand(SubCommand.of("loaddefault", "command.thankwords.loaddefault.description")
                         .handler(new LoadDefault(guilds, thankwordsContainer))
-                        .argument(Argument.text("language", "command.thankwords.loaddefault.language.description").withAutoComplete()))
+                        .argument(Argument.text("language", "command.thankwords.loaddefault.language.description")
+                                          .withAutoComplete()))
         );
     }
 

@@ -36,29 +36,29 @@ public class Ranks extends QueryFactory implements GuildHolder {
      */
     public boolean add(Role role, long reputation) {
         var result = builder()
-                             .query("""
-                                    DELETE FROM
-                                        guild_ranks
-                                    WHERE
-                                        guild_id = ?
-                                            AND (role_id = ?
-                                                OR reputation = ?);
-                                    """)
-                             .parameter(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong())
-                                                    .setLong(reputation))
-                             .append()
-                             .query("""
-                                    INSERT INTO guild_ranks(guild_id, role_id, reputation) VALUES(?,?,?)
-                                        ON CONFLICT(guild_id, role_id)
-                                            DO UPDATE
-                                                SET reputation = excluded.reputation,
-                                                    role_id = excluded.role_id;
-                                    """)
-                             .parameter(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong())
-                                                    .setLong(reputation))
-                             .update()
-                             .sendSync()
-                             .changed();
+                .query("""
+                       DELETE FROM
+                           guild_ranks
+                       WHERE
+                           guild_id = ?
+                               AND (role_id = ?
+                                   OR reputation = ?);
+                       """)
+                .parameter(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong())
+                                       .setLong(reputation))
+                .append()
+                .query("""
+                       INSERT INTO guild_ranks(guild_id, role_id, reputation) VALUES(?,?,?)
+                           ON CONFLICT(guild_id, role_id)
+                               DO UPDATE
+                                   SET reputation = excluded.reputation,
+                                       role_id = excluded.role_id;
+                       """)
+                .parameter(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong())
+                                       .setLong(reputation))
+                .update()
+                .sendSync()
+                .changed();
         if (result) {
             ranks.removeIf(r -> r.roleId() == role.getIdLong() || reputation == r.reputation());
             ranks.add(new ReputationRank(this, role.getIdLong(), reputation));

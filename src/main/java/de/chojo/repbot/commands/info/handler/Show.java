@@ -58,10 +58,10 @@ public class Show implements SlashHandler {
     private MessageEmbed getResponse(SlashCommandInteractionEvent event, EventContext context) {
         if (contributors == null || lastFetch.isBefore(Instant.now().minus(5, ChronoUnit.MINUTES))) {
             var request = HttpRequest.newBuilder().GET()
-                    .uri(URI.create("https://api.github.com/repos/rainbowdashlabs/reputation-bot/contributors?anon=1"))
-                    .header("accept", "application/vnd.github.v3+json")
-                    .header("User-Agent", "reputation-bot")
-                    .build();
+                                     .uri(URI.create("https://api.github.com/repos/rainbowdashlabs/reputation-bot/contributors?anon=1"))
+                                     .header("accept", "application/vnd.github.v3+json")
+                                     .header("User-Agent", "reputation-bot")
+                                     .build();
 
             List<Contributor> contributors;
             try {
@@ -77,10 +77,10 @@ public class Show implements SlashHandler {
                 if (ContributorType.BOT == contributor.type) continue;
 
                 var profile = HttpRequest.newBuilder().GET()
-                        .uri(URI.create(contributor.url))
-                        .header("accept", "application/vnd.github.v3+json")
-                        .header("User-Agent", "reputation-bot")
-                        .build();
+                                         .uri(URI.create(contributor.url))
+                                         .header("accept", "application/vnd.github.v3+json")
+                                         .header("User-Agent", "reputation-bot")
+                                         .build();
 
                 try {
                     var response = client.send(profile, HttpResponse.BodyHandlers.ofString());

@@ -27,10 +27,10 @@ public class Profile implements SlashHandler {
             return;
         }
         var reputation = guilds.guild(event.getGuild())
-                .reputation()
-                .user(member)
-                .profile()
-                .publicProfile(configuration, context.guildLocalizer());
+                               .reputation()
+                               .user(member)
+                               .profile()
+                               .publicProfile(configuration, context.guildLocalizer());
         event.replyEmbeds(reputation).queue();
         roleAssigner.updateReporting(member, event.getGuildChannel());
     }

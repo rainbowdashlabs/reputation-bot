@@ -25,7 +25,8 @@ public class Show implements SlashHandler {
     private MessageEmbed getResponse(EventContext context) {
         return new LocalizedEmbedBuilder(context.guildLocalizer())
                 .setTitle("command.invite.message.title")
-                .setDescription("command.invite.message.click", Replacement.create("URL", configuration.links().invite()))
+                .setDescription("command.invite.message.click", Replacement.create("URL", configuration.links()
+                                                                                                       .invite()))
                 .build();
     }
 }

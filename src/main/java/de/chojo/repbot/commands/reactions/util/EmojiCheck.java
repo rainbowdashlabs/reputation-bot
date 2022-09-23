@@ -15,9 +15,9 @@ public final class EmojiCheck {
         // Check for emote id
         if (Verifier.isValidId(emote)) {
             var emoteById = message.getGuild()
-                    .retrieveEmojiById(Verifier.getIdRaw(emote).get())
-                    .onErrorMap(err -> null)
-                    .complete();
+                                   .retrieveEmojiById(Verifier.getIdRaw(emote).get())
+                                   .onErrorMap(err -> null)
+                                   .complete();
             if (!canUse(emoteById, message)) {
                 return new EmojiCheckResult("", "", CheckResult.NOT_FOUND);
             }
@@ -26,14 +26,15 @@ public final class EmojiCheck {
 
         // Check for name
         var emoteByName = message.getGuild().retrieveEmojis().complete().stream()
-                .filter(e -> e.getName().equals(emote))
-                .findFirst();
+                                 .filter(e -> e.getName().equals(emote))
+                                 .findFirst();
 
         if (emoteByName.isPresent()) {
             if (!canUse(emoteByName.get(), message)) {
                 return new EmojiCheckResult("", "", CheckResult.NOT_FOUND);
             }
-            return new EmojiCheckResult(emoteByName.get().getAsMention(), emoteByName.get().getId(), CheckResult.EMOTE_FOUND);
+            return new EmojiCheckResult(emoteByName.get().getAsMention(), emoteByName.get()
+                                                                                     .getId(), CheckResult.EMOTE_FOUND);
         }
 
         // check for unicode

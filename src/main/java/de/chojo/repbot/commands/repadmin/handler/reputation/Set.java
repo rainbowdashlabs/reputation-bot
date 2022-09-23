@@ -20,8 +20,8 @@ public class Set implements SlashHandler {
         var set = event.getOption("set").getAsLong();
         repUser.setReputation(set);
         event.reply(context.localize("command.repadmin.reputation.set.message.set",
-                        Replacement.create("VALUE", set), Replacement.createMention(user)))
-                .setEphemeral(true).queue();
+                     Replacement.create("VALUE", set), Replacement.createMention(user)))
+             .setEphemeral(true).queue();
 
     }
 }

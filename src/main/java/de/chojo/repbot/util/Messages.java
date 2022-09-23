@@ -34,13 +34,15 @@ public final class Messages {
     }
 
     public static void markMessage(Message message, Emoji emote) {
-        if (PermissionUtil.checkPermission(message.getGuildChannel().getPermissionContainer(), message.getGuild().getSelfMember(), Permission.MESSAGE_ADD_REACTION)) {
+        if (PermissionUtil.checkPermission(message.getGuildChannel().getPermissionContainer(), message.getGuild()
+                                                                                                      .getSelfMember(), Permission.MESSAGE_ADD_REACTION)) {
             handleMark(message.addReaction(emote));
         }
     }
 
     public static void markMessage(Message message, String emoji) {
-        if (PermissionUtil.checkPermission(message.getGuildChannel().getPermissionContainer(), message.getGuild().getSelfMember(), Permission.MESSAGE_ADD_REACTION)) {
+        if (PermissionUtil.checkPermission(message.getGuildChannel().getPermissionContainer(), message.getGuild()
+                                                                                                      .getSelfMember(), Permission.MESSAGE_ADD_REACTION)) {
             handleMark(message.addReaction(Emoji.fromUnicode(emoji)));
         }
     }

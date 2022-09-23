@@ -20,7 +20,7 @@ public class Add implements SlashHandler {
         var add = event.getOption("add").getAsLong();
         repUser.addReputation(add);
         event.reply(context.localize("command.repadmin.reputation.add.message.added",
-                        Replacement.create("VALUE", add), Replacement.createMention(user)))
-                .setEphemeral(true).queue();
+                     Replacement.create("VALUE", add), Replacement.createMention(user)))
+             .setEphemeral(true).queue();
     }
 }

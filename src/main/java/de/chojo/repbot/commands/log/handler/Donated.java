@@ -5,7 +5,6 @@ import de.chojo.jdautil.pagination.bag.PrivatePageBag;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 

@@ -28,7 +28,7 @@ public class List implements SlashHandler {
     @Nullable
     private String getGuildPattern(Guild guild) {
         return guilds.guild(guild).settings().thanking().thankwords().words().stream()
-                .map(w -> StringUtils.wrap(w, "`"))
-                .collect(Collectors.joining(", "));
+                     .map(w -> StringUtils.wrap(w, "`"))
+                     .collect(Collectors.joining(", "));
     }
 }

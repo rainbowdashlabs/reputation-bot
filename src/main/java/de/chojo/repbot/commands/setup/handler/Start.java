@@ -41,17 +41,19 @@ public class Start implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        PermissionErrorHandler.assertPermissions(event.getChannel().asGuildMessageChannel(), Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL);
+        PermissionErrorHandler.assertPermissions(event.getChannel()
+                                                      .asGuildMessageChannel(), Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL);
         event.reply(context.localize("command.setup.message.starting")).queue();
-        context.conversationService().startDialog(event.getUser(), event.getChannel().asGuildMessageChannel(), getConversation(context));
+        context.conversationService()
+               .startDialog(event.getUser(), event.getChannel().asGuildMessageChannel(), getConversation(context));
     }
 
     private Conversation getConversation(EventContext context) {
         var builder = ConversationBuilder.builder(
                         Step.button("**$%s$**%n$%s$".formatted("command.setup.dialog.welcome", "command.setup.message.continueToProceed"),
-                                        buttons -> buttons
-                                                .add(Button.success("continue", "word.continue"), ctx -> Result.proceed(1)))
-                                .build())
+                                    buttons -> buttons
+                                            .add(Button.success("continue", "word.continue"), ctx -> Result.proceed(1)))
+                            .build())
                 .addStep(1, buildSelectLanguage(context))
                 .addStep(3, buildRoles())
                 .addStep(4, buildLoadDefaults())
@@ -62,7 +64,7 @@ public class Start implements SlashHandler {
 
     private Step buildSelectLanguage(EventContext context) {
         return Step.button("command.setup.message.language", but -> buildLanguageButtons(but, context))
-                .build();
+                   .build();
     }
 
     private void buildLanguageButtons(ButtonDialog buttons, EventContext context) {
@@ -104,16 +106,16 @@ public class Start implements SlashHandler {
     private Result responseRolesSubAdded(ConversationContext context, Role role, Integer reputation) {
         guilds.guild(context.getGuild()).settings().ranks().add(role, reputation);
         context.reply(context.localize("command.roles.add.message.added",
-                        Replacement.createMention(role),
-                        Replacement.create("POINTS", reputation, Format.BOLD)))
-                .queue();
+                       Replacement.createMention(role),
+                       Replacement.create("POINTS", reputation, Format.BOLD)))
+               .queue();
         return Result.freeze();
     }
 
     private Step buildLoadDefaults() {
         return Step.button("command.setup.message.loadDefaults",
-                        this::buildLoadDefaultsButton)
-                .build();
+                           this::buildLoadDefaultsButton)
+                   .build();
     }
 
     private void buildLoadDefaultsButton(ButtonDialog buttons) {
@@ -122,11 +124,12 @@ public class Start implements SlashHandler {
             buttons.add(Button.of(ButtonStyle.PRIMARY, language, language),
                     context -> {
                         var words = thankwordsContainer.get(language.toLowerCase(Locale.ROOT));
-                        words.forEach(word -> guilds.guild(context.getGuild()).settings().thanking().thankwords().add(word));
+                        words.forEach(word -> guilds.guild(context.getGuild()).settings().thanking().thankwords()
+                                                    .add(word));
                         var wordsJoined = words.stream().map(w -> StringUtils.wrap(w, "`"))
-                                .collect(Collectors.joining(", "));
+                                               .collect(Collectors.joining(", "));
                         context.reply(context.localize("command.thankwords.loaddefault.message.added") + wordsJoined)
-                                .queue();
+                               .queue();
                         return Result.freeze();
                     });
         }
@@ -135,14 +138,14 @@ public class Start implements SlashHandler {
 
     private Step buildChannels() {
         return Step.button("command.setup.message.channels", this::buildChannelsButton)
-                .message(this::handleChannels)
-                .build();
+                   .message(this::handleChannels)
+                   .build();
     }
 
     private void buildChannelsButton(ButtonDialog buttons) {
         buttons.add(new ComponenAction(Button.success("done", "word.done"), ctx -> {
             ctx.reply(ctx.localize("command.setup.message.complete"))
-                    .queue();
+               .queue();
             return Result.finish();
         })).add(Button.primary("all", "command.setup.message.allchannel"), ctx -> {
             var guild = ctx.getGuild();
@@ -156,16 +159,16 @@ public class Start implements SlashHandler {
         var args = context.getContentRaw().replaceAll("\\s+", " ").split("\\s");
         var channels = DiscordResolver.getTextChannels(context.getGuild(), List.of(args));
         var addedChannel = channels.stream()
-                .map(channel -> {
-                    guilds.guild(context.getGuild()).settings().thanking().channels().add(channel);
-                    return channel.getAsMention();
-                })
-                .collect(Collectors.joining(", "));
+                                   .map(channel -> {
+                                       guilds.guild(context.getGuild()).settings().thanking().channels().add(channel);
+                                       return channel.getAsMention();
+                                   })
+                                   .collect(Collectors.joining(", "));
         context.reply(
-                        context.localize("command.channel.add.message.added",
-                                Replacement.create("CHANNEL", addedChannel)))
-                .mention(Collections.emptyList())
-                .queue();
+                       context.localize("command.channel.add.message.added",
+                               Replacement.create("CHANNEL", addedChannel)))
+               .mention(Collections.emptyList())
+               .queue();
         return Result.freeze();
     }
 

@@ -23,7 +23,8 @@ public class Reactions extends SlashCommand {
                         .argument(Argument.text("emote", "command.reactions.add.emote.description").asRequired()))
                 .subCommand(SubCommand.of("remove", "command.reactions.remove.description")
                         .handler(new Remove(guilds))
-                        .argument(Argument.text("emote", "command.reactions.remove.emote.description").withAutoComplete().asRequired()))
+                        .argument(Argument.text("emote", "command.reactions.remove.emote.description")
+                                          .withAutoComplete().asRequired()))
                 .subCommand(SubCommand.of("info", "command.reactions.info.description")
                         .handler(new Info(guilds)))
         );

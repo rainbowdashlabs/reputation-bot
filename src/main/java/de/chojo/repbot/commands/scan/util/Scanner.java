@@ -67,7 +67,8 @@ public class Scanner {
             return;
         }
         var duration = DurationFormatUtils.formatDuration((long) messageCount / 100 * INTERVAL_MS, "mm:ss");
-        event.reply(context.localize("command.scan.scannes.message.scheduling", Replacement.create("DURATION", duration))).queue();
+        event.reply(context.localize("command.scan.scanner.message.scheduling", Replacement.create("DURATION", duration)))
+             .queue();
         preSchedule(context, channel, messageCount);
     }
 
@@ -80,7 +81,8 @@ public class Scanner {
 
     private void schedule(MessageHistory history, EventContext context, Pattern pattern, TextChannel reportChannel, int calls) {
         var progressMessage = reportChannel.sendMessage(context.localize("command.scan.scanner.message.progress",
-                Replacement.create("PERCENT", String.format("%.02f", 0.0d))) + " " + Text.progressBar(0, 40)).complete();
+                                                   Replacement.create("PERCENT", String.format("%.02f", 0.0d))) + " " + Text.progressBar(0, 40))
+                                           .complete();
         var scanProcess = new ScanProcess(messageAnalyzer, context.guildLocalizer(), progressMessage, history, pattern, calls, guilds);
         setActive(scanProcess);
         reportChannel.getGuild().loadMembers().get();
@@ -178,7 +180,8 @@ public class Scanner {
                 continue;
             }
             if (activeScan.interrupt()) {
-                log.warn("Scan thread was stuck and interrupted. Scan was canceled on guild {}", activeScan.guild().getIdLong());
+                log.warn("Scan thread was stuck and interrupted. Scan was canceled on guild {}", activeScan.guild()
+                                                                                                           .getIdLong());
                 cancelScan(activeScan.guild());
             }
         }

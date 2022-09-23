@@ -31,6 +31,7 @@ public class Messages extends MetricsHolder {
             writeImage(ctx, stats.getChart("Messages analyzed per hour"));
         }
     }
+
     public void countDay(Context ctx) {
         var stats = metrics().messages().day(offset(ctx, MAX_DAY_OFFSET), count(ctx, MAX_DAYS)).join();
         if ("application/json".equals(ctx.header("Accept"))) {
@@ -90,70 +91,70 @@ public class Messages extends MetricsHolder {
         path("messages", () -> {
             path("count", () -> {
                 get("hour/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
-                                .operation(op -> {
-                                    op.summary("Get the counts of analyzed messages per hour.");
-                                })
-                                .result("200", byte[].class, "image/png")
-                                .result("200", CountsStatistic.class, "application/json")
-                                .pathParam("offset", Integer.class, MetricsRoute::offsetHourDoc)
-                                .pathParam("count", Integer.class, MetricsRoute::countHourDoc),
+                                                                                     .operation(op -> {
+                                                                                         op.summary("Get the counts of analyzed messages per hour.");
+                                                                                     })
+                                                                                     .result("200", byte[].class, "image/png")
+                                                                                     .result("200", CountsStatistic.class, "application/json")
+                                                                                     .pathParam("offset", Integer.class, MetricsRoute::offsetHourDoc)
+                                                                                     .pathParam("count", Integer.class, MetricsRoute::countHourDoc),
                         cache(this::countHour)));
                 get("day/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
-                                .operation(op -> {
-                                    op.summary("Get the counts of analyzed messages per day.");
-                                })
-                                .result("200", byte[].class, "image/png")
-                                .result("200", CountsStatistic.class, "application/json")
-                                .pathParam("offset", Integer.class, MetricsRoute::offsetDayDoc)
-                                .pathParam("count", Integer.class, MetricsRoute::countDayDoc),
+                                                                                    .operation(op -> {
+                                                                                        op.summary("Get the counts of analyzed messages per day.");
+                                                                                    })
+                                                                                    .result("200", byte[].class, "image/png")
+                                                                                    .result("200", CountsStatistic.class, "application/json")
+                                                                                    .pathParam("offset", Integer.class, MetricsRoute::offsetDayDoc)
+                                                                                    .pathParam("count", Integer.class, MetricsRoute::countDayDoc),
                         cache(this::countDay)));
                 get("week/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
-                                .operation(op -> {
-                                    op.summary("Get the counts of analyzed messages per week.");
-                                })
-                                .result("200", byte[].class, "image/png")
-                                .result("200", CountsStatistic.class, "application/json")
-                                .pathParam("offset", Integer.class, MetricsRoute::offsetWeekDoc)
-                                .pathParam("count", Integer.class,MetricsRoute::countWeekDoc),
+                                                                                     .operation(op -> {
+                                                                                         op.summary("Get the counts of analyzed messages per week.");
+                                                                                     })
+                                                                                     .result("200", byte[].class, "image/png")
+                                                                                     .result("200", CountsStatistic.class, "application/json")
+                                                                                     .pathParam("offset", Integer.class, MetricsRoute::offsetWeekDoc)
+                                                                                     .pathParam("count", Integer.class, MetricsRoute::countWeekDoc),
                         cache(this::countWeek)));
                 get("month/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
-                                .operation(op -> {
-                                    op.summary("Get the counts of analyzed messages per month.");
-                                })
-                                .result("200", byte[].class, "image/png")
-                                .result("200", CountsStatistic.class, "application/json")
-                                .pathParam("offset", Integer.class, MetricsRoute::offsetMonthDoc)
-                                .pathParam("count", Integer.class, MetricsRoute::countMonthDoc),
+                                                                                      .operation(op -> {
+                                                                                          op.summary("Get the counts of analyzed messages per month.");
+                                                                                      })
+                                                                                      .result("200", byte[].class, "image/png")
+                                                                                      .result("200", CountsStatistic.class, "application/json")
+                                                                                      .pathParam("offset", Integer.class, MetricsRoute::offsetMonthDoc)
+                                                                                      .pathParam("count", Integer.class, MetricsRoute::countMonthDoc),
                         cache(this::countMonth)));
             });
 
             path("total", () -> {
                 get("day/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
-                                .operation(op -> {
-                                    op.summary("Get the total count of analyzed messages in these days.");
-                                })
-                                .result("200", byte[].class, "image/png")
-                                .result("200", CountsStatistic.class, "application/json")
-                                .pathParam("offset", Integer.class,  MetricsRoute::offsetDayDoc)
-                                .pathParam("count", Integer.class, MetricsRoute::countDayDoc),
+                                                                                    .operation(op -> {
+                                                                                        op.summary("Get the total count of analyzed messages in these days.");
+                                                                                    })
+                                                                                    .result("200", byte[].class, "image/png")
+                                                                                    .result("200", CountsStatistic.class, "application/json")
+                                                                                    .pathParam("offset", Integer.class, MetricsRoute::offsetDayDoc)
+                                                                                    .pathParam("count", Integer.class, MetricsRoute::countDayDoc),
                         cache(this::totalDay)));
                 get("week/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
-                                .operation(op -> {
-                                    op.summary("Get the total count of analyzed messages in these weeks.");
-                                })
-                                .result("200", byte[].class, "image/png")
-                                .result("200", CountsStatistic.class, "application/json")
-                                .pathParam("offset", Integer.class, MetricsRoute::offsetWeekDoc)
-                                .pathParam("count", Integer.class, MetricsRoute::countWeekDoc),
+                                                                                     .operation(op -> {
+                                                                                         op.summary("Get the total count of analyzed messages in these weeks.");
+                                                                                     })
+                                                                                     .result("200", byte[].class, "image/png")
+                                                                                     .result("200", CountsStatistic.class, "application/json")
+                                                                                     .pathParam("offset", Integer.class, MetricsRoute::offsetWeekDoc)
+                                                                                     .pathParam("count", Integer.class, MetricsRoute::countWeekDoc),
                         cache(this::totalWeek)));
                 get("month/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
-                                .operation(op -> {
-                                    op.summary("Get the total count of analyzed messages in these months.");
-                                })
-                                .result("200", byte[].class, "image/png")
-                                .result("200", CountsStatistic.class, "application/json")
-                                .pathParam("offset", Integer.class, MetricsRoute::offsetMonthDoc)
-                                .pathParam("count", Integer.class, MetricsRoute::countMonthDoc),
+                                                                                      .operation(op -> {
+                                                                                          op.summary("Get the total count of analyzed messages in these months.");
+                                                                                      })
+                                                                                      .result("200", byte[].class, "image/png")
+                                                                                      .result("200", CountsStatistic.class, "application/json")
+                                                                                      .pathParam("offset", Integer.class, MetricsRoute::offsetMonthDoc)
+                                                                                      .pathParam("count", Integer.class, MetricsRoute::countMonthDoc),
                         cache(this::totalMonth)));
             });
         });

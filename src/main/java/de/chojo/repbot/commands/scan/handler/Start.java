@@ -24,12 +24,14 @@ public class Start implements SlashHandler {
         }
 
         if (scanner.isActive(event.getGuild())) {
-            event.reply(":stop_sign: " + context.localize("command.scan.start.message.running")).setEphemeral(true).queue();
+            event.reply(":stop_sign: " + context.localize("command.scan.start.message.running")).setEphemeral(true)
+                 .queue();
             return;
         }
 
         if (scanner.limitReached()) {
-            event.reply(":stop_sign: " + context.localize("command.scan.start.message.queueFull")).setEphemeral(true).queue();
+            event.reply(":stop_sign: " + context.localize("command.scan.start.message.queueFull")).setEphemeral(true)
+                 .queue();
             return;
         }
 

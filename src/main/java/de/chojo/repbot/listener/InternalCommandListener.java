@@ -69,7 +69,7 @@ public class InternalCommandListener extends ListenerAdapter {
 
         if ("metrics".equalsIgnoreCase(args[0])) {
             var reply = event.getMessage()
-                    .reply("Metrics");
+                             .reply("Metrics");
 
             var commands = metrics.commands().week(1).join();
             if (!commands.commands().isEmpty()) {

@@ -4,7 +4,6 @@ import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.util.MentionUtil;
 import de.chojo.jdautil.wrapper.EventContext;
-import de.chojo.repbot.dao.pagination.Announcements;
 import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 

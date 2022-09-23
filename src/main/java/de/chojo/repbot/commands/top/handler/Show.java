@@ -52,7 +52,8 @@ public class Show implements SlashHandler {
                     var ranking = guildRanking.page(current());
 
                     var maxRank = ranking.get(ranking.size() - 1).rank();
-                    var rankString = ranking.stream().map(rank -> rank.fancyString((int) maxRank)).collect(Collectors.joining("\n"));
+                    var rankString = ranking.stream().map(rank -> rank.fancyString((int) maxRank))
+                                            .collect(Collectors.joining("\n"));
 
                     return createBaseBuilder(guildRanking, context, event.getGuild())
                             .setDescription(rankString)

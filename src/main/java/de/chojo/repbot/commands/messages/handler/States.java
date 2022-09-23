@@ -39,20 +39,22 @@ public class States implements SlashHandler {
                 settings.reputation().isReactionActive());
 
         context.registerMenu(MenuAction.forCallback(getSettings(context, settings), event)
-                .addComponent(MenuEntry.of(setting, ctx -> {
-                    var option = ctx.event().getValues().get(0);
-                    var entry = ctx.container().entry(option).get();
-                    ctx.container().entries().forEach(MenuEntry::hidden);
-                    ctx.entry().visible(true);
-                    entry.visible(true);
-                    var copy = ctx.entry().component().createCopy();
-                    copy.setDefaultValues(Collections.singleton(option));
-                    ctx.entry().component(copy.build());
-                    ctx.refresh();
-                }))
-                .addComponent(MenuEntry.of(reactions, ctx -> refresh(ctx, res -> settings.messages().reactionConfirmation(res), context, settings)).hidden())
-                .asEphemeral()
-                .build());
+                                       .addComponent(MenuEntry.of(setting, ctx -> {
+                                           var option = ctx.event().getValues().get(0);
+                                           var entry = ctx.container().entry(option).get();
+                                           ctx.container().entries().forEach(MenuEntry::hidden);
+                                           ctx.entry().visible(true);
+                                           entry.visible(true);
+                                           var copy = ctx.entry().component().createCopy();
+                                           copy.setDefaultValues(Collections.singleton(option));
+                                           ctx.entry().component(copy.build());
+                                           ctx.refresh();
+                                       }))
+                                       .addComponent(MenuEntry.of(reactions, ctx -> refresh(ctx, res -> settings.messages()
+                                                                                                                .reactionConfirmation(res), context, settings))
+                                               .hidden())
+                                       .asEphemeral()
+                                       .build());
     }
 
     private SelectMenu getMenu(String id, String placeholder, String enabledDescr, String disabledDescr, boolean state) {

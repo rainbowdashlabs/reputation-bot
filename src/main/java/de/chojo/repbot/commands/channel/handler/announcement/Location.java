@@ -3,7 +3,6 @@ package de.chojo.repbot.commands.channel.handler.announcement;
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.util.Completion;
 import de.chojo.jdautil.wrapper.EventContext;
-import de.chojo.repbot.dao.pagination.Announcements;
 import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;

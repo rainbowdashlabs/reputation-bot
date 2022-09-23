@@ -28,7 +28,7 @@ public class Add implements SlashHandler {
         var ranks = guilds.guild(event.getGuild()).settings().ranks();
         ranks.add(role, reputation);
         event.reply(context.localize("command.roles.add.message.added",
-                        Replacement.createMention("ROLE", role), Replacement.create("POINTS", reputation)))
-                .mention(Collections.emptyList()).queue();
+                     Replacement.createMention("ROLE", role), Replacement.create("POINTS", reputation)))
+             .mention(Collections.emptyList()).queue();
     }
 }

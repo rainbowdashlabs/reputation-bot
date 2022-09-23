@@ -55,7 +55,8 @@ public class StateListener extends ListenerAdapter {
         for (var channel : event.getGuild().getTextChannels()) {
             if (selfMember.hasPermission(channel, Permission.VIEW_CHANNEL)
                 && selfMember.hasPermission(channel, Permission.MESSAGE_SEND)) {
-                channel.sendMessage(localizer.localize("message.welcome", event.getGuild())).queueAfter(5, TimeUnit.SECONDS);
+                channel.sendMessage(localizer.localize("message.welcome", event.getGuild()))
+                       .queueAfter(5, TimeUnit.SECONDS);
                 break;
             }
         }

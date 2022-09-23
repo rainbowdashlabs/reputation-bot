@@ -17,7 +17,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.annotation.Nullable;
 import java.sql.SQLException;
 import java.util.Optional;
 
@@ -82,7 +81,7 @@ public record RepProfile(RepUser repUser, long rank, long rankDonated, long user
 
         var currentRoleRep = current.map(ReputationRank::reputation).orElse(0L);
         var nextRoleRep = next.map(ReputationRank::reputation).orElse(currentRoleRep);
-        var progess = (double) (reputation() - currentRoleRep) / (double) (nextRoleRep - currentRoleRep);
+        var progess = (double) (reputation() - currentRoleRep) / (nextRoleRep - currentRoleRep);
 
         var progressBar = Text.progressBar(progess, BAR_SIZE);
 

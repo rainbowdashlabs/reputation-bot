@@ -4,7 +4,6 @@ import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.Guilds;
-import de.chojo.repbot.dao.snapshots.RepProfile;
 import de.chojo.repbot.dao.snapshots.ReputationRank;
 import de.chojo.repbot.util.Roles;
 import net.dv8tion.jda.api.entities.Guild;

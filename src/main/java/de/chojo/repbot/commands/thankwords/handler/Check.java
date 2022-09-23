@@ -30,7 +30,8 @@ public class Check implements SlashHandler {
         }
 
         var message = event.getChannel().retrieveMessageById(messageId).complete();
-        var result = messageAnalyzer.processMessage(guildSettings.thankwordPattern(), message, settings, true, settings.abuseProtection().maxMessageReputation());
+        var result = messageAnalyzer.processMessage(guildSettings.thankwordPattern(), message, settings, true, settings.abuseProtection()
+                                                                                                                       .maxMessageReputation());
         if (result.receivers().isEmpty()) {
             event.reply(context.localize("command.thankwords.check.message.noMatch")).queue();
             return;

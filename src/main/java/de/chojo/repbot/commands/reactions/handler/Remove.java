@@ -43,14 +43,14 @@ public class Remove implements SlashHandler {
     public void onAutoComplete(CommandAutoCompleteInteractionEvent event, EventContext context) {
         if ("emote".equals(event.getFocusedOption().getName())) {
             var reactions = guilds.guild(event.getGuild())
-                    .settings()
-                    .thanking()
-                    .reactions()
-                    .reactions()
-                    .stream()
-                    .limit(25)
-                    .map(Choice::toChoice)
-                    .toList();
+                                  .settings()
+                                  .thanking()
+                                  .reactions()
+                                  .reactions()
+                                  .stream()
+                                  .limit(25)
+                                  .map(Choice::toChoice)
+                                  .toList();
             event.replyChoices(reactions).queue();
         }
     }

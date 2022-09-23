@@ -85,36 +85,50 @@ public class Info implements SlashHandler {
                 .build();
 
         context.registerMenu(MenuAction.forCallback(getSettings(context, guildSettings), event)
-                .addComponent(MenuEntry.of(settings, ctx -> {
-                    var option = ctx.event().getValues().get(0);
-                    var entry = ctx.container().entry(option).get();
-                    ctx.container().entries().forEach(MenuEntry::hidden);
-                    ctx.entry().visible(true);
-                    entry.visible(true);
-                    var copy = ctx.entry().component().createCopy();
-                    copy.setDefaultValues(Collections.singleton(option));
-                    ctx.entry().component(copy.build());
-                    ctx.refresh();
-                }))
-                .addComponent(MenuEntry.of(reactions, ctx -> refresh(ctx, res -> guildSettings.reputation().reactionActive(res), context, guildSettings)).hidden())
-                .addComponent(MenuEntry.of(answers, ctx -> refresh(ctx, res -> guildSettings.reputation().answerActive(res), context, guildSettings)).hidden())
-                .addComponent(MenuEntry.of(mention, ctx -> refresh(ctx, res -> guildSettings.reputation().mentionActive(res), context, guildSettings)).hidden())
-                .addComponent(MenuEntry.of(fuzzy, ctx -> refresh(ctx, res -> guildSettings.reputation().fuzzyActive(res), context, guildSettings)).hidden())
-                .addComponent(MenuEntry.of(embed, ctx -> refresh(ctx, res -> guildSettings.reputation().embedActive(res), context, guildSettings)).hidden())
-                .addComponent(MenuEntry.of(emojidebug, ctx -> refresh(ctx, res -> guildSettings.general().emojiDebug(res), context, guildSettings)).hidden())
-                .addComponent(MenuEntry.of(skipSingleEmbed, ctx -> refresh(ctx, res -> guildSettings.reputation().skipSingleEmbed(res), context, guildSettings)).hidden())
-                .addComponent(MenuEntry.of(reputationMode, ctx -> {
-                    var value = ctx.event().getValues().get(0);
-                    var copy = ctx.entry().component().createCopy();
-                    var mode = ReputationMode.valueOf(value);
-                    mode = guildSettings.general().reputationMode(mode);
-                    copy.setDefaultValues(Collections.singleton(mode.name()));
-                    var settingsEmbed = getSettings(context, guildSettings);
-                    ctx.entry().component(copy.build());
-                    ctx.refresh(settingsEmbed);
-                }).hidden())
-                .asEphemeral()
-                .build());
+                                       .addComponent(MenuEntry.of(settings, ctx -> {
+                                           var option = ctx.event().getValues().get(0);
+                                           var entry = ctx.container().entry(option).get();
+                                           ctx.container().entries().forEach(MenuEntry::hidden);
+                                           ctx.entry().visible(true);
+                                           entry.visible(true);
+                                           var copy = ctx.entry().component().createCopy();
+                                           copy.setDefaultValues(Collections.singleton(option));
+                                           ctx.entry().component(copy.build());
+                                           ctx.refresh();
+                                       }))
+                                       .addComponent(MenuEntry.of(reactions, ctx -> refresh(ctx, res -> guildSettings.reputation()
+                                                                                                                     .reactionActive(res), context, guildSettings))
+                                               .hidden())
+                                       .addComponent(MenuEntry.of(answers, ctx -> refresh(ctx, res -> guildSettings.reputation()
+                                                                                                                   .answerActive(res), context, guildSettings))
+                                               .hidden())
+                                       .addComponent(MenuEntry.of(mention, ctx -> refresh(ctx, res -> guildSettings.reputation()
+                                                                                                                   .mentionActive(res), context, guildSettings))
+                                               .hidden())
+                                       .addComponent(MenuEntry.of(fuzzy, ctx -> refresh(ctx, res -> guildSettings.reputation()
+                                                                                                                 .fuzzyActive(res), context, guildSettings))
+                                               .hidden())
+                                       .addComponent(MenuEntry.of(embed, ctx -> refresh(ctx, res -> guildSettings.reputation()
+                                                                                                                 .embedActive(res), context, guildSettings))
+                                               .hidden())
+                                       .addComponent(MenuEntry.of(emojidebug, ctx -> refresh(ctx, res -> guildSettings.general()
+                                                                                                                      .emojiDebug(res), context, guildSettings))
+                                               .hidden())
+                                       .addComponent(MenuEntry.of(skipSingleEmbed, ctx -> refresh(ctx, res -> guildSettings.reputation()
+                                                                                                                           .skipSingleEmbed(res), context, guildSettings))
+                                               .hidden())
+                                       .addComponent(MenuEntry.of(reputationMode, ctx -> {
+                                           var value = ctx.event().getValues().get(0);
+                                           var copy = ctx.entry().component().createCopy();
+                                           var mode = ReputationMode.valueOf(value);
+                                           mode = guildSettings.general().reputationMode(mode);
+                                           copy.setDefaultValues(Collections.singleton(mode.name()));
+                                           var settingsEmbed = getSettings(context, guildSettings);
+                                           ctx.entry().component(copy.build());
+                                           ctx.refresh(settingsEmbed);
+                                       }).hidden())
+                                       .asEphemeral()
+                                       .build());
     }
 
     private SelectMenu getMenu(String id, String placeholder, String enabledDescr, String disabledDescr, boolean state) {

@@ -41,7 +41,9 @@ public class Set implements SlashHandler {
     public void onAutoComplete(CommandAutoCompleteInteractionEvent event, EventContext context) {
         var option = event.getFocusedOption();
         if ("language".equalsIgnoreCase(option.getName())) {
-            event.replyChoices(Completion.complete(option.getValue(), context.guildLocalizer().localizer().languages(), DiscordLocale::getNativeName)).queue();
+            event.replyChoices(Completion.complete(option.getValue(), context.guildLocalizer().localizer()
+                                                                             .languages(), DiscordLocale::getNativeName))
+                 .queue();
         }
     }
 }

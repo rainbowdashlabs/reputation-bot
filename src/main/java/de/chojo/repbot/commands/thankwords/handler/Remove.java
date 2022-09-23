@@ -26,8 +26,8 @@ public class Remove implements SlashHandler {
             Pattern.compile(pattern);
         } catch (PatternSyntaxException e) {
             event.reply(context.localize("error.invalidRegex"))
-                    .setEphemeral(true)
-                    .queue();
+                 .setEphemeral(true)
+                 .queue();
             return;
         }
         if (guilds.guild(event.getGuild()).settings().thanking().thankwords().remove(pattern)) {
@@ -36,8 +36,8 @@ public class Remove implements SlashHandler {
             return;
         }
         event.reply(context.localize("command.thankwords.remove.message.patternnotfound"))
-                .setEphemeral(true)
-                .queue();
+             .setEphemeral(true)
+             .queue();
     }
 
     @Override

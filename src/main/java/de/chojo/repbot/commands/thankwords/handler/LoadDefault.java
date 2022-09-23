@@ -33,8 +33,8 @@ public class LoadDefault implements SlashHandler {
         var words = thankwordsContainer.get(language.toLowerCase(Locale.ROOT));
         if (words == null) {
             event.reply(context.localize("command.locale.set.message.invalidlocale"))
-                    .setEphemeral(true)
-                    .queue();
+                 .setEphemeral(true)
+                 .queue();
             return;
         }
         for (var word : words) {

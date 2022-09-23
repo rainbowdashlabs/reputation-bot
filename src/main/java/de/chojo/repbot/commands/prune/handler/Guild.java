@@ -17,7 +17,7 @@ public class Guild implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         event.reply(context.localize("command.prune.guild.message.started")).queue();
         service.cleanupGuildUsers(event.getGuild())
-                .thenAccept(amount -> event.getHook().editOriginal(context.localize("command.prune.guild.message.done",
-                        Replacement.create("AMOUNT", amount))).queue());
+               .thenAccept(amount -> event.getHook().editOriginal(context.localize("command.prune.guild.message.done",
+                       Replacement.create("AMOUNT", amount))).queue());
     }
 }

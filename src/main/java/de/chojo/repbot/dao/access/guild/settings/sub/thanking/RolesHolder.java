@@ -52,10 +52,10 @@ public abstract class RolesHolder extends QueryFactory implements GuildHolder {
     public boolean add(Role role) {
         var result = builder()
                 .query("INSERT INTO %s(guild_id, role_id) VALUES (?,?) ON CONFLICT(guild_id, role_id) DO NOTHING", targetTable())
-                              .parameter(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong()))
-                              .update()
-                              .sendSync()
-                              .changed();
+                .parameter(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong()))
+                .update()
+                .sendSync()
+                .changed();
         if (result) {
             roleIds.add(role.getIdLong());
         }
@@ -65,10 +65,10 @@ public abstract class RolesHolder extends QueryFactory implements GuildHolder {
     public boolean remove(Role role) {
         var result = builder()
                 .query("DELETE FROM %s WHERE guild_id = ? AND role_id = ?", targetTable())
-                              .parameter(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong()))
-                              .update()
-                              .sendSync()
-                              .changed();
+                .parameter(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong()))
+                .update()
+                .sendSync()
+                .changed();
         if (result) {
             roleIds.remove(role.getIdLong());
         }

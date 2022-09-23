@@ -3,7 +3,6 @@ package de.chojo.repbot.commands.abuseprotection.handler;
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.EventContext;
-import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
@@ -29,14 +28,15 @@ public class ReceiverLimit implements SlashHandler {
         }
 
         if (protection.maxReceived() == 0) {
-            event.reply(context.localize("command.abuseprotection.receiverlimit.message.disabled")).setEphemeral(true).queue();
+            event.reply(context.localize("command.abuseprotection.receiverlimit.message.disabled")).setEphemeral(true)
+                 .queue();
             return;
         }
 
         event.reply(context.localize("command.abuseprotection.receiverlimit.message.set",
-                        Replacement.create("AMOUNT", protection.maxReceived()),
-                        Replacement.create("HOURS", protection.maxReceivedHours())))
-                .setEphemeral(true)
-                .queue();
+                     Replacement.create("AMOUNT", protection.maxReceived()),
+                     Replacement.create("HOURS", protection.maxReceivedHours())))
+             .setEphemeral(true)
+             .queue();
     }
 }

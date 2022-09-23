@@ -29,7 +29,9 @@ public record AnalyzerResult(ThankType type, Message referenceMessage, Member do
     }
 
     public static AnalyzerResult mention(Member donator, List<Member> receiver) {
-        return new AnalyzerResult(ThankType.MENTION, null, donator, receiver.stream().map(u -> WeightedEntry.withWeight(u, 1)).collect(Collectors.toList()));
+        return new AnalyzerResult(ThankType.MENTION, null, donator, receiver.stream()
+                                                                            .map(u -> WeightedEntry.withWeight(u, 1))
+                                                                            .collect(Collectors.toList()));
     }
 
     public static AnalyzerResult answer(Member donator, Member receiver, Message referenceMessage) {

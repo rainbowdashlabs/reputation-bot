@@ -31,15 +31,15 @@ public class ContextResolver {
     private final Voice voiceData;
     private final Configuration configuration;
     private final Cache<Long, MessageContext> messageContextCache = CacheBuilder.newBuilder()
-            .expireAfterAccess(5, TimeUnit.SECONDS)
-            .expireAfterWrite(10, TimeUnit.SECONDS)
-            .maximumSize(100000)
-            .build();
+                                                                                .expireAfterAccess(5, TimeUnit.SECONDS)
+                                                                                .expireAfterWrite(10, TimeUnit.SECONDS)
+                                                                                .maximumSize(100000)
+                                                                                .build();
 
     private final Cache<Long, MessageContext> voiceContextCache = CacheBuilder.newBuilder()
-            .expireAfterAccess(5, TimeUnit.SECONDS)
-            .expireAfterWrite(10, TimeUnit.SECONDS)
-            .build();
+                                                                              .expireAfterAccess(5, TimeUnit.SECONDS)
+                                                                              .expireAfterWrite(10, TimeUnit.SECONDS)
+                                                                              .build();
 
     public ContextResolver(Voice voiceData, Configuration configuration) {
         this.voiceData = voiceData;
@@ -67,15 +67,16 @@ public class ContextResolver {
     }
 
     private MessageContext retrieveChannelContext(Member target, Message message, Settings settings) {
-        var history = message.getChannel().getHistoryBefore(message, configuration.analyzerSettings().historySize()).complete();
+        var history = message.getChannel().getHistoryBefore(message, configuration.analyzerSettings().historySize())
+                             .complete();
         List<Message> retrievedHistory = new ArrayList<>();
         // add user message
         retrievedHistory.add(message);
         retrievedHistory.addAll(history.getRetrievedHistory());
         retrievedHistory = retrievedHistory.stream()
-                // Remove all bot messages. we wont need them anyway.
-                .filter(mes -> !mes.getAuthor().isBot())
-                .collect(Collectors.toList());
+                                           // Remove all bot messages. we wont need them anyway.
+                                           .filter(mes -> !mes.getAuthor().isBot())
+                                           .collect(Collectors.toList());
 
         var context = MessageContext.byMessageAndMember(message, target);
         context.addRawMessages(retrievedHistory);
@@ -98,7 +99,8 @@ public class ContextResolver {
 
         var oldest = findOldestMessageByTarget(context, maxAge);
 
-        var limit = settings == null ? configuration.analyzerSettings().historySize() : settings.abuseProtection().minMessages();
+        var limit = settings == null ? configuration.analyzerSettings().historySize() : settings.abuseProtection()
+                                                                                                .minMessages();
         // add users of the last recent messages
         addMembersAfter(context.latestMessages(limit), context, oldest);
     }
@@ -112,7 +114,8 @@ public class ContextResolver {
      * @param settings settings
      */
     private void addRecentAuthors(MessageContext context, Settings settings) {
-        var maxAge = Instant.now().minus(settings == null ? Long.MAX_VALUE : settings.abuseProtection().maxMessageAge(), ChronoUnit.MINUTES);
+        var maxAge = Instant.now().minus(settings == null ? Long.MAX_VALUE : settings.abuseProtection()
+                                                                                     .maxMessageAge(), ChronoUnit.MINUTES);
         // find the oldest message in the history written by the message author which is newer than the max message age.
         var oldest = findOldestMessageByTarget(context, maxAge);
 
@@ -129,31 +132,33 @@ public class ContextResolver {
     private void addMembersAfter(Collection<Message> messages, MessageContext context, Instant oldest) {
         // filter message for only recent messages and after the first message of the user.
         var filtered = messages.stream()
-                .filter(mes -> mes.getTimeCreated().toInstant().isAfter(oldest))
-                .collect(Collectors.toCollection(LinkedHashSet::new));
+                               .filter(mes -> mes.getTimeCreated().toInstant().isAfter(oldest))
+                               .collect(Collectors.toCollection(LinkedHashSet::new));
         context.addContextMessages(filtered);
         var memberIds = filtered.stream()
-                .map(Message::getAuthor)
-                .distinct()
-                .map(u -> context.guild().retrieveMemberById(u.getIdLong()).onErrorMap(mes -> null).complete())
-                .filter(Objects::nonNull)
-                .map(Member::getIdLong)
-                .collect(Collectors.toSet());
+                                .map(Message::getAuthor)
+                                .distinct()
+                                .map(u -> context.guild().retrieveMemberById(u.getIdLong()).onErrorMap(mes -> null)
+                                                 .complete())
+                                .filter(Objects::nonNull)
+                                .map(Member::getIdLong)
+                                .collect(Collectors.toSet());
         context.addIds(memberIds);
     }
 
     private Instant findOldestMessageByTarget(MessageContext context, Instant maxAge) {
         return context.rawMessages().stream()
-                .filter(mes -> Verifier.equalSnowflake(mes.getAuthor(), context.user()))
-                .map(mes -> mes.getTimeCreated().toInstant())
-                .filter(entry -> entry.isAfter(maxAge))
-                .min(Instant::compareTo)
-                .orElse(maxAge);
+                      .filter(mes -> Verifier.equalSnowflake(mes.getAuthor(), context.user()))
+                      .map(mes -> mes.getTimeCreated().toInstant())
+                      .filter(entry -> entry.isAfter(maxAge))
+                      .min(Instant::compareTo)
+                      .orElse(maxAge);
     }
 
     public MessageContext getVoiceContext(Member target, Message message, @Nullable Settings settings) {
         try {
-            return voiceContextCache.get(message.getIdLong(), () -> retrieveVoiceContext(target, message, settings).resolve().resolve());
+            return voiceContextCache.get(message.getIdLong(), () -> retrieveVoiceContext(target, message, settings).resolve()
+                                                                                                                   .resolve());
         } catch (ExecutionException e) {
             log.error("Could not compute voice cache", e);
         }
@@ -166,18 +171,20 @@ public class ContextResolver {
         if (voiceState == null) return context;
         if (voiceState.inAudioChannel()) {
             var voice = voiceState.getChannel()
-                    .getMembers()
-                    .stream()
-                    .map(Member::getIdLong)
-                    .collect(Collectors.toSet());
+                                  .getMembers()
+                                  .stream()
+                                  .map(Member::getIdLong)
+                                  .collect(Collectors.toSet());
             context.addIds(voice);
         }
         var pastUser = voiceData.getPastUser(target.getUser(), message.getGuild(),
-                settings == null ? 0 : settings.abuseProtection().minMessages(), configuration.analyzerSettings().voiceMembers());
+                settings == null ? 0 : settings.abuseProtection().minMessages(), configuration.analyzerSettings()
+                                                                                              .voiceMembers());
         context.addIds(pastUser.stream()
-                .map(id -> message.getGuild().retrieveMemberById(id).onErrorMap(throwable -> null).complete())
-                .map(Member::getIdLong)
-                .toList());
+                               .map(id -> message.getGuild().retrieveMemberById(id).onErrorMap(throwable -> null)
+                                                 .complete())
+                               .map(Member::getIdLong)
+                               .toList());
         return context;
     }
 

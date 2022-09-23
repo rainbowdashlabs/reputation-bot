@@ -61,41 +61,41 @@ public class Commands extends MetricsHolder {
         path("commands", () -> {
             path("count", () -> {
                 get("week/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
-                                .operation(op -> {
-                                    op.summary("Get the amount of exectued commands per week.");
-                                })
-                                .result("200", byte[].class, "image/png")
-                                .result("200", CommandsStatistic.class, "application/json")
-                                .pathParam("offset", Integer.class, MetricsRoute::offsetWeekDoc)
-                                .pathParam("count", Integer.class, MetricsRoute::countWeekDoc),
+                                                                                     .operation(op -> {
+                                                                                         op.summary("Get the amount of exectued commands per week.");
+                                                                                     })
+                                                                                     .result("200", byte[].class, "image/png")
+                                                                                     .result("200", CommandsStatistic.class, "application/json")
+                                                                                     .pathParam("offset", Integer.class, MetricsRoute::offsetWeekDoc)
+                                                                                     .pathParam("count", Integer.class, MetricsRoute::countWeekDoc),
                         cache(this::countWeek)));
                 get("month/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
-                                .operation(op -> {
-                                    op.summary("Get the amount of exectued commands per month.");
-                                })
-                                .result("200", byte[].class, "image/png")
-                                .result("200", CommandsStatistic.class, "application/json")
-                                .pathParam("offset", Integer.class, MetricsRoute::offsetMonthDoc)
-                                .pathParam("count", Integer.class, MetricsRoute::countMonthDoc),
+                                                                                      .operation(op -> {
+                                                                                          op.summary("Get the amount of exectued commands per month.");
+                                                                                      })
+                                                                                      .result("200", byte[].class, "image/png")
+                                                                                      .result("200", CommandsStatistic.class, "application/json")
+                                                                                      .pathParam("offset", Integer.class, MetricsRoute::offsetMonthDoc)
+                                                                                      .pathParam("count", Integer.class, MetricsRoute::countMonthDoc),
                         cache(this::countMonth)));
             });
 
             path("usage", () -> {
                 get("week/{offset}", OpenApiBuilder.documented(OpenApiBuilder.document()
-                                .operation(op -> {
-                                    op.summary("Get command usages for a week.");
-                                })
-                                .result("200", byte[].class, "image/png")
-                                .result("200", CommandsStatistic.class, "application/json")
-                                .pathParam("offset", Integer.class, MetricsRoute::offsetWeekDoc),
+                                                                             .operation(op -> {
+                                                                                 op.summary("Get command usages for a week.");
+                                                                             })
+                                                                             .result("200", byte[].class, "image/png")
+                                                                             .result("200", CommandsStatistic.class, "application/json")
+                                                                             .pathParam("offset", Integer.class, MetricsRoute::offsetWeekDoc),
                         cache(this::usageWeek)));
                 get("month/{offset}", OpenApiBuilder.documented(OpenApiBuilder.document()
-                                .operation(op -> {
-                                    op.summary("Get command usages for a month.");
-                                })
-                                .result("200", byte[].class, "image/png")
-                                .result("200", CommandsStatistic.class, "application/json")
-                                .pathParam("offset", Integer.class, MetricsRoute::offsetMonthDoc),
+                                                                              .operation(op -> {
+                                                                                  op.summary("Get command usages for a month.");
+                                                                              })
+                                                                              .result("200", byte[].class, "image/png")
+                                                                              .result("200", CommandsStatistic.class, "application/json")
+                                                                              .pathParam("offset", Integer.class, MetricsRoute::offsetMonthDoc),
                         cache(this::usageMonth)));
             });
         });

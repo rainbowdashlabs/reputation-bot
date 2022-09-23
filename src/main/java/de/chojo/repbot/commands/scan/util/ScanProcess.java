@@ -87,7 +87,9 @@ public class ScanProcess {
 
             if (message.getAuthor().isBot()) continue;
 
-            var result = messageAnalyzer.processMessage(pattern, message, null, false, guilds.guild(guild).settings().abuseProtection().maxMessageReputation());
+            var result = messageAnalyzer.processMessage(pattern, message, null, false, guilds.guild(guild).settings()
+                                                                                             .abuseProtection()
+                                                                                             .maxMessageReputation());
 
             var donator = result.donator();
             var refMessage = result.referenceMessage();
@@ -97,7 +99,7 @@ public class ScanProcess {
                     case FUZZY, MENTION, ANSWER -> {
                         if (Verifier.equalSnowflake(donator, resultReceiver.getReference())) continue;
                         if (reputation.user(resultReceiver.getReference().getUser())
-                                .addOldReputation(donator != null && guild.isMember(donator) ? donator : null, message, refMessage, result.type())) {
+                                      .addOldReputation(donator != null && guild.isMember(donator) ? donator : null, message, refMessage, result.type())) {
                             hit();
                         }
                     }

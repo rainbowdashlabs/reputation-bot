@@ -28,20 +28,24 @@ public class List implements SlashHandler {
 
     private MessageEmbed getChannelList(Channels channels, EventContext context) {
 
-        var channelNames = channels.channels().stream().map(IMentionable::getAsMention).limit(40).collect(Collectors.joining(", "));
+        var channelNames = channels.channels().stream().map(IMentionable::getAsMention).limit(40)
+                                   .collect(Collectors.joining(", "));
         if (channels.channels().size() > 40) {
             channelNames += MORE;
         }
 
-        var categoryNames = channels.categories().stream().map(IMentionable::getAsMention).limit(40).collect(Collectors.joining(", "));
+        var categoryNames = channels.categories().stream().map(IMentionable::getAsMention).limit(40)
+                                    .collect(Collectors.joining(", "));
         if (channels.categories().size() > 40) {
             categoryNames += MORE;
         }
 
         return new LocalizedEmbedBuilder(context.guildLocalizer())
                 .setTitle(channels.isWhitelist() ? "command.channel.list.message.whitelist" : "command.channel.list.message.blacklist")
-                .addField("words.channels", channelNames, false, Replacement.create("MORE", channels.channels().size() - 40))
-                .addField("words.categories", categoryNames, false, Replacement.create("MORE", channels.channels().size() - 40))
+                .addField("words.channels", channelNames, false,
+                        Replacement.create("MORE", channels.channels().size() - 40))
+                .addField("words.categories", categoryNames, false,
+                        Replacement.create("MORE", channels.channels().size() - 40))
                 .build();
     }
 

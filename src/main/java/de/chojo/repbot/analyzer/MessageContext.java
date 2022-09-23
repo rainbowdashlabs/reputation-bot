@@ -102,9 +102,9 @@ public class MessageContext implements MemberHolder {
      */
     public MessageContext resolve() {
         addMembers(userIds.stream()
-                .map(id -> guild().retrieveMemberById(id).onErrorMap(e -> null).complete())
-                .filter(Objects::nonNull)
-                .collect(Collectors.toSet()));
+                          .map(id -> guild().retrieveMemberById(id).onErrorMap(e -> null).complete())
+                          .filter(Objects::nonNull)
+                          .collect(Collectors.toSet()));
         return this;
     }
 

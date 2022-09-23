@@ -13,12 +13,12 @@ public record GlobalInfoStatisticDisplay(GlobalShardStatistic globalShardStatist
     public void appendTo(EmbedBuilder embedBuilder) {
         embedBuilder.addField("Global Info",
                 String.format("""
-                                Analyzed: %s
-                                Total Reputation: %s
-                                Week Reputation: %s
-                                AverageWeek Reputation: %s
-                                Today Reputation: %s
-                                """.stripIndent(),
+                              Analyzed: %s
+                              Total Reputation: %s
+                              Week Reputation: %s
+                              AverageWeek Reputation: %s
+                              Today Reputation: %s
+                              """.stripIndent(),
                         globalShardStatistic.analyzedMessages(), dataStatistic.totalRep(), dataStatistic.weeklyRep(),
                         dataStatistic.weeklyAvgRep(), dataStatistic.today()), false);
     }

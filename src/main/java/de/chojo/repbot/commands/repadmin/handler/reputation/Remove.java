@@ -20,8 +20,8 @@ public class Remove implements SlashHandler {
         var remove = event.getOption("remove").getAsLong();
         repUser.removeReputation(remove);
         event.reply(context.localize("command.repadmin.reputation.remove.message.removed",
-                        Replacement.create("VALUE", remove), Replacement.createMention(user)))
-                .setEphemeral(true).queue();
+                     Replacement.create("VALUE", remove), Replacement.createMention(user)))
+             .setEphemeral(true).queue();
 
     }
 }

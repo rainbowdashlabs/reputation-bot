@@ -40,7 +40,8 @@ final class LogFormatter {
             var jumpLink = createJumpLink(context, logEntry);
             var thankType = context.localize(logEntry.type().localeKey());
             entries.add(String.format("%s **%s** %s ➜ %s **|** %s", logEntry.timestamp(),
-                    thankType, User.fromId(logEntry.donorId()).getAsMention(), User.fromId(logEntry.receiverId()).getAsMention(), jumpLink));
+                    thankType, User.fromId(logEntry.donorId()).getAsMention(), User.fromId(logEntry.receiverId())
+                                                                                   .getAsMention(), jumpLink));
         }
         return entries;
     }

@@ -22,7 +22,7 @@ public class Add implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var emote = event.getOption("emote").getAsString();
         var message = event.reply(context.localize("command.reactions.message.checking"))
-                .flatMap(InteractionHook::retrieveOriginal).complete();
+                           .flatMap(InteractionHook::retrieveOriginal).complete();
         handleAddCheckResult(event.getGuild(), context, message, emote);
     }
 

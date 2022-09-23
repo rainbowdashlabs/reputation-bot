@@ -3,7 +3,6 @@ package de.chojo.repbot.commands.abuseprotection.handler;
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.EventContext;
-import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
@@ -29,14 +28,15 @@ public class DonorLimit implements SlashHandler {
         }
 
         if (protection.maxGiven() == 0) {
-            event.reply(context.localize("command.abuseprotection.donorlimit.message.disabled")).setEphemeral(true).queue();
+            event.reply(context.localize("command.abuseprotection.donorlimit.message.disabled")).setEphemeral(true)
+                 .queue();
             return;
         }
 
         event.reply(context.localize("command.abuseprotection.donorlimit.message.set",
-                        Replacement.create("AMOUNT", protection.maxGiven()),
-                        Replacement.create("HOURS", protection.maxGivenHours())))
-                .setEphemeral(true)
-                .queue();
+                     Replacement.create("AMOUNT", protection.maxGiven()),
+                     Replacement.create("HOURS", protection.maxGivenHours())))
+             .setEphemeral(true)
+             .queue();
     }
 }

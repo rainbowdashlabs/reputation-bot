@@ -40,7 +40,8 @@ public class ReactionListener extends ListenerAdapter {
     private final ILocalizer localizer;
     private final ReputationService reputationService;
     private final Configuration configuration;
-    private final Cache<Long, Instant> lastReaction = CacheBuilder.newBuilder().expireAfterAccess(60, TimeUnit.SECONDS).build();
+    private final Cache<Long, Instant> lastReaction = CacheBuilder.newBuilder().expireAfterAccess(60, TimeUnit.SECONDS)
+                                                                  .build();
 
     public ReactionListener(Guilds guilds, ILocalizer localizer, ReputationService reputationService, Configuration configuration) {
         this.guilds = guilds;
@@ -64,10 +65,10 @@ public class ReactionListener extends ListenerAdapter {
         Message message;
         try {
             message = event.getChannel()
-                    .retrieveMessageById(event.getMessageId())
-                    .timeout(10, TimeUnit.SECONDS)
-                    .onErrorMap(err -> null)
-                    .complete();
+                           .retrieveMessageById(event.getMessageId())
+                           .timeout(10, TimeUnit.SECONDS)
+                           .onErrorMap(err -> null)
+                           .complete();
         } catch (InsufficientPermissionException e) {
             PermissionErrorHandler.handle(e, event.getGuild(), localizer, configuration);
             return;
@@ -98,13 +99,14 @@ public class ReactionListener extends ListenerAdapter {
             reacted(event.getMember());
             if (guildSettings.messages().isReactionConfirmation()) {
                 event.getChannel().sendMessage(localizer.localize("listener.reaction.confirmation", event.getGuild(),
-                                Replacement.create("DONOR", event.getUser().getAsMention()), Replacement.create("RECEIVER", receiver.getAsMention())))
-                        .mention(event.getUser())
-                        .onErrorFlatMap(err -> null)
-                        .delay(30, TimeUnit.SECONDS)
-                        .flatMap(Message::delete)
-                        .onErrorMap(err -> null)
-                        .queue();
+                             Replacement.createMention("DONOR", event.getUser()),
+                             Replacement.createMention("RECEIVER", receiver)))
+                     .mention(event.getUser())
+                     .onErrorFlatMap(err -> null)
+                     .delay(30, TimeUnit.SECONDS)
+                     .flatMap(Message::delete)
+                     .onErrorMap(err -> null)
+                     .queue();
             }
         }
     }
@@ -116,8 +118,8 @@ public class ReactionListener extends ListenerAdapter {
         var guildSettings = guilds.guild(event.getGuild()).settings();
         if (!guildSettings.thanking().reactions().isReaction(event.getReaction())) return;
         guilds.guild(event.getGuild()).reputation().log().messageLog(event.getMessageIdLong(), 50).stream()
-                .filter(entry -> entry.type() == ThankType.REACTION)
-                .forEach(ReputationLogEntry::delete);
+              .filter(entry -> entry.type() == ThankType.REACTION)
+              .forEach(ReputationLogEntry::delete);
     }
 
     @Override
@@ -126,26 +128,29 @@ public class ReactionListener extends ListenerAdapter {
         var guildSettings = guilds.guild(event.getGuild()).settings();
         if (!guildSettings.thanking().reactions().isReaction(event.getReaction())) return;
         var entries = guilds.guild(event.getGuild()).reputation().log().messageLog(event.getMessageIdLong(), 50)
-                .stream().filter(entry -> entry.type() == ThankType.REACTION && entry.donorId() == event.getUserIdLong()).toList();
+                            .stream()
+                            .filter(entry -> entry.type() == ThankType.REACTION && entry.donorId() == event.getUserIdLong())
+                            .toList();
         entries.forEach(ReputationLogEntry::delete);
         if (!entries.isEmpty() && guildSettings.messages().isReactionConfirmation()) {
             event.getChannel().sendMessage(localizer.localize("listener.reaction.removal", event.getGuild(),
-                            Replacement.create("DONOR", User.fromId(event.getUserId()).getAsMention())))
-                    .delay(30, TimeUnit.SECONDS).flatMap(Message::delete)
-                    .queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
+                         Replacement.create("DONOR", User.fromId(event.getUserId()).getAsMention())))
+                 .delay(30, TimeUnit.SECONDS).flatMap(Message::delete)
+                 .queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
         }
     }
 
     @Override
     public void onMessageReactionRemoveAll(@NotNull MessageReactionRemoveAllEvent event) {
-        guilds.guild(event.getGuild()).reputation().log().messageLog(event.getMessageIdLong(), 50).stream().filter(entry -> entry.type() == ThankType.REACTION)
-                .forEach(ReputationLogEntry::delete);
+        guilds.guild(event.getGuild()).reputation().log().messageLog(event.getMessageIdLong(), 50).stream()
+              .filter(entry -> entry.type() == ThankType.REACTION)
+              .forEach(ReputationLogEntry::delete);
     }
 
     public boolean isCooldown(Member member) {
         try {
             return lastReaction.get(member.getIdLong(), () -> Instant.MIN)
-                    .isAfter(Instant.now().minus(REACTION_COOLDOWN, ChronoUnit.SECONDS));
+                               .isAfter(Instant.now().minus(REACTION_COOLDOWN, ChronoUnit.SECONDS));
         } catch (ExecutionException e) {
             log.error("Could not compute instant", e);
         }

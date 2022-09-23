@@ -25,6 +25,7 @@ public final class FilterUtil {
 
     public static List<TextChannel> filterChannelByPermission(Guild guild, Permission... permissions) {
         var self = guild.getSelfMember();
-        return guild.getTextChannels().stream().filter(textChannel -> self.hasPermission(textChannel, permissions)).collect(Collectors.toList());
+        return guild.getTextChannels().stream().filter(textChannel -> self.hasPermission(textChannel, permissions))
+                    .collect(Collectors.toList());
     }
 }
