@@ -8,7 +8,7 @@ import de.chojo.repbot.dao.access.guild.reputation.sub.Ranking;
 import de.chojo.repbot.dao.access.guild.reputation.sub.RepUser;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.dao.snapshots.GuildReputationStats;
-import de.chojo.sqlutil.base.QueryFactoryHolder;
+import de.chojo.sadu.base.QueryFactory;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class Reputation extends QueryFactoryHolder implements GuildHolder {
+public class Reputation extends QueryFactory implements GuildHolder {
     private static final Logger log = getLogger(Reputation.class);
     private final RepGuild repGuild;
 
@@ -47,7 +47,7 @@ public class Reputation extends QueryFactoryHolder implements GuildHolder {
     public GuildReputationStats stats() {
         return builder(GuildReputationStats.class)
                 .query("SELECT total_reputation, week_reputation, today_reputation, top_channel FROM get_guild_stats(?)")
-                .paramsBuilder(stmt -> stmt.setLong(guildId()))
+                .parameter(stmt -> stmt.setLong(guildId()))
                 .readRow(rs -> new GuildReputationStats(
                         rs.getInt("total_reputation"),
                         rs.getInt("week_reputation"),

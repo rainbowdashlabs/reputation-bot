@@ -21,9 +21,9 @@ public class MetricCache implements RoutesBuilder {
     private static final Logger log = getLogger(MetricCache.class);
     private final RateLimiter rateLimiter;
     private final Cache<CacheKey, ResponseCache> cache = CacheBuilder.newBuilder()
-            .expireAfterAccess(30, TimeUnit.MINUTES)
-            .maximumSize(100)
-            .build();
+                                                                     .expireAfterAccess(30, TimeUnit.MINUTES)
+                                                                     .maximumSize(100)
+                                                                     .build();
 
     public MetricCache() {
         rateLimiter = new RateLimiter(TimeUnit.MINUTES);
@@ -109,7 +109,7 @@ public class MetricCache implements RoutesBuilder {
 
         @Override
         public int hashCode() {
-            int result = route.hashCode();
+            var result = route.hashCode();
             result = 31 * result + (accept != null ? accept.hashCode() : 0);
             return result;
         }

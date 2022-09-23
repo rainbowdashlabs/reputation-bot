@@ -1,22 +1,23 @@
 package de.chojo.repbot.dao.access.gdpr;
 
 import de.chojo.repbot.dao.access.Gdpr;
-import de.chojo.sqlutil.base.QueryFactoryHolder;
-import net.dv8tion.jda.api.entities.PrivateChannel;
+import de.chojo.sadu.base.QueryFactory;
+import de.chojo.sadu.wrapper.util.Row;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import net.dv8tion.jda.api.utils.FileUpload;
 import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class GdprUser extends QueryFactoryHolder {
+public class GdprUser extends QueryFactory {
 
     private static final Logger log = getLogger(GdprUser.class);
     private final long userId;
@@ -26,64 +27,66 @@ public class GdprUser extends QueryFactoryHolder {
         this.userId = userId;
     }
 
-    public static GdprUser build(Gdpr gdpr, ResultSet rs) throws SQLException {
+    public static GdprUser build(Gdpr gdpr, Row rs) throws SQLException {
         return new GdprUser(gdpr, rs.getLong(1));
     }
 
     public boolean queueDeletion() {
         return builder()
-                       .query("""
-                               INSERT INTO
-                                   cleanup_schedule(user_id, delete_after)
-                                   VALUES (?, NOW())
-                                       ON CONFLICT(guild_id, user_id)
-                                           DO NOTHING;
-                               """)
-                       .paramsBuilder(stmt -> stmt.setLong(userId))
-                       .update()
-                       .executeSync() > 0;
+                .query("""
+                       INSERT INTO
+                           cleanup_schedule(user_id, delete_after)
+                           VALUES (?, NOW())
+                               ON CONFLICT(guild_id, user_id)
+                                   DO NOTHING;
+                       """)
+                .parameter(stmt -> stmt.setLong(userId))
+                .update()
+                .sendSync()
+                .changed();
     }
 
     public boolean queueRequest() {
         return builder()
-                       .query("""
-                               DELETE FROM gdpr_log
-                               WHERE user_id = ?
-                                   AND received IS NOT NULL
-                                   AND received < NOW() - INTERVAL '30 days';
-                               """)
-                       .paramsBuilder(stmt -> stmt.setLong(userId))
-                       .append()
-                       .query("""
-                               INSERT INTO gdpr_log(user_id) VALUES(?)
-                                   ON CONFLICT(user_id)
-                                       DO NOTHING;
-                               """)
-                       .paramsBuilder(stmt -> stmt.setLong(userId))
-                       .update()
-                       .executeSync() > 0;
+                .query("""
+                       DELETE FROM gdpr_log
+                       WHERE user_id = ?
+                           AND received IS NOT NULL
+                           AND received < NOW() - INTERVAL '30 days';
+                       """)
+                .parameter(stmt -> stmt.setLong(userId))
+                .append()
+                .query("""
+                       INSERT INTO gdpr_log(user_id) VALUES(?)
+                           ON CONFLICT(user_id)
+                               DO NOTHING;
+                       """)
+                .parameter(stmt -> stmt.setLong(userId))
+                .update()
+                .sendSync()
+                .changed();
     }
 
     public void requestSend() {
         builder()
                 .query("UPDATE gdpr_log SET received = NOW() WHERE user_id = ?")
-                .paramsBuilder(stmt -> stmt.setLong(userId))
+                .parameter(stmt -> stmt.setLong(userId))
                 .update()
-                .executeSync();
+                .sendSync();
     }
 
     public void requestSendFailed() {
         builder()
                 .query("UPDATE gdpr_log SET attempts = attempts + 1 WHERE user_id = ?")
-                .paramsBuilder(stmt -> stmt.setLong(userId))
+                .parameter(stmt -> stmt.setLong(userId))
                 .update()
-                .executeSync();
+                .sendSync();
     }
 
     public Optional<String> userData() {
         return builder(String.class)
                 .query("SELECT aggregate_user_data(?)")
-                .paramsBuilder(stmt -> stmt.setLong(userId))
+                .parameter(stmt -> stmt.setLong(userId))
                 .readRow(rs -> rs.getString(1))
                 .firstSync();
     }
@@ -154,7 +157,7 @@ public class GdprUser extends QueryFactoryHolder {
         try {
             privateChannel
                     .sendMessage("Here is your requested data. You can request it again in 30 days.")
-                    .addFile(tempFile.toFile())
+                    .addFiles(FileUpload.fromData(tempFile.toFile()))
                     .complete();
         } catch (RuntimeException e) {
             log.warn("Could not send gdpr data to user {}. File sending failed.", userId, e);

@@ -23,6 +23,7 @@ public class ConfigFile {
     private Botlist botlist = new Botlist();
     private Api api = new Api();
     private SelfCleanup selfcleanup = new SelfCleanup();
+
     public BaseSettings baseSettings() {
         return baseSettings;
     }

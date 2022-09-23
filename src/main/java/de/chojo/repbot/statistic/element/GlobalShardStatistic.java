@@ -11,7 +11,7 @@ public class GlobalShardStatistic implements ReplacementProvider {
 
     public GlobalShardStatistic(List<ShardStatistic> shardStatistics) {
         analyzedMessages = shardStatistics.stream()
-                .map(ShardStatistic::analyzedMessages).reduce(0L, Long::sum);
+                                          .map(ShardStatistic::analyzedMessages).reduce(0L, Long::sum);
     }
 
     public long analyzedMessages() {

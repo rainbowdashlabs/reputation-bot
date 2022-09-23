@@ -3,7 +3,7 @@ package de.chojo.repbot.dao.access.guild.settings.sub.thanking;
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.sqlutil.base.QueryFactoryHolder;
+import de.chojo.sadu.base.QueryFactory;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.emoji.CustomEmoji;
@@ -15,7 +15,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class Reactions extends QueryFactoryHolder implements GuildHolder {
+public class Reactions extends QueryFactory implements GuildHolder {
     private final Thanking thanking;
     private final Set<String> reactions;
     private String mainReaction;
@@ -57,7 +57,8 @@ public class Reactions extends QueryFactoryHolder implements GuildHolder {
         if (!reactionIsEmote()) {
             return Optional.ofNullable(mainReaction());
         }
-        return Optional.of(guild().retrieveEmojiById(mainReaction()).onErrorFlatMap(err -> null).complete()).map(CustomEmoji::getAsMention);
+        return Optional.of(guild().retrieveEmojiById(mainReaction()).onErrorFlatMap(err -> null).complete())
+                .map(CustomEmoji::getAsMention);
     }
 
     public String mainReaction() {
@@ -66,26 +67,29 @@ public class Reactions extends QueryFactoryHolder implements GuildHolder {
 
     public List<String> getAdditionalReactionMentions() {
         return reactions.stream()
-                .map(reaction -> {
-                    if (Verifier.isValidId(reaction)) {
-                        var asMention = guild().retrieveEmojiById(reaction).onErrorFlatMap(err -> null).complete();
-                        return asMention == null ? null : asMention.getAsMention();
-                    }
-                    return reaction;
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                        .map(reaction -> {
+                            if (Verifier.isValidId(reaction)) {
+                                var asMention = guild().retrieveEmojiById(reaction).onErrorFlatMap(err -> null)
+                                                       .complete();
+                                return asMention == null ? null : asMention.getAsMention();
+                            }
+                            return reaction;
+                        })
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList());
     }
 
     public boolean add(String reaction) {
-        var result = builder().query("""
-                        INSERT INTO guild_reactions(guild_id, reaction) VALUES (?,?)
-                            ON CONFLICT(guild_id, reaction)
-                                DO NOTHING;
-                        """)
-                             .paramsBuilder(stmt -> stmt.setLong(guildId()).setString(reaction))
-                             .update()
-                             .executeSync() > 0;
+        var result = builder()
+                .query("""
+                       INSERT INTO guild_reactions(guild_id, reaction) VALUES (?,?)
+                           ON CONFLICT(guild_id, reaction)
+                               DO NOTHING;
+                       """)
+                .parameter(stmt -> stmt.setLong(guildId()).setString(reaction))
+                .update()
+                .sendSync()
+                .changed();
         if (result) {
             reactions.add(reaction);
         }
@@ -93,12 +97,14 @@ public class Reactions extends QueryFactoryHolder implements GuildHolder {
     }
 
     public boolean remove(String reaction) {
-        var result = builder().query("""
-                        DELETE FROM guild_reactions WHERE guild_id = ? AND reaction = ?;
-                        """)
-                             .paramsBuilder(stmt -> stmt.setLong(guildId()).setString(reaction))
-                             .update()
-                             .executeSync() > 0;
+        var result = builder()
+                .query("""
+                       DELETE FROM guild_reactions WHERE guild_id = ? AND reaction = ?;
+                       """)
+                .parameter(stmt -> stmt.setLong(guildId()).setString(reaction))
+                .update()
+                .sendSync()
+                .changed();
         if (result) {
             reactions.remove(reaction);
         }
@@ -107,15 +113,17 @@ public class Reactions extends QueryFactoryHolder implements GuildHolder {
     }
 
     public boolean mainReaction(String reaction) {
-        var result = builder().query("""
-                        INSERT INTO thank_settings(guild_id, reaction) VALUES (?,?)
-                            ON CONFLICT(guild_id)
-                                DO UPDATE
-                                    SET reaction = excluded.reaction
-                        """)
-                             .paramsBuilder(stmt -> stmt.setLong(guildId()).setString(reaction))
-                             .update()
-                             .executeSync() > 0;
+        var result = builder()
+                .query("""
+                       INSERT INTO thank_settings(guild_id, reaction) VALUES (?,?)
+                           ON CONFLICT(guild_id)
+                               DO UPDATE
+                                   SET reaction = excluded.reaction
+                       """)
+                .parameter(stmt -> stmt.setLong(guildId()).setString(reaction))
+                .update()
+                .sendSync()
+                .changed();
         if (result) {
             mainReaction = reaction;
         }

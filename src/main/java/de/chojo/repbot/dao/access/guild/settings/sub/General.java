@@ -1,23 +1,23 @@
 package de.chojo.repbot.dao.access.guild.settings.sub;
 
 import de.chojo.jdautil.consumer.ThrowingConsumer;
-import de.chojo.jdautil.localization.util.Language;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.sqlutil.base.QueryFactoryHolder;
-import de.chojo.sqlutil.wrapper.ParamBuilder;
+import de.chojo.sadu.base.QueryFactory;
+import de.chojo.sadu.wrapper.util.ParamBuilder;
+import de.chojo.sadu.wrapper.util.Row;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.interactions.DiscordLocale;
+import org.jetbrains.annotations.Nullable;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class General extends QueryFactoryHolder implements GuildHolder {
+public class General extends QueryFactory implements GuildHolder {
     private final AtomicBoolean stackRoles;
     private final Settings settings;
-    private String language;
+    private DiscordLocale language;
     private boolean emojiDebug;
     private ReputationMode reputationMode;
 
@@ -25,7 +25,7 @@ public class General extends QueryFactoryHolder implements GuildHolder {
         this(settings, null, true, false, ReputationMode.TOTAL);
     }
 
-    public General(Settings settings, String language, boolean emojiDebug, boolean stackRoles, ReputationMode reputationMode) {
+    public General(Settings settings, DiscordLocale language, boolean emojiDebug, boolean stackRoles, ReputationMode reputationMode) {
         super(settings);
         this.settings = settings;
         this.language = language;
@@ -34,18 +34,19 @@ public class General extends QueryFactoryHolder implements GuildHolder {
         this.reputationMode = reputationMode;
     }
 
-    public static General build(Settings settings, ResultSet rs) throws SQLException {
+    public static General build(Settings settings, Row rs) throws SQLException {
+        var lang = rs.getString("language");
         return new General(settings,
-                rs.getString("language"),
+                lang == null ? null : DiscordLocale.from(lang),
                 rs.getBoolean("emoji_debug"),
                 rs.getBoolean("stack_roles"),
                 ReputationMode.valueOf(rs.getString("reputation_mode")));
     }
 
-    public boolean language(Language language) {
-        var result = set("language", stmt -> stmt.setString(language.getCode()));
+    public boolean language(@Nullable DiscordLocale language) {
+        var result = set("language", stmt -> stmt.setString(language == null ? null : language.getLocale()));
         if (result) {
-            this.language = language.getCode();
+            this.language = language;
         }
         return result;
     }
@@ -74,7 +75,7 @@ public class General extends QueryFactoryHolder implements GuildHolder {
         return result;
     }
 
-    public Optional<String> language() {
+    public Optional<DiscordLocale> language() {
         return Optional.ofNullable(language);
     }
 
@@ -97,16 +98,17 @@ public class General extends QueryFactoryHolder implements GuildHolder {
 
     private boolean set(String parameter, ThrowingConsumer<ParamBuilder, SQLException> builder) {
         return builder()
-                       .query("""
-                               INSERT INTO guild_settings(guild_id, %s) VALUES (?, ?)
-                               ON CONFLICT(guild_id)
-                                   DO UPDATE SET %s = excluded.%s;
-                               """, parameter, parameter, parameter)
-                       .paramsBuilder(stmts -> {
-                           stmts.setLong(guildId());
-                           builder.accept(stmts);
-                       }).insert()
-                       .executeSync() > 0;
+                .query("""
+                       INSERT INTO guild_settings(guild_id, %s) VALUES (?, ?)
+                       ON CONFLICT(guild_id)
+                           DO UPDATE SET %s = excluded.%s;
+                       """, parameter, parameter, parameter)
+                .parameter(stmts -> {
+                    stmts.setLong(guildId());
+                    builder.accept(stmts);
+                }).insert()
+                .sendSync()
+                .changed();
     }
 
     public ReputationMode reputationMode() {

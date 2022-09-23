@@ -96,7 +96,9 @@ public class SelfCleanupService implements Runnable {
             if (markers.contains(InactivityMarker.NO_REPUTATION)) {
                 log.debug("No reputation on guild {}", prettyName(guild));
                 log.debug("Bot is unused for {} days",
-                        Math.abs(Duration.between(lastReputation.get().received(), LocalDateTime.now().atZone(ZoneOffset.UTC)).toDays()));
+                        Math.abs(Duration.between(lastReputation.get().received(), LocalDateTime.now()
+                                                                                                .atZone(ZoneOffset.UTC))
+                                         .toDays()));
                 promptCleanup(guild);
                 continue;
             }
@@ -134,8 +136,9 @@ public class SelfCleanupService implements Runnable {
         var clean = guilds.guild(guild).cleanup();
         if (clean.getCleanupPromptTime().get().isAfter(configuration.selfCleanup().getLeaveDaysOffset())) {
             log.debug("Prompt was send {}/{} days ago on {}",
-                    Math.abs(Duration.between(clean.getCleanupPromptTime().get(), LocalDateTime.now().atZone(ZoneOffset.UTC)).toDays()),
-                    configuration.selfCleanup().getLeaveDaysOffset(),
+                    Math.abs(Duration.between(clean.getCleanupPromptTime().get(),
+                            LocalDateTime.now().atZone(ZoneOffset.UTC)).toDays()),
+                    configuration.selfCleanup().leaveDays(),
                     prettyName(guild));
             return;
         }
@@ -155,10 +158,10 @@ public class SelfCleanupService implements Runnable {
     private void notifyGuild(Guild guild, MessageEmbed embed) {
         var selfMember = guild.getSelfMember();
         guild.retrieveMemberById(guild.getOwnerIdLong())
-                .flatMap(member -> member.getUser().openPrivateChannel())
-                .flatMap(privateChannel -> privateChannel.sendMessageEmbeds(embed))
-                .onErrorMap(err -> null)
-                .complete();
+             .flatMap(member -> member.getUser().openPrivateChannel())
+             .flatMap(privateChannel -> privateChannel.sendMessageEmbeds(embed))
+             .onErrorMap(err -> null)
+             .complete();
 
         for (var channel : guild.getTextChannels()) {
             if (selfMember.hasPermission(channel, Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND)) {

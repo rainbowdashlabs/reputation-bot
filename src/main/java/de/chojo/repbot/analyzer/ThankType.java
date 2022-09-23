@@ -15,6 +15,7 @@ public enum ThankType {
     ThankType(String localeKey) {
         this.localeKey = localeKey;
     }
+
     ThankType() {
         this(null);
     }

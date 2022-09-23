@@ -20,7 +20,7 @@ public class RoleUpdater extends ListenerAdapter implements Runnable {
     private final RoleAssigner roleAssigner;
 
     public static RoleUpdater create(Guilds guilds, RoleAssigner roleAssigner, ScheduledExecutorService executorService) {
-        RoleUpdater roleUpdater = new RoleUpdater(guilds, roleAssigner);
+        var roleUpdater = new RoleUpdater(guilds, roleAssigner);
         executorService.scheduleAtFixedRate(roleUpdater, 30, 30, TimeUnit.MINUTES);
         return roleUpdater;
     }
@@ -35,7 +35,7 @@ public class RoleUpdater extends ListenerAdapter implements Runnable {
         if (!event.isFromGuild()) return;
         if (!guilds.guild(event.getGuild()).settings().general().reputationMode().isAutoRefresh()) return;
         if (isChecked(event.getMember())) return;
-        roleAssigner.update(event.getMember());
+        roleAssigner.updateReporting(event.getMember(), event.getGuildChannel());
         guildSet(event.getGuild()).add(event.getMember().getIdLong());
     }
 

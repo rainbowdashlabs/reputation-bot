@@ -6,8 +6,8 @@ import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.config.Configuration;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.GuildMessageChannel;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.internal.utils.PermissionUtil;
@@ -53,7 +53,8 @@ public final class PermissionErrorHandler {
             errorMessage += "\n" + localizer.localize("error.missingPermissionGuild", guild);
         }
         if (permission != Permission.MESSAGE_SEND && permission != Permission.VIEW_CHANNEL
-            && PermissionUtil.checkPermission(channel.getPermissionContainer(), channel.getGuild().getSelfMember(), Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL)) {
+            && PermissionUtil.checkPermission(channel.getPermissionContainer(), channel.getGuild()
+                                                                                       .getSelfMember(), Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL)) {
             channel.sendMessage(errorMessage).queue();
             return;
         }
@@ -63,10 +64,10 @@ public final class PermissionErrorHandler {
         var ownerId = guild.getOwnerIdLong();
         var finalErrorMessage = errorMessage;
         guild.retrieveMemberById(ownerId)
-                .flatMap(member -> member.getUser().openPrivateChannel())
-                .flatMap(privateChannel -> privateChannel.sendMessage(finalErrorMessage))
-                .onErrorMap(t -> null)
-                .queue();
+             .flatMap(member -> member.getUser().openPrivateChannel())
+             .flatMap(privateChannel -> privateChannel.sendMessage(finalErrorMessage))
+             .onErrorMap(t -> null)
+             .queue();
     }
 
     /**
@@ -95,13 +96,13 @@ public final class PermissionErrorHandler {
     }
 
     /**
-     * Checks if the self user has the permissions in this channel and sends an permission error if one is missing.
+     * Checks if the self user has the permissions in this channel and sends a permission error if one is missing.
      *
      * @param channel       channel to check
      * @param localizer     localizer
      * @param configuration configuration
      * @param permissions   permissions to check
-     * @return true if a permission was missing and a message was send
+     * @return true if a permission was missing and a message was sent
      */
     public static boolean assertAndHandle(GuildMessageChannel channel, ILocalizer localizer, Configuration configuration, Permission... permissions) {
         try {

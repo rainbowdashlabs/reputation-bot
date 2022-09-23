@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "1.8.3"
+version = "1.9.0"
 
 repositories {
     maven("https://eldonexus.de/repository/maven-public")
@@ -15,24 +15,27 @@ repositories {
 
 dependencies {
     //discord
-    implementation("de.chojo", "cjda-util", "2.6.1+alpha.13") {
+    implementation("de.chojo", "cjda-util", "2.7.0+alpha.20") {
         exclude(group = "club.minnced", module = "opus-java")
     }
 
     // database
-    implementation("org.postgresql", "postgresql", "42.4.0")
-    implementation("de.chojo", "sql-util", "1.4.6")
+    implementation("org.postgresql", "postgresql", "42.5.0")
+    implementation("de.chojo.sadu", "sadu-queries", "1.1.0")
+    implementation("de.chojo.sadu", "sadu-updater", "1.1.0")
+    implementation("de.chojo.sadu", "sadu-postgresql", "1.1.0")
+    implementation("de.chojo.sadu", "sadu-datasource", "1.1.0")
 
     // Logging
-    implementation("org.slf4j", "slf4j-api", "1.7.36")
-    implementation("org.apache.logging.log4j", "log4j-core", "2.18.0")
-    implementation("org.apache.logging.log4j", "log4j-slf4j-impl", "2.18.0")
+    implementation("org.slf4j", "slf4j-api", "2.0.2")
+    implementation("org.apache.logging.log4j", "log4j-core", "2.19.0")
+    implementation("org.apache.logging.log4j", "log4j-slf4j2-impl", "2.19.0")
     implementation("club.minnced", "discord-webhooks", "0.8.2")
 
     implementation("org.knowm.xchart", "xchart", "3.8.1")
 
     // unit testing
-    testImplementation(platform("org.junit:junit-bom:5.9.0"))
+    testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter", "junit-jupiter")
     testImplementation("org.knowm.xchart", "xchart", "3.8.1")
 }

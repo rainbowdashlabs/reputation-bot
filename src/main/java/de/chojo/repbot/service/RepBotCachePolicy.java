@@ -1,7 +1,7 @@
 package de.chojo.repbot.service;
 
-import de.chojo.repbot.commands.Roles;
-import de.chojo.repbot.commands.Scan;
+import de.chojo.repbot.commands.roles.Roles;
+import de.chojo.repbot.commands.scan.Scan;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import org.jetbrains.annotations.NotNull;

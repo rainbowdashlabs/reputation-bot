@@ -39,8 +39,8 @@ import java.util.regex.Pattern;
 
 public class ReputationVoteListener extends ListenerAdapter {
     private static final ActionComponent DELETE = Button.of(ButtonStyle.DANGER, "vote:delete", Emoji.fromUnicode("🗑️"));
-    private static final Pattern VOTE = Pattern.compile("vote:(?<id>[0-9]*?)");
-    private Guilds guilds;
+    private static final Pattern VOTE = Pattern.compile("vote:(?<id>\\d*?)");
+    private final Guilds guilds;
     private final ReputationService reputationService;
     private final ILocalizer loc;
     private final Configuration configuration;
@@ -66,11 +66,12 @@ public class ReputationVoteListener extends ListenerAdapter {
         var voteRequest = voteRequests.get(event.getMessageIdLong());
         if (!Verifier.equalSnowflake(voteRequest.member(), event.getMember())) {
             event.getHook().sendMessage(loc.localize("error.notYourEmbed", event.getGuild())).setEphemeral(true)
-                    .queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
+                 .queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
             return;
         }
         if ("vote:delete".equals(event.getButton().getId())) {
-            event.getMessage().delete().queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
+            event.getMessage().delete()
+                 .queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
             voteRequests.remove(event.getMessageIdLong());
             return;
         }
@@ -83,19 +84,20 @@ public class ReputationVoteListener extends ListenerAdapter {
             voteRequest.voted();
             voteRequest.remove(event.getButton().getId());
             voteRequest.voteMessage().
-                    editMessageEmbeds(voteRequest.getNewEmbed(loc.localize("listener.messages.request.descrThank"
-                            , event.getGuild(), Replacement.create("MORE", voteRequest.remainingVotes()))))
-                    .setActionRows(getComponentRows(voteRequest.components()))
-                    .queue(suc -> {
-                    }, ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
+                       editMessageEmbeds(voteRequest.getNewEmbed(loc.localize("listener.messages.request.descrThank",
+                               event.getGuild(), Replacement.create("MORE", voteRequest.remainingVotes()))))
+                       .setComponents(getComponentRows(voteRequest.components()))
+                       .queue(suc -> {
+                       }, ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
             if (voteRequest.remainingVotes() == 0) {
                 voteRequest.voteMessage()
-                        .editMessageEmbeds(voteRequest.getNewEmbed(loc.localize("listener.messages.request.descrThank"
-                                , event.getGuild(), Replacement.create("MORE", voteRequest.remainingVotes()))))
-                        .setActionRows(Collections.emptyList())
-                        .queue();
+                           .editMessageEmbeds(voteRequest.getNewEmbed(loc.localize("listener.messages.request.descrThank"
+                                   , event.getGuild(), Replacement.create("MORE", voteRequest.remainingVotes()))))
+                           .setComponents(Collections.emptyList())
+                           .queue();
                 voteRequest.voteMessage().delete().queueAfter(5, TimeUnit.SECONDS,
-                        suc -> voteRequests.remove(voteRequest.voteMessage().getIdLong()), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
+                        suc -> voteRequests.remove(voteRequest.voteMessage().getIdLong()),
+                        ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
             }
         }
     }
@@ -126,7 +128,10 @@ public class ReputationVoteListener extends ListenerAdapter {
 
         int remaining;
         if (settings.abuseProtection().isDonorLimit()) {
-            remaining = Math.min(maxMessageReputation, settings.abuseProtection().maxGiven() - settings.repGuild().reputation().user(message.getMember()).countReceived());
+            remaining = Math.min(maxMessageReputation, settings.abuseProtection().maxGiven() - settings.repGuild()
+                                                                                                       .reputation()
+                                                                                                       .user(message.getMember())
+                                                                                                       .countReceived());
             if (remaining == 0) {
                 if (settings.general().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.DONOR_LIMIT);
                 return;
@@ -136,12 +141,12 @@ public class ReputationVoteListener extends ListenerAdapter {
         }
 
         message.replyEmbeds(builder.build())
-                .setActionRows(componentRows).queue(voteMessage -> {
-                    voteRequests.put(voteMessage.getIdLong(), new VoteRequest(message.getMember(), builder, voteMessage, message, components, Math.min(remaining, members.size())));
-                    voteMessage.delete().queueAfter(1, TimeUnit.MINUTES,
-                            submit -> voteRequests.remove(voteMessage.getIdLong()),
-                            ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE, ErrorResponse.UNKNOWN_CHANNEL));
-                });
+               .addComponents(componentRows).queue(voteMessage -> {
+                   voteRequests.put(voteMessage.getIdLong(), new VoteRequest(message.getMember(), builder, voteMessage, message, components, Math.min(remaining, members.size())));
+                   voteMessage.delete().queueAfter(1, TimeUnit.MINUTES,
+                           submit -> voteRequests.remove(voteMessage.getIdLong()),
+                           ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE, ErrorResponse.UNKNOWN_CHANNEL));
+               });
     }
 
 

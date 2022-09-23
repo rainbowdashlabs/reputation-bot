@@ -4,6 +4,7 @@ import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.dao.provider.Metrics;
+import de.chojo.repbot.dao.snapshots.ReputationRank;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.channel.ChannelDeleteEvent;
 import net.dv8tion.jda.api.events.emoji.EmojiRemovedEvent;
@@ -54,7 +55,8 @@ public class StateListener extends ListenerAdapter {
         for (var channel : event.getGuild().getTextChannels()) {
             if (selfMember.hasPermission(channel, Permission.VIEW_CHANNEL)
                 && selfMember.hasPermission(channel, Permission.MESSAGE_SEND)) {
-                channel.sendMessage(localizer.localize("message.welcome", event.getGuild())).queueAfter(5, TimeUnit.SECONDS);
+                channel.sendMessage(localizer.localize("message.welcome", event.getGuild()))
+                       .queueAfter(5, TimeUnit.SECONDS);
                 break;
             }
         }
@@ -80,7 +82,7 @@ public class StateListener extends ListenerAdapter {
 
     @Override
     public void onRoleDelete(@NotNull RoleDeleteEvent event) {
-        guilds.guild(event.getGuild()).settings().ranks().remove(event.getRole());
+        guilds.guild(event.getGuild()).settings().ranks().rank(event.getRole()).ifPresent(ReputationRank::remove);
     }
 
     @Override

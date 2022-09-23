@@ -6,7 +6,6 @@ import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
-import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;
@@ -16,10 +15,10 @@ import de.chojo.repbot.util.EmojiDebug;
 import de.chojo.repbot.util.Messages;
 import de.chojo.repbot.util.PermissionErrorHandler;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.entities.ChannelType;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageType;
-import net.dv8tion.jda.api.entities.ThreadChannel;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
+import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
 import net.dv8tion.jda.api.events.channel.ChannelCreateEvent;
 import net.dv8tion.jda.api.events.message.MessageBulkDeleteEvent;
 import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
@@ -72,18 +71,18 @@ public class MessageListener extends ListenerAdapter {
     @Override
     public void onMessageDelete(@NotNull MessageDeleteEvent event) {
         guilds.guild(event.getGuild()).reputation().log()
-                .getLogEntry(event.getMessageIdLong())
-                .ifPresent(ReputationLogEntry::deleteAll);
+              .getLogEntry(event.getMessageIdLong())
+              .ifPresent(ReputationLogEntry::deleteAll);
     }
 
     @Override
     public void onMessageBulkDelete(@NotNull MessageBulkDeleteEvent event) {
         var reputationLog = guilds.guild(event.getGuild()).reputation().log();
         event.getMessageIds().stream().map(Long::valueOf)
-                .map(reputationLog::getLogEntry)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .forEach(ReputationLogEntry::deleteAll);
+             .map(reputationLog::getLogEntry)
+             .filter(Optional::isPresent)
+             .map(Optional::get)
+             .forEach(ReputationLogEntry::deleteAll);
     }
 
     @Override
@@ -92,9 +91,10 @@ public class MessageListener extends ListenerAdapter {
         var guild = event.getGuild();
         var repGuild = guilds.guild(guild);
         var settings = repGuild.settings();
-        Thanking thank = settings.thanking();
+        var thank = settings.thanking();
 
-        if (event.getMessage().getType() != MessageType.DEFAULT && event.getMessage().getType() != MessageType.INLINE_REPLY) {
+        if (event.getMessage().getType() != MessageType.DEFAULT && event.getMessage()
+                                                                        .getType() != MessageType.INLINE_REPLY) {
             return;
         }
 
@@ -105,7 +105,9 @@ public class MessageListener extends ListenerAdapter {
 
         var message = event.getMessage();
 
-        var analyzerResult = messageAnalyzer.processMessage(thank.thankwords().thankwordPattern(), message, settings, true, settings.abuseProtection().maxMessageReputation());
+        var analyzerResult = messageAnalyzer.processMessage(thank.thankwords()
+                                                                 .thankwordPattern(), message, settings, true, settings.abuseProtection()
+                                                                                                                       .maxMessageReputation());
 
         if (analyzerResult.type() == ThankType.NO_MATCH) return;
 
@@ -173,10 +175,10 @@ public class MessageListener extends ListenerAdapter {
         }
 
         var members = recentMembers.stream()
-                .filter(receiver -> reputationService.canVote(message.getMember(), receiver, message.getGuild(), settings))
-                .filter(receiver -> !settings.abuseProtection().isReceiverLimit(receiver))
-                .limit(10)
-                .collect(Collectors.toList());
+                                   .filter(receiver -> reputationService.canVote(message.getMember(), receiver, message.getGuild(), settings))
+                                   .filter(receiver -> !settings.abuseProtection().isReceiverLimit(receiver))
+                                   .limit(10)
+                                   .collect(Collectors.toList());
 
         if (members.isEmpty()) {
             log.trace("None of the recent members can receive reputation {}", message.getIdLong());

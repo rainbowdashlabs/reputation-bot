@@ -90,7 +90,7 @@ public class ReputationService {
         }
 
         if (isTypeDisabled(type, messageSettings)) {
-            log.trace("Thank type {} for message {} is disabled",  type, message.getIdLong());
+            log.trace("Thank type {} for message {} is disabled", type, message.getIdLong());
             return false;
         }
 
@@ -147,7 +147,8 @@ public class ReputationService {
         // block outdated ref message
         // Abuse protection: Message age
         if (refMessage != null) {
-            if (abuseSettings.isOldMessage(refMessage) && !context.latestMessages(abuseSettings.minMessages()).contains(refMessage)) {
+            if (abuseSettings.isOldMessage(refMessage) && !context.latestMessages(abuseSettings.minMessages())
+                                                                  .contains(refMessage)) {
                 log.trace("Reference message of {} is outdated", message.getIdLong());
                 if (addEmoji) Messages.markMessage(message, EmojiDebug.TOO_OLD);
                 return true;
@@ -186,13 +187,13 @@ public class ReputationService {
                 lastEasterEggSent = Instant.now();
                 //TODO: Escape unknown channel 5
                 message.replyEmbeds(new EmbedBuilder()
-                                .setImage(magicImage.magicImageLink())
-                                .setColor(Color.RED).build())
-                        .queue(msg -> msg.delete().queueAfter(
-                                magicImage.magicImageDeleteSchedule(), TimeUnit.SECONDS,
-                                RestAction.getDefaultSuccess(),
-                                ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE, ErrorResponse.UNKNOWN_CHANNEL))
-                        );
+                               .setImage(magicImage.magicImageLink())
+                               .setColor(Color.RED).build())
+                       .queue(msg -> msg.delete().queueAfter(
+                               magicImage.magicImageDeleteSchedule(), TimeUnit.SECONDS,
+                               RestAction.getDefaultSuccess(),
+                               ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE, ErrorResponse.UNKNOWN_CHANNEL))
+                       );
             }
             return true;
         }
@@ -201,7 +202,8 @@ public class ReputationService {
 
     private boolean log(Guild guild, Member donor, Member receiver, Message message, @Nullable Message refMessage, ThankType type, Settings settings) {
         // try to log reputation
-        if (!guilds.guild(guild).reputation().user(receiver).addReputation(donor, message, refMessage, type)) {// submit to database failed. Maybe this message was already voted by the user.
+        if (!guilds.guild(guild).reputation().user(receiver)
+                   .addReputation(donor, message, refMessage, type)) {// submit to database failed. Maybe this message was already voted by the user.
             log.trace("Could not log reputation for message {}. An equal entry was already present.", message.getIdLong());
             return false;
         }
@@ -209,31 +211,23 @@ public class ReputationService {
         // mark messages
         Messages.markMessage(message, refMessage, settings);
         // update role
-        try {
-            var newRank = assigner.update(receiver);
 
-            // Send level up message
-            newRank.ifPresent(rank -> {
-                var announcements = guilds.guild(guild).settings().announcements();
-                if (!announcements.isActive()) return;
-                var channel = message.getChannel();
-                if (!announcements.isSameChannel()) {
-                    channel = guild.getTextChannelById(announcements.channelId());
-                }
-                if (channel == null || rank.getRole(guild) == null) return;
-                channel.sendMessage(localizer.localize("message.levelAnnouncement", guild,
-                                Replacement.createMention(receiver), Replacement.createMention(rank.getRole(guild))))
-                        .allowedMentions(Collections.emptyList())
-                        .queue();
-            });
+        var newRank = assigner.updateReporting(receiver, message.getGuildChannel());
 
-        } catch (RoleAccessException e) {
-            message.getChannel()
-                    .sendMessage(localizer.localize("error.roleAccess", message.getGuild(),
-                            Replacement.createMention("ROLE", e.role())))
-                    .allowedMentions(Collections.emptyList())
-                    .queue();
-        }
+        // Send level up message
+        newRank.ifPresent(rank -> {
+            var announcements = guilds.guild(guild).settings().announcements();
+            if (!announcements.isActive()) return;
+            var channel = message.getChannel().asTextChannel();
+            if (!announcements.isSameChannel()) {
+                channel = guild.getTextChannelById(announcements.channelId());
+            }
+            if (channel == null || rank.getRole(guild) == null) return;
+            channel.sendMessage(localizer.localize("message.levelAnnouncement", guild,
+                           Replacement.createMention(receiver), Replacement.createMention(rank.getRole(guild))))
+                   .mention(Collections.emptyList())
+                   .queue();
+        });
         return true;
     }
 
@@ -266,12 +260,13 @@ public class ReputationService {
     public boolean canVote(Member donor, Member receiver, Guild guild, Settings settings) {
         // block cooldown
         var lastRated = guilds.guild(guild).reputation().user(donor).getLastRatedDuration(receiver);
-        if (lastRated.toMinutes() < settings.abuseProtection().cooldown()){
-            log.trace("The last rating is too recent. {}/{}", lastRated.toMinutes(), settings.abuseProtection().cooldown());
+        if (lastRated.toMinutes() < settings.abuseProtection().cooldown()) {
+            log.trace("The last rating is too recent. {}/{}", lastRated.toMinutes(),
+                    settings.abuseProtection().cooldown());
             return false;
         }
 
-        if (!settings.thanking().receiverRoles().hasRole(receiver)){
+        if (!settings.thanking().receiverRoles().hasRole(receiver)) {
             log.trace("The receiver does not have a receiver role.");
             return false;
         }

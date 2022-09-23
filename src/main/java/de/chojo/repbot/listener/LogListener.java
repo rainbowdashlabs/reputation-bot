@@ -69,8 +69,8 @@ public class LogListener extends ListenerAdapter implements Runnable {
     private void handleShardReconnect(JDA jda) {
         var shardId = jda.getShardInfo().getShardId();
         var seconds = Duration.between(
-                        disconnected.getOrDefault(shardId, Instant.now()), Instant.now())
-                .getSeconds();
+                                      disconnected.getOrDefault(shardId, Instant.now()), Instant.now())
+                              .getSeconds();
         disconnected.remove(shardId);
         if (seconds > 5) {
             log.info(LogNotify.STATUS,
@@ -95,13 +95,13 @@ public class LogListener extends ListenerAdapter implements Runnable {
         if (disconnected.isEmpty()) return;
 
         var message = disconnected.entrySet().stream()
-                .map(e -> {
-                    var seconds = Duration.between(e.getValue(), Instant.now()).getSeconds();
-                    if (seconds < 5) return null;
-                    return String.format(" Shard %d is disconnected since %d seconds", e.getKey(), seconds);
-                })
-                .filter(Objects::nonNull)
-                .collect(Collectors.joining("\n"));
+                                  .map(e -> {
+                                      var seconds = Duration.between(e.getValue(), Instant.now()).getSeconds();
+                                      if (seconds < 5) return null;
+                                      return String.format(" Shard %d is disconnected since %d seconds", e.getKey(), seconds);
+                                  })
+                                  .filter(Objects::nonNull)
+                                  .collect(Collectors.joining("\n"));
         if (message.isBlank()) return;
 
         log.warn(LogNotify.NOTIFY_ADMIN, message);

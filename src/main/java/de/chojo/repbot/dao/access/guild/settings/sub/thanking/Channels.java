@@ -3,15 +3,15 @@ package de.chojo.repbot.dao.access.guild.settings.sub.thanking;
 import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.sqlutil.base.QueryFactoryHolder;
-import net.dv8tion.jda.api.entities.BaseGuildMessageChannel;
-import net.dv8tion.jda.api.entities.Category;
-import net.dv8tion.jda.api.entities.Channel;
+import de.chojo.sadu.base.QueryFactory;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.GuildMessageChannel;
-import net.dv8tion.jda.api.entities.MessageChannel;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.ThreadChannel;
+import net.dv8tion.jda.api.entities.channel.Channel;
+import net.dv8tion.jda.api.entities.channel.concrete.Category;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildMessageChannel;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class Channels extends QueryFactoryHolder implements GuildHolder {
+public class Channels extends QueryFactory implements GuildHolder {
 
     private static final Logger log = getLogger(Channels.class);
 
@@ -46,16 +46,11 @@ public class Channels extends QueryFactoryHolder implements GuildHolder {
     }
 
     public boolean isEnabled(GuildMessageChannel channel) {
-        BaseGuildMessageChannel baseChannel;
-        if (channel instanceof ThreadChannel thread) {
-            if (thread.getParentChannel() instanceof BaseGuildMessageChannel bc) {
-                baseChannel = bc;
-            } else {
-                log.error("Thread was created in a non base guild channel, but in {}.", thread.getParentChannel().getClass().getName());
-                return false;
-            }
+        StandardGuildChannel baseChannel;
+        if (channel instanceof ThreadChannel bc) {
+            baseChannel = bc.getParentChannel().asStandardGuildChannel();
         } else {
-            if (channel instanceof BaseGuildMessageChannel bc) {
+            if (channel instanceof StandardGuildMessageChannel bc) {
                 baseChannel = bc;
             } else {
                 log.error("Channel is a non base guild channel, but a {}.", channel.getClass().getName());
@@ -66,7 +61,7 @@ public class Channels extends QueryFactoryHolder implements GuildHolder {
         return isEnabledByChannel(baseChannel) || isEnabledByCategory(baseChannel.getParentCategory());
     }
 
-    public boolean isEnabledByChannel(Channel channel) {
+    public boolean isEnabledByChannel(StandardGuildChannel channel) {
         if (channels.isEmpty()) return false;
         if (isWhitelist()) {
             return channels.contains(channel.getIdLong());
@@ -89,8 +84,8 @@ public class Channels extends QueryFactoryHolder implements GuildHolder {
 
     public List<Category> categories() {
         return categories.stream().map(guild()::getCategoryById)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                         .filter(Objects::nonNull)
+                         .collect(Collectors.toList());
     }
 
     public Set<Long> channelIds() {
@@ -107,12 +102,13 @@ public class Channels extends QueryFactoryHolder implements GuildHolder {
      * @param channel channel
      * @return true if a channel was added
      */
-    public boolean add(MessageChannel channel) {
+    public boolean add(StandardGuildChannel channel) {
         var result = builder()
-                             .query("INSERT INTO active_channel(guild_id, channel_id) VALUES(?,?) ON CONFLICT(guild_id, channel_id) DO NOTHING;")
-                             .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(channel.getIdLong()))
-                             .update()
-                             .executeSync() > 0;
+                .query("INSERT INTO active_channel(guild_id, channel_id) VALUES(?,?) ON CONFLICT(guild_id, channel_id) DO NOTHING;")
+                .parameter(stmt -> stmt.setLong(guildId()).setLong(channel.getIdLong()))
+                .update()
+                .sendSync()
+                .changed();
         if (result) {
             channels.add(channel.getIdLong());
         }
@@ -127,10 +123,11 @@ public class Channels extends QueryFactoryHolder implements GuildHolder {
      */
     public boolean add(Category category) {
         var result = builder()
-                             .query("INSERT INTO active_categories(guild_id, category_id) VALUES(?,?) ON CONFLICT(guild_id, category_id) DO NOTHING;")
-                             .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(category.getIdLong()))
-                             .update()
-                             .executeSync() > 0;
+                .query("INSERT INTO active_categories(guild_id, category_id) VALUES(?,?) ON CONFLICT(guild_id, category_id) DO NOTHING;")
+                .parameter(stmt -> stmt.setLong(guildId()).setLong(category.getIdLong()))
+                .update()
+                .sendSync()
+                .changed();
         if (result) {
             categories.add(category.getIdLong());
         }
@@ -145,10 +142,11 @@ public class Channels extends QueryFactoryHolder implements GuildHolder {
      */
     public boolean remove(Channel channel) {
         var result = builder()
-                             .query("DELETE FROM active_channel WHERE guild_id = ? AND channel_id = ?;")
-                             .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(channel.getIdLong()))
-                             .update()
-                             .executeSync() > 0;
+                .query("DELETE FROM active_channel WHERE guild_id = ? AND channel_id = ?;")
+                .parameter(stmt -> stmt.setLong(guildId()).setLong(channel.getIdLong()))
+                .update()
+                .sendSync()
+                .changed();
         if (result) {
             channels.remove(channel.getIdLong());
         }
@@ -163,10 +161,11 @@ public class Channels extends QueryFactoryHolder implements GuildHolder {
      */
     public boolean remove(Category category) {
         var result = builder()
-                             .query("DELETE FROM active_categories WHERE guild_id = ? AND category_id = ?;")
-                             .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(category.getIdLong()))
-                             .update()
-                             .executeSync() > 0;
+                .query("DELETE FROM active_categories WHERE guild_id = ? AND category_id = ?;")
+                .parameter(stmt -> stmt.setLong(guildId()).setLong(category.getIdLong()))
+                .update()
+                .sendSync()
+                .changed();
         if (result) {
             categories.remove(category.getIdLong());
         }
@@ -181,9 +180,10 @@ public class Channels extends QueryFactoryHolder implements GuildHolder {
     public int clearChannel() {
         var result = builder()
                 .query("DELETE FROM active_channel WHERE guild_id = ?;")
-                .paramsBuilder(stmt -> stmt.setLong(guildId()))
+                .parameter(stmt -> stmt.setLong(guildId()))
                 .update()
-                .executeSync();
+                .sendSync()
+                .rows();
         if (result > 0) {
             channels.clear();
         }
@@ -198,9 +198,10 @@ public class Channels extends QueryFactoryHolder implements GuildHolder {
     public int clearCategories() {
         var result = builder()
                 .query("DELETE FROM active_categories WHERE guild_id = ?;")
-                .paramsBuilder(stmt -> stmt.setLong(guildId()))
+                .parameter(stmt -> stmt.setLong(guildId()))
                 .update()
-                .executeSync();
+                .sendSync()
+                .rows();
         if (result > 0) {
             categories.clear();
         }
@@ -208,15 +209,17 @@ public class Channels extends QueryFactoryHolder implements GuildHolder {
     }
 
     public boolean listType(boolean whitelist) {
-        var result = builder().query("""
-                        INSERT INTO thank_settings(guild_id, channel_whitelist) VALUES (?,?)
-                            ON CONFLICT(guild_id)
-                                DO UPDATE
-                                    SET channel_whitelist = excluded.channel_whitelist
-                        """)
-                             .paramsBuilder(stmt -> stmt.setLong(guildId()).setBoolean(whitelist))
-                             .update()
-                             .executeSync() > 0;
+        var result = builder()
+                .query("""
+                       INSERT INTO thank_settings(guild_id, channel_whitelist) VALUES (?,?)
+                           ON CONFLICT(guild_id)
+                               DO UPDATE
+                                   SET channel_whitelist = excluded.channel_whitelist
+                       """)
+                .parameter(stmt -> stmt.setLong(guildId()).setBoolean(whitelist))
+                .update()
+                .sendSync()
+                .changed();
         if (result) {
             this.whitelist = whitelist;
         }

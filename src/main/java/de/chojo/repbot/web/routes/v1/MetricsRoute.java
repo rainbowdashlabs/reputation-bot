@@ -55,6 +55,7 @@ public class MetricsRoute implements RoutesBuilder {
     public static void offsetDayDoc(Parameter p) {
         offsetDoc(p, "Day", MAX_DAY_OFFSET);
     }
+
     public static void offsetHourDoc(Parameter p) {
         offsetDoc(p, "Hour", MAX_HOUR_OFFSET);
     }
@@ -78,6 +79,7 @@ public class MetricsRoute implements RoutesBuilder {
     public static void countHourDoc(Parameter p) {
         countDoc(p, "Hours", MAX_HOURS);
     }
+
     public static void countDayDoc(Parameter p) {
         countDoc(p, "Days", MAX_DAYS);
     }

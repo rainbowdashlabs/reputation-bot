@@ -5,7 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import de.chojo.repbot.dao.access.guild.reputation.Reputation;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.sqlutil.base.QueryFactoryHolder;
+import de.chojo.sadu.base.QueryFactory;
 import net.dv8tion.jda.api.entities.Guild;
 
 import javax.sql.DataSource;
@@ -13,9 +13,11 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-public class RepGuild extends QueryFactoryHolder implements GuildHolder {
-    private static final Cache<Long, Cleanup> CLEANUPS = CacheBuilder.newBuilder().expireAfterAccess(2, TimeUnit.MINUTES).build();
-    private static final Cache<Long, Gdpr> GDPR = CacheBuilder.newBuilder().expireAfterAccess(2, TimeUnit.MINUTES).build();
+public class RepGuild extends QueryFactory implements GuildHolder {
+    private static final Cache<Long, Cleanup> CLEANUPS = CacheBuilder.newBuilder()
+                                                                     .expireAfterAccess(2, TimeUnit.MINUTES).build();
+    private static final Cache<Long, Gdpr> GDPR = CacheBuilder.newBuilder().expireAfterAccess(2, TimeUnit.MINUTES)
+                                                              .build();
     private final Reputation reputation;
     private final Settings settings;
     private Guild guild;
@@ -54,26 +56,26 @@ public class RepGuild extends QueryFactoryHolder implements GuildHolder {
     public List<Long> userIds() {
         return builder(Long.class)
                 .query("""
-                        SELECT
-                        	user_id AS user_id
-                        FROM
-                        	(
-                        		SELECT
-                        			donor_id AS user_id
-                        		FROM
-                        			reputation_log
-                        		WHERE guild_id = ?
-                        		UNION
-                        		DISTINCT
-                        		SELECT
-                        			receiver_id AS user_id
-                        		FROM
-                        			reputation_log
-                        		WHERE guild_id = ?
-                        	) users
-                        WHERE user_id != 0
-                         """)
-                .paramsBuilder(stmt -> stmt.setLong(guildId()).setLong(guildId()))
+                       SELECT
+                       	user_id AS user_id
+                       FROM
+                       	(
+                       		SELECT
+                       			donor_id AS user_id
+                       		FROM
+                       			reputation_log
+                       		WHERE guild_id = ?
+                       		UNION
+                       		DISTINCT
+                       		SELECT
+                       			receiver_id AS user_id
+                       		FROM
+                       			reputation_log
+                       		WHERE guild_id = ?
+                       	) users
+                       WHERE user_id != 0
+                        """)
+                .parameter(stmt -> stmt.setLong(guildId()).setLong(guildId()))
                 .readRow(rs -> rs.getLong("user_id"))
                 .allSync();
     }

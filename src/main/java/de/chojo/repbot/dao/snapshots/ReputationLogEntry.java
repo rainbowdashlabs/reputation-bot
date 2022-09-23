@@ -2,16 +2,16 @@ package de.chojo.repbot.dao.snapshots;
 
 import de.chojo.repbot.analyzer.ThankType;
 import de.chojo.repbot.dao.access.guild.reputation.sub.Log;
-import de.chojo.sqlutil.base.QueryFactoryHolder;
+import de.chojo.sadu.base.QueryFactory;
+import de.chojo.sadu.wrapper.util.Row;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 /**
  * A log entry representing a single reputation.
  */
-public class ReputationLogEntry extends QueryFactoryHolder {
+public class ReputationLogEntry extends QueryFactory {
     private static final String PATH = "https://discord.com/channels/%s/%s/%s";
     private static final long DISCORD_EPOCH = 1420070400000L;
     private final long guildId;
@@ -35,7 +35,7 @@ public class ReputationLogEntry extends QueryFactoryHolder {
         this.received = received;
     }
 
-    public static ReputationLogEntry build(Log log, ResultSet rs) throws SQLException {
+    public static ReputationLogEntry build(Log log, Row rs) throws SQLException {
         return new ReputationLogEntry(log,
                 rs.getLong("guild_id"),
                 rs.getLong("channel_id"),
@@ -48,11 +48,11 @@ public class ReputationLogEntry extends QueryFactoryHolder {
     }
 
     public String getMessageJumpLink() {
-        return String.format(PATH, guildId, channelId, messageId);
+        return String.format(PATH, guildId(), channelId(), messageId());
     }
 
-    public String getRedMessageJumpLink() {
-        return String.format(PATH, guildId, channelId, refMessageId);
+    public String getRefMessageJumpLink() {
+        return String.format(PATH, guildId(), channelId(), refMessageId());
     }
 
     public boolean hasRefMessage() {
@@ -102,8 +102,8 @@ public class ReputationLogEntry extends QueryFactoryHolder {
     public void delete() {
         builder()
                 .query("DELETE FROM reputation_log WHERE message_id = ? AND receiver_id = ? AND donor_id = ?;")
-                .paramsBuilder(stmt -> stmt.setLong(messageId).setLong(receiverId).setLong(donorId))
-                .update().execute();
+                .parameter(stmt -> stmt.setLong(messageId).setLong(receiverId).setLong(donorId))
+                .update().send();
     }
 
     /**
@@ -112,7 +112,7 @@ public class ReputationLogEntry extends QueryFactoryHolder {
     public void deleteAll() {
         builder()
                 .query("DELETE FROM reputation_log WHERE message_id = ?")
-                .paramsBuilder(stmt -> stmt.setLong(messageId))
-                .update().execute();
+                .parameter(stmt -> stmt.setLong(messageId))
+                .update().send();
     }
 }

@@ -3,19 +3,19 @@ package de.chojo.repbot.dao.pagination;
 import de.chojo.jdautil.consumer.ThrowingConsumer;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.sqlutil.base.QueryFactoryHolder;
-import de.chojo.sqlutil.wrapper.ParamBuilder;
+import de.chojo.sadu.base.QueryFactory;
+import de.chojo.sadu.wrapper.util.ParamBuilder;
+import de.chojo.sadu.wrapper.util.Row;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.TextChannel;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class Announcements extends QueryFactoryHolder implements GuildHolder {
+public class Announcements extends QueryFactory implements GuildHolder {
+    private final Settings settings;
     private boolean active = false;
     private boolean sameChannel = true;
     private long channelId = 0;
-    private final Settings settings;
 
     private Announcements(Settings settings, boolean active, boolean sameChannel, long channelId) {
         super(settings);
@@ -30,7 +30,7 @@ public class Announcements extends QueryFactoryHolder implements GuildHolder {
         this.settings = settings;
     }
 
-    public static Announcements build(Settings settings, ResultSet rs) throws SQLException {
+    public static Announcements build(Settings settings, Row rs) throws SQLException {
         return new Announcements(settings,
                 rs.getBoolean("active"),
                 rs.getBoolean("same_channel"),
@@ -72,16 +72,17 @@ public class Announcements extends QueryFactoryHolder implements GuildHolder {
 
     private boolean set(String parameter, ThrowingConsumer<ParamBuilder, SQLException> builder) {
         return builder()
-                       .query("""
-                               INSERT INTO announcements(guild_id, %s) VALUES (?, ?)
-                               ON CONFLICT(guild_id)
-                                   DO UPDATE SET %s = excluded.%s;
-                               """, parameter, parameter, parameter)
-                       .paramsBuilder(stmts -> {
-                           stmts.setLong(guildId());
-                           builder.accept(stmts);
-                       }).insert()
-                       .executeSync() > 0;
+                .query("""
+                       INSERT INTO announcements(guild_id, %s) VALUES (?, ?)
+                       ON CONFLICT(guild_id)
+                           DO UPDATE SET %s = excluded.%s;
+                       """, parameter, parameter, parameter)
+                .parameter(stmts -> {
+                    stmts.setLong(guildId());
+                    builder.accept(stmts);
+                }).insert()
+                .sendSync()
+                .changed();
     }
 
     @Override

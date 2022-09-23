@@ -1,18 +1,18 @@
 package de.chojo.repbot.dao.access.guild.settings.sub;
 
 public enum ReputationMode {
-    TOTAL("user_reputation","reputationMode.total", true, false),
+    TOTAL("user_reputation", "reputationMode.total", true, false),
     ROLLING_WEEK("user_reputation_week", "reputationMode.rollingWeek", false, true),
     ROLLING_MONTH("user_reputation_month", "reputationMode.rollingMonth", false, true);
 
     private final String tableName;
-    private final String localizedName;
+    private final String localeCode;
     private final boolean supportsOffset;
     private final boolean autoRefresh;
 
     ReputationMode(String tableName, String localeCode, boolean supportsOffset, boolean autoRefresh) {
         this.tableName = tableName;
-        this.localizedName = localeCode;
+        this.localeCode = localeCode;
         this.supportsOffset = supportsOffset;
         this.autoRefresh = autoRefresh;
     }
@@ -30,6 +30,6 @@ public enum ReputationMode {
     }
 
     public String localeCode() {
-        return localizedName;
+        return localeCode;
     }
 }

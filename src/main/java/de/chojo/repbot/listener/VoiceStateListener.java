@@ -6,19 +6,18 @@ import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
-import javax.sql.DataSource;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class VoiceStateListener extends ListenerAdapter implements Runnable {
     private final Voice voice;
 
-    public VoiceStateListener(DataSource dataSource) {
-        voice = new Voice(dataSource);
+    public VoiceStateListener(Voice voice) {
+        this.voice = voice;
     }
 
-    public static VoiceStateListener of(DataSource dataSource, ScheduledExecutorService repBotWorker) {
-        var voiceStateListener = new VoiceStateListener(dataSource);
+    public static VoiceStateListener of(Voice voice, ScheduledExecutorService repBotWorker) {
+        var voiceStateListener = new VoiceStateListener(voice);
         repBotWorker.scheduleAtFixedRate(voiceStateListener, 2, 12, TimeUnit.HOURS);
         return voiceStateListener;
     }

@@ -7,7 +7,6 @@ import de.chojo.jdautil.parsing.WeightedEntry;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.provider.Metrics;
-import de.chojo.repbot.statistic.Statistic;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageType;
@@ -29,9 +28,9 @@ public class MessageAnalyzer {
     private static final Logger log = getLogger(MessageAnalyzer.class);
     private final ContextResolver contextResolver;
     private final Cache<Long, AnalyzerResult> resultCache = CacheBuilder.newBuilder()
-            .expireAfterWrite(10, TimeUnit.MINUTES)
-            .maximumSize(100000)
-            .build();
+                                                                        .expireAfterWrite(10, TimeUnit.MINUTES)
+                                                                        .maximumSize(100000)
+                                                                        .build();
     private final Configuration configuration;
     private final Metrics metrics;
 
@@ -151,11 +150,11 @@ public class MessageAnalyzer {
         }
 
         var members = users.stream()
-                .filter(e -> e.getWeight() >= configuration.analyzerSettings().minFuzzyScore())
-                .distinct()
-                .sorted()
-                .limit(limit)
-                .collect(Collectors.toList());
+                           .filter(e -> e.getWeight() >= configuration.analyzerSettings().minFuzzyScore())
+                           .distinct()
+                           .sorted()
+                           .limit(limit)
+                           .collect(Collectors.toList());
         if (members.isEmpty()) return AnalyzerResult.noTarget(message.getMember());
 
         return AnalyzerResult.fuzzy(message.getMember(), members);

@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.slf4j.Logger;
 
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -33,9 +32,9 @@ public class Statistic {
         return statistic;
     }
 
-    private ShardStatistic getShardStatistic(JDA jda) throws ExecutionException {
+    private ShardStatistic getShardStatistic(JDA jda) {
         var shardId = jda.getShardInfo().getShardId();
-        var analyzedMessages = metrics.messages().hour(1,1).join().get(0).count();
+        var analyzedMessages = metrics.messages().hour(1, 1).join().get(0).count();
 
         return new ShardStatistic(
                 shardId + 1,
@@ -46,15 +45,9 @@ public class Statistic {
 
     public SystemStatistics getSystemStatistic() {
         var shardStatistics = shardManager.getShardCache()
-                .stream().map(jda -> {
-                    try {
-                        return getShardStatistic(jda);
-                    } catch (ExecutionException e) {
-                        log.error("An error occured while building the system statistics", e);
-                    }
-                    return new ShardStatistic(jda.getShardInfo().getShardId(),
-                            JDA.Status.DISCONNECTED, 0, jda.getGuildCache().size());
-                }).collect(Collectors.toList());
+                                          .stream()
+                                          .map(this::getShardStatistic)
+                                          .collect(Collectors.toList());
 
         return new SystemStatistics(ProcessStatistics.create(),
                 metrics.statistic().getStatistic().orElseGet(DataStatistic::new),

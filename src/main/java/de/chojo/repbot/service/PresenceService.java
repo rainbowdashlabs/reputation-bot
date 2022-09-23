@@ -27,7 +27,8 @@ public class PresenceService implements Runnable {
     public static void start(ShardManager shardManager, Configuration configuration, Statistic statistic, ScheduledExecutorService executorService) {
         var presenceService = new PresenceService(shardManager, configuration, statistic);
         if (configuration.presence().isActive()) {
-            executorService.scheduleAtFixedRate(presenceService, 0, configuration.presence().interval(), TimeUnit.MINUTES);
+            executorService.scheduleAtFixedRate(presenceService, 0,
+                    configuration.presence().interval(), TimeUnit.MINUTES);
         }
     }
 

@@ -59,8 +59,8 @@ public class GdprService implements Runnable {
         return CompletableFuture.supplyAsync(() -> {
             var savedIds = guilds.guild(guild).userIds();
             var memberIds = guild.loadMembers().get()
-                    .stream()
-                    .map(ISnowflake::getIdLong).toList();
+                                 .stream()
+                                 .map(ISnowflake::getIdLong).toList();
             var collect = savedIds.stream().filter(id -> !memberIds.contains(id)).toList();
             for (var id : collect) RemovalTask.anonymExecute(gdpr, guild.getIdLong(), id);
             return collect.size();
