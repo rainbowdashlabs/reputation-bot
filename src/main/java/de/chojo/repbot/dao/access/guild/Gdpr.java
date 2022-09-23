@@ -45,7 +45,7 @@ public class Gdpr extends QueryFactory implements GuildHolder {
 
     public void dequeueDeletion() {
         if (builder()
-                .query("DELETE FROM cleanup_schedule WHERE guild_id = ? AND user_id IS NULL;")
+                .query("DELETE FROM cleanup_schedule WHERE guild_id = ? AND user_id = 0;")
                 .parameter(stmt -> stmt.setLong(guildId()))
                 .update()
                 .sendSync()

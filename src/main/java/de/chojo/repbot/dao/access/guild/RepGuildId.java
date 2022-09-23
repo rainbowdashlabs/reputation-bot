@@ -2,10 +2,10 @@ package de.chojo.repbot.dao.access.guild;
 
 import javax.sql.DataSource;
 
-public class RepGuildIdImpl extends RepGuild {
+public class RepGuildId extends RepGuild {
     private final long guildId;
 
-    public RepGuildIdImpl(DataSource dataSource, long guildId) {
+    public RepGuildId(DataSource dataSource, long guildId) {
         super(dataSource, null);
         this.guildId = guildId;
     }

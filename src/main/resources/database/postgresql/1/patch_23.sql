@@ -32,4 +32,6 @@ UNION DISTINCT
 SELECT guild_id FROM thankwords
 UNION DISTINCT
 SELECT guild_id FROM voice_activity
-ORDER BY guild_id
+ORDER BY guild_id;
+
+UPDATE repbot_schema.cleanup_schedule SET user_id = 0 WHERE user_id IS NULL;

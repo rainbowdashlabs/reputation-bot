@@ -3,7 +3,7 @@ package de.chojo.repbot.dao.provider;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import de.chojo.repbot.dao.access.guild.RepGuild;
-import de.chojo.repbot.dao.access.guild.RepGuildIdImpl;
+import de.chojo.repbot.dao.access.guild.RepGuildId;
 import de.chojo.repbot.dao.pagination.GuildList;
 import de.chojo.sadu.base.QueryFactory;
 import net.dv8tion.jda.api.entities.Guild;
@@ -34,8 +34,15 @@ public class Guilds extends QueryFactory {
         }
     }
 
+    /**
+     * Gets a guild by id. This guild object might have limited functionality. This object is never cached.
+     * It should never be used to change settings.
+     *
+     * @param id
+     * @return
+     */
     public RepGuild guild(long id) {
-        return new RepGuildIdImpl(source(), id);
+        return new RepGuildId(source(), id);
     }
 
     public GuildList guilds(int pageSize) {
@@ -64,7 +71,7 @@ public class Guilds extends QueryFactory {
                        LIMIT ?;
                        """)
                 .parameter(stmt -> stmt.setInt(page * pageSize).setInt(pageSize))
-                .readRow(row -> new RepGuildIdImpl(source(), row.getLong("guild_id")))
+                .readRow(row -> new RepGuildId(source(), row.getLong("guild_id")))
                 .allSync();
     }
 }
