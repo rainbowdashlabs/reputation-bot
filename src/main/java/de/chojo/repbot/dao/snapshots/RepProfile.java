@@ -91,7 +91,7 @@ public record RepProfile(RepUser repUser, long rank, long rankDonated, long user
         var currProgress = String.valueOf(reputation() - currentRoleRep);
         var nextLevel = nextRoleRep.equals(currentRoleRep) ? "Ꝏ" : String.valueOf(nextRoleRep - currentRoleRep);
         var build = new LocalizedEmbedBuilder(localizer)
-                .setAuthor("%s%s".formatted(rank() != 0 ? "#" + rank() + " " : "", "element.profile.title"),
+                .setAuthor("%s$%s$".formatted(rank() != 0 ? "#" + rank() + " " : "", "element.profile.title"),
                         null, repUser.member().getEffectiveAvatarUrl(),
                         Replacement.create("NAME", repUser.member().getEffectiveName()))
                 .addField("words.level", level, true)
