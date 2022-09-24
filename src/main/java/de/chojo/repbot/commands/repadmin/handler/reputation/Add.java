@@ -17,7 +17,7 @@ public class Add implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var user = event.getOption("user").getAsMember();
         var repUser = guilds.guild(event.getGuild()).reputation().user(user);
-        var add = event.getOption("add").getAsLong();
+        var add = event.getOption("amount").getAsLong();
         repUser.addReputation(add);
         event.reply(context.localize("command.repadmin.reputation.add.message.added",
                      Replacement.create("VALUE", add), Replacement.createMention(user)))

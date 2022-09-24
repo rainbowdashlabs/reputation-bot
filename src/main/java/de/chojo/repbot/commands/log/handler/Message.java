@@ -29,7 +29,7 @@ public class Message implements SlashHandler {
             return;
         }
 
-        event.replyEmbeds(getMessageLog(context, event.getGuild(), event.getOption("message_id").getAsLong()))
+        event.replyEmbeds(getMessageLog(context, event.getGuild(), event.getOption("messageid").getAsLong()))
              .setEphemeral(true).queue();
     }
 

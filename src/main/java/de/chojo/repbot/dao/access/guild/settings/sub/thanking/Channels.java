@@ -58,7 +58,7 @@ public class Channels extends QueryFactory implements GuildHolder {
             if (channel instanceof StandardGuildMessageChannel bc) {
                 baseChannel = bc;
             } else {
-                log.error("Channel is a non base guild channel, but a {}.", channel.getClass().getName());
+                log.debug("Channel is a non base guild channel, but a {}.", channel.getClass().getName());
                 return false;
             }
         }
