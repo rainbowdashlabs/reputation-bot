@@ -17,7 +17,7 @@ public class Remove implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var user = event.getOption("user").getAsMember();
         var repUser = guilds.guild(event.getGuild()).reputation().user(user);
-        var remove = event.getOption("remove").getAsLong();
+        var remove = event.getOption("amount").getAsLong();
         repUser.removeReputation(remove);
         event.reply(context.localize("command.repadmin.reputation.remove.message.removed",
                      Replacement.create("VALUE", remove), Replacement.createMention(user)))
