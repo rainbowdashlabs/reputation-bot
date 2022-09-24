@@ -17,7 +17,7 @@ public class Set implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var user = event.getOption("user").getAsMember();
         var repUser = guilds.guild(event.getGuild()).reputation().user(user);
-        var set = event.getOption("set").getAsLong();
+        var set = event.getOption("amount").getAsLong();
         repUser.setReputation(set);
         event.reply(context.localize("command.repadmin.reputation.set.message.set",
                      Replacement.create("VALUE", set), Replacement.createMention(user)))
