@@ -5,8 +5,8 @@ Welcome on the Reputation Bot website. We provide all information about the bot,
 The Reputation Bot was created for communities where the main focus is on mutual help between users.
 
 Normal level systems, which are based on pure activity are not able to reflect how much a user contributes to the
-community. User which have a lot of knowledge and are helping all the time have the same level like users which asks a
-lot of questions all the time. Thats where the Reputation Bot comes in handy.
+community. User which have a lot of knowledge and are helping all the time have the same level as users which asks a
+lot of questions all the time. That's where the Reputation Bot comes in handy.
 
 ## How does it work
 
@@ -14,9 +14,9 @@ The bot gets triggered by so called "thankwords". These are user defined words (
 settings for every supported language) which usually are something like "Thanks" or "thx" or something completely 
 different.
 
-On receiving the thankword the bot will perform several check, which might lead to giving reputation to a
+On receiving the thankword the bot will perform several check, which might lead to giving reputation to an
 identified target. If the bot cant identify a target it will question the user which used the thankword to give
-reputation to a available user.
+reputation to an available user.
 
 We decided against a command for giving rep for multiple reasons:
 
@@ -27,7 +27,7 @@ We decided against a command for giving rep for multiple reasons:
    thanking the person who helped.
 4. The bot is not disruptive and deletes his messages afterwards to keep the channel clean.
 
-All in all we want to make it as easy and intuitive as possible to give reputation. It should be a no brainer for 
+All in all we want to make it as easy and intuitive as possible to give reputation. It should be a no-brainer for 
 the users to use and should cause as less additional actions as possible.
 
 To see the different ways to give reputation have a look at our extra [page](give_reputation.md)
@@ -53,7 +53,7 @@ We provide three different toplists
 - Month
 - Week
 
-The month and week toplists are a roling sum of reputations during the last 30 or 7 days.
+The month and week toplists are a rolling sum of reputations during the last 30 or 7 days.
 
 # Get help
 

@@ -14,9 +14,9 @@ When a thank phrase is found the bot will try to find the receiver of the messag
 
 You can find more about the bot on our [website](https://rainbowdashlabs.github.io/reputation-bot/).
 
-# Self hosting
+# Self-hosting
 
 Take a look at our [hosting](https://rainbowdashlabs.github.io/reputation-bot/hosting/) page.
 
 # Invite and more Information
-For an invite link and more information take a look at the [website](https://rainbowdashlabs.github.io/reputation-bot/invite/).
+For an invitation link and more information take a look at the [website](https://rainbowdashlabs.github.io/reputation-bot/invite/).
