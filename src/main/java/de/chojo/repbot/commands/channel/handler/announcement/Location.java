@@ -7,10 +7,10 @@ import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-public class Channel implements SlashHandler {
+public class Location implements SlashHandler {
     private final Guilds guilds;
 
-    public Channel(Guilds guilds) {
+    public Location(Guilds guilds) {
         this.guilds = guilds;
     }
 

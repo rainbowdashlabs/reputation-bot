@@ -8,10 +8,10 @@ import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInterac
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
-public class Location implements SlashHandler {
+public class Where implements SlashHandler {
     private final Guilds guilds;
 
-    public Location(Guilds guilds) {
+    public Where(Guilds guilds) {
         this.guilds = guilds;
     }
 

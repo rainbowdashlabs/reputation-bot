@@ -12,6 +12,7 @@ import de.chojo.repbot.commands.channel.handler.Remove;
 import de.chojo.repbot.commands.channel.handler.Set;
 import de.chojo.repbot.commands.channel.handler.announcement.Info;
 import de.chojo.repbot.commands.channel.handler.announcement.Location;
+import de.chojo.repbot.commands.channel.handler.announcement.Where;
 import de.chojo.repbot.commands.channel.handler.announcement.State;
 import de.chojo.repbot.dao.provider.Guilds;
 
@@ -41,8 +42,8 @@ public class Channel extends SlashCommand {
                                 .handler(new State(guilds))
                                 .argument(Argument.bool("active", "command.channel.announcement.state.active.description").asRequired()))
                         .subCommand(SubCommand.of("where", "command.channel.announcement.where.description")
-                                .handler(new de.chojo.repbot.commands.channel.handler.announcement.Channel(guilds))
-                                .argument(Argument.channel("where", "command.channel.announcement.where.where.description").asRequired()))
+                                .handler(new Where(guilds))
+                                .argument(Argument.channel("where", "command.channel.announcement.where.where.description").asRequired().withAutoComplete()))
                         .subCommand(SubCommand.of("channel", "command.channel.announcement.channel.description")
                                 .handler(new Location(guilds))
                                 .argument(Argument.channel("channel", "command.channel.announcement.channel.channel.description").asRequired()))
