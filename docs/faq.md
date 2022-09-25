@@ -7,12 +7,12 @@ Those emojis indicate what the bot does with a message:
 - 👀 ➜ Found a thankword
 - 💤 ➜ Receiver was on cooldown
 - 🔍 ➜ No receiver was found
-- ❓ ➜ Receiver has no recent messages in this channel and is mising in the context
+- ❓ ➜ Receiver has no recent messages in this channel and is missing in the context
 - ❔ ➜ Donor is not present in channel
 - 🕛 ➜ The referenced message is too old
 - 🗨️ ➜ User was prompted for reputation.
 
-A bot admin can disable this emojis in the `repsettings`.
+A bot admin can disable these emojis in the `repsettings`.
 
 ### Why cant I give reputation to user XY?
 
@@ -26,7 +26,7 @@ To thank a user make sure that:
 
 - The user has written at least one message after a message of you
 - The message of the user you want to thank is not too old (How old depends on the server settings)
-- You havent received reputation from this user shortly
+- You haven't received reputation from this user shortly
 
 You can also give reputation to users you currently share or recently shared a voice channel with.
 
@@ -42,7 +42,7 @@ If you are interested in how it works, here is a short explanation:
 To build the message context we search for the oldest message within a fixed time (This is the max message age. 30
 minutes on default).  
 After we found the older message of the reputation donor we collect all users which have written a message after the
-oldest message. If we havent found any message within the max message age we add the users of the last 10 messages (The
+oldest message. If we haven't found any message within the max message age we add the users of the last 10 messages (The
 amount depends on the server settings) to the context. We do this because often users come back after some time and the
 thank duration already ran out.  
 Finally we add also the users which share a voice channel with the message author and the users which shared a voice
@@ -54,7 +54,7 @@ You can read more about this mechanic on our [abuse protection page](abuse_prote
 
 The bot will manage all roles which are registered as reputation roles.  
 The bot will always check the user roles when a user receives reputation. If you add a new role, the bot will adjust the
-user roles, when this users receives reputation again.
+user roles, when these users receive reputation again.
 
 When the bot updates user roles it will first remove all roles registered as reputation roles from the user.  
 It will then add the new reputation role to the user.
@@ -81,7 +81,7 @@ Alternatively you can remove reputation of all users which are no longer on this
 
 ### How can I request my data?
 
-You have to be on a server with the Reputation Bot. If you dont have one, join the support server. Make also sure 
+You have to be on a server with the Reputation Bot. If you don't have one, join the support server. Make also sure 
 that your privacy settings are not blocking dms.
 
 You can request a copy of your data with the `gdpr request` command.
@@ -94,7 +94,7 @@ You can request your data every 30 days.
 
 ### How can I request deletion of my data?
 
-You have to be on a server with the Reputation Bot. If you dont have one, join the support server.
+You have to be on a server with the Reputation Bot. If you don't have one, join the support server.
 
 You can request deletion of your data with the `gdpr delete` command.
 
@@ -103,5 +103,5 @@ of the deletion. You can not abort the deletion of your data.
 You may request your data again after some time, if you want to check that your data was deleted.
 
 We will delete all your received reputation on all servers.  
-We will remove your user id on every given reputation by you, but we will not delete these reputations, since they dont
+We will remove your user id on every given reputation by you, but we will not delete these reputations, since they don't
 belong to you.

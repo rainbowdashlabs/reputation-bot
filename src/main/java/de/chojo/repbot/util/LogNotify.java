@@ -10,7 +10,7 @@ public final class LogNotify {
      */
     public static final Marker NOTIFY_ADMIN = createMarker("NOTIFY_ADMIN");
     /**
-     * Will be send to status-log.
+     * Will be sent to status-log.
      */
     public static final Marker STATUS = createMarker("STATUS");
     /**

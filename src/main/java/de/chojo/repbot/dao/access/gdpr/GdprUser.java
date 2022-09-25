@@ -107,7 +107,7 @@ public class GdprUser extends QueryFactory {
      * - The file exceeds the max file size
      *
      * @param shardManager shard manager to resolve the user
-     * @return true when the request was send.
+     * @return true when the request was sent.
      */
     public boolean sendData(ShardManager shardManager) {
         User user;
