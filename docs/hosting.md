@@ -10,13 +10,13 @@ Use the docker compose file in the docker directory.
 You will need a PostgreSQL database and Java 18 or higher installed already.
 
 ## Detailed setup guide for non docker users.
-We provide a bash script for seting up all requirements for the reputation bot.
+We provide a bash script for setting up all requirements for the reputation bot.
 We do not install any databases or java for you.
 
 Once the setup is complete you can simply execute the start.sh to start the bot in a screen called `repbot`.
 
 ### Simple Setup
-[See whats inside](https://gist.github.com/RainbowDashLabs/20d7ad959b524056a406aeb6ee53b4e2)
+[See what's inside](https://gist.github.com/RainbowDashLabs/20d7ad959b524056a406aeb6ee53b4e2)
 
 
 ```sh

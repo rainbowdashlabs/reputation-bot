@@ -11,7 +11,7 @@ Setting: `cooldown`
 When User A thanks User B they get a cooldown for each other. During this cooldown, User B can not thank User A 
 again and vice versa.
 
-However User A can thank any other user during this time, as well as User B.
+However, User A can thank any other user during this time, as well as User B.
 
 ## Receiver and Donor Context
 To determine which users are eligible to receive and donate reputation we build a context for every message which 
@@ -35,7 +35,7 @@ Users which share or shared a voice channel in the `maxMessageAge` minutes are a
 Setting: `donorContext` and `maxMessageAge`
 
 The donor context checks if the user has at least one more message in the `maxMessageAge` in the channel. 
-Additionally we check if the user was in a voice channel currently or in the `maxMessageAge` minutes.
+Additionally, we check if the user was in a voice channel currently or in the `maxMessageAge` minutes.
 
 ## Outdated messages
 
@@ -51,7 +51,7 @@ If a user thanks someone and deleted its messages the reputation will be removed
 
 ## Max reputation per message
 
-By default the bot will limit given reputation to three users per message and embed request. You can change this 
+By default, the bot will limit given reputation to three users per message and embed request. You can change this 
 value with the `maxmessagereputation` setting.
 
 ## Donor and Receiver limit

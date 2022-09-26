@@ -8,7 +8,7 @@ After this, there are some optional steps you may want to take a look at. You wi
 possibilities on the [configuration and customization page](configuration.md)
 
 - Use the `/scan` command to scan the messages in a channel for thank phrases. This will backfill your reputations. You
-  can scan up to 100k messages in a channel. This will take some time and you can only scan one channel at a time. 
+  can scan up to 100k messages in a channel. This will take some time, and you can only scan one channel at a time. 
   The scan might cancel at some time once discord takes too long to deliver the requested messages.
 - Set your own reputation emote with `/reaction main`. This can be a custom emote from your server or a normal
   discord emote. you can also add more additional emotes with `/reactions add`.

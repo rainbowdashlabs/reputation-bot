@@ -74,7 +74,7 @@ public class ContextResolver {
         retrievedHistory.add(message);
         retrievedHistory.addAll(history.getRetrievedHistory());
         retrievedHistory = retrievedHistory.stream()
-                                           // Remove all bot messages. we wont need them anyway.
+                                           // Remove all bot messages. we won't need them anyway.
                                            .filter(mes -> !mes.getAuthor().isBot())
                                            .collect(Collectors.toList());
 

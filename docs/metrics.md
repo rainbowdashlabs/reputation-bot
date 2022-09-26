@@ -2,7 +2,7 @@
 
 You are curious about the traffic and usage of the bot?
 
-We are as well! Thats why we compiled some nice graphs on this page. These are showing nearly realtime data directly 
+We are as well! That's why we compiled some nice graphs on this page. These are showing nearly realtime data directly 
 from the bot. The graphs are refreshed automatically.
 
 Most of the graphs show data with an offset of one week or month. That avoids showing dirty or incomplete data. If you 
@@ -18,6 +18,7 @@ want more insights you can try out our [API](https://repbot.chojo.de/docs).
 
 ![](https://repbot.chojo.de/v1/metrics/reputation/type/total/month/0/48)
 
+![](https://repbot.chojo.de/v1/metrics/reputation/type/count/month/0/48)
 
 ## Commands
 
