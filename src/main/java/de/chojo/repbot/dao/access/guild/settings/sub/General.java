@@ -114,4 +114,14 @@ public class General extends QueryFactory implements GuildHolder {
     public ReputationMode reputationMode() {
         return reputationMode;
     }
+
+    public String prettyString() {
+        return """
+               Stack roles: %s
+               Emoji Debug: %s
+               Language: %s
+               Reputation Mode: %s
+               """.stripIndent()
+                  .formatted(stackRoles.get(), emojiDebug, language.getLanguageName(), reputationMode.name());
+    }
 }
