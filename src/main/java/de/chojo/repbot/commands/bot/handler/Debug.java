@@ -71,8 +71,10 @@ public class Debug implements SlashHandler {
                 .setTitle("Settings")
                 .addField("Reputation Settings", settings.reputation().prettyString(), true)
                 .addField("General", settings.general().prettyString(), true)
+                .addBlankField(false)
                 .addField("Abuse Protection", settings.abuseProtection().prettyString(), true)
                 .addField("Announcements", settings.announcements().prettyString(), true)
+                .addBlankField(false)
                 .addField("Message States", settings.messages().prettyString(), true)
                 .build());
 
