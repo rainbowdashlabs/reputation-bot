@@ -94,4 +94,13 @@ public class Announcements extends QueryFactory implements GuildHolder {
     public long guildId() {
         return settings.guildId();
     }
+      
+    public String prettyString() {
+        return """
+               Active: %s
+               Same channel: %s
+               Channel: %s
+               """.stripIndent()
+                .formatted(active, sameChannel, channelId);
+    }
 }

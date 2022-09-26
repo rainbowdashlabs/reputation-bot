@@ -13,6 +13,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 public class Ranks extends QueryFactory implements GuildHolder {
     private final LinkedHashSet<ReputationRank> ranks = new LinkedHashSet<>();
@@ -141,5 +142,9 @@ public class Ranks extends QueryFactory implements GuildHolder {
 
     public void refresh() {
         ranks.clear();
+    }
+
+    public String prettyString() {
+        return ranks().stream().map(rank -> "%s %d".formatted(rank.role().getName(), rank.reputation())).collect(Collectors.joining("\n"));
     }
 }
