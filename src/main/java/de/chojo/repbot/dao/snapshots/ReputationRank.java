@@ -53,7 +53,7 @@ public class ReputationRank extends QueryFactory implements GuildHolder, Compara
     }
 
     public Role role() {
-        return role;
+        return getRole(ranks.guild());
     }
 
     /**

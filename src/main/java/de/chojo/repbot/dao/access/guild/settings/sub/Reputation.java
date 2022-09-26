@@ -164,4 +164,16 @@ public class Reputation extends QueryFactory implements GuildHolder {
                 .sendSync()
                 .changed();
     }
+
+    public String prettyString() {
+        return """
+               Reaction active: %s
+               Answer active: %s
+               Mention active: %s
+               Fuzzy active: %s
+               Embed active: %s
+               Skip single embed: %s
+               """.formatted(reactionActive, answerActive, mentionActive, fuzzyActive, embedActive, skipSingleEmbed)
+                  .stripIndent();
+    }
 }

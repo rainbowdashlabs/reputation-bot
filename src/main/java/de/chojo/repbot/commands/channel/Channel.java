@@ -43,7 +43,7 @@ public class Channel extends SlashCommand {
                                 .argument(Argument.bool("active", "command.channel.announcement.state.active.description").asRequired()))
                         .subCommand(SubCommand.of("where", "command.channel.announcement.where.description")
                                 .handler(new Where(guilds))
-                                .argument(Argument.channel("where", "command.channel.announcement.where.where.description").asRequired().withAutoComplete()))
+                                .argument(Argument.text("where", "command.channel.announcement.where.where.description").asRequired().withAutoComplete()))
                         .subCommand(SubCommand.of("channel", "command.channel.announcement.channel.description")
                                 .handler(new Location(guilds))
                                 .argument(Argument.channel("channel", "command.channel.announcement.channel.channel.description").asRequired()))

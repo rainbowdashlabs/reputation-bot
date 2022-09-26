@@ -8,6 +8,7 @@ public class BaseSettings {
     private String token = "";
     private boolean internalCommands;
     private List<Long> botOwner = new ArrayList<>();
+    private long botGuild = 0L;
 
     public String token() {
         return token;
@@ -21,4 +22,7 @@ public class BaseSettings {
         return internalCommands;
     }
 
+    public long botGuild() {
+        return botGuild;
+    }
 }

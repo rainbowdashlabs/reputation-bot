@@ -4,6 +4,7 @@ import de.chojo.jdautil.interactions.dispatching.InteractionHub;
 import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.commands.abuseprotection.AbuseProtection;
+import de.chojo.repbot.commands.bot.BotAdmin;
 import de.chojo.repbot.commands.channel.Channel;
 import de.chojo.repbot.commands.dashboard.Dashboard;
 import de.chojo.repbot.commands.debug.Debug;
@@ -53,6 +54,8 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.slf4j.Logger;
 
 import javax.security.auth.login.LoginException;
+
+import java.util.Collections;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -196,7 +199,8 @@ public class Bot {
                         new AbuseProtection(guilds),
                         new Debug(guilds),
                         new RepAdmin(guilds, configuration),
-                        new Messages(guilds))
+                        new Messages(guilds),
+                        new BotAdmin(guilds))
                 .withLocalizer(localizer)
                 .cleanGuildCommands("true".equals(System.getProperty("bot.cleancommands", "false")))
                 .testMode("true".equals(System.getProperty("bot.testmode", "false")))
@@ -208,6 +212,7 @@ public class Bot {
                     log.error(LogNotify.NOTIFY_ADMIN, "Command execution of {} failed\n{}",
                             context.interaction().meta().name(), context.args(), throwable);
                 })
+                .withGuildCommandMapper(cmd -> Collections.singletonList(configuration.baseSettings().botGuild()))
                 .withDefaultMenuService()
                 .withPostCommandHook(result -> data.metrics().commands()
                                                    .logCommand(result.context().interaction().meta().name()))
