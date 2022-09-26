@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static de.chojo.jdautil.util.Guilds.prettyName;
@@ -62,7 +63,7 @@ public class Debug implements SlashHandler {
                 .setTitle("Permissions")
                 .setDescription(Arrays.stream(Permission.values())
                                       .filter(Predicate.not(Permission.UNKNOWN::equals))
-                                      .map(perm -> (selfMember.hasPermission(perm) ? "✅" : "❌") + perm.getName())
+                                      .map(perm -> (selfMember.hasPermission(perm) ? "✅ " : "❌ ") + perm.getName())
                                       .collect(Collectors.joining("\n")))
                 .build());
 
@@ -81,8 +82,9 @@ public class Debug implements SlashHandler {
                 .setTitle("Thank settings")
                 .addField("Donor Roles", thanks.donorRoles().prettyString(), true)
                 .addField("Receiver Roles", thanks.receiverRoles().prettyString(), true)
-                .addField("Channel count", String.valueOf(thanks.channels().channels().size()), false)
-                .addField("Category Count", String.valueOf(thanks.channels().categories().size()), false)
+                .addBlankField(false)
+                .addField("Channel count", String.valueOf(thanks.channels().channels().size()), true)
+                .addField("Category Count", String.valueOf(thanks.channels().categories().size()), true)
                 .addField("Thankwords", thanks.thankwords().prettyString(), false)
                 .addField("Main Reaction", thanks.reactions().reactionMention().orElse("None"), true)
                 .addField("Additional Reactions", String.join(" ", thanks.reactions()
