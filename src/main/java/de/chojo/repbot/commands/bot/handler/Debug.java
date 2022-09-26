@@ -61,6 +61,7 @@ public class Debug implements SlashHandler {
         embeds.add(new EmbedBuilder()
                 .setTitle("Permissions")
                 .setDescription(Arrays.stream(Permission.values())
+                                      .filter(Predicate.not(Permission.UNKNOWN::equals))
                                       .map(perm -> (selfMember.hasPermission(perm) ? "✅" : "❌") + perm.getName())
                                       .collect(Collectors.joining("\n")))
                 .build());
