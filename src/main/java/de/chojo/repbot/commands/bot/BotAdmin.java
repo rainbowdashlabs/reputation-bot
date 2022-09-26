@@ -1,6 +1,7 @@
 package de.chojo.repbot.commands.bot;
 
 import de.chojo.jdautil.interactions.slash.Argument;
+import de.chojo.jdautil.interactions.slash.Group;
 import de.chojo.jdautil.interactions.slash.Slash;
 import de.chojo.jdautil.interactions.slash.SubCommand;
 import de.chojo.jdautil.interactions.slash.provider.SlashCommand;
@@ -9,6 +10,9 @@ import de.chojo.repbot.commands.bot.handler.Leave;
 import de.chojo.repbot.commands.bot.handler.Redeploy;
 import de.chojo.repbot.commands.bot.handler.Search;
 import de.chojo.repbot.commands.bot.handler.SharedGuilds;
+import de.chojo.repbot.commands.bot.handler.system.Restart;
+import de.chojo.repbot.commands.bot.handler.system.Shudown;
+import de.chojo.repbot.commands.bot.handler.system.Upgrade;
 import de.chojo.repbot.dao.provider.Guilds;
 
 public class BotAdmin extends SlashCommand {
@@ -18,6 +22,13 @@ public class BotAdmin extends SlashCommand {
                 .guildOnly()
                 .adminCommand()
                 .privateCommand()
+                .group(Group.of("system", "System management")
+                        .subCommand(SubCommand.of("restart", "Restart bot")
+                                .handler(new Restart()))
+                        .subCommand(SubCommand.of("upgrade", "Deploy an update")
+                                .handler(new Upgrade()))
+                        .subCommand(SubCommand.of("Shutdown", "Shutdown the bot.")
+                                .handler(new Shudown())))
                 .subCommand(SubCommand.of("debug", "Debug of a guild")
                         .handler(new Debug(guilds))
                         .argument(Argument.text("guild_id", "Id of guild").asRequired()))

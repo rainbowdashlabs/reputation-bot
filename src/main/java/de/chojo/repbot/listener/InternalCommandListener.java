@@ -20,7 +20,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class InternalCommandListener extends ListenerAdapter {
     private static final Logger log = getLogger(InternalCommandListener.class);
     private final Configuration configuration;
-    private final Statistic statistic;
     private final Metrics metrics;
 
     public InternalCommandListener(Configuration configuration, Statistic statistic, Metrics metrics) {
@@ -40,31 +39,7 @@ public class InternalCommandListener extends ListenerAdapter {
 
         args = Arrays.copyOfRange(args, 1, args.length);
 
-        if ("upgrade".equalsIgnoreCase(args[0])) {
-            log.info(LogNotify.STATUS, "Upgrade command received. Attempting upgrade.");
-            event.getMessage().reply("Starting upgrade. Will be back soon!").complete();
-            System.exit(20);
-            return;
-        }
-
-        if ("restart".equalsIgnoreCase(args[0])) {
-            log.info(LogNotify.STATUS, "Restart command received. Attempting restart.");
-            event.getMessage().reply("Restarting. Will be back soon!").complete();
-            System.exit(10);
-            return;
-        }
-
-        if ("shutdown".equalsIgnoreCase(args[0])) {
-            log.info(LogNotify.STATUS, "Shutdown command received. Shutting down.");
-            event.getMessage().reply("Initializing shutdown. Good bye :c").complete();
-            System.exit(0);
-        }
-
         if ("stats".equalsIgnoreCase(args[0]) || "system".equalsIgnoreCase(args[0])) {
-            var builder = new EmbedBuilder();
-            var systemStatistic = statistic.getSystemStatistic();
-            systemStatistic.appendTo(builder);
-            event.getMessage().replyEmbeds(builder.build()).queue();
         }
 
         if ("metrics".equalsIgnoreCase(args[0])) {
