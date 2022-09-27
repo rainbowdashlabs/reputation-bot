@@ -16,6 +16,5 @@ public class Shudown implements SlashHandler {
         log.info(LogNotify.STATUS, "Shutdown command received from {}. Shutting down.", event.getUser().getAsTag());
         event.reply("Initializing shutdown. Good bye :c").complete();
         System.exit(0);
-
     }
 }
