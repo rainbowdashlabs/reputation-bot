@@ -21,7 +21,7 @@ public class SharedGuilds implements SlashHandler {
 
         event.deferReply(true).queue();
 
-        User user = null;
+        User user;
 
         if (userOpt != null) {
             user = userOpt.getAsUser();
@@ -37,6 +37,7 @@ public class SharedGuilds implements SlashHandler {
         var mutualGuilds = user.getMutualGuilds();
         var guilds = mutualGuilds.stream().map(Guilds::prettyName).collect(Collectors.joining("\n"));
 
-        event.getHook().editOriginalEmbeds(new EmbedBuilder().setTitle("Shared Guilds").setDescription(guilds).build()).queue();
+        event.getHook().editOriginalEmbeds(new EmbedBuilder().setTitle("Shared Guilds").setDescription(guilds).build())
+             .queue();
     }
 }
