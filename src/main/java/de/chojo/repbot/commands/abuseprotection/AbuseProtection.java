@@ -44,7 +44,7 @@ public class AbuseProtection extends SlashCommand {
                         .handler(new DonorLimit(guilds))
                         .argument(Argument.integer("limit", "command.abuseprotection.donorlimit.limit.description"))
                         .argument(Argument.integer("hours", "command.abuseprotection.donorlimit.hours.description")))
-                .subCommand(SubCommand.of("receiverlimit", "command.abuseprotection.receiverLimit.description")
+                .subCommand(SubCommand.of("receiverlimit", "command.abuseprotection.receiverlimit.description")
                         .handler(new ReceiverLimit(guilds))
                         .argument(Argument.integer("limit", "command.abuseprotection.receiverlimit.limit.description"))
                         .argument(Argument.integer("hours", "command.abuseprotection.receiverlimit.hours.description")))
