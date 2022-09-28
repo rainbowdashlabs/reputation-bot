@@ -48,7 +48,7 @@ public class Debug implements SlashHandler {
 
         embeds.add(new EmbedBuilder()
                 .setTitle("Information about guild " + prettyName(guild))
-                .addField("Owner", guild.getOwner().getUser().getAsTag(), true)
+                .addField("Owner", guild.retrieveOwner().complete().getUser().getAsTag(), true)
                 .addField("Member", String.valueOf(guild.getMemberCount()), true)
                 .addField("Joined", timestamp(selfMember.getTimeJoined()), true)
                 .addField("Total Reputation", String.valueOf(reputation.stats().totalReputation()), true)
