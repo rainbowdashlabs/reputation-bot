@@ -1,4 +1,4 @@
-name: Verify state
+name: Verify
 
 on: [push, pull_request]
 
