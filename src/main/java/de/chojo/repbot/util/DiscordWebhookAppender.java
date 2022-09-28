@@ -60,6 +60,7 @@ public final class DiscordWebhookAppender extends AbstractAppender {
 
     private final WebhookClient webhookClient;
     private final List<WebhookEmbed> buffer = new ArrayList<>();
+    private int bufferSize = 0;
     private TimerTask flushTimer;
 
     private DiscordWebhookAppender(String name, Filter filter, boolean ignoreExceptions, WebhookClient webhookClient) {
@@ -185,18 +186,25 @@ public final class DiscordWebhookAppender extends AbstractAppender {
                 var text = StringUtils.abbreviate(chunk, abbreviateChars - lineChars);
                 text = String.format("```st%n%s%n```", text);
                 eb.addField(new WebhookEmbed.EmbedField(false, fieldTitle, text));
+                currLength += fieldTitle.length();
+                currLength += text.length();
                 first = false;
             }
         }
 
         // add to buffer
-        add(eb.build());
+        add(eb.build(), currLength);
     }
 
-    private void add(WebhookEmbed embed) {
+    private void add(WebhookEmbed embed, int size) {
         synchronized (buffer) {
+            if (bufferSize + size > MAX_EMBED_CHARS) {
+                flush();
+            }
+
             // each add flushes on full buffer, so we know the buffer has at least one space left
             buffer.add(embed);
+            bufferSize += size;
 
             if (buffer.size() >= MAX_EMBED) {
                 flush();
@@ -214,6 +222,7 @@ public final class DiscordWebhookAppender extends AbstractAppender {
                 // no need to copy buffer since library will already perform full copy
                 webhookClient.send(buffer);
                 buffer.clear();
+                bufferSize = 0;
 
             } finally {
                 // timer is always reset after flush, since we not know cause of flush, we always cancel timer
