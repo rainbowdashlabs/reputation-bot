@@ -50,7 +50,7 @@ public class Refresh implements SlashHandler {
                 .updateBatch(event.getGuild(), context, message)
                 .whenComplete(Futures.whenComplete(res -> {
                     var duration = DurationFormatUtils.formatDuration(start.until(Instant.now(), ChronoUnit.MILLIS), "mm:ss");
-                    log.info("Update of roles on {} took {}.", prettyName(event.getGuild()), duration);
+                    log.info("Update of roles on {} took {}. Checked {} Updated {}", prettyName(event.getGuild()), duration, res.checked(), res.updated());
                     message.editMessage(context.localize("command.roles.refresh.message.finished",
                                    Replacement.create("CHECKED", res.checked()), Replacement.create("UPDATED", res.updated())))
                            .queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
