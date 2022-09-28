@@ -230,4 +230,25 @@ public class AbuseProtection extends QueryFactory implements GuildHolder {
     public Guild guild() {
         return settings.guild();
     }
+
+    public String prettyString() {
+        return """
+               **Context**
+               Donor: %s
+               Receiver: %s
+               
+               **Limits**
+               Given: %s in %s hours
+               Received: %s in %s hours
+               Per Message: %s
+               Cooldown: %s
+               
+               **Age**
+               Max Age: %s minutes
+               Min Messages: %s
+               """.formatted(donorContext, receiverContext,
+                maxGiven, maxGivenHours, maxReceived, maxReceivedHours, maxMessageReputation, cooldown,
+                maxMessageAge, minMessages)
+                .stripIndent();
+    }
 }

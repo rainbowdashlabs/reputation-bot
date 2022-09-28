@@ -77,4 +77,8 @@ public class Thankwords extends QueryFactory implements GuildHolder {
         }
         return result;
     }
+
+    public String prettyString() {
+        return words().stream().map("`%s`"::formatted).collect(Collectors.joining(", "));
+    }
 }

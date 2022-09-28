@@ -74,4 +74,11 @@ public class Messages extends QueryFactory implements GuildHolder {
     private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, boolean object) {
         return String.format("$%s$: $%s$", locale, object ? "words.enabled" : "words.disabled");
     }
+
+    public String prettyString() {
+        return """
+               Reaction confirmation: %s
+               """.stripIndent()
+                .formatted(reactionConfirmation);
+    }
 }

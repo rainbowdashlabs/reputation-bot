@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -73,5 +74,13 @@ public abstract class RolesHolder extends QueryFactory implements GuildHolder {
             roleIds.remove(role.getIdLong());
         }
         return result;
+    }
+
+    public String prettyString() {
+        return roleIds.stream()
+                      .map(id -> Optional.ofNullable(guild().getRoleById(id))
+                                         .map(Role::getName)
+                                         .orElse("Unkown (%d)".formatted(id)))
+                      .collect(Collectors.joining(", "));
     }
 }

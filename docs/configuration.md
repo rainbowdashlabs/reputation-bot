@@ -10,7 +10,7 @@ Reputation roles offer you a way to reward your users for reaching a reputation 
 You can add those roles via the `roles` command. Be aware that every role can only have one reputation amount 
 associated and every reputation amount can only have one role.
 
-By default the user will only have the highest possible role assigned to him. You can change this to role stacking, 
+By default, the user will only have the highest possible role assigned to him. You can change this to role stacking, 
 which would give the user all roles which are below his current reputation amount as well. This can be done via the 
 `roles` command as well.
 
@@ -19,18 +19,18 @@ which would give the user all roles which are below his current reputation amoun
 When it comes to defining channels where reputation can be collected you have multiple options. All these options 
 can be found under the `channel` command
 
-You can add channels separately or you can add categories as well. Adding a category will enable the bot on all 
-channels in this category. Note that no indivdual channels will be added. So removing or adding channels of this 
+You can add channels separately, or you can add categories as well. Adding a category will enable the bot on all 
+channels in this category. Note that no individual channels will be added. So removing or adding channels of this 
 category will enable or disable reputation for these channels.
 
-If you have a lot of channels and you want to only exclude a few of these you can set the list mode to blacklist. 
+If you have a lot of channels, and you want to only exclude a few of these you can set the list mode to blacklist. 
 This will disable reputation in all defined channels.
 
 ## Level Up Messages
 
 The bot can send level up messages when a user received a higher reputation role.
 
-These messages can be send in the channel where the user received their reputation or in another dedicated channel. 
+These messages can be sent in the channel where the user received their reputation or in another dedicated channel. 
 You can define these settings via the `channel announcement` command.
 
 ## Managing ways to give reputation
@@ -57,7 +57,7 @@ get more reputation instead.
 ### Fuzzy
 
 When the bot detects a thankword in a message which is not an answer and has no mentions it will check the words 
-around the thankword for user names. If it finds a matching name which is similar enough to a user name this user 
+around the thankword for usernames. If it finds a matching name which is similar enough to a username this user 
 will receive reputation. 
 
 ### Confirmation Message
@@ -72,9 +72,9 @@ Sometimes this embed will only contain one entry. In this case reputation can be
 ## Reputation Mode
 
 The reputation mode decides how the bot calculates the rankings and roles. You can set it in your `repsettings`.
-Currently we offer three different modes:
+Currently, we offer three different modes:
 
-- Total: The total all time reputation of users
+- Total: The total all-time reputation of users
 - 30 Days: The reputation collected in the last 30 days
 - 7 Days: The reputation collected in the last 7 days
 

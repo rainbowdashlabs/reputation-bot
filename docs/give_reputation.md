@@ -20,7 +20,7 @@ User B: Thank you # (4)
 ```
 
 1. User A can't receive reputation because he has no message after the question
-2. This is the inital question. This adds User B to the donor context, which contains users eligible to give reputation
+2. This is the initial question. This adds User B to the donor context, which contains users eligible to give reputation
 3. A possible answer for the question. This adds User C to the receiver context, which contains users eligible to 
    receive reputation
 4. The message which will trigger the reputation embed
@@ -37,7 +37,7 @@ can be done in every channel where reputation is enabled.
 ## Embed
 
 The embed method is the most common method. If the bot detects a thankword but cant determine a receiver with 100%
-confidence a message will be send containing an embed. This embed contains all users which are eligible to receive
+confidence a message will be sent containing an embed. This embed contains all users which are eligible to receive
 reputation from the user which received a thankword.
 
 ![A text with a confirmation request.](resources/embed.png)
