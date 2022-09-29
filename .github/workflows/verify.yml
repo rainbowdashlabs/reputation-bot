@@ -1,10 +1,11 @@
-name: Verify state
+name: Verify
 
 on: [push, pull_request]
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    name: Gradle build
 
     steps:
       - uses: actions/checkout@v3
@@ -18,11 +19,19 @@ jobs:
         run: ./gradlew --build-cache build
       - name: Test with Gradle
         run: ./gradlew test --info
+
+  build-docker:
+    runs-on: ubuntu-latest
+    name: Docker build
+
+    steps:
+      - uses: actions/checkout@v3
       - name: Build as Docker image
         run: docker build . -f docker/Dockerfile
 
   enforce-encoding:
     runs-on: ubuntu-latest
+    name: Encoding check
 
     steps:
       - uses: actions/checkout@v3
@@ -32,3 +41,15 @@ jobs:
         run: |
           find src/main/resources/locale* -type f -exec file --mime {} \; | grep -v charset=utf-8 && NOT_UTF_FOUND=1 || true
           [[ \"$NOT_UTF_FOUND\" == \"1\" ]] && exit 1 || true
+
+  verify-docs:
+    runs-on: ubuntu-latest
+    name: Docs build
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: 3.x
+      - run: pip install mkdocs-material
+      - run: pip install mkdocs-git-revision-date-localized-plugin

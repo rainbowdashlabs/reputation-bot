@@ -25,7 +25,6 @@ import de.chojo.repbot.commands.setup.Setup;
 import de.chojo.repbot.commands.thankwords.Thankwords;
 import de.chojo.repbot.commands.top.Top;
 import de.chojo.repbot.config.Configuration;
-import de.chojo.repbot.listener.InternalCommandListener;
 import de.chojo.repbot.listener.LogListener;
 import de.chojo.repbot.listener.MessageListener;
 import de.chojo.repbot.listener.ReactionListener;
@@ -173,10 +172,6 @@ public class Bot {
         var localizer = localization.localizer();
         var guilds = data.guilds();
 
-        if (configuration.baseSettings().isInternalCommands()) {
-            shardManager.addEventListener(new InternalCommandListener(configuration, statistic, data.metrics()));
-        }
-
         InteractionHub.builder(shardManager)
                 .withConversationSystem()
                 .withCommands(
@@ -200,7 +195,7 @@ public class Bot {
                         new Debug(guilds),
                         new RepAdmin(guilds, configuration),
                         new Messages(guilds),
-                        new BotAdmin(guilds))
+                        new BotAdmin(guilds, configuration, statistic))
                 .withLocalizer(localizer)
                 .cleanGuildCommands("true".equals(System.getProperty("bot.cleancommands", "false")))
                 .testMode("true".equals(System.getProperty("bot.testmode", "false")))

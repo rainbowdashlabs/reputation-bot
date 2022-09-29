@@ -16,7 +16,8 @@ jobs:
         uses: lewagon/wait-on-check-action@master
         with:
           ref: ${{ github.ref }}
-          running-workflow-name: 'docker-build'
+          check-name: 'Docker build'
+          running-workflow-name: 'Verify'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           allowed-conclusions: success
       - uses: actions/checkout@v3

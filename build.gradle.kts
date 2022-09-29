@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "1.9.1"
+version = "1.10.0"
 
 repositories {
     maven("https://eldonexus.de/repository/maven-public")
@@ -15,16 +15,16 @@ repositories {
 
 dependencies {
     //discord
-    implementation("de.chojo", "cjda-util", "2.7.3+alpha.20-SNAPSHOT") {
+    implementation("de.chojo", "cjda-util", "2.7.3+alpha.20") {
         exclude(group = "club.minnced", module = "opus-java")
     }
 
     // database
     implementation("org.postgresql", "postgresql", "42.5.0")
-    implementation("de.chojo.sadu", "sadu-queries", "1.1.0")
-    implementation("de.chojo.sadu", "sadu-updater", "1.1.0")
-    implementation("de.chojo.sadu", "sadu-postgresql", "1.1.0")
-    implementation("de.chojo.sadu", "sadu-datasource", "1.1.0")
+    implementation("de.chojo.sadu", "sadu-queries", "1.2.0")
+    implementation("de.chojo.sadu", "sadu-updater", "1.2.0")
+    implementation("de.chojo.sadu", "sadu-postgresql", "1.2.0")
+    implementation("de.chojo.sadu", "sadu-datasource", "1.2.0")
 
     // Logging
     implementation("org.slf4j", "slf4j-api", "2.0.2")

@@ -12,6 +12,9 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
+import net.dv8tion.jda.api.requests.ErrorResponse;
+import net.dv8tion.jda.api.requests.RestAction;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -171,7 +174,7 @@ public class RoleAssigner {
                         if (lastRefresh.get().isAfter(Instant.now().minus(5, ChronoUnit.SECONDS))) return;
                         message.editMessage(context.localize("command.roles.refresh.message.progress",
                                        Replacement.create("CHECKED", checked.get()), Replacement.create("UPDATED", updated.get())))
-                               .queue();
+                               .queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
                     });
                 }
             }
