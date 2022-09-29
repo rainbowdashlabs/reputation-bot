@@ -156,7 +156,7 @@ public class Bot {
         statistic = Statistic.of(shardManager, data.metrics(), worker);
 
         contextResolver = new ContextResolver(data.voice(), configuration);
-        messageAnalyzer = new MessageAnalyzer(contextResolver, configuration, data.metrics());
+        messageAnalyzer = new MessageAnalyzer(contextResolver, configuration, data.metrics(), guilds);
 
         PresenceService.start(shardManager, configuration, statistic, worker);
         scan.lateInit(messageAnalyzer);

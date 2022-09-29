@@ -3,6 +3,7 @@ package de.chojo.repbot.dao.access.guild.reputation;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import de.chojo.repbot.dao.access.guild.RepGuild;
+import de.chojo.repbot.dao.access.guild.reputation.sub.Analyzer;
 import de.chojo.repbot.dao.access.guild.reputation.sub.Log;
 import de.chojo.repbot.dao.access.guild.reputation.sub.Ranking;
 import de.chojo.repbot.dao.access.guild.reputation.sub.RepUser;
@@ -27,16 +28,22 @@ public class Reputation extends QueryFactory implements GuildHolder {
     private final Ranking ranking;
     private final Cache<Long, RepUser> users = CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.MINUTES).build();
     private final Log logAccess;
+    private final Analyzer analyzer;
 
     public Reputation(RepGuild repGuild) {
         super(repGuild);
         this.repGuild = repGuild;
         ranking = new Ranking(this);
         logAccess = new Log(this);
+        analyzer = new Analyzer(this);
     }
 
     public Log log() {
         return logAccess;
+    }
+
+    public Analyzer analyzer() {
+        return analyzer;
     }
 
     @Override

@@ -9,6 +9,7 @@ import de.chojo.repbot.analyzer.results.match.FuzzyResult;
 import de.chojo.repbot.analyzer.results.match.MatchResult;
 import de.chojo.repbot.analyzer.results.match.ThankType;
 import de.chojo.repbot.analyzer.results.match.fuzzy.MemberMatch;
+import de.chojo.repbot.dao.snapshots.analyzer.ResultSnapshot;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 
@@ -33,19 +34,21 @@ public interface Result {
         return new EmptyResult(match, resultReason);
     }
 
-    static Result mention(Member donator, List<Member> receiver) {
-        return new DirectResult(ThankType.MENTION, donator, receiver);
+    static Result mention(String match, Member donator, List<Member> receiver) {
+        return new DirectResult(match, ThankType.MENTION, donator, receiver);
     }
 
-    static Result answer(Member donator, Member receiver, Message referenceMessage) {
-        return new AnswerResult(donator, receiver, referenceMessage);
+    static Result answer(String match, Member donator, Member receiver, Message referenceMessage) {
+        return new AnswerResult(match, donator, receiver, referenceMessage.getIdLong());
     }
 
-    static Result fuzzy(List<String> thankwords, List<MemberMatch> memberMatches, Member donator, List<WeightedEntry<Member>> receivers) {
-        return new FuzzyResult(thankwords, memberMatches, donator, receivers);
+    static Result fuzzy(String match, List<String> thankwords, List<MemberMatch> memberMatches, Member donator, List<WeightedEntry<Member>> receivers) {
+        return new FuzzyResult(match, thankwords, memberMatches, donator, receivers);
     }
 
     default boolean isEmpty() {
         return resultType() == ResultType.NO_MATCH;
     }
+
+    ResultSnapshot toSnapshot();
 }

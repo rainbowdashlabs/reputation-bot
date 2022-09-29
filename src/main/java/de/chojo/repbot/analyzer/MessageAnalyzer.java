@@ -9,6 +9,7 @@ import de.chojo.repbot.analyzer.results.empty.EmptyResultReason;
 import de.chojo.repbot.analyzer.results.match.fuzzy.MemberMatch;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
+import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.dao.provider.Metrics;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -36,11 +37,13 @@ public class MessageAnalyzer {
                                                                 .build();
     private final Configuration configuration;
     private final Metrics metrics;
+    private final Guilds guilds;
 
-    public MessageAnalyzer(ContextResolver resolver, Configuration configuration, Metrics metrics) {
+    public MessageAnalyzer(ContextResolver resolver, Configuration configuration, Metrics metrics, Guilds guilds) {
         contextResolver = resolver;
         this.configuration = configuration;
         this.metrics = metrics;
+        this.guilds = guilds;
     }
 
     /**
@@ -55,12 +58,13 @@ public class MessageAnalyzer {
      * @return analyzer results
      */
     public Result processMessage(Pattern pattern, @NotNull Message message, Settings settings, boolean limitTargets, int limit) {
+        var analyzer = guilds.guild(message.getGuild()).reputation().analyzer();
         try {
-            return resultCache.get(message.getIdLong(), () -> analyze(pattern, message, settings, limitTargets, limit));
+            return analyzer.log(message, resultCache.get(message.getIdLong(), () -> analyze(pattern, message, settings, limitTargets, limit)));
         } catch (ExecutionException e) {
             log.error("Could not compute anaylzer result", e);
         }
-        return Result.empty(EmptyResultReason.INTERNAL_ERROR);
+        return analyzer.log(message, Result.empty(EmptyResultReason.INTERNAL_ERROR));
     }
 
     private Result analyze(Pattern pattern, Message message, @Nullable Settings settings, boolean limitTargets, int limit) {
@@ -87,7 +91,7 @@ public class MessageAnalyzer {
                 return Result.empty(match, EmptyResultReason.TARGET_NOT_ON_GUILD);
             }
 
-            return Result.answer(message.getMember(), user, referencedMessage);
+            return Result.answer(match, message.getMember(), user, referencedMessage);
         }
 
         var context = MessageContext.byMessage(message);
@@ -98,7 +102,7 @@ public class MessageAnalyzer {
         var mentionedMembers = message.getMentions().getUsers();
         if (!mentionedMembers.isEmpty()) {
             if (mentionedMembers.size() > limit) {
-                return resolveMessage(message, pattern, context, limitTargets, limit);
+                return resolveMessage(match, message, pattern, context, limitTargets, limit);
             }
 
             List<Member> members = new ArrayList<>();
@@ -113,13 +117,13 @@ public class MessageAnalyzer {
 
             if (members.isEmpty()) return Result.empty(match, EmptyResultReason.TARGET_NOT_ON_GUILD);
 
-            return Result.mention(message.getMember(), members);
+            return Result.mention(match, message.getMember(), members);
         }
-        return resolveMessage(message, pattern, context, limitTargets, limit);
+        return resolveMessage(match, message, pattern, context, limitTargets, limit);
     }
 
 
-    private Result resolveMessage(Message message, Pattern thankPattern, MessageContext targets, boolean limitTargets, int limit) {
+    private Result resolveMessage(String matchPattern, Message message, Pattern thankPattern, MessageContext targets, boolean limitTargets, int limit) {
         var contentRaw = message.getContentRaw();
 
         var words = new ArrayList<>(List.of(contentRaw.split("\\s")));
@@ -173,10 +177,10 @@ public class MessageAnalyzer {
                            .sorted()
                            .limit(limit)
                            .collect(Collectors.toList());
-        if (members.isEmpty()) return Result.empty(EmptyResultReason.INSUFFICIENT_SCORE);
+        if (members.isEmpty()) return Result.empty(matchPattern, EmptyResultReason.INSUFFICIENT_SCORE);
 
         var thankwords = thankWordIndices.stream().map(words::get).collect(Collectors.toList());
 
-        return Result.fuzzy(thankwords, memberMatches, message.getMember(), members);
+        return Result.fuzzy(matchPattern, thankwords, memberMatches, message.getMember(), members);
     }
 }

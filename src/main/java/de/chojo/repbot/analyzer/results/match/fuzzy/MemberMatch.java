@@ -1,12 +1,16 @@
 package de.chojo.repbot.analyzer.results.match.fuzzy;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class MemberMatch {
     private final String word;
     private final String name;
     private final String nickname;
     private final double score;
 
-    public MemberMatch(String word, String name, String nickname, double score) {
+    @JsonCreator
+    public MemberMatch(@JsonProperty("word") String word, @JsonProperty("name") String name, @JsonProperty("nickname") String nickname, @JsonProperty("score") double score) {
         this.word = word;
         this.name = name;
         this.nickname = nickname;
@@ -27,5 +31,9 @@ public class MemberMatch {
 
     public double score() {
         return score;
+    }
+
+    public String asString() {
+        return "`%s` ➜ %s (%s) | Score %.03f".formatted(word, name, nickname, score);
     }
 }

@@ -1,20 +1,20 @@
 package de.chojo.repbot.analyzer.results.match;
 
 public enum ThankType {
-    FUZZY("thankType.fuzzy"),
-    MENTION("thankType.mention"),
-    ANSWER("thankType.answer"),
-    DIRECT("thankType.direct"),
-    REACTION("thankType.reaction"),
-    EMBED("thankType.embed");
+    FUZZY("thankType.fuzzy.name"),
+    MENTION("thankType.mention.name"),
+    ANSWER("thankType.answer.name"),
+    DIRECT("thankType.direct.name"),
+    REACTION("thankType.reaction.name"),
+    EMBED("thankType.embed.name");
 
-    private final String localeKey;
+    private final String nameLocaleKey;
 
-    ThankType(String localeKey) {
-        this.localeKey = localeKey;
+    ThankType(String nameLocaleKey) {
+        this.nameLocaleKey = nameLocaleKey;
     }
 
-    public String localeKey() {
-        return localeKey;
+    public String nameLocaleKey() {
+        return nameLocaleKey;
     }
 }
