@@ -5,7 +5,7 @@ import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.MessageContext;
-import de.chojo.repbot.analyzer.ThankType;
+import de.chojo.repbot.analyzer.results.match.ThankType;
 import de.chojo.repbot.config.elements.MagicImage;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.access.guild.settings.sub.Reputation;

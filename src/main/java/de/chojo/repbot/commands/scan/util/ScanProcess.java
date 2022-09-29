@@ -63,7 +63,7 @@ public class ScanProcess {
 
     public boolean scan() {
         if (currWorker != null) {
-            log.debug("Scanning takes to long. Skipping execution of scan to catch up");
+            log.debug("Scanning takes too long. Skipping execution of scan to catch up");
             return false;
         }
 
@@ -91,19 +91,29 @@ public class ScanProcess {
                                                                                              .abuseProtection()
                                                                                              .maxMessageReputation());
 
-            var donator = result.donator();
-            var refMessage = result.referenceMessage();
+            if(result.isEmpty()) continue;
+
+            var matchResult = result.asMatch();
+
+            var donator = matchResult.donor();
             var reputation = guilds.guild(guild).reputation();
-            for (var resultReceiver : result.receivers()) {
-                switch (result.type()) {
-                    case FUZZY, MENTION, ANSWER -> {
-                        if (Verifier.equalSnowflake(donator, resultReceiver.getReference())) continue;
-                        if (reputation.user(resultReceiver.getReference().getUser())
-                                      .addOldReputation(donator != null && guild.isMember(donator) ? donator : null, message, refMessage, result.type())) {
+            for (var resultReceiver : matchResult.receivers()) {
+                if (Verifier.equalSnowflake(donator, resultReceiver)) continue;
+
+                switch (matchResult.thankType()) {
+                    case FUZZY, MENTION -> {
+                        if (reputation.user(resultReceiver.getUser())
+                                      .addOldReputation(donator != null && guild.isMember(donator) ? donator : null,
+                                              message, null, matchResult.thankType())) {
                             hit();
                         }
-                    }
-                    case NO_MATCH -> {
+                    }case ANSWER -> {
+                        if (reputation.user(resultReceiver.getUser())
+                                      .addOldReputation(donator != null && guild.isMember(donator) ? donator : null,
+                                              message, matchResult.asAnswer().referenceMessage(), matchResult.thankType())) {
+                            hit();
+                        }
+
                     }
                 }
             }

@@ -4,6 +4,9 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.jdautil.parsing.WeightedEntry;
+import de.chojo.repbot.analyzer.results.Result;
+import de.chojo.repbot.analyzer.results.empty.EmptyResultReason;
+import de.chojo.repbot.analyzer.results.match.fuzzy.MemberMatch;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.provider.Metrics;
@@ -27,10 +30,10 @@ public class MessageAnalyzer {
     private static final int LOOKAROUND = 6;
     private static final Logger log = getLogger(MessageAnalyzer.class);
     private final ContextResolver contextResolver;
-    private final Cache<Long, AnalyzerResult> resultCache = CacheBuilder.newBuilder()
-                                                                        .expireAfterWrite(10, TimeUnit.MINUTES)
-                                                                        .maximumSize(100000)
-                                                                        .build();
+    private final Cache<Long, Result> resultCache = CacheBuilder.newBuilder()
+                                                                .expireAfterWrite(10, TimeUnit.MINUTES)
+                                                                .maximumSize(100000)
+                                                                .build();
     private final Configuration configuration;
     private final Metrics metrics;
 
@@ -51,25 +54,29 @@ public class MessageAnalyzer {
      * @param limit        limit for returned matches in the analyzer result
      * @return analyzer results
      */
-    public AnalyzerResult processMessage(Pattern pattern, @NotNull Message message, Settings settings, boolean limitTargets, int limit) {
+    public Result processMessage(Pattern pattern, @NotNull Message message, Settings settings, boolean limitTargets, int limit) {
         try {
             return resultCache.get(message.getIdLong(), () -> analyze(pattern, message, settings, limitTargets, limit));
         } catch (ExecutionException e) {
             log.error("Could not compute anaylzer result", e);
         }
-        return AnalyzerResult.noMatch();
+        return Result.empty(EmptyResultReason.INTERNAL_ERROR);
     }
 
-    private AnalyzerResult analyze(Pattern pattern, Message message, @Nullable Settings settings, boolean limitTargets, int limit) {
+    private Result analyze(Pattern pattern, Message message, @Nullable Settings settings, boolean limitTargets, int limit) {
         metrics.messages().countMessage();
-        if (pattern.pattern().isBlank()) return AnalyzerResult.noMatch();
+        if (pattern.pattern().isBlank()) return Result.empty(EmptyResultReason.NO_PATTERN);
         var contentRaw = message.getContentRaw().toLowerCase();
 
-        if (!pattern.matcher(contentRaw).find()) return AnalyzerResult.noMatch();
+        var matcher = pattern.matcher(contentRaw);
+        if (!matcher.find()) return Result.empty(EmptyResultReason.NO_MATCH);
+
+        var match = matcher.group("match");
+
         if (message.getType() == MessageType.INLINE_REPLY) {
 
             var referencedMessage = message.getReferencedMessage();
-            if (referencedMessage == null) return AnalyzerResult.noMatch();
+            if (referencedMessage == null) return Result.empty(match, EmptyResultReason.REFERENCE_MESSAGE_NOT_FOUND);
 
             Member user;
 
@@ -77,10 +84,10 @@ public class MessageAnalyzer {
                 user = message.getGuild().retrieveMemberById(referencedMessage.getAuthor().getIdLong()).complete();
             } catch (RuntimeException e) {
                 log.debug("Could not retrieve member. Probably not on guild anymore.");
-                return AnalyzerResult.noMatch();
+                return Result.empty(match, EmptyResultReason.TARGET_NOT_ON_GUILD);
             }
 
-            return AnalyzerResult.answer(message.getMember(), user, referencedMessage);
+            return Result.answer(message.getMember(), user, referencedMessage);
         }
 
         var context = MessageContext.byMessage(message);
@@ -104,15 +111,15 @@ public class MessageAnalyzer {
                 }
             }
 
-            if (members.isEmpty()) return AnalyzerResult.noMatch();
+            if (members.isEmpty()) return Result.empty(match, EmptyResultReason.TARGET_NOT_ON_GUILD);
 
-            return AnalyzerResult.mention(message.getMember(), members);
+            return Result.mention(message.getMember(), members);
         }
         return resolveMessage(message, pattern, context, limitTargets, limit);
     }
 
 
-    private AnalyzerResult resolveMessage(Message message, Pattern thankPattern, MessageContext targets, boolean limitTargets, int limit) {
+    private Result resolveMessage(Message message, Pattern thankPattern, MessageContext targets, boolean limitTargets, int limit) {
         var contentRaw = message.getContentRaw();
 
         var words = new ArrayList<>(List.of(contentRaw.split("\\s")));
@@ -126,6 +133,8 @@ public class MessageAnalyzer {
             }
         }
         List<WeightedEntry<Member>> users = new ArrayList<>();
+
+        List<MemberMatch> memberMatches = new ArrayList<>();
 
         for (var thankwordindex : thankWordIndices) {
             List<String> resolve = new ArrayList<>();
@@ -145,9 +154,18 @@ public class MessageAnalyzer {
                     weightedMembers = DiscordResolver.fuzzyGuildUserSearch(message.getGuild(), word);
                 }
                 if (weightedMembers.isEmpty()) continue;
+                for (var match : weightedMembers) {
+                    var member = match.getReference();
+                    memberMatches.add(new MemberMatch(word, member.getUser().getAsTag(),
+                            member.getEffectiveName(), match.getWeight()));
+                }
                 users.addAll(weightedMembers);
             }
         }
+
+        memberMatches = memberMatches.stream()
+                                     .filter(e -> e.score() >= configuration.analyzerSettings().minFuzzyScore())
+                                     .toList();
 
         var members = users.stream()
                            .filter(e -> e.getWeight() >= configuration.analyzerSettings().minFuzzyScore())
@@ -155,8 +173,10 @@ public class MessageAnalyzer {
                            .sorted()
                            .limit(limit)
                            .collect(Collectors.toList());
-        if (members.isEmpty()) return AnalyzerResult.noTarget(message.getMember());
+        if (members.isEmpty()) return Result.empty(EmptyResultReason.INSUFFICIENT_SCORE);
 
-        return AnalyzerResult.fuzzy(message.getMember(), members);
+        var thankwords = thankWordIndices.stream().map(words::get).collect(Collectors.toList());
+
+        return Result.fuzzy(thankwords, memberMatches, message.getMember(), members);
     }
 }

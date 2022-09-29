@@ -35,3 +35,16 @@ SELECT guild_id FROM voice_activity
 ORDER BY guild_id;
 
 UPDATE repbot_schema.cleanup_schedule SET user_id = 0 WHERE user_id IS NULL;
+
+CREATE TABLE repbot.analyzer_results
+(
+    guild_id   BIGINT NOT NULL,
+    channel_id BIGINT NOT NULL,
+    message_id BIGINT NOT NULL,
+    result     jsonb  NOT NULL,
+    CONSTRAINT analyzer_results_pk
+        PRIMARY KEY (guild_id, message_id)
+);
+
+CREATE INDEX analyzer_results_guild_id_index
+    ON repbot.analyzer_results (guild_id);
