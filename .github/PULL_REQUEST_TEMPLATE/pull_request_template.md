@@ -3,6 +3,11 @@
   - [ ] I fully localised the command
   - [ ] I fully checked the commands functionality
 
+- [ ] I added new localisation codes
+  - [ ] I fully translated it for all languages
+  - [ ] I sorted properties alphabetically
+
+
 - [ ] I made changes to the database
   - [ ] I added my changed to a patch file
   - [ ] I made sure my database was up to date
