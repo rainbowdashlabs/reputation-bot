@@ -33,6 +33,11 @@ public class RepGuild extends QueryFactory implements GuildHolder {
         return guild;
     }
 
+    @Override
+    public long guildId() {
+        return guild.getIdLong();
+    }
+
     public Gdpr gdpr() {
         try {
             return GDPR.get(guildId(), () -> new Gdpr(this));
@@ -46,7 +51,7 @@ public class RepGuild extends QueryFactory implements GuildHolder {
         return this;
     }
 
-    //Todo: We dont actually know how many users are on a guild and saved in the database. At some point we might want to add some pagination here.
+    //Todo: We don't actually know how many users are on a guild and saved in the database. At some point we might want to add some pagination here.
 
     /**
      * A list of user ids of all users which are connected to this guild.

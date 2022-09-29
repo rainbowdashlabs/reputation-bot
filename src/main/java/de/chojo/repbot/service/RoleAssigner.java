@@ -4,6 +4,7 @@ import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.snapshots.RepProfile;
 import de.chojo.repbot.dao.snapshots.ReputationRank;
 import de.chojo.repbot.util.Roles;
 import net.dv8tion.jda.api.entities.Guild;
@@ -21,6 +22,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -162,8 +164,8 @@ public class RoleAssigner {
             var checked = new AtomicInteger(0);
             var updated = new AtomicInteger(0);
             var lastRefresh = new AtomicReference<>(Instant.now());
-            for (var page = 0; page < guildRanking.pages(); page++) {
-                for (var repProfile : guildRanking.page(page)) {
+            for (var page : guildRanking) {
+                for (var repProfile : page) {
                     repProfile.resolveMember(guild).ifPresent(member -> {
                         var newRank = updateSilent(member);
                         newRank.ifPresent(r -> updated.incrementAndGet());

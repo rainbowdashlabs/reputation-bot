@@ -20,4 +20,9 @@ public interface MemberHolder extends UserHolder, GuildHolder {
     default Guild guild() {
         return member().getGuild();
     }
+
+    @Override
+    default long guildId(){
+        return guild().getIdLong();
+    }
 }
