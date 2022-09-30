@@ -42,9 +42,13 @@ CREATE TABLE repbot_schema.analyzer_results
     channel_id BIGINT NOT NULL,
     message_id BIGINT NOT NULL,
     result     jsonb  NOT NULL,
-    CONSTRAINT analyzer_results_pk
-        PRIMARY KEY (guild_id, message_id)
+    analyzed   TIMESTAMP DEFAULT (now() AT TIME ZONE 'utc') NOT NULL ,
+        CONSTRAINT analyzer_results_pk
+            PRIMARY KEY (guild_id, message_id)
 );
 
 CREATE INDEX analyzer_results_guild_id_index
     ON repbot_schema.analyzer_results (guild_id);
+
+CREATE INDEX analyzer_results_analyzed_index
+    ON repbot_schema.analyzer_results (analyzed);
