@@ -9,7 +9,6 @@ public class RemoveResetDate implements SlashHandler {
     private final Guilds guilds;
 
     public RemoveResetDate(Guilds guilds) {
-
         this.guilds = guilds;
     }
 

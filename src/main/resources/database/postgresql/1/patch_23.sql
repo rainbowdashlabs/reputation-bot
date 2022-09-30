@@ -1,4 +1,4 @@
---feature/guild-cleanup
+-- feature/guild-cleanup
 CREATE OR REPLACE VIEW repbot_schema.guilds AS
 SELECT guild_id FROM reputation_log
 UNION DISTINCT
