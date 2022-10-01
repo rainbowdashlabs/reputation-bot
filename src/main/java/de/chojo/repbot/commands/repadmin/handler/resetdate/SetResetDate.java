@@ -6,6 +6,7 @@ import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -23,7 +24,13 @@ public class SetResetDate implements SlashHandler {
         var month = event.getOption("month").getAsInt();
         var day = event.getOption("day").getAsInt();
 
-        var date = LocalDate.of(year, month, day);
+        LocalDate date;
+        try {
+            date = LocalDate.of(year, month, day);
+        } catch (DateTimeException e) {
+            event.reply(context.localize("error.invalidDate")).setEphemeral(true).queue();
+            return;
+        }
 
         guilds.guild(event.getGuild()).settings().general().resetDate(date);
 
