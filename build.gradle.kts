@@ -15,7 +15,7 @@ repositories {
 
 dependencies {
     //discord
-    implementation("de.chojo", "cjda-util", "2.7.3+alpha.20") {
+    implementation("de.chojo", "cjda-util", "2.7.4+alpha.20") {
         exclude(group = "club.minnced", module = "opus-java")
     }
 
@@ -27,7 +27,7 @@ dependencies {
     implementation("de.chojo.sadu", "sadu-datasource", "1.2.0")
 
     // Logging
-    implementation("org.slf4j", "slf4j-api", "2.0.2")
+    implementation("org.slf4j", "slf4j-api", "2.0.3")
     implementation("org.apache.logging.log4j", "log4j-core", "2.19.0")
     implementation("org.apache.logging.log4j", "log4j-slf4j2-impl", "2.19.0")
     implementation("club.minnced", "discord-webhooks", "0.8.2")
