@@ -2,6 +2,7 @@ package de.chojo.repbot.core;
 
 import com.zaxxer.hikari.HikariDataSource;
 import de.chojo.repbot.config.Configuration;
+import de.chojo.repbot.dao.access.Analyzer;
 import de.chojo.repbot.dao.access.Cleanup;
 import de.chojo.repbot.dao.access.Gdpr;
 import de.chojo.repbot.dao.provider.Guilds;
@@ -30,6 +31,7 @@ public class Data {
     private Cleanup cleanup;
     private Metrics metrics;
     private Voice voice;
+    private Analyzer analyzer;
 
     private Data(Threading threading, Configuration configuration) {
         this.threading = threading;
@@ -78,6 +80,7 @@ public class Data {
         cleanup = new Cleanup(dataSource);
         metrics = new Metrics(dataSource);
         voice = new Voice(dataSource);
+        analyzer = new Analyzer(dataSource);
     }
 
     private HikariDataSource getConnectionPool() {
@@ -119,5 +122,9 @@ public class Data {
 
     public void shutDown() {
         dataSource.close();
+    }
+
+    public Analyzer analyzer() {
+        return analyzer;
     }
 }

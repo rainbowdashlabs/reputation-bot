@@ -31,6 +31,7 @@ import de.chojo.repbot.listener.ReactionListener;
 import de.chojo.repbot.listener.StateListener;
 import de.chojo.repbot.listener.VoiceStateListener;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;
+import de.chojo.repbot.service.AnalyzerService;
 import de.chojo.repbot.service.GdprService;
 import de.chojo.repbot.service.PresenceService;
 import de.chojo.repbot.service.RepBotCachePolicy;
@@ -156,7 +157,7 @@ public class Bot {
         statistic = Statistic.of(shardManager, data.metrics(), worker);
 
         contextResolver = new ContextResolver(data.voice(), configuration);
-        messageAnalyzer = new MessageAnalyzer(contextResolver, configuration, data.metrics());
+        messageAnalyzer = new MessageAnalyzer(contextResolver, configuration, data.metrics(), guilds);
 
         PresenceService.start(shardManager, configuration, statistic, worker);
         scan.lateInit(messageAnalyzer);
@@ -165,6 +166,7 @@ public class Bot {
         reputationService = new ReputationService(guilds, contextResolver, roleAssigner, configuration.magicImage(), localization.localizer());
         gdprService = GdprService.of(shardManager, guilds, data.gdpr(), worker);
         SelfCleanupService.create(shardManager, localization.localizer(), guilds, data.cleanup(), configuration, worker);
+        AnalyzerService.create(threading.repBotWorker(), data.analyzer());
     }
 
     private void initInteractions() {

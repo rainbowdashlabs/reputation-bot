@@ -37,6 +37,24 @@ ORDER BY guild_id;
 
 UPDATE repbot_schema.cleanup_schedule SET user_id = 0 WHERE user_id IS NULL;
 
+-- feature/analyzer-log
+CREATE TABLE repbot_schema.analyzer_results
+(
+    guild_id   BIGINT NOT NULL,
+    channel_id BIGINT NOT NULL,
+    message_id BIGINT NOT NULL,
+    result     jsonb  NOT NULL,
+    analyzed   TIMESTAMP DEFAULT (now() AT TIME ZONE 'utc') NOT NULL,
+    CONSTRAINT analyzer_results_pk
+        PRIMARY KEY (guild_id, message_id)
+);
+
+CREATE INDEX analyzer_results_guild_id_index
+    ON repbot_schema.analyzer_results (guild_id);
+
+CREATE INDEX analyzer_results_analyzed_index
+    ON repbot_schema.analyzer_results (analyzed);
+
 -- feature/reset-date
 ALTER TABLE repbot_schema.reputation_settings
     ADD reset_date DATE;

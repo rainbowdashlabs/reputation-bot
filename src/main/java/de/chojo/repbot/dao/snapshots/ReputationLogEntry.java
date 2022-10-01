@@ -1,6 +1,6 @@
 package de.chojo.repbot.dao.snapshots;
 
-import de.chojo.repbot.analyzer.ThankType;
+import de.chojo.repbot.analyzer.results.match.ThankType;
 import de.chojo.repbot.dao.access.guild.reputation.sub.Log;
 import de.chojo.sadu.base.QueryFactory;
 import de.chojo.sadu.wrapper.util.Row;

@@ -24,7 +24,7 @@ final class LogFormatter {
     static List<String> mapUserLogEntry(EventContext context, List<ReputationLogEntry> logEntries, Function<ReputationLogEntry, Long> userId) {
         List<String> entries = new ArrayList<>();
         for (var logEntry : logEntries) {
-            var thankType = context.localize(logEntry.type().localeKey());
+            var thankType = context.localize(logEntry.type().nameLocaleKey());
             var jumpLink = createJumpLink(context, logEntry);
             entries.add(String.format("%s **%s** %s %s", logEntry.timestamp(),
                     thankType, User.fromId(userId.apply(logEntry)).getAsMention(), jumpLink));
@@ -38,7 +38,7 @@ final class LogFormatter {
         List<String> entries = new ArrayList<>();
         for (var logEntry : logEntries) {
             var jumpLink = createJumpLink(context, logEntry);
-            var thankType = context.localize(logEntry.type().localeKey());
+            var thankType = context.localize(logEntry.type().nameLocaleKey());
             entries.add(String.format("%s **%s** %s ➜ %s **|** %s", logEntry.timestamp(),
                     thankType, User.fromId(logEntry.donorId()).getAsMention(), User.fromId(logEntry.receiverId())
                                                                                    .getAsMention(), jumpLink));

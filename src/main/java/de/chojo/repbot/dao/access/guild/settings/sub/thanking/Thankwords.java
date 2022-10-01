@@ -4,14 +4,17 @@ import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.sadu.base.QueryFactory;
 import net.dv8tion.jda.api.entities.Guild;
+import org.intellij.lang.annotations.Language;
 
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Thankwords extends QueryFactory implements GuildHolder {
-    private static final String THANKWORD = "((?:^|\\b)%s(?:$|\\b))";
-    private static final String PATTERN = "(?i)(%s)";
+    @Language("RegExp")
+    private static final String THANKWORD = "(?:^|\\b)%s(?:$|\\b)";
+    @Language("RegExp")
+    private static final String PATTERN = "(?i)(?<match>%s)";
 
     private final Thanking thanking;
 

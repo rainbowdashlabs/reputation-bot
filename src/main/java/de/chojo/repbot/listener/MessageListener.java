@@ -3,7 +3,9 @@ package de.chojo.repbot.listener;
 import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
-import de.chojo.repbot.analyzer.ThankType;
+import de.chojo.repbot.analyzer.results.empty.EmptyResultReason;
+import de.chojo.repbot.analyzer.results.match.MatchResult;
+import de.chojo.repbot.analyzer.results.match.ThankType;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.provider.Guilds;
@@ -105,11 +107,11 @@ public class MessageListener extends ListenerAdapter {
 
         var message = event.getMessage();
 
-        var analyzerResult = messageAnalyzer.processMessage(thank.thankwords()
-                                                                 .thankwordPattern(), message, settings, true, settings.abuseProtection()
-                                                                                                                       .maxMessageReputation());
+        var result = messageAnalyzer.processMessage(thank.thankwords()
+                                                         .thankwordPattern(), message, settings, true, settings.abuseProtection()
+                                                                                                               .maxMessageReputation());
 
-        if (analyzerResult.type() == ThankType.NO_MATCH) return;
+        if (result.isEmpty() && result.asEmpty().reason() == EmptyResultReason.NO_MATCH) return;
 
 
         if (PermissionErrorHandler.assertAndHandle(event.getGuildChannel(), localizer, configuration,
@@ -131,35 +133,33 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        var resultType = analyzerResult.type();
-        var resolveNoTarget = true;
+        if (result.isEmpty() && settings.reputation().isEmbedActive()) {
+            resolveNoTarget(message, settings);
+            return;
+        }
+        if (result.isEmpty()) return;
 
-        var donator = analyzerResult.donator();
+        var match = result.asMatch();
+        var resultType = match.thankType();
 
-        for (var result : analyzerResult.receivers()) {
-            var refMessage = analyzerResult.referenceMessage();
+        var donator = match.donor();
+
+        for (var receiver : match.receivers()) {
             switch (resultType) {
                 case FUZZY -> {
                     if (!settings.reputation().isFuzzyActive()) continue;
-                    reputationService.submitReputation(guild, donator, result.getReference(), message, refMessage, resultType);
-                    resolveNoTarget = false;
+                    reputationService.submitReputation(guild, donator, receiver, message, null, resultType);
                 }
                 case MENTION -> {
                     if (!settings.reputation().isMentionActive()) continue;
-                    reputationService.submitReputation(guild, donator, result.getReference(), message, refMessage, resultType);
-                    resolveNoTarget = false;
+                    reputationService.submitReputation(guild, donator, receiver, message, null, resultType);
                 }
                 case ANSWER -> {
                     if (!settings.reputation().isAnswerActive()) continue;
-                    reputationService.submitReputation(guild, donator, result.getReference(), message, refMessage, resultType);
-                    resolveNoTarget = false;
+                    reputationService.submitReputation(
+                            guild, donator, receiver, message, match.asAnswer().referenceMessage(), resultType);
                 }
             }
-        }
-        if (resolveNoTarget && settings.reputation().isEmbedActive()) {
-            resolveNoTarget(message, settings);
-        } else if (resolveNoTarget) {
-            log.trace("Message {} has no target, but embed is disabled", event.getMessage().getIdLong());
         }
     }
 
