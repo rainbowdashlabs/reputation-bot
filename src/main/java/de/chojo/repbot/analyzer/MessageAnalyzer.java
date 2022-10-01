@@ -62,7 +62,7 @@ public class MessageAnalyzer {
         try {
             return analyzer.log(message, resultCache.get(message.getIdLong(), () -> analyze(pattern, message, settings, limitTargets, limit)));
         } catch (ExecutionException e) {
-            log.error("Could not compute anaylzer result", e);
+            log.error("Could not compute analyzer result", e);
         }
         return analyzer.log(message, Result.empty(EmptyResultReason.INTERNAL_ERROR));
     }
