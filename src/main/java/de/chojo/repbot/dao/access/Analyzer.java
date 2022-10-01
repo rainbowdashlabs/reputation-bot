@@ -18,7 +18,7 @@ public class Analyzer extends QueryFactory {
 
     public void cleanup() {
         builder().query("""
-                        DELETE FROM analyzer_results WHERE analyzed < NOW() - '24 hours';
+                        DELETE FROM analyzer_results WHERE analyzed < NOW() - '24 hours'::interval;
                         """)
                  .emptyParams()
                  .delete()

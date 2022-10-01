@@ -47,7 +47,7 @@ public class Analyzer extends QueryFactory implements GuildHolder {
             return result;
         }
         builder().query("""
-                        INSERT INTO analyzer_results(guild_id, channel_id, message_id, result) VALUES(?,?,?,?::JSONB)
+                        INSERT INTO analyzer_results(guild_id, channel_id, message_id, result) VALUES(?, ?, ?, ?::JSONB)
                             ON CONFLICT (guild_id, message_id)
                                 DO NOTHING;
                         """).parameter(stmt -> stmt.setLong(message.getGuild().getIdLong())

@@ -107,7 +107,8 @@ public class ScanProcess {
                                               message, null, matchResult.thankType())) {
                             hit();
                         }
-                    }case ANSWER -> {
+                    }
+                    case ANSWER -> {
                         if (reputation.user(resultReceiver.getUser())
                                       .addOldReputation(donator != null && guild.isMember(donator) ? donator : null,
                                               message, matchResult.asAnswer().referenceMessage(), matchResult.thankType())) {

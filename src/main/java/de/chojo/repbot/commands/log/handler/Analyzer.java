@@ -19,7 +19,6 @@ public class Analyzer implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        event.getOption("messageid");
         var optMessageId = ValueParser.parseLong(event.getOption("messageid").getAsString());
         if (optMessageId.isEmpty()) {
             event.reply(context.localize("error.invalidMessage")).setEphemeral(true).queue();
