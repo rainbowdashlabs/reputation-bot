@@ -2,6 +2,7 @@ package de.chojo.repbot.dao.provider;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.access.guild.RepGuildId;
 import de.chojo.repbot.dao.pagination.GuildList;
@@ -20,14 +21,16 @@ public class Guilds extends QueryFactory {
     private static final Logger log = getLogger(Guilds.class);
     private final Cache<Long, RepGuild> guilds = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES)
                                                              .build();
+    private final Configuration configuration;
 
-    public Guilds(DataSource dataSource) {
+    public Guilds(DataSource dataSource, Configuration configuration) {
         super(dataSource);
+        this.configuration = configuration;
     }
 
     public RepGuild guild(Guild guild) {
         try {
-            return guilds.get(guild.getIdLong(), () -> new RepGuild(source(), guild)).refresh(guild);
+            return guilds.get(guild.getIdLong(), () -> new RepGuild(source(), guild, configuration)).refresh(guild);
         } catch (ExecutionException e) {
             log.error("Could not create guild adapter", e);
             throw new RuntimeException("", e);

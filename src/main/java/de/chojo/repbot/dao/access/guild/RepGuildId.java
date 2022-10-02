@@ -6,7 +6,7 @@ public class RepGuildId extends RepGuild {
     private final long guildId;
 
     public RepGuildId(DataSource dataSource, long guildId) {
-        super(dataSource, null);
+        super(dataSource, null, configuration);
         this.guildId = guildId;
     }
 

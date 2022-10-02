@@ -1,5 +1,6 @@
 package de.chojo.repbot.dao.access.guild.reputation.sub.user;
 
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.reputation.sub.RepUser;
 import de.chojo.repbot.dao.components.MemberHolder;
 import de.chojo.sadu.base.QueryFactory;
@@ -24,12 +25,14 @@ public class Gdpr extends QueryFactory implements MemberHolder {
         builder()
                 .query("""
                        INSERT INTO
-                           cleanup_schedule(guild_id, user_id)
-                           VALUES (?,?)
+                           cleanup_schedule(guild_id, user_id, delete_after)
+                           VALUES (?,?,?::INTERVAL)
                                ON CONFLICT(guild_id, user_id)
                                    DO NOTHING;
-                       """)
-                .parameter(stmt -> stmt.setLong(guildId()).setLong(userId()))
+                       """, repUser.configuration().cleanup().cleanupScheduleDays())
+                .parameter(stmt -> stmt.setLong(guildId())
+                                       .setLong(userId())
+                                       .setString("%d DAYS".formatted(repUser.configuration().cleanup().cleanupScheduleDays())))
                 .update()
                 .sendSync();
     }

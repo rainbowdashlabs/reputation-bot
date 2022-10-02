@@ -1,5 +1,6 @@
 package de.chojo.repbot.dao.access;
 
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.gdpr.GdprUser;
 import de.chojo.repbot.dao.access.gdpr.RemovalTask;
 import de.chojo.sadu.base.QueryFactory;
@@ -13,9 +14,11 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class Gdpr extends QueryFactory {
     private static final Logger log = getLogger(Gdpr.class);
+    private final Configuration configuration;
 
-    public Gdpr(DataSource dataSource) {
+    public Gdpr(DataSource dataSource, Configuration configuration) {
         super(dataSource);
+        this.configuration = configuration;
     }
 
     public List<RemovalTask> getRemovalTasks() {
@@ -38,8 +41,8 @@ public class Gdpr extends QueryFactory {
                 .queryWithoutParams("""
                                     DELETE FROM gdpr_log
                                     WHERE received IS NOT NULL
-                                        AND received < NOW() - INTERVAL '90 DAYS';
-                                    """)
+                                        AND received < NOW() - INTERVAL '%d DAYS';
+                                    """, configuration.cleanup().gdprDays())
                 .update()
                 .sendSync();
     }
