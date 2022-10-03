@@ -76,7 +76,7 @@ public class GdprUser extends QueryFactory {
 
     public void requestSend() {
         builder()
-                .query("UPDATE gdpr_log SET received = NOW() WHERE user_id = ?")
+                .query("UPDATE gdpr_log SET received = NOW(), last_attempt = now() WHERE user_id = ?")
                 .parameter(stmt -> stmt.setLong(userId()))
                 .update()
                 .sendSync();
@@ -84,7 +84,7 @@ public class GdprUser extends QueryFactory {
 
     public void requestSendFailed() {
         builder()
-                .query("UPDATE gdpr_log SET attempts = attempts + 1 WHERE user_id = ?")
+                .query("UPDATE gdpr_log SET attempts = attempts + 1, last_attempt = now() WHERE user_id = ?")
                 .parameter(stmt -> stmt.setLong(userId()))
                 .update()
                 .sendSync();

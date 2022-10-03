@@ -8,10 +8,8 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import org.slf4j.Logger;
 
 import javax.sql.DataSource;
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -59,7 +57,12 @@ public class Gdpr extends QueryFactory {
      */
     public List<GdprUser> getReportRequests(ShardManager shardManager) {
         return builder(GdprUser.class)
-                .queryWithoutParams("SELECT user_id FROM gdpr_log WHERE received IS NULL")
+                .queryWithoutParams("""
+                                        SELECT user_id 
+                                        FROM gdpr_log
+                                        WHERE received IS NULL
+                                            AND last_attempt < now() - (least(48, attempts) || ' HOURS')::INTERVAL 
+                                    """)
                 .readRow(rs -> GdprUser.build(this, rs, shardManager))
                 .allSync()
                 .stream()
