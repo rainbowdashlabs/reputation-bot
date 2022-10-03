@@ -9,7 +9,7 @@ import de.chojo.repbot.service.RoleAssigner;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
-import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.requests.RestAction;
 import org.apache.commons.lang3.time.DurationFormatUtils;
@@ -34,35 +34,40 @@ public class Refresh implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        if (running.contains(event.getGuild().getIdLong())) {
-            event.reply(context.localize("command.roles.refresh.message.running")).queue();
+        refresh(context, event.getGuild(), event);
+    }
+
+    public void refresh(EventContext context, Guild guild, IReplyCallback replyCallback) {
+        if (!replyCallback.isAcknowledged()) {
+            replyCallback.deferReply().queue();
+        }
+        if (running.contains(guild.getIdLong())) {
+            replyCallback.getHook().editOriginal(context.localize("command.roles.refresh.message.running")).queue();
             return;
         }
 
-        running.add(event.getGuild().getIdLong());
+        running.add(guild.getIdLong());
 
-        var message = event.reply(context.localize("command.roles.refresh.message.started"))
-                           .flatMap(InteractionHook::retrieveOriginal)
-                           .complete();
+        var message = replyCallback.getHook().editOriginal(context.localize("command.roles.refresh.message.started")).complete();
         var start = Instant.now();
 
         roleAssigner
-                .updateBatch(event.getGuild(), context, message)
+                .updateBatch(guild, context, message)
                 .whenComplete(Futures.whenComplete(res -> {
                     var duration = DurationFormatUtils.formatDuration(start.until(Instant.now(), ChronoUnit.MILLIS), "mm:ss");
-                    log.info("Update of roles on {} took {}. Checked {} Updated {}", prettyName(event.getGuild()), duration, res.checked(), res.updated());
+                    log.info("Update of roles on {} took {}. Checked {} Updated {}", prettyName(guild), duration, res.checked(), res.updated());
                     message.editMessage(context.localize("command.roles.refresh.message.finished",
-                                   Replacement.create("CHECKED", res.checked()), Replacement.create("UPDATED", res.updated())))
-                           .queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
-                    running.remove(event.getGuild().getIdLong());
+                                    Replacement.create("CHECKED", res.checked()), Replacement.create("UPDATED", res.updated())))
+                            .queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
+                    running.remove(guild.getIdLong());
                 }, err -> {
-                    log.warn("Update of role failed on guild {}", prettyName(event.getGuild()), err);
+                    log.warn("Update of role failed on guild {}", prettyName(guild), err);
                     if (err instanceof RoleAccessException roleException) {
                         message.editMessage(context.localize("error.roleAccess",
-                                       Replacement.createMention("ROLE", roleException.role())))
-                               .queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
+                                        Replacement.createMention("ROLE", roleException.role())))
+                                .queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
                     }
-                    running.remove(event.getGuild().getIdLong());
+                    running.remove(guild.getIdLong());
                 }));
     }
 
