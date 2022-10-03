@@ -1,6 +1,5 @@
 package de.chojo.repbot.commands.repadmin.handler.reputation;
 
-import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.access.guild.reputation.sub.RepUser;
