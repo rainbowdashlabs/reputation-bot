@@ -195,7 +195,7 @@ public class Bot {
                         new Dashboard(guilds),
                         new AbuseProtection(guilds),
                         new Debug(guilds),
-                        new RepAdmin(guilds, configuration),
+                        new RepAdmin(guilds, configuration, roleAssigner),
                         new Messages(guilds),
                         new BotAdmin(guilds, configuration, statistic))
                 .withLocalizer(localizer)
