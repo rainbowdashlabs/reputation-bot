@@ -56,7 +56,7 @@ CREATE INDEX analyzer_results_analyzed_index
     ON repbot_schema.analyzer_results (analyzed);
 
 -- feature/reset-date
-ALTER TABLE repbot_schema.reputation_settings
+ALTER TABLE repbot_schema.guild_settings
     ADD reset_date DATE;
 
 -- Add user with offset, but no reputation
