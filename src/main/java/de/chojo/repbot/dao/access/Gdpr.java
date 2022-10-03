@@ -4,10 +4,14 @@ import de.chojo.repbot.dao.access.gdpr.GdprUser;
 import de.chojo.repbot.dao.access.gdpr.RemovalTask;
 import de.chojo.sadu.base.QueryFactory;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import org.slf4j.Logger;
 
 import javax.sql.DataSource;
+import javax.swing.text.html.Option;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -45,7 +49,7 @@ public class Gdpr extends QueryFactory {
     }
 
     public GdprUser request(User user) {
-        return new GdprUser(this, user.getIdLong());
+        return new GdprUser(this, user);
     }
 
     /**
@@ -53,10 +57,13 @@ public class Gdpr extends QueryFactory {
      *
      * @return list of users
      */
-    public List<GdprUser> getReportRequests() {
+    public List<GdprUser> getReportRequests(ShardManager shardManager) {
         return builder(GdprUser.class)
                 .queryWithoutParams("SELECT user_id FROM gdpr_log WHERE received IS NULL")
-                .readRow(rs -> GdprUser.build(this, rs))
-                .allSync();
+                .readRow(rs -> GdprUser.build(this, rs, shardManager))
+                .allSync()
+                .stream()
+                .filter(Objects::nonNull)
+                .toList();
     }
 }

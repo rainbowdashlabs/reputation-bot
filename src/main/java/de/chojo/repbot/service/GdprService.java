@@ -39,10 +39,10 @@ public class GdprService implements Runnable {
 
     @Override
     public void run() {
-        var reportRequests = gdpr.getReportRequests();
+        var reportRequests = gdpr.getReportRequests(shardManager);
 
         for (var request : reportRequests) {
-            var send = request.sendData(shardManager);
+            var send = request.sendData();
             if (send) {
                 request.requestSend();
             } else {

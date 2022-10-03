@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.FileUpload;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -20,15 +21,21 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class GdprUser extends QueryFactory {
 
     private static final Logger log = getLogger(GdprUser.class);
-    private final long userId;
+    private final User user;
 
-    public GdprUser(Gdpr gdpr, long userId) {
+    public GdprUser(Gdpr gdpr, User user) {
         super(gdpr);
-        this.userId = userId;
+        this.user = user;
     }
 
-    public static GdprUser build(Gdpr gdpr, Row rs) throws SQLException {
-        return new GdprUser(gdpr, rs.getLong(1));
+    @Nullable
+    public static GdprUser build(Gdpr gdpr, Row rs, ShardManager shardManager) throws SQLException {
+        try {
+            var user = shardManager.retrieveUserById(rs.getLong("user_id")).complete();
+            return new GdprUser(gdpr, user);
+        } catch (RuntimeException e) {
+            return null;
+        }
     }
 
     public boolean queueDeletion() {
@@ -40,13 +47,13 @@ public class GdprUser extends QueryFactory {
                                ON CONFLICT(guild_id, user_id)
                                    DO NOTHING;
                        """)
-                .parameter(stmt -> stmt.setLong(userId))
+                .parameter(stmt -> stmt.setLong(userId()))
                 .update()
                 .sendSync()
                 .changed();
     }
 
-    public boolean queueRequest() {
+    public boolean request() {
         return builder()
                 .query("""
                        DELETE FROM gdpr_log
@@ -54,14 +61,14 @@ public class GdprUser extends QueryFactory {
                            AND received IS NOT NULL
                            AND received < NOW() - INTERVAL '30 days';
                        """)
-                .parameter(stmt -> stmt.setLong(userId))
+                .parameter(stmt -> stmt.setLong(userId()))
                 .append()
                 .query("""
                        INSERT INTO gdpr_log(user_id) VALUES(?)
                            ON CONFLICT(user_id)
                                DO NOTHING;
                        """)
-                .parameter(stmt -> stmt.setLong(userId))
+                .parameter(stmt -> stmt.setLong(userId()))
                 .update()
                 .sendSync()
                 .changed();
@@ -70,7 +77,7 @@ public class GdprUser extends QueryFactory {
     public void requestSend() {
         builder()
                 .query("UPDATE gdpr_log SET received = NOW() WHERE user_id = ?")
-                .parameter(stmt -> stmt.setLong(userId))
+                .parameter(stmt -> stmt.setLong(userId()))
                 .update()
                 .sendSync();
     }
@@ -78,7 +85,7 @@ public class GdprUser extends QueryFactory {
     public void requestSendFailed() {
         builder()
                 .query("UPDATE gdpr_log SET attempts = attempts + 1 WHERE user_id = ?")
-                .parameter(stmt -> stmt.setLong(userId))
+                .parameter(stmt -> stmt.setLong(userId()))
                 .update()
                 .sendSync();
     }
@@ -86,7 +93,7 @@ public class GdprUser extends QueryFactory {
     public Optional<String> userData() {
         return builder(String.class)
                 .query("SELECT aggregate_user_data(?)")
-                .parameter(stmt -> stmt.setLong(userId))
+                .parameter(stmt -> stmt.setLong(userId()))
                 .readRow(rs -> rs.getString(1))
                 .firstSync();
     }
@@ -106,38 +113,25 @@ public class GdprUser extends QueryFactory {
      * <p>
      * - The file exceeds the max file size
      *
-     * @param shardManager shard manager to resolve the user
      * @return true when the request was sent.
      */
-    public boolean sendData(ShardManager shardManager) {
-        User user;
-        try {
-            user = shardManager.retrieveUserById(userId).complete();
-        } catch (RuntimeException e) {
-            log.info("Could not process gdpr request for user {}. User could not be retrieved.", userId);
-            return false;
-        }
-        if (user == null) {
-            log.info("Could not process gdpr request for user {}. User could not be retrieved.", userId);
-            return false;
-        }
-
+    public boolean sendData() {
         PrivateChannel privateChannel;
         try {
             privateChannel = user.openPrivateChannel().complete();
         } catch (RuntimeException e) {
-            log.info("Could not process gdpr request for user {}. Could not open private channel.", userId);
+            log.info("Could not process gdpr request for user {}. Could not open private channel.", userId());
             return false;
         }
         if (privateChannel == null) {
-            log.info("Could not process gdpr request for user {}. Could not open private channel.", userId);
+            log.info("Could not process gdpr request for user {}. Could not open private channel.", userId());
             return false;
         }
 
         var userData = userData();
 
         if (userData.isEmpty()) {
-            log.warn("Could not process gdpr request for user {}. Data aggregation failed.", userId);
+            log.warn("Could not process gdpr request for user {}. Data aggregation failed.", userId());
             return false;
         }
         Path tempFile;
@@ -160,9 +154,13 @@ public class GdprUser extends QueryFactory {
                     .addFiles(FileUpload.fromData(tempFile.toFile()))
                     .complete();
         } catch (RuntimeException e) {
-            log.warn("Could not send gdpr data to user {}. File sending failed.", userId, e);
+            log.warn("Could not send gdpr data to user {}. File sending failed.", userId(), e);
             return false;
         }
         return true;
+    }
+
+    private long userId() {
+        return user.getIdLong();
     }
 }
