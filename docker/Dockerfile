@@ -13,13 +13,13 @@ RUN ./gradlew clean build --no-daemon > /dev/null 2>&1 || true
 COPY src/ src/
 RUN ./gradlew shadowJar --no-daemon
 
-FROM eclipse-temurin:18-jdk-alpine AS unzip
+FROM eclipse-temurin:19-jdk-alpine AS unzip
 WORKDIR /source
 COPY --from=build source/build/libs/rep-bot-*-all.jar app.jar
 # Extract jar
 RUN jar -xf app.jar
 
-FROM eclipse-temurin:18-alpine AS extractDependencies
+FROM eclipse-temurin:19-alpine AS extractDependencies
 WORKDIR /extractDependencies
 # Copy everything from unzip stage
 COPY --from=unzip source/ ./
@@ -35,7 +35,7 @@ RUN rm -r \
         de/chojo/repbot \
         *.jar
 
-FROM eclipse-temurin:18-alpine
+FROM eclipse-temurin:19-alpine
 WORKDIR /
 ENV TERM xterm-256color
 # Copy all dependencies
