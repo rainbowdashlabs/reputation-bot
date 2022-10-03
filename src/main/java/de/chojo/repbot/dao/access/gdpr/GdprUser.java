@@ -32,8 +32,14 @@ public class GdprUser extends QueryFactory {
     public static GdprUser build(Gdpr gdpr, Row rs, ShardManager shardManager) throws SQLException {
         try {
             var user = shardManager.retrieveUserById(rs.getLong("user_id")).complete();
+            if (user == null) {
+                log.info("Could not process gdpr request for user {}. User could not be retrieved.", rs.getLong("user_id"));
+                return null;
+            }
+
             return new GdprUser(gdpr, user);
         } catch (RuntimeException e) {
+            log.info("Could not process gdpr request for user {}. User could not be retrieved.", rs.getLong("user_id"));
             return null;
         }
     }
@@ -76,7 +82,7 @@ public class GdprUser extends QueryFactory {
 
     public void requestSend() {
         builder()
-                .query("UPDATE gdpr_log SET received = NOW(), last_attempt = now() WHERE user_id = ?")
+                .query("UPDATE gdpr_log SET received = NOW(), last_attempt = NOW() WHERE user_id = ?")
                 .parameter(stmt -> stmt.setLong(userId()))
                 .update()
                 .sendSync();
@@ -84,7 +90,7 @@ public class GdprUser extends QueryFactory {
 
     public void requestSendFailed() {
         builder()
-                .query("UPDATE gdpr_log SET attempts = attempts + 1, last_attempt = now() WHERE user_id = ?")
+                .query("UPDATE gdpr_log SET attempts = attempts + 1, last_attempt = NOW() WHERE user_id = ?")
                 .parameter(stmt -> stmt.setLong(userId()))
                 .update()
                 .sendSync();
