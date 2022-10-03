@@ -38,11 +38,12 @@ public class Gdpr extends QueryFactory {
 
     public void cleanupRequests() {
         builder()
-                .queryWithoutParams("""
-                                    DELETE FROM gdpr_log
-                                    WHERE received IS NOT NULL
-                                        AND received < NOW() - INTERVAL '%d DAYS';
-                                    """, configuration.cleanup().gdprDays())
+                .query("""
+                       DELETE FROM gdpr_log
+                       WHERE received IS NOT NULL
+                           AND received < NOW() - INTERVAL ?;
+                       """, configuration.cleanup().gdprDays())
+                .parameter(stmt -> stmt.setString("%d DAYS".formatted(configuration.cleanup().gdprDays())))
                 .update()
                 .sendSync();
     }
