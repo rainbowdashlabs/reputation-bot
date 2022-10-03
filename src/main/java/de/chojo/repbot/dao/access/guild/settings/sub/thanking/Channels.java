@@ -9,9 +9,11 @@ import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildMessageChannel;
+import net.dv8tion.jda.internal.entities.channel.concrete.VoiceChannelImpl;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -57,6 +59,8 @@ public class Channels extends QueryFactory implements GuildHolder {
         } else {
             if (channel instanceof StandardGuildMessageChannel bc) {
                 baseChannel = bc;
+            } else if (channel instanceof VoiceChannelImpl bc) {
+                baseChannel = bc.asStandardGuildChannel();
             } else {
                 log.debug("Channel is a non base guild channel, but a {}.", channel.getClass().getName());
                 return false;

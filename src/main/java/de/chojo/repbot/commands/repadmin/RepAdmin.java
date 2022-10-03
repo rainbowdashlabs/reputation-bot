@@ -14,30 +14,31 @@ import de.chojo.repbot.commands.repadmin.handler.resetdate.CurrentResetDate;
 import de.chojo.repbot.commands.repadmin.handler.resetdate.SetResetDate;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.service.RoleAssigner;
 
 import java.time.LocalDate;
 
 public class RepAdmin extends SlashCommand {
 
-    public RepAdmin(Guilds guilds, Configuration configuration) {
+    public RepAdmin(Guilds guilds, Configuration configuration, RoleAssigner roleAssigner) {
         super(Slash.of("repadmin", "command.repadmin.description")
                 .guildOnly()
                 .adminCommand()
                 .group(Group.of("reputation", "command.repadmin.reputation.description")
                         .subCommand(SubCommand.of("add", "command.repadmin.reputation.add.description")
-                                .handler(new Add(guilds))
+                                .handler(new Add(roleAssigner, guilds))
                                 .argument(Argument.user("user", "command.repadmin.reputation.add.user.description")
                                                   .asRequired())
                                 .argument(Argument.integer("amount", "command.repadmin.reputation.add.amount.description")
                                                   .asRequired()))
                         .subCommand(SubCommand.of("remove", "command.repadmin.reputation.remove.description")
-                                .handler(new Remove(guilds))
+                                .handler(new Remove(roleAssigner, guilds))
                                 .argument(Argument.user("user", "command.repadmin.reputation.remove.user.description")
                                                   .asRequired())
                                 .argument(Argument.integer("amount", "command.repadmin.reputation.remove.amount.description")
                                                   .asRequired()))
                         .subCommand(SubCommand.of("set", "command.repadmin.reputation.set.description")
-                                .handler(new Set(guilds))
+                                .handler(new Set(roleAssigner, guilds))
                                 .argument(Argument.user("user", "command.repadmin.reputation.set.user.description")
                                                   .asRequired())
                                 .argument(Argument.integer("amount", "command.repadmin.reputation.set.amount.description")
