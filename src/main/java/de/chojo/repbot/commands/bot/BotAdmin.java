@@ -11,6 +11,7 @@ import de.chojo.repbot.commands.bot.handler.Redeploy;
 import de.chojo.repbot.commands.bot.handler.Search;
 import de.chojo.repbot.commands.bot.handler.SharedGuilds;
 import de.chojo.repbot.commands.bot.handler.system.Metrics;
+import de.chojo.repbot.commands.bot.handler.system.Reload;
 import de.chojo.repbot.commands.bot.handler.system.Restart;
 import de.chojo.repbot.commands.bot.handler.system.Shudown;
 import de.chojo.repbot.commands.bot.handler.system.Status;
@@ -36,7 +37,9 @@ public class BotAdmin extends SlashCommand {
                         .subCommand(SubCommand.of("status", "System status")
                                 .handler(new Status(statistics)))
                         .subCommand(SubCommand.of("metrics", "System metrics")
-                                .handler(new Metrics(configuration))))
+                                .handler(new Metrics(configuration)))
+                        .subCommand(SubCommand.of("reload", "Reload configuration")
+                                .handler(new Reload(configuration))))
                 .subCommand(SubCommand.of("debug", "Debug of a guild")
                         .handler(new Debug(guilds))
                         .argument(Argument.text("guild_id", "Id of guild").asRequired()))
