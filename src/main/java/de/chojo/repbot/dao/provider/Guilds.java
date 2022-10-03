@@ -40,12 +40,14 @@ public class Guilds extends QueryFactory {
     /**
      * Gets a guild by id. This guild object might have limited functionality. This object is never cached.
      * It should never be used to change settings.
+     * <p>
+     * There is no gurantee that this guild will have any data stored in the database.
      *
-     * @param id
-     * @return
+     * @param id id of guild to create.
+     * @return repguild created based on an id
      */
     public RepGuild guild(long id) {
-        return new RepGuildId(source(), id);
+        return new RepGuildId(source(), id, configuration);
     }
 
     public GuildList guilds(int pageSize) {
@@ -74,7 +76,7 @@ public class Guilds extends QueryFactory {
                        LIMIT ?;
                        """)
                 .parameter(stmt -> stmt.setInt(page * pageSize).setInt(pageSize))
-                .readRow(row -> new RepGuildId(source(), row.getLong("guild_id")))
+                .readRow(row -> new RepGuildId(source(), row.getLong("guild_id"), configuration))
                 .allSync();
     }
 }
