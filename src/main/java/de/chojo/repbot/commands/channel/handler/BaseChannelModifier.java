@@ -10,8 +10,6 @@ import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public abstract class BaseChannelModifier implements SlashHandler {
     private static final java.util.Set<ChannelType> ALLOWED_CHANNEL =
