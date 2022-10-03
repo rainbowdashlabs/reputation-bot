@@ -14,10 +14,10 @@ import java.util.stream.Stream;
 
 public abstract class BaseChannelModifier implements SlashHandler {
     private static final java.util.Set<ChannelType> ALLOWED_CHANNEL =
-            Stream.of(ChannelType.TEXT, ChannelType.FORUM, ChannelType.CATEGORY)
+            Stream.of(ChannelType.TEXT, ChannelType.FORUM, ChannelType.CATEGORY, ChannelType.VOICE, ChannelType.VOICE)
                     .collect(Collectors.toUnmodifiableSet());
     private static final java.util.Set<ChannelType> TEXT_CHANNEL =
-            Stream.of(ChannelType.TEXT, ChannelType.FORUM).collect(Collectors.toUnmodifiableSet());
+            Stream.of(ChannelType.TEXT, ChannelType.FORUM, ChannelType.VOICE).collect(Collectors.toUnmodifiableSet());
     private final Guilds guilds;
 
     public BaseChannelModifier(Guilds guilds) {
