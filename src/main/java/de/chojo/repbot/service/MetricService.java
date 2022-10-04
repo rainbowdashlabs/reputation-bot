@@ -3,8 +3,12 @@ package de.chojo.repbot.service;
 import de.chojo.repbot.dao.provider.Metrics;
 
 import java.time.DayOfWeek;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.TimeZone;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -15,9 +19,9 @@ public class MetricService implements Runnable {
         this.metrics = metrics;
     }
 
-    public MetricService create(ScheduledExecutorService executorService, Metrics metrics) {
-        var now = ZonedDateTime.now();
-        var midnight = now.toLocalDate().atStartOfDay().plus(1, ChronoUnit.DAYS).plus(1, ChronoUnit.HOURS);
+    public static MetricService create(ScheduledExecutorService executorService, Metrics metrics) {
+        var now = ZonedDateTime.now(ZoneOffset.UTC);
+        var midnight = now.toLocalDate().atStartOfDay().plus(1, ChronoUnit.DAYS).plus(1, ChronoUnit.HOURS).atOffset(ZoneOffset.UTC);
         var minutes = now.until(midnight, ChronoUnit.MINUTES);
         var service = new MetricService(metrics);
         executorService.scheduleAtFixedRate(service, minutes, 1440, TimeUnit.MINUTES);
