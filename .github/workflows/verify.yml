@@ -24,8 +24,6 @@ jobs:
     runs-on: ubuntu-latest
     name: Docker build
 
-    needs:
-      - build
     steps:
       - uses: actions/checkout@v3
       - name: Build as Docker image

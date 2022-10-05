@@ -145,4 +145,9 @@ public class Thanking extends QueryFactory implements GuildHolder {
     public Guild guild() {
         return settings.guild();
     }
+
+    @Override
+    public long guildId() {
+        return settings.guildId();
+    }
 }

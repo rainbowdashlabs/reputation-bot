@@ -90,6 +90,11 @@ public class Announcements extends QueryFactory implements GuildHolder {
         return settings.guild();
     }
 
+    @Override
+    public long guildId() {
+        return settings.guildId();
+    }
+      
     public String prettyString() {
         return """
                Active: %s

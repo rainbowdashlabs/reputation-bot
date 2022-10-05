@@ -1,6 +1,7 @@
 package de.chojo.repbot.commands.bot.handler;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
+import de.chojo.jdautil.util.Choice;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.util.Guilds;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -34,7 +35,7 @@ public class SharedGuilds implements SlashHandler {
             }
         }
 
-        var mutualGuilds = user.getMutualGuilds();
+        var mutualGuilds = event.getJDA().getShardManager().getMutualGuilds(user);
         var guilds = mutualGuilds.stream().map(Guilds::prettyName).collect(Collectors.joining("\n"));
 
         event.getHook().editOriginalEmbeds(new EmbedBuilder().setTitle("Shared Guilds").setDescription(guilds).build())

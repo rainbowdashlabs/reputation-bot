@@ -33,12 +33,12 @@ public class Roles implements SlashProvider<Slash> {
                 .guildOnly()
                 .withPermission(Permission.MANAGE_ROLES)
                 .subCommand(SubCommand.of("add", "command.roles.add.description")
-                        .handler(new Add(guilds))
+                        .handler(new Add(refresh, guilds))
                         .argument(Argument.role("role", "command.roles.add.role.description").asRequired())
                         .argument(Argument.integer("reputation", "command.roles.add.reputation.description")
                                           .asRequired()))
                 .subCommand(SubCommand.of("remove", "command.roles.remove.description")
-                        .handler(new Remove(guilds))
+                        .handler(new Remove(refresh, guilds))
                         .argument(Argument.role("role", "command.roles.remove.role.description").asRequired()))
                 .subCommand(SubCommand.of("adddonor", "command.roles.adddonor.description")
                         .handler(new AddDonor(guilds))
@@ -57,7 +57,7 @@ public class Roles implements SlashProvider<Slash> {
                 .subCommand(SubCommand.of("list", "command.roles.list.description")
                         .handler(new List(guilds)))
                 .subCommand(SubCommand.of("stackroles", "command.roles.stackroles.description")
-                        .handler(new StackRoles(guilds))
+                        .handler(new StackRoles(refresh, guilds))
                         .argument(Argument.bool("stack", "command.roles.stackroles.stack.description"))
                 ).build();
     }

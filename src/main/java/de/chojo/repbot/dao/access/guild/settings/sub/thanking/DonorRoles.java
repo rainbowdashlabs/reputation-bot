@@ -19,6 +19,11 @@ public class DonorRoles extends RolesHolder {
     }
 
     @Override
+    public long guildId() {
+        return thanking.guildId();
+    }
+
+    @Override
     protected String targetTable() {
         return "donor_roles";
     }

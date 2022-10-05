@@ -127,6 +127,11 @@ public class Ranks extends QueryFactory implements GuildHolder {
         return settings.guild();
     }
 
+    @Override
+    public long guildId() {
+        return settings.guildId();
+    }
+
     public Optional<ReputationRank> rank(Role role) {
         return builder(ReputationRank.class)
                 .query("SELECT reputation FROM guild_ranks WHERE guild_id = ? AND role_id = ?")

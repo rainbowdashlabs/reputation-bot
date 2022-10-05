@@ -9,15 +9,13 @@ import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Set;
 
 public abstract class BaseChannelModifier implements SlashHandler {
     private static final java.util.Set<ChannelType> ALLOWED_CHANNEL =
-            Stream.of(ChannelType.TEXT, ChannelType.FORUM, ChannelType.CATEGORY)
-                    .collect(Collectors.toUnmodifiableSet());
+            Set.of(ChannelType.TEXT, ChannelType.FORUM, ChannelType.CATEGORY, ChannelType.VOICE);
     private static final java.util.Set<ChannelType> TEXT_CHANNEL =
-            Stream.of(ChannelType.TEXT, ChannelType.FORUM).collect(Collectors.toUnmodifiableSet());
+            Set.of(ChannelType.TEXT, ChannelType.FORUM, ChannelType.VOICE);
     private final Guilds guilds;
 
     public BaseChannelModifier(Guilds guilds) {

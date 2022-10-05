@@ -49,4 +49,9 @@ public class Cleanup extends QueryFactory implements GuildHolder {
     public Guild guild() {
         return repGuild.guild();
     }
+
+    @Override
+    public long guildId() {
+        return repGuild.guildId();
+    }
 }

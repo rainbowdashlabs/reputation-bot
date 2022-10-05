@@ -150,6 +150,11 @@ public class Reputation extends QueryFactory implements GuildHolder {
         return settings.guild();
     }
 
+    @Override
+    public long guildId() {
+        return settings.guildId();
+    }
+
     private boolean set(String parameter, ThrowingConsumer<ParamBuilder, SQLException> builder) {
         return builder()
                 .query("""

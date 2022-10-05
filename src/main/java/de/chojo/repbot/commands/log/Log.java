@@ -4,6 +4,7 @@ import de.chojo.jdautil.interactions.slash.Argument;
 import de.chojo.jdautil.interactions.slash.Slash;
 import de.chojo.jdautil.interactions.slash.SubCommand;
 import de.chojo.jdautil.interactions.slash.provider.SlashCommand;
+import de.chojo.repbot.commands.log.handler.Analyzer;
 import de.chojo.repbot.commands.log.handler.Donated;
 import de.chojo.repbot.commands.log.handler.Message;
 import de.chojo.repbot.commands.log.handler.Received;
@@ -24,6 +25,9 @@ public class Log extends SlashCommand {
                 .subCommand(SubCommand.of("message", "command.log.message.description")
                         .handler(new Message(guilds))
                         .argument(Argument.text("messageid", "command.log.message.messageid.description").asRequired()))
+                .subCommand(SubCommand.of("analyzer", "command.log.analyzer.description")
+                        .handler(new Analyzer(guilds))
+                        .argument(Argument.text("messageid", "command.log.analyzer.messageid.description").asRequired()))
         );
     }
 }

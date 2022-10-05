@@ -10,7 +10,9 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import org.jetbrains.annotations.Nullable;
 
+import java.sql.Date;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -20,18 +22,20 @@ public class General extends QueryFactory implements GuildHolder {
     private DiscordLocale language;
     private boolean emojiDebug;
     private ReputationMode reputationMode;
+    private LocalDate resetDate;
 
     public General(Settings settings) {
-        this(settings, null, true, false, ReputationMode.TOTAL);
+        this(settings, null, true, false, ReputationMode.TOTAL, null);
     }
 
-    public General(Settings settings, DiscordLocale language, boolean emojiDebug, boolean stackRoles, ReputationMode reputationMode) {
+    public General(Settings settings, DiscordLocale language, boolean emojiDebug, boolean stackRoles, ReputationMode reputationMode, LocalDate resetDate) {
         super(settings);
         this.settings = settings;
         this.language = language;
         this.emojiDebug = emojiDebug;
         this.stackRoles = new AtomicBoolean(stackRoles);
         this.reputationMode = reputationMode;
+        this.resetDate = resetDate;
     }
 
     public static General build(Settings settings, Row rs) throws SQLException {
@@ -40,7 +44,8 @@ public class General extends QueryFactory implements GuildHolder {
                 lang == null ? null : DiscordLocale.from(lang),
                 rs.getBoolean("emoji_debug"),
                 rs.getBoolean("stack_roles"),
-                ReputationMode.valueOf(rs.getString("reputation_mode")));
+                ReputationMode.valueOf(rs.getString("reputation_mode")),
+                Optional.ofNullable(rs.getDate("reset_date")).map(Date::toLocalDate).orElse(null));
     }
 
     public boolean language(@Nullable DiscordLocale language) {
@@ -75,6 +80,19 @@ public class General extends QueryFactory implements GuildHolder {
         return result;
     }
 
+    public boolean resetDate(LocalDate resetDate) {
+            boolean result;
+        if (resetDate == null) {
+            result = set("reset_date", stmt -> stmt.setDate(null));
+        } else {
+            result = set("reset_date", stmt -> stmt.setDate(Date.valueOf(resetDate)));
+        }
+        if (result) {
+            this.resetDate = resetDate;
+        }
+        return result;
+    }
+
     public Optional<DiscordLocale> language() {
         return Optional.ofNullable(language);
     }
@@ -91,9 +109,18 @@ public class General extends QueryFactory implements GuildHolder {
         return stackRoles;
     }
 
+    public LocalDate resetDate() {
+        return resetDate;
+    }
+
     @Override
     public Guild guild() {
         return settings.guild();
+    }
+
+    @Override
+    public long guildId() {
+        return settings.guildId();
     }
 
     private boolean set(String parameter, ThrowingConsumer<ParamBuilder, SQLException> builder) {

@@ -1,10 +1,13 @@
 package de.chojo.repbot.dao.pagination;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Iterator;
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class PageAccess<T> {
+public class PageAccess<T> implements Iterable<List<T>> {
     private final Supplier<Integer> pagecount;
     private final Function<Integer, List<T>> pageSupplier;
 
@@ -30,5 +33,24 @@ public class PageAccess<T> {
      */
     public List<T> page(int page) {
         return pageSupplier.apply(page);
+    }
+
+    @NotNull
+    @Override
+    public Iterator<List<T>> iterator() {
+        return new Iterator<>() {
+            private int currPage = 0;
+            private final int pages = pages();
+
+            @Override
+            public boolean hasNext() {
+                return currPage < pages;
+            }
+
+            @Override
+            public List<T> next() {
+                return page(currPage++);
+            }
+        };
     }
 }

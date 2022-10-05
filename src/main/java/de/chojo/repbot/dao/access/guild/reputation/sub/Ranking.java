@@ -132,4 +132,9 @@ public class Ranking extends QueryFactory implements GuildHolder {
     public Guild guild() {
         return reputation.guild();
     }
+
+    @Override
+    public long guildId() {
+        return reputation.guildId();
+    }
 }
