@@ -1,22 +1,22 @@
 package de.chojo.repbot.commands.roles.handler;
 
-import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
+import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.Guilds;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-import java.util.Collections;
+import java.util.function.Consumer;
 
-public class Add implements SlashHandler {
-    private final Guilds guilds;
+public class Add extends BaseRoleModifier {
 
-    public Add(Guilds guilds) {
-        this.guilds = guilds;
+    public Add(Refresh refresh, Guilds guilds) {
+        super(refresh, guilds);
     }
 
     @Override
-    public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
+    public void modify(SlashCommandInteractionEvent event, EventContext context, Consumer<MessageEmbed> refresh) {
         var role = event.getOption("role").getAsRole();
         var reputation = event.getOption("reputation").getAsLong();
         if (!event.getGuild().getSelfMember().canInteract(role)) {
@@ -25,10 +25,12 @@ public class Add implements SlashHandler {
             return;
         }
 
-        var ranks = guilds.guild(event.getGuild()).settings().ranks();
+        var ranks = guilds().guild(event.getGuild()).settings().ranks();
         ranks.add(role, reputation);
-        event.reply(context.localize("command.roles.add.message.added",
-                     Replacement.createMention("ROLE", role), Replacement.create("POINTS", reputation)))
-             .mention(Collections.emptyList()).queue();
+        var menu = new LocalizedEmbedBuilder(context.guildLocalizer())
+                .setTitle("command.roles.add.title.added")
+                .setDescription("command.roles.add.message.added", Replacement.createMention("ROLE", role), Replacement.create("POINTS", reputation))
+                .build();
+        refresh.accept(menu);
     }
 }
