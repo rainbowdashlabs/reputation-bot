@@ -121,7 +121,3 @@ SELECT RANK() OVER (PARTITION BY guild_id ORDER BY reputation DESC) AS rank,
        raw_reputation,
        donated
 FROM offset_reputation;
-
--- feature/gdpr-send
-ALTER TABLE repbot_schema.gdpr_log
-    ADD last_attempt TIMESTAMP DEFAULT (NOW() AT TIME ZONE 'utc');
