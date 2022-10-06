@@ -147,7 +147,7 @@ public class Reputation extends QueryFactory {
     /**
      * Freeze reputation counts of the previous day into metric tables.
      */
-    public void freezeRepCounts() {
+    public void saveRepCounts() {
         builder()
                 .query("""
                        INSERT INTO metrics_reputation(day, cause, count)

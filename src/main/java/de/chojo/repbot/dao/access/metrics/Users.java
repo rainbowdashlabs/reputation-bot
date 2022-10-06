@@ -38,7 +38,7 @@ public class Users extends QueryFactory {
                 .thenApply(UsersStatistic::new);
     }
 
-    public void freezeUserCountWeek() {
+    public void saveUserCountWeek() {
         builder()
                 .query("""
                        INSERT INTO metrics_users_week
@@ -54,7 +54,7 @@ public class Users extends QueryFactory {
                 .send();
     }
 
-    public void freezeUserCountMonth() {
+    public void saveUserCountMonth() {
         builder()
                 .query("""
                        INSERT INTO metrics_users_month
