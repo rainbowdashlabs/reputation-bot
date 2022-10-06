@@ -12,11 +12,11 @@ public class Users extends QueryFactory {
     }
 
     public CompletableFuture<UsersStatistic> week(int offset, int count) {
-        return get("metrics_unique_users_week", "week", offset, count);
+        return get("metrics_users_week", "week", offset, count);
     }
 
     public CompletableFuture<UsersStatistic> month(int offset, int count) {
-        return get("metrics_unique_users_month", "month", offset, count);
+        return get("metrics_users_month", "month", offset, count);
     }
 
     private CompletableFuture<UsersStatistic> get(String table, String timeframe, int offset, int count) {
@@ -36,5 +36,44 @@ public class Users extends QueryFactory {
                 .readRow(rs -> UserStatistic.build(rs, timeframe))
                 .all()
                 .thenApply(UsersStatistic::new);
+    }
+
+    /**
+     * Save the user count of the last week.
+     */
+    public void saveUserCountWeek() {
+        builder()
+                .query("""
+                       INSERT INTO metrics_users_week
+                       SELECT week, receiver_count, donor_count, total_count
+                       FROM metrics_unique_users_week
+                       WHERE week = DATE_TRUNC('week', NOW()  - INTERVAL '1 WEEK')
+                       ON CONFLICT(week) 
+                           DO UPDATE SET receiver_count = excluded.receiver_count,
+                               donor_count = excluded.donor_count,
+                               total_count = excluded.donor_count
+                       """).emptyParams()
+                .insert()
+                .send();
+    }
+
+    /**
+     * Save the user count of the last month.
+     */
+    public void saveUserCountMonth() {
+        builder()
+                .query("""
+                       INSERT INTO metrics_users_month
+                       SELECT month, receiver_count, donor_count, total_count
+                       FROM metrics_unique_users_month
+                       WHERE month = DATE_TRUNC('week', NOW()  - INTERVAL '1 WEEK')
+                       ON CONFLICT(month) 
+                           DO UPDATE SET receiver_count = excluded.receiver_count,
+                               donor_count = excluded.donor_count,
+                               total_count = excluded.donor_count
+                       """)
+                .emptyParams()
+                .insert()
+                .send();
     }
 }

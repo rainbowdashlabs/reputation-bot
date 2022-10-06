@@ -97,6 +97,24 @@ public class Reputation extends MetricsHolder {
         }
     }
 
+    public void changesWeek(Context ctx) {
+        var stats = metrics().reputation().weekChanges(offset(ctx, MAX_WEEK_OFFSET), count(ctx, MAX_WEEKS)).join();
+        if ("application/json".equals(ctx.header("Accept"))) {
+            ctx.json(stats);
+        } else {
+            writeImage(ctx, stats.getChart("Reputation changes per week"));
+        }
+    }
+
+    public void changesMonth(Context ctx) {
+        var stats = metrics().reputation().monthChanges(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH)).join();
+        if ("application/json".equals(ctx.header("Accept"))) {
+            ctx.json(stats);
+        } else {
+            writeImage(ctx, stats.getChart("Reputation changes per month"));
+        }
+    }
+
     public void dowWeek(Context ctx) {
         var stats = metrics().reputation().dowWeek(offset(ctx, MAX_WEEK_OFFSET)).join();
         if ("application/json".equals(ctx.header("Accept"))) {
@@ -210,6 +228,27 @@ public class Reputation extends MetricsHolder {
                                                                                       .pathParam("offset", Integer.class, MetricsRoute::offsetMonthDoc)
                                                                                       .pathParam("count", Integer.class, MetricsRoute::countMonthDoc),
                         cache(this::totalMonth)));
+            });
+
+            path("changes", () -> {
+                get("week/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
+                                                                                     .operation(op -> {
+                                                                                         op.summary("Get the changed reputation per week.");
+                                                                                     })
+                                                                                     .result("200", byte[].class, "image/png")
+                                                                                     .result("200", LabeledCountStatistic.class, "application/json")
+                                                                                     .pathParam("offset", Integer.class, MetricsRoute::offsetWeekDoc)
+                                                                                     .pathParam("count", Integer.class, MetricsRoute::countWeekDoc),
+                        cache(this::changesWeek)));
+                get("month/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
+                                                                                      .operation(op -> {
+                                                                                          op.summary("Get the changed reputation per month.");
+                                                                                      })
+                                                                                      .result("200", byte[].class, "image/png")
+                                                                                      .result("200", LabeledCountStatistic.class, "application/json")
+                                                                                      .pathParam("offset", Integer.class, MetricsRoute::offsetMonthDoc)
+                                                                                      .pathParam("count", Integer.class, MetricsRoute::countMonthDoc),
+                        cache(this::changesMonth)));
             });
 
             path("dow", () -> {
