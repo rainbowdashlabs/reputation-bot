@@ -145,7 +145,7 @@ public class Reputation extends QueryFactory {
     }
 
     /**
-     * Freeze reputation counts of the previous day into metric tables.
+     * Save reputation counts of the previous day into metric tables.
      */
     public void saveRepCounts() {
         builder()

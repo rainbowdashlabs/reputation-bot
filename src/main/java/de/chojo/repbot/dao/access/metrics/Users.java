@@ -38,6 +38,9 @@ public class Users extends QueryFactory {
                 .thenApply(UsersStatistic::new);
     }
 
+    /**
+     * Save the user count of the last week.
+     */
     public void saveUserCountWeek() {
         builder()
                 .query("""
@@ -54,6 +57,9 @@ public class Users extends QueryFactory {
                 .send();
     }
 
+    /**
+     * Save the user count of the last month.
+     */
     public void saveUserCountMonth() {
         builder()
                 .query("""
