@@ -128,7 +128,7 @@ CREATE OR REPLACE TRIGGER reputation_remove
     FOR EACH ROW
 EXECUTE FUNCTION repbot_schema.reputation_removed();
 
--- Create tables for user freezing
+-- Create tables for user metrics
 CREATE TABLE repbot_schema.metrics_users_week
 (
     week           DATE   NOT NULL
