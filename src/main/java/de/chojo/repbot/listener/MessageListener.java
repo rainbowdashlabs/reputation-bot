@@ -4,7 +4,6 @@ import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.analyzer.results.empty.EmptyResultReason;
-import de.chojo.repbot.analyzer.results.match.MatchResult;
 import de.chojo.repbot.analyzer.results.match.ThankType;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
@@ -111,7 +110,9 @@ public class MessageListener extends ListenerAdapter {
                                                          .thankwordPattern(), message, settings, true, settings.abuseProtection()
                                                                                                                .maxMessageReputation());
 
-        if (result.isEmpty() && result.asEmpty().reason() == EmptyResultReason.NO_MATCH) return;
+        if (result.isEmpty()
+            && (result.asEmpty().reason() == EmptyResultReason.NO_MATCH
+                || result.asEmpty().reason() == EmptyResultReason.NO_PATTERN)) return;
 
 
         if (PermissionErrorHandler.assertAndHandle(event.getGuildChannel(), localizer, configuration,
