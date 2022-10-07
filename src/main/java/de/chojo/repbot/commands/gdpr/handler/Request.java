@@ -14,11 +14,19 @@ public class Request implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        var request = gdpr.request(event.getUser()).queueRequest();
+        event.deferReply(true).queue();
+        var user = gdpr.request(event.getUser());
+        var request = user.request();
         if (request) {
-            event.reply(context.localize("command.gdpr.request.message.received")).setEphemeral(true).queue();
+            if (user.sendData()) {
+                user.requestSend();
+                event.getHook().editOriginal(context.localize("command.gdpr.request.message.send")).queue();
+            } else {
+                user.requestSendFailed();
+                event.getHook().editOriginal(context.localize("command.gdpr.request.message.failed")).queue();
+            }
         } else {
-            event.reply(context.localize("command.gdpr.request.message.requested")).setEphemeral(true).queue();
+            event.getHook().editOriginal(context.localize("command.gdpr.request.message.requested")).queue();
         }
     }
 }
