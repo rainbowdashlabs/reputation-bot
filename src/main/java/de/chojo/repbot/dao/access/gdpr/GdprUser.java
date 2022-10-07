@@ -160,7 +160,7 @@ public class GdprUser extends QueryFactory {
                     .addFiles(FileUpload.fromData(tempFile.toFile()))
                     .complete();
         } catch (RuntimeException e) {
-            log.warn("Could not send gdpr data to user {}. File sending failed.", userId(), e);
+            log.warn("Could not send gdpr data to user {}. File sending failed.\nCause: {}", userId(), e.getMessage());
             return false;
         }
         return true;

@@ -52,7 +52,10 @@ public class Gdpr extends QueryFactory {
 
     /**
      * Get a list of {@link GdprUser}s which have requested their data.
+     * <p>
+     * Only users which are known to the provided shard manager will be returned.
      *
+     * @param shardManager shardmanager to resolve users.
      * @return list of users
      */
     public List<GdprUser> getReportRequests(ShardManager shardManager) {
@@ -61,7 +64,7 @@ public class Gdpr extends QueryFactory {
                                         SELECT user_id 
                                         FROM gdpr_log
                                         WHERE received IS NULL
-                                            AND last_attempt < now() - (least(48, attempts) || ' HOURS')::INTERVAL 
+                                            AND last_attempt < NOW() - (LEAST(48, attempts) || ' HOURS')::interval 
                                     """)
                 .readRow(rs -> GdprUser.build(this, rs, shardManager))
                 .allSync()
