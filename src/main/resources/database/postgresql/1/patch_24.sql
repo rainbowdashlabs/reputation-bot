@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 -- feature/static-metrics
 -- Create a new table containing the reputation of each day grouped by day
 CREATE TABLE repbot_schema.metrics_reputation
