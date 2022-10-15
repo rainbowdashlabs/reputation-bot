@@ -20,6 +20,8 @@ want more insights you can try out our [API](https://repbot.chojo.de/docs).
 
 ![](https://repbot.chojo.de/v1/metrics/reputation/type/count/month/0/48)
 
+![](https://repbot.chojo.de/v1/metrics/reputation/changes/week/0/52)
+
 ## Commands
 
 ![](https://repbot.chojo.de/v1/metrics/commands/count/week/1/52)

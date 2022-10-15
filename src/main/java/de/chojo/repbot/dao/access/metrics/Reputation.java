@@ -31,6 +31,14 @@ public class Reputation extends QueryFactory {
         return get("metrics_reputation_month", "month", month, count);
     }
 
+    public CompletableFuture<LabeledCountStatistic> weekChanges(int week, int count) {
+        return getChanges("metrics_reputation_changed_week", "week", week, count);
+    }
+
+    public CompletableFuture<LabeledCountStatistic> monthChanges(int month, int count) {
+        return getChanges("metrics_reputation_changed_month", "month", month, count);
+    }
+
     public CompletableFuture<LabeledCountStatistic> typeWeek(int week, int count) {
         return getType("metrics_reputation_type_week", "week", week, count);
     }
@@ -96,6 +104,29 @@ public class Reputation extends QueryFactory {
                 .thenApply(r -> builder.build());
     }
 
+    private CompletableFuture<LabeledCountStatistic> getChanges(String table, String timeframe, int offset, int count) {
+        var builder = new LabeledCountStatisticBuilder();
+        return builder(LabeledCountStatisticBuilder.class)
+                .query("""
+                       SELECT %s,
+                           added - removed as delta,
+                           added,
+                           removed
+                       FROM %s
+                       WHERE %s <= DATE_TRUNC(?, NOW())::date - ?::interval
+                       ORDER BY %s DESC
+                       LIMIT ?
+                       """, timeframe, table, timeframe, timeframe)
+                .parameter(stmt -> stmt.setString(timeframe)
+                                       .setString(offset + " " + timeframe)
+                                       .setInt(count))
+                .readRow(rs -> builder.add("delta", CountStatistics.build(rs, "delta",timeframe))
+                                      .add("added", CountStatistics.build(rs, "added",timeframe))
+                                      .add("removed", CountStatistics.build(rs, "removed",timeframe)))
+                .all()
+                .thenApply(r -> builder.build());
+    }
+
     private CompletableFuture<DowsStatistic> get(String table, String timeframe, int offset) {
         return builder(DowStatistics.class)
                 .query("""
@@ -111,5 +142,40 @@ public class Reputation extends QueryFactory {
                 .readRow(rs -> DowStatistics.build(rs, timeframe))
                 .all()
                 .thenApply(DowsStatistic::new);
+    }
+
+    /**
+     * Save reputation counts of the previous day into metric tables.
+     */
+    public void saveRepCounts() {
+        builder()
+                .query("""
+                       INSERT INTO metrics_reputation(day, cause, count)
+                       SELECT received::date AS day,
+                              cause,
+                              COUNT(1)       AS count
+                       FROM reputation_log
+                       WHERE received::date = NOW()::date - INTERVAL '1 DAY'
+                       GROUP BY day, cause
+                       ORDER BY day DESC
+                       ON CONFLICT(day, cause)
+                       DO UPDATE
+                       SET count = excluded.count;
+                       """)
+                .emptyParams()
+                .append()
+                .query("""
+                       INSERT INTO metrics_reputation_count(day, count)
+                       SELECT NOW() - INTERVAL '1 DAY',
+                       COUNT(1) 
+                       FROM reputation_log
+                       WHERE received < NOW()::date
+                       ON CONFLICT(day) 
+                       DO UPDATE
+                       SET count = excluded.count;
+                       """)
+                .emptyParams()
+                .insert()
+                .send();
     }
 }

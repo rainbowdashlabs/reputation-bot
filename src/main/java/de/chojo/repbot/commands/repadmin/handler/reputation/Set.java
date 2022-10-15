@@ -5,7 +5,7 @@ import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.access.guild.reputation.sub.RepUser;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.service.RoleAssigner;
-import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class Set extends BaseReputationModifier {
@@ -15,7 +15,7 @@ public class Set extends BaseReputationModifier {
     }
 
     @Override
-    void execute(SlashCommandInteractionEvent event, EventContext context, Member user, RepUser repUser, long rep) {
+    void execute(SlashCommandInteractionEvent event, EventContext context, User user, RepUser repUser, long rep) {
         repUser.setReputation(rep);
         event.reply(context.localize("command.repadmin.reputation.set.message.set",
                         Replacement.create("VALUE", rep), Replacement.createMention(user)))
