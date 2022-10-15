@@ -1,5 +1,6 @@
 package de.chojo.repbot.dao.provider;
 
+import de.chojo.repbot.config.Configuration;
 import de.chojo.sadu.base.QueryFactory;
 import de.chojo.sadu.wrapper.stage.ResultStage;
 import net.dv8tion.jda.api.entities.Guild;
@@ -14,9 +15,11 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class Voice extends QueryFactory {
     private static final Logger log = getLogger(Voice.class);
+    private final Configuration configuration;
 
-    public Voice(DataSource dataSource) {
+    public Voice(DataSource dataSource, Configuration configuration) {
         super(dataSource);
+        this.configuration = configuration;
     }
 
     /**
@@ -87,9 +90,10 @@ public class Voice extends QueryFactory {
      */
     public void cleanup() {
         builder()
-                .queryWithoutParams("""
-                                    DELETE FROM voice_activity WHERE seen < NOW() - '12 hours'::interval
+                .query("""
+                                    DELETE FROM voice_activity WHERE seen < NOW() - ?::interval
                                     """)
+                .parameter(stmt -> stmt.setString("%d hours".formatted(configuration.cleanup().voiceActivityHours())))
                 .update()
                 .send();
     }

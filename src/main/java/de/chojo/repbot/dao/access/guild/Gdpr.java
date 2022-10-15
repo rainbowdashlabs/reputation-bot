@@ -1,5 +1,6 @@
 package de.chojo.repbot.dao.access.guild;
 
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.sadu.base.QueryFactory;
 import net.dv8tion.jda.api.entities.Guild;
@@ -30,12 +31,13 @@ public class Gdpr extends QueryFactory implements GuildHolder {
         if (builder()
                 .query("""
                        INSERT INTO
-                           cleanup_schedule(guild_id, user_id)
-                           VALUES (?, 0)
+                           cleanup_schedule(guild_id, user_id, delete_after)
+                           VALUES (?, 0, now() + ?::INTERVAL)
                                ON CONFLICT(guild_id, user_id)
                                    DO NOTHING;
                        """)
-                .parameter(stmt -> stmt.setLong(guildId()))
+                .parameter(stmt -> stmt.setLong(guildId())
+                        .setString("%d DAYS".formatted(repGuild.configuration().cleanup().cleanupScheduleDays())))
                 .update()
                 .sendSync()
                 .changed()) {

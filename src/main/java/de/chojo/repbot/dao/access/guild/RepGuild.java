@@ -2,6 +2,7 @@ package de.chojo.repbot.dao.access.guild;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.reputation.Reputation;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
@@ -21,9 +22,11 @@ public class RepGuild extends QueryFactory implements GuildHolder {
     private final Reputation reputation;
     private final Settings settings;
     private Guild guild;
+    private final Configuration configuration;
 
-    public RepGuild(DataSource dataSource, Guild guild) {
+    public RepGuild(DataSource dataSource, Guild guild, Configuration configuration) {
         super(dataSource);
+        this.configuration = configuration;
         reputation = new Reputation(this);
         settings = new Settings(this);
         this.guild = guild;
@@ -106,5 +109,9 @@ public class RepGuild extends QueryFactory implements GuildHolder {
         return "RepGuild{" +
                "guild=" + guild +
                '}';
+    }
+
+    public Configuration configuration() {
+        return configuration;
     }
 }
