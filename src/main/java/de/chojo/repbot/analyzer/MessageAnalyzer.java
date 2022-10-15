@@ -117,7 +117,14 @@ public class MessageAnalyzer {
 
             if (members.isEmpty()) return Result.empty(match, EmptyResultReason.TARGET_NOT_ON_GUILD);
 
-            return Result.mention(match, message.getMember(), members);
+            Member author;
+            try {
+                author = message.getGuild().retrieveMember(message.getAuthor()).complete();
+            } catch (RuntimeException e) {
+                return Result.empty(EmptyResultReason.TARGET_NOT_ON_GUILD);
+            }
+
+            return Result.mention(match, author, members);
         }
         return resolveMessage(match, message, pattern, context, limitTargets, limit);
     }
@@ -181,6 +188,13 @@ public class MessageAnalyzer {
 
         var thankwords = thankWordIndices.stream().map(words::get).collect(Collectors.toList());
 
-        return Result.fuzzy(matchPattern, thankwords, memberMatches, message.getMember(), members);
+        Member author;
+        try {
+            author = message.getGuild().retrieveMember(message.getAuthor()).complete();
+        } catch (RuntimeException e) {
+            return Result.empty(EmptyResultReason.TARGET_NOT_ON_GUILD);
+        }
+
+        return Result.fuzzy(matchPattern, thankwords, memberMatches, author, members);
     }
 }
