@@ -43,7 +43,7 @@ public class Gdpr extends QueryFactory {
                 .query("""
                        DELETE FROM gdpr_log
                        WHERE received IS NOT NULL
-                           AND received < NOW() - INTERVAL ?;
+                           AND received < NOW() - ?::INTERVAL;
                        """, configuration.cleanup().gdprDays())
                 .parameter(stmt -> stmt.setString("%d DAYS".formatted(configuration.cleanup().gdprDays())))
                 .update()
