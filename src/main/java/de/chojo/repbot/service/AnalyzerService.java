@@ -1,5 +1,6 @@
 package de.chojo.repbot.service;
 
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.Analyzer;
 
 import java.util.concurrent.ScheduledExecutorService;

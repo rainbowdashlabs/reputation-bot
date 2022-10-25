@@ -176,3 +176,7 @@ SELECT DATE_TRUNC('month', day)::DATE AS month,
 FROM repbot_schema.metrics_reputation_count
 GROUP BY month
 ORDER BY month DESC;
+
+-- feature/gdpr-send
+ALTER TABLE repbot_schema.gdpr_log
+    ADD last_attempt TIMESTAMP DEFAULT (NOW() AT TIME ZONE 'utc');

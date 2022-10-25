@@ -1,6 +1,7 @@
 package de.chojo.repbot.dao.access;
 
 import de.chojo.jdautil.util.Futures;
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.sadu.base.QueryFactory;
 import org.slf4j.Logger;
@@ -11,16 +12,18 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class Analyzer extends QueryFactory {
     private static final Logger log = getLogger(Analyzer.class);
+    private final Configuration configuration;
 
-    public Analyzer(DataSource dataSource) {
+    public Analyzer(DataSource dataSource, Configuration configuration) {
         super(dataSource);
+        this.configuration = configuration;
     }
 
     public void cleanup() {
         builder().query("""
-                        DELETE FROM analyzer_results WHERE analyzed < NOW() - '24 hours'::interval;
+                        DELETE FROM analyzer_results WHERE analyzed < NOW() - ?::interval;
                         """)
-                 .emptyParams()
+                 .parameter(stmt -> stmt.setString("%d HOURS".formatted(configuration.cleanup().analyzerLogHours())))
                  .delete()
                  .send()
                  .whenComplete(Futures.whenComplete(res -> log.debug("Deleted {} entries from analyzer log", res.rows()),
