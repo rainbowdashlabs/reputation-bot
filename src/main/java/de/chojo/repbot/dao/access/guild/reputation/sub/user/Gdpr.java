@@ -26,7 +26,7 @@ public class Gdpr extends QueryFactory implements MemberHolder {
                 .query("""
                        INSERT INTO
                            cleanup_schedule(guild_id, user_id, delete_after)
-                           VALUES (?,?,?::INTERVAL)
+                           VALUES (?,?,now() + ?::INTERVAL)
                                ON CONFLICT(guild_id, user_id)
                                    DO NOTHING;
                        """, repUser.configuration().cleanup().cleanupScheduleDays())
