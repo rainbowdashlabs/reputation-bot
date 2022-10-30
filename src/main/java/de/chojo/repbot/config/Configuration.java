@@ -12,6 +12,7 @@ import de.chojo.repbot.config.elements.Api;
 import de.chojo.repbot.config.elements.Badges;
 import de.chojo.repbot.config.elements.BaseSettings;
 import de.chojo.repbot.config.elements.Botlist;
+import de.chojo.repbot.config.elements.Cleanup;
 import de.chojo.repbot.config.elements.Database;
 import de.chojo.repbot.config.elements.Links;
 import de.chojo.repbot.config.elements.MagicImage;
@@ -130,5 +131,9 @@ public class Configuration {
 
     public Api api() {
         return configFile.api();
+    }
+
+    public Cleanup cleanup() {
+        return configFile.cleanup();
     }
 }

@@ -1,6 +1,7 @@
 package de.chojo.repbot.dao.access.guild.reputation.sub;
 
 import de.chojo.repbot.analyzer.results.match.ThankType;
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.reputation.Reputation;
 import de.chojo.repbot.dao.access.guild.reputation.sub.user.Gdpr;
 import de.chojo.repbot.dao.access.guild.settings.sub.AbuseProtection;
@@ -288,5 +289,9 @@ public class RepUser extends QueryFactory implements MemberHolder {
 
     public Reputation reputation() {
         return reputation;
+    }
+
+    public Configuration configuration() {
+        return reputation.configuration();
     }
 }

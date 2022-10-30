@@ -5,6 +5,7 @@ import de.chojo.repbot.config.elements.Api;
 import de.chojo.repbot.config.elements.Badges;
 import de.chojo.repbot.config.elements.BaseSettings;
 import de.chojo.repbot.config.elements.Botlist;
+import de.chojo.repbot.config.elements.Cleanup;
 import de.chojo.repbot.config.elements.Database;
 import de.chojo.repbot.config.elements.Links;
 import de.chojo.repbot.config.elements.MagicImage;
@@ -23,6 +24,7 @@ public class ConfigFile {
     private Botlist botlist = new Botlist();
     private Api api = new Api();
     private SelfCleanup selfcleanup = new SelfCleanup();
+    private Cleanup cleanup = new Cleanup();
 
     public BaseSettings baseSettings() {
         return baseSettings;
@@ -62,5 +64,9 @@ public class ConfigFile {
 
     public Api api() {
         return api;
+    }
+
+    public Cleanup cleanup() {
+        return cleanup;
     }
 }

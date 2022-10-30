@@ -2,6 +2,7 @@ package de.chojo.repbot.dao.access.guild.reputation;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.access.guild.reputation.sub.Analyzer;
 import de.chojo.repbot.dao.access.guild.reputation.sub.Log;
@@ -93,5 +94,9 @@ public class Reputation extends QueryFactory implements GuildHolder {
 
     public RepGuild repGuild() {
         return repGuild;
+    }
+
+    public Configuration configuration() {
+        return repGuild.configuration();
     }
 }

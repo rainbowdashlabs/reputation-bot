@@ -75,12 +75,12 @@ public class Data {
 
     private void initDao() {
         log.info("Creating DAOs");
-        guilds = new Guilds(dataSource);
-        gdpr = new Gdpr(dataSource);
+        guilds = new Guilds(dataSource, configuration);
+        gdpr = new Gdpr(dataSource, configuration);
         cleanup = new Cleanup(dataSource);
         metrics = new Metrics(dataSource);
-        voice = new Voice(dataSource);
-        analyzer = new Analyzer(dataSource);
+        analyzer = new Analyzer(dataSource, configuration);
+        voice = new Voice(dataSource, configuration);
     }
 
     private HikariDataSource getConnectionPool() {
