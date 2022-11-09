@@ -11,8 +11,8 @@ import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
 import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.SelectMenuInteractionEvent;
-import net.dv8tion.jda.api.interactions.components.selections.SelectMenu;
+import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 
 import java.awt.Color;
 import java.util.Collections;
@@ -28,7 +28,7 @@ public class Info implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var guildSettings = guilds.guild(event.getGuild()).settings();
-        var settings = SelectMenu.create("settings")
+        var settings = StringSelectMenu.create("settings")
                 .setPlaceholder("command.repsettings.info.message.choose")
                 .setRequiredRange(1, 1)
                 .addOption("command.repsettings.info.message.option.byreaction.name", "reactions", "command.repsettings.info.message.option.byreaction.description")
@@ -75,7 +75,7 @@ public class Info implements SlashHandler {
                 "command.repsettings.info.message.skipsingleembed.true",
                 "command.repsettings.info.message.skipsingleembed.false",
                 guildSettings.reputation().isSkipSingleEmbed());
-        var reputationMode = SelectMenu.create("reputationmode")
+        var reputationMode = StringSelectMenu.create("reputationmode")
                 .setPlaceholder("command.repsettings.info.message.option.reputationmode.description")
                 .setRequiredRange(1, 1)
                 .addOption(ReputationMode.TOTAL.localeCode(), ReputationMode.TOTAL.name(), "command.repsettings.info.message.reputationMode.total")
@@ -131,8 +131,8 @@ public class Info implements SlashHandler {
                                        .build());
     }
 
-    private SelectMenu getMenu(String id, String placeholder, String enabledDescr, String disabledDescr, boolean state) {
-        return SelectMenu.create(id)
+    private StringSelectMenu getMenu(String id, String placeholder, String enabledDescr, String disabledDescr, boolean state) {
+        return StringSelectMenu.create(id)
                 .setPlaceholder(placeholder)
                 .setRequiredRange(1, 1)
                 .addOption("words.enabled", "enabled", enabledDescr)
@@ -141,7 +141,7 @@ public class Info implements SlashHandler {
                 .build();
     }
 
-    private void refresh(EntryContext<SelectMenuInteractionEvent, SelectMenu> ctx, Consumer<Boolean> result, EventContext
+    private void refresh(EntryContext<StringSelectInteractionEvent, StringSelectMenu> ctx, Consumer<Boolean> result, EventContext
             context, Settings guildSettings) {
         var value = ctx.event().getValues().get(0);
         var copy = ctx.entry().component().createCopy();
