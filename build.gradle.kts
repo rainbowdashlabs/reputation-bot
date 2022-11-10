@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "1.11.3"
+version = "1.11.4"
 
 repositories {
     maven("https://eldonexus.de/repository/maven-public")
@@ -15,7 +15,7 @@ repositories {
 
 dependencies {
     //discord
-    implementation("de.chojo", "cjda-util", "2.7.5+alpha.20") {
+    implementation("de.chojo", "cjda-util", "2.7.8+alpha.22") {
         exclude(group = "club.minnced", module = "opus-java")
     }
 

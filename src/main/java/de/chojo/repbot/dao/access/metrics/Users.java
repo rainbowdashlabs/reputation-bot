@@ -66,7 +66,7 @@ public class Users extends QueryFactory {
                        INSERT INTO metrics_users_month
                        SELECT month, receiver_count, donor_count, total_count
                        FROM metrics_unique_users_month
-                       WHERE month = DATE_TRUNC('week', NOW()  - INTERVAL '1 WEEK')
+                       WHERE month = DATE_TRUNC('month', NOW()  - INTERVAL '1 MONTH')
                        ON CONFLICT(month) 
                            DO UPDATE SET receiver_count = excluded.receiver_count,
                                donor_count = excluded.donor_count,

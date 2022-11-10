@@ -2,13 +2,14 @@ package de.chojo.repbot.listener;
 
 import de.chojo.repbot.util.LogNotify;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.events.DisconnectEvent;
-import net.dv8tion.jda.api.events.ReadyEvent;
-import net.dv8tion.jda.api.events.ReconnectedEvent;
-import net.dv8tion.jda.api.events.ResumedEvent;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
+import net.dv8tion.jda.api.events.session.ReadyEvent;
+import net.dv8tion.jda.api.events.session.SessionDisconnectEvent;
+import net.dv8tion.jda.api.events.session.SessionRecreateEvent;
+import net.dv8tion.jda.api.events.session.SessionResumeEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import javax.annotation.Nonnull;
@@ -51,18 +52,18 @@ public class LogListener extends ListenerAdapter implements Runnable {
     }
 
     @Override
-    public void onDisconnect(@Nonnull DisconnectEvent event) {
+    public void onSessionDisconnect(@NotNull SessionDisconnectEvent event) {
         disconnected.put(event.getJDA().getShardInfo().getShardId(), Instant.now());
         log.debug("Shard {} disconnected.", event.getJDA().getShardInfo().getShardId());
     }
 
     @Override
-    public void onReconnected(@Nonnull ReconnectedEvent event) {
+    public void onSessionRecreate(@NotNull SessionRecreateEvent event) {
         handleShardReconnect(event.getJDA());
     }
 
     @Override
-    public void onResumed(@Nonnull ResumedEvent event) {
+    public void onSessionResume(@NotNull SessionResumeEvent event) {
         handleShardReconnect(event.getJDA());
     }
 

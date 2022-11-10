@@ -1,8 +1,7 @@
 package de.chojo.repbot.listener;
 
 import de.chojo.repbot.dao.provider.Voice;
-import net.dv8tion.jda.api.events.guild.voice.GuildVoiceLeaveEvent;
-import net.dv8tion.jda.api.events.guild.voice.GuildVoiceMoveEvent;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,13 +22,10 @@ public class VoiceStateListener extends ListenerAdapter implements Runnable {
     }
 
     @Override
-    public void onGuildVoiceLeave(@NotNull GuildVoiceLeaveEvent event) {
-        voice.logUser(event.getMember(), event.getChannelLeft().getMembers());
-    }
-
-    @Override
-    public void onGuildVoiceMove(@NotNull GuildVoiceMoveEvent event) {
-        voice.logUser(event.getMember(), event.getChannelLeft().getMembers());
+    public void onGuildVoiceUpdate(@NotNull GuildVoiceUpdateEvent event) {
+        if (event.getChannelLeft() != null) {
+            voice.logUser(event.getMember(), event.getChannelLeft().getMembers());
+        }
     }
 
     @Override
