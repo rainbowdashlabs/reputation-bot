@@ -28,7 +28,9 @@ public class Scan implements SlashProvider<Slash> {
                 .subCommand(SubCommand.of("start", "command.scan.start.description")
                         .handler(new Start(scanner))
                         .argument(Argument.channel("channel", "command.scan.start.channel.description"))
-                        .argument(Argument.integer("numbermessages", "command.scan.start.numbermessages.description")))
+                        .argument(Argument.integer("numbermessages", "command.scan.start.numbermessages.description")
+                                .min(1)
+                                .max(10000)))
                 .subCommand(SubCommand.of("cancel", "command.scan.cancel.description")
                         .handler(new Cancel(scanner)))
                 .build();
