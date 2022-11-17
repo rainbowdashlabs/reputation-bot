@@ -59,7 +59,7 @@ public class AbuseProtection extends SlashCommand {
                                           .max(100_000))
                         .argument(Argument.integer("hours", "command.abuseprotection.donorlimit.hours.description")
                                           .min(1)
-                                          .max(ChronoUnit.WEEKS.getDuration().toMinutes())))
+                                          .max(ChronoUnit.WEEKS.getDuration().toHours())))
                 .subCommand(SubCommand.of("receiverlimit", "command.abuseprotection.receiverlimit.description")
                         .handler(new ReceiverLimit(guilds))
                         .argument(Argument.integer("limit", "command.abuseprotection.receiverlimit.limit.description")
@@ -67,7 +67,7 @@ public class AbuseProtection extends SlashCommand {
                                           .max(100_000))
                         .argument(Argument.integer("hours", "command.abuseprotection.receiverlimit.hours.description")
                                           .min(1)
-                                          .max(ChronoUnit.WEEKS.getDuration().toMinutes())))
+                                          .max(ChronoUnit.WEEKS.getDuration().toHours())))
         );
     }
 }
