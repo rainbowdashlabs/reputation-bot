@@ -15,6 +15,8 @@ import de.chojo.repbot.commands.abuseprotection.handler.ReceiverContext;
 import de.chojo.repbot.commands.abuseprotection.handler.ReceiverLimit;
 import de.chojo.repbot.dao.provider.Guilds;
 
+import java.time.temporal.ChronoUnit;
+
 public class AbuseProtection extends SlashCommand {
     public AbuseProtection(Guilds guilds) {
         super(Slash.of("abuseprotection", "command.abuseprotection.description")
@@ -26,7 +28,7 @@ public class AbuseProtection extends SlashCommand {
                         .handler(new MaxMessageAge(guilds))
                         .argument(Argument.integer("minutes", "command.abuseprotection.maxmessageage.minutes.description")
                                           .min(0)
-                                          .max(10_080)))
+                                          .max(ChronoUnit.WEEKS.getDuration().toMinutes())))
                 .subCommand(SubCommand.of("maxmessagereputation", "command.abuseprotection.maxmessagereputation.description")
                         .handler(new MaxMessageReputation(guilds))
                         .argument(Argument.integer("amount", "command.abuseprotection.maxmessagereputation.amount.description")
@@ -43,7 +45,7 @@ public class AbuseProtection extends SlashCommand {
                         .handler(new Cooldown(guilds))
                         .argument(Argument.integer("minutes", "command.abuseprotection.cooldown.minutes.description")
                                           .min(0)
-                                          .max(10_080)))
+                                          .max(ChronoUnit.WEEKS.getDuration().toMinutes())))
                 .subCommand(SubCommand.of("donorcontext", "command.abuseprotection.donorcontext.description")
                         .handler(new DonorContext(guilds))
                         .argument(Argument.bool("state", "command.abuseprotection.donorcontext.state.description")))
@@ -57,8 +59,7 @@ public class AbuseProtection extends SlashCommand {
                                           .max(100_000))
                         .argument(Argument.integer("hours", "command.abuseprotection.donorlimit.hours.description")
                                           .min(1)
-                                          // 1 Week
-                                          .max(168)))
+                                          .max(ChronoUnit.WEEKS.getDuration().toMinutes())))
                 .subCommand(SubCommand.of("receiverlimit", "command.abuseprotection.receiverlimit.description")
                         .handler(new ReceiverLimit(guilds))
                         .argument(Argument.integer("limit", "command.abuseprotection.receiverlimit.limit.description")
@@ -66,8 +67,7 @@ public class AbuseProtection extends SlashCommand {
                                           .max(100_000))
                         .argument(Argument.integer("hours", "command.abuseprotection.receiverlimit.hours.description")
                                           .min(1)
-                                          // 1 Week
-                                          .max(168)))
+                                          .max(ChronoUnit.WEEKS.getDuration().toMinutes())))
         );
     }
 }
