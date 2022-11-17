@@ -8,6 +8,10 @@ import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.channel.Channel;
+import net.dv8tion.jda.api.entities.channel.concrete.Category;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.utils.TimeFormat;
 
@@ -16,6 +20,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
@@ -80,13 +85,35 @@ public class Debug implements SlashHandler {
 
         var thanks = settings.thanking();
 
+        List<? extends GuildChannel> channels;
+        List<Category> categories;
+
+        if (thanks.channels().isWhitelist()) {
+            channels = thanks.channels().channels();
+            categories = thanks.channels().categories();
+        } else {
+            channels = guild.getChannels().stream()
+                            .filter(c -> c instanceof GuildMessageChannel)
+                            .filter(c -> thanks.channels().isEnabled((GuildMessageChannel) c))
+                            .toList();
+            categories = guild.getCategories().stream()
+                              .filter(category -> thanks.channels().isEnabledByCategory(category))
+                              .toList();
+        }
+
+        var channelNames = channels.stream().map(Channel::getName).limit(25).collect(Collectors.joining(", "));
+        var categoryNames = categories.stream().map(Category::getName).limit(25).collect(Collectors.joining(", "));
+
         embeds.add(new EmbedBuilder()
                 .setTitle("Thank settings")
                 .addField("Donor Roles", thanks.donorRoles().prettyString(), true)
                 .addField("Receiver Roles", thanks.receiverRoles().prettyString(), true)
                 .addBlankField(false)
-                .addField("Channel count", String.valueOf(thanks.channels().channels().size()), true)
-                .addField("Category Count", String.valueOf(thanks.channels().categories().size()), true)
+                .addField("Channel count", String.valueOf(channels.size()), true)
+                .addField("Category Count", String.valueOf(categories.size()), true)
+                .addField("Channel", channelNames, true)
+                .addField("Categories", categoryNames, true)
+                .addField("List Type", thanks.channels().isWhitelist() ? "whitelist" : "blacklist", true)
                 .addField("Thankwords", thanks.thankwords().prettyString(), false)
                 .addField("Main Reaction", thanks.reactions().reactionMention().orElse("None"), true)
                 .addField("Additional Reactions", String.join(" ", thanks.reactions()
