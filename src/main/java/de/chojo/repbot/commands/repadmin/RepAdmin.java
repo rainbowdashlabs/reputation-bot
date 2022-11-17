@@ -55,7 +55,7 @@ public class RepAdmin extends SlashCommand {
                                 .argument(Argument.integer("year", "command.repadmin.resetdate.set.year.description")
                                                   .asRequired()
                                                   .min(2016)
-                                                  .max(LocalDate.now().getYear()))
+                                                  .max(LocalDate.now().getYear() + 1))
                                 .argument(Argument.integer("month", "command.repadmin.resetdate.set.month.description")
                                                   .asRequired()
                                                   .min(1)
