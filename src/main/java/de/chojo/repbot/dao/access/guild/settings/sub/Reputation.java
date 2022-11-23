@@ -70,6 +70,10 @@ public class Reputation extends QueryFactory implements GuildHolder {
         return skipSingleEmbed;
     }
 
+    public boolean isDirectActive(){
+        return skipSingleEmbed;
+    }
+
     public boolean embedActive(boolean embedActive) {
         var result = set("embed_active", stmt -> stmt.setBoolean(embedActive));
         if (result) {

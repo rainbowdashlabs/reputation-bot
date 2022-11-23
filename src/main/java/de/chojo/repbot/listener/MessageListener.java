@@ -104,13 +104,13 @@ public class MessageListener extends ListenerAdapter {
 
         var analyzer = repGuild.reputation().analyzer();
 
-        if (!thank.channels().isEnabled(event.getGuildChannel())){
+        if (!thank.channels().isEnabled(event.getGuildChannel())) {
             analyzer.log(message, SubmitResult.of(SubmitResultType.CHANNEL_INACTIVE));
             return;
         }
         repBotCachePolicy.seen(event.getMember());
 
-        if (!thank.donorRoles().hasRole(event.getMember())){
+        if (!thank.donorRoles().hasRole(event.getMember())) {
             analyzer.log(message, SubmitResult.of(SubmitResultType.NO_DONOR_ROLE, Replacement.createMention(event.getMember())));
             return;
         }
@@ -144,11 +144,11 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        if (result.isEmpty() && settings.reputation().isEmbedActive()) {
+        if (result.isEmpty() && (settings.reputation().isEmbedActive() || settings.reputation().isSkipSingleEmbed())) {
             resolveNoTarget(message, settings);
             return;
         }
-        if (result.isEmpty()){
+        if (result.isEmpty()) {
             analyzer.log(message, SubmitResult.of(SubmitResultType.NO_TARGETS));
             return;
         }
@@ -183,7 +183,8 @@ public class MessageListener extends ListenerAdapter {
         recentMembers.remove(message.getMember());
 
         if (recentMembers.isEmpty()) {
-            settings.repGuild().reputation().analyzer().log(message, SubmitResult.of(SubmitResultType.NO_RECENT_MEMBERS));
+            settings.repGuild().reputation().analyzer()
+                    .log(message, SubmitResult.of(SubmitResultType.NO_RECENT_MEMBERS));
             log.trace("No recent members for {}", message.getIdLong());
             if (settings.general().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.EMPTY_CONTEXT);
             return;
@@ -208,7 +209,9 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        settings.repGuild().reputation().analyzer().log(message, SubmitResult.of(SubmitResultType.EMBED_SEND));
-        reputationVoteListener.registerVote(message, members, settings);
+        if (settings.reputation().isEmbedActive()) {
+            settings.repGuild().reputation().analyzer().log(message, SubmitResult.of(SubmitResultType.EMBED_SEND));
+            reputationVoteListener.registerVote(message, members, settings);
+        }
     }
 }
