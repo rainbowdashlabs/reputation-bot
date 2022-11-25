@@ -36,6 +36,8 @@ public class Roles implements SlashProvider<Slash> {
                         .handler(new Add(refresh, guilds))
                         .argument(Argument.role("role", "command.roles.add.role.description").asRequired())
                         .argument(Argument.integer("reputation", "command.roles.add.reputation.description")
+                                          .min(0)
+                                          .max(1_000_000)
                                           .asRequired()))
                 .subCommand(SubCommand.of("remove", "command.roles.remove.description")
                         .handler(new Remove(refresh, guilds))
