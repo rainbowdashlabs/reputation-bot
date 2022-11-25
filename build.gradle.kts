@@ -20,7 +20,7 @@ dependencies {
     }
 
     // database
-    implementation("org.postgresql", "postgresql", "42.5.0")
+    implementation("org.postgresql", "postgresql", "42.5.1")
     implementation("de.chojo.sadu", "sadu-queries", "1.2.0")
     implementation("de.chojo.sadu", "sadu-updater", "1.2.0")
     implementation("de.chojo.sadu", "sadu-postgresql", "1.2.0")
