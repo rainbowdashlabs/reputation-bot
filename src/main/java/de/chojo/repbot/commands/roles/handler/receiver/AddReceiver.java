@@ -1,4 +1,4 @@
-package de.chojo.repbot.commands.roles.handler;
+package de.chojo.repbot.commands.roles.handler.receiver;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.Replacement;
@@ -19,7 +19,7 @@ public class AddReceiver implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var role = event.getOption("role").getAsRole();
         guilds.guild(event.getGuild()).settings().thanking().receiverRoles().add(role);
-        event.reply(context.localize("command.roles.addreceiver.message.add",
+        event.reply(context.localize("command.roles.receiver.add.message.add",
                 Replacement.createMention(role))).mention(Collections.emptyList()).queue();
     }
 }
