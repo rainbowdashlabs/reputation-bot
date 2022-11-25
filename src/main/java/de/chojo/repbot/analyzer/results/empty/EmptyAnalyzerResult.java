@@ -1,7 +1,7 @@
 package de.chojo.repbot.analyzer.results.empty;
 
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
-import de.chojo.repbot.analyzer.results.Result;
+import de.chojo.repbot.analyzer.results.AnalyzerResult;
 import de.chojo.repbot.analyzer.results.ResultType;
 import de.chojo.repbot.dao.snapshots.analyzer.ResultSnapshot;
 import de.chojo.repbot.dao.snapshots.ResultEntry;
@@ -10,7 +10,7 @@ import net.dv8tion.jda.api.entities.Guild;
 
 import javax.annotation.Nullable;
 
-public record EmptyResult(@Nullable String match, EmptyResultReason reason) implements Result, ResultSnapshot {
+public record EmptyAnalyzerResult(@Nullable String match, EmptyResultReason reason) implements AnalyzerResult, ResultSnapshot {
 
     @Override
     public ResultType resultType() {

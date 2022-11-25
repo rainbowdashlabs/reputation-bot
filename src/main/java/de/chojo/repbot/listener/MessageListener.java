@@ -1,6 +1,7 @@
 package de.chojo.repbot.listener;
 
 import de.chojo.jdautil.localization.ILocalizer;
+import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.analyzer.results.empty.EmptyResultReason;
@@ -11,7 +12,9 @@ import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;
 import de.chojo.repbot.service.RepBotCachePolicy;
-import de.chojo.repbot.service.ReputationService;
+import de.chojo.repbot.service.reputation.ReputationService;
+import de.chojo.repbot.service.reputation.SubmitResult;
+import de.chojo.repbot.service.reputation.SubmitResultType;
 import de.chojo.repbot.util.EmojiDebug;
 import de.chojo.repbot.util.Messages;
 import de.chojo.repbot.util.PermissionErrorHandler;
@@ -94,17 +97,23 @@ public class MessageListener extends ListenerAdapter {
         var settings = repGuild.settings();
         var thank = settings.thanking();
 
-        if (event.getMessage().getType() != MessageType.DEFAULT && event.getMessage()
-                                                                        .getType() != MessageType.INLINE_REPLY) {
+        var message = event.getMessage();
+        if (message.getType() != MessageType.DEFAULT && message.getType() != MessageType.INLINE_REPLY) {
             return;
         }
 
-        if (!thank.channels().isEnabled(event.getGuildChannel())) return;
+        var analyzer = repGuild.reputation().analyzer();
+
+        if (!thank.channels().isEnabled(event.getGuildChannel())){
+            analyzer.log(message, SubmitResult.of(SubmitResultType.CHANNEL_INACTIVE));
+            return;
+        }
         repBotCachePolicy.seen(event.getMember());
 
-        if (!thank.donorRoles().hasRole(event.getMember())) return;
-
-        var message = event.getMessage();
+        if (!thank.donorRoles().hasRole(event.getMember())){
+            analyzer.log(message, SubmitResult.of(SubmitResultType.NO_DONOR_ROLE, Replacement.createMention(event.getMember())));
+            return;
+        }
 
         var result = messageAnalyzer.processMessage(thank.thankwords()
                                                          .thankwordPattern(), message, settings, true, settings.abuseProtection()
@@ -121,15 +130,16 @@ public class MessageListener extends ListenerAdapter {
         }
 
         if (settings.general().isEmojiDebug()) {
-            Messages.markMessage(event.getMessage(), EmojiDebug.FOUND_THANKWORD);
+            Messages.markMessage(message, EmojiDebug.FOUND_THANKWORD);
         }
 
-        log.trace("Found thankword in {}", event.getMessage().getIdLong());
+        log.trace("Found thankword in {}", message.getIdLong());
 
         if (settings.abuseProtection().isDonorLimit(event.getMember())) {
-            log.trace("Donor reached limit on {}", event.getMessage().getIdLong());
+            analyzer.log(message, SubmitResult.of(SubmitResultType.DONOR_LIMIT));
+            log.trace("Donor reached limit on {}", message.getIdLong());
             if (settings.general().isEmojiDebug()) {
-                Messages.markMessage(event.getMessage(), EmojiDebug.DONOR_LIMIT);
+                Messages.markMessage(message, EmojiDebug.DONOR_LIMIT);
             }
             return;
         }
@@ -138,7 +148,10 @@ public class MessageListener extends ListenerAdapter {
             resolveNoTarget(message, settings);
             return;
         }
-        if (result.isEmpty()) return;
+        if (result.isEmpty()){
+            analyzer.log(message, SubmitResult.of(SubmitResultType.NO_TARGETS));
+            return;
+        }
 
         var match = result.asMatch();
         var resultType = match.thankType();
@@ -170,18 +183,20 @@ public class MessageListener extends ListenerAdapter {
         recentMembers.remove(message.getMember());
 
         if (recentMembers.isEmpty()) {
+            settings.repGuild().reputation().analyzer().log(message, SubmitResult.of(SubmitResultType.NO_RECENT_MEMBERS));
             log.trace("No recent members for {}", message.getIdLong());
             if (settings.general().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.EMPTY_CONTEXT);
             return;
         }
 
         var members = recentMembers.stream()
-                                   .filter(receiver -> reputationService.canVote(message.getMember(), receiver, message.getGuild(), settings))
+                                   .filter(receiver -> reputationService.canVote(message, message.getMember(), receiver, message.getGuild(), settings))
                                    .filter(receiver -> !settings.abuseProtection().isReceiverLimit(receiver))
                                    .limit(10)
                                    .collect(Collectors.toList());
 
         if (members.isEmpty()) {
+            settings.repGuild().reputation().analyzer().log(message, SubmitResult.of(SubmitResultType.ALL_COOLDOWN));
             log.trace("None of the recent members can receive reputation {}", message.getIdLong());
             if (settings.general().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.ONLY_COOLDOWN);
             return;
@@ -193,6 +208,7 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
+        settings.repGuild().reputation().analyzer().log(message, SubmitResult.of(SubmitResultType.EMBED_SEND));
         reputationVoteListener.registerVote(message, members, settings);
     }
 }

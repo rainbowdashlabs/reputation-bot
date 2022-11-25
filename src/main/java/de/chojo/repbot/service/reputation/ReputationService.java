@@ -1,4 +1,4 @@
-package de.chojo.repbot.service;
+package de.chojo.repbot.service.reputation;
 
 import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.util.Replacement;
@@ -10,6 +10,7 @@ import de.chojo.repbot.config.elements.MagicImage;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.access.guild.settings.sub.Reputation;
 import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.service.RoleAssigner;
 import de.chojo.repbot.util.EmojiDebug;
 import de.chojo.repbot.util.Messages;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -62,6 +63,7 @@ public class ReputationService {
      * @return true if the reputation was counted and is valid
      */
     public boolean submitReputation(Guild guild, Member donor, Member receiver, Message message, @Nullable Message refMessage, ThankType type) {
+        var repGuild = guilds.guild(guild);
         log.trace("Submitting reputation for message {} of type {}", message.getIdLong(), type);
         // block bots
         if (receiver.getUser().isBot()) {
@@ -69,34 +71,32 @@ public class ReputationService {
             return false;
         }
 
-        var settings = guilds.guild(guild).settings();
+        var settings = repGuild.settings();
         var messageSettings = settings.reputation();
         var thankSettings = settings.thanking();
+        var analyzer = repGuild.reputation().analyzer();
+
+        analyzer.log(message, SubmitResult.of(SubmitResultType.SUBMITTING,
+                Replacement.create("type", "$%s$".formatted(type.nameLocaleKey())),
+                Replacement.createMention(donor)));
 
         // block non reputation channel
         if (!thankSettings.channels().isEnabled(message.getGuildChannel())) {
+            analyzer.log(message, SubmitResult.of(SubmitResultType.CHANNEL_INACTIVE));
             log.trace("Channel of message {} is not enabled", message.getIdLong());
             return false;
         }
 
-        if (!thankSettings.donorRoles().hasRole(donor)) {
-            log.trace("Donor role is missing for message {}", message.getIdLong());
-            return false;
-        }
-
-        if (!thankSettings.receiverRoles().hasRole(receiver)) {
-            log.trace("Receiver role is missing for message {}", message.getIdLong());
-            return false;
-        }
-
         if (isTypeDisabled(type, messageSettings)) {
+            analyzer.log(message, SubmitResult.of(SubmitResultType.THANK_TYPE_DISABLED, Replacement.create("thanktype", "$%s$".formatted(type.nameLocaleKey()))));
             log.trace("Thank type {} for message {} is disabled", type, message.getIdLong());
             return false;
         }
 
-        var context = getContext(guild, donor, message, type, settings);
+        var context = getContext(donor, message, type, settings);
 
         if (isSelfVote(donor, receiver, message)) {
+            analyzer.log(message, SubmitResult.of(SubmitResultType.SELF_VOTE));
             log.trace("Detected self vote on {}", message.getIdLong());
             return false;
         }
@@ -106,7 +106,7 @@ public class ReputationService {
         return log(guild, donor, receiver, message, refMessage, type, settings);
     }
 
-    private MessageContext getContext(Guild guild, Member donor, Message message, ThankType type, Settings settings) {
+    private MessageContext getContext(Member donor, Message message, ThankType type, Settings settings) {
         MessageContext context;
         if (type == ThankType.REACTION) {
             // Check if user was recently seen in this channel.
@@ -118,12 +118,15 @@ public class ReputationService {
     }
 
     private boolean assertAbuseProtection(Guild guild, Member donor, Member receiver, Message message, @Nullable Message refMessage, MessageContext context) {
-        var settings = guilds.guild(guild).settings();
+        var repGuild = guilds.guild(guild);
+        var analyzer = repGuild.reputation().analyzer();
+        var settings = repGuild.settings();
         var addEmoji = settings.general().isEmojiDebug();
         var abuseSettings = settings.abuseProtection();
 
         // Abuse Protection: target context
         if (!context.members().contains(receiver) && abuseSettings.isReceiverContext()) {
+            analyzer.log(message, SubmitResult.of(SubmitResultType.TARGET_NOT_IN_CONTEXT, Replacement.createMention(receiver)));
             log.trace("Receiver is not in context of {}", message.getIdLong());
             if (addEmoji) Messages.markMessage(message, EmojiDebug.TARGET_NOT_IN_CONTEXT);
             return true;
@@ -132,13 +135,13 @@ public class ReputationService {
         // Abuse Protection: donor context
         if (!context.members().contains(donor) && abuseSettings.isDonorContext()) {
             log.trace("Donor is not in context of {}", message.getIdLong());
-            log.trace("Donor is not in context");
+            analyzer.log(message, SubmitResult.of(SubmitResultType.DONOR_NOT_IN_CONTEXT, Replacement.createMention(donor)));
             if (addEmoji) Messages.markMessage(message, EmojiDebug.DONOR_NOT_IN_CONTEXT);
             return true;
         }
 
         // Abuse protection: Cooldown
-        if (!canVote(donor, receiver, guild, settings)) {
+        if (!canVote(message, donor, receiver, guild, settings)) {
             log.trace("Cooldown active on {}", message.getIdLong());
             if (addEmoji) Messages.markMessage(message, EmojiDebug.ONLY_COOLDOWN);
             return true;
@@ -150,6 +153,7 @@ public class ReputationService {
             if (abuseSettings.isOldMessage(refMessage) && !context.latestMessages(abuseSettings.minMessages())
                                                                   .contains(refMessage)) {
                 log.trace("Reference message of {} is outdated", message.getIdLong());
+                analyzer.log(message, SubmitResult.of(SubmitResultType.OUTDATED_REFERENCE_MESSAGE));
                 if (addEmoji) Messages.markMessage(message, EmojiDebug.TOO_OLD);
                 return true;
             }
@@ -159,19 +163,22 @@ public class ReputationService {
         // Abuse protection: Message age
         if (abuseSettings.isOldMessage(message)) {
             log.trace("Message of {} is outdated", message.getIdLong());
+            analyzer.log(message, SubmitResult.of(SubmitResultType.OUTDATED_MESSAGE));
             if (addEmoji) Messages.markMessage(message, EmojiDebug.TOO_OLD);
             return true;
         }
 
 
         if (abuseSettings.isReceiverLimit(receiver)) {
-            log.trace("Receiver limit is reached active on {}", message.getIdLong());
+            log.trace("Receiver limit is reached on {}", message.getIdLong());
+            analyzer.log(message, SubmitResult.of(SubmitResultType.RECEIVER_LIMIT));
             if (addEmoji) Messages.markMessage(message, EmojiDebug.RECEIVER_LIMIT);
             return true;
         }
 
         if (abuseSettings.isDonorLimit(donor)) {
-            log.trace("Donor limit is reached active on {}", message.getIdLong());
+            log.trace("Donor limit is reached on {}", message.getIdLong());
+            analyzer.log(message, SubmitResult.of(SubmitResultType.DONOR_LIMIT));
             if (addEmoji) Messages.markMessage(message, EmojiDebug.DONOR_LIMIT);
             return true;
         }
@@ -201,9 +208,11 @@ public class ReputationService {
     }
 
     private boolean log(Guild guild, Member donor, Member receiver, Message message, @Nullable Message refMessage, ThankType type, Settings settings) {
+        var repGuild = guilds.guild(guild);
         // try to log reputation
-        if (!guilds.guild(guild).reputation().user(receiver)
-                   .addReputation(donor, message, refMessage, type)) {// submit to database failed. Maybe this message was already voted by the user.
+        if (!repGuild.reputation().user(receiver)
+                     .addReputation(donor, message, refMessage, type)) {// submit to database failed. Maybe this message was already voted by the user.
+            repGuild.reputation().analyzer().log(message, SubmitResult.of(SubmitResultType.ALREADY_PRESENT));
             log.trace("Could not log reputation for message {}. An equal entry was already present.", message.getIdLong());
             return false;
         }
@@ -216,7 +225,7 @@ public class ReputationService {
 
         // Send level up message
         newRank.ifPresent(rank -> {
-            var announcements = guilds.guild(guild).settings().announcements();
+            var announcements = repGuild.settings().announcements();
             if (!announcements.isActive()) return;
             var channel = message.getChannel().asGuildMessageChannel();
             if (!announcements.isSameChannel()) {
@@ -257,20 +266,25 @@ public class ReputationService {
         return false;
     }
 
-    public boolean canVote(Member donor, Member receiver, Guild guild, Settings settings) {
+    public boolean canVote(Message message, Member donor, Member receiver, Guild guild, Settings settings) {
+        var repGuild = settings.repGuild();
+        var analyzer = repGuild.reputation().analyzer();
         // block cooldown
         var lastRated = guilds.guild(guild).reputation().user(donor).getLastRatedDuration(receiver);
         if (lastRated.toMinutes() < settings.abuseProtection().cooldown()) {
+            analyzer.log(message, SubmitResult.of(SubmitResultType.COOLDOWN_ACTIVE, Replacement.createMention(receiver)));
             log.trace("The last rating is too recent. {}/{}", lastRated.toMinutes(),
                     settings.abuseProtection().cooldown());
             return false;
         }
 
         if (!settings.thanking().receiverRoles().hasRole(receiver)) {
+            analyzer.log(message, SubmitResult.of(SubmitResultType.NO_RECEIVER_ROLE, Replacement.createMention(receiver)));
             log.trace("The receiver does not have a receiver role.");
             return false;
         }
         if (!settings.thanking().donorRoles().hasRole(donor)) {
+            analyzer.log(message, SubmitResult.of(SubmitResultType.NO_DONOR_ROLE, Replacement.createMention(donor)));
             log.trace("The donor does not have a donor role.");
             return false;
         }
