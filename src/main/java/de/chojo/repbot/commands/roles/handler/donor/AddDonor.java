@@ -1,4 +1,4 @@
-package de.chojo.repbot.commands.roles.handler;
+package de.chojo.repbot.commands.roles.handler.donor;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.Replacement;
@@ -19,7 +19,7 @@ public class AddDonor implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var role = event.getOption("role").getAsRole();
         guilds.guild(event.getGuild()).settings().thanking().donorRoles().add(role);
-        event.reply(context.localize("command.roles.adddonor.message.add",
+        event.reply(context.localize("command.roles.donor.add.message.add",
                 Replacement.createMention(role))).mention(Collections.emptyList()).queue();
     }
 }
