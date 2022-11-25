@@ -111,7 +111,6 @@ public class Analyzer extends QueryFactory implements GuildHolder {
 
         if(submitResults.isEmpty() && resultEntry.isEmpty()) return Optional.empty();
 
-
         return Optional.of(new AnalyzerTrace(resultEntry.orElse(null), submitResults));
     }
 
