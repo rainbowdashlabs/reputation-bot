@@ -9,12 +9,12 @@ import net.dv8tion.jda.api.entities.Member;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FuzzyResult extends MatchResult {
+public class FuzzyAnalyzerResult extends MatchAnalyzerResult {
     private final List<String> thankwords;
     private final List<MemberMatch> memberMatches;
     private final List<WeightedEntry<Member>> weightedReceiver;
 
-    public FuzzyResult(String match, List<String> thankwords, List<MemberMatch> memberMatches, Member donor, List<WeightedEntry<Member>> weightedReceiver) {
+    public FuzzyAnalyzerResult(String match, List<String> thankwords, List<MemberMatch> memberMatches, Member donor, List<WeightedEntry<Member>> weightedReceiver) {
         super(ThankType.FUZZY, donor, match);
         this.thankwords = thankwords;
         this.memberMatches = memberMatches;

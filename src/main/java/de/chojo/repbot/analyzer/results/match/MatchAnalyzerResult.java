@@ -1,19 +1,19 @@
 package de.chojo.repbot.analyzer.results.match;
 
-import de.chojo.repbot.analyzer.results.Result;
+import de.chojo.repbot.analyzer.results.AnalyzerResult;
 import de.chojo.repbot.analyzer.results.ResultType;
 import net.dv8tion.jda.api.entities.Member;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public abstract class MatchResult implements Result {
+public abstract class MatchAnalyzerResult implements AnalyzerResult {
     private final ThankType thankType;
     private final Member donor;
     private final long donorId;
     private final String match;
 
-    public MatchResult(ThankType thankType, Member donor, String match) {
+    public MatchAnalyzerResult(ThankType thankType, Member donor, String match) {
         this.thankType = thankType;
         this.donor = donor;
         donorId = donor.getIdLong();
@@ -39,16 +39,16 @@ public abstract class MatchResult implements Result {
         return thankType;
     }
 
-    public AnswerResult asAnswer() {
-        return (AnswerResult) this;
+    public AnswerAnalyzerResult asAnswer() {
+        return (AnswerAnalyzerResult) this;
     }
 
-    public DirectResult asMention() {
-        return (DirectResult) this;
+    public DirectAnalyzerResult asMention() {
+        return (DirectAnalyzerResult) this;
     }
 
-    public FuzzyResult asFuzzy() {
-        return (FuzzyResult) this;
+    public FuzzyAnalyzerResult asFuzzy() {
+        return (FuzzyAnalyzerResult) this;
     }
 
     @Override

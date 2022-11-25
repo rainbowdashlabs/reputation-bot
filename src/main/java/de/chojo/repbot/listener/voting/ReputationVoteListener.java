@@ -8,7 +8,7 @@ import de.chojo.repbot.analyzer.results.match.ThankType;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.provider.Guilds;
-import de.chojo.repbot.service.ReputationService;
+import de.chojo.repbot.service.reputation.ReputationService;
 import de.chojo.repbot.util.EmojiDebug;
 import de.chojo.repbot.util.Messages;
 import de.chojo.repbot.util.PermissionErrorHandler;

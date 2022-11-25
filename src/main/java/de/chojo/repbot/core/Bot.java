@@ -36,7 +36,7 @@ import de.chojo.repbot.service.GdprService;
 import de.chojo.repbot.service.MetricService;
 import de.chojo.repbot.service.PresenceService;
 import de.chojo.repbot.service.RepBotCachePolicy;
-import de.chojo.repbot.service.ReputationService;
+import de.chojo.repbot.service.reputation.ReputationService;
 import de.chojo.repbot.service.RoleAssigner;
 import de.chojo.repbot.service.RoleUpdater;
 import de.chojo.repbot.service.SelfCleanupService;
