@@ -144,7 +144,7 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        if (result.isEmpty() && (settings.reputation().isEmbedActive() || settings.reputation().isSkipSingleEmbed())) {
+        if (result.isEmpty() && (settings.reputation().isEmbedActive() || settings.reputation().isDirectActive())) {
             resolveNoTarget(message, settings);
             return;
         }
@@ -203,7 +203,7 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        if (members.size() == 1 && settings.reputation().isSkipSingleEmbed()) {
+        if (members.size() == 1 && settings.reputation().isDirectActive()) {
             log.trace("Found single target on {}. Skipping embed", message.getIdLong());
             reputationService.submitReputation(message.getGuild(), message.getMember(), members.get(0), message, null, ThankType.DIRECT);
             return;

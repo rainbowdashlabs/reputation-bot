@@ -37,7 +37,7 @@ public class Info implements SlashHandler {
                 .addOption("command.repsettings.info.message.option.byfuzzy.name", "fuzzy", "command.repsettings.info.message.option.byfuzzy.description")
                 .addOption("command.repsettings.info.message.option.byembed.name", "embed", "command.repsettings.info.message.option.byembed.description")
                 .addOption("command.repsettings.info.message.option.emojidebug.name", "emojidebug", "command.repsettings.info.message.option.emojidebug.description")
-                .addOption("command.repsettings.info.message.option.skipsingleembed.name", "directembed", "command.repsettings.info.message.option.skipsingleembed.description")
+                .addOption("command.repsettings.info.message.option.skipsingletarget.name", "directembed", "command.repsettings.info.message.option.skipsingletarget.description")
                 .addOption("command.repsettings.info.message.option.reputationmode.name", "reputationmode", "command.repsettings.info.message.option.reputationmode.description")
                 .build();
         var reactions = getMenu("reactions",
@@ -71,10 +71,10 @@ public class Info implements SlashHandler {
                 "command.repsettings.emojidebug.message.false",
                 guildSettings.general().isEmojiDebug());
         var skipSingleEmbed = getMenu("directembed",
-                "command.repsettings.info.message.option.skipsingleembed.description",
+                "command.repsettings.info.message.option.skipsingletarget.description",
                 "command.repsettings.info.message.skipsingleembed.true",
                 "command.repsettings.info.message.skipsingleembed.false",
-                guildSettings.reputation().isSkipSingleEmbed());
+                guildSettings.reputation().isDirectActive());
         var reputationMode = StringSelectMenu.create("reputationmode")
                 .setPlaceholder("command.repsettings.info.message.option.reputationmode.description")
                 .setRequiredRange(1, 1)
@@ -115,7 +115,7 @@ public class Info implements SlashHandler {
                                                                                                                       .emojiDebug(res), context, guildSettings))
                                                .hidden())
                                        .addComponent(MenuEntry.of(skipSingleEmbed, ctx -> refresh(ctx, res -> guildSettings.reputation()
-                                                                                                                           .skipSingleEmbed(res), context, guildSettings))
+                                                                                                                           .directActive(res), context, guildSettings))
                                                .hidden())
                                        .addComponent(MenuEntry.of(reputationMode, ctx -> {
                                            var value = ctx.event().getValues().get(0);

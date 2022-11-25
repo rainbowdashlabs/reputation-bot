@@ -19,13 +19,13 @@ public class Reputation extends QueryFactory implements GuildHolder {
     private boolean mentionActive;
     private boolean fuzzyActive;
     private boolean embedActive;
-    private boolean skipSingleEmbed;
+    private boolean directActive;
 
     public Reputation(Settings settings) {
         this(settings, true, true, true, true, true, false);
     }
 
-    public Reputation(Settings settings, boolean reactionActive, boolean answerActive, boolean mentionActive, boolean fuzzyActive, boolean embedActive, boolean skipSingleEmbed) {
+    public Reputation(Settings settings, boolean reactionActive, boolean answerActive, boolean mentionActive, boolean fuzzyActive, boolean embedActive, boolean directActive) {
         super(settings);
         this.settings = settings;
         this.reactionActive = reactionActive;
@@ -33,7 +33,7 @@ public class Reputation extends QueryFactory implements GuildHolder {
         this.mentionActive = mentionActive;
         this.fuzzyActive = fuzzyActive;
         this.embedActive = embedActive;
-        this.skipSingleEmbed = skipSingleEmbed;
+        this.directActive = directActive;
     }
 
     public static Reputation build(Settings settings, Row rs) throws SQLException {
@@ -66,12 +66,8 @@ public class Reputation extends QueryFactory implements GuildHolder {
         return embedActive;
     }
 
-    public boolean isSkipSingleEmbed() {
-        return skipSingleEmbed;
-    }
-
     public boolean isDirectActive(){
-        return skipSingleEmbed;
+        return directActive;
     }
 
     public boolean embedActive(boolean embedActive) {
@@ -114,12 +110,12 @@ public class Reputation extends QueryFactory implements GuildHolder {
         return this.fuzzyActive;
     }
 
-    public boolean skipSingleEmbed(boolean skipSingleEmbed) {
-        var result = set("skip_single_embed", stmt -> stmt.setBoolean(skipSingleEmbed));
+    public boolean directActive(boolean directActive) {
+        var result = set("skip_single_embed", stmt -> stmt.setBoolean(directActive));
         if (result) {
-            this.skipSingleEmbed = skipSingleEmbed;
+            this.directActive = directActive;
         }
-        return this.skipSingleEmbed;
+        return this.directActive;
     }
 
     public String toLocalizedString() {
@@ -131,8 +127,8 @@ public class Reputation extends QueryFactory implements GuildHolder {
                 getSetting("command.repsettings.info.message.option.byembed.name", isEmbedActive()),
                 getSetting("command.repsettings.info.message.option.emojidebug.name", settings.general()
                                                                                               .isEmojiDebug()),
-                getSetting("command.repsettings.info.message.option.skipsingleembed.name", settings.reputation()
-                                                                                                   .isSkipSingleEmbed()),
+                getSetting("command.repsettings.info.message.option.skipsingletarget.name", settings.reputation()
+                                                                                                    .isDirectActive()),
                 getSetting("command.repsettings.info.message.option.reputationmode.name", settings.general()
                                                                                                   .reputationMode()
                                                                                                   .localeCode())
@@ -182,7 +178,7 @@ public class Reputation extends QueryFactory implements GuildHolder {
                Fuzzy active: %s
                Embed active: %s
                Skip single embed: %s
-               """.formatted(reactionActive, answerActive, mentionActive, fuzzyActive, embedActive, skipSingleEmbed)
+               """.formatted(reactionActive, answerActive, mentionActive, fuzzyActive, embedActive, directActive)
                   .stripIndent();
     }
 }

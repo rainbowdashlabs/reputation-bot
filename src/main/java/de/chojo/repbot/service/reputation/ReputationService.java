@@ -259,7 +259,7 @@ public class ReputationService {
                 if (!reputation.isEmbedActive()) return true;
             }
             case DIRECT -> {
-                if (!reputation.isSkipSingleEmbed()) return true;
+                if (!reputation.isDirectActive()) return true;
             }
             default -> throw new IllegalStateException("Unexpected value: " + type);
         }
