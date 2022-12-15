@@ -1,4 +1,4 @@
-package de.chojo.repbot.commands.abuseprotection.handler;
+package de.chojo.repbot.commands.abuseprotection.handler.context;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.wrapper.EventContext;
@@ -6,10 +6,10 @@ import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.util.Text;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-public class ReceiverContext implements SlashHandler {
+public class DonorContext implements SlashHandler {
     private final Guilds guilds;
 
-    public ReceiverContext(Guilds guilds) {
+    public DonorContext(Guilds guilds) {
         this.guilds = guilds;
     }
 
@@ -18,15 +18,16 @@ public class ReceiverContext implements SlashHandler {
         var guild = guilds.guild(event.getGuild());
         var abuseSettings = guild.settings().abuseProtection();
         if (event.getOptions().isEmpty()) {
-            event.reply(Text.getBooleanMessage(context, abuseSettings.isReceiverContext(),
-                         "command.abuseprotection.receivercontext.message.true", "command.abuseprotection.receivercontext.message.false"))
+            event.reply(Text.getBooleanMessage(context, abuseSettings.isDonorContext(),
+                         "command.abuseprotection.context.donor.message.true", "command.abuseprotection.context.donor.message.false"))
                  .queue();
             return;
         }
         var state = event.getOption("state").getAsBoolean();
 
-        event.reply(Text.getBooleanMessage(context, abuseSettings.receiverContext(state),
-                     "command.abuseprotection.receivercontext.message.true", "command.abuseprotection.receivercontext.message.false"))
+        event.reply(Text.getBooleanMessage(context, abuseSettings.donorContext(state),
+                     "command.abuseprotection.context.donor.message.true", "command.abuseprotection.context.donor.message.false"))
              .queue();
+
     }
 }
