@@ -8,17 +8,17 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 
-public class AnswerResult extends DirectResult {
+public class AnswerAnalyzerResult extends DirectAnalyzerResult {
     private final Message referenceMessage;
     private final long referenceMessageId;
 
-    public AnswerResult(String match, Member donor, Member receiver, Message referenceMessage) {
+    public AnswerAnalyzerResult(String match, Member donor, Member receiver, Message referenceMessage) {
         super(match, ThankType.ANSWER, donor, Collections.singletonList(receiver));
         this.referenceMessage = referenceMessage;
         referenceMessageId = referenceMessage.getIdLong();
     }
 
-    public AnswerResult(String match, Member donor, Member receiver, long referenceMessageId) {
+    public AnswerAnalyzerResult(String match, Member donor, Member receiver, long referenceMessageId) {
         super(match, ThankType.ANSWER, donor, Collections.singletonList(receiver));
         referenceMessage = null;
         this.referenceMessageId = referenceMessageId;

@@ -1,4 +1,4 @@
-package de.chojo.repbot.commands.abuseprotection.handler;
+package de.chojo.repbot.commands.abuseprotection.handler.limit;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.Replacement;
@@ -18,13 +18,13 @@ public class Cooldown implements SlashHandler {
         var guild = guilds.guild(event.getGuild());
         var abuseSettings = guild.settings().abuseProtection();
         if (event.getOptions().isEmpty()) {
-            event.reply(context.localize("command.abuseprotection.cooldown.message.get",
+            event.reply(context.localize("command.abuseprotection.limit.cooldown.message.get",
                     Replacement.create("MINUTES", abuseSettings.cooldown()))).queue();
             return;
         }
         var cooldown = event.getOption("minutes").getAsLong();
 
-        event.reply(context.localize("command.abuseprotection.cooldown.message.set",
+        event.reply(context.localize("command.abuseprotection.limit.cooldown.message.set",
                 Replacement.create("MINUTES", abuseSettings.cooldown((int) cooldown)))).queue();
 
     }

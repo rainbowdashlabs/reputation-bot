@@ -1,4 +1,4 @@
-package de.chojo.repbot.commands.abuseprotection.handler;
+package de.chojo.repbot.commands.abuseprotection.handler.message;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.Replacement;
@@ -6,10 +6,10 @@ import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-public class MinMessages implements SlashHandler {
+public class MaxMessageReputation implements SlashHandler {
     private final Guilds guilds;
 
-    public MinMessages(Guilds guilds) {
+    public MaxMessageReputation(Guilds guilds) {
         this.guilds = guilds;
     }
 
@@ -18,14 +18,14 @@ public class MinMessages implements SlashHandler {
         var guild = guilds.guild(event.getGuild());
         var abuseSettings = guild.settings().abuseProtection();
         if (event.getOptions().isEmpty()) {
-            event.reply(context.localize("command.abuseprotection.minmessages.message.get",
-                    Replacement.create("AMOUNT", abuseSettings.minMessages()))).queue();
+            event.reply(context.localize("command.abuseprotection.message.reputation.message.get",
+                    Replacement.create("VALUE", abuseSettings.maxMessageReputation()))).queue();
             return;
         }
-        var minMessages = event.getOption("messages").getAsLong();
+        var maxRep = event.getOption("amount").getAsInt();
 
-        minMessages = Math.max(0, Math.min(minMessages, 100));
-        event.reply(context.localize("command.abuseprotection.minmessages.message.get",
-                Replacement.create("AMOUNT", abuseSettings.minMessages((int) minMessages)))).queue();
+        maxRep = Math.max(1, maxRep);
+        event.reply(context.localize("command.abuseprotection.message.reputation.message.get",
+                Replacement.create("VALUE", abuseSettings.maxMessageReputation(maxRep)))).queue();
     }
 }

@@ -6,7 +6,7 @@ import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
-import de.chojo.repbot.analyzer.results.match.MatchResult;
+import de.chojo.repbot.analyzer.results.match.MatchAnalyzerResult;
 import de.chojo.repbot.analyzer.results.match.ThankType;
 import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -44,7 +44,7 @@ public class Check implements SlashHandler {
         event.replyEmbeds(builder.build()).queue();
     }
 
-    private void processMessage(MatchResult result, LocalizedEmbedBuilder builder) {
+    private void processMessage(MatchAnalyzerResult result, LocalizedEmbedBuilder builder) {
         if (result.thankType() == ThankType.FUZZY) {
             for (var receiver : result.asFuzzy().weightedReceiver()) {
                 builder.addField("command.thankwords.check.message.fuzzy",

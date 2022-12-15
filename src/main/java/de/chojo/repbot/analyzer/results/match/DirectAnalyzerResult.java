@@ -6,9 +6,9 @@ import net.dv8tion.jda.api.entities.Member;
 
 import java.util.List;
 
-public class DirectResult extends MatchResult {
+public class DirectAnalyzerResult extends MatchAnalyzerResult {
     private final List<Member> receivers;
-    public DirectResult(String match, ThankType type, Member donor, List<Member> receivers) {
+    public DirectAnalyzerResult(String match, ThankType type, Member donor, List<Member> receivers) {
         super(type, donor, match);
         this.receivers = receivers;
     }

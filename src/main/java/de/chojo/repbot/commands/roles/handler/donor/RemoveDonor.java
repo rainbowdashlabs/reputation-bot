@@ -1,4 +1,4 @@
-package de.chojo.repbot.commands.roles.handler;
+package de.chojo.repbot.commands.roles.handler.donor;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.Replacement;
@@ -19,7 +19,7 @@ public class RemoveDonor implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var role = event.getOption("role").getAsRole();
         guilds.guild(event.getGuild()).settings().thanking().donorRoles().remove(role);
-        event.reply(context.localize("command.roles.removeronor.message.remove",
+        event.reply(context.localize("command.roles.donor.remove.message.remove",
                 Replacement.createMention(role))).mention(Collections.emptyList()).queue();
     }
 }

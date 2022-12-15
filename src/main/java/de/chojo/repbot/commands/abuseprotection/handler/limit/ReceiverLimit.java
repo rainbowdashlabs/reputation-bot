@@ -1,4 +1,4 @@
-package de.chojo.repbot.commands.abuseprotection.handler;
+package de.chojo.repbot.commands.abuseprotection.handler.limit;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.Replacement;
@@ -28,12 +28,12 @@ public class ReceiverLimit implements SlashHandler {
         }
 
         if (protection.maxReceived() == 0) {
-            event.reply(context.localize("command.abuseprotection.receiverlimit.message.disabled")).setEphemeral(true)
+            event.reply(context.localize("command.abuseprotection.limit.receiver.message.disabled")).setEphemeral(true)
                  .queue();
             return;
         }
 
-        event.reply(context.localize("command.abuseprotection.receiverlimit.message.set",
+        event.reply(context.localize("command.abuseprotection.limit.receiver.message.set",
                      Replacement.create("AMOUNT", protection.maxReceived()),
                      Replacement.create("HOURS", protection.maxReceivedHours())))
              .setEphemeral(true)
