@@ -31,11 +31,11 @@ public class Ranking extends QueryFactory implements GuildHolder {
     }
 
     private Integer getWeekRankingPageCount(int pageSize) {
-        return pages(pageSize, "user_reputation_7_days");
+        return pages(pageSize, "user_reputation_week");
     }
 
     private Integer getMonthRankingPageCount(int pageSize) {
-        return pages(pageSize, "user_reputation_30_days");
+        return pages(pageSize, "user_reputation_month");
     }
 
     private Integer pages(int pageSize, String table) {
