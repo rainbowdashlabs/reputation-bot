@@ -81,6 +81,8 @@ public class Info implements SlashHandler {
                 .addOption(ReputationMode.TOTAL.localeCode(), ReputationMode.TOTAL.name(), "command.repsettings.info.message.reputationMode.total")
                 .addOption(ReputationMode.ROLLING_MONTH.localeCode(), ReputationMode.ROLLING_MONTH.name(), "command.repsettings.info.message.reputationMode.rollingMonth")
                 .addOption(ReputationMode.ROLLING_WEEK.localeCode(), ReputationMode.ROLLING_WEEK.name(), "command.repsettings.info.message.reputationMode.rollingWeek")
+                .addOption(ReputationMode.WEEK.localeCode(), ReputationMode.WEEK.name(), "command.repsettings.info.message.reputationMode.week")
+                .addOption(ReputationMode.MONTH.localeCode(), ReputationMode.MONTH.name(), "command.repsettings.info.message.reputationMode.month")
                 .setDefaultValues(Collections.singletonList(guildSettings.general().reputationMode().name()))
                 .build();
 

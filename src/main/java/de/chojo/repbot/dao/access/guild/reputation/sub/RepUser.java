@@ -86,7 +86,7 @@ public class RepUser extends QueryFactory implements MemberHolder {
      * @return true if changed.
      */
     public boolean setReputation(long amount) {
-        var offset = amount - profile().rawReputation();
+        var offset = amount - profile().reputation();
         return builder()
                 .query("""
                        INSERT INTO reputation_offset(guild_id, user_id, amount) VALUES (?,?,?)
@@ -149,13 +149,14 @@ public class RepUser extends QueryFactory implements MemberHolder {
                            ON CONFLICT(guild_id, donor_id, receiver_id, message_id)
                                DO NOTHING;
                        """)
-                .parameter(stmt -> stmt.setLong(guildId()).setLong(donor == null ? 0 : donor.getIdLong())
+                .parameter(stmt -> stmt.setLong(guildId())
+                                       .setLong(donor == null ? 0 : donor.getIdLong())
                                        .setLong(userId())
                                        .setLong(message.getIdLong())
                                        .setLong(refMessage == null ? null : refMessage.getIdLong())
-                                       .setLong(message.getChannel().getIdLong()).setString(type.name())
-                                       .setTimestamp(Timestamp.from(message.getTimeCreated()
-                                                                           .toInstant())))
+                                       .setLong(message.getChannel().getIdLong())
+                                       .setString(type.name())
+                                       .setTimestamp(Timestamp.from(message.getTimeCreated().toInstant())))
                 .insert()
                 .sendSync()
                 .changed();
@@ -167,7 +168,7 @@ public class RepUser extends QueryFactory implements MemberHolder {
 
 
     /**
-     * Get the last time where the the user gave reputation to the user or received reputation from this user
+     * Get the last time the user gave reputation to the user or received reputation from this user
      *
      * @param other the other user
      * @return last timestamp as instant
@@ -187,8 +188,10 @@ public class RepUser extends QueryFactory implements MemberHolder {
                       LIMIT  1;
                       """)
                 .parameter(stmt -> stmt.setLong(reputation.guildId())
-                                       .setLong(userId()).setLong(other.getIdLong()).
-                                       setLong(other.getIdLong()).setLong(userId()))
+                                       .setLong(userId())
+                                       .setLong(other.getIdLong())
+                                       .setLong(other.getIdLong())
+                                       .setLong(userId()))
                 .readRow(row -> row.getTimestamp("received").toInstant())
                 .firstSync();
     }

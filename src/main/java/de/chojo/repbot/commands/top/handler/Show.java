@@ -36,6 +36,8 @@ public class Show implements SlashHandler {
                 case "total" -> ReputationMode.TOTAL;
                 case "7 days" -> ReputationMode.ROLLING_WEEK;
                 case "30 days" -> ReputationMode.ROLLING_MONTH;
+                case "week" -> ReputationMode.WEEK;
+                case "month" -> ReputationMode.MONTH;
                 default -> reputationMode;
             };
         }
@@ -80,7 +82,7 @@ public class Show implements SlashHandler {
     public void onAutoComplete(CommandAutoCompleteInteractionEvent event, EventContext context) {
         var option = event.getFocusedOption();
         if ("mode".equalsIgnoreCase(option.getName())) {
-            event.replyChoices(Completion.complete(option.getValue(), "total", "7 days", "30 days")).queue();
+            event.replyChoices(Completion.complete(option.getValue(), "total", "7 days", "30 days", "week", "month")).queue();
         }
     }
 }

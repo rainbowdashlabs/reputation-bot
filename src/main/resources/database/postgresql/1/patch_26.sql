@@ -1,4 +1,11 @@
 ALTER TABLE repbot_schema.reputation_offset
+    DROP CONSTRAINT reputation_offset_pk;
+
+CREATE INDEX reputation_offset_guild_id_user_id_index
+    ON repbot_schema.reputation_offset (guild_id, user_id);
+
+
+ALTER TABLE repbot_schema.reputation_offset
     ADD added TIMESTAMP DEFAULT (NOW() AT TIME ZONE 'utc') NOT NULL;
 
 ALTER TABLE repbot_schema.user_reputation_month
