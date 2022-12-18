@@ -2,8 +2,8 @@ package de.chojo.repbot.dao.access.guild.settings.sub;
 
 public enum ReputationMode {
     TOTAL("user_reputation", "reputationMode.total", true, false),
-    ROLLING_WEEK("user_reputation_week", "reputationMode.rollingWeek", false, true),
-    ROLLING_MONTH("user_reputation_month", "reputationMode.rollingMonth", false, true);
+    ROLLING_WEEK("user_reputation_7_days", "reputationMode.rollingWeek", false, true),
+    ROLLING_MONTH("user_reputation_30_days", "reputationMode.rollingMonth", false, true);
 
     private final String tableName;
     private final String localeCode;

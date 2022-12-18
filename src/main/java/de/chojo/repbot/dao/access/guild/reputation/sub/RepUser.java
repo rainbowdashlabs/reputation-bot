@@ -211,7 +211,7 @@ public class RepUser extends QueryFactory implements MemberHolder {
      */
     public RepProfile profile() {
         var mode = reputation.repGuild().settings().general().reputationMode();
-        // We probably dont want to cache the profile. There are just too many factors which can change the user reputation.
+        // We probably don't want to cache the profile. There are just too many factors which can change the user reputation.
         var builder = builder(RepProfile.class);
         StatementStage<RepProfile> query;
         if (mode.isSupportsOffset()) {

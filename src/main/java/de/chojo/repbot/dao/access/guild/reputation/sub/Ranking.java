@@ -22,12 +22,12 @@ public class Ranking extends QueryFactory implements GuildHolder {
         return pages(pageSize, "user_reputation");
     }
 
-    private Integer getWeekRankingPageCount(int pageSize) {
-        return pages(pageSize, "user_reputation_week");
+    private Integer get7DaysRankingPageCount(int pageSize) {
+        return pages(pageSize, "user_reputation_7_days");
     }
 
-    private Integer getMonthRankingPageCount(int pageSize) {
-        return pages(pageSize, "user_reputation_month");
+    private Integer get30DaysRankingPageCount(int pageSize) {
+        return pages(pageSize, "user_reputation_30_days");
     }
 
     private Integer pages(int pageSize, String table) {
@@ -76,7 +76,7 @@ public class Ranking extends QueryFactory implements GuildHolder {
      * @return a sorted list of reputation users
      */
     public GuildRanking week(int pageSize) {
-        return new GuildRanking("command.top.message.weekTitle", () -> getWeekRankingPageCount(pageSize), page -> getWeekRankingPage(pageSize, page));
+        return new GuildRanking("command.top.message.weekTitle", () -> get7DaysRankingPageCount(pageSize), page -> getWeekRankingPage(pageSize, page));
     }
 
     /**
@@ -86,7 +86,7 @@ public class Ranking extends QueryFactory implements GuildHolder {
      * @return a sorted list of reputation users
      */
     public GuildRanking month(int pageSize) {
-        return new GuildRanking("command.top.message.monthTitle", () -> getMonthRankingPageCount(pageSize), page -> getMonthRankingPage(pageSize, page));
+        return new GuildRanking("command.top.message.monthTitle", () -> get30DaysRankingPageCount(pageSize), page -> getMonthRankingPage(pageSize, page));
     }
 
     /**
@@ -101,11 +101,11 @@ public class Ranking extends QueryFactory implements GuildHolder {
     }
 
     private List<RepProfile> getWeekRankingPage(int pageSize, int page) {
-        return getRankingPage(pageSize, page, "user_reputation_week");
+        return getRankingPage(pageSize, page, "user_reputation_7_days");
     }
 
     private List<RepProfile> getMonthRankingPage(int pageSize, int page) {
-        return getRankingPage(pageSize, page, "user_reputation_month");
+        return getRankingPage(pageSize, page, "user_reputation_30_days");
     }
 
     private List<RepProfile> getRankingPage(int pageSize, int page, String table) {
