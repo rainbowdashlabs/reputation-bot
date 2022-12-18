@@ -232,7 +232,7 @@ public class Bot {
         var voiceStateListener = VoiceStateListener.of(data.voice(), threading.repBotWorker());
         var logListener = LogListener.create(threading.repBotWorker());
         var stateListener = StateListener.of(localizer, guilds, configuration, data.metrics());
-        var roleUpdater = RoleUpdater.create(guilds, roleAssigner, threading.repBotWorker());
+        var roleUpdater = RoleUpdater.create(guilds, roleAssigner, shardManager,threading.repBotWorker());
 
         shardManager.addEventListener(
                 reactionListener,

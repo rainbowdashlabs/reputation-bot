@@ -14,7 +14,7 @@ ALTER TABLE repbot_schema.user_reputation_month
 ALTER TABLE repbot_schema.user_reputation_week
     RENAME TO user_reputation_7_days;
 
-DROP VIEW repbot_schema.user_reputation_7_days;
+DROP VIEW IF EXISTS repbot_schema.user_reputation_7_days;
 -- Add offset
 CREATE OR REPLACE VIEW repbot_schema.user_reputation_7_days AS
 WITH rep_offset
@@ -64,19 +64,29 @@ WITH rep_offset
                               AND clean.user_id = full_log.user_id
                      )
                -- remove null users
-               AND user_id IS NOT NULL)
-SELECT RANK() OVER (PARTITION BY rank.guild_id ORDER BY rank.reputation DESC) AS rank,
-       RANK() OVER (PARTITION BY rank.guild_id ORDER BY donated DESC)         AS rank_donated,
-       rank.guild_id,
-       rank.user_id,
-       rank.reputation                                                        AS raw_reputation,
+               AND user_id IS NOT NULL),
+     offset_reputation
+         AS (SELECT COALESCE(f.guild_id, o.guild_id)                      AS guild_id,
+                    COALESCE(f.user_id, o.user_id)                        AS user_id,
+                    -- apply offset to the normal reputation.
+                    COALESCE(f.reputation, 0) + COALESCE(o.reputation, 0) AS reputation,
+                    COALESCE(o.reputation, 0)                             AS rep_offset,
+                    -- save raw reputation without the offset.
+                    COALESCE(f.reputation, 0)                             AS raw_reputation,
+                    COALESCE(f.donated, 0)                                AS donated
+             FROM filtered_log f
+                      FULL JOIN rep_offset o ON f.guild_id = o.guild_id AND f.user_id = o.user_id)
+SELECT RANK() OVER (PARTITION BY guild_id ORDER BY reputation DESC) AS rank,
+       RANK() OVER (PARTITION BY guild_id ORDER BY donated DESC)    AS rank_donated,
+       guild_id,
+       user_id,
+       raw_reputation                                               AS raw_reputation,
        donated,
-       COALESCE(o.reputation, 0)                                              AS rep_offset,
-       rank.reputation + COALESCE(o.reputation, 0)                            AS reputation
-FROM filtered_log rank
-         LEFT JOIN rep_offset o ON rank.guild_id = o.guild_id AND rank.user_id = o.guild_id;
+       rep_offset::BIGINT                                           AS rep_offset,
+       reputation::BIGINT                                           AS reputation
+FROM offset_reputation rank;
 
-DROP VIEW repbot_schema.user_reputation_30_days;
+DROP VIEW IF EXISTS repbot_schema.user_reputation_30_days;
 -- Add offset
 CREATE OR REPLACE VIEW repbot_schema.user_reputation_30_days AS
 WITH rep_offset
@@ -125,18 +135,29 @@ WITH rep_offset
                                        AND clean.user_id = full_log.user_id
                               )
                         -- remove null users
-                        AND user_id IS NOT NULL)
-SELECT RANK() OVER (PARTITION BY rank.guild_id ORDER BY rank.reputation DESC) AS rank,
-       RANK() OVER (PARTITION BY rank.guild_id ORDER BY donated DESC)         AS rank_donated,
-       rank.guild_id,
-       rank.user_id,
-       rank.reputation                                                        AS raw_reputation,
+                        AND user_id IS NOT NULL),
+     offset_reputation
+         AS (SELECT COALESCE(f.guild_id, o.guild_id)                      AS guild_id,
+                    COALESCE(f.user_id, o.user_id)                        AS user_id,
+                    -- apply offset to the normal reputation.
+                    COALESCE(f.reputation, 0) + COALESCE(o.reputation, 0) AS reputation,
+                    COALESCE(o.reputation, 0)                             AS rep_offset,
+                    -- save raw reputation without the offset.
+                    COALESCE(f.reputation, 0)                             AS raw_reputation,
+                    COALESCE(f.donated, 0)                                AS donated
+             FROM filtered_log f
+                      FULL JOIN rep_offset o ON f.guild_id = o.guild_id AND f.user_id = o.user_id)
+SELECT RANK() OVER (PARTITION BY guild_id ORDER BY reputation DESC) AS rank,
+       RANK() OVER (PARTITION BY guild_id ORDER BY donated DESC)    AS rank_donated,
+       guild_id,
+       user_id,
+       raw_reputation                                               AS raw_reputation,
        donated,
-       COALESCE(o.reputation, 0)                                              AS rep_offset,
-       rank.reputation + COALESCE(o.reputation, 0)                            AS reputation
-FROM filtered_log rank
-         LEFT JOIN rep_offset o ON rank.guild_id = o.guild_id AND rank.user_id = o.guild_id;
+       rep_offset::BIGINT                                           AS rep_offset,
+       reputation::BIGINT                                           AS reputation
+FROM offset_reputation rank;
 
+DROP VIEW IF EXISTS repbot_schema.user_reputation_month;
 CREATE OR REPLACE VIEW repbot_schema.user_reputation_month AS
 WITH rep_offset
          AS (SELECT o.guild_id,
@@ -184,18 +205,29 @@ WITH rep_offset
                                        AND clean.user_id = full_log.user_id
                               )
                         -- remove null users
-                        AND user_id IS NOT NULL)
-SELECT RANK() OVER (PARTITION BY rank.guild_id ORDER BY rank.reputation DESC) AS rank,
-       RANK() OVER (PARTITION BY rank.guild_id ORDER BY donated DESC)         AS rank_donated,
-       rank.guild_id,
-       rank.user_id,
-       rank.reputation                                                        AS raw_reputation,
+                        AND user_id IS NOT NULL),
+     offset_reputation
+         AS (SELECT COALESCE(f.guild_id, o.guild_id)                      AS guild_id,
+                    COALESCE(f.user_id, o.user_id)                        AS user_id,
+                    -- apply offset to the normal reputation.
+                    COALESCE(f.reputation, 0) + COALESCE(o.reputation, 0) AS reputation,
+                    COALESCE(o.reputation, 0)                             AS rep_offset,
+                    -- save raw reputation without the offset.
+                    COALESCE(f.reputation, 0)                             AS raw_reputation,
+                    COALESCE(f.donated, 0)                                AS donated
+             FROM filtered_log f
+                      FULL JOIN rep_offset o ON f.guild_id = o.guild_id AND f.user_id = o.user_id)
+SELECT RANK() OVER (PARTITION BY guild_id ORDER BY reputation DESC) AS rank,
+       RANK() OVER (PARTITION BY guild_id ORDER BY donated DESC)    AS rank_donated,
+       guild_id,
+       user_id,
+       raw_reputation                                               AS raw_reputation,
        donated,
-       COALESCE(o.reputation, 0)                                              AS rep_offset,
-       rank.reputation + COALESCE(o.reputation, 0)                            AS reputation
-FROM filtered_log rank
-         LEFT JOIN rep_offset o ON rank.guild_id = o.guild_id AND rank.user_id = o.guild_id;
+       rep_offset::BIGINT                                           AS rep_offset,
+       reputation::BIGINT                                           AS reputation
+FROM offset_reputation rank;
 
+DROP VIEW IF EXISTS repbot_schema.user_reputation_week;
 CREATE OR REPLACE VIEW repbot_schema.user_reputation_week AS
 WITH rep_offset
          AS (SELECT o.guild_id,
@@ -243,17 +275,27 @@ WITH rep_offset
                                        AND clean.user_id = full_log.user_id
                               )
                         -- remove null users
-                        AND user_id IS NOT NULL)
-SELECT RANK() OVER (PARTITION BY rank.guild_id ORDER BY rank.reputation DESC) AS rank,
-       RANK() OVER (PARTITION BY rank.guild_id ORDER BY donated DESC)         AS rank_donated,
-       rank.guild_id,
-       rank.user_id,
-       rank.reputation                                                        AS raw_reputation,
+                        AND user_id IS NOT NULL),
+     offset_reputation
+         AS (SELECT COALESCE(f.guild_id, o.guild_id)                      AS guild_id,
+                    COALESCE(f.user_id, o.user_id)                        AS user_id,
+                    -- apply offset to the normal reputation.
+                    COALESCE(f.reputation, 0) + COALESCE(o.reputation, 0) AS reputation,
+                    COALESCE(o.reputation, 0)                             AS rep_offset,
+                    -- save raw reputation without the offset.
+                    COALESCE(f.reputation, 0)                             AS raw_reputation,
+                    COALESCE(f.donated, 0)                                AS donated
+             FROM filtered_log f
+                      FULL JOIN rep_offset o ON f.guild_id = o.guild_id AND f.user_id = o.user_id)
+SELECT RANK() OVER (PARTITION BY guild_id ORDER BY reputation DESC) AS rank,
+       RANK() OVER (PARTITION BY guild_id ORDER BY donated DESC)    AS rank_donated,
+       guild_id,
+       user_id,
+       raw_reputation                                               AS raw_reputation,
        donated,
-       COALESCE(o.reputation, 0)                                              AS rep_offset,
-       rank.reputation + COALESCE(o.reputation, 0)                            AS reputation
-FROM filtered_log rank
-         LEFT JOIN rep_offset o ON rank.guild_id = o.guild_id AND rank.user_id = o.guild_id;
+       rep_offset::BIGINT                                           AS rep_offset,
+       reputation::BIGINT                                           AS reputation
+FROM offset_reputation rank;
 
 CREATE INDEX reputation_log_received_week_index
     ON repbot_schema.reputation_log (DATE_TRUNC('week', received));

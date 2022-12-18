@@ -60,8 +60,6 @@ public class RepUser extends QueryFactory implements MemberHolder {
         return builder()
                 .query("""
                        INSERT INTO reputation_offset(guild_id, user_id, amount) VALUES (?,?,?)
-                           ON CONFLICT(guild_id, user_id)
-                               DO UPDATE SET amount = reputation_offset.amount + excluded.amount;
                        """)
                 .parameter(stmt -> stmt.setLong(guildId()).setLong(userId()).setLong(amount))
                 .insert()
