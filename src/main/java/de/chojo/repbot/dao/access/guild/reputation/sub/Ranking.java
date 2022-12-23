@@ -22,6 +22,14 @@ public class Ranking extends QueryFactory implements GuildHolder {
         return pages(pageSize, "user_reputation");
     }
 
+    private Integer get7DaysRankingPageCount(int pageSize) {
+        return pages(pageSize, "user_reputation_7_days");
+    }
+
+    private Integer get30DaysRankingPageCount(int pageSize) {
+        return pages(pageSize, "user_reputation_30_days");
+    }
+
     private Integer getWeekRankingPageCount(int pageSize) {
         return pages(pageSize, "user_reputation_week");
     }
@@ -53,8 +61,10 @@ public class Ranking extends QueryFactory implements GuildHolder {
     public GuildRanking byMode(ReputationMode mode, int pageSize) {
         return switch (mode) {
             case TOTAL -> total(pageSize);
-            case ROLLING_WEEK -> week(pageSize);
-            case ROLLING_MONTH -> month(pageSize);
+            case ROLLING_WEEK -> days7(pageSize);
+            case ROLLING_MONTH -> days30(pageSize);
+            case WEEK -> week(pageSize);
+            case MONTH -> month(pageSize);
             default -> throw new IllegalArgumentException("Unkown input " + mode);
         };
     }
@@ -67,6 +77,26 @@ public class Ranking extends QueryFactory implements GuildHolder {
      */
     public GuildRanking total(int pageSize) {
         return new GuildRanking("command.top.message.total", () -> getRankingPageCount(pageSize), page -> getRankingPage(pageSize, page));
+    }
+
+    /**
+     * Get the 7 days ranking of the guild.
+     *
+     * @param pageSize the size of a page
+     * @return a sorted list of reputation users
+     */
+    public GuildRanking days7(int pageSize) {
+        return new GuildRanking("command.top.message.7daysTitle", () -> get7DaysRankingPageCount(pageSize), page -> get7DaysRankingPage(pageSize, page));
+    }
+
+    /**
+     * Get the 30 days ranking of the guild.
+     *
+     * @param pageSize the size of a page
+     * @return a sorted list of reputation users
+     */
+    public GuildRanking days30(int pageSize) {
+        return new GuildRanking("command.top.message.30daysTitle", () -> get30DaysRankingPageCount(pageSize), page -> get30DaysRankingPage(pageSize, page));
     }
 
     /**
@@ -98,6 +128,14 @@ public class Ranking extends QueryFactory implements GuildHolder {
      */
     private List<RepProfile> getRankingPage(int pageSize, int page) {
         return getRankingPage(pageSize, page, "user_reputation");
+    }
+
+    private List<RepProfile> get7DaysRankingPage(int pageSize, int page) {
+        return getRankingPage(pageSize, page, "user_reputation_7_days");
+    }
+
+    private List<RepProfile> get30DaysRankingPage(int pageSize, int page) {
+        return getRankingPage(pageSize, page, "user_reputation_30_days");
     }
 
     private List<RepProfile> getWeekRankingPage(int pageSize, int page) {

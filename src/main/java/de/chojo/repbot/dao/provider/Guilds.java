@@ -5,6 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.access.guild.RepGuildId;
+import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
 import de.chojo.repbot.dao.pagination.GuildList;
 import de.chojo.sadu.base.QueryFactory;
 import net.dv8tion.jda.api.entities.Guild;
@@ -46,8 +47,17 @@ public class Guilds extends QueryFactory {
      * @param id id of guild to create.
      * @return repguild created based on an id
      */
-    public RepGuild guild(long id) {
-        return new RepGuildId(source(), id, configuration);
+    public RepGuild byId(long id) {
+        var cached = guilds.getIfPresent(id);
+        return cached != null ? cached : new RepGuildId(source(), id, configuration);
+    }
+
+    public List<RepGuild> byReputationMode(ReputationMode mode) {
+        return builder(RepGuild.class)
+                .query("SELECT guild_id FROM guild_settings WHERE reputation_mode = ?")
+                .parameter(stmt -> stmt.setString(mode.name()))
+                .readRow(row -> byId(row.getLong("guild_id")))
+                .allSync();
     }
 
     public GuildList guilds(int pageSize) {
@@ -76,7 +86,7 @@ public class Guilds extends QueryFactory {
                        LIMIT ?;
                        """)
                 .parameter(stmt -> stmt.setInt(page * pageSize).setInt(pageSize))
-                .readRow(row -> new RepGuildId(source(), row.getLong("guild_id"), configuration))
+                .readRow(row -> byId(row.getLong("guild_id")))
                 .allSync();
     }
 }
