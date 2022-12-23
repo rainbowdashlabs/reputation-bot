@@ -13,7 +13,7 @@ public class Reputation extends SlashCommand {
         super(Slash.of("rep", "command.rep.description")
                 .guildOnly()
                 .command(new Profile(guilds, configuration, roleAssigner))
-                .argument(Argument.user("user", "command.rep.user.description"))
+                .argument(Argument.user("user", "command.rep.options.user.description"))
         );
     }
 }
