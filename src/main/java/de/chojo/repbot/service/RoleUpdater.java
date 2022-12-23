@@ -34,7 +34,7 @@ public class RoleUpdater extends ListenerAdapter implements Runnable {
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (!event.isFromGuild()) return;
         if (!guilds.guild(event.getGuild()).settings().general().reputationMode().isAutoRefresh()) return;
-        if (isChecked(event.getMember())) return;
+        if (event.getMember() == null || isChecked(event.getMember())) return;
         roleAssigner.updateReporting(event.getMember(), event.getGuildChannel());
         guildSet(event.getGuild()).add(event.getMember().getIdLong());
     }
