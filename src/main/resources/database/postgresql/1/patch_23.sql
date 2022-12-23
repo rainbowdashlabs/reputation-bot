@@ -1,38 +1,38 @@
 -- feature/guild-cleanup
 CREATE OR REPLACE VIEW repbot_schema.guilds AS
-SELECT guild_id FROM reputation_log
+SELECT guild_id FROM repbot_schema.reputation_log
 UNION DISTINCT
-SELECT guild_id FROM abuse_protection
+SELECT guild_id FROM repbot_schema.abuse_protection
 UNION DISTINCT
-SELECT guild_id FROM active_categories
+SELECT guild_id FROM repbot_schema.active_categories
 UNION DISTINCT
-SELECT guild_id FROM active_channel
+SELECT guild_id FROM repbot_schema.active_channel
 UNION DISTINCT
-SELECT guild_id FROM announcements
+SELECT guild_id FROM repbot_schema.announcements
 UNION DISTINCT
-SELECT guild_id FROM donor_roles
+SELECT guild_id FROM repbot_schema.donor_roles
 UNION DISTINCT
-SELECT guild_id FROM guild_ranks
+SELECT guild_id FROM repbot_schema.guild_ranks
 UNION DISTINCT
-SELECT guild_id FROM guild_reactions
+SELECT guild_id FROM repbot_schema.guild_reactions
 UNION DISTINCT
-SELECT guild_id FROM guild_settings
+SELECT guild_id FROM repbot_schema.guild_settings
 UNION DISTINCT
-SELECT guild_id FROM message_states
+SELECT guild_id FROM repbot_schema.message_states
 UNION DISTINCT
-SELECT guild_id FROM receiver_roles
+SELECT guild_id FROM repbot_schema.receiver_roles
 UNION DISTINCT
-SELECT guild_id FROM donor_roles
+SELECT guild_id FROM repbot_schema.donor_roles
 UNION DISTINCT
-SELECT guild_id FROM reputation_offset
+SELECT guild_id FROM repbot_schema.reputation_offset
 UNION DISTINCT
-SELECT guild_id FROM reputation_settings
+SELECT guild_id FROM repbot_schema.reputation_settings
 UNION DISTINCT
-SELECT guild_id FROM thank_settings
+SELECT guild_id FROM repbot_schema.thank_settings
 UNION DISTINCT
-SELECT guild_id FROM thankwords
+SELECT guild_id FROM repbot_schema.thankwords
 UNION DISTINCT
-SELECT guild_id FROM voice_activity
+SELECT guild_id FROM repbot_schema.voice_activity
 ORDER BY guild_id;
 
 UPDATE repbot_schema.cleanup_schedule SET user_id = 0 WHERE user_id IS NULL;
