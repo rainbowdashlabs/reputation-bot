@@ -8,6 +8,7 @@ import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.sadu.base.QueryFactory;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.sharding.ShardManager;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -104,11 +105,21 @@ public class RepGuild extends QueryFactory implements GuildHolder {
         }
     }
 
+    public boolean isById() {
+        return guild == null;
+    }
+
     @Override
     public String toString() {
         return "RepGuild{" +
                "guild=" + guild +
                '}';
+    }
+
+    public RepGuild load(ShardManager shardManager) {
+        if (guild != null) return this;
+        guild = shardManager.getGuildById(guildId());
+        return this;
     }
 
     public Configuration configuration() {
