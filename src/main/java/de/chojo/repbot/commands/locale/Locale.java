@@ -16,7 +16,7 @@ public class Locale extends SlashCommand {
                 .adminCommand()
                 .subCommand(SubCommand.of("set", "command.locale.set.description")
                         .handler(new Set(guilds))
-                        .argument(Argument.text("language", "command.locale.set.language.description").asRequired()
+                        .argument(Argument.text("language", "command.locale.set.options.language.description").asRequired()
                                           .withAutoComplete()))
                 .subCommand(SubCommand.of("reset", "command.locale.reset.description")
                         .handler(new Reset(guilds)))
