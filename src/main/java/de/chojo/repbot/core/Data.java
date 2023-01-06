@@ -52,7 +52,16 @@ public class Data {
     }
 
     public void initConnection() {
-        dataSource = getConnectionPool();
+        try {
+            dataSource = getConnectionPool();
+        } catch (Exception e) {
+            log.error("Could not connect to database. Retrying in 10.");
+            try {
+                Thread.sleep(1000 * 10);
+            } catch (InterruptedException ignore) {
+            }
+            initConnection();
+        }
     }
 
     private void updateDatabase() throws IOException, SQLException {

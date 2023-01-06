@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "1.13.0"
+version = "1.13.1"
 
 repositories {
     maven("https://eldonexus.de/repository/maven-public")
@@ -15,7 +15,7 @@ repositories {
 
 dependencies {
     //discord
-    implementation("de.chojo", "cjda-util", "2.7.8+beta.2-DEV") {
+    implementation("de.chojo", "cjda-util", "2.7.8+beta.2") {
         exclude(group = "club.minnced", module = "opus-java")
     }
 
@@ -32,17 +32,17 @@ dependencies {
     implementation("org.apache.logging.log4j", "log4j-slf4j2-impl", "2.19.0")
     implementation("club.minnced", "discord-webhooks", "0.8.2")
 
-    implementation("org.knowm.xchart", "xchart", "3.8.2")
+    implementation("org.knowm.xchart", "xchart", "3.8.3")
 
     // unit testing
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter", "junit-jupiter")
-    testImplementation("org.knowm.xchart", "xchart", "3.8.2")
+    testImplementation("org.knowm.xchart", "xchart", "3.8.3")
 }
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(18))
+        languageVersion.set(JavaLanguageVersion.of(19))
     }
     withSourcesJar()
     withJavadocJar()
