@@ -16,7 +16,7 @@ public abstract class MatchAnalyzerResult implements AnalyzerResult {
     public MatchAnalyzerResult(ThankType thankType, Member donor, String match) {
         this.thankType = thankType;
         this.donor = donor;
-        donorId = donor.getIdLong();
+        donorId = donor == null ? 0 : donor.getIdLong();
         this.match = match;
     }
 

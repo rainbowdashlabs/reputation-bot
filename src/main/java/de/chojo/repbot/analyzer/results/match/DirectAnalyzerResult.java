@@ -8,12 +8,13 @@ import java.util.List;
 
 public class DirectAnalyzerResult extends MatchAnalyzerResult {
     private final List<Member> receivers;
+
     public DirectAnalyzerResult(String match, ThankType type, Member donor, List<Member> receivers) {
         super(type, donor, match);
         this.receivers = receivers;
     }
 
-    protected List<Long> receiverIds(){
+    protected List<Long> receiverIds() {
         return receivers.stream().map(Member::getIdLong).toList();
     }
 
