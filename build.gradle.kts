@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "1.13.1"
+version = "1.13.2"
 
 repositories {
     maven("https://eldonexus.de/repository/maven-public")
@@ -35,7 +35,7 @@ dependencies {
     implementation("org.knowm.xchart", "xchart", "3.8.3")
 
     // unit testing
-    testImplementation(platform("org.junit:junit-bom:5.9.1"))
+    testImplementation(platform("org.junit:junit-bom:5.9.2"))
     testImplementation("org.junit.jupiter", "junit-jupiter")
     testImplementation("org.knowm.xchart", "xchart", "3.8.3")
 }

@@ -58,7 +58,7 @@ public class RoleUpdater extends ListenerAdapter {
         }
     }
 
-    private void updateRoles(RepGuild guild){
+    private void updateRoles(RepGuild guild) {
         guild.load(shardManager);
         if (guild.isById()) return;
         for (var rank : guild.settings().ranks().ranks()) {
