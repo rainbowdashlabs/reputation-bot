@@ -25,6 +25,6 @@ public class DirectAnalyzerResult extends MatchAnalyzerResult {
 
     @Override
     public ResultSnapshot toSnapshot() {
-        return new DirectResultSnapshot(thankType(), donor().getIdLong(), match(), receiverIds());
+        return new DirectResultSnapshot(thankType(), donorId(), match(), receiverIds());
     }
 }
