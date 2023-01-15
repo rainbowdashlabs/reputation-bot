@@ -35,6 +35,6 @@ public class AnswerAnalyzerResult extends DirectAnalyzerResult {
 
     @Override
     public ResultSnapshot toSnapshot() {
-        return new AnswerResultSnapshot(donor().getIdLong(), match(), receiverIds(), referenceMessageId);
+        return new AnswerResultSnapshot(donorId(), match(), receiverIds(), referenceMessageId);
     }
 }
