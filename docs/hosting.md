@@ -47,10 +47,10 @@ After the first start the bot will create a configuration file.
 
 ## Managing
 
-The bot supports simple commands for users listed as bot owners. They can be executed by mentioning the bot and
-adding the command
+The bot can be managed by commands located under the bot slash command, which will be only available on the bot 
+guild defined in the config file.
 
-- `upgrade` -> Upgrade the bot on the latest stable version
+- `upgrade` -> Upgrade the bot on the latest stable version (Not supported when using docker)
 - `restart` -> Restarts the bot process
 - `shutdown` -> Stops the bot and ends the loop.
 - `stats` -> Shows stats about bot usage

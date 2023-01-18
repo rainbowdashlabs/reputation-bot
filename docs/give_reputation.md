@@ -26,7 +26,7 @@ User B: Thank you # (4)
 4. The message which will trigger the reputation embed
 
 In this conversation user A will not be eligible since there is no chance that A could have helped B before asking the
-actual question.
+actual question. Those context checks can be disabled via the [abuseprotection command](abuse_protection.md#receiver-and-donor-context)
 
 ### Voice activity
 

@@ -8,9 +8,13 @@ Normal level systems, which are based on pure activity are not able to reflect h
 community. User which have a lot of knowledge and are helping all the time have the same level as users which asks a
 lot of questions all the time. That's where the Reputation Bot comes in handy.
 
+_This bot is not a simple dumb bot which counts reputation, but has also a lot of checks which ensure that the 
+person is actualy elligible to receive reputation. Those checks are enabled by default, but can be disabled. See our 
+[abuse protection page](abuse_protection.md) for further information._
+
 ## How does it work
 
-The bot gets triggered by so called "thankwords". These are user defined words (We provide reasonable default 
+The bot is triggered by so called "thankwords". These are user defined words (We provide reasonable default 
 settings for every supported language) which usually are something like "Thanks" or "thx" or something completely 
 different.
 
@@ -45,15 +49,17 @@ These are displayed as level.
 
 ![A list of roles](resources/roles.png)
 
-# Toplists
+# Toplists and reputation modes
 
-We provide three different toplists
+We provide different modes
 
 - Total
 - Month
 - Week
+- 7 Days
+- 30 Days
 
-The month and week toplists are a rolling sum of reputations during the last 30 or 7 days.
+Those determine the user rank, leaderboard and the reputation shown in the user profile.
 
 # Get help
 
