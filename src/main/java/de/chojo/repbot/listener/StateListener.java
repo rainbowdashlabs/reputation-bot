@@ -94,6 +94,9 @@ public class StateListener extends ListenerAdapter {
     public void onEmojiRemoved(@NotNull EmojiRemovedEvent event) {
         var guildSettings = guilds.guild(event.getGuild()).settings();
         if (!guildSettings.thanking().reactions().reactionIsEmote()) return;
+
+        guildSettings.thanking().reactions().remove(event.getEmoji().getId());
+
         if (!guildSettings.thanking().reactions().mainReaction().equals(event.getEmoji().getId())) return;
         guildSettings.thanking().reactions().mainReaction("🏅");
     }
