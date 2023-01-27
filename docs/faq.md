@@ -14,7 +14,7 @@ Those emojis indicate what the bot does with a message:
 
 A bot admin can disable these emojis in the `repsettings`.
 
-### Why cant I give reputation to user XY?
+### Why can't I give reputation to user XY?
 
 This can have several reasons:
 
@@ -49,6 +49,15 @@ Finally we add also the users which share a voice channel with the message autho
 channel with the users withing the max message age.
 
 You can read more about this mechanic on our [abuse protection page](abuse_protection.md)
+
+### Why did user XY not receive any reputation or why was the message ignored?
+
+This can have a lot of reasons and since it is nearly impossible for us to cover all the reasons here, we added 
+a command which can tell exactly this. The `/analyzer log <message_id>` command will show you in detail how the 
+bot processed a message.
+
+This command is basically showing what the debug emojis are showing as well, but will actually explain why 
+something happened or not happened.
 
 ### What roles will be managed by the bot?
 
