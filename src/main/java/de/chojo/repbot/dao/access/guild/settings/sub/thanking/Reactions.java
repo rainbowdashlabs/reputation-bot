@@ -62,7 +62,7 @@ public class Reactions extends QueryFactory implements GuildHolder {
         if (!reactionIsEmote()) {
             return Optional.ofNullable(mainReaction());
         }
-        return Optional.of(guild().retrieveEmojiById(mainReaction()).onErrorFlatMap(err -> null).complete())
+        return Optional.of(guild().retrieveEmojiById(mainReaction()).onErrorMap(err -> null).complete())
                 .map(CustomEmoji::getAsMention);
     }
 
@@ -74,7 +74,7 @@ public class Reactions extends QueryFactory implements GuildHolder {
         return reactions.stream()
                         .map(reaction -> {
                             if (Verifier.isValidId(reaction)) {
-                                var asMention = guild().retrieveEmojiById(reaction).onErrorFlatMap(err -> null)
+                                var asMention = guild().retrieveEmojiById(reaction).onErrorMap(err -> null)
                                                        .complete();
                                 return asMention == null ? null : asMention.getAsMention();
                             }
