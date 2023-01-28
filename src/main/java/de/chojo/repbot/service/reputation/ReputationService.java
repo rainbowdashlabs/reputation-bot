@@ -234,7 +234,7 @@ public class ReputationService {
             if (channel == null || rank.getRole(guild) == null) return;
             channel.sendMessage(localizer.localize("message.levelAnnouncement", guild,
                            Replacement.createMention(receiver), Replacement.createMention(rank.getRole(guild))))
-                   .mention(Collections.emptyList())
+                   .setAllowedMentions(Collections.emptyList())
                    .queue();
         });
         return true;
