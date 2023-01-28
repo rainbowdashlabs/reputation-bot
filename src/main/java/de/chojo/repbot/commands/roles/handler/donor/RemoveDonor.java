@@ -20,6 +20,6 @@ public class RemoveDonor implements SlashHandler {
         var role = event.getOption("role").getAsRole();
         guilds.guild(event.getGuild()).settings().thanking().donorRoles().remove(role);
         event.reply(context.localize("command.roles.donor.remove.message.remove",
-                Replacement.createMention(role))).mention(Collections.emptyList()).queue();
+                Replacement.createMention(role))).setAllowedMentions(Collections.emptyList()).queue();
     }
 }
