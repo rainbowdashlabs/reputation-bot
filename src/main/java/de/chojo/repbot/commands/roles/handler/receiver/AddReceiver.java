@@ -20,6 +20,6 @@ public class AddReceiver implements SlashHandler {
         var role = event.getOption("role").getAsRole();
         guilds.guild(event.getGuild()).settings().thanking().receiverRoles().add(role);
         event.reply(context.localize("command.roles.receiver.add.message.add",
-                Replacement.createMention(role))).mention(Collections.emptyList()).queue();
+                Replacement.createMention(role))).setAllowedMentions(Collections.emptyList()).queue();
     }
 }

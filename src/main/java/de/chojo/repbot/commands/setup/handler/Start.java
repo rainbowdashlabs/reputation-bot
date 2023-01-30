@@ -167,7 +167,7 @@ public class Start implements SlashHandler {
         context.reply(
                        context.localize("command.channel.add.message.added",
                                Replacement.create("CHANNEL", addedChannel)))
-               .mention(Collections.emptyList())
+               .setAllowedMentions(Collections.emptyList())
                .queue();
         return Result.freeze();
     }

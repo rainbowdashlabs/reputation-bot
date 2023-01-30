@@ -4,7 +4,6 @@ import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.Guilds;
-import de.chojo.repbot.dao.snapshots.RepProfile;
 import de.chojo.repbot.dao.snapshots.ReputationRank;
 import de.chojo.repbot.util.Roles;
 import net.dv8tion.jda.api.entities.Guild;
@@ -22,7 +21,6 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
@@ -57,7 +55,7 @@ public class RoleAssigner {
         } catch (RoleAccessException e) {
             channel.sendMessage(localizer.localize("error.roleAccess", channel.getGuild(),
                            Replacement.createMention("ROLE", e.role())))
-                   .mention(Collections.emptyList())
+                   .setAllowedMentions(Collections.emptyList())
                    .queue();
         }
         return Optional.empty();
