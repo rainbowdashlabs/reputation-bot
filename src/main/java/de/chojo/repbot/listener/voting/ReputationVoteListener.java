@@ -94,7 +94,8 @@ public class ReputationVoteListener extends ListenerAdapter {
                            .editMessageEmbeds(voteRequest.getNewEmbed(loc.localize("listener.messages.request.descrThank"
                                    , event.getGuild(), Replacement.create("MORE", voteRequest.remainingVotes()))))
                            .setComponents(Collections.emptyList())
-                           .queue();
+                           .queue(RestAction.getDefaultSuccess(),
+                                   ErrorResponseException.ignore(ErrorResponse.ILLEGAL_OPERATION_ARCHIVED_THREAD));
                 voteRequest.voteMessage().delete().queueAfter(5, TimeUnit.SECONDS,
                         suc -> voteRequests.remove(voteRequest.voteMessage().getIdLong()),
                         ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
@@ -145,7 +146,10 @@ public class ReputationVoteListener extends ListenerAdapter {
                    voteRequests.put(voteMessage.getIdLong(), new VoteRequest(message.getMember(), builder, voteMessage, message, components, Math.min(remaining, members.size())));
                    voteMessage.delete().queueAfter(1, TimeUnit.MINUTES,
                            submit -> voteRequests.remove(voteMessage.getIdLong()),
-                           ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE, ErrorResponse.UNKNOWN_CHANNEL));
+                           ErrorResponseException.ignore(
+                                   ErrorResponse.UNKNOWN_MESSAGE,
+                                   ErrorResponse.UNKNOWN_CHANNEL,
+                                   ErrorResponse.ILLEGAL_OPERATION_ARCHIVED_THREAD));
                });
     }
 

@@ -199,7 +199,10 @@ public class ReputationService {
                        .queue(msg -> msg.delete().queueAfter(
                                magicImage.magicImageDeleteSchedule(), TimeUnit.SECONDS,
                                RestAction.getDefaultSuccess(),
-                               ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE, ErrorResponse.UNKNOWN_CHANNEL))
+                               ErrorResponseException.ignore(
+                                       ErrorResponse.UNKNOWN_MESSAGE,
+                                       ErrorResponse.UNKNOWN_CHANNEL,
+                                       ErrorResponse.ILLEGAL_OPERATION_ARCHIVED_THREAD))
                        );
             }
             return true;

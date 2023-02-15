@@ -101,8 +101,12 @@ public class Bot {
     private void configureRestActions() {
         log.info("Configuring rest actions.");
         RestAction.setDefaultFailure(throwable -> {
-            if (throwable instanceof InsufficientPermissionException) {
-                PermissionErrorHandler.handle((InsufficientPermissionException) throwable, shardManager, localization.localizer(), configuration);
+            if (throwable instanceof InsufficientPermissionException perm) {
+                PermissionErrorHandler.handle(perm, shardManager, localization.localizer(), configuration);
+                return;
+            }
+            if (throwable.getCause() instanceof InsufficientPermissionException insuf) {
+                PermissionErrorHandler.handle(insuf, shardManager, localization.localizer(), configuration);
                 return;
             }
             if (throwable instanceof ErrorResponseException e) {
