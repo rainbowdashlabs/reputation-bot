@@ -49,6 +49,10 @@ public final class Messages {
 
     private static void handleMark(RestAction<Void> action) {
         action.queue(RestAction.getDefaultSuccess(),
-                ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE, ErrorResponse.TOO_MANY_REACTIONS));
+                ErrorResponseException.ignore(
+                        ErrorResponse.UNKNOWN_MESSAGE,
+                        ErrorResponse.TOO_MANY_REACTIONS,
+                        ErrorResponse.REACTION_BLOCKED,
+                        ErrorResponse.UNKNOWN_CHANNEL));
     }
 }

@@ -1,11 +1,11 @@
 plugins {
-    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("com.github.johnrengelman.shadow") version "8.0.0"
     java
     `maven-publish`
 }
 
 group = "de.chojo"
-version = "1.13.6"
+version = "1.13.7"
 
 repositories {
     maven("https://eldonexus.de/repository/maven-public")
@@ -20,7 +20,7 @@ dependencies {
     }
 
     // database
-    implementation("org.postgresql", "postgresql", "42.5.3")
+    implementation("org.postgresql", "postgresql", "42.5.4")
     implementation("de.chojo.sadu", "sadu-queries", "1.2.0")
     implementation("de.chojo.sadu", "sadu-updater", "1.2.0")
     implementation("de.chojo.sadu", "sadu-postgresql", "1.2.0")
@@ -28,8 +28,8 @@ dependencies {
 
     // Logging
     implementation("org.slf4j", "slf4j-api", "2.0.6")
-    implementation("org.apache.logging.log4j", "log4j-core", "2.19.0")
-    implementation("org.apache.logging.log4j", "log4j-slf4j2-impl", "2.19.0")
+    implementation("org.apache.logging.log4j", "log4j-core", "2.20.0")
+    implementation("org.apache.logging.log4j", "log4j-slf4j2-impl", "2.20.0")
     implementation("club.minnced", "discord-webhooks", "0.8.2")
 
     implementation("org.knowm.xchart", "xchart", "3.8.3")
