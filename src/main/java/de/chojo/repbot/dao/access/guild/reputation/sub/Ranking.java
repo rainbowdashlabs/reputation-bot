@@ -86,7 +86,7 @@ public class Ranking extends QueryFactory implements GuildHolder {
      * @return a sorted list of reputation users
      */
     public GuildRanking days7(int pageSize) {
-        return new GuildRanking("command.top.message.7daysTitle", () -> get7DaysRankingPageCount(pageSize), page -> get7DaysRankingPage(pageSize, page));
+        return new GuildRanking("command.top.message.rollingweektitle", () -> get7DaysRankingPageCount(pageSize), page -> get7DaysRankingPage(pageSize, page));
     }
 
     /**
@@ -96,7 +96,7 @@ public class Ranking extends QueryFactory implements GuildHolder {
      * @return a sorted list of reputation users
      */
     public GuildRanking days30(int pageSize) {
-        return new GuildRanking("command.top.message.30daysTitle", () -> get30DaysRankingPageCount(pageSize), page -> get30DaysRankingPage(pageSize, page));
+        return new GuildRanking("command.top.message.rollingmonthtitle", () -> get30DaysRankingPageCount(pageSize), page -> get30DaysRankingPage(pageSize, page));
     }
 
     /**
