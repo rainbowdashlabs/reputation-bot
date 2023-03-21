@@ -1,13 +1,11 @@
 package de.chojo.repbot.dao.access.guild.settings.sub.thanking;
 
-import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.sadu.base.QueryFactory;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
@@ -17,11 +15,9 @@ import net.dv8tion.jda.internal.entities.channel.concrete.VoiceChannelImpl;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -87,14 +83,16 @@ public class Channels extends QueryFactory implements GuildHolder {
         return !categories.contains(category.getIdLong());
     }
 
-    public List<TextChannel> channels() {
-        return DiscordResolver.getValidTextChannelsById(guild(), new ArrayList<>(channels));
+    public List<GuildChannel> channels() {
+        return channels.stream().map(guild()::getGuildChannelById)
+                .filter(Objects::nonNull)
+                .toList();
     }
 
     public List<Category> categories() {
         return categories.stream().map(guild()::getCategoryById)
                          .filter(Objects::nonNull)
-                         .collect(Collectors.toList());
+                         .toList();
     }
 
     public Set<Long> channelIds() {
