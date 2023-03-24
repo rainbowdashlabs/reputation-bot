@@ -72,7 +72,7 @@ public class ReactionListener extends ListenerAdapter {
                            .onErrorMap(err -> null)
                            .complete();
         } catch (InsufficientPermissionException e) {
-            PermissionErrorHandler.handle(e, event.getGuild(), localizer, configuration);
+            PermissionErrorHandler.handle(e, event.getGuild(), localizer.context(LocaleProvider.guild(event.getGuild())), configuration);
             return;
         }
 
@@ -92,7 +92,7 @@ public class ReactionListener extends ListenerAdapter {
             receiver = newReceiver;
         }
 
-        if (PermissionErrorHandler.assertAndHandle(event.getGuildChannel(), LocaleProvider.guild(event.getGuild()), configuration, Permission.MESSAGE_SEND)) {
+        if (PermissionErrorHandler.assertAndHandle(event.getGuildChannel(), localizer.context(LocaleProvider.guild(event.getGuild())), configuration, Permission.MESSAGE_SEND)) {
             return;
         }
 
