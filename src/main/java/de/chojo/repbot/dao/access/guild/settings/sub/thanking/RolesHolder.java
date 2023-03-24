@@ -79,7 +79,7 @@ public abstract class RolesHolder extends QueryFactory implements GuildHolder {
     public String prettyString() {
         return roleIds.stream()
                       .map(id -> Optional.ofNullable(guild().getRoleById(id))
-                                         .map(Role::getName)
+                                         .map(r -> "%s | %d".formatted(r.getName(), r.getPosition()))
                                          .orElse("Unkown (%d)".formatted(id)))
                       .collect(Collectors.joining(", "));
     }
