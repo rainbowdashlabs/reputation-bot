@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.utils.TimeFormat;
 
 import java.time.LocalDateTime;
@@ -44,6 +45,8 @@ public class Debug implements SlashHandler {
             return;
         }
 
+        var channel = guild.getGuildChannelById(event.getOption("channel_id", () -> 0L, OptionMapping::getAsLong));
+
         var selfMember = guild.getSelfMember();
         var repGuild = guilds.guild(guild);
         var settings = repGuild.settings();
@@ -71,6 +74,16 @@ public class Debug implements SlashHandler {
                                       .map(perm -> (selfMember.hasPermission(perm) ? "✅ " : "❌ ") + perm.getName())
                                       .collect(Collectors.joining("\n")))
                 .build());
+        if (channel != null) {
+            embeds.add(new EmbedBuilder()
+                    .setTitle("Channel Permissions for %s".formatted(channel.getName()))
+                    .setDescription(Arrays.stream(Permission.values())
+                            .filter(Predicate.not(Permission.UNKNOWN::equals))
+                            .filter(Permission::isChannel)
+                            .map(perm -> (selfMember.hasPermission(channel, perm) ? "✅ " : "❌ ") + perm.getName())
+                            .collect(Collectors.joining("\n")))
+                    .build());
+        }
 
         embeds.add(new EmbedBuilder()
                 .setTitle("Settings")

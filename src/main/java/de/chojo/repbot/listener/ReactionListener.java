@@ -3,6 +3,8 @@ package de.chojo.repbot.listener;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import de.chojo.jdautil.localization.ILocalizer;
+import de.chojo.jdautil.localization.LocalizationContext;
+import de.chojo.jdautil.localization.util.LocaleProvider;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.analyzer.results.match.ThankType;
 import de.chojo.repbot.config.Configuration;
@@ -90,7 +92,7 @@ public class ReactionListener extends ListenerAdapter {
             receiver = newReceiver;
         }
 
-        if (PermissionErrorHandler.assertAndHandle(event.getGuildChannel(), localizer, configuration, Permission.MESSAGE_SEND)) {
+        if (PermissionErrorHandler.assertAndHandle(event.getGuildChannel(), LocaleProvider.guild(event.getGuild()), configuration, Permission.MESSAGE_SEND)) {
             return;
         }
 
