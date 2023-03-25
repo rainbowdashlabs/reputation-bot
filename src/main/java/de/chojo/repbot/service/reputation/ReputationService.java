@@ -234,9 +234,9 @@ public class ReputationService {
             if (!announcements.isSameChannel()) {
                 channel = guild.getTextChannelById(announcements.channelId());
             }
-            if (channel == null || rank.getRole(guild) == null) return;
+            if (channel == null || rank.getRole(guild).isEmpty()) return;
             channel.sendMessage(localizer.localize("message.levelAnnouncement", guild,
-                           Replacement.createMention(receiver), Replacement.createMention(rank.getRole(guild))))
+                           Replacement.createMention(receiver), Replacement.createMention(rank.role().get())))
                    .setAllowedMentions(Collections.emptyList())
                    .queue();
         });

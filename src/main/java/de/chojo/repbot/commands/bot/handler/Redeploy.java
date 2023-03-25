@@ -17,6 +17,6 @@ public class Redeploy implements SlashHandler {
         }
 
         event.reply("Refreshing commands of guild " + Guilds.prettyName(guild)).setEphemeral(true).queue();
-        context.commandHub().refreshGuildCommands(guild);
+        context.interactionHub().refreshGuildCommands(guild);
     }
 }

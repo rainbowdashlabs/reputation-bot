@@ -44,7 +44,7 @@ public class BotAdmin extends SlashCommand {
                         .handler(new Debug(guilds))
                         .argument(Argument.text("guild_id", "Id of guild").asRequired()))
                 .subCommand(SubCommand.of("shared_guilds", "Shared guilds with a user")
-                        .handler(new SharedGuilds())
+                        .handler(new SharedGuilds(configuration))
                         .argument(Argument.text("user_id", "user id"))
                         .argument(Argument.user("user", "user")))
                 .subCommand(SubCommand.of("redeploy", "Redeploy guild commands")

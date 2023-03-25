@@ -32,7 +32,7 @@ public class RoleUpdater extends ListenerAdapter {
         executorService.scheduleAtFixedRate(roleUpdater.checked::clear, 30, 30, TimeUnit.MINUTES);
         var now = ZonedDateTime.now(ZoneOffset.UTC);
         var base = now.toLocalDate().atStartOfDay().plus(1, ChronoUnit.DAYS).plus(1, ChronoUnit.HOURS)
-                      .atOffset(ZoneOffset.UTC);
+                .atOffset(ZoneOffset.UTC);
         var minutes = now.until(base, ChronoUnit.MINUTES);
         executorService.scheduleAtFixedRate(roleUpdater::updateTimed, minutes, 1440, TimeUnit.MINUTES);
         return roleUpdater;
@@ -62,15 +62,15 @@ public class RoleUpdater extends ListenerAdapter {
         guild.load(shardManager);
         if (guild.isById()) return;
         for (var rank : guild.settings().ranks().ranks()) {
-            var role = rank.role();
-            if (role == null) continue;
-            for (Member member : guild.guild().getMembersWithRoles(role)) {
-                try {
-                    roleAssigner.update(member);
-                } catch (RoleAccessException e) {
-
+            rank.role().ifPresent(role -> {
+                for (Member member : guild.guild().getMembersWithRoles(role)) {
+                    try {
+                        roleAssigner.update(member);
+                    } catch (RoleAccessException e) {
+                        // ignore
+                    }
                 }
-            }
+            });
         }
     }
 

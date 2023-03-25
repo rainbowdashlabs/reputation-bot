@@ -7,9 +7,9 @@ import de.chojo.sadu.wrapper.util.Row;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.sql.SQLException;
+import java.util.Optional;
 
 /**
  * Representing a repuration rank.
@@ -36,12 +36,11 @@ public class ReputationRank extends QueryFactory implements GuildHolder, Compara
         );
     }
 
-    @Nullable
-    public Role getRole(Guild guild) {
+    public Optional<Role> getRole(Guild guild) {
         if (role == null) {
             role = guild.getRoleById(roleId);
         }
-        return role;
+        return Optional.ofNullable(role);
     }
 
     public long roleId() {
@@ -52,7 +51,7 @@ public class ReputationRank extends QueryFactory implements GuildHolder, Compara
         return reputation;
     }
 
-    public Role role() {
+    public Optional<Role> role() {
         return getRole(ranks.guild());
     }
 
