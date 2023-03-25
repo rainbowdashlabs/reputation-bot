@@ -32,8 +32,8 @@ public class List implements SlashHandler {
         var reputationRoles = ranks.ranks()
                                    .stream()
                                    .sorted(Comparator.reverseOrder())
-                                   .filter(role -> role.getRole(guild) != null)
-                                   .map(role -> role.reputation() + " ➜ " + role.getRole(guild).getAsMention())
+                                   .filter(role -> role.getRole(guild).isPresent())
+                                   .map(role -> role.reputation() + " ➜ " + role.getRole(guild).get().getAsMention())
                                    .collect(Collectors.joining("\n"));
 
         var builder = new LocalizedEmbedBuilder(context.guildLocalizer())

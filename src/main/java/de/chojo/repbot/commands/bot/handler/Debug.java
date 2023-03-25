@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.utils.TimeFormat;
 
 import java.time.LocalDateTime;
@@ -20,7 +21,6 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
@@ -44,6 +44,8 @@ public class Debug implements SlashHandler {
             return;
         }
 
+        var channel = guild.getGuildChannelById(event.getOption("channel_id", () -> 0L, OptionMapping::getAsLong));
+
         var selfMember = guild.getSelfMember();
         var repGuild = guilds.guild(guild);
         var settings = repGuild.settings();
@@ -60,17 +62,27 @@ public class Debug implements SlashHandler {
                 .addField("Week Reputation", String.valueOf(reputation.stats().weekReputation()), true)
                 .addField("Today Reputation", String.valueOf(reputation.stats().todayReputation()), true)
                 .addField("Latest reputation", timestamp(reputation.log().getLatestReputation()
-                                                                   .map(ReputationLogEntry::received)
-                                                                   .orElse(LocalDateTime.ofEpochSecond(0L, 0, ZoneOffset.UTC))), true)
+                        .map(ReputationLogEntry::received)
+                        .orElse(LocalDateTime.ofEpochSecond(0L, 0, ZoneOffset.UTC))), true)
                 .build());
 
         embeds.add(new EmbedBuilder()
                 .setTitle("Permissions")
                 .setDescription(Arrays.stream(Permission.values())
-                                      .filter(Predicate.not(Permission.UNKNOWN::equals))
-                                      .map(perm -> (selfMember.hasPermission(perm) ? "✅ " : "❌ ") + perm.getName())
-                                      .collect(Collectors.joining("\n")))
+                        .filter(Predicate.not(Permission.UNKNOWN::equals))
+                        .map(perm -> (selfMember.hasPermission(perm) ? "✅ " : "❌ ") + perm.getName())
+                        .collect(Collectors.joining("\n")))
                 .build());
+        if (channel != null) {
+            embeds.add(new EmbedBuilder()
+                    .setTitle("Channel Permissions for %s".formatted(channel.getName()))
+                    .setDescription(Arrays.stream(Permission.values())
+                            .filter(Predicate.not(Permission.UNKNOWN::equals))
+                            .filter(Permission::isChannel)
+                            .map(perm -> (selfMember.hasPermission(channel, perm) ? "✅ " : "❌ ") + perm.getName())
+                            .collect(Collectors.joining("\n")))
+                    .build());
+        }
 
         embeds.add(new EmbedBuilder()
                 .setTitle("Settings")
@@ -93,12 +105,12 @@ public class Debug implements SlashHandler {
             categories = thanks.channels().categories();
         } else {
             channels = guild.getChannels().stream()
-                            .filter(c -> c instanceof GuildMessageChannel)
-                            .filter(c -> thanks.channels().isEnabled((GuildMessageChannel) c))
-                            .toList();
+                    .filter(c -> c instanceof GuildMessageChannel)
+                    .filter(c -> thanks.channels().isEnabled((GuildMessageChannel) c))
+                    .toList();
             categories = guild.getCategories().stream()
-                              .filter(category -> thanks.channels().isEnabledByCategory(category))
-                              .toList();
+                    .filter(category -> thanks.channels().isEnabledByCategory(category))
+                    .toList();
         }
 
         var channelNames = channels.stream().map(Channel::getName).limit(25).collect(Collectors.joining(", "));
@@ -117,12 +129,15 @@ public class Debug implements SlashHandler {
                 .addField("Thankwords", thanks.thankwords().prettyString(), false)
                 .addField("Main Reaction", thanks.reactions().reactionMention().orElse("None"), true)
                 .addField("Additional Reactions", String.join(" ", thanks.reactions()
-                                                                         .getAdditionalReactionMentions()), true)
+                        .getAdditionalReactionMentions()), true)
                 .build());
 
         embeds.add(new EmbedBuilder()
                 .setTitle("Ranks")
-                .setDescription(settings.ranks().prettyString())
+                .addField("Reputation ranks", settings.ranks().prettyString(), false)
+                .addField("Bot roles", event.getGuild().getSelfMember().getRoles().stream()
+                        .map(role -> "%s(%d)".formatted(role.getName(), role.getPosition()))
+                        .collect(Collectors.joining("\n")), false)
                 .build());
 
         var pages = new ListPageBag<>(embeds) {

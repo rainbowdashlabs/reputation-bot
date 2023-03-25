@@ -1,6 +1,7 @@
 package de.chojo.repbot.util;
 
 import de.chojo.jdautil.localization.ILocalizer;
+import de.chojo.jdautil.localization.LocalizationContext;
 import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.config.Configuration;
@@ -18,7 +19,7 @@ public final class PermissionErrorHandler {
     }
 
     public static void handle(InsufficientPermissionException permissionException, ShardManager shardManager,
-                              ILocalizer localizer, Configuration configuration) {
+                              LocalizationContext localizer, Configuration configuration) {
         var permission = permissionException.getPermission();
         var guildById = shardManager.getGuildById(permissionException.getGuildId());
         var channel = (TextChannel) permissionException.getChannel(guildById.getJDA());
@@ -26,7 +27,7 @@ public final class PermissionErrorHandler {
         sendPermissionError(channel, permission, localizer, configuration);
     }
 
-    public static void handle(InsufficientPermissionException permissionException, Guild guild, ILocalizer localizer,
+    public static void handle(InsufficientPermissionException permissionException, Guild guild, LocalizationContext localizer,
                               Configuration configuration) {
         var permission = permissionException.getPermission();
         var channel = (TextChannel) permissionException.getChannel(guild.getJDA());
@@ -35,22 +36,22 @@ public final class PermissionErrorHandler {
     }
 
     public static void handle(InsufficientPermissionException permissionException, GuildMessageChannel channel,
-                              ILocalizer localizer, Configuration configuration) {
+                              LocalizationContext localizer, Configuration configuration) {
         var permission = permissionException.getPermission();
         if (channel == null) return;
         sendPermissionError(channel, permission, localizer, configuration);
     }
 
-    public static void sendPermissionError(GuildMessageChannel channel, Permission permission, ILocalizer localizer,
+    public static void sendPermissionError(GuildMessageChannel channel, Permission permission, LocalizationContext localizer,
                                            Configuration configuration) {
         var guild = channel.getGuild();
-        var errorMessage = localizer.localize("error.missingPermission", guild,
+        var errorMessage = localizer.localize("error.missingPermission",
                 Replacement.create("PERM", permission.getName(), Format.BOLD));
         if (guild.getSelfMember().hasPermission(permission)) {
-            errorMessage += "\n" + localizer.localize("error.missingPermissionChannel", guild,
+            errorMessage += "\n" + localizer.localize("error.missingPermissionChannel",
                     Replacement.createMention("CHANNEL", channel));
         } else {
-            errorMessage += "\n" + localizer.localize("error.missingPermissionGuild", guild);
+            errorMessage += "\n" + localizer.localize("error.missingPermissionGuild");
         }
         if (permission != Permission.MESSAGE_SEND && permission != Permission.VIEW_CHANNEL
             && PermissionUtil.checkPermission(channel.getPermissionContainer(), channel.getGuild()
@@ -104,7 +105,7 @@ public final class PermissionErrorHandler {
      * @param permissions   permissions to check
      * @return true if a permission was missing and a message was sent
      */
-    public static boolean assertAndHandle(GuildMessageChannel channel, ILocalizer localizer, Configuration configuration, Permission... permissions) {
+    public static boolean assertAndHandle(GuildMessageChannel channel, LocalizationContext localizer, Configuration configuration, Permission... permissions) {
         try {
             assertPermissions(channel, permissions);
         } catch (InsufficientPermissionException e) {

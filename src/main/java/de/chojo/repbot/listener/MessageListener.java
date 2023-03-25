@@ -1,6 +1,7 @@
 package de.chojo.repbot.listener;
 
 import de.chojo.jdautil.localization.ILocalizer;
+import de.chojo.jdautil.localization.util.LocaleProvider;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
@@ -124,7 +125,7 @@ public class MessageListener extends ListenerAdapter {
                 || result.asEmpty().reason() == EmptyResultReason.NO_PATTERN)) return;
 
 
-        if (PermissionErrorHandler.assertAndHandle(event.getGuildChannel(), localizer, configuration,
+        if (PermissionErrorHandler.assertAndHandle(event.getGuildChannel(), localizer.context(LocaleProvider.guild(event.getGuild())), configuration,
                 Permission.MESSAGE_SEND, Permission.MESSAGE_ADD_REACTION, Permission.MESSAGE_EMBED_LINKS)) {
             return;
         }

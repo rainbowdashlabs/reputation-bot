@@ -81,7 +81,7 @@ public class General extends QueryFactory implements GuildHolder {
     }
 
     public boolean resetDate(LocalDate resetDate) {
-            boolean result;
+        boolean result;
         if (resetDate == null) {
             result = set("reset_date", stmt -> stmt.setDate(null));
         } else {
@@ -126,10 +126,10 @@ public class General extends QueryFactory implements GuildHolder {
     private boolean set(String parameter, ThrowingConsumer<ParamBuilder, SQLException> builder) {
         return builder()
                 .query("""
-                       INSERT INTO guild_settings(guild_id, %s) VALUES (?, ?)
-                       ON CONFLICT(guild_id)
-                           DO UPDATE SET %s = excluded.%s;
-                       """, parameter, parameter, parameter)
+                        INSERT INTO guild_settings(guild_id, %s) VALUES (?, ?)
+                        ON CONFLICT(guild_id)
+                            DO UPDATE SET %s = excluded.%s;
+                        """, parameter, parameter, parameter)
                 .parameter(stmts -> {
                     stmts.setLong(guildId());
                     builder.accept(stmts);
@@ -144,11 +144,11 @@ public class General extends QueryFactory implements GuildHolder {
 
     public String prettyString() {
         return """
-               Stack roles: %s
-               Emoji Debug: %s
-               Language: %s
-               Reputation Mode: %s
-               """.stripIndent()
-                  .formatted(stackRoles.get(), emojiDebug, language.getLanguageName(), reputationMode.name());
+                Stack roles: %s
+                Emoji Debug: %s
+                Language: %s
+                Reputation Mode: %s
+                """.stripIndent()
+                .formatted(stackRoles.get(), emojiDebug, language != null ? language.getLanguageName() : guild().getLocale().getLanguageName(), reputationMode.name());
     }
 }

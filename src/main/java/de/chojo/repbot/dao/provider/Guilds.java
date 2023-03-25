@@ -89,4 +89,8 @@ public class Guilds extends QueryFactory {
                 .readRow(row -> byId(row.getLong("guild_id")))
                 .allSync();
     }
+
+    public void invalidate(long guild) {
+        guilds.invalidate(guild);
+    }
 }

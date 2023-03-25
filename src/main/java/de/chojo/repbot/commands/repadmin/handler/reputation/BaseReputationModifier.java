@@ -26,7 +26,7 @@ public abstract class BaseReputationModifier implements SlashHandler {
         var add = event.getOption("amount").getAsLong();
         execute(event, context, user, repUser, add);
         var member = event.getGuild().retrieveMember(user).complete();
-        roleAssigner.updateReporting(member, event.getChannel().asTextChannel());
+        roleAssigner.updateReporting(member, event.getChannel().asGuildMessageChannel());
     }
 
     abstract void execute(SlashCommandInteractionEvent event, EventContext context, User user, RepUser repUser, long rep);

@@ -62,7 +62,7 @@ public class Scanner {
     }
 
     public void scanChannel(SlashCommandInteractionEvent event, EventContext context, TextChannel channel, int messageCount) {
-        if (PermissionErrorHandler.assertAndHandle(channel, context.guildLocalizer().localizer(), configuration,
+        if (PermissionErrorHandler.assertAndHandle(channel, context.guildLocalizer(), configuration,
                 Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL, Permission.VIEW_CHANNEL, Permission.MESSAGE_HISTORY)) {
             return;
         }

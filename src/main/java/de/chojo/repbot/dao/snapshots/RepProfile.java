@@ -85,7 +85,7 @@ public record RepProfile(RepUser repUser, long rank, long rankDonated, long user
 
         var progressBar = Text.progressBar(progess, BAR_SIZE);
 
-        var level = current.map(r -> r.getRole(repUser.member().getGuild())).map(IMentionable::getAsMention)
+        var level = current.flatMap(r -> r.getRole(repUser.member().getGuild())).map(IMentionable::getAsMention)
                            .orElse("/");
 
         var currProgress = String.valueOf(reputation() - currentRoleRep);

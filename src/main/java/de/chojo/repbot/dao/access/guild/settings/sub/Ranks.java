@@ -38,25 +38,25 @@ public class Ranks extends QueryFactory implements GuildHolder {
     public boolean add(Role role, long reputation) {
         var result = builder()
                 .query("""
-                       DELETE FROM
-                           guild_ranks
-                       WHERE
-                           guild_id = ?
-                               AND (role_id = ?
-                                   OR reputation = ?);
-                       """)
+                        DELETE FROM
+                            guild_ranks
+                        WHERE
+                            guild_id = ?
+                                AND (role_id = ?
+                                    OR reputation = ?);
+                        """)
                 .parameter(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong())
-                                       .setLong(reputation))
+                        .setLong(reputation))
                 .append()
                 .query("""
-                       INSERT INTO guild_ranks(guild_id, role_id, reputation) VALUES(?,?,?)
-                           ON CONFLICT(guild_id, role_id)
-                               DO UPDATE
-                                   SET reputation = excluded.reputation,
-                                       role_id = excluded.role_id;
-                       """)
+                        INSERT INTO guild_ranks(guild_id, role_id, reputation) VALUES(?,?,?)
+                            ON CONFLICT(guild_id, role_id)
+                                DO UPDATE
+                                    SET reputation = excluded.reputation,
+                                        role_id = excluded.role_id;
+                        """)
                 .parameter(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong())
-                                       .setLong(reputation))
+                        .setLong(reputation))
                 .update()
                 .sendSync()
                 .changed();
@@ -73,14 +73,14 @@ public class Ranks extends QueryFactory implements GuildHolder {
         }
         var ranks = builder(ReputationRank.class)
                 .query("""
-                       SELECT
-                           role_id,
-                           reputation
-                       FROM
-                           guild_ranks
-                       WHERE guild_id = ?
-                       ORDER BY reputation;
-                       """)
+                        SELECT
+                            role_id,
+                            reputation
+                        FROM
+                            guild_ranks
+                        WHERE guild_id = ?
+                        ORDER BY reputation;
+                        """)
                 .parameter(stmt -> stmt.setLong(guildId()))
                 .readRow(r -> ReputationRank.build(this, r))
                 .allSync();
@@ -101,25 +101,25 @@ public class Ranks extends QueryFactory implements GuildHolder {
     public List<ReputationRank> currentRanks(RepUser user) {
         var profile = user.profile();
         return ranks().stream()
-                      .filter(rank -> rank.reputation() <= profile.reputation())
-                      .sorted()
-                      .limit(stackRoles.get() ? Integer.MAX_VALUE : 1)
-                      .toList();
+                .filter(rank -> rank.reputation() <= profile.reputation())
+                .sorted()
+                .limit(stackRoles.get() ? Integer.MAX_VALUE : 1)
+                .toList();
     }
 
     public Optional<ReputationRank> currentRank(RepUser user) {
         var profile = user.profile();
         return ranks().stream()
-                      .filter(rank -> rank.reputation() <= profile.reputation())
-                      .sorted()
-                      .limit(1)
-                      .findFirst();
+                .filter(rank -> rank.reputation() <= profile.reputation())
+                .sorted()
+                .limit(1)
+                .findFirst();
     }
 
     public Optional<ReputationRank> nextRank(RepUser user) {
         var profile = user.profile();
         return ranks().stream().filter(rank -> rank.reputation() > profile.reputation())
-                      .sorted(Comparator.reverseOrder()).limit(1).findFirst();
+                .sorted(Comparator.reverseOrder()).limit(1).findFirst();
     }
 
     @Override
@@ -145,6 +145,8 @@ public class Ranks extends QueryFactory implements GuildHolder {
     }
 
     public String prettyString() {
-        return ranks().stream().map(rank -> "%s %d".formatted(rank.role().getName(), rank.reputation())).collect(Collectors.joining("\n"));
+        return ranks().stream().filter(r -> r.role().isPresent())
+                .map(rank -> "%s(%d) %d".formatted(rank.role().get().getName(), rank.role().get().getPosition(), rank.reputation()))
+                .collect(Collectors.joining("\n"));
     }
 }
