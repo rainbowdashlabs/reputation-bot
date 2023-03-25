@@ -1,6 +1,7 @@
 package de.chojo.repbot.listener.voting;
 
 import de.chojo.jdautil.localization.ILocalizer;
+import de.chojo.jdautil.localization.util.LocaleProvider;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.Verifier;
@@ -104,7 +105,7 @@ public class ReputationVoteListener extends ListenerAdapter {
     }
 
     public void registerVote(Message message, List<Member> members, Settings settings) {
-        if (PermissionErrorHandler.assertAndHandle(message.getGuildChannel(), loc, configuration, Permission.MESSAGE_SEND, Permission.MESSAGE_EMBED_LINKS)) {
+        if (PermissionErrorHandler.assertAndHandle(message.getGuildChannel(), loc.context(LocaleProvider.guild(message.getGuild())), configuration, Permission.MESSAGE_SEND, Permission.MESSAGE_EMBED_LINKS)) {
             return;
         }
 

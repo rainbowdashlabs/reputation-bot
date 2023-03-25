@@ -1,6 +1,7 @@
 package de.chojo.repbot.core;
 
 import de.chojo.jdautil.interactions.dispatching.InteractionHub;
+import de.chojo.jdautil.localization.util.LocaleProvider;
 import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.commands.abuseprotection.AbuseProtection;
@@ -102,11 +103,11 @@ public class Bot {
         log.info("Configuring rest actions.");
         RestAction.setDefaultFailure(throwable -> {
             if (throwable instanceof InsufficientPermissionException perm) {
-                PermissionErrorHandler.handle(perm, shardManager, localization.localizer(), configuration);
+                PermissionErrorHandler.handle(perm, shardManager, localization.localizer().context(LocaleProvider.empty()), configuration);
                 return;
             }
             if (throwable.getCause() instanceof InsufficientPermissionException insuf) {
-                PermissionErrorHandler.handle(insuf, shardManager, localization.localizer(), configuration);
+                PermissionErrorHandler.handle(insuf, shardManager, localization.localizer().context(LocaleProvider.empty()), configuration);
                 return;
             }
             if (throwable instanceof ErrorResponseException e) {
@@ -194,7 +195,7 @@ public class Bot {
                         new Invite(configuration),
                         Info.create(configuration),
                         new Log(guilds),
-                        Setup.of(guilds),
+                        Setup.of(guilds, configuration),
                         new Gdpr(data.gdpr()),
                         new Prune(gdprService),
                         new Reactions(guilds),
@@ -209,7 +210,8 @@ public class Bot {
                 .testMode("true".equals(System.getProperty("bot.testmode", "false")))
                 .withCommandErrorHandler((context, throwable) -> {
                     if (throwable instanceof InsufficientPermissionException) {
-                        PermissionErrorHandler.handle((InsufficientPermissionException) throwable, shardManager, localizer, configuration);
+                        PermissionErrorHandler.handle((InsufficientPermissionException) throwable, shardManager,
+                                localizer.context(LocaleProvider.guild(context.guild())), configuration);
                         return;
                     }
                     log.error(LogNotify.NOTIFY_ADMIN, "Command execution of {} failed\n{}",
