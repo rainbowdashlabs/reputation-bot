@@ -6,6 +6,7 @@ import de.chojo.jdautil.interactions.slash.Slash;
 import de.chojo.jdautil.interactions.slash.SubCommand;
 import de.chojo.jdautil.interactions.slash.provider.SlashCommand;
 import de.chojo.repbot.commands.bot.handler.Debug;
+import de.chojo.repbot.commands.bot.handler.InvalidateCache;
 import de.chojo.repbot.commands.bot.handler.Leave;
 import de.chojo.repbot.commands.bot.handler.Redeploy;
 import de.chojo.repbot.commands.bot.handler.Search;
@@ -54,6 +55,9 @@ public class BotAdmin extends SlashCommand {
                 .subCommand(SubCommand.of("search", "Search for guilds")
                         .handler(new Search())
                         .argument(Argument.text("term", "Search term").asRequired()))
+                .subCommand(SubCommand.of("invalidate_cache", "Invalidates cached data for the guild")
+                        .handler(new InvalidateCache(guilds))
+                        .argument(Argument.text("guild", "guild id").asRequired()))
                 .subCommand(SubCommand.of("leave", "Leave a guild")
                         .handler(new Leave())
                         .argument(Argument.text("guild_id", "Guild id").asRequired())));
