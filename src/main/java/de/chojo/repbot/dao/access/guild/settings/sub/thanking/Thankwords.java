@@ -28,6 +28,9 @@ public class Thankwords extends QueryFactory implements GuildHolder {
         this.thanking = thanking;
         this.thankwords = thankwords;
         this.lock = new StampedLock();
+        // as 'this' does not escape in this constructor,
+        // we don't need a write-lock here
+        this.cachedPattern = compilePattern();
     }
 
     @Override
@@ -56,7 +59,7 @@ public class Thankwords extends QueryFactory implements GuildHolder {
     }
 
     /**
-     * Must be called in a write-lock
+     * Must be called in a write-lock if 'this' is accessible from other objects
      */
     private Pattern compilePattern() {
         if (thankwords.isEmpty()) return Pattern.compile("");
