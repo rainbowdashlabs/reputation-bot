@@ -11,6 +11,8 @@ import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.dao.provider.Metrics;
+import de.chojo.repbot.util.LogNotify;
+
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageType;
@@ -20,8 +22,12 @@ import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -30,11 +36,15 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class MessageAnalyzer {
     private static final int LOOKAROUND = 6;
     private static final Logger log = getLogger(MessageAnalyzer.class);
+    private static final Object PLACEHOLDER = new Object();
     private final ContextResolver contextResolver;
     private final Cache<Long, AnalyzerResult> resultCache = CacheBuilder.newBuilder()
                                                                         .expireAfterWrite(10, TimeUnit.MINUTES)
                                                                         .maximumSize(100000)
                                                                         .build();
+    private final Cache<Long, Object> rejectionCache = CacheBuilder.newBuilder()
+            .expireAfterWrite(1, TimeUnit.MINUTES)
+            .build();
     private final Configuration configuration;
     private final Metrics metrics;
     private final Guilds guilds;
@@ -58,13 +68,27 @@ public class MessageAnalyzer {
      * @return analyzer results
      */
     public AnalyzerResult processMessage(Pattern pattern, @NotNull Message message, Settings settings, boolean limitTargets, int limit) {
+        if (rejectionCache.getIfPresent(settings.guildId()) != null) {
+            return AnalyzerResult.empty(EmptyResultReason.INTERNAL_ERROR);
+        }
         var analyzer = guilds.guild(message.getGuild()).reputation().analyzer();
         try {
-            return analyzer.log(message, resultCache.get(message.getIdLong(), () -> analyze(pattern, message, settings, limitTargets, limit)));
+            return analyzer.log(message, resultCache.get(message.getIdLong(), () -> analyzeWithTimeout(pattern, message, settings, limitTargets, limit)));
         } catch (ExecutionException e) {
-            log.error("Could not compute analyzer result", e);
+            if (e.getCause() instanceof TimeoutException) {
+                log.warn(LogNotify.NOTIFY_ADMIN, "Timeout when analyzing message using pattern {} for guild {}", pattern.pattern(), settings.guildId());
+                rejectionCache.put(settings.guildId(), PLACEHOLDER);
+            } else {
+                log.error("Could not compute analyzer result", e);
+            }
         }
         return analyzer.log(message, AnalyzerResult.empty(EmptyResultReason.INTERNAL_ERROR));
+    }
+
+    private AnalyzerResult analyzeWithTimeout(Pattern pattern, Message message, @Nullable Settings settings, boolean limitTargets, int limit) {
+        return CompletableFuture.supplyAsync(() -> analyze(pattern, message, settings, limitTargets, limit))
+                .orTimeout(1L, TimeUnit.SECONDS)
+                .join();
     }
 
     private AnalyzerResult analyze(Pattern pattern, Message message, @Nullable Settings settings, boolean limitTargets, int limit) {

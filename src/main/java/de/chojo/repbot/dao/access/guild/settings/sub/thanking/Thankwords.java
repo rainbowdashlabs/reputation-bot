@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import org.intellij.lang.annotations.Language;
 
 import java.util.Set;
+import java.util.concurrent.locks.StampedLock;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -19,11 +20,17 @@ public class Thankwords extends QueryFactory implements GuildHolder {
     private final Thanking thanking;
 
     private final Set<String> thankwords;
+    private final StampedLock lock;
+    private volatile Pattern cachedPattern;
 
     public Thankwords(Thanking thanking, Set<String> thankwords) {
         super(thanking);
         this.thanking = thanking;
         this.thankwords = thankwords;
+        this.lock = new StampedLock();
+        // as 'this' does not escape in this constructor,
+        // we don't need a write-lock here
+        this.cachedPattern = compilePattern();
     }
 
     @Override
@@ -37,53 +44,76 @@ public class Thankwords extends QueryFactory implements GuildHolder {
     }
 
     public Set<String> words() {
-        return thankwords;
+        long stamp = lock.readLock();
+        try {
+            return Set.copyOf(thankwords);
+        } finally {
+            lock.unlockRead(stamp);
+        }
     }
 
     public Pattern thankwordPattern() {
+        // even if another thread has a write-lock, we either read the old pattern before the other thread compiles the new one,
+        // or we read the new one - both fine for our use
+        return cachedPattern;
+    }
+
+    /**
+     * Must be called in a write-lock if 'this' is accessible from other objects
+     */
+    private Pattern compilePattern() {
         if (thankwords.isEmpty()) return Pattern.compile("");
         var twPattern = thankwords.stream()
-                                  .map(t -> String.format(THANKWORD, t))
-                                  .collect(Collectors.joining("|"));
+                .map(t -> String.format(THANKWORD, t))
+                .collect(Collectors.joining("|"));
         return Pattern.compile(String.format(PATTERN, twPattern),
                 Pattern.CASE_INSENSITIVE + Pattern.MULTILINE + Pattern.DOTALL + Pattern.COMMENTS);
     }
 
     public boolean add(String pattern) {
-        var result = builder()
-                .query("""
-                       INSERT INTO
-                           thankwords(guild_id, thankword) VALUES(?,?)
-                               ON CONFLICT(guild_id, thankword)
-                                   DO NOTHING;
-                       """)
-                .parameter(stmt -> stmt.setLong(guildId()).setString(pattern))
-                .update()
-                .sendSync()
-                .changed();
-        if (result) {
-            thankwords.add(pattern);
+        long stamp = lock.writeLock();
+        try {
+            var result = builder().query("""
+                    INSERT INTO
+                        thankwords(guild_id, thankword) VALUES(?,?)
+                            ON CONFLICT(guild_id, thankword)
+                                DO NOTHING;
+                    """)
+                    .parameter(stmt -> stmt.setLong(guildId()).setString(pattern))
+                    .update()
+                    .sendSync()
+                    .changed();
+            if (result) {
+                thankwords.add(pattern);
+                cachedPattern = compilePattern();
+            }
+            return result;
+        } finally {
+            lock.unlockWrite(stamp);
         }
-        return result;
     }
 
     public boolean remove(String pattern) {
-        var result = builder()
-                .query("""
-                       DELETE FROM
-                           thankwords
-                       WHERE
-                           guild_id = ?
-                           AND thankword = ?
-                       """)
-                .parameter(stmt -> stmt.setLong(guildId()).setString(pattern))
-                .update()
-                .sendSync()
-                .changed();
-        if (result) {
-            thankwords.remove(pattern);
+        long stamp = lock.writeLock();
+        try {
+            var result = builder().query("""
+                    DELETE FROM
+                        thankwords
+                    WHERE
+                        guild_id = ?
+                        AND thankword = ?
+                    """).parameter(stmt -> stmt.setLong(guildId()).setString(pattern))
+                    .update()
+                    .sendSync()
+                    .changed();
+            if (result) {
+                thankwords.remove(pattern);
+                cachedPattern = compilePattern();
+            }
+            return result;
+        } finally {
+            lock.unlockWrite(stamp);
         }
-        return result;
     }
 
     public String prettyString() {

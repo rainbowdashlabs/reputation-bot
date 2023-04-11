@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "1.13.10"
+version = "1.13.11"
 
 repositories {
     maven("https://eldonexus.de/repository/maven-public")
@@ -21,10 +21,10 @@ dependencies {
 
     // database
     implementation("org.postgresql", "postgresql", "42.6.0")
-    implementation("de.chojo.sadu", "sadu-queries", "1.2.0")
-    implementation("de.chojo.sadu", "sadu-updater", "1.2.0")
-    implementation("de.chojo.sadu", "sadu-postgresql", "1.2.0")
-    implementation("de.chojo.sadu", "sadu-datasource", "1.2.0")
+    implementation("de.chojo.sadu", "sadu-queries", "1.3.0")
+    implementation("de.chojo.sadu", "sadu-updater", "1.3.0")
+    implementation("de.chojo.sadu", "sadu-postgresql", "1.3.0")
+    implementation("de.chojo.sadu", "sadu-datasource", "1.3.0")
 
     // Logging
     implementation("org.slf4j", "slf4j-api", "2.0.7")
