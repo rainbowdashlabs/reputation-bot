@@ -67,20 +67,12 @@ public class Channels extends QueryFactory implements GuildHolder {
     }
 
     public boolean isEnabledByChannel(StandardGuildChannel channel) {
-        if (channels.isEmpty()) return false;
-        if (isWhitelist()) {
-            return channels.contains(channel.getIdLong());
-        }
-        return !channels.contains(channel.getIdLong());
+        return isWhitelist() == channels.contains(channel.getIdLong());
     }
 
     public boolean isEnabledByCategory(@Nullable Category category) {
         if (category == null) return false;
-        if (categories.isEmpty()) return false;
-        if (isWhitelist()) {
-            return categories.contains(category.getIdLong());
-        }
-        return !categories.contains(category.getIdLong());
+        return isWhitelist() == categories.contains(category.getIdLong());
     }
 
     public List<GuildChannel> channels() {
