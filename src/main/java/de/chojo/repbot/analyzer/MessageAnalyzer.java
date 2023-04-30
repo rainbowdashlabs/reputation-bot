@@ -2,6 +2,7 @@ package de.chojo.repbot.analyzer;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.util.concurrent.UncheckedExecutionException;
 import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.jdautil.parsing.WeightedEntry;
 import de.chojo.repbot.analyzer.results.AnalyzerResult;
@@ -75,7 +76,7 @@ public class MessageAnalyzer {
         var analyzer = guilds.guild(message.getGuild()).reputation().analyzer();
         try {
             return analyzer.log(message, resultCache.get(message.getIdLong(), () -> analyzeWithTimeout(pattern, message, settings, limitTargets, limit)));
-        } catch (ExecutionException e) {
+        } catch (ExecutionException | UncheckedExecutionException e) {
             if (e.getCause() instanceof TimeoutException) {
                 log.warn(LogNotify.NOTIFY_ADMIN, "Timeout when analyzing message using pattern {} for guild {}", pattern.pattern(), settings.guildId());
                 rejectionCache.put(settings.guildId(), PLACEHOLDER);
