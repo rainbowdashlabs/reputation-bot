@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -71,7 +72,7 @@ public class MessageAnalyzer {
         }
         var analyzer = guilds.guild(message.getGuild()).reputation().analyzer();
         try {
-            return analyzer.log(message, resultCache.get(message.getIdLong(), () -> analyzeWithTimeout(pattern, message, settings, limitTargets, limit)));
+            return analyzer.log(message, resultCache.get(message.getIdLong(), () -> analyze(pattern, message, settings, limitTargets, limit)));
         } catch (ExecutionException | UncheckedExecutionException e) {
             if (e.getCause() instanceof TimeoutException) {
                 log.warn(LogNotify.NOTIFY_ADMIN, "Timeout when analyzing message using pattern {} for guild {}", pattern.pattern(), settings.guildId());
@@ -86,8 +87,14 @@ public class MessageAnalyzer {
         return analyzer.log(message, AnalyzerResult.empty(EmptyResultReason.INTERNAL_ERROR));
     }
 
-    private AnalyzerResult analyzeWithTimeout(Pattern pattern, Message message, @Nullable Settings settings, boolean limitTargets, int limit) {
-        return CompletableFuture.supplyAsync(() -> analyze(pattern, message, settings, limitTargets, limit))
+    @SuppressWarnings("DataFlowIssue") // We got no issues c:
+    private Optional<String> getThankword(Message message, Pattern pattern) {
+        return CompletableFuture.supplyAsync(() -> {
+                    var contentRaw = message.getContentRaw().toLowerCase();
+                    var matcher = pattern.matcher(contentRaw);
+                    if (!matcher.find()) return Optional.ofNullable((String) null); // Yes this is intended
+                    return Optional.ofNullable(matcher.group("match"));
+                })
                 .orTimeout(1L, TimeUnit.SECONDS)
                 .join();
     }
@@ -95,12 +102,11 @@ public class MessageAnalyzer {
     private AnalyzerResult analyze(Pattern pattern, Message message, @Nullable Settings settings, boolean limitTargets, int limit) {
         metrics.messages().countMessage();
         if (pattern.pattern().isBlank()) return AnalyzerResult.empty(EmptyResultReason.NO_PATTERN);
-        var contentRaw = message.getContentRaw().toLowerCase();
 
-        var matcher = pattern.matcher(contentRaw);
-        if (!matcher.find()) return AnalyzerResult.empty(EmptyResultReason.NO_MATCH);
+        var thankword = getThankword(message, pattern);
+        if (thankword.isEmpty()) return AnalyzerResult.empty(EmptyResultReason.NO_MATCH);
 
-        var match = matcher.group("match");
+        var match = thankword.get();
 
         if (message.getType() == MessageType.INLINE_REPLY) {
 
