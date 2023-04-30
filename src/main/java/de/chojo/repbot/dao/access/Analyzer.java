@@ -23,10 +23,16 @@ public class Analyzer extends QueryFactory {
         builder().query("""
                         DELETE FROM analyzer_results WHERE analyzed < NOW() - ?::interval;
                         """)
-                 .parameter(stmt -> stmt.setString("%d HOURS".formatted(configuration.cleanup().analyzerLogHours())))
-                 .delete()
-                 .send()
-                 .whenComplete(Futures.whenComplete(res -> log.debug("Deleted {} entries from analyzer log", res.rows()),
-                         err -> log.error(LogNotify.NOTIFY_ADMIN, "Could not cleanup analyzer log.", err)));
+                .parameter(stmt -> stmt.setString("%d HOURS".formatted(configuration.cleanup().analyzerLogHours())))
+                .delete()
+                .send()
+                .whenComplete(Futures.whenComplete(res -> log.debug("Deleted {} entries from analyzer log", res.rows()),
+                        err -> log.error(LogNotify.NOTIFY_ADMIN, "Could not cleanup analyzer log.", err)));
+        builder().query("DELETE FROM reputation_results WHERE submitted < now() - ?::interval")
+                .parameter(stmt -> stmt.setString("%d HOURS".formatted(configuration.cleanup().analyzerLogHours())))
+                .delete()
+                .send()
+                .whenComplete(Futures.whenComplete(res -> log.debug("Deleted {} entries from reputation results", res.rows()),
+                        err -> log.error(LogNotify.NOTIFY_ADMIN, "Could not cleanup reputation results.", err)));
     }
 }
