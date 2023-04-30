@@ -2,6 +2,7 @@ package de.chojo.repbot.analyzer;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.util.concurrent.UncheckedExecutionException;
 import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.jdautil.parsing.WeightedEntry;
 import de.chojo.repbot.analyzer.results.AnalyzerResult;
@@ -12,7 +13,6 @@ import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.util.LogNotify;
-
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageType;
@@ -20,13 +20,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
-import javax.validation.constraints.Null;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.regex.Pattern;
@@ -40,9 +37,9 @@ public class MessageAnalyzer {
     private static final Object PLACEHOLDER = new Object();
     private final ContextResolver contextResolver;
     private final Cache<Long, AnalyzerResult> resultCache = CacheBuilder.newBuilder()
-                                                                        .expireAfterWrite(10, TimeUnit.MINUTES)
-                                                                        .maximumSize(100000)
-                                                                        .build();
+            .expireAfterWrite(10, TimeUnit.MINUTES)
+            .maximumSize(100000)
+            .build();
     private final Cache<Long, Object> rejectionCache = CacheBuilder.newBuilder()
             .expireAfterWrite(1, TimeUnit.MINUTES)
             .build();
@@ -75,8 +72,11 @@ public class MessageAnalyzer {
         var analyzer = guilds.guild(message.getGuild()).reputation().analyzer();
         try {
             return analyzer.log(message, resultCache.get(message.getIdLong(), () -> analyzeWithTimeout(pattern, message, settings, limitTargets, limit)));
-        } catch (ExecutionException e) {
+        } catch (ExecutionException | UncheckedExecutionException e) {
             if (e.getCause() instanceof TimeoutException) {
+                log.warn(LogNotify.NOTIFY_ADMIN, "Timeout when analyzing message using pattern {} for guild {}", pattern.pattern(), settings.guildId());
+                rejectionCache.put(settings.guildId(), PLACEHOLDER);
+            } else if (e.getCause().getCause() instanceof TimeoutException) {
                 log.warn(LogNotify.NOTIFY_ADMIN, "Timeout when analyzing message using pattern {} for guild {}", pattern.pattern(), settings.guildId());
                 rejectionCache.put(settings.guildId(), PLACEHOLDER);
             } else {
@@ -105,7 +105,8 @@ public class MessageAnalyzer {
         if (message.getType() == MessageType.INLINE_REPLY) {
 
             var referencedMessage = message.getReferencedMessage();
-            if (referencedMessage == null) return AnalyzerResult.empty(match, EmptyResultReason.REFERENCE_MESSAGE_NOT_FOUND);
+            if (referencedMessage == null)
+                return AnalyzerResult.empty(match, EmptyResultReason.REFERENCE_MESSAGE_NOT_FOUND);
 
             Member user;
 
@@ -200,15 +201,15 @@ public class MessageAnalyzer {
         }
 
         memberMatches = memberMatches.stream()
-                                     .filter(e -> e.score() >= configuration.analyzerSettings().minFuzzyScore())
-                                     .toList();
+                .filter(e -> e.score() >= configuration.analyzerSettings().minFuzzyScore())
+                .toList();
 
         var members = users.stream()
-                           .filter(e -> e.getWeight() >= configuration.analyzerSettings().minFuzzyScore())
-                           .distinct()
-                           .sorted()
-                           .limit(limit)
-                           .collect(Collectors.toList());
+                .filter(e -> e.getWeight() >= configuration.analyzerSettings().minFuzzyScore())
+                .distinct()
+                .sorted()
+                .limit(limit)
+                .collect(Collectors.toList());
         if (members.isEmpty()) return AnalyzerResult.empty(matchPattern, EmptyResultReason.INSUFFICIENT_SCORE);
 
         var thankwords = thankWordIndices.stream().map(words::get).collect(Collectors.toList());
