@@ -4,6 +4,7 @@ import de.chojo.jdautil.localization.LocalizationContext;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
+import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.util.Text;
 import net.dv8tion.jda.api.entities.Guild;
@@ -86,12 +87,11 @@ public class ScanProcess {
             countScan();
 
             if (message.getAuthor().isBot()) continue;
+            var settings = guilds.guild(guild).settings();
+            var result = messageAnalyzer.processMessage(pattern, message, settings, false,
+                    settings.abuseProtection().maxMessageReputation());
 
-            var result = messageAnalyzer.processMessage(pattern, message, null, false, guilds.guild(guild).settings()
-                                                                                             .abuseProtection()
-                                                                                             .maxMessageReputation());
-
-            if(result.isEmpty()) continue;
+            if (result.isEmpty()) continue;
 
             var matchResult = result.asMatch();
 
@@ -103,15 +103,15 @@ public class ScanProcess {
                 switch (matchResult.thankType()) {
                     case FUZZY, MENTION -> {
                         if (reputation.user(resultReceiver.getUser())
-                                      .addOldReputation(donator != null && guild.isMember(donator) ? donator : null,
-                                              message, null, matchResult.thankType())) {
+                                .addOldReputation(donator != null && guild.isMember(donator) ? donator : null,
+                                        message, null, matchResult.thankType())) {
                             hit();
                         }
                     }
                     case ANSWER -> {
                         if (reputation.user(resultReceiver.getUser())
-                                      .addOldReputation(donator != null && guild.isMember(donator) ? donator : null,
-                                              message, matchResult.asAnswer().referenceMessage(), matchResult.thankType())) {
+                                .addOldReputation(donator != null && guild.isMember(donator) ? donator : null,
+                                        message, matchResult.asAnswer().referenceMessage(), matchResult.thankType())) {
                             hit();
                         }
 
