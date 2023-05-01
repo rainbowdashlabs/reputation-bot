@@ -22,6 +22,7 @@ public class Setup extends SlashCommand {
     public Setup(Guilds guilds, ThankwordsContainer thankwordsContainer, Configuration configuration) {
         super(Slash.of("setup", "command.setup.description")
                 .guildOnly()
+                .adminCommand()
                 .command(new Start(guilds, thankwordsContainer, configuration)));
     }
 
