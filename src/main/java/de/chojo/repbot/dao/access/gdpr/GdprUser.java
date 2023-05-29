@@ -45,6 +45,7 @@ public class GdprUser extends QueryFactory {
     }
 
     public boolean queueDeletion() {
+        log.info("User {} requested deletion of their data", userId());
         return builder()
                 .query("""
                        INSERT INTO
