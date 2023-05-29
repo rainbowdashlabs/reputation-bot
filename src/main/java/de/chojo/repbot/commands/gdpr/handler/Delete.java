@@ -4,9 +4,13 @@ import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.access.Gdpr;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import org.slf4j.Logger;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class Delete implements SlashHandler {
     private final Gdpr gdpr;
+    private static final Logger log = getLogger(Delete.class);
 
     public Delete(Gdpr gdpr) {
         this.gdpr = gdpr;

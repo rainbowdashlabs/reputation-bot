@@ -7,9 +7,13 @@ import de.chojo.sadu.base.QueryFactory;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
+import org.slf4j.Logger;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class Gdpr extends QueryFactory implements MemberHolder {
     private final RepUser repUser;
+    private static final Logger log = getLogger(Gdpr.class);
 
     public Gdpr(RepUser repUser) {
         super(repUser);
@@ -22,6 +26,7 @@ public class Gdpr extends QueryFactory implements MemberHolder {
     }
 
     public void queueDeletion() {
+        log.info("User {} is scheduled for deletion on guild {}", userId(), guildId());
         builder()
                 .query("""
                        INSERT INTO
@@ -38,6 +43,7 @@ public class Gdpr extends QueryFactory implements MemberHolder {
     }
 
     public void dequeueDeletion() {
+        log.info("User {} deletion on guild {} canceled", userId(), guildId());
         builder()
                 .query("""
                        DELETE FROM
