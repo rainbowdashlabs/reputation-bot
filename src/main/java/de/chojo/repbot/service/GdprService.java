@@ -2,13 +2,13 @@ package de.chojo.repbot.service;
 
 import de.chojo.repbot.dao.access.Gdpr;
 import de.chojo.repbot.dao.access.gdpr.RemovalTask;
-import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.slf4j.Logger;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
@@ -60,17 +60,26 @@ public class GdprService implements Runnable {
 
     public CompletableFuture<Integer> cleanupGuildUsers(Guild guild) {
         return CompletableFuture.supplyAsync(() -> {
-            var savedIds = guilds.guild(guild).userIds();
-            var memberIds = guild.loadMembers().get()
-                                 .stream()
-                                 .map(ISnowflake::getIdLong).toList();
-            var collect = savedIds.stream().filter(id -> !memberIds.contains(id)).toList();
-            for (var id : collect) RemovalTask.anonymExecute(gdpr, guild.getIdLong(), id);
-            return collect.size();
+            log.info("Guild prune was started on {}", guild.getId());
+            var pruned = 0;
+            var users = guilds.guild(guild).userIds();
+            log.info("Checking {} users", users.size());
+            for (var user : users) {
+                try {
+                    guild.retrieveMemberById(user).complete();
+                } catch (RuntimeException e) {
+                    log.info("Removing user {} data during guild prune", user);
+                    RemovalTask.anonymExecute(gdpr, guild.getIdLong(), user);
+                    pruned++;
+                }
+            }
+            log.info("Prune on guild {} finished. Removed {} users", guild.getId(), pruned);
+            return pruned;
         }, executorService);
     }
 
     public void cleanupGuildUser(Guild guild, Long user) {
+        log.info("User data of {} was pruned on guild {}.", user, guild.getIdLong());
         CompletableFuture.runAsync(() -> RemovalTask.anonymExecute(gdpr, guild.getIdLong(), user), executorService);
     }
 
