@@ -43,8 +43,7 @@ public class Gdpr extends QueryFactory implements MemberHolder {
     }
 
     public void dequeueDeletion() {
-        log.info("User {} deletion on guild {} canceled", userId(), guildId());
-        builder()
+        if (builder()
                 .query("""
                        DELETE FROM
                            cleanup_schedule
@@ -53,7 +52,10 @@ public class Gdpr extends QueryFactory implements MemberHolder {
                        """)
                 .parameter(stmt -> stmt.setLong(guildId()).setLong(userId()))
                 .update()
-                .sendSync();
+                .sendSync()
+                .changed()) {
+            log.info("User {} deletion on guild {} canceled", userId(), guildId());
+        }
     }
 
     @Override
