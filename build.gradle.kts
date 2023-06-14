@@ -32,12 +32,12 @@ dependencies {
     implementation("org.apache.logging.log4j", "log4j-slf4j2-impl", "2.20.0")
     implementation("club.minnced", "discord-webhooks", "0.8.2")
 
-    implementation("org.knowm.xchart", "xchart", "3.8.3")
+    implementation("org.knowm.xchart", "xchart", "3.8.4")
 
     // unit testing
     testImplementation(platform("org.junit:junit-bom:5.9.3"))
     testImplementation("org.junit.jupiter", "junit-jupiter")
-    testImplementation("org.knowm.xchart", "xchart", "3.8.3")
+    testImplementation("org.knowm.xchart", "xchart", "3.8.4")
 }
 
 java {
