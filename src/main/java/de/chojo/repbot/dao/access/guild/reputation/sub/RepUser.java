@@ -121,7 +121,7 @@ public class RepUser extends QueryFactory implements MemberHolder {
                 .sendSync()
                 .changed();
         if (success) {
-            log.debug("{} received one reputation from {} for message {}", user().getName(), donor != null ? donor.getEffectiveName() : "unkown", message.getIdLong());
+            log.debug("{} received one reputation from {} on guild {} for message {}", userId(), donor != null ? donor.getIdLong() : "unkown", guildId(), message.getIdLong());
         }
         return success;
     }
