@@ -1,0 +1,18 @@
+# The pretty name of the repository. Otherwise, the identifier is used.
+name: "Reputation Bot"
+# The repository description to describe what the tags contain
+description: "Tags for the reputation bot"
+# A list of categories, which describe this repository
+category: ["reputation bot", "discord bot", "bot", "discord"]
+# Mark this repository as public.
+# This will make it appear in the search.
+# People can still import your repository via the identifier or url.
+# To appear in the search you also need to define a name, description and set a language
+public: true
+# Set the language of the repo
+language: en
+# Change the directory where the tags are located
+# Default is root
+# This allows you to include your tags in your project instead of an extra repository.
+# Our tags are contained in a directory called "tags"
+directory: tags
