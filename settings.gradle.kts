@@ -9,7 +9,7 @@ dependencyResolutionManagement {
         create("libs") {
             // misc
             library("jetbrains-annotations", "org.jetbrains:annotations:24.0.1")
-            version("sadu", "1.3.1-DEV")
+            version("sadu", "1.3.0")
             library("sadu-queries", "de.chojo.sadu", "sadu-queries").versionRef("sadu")
             library("sadu-updater", "de.chojo.sadu", "sadu-updater").versionRef("sadu")
             library("sadu-postgresql", "de.chojo.sadu", "sadu-postgresql").versionRef("sadu")
