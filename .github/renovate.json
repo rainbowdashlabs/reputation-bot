@@ -1,0 +1,11 @@
+{
+  "extends": [
+    "github>rainbowdashlabs/rainbowdashlabs//.github/renovate_default"
+  ],
+  "reviewers": [
+    "dlsf",
+    "RainbowDashLabs",
+    "Taucher2003",
+    "yannicklamprecht"
+  ]
+}
