@@ -4,8 +4,8 @@ on:
   push:
     tags:
     branches:
-      - master
-      - development
+      - main
+      - dev
 
 jobs:
   docker-build:
@@ -34,7 +34,7 @@ jobs:
           docker image tag ghcr.io/rainbowdashlabs/reputation-bot:${{ github.sha }} ghcr.io/rainbowdashlabs/reputation-bot:${{ github.ref_name }}
           docker push ghcr.io/rainbowdashlabs/reputation-bot:${{ github.ref_name }}
       - name: Tag & Push latest image
-        if: github.ref_name == 'master'
+        if: github.ref_name == 'main'
         run: |
           docker image tag ghcr.io/rainbowdashlabs/reputation-bot:${{ github.sha }} ghcr.io/rainbowdashlabs/reputation-bot:latest
           docker push ghcr.io/rainbowdashlabs/reputation-bot:latest

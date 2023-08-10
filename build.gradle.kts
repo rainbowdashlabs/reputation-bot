@@ -1,16 +1,24 @@
 plugins {
-    id("com.github.johnrengelman.shadow") version "8.1.1"
+    alias(libs.plugins.shadow)
+    alias(libs.plugins.spotless)
     java
     `maven-publish`
 }
 
 group = "de.chojo"
-version = "1.13.17"
+version = "1.13.18"
 
 repositories {
     maven("https://eldonexus.de/repository/maven-public")
     maven("https://eldonexus.de/repository/maven-proxies")
     maven("https://m2.dv8tion.net/releases")
+}
+
+spotless {
+    java {
+        licenseHeaderFile(rootProject.file("HEADER.txt"))
+        target("**/*.java")
+    }
 }
 
 dependencies {
@@ -21,23 +29,20 @@ dependencies {
 
     // database
     implementation("org.postgresql", "postgresql", "42.6.0")
-    implementation("de.chojo.sadu", "sadu-queries", "1.3.0")
-    implementation("de.chojo.sadu", "sadu-updater", "1.3.0")
-    implementation("de.chojo.sadu", "sadu-postgresql", "1.3.0")
-    implementation("de.chojo.sadu", "sadu-datasource", "1.3.0")
+    implementation(libs.bundles.sadu)
 
     // Logging
-    implementation("org.slf4j", "slf4j-api", "2.0.7")
-    implementation("org.apache.logging.log4j", "log4j-core", "2.20.0")
-    implementation("org.apache.logging.log4j", "log4j-slf4j2-impl", "2.20.0")
-    implementation("club.minnced", "discord-webhooks", "0.8.2")
+    implementation(libs.bundles.log4j)
+    implementation("de.chojo", "log-util", "1.0.1") {
+        exclude("org.apache.logging.log4j")
+    }
 
-    implementation("org.knowm.xchart", "xchart", "3.8.4")
+    implementation("org.knowm.xchart", "xchart", "3.8.5")
 
     // unit testing
-    testImplementation(platform("org.junit:junit-bom:5.9.3"))
+    testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter", "junit-jupiter")
-    testImplementation("org.knowm.xchart", "xchart", "3.8.4")
+    testImplementation("org.knowm.xchart", "xchart", "3.8.5")
 }
 
 java {

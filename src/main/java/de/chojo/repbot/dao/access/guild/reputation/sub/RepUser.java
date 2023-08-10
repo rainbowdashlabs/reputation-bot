@@ -1,3 +1,8 @@
+/*
+ *     SPDX-License-Identifier: AGPL-3.0-only
+ *
+ *     Copyright (C) RainbowDashLabs and Contributor
+ */
 package de.chojo.repbot.dao.access.guild.reputation.sub;
 
 import de.chojo.repbot.analyzer.results.match.ThankType;

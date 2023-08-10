@@ -1,3 +1,8 @@
+/*
+ *     SPDX-License-Identifier: AGPL-3.0-only
+ *
+ *     Copyright (C) RainbowDashLabs and Contributor
+ */
 package de.chojo.repbot.dao.access.guild.reputation.sub;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
@@ -21,18 +26,19 @@ import net.dv8tion.jda.api.entities.Message;
 import org.slf4j.Logger;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Analyzer extends QueryFactory implements GuildHolder {
     private static final Logger log = getLogger(Analyzer.class);
-    private static final ObjectMapper MAPPER = JsonMapper.builder()
-            .configure(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS, true)
-            .build()
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-            .setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE)
-            .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+    public static final ObjectMapper MAPPER = JsonMapper.builder()
+                                                        .configure(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS, true)
+                                                        .build()
+                                                        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                                                        .setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE)
+                                                        .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
 
     private final Reputation reputation;
 
@@ -50,13 +56,13 @@ public class Analyzer extends QueryFactory implements GuildHolder {
             return analyzerResult;
         }
         builder().query("""
-                        INSERT INTO analyzer_results(guild_id, channel_id, message_id, result) VALUES(?, ?, ?, ?::jsonb)
-                            ON CONFLICT (guild_id, message_id)
-                                DO NOTHING;
-                        """).parameter(stmt -> stmt.setLong(message.getGuild().getIdLong())
-                                                   .setLong(message.getChannel().getIdLong())
-                                                   .setLong(message.getIdLong())
-                                                   .setString(resultString))
+                         INSERT INTO analyzer_results(guild_id, channel_id, message_id, result) VALUES(?, ?, ?, ?::JSONB)
+                             ON CONFLICT (guild_id, message_id)
+                                 DO NOTHING;
+                         """).parameter(stmt -> stmt.setLong(message.getGuild().getIdLong())
+                                                    .setLong(message.getChannel().getIdLong())
+                                                    .setLong(message.getIdLong())
+                                                    .setString(resultString))
                  .insert()
                  .send();
         return analyzerResult;
@@ -71,18 +77,33 @@ public class Analyzer extends QueryFactory implements GuildHolder {
             return;
         }
         builder().query("""
-                        INSERT INTO reputation_results(guild_id, channel_id, message_id, result) VALUES(?, ?, ?, ?::jsonb);
-                        """).parameter(stmt -> stmt.setLong(message.getGuild().getIdLong())
-                                                   .setLong(message.getChannel().getIdLong())
-                                                   .setLong(message.getIdLong())
-                                                   .setString(resultString))
+                         INSERT INTO reputation_results(guild_id, channel_id, message_id, result) VALUES(?, ?, ?, ?::JSONB);
+                         """).parameter(stmt -> stmt.setLong(message.getGuild().getIdLong())
+                                                    .setLong(message.getChannel().getIdLong())
+                                                    .setLong(message.getIdLong())
+                                                    .setString(resultString))
                  .insert()
                  .send();
     }
 
     public Optional<AnalyzerTrace> get(long messageId) {
-        var resultEntry = builder(ResultEntry.class)
-                .query("SELECT * FROM analyzer_results WHERE guild_id = ? AND message_id = ?;")
+        var resultEntry = getResults(messageId);
+
+        var submitResults = getSubmitResults(messageId);
+
+        if (submitResults.isEmpty() && resultEntry.isEmpty()) return Optional.empty();
+
+        return Optional.of(new AnalyzerTrace(resultEntry.orElse(null), submitResults));
+    }
+
+
+    private Optional<ResultEntry> getResults(long messageId) {
+        return builder(ResultEntry.class)
+                .query("""
+                        SELECT guild_id, channel_id, message_id, result, analyzed
+                        FROM analyzer_results
+                        WHERE guild_id = ?
+                          AND message_id = ?;""")
                 .parameter(stmt -> stmt.setLong(guildId()).setLong(messageId))
                 .readRow(row -> {
                     ResultSnapshot result;
@@ -94,9 +115,16 @@ public class Analyzer extends QueryFactory implements GuildHolder {
                     }
                     return new ResultEntry(result, row.getLong("channel_id"), messageId);
                 }).firstSync();
+    }
 
-        var submitResults = builder(SubmitResultEntry.class)
-                .query("SELECT guild_id, channel_id, message_id, result, submitted FROM reputation_results WHERE guild_id = ? AND message_id = ? ORDER BY submitted;")
+    private List<SubmitResultEntry> getSubmitResults(long messageId) {
+        return builder(SubmitResultEntry.class)
+                .query("""
+                        SELECT guild_id, channel_id, message_id, result, submitted
+                        FROM reputation_results
+                        WHERE guild_id = ?
+                          AND message_id = ?
+                        ORDER BY submitted;""")
                 .parameter(stmt -> stmt.setLong(guildId()).setLong(messageId))
                 .readRow(row -> {
                     SubmitResult result;
@@ -108,10 +136,6 @@ public class Analyzer extends QueryFactory implements GuildHolder {
                     }
                     return new SubmitResultEntry(result, row.getLong("channel_id"), messageId, row.getTimestamp("submitted").toInstant());
                 }).allSync();
-
-        if(submitResults.isEmpty() && resultEntry.isEmpty()) return Optional.empty();
-
-        return Optional.of(new AnalyzerTrace(resultEntry.orElse(null), submitResults));
     }
 
     @Override
