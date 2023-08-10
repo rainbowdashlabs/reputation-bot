@@ -34,11 +34,11 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class Analyzer extends QueryFactory implements GuildHolder {
     private static final Logger log = getLogger(Analyzer.class);
     public static final ObjectMapper MAPPER = JsonMapper.builder()
-            .configure(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS, true)
-            .build()
-            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-            .setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE)
-            .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+                                                        .configure(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS, true)
+                                                        .build()
+                                                        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                                                        .setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE)
+                                                        .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
 
     private final Reputation reputation;
 
@@ -56,15 +56,15 @@ public class Analyzer extends QueryFactory implements GuildHolder {
             return analyzerResult;
         }
         builder().query("""
-                        INSERT INTO analyzer_results(guild_id, channel_id, message_id, result) VALUES(?, ?, ?, ?::jsonb)
-                            ON CONFLICT (guild_id, message_id)
-                                DO NOTHING;
-                        """).parameter(stmt -> stmt.setLong(message.getGuild().getIdLong())
-                        .setLong(message.getChannel().getIdLong())
-                        .setLong(message.getIdLong())
-                        .setString(resultString))
-                .insert()
-                .send();
+                         INSERT INTO analyzer_results(guild_id, channel_id, message_id, result) VALUES(?, ?, ?, ?::JSONB)
+                             ON CONFLICT (guild_id, message_id)
+                                 DO NOTHING;
+                         """).parameter(stmt -> stmt.setLong(message.getGuild().getIdLong())
+                                                    .setLong(message.getChannel().getIdLong())
+                                                    .setLong(message.getIdLong())
+                                                    .setString(resultString))
+                 .insert()
+                 .send();
         return analyzerResult;
     }
 
@@ -77,13 +77,13 @@ public class Analyzer extends QueryFactory implements GuildHolder {
             return;
         }
         builder().query("""
-                        INSERT INTO reputation_results(guild_id, channel_id, message_id, result) VALUES(?, ?, ?, ?::jsonb);
-                        """).parameter(stmt -> stmt.setLong(message.getGuild().getIdLong())
-                        .setLong(message.getChannel().getIdLong())
-                        .setLong(message.getIdLong())
-                        .setString(resultString))
-                .insert()
-                .send();
+                         INSERT INTO reputation_results(guild_id, channel_id, message_id, result) VALUES(?, ?, ?, ?::JSONB);
+                         """).parameter(stmt -> stmt.setLong(message.getGuild().getIdLong())
+                                                    .setLong(message.getChannel().getIdLong())
+                                                    .setLong(message.getIdLong())
+                                                    .setString(resultString))
+                 .insert()
+                 .send();
     }
 
     public Optional<AnalyzerTrace> get(long messageId) {
@@ -120,11 +120,11 @@ public class Analyzer extends QueryFactory implements GuildHolder {
     private List<SubmitResultEntry> getSubmitResults(long messageId) {
         return builder(SubmitResultEntry.class)
                 .query("""
-                     SELECT guild_id, channel_id, message_id, result, submitted
-                     FROM reputation_results
-                     WHERE guild_id = ?
-                       AND message_id = ?
-                     ORDER BY submitted;""")
+                        SELECT guild_id, channel_id, message_id, result, submitted
+                        FROM reputation_results
+                        WHERE guild_id = ?
+                          AND message_id = ?
+                        ORDER BY submitted;""")
                 .parameter(stmt -> stmt.setLong(guildId()).setLong(messageId))
                 .readRow(row -> {
                     SubmitResult result;
