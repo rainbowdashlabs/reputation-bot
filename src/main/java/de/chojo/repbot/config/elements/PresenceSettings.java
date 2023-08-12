@@ -18,13 +18,13 @@ public class PresenceSettings {
     private boolean active;
     private int interval = 5;
     private List<Presence> status = List.of(
-            Presence.of(Activity.ActivityType.WATCHING, "%guild_count% guilds!"),
-            Presence.of(Activity.ActivityType.LISTENING, "%channel_count% channels!"),
-            Presence.of(Activity.ActivityType.WATCHING, "%total_rep% Reputations!"),
-            Presence.of(Activity.ActivityType.WATCHING, "%weekly_rep% Reputation this week!"),
-            Presence.of(Activity.ActivityType.WATCHING, "%today_rep% Reputation today!"),
-            Presence.of(Activity.ActivityType.WATCHING, "%weekly_avg_rep% Reputation per week!"),
-            Presence.of(Activity.ActivityType.LISTENING, "%analyzed_messages% messages during the last hour!")
+            Presence.of("Watching %guild_count% guilds!"),
+            Presence.of("Reading %channel_count% channels!"),
+            Presence.of("Couting %total_rep% Reputations!"),
+            Presence.of("Counted %weekly_rep% Reputation this week!"),
+            Presence.of("Counted %today_rep% Reputation today!"),
+            Presence.of("Counted %weekly_avg_rep% Reputation per week!"),
+            Presence.of("Read %analyzed_messages% messages during the last hour!")
     );
 
     public boolean isActive() {
@@ -36,7 +36,7 @@ public class PresenceSettings {
     }
 
     public Presence randomStatus() {
-        if (status.isEmpty()) return Presence.of(Activity.ActivityType.WATCHING, "something");
+        if (status.isEmpty()) return Presence.of("something");
         return status.get(ThreadLocalRandom.current().nextInt(status.size()));
     }
 
@@ -46,21 +46,15 @@ public class PresenceSettings {
 
     @SuppressWarnings("CanBeFinal")
     public static class Presence {
-        private Activity.ActivityType type;
         private String text;
 
         @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
-        public Presence(@JsonProperty("type") Activity.ActivityType type, @JsonProperty("text") String text) {
-            this.type = type;
+        public Presence(@JsonProperty("text") String text) {
             this.text = text;
         }
 
-        public static Presence of(Activity.ActivityType type, String text) {
-            return new Presence(type, text);
-        }
-
-        public Activity.ActivityType type() {
-            return type;
+        public static Presence of(String text) {
+            return new Presence(text);
         }
 
         public String text(List<Replacement> replacements) {

@@ -49,7 +49,6 @@ public class PresenceService implements Runnable {
         var text = currentPresence.text(replacements);
         log.debug("Changed presence to: {}", text);
 
-        shardManager.setPresence(OnlineStatus.ONLINE,
-                Activity.of(currentPresence.type(), text));
+        shardManager.setPresence(OnlineStatus.ONLINE,Activity.of(Activity.ActivityType.CUSTOM_STATUS, text));
     }
 }
