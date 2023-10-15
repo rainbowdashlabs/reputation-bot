@@ -3,7 +3,7 @@ FROM gradle:jdk19-alpine as build
 COPY . .
 RUN gradle clean build --no-daemon
 
-FROM eclipse-temurin:19-alpine as runtime
+FROM eclipse-temurin:21-alpine as runtime
 
 WORKDIR /app
 
