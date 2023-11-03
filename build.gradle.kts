@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.transformers.Log4j2PluginsCacheFileTransformer
+
 plugins {
     alias(libs.plugins.shadow)
     alias(libs.plugins.spotless)
@@ -6,7 +8,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "1.13.18"
+version = "1.13.19"
 
 repositories {
     maven("https://eldonexus.de/repository/maven-public")
@@ -81,6 +83,7 @@ tasks {
     }
 
     shadowJar {
+        transform(Log4j2PluginsCacheFileTransformer::class.java)
         mergeServiceFiles()
         manifest {
             attributes(mapOf("Main-Class" to "de.chojo.repbot.ReputationBot"))
