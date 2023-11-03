@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.transformers.Log4j2PluginsCacheFileTransformer
+
 plugins {
     alias(libs.plugins.shadow)
     alias(libs.plugins.spotless)
