@@ -81,6 +81,7 @@ tasks {
     }
 
     shadowJar {
+        transform(Log4j2PluginsCacheFileTransformer::class.java)
         mergeServiceFiles()
         manifest {
             attributes(mapOf("Main-Class" to "de.chojo.repbot.ReputationBot"))
