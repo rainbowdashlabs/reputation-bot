@@ -16,16 +16,17 @@ import java.time.format.DateTimeFormatter;
 
 public final class Text {
 
-    private static final String EMPTY = "░";
-    private static final String FULL = "▓";
-
+    private static final String EMPTY = "_";
+    private static final String FULL = "█";
+    private static final String ORANGE = "\u001b[0;33m";
+    private static final String WHITE = "\u001b[0;37;47m";
     private Text() {
         throw new UnsupportedOperationException("This is a utility class.");
     }
 
     public static String progressBar(double percent, int tiles) {
-        var progressBar = StringUtils.repeat(FULL, (int) Math.round(percent * tiles));
-        return StringUtils.rightPad(progressBar, tiles, EMPTY);
+        var progressBar = StringUtils.repeat(FULL, (int) Math.round(percent * tiles)) + WHITE;
+        return ORANGE + StringUtils.rightPad(progressBar, tiles + WHITE.length(), EMPTY);
     }
 
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");

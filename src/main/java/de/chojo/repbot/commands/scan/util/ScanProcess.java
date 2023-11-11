@@ -27,7 +27,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class ScanProcess {
     public static final int MAX_MESSAGES = 10000;
-    private static final Logger log = getLogger(ScanProcess.class);
+    private static final Logger log = getLogger(de.chojo.repbot.commands.scan.util.ScanProcess.class);
     private final MessageAnalyzer messageAnalyzer;
     private final LocalizationContext loc;
     private final Guild guild;
@@ -108,15 +108,15 @@ public class ScanProcess {
                 switch (matchResult.thankType()) {
                     case FUZZY, MENTION -> {
                         if (reputation.user(resultReceiver.getUser())
-                                .addOldReputation(donator != null && guild.isMember(donator) ? donator : null,
-                                        message, null, matchResult.thankType())) {
+                                      .addOldReputation(donator != null && guild.isMember(donator) ? donator : null,
+                                              message, null, matchResult.thankType())) {
                             hit();
                         }
                     }
                     case ANSWER -> {
                         if (reputation.user(resultReceiver.getUser())
-                                .addOldReputation(donator != null && guild.isMember(donator) ? donator : null,
-                                        message, matchResult.asAnswer().referenceMessage(), matchResult.thankType())) {
+                                      .addOldReputation(donator != null && guild.isMember(donator) ? donator : null,
+                                              message, matchResult.asAnswer().referenceMessage(), matchResult.thankType())) {
                             hit();
                         }
 
@@ -127,8 +127,10 @@ public class ScanProcess {
         var progress = (calls - Math.max(callsLeft, 0)) / (double) calls;
         var progressString = String.format("%.02f", progress * 100.0d);
         log.debug("Scan progress for guild {}: {}", guild.getIdLong(), progressString);
-        progressMessage.editMessage(loc.localize("command.scan.scanner.message.progress",
-                Replacement.create("PERCENT", progressString)) + " " + Text.progressBar(progress, 40)).complete();
+        progressMessage.editMessage("```ANSI\n" +
+                loc.localize("command.scan.scanner.message.progress",
+                        Replacement.create("PERCENT", progressString)) + " " + Text.progressBar(progress, 40) +
+                "```").complete();
         time = Instant.now().until(start, ChronoUnit.MILLIS);
         currWorker = null;
         return callsLeft > 0;
