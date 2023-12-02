@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.StringJoiner;
 import java.util.function.Function;
 
-final class LogFormatter {
+public final class LogFormatter {
     static final int PAGE_SIZE = 15;
 
     private LogFormatter() {
@@ -37,7 +37,7 @@ final class LogFormatter {
         return entries;
     }
 
-    static List<String> mapMessageLogEntry(EventContext context, List<ReputationLogEntry> logEntries) {
+    public static List<String> mapMessageLogEntry(EventContext context, List<ReputationLogEntry> logEntries) {
         if (logEntries.isEmpty()) return Collections.emptyList();
 
         List<String> entries = new ArrayList<>();
@@ -73,7 +73,7 @@ final class LogFormatter {
         return builder.build();
     }
 
-    static void buildFields(List<String> entries, LocalizedEmbedBuilder embedBuilder) {
+    public static void buildFields(List<String> entries, LocalizedEmbedBuilder embedBuilder) {
         var joiner = new StringJoiner("\n");
         for (var entry : entries) {
             if (joiner.length() + entry.length() > MessageEmbed.DESCRIPTION_MAX_LENGTH) break;

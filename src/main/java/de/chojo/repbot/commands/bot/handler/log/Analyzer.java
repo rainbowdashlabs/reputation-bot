@@ -3,20 +3,16 @@
  *
  *     Copyright (C) RainbowDashLabs and Contributor
  */
-package de.chojo.repbot.commands.log.handler;
+package de.chojo.repbot.commands.bot.handler.log;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
-import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
-import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.ValueParser;
 import de.chojo.jdautil.wrapper.EventContext;
-import de.chojo.repbot.dao.access.guild.reputation.Reputation;
+import de.chojo.repbot.commands.log.handler.BaseAnalyzer;
 import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-import java.util.List;
-
-public class Analyzer extends BaseAnalyzer implements SlashHandler  {
+public class Analyzer extends BaseAnalyzer implements SlashHandler {
     private final Guilds guilds;
 
     public Analyzer(Guilds guilds) {
@@ -25,6 +21,7 @@ public class Analyzer extends BaseAnalyzer implements SlashHandler  {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        onSlashCommand(event, context, guilds.guild(event.getGuild()).reputation());
+        var guild_id = ValueParser.parseLong(event.getOption("guild_id").getAsString());
+        onSlashCommand(event, context, guilds.byId(guild_id.get()).reputation());
     }
 }
