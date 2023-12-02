@@ -14,4 +14,4 @@ To thank a user make sure that:
 
 You can also give reputation to users you currently share or recently shared a voice channel with.
 
-You can read more about this mechanic on our [abuse protection page](abuse_protection.md)
+You can read more about this mechanic on our [abuse protection page](<https://rainbowdashlabs.github.io/reputation-bot/abuse_protection/>)

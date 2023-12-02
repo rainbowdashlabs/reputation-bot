@@ -1,7 +1,8 @@
 {
-  "extends": [
-    "github>rainbowdashlabs/rainbowdashlabs//.github/renovate_default"
-  ],
+    "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+    "extends": [
+        "github>rainbowdashlabs/rainbowdashlabs"
+    ],
   "reviewers": [
     "dlsf",
     "RainbowDashLabs",
