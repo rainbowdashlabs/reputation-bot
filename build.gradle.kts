@@ -39,12 +39,12 @@ dependencies {
         exclude("org.apache.logging.log4j")
     }
 
-    implementation("org.knowm.xchart", "xchart", "3.8.5")
+    implementation("org.knowm.xchart", "xchart", "3.8.6")
 
     // unit testing
     testImplementation(platform("org.junit:junit-bom:5.10.1"))
     testImplementation("org.junit.jupiter", "junit-jupiter")
-    testImplementation("org.knowm.xchart", "xchart", "3.8.5")
+    testImplementation("org.knowm.xchart", "xchart", "3.8.6")
 }
 
 java {
