@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "1.13.19"
+version = "1.14.0"
 
 repositories {
     maven("https://eldonexus.de/repository/maven-public")
@@ -30,7 +30,7 @@ dependencies {
     }
 
     // database
-    implementation("org.postgresql", "postgresql", "42.6.0")
+    implementation("org.postgresql", "postgresql", "42.7.0")
     implementation(libs.bundles.sadu)
 
     // Logging
@@ -39,12 +39,12 @@ dependencies {
         exclude("org.apache.logging.log4j")
     }
 
-    implementation("org.knowm.xchart", "xchart", "3.8.5")
+    implementation("org.knowm.xchart", "xchart", "3.8.6")
 
     // unit testing
-    testImplementation(platform("org.junit:junit-bom:5.10.0"))
+    testImplementation(platform("org.junit:junit-bom:5.10.1"))
     testImplementation("org.junit.jupiter", "junit-jupiter")
-    testImplementation("org.knowm.xchart", "xchart", "3.8.5")
+    testImplementation("org.knowm.xchart", "xchart", "3.8.6")
 }
 
 java {

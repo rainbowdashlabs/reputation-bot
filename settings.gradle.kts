@@ -8,14 +8,14 @@ dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
             // misc
-            version("sadu", "1.3.1")
+            version("sadu", "1.4.0")
             library("sadu-queries", "de.chojo.sadu", "sadu-queries").versionRef("sadu")
             library("sadu-updater", "de.chojo.sadu", "sadu-updater").versionRef("sadu")
             library("sadu-postgresql", "de.chojo.sadu", "sadu-postgresql").versionRef("sadu")
             library("sadu-datasource", "de.chojo.sadu", "sadu-datasource").versionRef("sadu")
             bundle("sadu", listOf("sadu-queries", "sadu-updater", "sadu-postgresql", "sadu-datasource"))
 
-            version("log4j", "2.21.1")
+            version("log4j", "2.22.0")
             library("slf4j-api", "org.slf4j:slf4j-api:2.0.9")
             library("log4j-core", "org.apache.logging.log4j", "log4j-core").versionRef("log4j")
             library("log4j-slf4j2", "org.apache.logging.log4j", "log4j-slf4j2-impl").versionRef("log4j")
@@ -23,7 +23,7 @@ dependencyResolutionManagement {
             bundle("log4j", listOf("slf4j-api", "log4j-core", "log4j-slf4j2", "log4j-jsontemplate"))
 
             // plugins
-            plugin("spotless", "com.diffplug.spotless").version("6.22.0")
+            plugin("spotless", "com.diffplug.spotless").version("6.23.2")
             plugin("shadow", "com.github.johnrengelman.shadow").version("8.1.1")
 
         }
