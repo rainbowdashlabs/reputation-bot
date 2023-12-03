@@ -101,7 +101,7 @@ public record RepProfile(RepUser repUser, long rank, long rankDonated, long user
                         Replacement.create("NAME", repUser.member().getEffectiveName()))
                 .addField("words.level", level, true)
                 .addField("words.reputation", Format.BOLD.apply(String.valueOf(reputation())), true)
-                .addField("element.profile.nextLevel", currProgress + "/" + nextLevel + "  " + progressBar, false)
+                .addField("element.profile.nextLevel", "```ANSI%n%s/%s  %s```".formatted(currProgress, nextLevel, progressBar), false)
                 .setColor(repUser.member().getColor());
         var badge = configuration.badges().badge((int) rank());
         badge.ifPresent(build::setThumbnail);

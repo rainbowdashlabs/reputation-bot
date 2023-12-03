@@ -85,9 +85,10 @@ public class Scanner {
     }
 
     private void schedule(MessageHistory history, EventContext context, Pattern pattern, TextChannel reportChannel, int calls) {
-        var progressMessage = reportChannel.sendMessage(context.localize("command.scan.scanner.message.progress",
-                                                   Replacement.create("PERCENT", String.format("%.02f", 0.0d))) + " " + Text.progressBar(0, 40))
-                                           .complete();
+        var progressMessage = reportChannel.sendMessage("```ANSI\n" +
+                context.localize("command.scan.scanner.message.progress",
+                        Replacement.create("PERCENT", String.format("%.02f", 0.0d))) + " " + Text.progressBar(0, 40) +
+                "```").complete();
         var scanProcess = new ScanProcess(messageAnalyzer, context.guildLocalizer(), progressMessage, history, pattern, calls, guilds);
         setActive(scanProcess);
         reportChannel.getGuild().loadMembers().get();
@@ -137,8 +138,10 @@ public class Scanner {
         if (finished.isEmpty()) return;
         var scan = finished.poll();
         setInactive(scan);
-        scan.progressMessage().editMessage(scan.loc().localize("command.scan.scanner.message.progress",
-                Replacement.create("PERCENT", String.format("%.02f", 100.0d))) + " " + Text.progressBar(1, 40)).queue();
+        scan.progressMessage().editMessage("```ANSI\n" +
+                scan.loc().localize("command.scan.scanner.message.progress",
+                        Replacement.create("PERCENT", String.format("%.02f", 100.0d))) + " " + Text.progressBar(1, 40) +
+                "```").queue();
         var embed = new LocalizedEmbedBuilder(scan.loc())
                 .setTitle("command.scan.scanner.message.completed")
                 .setDescription("command.scan.scanner.message.result",
