@@ -55,14 +55,14 @@ markdown_extensions:
   - pymdownx.superfences
   - attr_list
   - pymdownx.emoji:
-      emoji_index: !!python/name:materialx.emoji.twemoji
-      emoji_generator: !!python/name:materialx.emoji.to_svg
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
 extra:
   social:
     - icon: fontawesome/solid/magnifying-glass
       name: TOS & Privacy
       link: https://rainbowdashlabs.github.io/reputation-bot/tos-privacy
-    - icon: simple/addthis
+    - icon: simple/discord
       name: Invite
       link: https://discord.com/api/oauth2/authorize?client_id=871322553698906142&permissions=1342532672&scope=bot%20applications.commands
     - icon: material/chat
