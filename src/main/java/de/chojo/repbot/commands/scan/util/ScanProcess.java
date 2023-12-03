@@ -27,7 +27,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class ScanProcess {
     public static final int MAX_MESSAGES = 10000;
-    private static final Logger log = getLogger(de.chojo.repbot.commands.scan.util.ScanProcess.class);
+    private static final Logger log = getLogger(ScanProcess.class);
     private final MessageAnalyzer messageAnalyzer;
     private final LocalizationContext loc;
     private final Guild guild;
