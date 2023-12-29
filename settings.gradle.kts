@@ -16,7 +16,7 @@ dependencyResolutionManagement {
             bundle("sadu", listOf("sadu-queries", "sadu-updater", "sadu-postgresql", "sadu-datasource"))
 
             version("log4j", "2.22.1")
-            library("slf4j-api", "org.slf4j:slf4j-api:2.0.9")
+            library("slf4j-api", "org.slf4j:slf4j-api:2.0.10")
             library("log4j-core", "org.apache.logging.log4j", "log4j-core").versionRef("log4j")
             library("log4j-slf4j2", "org.apache.logging.log4j", "log4j-slf4j2-impl").versionRef("log4j")
             library("log4j-jsontemplate","org.apache.logging.log4j", "log4j-layout-template-json").versionRef("log4j")
