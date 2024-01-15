@@ -23,7 +23,7 @@ dependencyResolutionManagement {
             bundle("log4j", listOf("slf4j-api", "log4j-core", "log4j-slf4j2", "log4j-jsontemplate"))
 
             // plugins
-            plugin("spotless", "com.diffplug.spotless").version("6.23.3")
+            plugin("spotless", "com.diffplug.spotless").version("6.24.0")
             plugin("shadow", "com.github.johnrengelman.shadow").version("8.1.1")
 
         }
