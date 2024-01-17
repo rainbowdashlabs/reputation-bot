@@ -20,6 +20,7 @@ import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.utils.TimeFormat;
+import net.dv8tion.jda.api.utils.messages.MessageEditData;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -147,8 +148,8 @@ public class Debug implements SlashHandler {
 
         var pages = new ListPageBag<>(embeds) {
             @Override
-            public CompletableFuture<MessageEmbed> buildPage() {
-                return CompletableFuture.completedFuture(currentElement());
+            public CompletableFuture<MessageEditData> buildPage() {
+                return CompletableFuture.completedFuture(MessageEditData.fromEmbeds(currentElement()));
             }
         };
 

@@ -18,6 +18,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.utils.messages.MessageEditData;
 
 import java.awt.Color;
 import java.util.concurrent.CompletableFuture;
@@ -54,7 +55,7 @@ public class Show implements SlashHandler {
     public static void registerPage(GuildRanking guildRanking, SlashCommandInteractionEvent event, EventContext context) {
         context.registerPage(new PageBag(guildRanking.pages()) {
             @Override
-            public CompletableFuture<MessageEmbed> buildPage() {
+            public CompletableFuture<MessageEditData> buildPage() {
                 return CompletableFuture.supplyAsync(() -> {
                     var ranking = guildRanking.page(current());
 
@@ -62,17 +63,17 @@ public class Show implements SlashHandler {
                     var rankString = ranking.stream().map(rank -> rank.fancyString((int) maxRank))
                                             .collect(Collectors.joining("\n"));
 
-                    return createBaseBuilder(guildRanking, context, event.getGuild())
+                    return MessageEditData.fromEmbeds(createBaseBuilder(guildRanking, context, event.getGuild())
                             .setDescription(rankString)
-                            .build();
+                            .build());
                 });
             }
 
             @Override
-            public CompletableFuture<MessageEmbed> buildEmptyPage() {
-                return CompletableFuture.completedFuture(createBaseBuilder(guildRanking, context, event.getGuild())
+            public CompletableFuture<MessageEditData> buildEmptyPage() {
+                return CompletableFuture.completedFuture(MessageEditData.fromEmbeds(createBaseBuilder(guildRanking, context, event.getGuild())
                         .setDescription("*" + context.localize("command.top.message.empty") + "*")
-                        .build());
+                        .build()));
             }
         }, true);
     }
