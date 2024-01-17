@@ -1,4 +1,4 @@
-CREATE OR REPLACE VIEW repbot.truncated_reputation_offset AS
+CREATE OR REPLACE VIEW repbot_schema.truncated_reputation_offset AS
 SELECT l.guild_id, l.user_id, sum(l.amount)::BIGINT as amount
 FROM repbot_schema.reputation_offset l
          LEFT JOIN repbot_schema.guild_settings s ON l.guild_id = s.guild_id
