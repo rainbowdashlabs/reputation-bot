@@ -7,6 +7,9 @@ package de.chojo.repbot.core;
 
 import de.chojo.jdautil.interactions.dispatching.InteractionHub;
 import de.chojo.jdautil.localization.util.LocaleProvider;
+import de.chojo.repbot.actions.messages.log.MessageLog;
+import de.chojo.repbot.actions.user.donated.received.UserDonated;
+import de.chojo.repbot.actions.user.received.UserReceived;
 import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.commands.abuseprotection.AbuseProtection;
@@ -42,10 +45,10 @@ import de.chojo.repbot.service.GdprService;
 import de.chojo.repbot.service.MetricService;
 import de.chojo.repbot.service.PresenceService;
 import de.chojo.repbot.service.RepBotCachePolicy;
-import de.chojo.repbot.service.reputation.ReputationService;
 import de.chojo.repbot.service.RoleAssigner;
 import de.chojo.repbot.service.RoleUpdater;
 import de.chojo.repbot.service.SelfCleanupService;
+import de.chojo.repbot.service.reputation.ReputationService;
 import de.chojo.repbot.statistic.Statistic;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.repbot.util.PermissionErrorHandler;
@@ -61,7 +64,6 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.slf4j.Logger;
 
 import javax.security.auth.login.LoginException;
-
 import java.util.Collections;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -139,25 +141,26 @@ public class Bot {
         roles = new Roles(data.guilds(), new RoleAssigner(data.guilds(), localization.localizer()));
 
         repBotCachePolicy = new RepBotCachePolicy(scan, roles);
-        shardManager = DefaultShardManagerBuilder.createDefault(configuration.baseSettings().token())
-                                                 .enableIntents(
-                                                         // Required to retrieve reputation emotes
-                                                         GatewayIntent.GUILD_MESSAGE_REACTIONS,
-                                                         // Required to scan for thankwords
-                                                         GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT,
-                                                         // Required to resolve member without a direct mention
-                                                         GatewayIntent.GUILD_MEMBERS,
-                                                         // Required to cache voice states for member relationships
-                                                         GatewayIntent.GUILD_VOICE_STATES)
-                                                 .enableCache(
-                                                         // Required for voice activity
-                                                         CacheFlag.VOICE_STATE)
-                                                 // we have our own shutdown hook
-                                                 .setEnableShutdownHook(false)
-                                                 .setMemberCachePolicy(repBotCachePolicy)
-                                                 .setEventPool(threading.eventThreads())
-                                                 .setThreadFactory(Threading.createThreadFactory(threading.jdaGroup()))
-                                                 .build();
+        shardManager = DefaultShardManagerBuilder
+                .createDefault(configuration.baseSettings().token())
+                .enableIntents(
+                        // Required to retrieve reputation emotes
+                        GatewayIntent.GUILD_MESSAGE_REACTIONS,
+                        // Required to scan for thankwords
+                        GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT,
+                        // Required to resolve member without a direct mention
+                        GatewayIntent.GUILD_MEMBERS,
+                        // Required to cache voice states for member relationships
+                        GatewayIntent.GUILD_VOICE_STATES)
+                .enableCache(
+                        // Required for voice activity
+                        CacheFlag.VOICE_STATE)
+                // we have our own shutdown hook
+                .setEnableShutdownHook(false)
+                .setMemberCachePolicy(repBotCachePolicy)
+                .setEventPool(threading.eventThreads())
+                .setThreadFactory(Threading.createThreadFactory(threading.jdaGroup()))
+                .build();
     }
 
     private void initServices() {
@@ -187,48 +190,51 @@ public class Bot {
         var guilds = data.guilds();
 
         InteractionHub.builder(shardManager)
-                .withConversationSystem()
-                .withCommands(
-                        new Channel(guilds),
-                        new Reputation(guilds, configuration, roleAssigner),
-                        roles,
-                        new RepSettings(guilds),
-                        new Top(guilds),
-                        Thankwords.of(messageAnalyzer, guilds),
-                        scan,
-                        new Locale(guilds),
-                        new Invite(configuration),
-                        Info.create(configuration),
-                        new Log(guilds),
-                        Setup.of(guilds, configuration),
-                        new Gdpr(data.gdpr()),
-                        new Prune(gdprService),
-                        new Reactions(guilds),
-                        new Dashboard(guilds),
-                        new AbuseProtection(guilds),
-                        new Debug(guilds),
-                        new RepAdmin(guilds, configuration, roleAssigner),
-                        new Messages(guilds),
-                        new BotAdmin(guilds, configuration, statistic))
-                .withLocalizer(localizer)
-                .cleanGuildCommands("true".equals(System.getProperty("bot.cleancommands", "false")))
-                .testMode("true".equals(System.getProperty("bot.testmode", "false")))
-                .withCommandErrorHandler((context, throwable) -> {
-                    if (throwable instanceof InsufficientPermissionException) {
-                        PermissionErrorHandler.handle((InsufficientPermissionException) throwable, shardManager,
-                                localizer.context(LocaleProvider.guild(context.guild())), configuration);
-                        return;
-                    }
-                    log.error(LogNotify.NOTIFY_ADMIN, "Command execution of {} failed\n{}",
-                            context.interaction().meta().name(), context.args(), throwable);
-                })
-                .withGuildCommandMapper(cmd -> Collections.singletonList(configuration.baseSettings().botGuild()))
-                .withDefaultMenuService()
-                .withPostCommandHook(result -> data.metrics().commands()
-                                                   .logCommand(result.context().interaction().meta().name()))
-                .withPagination(builder -> builder.withLocalizer(localizer).previousText("pages.previous")
-                                                  .nextText("pages.next"))
-                .build();
+                      .withConversationSystem()
+                      .withCommands(
+                              new Channel(guilds),
+                              new Reputation(guilds, configuration, roleAssigner),
+                              roles,
+                              new RepSettings(guilds),
+                              new Top(guilds),
+                              Thankwords.of(messageAnalyzer, guilds),
+                              scan,
+                              new Locale(guilds),
+                              new Invite(configuration),
+                              Info.create(configuration),
+                              new Log(guilds),
+                              Setup.of(guilds, configuration),
+                              new Gdpr(data.gdpr()),
+                              new Prune(gdprService),
+                              new Reactions(guilds),
+                              new Dashboard(guilds),
+                              new AbuseProtection(guilds),
+                              new Debug(guilds),
+                              new RepAdmin(guilds, configuration, roleAssigner),
+                              new Messages(guilds),
+                              new BotAdmin(guilds, configuration, statistic))
+                      .withMessages(new MessageLog(guilds))
+                      .withUsers(new UserReceived(guilds),
+                              new UserDonated(guilds))
+                      .withLocalizer(localizer)
+                      .cleanGuildCommands("true".equals(System.getProperty("bot.cleancommands", "false")))
+                      .testMode("true".equals(System.getProperty("bot.testmode", "false")))
+                      .withCommandErrorHandler((context, throwable) -> {
+                          if (throwable instanceof InsufficientPermissionException) {
+                              PermissionErrorHandler.handle((InsufficientPermissionException) throwable, shardManager,
+                                      localizer.context(LocaleProvider.guild(context.guild())), configuration);
+                              return;
+                          }
+                          log.error(LogNotify.NOTIFY_ADMIN, "Command execution of {} failed\n{}",
+                                  context.interaction().meta().name(), context.args(), throwable);
+                      })
+                      .withGuildCommandMapper(cmd -> Collections.singletonList(configuration.baseSettings().botGuild()))
+                      .withDefaultMenuService()
+                      .withPostCommandHook(result -> data.metrics().commands()
+                                                         .logCommand(result.context().interaction().meta().name()))
+                      .withPagination(builder -> builder.withLocalizer(localizer).previousText("pages.previous")
+                                                        .nextText("pages.next"))
+                      .build();
     }
 
     private void initListener() {

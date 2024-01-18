@@ -12,6 +12,7 @@ import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.utils.messages.MessageEditData;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -66,11 +67,11 @@ public final class LogFormatter {
         return String.format("**%s** %s", jump, refJump == null ? "" : "➜ **" + refJump + "**");
     }
 
-    static MessageEmbed userLogEmbed(EventContext context, Member user, String title, List<String> log) {
+    static MessageEditData userLogEmbed(EventContext context, Member user, String title, List<String> log) {
         var builder = new LocalizedEmbedBuilder(context.guildLocalizer())
                 .setAuthor(title, null, user.getEffectiveAvatarUrl(), Replacement.create("USER", user.getEffectiveName()));
         buildFields(log, builder);
-        return builder.build();
+        return MessageEditData.fromEmbeds(builder.build());
     }
 
     public static void buildFields(List<String> entries, LocalizedEmbedBuilder embedBuilder) {

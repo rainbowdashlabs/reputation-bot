@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "1.14.0"
+version = "1.15.0"
 
 repositories {
     maven("https://eldonexus.de/repository/maven-public")
@@ -25,12 +25,12 @@ spotless {
 
 dependencies {
     //discord
-    implementation("de.chojo", "cjda-util", "2.8.6+beta.11") {
+    implementation("de.chojo", "cjda-util", "2.9.3+beta.19") {
         exclude(group = "club.minnced", module = "opus-java")
     }
 
     // database
-    implementation("org.postgresql", "postgresql", "42.7.0")
+    implementation("org.postgresql", "postgresql", "42.7.1")
     implementation(libs.bundles.sadu)
 
     // Logging
@@ -39,12 +39,12 @@ dependencies {
         exclude("org.apache.logging.log4j")
     }
 
-    implementation("org.knowm.xchart", "xchart", "3.8.6")
+    implementation("org.knowm.xchart", "xchart", "3.8.7")
 
     // unit testing
     testImplementation(platform("org.junit:junit-bom:5.10.1"))
     testImplementation("org.junit.jupiter", "junit-jupiter")
-    testImplementation("org.knowm.xchart", "xchart", "3.8.6")
+    testImplementation("org.knowm.xchart", "xchart", "3.8.7")
 }
 
 java {
