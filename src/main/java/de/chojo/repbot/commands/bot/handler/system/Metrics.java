@@ -12,6 +12,7 @@ import de.chojo.repbot.config.Configuration;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.utils.messages.MessageEditData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,11 +49,11 @@ public class Metrics implements SlashHandler {
 
         context.registerPage(new ListPageBag<>(links) {
             @Override
-            public CompletableFuture<MessageEmbed> buildPage() {
-                return CompletableFuture.completedFuture(new EmbedBuilder()
+            public CompletableFuture<MessageEditData> buildPage() {
+                return CompletableFuture.completedFuture(MessageEditData.fromEmbeds(new EmbedBuilder()
                         .setImage(currentElement())
                         .setAuthor("Open in Browser", currentElement(), event.getJDA().getSelfUser().getAvatarUrl())
-                        .build());
+                        .build()));
             }
         });
     }

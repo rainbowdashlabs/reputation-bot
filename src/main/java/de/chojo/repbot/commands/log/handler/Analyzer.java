@@ -10,11 +10,10 @@ import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.ValueParser;
 import de.chojo.jdautil.wrapper.EventContext;
-import de.chojo.repbot.dao.access.guild.reputation.Reputation;
 import de.chojo.repbot.dao.provider.Guilds;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-
-import java.util.List;
+import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 
 public class Analyzer implements SlashHandler {
     private final Guilds guilds;
@@ -53,5 +52,31 @@ public class Analyzer implements SlashHandler {
         embed.add(builder.build());
 
         event.replyEmbeds(embed).setEphemeral(true).queue();
+    }
+
+    public static void sendAnalyzerLog(IReplyCallback callback, Guilds guilds, long messageId, EventContext context) {
+        var reputation = guilds.guild(callback.getGuild()).reputation();
+        var resultEntry = reputation.analyzer()
+                                    .get(messageId);
+
+        if (resultEntry.isEmpty()) {
+            callback.reply(context.localize("command.log.analyzer.notanalyzed")).setEphemeral(true).queue();
+            return;
+        }
+
+        var embed = resultEntry.get().embed(callback.getGuild(), context);
+
+        var reputationLogEntries = reputation.log().messageLog(messageId, 10);
+
+        var entries = LogFormatter.mapMessageLogEntry(context, reputationLogEntries);
+
+        var builder = new LocalizedEmbedBuilder(context.guildLocalizer())
+                .setTitle("command.log.message.message.log", Replacement.create("ID", messageId));
+
+        LogFormatter.buildFields(entries, builder);
+
+        embed.add(builder.build());
+
+        callback.replyEmbeds(embed).setEphemeral(true).queue();
     }
 }
