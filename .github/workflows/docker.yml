@@ -21,7 +21,7 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           allowed-conclusions: success
       - uses: actions/checkout@v4
-      - uses: gradle/wrapper-validation-action@v1
+      - uses: gradle/wrapper-validation-action@v2
       - name: Build Image
         run: docker build . -f docker/Dockerfile -t ghcr.io/rainbowdashlabs/reputation-bot:${{ github.sha }}
       - name: Login to Registry
