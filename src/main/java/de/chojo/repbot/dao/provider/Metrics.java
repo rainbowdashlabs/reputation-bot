@@ -25,12 +25,12 @@ public class Metrics extends QueryFactory {
 
     public Metrics(DataSource dataSource) {
         super(dataSource);
-        commands = new Commands(this);
-        messages = new Messages(this);
-        users = new Users(this);
-        statistic = new Statistic(this);
-        reputation = new Reputation(this);
-        service = new Service(this);
+        commands = new Commands();
+        messages = new Messages();
+        users = new Users();
+        statistic = new Statistic();
+        reputation = new Reputation();
+        service = new Service();
     }
 
     public Commands commands() {
