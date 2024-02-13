@@ -18,15 +18,15 @@ public class Users {
         super();
     }
 
-    public CompletableFuture<UsersStatistic> week(int offset, int count) {
+    public UsersStatistic week(int offset, int count) {
         return get("metrics_users_week", "week", offset, count);
     }
 
-    public CompletableFuture<UsersStatistic> month(int offset, int count) {
+    public UsersStatistic month(int offset, int count) {
         return get("metrics_users_month", "month", offset, count);
     }
 
-    private CompletableFuture<UsersStatistic> get(String table, String timeframe, int offset, int count) {
+    private UsersStatistic get(String table, String timeframe, int offset, int count) {
         return Query.query("""
                             SELECT %s,
                                 donor_count,

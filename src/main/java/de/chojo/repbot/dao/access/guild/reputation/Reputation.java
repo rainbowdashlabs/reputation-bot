@@ -15,7 +15,6 @@ import de.chojo.repbot.dao.access.guild.reputation.sub.Ranking;
 import de.chojo.repbot.dao.access.guild.reputation.sub.RepUser;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.dao.snapshots.GuildReputationStats;
-import de.chojo.sadu.base.QueryFactory;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
@@ -25,9 +24,11 @@ import org.slf4j.Logger;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import static de.chojo.sadu.queries.api.call.Call.call;
+import static de.chojo.sadu.queries.api.query.Query.query;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class Reputation extends QueryFactory implements GuildHolder {
+public class Reputation  implements GuildHolder {
     private static final Logger log = getLogger(Reputation.class);
     private final RepGuild repGuild;
 
@@ -37,7 +38,6 @@ public class Reputation extends QueryFactory implements GuildHolder {
     private final Analyzer analyzer;
 
     public Reputation(RepGuild repGuild) {
-        super(repGuild);
         this.repGuild = repGuild;
         ranking = new Ranking(this);
         logAccess = new Log(this);
@@ -63,15 +63,14 @@ public class Reputation extends QueryFactory implements GuildHolder {
     }
 
     public GuildReputationStats stats() {
-        return builder(GuildReputationStats.class)
-                .query("SELECT total_reputation, week_reputation, today_reputation, top_channel FROM get_guild_stats(?)")
-                .parameter(stmt -> stmt.setLong(guildId()))
-                .readRow(rs -> new GuildReputationStats(
+        return query("SELECT total_reputation, week_reputation, today_reputation, top_channel FROM get_guild_stats(?)")
+                .single(call().bind(guildId()))
+                .map(rs -> new GuildReputationStats(
                         rs.getInt("total_reputation"),
                         rs.getInt("week_reputation"),
                         rs.getInt("today_reputation"),
                         rs.getLong("top_channel")
-                )).firstSync()
+                )).first()
                 .orElseGet(() -> new GuildReputationStats(0, 0, 0, 0));
     }
 

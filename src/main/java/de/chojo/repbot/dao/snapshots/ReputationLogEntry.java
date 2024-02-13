@@ -7,16 +7,18 @@ package de.chojo.repbot.dao.snapshots;
 
 import de.chojo.repbot.analyzer.results.match.ThankType;
 import de.chojo.repbot.dao.access.guild.reputation.sub.Log;
-import de.chojo.sadu.base.QueryFactory;
-import de.chojo.sadu.wrapper.util.Row;
+import de.chojo.sadu.mapper.wrapper.Row;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 
+import static de.chojo.sadu.queries.api.call.Call.call;
+import static de.chojo.sadu.queries.api.query.Query.query;
+
 /**
  * A log entry representing a single reputation.
  */
-public class ReputationLogEntry extends QueryFactory {
+public class ReputationLogEntry  {
     private static final String PATH = "https://discord.com/channels/%s/%s/%s";
     private static final long DISCORD_EPOCH = 1420070400000L;
     private final long guildId;
@@ -29,7 +31,6 @@ public class ReputationLogEntry extends QueryFactory {
     private final LocalDateTime received;
 
     public ReputationLogEntry(Log log, long guildId, long channelId, long donorId, long receiverId, long messageId, long refMessageId, ThankType type, LocalDateTime received) {
-        super(log);
         this.guildId = guildId;
         this.channelId = channelId;
         this.donorId = donorId;
@@ -105,19 +106,17 @@ public class ReputationLogEntry extends QueryFactory {
      * Removes the log entry
      */
     public void delete() {
-        builder()
-                .query("DELETE FROM reputation_log WHERE message_id = ? AND receiver_id = ? AND donor_id = ?;")
-                .parameter(stmt -> stmt.setLong(messageId).setLong(receiverId).setLong(donorId))
-                .update().send();
+        query("DELETE FROM reputation_log WHERE message_id = ? AND receiver_id = ? AND donor_id = ?;")
+                .single(call().bind(messageId).bind(receiverId).bind(donorId))
+                .update();
     }
 
     /**
      * Removes all reputations associated with the message
      */
     public void deleteAll() {
-        builder()
-                .query("DELETE FROM reputation_log WHERE message_id = ?")
-                .parameter(stmt -> stmt.setLong(messageId))
-                .update().send();
+        query("DELETE FROM reputation_log WHERE message_id = ?")
+                .single(call().bind(messageId))
+                .update();
     }
 }

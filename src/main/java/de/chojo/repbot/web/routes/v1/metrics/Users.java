@@ -25,7 +25,7 @@ public class Users extends MetricsHolder {
     }
 
     public void activeWeek(Context ctx) {
-        var stats = metrics().users().week(offset(ctx, MAX_WEEK_OFFSET), count(ctx, MAX_WEEKS)).join();
+        var stats = metrics().users().week(offset(ctx, MAX_WEEK_OFFSET), count(ctx, MAX_WEEKS));
         if ("application/json".equalsIgnoreCase(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {
@@ -34,7 +34,7 @@ public class Users extends MetricsHolder {
     }
 
     public void activeMonth(Context ctx) {
-        var stats = metrics().users().month(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH)).join();
+        var stats = metrics().users().month(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH));
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {

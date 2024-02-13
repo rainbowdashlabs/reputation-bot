@@ -41,23 +41,23 @@ public class Service {
              .insert();
     }
 
-    public CompletableFuture<LabeledCountStatistic> hour(int hour, int count) {
+    public LabeledCountStatistic hour(int hour, int count) {
         return get("metrics_handled_interactions", "hour", hour, count);
     }
 
-    public CompletableFuture<LabeledCountStatistic> day(int day, int count) {
+    public LabeledCountStatistic day(int day, int count) {
         return get("metrics_handled_interactions_day", "day", day, count);
     }
 
-    public CompletableFuture<LabeledCountStatistic> week(int week, int count) {
+    public LabeledCountStatistic week(int week, int count) {
         return get("metrics_handled_interactions_week", "week", week, count);
     }
 
-    public CompletableFuture<LabeledCountStatistic> month(int month, int count) {
+    public LabeledCountStatistic month(int month, int count) {
         return get("metrics_handled_interactions_month", "month", month, count);
     }
 
-    private CompletableFuture<LabeledCountStatistic> get(String table, String timeframe, int offset, int count) {
+    private LabeledCountStatistic get(String table, String timeframe, int offset, int count) {
         var builder = new LabeledCountStatisticBuilder();
         return Query.query("""
                         SELECT %s,

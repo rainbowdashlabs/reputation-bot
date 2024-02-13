@@ -11,11 +11,10 @@ import de.chojo.repbot.dao.access.metrics.Reputation;
 import de.chojo.repbot.dao.access.metrics.Service;
 import de.chojo.repbot.dao.access.metrics.Statistic;
 import de.chojo.repbot.dao.access.metrics.Users;
-import de.chojo.sadu.base.QueryFactory;
 
 import javax.sql.DataSource;
 
-public class Metrics extends QueryFactory {
+public class Metrics {
     private final Commands commands;
     private final Messages messages;
     private final Users users;
@@ -24,7 +23,6 @@ public class Metrics extends QueryFactory {
     private final Service service;
 
     public Metrics(DataSource dataSource) {
-        super(dataSource);
         commands = new Commands();
         messages = new Messages();
         users = new Users();
