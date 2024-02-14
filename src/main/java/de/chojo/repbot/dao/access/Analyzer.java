@@ -30,8 +30,7 @@ public class Analyzer {
         if (delete.changed()) {
             log.debug("Deleted {} entries from analyzer log", delete.rows());
         } else {
-            // TODO log error
-            log.error(LogNotify.NOTIFY_ADMIN, "Could not cleanup analyzer log.", delete);
+            delete.exceptions().forEach(e -> log.error(LogNotify.NOTIFY_ADMIN, "Could not cleanup analyzer log.", e));
         }
         delete = Query.query("DELETE FROM reputation_results WHERE submitted < now() - ?::INTERVAL")
                       .single(call().bind("%d HOURS".formatted(configuration.cleanup().analyzerLogHours())))
@@ -39,7 +38,7 @@ public class Analyzer {
         if (delete.changed()) {
             log.debug("Deleted {} entries from reputation results", delete.rows());
         } else {
-            log.error(LogNotify.NOTIFY_ADMIN, "Could not cleanup analyzer log.", delete);
+            delete.exceptions().forEach(e -> log.error(LogNotify.NOTIFY_ADMIN, "Could not cleanup analyzer log.", e));
         }
     }
 }
