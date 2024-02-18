@@ -70,7 +70,7 @@ public class Guilds {
     private Integer pages(int pageSize) {
         return query("""
                        SELECT
-                           CEIL(COUNT(1)::numeric / ?) AS count
+                           CEIL(COUNT(1)::numeric / ?)::INTEGER AS count
                        FROM
                            guilds
                        """)
