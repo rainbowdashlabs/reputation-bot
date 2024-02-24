@@ -11,16 +11,17 @@ import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.reputation.Reputation;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.sadu.base.QueryFactory;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.sharding.ShardManager;
 
-import javax.sql.DataSource;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-public class RepGuild extends QueryFactory implements GuildHolder {
+import static de.chojo.sadu.queries.api.call.Call.call;
+import static de.chojo.sadu.queries.api.query.Query.query;
+
+public class RepGuild implements GuildHolder {
     private static final Cache<Long, Cleanup> CLEANUPS = CacheBuilder.newBuilder()
                                                                      .expireAfterAccess(2, TimeUnit.MINUTES).build();
     private static final Cache<Long, Gdpr> GDPR = CacheBuilder.newBuilder().expireAfterAccess(2, TimeUnit.MINUTES)
@@ -30,8 +31,8 @@ public class RepGuild extends QueryFactory implements GuildHolder {
     private Guild guild;
     private final Configuration configuration;
 
-    public RepGuild(DataSource dataSource, Guild guild, Configuration configuration) {
-        super(dataSource);
+    public RepGuild(Guild guild, Configuration configuration) {
+        super();
         this.configuration = configuration;
         reputation = new Reputation(this);
         settings = new Settings(this);
@@ -68,30 +69,29 @@ public class RepGuild extends QueryFactory implements GuildHolder {
      * @return list of user ids
      */
     public List<Long> userIds() {
-        return builder(Long.class)
-                .query("""
-                       SELECT
-                       	user_id AS user_id
-                       FROM
-                       	(
-                       		SELECT
-                       			donor_id AS user_id
-                       		FROM
-                       			reputation_log
-                       		WHERE guild_id = ?
-                       		UNION
-                       		DISTINCT
-                       		SELECT
-                       			receiver_id AS user_id
-                       		FROM
-                       			reputation_log
-                       		WHERE guild_id = ?
-                       	) users
-                       WHERE user_id != 0
-                        """)
-                .parameter(stmt -> stmt.setLong(guildId()).setLong(guildId()))
-                .readRow(rs -> rs.getLong("user_id"))
-                .allSync();
+        return query("""
+                SELECT
+                	user_id AS user_id
+                FROM
+                	(
+                		SELECT
+                			donor_id AS user_id
+                		FROM
+                			reputation_log
+                		WHERE guild_id = ?
+                		UNION
+                		DISTINCT
+                		SELECT
+                			receiver_id AS user_id
+                		FROM
+                			reputation_log
+                		WHERE guild_id = ?
+                	) users
+                WHERE user_id != 0
+                 """)
+                .single(call().bind(guildId()).bind(guildId()))
+                .mapAs(Long.class)
+                .all();
     }
 
     public Reputation reputation() {
@@ -117,8 +117,8 @@ public class RepGuild extends QueryFactory implements GuildHolder {
     @Override
     public String toString() {
         return "RepGuild{" +
-               "guild=" + guild +
-               '}';
+                "guild=" + guild +
+                '}';
     }
 
     public RepGuild load(ShardManager shardManager) {

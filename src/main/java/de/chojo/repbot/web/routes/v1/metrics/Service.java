@@ -29,7 +29,7 @@ public class Service extends MetricsHolder {
     }
 
     public void countHour(Context ctx) {
-        var stats = metrics().service().hour(offset(ctx, MAX_HOUR_OFFSET), count(ctx, MAX_HOURS)).join();
+        var stats = metrics().service().hour(offset(ctx, MAX_HOUR_OFFSET), count(ctx, MAX_HOURS));
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {
@@ -38,7 +38,7 @@ public class Service extends MetricsHolder {
     }
 
     public void countDay(Context ctx) {
-        var stats = metrics().service().day(offset(ctx, MAX_DAY_OFFSET), count(ctx, MAX_DAYS)).join();
+        var stats = metrics().service().day(offset(ctx, MAX_DAY_OFFSET), count(ctx, MAX_DAYS));
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {
@@ -47,7 +47,7 @@ public class Service extends MetricsHolder {
     }
 
     public void countWeek(Context ctx) {
-        var stats = metrics().service().week(offset(ctx, MAX_WEEK_OFFSET), count(ctx, MAX_WEEKS)).join();
+        var stats = metrics().service().week(offset(ctx, MAX_WEEK_OFFSET), count(ctx, MAX_WEEKS));
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {
@@ -56,7 +56,7 @@ public class Service extends MetricsHolder {
     }
 
     public void countMonth(Context ctx) {
-        var stats = metrics().service().month(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH)).join();
+        var stats = metrics().service().month(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH));
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {

@@ -5,95 +5,69 @@
  */
 package de.chojo.repbot.dao.access.gdpr;
 
-import de.chojo.repbot.dao.access.Gdpr;
-import de.chojo.sadu.base.QueryFactory;
-import de.chojo.sadu.wrapper.stage.ResultStage;
-import de.chojo.sadu.wrapper.util.Row;
+import de.chojo.sadu.mapper.wrapper.Row;
+import de.chojo.sadu.queries.configuration.QueryConfiguration;
 import org.slf4j.Logger;
 
 import java.sql.SQLException;
+import java.util.List;
 
+import static de.chojo.sadu.queries.api.call.Call.call;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public final class RemovalTask extends QueryFactory {
+public final class RemovalTask {
     private static final Logger log = getLogger(RemovalTask.class);
     private final long taskId;
     private final long guildId;
     private final long userId;
 
-    public RemovalTask(QueryFactory holder, long taskId, long guildId, long userId) {
-        super(holder);
+    public RemovalTask(long taskId, long guildId, long userId) {
         this.taskId = taskId;
         this.guildId = guildId;
         this.userId = userId;
     }
 
-    public static RemovalTask build(Gdpr gdpr, Row rs) throws SQLException {
-        return new RemovalTask(gdpr, rs.getLong("task_id"), rs.getLong("guild_id"), rs.getLong("user_id"));
+    public static RemovalTask build(Row rs) throws SQLException {
+        return new RemovalTask(rs.getLong("task_id"), rs.getLong("guild_id"), rs.getLong("user_id"));
     }
 
-    public static void anonymExecute(QueryFactory holder, long guildId, long userId) {
-        new RemovalTask(holder, -1L, guildId, userId).executeRemovalTask();
+    public static void anonymExecute(long guildId, long userId) {
+        new RemovalTask(-1L, guildId, userId).executeRemovalTask();
     }
 
     public void executeRemovalTask() {
-        ResultStage<Void> builder;
-        if (userId() == 0) {
-            // Remove guild
-            builder = builder().query("DELETE FROM reputation_log WHERE guild_id = ?;")
-                               .parameter(stmt -> stmt.setLong(guildId()))
-                               .append().query("DELETE FROM guild_settings WHERE guild_id = ?;")
-                               .parameter(stmt -> stmt.setLong(guildId()))
-                               .append().query("DELETE FROM active_channel WHERE guild_id = ?;")
-                               .parameter(stmt -> stmt.setLong(guildId()))
-                               .append().query("DELETE FROM abuse_protection WHERE guild_id = ?;")
-                               .parameter(stmt -> stmt.setLong(guildId()))
-                               .append().query("DELETE FROM active_categories WHERE guild_id = ?;")
-                               .parameter(stmt -> stmt.setLong(guildId()))
-                               .append().query("DELETE FROM reputation_settings WHERE guild_id = ?;")
-                               .parameter(stmt -> stmt.setLong(guildId()))
-                               .append().query("DELETE FROM guild_ranks WHERE guild_id = ?;")
-                               .parameter(stmt -> stmt.setLong(guildId()))
-                               .append().query("DELETE FROM thankwords WHERE guild_id = ?;")
-                               .parameter(stmt -> stmt.setLong(guildId()))
-                               .append().query("DELETE FROM thank_settings WHERE guild_id = ?;")
-                               .parameter(stmt -> stmt.setLong(guildId()))
-                               .append().query("DELETE FROM reputation_offset WHERE guild_id = ?;")
-                               .parameter(stmt -> stmt.setLong(guildId()))
-                               .append().query("DELETE FROM receiver_roles WHERE guild_id = ?;")
-                               .parameter(stmt -> stmt.setLong(guildId()))
-                               .append().query("DELETE FROM donor_roles WHERE guild_id = ?;")
-                               .parameter(stmt -> stmt.setLong(guildId()))
-                               .append().query("DELETE FROM guild_reactions WHERE guild_id = ?;")
-                               .parameter(stmt -> stmt.setLong(guildId()))
-                               .append().query("DELETE FROM announcements WHERE guild_id = ?;")
-                               .parameter(stmt -> stmt.setLong(guildId()));
-            log.trace("Removed guild settings for {}", guildId());
-        } else if (guildId() == 0) {
-            // Remove complete user
-            builder = builder().query("DELETE FROM reputation_log WHERE receiver_id = ?;")
-                               .parameter(stmt -> stmt.setLong(userId()))
-                               .append().query("UPDATE reputation_log SET donor_id = NULL WHERE donor_id = ?;")
-                               .parameter(stmt -> stmt.setLong(userId()))
-                               .append().query("DELETE FROM reputation_offset WHERE user_id = ?;")
-                               .parameter(stmt -> stmt.setLong(userId()));
-            log.trace("Removed Data of user {}", userId());
-        } else {
-            // Remove user from guild
-            builder = builder().query("DELETE FROM reputation_log WHERE guild_id = ? AND receiver_id = ?;")
-                               .parameter(stmt -> stmt.setLong(guildId()).setLong(userId()))
-                               .append()
-                               .query("UPDATE reputation_log SET donor_id = NULL WHERE guild_id = ? AND donor_id = ?;")
-                               .parameter(stmt -> stmt.setLong(guildId()).setLong(userId()))
-                               .append().query("DELETE FROM reputation_offset WHERE guild_id = ? AND user_id = ?;")
-                               .parameter(stmt -> stmt.setLong(guildId()).setLong(userId()));
-            log.trace("Removed user reputation from guild {} of user {}", guildId(), userId());
-        }
+        try (var conn = QueryConfiguration.getDefault().withSingleTransaction()) {
+            if (userId() == 0) {
+                var tables = List.of("reputation_log", "guild_settings", "active_channel", "abuse_protection",
+                        "active_categories", "reputation_settings", "guild_ranks", "thankwords", "thank_settings",
+                        "reputation_offset", "receiver_roles", "donor_roles", "guild_reactions", "announcements");
+                for (var table : tables) {
+                    conn.query("DELETE FROM %s WHERE guild_id = ?;", table).single(call().bind(guildId)).delete();
+                }
+                log.trace("Removed guild settings for {}", guildId());
+            } else if (guildId() == 0) {
+                conn.query("DELETE FROM reputation_log WHERE receiver_id = ?;").single(call().bind(userId())).delete();
+                conn.query("UPDATE reputation_log SET donor_id = NULL WHERE donor_id = ?;").single(call().bind(userId())).update();
+                conn.query("DELETE FROM reputation_offset WHERE user_id = ?;").single(call().bind(userId())).delete();
+                log.trace("Removed Data of user {}", userId());
+            } else {
+                // Remove user from guild
+                conn.query("DELETE FROM reputation_log WHERE guild_id = ? AND receiver_id = ?;")
+                    .single(call().bind(guildId()).bind(userId()))
+                    .delete();
+                conn.query("UPDATE reputation_log SET donor_id = NULL WHERE guild_id = ? AND donor_id = ?;")
+                    .single(call().bind(guildId()).bind(userId()))
+                    .delete();
+                conn.query("DELETE FROM reputation_offset WHERE guild_id = ? AND user_id = ?;")
+                    .single(call().bind(guildId()).bind(userId()))
+                    .delete();
+                log.trace("Removed user reputation from guild {} of user {}", guildId(), userId());
+            }
 
-        builder.append().query("DELETE FROM cleanup_schedule WHERE task_id = ?;")
-               .parameter(stmt -> stmt.setLong(taskId()))
-               .update()
-               .sendSync();
+            conn.query("DELETE FROM cleanup_schedule WHERE task_id = ?;")
+                .single(call().bind(taskId()))
+                .delete();
+        }
     }
 
     public long taskId() {

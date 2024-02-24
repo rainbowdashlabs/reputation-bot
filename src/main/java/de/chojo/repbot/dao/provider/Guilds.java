@@ -12,31 +12,30 @@ import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.access.guild.RepGuildId;
 import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
 import de.chojo.repbot.dao.pagination.GuildList;
-import de.chojo.sadu.base.QueryFactory;
 import net.dv8tion.jda.api.entities.Guild;
 import org.slf4j.Logger;
 
-import javax.sql.DataSource;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
+import static de.chojo.sadu.queries.api.call.Call.call;
+import static de.chojo.sadu.queries.api.query.Query.query;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class Guilds extends QueryFactory {
+public class Guilds {
     private static final Logger log = getLogger(Guilds.class);
     private final Cache<Long, RepGuild> guilds = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES)
                                                              .build();
     private final Configuration configuration;
 
-    public Guilds(DataSource dataSource, Configuration configuration) {
-        super(dataSource);
+    public Guilds(Configuration configuration) {
         this.configuration = configuration;
     }
 
     public RepGuild guild(Guild guild) {
         try {
-            return guilds.get(guild.getIdLong(), () -> new RepGuild(source(), guild, configuration)).refresh(guild);
+            return guilds.get(guild.getIdLong(), () -> new RepGuild(guild, configuration)).refresh(guild);
         } catch (ExecutionException e) {
             log.error("Could not create guild adapter", e);
             throw new RuntimeException("", e);
@@ -54,15 +53,14 @@ public class Guilds extends QueryFactory {
      */
     public RepGuild byId(long id) {
         var cached = guilds.getIfPresent(id);
-        return cached != null ? cached : new RepGuildId(source(), id, configuration);
+        return cached != null ? cached : new RepGuildId(id, configuration);
     }
 
     public List<RepGuild> byReputationMode(ReputationMode mode) {
-        return builder(RepGuild.class)
-                .query("SELECT guild_id FROM guild_settings WHERE reputation_mode = ?")
-                .parameter(stmt -> stmt.setString(mode.name()))
-                .readRow(row -> byId(row.getLong("guild_id")))
-                .allSync();
+        return query("SELECT guild_id FROM guild_settings WHERE reputation_mode = ?")
+                .single(call().bind(mode.name()))
+                .map(row -> byId(row.getLong("guild_id")))
+                .all();
     }
 
     public GuildList guilds(int pageSize) {
@@ -70,29 +68,27 @@ public class Guilds extends QueryFactory {
     }
 
     private Integer pages(int pageSize) {
-        return builder(Integer.class)
-                .query("""
+        return query("""
                        SELECT
-                           CEIL(COUNT(1)::numeric / ?) AS count
+                           CEIL(COUNT(1)::numeric / ?)::INTEGER AS count
                        FROM
                            guilds
                        """)
-                .parameter(stmt -> stmt.setInt(pageSize))
-                .readRow(row -> row.getInt("count"))
-                .firstSync()
+                .single(call().bind(pageSize))
+                .mapAs(Integer.class)
+                .first()
                 .orElse(1);
     }
 
     private List<RepGuild> page(int pageSize, int page) {
-        return builder(RepGuild.class)
-                .query("""
+        return query("""
                        SELECT guild_id FROM guilds
                        OFFSET ?
                        LIMIT ?;
                        """)
-                .parameter(stmt -> stmt.setInt(page * pageSize).setInt(pageSize))
-                .readRow(row -> byId(row.getLong("guild_id")))
-                .allSync();
+                .single(call().bind(page * pageSize).bind(pageSize))
+                .map(row -> byId(row.getLong("guild_id")))
+                .all();
     }
 
     public void invalidate(long guild) {

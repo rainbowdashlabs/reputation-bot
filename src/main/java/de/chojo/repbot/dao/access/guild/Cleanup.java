@@ -6,48 +6,44 @@
 package de.chojo.repbot.dao.access.guild;
 
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.sadu.base.QueryFactory;
 import net.dv8tion.jda.api.entities.Guild;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-public class Cleanup extends QueryFactory implements GuildHolder {
+import static de.chojo.sadu.queries.api.call.Call.call;
+import static de.chojo.sadu.queries.api.query.Query.query;
+
+public class Cleanup implements GuildHolder {
     private final RepGuild repGuild;
 
     public Cleanup(RepGuild repGuild) {
-        super(repGuild);
         this.repGuild = repGuild;
     }
 
     public void selfCleanupPrompt() {
-        builder()
-                .query("""
+        query("""
                        INSERT INTO self_cleanup(guild_id) VALUES(?)
                        """)
-                .parameter(stmt -> stmt.setLong(guildId()))
-                .update()
-                .sendSync();
+                .single(call().bind(guildId()))
+                .update();
     }
 
     public Optional<LocalDateTime> getCleanupPromptTime() {
-        return builder(LocalDateTime.class)
-                .query("""
+        return query("""
                        SELECT prompted FROM self_cleanup WHERE guild_id = ?
                        """)
-                .parameter(stmt -> stmt.setLong(guildId()))
-                .readRow(rs -> rs.getTimestamp("prompted").toLocalDateTime())
-                .firstSync();
+                .single(call().bind(guildId()))
+                .map(rs -> rs.getTimestamp("prompted").toLocalDateTime())
+                .first();
     }
 
     public void cleanupDone() {
-        builder(Boolean.class)
-                .query("""
+        query("""
                        DELETE FROM self_cleanup WHERE guild_id = ?
                        """)
-                .parameter(stmt -> stmt.setLong(guildId()))
-                .update()
-                .sendSync();
+                .single(call().bind(guildId()))
+                .update();
     }
 
     @Override

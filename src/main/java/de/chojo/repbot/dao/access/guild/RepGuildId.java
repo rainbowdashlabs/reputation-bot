@@ -12,8 +12,8 @@ import javax.sql.DataSource;
 public class RepGuildId extends RepGuild {
     private final long guildId;
 
-    public RepGuildId(DataSource dataSource, long guildId, Configuration configuration) {
-        super(dataSource, null, configuration);
+    public RepGuildId(long guildId, Configuration configuration) {
+        super(null, configuration);
         this.guildId = guildId;
     }
 
