@@ -74,7 +74,7 @@ public class GdprService implements Runnable {
                     guild.retrieveMemberById(user).complete();
                 } catch (RuntimeException e) {
                     log.info("Removing user {} data during guild prune", user);
-                    RemovalTask.anonymExecute(gdpr, guild.getIdLong(), user);
+                    RemovalTask.anonymExecute(guild.getIdLong(), user);
                     pruned++;
                 }
             }
@@ -85,7 +85,7 @@ public class GdprService implements Runnable {
 
     public void cleanupGuildUser(Guild guild, Long user) {
         log.info("User data of {} was pruned on guild {}.", user, guild.getIdLong());
-        CompletableFuture.runAsync(() -> RemovalTask.anonymExecute(gdpr, guild.getIdLong(), user), executorService);
+        CompletableFuture.runAsync(() -> RemovalTask.anonymExecute(guild.getIdLong(), user), executorService);
     }
 
     private void cleanupGuilds() {

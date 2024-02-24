@@ -3,27 +3,28 @@
  *
  *     Copyright (C) RainbowDashLabs and Contributor
  */
-package de.chojo.repbot.dao.pagination;
+package de.chojo.repbot.dao.access.guild.settings.sub;
 
-import de.chojo.jdautil.consumer.ThrowingConsumer;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.sadu.base.QueryFactory;
-import de.chojo.sadu.wrapper.util.ParamBuilder;
-import de.chojo.sadu.wrapper.util.Row;
+import de.chojo.sadu.mapper.wrapper.Row;
+import de.chojo.sadu.queries.api.call.Call;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
 import java.sql.SQLException;
+import java.util.function.Function;
 
-public class Announcements extends QueryFactory implements GuildHolder {
+import static de.chojo.sadu.queries.api.call.Call.call;
+import static de.chojo.sadu.queries.api.query.Query.query;
+
+public class Announcements implements GuildHolder {
     private final Settings settings;
     private boolean active = false;
     private boolean sameChannel = true;
     private long channelId = 0;
 
     private Announcements(Settings settings, boolean active, boolean sameChannel, long channelId) {
-        super(settings);
         this.settings = settings;
         this.active = active;
         this.sameChannel = sameChannel;
@@ -31,7 +32,6 @@ public class Announcements extends QueryFactory implements GuildHolder {
     }
 
     public Announcements(Settings settings) {
-        super(settings);
         this.settings = settings;
     }
 
@@ -55,38 +55,34 @@ public class Announcements extends QueryFactory implements GuildHolder {
     }
 
     public boolean active(boolean active) {
-        if (set("active", stmt -> stmt.setBoolean(active))) {
+        if (set("active", stmt -> stmt.bind(active))) {
             this.active = active;
         }
         return this.active;
     }
 
     public boolean sameChannel(boolean sameChannel) {
-        if (set("same_channel", stmt -> stmt.setBoolean(sameChannel))) {
+        if (set("same_channel", stmt -> stmt.bind(sameChannel))) {
             this.sameChannel = sameChannel;
         }
         return this.sameChannel;
     }
 
     public long channel(TextChannel textChannel) {
-        if (set("channel_id", stmt -> stmt.setLong(textChannel.getIdLong()))) {
+        if (set("channel_id", stmt -> stmt.bind(textChannel.getIdLong()))) {
             channelId = textChannel.getIdLong();
         }
         return channelId;
     }
 
-    private boolean set(String parameter, ThrowingConsumer<ParamBuilder, SQLException> builder) {
-        return builder()
-                .query("""
+    private boolean set(String parameter, Function<Call, Call> builder) {
+        return query("""
                        INSERT INTO announcements(guild_id, %s) VALUES (?, ?)
                        ON CONFLICT(guild_id)
                            DO UPDATE SET %s = excluded.%s;
                        """, parameter, parameter, parameter)
-                .parameter(stmts -> {
-                    stmts.setLong(guildId());
-                    builder.accept(stmts);
-                }).insert()
-                .sendSync()
+                .single(builder.apply(call().bind(guildId())))
+                .insert()
                 .changed();
     }
 

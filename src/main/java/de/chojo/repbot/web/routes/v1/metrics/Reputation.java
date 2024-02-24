@@ -31,7 +31,7 @@ public class Reputation extends MetricsHolder {
     This function is broken, but I don't know how to fix it.
      */
     public void countWeek(Context ctx) {
-        var stats = metrics().reputation().week(offset(ctx, MAX_WEEK_OFFSET), count(ctx, MAX_WEEKS)).join();
+        var stats = metrics().reputation().week(offset(ctx, MAX_WEEK_OFFSET), count(ctx, MAX_WEEKS));
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {
@@ -40,7 +40,7 @@ public class Reputation extends MetricsHolder {
     }
 
     public void countMonth(Context ctx) {
-        var stats = metrics().reputation().month(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH)).join();
+        var stats = metrics().reputation().month(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH));
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {
@@ -49,7 +49,7 @@ public class Reputation extends MetricsHolder {
     }
 
     public void countTypeWeek(Context ctx) {
-        var stats = metrics().reputation().typeWeek(offset(ctx, MAX_WEEK_OFFSET), count(ctx, MAX_WEEKS)).join();
+        var stats = metrics().reputation().typeWeek(offset(ctx, MAX_WEEK_OFFSET), count(ctx, MAX_WEEKS));
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {
@@ -58,7 +58,7 @@ public class Reputation extends MetricsHolder {
     }
 
     public void countTypeMonth(Context ctx) {
-        var stats = metrics().reputation().typeMonth(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH)).join();
+        var stats = metrics().reputation().typeMonth(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH));
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {
@@ -67,7 +67,7 @@ public class Reputation extends MetricsHolder {
     }
 
     public void totalWeek(Context ctx) {
-        var stats = metrics().reputation().totalWeek(offset(ctx, MAX_WEEK_OFFSET), count(ctx, MAX_WEEKS)).join();
+        var stats = metrics().reputation().totalWeek(offset(ctx, MAX_WEEK_OFFSET), count(ctx, MAX_WEEKS));
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {
@@ -76,7 +76,7 @@ public class Reputation extends MetricsHolder {
     }
 
     public void totalMonth(Context ctx) {
-        var stats = metrics().reputation().totalMonth(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH)).join();
+        var stats = metrics().reputation().totalMonth(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH));
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {
@@ -85,7 +85,7 @@ public class Reputation extends MetricsHolder {
     }
 
     public void totalTypeWeek(Context ctx) {
-        var stats = metrics().reputation().typeTotalWeek(offset(ctx, MAX_WEEK_OFFSET), count(ctx, MAX_WEEKS)).join();
+        var stats = metrics().reputation().typeTotalWeek(offset(ctx, MAX_WEEK_OFFSET), count(ctx, MAX_WEEKS));
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {
@@ -94,7 +94,7 @@ public class Reputation extends MetricsHolder {
     }
 
     public void totalTypeMonth(Context ctx) {
-        var stats = metrics().reputation().typeTotalMonth(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH)).join();
+        var stats = metrics().reputation().typeTotalMonth(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH));
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {
@@ -103,7 +103,7 @@ public class Reputation extends MetricsHolder {
     }
 
     public void changesWeek(Context ctx) {
-        var stats = metrics().reputation().weekChanges(offset(ctx, MAX_WEEK_OFFSET), count(ctx, MAX_WEEKS)).join();
+        var stats = metrics().reputation().weekChanges(offset(ctx, MAX_WEEK_OFFSET), count(ctx, MAX_WEEKS));
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {
@@ -112,7 +112,7 @@ public class Reputation extends MetricsHolder {
     }
 
     public void changesMonth(Context ctx) {
-        var stats = metrics().reputation().monthChanges(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH)).join();
+        var stats = metrics().reputation().monthChanges(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH));
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {
@@ -121,7 +121,7 @@ public class Reputation extends MetricsHolder {
     }
 
     public void dowWeek(Context ctx) {
-        var stats = metrics().reputation().dowWeek(offset(ctx, MAX_WEEK_OFFSET)).join();
+        var stats = metrics().reputation().dowWeek(offset(ctx, MAX_WEEK_OFFSET));
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {
@@ -130,7 +130,7 @@ public class Reputation extends MetricsHolder {
     }
 
     public void dowMonth(Context ctx) {
-        var stats = metrics().reputation().dowMonth(offset(ctx, MAX_MONTH_OFFSET)).join();
+        var stats = metrics().reputation().dowMonth(offset(ctx, MAX_MONTH_OFFSET));
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {
@@ -139,7 +139,7 @@ public class Reputation extends MetricsHolder {
     }
 
     public void dowYear(Context ctx) {
-        var stats = metrics().reputation().dowYear(offset(ctx, MAX_YEAR_OFFSET)).join();
+        var stats = metrics().reputation().dowYear(offset(ctx, MAX_YEAR_OFFSET));
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {

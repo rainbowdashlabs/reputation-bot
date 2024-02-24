@@ -13,11 +13,13 @@ import de.chojo.repbot.dao.access.guild.settings.sub.Ranks;
 import de.chojo.repbot.dao.access.guild.settings.sub.Reputation;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.repbot.dao.pagination.Announcements;
-import de.chojo.sadu.base.QueryFactory;
+import de.chojo.repbot.dao.access.guild.settings.sub.Announcements;
 import net.dv8tion.jda.api.entities.Guild;
 
-public class Settings extends QueryFactory implements GuildHolder {
+import static de.chojo.sadu.queries.api.call.Call.call;
+import static de.chojo.sadu.queries.api.query.Query.query;
+
+public class Settings implements GuildHolder {
     private final RepGuild repGuild;
     private AbuseProtection abuseProtection;
     private General general;
@@ -28,7 +30,6 @@ public class Settings extends QueryFactory implements GuildHolder {
     private Messages messages;
 
     public Settings(RepGuild repGuild) {
-        super(repGuild);
         this.repGuild = repGuild;
     }
 
@@ -36,26 +37,25 @@ public class Settings extends QueryFactory implements GuildHolder {
         if (abuseProtection != null) {
             return abuseProtection;
         }
-        abuseProtection = builder(AbuseProtection.class)
-                .query("""
-                       SELECT
-                           min_messages,
-                           max_message_age,
-                           receiver_context,
-                           donor_context,
-                           cooldown,
-                           max_given,
-                           max_given_hours,
-                           max_received,
-                           max_received_hours,
-                           max_message_reputation
-                       FROM
-                           abuse_protection
-                       WHERE guild_id = ?;
-                       """)
-                .parameter(stmt -> stmt.setLong(guildId()))
-                .readRow(rs -> AbuseProtection.build(this, rs))
-                .firstSync()
+        abuseProtection = query("""
+                SELECT
+                    min_messages,
+                    max_message_age,
+                    receiver_context,
+                    donor_context,
+                    cooldown,
+                    max_given,
+                    max_given_hours,
+                    max_received,
+                    max_received_hours,
+                    max_message_reputation
+                FROM
+                    abuse_protection
+                WHERE guild_id = ?;
+                """)
+                .single(call().bind(guildId()))
+                .map(rs -> AbuseProtection.build(this, rs))
+                .first()
                 .orElseGet(() -> new AbuseProtection(this));
         return abuseProtection;
     }
@@ -64,19 +64,18 @@ public class Settings extends QueryFactory implements GuildHolder {
         if (announcements != null) {
             return announcements;
         }
-        announcements = builder(Announcements.class)
-                .query("""
-                       SELECT
-                           active,
-                           same_channel,
-                           channel_id
-                       FROM
-                           announcements
-                       WHERE guild_id = ?;
-                       """)
-                .parameter(stmt -> stmt.setLong(guildId()))
-                .readRow(rs -> Announcements.build(this, rs))
-                .firstSync()
+        announcements = query("""
+                SELECT
+                    active,
+                    same_channel,
+                    channel_id
+                FROM
+                    announcements
+                WHERE guild_id = ?;
+                """)
+                .single(call().bind(guildId()))
+                .map(rs -> Announcements.build(this, rs))
+                .first()
                 .orElseGet(() -> new Announcements(this));
         return announcements;
     }
@@ -85,22 +84,21 @@ public class Settings extends QueryFactory implements GuildHolder {
         if (reputation != null) {
             return reputation;
         }
-        reputation = builder(Reputation.class)
-                .query("""
-                       SELECT
-                           reactions_active,
-                           answer_active,
-                           mention_active,
-                           fuzzy_active,
-                           embed_active,
-                           skip_single_embed
-                       FROM
-                           reputation_settings
-                       WHERE guild_id = ?;
-                       """)
-                .parameter(stmt -> stmt.setLong(guildId()))
-                .readRow(rs -> Reputation.build(this, rs))
-                .firstSync()
+        reputation = query("""
+                SELECT
+                    reactions_active,
+                    answer_active,
+                    mention_active,
+                    fuzzy_active,
+                    embed_active,
+                    skip_single_embed
+                FROM
+                    reputation_settings
+                WHERE guild_id = ?;
+                """)
+                .single(call().bind(guildId()))
+                .map(rs -> Reputation.build(this, rs))
+                .first()
                 .orElseGet(() -> new Reputation(this));
         return reputation;
     }
@@ -109,21 +107,20 @@ public class Settings extends QueryFactory implements GuildHolder {
         if (general != null) {
             return general;
         }
-        general = builder(General.class)
-                .query("""
-                       SELECT
-                           language,
-                           emoji_debug,
-                           stack_roles,
-                           reputation_mode,
-                           reset_date
-                       FROM
-                           guild_settings
-                       WHERE guild_id = ?;
-                       """)
-                .parameter(stmt -> stmt.setLong(guildId()))
-                .readRow(rs -> General.build(this, rs))
-                .firstSync()
+        general = query("""
+                SELECT
+                    language,
+                    emoji_debug,
+                    stack_roles,
+                    reputation_mode,
+                    reset_date
+                FROM
+                    guild_settings
+                WHERE guild_id = ?;
+                """)
+                .single(call().bind(guildId()))
+                .map(rs -> General.build(this, rs))
+                .first()
                 .orElseGet(() -> new General(this));
         return general;
     }
@@ -132,18 +129,17 @@ public class Settings extends QueryFactory implements GuildHolder {
         if (thanking != null) {
             return thanking;
         }
-        thanking = builder(Thanking.class)
-                .query("""
-                       SELECT
-                           reaction,
-                           channel_whitelist
-                       FROM
-                           thank_settings
-                       WHERE guild_id = ?;
-                       """)
-                .parameter(stmt -> stmt.setLong(guildId()))
-                .readRow(rs -> Thanking.build(this, rs))
-                .firstSync()
+        thanking = query("""
+                SELECT
+                    reaction,
+                    channel_whitelist
+                FROM
+                    thank_settings
+                WHERE guild_id = ?;
+                """)
+                .single(call().bind(guildId()))
+                .map(rs -> Thanking.build(this, rs))
+                .first()
                 .orElseGet(() -> new Thanking(this));
         return thanking;
     }
@@ -152,17 +148,16 @@ public class Settings extends QueryFactory implements GuildHolder {
         if (messages != null) {
             return messages;
         }
-        messages = builder(Messages.class)
-                .query("""
-                       SELECT
-                           reaction_confirmation
-                       FROM
-                           message_states
-                       WHERE guild_id = ?;
-                       """)
-                .parameter(stmt -> stmt.setLong(guildId()))
-                .readRow(rs -> Messages.build(this, rs))
-                .firstSync()
+        messages = query("""
+                SELECT
+                    reaction_confirmation
+                FROM
+                    message_states
+                WHERE guild_id = ?;
+                """)
+                .single(call().bind(guildId()))
+                .map(rs -> Messages.build(this, rs))
+                .first()
                 .orElseGet(() -> new Messages(this));
         return messages;
     }

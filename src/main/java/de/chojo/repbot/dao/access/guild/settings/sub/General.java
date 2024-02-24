@@ -5,12 +5,10 @@
  */
 package de.chojo.repbot.dao.access.guild.settings.sub;
 
-import de.chojo.jdautil.consumer.ThrowingConsumer;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.sadu.base.QueryFactory;
-import de.chojo.sadu.wrapper.util.ParamBuilder;
-import de.chojo.sadu.wrapper.util.Row;
+import de.chojo.sadu.mapper.wrapper.Row;
+import de.chojo.sadu.queries.api.call.Call;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import org.jetbrains.annotations.Nullable;
@@ -20,8 +18,12 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
 
-public class General extends QueryFactory implements GuildHolder {
+import static de.chojo.sadu.queries.api.call.Call.call;
+import static de.chojo.sadu.queries.api.query.Query.query;
+
+public class General implements GuildHolder {
     private final AtomicBoolean stackRoles;
     private final Settings settings;
     private DiscordLocale language;
@@ -34,7 +36,6 @@ public class General extends QueryFactory implements GuildHolder {
     }
 
     public General(Settings settings, DiscordLocale language, boolean emojiDebug, boolean stackRoles, ReputationMode reputationMode, LocalDate resetDate) {
-        super(settings);
         this.settings = settings;
         this.language = language;
         this.emojiDebug = emojiDebug;
@@ -54,7 +55,7 @@ public class General extends QueryFactory implements GuildHolder {
     }
 
     public boolean language(@Nullable DiscordLocale language) {
-        var result = set("language", stmt -> stmt.setString(language == null ? null : language.getLocale()));
+        var result = set("language", stmt -> stmt.bind(language == null ? null : language.getLocale()));
         if (result) {
             this.language = language;
         }
@@ -62,7 +63,7 @@ public class General extends QueryFactory implements GuildHolder {
     }
 
     public boolean emojiDebug(boolean emojiDebug) {
-        var result = set("emoji_debug", stmt -> stmt.setBoolean(emojiDebug));
+        var result = set("emoji_debug", stmt -> stmt.bind(emojiDebug));
         if (result) {
             this.emojiDebug = emojiDebug;
         }
@@ -70,7 +71,7 @@ public class General extends QueryFactory implements GuildHolder {
     }
 
     public ReputationMode reputationMode(ReputationMode reputationMode) {
-        var result = set("reputation_mode", stmt -> stmt.setString(reputationMode.name()));
+        var result = set("reputation_mode", stmt -> stmt.bind(reputationMode.name()));
         if (result) {
             this.reputationMode = reputationMode;
         }
@@ -78,7 +79,7 @@ public class General extends QueryFactory implements GuildHolder {
     }
 
     public boolean stackRoles(boolean stackRoles) {
-        var result = set("stack_roles", stmt -> stmt.setBoolean(stackRoles));
+        var result = set("stack_roles", stmt -> stmt.bind(stackRoles));
         if (result) {
             this.stackRoles.set(stackRoles);
         }
@@ -86,12 +87,7 @@ public class General extends QueryFactory implements GuildHolder {
     }
 
     public boolean resetDate(LocalDate resetDate) {
-        boolean result;
-        if (resetDate == null) {
-            result = set("reset_date", stmt -> stmt.setDate(null));
-        } else {
-            result = set("reset_date", stmt -> stmt.setDate(Date.valueOf(resetDate)));
-        }
+        var result = set("reset_date", stmt -> stmt.bind(resetDate == null ? null : Date.valueOf(resetDate)));
         if (result) {
             this.resetDate = resetDate;
         }
@@ -128,18 +124,14 @@ public class General extends QueryFactory implements GuildHolder {
         return settings.guildId();
     }
 
-    private boolean set(String parameter, ThrowingConsumer<ParamBuilder, SQLException> builder) {
-        return builder()
-                .query("""
-                        INSERT INTO guild_settings(guild_id, %s) VALUES (?, ?)
-                        ON CONFLICT(guild_id)
-                            DO UPDATE SET %s = excluded.%s;
-                        """, parameter, parameter, parameter)
-                .parameter(stmts -> {
-                    stmts.setLong(guildId());
-                    builder.accept(stmts);
-                }).insert()
-                .sendSync()
+    private boolean set(String parameter, Function<Call, Call> builder) {
+        return query("""
+                INSERT INTO guild_settings(guild_id, %s) VALUES (?, ?)
+                ON CONFLICT(guild_id)
+                    DO UPDATE SET %s = excluded.%s;
+                """, parameter, parameter, parameter)
+                .single(builder.apply(call().bind(guildId())))
+                .insert()
                 .changed();
     }
 
@@ -154,6 +146,6 @@ public class General extends QueryFactory implements GuildHolder {
                 Language: %s
                 Reputation Mode: %s
                 """.stripIndent()
-                .formatted(stackRoles.get(), emojiDebug, language != null ? language.getLanguageName() : guild().getLocale().getLanguageName(), reputationMode.name());
+                   .formatted(stackRoles.get(), emojiDebug, language != null ? language.getLanguageName() : guild().getLocale().getLanguageName(), reputationMode.name());
     }
 }

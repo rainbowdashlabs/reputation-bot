@@ -9,7 +9,6 @@ import de.chojo.repbot.dao.access.guild.reputation.Reputation;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.dao.pagination.ReputationLogAccess;
 import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
-import de.chojo.sadu.base.QueryFactory;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -17,11 +16,13 @@ import net.dv8tion.jda.api.entities.User;
 import java.util.List;
 import java.util.Optional;
 
-public class Log extends QueryFactory implements GuildHolder {
+import static de.chojo.sadu.queries.api.call.Call.call;
+import static de.chojo.sadu.queries.api.query.Query.query;
+
+public class Log  implements GuildHolder {
     private final Reputation reputation;
 
     public Log(Reputation reputation) {
-        super(reputation);
         this.reputation = reputation;
     }
 
@@ -70,8 +71,7 @@ public class Log extends QueryFactory implements GuildHolder {
     }
 
     private List<ReputationLogEntry> getLog(String column, long id, int pageSize, int page) {
-        return builder(ReputationLogEntry.class)
-                .query("""
+        return query("""
                        SELECT
                            guild_id,
                            donor_id,
@@ -90,14 +90,13 @@ public class Log extends QueryFactory implements GuildHolder {
                        OFFSET ?
                        LIMIT ?;
                        """, column)
-                .parameter(stmt -> stmt.setLong(id).setLong(guildId()).setInt(page * pageSize).setInt(pageSize))
-                .readRow(r -> ReputationLogEntry.build(this, r))
-                .allSync();
+                .single(call().bind(id).bind(guildId()).bind(page * pageSize).bind(pageSize))
+                .map(r -> ReputationLogEntry.build(this, r))
+                .all();
     }
 
     public Optional<ReputationLogEntry> getLatestReputation() {
-        return builder(ReputationLogEntry.class)
-                .query("""
+        return query("""
                        SELECT
                            guild_id,
                            donor_id,
@@ -111,9 +110,9 @@ public class Log extends QueryFactory implements GuildHolder {
                        WHERE guild_id = ?
                        ORDER BY received DESC
                        LIMIT 1;
-                       """).parameter(stmt -> stmt.setLong(guildId()))
-                .readRow(r -> ReputationLogEntry.build(this, r))
-                .firstSync();
+                       """).single(call().bind(guildId()))
+                .map(r -> ReputationLogEntry.build(this, r))
+                .first();
     }
 
     /**
@@ -123,8 +122,7 @@ public class Log extends QueryFactory implements GuildHolder {
      * @return a log entry if found
      */
     public Optional<ReputationLogEntry> getLogEntry(long message) {
-        return builder(ReputationLogEntry.class)
-                .query("""
+        return query("""
                        SELECT
                            guild_id,
                            donor_id,
@@ -140,9 +138,9 @@ public class Log extends QueryFactory implements GuildHolder {
                            message_id = ?
                            AND guild_id = ?;
                        """)
-                .parameter(stmt -> stmt.setLong(message).setLong(guildId()))
-                .readRow(r -> ReputationLogEntry.build(this, r))
-                .firstSync();
+                .single(call().bind(message).bind(guildId()))
+                .map(r -> ReputationLogEntry.build(this, r))
+                .first();
     }
 
     /**
@@ -164,8 +162,7 @@ public class Log extends QueryFactory implements GuildHolder {
     }
 
     private int getLogPages(String column, long id, int pageSize) {
-        return builder(Integer.class)
-                .query("""
+        return query("""
                        SELECT
                            CEIL(COUNT(1)::numeric / ?) AS count
                        FROM
@@ -173,9 +170,9 @@ public class Log extends QueryFactory implements GuildHolder {
                        WHERE guild_id = ?
                            AND %s = ?;
                        """, column)
-                .parameter(stmt -> stmt.setInt(pageSize).setLong(guildId()).setLong(id))
-                .readRow(row -> row.getInt("count"))
-                .firstSync()
+                .single(call().bind(pageSize).bind(guildId()).bind(id))
+                .map(row -> row.getInt("count"))
+                .first()
                 .orElse(1);
     }
 
