@@ -5,12 +5,10 @@
  */
 package de.chojo.repbot.dao.access.guild.settings.sub;
 
-import de.chojo.jdautil.consumer.ThrowingConsumer;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.sadu.base.QueryFactory;
-import de.chojo.sadu.wrapper.util.ParamBuilder;
-import de.chojo.sadu.wrapper.util.Row;
+import de.chojo.sadu.mapper.wrapper.Row;
+import de.chojo.sadu.queries.api.call.Call;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -18,8 +16,12 @@ import net.dv8tion.jda.api.entities.Message;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.function.Function;
 
-public class AbuseProtection extends QueryFactory implements GuildHolder {
+import static de.chojo.sadu.queries.api.call.Call.call;
+import static de.chojo.sadu.queries.api.query.Query.query;
+
+public class AbuseProtection implements GuildHolder {
     private final Settings settings;
     private int cooldown;
     private int maxMessageAge;
@@ -34,7 +36,6 @@ public class AbuseProtection extends QueryFactory implements GuildHolder {
 
     public AbuseProtection(Settings settings, int cooldown, int maxMessageAge, int minMessages, boolean donorContext, boolean receiverContext,
                            int maxGiven, int maxGivenHours, int maxReceived, int maxReceivedHours, int maxMessageReputation) {
-        super(settings);
         this.settings = settings;
         this.cooldown = cooldown;
         this.maxMessageAge = maxMessageAge;
@@ -107,42 +108,42 @@ public class AbuseProtection extends QueryFactory implements GuildHolder {
     }
 
     public int cooldown(int cooldown) {
-        if (set("cooldown", stmt -> stmt.setInt(cooldown))) {
+        if (set("cooldown", stmt -> stmt.bind(cooldown))) {
             this.cooldown = cooldown;
         }
         return this.cooldown;
     }
 
     public int maxMessageAge(int maxMessageAge) {
-        if (set("max_message_age", stmt -> stmt.setInt(maxMessageAge))) {
+        if (set("max_message_age", stmt -> stmt.bind(maxMessageAge))) {
             this.maxMessageAge = maxMessageAge;
         }
         return this.maxMessageAge;
     }
 
     public int minMessages(int minMessages) {
-        if (set("min_messages", stmt -> stmt.setInt(minMessages))) {
+        if (set("min_messages", stmt -> stmt.bind(minMessages))) {
             this.minMessages = minMessages;
         }
         return this.minMessages;
     }
 
     public boolean donorContext(boolean donorContext) {
-        if (set("donor_context", stmt -> stmt.setBoolean(donorContext))) {
+        if (set("donor_context", stmt -> stmt.bind(donorContext))) {
             this.donorContext = donorContext;
         }
         return this.donorContext;
     }
 
     public boolean receiverContext(boolean receiverContext) {
-        if (set("receiver_context", stmt -> stmt.setBoolean(receiverContext))) {
+        if (set("receiver_context", stmt -> stmt.bind(receiverContext))) {
             this.receiverContext = receiverContext;
         }
         return this.receiverContext;
     }
 
     public int maxGiven(int maxGiven) {
-        var result = set("max_given", stmt -> stmt.setInt(Math.max(maxGiven, 0)));
+        var result = set("max_given", stmt -> stmt.bind(Math.max(maxGiven, 0)));
         if (result) {
             this.maxGiven = Math.max(maxGiven, 0);
         }
@@ -150,7 +151,7 @@ public class AbuseProtection extends QueryFactory implements GuildHolder {
     }
 
     public int maxGivenHours(int maxGivenHours) {
-        var result = set("max_given_hours", stmt -> stmt.setInt(Math.max(maxGivenHours, 1)));
+        var result = set("max_given_hours", stmt -> stmt.bind(Math.max(maxGivenHours, 1)));
         if (result) {
             this.maxGivenHours = Math.max(maxGivenHours, 1);
         }
@@ -158,7 +159,7 @@ public class AbuseProtection extends QueryFactory implements GuildHolder {
     }
 
     public int maxReceived(int maxReceived) {
-        var result = set("max_received", stmt -> stmt.setInt(Math.max(maxReceived, 0)));
+        var result = set("max_received", stmt -> stmt.bind(Math.max(maxReceived, 0)));
         if (result) {
             this.maxReceived = Math.max(maxReceived, 0);
         }
@@ -166,7 +167,7 @@ public class AbuseProtection extends QueryFactory implements GuildHolder {
     }
 
     public int maxReceivedHours(int maxReceivedHours) {
-        var result = set("max_received_hours", stmt -> stmt.setInt(Math.max(maxReceivedHours, 1)));
+        var result = set("max_received_hours", stmt -> stmt.bind(Math.max(maxReceivedHours, 1)));
         if (result) {
             this.maxReceivedHours = Math.max(maxReceivedHours, 1);
         }
@@ -174,7 +175,7 @@ public class AbuseProtection extends QueryFactory implements GuildHolder {
     }
 
     public int maxMessageReputation(int maxMessageReputation) {
-        if (set("max_message_reputation", stmt -> stmt.setInt(maxMessageReputation))) {
+        if (set("max_message_reputation", stmt -> stmt.bind(maxMessageReputation))) {
             this.maxMessageReputation = maxMessageReputation;
         }
         return this.maxMessageReputation;
@@ -216,18 +217,14 @@ public class AbuseProtection extends QueryFactory implements GuildHolder {
         return maxReceived != 0;
     }
 
-    private boolean set(String parameter, ThrowingConsumer<ParamBuilder, SQLException> builder) {
-        return builder()
-                .query("""
+    private boolean set(String parameter, Function<Call, Call> builder) {
+        return query("""
                        INSERT INTO abuse_protection(guild_id, %s) VALUES (?, ?)
                        ON CONFLICT(guild_id)
                            DO UPDATE SET %s = excluded.%s;
                        """, parameter, parameter, parameter)
-                .parameter(stmts -> {
-                    stmts.setLong(guildId());
-                    builder.accept(stmts);
-                }).insert()
-                .sendSync()
+                .single(builder.apply(call().bind(guildId())))
+                .insert()
                 .changed();
     }
 

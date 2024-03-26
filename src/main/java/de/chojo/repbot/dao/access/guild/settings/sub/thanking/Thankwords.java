@@ -7,7 +7,6 @@ package de.chojo.repbot.dao.access.guild.settings.sub.thanking;
 
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.sadu.base.QueryFactory;
 import net.dv8tion.jda.api.entities.Guild;
 import org.intellij.lang.annotations.Language;
 
@@ -16,7 +15,10 @@ import java.util.concurrent.locks.StampedLock;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-public class Thankwords extends QueryFactory implements GuildHolder {
+import static de.chojo.sadu.queries.api.call.Call.call;
+import static de.chojo.sadu.queries.api.query.Query.query;
+
+public class Thankwords implements GuildHolder {
     @Language("RegExp")
     private static final String THANKWORD = "(?:^|\\b)%s(?:$|\\b)";
     @Language("RegExp")
@@ -29,7 +31,6 @@ public class Thankwords extends QueryFactory implements GuildHolder {
     private volatile Pattern cachedPattern;
 
     public Thankwords(Thanking thanking, Set<String> thankwords) {
-        super(thanking);
         this.thanking = thanking;
         this.thankwords = thankwords;
         this.lock = new StampedLock();
@@ -78,15 +79,14 @@ public class Thankwords extends QueryFactory implements GuildHolder {
     public boolean add(String pattern) {
         long stamp = lock.writeLock();
         try {
-            var result = builder().query("""
+            var result = query("""
                     INSERT INTO
                         thankwords(guild_id, thankword) VALUES(?,?)
                             ON CONFLICT(guild_id, thankword)
                                 DO NOTHING;
                     """)
-                    .parameter(stmt -> stmt.setLong(guildId()).setString(pattern))
+                    .single(call().bind(guildId()).bind(pattern))
                     .update()
-                    .sendSync()
                     .changed();
             if (result) {
                 thankwords.add(pattern);
@@ -101,15 +101,14 @@ public class Thankwords extends QueryFactory implements GuildHolder {
     public boolean remove(String pattern) {
         long stamp = lock.writeLock();
         try {
-            var result = builder().query("""
+            var result = query("""
                     DELETE FROM
                         thankwords
                     WHERE
                         guild_id = ?
                         AND thankword = ?
-                    """).parameter(stmt -> stmt.setLong(guildId()).setString(pattern))
+                    """).single(call().bind(guildId()).bind(pattern))
                     .update()
-                    .sendSync()
                     .changed();
             if (result) {
                 thankwords.remove(pattern);

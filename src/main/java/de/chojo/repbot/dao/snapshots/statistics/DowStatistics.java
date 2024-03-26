@@ -5,7 +5,7 @@
  */
 package de.chojo.repbot.dao.snapshots.statistics;
 
-import de.chojo.sadu.wrapper.util.Row;
+import de.chojo.sadu.mapper.wrapper.Row;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;

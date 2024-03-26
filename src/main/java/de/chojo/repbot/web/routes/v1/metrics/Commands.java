@@ -26,7 +26,7 @@ public class Commands extends MetricsHolder {
     }
 
     public void usageWeek(Context ctx) {
-        var stats = metrics().commands().week(offset(ctx, MAX_WEEK_OFFSET)).join();
+        var stats = metrics().commands().week(offset(ctx, MAX_WEEK_OFFSET));
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {
@@ -35,7 +35,7 @@ public class Commands extends MetricsHolder {
     }
 
     public void usageMonth(Context ctx) {
-        var stats = metrics().commands().month(offset(ctx, MAX_MONTH_OFFSET)).join();
+        var stats = metrics().commands().month(offset(ctx, MAX_MONTH_OFFSET));
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {
@@ -44,7 +44,7 @@ public class Commands extends MetricsHolder {
     }
 
     public void countWeek(Context ctx) {
-        var stats = metrics().commands().week(offset(ctx, MAX_WEEK_OFFSET), count(ctx, MAX_WEEKS)).join();
+        var stats = metrics().commands().week(offset(ctx, MAX_WEEK_OFFSET), count(ctx, MAX_WEEKS));
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {
@@ -53,7 +53,7 @@ public class Commands extends MetricsHolder {
     }
 
     public void countMonth(Context ctx) {
-        var stats = metrics().commands().month(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH)).join();
+        var stats = metrics().commands().month(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH));
         if ("application/json".equals(ctx.header("Accept"))) {
             ctx.json(stats);
         } else {
