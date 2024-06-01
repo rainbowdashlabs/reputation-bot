@@ -36,3 +36,4 @@ buildNumber.properties
 /out/
 
 /site/
+/.direnv

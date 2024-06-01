@@ -1,4 +1,4 @@
-FROM gradle:jdk19-alpine as build
+FROM gradle:jdk21-alpine as build
 
 COPY . .
 RUN gradle clean build --no-daemon
