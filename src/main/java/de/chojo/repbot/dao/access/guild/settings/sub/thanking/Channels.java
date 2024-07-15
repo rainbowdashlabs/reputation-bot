@@ -7,7 +7,6 @@ package de.chojo.repbot.dao.access.guild.settings.sub.thanking;
 
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.sadu.base.QueryFactory;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
@@ -24,9 +23,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import static de.chojo.sadu.queries.api.call.Call.call;
+import static de.chojo.sadu.queries.api.query.Query.query;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class Channels extends QueryFactory implements GuildHolder {
+public class Channels  implements GuildHolder {
 
     private static final Logger log = getLogger(Channels.class);
 
@@ -36,7 +37,6 @@ public class Channels extends QueryFactory implements GuildHolder {
     private boolean whitelist;
 
     public Channels(Thanking thanking, boolean whitelist, Set<Long> channels, Set<Long> categories) {
-        super(thanking);
         this.thanking = thanking;
         this.whitelist = whitelist;
         this.channels = channels;
@@ -107,11 +107,9 @@ public class Channels extends QueryFactory implements GuildHolder {
      * @return true if a channel was added
      */
     public boolean add(StandardGuildChannel channel) {
-        var result = builder()
-                .query("INSERT INTO active_channel(guild_id, channel_id) VALUES(?,?) ON CONFLICT(guild_id, channel_id) DO NOTHING;")
-                .parameter(stmt -> stmt.setLong(guildId()).setLong(channel.getIdLong()))
+        var result = query("INSERT INTO active_channel(guild_id, channel_id) VALUES(?,?) ON CONFLICT(guild_id, channel_id) DO NOTHING;")
+                .single(call().bind(guildId()).bind(channel.getIdLong()))
                 .update()
-                .sendSync()
                 .changed();
         if (result) {
             channels.add(channel.getIdLong());
@@ -126,11 +124,9 @@ public class Channels extends QueryFactory implements GuildHolder {
      * @return true if a category was added
      */
     public boolean add(Category category) {
-        var result = builder()
-                .query("INSERT INTO active_categories(guild_id, category_id) VALUES(?,?) ON CONFLICT(guild_id, category_id) DO NOTHING;")
-                .parameter(stmt -> stmt.setLong(guildId()).setLong(category.getIdLong()))
+        var result = query("INSERT INTO active_categories(guild_id, category_id) VALUES(?,?) ON CONFLICT(guild_id, category_id) DO NOTHING;")
+                .single(call().bind(guildId()).bind(category.getIdLong()))
                 .update()
-                .sendSync()
                 .changed();
         if (result) {
             categories.add(category.getIdLong());
@@ -145,11 +141,9 @@ public class Channels extends QueryFactory implements GuildHolder {
      * @return true if the channel was removed
      */
     public boolean remove(Channel channel) {
-        var result = builder()
-                .query("DELETE FROM active_channel WHERE guild_id = ? AND channel_id = ?;")
-                .parameter(stmt -> stmt.setLong(guildId()).setLong(channel.getIdLong()))
+        var result = query("DELETE FROM active_channel WHERE guild_id = ? AND channel_id = ?;")
+                .single(call().bind(guildId()).bind(channel.getIdLong()))
                 .update()
-                .sendSync()
                 .changed();
         if (result) {
             channels.remove(channel.getIdLong());
@@ -164,11 +158,9 @@ public class Channels extends QueryFactory implements GuildHolder {
      * @return true if the channel was removed
      */
     public boolean remove(Category category) {
-        var result = builder()
-                .query("DELETE FROM active_categories WHERE guild_id = ? AND category_id = ?;")
-                .parameter(stmt -> stmt.setLong(guildId()).setLong(category.getIdLong()))
+        var result =query("DELETE FROM active_categories WHERE guild_id = ? AND category_id = ?;")
+                .single(call().bind(guildId()).bind(category.getIdLong()))
                 .update()
-                .sendSync()
                 .changed();
         if (result) {
             categories.remove(category.getIdLong());
@@ -182,11 +174,9 @@ public class Channels extends QueryFactory implements GuildHolder {
      * @return the amount of removed channel
      */
     public int clearChannel() {
-        var result = builder()
-                .query("DELETE FROM active_channel WHERE guild_id = ?;")
-                .parameter(stmt -> stmt.setLong(guildId()))
+        var result = query("DELETE FROM active_channel WHERE guild_id = ?;")
+                .single(call().bind(guildId()))
                 .update()
-                .sendSync()
                 .rows();
         if (result > 0) {
             channels.clear();
@@ -200,11 +190,9 @@ public class Channels extends QueryFactory implements GuildHolder {
      * @return the amount of removed categories
      */
     public int clearCategories() {
-        var result = builder()
-                .query("DELETE FROM active_categories WHERE guild_id = ?;")
-                .parameter(stmt -> stmt.setLong(guildId()))
+        var result = query("DELETE FROM active_categories WHERE guild_id = ?;")
+                .single(call().bind(guildId()))
                 .update()
-                .sendSync()
                 .rows();
         if (result > 0) {
             categories.clear();
@@ -213,16 +201,14 @@ public class Channels extends QueryFactory implements GuildHolder {
     }
 
     public boolean listType(boolean whitelist) {
-        var result = builder()
-                .query("""
+        var result = query("""
                        INSERT INTO thank_settings(guild_id, channel_whitelist) VALUES (?,?)
                            ON CONFLICT(guild_id)
                                DO UPDATE
                                    SET channel_whitelist = excluded.channel_whitelist
                        """)
-                .parameter(stmt -> stmt.setLong(guildId()).setBoolean(whitelist))
+                .single(call().bind(guildId()).bind(whitelist))
                 .update()
-                .sendSync()
                 .changed();
         if (result) {
             this.whitelist = whitelist;

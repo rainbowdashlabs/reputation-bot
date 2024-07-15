@@ -5,19 +5,21 @@
  */
 package de.chojo.repbot.dao.access.guild.settings.sub;
 
-import de.chojo.jdautil.consumer.ThrowingConsumer;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.sadu.base.QueryFactory;
-import de.chojo.sadu.wrapper.util.ParamBuilder;
-import de.chojo.sadu.wrapper.util.Row;
+import de.chojo.sadu.mapper.wrapper.Row;
+import de.chojo.sadu.queries.api.call.Call;
 import net.dv8tion.jda.api.entities.Guild;
 import org.jetbrains.annotations.PropertyKey;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.function.Function;
 
-public class Reputation extends QueryFactory implements GuildHolder {
+import static de.chojo.sadu.queries.api.call.Call.call;
+import static de.chojo.sadu.queries.api.query.Query.query;
+
+public class Reputation implements GuildHolder {
     private final Settings settings;
     private boolean reactionActive;
     private boolean answerActive;
@@ -31,7 +33,6 @@ public class Reputation extends QueryFactory implements GuildHolder {
     }
 
     public Reputation(Settings settings, boolean reactionActive, boolean answerActive, boolean mentionActive, boolean fuzzyActive, boolean embedActive, boolean directActive) {
-        super(settings);
         this.settings = settings;
         this.reactionActive = reactionActive;
         this.answerActive = answerActive;
@@ -71,12 +72,12 @@ public class Reputation extends QueryFactory implements GuildHolder {
         return embedActive;
     }
 
-    public boolean isDirectActive(){
+    public boolean isDirectActive() {
         return directActive;
     }
 
     public boolean embedActive(boolean embedActive) {
-        var result = set("embed_active", stmt -> stmt.setBoolean(embedActive));
+        var result = set("embed_active", stmt -> stmt.bind(embedActive));
         if (result) {
             this.embedActive = embedActive;
         }
@@ -84,7 +85,7 @@ public class Reputation extends QueryFactory implements GuildHolder {
     }
 
     public boolean reactionActive(boolean reactionActive) {
-        var result = set("reactions_active", stmt -> stmt.setBoolean(reactionActive));
+        var result = set("reactions_active", stmt -> stmt.bind(reactionActive));
         if (result) {
             this.reactionActive = reactionActive;
         }
@@ -92,7 +93,7 @@ public class Reputation extends QueryFactory implements GuildHolder {
     }
 
     public boolean answerActive(boolean answerActive) {
-        var result = set("answer_active", stmt -> stmt.setBoolean(answerActive));
+        var result = set("answer_active", stmt -> stmt.bind(answerActive));
         if (result) {
             this.answerActive = answerActive;
         }
@@ -100,7 +101,7 @@ public class Reputation extends QueryFactory implements GuildHolder {
     }
 
     public boolean mentionActive(boolean mentionActive) {
-        var result = set("mention_active", stmt -> stmt.setBoolean(mentionActive));
+        var result = set("mention_active", stmt -> stmt.bind(mentionActive));
         if (result) {
             this.mentionActive = mentionActive;
         }
@@ -108,7 +109,7 @@ public class Reputation extends QueryFactory implements GuildHolder {
     }
 
     public boolean fuzzyActive(boolean fuzzyActive) {
-        var result = set("fuzzy_active", stmt -> stmt.setBoolean(fuzzyActive));
+        var result = set("fuzzy_active", stmt -> stmt.bind(fuzzyActive));
         if (result) {
             this.fuzzyActive = fuzzyActive;
         }
@@ -116,7 +117,7 @@ public class Reputation extends QueryFactory implements GuildHolder {
     }
 
     public boolean directActive(boolean directActive) {
-        var result = set("skip_single_embed", stmt -> stmt.setBoolean(directActive));
+        var result = set("skip_single_embed", stmt -> stmt.bind(directActive));
         if (result) {
             this.directActive = directActive;
         }
@@ -160,30 +161,26 @@ public class Reputation extends QueryFactory implements GuildHolder {
         return settings.guildId();
     }
 
-    private boolean set(String parameter, ThrowingConsumer<ParamBuilder, SQLException> builder) {
-        return builder()
-                .query("""
-                       INSERT INTO reputation_settings(guild_id, %s) VALUES (?, ?)
-                       ON CONFLICT(guild_id)
-                           DO UPDATE SET %s = excluded.%s;
-                       """, parameter, parameter, parameter)
-                .parameter(stmts -> {
-                    stmts.setLong(guildId());
-                    builder.accept(stmts);
-                }).insert()
-                .sendSync()
+    private boolean set(String parameter, Function<Call, Call> builder) {
+        return query("""
+                INSERT INTO reputation_settings(guild_id, %s) VALUES (?, ?)
+                ON CONFLICT(guild_id)
+                    DO UPDATE SET %s = excluded.%s;
+                """, parameter, parameter, parameter)
+                .single(builder.apply(call().bind(guildId())))
+                .insert()
                 .changed();
     }
 
     public String prettyString() {
         return """
-               Reaction active: %s
-               Answer active: %s
-               Mention active: %s
-               Fuzzy active: %s
-               Embed active: %s
-               Skip single embed: %s
-               """.formatted(reactionActive, answerActive, mentionActive, fuzzyActive, embedActive, directActive)
-                  .stripIndent();
+                Reaction active: %s
+                Answer active: %s
+                Mention active: %s
+                Fuzzy active: %s
+                Embed active: %s
+                Skip single embed: %s
+                """.formatted(reactionActive, answerActive, mentionActive, fuzzyActive, embedActive, directActive)
+                   .stripIndent();
     }
 }

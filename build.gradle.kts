@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.shadow)
     alias(libs.plugins.spotless)
     java
-    `maven-publish`
 }
 
 group = "de.chojo"
@@ -49,7 +48,7 @@ dependencies {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(19))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
     withSourcesJar()
     withJavadocJar()
