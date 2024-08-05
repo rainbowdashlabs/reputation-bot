@@ -10,15 +10,19 @@ import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.Analyzer;
 import de.chojo.repbot.dao.access.Cleanup;
 import de.chojo.repbot.dao.access.Gdpr;
+import de.chojo.repbot.dao.access.gdpr.RemovalTask;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.dao.provider.Voice;
 import de.chojo.repbot.util.LogNotify;
-import de.chojo.sadu.databases.PostgreSql;
 import de.chojo.sadu.datasource.DataSourceCreator;
+import de.chojo.sadu.mapper.RowMapperRegistry;
+import de.chojo.sadu.mapper.rowmapper.RowMapper;
+import de.chojo.sadu.postgresql.databases.PostgreSql;
+import de.chojo.sadu.postgresql.mapper.PostgresqlMapper;
+import de.chojo.sadu.queries.configuration.QueryConfiguration;
 import de.chojo.sadu.updater.QueryReplacement;
 import de.chojo.sadu.updater.SqlUpdater;
-import de.chojo.sadu.wrapper.QueryBuilderConfig;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -50,8 +54,8 @@ public class Data {
     }
 
     public void init() throws SQLException, IOException {
-        configure();
         initConnection();
+        configure();
         updateDatabase();
         initDao();
     }
@@ -72,46 +76,50 @@ public class Data {
     private void updateDatabase() throws IOException, SQLException {
         var schema = configuration.database().schema();
         SqlUpdater.builder(dataSource, PostgreSql.get())
-                .setReplacements(new QueryReplacement("repbot_schema", schema))
-                .setVersionTable(schema + ".repbot_version")
-                .setSchemas(schema)
-                .execute();
+                  .setReplacements(new QueryReplacement("repbot_schema", schema))
+                  .setVersionTable(schema + ".repbot_version")
+                  .setSchemas(schema)
+                  .execute();
     }
 
     private void configure() {
-        log.info("Configuring QueryBuilder");
+        log.info("Configuring Query Configuration");
         var logger = getLogger("DbLogger");
-        QueryBuilderConfig.setDefault(QueryBuilderConfig.builder()
-                .withExceptionHandler(err -> logger.error(LogNotify.NOTIFY_ADMIN, "An error occured during a database request", err))
-                .withExecutor(threading.repBotWorker())
-                .build());
+        var registry = new RowMapperRegistry();
+        registry.register(RowMapper.forClass(RemovalTask.class).mapper(RemovalTask::build).build());
+        registry.register(PostgresqlMapper.getDefaultMapper());
+        QueryConfiguration.setDefault(
+                QueryConfiguration.builder(dataSource)
+                                  .setExceptionHandler(err -> logger.error(LogNotify.NOTIFY_ADMIN, "An error occured during a database request", err))
+                                  .setRowMapperRegistry(registry)
+                                  .build());
     }
 
     private void initDao() {
         log.info("Creating DAOs");
-        guilds = new Guilds(dataSource, configuration);
-        gdpr = new Gdpr(dataSource, configuration);
-        cleanup = new Cleanup(dataSource);
+        guilds = new Guilds(configuration);
+        gdpr = new Gdpr(configuration);
+        cleanup = new Cleanup();
         metrics = new Metrics(dataSource);
-        analyzer = new Analyzer(dataSource, configuration);
-        voice = new Voice(dataSource, configuration);
+        analyzer = new Analyzer(configuration);
+        voice = new Voice(configuration);
     }
 
     private HikariDataSource getConnectionPool() {
         log.info("Creating connection pool.");
         var data = configuration.database();
         return DataSourceCreator.create(PostgreSql.get())
-                .configure(config -> config
-                        .host(data.host())
-                        .port(data.port())
-                        .user(data.user())
-                        .password(data.password())
-                        .database(data.database()))
-                .create()
-                .withMaximumPoolSize(data.poolSize())
-                .withThreadFactory(Threading.createThreadFactory(threading.hikariGroup()))
-                .forSchema(data.schema())
-                .build();
+                                .configure(config -> config
+                                        .host(data.host())
+                                        .port(data.port())
+                                        .user(data.user())
+                                        .password(data.password())
+                                        .database(data.database()))
+                                .create()
+                                .withMaximumPoolSize(data.poolSize())
+                                .withThreadFactory(Threading.createThreadFactory(threading.hikariGroup()))
+                                .forSchema(data.schema())
+                                .build();
     }
 
     public Guilds guilds() {

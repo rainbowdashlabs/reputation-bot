@@ -13,7 +13,7 @@ import de.chojo.jdautil.util.MentionUtil;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.reputation.sub.RepUser;
 import de.chojo.repbot.util.Text;
-import de.chojo.sadu.wrapper.util.Row;
+import de.chojo.sadu.mapper.wrapper.Row;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.IMentionable;

@@ -12,12 +12,11 @@ import de.chojo.repbot.dao.access.guild.reputation.sub.user.Gdpr;
 import de.chojo.repbot.dao.access.guild.settings.sub.AbuseProtection;
 import de.chojo.repbot.dao.components.MemberHolder;
 import de.chojo.repbot.dao.snapshots.RepProfile;
-import de.chojo.sadu.base.QueryFactory;
-import de.chojo.sadu.wrapper.stage.StatementStage;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
+import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
@@ -27,9 +26,11 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Optional;
 
+import static de.chojo.sadu.queries.api.call.Call.call;
+import static de.chojo.sadu.queries.api.query.Query.query;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class RepUser extends QueryFactory implements MemberHolder {
+public class RepUser implements MemberHolder {
     private static final Logger log = getLogger(RepUser.class);
     private final Reputation reputation;
     private final Gdpr gdpr;
@@ -37,7 +38,6 @@ public class RepUser extends QueryFactory implements MemberHolder {
     private Member member;
 
     public RepUser(Reputation reputation, Member member) {
-        super(reputation);
         gdpr = new Gdpr(this);
         this.reputation = reputation;
         this.member = member;
@@ -45,7 +45,6 @@ public class RepUser extends QueryFactory implements MemberHolder {
     }
 
     public RepUser(Reputation reputation, User user) {
-        super(reputation);
         gdpr = new Gdpr(this);
         this.reputation = reputation;
         this.user = user;
@@ -62,13 +61,11 @@ public class RepUser extends QueryFactory implements MemberHolder {
      * @return true if added
      */
     public boolean addReputation(long amount) {
-        return builder()
-                .query("""
-                       INSERT INTO reputation_offset(guild_id, user_id, amount) VALUES (?,?,?)
-                       """)
-                .parameter(stmt -> stmt.setLong(guildId()).setLong(userId()).setLong(amount))
+        return query("""
+                INSERT INTO reputation_offset(guild_id, user_id, amount) VALUES (?,?,?)
+                """)
+                .single(call().bind(guildId()).bind(userId()).bind(amount))
                 .insert()
-                .sendSync()
                 .changed();
     }
 
@@ -90,13 +87,11 @@ public class RepUser extends QueryFactory implements MemberHolder {
      */
     public boolean setReputation(long amount) {
         var offset = amount - profile().reputation();
-        return builder()
-                .query("""
-                       INSERT INTO reputation_offset(guild_id, user_id, amount) VALUES (?,?,?)
-                       """)
-                .parameter(stmt -> stmt.setLong(guildId()).setLong(userId()).setLong(offset))
+        return query("""
+                INSERT INTO reputation_offset(guild_id, user_id, amount) VALUES (?,?,?)
+                """)
+                .single(call().bind(guildId()).bind(userId()).bind(offset))
                 .insert()
-                .sendSync()
                 .changed();
     }
 
@@ -110,20 +105,18 @@ public class RepUser extends QueryFactory implements MemberHolder {
      * @return true if the repuation was logged.
      */
     public boolean addReputation(@Nullable Member donor, @NotNull Message message, @Nullable Message refMessage, ThankType type) {
-        var success = builder()
-                .query("""
-                       INSERT INTO
-                       reputation_log(guild_id, donor_id, receiver_id, message_id, ref_message_id, channel_id, cause) VALUES(?,?,?,?,?,?,?)
-                           ON CONFLICT(guild_id, donor_id, receiver_id, message_id)
-                               DO NOTHING;
-                       """)
-                .parameter(stmt -> stmt.setLong(guildId()).setLong(donor == null ? 0 : donor.getIdLong())
-                                       .setLong(userId())
-                                       .setLong(message.getIdLong())
-                                       .setLong(refMessage == null ? null : refMessage.getIdLong())
-                                       .setLong(message.getChannel().getIdLong()).setString(type.name()))
+        var success = query("""
+                INSERT INTO
+                reputation_log(guild_id, donor_id, receiver_id, message_id, ref_message_id, channel_id, cause) VALUES(?,?,?,?,?,?,?)
+                    ON CONFLICT(guild_id, donor_id, receiver_id, message_id)
+                        DO NOTHING;
+                """)
+                .single(call().bind(guildId()).bind(donor == null ? 0 : donor.getIdLong())
+                              .bind(userId())
+                              .bind(message.getIdLong())
+                              .bind(refMessage == null ? null : refMessage.getIdLong())
+                              .bind(message.getChannel().getIdLong()).bind(type.name()))
                 .insert()
-                .sendSync()
                 .changed();
         if (success) {
             log.debug("{} received one reputation from {} on guild {} for message {}", userId(), donor != null ? donor.getIdLong() : "unkown", guildId(), message.getIdLong());
@@ -143,23 +136,21 @@ public class RepUser extends QueryFactory implements MemberHolder {
      * @return true if the repuation was logged.
      */
     public boolean addOldReputation(@Nullable Member donor, @NotNull Message message, @Nullable Message refMessage, ThankType type) {
-        var success = builder()
-                .query("""
-                       INSERT INTO
-                       reputation_log(guild_id, donor_id, receiver_id, message_id, ref_message_id, channel_id, cause, received) VALUES(?,?,?,?,?,?,?,?)
-                           ON CONFLICT(guild_id, donor_id, receiver_id, message_id)
-                               DO NOTHING;
-                       """)
-                .parameter(stmt -> stmt.setLong(guildId())
-                                       .setLong(donor == null ? 0 : donor.getIdLong())
-                                       .setLong(userId())
-                                       .setLong(message.getIdLong())
-                                       .setLong(refMessage == null ? null : refMessage.getIdLong())
-                                       .setLong(message.getChannel().getIdLong())
-                                       .setString(type.name())
-                                       .setTimestamp(Timestamp.from(message.getTimeCreated().toInstant())))
+        var success = query("""
+                INSERT INTO
+                reputation_log(guild_id, donor_id, receiver_id, message_id, ref_message_id, channel_id, cause, received) VALUES(?,?,?,?,?,?,?,?)
+                    ON CONFLICT(guild_id, donor_id, receiver_id, message_id)
+                        DO NOTHING;
+                """)
+                .single(call().bind(guildId())
+                              .bind(donor == null ? 0 : donor.getIdLong())
+                              .bind(userId())
+                              .bind(message.getIdLong())
+                              .bind(refMessage == null ? null : refMessage.getIdLong())
+                              .bind(message.getChannel().getIdLong())
+                              .bind(type.name())
+                              .bind(Timestamp.from(message.getTimeCreated().toInstant())))
                 .insert()
-                .sendSync()
                 .changed();
         if (success) {
             log.debug("{} received one reputation from {} for message {}", user().getName(), donor != null ? donor.getEffectiveName() : "unkown", message.getIdLong());
@@ -175,26 +166,26 @@ public class RepUser extends QueryFactory implements MemberHolder {
      * @return last timestamp as instant
      */
     public Optional<Instant> getLastReputation(Member other) {
-        return builder(Instant.class).
+        return
                 query("""
-                      SELECT
-                          received
-                      FROM
-                          reputation_log
-                      WHERE
-                          guild_id = ?
-                          AND ((donor_id = ? AND receiver_id = ?)
-                              OR (donor_id = ? AND receiver_id = ?))
-                      ORDER BY received DESC
-                      LIMIT  1;
-                      """)
-                .parameter(stmt -> stmt.setLong(reputation.guildId())
-                                       .setLong(userId())
-                                       .setLong(other.getIdLong())
-                                       .setLong(other.getIdLong())
-                                       .setLong(userId()))
-                .readRow(row -> row.getTimestamp("received").toInstant())
-                .firstSync();
+                        SELECT
+                            received
+                        FROM
+                            reputation_log
+                        WHERE
+                            guild_id = ?
+                            AND ((donor_id = ? AND receiver_id = ?)
+                                OR (donor_id = ? AND receiver_id = ?))
+                        ORDER BY received DESC
+                        LIMIT  1;
+                        """)
+                        .single(call().bind(reputation.guildId())
+                                      .bind(userId())
+                                      .bind(other.getIdLong())
+                                      .bind(other.getIdLong())
+                                      .bind(userId()))
+                        .map(row -> row.getTimestamp("received").toInstant())
+                        .first();
     }
 
     /**
@@ -216,28 +207,27 @@ public class RepUser extends QueryFactory implements MemberHolder {
     public RepProfile profile() {
         var mode = reputation.repGuild().settings().general().reputationMode();
         // We probably don't want to cache the profile. There are just too many factors which can change the user reputation.
-        var builder = builder(RepProfile.class);
-        StatementStage<RepProfile> query;
+        @Language("postgresql")
+        String query;
         if (mode.isSupportsOffset()) {
-            query = builder
-                    .query("""
-                           SELECT rank, rank_donated, user_id, reputation, rep_offset, raw_reputation, donated
-                           FROM %s
-                           WHERE guild_id = ? AND user_id = ?;
-                           """, mode.tableName());
+            query = """
+                    SELECT rank, rank_donated, user_id, reputation, rep_offset, raw_reputation, donated
+                    FROM %s
+                    WHERE guild_id = ? AND user_id = ?;
+                    """;
         } else {
-            query = builder
-                    .query("""
-                           SELECT rank, rank_donated, user_id, reputation, 0 AS rep_offset, reputation AS raw_reputation, donated
-                           FROM %s
-                           WHERE guild_id = ? AND user_id = ?;
-                           """, mode.tableName());
+            query = """
+                    SELECT rank, rank_donated, user_id, reputation, 0 AS rep_offset, reputation AS raw_reputation, donated
+                    FROM %s
+                    WHERE guild_id = ? AND user_id = ?;
+                    """;
         }
 
-        return query.parameter(stmt -> stmt.setLong(guildId()).setLong(userId()))
-                    .readRow(row -> RepProfile.buildProfile(this, row))
-                    .firstSync()
-                    .orElseGet(() -> RepProfile.empty(this, user()));
+        return query(query, mode.tableName())
+                .single(call().bind(guildId()).bind(userId()))
+                .map(row -> RepProfile.buildProfile(this, row))
+                .first()
+                .orElseGet(() -> RepProfile.empty(this, user()));
 
     }
 
@@ -248,11 +238,10 @@ public class RepUser extends QueryFactory implements MemberHolder {
      */
     public int countReceived() {
         var hours = reputation().repGuild().settings().abuseProtection().maxReceivedHours();
-        return builder(Integer.class)
-                .query("SELECT COUNT(1) FROM reputation_log WHERE received > NOW() - ?::interval AND receiver_id = ?")
-                .parameter(stmt -> stmt.setString("%s hours".formatted(hours)).setLong(memberId()))
-                .readRow(rs -> rs.getInt(1))
-                .firstSync()
+        return query("SELECT COUNT(1) FROM reputation_log WHERE received > NOW() - ?::interval AND receiver_id = ?")
+                .single(call().bind("%s hours".formatted(hours)).bind(memberId()))
+                .map(rs -> rs.getInt(1))
+                .first()
                 .orElse(0);
     }
 
@@ -263,11 +252,10 @@ public class RepUser extends QueryFactory implements MemberHolder {
      */
     public int countGiven() {
         var hours = reputation().repGuild().settings().abuseProtection().maxGivenHours();
-        return builder(Integer.class)
-                .query("SELECT COUNT(1) FROM reputation_log WHERE received > NOW() - ?::interval AND donor_id = ?")
-                .parameter(stmt -> stmt.setString("%s hours".formatted(hours)).setLong(memberId()))
-                .readRow(rs -> rs.getInt(1))
-                .firstSync()
+        return query("SELECT COUNT(1) FROM reputation_log WHERE received > NOW() - ?::interval AND donor_id = ?")
+                .single(call().bind("%s hours".formatted(hours)).bind(memberId()))
+                .map(rs -> rs.getInt(1))
+                .first()
                 .orElse(0);
     }
 

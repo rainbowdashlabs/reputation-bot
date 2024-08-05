@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.shadow)
     alias(libs.plugins.spotless)
     java
-    `maven-publish`
 }
 
 group = "de.chojo"
@@ -25,12 +24,12 @@ spotless {
 
 dependencies {
     //discord
-    implementation("de.chojo", "cjda-util", "2.9.6+beta.19") {
+    implementation("de.chojo", "cjda-util", "2.9.8+jda-5.0.0") {
         exclude(group = "club.minnced", module = "opus-java")
     }
 
     // database
-    implementation("org.postgresql", "postgresql", "42.7.1")
+    implementation("org.postgresql", "postgresql", "42.7.3")
     implementation(libs.bundles.sadu)
 
     // Logging
@@ -39,17 +38,17 @@ dependencies {
         exclude("org.apache.logging.log4j")
     }
 
-    implementation("org.knowm.xchart", "xchart", "3.8.7")
+    implementation("org.knowm.xchart", "xchart", "3.8.8")
 
     // unit testing
-    testImplementation(platform("org.junit:junit-bom:5.10.1"))
+    testImplementation(platform("org.junit:junit-bom:5.10.3"))
     testImplementation("org.junit.jupiter", "junit-jupiter")
-    testImplementation("org.knowm.xchart", "xchart", "3.8.7")
+    testImplementation("org.knowm.xchart", "xchart", "3.8.8")
 }
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(19))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
     withSourcesJar()
     withJavadocJar()

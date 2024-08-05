@@ -12,14 +12,16 @@ import de.chojo.repbot.dao.access.guild.settings.sub.thanking.Reactions;
 import de.chojo.repbot.dao.access.guild.settings.sub.thanking.ReceiverRoles;
 import de.chojo.repbot.dao.access.guild.settings.sub.thanking.Thankwords;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.sadu.base.QueryFactory;
-import de.chojo.sadu.wrapper.util.Row;
+import de.chojo.sadu.mapper.wrapper.Row;
 import net.dv8tion.jda.api.entities.Guild;
 
 import java.sql.SQLException;
 import java.util.HashSet;
 
-public class Thanking extends QueryFactory implements GuildHolder {
+import static de.chojo.sadu.queries.api.call.Call.call;
+import static de.chojo.sadu.queries.api.query.Query.query;
+
+public class Thanking  implements GuildHolder {
     private static final String DEFAULT_REACTION = "🏅";
     private final String mainReaction;
     private final Settings settings;
@@ -36,7 +38,6 @@ public class Thanking extends QueryFactory implements GuildHolder {
     }
 
     public Thanking(Settings settings, String mainReaction, boolean channelWhitelist) {
-        super(settings);
         this.settings = settings;
         this.mainReaction = mainReaction;
         this.channelWhitelist = channelWhitelist;
@@ -53,24 +54,22 @@ public class Thanking extends QueryFactory implements GuildHolder {
         if (channels != null) {
             return channels;
         }
-        var channels = builder(Long.class)
-                .query("""
+        var channels = query("""
                        SELECT channel_id
                        FROM active_channel
                        WHERE guild_id = ?
                        """)
-                .parameter(stmt -> stmt.setLong(guildId()))
-                .readRow(r -> r.getLong("channel_id"))
-                .allSync();
-        var categories = builder(Long.class)
-                .query("""
+                .single(call().bind(guildId()))
+                .map(r -> r.getLong("channel_id"))
+                .all();
+        var categories = query("""
                        SELECT category_id
                        FROM active_categories
                        WHERE guild_id = ?
                        """)
-                .parameter(stmt -> stmt.setLong(guildId()))
-                .readRow(r -> r.getLong("category_id"))
-                .allSync();
+                .single(call().bind(guildId()))
+                .mapAs(Long.class)
+                .all();
         this.channels = new Channels(this, channelWhitelist, new HashSet<>(channels), new HashSet<>(categories));
         return this.channels;
     }
@@ -79,15 +78,14 @@ public class Thanking extends QueryFactory implements GuildHolder {
         if (donorRoles != null) {
             return donorRoles;
         }
-        var roles = builder(Long.class)
-                .query("""
+        var roles = query("""
                        SELECT role_id
                        FROM donor_roles
                        WHERE guild_id = ?
                        """)
-                .parameter(stmt -> stmt.setLong(guildId()))
-                .readRow(r -> r.getLong("role_id"))
-                .allSync();
+                .single(call().bind(guildId()))
+                .mapAs(Long.class)
+                .all();
 
         donorRoles = new DonorRoles(this, new HashSet<>(roles));
         return donorRoles;
@@ -97,15 +95,14 @@ public class Thanking extends QueryFactory implements GuildHolder {
         if (receiverRoles != null) {
             return receiverRoles;
         }
-        var roles = builder(Long.class)
-                .query("""
+        var roles = query("""
                        SELECT role_id
                        FROM receiver_roles
                        WHERE guild_id = ?
                        """)
-                .parameter(stmt -> stmt.setLong(guildId()))
-                .readRow(r -> r.getLong("role_id"))
-                .allSync();
+                .single(call().bind(guildId()))
+                .mapAs(Long.class)
+                .all();
 
         receiverRoles = new ReceiverRoles(this, new HashSet<>(roles));
         return receiverRoles;
@@ -115,15 +112,14 @@ public class Thanking extends QueryFactory implements GuildHolder {
         if (reactions != null) {
             return reactions;
         }
-        var reactions = builder(String.class)
-                .query("""
+        var reactions = query("""
                        SELECT reaction
                        FROM guild_reactions
                        WHERE guild_id = ?
                        """)
-                .parameter(stmt -> stmt.setLong(guildId()))
-                .readRow(r -> r.getString("reaction"))
-                .allSync();
+                .single(call().bind(guildId()))
+                .mapAs(String.class)
+                .all();
         this.reactions = new Reactions(this, mainReaction, new HashSet<>(reactions));
         return this.reactions;
     }
@@ -132,15 +128,14 @@ public class Thanking extends QueryFactory implements GuildHolder {
         if (thankwords != null) {
             return thankwords;
         }
-        var thankwords = builder(String.class)
-                .query("""
+        var thankwords = query("""
                        SELECT thankword
                        FROM thankwords
                        WHERE guild_id = ?
                        """)
-                .parameter(stmt -> stmt.setLong(guildId()))
-                .readRow(r -> r.getString("thankword"))
-                .allSync();
+                .single(call().bind(guildId()))
+                .mapAs(String.class)
+                .all();
 
         this.thankwords = new Thankwords(this, new HashSet<>(thankwords));
         return this.thankwords;

@@ -39,7 +39,7 @@ public class Statistic {
 
     private ShardStatistic getShardStatistic(JDA jda) {
         var shardId = jda.getShardInfo().getShardId();
-        var analyzedMessages = metrics.messages().hour(1, 1).join().get(0).count();
+        var analyzedMessages = metrics.messages().hour(1, 1).get(0).count();
 
         return new ShardStatistic(
                 shardId + 1,

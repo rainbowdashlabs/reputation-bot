@@ -7,7 +7,6 @@ package de.chojo.repbot.dao.access.guild.settings.sub.thanking;
 
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.sadu.base.QueryFactory;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
@@ -19,15 +18,16 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static de.chojo.sadu.queries.api.call.Call.call;
+import static de.chojo.sadu.queries.api.query.Query.query;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public abstract class RolesHolder extends QueryFactory implements GuildHolder {
+public abstract class RolesHolder implements GuildHolder {
     private static final Logger log = getLogger(RolesHolder.class);
     protected final Set<Long> roleIds;
     protected final Thanking thanking;
 
     public RolesHolder(Thanking thanking, Set<Long> roleIds) {
-        super(thanking);
         this.thanking = thanking;
         this.roleIds = roleIds;
     }
@@ -56,11 +56,9 @@ public abstract class RolesHolder extends QueryFactory implements GuildHolder {
     protected abstract String targetTable();
 
     public boolean add(Role role) {
-        var result = builder()
-                .query("INSERT INTO %s(guild_id, role_id) VALUES (?,?) ON CONFLICT(guild_id, role_id) DO NOTHING", targetTable())
-                .parameter(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong()))
+        var result = query("INSERT INTO %s(guild_id, role_id) VALUES (?,?) ON CONFLICT(guild_id, role_id) DO NOTHING", targetTable())
+                .single(call().bind(guildId()).bind(role.getIdLong()))
                 .update()
-                .sendSync()
                 .changed();
         if (result) {
             roleIds.add(role.getIdLong());
@@ -69,11 +67,9 @@ public abstract class RolesHolder extends QueryFactory implements GuildHolder {
     }
 
     public boolean remove(Role role) {
-        var result = builder()
-                .query("DELETE FROM %s WHERE guild_id = ? AND role_id = ?", targetTable())
-                .parameter(stmt -> stmt.setLong(guildId()).setLong(role.getIdLong()))
+        var result = query("DELETE FROM %s WHERE guild_id = ? AND role_id = ?", targetTable())
+                .single(call().bind(guildId()).bind(role.getIdLong()))
                 .update()
-                .sendSync()
                 .changed();
         if (result) {
             roleIds.remove(role.getIdLong());

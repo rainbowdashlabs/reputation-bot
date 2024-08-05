@@ -8,7 +8,6 @@ package de.chojo.repbot.dao.access.guild.settings.sub.thanking;
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.sadu.base.QueryFactory;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.emoji.CustomEmoji;
@@ -20,13 +19,15 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class Reactions extends QueryFactory implements GuildHolder {
+import static de.chojo.sadu.queries.api.call.Call.call;
+import static de.chojo.sadu.queries.api.query.Query.query;
+
+public class Reactions  implements GuildHolder {
     private final Thanking thanking;
     private final Set<String> reactions;
     private String mainReaction;
 
     public Reactions(Thanking thanking, String mainReaction, Set<String> reactions) {
-        super(thanking);
         this.thanking = thanking;
         this.mainReaction = mainReaction;
         this.reactions = reactions;
@@ -90,15 +91,13 @@ public class Reactions extends QueryFactory implements GuildHolder {
     }
 
     public boolean add(String reaction) {
-        var result = builder()
-                .query("""
+        var result = query("""
                        INSERT INTO guild_reactions(guild_id, reaction) VALUES (?,?)
                            ON CONFLICT(guild_id, reaction)
                                DO NOTHING;
                        """)
-                .parameter(stmt -> stmt.setLong(guildId()).setString(reaction))
+                .single(call().bind(guildId()).bind(reaction))
                 .update()
-                .sendSync()
                 .changed();
         if (result) {
             reactions.add(reaction);
@@ -107,13 +106,11 @@ public class Reactions extends QueryFactory implements GuildHolder {
     }
 
     public boolean remove(String reaction) {
-        var result = builder()
-                .query("""
+        var result = query("""
                        DELETE FROM guild_reactions WHERE guild_id = ? AND reaction = ?;
                        """)
-                .parameter(stmt -> stmt.setLong(guildId()).setString(reaction))
+                .single(call().bind(guildId()).bind(reaction))
                 .update()
-                .sendSync()
                 .changed();
         if (result) {
             reactions.remove(reaction);
@@ -123,16 +120,14 @@ public class Reactions extends QueryFactory implements GuildHolder {
     }
 
     public boolean mainReaction(String reaction) {
-        var result = builder()
-                .query("""
+        var result = query("""
                        INSERT INTO thank_settings(guild_id, reaction) VALUES (?,?)
                            ON CONFLICT(guild_id)
                                DO UPDATE
                                    SET reaction = excluded.reaction
                        """)
-                .parameter(stmt -> stmt.setLong(guildId()).setString(reaction))
+                .single(call().bind(guildId()).bind(reaction))
                 .update()
-                .sendSync()
                 .changed();
         if (result) {
             mainReaction = reaction;
