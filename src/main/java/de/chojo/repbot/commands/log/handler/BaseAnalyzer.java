@@ -14,7 +14,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 public class BaseAnalyzer {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context, Reputation reputation) {
-        var optMessageId = ValueParser.parseLong(event.getOption("message_id").getAsString());
+        var optMessageId = ValueParser.parseLong(event.getOption("messageid").getAsString());
         if (optMessageId.isEmpty()) {
             event.reply(context.localize("error.invalidMessage")).setEphemeral(true).queue();
             return;
