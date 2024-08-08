@@ -10,6 +10,7 @@ group = "de.chojo"
 version = "1.15.1"
 
 repositories {
+    mavenCentral()
     maven("https://eldonexus.de/repository/maven-public")
     maven("https://eldonexus.de/repository/maven-proxies")
     maven("https://m2.dv8tion.net/releases")

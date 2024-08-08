@@ -20,7 +20,7 @@ import de.chojo.sadu.mapper.RowMapperRegistry;
 import de.chojo.sadu.mapper.rowmapper.RowMapper;
 import de.chojo.sadu.postgresql.databases.PostgreSql;
 import de.chojo.sadu.postgresql.mapper.PostgresqlMapper;
-import de.chojo.sadu.queries.configuration.QueryConfiguration;
+import de.chojo.sadu.queries.api.configuration.QueryConfiguration;
 import de.chojo.sadu.updater.QueryReplacement;
 import de.chojo.sadu.updater.SqlUpdater;
 import org.slf4j.Logger;
@@ -90,7 +90,7 @@ public class Data {
         registry.register(PostgresqlMapper.getDefaultMapper());
         QueryConfiguration.setDefault(
                 QueryConfiguration.builder(dataSource)
-                                  .setExceptionHandler(err -> logger.error(LogNotify.NOTIFY_ADMIN, "An error occured during a database request", err))
+                                  .setExceptionHandler(err -> logger.error(LogNotify.NOTIFY_ADMIN, "An error occurred during a database request", err))
                                   .setRowMapperRegistry(registry)
                                   .build());
     }

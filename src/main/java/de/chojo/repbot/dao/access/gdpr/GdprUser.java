@@ -6,8 +6,8 @@
 package de.chojo.repbot.dao.access.gdpr;
 
 import de.chojo.sadu.mapper.wrapper.Row;
+import de.chojo.sadu.queries.api.configuration.QueryConfiguration;
 import de.chojo.sadu.queries.api.query.Query;
-import de.chojo.sadu.queries.configuration.QueryConfiguration;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
+import static de.chojo.sadu.queries.api.query.Query.query;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class GdprUser {
@@ -51,7 +52,7 @@ public class GdprUser {
 
     public boolean queueDeletion() {
         log.info("User {} requested deletion of their data", userId());
-        return Query.query("""
+        return query("""
                             INSERT INTO
                                 cleanup_schedule(user_id, delete_after)
                                 VALUES (?, now())
@@ -85,19 +86,19 @@ public class GdprUser {
     }
 
     public void requestSend() {
-        Query.query("UPDATE gdpr_log SET received = now(), last_attempt = now() WHERE user_id = ?")
+        query("UPDATE gdpr_log SET received = now(), last_attempt = now() WHERE user_id = ?")
              .single(call().bind(userId()))
              .update();
     }
 
     public void requestSendFailed() {
-        Query.query("UPDATE gdpr_log SET attempts = attempts + 1, last_attempt = now() WHERE user_id = ?")
+        query("UPDATE gdpr_log SET attempts = attempts + 1, last_attempt = now() WHERE user_id = ?")
              .single(call().bind(userId()))
              .update();
     }
 
     public Optional<String> userData() {
-        return Query.query("SELECT aggregate_user_data(?)")
+        return query("SELECT aggregate_user_data(?)")
                 .single(call().bind(userId()))
                 .mapAs(String.class)
                 .first();
@@ -143,7 +144,7 @@ public class GdprUser {
         try {
             tempFile = Files.createTempFile("repbot_gdpr", ".json");
         } catch (IOException e) {
-            log.warn("Coult not create temp file", e);
+            log.warn("Could not create temp file", e);
             return false;
         }
         try {

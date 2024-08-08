@@ -6,7 +6,7 @@
 package de.chojo.repbot.dao.access.gdpr;
 
 import de.chojo.sadu.mapper.wrapper.Row;
-import de.chojo.sadu.queries.configuration.QueryConfiguration;
+import de.chojo.sadu.queries.api.configuration.QueryConfiguration;
 import org.slf4j.Logger;
 
 import java.sql.SQLException;

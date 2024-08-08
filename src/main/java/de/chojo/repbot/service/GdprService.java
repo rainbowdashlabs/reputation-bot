@@ -38,7 +38,7 @@ public class GdprService implements Runnable {
     public static GdprService of(ShardManager shardManager, Guilds guilds, Gdpr gdpr,
                                  ScheduledExecutorService scheduledExecutorService) {
         var service = new GdprService(shardManager, guilds, gdpr, scheduledExecutorService);
-        scheduledExecutorService.scheduleAtFixedRate(service, 1, 60, TimeUnit.MINUTES);
+        scheduledExecutorService.scheduleAtFixedRate(service, 15, 3600, TimeUnit.SECONDS);
         return service;
     }
 
