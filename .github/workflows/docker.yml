@@ -2,6 +2,8 @@ name: Docker Build
 
 on:
   release:
+    types:
+      - published
   push:
     tags:
     branches:
