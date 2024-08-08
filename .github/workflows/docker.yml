@@ -1,6 +1,7 @@
 name: Docker Build
 
 on:
+  release:
   push:
     tags:
     branches:
