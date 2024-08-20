@@ -8,7 +8,7 @@ dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
             // misc
-            version("sadu", "2.2.4")
+            version("sadu", "2.2.5")
             library("sadu-queries", "de.chojo.sadu", "sadu-queries").versionRef("sadu")
             library("sadu-updater", "de.chojo.sadu", "sadu-updater").versionRef("sadu")
             library("sadu-postgresql", "de.chojo.sadu", "sadu-postgresql").versionRef("sadu")
