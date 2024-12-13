@@ -9,12 +9,9 @@ import de.chojo.jdautil.botlist.BotlistService;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.web.Api;
 import io.javalin.Javalin;
-import io.javalin.plugin.openapi.OpenApiOptions;
-import io.javalin.plugin.openapi.OpenApiPlugin;
-import io.javalin.plugin.openapi.ui.ReDocOptions;
-import io.javalin.plugin.openapi.ui.SwaggerOptions;
-import io.javalin.plugin.openapi.utils.OpenApiVersionUtil;
-import io.swagger.v3.oas.models.info.License;
+import io.javalin.openapi.OpenApiLicense;
+import io.javalin.openapi.plugin.OpenApiPlugin;
+import io.javalin.openapi.plugin.OpenApiPluginConfiguration;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.requests.ErrorResponse;
@@ -51,19 +48,34 @@ public class Web {
     private void initApi() {
         var api = configuration.api();
 
-        var info = new io.swagger.v3.oas.models.info.Info().version("1.0").title("Reputation Bot API")
-                                                           .description("Documentation for the Reputation Bot API")
-                                                           .license(new License().name("GNU Affero General Public License v3.0")
-                                                                                 .url("https://github.com/RainbowDashLabs/reputation-bot/blob/master/LICENSE.md"));
+        /*
         var options = new OpenApiOptions(info)
                 .path("/json-docs")
                 .reDoc(new ReDocOptions("/redoc")) // endpoint for redoc
                 .swagger(new SwaggerOptions("/docs").title("Reputation Bot API"));
-        OpenApiVersionUtil.INSTANCE.setLogWarnings(false);
+        OpenApiVersionUtil.INSTANCE.setLogWarnings(false);*/
 
-        javalin = Javalin.create(config -> config.registerPlugin(new OpenApiPlugin(options)))
+        javalin = Javalin.create(config -> config.registerPlugin(new OpenApiPlugin(this::configureOpenApi)))
                 .start(api.host(), api.port());
         new Api(javalin, data.metrics()).init();
+    }
+
+    private void configureOpenApi(OpenApiPluginConfiguration config) {
+        config.withDefinitionConfiguration((version, definition) -> {
+            definition.withInfo(info -> {
+                info.setTitle("Reputation Bot API");
+                info.setVersion("1.0");
+                info.setDescription("Documentation for the Reputation Bot API");
+                info.setLicense(new OpenApiLicense()
+                        .name("GNU Affero General Public License v3.0")
+                        .url("https://github.com/RainbowDashLabs/reputation-bot/blob/master/LICENSE.md")
+                );
+            });
+            definition.withServer(openApiServer -> {
+                openApiServer.setUrl("https://repbot.rainbowdashlabs.de");
+                openApiServer.setDescription("Main server");
+            });
+        });
     }
 
     private void initBotList() {

@@ -29,6 +29,12 @@ dependencies {
         exclude(group = "club.minnced", module = "opus-java")
     }
 
+    val openapi = "6.3.0"
+
+    annotationProcessor("io.javalin.community.openapi:openapi-annotation-processor:$openapi")
+    implementation("io.javalin.community.openapi:javalin-openapi-plugin:$openapi") // for /openapi route with JSON scheme
+    implementation("io.javalin.community.openapi:javalin-swagger-plugin:$openapi") // for Swagger UI
+
     // database
     implementation("org.postgresql", "postgresql", "42.7.4")
     implementation(libs.bundles.sadu)
