@@ -11,13 +11,28 @@ import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
+/**
+ * Handler for the "announcement state" slash command.
+ * This command sets the active state of announcements for the guild.
+ */
 public class State implements SlashHandler {
     private final Guilds guilds;
 
+    /**
+     * Constructs a new State handler.
+     *
+     * @param guilds the guilds provider
+     */
     public State(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var announcements = guilds.guild(event.getGuild()).settings().announcements();

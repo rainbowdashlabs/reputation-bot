@@ -12,13 +12,27 @@ import de.chojo.repbot.commands.log.handler.BaseAnalyzer;
 import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
+/**
+ * Handler for the "analyzer" slash command.
+ */
 public class Analyzer extends BaseAnalyzer implements SlashHandler {
     private final Guilds guilds;
 
+    /**
+     * Constructs an Analyzer handler with the specified guilds provider.
+     *
+     * @param guilds the guilds provider
+     */
     public Analyzer(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var guild_id = ValueParser.parseLong(event.getOption("guild_id").getAsString());

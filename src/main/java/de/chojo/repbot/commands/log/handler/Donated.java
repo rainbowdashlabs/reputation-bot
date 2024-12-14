@@ -11,7 +11,6 @@ import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import net.dv8tion.jda.api.utils.messages.MessageEditData;
@@ -23,19 +22,41 @@ import static de.chojo.repbot.commands.log.handler.LogFormatter.PAGE_SIZE;
 import static de.chojo.repbot.commands.log.handler.LogFormatter.mapUserLogEntry;
 import static de.chojo.repbot.commands.log.handler.LogFormatter.userLogEmbed;
 
+/**
+ * Handles the slash command for displaying donated reputation logs.
+ */
 public class Donated implements SlashHandler {
     private final Guilds guilds;
 
+    /**
+     * Constructs a Donated handler with the specified guild provider.
+     *
+     * @param guilds the guild provider
+     */
     public Donated(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event to display donated reputation logs.
+     *
+     * @param event   the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var user = event.getOption("user").getAsMember();
         send(event, user, guilds, context);
     }
 
+    /**
+     * Sends the donated reputation logs to the user.
+     *
+     * @param event   the reply callback event
+     * @param user    the member whose logs are to be displayed
+     * @param guilds  the guild provider
+     * @param context the event context
+     */
     public static void send(IReplyCallback event, Member user, Guilds guilds, EventContext context) {
         var logAccess = guilds.guild(event.getGuild()).reputation().log().userDonatedLog(user.getUser(), PAGE_SIZE);
         context.registerPage(new PrivatePageBag(logAccess.pages(), event.getUser().getIdLong()) {

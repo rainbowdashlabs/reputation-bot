@@ -15,26 +15,52 @@ import java.util.List;
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Represents a task for removing user or guild data for GDPR compliance.
+ */
 public final class RemovalTask {
     private static final Logger log = getLogger(RemovalTask.class);
     private final long taskId;
     private final long guildId;
     private final long userId;
 
+    /**
+     * Constructs a RemovalTask with the specified task ID, guild ID, and user ID.
+     *
+     * @param taskId the task ID
+     * @param guildId the guild ID
+     * @param userId the user ID
+     */
     public RemovalTask(long taskId, long guildId, long userId) {
         this.taskId = taskId;
         this.guildId = guildId;
         this.userId = userId;
     }
 
+    /**
+     * Builds a RemovalTask from the given database row.
+     *
+     * @param rs the database row
+     * @return a new RemovalTask instance
+     * @throws SQLException if a database access error occurs
+     */
     public static RemovalTask build(Row rs) throws SQLException {
         return new RemovalTask(rs.getLong("task_id"), rs.getLong("guild_id"), rs.getLong("user_id"));
     }
 
+    /**
+     * Executes an anonymous removal task for the specified guild ID and user ID.
+     *
+     * @param guildId the guild ID
+     * @param userId the user ID
+     */
     public static void anonymExecute(long guildId, long userId) {
         new RemovalTask(-1L, guildId, userId).executeRemovalTask();
     }
 
+    /**
+     * Executes the removal task, deleting user or guild data from the database.
+     */
     public void executeRemovalTask() {
         try (var conn = QueryConfiguration.getDefault().withSingleTransaction()) {
             if (userId() == 0) {
@@ -70,14 +96,29 @@ public final class RemovalTask {
         }
     }
 
+    /**
+     * Gets the task ID.
+     *
+     * @return the task ID
+     */
     public long taskId() {
         return taskId;
     }
 
+    /**
+     * Gets the guild ID.
+     *
+     * @return the guild ID
+     */
     public long guildId() {
         return guildId;
     }
 
+    /**
+     * Gets the user ID.
+     *
+     * @return the user ID
+     */
     public long userId() {
         return userId;
     }

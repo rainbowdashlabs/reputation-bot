@@ -19,11 +19,25 @@ import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_WEEK_OFFSET;
 import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
 
+/**
+ * Class for handling user metrics routes.
+ */
 public class Users extends MetricsHolder {
+    /**
+     * Constructs a new Users instance.
+     *
+     * @param metrics the metrics provider
+     * @param cache the metric cache
+     */
     public Users(Metrics metrics, MetricCache cache) {
         super(cache, metrics);
     }
 
+    /**
+     * Handles the active week user metrics request.
+     *
+     * @param ctx the context of the request
+     */
     public void activeWeek(Context ctx) {
         var stats = metrics().users().week(offset(ctx, MAX_WEEK_OFFSET), count(ctx, MAX_WEEKS));
         if ("application/json".equalsIgnoreCase(ctx.header("Accept"))) {
@@ -33,6 +47,11 @@ public class Users extends MetricsHolder {
         }
     }
 
+    /**
+     * Handles the active month user metrics request.
+     *
+     * @param ctx the context of the request
+     */
     public void activeMonth(Context ctx) {
         var stats = metrics().users().month(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH));
         if ("application/json".equals(ctx.header("Accept"))) {
@@ -42,6 +61,9 @@ public class Users extends MetricsHolder {
         }
     }
 
+    /**
+     * Builds the routes for user metrics.
+     */
     @Override
     public void buildRoutes() {
         path("users", () -> path("active", () -> {

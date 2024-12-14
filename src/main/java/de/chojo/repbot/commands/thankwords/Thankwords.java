@@ -26,10 +26,23 @@ import java.io.IOException;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Class representing the Thankwords slash command.
+ */
 public class Thankwords extends SlashCommand {
 
+    /**
+     * Logger instance for logging events.
+     */
     private static final Logger log = getLogger(Thankwords.class);
 
+    /**
+     * Constructs a new Thankwords instance.
+     *
+     * @param messageAnalyzer the message analyzer
+     * @param guilds the guilds provider
+     * @param thankwordsContainer the thank words container
+     */
     private Thankwords(MessageAnalyzer messageAnalyzer, Guilds guilds, ThankwordsContainer thankwordsContainer) {
         super(Slash.of("thankwords", "command.thankwords.description")
                 .guildOnly()
@@ -54,6 +67,13 @@ public class Thankwords extends SlashCommand {
         );
     }
 
+    /**
+     * Creates a new Thankwords instance.
+     *
+     * @param messageAnalyzer the message analyzer
+     * @param guilds the guilds provider
+     * @return a new Thankwords instance
+     */
     public static Thankwords of(MessageAnalyzer messageAnalyzer, Guilds guilds) {
         ThankwordsContainer thankwordsContainer;
         try {
@@ -65,6 +85,12 @@ public class Thankwords extends SlashCommand {
         return new Thankwords(messageAnalyzer, guilds, thankwordsContainer);
     }
 
+    /**
+     * Loads the ThankwordsContainer from a JSON file.
+     *
+     * @return the loaded ThankwordsContainer
+     * @throws IOException if an I/O error occurs
+     */
     public static ThankwordsContainer loadContainer() throws IOException {
         try (var input = Thankwords.class.getClassLoader().getResourceAsStream("Thankswords.json")) {
             return new ObjectMapper()

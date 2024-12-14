@@ -14,14 +14,35 @@ import org.slf4j.Logger;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Handler for the upgrade slash command.
+ */
 public class Upgrade implements SlashHandler {
+    /**
+     * Logger instance for logging events.
+     */
     private static final Logger log = getLogger(Upgrade.class);
+
+    /**
+     * Configuration object for accessing base settings.
+     */
     private final Configuration configuration;
 
+    /**
+     * Constructs a new Upgrade handler.
+     *
+     * @param configuration the configuration object used to access base settings
+     */
     public Upgrade(Configuration configuration) {
         this.configuration = configuration;
     }
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         if (!configuration.baseSettings().isOwner(event.getUser().getIdLong())) {

@@ -13,18 +13,39 @@ import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
+/**
+ * Handler for the slash command that provides information about reactions.
+ */
 public class Info implements SlashHandler {
     private final Guilds guilds;
 
+    /**
+     * Constructs a new Info handler.
+     *
+     * @param guilds the Guilds provider
+     */
     public Info(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event the SlashCommandInteractionEvent
+     * @param context the EventContext
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         event.replyEmbeds(getInfoEmbed(guilds.guild(event.getGuild()).settings(), context)).queue();
     }
 
+    /**
+     * Creates an information embed about the reactions.
+     *
+     * @param settings the guild settings
+     * @param context the event context
+     * @return a MessageEmbed containing the information
+     */
     private MessageEmbed getInfoEmbed(Settings settings, EventContext context) {
         var reactions = settings.thanking().reactions();
         var mainEmote = reactions.reactionMention();
@@ -36,5 +57,4 @@ public class Info implements SlashHandler {
                 .addField("command.reactions.info.message.additional", emotes, true)
                 .build();
     }
-
 }

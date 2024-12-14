@@ -10,7 +10,23 @@ import de.chojo.jdautil.text.TextFormatting;
 import de.chojo.jdautil.wrapper.EventContext;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
+/**
+ * Handler for the list locales command.
+ */
 public class List implements SlashHandler {
+
+    /**
+     * Creates a new list handler.
+     */
+    public List(){
+    }
+
+    /**
+     * Handles the slash command interaction event to list available locales.
+     *
+     * @param event the SlashCommandInteractionEvent
+     * @param context the EventContext
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var languages = context.guildLocalizer().localizer().languages();

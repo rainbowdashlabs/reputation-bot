@@ -23,8 +23,18 @@ import de.chojo.repbot.service.RoleAssigner;
 
 import java.time.LocalDate;
 
+/**
+ * Slash command for managing reputation and reset dates in the bot.
+ */
 public class RepAdmin extends SlashCommand {
 
+    /**
+     * Constructs a RepAdmin command with the specified guilds provider, configuration, and role assigner.
+     *
+     * @param guilds the guilds provider
+     * @param configuration the configuration
+     * @param roleAssigner the role assigner
+     */
     public RepAdmin(Guilds guilds, Configuration configuration, RoleAssigner roleAssigner) {
         super(Slash.of("repadmin", "command.repadmin.description")
                 .guildOnly()

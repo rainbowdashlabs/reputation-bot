@@ -11,13 +11,27 @@ import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
+/**
+ * Handles the minimum messages command for abuse protection.
+ */
 public class MinMessages implements SlashHandler {
     private final Guilds guilds;
 
+    /**
+     * Constructs a MinMessages handler with the specified guilds provider.
+     *
+     * @param guilds the guilds provider
+     */
     public MinMessages(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event for setting or getting the minimum messages for abuse protection.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var guild = guilds.guild(event.getGuild());

@@ -17,22 +17,44 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Custom cache policy for managing member caching in the bot.
+ */
 public class RepBotCachePolicy implements MemberCachePolicy, Runnable {
+    /**
+     * Duration for which members are cached, in minutes.
+     */
     public static final int CACHE_DURATION = 30;
     private final HashMap<Long, Instant> seen = new HashMap<>();
     private final Scan scan;
-
     private final Roles roles;
 
+    /**
+     * Constructs a RepBotCachePolicy with the specified scan and roles handlers.
+     *
+     * @param scan the scan handler
+     * @param roles the roles handler
+     */
     public RepBotCachePolicy(Scan scan, Roles roles) {
         this.scan = scan;
         this.roles = roles;
     }
 
+    /**
+     * Marks a member as seen at the current time.
+     *
+     * @param member the member to mark as seen
+     */
     public void seen(Member member) {
         seen.put(member.getIdLong(), Instant.now());
     }
 
+    /**
+     * Determines whether a member should be cached based on various conditions.
+     *
+     * @param member the member to check
+     * @return true if the member should be cached, false otherwise
+     */
     @Override
     public boolean cacheMember(@NotNull Member member) {
         if (MemberCachePolicy.VOICE.cacheMember(member)) {
@@ -68,11 +90,17 @@ public class RepBotCachePolicy implements MemberCachePolicy, Runnable {
         return false;
     }
 
+    /**
+     * Runs the cache cleaning process.
+     */
     @Override
     public void run() {
         clean();
     }
 
+    /**
+     * Cleans the cache by removing members that have not been seen recently.
+     */
     public synchronized void clean() {
         Set<Long> remove = new HashSet<>();
         var oldest = oldest();
@@ -84,6 +112,11 @@ public class RepBotCachePolicy implements MemberCachePolicy, Runnable {
         remove.forEach(seen::remove);
     }
 
+    /**
+     * Returns the oldest time that a member can be seen and still be cached.
+     *
+     * @return the oldest acceptable time
+     */
     private Instant oldest() {
         return Instant.now().minus(CACHE_DURATION, ChronoUnit.MINUTES);
     }

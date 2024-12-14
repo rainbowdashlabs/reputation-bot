@@ -10,8 +10,16 @@ import de.chojo.jdautil.interactions.slash.provider.SlashCommand;
 import de.chojo.repbot.commands.debug.handler.Show;
 import de.chojo.repbot.dao.provider.Guilds;
 
+/**
+ * Represents the debug command for the bot.
+ */
 public class Debug extends SlashCommand {
 
+    /**
+     * Constructs a new Debug instance.
+     *
+     * @param guilds the guilds provider
+     */
     public Debug(Guilds guilds) {
         super(Slash.of("debug", "command.debug.description")
                 .guildOnly()

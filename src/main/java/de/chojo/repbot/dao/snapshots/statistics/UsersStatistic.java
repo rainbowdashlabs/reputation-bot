@@ -18,8 +18,19 @@ import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Record for storing user statistics and providing chart generation.
+ *
+ * @param stats the list of user statistics
+ */
 public record UsersStatistic(List<UserStatistic> stats) implements ChartProvider {
 
+    /**
+     * Generates a chart image based on the user statistics.
+     *
+     * @param title the title of the chart
+     * @return a byte array representing the chart image in PNG format
+     */
     @Override
     public byte[] getChart(String title) {
         var categorySeries = new XYChartBuilder().width(1200).height(600)
@@ -55,7 +66,6 @@ public record UsersStatistic(List<UserStatistic> stats) implements ChartProvider
                       .setMarker(SeriesMarkers.NONE)
                       .setLabel("Receivers");
 
-
         try {
             return BitmapEncoder.getBitmapBytes(categorySeries, BitmapEncoder.BitmapFormat.PNG);
         } catch (IOException e) {
@@ -63,6 +73,12 @@ public record UsersStatistic(List<UserStatistic> stats) implements ChartProvider
         }
     }
 
+    /**
+     * Converts a LocalDate to a Date object.
+     *
+     * @param date the LocalDate to convert
+     * @return the corresponding Date object
+     */
     private Date toDate(LocalDate date) {
         return new Date(date.atStartOfDay().toEpochSecond(ZoneOffset.UTC) * 1000);
     }

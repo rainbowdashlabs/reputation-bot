@@ -11,13 +11,30 @@ import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.service.GdprService;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
+/**
+ * Handler for the prune user slash command.
+ */
 public class User implements SlashHandler {
+    /**
+     * Service for handling GDPR-related operations.
+     */
     private final GdprService service;
 
+    /**
+     * Constructs a new User handler.
+     *
+     * @param service the GDPR service used for cleanup operations
+     */
     public User(GdprService service) {
         this.service = service;
     }
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var user = event.getOption("user");

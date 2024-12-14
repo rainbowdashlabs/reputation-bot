@@ -25,7 +25,13 @@ import java.util.regex.Pattern;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Class representing a scan process for messages in a channel.
+ */
 public class ScanProcess {
+    /**
+     * The maximum number of messages to scan.
+     */
     public static final int MAX_MESSAGES = 10000;
     private static final Logger log = getLogger(ScanProcess.class);
     private final MessageAnalyzer messageAnalyzer;
@@ -37,7 +43,6 @@ public class ScanProcess {
     private final Pattern pattern;
     private final int calls;
     private final Guilds guilds;
-    // This is the offset of two bot messages of the reputation bot.
     private int scanned = -2;
     private int hits;
     private int callsLeft;
@@ -45,6 +50,17 @@ public class ScanProcess {
     private Instant lastSeen;
     private Thread currWorker;
 
+    /**
+     * Constructs a new ScanProcess.
+     *
+     * @param messageAnalyzer the message analyzer
+     * @param localizer the localization context
+     * @param progressMessage the progress message
+     * @param history the message history
+     * @param pattern the pattern to match
+     * @param calls the number of calls to make
+     * @param data the guilds provider
+     */
     ScanProcess(MessageAnalyzer messageAnalyzer, LocalizationContext localizer, Message progressMessage, MessageHistory history, Pattern pattern, int calls, Guilds data) {
         this.messageAnalyzer = messageAnalyzer;
         loc = localizer;
@@ -53,20 +69,30 @@ public class ScanProcess {
         this.progressMessage = progressMessage;
         this.history = history;
         this.pattern = pattern;
-        // The history will already contain two messages of the bot at this point.
         this.calls = Math.min(Math.max(0, calls + 2), MAX_MESSAGES);
         callsLeft = this.calls;
         guilds = data;
     }
 
+    /**
+     * Increments the scanned message count.
+     */
     public void countScan() {
         scanned++;
     }
 
+    /**
+     * Increments the hit count.
+     */
     public void hit() {
         hits++;
     }
 
+    /**
+     * Executes the scan process.
+     *
+     * @return true if there are more messages to scan, false otherwise
+     */
     public boolean scan() {
         if (currWorker != null) {
             log.debug("Scanning takes too long. Skipping execution of scan to catch up");
@@ -136,40 +162,85 @@ public class ScanProcess {
         return callsLeft > 0;
     }
 
+    /**
+     * Interrupts the current scan process.
+     *
+     * @return true if the scan process was interrupted, false otherwise
+     */
     public boolean interrupt() {
         if (currWorker == null) return false;
         currWorker.interrupt();
         return true;
     }
 
+    /**
+     * Retrieves the time taken for the scan.
+     *
+     * @return the time taken for the scan
+     */
     public long getTime() {
         return time;
     }
 
+    /**
+     * Retrieves the guild associated with the scan.
+     *
+     * @return the guild
+     */
     public Guild guild() {
         return guild;
     }
 
+    /**
+     * Retrieves the progress message.
+     *
+     * @return the progress message
+     */
     public Message progressMessage() {
         return progressMessage;
     }
 
+    /**
+     * Retrieves the number of scanned messages.
+     *
+     * @return the number of scanned messages
+     */
     public int scanned() {
         return scanned;
     }
 
+    /**
+     * Retrieves the number of hits.
+     *
+     * @return the number of hits
+     */
     public int hits() {
         return hits;
     }
 
+    /**
+     * Retrieves the result channel.
+     *
+     * @return the result channel
+     */
     public TextChannel resultChannel() {
         return resultChannel;
     }
 
+    /**
+     * Retrieves the last seen time.
+     *
+     * @return the last seen time
+     */
     public Instant lastSeen() {
         return lastSeen;
     }
 
+    /**
+     * Retrieves the localization context.
+     *
+     * @return the localization context
+     */
     public LocalizationContext loc() {
         return loc;
     }

@@ -18,10 +18,21 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Represents a snapshot of fuzzy match results.
+ */
 public class FuzzyResultSnapshot extends MatchResultSnapshot implements ResultSnapshot {
     private final List<String> thankwords;
     private final List<MemberMatch> memberMatches;
 
+    /**
+     * Constructs a new FuzzyResultSnapshot instance.
+     *
+     * @param donor the ID of the donor
+     * @param match the match string
+     * @param thankwords the list of thank words
+     * @param memberMatches the list of member matches
+     */
     @JsonCreator
     public FuzzyResultSnapshot(@JsonProperty("donor") long donor,
                                @JsonProperty("match") String match,
@@ -32,6 +43,13 @@ public class FuzzyResultSnapshot extends MatchResultSnapshot implements ResultSn
         this.memberMatches = memberMatches;
     }
 
+    /**
+     * Adds the result entry to the localized embed builder.
+     *
+     * @param guild the guild
+     * @param entry the result entry
+     * @param builder the localized embed builder
+     */
     @Override
     public void add(Guild guild, ResultEntry entry, LocalizedEmbedBuilder builder) {
         super.add(guild, entry, builder);

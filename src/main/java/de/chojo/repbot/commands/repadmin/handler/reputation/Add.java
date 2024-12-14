@@ -13,12 +13,30 @@ import de.chojo.repbot.service.RoleAssigner;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
+/**
+ * Handler for the "add reputation" slash command, which adds reputation to a user.
+ */
 public class Add extends BaseReputationModifier {
 
+    /**
+     * Constructs an Add handler with the specified role assigner and guilds provider.
+     *
+     * @param roleAssigner the role assigner
+     * @param guilds the guilds provider
+     */
     public Add(RoleAssigner roleAssigner, Guilds guilds) {
         super(roleAssigner, guilds);
     }
 
+    /**
+     * Executes the slash command interaction event to add reputation to a user.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     * @param user the user to add reputation to
+     * @param repUser the reputation user object
+     * @param rep the amount of reputation to add
+     */
     @Override
     void execute(SlashCommandInteractionEvent event, EventContext context, User user, RepUser repUser, long rep) {
         repUser.addReputation(rep);

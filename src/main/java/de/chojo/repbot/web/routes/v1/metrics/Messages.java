@@ -23,11 +23,25 @@ import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_WEEK_OFFSET;
 import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
 
+/**
+ * Handles the metrics related to messages.
+ */
 public class Messages extends MetricsHolder {
+    /**
+     * Constructs a new Messages handler.
+     *
+     * @param metrics the Metrics provider
+     * @param cache the MetricCache
+     */
     public Messages(Metrics metrics, MetricCache cache) {
         super(cache, metrics);
     }
 
+    /**
+     * Handles the request to get the count of messages analyzed per hour.
+     *
+     * @param ctx the Javalin context
+     */
     public void countHour(Context ctx) {
         var stats = metrics().messages().hour(offset(ctx, MAX_HOUR_OFFSET), count(ctx, MAX_HOURS));
         if ("application/json".equals(ctx.header("Accept"))) {
@@ -37,6 +51,11 @@ public class Messages extends MetricsHolder {
         }
     }
 
+    /**
+     * Handles the request to get the count of messages analyzed per day.
+     *
+     * @param ctx the Javalin context
+     */
     public void countDay(Context ctx) {
         var stats = metrics().messages().day(offset(ctx, MAX_DAY_OFFSET), count(ctx, MAX_DAYS));
         if ("application/json".equals(ctx.header("Accept"))) {
@@ -46,6 +65,11 @@ public class Messages extends MetricsHolder {
         }
     }
 
+    /**
+     * Handles the request to get the count of messages analyzed per week.
+     *
+     * @param ctx the Javalin context
+     */
     public void countWeek(Context ctx) {
         var stats = metrics().messages().week(offset(ctx, MAX_WEEK_OFFSET), count(ctx, MAX_WEEKS));
         if ("application/json".equals(ctx.header("Accept"))) {
@@ -55,6 +79,11 @@ public class Messages extends MetricsHolder {
         }
     }
 
+    /**
+     * Handles the request to get the count of messages analyzed per month.
+     *
+     * @param ctx the Javalin context
+     */
     public void countMonth(Context ctx) {
         var stats = metrics().messages().month(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH));
         if ("application/json".equals(ctx.header("Accept"))) {
@@ -64,6 +93,11 @@ public class Messages extends MetricsHolder {
         }
     }
 
+    /**
+     * Handles the request to get the total count of messages analyzed per day.
+     *
+     * @param ctx the Javalin context
+     */
     public void totalDay(Context ctx) {
         var stats = metrics().messages().totalDay(offset(ctx, MAX_DAY_OFFSET), count(ctx, MAX_DAYS));
         if ("application/json".equals(ctx.header("Accept"))) {
@@ -73,6 +107,11 @@ public class Messages extends MetricsHolder {
         }
     }
 
+    /**
+     * Handles the request to get the total count of messages analyzed per week.
+     *
+     * @param ctx the Javalin context
+     */
     public void totalWeek(Context ctx) {
         var stats = metrics().messages().totalWeek(offset(ctx, MAX_WEEK_OFFSET), count(ctx, MAX_WEEKS));
         if ("application/json".equals(ctx.header("Accept"))) {
@@ -82,6 +121,11 @@ public class Messages extends MetricsHolder {
         }
     }
 
+    /**
+     * Handles the request to get the total count of messages analyzed per month.
+     *
+     * @param ctx the Javalin context
+     */
     public void totalMonth(Context ctx) {
         var stats = metrics().messages().totalMonth(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH));
         if ("application/json".equals(ctx.header("Accept"))) {
@@ -91,6 +135,9 @@ public class Messages extends MetricsHolder {
         }
     }
 
+    /**
+     * Builds the routes for message metrics.
+     */
     @Override
     public void buildRoutes() {
         path("messages", () -> {

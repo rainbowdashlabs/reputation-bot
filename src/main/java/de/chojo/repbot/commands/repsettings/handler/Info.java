@@ -23,13 +23,27 @@ import java.awt.Color;
 import java.util.Collections;
 import java.util.function.Consumer;
 
+/**
+ * Handler for the reputation settings info command.
+ */
 public class Info implements SlashHandler {
     private final Guilds guilds;
 
+    /**
+     * Constructs a new Info handler.
+     *
+     * @param guilds the Guilds provider
+     */
     public Info(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event the SlashCommandInteractionEvent
+     * @param context the EventContext
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var guildSettings = guilds.guild(event.getGuild()).settings();
@@ -138,6 +152,16 @@ public class Info implements SlashHandler {
                                        .build());
     }
 
+    /**
+     * Creates a StringSelectMenu for the given parameters.
+     *
+     * @param id the ID of the menu
+     * @param placeholder the placeholder text for the menu
+     * @param enabledDescr the description for the enabled state
+     * @param disabledDescr the description for the disabled state
+     * @param state the current state
+     * @return the created StringSelectMenu
+     */
     private StringSelectMenu getMenu(String id, String placeholder, String enabledDescr, String disabledDescr, boolean state) {
         return StringSelectMenu.create(id)
                 .setPlaceholder(placeholder)
@@ -148,6 +172,14 @@ public class Info implements SlashHandler {
                 .build();
     }
 
+    /**
+     * Refreshes the menu entry with the given context and result consumer.
+     *
+     * @param ctx the EntryContext
+     * @param result the result consumer
+     * @param context the EventContext
+     * @param guildSettings the guild settings
+     */
     private void refresh(EntryContext<StringSelectInteractionEvent, StringSelectMenu> ctx, Consumer<Boolean> result, EventContext
             context, Settings guildSettings) {
         var value = ctx.event().getValues().get(0);
@@ -159,6 +191,13 @@ public class Info implements SlashHandler {
         ctx.refresh(settings);
     }
 
+    /**
+     * Retrieves the settings embed for the given context and guild settings.
+     *
+     * @param context the EventContext
+     * @param guildSettings the guild settings
+     * @return a MessageEmbed containing the settings
+     */
     private MessageEmbed getSettings(EventContext context, Settings guildSettings) {
         var messageSettings = guildSettings.reputation();
 

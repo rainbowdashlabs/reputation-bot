@@ -14,14 +14,28 @@ import org.slf4j.Logger;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Handles the guild prune slash command.
+ */
 public class Guild implements SlashHandler {
     private static final Logger log = getLogger(Guild.class);
     private final GdprService service;
 
+    /**
+     * Constructs a new Guild instance.
+     *
+     * @param service the GdprService instance
+     */
     public Guild(GdprService service) {
         this.service = service;
     }
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event the SlashCommandInteractionEvent
+     * @param context the EventContext
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         event.reply(context.localize("command.prune.guild.message.started")).queue();

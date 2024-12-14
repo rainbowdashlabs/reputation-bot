@@ -68,6 +68,9 @@ import java.util.Collections;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Main class for the bot.
+ */
 public class Bot {
     private static final Logger log = getLogger(Bot.class);
     private final Data data;
@@ -85,6 +88,14 @@ public class Bot {
     private Statistic statistic;
     private GdprService gdprService;
 
+    /**
+     * Constructs a Bot instance with the specified data, threading, configuration, and localization.
+     *
+     * @param data the data
+     * @param threading the threading
+     * @param configuration the configuration
+     * @param localization the localization
+     */
     private Bot(Data data, Threading threading, Configuration configuration, Localization localization) {
         this.data = data;
         this.threading = threading;
@@ -92,12 +103,27 @@ public class Bot {
         this.localization = localization;
     }
 
+    /**
+     * Creates and initializes a Bot instance.
+     *
+     * @param data the data
+     * @param threading the threading
+     * @param configuration the configuration
+     * @param localizer the localizer
+     * @return the created Bot instance
+     * @throws LoginException if a login error occurs
+     */
     public static Bot create(Data data, Threading threading, Configuration configuration, Localization localizer) throws LoginException {
         var bot = new Bot(data, threading, configuration, localizer);
         bot.init();
         return bot;
     }
 
+    /**
+     * Initializes the bot.
+     *
+     * @throws LoginException if a login error occurs
+     */
     public void init() throws LoginException {
         initShardManager();
         configureRestActions();
@@ -106,6 +132,9 @@ public class Bot {
         initListener();
     }
 
+    /**
+     * Configures the default actions for REST requests.
+     */
     private void configureRestActions() {
         log.info("Configuring rest actions.");
         RestAction.setDefaultFailure(throwable -> {
@@ -134,6 +163,11 @@ public class Bot {
         });
     }
 
+    /**
+     * Initializes the shard manager.
+     *
+     * @throws LoginException if a login error occurs
+     */
     private void initShardManager() throws LoginException {
         log.info("Initializing Shardmanager.");
         roleAssigner = new RoleAssigner(data.guilds(), localization.localizer());
@@ -163,6 +197,9 @@ public class Bot {
                 .build();
     }
 
+    /**
+     * Initializes the services used by the bot.
+     */
     private void initServices() {
         log.info("Setting up services");
         var guilds = data.guilds();
@@ -184,6 +221,9 @@ public class Bot {
         MetricService.create(threading.repBotWorker(), data.metrics());
     }
 
+    /**
+     * Initializes the interactions for the bot.
+     */
     private void initInteractions() {
         log.info("Setting up interactions");
         var localizer = localization.localizer();
@@ -237,6 +277,9 @@ public class Bot {
                       .build();
     }
 
+    /**
+     * Initializes the listeners for the bot.
+     */
     private void initListener() {
         log.info("Setting up listener.");
         var localizer = localization.localizer();
@@ -261,10 +304,18 @@ public class Bot {
                 roleUpdater);
     }
 
+    /**
+     * Gets the shard manager.
+     *
+     * @return the shard manager
+     */
     public ShardManager shardManager() {
         return shardManager;
     }
 
+    /**
+     * Shuts down the bot.
+     */
     public void shutdown() {
         shardManager.shutdown();
     }

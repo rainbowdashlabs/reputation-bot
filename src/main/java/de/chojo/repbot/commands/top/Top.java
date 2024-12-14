@@ -11,7 +11,16 @@ import de.chojo.jdautil.interactions.slash.provider.SlashCommand;
 import de.chojo.repbot.commands.top.handler.Show;
 import de.chojo.repbot.dao.provider.Guilds;
 
+/**
+ * Class representing the Top slash command.
+ */
 public class Top extends SlashCommand {
+
+    /**
+     * Constructs a new Top instance.
+     *
+     * @param guilds the guilds provider
+     */
     public Top(Guilds guilds) {
         super(Slash.of("top", "command.top.description")
                 .guildOnly()

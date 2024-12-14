@@ -14,12 +14,29 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 import java.util.function.Consumer;
 
+/**
+ * Handler for the "stack roles" slash command.
+ * This command toggles the stacking of roles for the guild.
+ */
 public class StackRoles extends BaseRoleModifier {
 
+    /**
+     * Constructs a new StackRoles handler.
+     *
+     * @param refresh the refresh consumer
+     * @param guilds the guilds provider
+     */
     public StackRoles(Refresh refresh, Guilds guilds) {
         super(refresh, guilds);
     }
 
+    /**
+     * Modifies the stack roles setting for the guild.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     * @param refresh the refresh consumer
+     */
     @Override
     public void modify(SlashCommandInteractionEvent event, EventContext context, Consumer<MessageEmbed> refresh) {
         var settings = guilds().guild(event.getGuild()).settings();

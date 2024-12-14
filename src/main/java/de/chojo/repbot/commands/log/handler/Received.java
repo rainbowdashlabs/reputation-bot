@@ -24,19 +24,41 @@ import static de.chojo.repbot.commands.log.handler.LogFormatter.PAGE_SIZE;
 import static de.chojo.repbot.commands.log.handler.LogFormatter.mapUserLogEntry;
 import static de.chojo.repbot.commands.log.handler.LogFormatter.userLogEmbed;
 
+/**
+ * Handles the received reputation log command.
+ */
 public class Received implements SlashHandler {
     private final Guilds guilds;
 
+    /**
+     * Constructs a Received handler with the specified guilds provider.
+     *
+     * @param guilds the guilds provider
+     */
     public Received(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var user = event.getOption("user").getAsMember();
-        send(event,user, guilds, context);
+        send(event, user, guilds, context);
     }
 
+    /**
+     * Sends the received reputation log to the user.
+     *
+     * @param callback the reply callback
+     * @param user the member whose log is being retrieved
+     * @param guilds the guilds provider
+     * @param context the event context
+     */
     public static void send(IReplyCallback callback, Member user, Guilds guilds, EventContext context) {
         var logAccess = guilds.guild(callback.getGuild()).reputation().log().getUserReceivedLog(user.getUser(), PAGE_SIZE);
         context.registerPage(new PrivatePageBag(logAccess.pages(), callback.getUser().getIdLong()) {

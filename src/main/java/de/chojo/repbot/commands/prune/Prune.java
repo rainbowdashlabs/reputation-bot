@@ -14,8 +14,16 @@ import de.chojo.repbot.commands.prune.handler.User;
 import de.chojo.repbot.service.GdprService;
 import net.dv8tion.jda.api.Permission;
 
+/**
+ * Represents the Prune command which allows pruning of users or guilds.
+ */
 public class Prune extends SlashCommand {
 
+    /**
+     * Constructs a Prune command with the specified GDPR service.
+     *
+     * @param service the GDPR service to handle pruning operations
+     */
     public Prune(GdprService service) {
         super(Slash.of("prune", "command.prune.description")
                 .guildOnly()

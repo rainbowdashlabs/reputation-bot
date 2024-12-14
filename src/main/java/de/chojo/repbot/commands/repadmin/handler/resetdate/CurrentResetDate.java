@@ -13,14 +13,28 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Handles the slash command for retrieving the current reset date.
+ */
 public class CurrentResetDate implements SlashHandler {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd");
     private final Guilds guilds;
 
+    /**
+     * Constructs a CurrentResetDate handler with the specified guild provider.
+     *
+     * @param guilds the guild provider
+     */
     public CurrentResetDate(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event to get the current reset date.
+     *
+     * @param event   the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var date = guilds.guild(event.getGuild()).settings().general().resetDate();

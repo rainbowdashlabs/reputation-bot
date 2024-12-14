@@ -16,9 +16,20 @@ import net.dv8tion.jda.api.entities.Message;
 
 import java.util.List;
 
+/**
+ * Snapshot class for storing the result of an answer match.
+ */
 public class AnswerResultSnapshot extends DirectResultSnapshot implements ResultSnapshot {
     private final long messageId;
 
+    /**
+     * Constructs an AnswerResultSnapshot instance.
+     *
+     * @param donorId   the ID of the donor
+     * @param match     the match string
+     * @param receivers the list of receiver IDs
+     * @param messageId the ID of the message
+     */
     @JsonCreator
     public AnswerResultSnapshot(@JsonProperty("donorId") long donorId,
                                 @JsonProperty("match") String match,
@@ -28,6 +39,13 @@ public class AnswerResultSnapshot extends DirectResultSnapshot implements Result
         this.messageId = messageId;
     }
 
+    /**
+     * Adds the result entry to the localized embed builder.
+     *
+     * @param guild   the guild
+     * @param entry   the result entry
+     * @param builder the localized embed builder
+     */
     @Override
     public void add(Guild guild, ResultEntry entry, LocalizedEmbedBuilder builder) {
         super.add(guild, entry, builder);

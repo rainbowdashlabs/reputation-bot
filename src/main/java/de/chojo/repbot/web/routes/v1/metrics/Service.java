@@ -23,11 +23,25 @@ import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_WEEK_OFFSET;
 import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
 
+/**
+ * Service class for handling metrics related to interactions.
+ */
 public class Service extends MetricsHolder {
+    /**
+     * Constructs a new Service.
+     *
+     * @param metrics the metrics provider
+     * @param cache the metric cache
+     */
     public Service(Metrics metrics, MetricCache cache) {
         super(cache, metrics);
     }
 
+    /**
+     * Handles the request to get the count of handled interactions per hour.
+     *
+     * @param ctx the context of the request
+     */
     public void countHour(Context ctx) {
         var stats = metrics().service().hour(offset(ctx, MAX_HOUR_OFFSET), count(ctx, MAX_HOURS));
         if ("application/json".equals(ctx.header("Accept"))) {
@@ -37,6 +51,11 @@ public class Service extends MetricsHolder {
         }
     }
 
+    /**
+     * Handles the request to get the count of handled interactions per day.
+     *
+     * @param ctx the context of the request
+     */
     public void countDay(Context ctx) {
         var stats = metrics().service().day(offset(ctx, MAX_DAY_OFFSET), count(ctx, MAX_DAYS));
         if ("application/json".equals(ctx.header("Accept"))) {
@@ -46,6 +65,11 @@ public class Service extends MetricsHolder {
         }
     }
 
+    /**
+     * Handles the request to get the count of handled interactions per week.
+     *
+     * @param ctx the context of the request
+     */
     public void countWeek(Context ctx) {
         var stats = metrics().service().week(offset(ctx, MAX_WEEK_OFFSET), count(ctx, MAX_WEEKS));
         if ("application/json".equals(ctx.header("Accept"))) {
@@ -55,6 +79,11 @@ public class Service extends MetricsHolder {
         }
     }
 
+    /**
+     * Handles the request to get the count of handled interactions per month.
+     *
+     * @param ctx the context of the request
+     */
     public void countMonth(Context ctx) {
         var stats = metrics().service().month(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH));
         if ("application/json".equals(ctx.header("Accept"))) {
@@ -64,6 +93,9 @@ public class Service extends MetricsHolder {
         }
     }
 
+    /**
+     * Builds the routes for the service metrics.
+     */
     @Override
     public void buildRoutes() {
         path("service", () -> path("count", () -> {

@@ -14,8 +14,20 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * Represents the statistics of commands executed on a specific date.
+ *
+ * @param date     the date of the statistics
+ * @param commands the list of command statistics
+ */
 public record CommandsStatistic(LocalDate date, List<CommandStatistic> commands) implements ChartProvider {
 
+    /**
+     * Generates a chart representing the command statistics.
+     *
+     * @param title the title of the chart
+     * @return a byte array containing the chart image in PNG format
+     */
     @Override
     public byte[] getChart(String title) {
         var categorySeries = new CategoryChartBuilder().width(1200).height(600)

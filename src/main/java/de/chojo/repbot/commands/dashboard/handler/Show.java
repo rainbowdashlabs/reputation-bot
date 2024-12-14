@@ -18,18 +18,40 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 import java.util.stream.Collectors;
 
+/**
+ * Handler for the "show dashboard" slash command.
+ * This command displays a dashboard with various statistics and rankings for the guild.
+ */
 public class Show implements SlashHandler {
     private final Guilds guilds;
 
+    /**
+     * Constructs a new Show handler.
+     *
+     * @param guilds the guilds provider
+     */
     public Show(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         event.replyEmbeds(getDashboard(event.getGuild(), context)).queue();
     }
 
+    /**
+     * Generates the dashboard embed message for the guild.
+     *
+     * @param guild the guild for which the dashboard is generated
+     * @param context the event context
+     * @return the dashboard embed message
+     */
     private MessageEmbed getDashboard(Guild guild, EventContext context) {
         var reputation = guilds.guild(guild).reputation();
         var stats = reputation.stats();

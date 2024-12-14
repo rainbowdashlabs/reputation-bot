@@ -21,8 +21,19 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * Represents statistics for days of the week.
+ *
+ * @param stats the list of day of the week statistics
+ */
 public record DowsStatistic(List<DowStatistics> stats) implements ChartProvider {
 
+    /**
+     * Generates a chart based on the statistics.
+     *
+     * @param title the title of the chart
+     * @return a byte array representing the chart image
+     */
     @Override
     public byte[] getChart(String title) {
         var categorySeries = new CategoryChartBuilder().width(1200).height(600)
@@ -65,6 +76,11 @@ public record DowsStatistic(List<DowStatistics> stats) implements ChartProvider 
         }
     }
 
+    /**
+     * Gets the date of the previous Monday.
+     *
+     * @return the date of the previous Monday
+     */
     private LocalDate getMonday() {
         return LocalDate.now().with(TemporalAdjusters.previous(DayOfWeek.MONDAY));
     }

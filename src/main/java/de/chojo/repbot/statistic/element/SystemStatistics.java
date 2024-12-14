@@ -15,6 +15,9 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class representing system statistics, including process statistics, data statistics, and shard statistics.
+ */
 public class SystemStatistics implements ReplacementProvider, EmbedDisplay {
 
     private final ProcessStatistics processStatistics;
@@ -24,6 +27,13 @@ public class SystemStatistics implements ReplacementProvider, EmbedDisplay {
     private final GlobalInfoStatisticDisplay globalInfoStatisticDisplay;
     private final SystemInfoStatisticDisplay systemInfoStatisticDisplay;
 
+    /**
+     * Constructs a new SystemStatistics instance.
+     *
+     * @param processStatistics the process statistics
+     * @param dataStatistic the data statistics
+     * @param shardStatistics the list of shard statistics
+     */
     public SystemStatistics(ProcessStatistics processStatistics, DataStatistic dataStatistic,
                             List<ShardStatistic> shardStatistics) {
         this.processStatistics = processStatistics;
@@ -37,10 +47,20 @@ public class SystemStatistics implements ReplacementProvider, EmbedDisplay {
 
     }
 
+    /**
+     * Retrieves the process statistics.
+     *
+     * @return the process statistics
+     */
     public ProcessStatistics processStatistics() {
         return processStatistics;
     }
 
+    /**
+     * Appends the system statistics to the given EmbedBuilder.
+     *
+     * @param embedBuilder the EmbedBuilder to append to
+     */
     @Override
     public void appendTo(EmbedBuilder embedBuilder) {
         systemInfoStatisticDisplay.appendTo(embedBuilder);
@@ -49,18 +69,38 @@ public class SystemStatistics implements ReplacementProvider, EmbedDisplay {
         shardCountStatistic.appendTo(embedBuilder);
     }
 
+    /**
+     * Retrieves the aggregated shard statistics.
+     *
+     * @return the aggregated shard statistics
+     */
     public GlobalShardStatistic aggregatedShards() {
         return aggregatedShards;
     }
 
+    /**
+     * Retrieves the data statistics.
+     *
+     * @return the data statistics
+     */
     public DataStatistic dataStatistic() {
         return dataStatistic;
     }
 
+    /**
+     * Retrieves the shard count.
+     *
+     * @return the shard count
+     */
     public int shardCount() {
         return shardCountStatistic.shardCount();
     }
 
+    /**
+     * Retrieves the list of replacements for the system statistics.
+     *
+     * @return the list of replacements
+     */
     @Override
     public List<Replacement> replacements() {
         List<Replacement> replacements = new ArrayList<>();

@@ -15,13 +15,27 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Collectors;
 
+/**
+ * Handler for the list thank words command.
+ */
 public class List implements SlashHandler {
     private final Guilds guilds;
 
+    /**
+     * Constructs a new List handler with the specified Guilds provider.
+     *
+     * @param guilds the Guilds provider
+     */
     public List(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event to list thank words.
+     *
+     * @param event the SlashCommandInteractionEvent
+     * @param context the EventContext
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var pattern = getGuildPattern(event.getGuild());
@@ -30,6 +44,12 @@ public class List implements SlashHandler {
         event.reply(context.localize("command.thankwords.list.message.list") + "\n" + pattern).queue();
     }
 
+    /**
+     * Retrieves the thank words pattern for the specified guild.
+     *
+     * @param guild the Guild to get the thank words pattern from
+     * @return a string containing the thank words pattern, or null if not available
+     */
     @Nullable
     private String getGuildPattern(Guild guild) {
         return guilds.guild(guild).settings().thanking().thankwords().words().stream()

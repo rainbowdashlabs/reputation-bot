@@ -13,6 +13,9 @@ import net.dv8tion.jda.api.entities.Activity;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
+/**
+ * Represents the settings for the bot's presence, including activity type and status messages.
+ */
 @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal", "CanBeFinal"})
 public class PresenceSettings {
     private boolean active;
@@ -27,42 +30,95 @@ public class PresenceSettings {
             Presence.of(Activity.ActivityType.LISTENING, "%analyzed_messages% messages during the last hour!")
     );
 
+    /**
+     * Creates a new presence settings with default values.
+     */
+    public PresenceSettings(){
+    }
+
+    /**
+     * Checks if the presence settings are active.
+     *
+     * @return true if active, false otherwise
+     */
     public boolean isActive() {
         return active;
     }
 
+    /**
+     * Gets the list of presence statuses.
+     *
+     * @return the list of presence statuses
+     */
     public List<Presence> status() {
         return status;
     }
 
+    /**
+     * Gets a random presence status from the list.
+     *
+     * @return a random presence status
+     */
     public Presence randomStatus() {
         if (status.isEmpty()) return Presence.of(Activity.ActivityType.WATCHING, "something");
         return status.get(ThreadLocalRandom.current().nextInt(status.size()));
     }
 
+    /**
+     * Gets the interval for updating the presence status.
+     *
+     * @return the interval in minutes
+     */
     public int interval() {
         return interval;
     }
 
+    /**
+     * Represents a single presence status with an activity type and text.
+     */
     @SuppressWarnings("CanBeFinal")
     public static class Presence {
         private Activity.ActivityType type;
         private String text;
 
+        /**
+         * Constructs a Presence instance with the specified type and text.
+         *
+         * @param type the activity type
+         * @param text the text to display
+         */
         @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
         public Presence(@JsonProperty("type") Activity.ActivityType type, @JsonProperty("text") String text) {
             this.type = type;
             this.text = text;
         }
 
+        /**
+         * Creates a new Presence instance with the specified type and text.
+         *
+         * @param type the activity type
+         * @param text the text to display
+         * @return a new Presence instance
+         */
         public static Presence of(Activity.ActivityType type, String text) {
             return new Presence(type, text);
         }
 
+        /**
+         * Gets the activity type of the presence.
+         *
+         * @return the activity type
+         */
         public Activity.ActivityType type() {
             return type;
         }
 
+        /**
+         * Gets the text of the presence with replacements applied.
+         *
+         * @param replacements the list of replacements to apply
+         * @return the text with replacements applied
+         */
         public String text(List<Replacement> replacements) {
             var message = text;
             for (var replacement : replacements) {

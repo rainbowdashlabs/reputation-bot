@@ -14,13 +14,28 @@ import java.time.temporal.ChronoUnit;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Service for handling metric-related tasks.
+ */
 public class MetricService implements Runnable {
     private final Metrics metrics;
 
+    /**
+     * Constructs a new MetricService with the specified metrics provider.
+     *
+     * @param metrics the metrics provider
+     */
     public MetricService(Metrics metrics) {
         this.metrics = metrics;
     }
 
+    /**
+     * Creates and schedules a new MetricService.
+     *
+     * @param executorService the executor service to schedule the task
+     * @param metrics the metrics provider
+     * @return the created MetricService
+     */
     public static MetricService create(ScheduledExecutorService executorService, Metrics metrics) {
         var now = ZonedDateTime.now(ZoneOffset.UTC);
         var base = now.toLocalDate().atStartOfDay().plus(1, ChronoUnit.DAYS).plus(1, ChronoUnit.HOURS)
@@ -31,6 +46,9 @@ public class MetricService implements Runnable {
         return service;
     }
 
+    /**
+     * Runs the metric saving tasks.
+     */
     @Override
     public void run() {
         metrics.reputation().saveRepCounts();

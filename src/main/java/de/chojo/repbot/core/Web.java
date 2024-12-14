@@ -22,7 +22,13 @@ import org.slf4j.Logger;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Class responsible for initializing and managing the web server and API.
+ */
 public class Web {
+    /**
+     * Logger instance for logging events.
+     */
     private static final Logger log = getLogger(Web.class);
     private final Bot bot;
     private final Data data;
@@ -30,6 +36,14 @@ public class Web {
     private final Configuration configuration;
     private Javalin javalin;
 
+    /**
+     * Constructs a new Web instance.
+     *
+     * @param bot           the bot instance
+     * @param data          the data instance
+     * @param threading     the threading instance
+     * @param configuration the configuration instance
+     */
     private Web(Bot bot, Data data, Threading threading, Configuration configuration) {
         this.bot = bot;
         this.data = data;
@@ -37,17 +51,32 @@ public class Web {
         this.configuration = configuration;
     }
 
+    /**
+     * Creates and initializes a new Web instance.
+     *
+     * @param bot           the bot instance
+     * @param data          the data instance
+     * @param threading     the threading instance
+     * @param configuration the configuration instance
+     * @return the created Web instance
+     */
     public static Web create(Bot bot, Data data, Threading threading, Configuration configuration) {
         var web = new Web(bot, data, threading, configuration);
         web.init();
         return web;
     }
 
+    /**
+     * Initializes the web server and API.
+     */
     public void init() {
         initApi();
         initBotList();
     }
 
+    /**
+     * Initializes the API with OpenAPI documentation.
+     */
     private void initApi() {
         var api = configuration.api();
 
@@ -66,6 +95,9 @@ public class Web {
         new Api(javalin, data.metrics()).init();
     }
 
+    /**
+     * Initializes the bot list services and vote handling.
+     */
     private void initBotList() {
         var botlist = configuration.botlist();
         if (!botlist.isSubmit()) return;

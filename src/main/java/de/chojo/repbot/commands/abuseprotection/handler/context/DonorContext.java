@@ -11,13 +11,27 @@ import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.util.Text;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
+/**
+ * Handles the donor context for abuse protection commands.
+ */
 public class DonorContext implements SlashHandler {
     private final Guilds guilds;
 
+    /**
+     * Constructs a new DonorContext handler.
+     *
+     * @param guilds the Guilds provider
+     */
     public DonorContext(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event   the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var guild = guilds.guild(event.getGuild());
@@ -33,6 +47,5 @@ public class DonorContext implements SlashHandler {
         event.reply(Text.getBooleanMessage(context, abuseSettings.donorContext(state),
                      "command.abuseprotection.context.donor.message.true", "command.abuseprotection.context.donor.message.false"))
              .queue();
-
     }
 }

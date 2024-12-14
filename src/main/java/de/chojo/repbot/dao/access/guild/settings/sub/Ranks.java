@@ -22,23 +22,32 @@ import java.util.stream.Collectors;
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 
+/**
+ * Manages the reputation ranks for a guild.
+ */
 public class Ranks implements GuildHolder {
     private final LinkedHashSet<ReputationRank> ranks = new LinkedHashSet<>();
     private final Settings settings;
     private final AtomicBoolean stackRoles;
 
+    /**
+     * Constructs a Ranks instance.
+     *
+     * @param settings   the settings for the guild
+     * @param stackRoles whether to stack roles
+     */
     public Ranks(Settings settings, AtomicBoolean stackRoles) {
         this.settings = settings;
         this.stackRoles = stackRoles;
     }
 
     /**
-     * Add a reputation rank.
+     * Adds a reputation rank.
      * <p>
-     * If the role or the reputation amount is already in use it will be removed first.
+     * If the role or the reputation amount is already in use, it will be removed first.
      *
-     * @param role       role
-     * @param reputation required reputation of role
+     * @param role       the role
+     * @param reputation the required reputation of the role
      * @return true if the role was added or updated
      */
     public boolean add(Role role, long reputation) {
@@ -71,6 +80,11 @@ public class Ranks implements GuildHolder {
         return deleteRank;
     }
 
+    /**
+     * Retrieves the list of reputation ranks.
+     *
+     * @return the list of reputation ranks
+     */
     public List<ReputationRank> ranks() {
         if (!ranks.isEmpty()) {
             return ranks.stream().sorted().toList();
@@ -98,8 +112,8 @@ public class Ranks implements GuildHolder {
      * <p>
      * This will contain up to {@link #ranks()}.size() when {@link General#stackRoles()} is false.
      *
-     * @param user user to check
-     * @return list of ranks
+     * @param user the user to check
+     * @return the list of ranks
      */
     public List<ReputationRank> currentRanks(RepUser user) {
         var profile = user.profile();
@@ -110,6 +124,12 @@ public class Ranks implements GuildHolder {
                       .toList();
     }
 
+    /**
+     * Gets the current rank of the user.
+     *
+     * @param user the user to check
+     * @return an optional containing the current rank if found, otherwise empty
+     */
     public Optional<ReputationRank> currentRank(RepUser user) {
         var profile = user.profile();
         return ranks().stream()
@@ -119,22 +139,44 @@ public class Ranks implements GuildHolder {
                       .findFirst();
     }
 
+    /**
+     * Gets the next rank of the user.
+     *
+     * @param user the user to check
+     * @return an optional containing the next rank if found, otherwise empty
+     */
     public Optional<ReputationRank> nextRank(RepUser user) {
         var profile = user.profile();
         return ranks().stream().filter(rank -> rank.reputation() > profile.reputation())
                       .sorted(Comparator.reverseOrder()).limit(1).findFirst();
     }
 
+    /**
+     * Retrieves the guild associated with this instance.
+     *
+     * @return the guild
+     */
     @Override
     public Guild guild() {
         return settings.guild();
     }
 
+    /**
+     * Retrieves the guild ID associated with this instance.
+     *
+     * @return the guild ID
+     */
     @Override
     public long guildId() {
         return settings.guildId();
     }
 
+    /**
+     * Gets the rank associated with the specified role.
+     *
+     * @param role the role
+     * @return an optional containing the rank if found, otherwise empty
+     */
     public Optional<ReputationRank> rank(Role role) {
         return query("SELECT reputation FROM guild_ranks WHERE guild_id = ? AND role_id = ?")
                 .single(call().bind(guildId()).bind(role.getIdLong()))
@@ -142,10 +184,18 @@ public class Ranks implements GuildHolder {
                 .first();
     }
 
+    /**
+     * Refreshes the ranks by clearing the current list.
+     */
     public void refresh() {
         ranks.clear();
     }
 
+    /**
+     * Generates a pretty string representation of the ranks.
+     *
+     * @return a pretty string representation of the ranks
+     */
     public String prettyString() {
         return ranks().stream().filter(r -> r.role().isPresent())
                       .map(rank -> "%s(%d) %d".formatted(rank.role().get().getName(), rank.role().get().getPosition(), rank.reputation()))

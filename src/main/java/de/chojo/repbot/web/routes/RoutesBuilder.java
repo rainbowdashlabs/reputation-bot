@@ -5,6 +5,12 @@
  */
 package de.chojo.repbot.web.routes;
 
+/**
+ * Interface for building routes.
+ */
 public interface RoutesBuilder {
+    /**
+     * Builds the routes.
+     */
     void buildRoutes();
 }

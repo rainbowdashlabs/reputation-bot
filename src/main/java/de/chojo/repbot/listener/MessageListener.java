@@ -43,7 +43,13 @@ import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Listener for handling various message-related events.
+ */
 public class MessageListener extends ListenerAdapter {
+    /**
+     * Logger instance for logging events.
+     */
     private static final Logger log = getLogger(MessageListener.class);
     private final ILocalizer localizer;
     private final Configuration configuration;
@@ -54,6 +60,18 @@ public class MessageListener extends ListenerAdapter {
     private final ContextResolver contextResolver;
     private final MessageAnalyzer messageAnalyzer;
 
+    /**
+     * Constructs a new MessageListener.
+     *
+     * @param localizer               the localizer instance
+     * @param configuration           the configuration instance
+     * @param guilds                  the guilds provider
+     * @param repBotCachePolicy       the cache policy
+     * @param reputationVoteListener  the reputation vote listener
+     * @param reputationService       the reputation service
+     * @param contextResolver         the context resolver
+     * @param messageAnalyzer         the message analyzer
+     */
     public MessageListener(ILocalizer localizer, Configuration configuration, Guilds guilds, RepBotCachePolicy repBotCachePolicy,
                            ReputationVoteListener reputationVoteListener, ReputationService reputationService,
                            ContextResolver contextResolver, MessageAnalyzer messageAnalyzer) {
@@ -67,6 +85,11 @@ public class MessageListener extends ListenerAdapter {
         this.messageAnalyzer = messageAnalyzer;
     }
 
+    /**
+     * Handles the channel creation event.
+     *
+     * @param event the channel creation event
+     */
     @Override
     public void onChannelCreate(@NotNull ChannelCreateEvent event) {
         if (event.getChannelType() == ChannelType.GUILD_PUBLIC_THREAD) {
@@ -78,6 +101,11 @@ public class MessageListener extends ListenerAdapter {
         }
     }
 
+    /**
+     * Handles the message deletion event.
+     *
+     * @param event the message deletion event
+     */
     @Override
     public void onMessageDelete(@NotNull MessageDeleteEvent event) {
         guilds.guild(event.getGuild()).reputation().log()
@@ -85,6 +113,11 @@ public class MessageListener extends ListenerAdapter {
               .ifPresent(ReputationLogEntry::deleteAll);
     }
 
+    /**
+     * Handles the bulk message deletion event.
+     *
+     * @param event the bulk message deletion event
+     */
     @Override
     public void onMessageBulkDelete(@NotNull MessageBulkDeleteEvent event) {
         var reputationLog = guilds.guild(event.getGuild()).reputation().log();
@@ -95,6 +128,11 @@ public class MessageListener extends ListenerAdapter {
              .forEach(ReputationLogEntry::deleteAll);
     }
 
+    /**
+     * Handles the message received event.
+     *
+     * @param event the message received event
+     */
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (event.getAuthor().isBot() || event.isWebhookMessage() || !event.isFromGuild()) return;
@@ -183,6 +221,12 @@ public class MessageListener extends ListenerAdapter {
         }
     }
 
+    /**
+     * Resolves the case when no target is found for the reputation submission.
+     *
+     * @param message  the message
+     * @param settings the settings
+     */
     private void resolveNoTarget(Message message, Settings settings) {
         log.trace("Resolving missing target for {}", message.getIdLong());
         var recentMembers = new LinkedHashSet<>(contextResolver.getCombinedContext(message, settings).members());

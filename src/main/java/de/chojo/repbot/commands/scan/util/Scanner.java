@@ -36,8 +36,15 @@ import java.util.regex.Pattern;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Class responsible for scanning messages in a channel.
+ */
 public class Scanner {
+    /**
+     * The interval in milliseconds between scan operations.
+     */
     public static final int INTERVAL_MS = 2000;
+
     private static final int SCAN_THREADS = 10;
     private static final long THREAD_MAX_SEEN_SECONDS = 30L;
     private static final Logger log = getLogger(Scan.class);
@@ -56,6 +63,12 @@ public class Scanner {
     private final Configuration configuration;
     private MessageAnalyzer messageAnalyzer;
 
+    /**
+     * Constructs a new Scanner.
+     *
+     * @param guilds the guilds provider
+     * @param configuration the bot configuration
+     */
     public Scanner(Guilds guilds, Configuration configuration) {
         this.guilds = guilds;
         this.configuration = configuration;
@@ -66,6 +79,14 @@ public class Scanner {
         }, 1, 1, TimeUnit.SECONDS);
     }
 
+    /**
+     * Initiates a scan of a channel.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     * @param channel the text channel to scan
+     * @param messageCount the number of messages to scan
+     */
     public void scanChannel(SlashCommandInteractionEvent event, EventContext context, TextChannel channel, int messageCount) {
         if (PermissionErrorHandler.assertAndHandle(channel, context.guildLocalizer(), configuration,
                 Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL, Permission.VIEW_CHANNEL, Permission.MESSAGE_HISTORY)) {
@@ -77,6 +98,13 @@ public class Scanner {
         preSchedule(context, channel, messageCount);
     }
 
+    /**
+     * Prepares the scheduling of a scan.
+     *
+     * @param context the event context
+     * @param channel the text channel to scan
+     * @param messageCount the number of messages to scan
+     */
     private void preSchedule(EventContext context, TextChannel channel, int messageCount) {
         var history = channel.getHistory();
         var pattern = guilds.guild(channel.getGuild()).settings().thanking().thankwords().thankwordPattern();
@@ -84,6 +112,15 @@ public class Scanner {
         schedule(history, context, pattern, channel, messageCount);
     }
 
+    /**
+     * Schedules a scan process.
+     *
+     * @param history the message history
+     * @param context the event context
+     * @param pattern the pattern to match
+     * @param reportChannel the channel to report progress
+     * @param calls the number of calls to make
+     */
     private void schedule(MessageHistory history, EventContext context, Pattern pattern, TextChannel reportChannel, int calls) {
         var progressMessage = reportChannel.sendMessage("```ANSI\n" +
                 context.localize("command.scan.scanner.message.progress",
@@ -95,22 +132,48 @@ public class Scanner {
         worker.schedule(() -> processScan(scanProcess), 0, TimeUnit.SECONDS);
     }
 
+    /**
+     * Checks if a scan is active for a given guild.
+     *
+     * @param guild the guild to check
+     * @return true if a scan is active, false otherwise
+     */
     public boolean isActive(Guild guild) {
         return activeScans.stream().anyMatch(p -> p.guild().getIdLong() == guild.getIdLong());
     }
 
+    /**
+     * Sets a scan process as active.
+     *
+     * @param process the scan process to set as active
+     */
     public void setActive(ScanProcess process) {
         activeScans.add(process);
     }
 
+    /**
+     * Sets a scan process as inactive.
+     *
+     * @param process the scan process to set as inactive
+     */
     public void setInactive(ScanProcess process) {
         activeScans.remove(process);
     }
 
+    /**
+     * Sets all scan processes for a guild as inactive.
+     *
+     * @param guild the guild to set as inactive
+     */
     public void setInactive(Guild guild) {
         activeScans.removeIf(p -> p.guild().getIdLong() == guild.getIdLong());
     }
 
+    /**
+     * Processes a scan.
+     *
+     * @param scan the scan process to execute
+     */
     private void processScan(ScanProcess scan) {
         if (cancel.remove(scan.guild().getIdLong())) {
             canceled.add(scan);
@@ -134,6 +197,9 @@ public class Scanner {
         }
     }
 
+    /**
+     * Finishes completed scan tasks.
+     */
     private void finishTasks() {
         if (finished.isEmpty()) return;
         var scan = finished.poll();
@@ -151,6 +217,9 @@ public class Scanner {
         scan.resultChannel().sendMessageEmbeds(embed).setMessageReference(scan.progressMessage()).queue();
     }
 
+    /**
+     * Finishes canceled scan tasks.
+     */
     private void finishCanceledTasks() {
         if (canceled.isEmpty()) return;
         var scan = canceled.poll();
@@ -164,24 +233,48 @@ public class Scanner {
         scan.resultChannel().sendMessageEmbeds(embed).setMessageReference(scan.progressMessage()).queue();
     }
 
+    /**
+     * Checks if a scan is running for a given guild.
+     *
+     * @param guild the guild to check
+     * @return true if a scan is running, false otherwise
+     */
     public boolean isRunning(Guild guild) {
         return isActive(guild);
     }
 
+    /**
+     * Cancels a scan for a given guild.
+     *
+     * @param guild the guild to cancel the scan for
+     */
     public void cancelScan(Guild guild) {
         setInactive(guild);
         cancel.add(guild.getIdLong());
     }
 
+    /**
+     * Finishes a scan process.
+     *
+     * @param scanProcess the scan process to finish
+     */
     public void finishScan(ScanProcess scanProcess) {
         setInactive(scanProcess);
         finished.add(scanProcess);
     }
 
+    /**
+     * Initializes the scanner with a message analyzer.
+     *
+     * @param messageAnalyzer the message analyzer
+     */
     public void lateInit(MessageAnalyzer messageAnalyzer) {
         this.messageAnalyzer = messageAnalyzer;
     }
 
+    /**
+     * Checks for and handles stuck scan tasks.
+     */
     private void checkStuckTasks() {
         for (var activeScan : activeScans) {
             if (activeScan.lastSeen().isAfter(Instant.now().minus(THREAD_MAX_SEEN_SECONDS, ChronoUnit.SECONDS))) {
@@ -195,6 +288,11 @@ public class Scanner {
         }
     }
 
+    /**
+     * Checks if the scan thread limit has been reached.
+     *
+     * @return true if the limit has been reached, false otherwise
+     */
     public boolean limitReached() {
         return activeScans.size() >= SCAN_THREADS;
     }

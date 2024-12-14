@@ -13,7 +13,17 @@ import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.service.RoleAssigner;
 
+/**
+ * Represents the reputation command for the bot.
+ */
 public class Reputation extends SlashCommand {
+    /**
+     * Constructs a Reputation command with the specified guilds provider, configuration, and role assigner.
+     *
+     * @param guilds the guilds provider
+     * @param configuration the configuration object
+     * @param roleAssigner the role assigner service
+     */
     public Reputation(Guilds guilds, Configuration configuration, RoleAssigner roleAssigner) {
         super(Slash.of("rep", "command.rep.description")
                 .guildOnly()

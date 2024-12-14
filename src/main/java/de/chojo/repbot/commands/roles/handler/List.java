@@ -18,18 +18,39 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 
+/**
+ * Handler for the list roles command.
+ */
 public class List implements SlashHandler {
     private final Guilds guilds;
 
+    /**
+     * Constructs a new List handler with the specified Guilds provider.
+     *
+     * @param guilds the Guilds provider
+     */
     public List(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event to list roles.
+     *
+     * @param event the SlashCommandInteractionEvent
+     * @param context the EventContext
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         event.replyEmbeds(getRoleList(context, event.getGuild())).setAllowedMentions(Collections.emptyList()).queue();
     }
 
+    /**
+     * Generates a MessageEmbed containing the list of roles for the specified guild.
+     *
+     * @param context the EventContext for localization
+     * @param guild the Guild to get the role list from
+     * @return a MessageEmbed containing the role list
+     */
     private MessageEmbed getRoleList(EventContext context, Guild guild) {
         var settings = guilds.guild(guild).settings();
         var ranks = settings.ranks();

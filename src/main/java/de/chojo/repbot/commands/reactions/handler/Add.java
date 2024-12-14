@@ -16,13 +16,27 @@ import net.dv8tion.jda.api.interactions.InteractionHook;
 
 import static de.chojo.repbot.commands.reactions.util.EmojiCheck.checkEmoji;
 
+/**
+ * Handler for the "add reaction" slash command, which adds a reaction to a message.
+ */
 public class Add implements SlashHandler {
     private final Guilds guilds;
 
+    /**
+     * Constructs an Add handler with the specified guilds provider.
+     *
+     * @param guilds the guilds provider
+     */
     public Add(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var emote = event.getOption("emote").getAsString();
@@ -31,6 +45,14 @@ public class Add implements SlashHandler {
         handleAddCheckResult(event.getGuild(), context, message, emote);
     }
 
+    /**
+     * Handles the result of the emoji check and adds the reaction accordingly.
+     *
+     * @param guild the guild where the command was executed
+     * @param context the event context
+     * @param message the message to add the reaction to
+     * @param emote the emote to add as a reaction
+     */
     private void handleAddCheckResult(Guild guild, EventContext context, Message message, String emote) {
         var reactions = guilds.guild(guild).settings().thanking().reactions();
         var result = checkEmoji(message, emote);

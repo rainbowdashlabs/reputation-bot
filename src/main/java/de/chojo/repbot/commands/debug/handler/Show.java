@@ -17,13 +17,27 @@ import java.util.StringJoiner;
 
 import static de.chojo.repbot.util.Guilds.prettyName;
 
+/**
+ * Handler for the debug show slash command.
+ */
 public class Show implements SlashHandler {
     private final Guilds guilds;
 
+    /**
+     * Constructs a new Show handler.
+     *
+     * @param guilds the guilds provider
+     */
     public Show(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var settings = guilds.guild(event.getGuild()).settings();

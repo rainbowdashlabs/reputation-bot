@@ -12,7 +12,24 @@ import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.access.guild.reputation.Reputation;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
+/**
+ * Handles the slash command for analyzing reputation logs.
+ */
 public class BaseAnalyzer {
+
+    /**
+     * Creates a new base analyzer.
+     */
+    public BaseAnalyzer(){
+    }
+
+    /**
+     * Handles the slash command interaction event to analyze reputation logs.
+     *
+     * @param event      the slash command interaction event
+     * @param context    the event context
+     * @param reputation the reputation access object
+     */
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context, Reputation reputation) {
         var optMessageId = ValueParser.parseLong(event.getOption("messageid").getAsString());
         if (optMessageId.isEmpty()) {
@@ -42,6 +59,5 @@ public class BaseAnalyzer {
         embed.add(builder.build());
 
         event.replyEmbeds(embed).setEphemeral(true).queue();
-
     }
 }

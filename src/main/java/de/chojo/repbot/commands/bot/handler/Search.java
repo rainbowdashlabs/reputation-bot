@@ -13,7 +13,22 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+/**
+ * Handler for the search slash command.
+ */
 public class Search implements SlashHandler {
+
+    /**
+     * Creates a new search handler.
+     */
+    public Search(){
+    }
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event   the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var term = event.getOption("term").getAsString().toLowerCase(Locale.ROOT);

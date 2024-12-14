@@ -34,13 +34,27 @@ import java.util.stream.Collectors;
 
 import static de.chojo.jdautil.util.Guilds.prettyName;
 
+/**
+ * Handles the slash command for debugging information about a guild.
+ */
 public class Debug implements SlashHandler {
     private final Guilds guilds;
 
+    /**
+     * Constructs a Debug handler with the specified guild provider.
+     *
+     * @param guilds the guild provider
+     */
     public Debug(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event to provide debugging information about a guild.
+     *
+     * @param event   the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var guildId = event.getOption("guild_id").getAsLong();
@@ -156,10 +170,22 @@ public class Debug implements SlashHandler {
         context.registerPage(pages, true);
     }
 
+    /**
+     * Formats a LocalDateTime as a timestamp.
+     *
+     * @param dateTime the LocalDateTime to format
+     * @return the formatted timestamp
+     */
     private String timestamp(LocalDateTime dateTime) {
         return TimeFormat.DATE_TIME_SHORT.format(dateTime.toEpochSecond(ZoneOffset.UTC) * 1000);
     }
 
+    /**
+     * Formats an OffsetDateTime as a timestamp.
+     *
+     * @param dateTime the OffsetDateTime to format
+     * @return the formatted timestamp
+     */
     private String timestamp(OffsetDateTime dateTime) {
         return TimeFormat.DATE_TIME_SHORT.format(dateTime.toEpochSecond() * 1000);
     }

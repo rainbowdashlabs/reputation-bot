@@ -15,13 +15,27 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+/**
+ * Handler for the "add thankword" slash command, which adds a thankword pattern.
+ */
 public class Add implements SlashHandler {
     private final Guilds guilds;
 
+    /**
+     * Constructs an Add handler with the specified guilds provider.
+     *
+     * @param guilds the guilds provider
+     */
     public Add(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var pattern = event.getOption("pattern").getAsString();

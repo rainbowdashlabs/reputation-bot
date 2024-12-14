@@ -25,15 +25,31 @@ import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Provides GDPR-related data access methods for users.
+ */
 public class GdprUser {
 
     private static final Logger log = getLogger(GdprUser.class);
     private final User user;
 
+    /**
+     * Constructs a new GdprUser instance.
+     *
+     * @param user the User instance
+     */
     public GdprUser(User user) {
         this.user = user;
     }
 
+    /**
+     * Builds a GdprUser instance from the given database row and shard manager.
+     *
+     * @param rs the database row
+     * @param shardManager the shard manager
+     * @return the GdprUser instance, or null if the user could not be retrieved
+     * @throws SQLException if a database access error occurs
+     */
     @Nullable
     public static GdprUser build(Row rs, ShardManager shardManager) throws SQLException {
         try {
@@ -50,6 +66,11 @@ public class GdprUser {
         }
     }
 
+    /**
+     * Queues the user for deletion by adding them to the cleanup schedule.
+     *
+     * @return true if the user was successfully queued for deletion, false otherwise
+     */
     public boolean queueDeletion() {
         log.info("User {} requested deletion of their data", userId());
         return query("""
@@ -64,6 +85,11 @@ public class GdprUser {
                     .changed();
     }
 
+    /**
+     * Requests the deletion of the user's data.
+     *
+     * @return true if the request was successful, false otherwise
+     */
     public boolean request() {
         try (var conn = QueryConfiguration.getDefault().withSingleTransaction()) {
             var res = conn.query("""
@@ -85,18 +111,29 @@ public class GdprUser {
         }
     }
 
+    /**
+     * Marks the user's GDPR request as sent.
+     */
     public void requestSend() {
         query("UPDATE gdpr_log SET received = now(), last_attempt = now() WHERE user_id = ?")
              .single(call().bind(userId()))
              .update();
     }
 
+    /**
+     * Marks the user's GDPR request as failed.
+     */
     public void requestSendFailed() {
         query("UPDATE gdpr_log SET attempts = attempts + 1, last_attempt = now() WHERE user_id = ?")
              .single(call().bind(userId()))
              .update();
     }
 
+    /**
+     * Retrieves the user's data.
+     *
+     * @return an Optional containing the user's data, or an empty Optional if the data could not be retrieved
+     */
     public Optional<String> userData() {
         return query("SELECT aggregate_user_data(?)")
                 .single(call().bind(userId()))
@@ -166,6 +203,11 @@ public class GdprUser {
         return true;
     }
 
+    /**
+     * Retrieves the ID of the user associated with this instance.
+     *
+     * @return the user ID
+     */
     private long userId() {
         return user.getIdLong();
     }

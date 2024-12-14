@@ -16,15 +16,30 @@ import de.chojo.repbot.analyzer.results.match.ThankType;
 import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
+/**
+ * Handler for the "check" slash command, which checks a message for thankwords.
+ */
 public class Check implements SlashHandler {
     private final Guilds guilds;
     private final MessageAnalyzer messageAnalyzer;
 
+    /**
+     * Constructs a Check handler with the specified guilds provider and message analyzer.
+     *
+     * @param guilds the guilds provider
+     * @param messageAnalyzer the message analyzer
+     */
     public Check(Guilds guilds, MessageAnalyzer messageAnalyzer) {
         this.guilds = guilds;
         this.messageAnalyzer = messageAnalyzer;
     }
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var settings = guilds.guild(event.getGuild()).settings();
@@ -49,6 +64,12 @@ public class Check implements SlashHandler {
         event.replyEmbeds(builder.build()).queue();
     }
 
+    /**
+     * Processes the message analysis result and builds the response embed.
+     *
+     * @param result the match analyzer result
+     * @param builder the localized embed builder
+     */
     private void processMessage(MatchAnalyzerResult result, LocalizedEmbedBuilder builder) {
         if (result.thankType() == ThankType.FUZZY) {
             for (var receiver : result.asFuzzy().weightedReceiver()) {

@@ -15,13 +15,27 @@ import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInterac
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 
+/**
+ * Handler for setting the locale of a guild.
+ */
 public class Set implements SlashHandler {
     private final Guilds guilds;
 
+    /**
+     * Constructs a new Set handler.
+     *
+     * @param guilds the guilds provider
+     */
     public Set(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command to set the locale.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         DiscordLocale locale = null;
@@ -42,6 +56,12 @@ public class Set implements SlashHandler {
         }
     }
 
+    /**
+     * Handles the auto-complete interaction for the locale command.
+     *
+     * @param event the command auto-complete interaction event
+     * @param context the event context
+     */
     @Override
     public void onAutoComplete(CommandAutoCompleteInteractionEvent event, EventContext context) {
         var option = event.getFocusedOption();

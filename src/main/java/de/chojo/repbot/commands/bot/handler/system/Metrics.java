@@ -18,13 +18,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Handles the metrics-related slash commands.
+ */
 public class Metrics implements SlashHandler {
     private final Configuration configuration;
 
+    /**
+     * Constructs a new Metrics handler with the specified configuration.
+     *
+     * @param configuration the configuration to use
+     */
     public Metrics(Configuration configuration) {
         this.configuration = configuration;
     }
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         List<String> links = new ArrayList<>();
@@ -58,6 +72,12 @@ public class Metrics implements SlashHandler {
         });
     }
 
+    /**
+     * Constructs a URL for the specified endpoint.
+     *
+     * @param endpoint the endpoint to construct the URL for
+     * @return the constructed URL
+     */
     private String url(String endpoint) {
         return "%s/v1/metrics/%s".formatted(configuration.api().url(), endpoint);
     }

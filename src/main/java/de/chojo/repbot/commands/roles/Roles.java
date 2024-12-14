@@ -24,15 +24,29 @@ import de.chojo.repbot.service.RoleAssigner;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 
+/**
+ * Class for handling role-related slash commands.
+ */
 public class Roles implements SlashProvider<Slash> {
     private final Refresh refresh;
     private final Guilds guilds;
 
+    /**
+     * Constructs a new Roles instance.
+     *
+     * @param guilds the guilds provider
+     * @param roleAssigner the role assigner service
+     */
     public Roles(Guilds guilds, RoleAssigner roleAssigner) {
         this.guilds = guilds;
-        refresh = new Refresh(roleAssigner);
+        this.refresh = new Refresh(roleAssigner);
     }
 
+    /**
+     * Defines the slash commands for roles.
+     *
+     * @return the slash command definition
+     */
     @Override
     public Slash slash() {
         return Slash.of("roles", "command.roles.description")
@@ -76,6 +90,12 @@ public class Roles implements SlashProvider<Slash> {
                 ).build();
     }
 
+    /**
+     * Checks if the refresh process is active for the specified guild.
+     *
+     * @param guild the guild to check
+     * @return true if the refresh process is active, false otherwise
+     */
     public boolean refreshActive(Guild guild) {
         return refresh.refreshActive(guild);
     }

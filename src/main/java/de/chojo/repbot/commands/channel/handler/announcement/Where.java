@@ -13,13 +13,27 @@ import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInterac
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
+/**
+ * Handler for the "Where" slash command.
+ */
 public class Where implements SlashHandler {
     private final Guilds guilds;
 
+    /**
+     * Constructs a new Where handler.
+     *
+     * @param guilds the guilds provider
+     */
     public Where(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event   the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var announcements = guilds.guild(event.getGuild()).settings().announcements();
@@ -30,6 +44,12 @@ public class Where implements SlashHandler {
         }
     }
 
+    /**
+     * Handles the auto-complete interaction event.
+     *
+     * @param event   the auto-complete interaction event
+     * @param context the event context
+     */
     @Override
     public void onAutoComplete(CommandAutoCompleteInteractionEvent event, EventContext context) {
         if ("where".equals(event.getFocusedOption().getName())) {

@@ -29,6 +29,9 @@ import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Listener for logging various events related to guilds and sessions.
+ */
 public class LogListener extends ListenerAdapter implements Runnable {
     private static final Logger log = getLogger(LogListener.class);
     private final Map<Integer, Instant> disconnected = new HashMap<>();
@@ -36,12 +39,23 @@ public class LogListener extends ListenerAdapter implements Runnable {
     private LogListener() {
     }
 
+    /**
+     * Creates a new LogListener and schedules it to run at a fixed rate.
+     *
+     * @param service the ScheduledExecutorService to use for scheduling
+     * @return a new LogListener instance
+     */
     public static LogListener create(ScheduledExecutorService service) {
         var logListener = new LogListener();
         service.scheduleAtFixedRate(logListener, 60, 60, TimeUnit.SECONDS);
         return logListener;
     }
 
+    /**
+     * Handles the event when the bot joins a guild.
+     *
+     * @param event the GuildJoinEvent
+     */
     @Override
     public void onGuildJoin(@Nonnull GuildJoinEvent event) {
         log.info(LogNotify.STATUS, "RepBot joined guild {} on shard {}.",
@@ -49,6 +63,11 @@ public class LogListener extends ListenerAdapter implements Runnable {
                 event.getJDA().getShardInfo().getShardId());
     }
 
+    /**
+     * Handles the event when the bot leaves a guild.
+     *
+     * @param event the GuildLeaveEvent
+     */
     @Override
     public void onGuildLeave(@Nonnull GuildLeaveEvent event) {
         log.info(LogNotify.STATUS, "RepBot left guild {} on shard {}.",
@@ -56,22 +75,42 @@ public class LogListener extends ListenerAdapter implements Runnable {
                 event.getJDA().getShardInfo().getShardId());
     }
 
+    /**
+     * Handles the event when a session disconnects.
+     *
+     * @param event the SessionDisconnectEvent
+     */
     @Override
     public void onSessionDisconnect(@NotNull SessionDisconnectEvent event) {
         disconnected.put(event.getJDA().getShardInfo().getShardId(), Instant.now());
         log.debug("Shard {} disconnected.", event.getJDA().getShardInfo().getShardId());
     }
 
+    /**
+     * Handles the event when a session is recreated.
+     *
+     * @param event the SessionRecreateEvent
+     */
     @Override
     public void onSessionRecreate(@NotNull SessionRecreateEvent event) {
         handleShardReconnect(event.getJDA());
     }
 
+    /**
+     * Handles the event when a session resumes.
+     *
+     * @param event the SessionResumeEvent
+     */
     @Override
     public void onSessionResume(@NotNull SessionResumeEvent event) {
         handleShardReconnect(event.getJDA());
     }
 
+    /**
+     * Handles shard reconnection logic.
+     *
+     * @param jda the JDA instance
+     */
     private void handleShardReconnect(JDA jda) {
         var shardId = jda.getShardInfo().getShardId();
         var seconds = Duration.between(
@@ -87,6 +126,11 @@ public class LogListener extends ListenerAdapter implements Runnable {
         }
     }
 
+    /**
+     * Handles the event when the bot is ready.
+     *
+     * @param event the ReadyEvent
+     */
     @Override
     public void onReady(@Nonnull ReadyEvent event) {
         handleShardReconnect(event.getJDA());
@@ -96,6 +140,9 @@ public class LogListener extends ListenerAdapter implements Runnable {
                 event.getGuildTotalCount());
     }
 
+    /**
+     * Periodically checks for disconnected shards and logs a warning if any are found.
+     */
     @Override
     public void run() {
         if (disconnected.isEmpty()) return;

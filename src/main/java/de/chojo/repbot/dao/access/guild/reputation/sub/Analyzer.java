@@ -32,8 +32,15 @@ import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Class for analyzing and logging reputation-related data.
+ */
 public class Analyzer implements GuildHolder {
     private static final Logger log = getLogger(Analyzer.class);
+
+    /**
+     * ObjectMapper instance for JSON serialization and deserialization.
+     */
     public static final ObjectMapper MAPPER = JsonMapper.builder()
                                                         .configure(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS, true)
                                                         .build()
@@ -43,10 +50,22 @@ public class Analyzer implements GuildHolder {
 
     private final Reputation reputation;
 
+    /**
+     * Constructs an Analyzer with the specified Reputation instance.
+     *
+     * @param reputation the Reputation instance
+     */
     public Analyzer(Reputation reputation) {
         this.reputation = reputation;
     }
 
+    /**
+     * Logs the analyzer result for a given message.
+     *
+     * @param message the message
+     * @param analyzerResult the analyzer result
+     * @return the analyzer result
+     */
     public AnalyzerResult log(Message message, AnalyzerResult analyzerResult) {
         String resultString;
         try {
@@ -67,6 +86,12 @@ public class Analyzer implements GuildHolder {
         return analyzerResult;
     }
 
+    /**
+     * Logs the submit result for a given message.
+     *
+     * @param message the message
+     * @param result the submit result
+     */
     public void log(Message message, SubmitResult result) {
         String resultString;
         try {
@@ -84,6 +109,12 @@ public class Analyzer implements GuildHolder {
                  .insert();
     }
 
+    /**
+     * Retrieves the analyzer trace for a given message ID.
+     *
+     * @param messageId the message ID
+     * @return an optional containing the analyzer trace if found, otherwise empty
+     */
     public Optional<AnalyzerTrace> get(long messageId) {
         var resultEntry = getResults(messageId);
 
@@ -94,7 +125,12 @@ public class Analyzer implements GuildHolder {
         return Optional.of(new AnalyzerTrace(resultEntry.orElse(null), submitResults));
     }
 
-
+    /**
+     * Retrieves the result entry for a given message ID.
+     *
+     * @param messageId the message ID
+     * @return an optional containing the result entry if found, otherwise empty
+     */
     private Optional<ResultEntry> getResults(long messageId) {
         return query("""
                         SELECT guild_id, channel_id, message_id, result, analyzed
@@ -114,6 +150,12 @@ public class Analyzer implements GuildHolder {
         }).first();
     }
 
+    /**
+     * Retrieves the submit result entries for a given message ID.
+     *
+     * @param messageId the message ID
+     * @return a list of submit result entries
+     */
     private List<SubmitResultEntry> getSubmitResults(long messageId) {
         return query("""
                         SELECT guild_id, channel_id, message_id, result, submitted
@@ -134,11 +176,21 @@ public class Analyzer implements GuildHolder {
         }).all();
     }
 
+    /**
+     * Returns the guild associated with this analyzer.
+     *
+     * @return the guild
+     */
     @Override
     public Guild guild() {
         return reputation.guild();
     }
 
+    /**
+     * Returns the guild ID associated with this analyzer.
+     *
+     * @return the guild ID
+     */
     @Override
     public long guildId() {
         return reputation.guildId();

@@ -17,33 +17,78 @@ import java.util.List;
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 
+/**
+ * Manages the ranking of users based on their reputation in a guild.
+ */
 public class Ranking implements GuildHolder {
     private final Reputation reputation;
 
+    /**
+     * Constructs a Ranking instance with the specified Reputation instance.
+     *
+     * @param reputation the Reputation instance
+     */
     public Ranking(Reputation reputation) {
         this.reputation = reputation;
     }
 
+    /**
+     * Gets the total number of ranking pages.
+     *
+     * @param pageSize the size of a page
+     * @return the total number of ranking pages
+     */
     private int getRankingPageCount(int pageSize) {
         return pages(pageSize, "user_reputation");
     }
 
+    /**
+     * Gets the total number of 7-day ranking pages.
+     *
+     * @param pageSize the size of a page
+     * @return the total number of 7-day ranking pages
+     */
     private Integer get7DaysRankingPageCount(int pageSize) {
         return pages(pageSize, "user_reputation_7_days");
     }
 
+    /**
+     * Gets the total number of 30-day ranking pages.
+     *
+     * @param pageSize the size of a page
+     * @return the total number of 30-day ranking pages
+     */
     private Integer get30DaysRankingPageCount(int pageSize) {
         return pages(pageSize, "user_reputation_30_days");
     }
 
+    /**
+     * Gets the total number of weekly ranking pages.
+     *
+     * @param pageSize the size of a page
+     * @return the total number of weekly ranking pages
+     */
     private Integer getWeekRankingPageCount(int pageSize) {
         return pages(pageSize, "user_reputation_week");
     }
 
+    /**
+     * Gets the total number of monthly ranking pages.
+     *
+     * @param pageSize the size of a page
+     * @return the total number of monthly ranking pages
+     */
     private Integer getMonthRankingPageCount(int pageSize) {
         return pages(pageSize, "user_reputation_month");
     }
 
+    /**
+     * Calculates the number of pages for a given table.
+     *
+     * @param pageSize the size of a page
+     * @param table the table name
+     * @return the number of pages
+     */
     private Integer pages(int pageSize, String table) {
         return query("""
                 SELECT
@@ -59,10 +104,23 @@ public class Ranking implements GuildHolder {
                 .orElse(1);
     }
 
+    /**
+     * Gets the default ranking of the guild based on the reputation mode.
+     *
+     * @param pageSize the size of a page
+     * @return the default ranking of the guild
+     */
     public GuildRanking defaultRanking(int pageSize) {
         return byMode(reputation.repGuild().settings().general().reputationMode(), pageSize);
     }
 
+    /**
+     * Gets the ranking of the guild based on the specified reputation mode.
+     *
+     * @param mode the reputation mode
+     * @param pageSize the size of a page
+     * @return the ranking of the guild
+     */
     public GuildRanking byMode(ReputationMode mode, int pageSize) {
         return switch (mode) {
             case TOTAL -> total(pageSize);
@@ -70,12 +128,12 @@ public class Ranking implements GuildHolder {
             case ROLLING_MONTH -> days30(pageSize);
             case WEEK -> week(pageSize);
             case MONTH -> month(pageSize);
-            default -> throw new IllegalArgumentException("Unkown input " + mode);
+            default -> throw new IllegalArgumentException("Unknown input " + mode);
         };
     }
 
     /**
-     * Get the ranking of the guild.
+     * Gets the total ranking of the guild.
      *
      * @param pageSize the size of a page
      * @return a sorted list of reputation users
@@ -85,7 +143,7 @@ public class Ranking implements GuildHolder {
     }
 
     /**
-     * Get the 7 days ranking of the guild.
+     * Gets the 7-day ranking of the guild.
      *
      * @param pageSize the size of a page
      * @return a sorted list of reputation users
@@ -95,7 +153,7 @@ public class Ranking implements GuildHolder {
     }
 
     /**
-     * Get the 30 days ranking of the guild.
+     * Gets the 30-day ranking of the guild.
      *
      * @param pageSize the size of a page
      * @return a sorted list of reputation users
@@ -105,7 +163,7 @@ public class Ranking implements GuildHolder {
     }
 
     /**
-     * Get the weekly ranking of the guild.
+     * Gets the weekly ranking of the guild.
      *
      * @param pageSize the size of a page
      * @return a sorted list of reputation users
@@ -115,7 +173,7 @@ public class Ranking implements GuildHolder {
     }
 
     /**
-     * Get the monthly ranking of the guild.
+     * Gets the monthly ranking of the guild.
      *
      * @param pageSize the size of a page
      * @return a sorted list of reputation users
@@ -125,32 +183,68 @@ public class Ranking implements GuildHolder {
     }
 
     /**
-     * Get the ranking of the guild.
+     * Gets the ranking of the guild.
      *
      * @param pageSize the size of a page
-     * @param page     the number of the page. zero based
+     * @param page the number of the page (zero-based)
      * @return a sorted list of reputation users
      */
     private List<RepProfile> getRankingPage(int pageSize, int page) {
         return getRankingPage(pageSize, page, "user_reputation");
     }
 
+    /**
+     * Gets the 7-day ranking page of the guild.
+     *
+     * @param pageSize the size of a page
+     * @param page the number of the page (zero-based)
+     * @return a sorted list of reputation users
+     */
     private List<RepProfile> get7DaysRankingPage(int pageSize, int page) {
         return getRankingPage(pageSize, page, "user_reputation_7_days");
     }
 
+    /**
+     * Gets the 30-day ranking page of the guild.
+     *
+     * @param pageSize the size of a page
+     * @param page the number of the page (zero-based)
+     * @return a sorted list of reputation users
+     */
     private List<RepProfile> get30DaysRankingPage(int pageSize, int page) {
         return getRankingPage(pageSize, page, "user_reputation_30_days");
     }
 
+    /**
+     * Gets the weekly ranking page of the guild.
+     *
+     * @param pageSize the size of a page
+     * @param page the number of the page (zero-based)
+     * @return a sorted list of reputation users
+     */
     private List<RepProfile> getWeekRankingPage(int pageSize, int page) {
         return getRankingPage(pageSize, page, "user_reputation_week");
     }
 
+    /**
+     * Gets the monthly ranking page of the guild.
+     *
+     * @param pageSize the size of a page
+     * @param page the number of the page (zero-based)
+     * @return a sorted list of reputation users
+     */
     private List<RepProfile> getMonthRankingPage(int pageSize, int page) {
         return getRankingPage(pageSize, page, "user_reputation_month");
     }
 
+    /**
+     * Gets the ranking page of the guild for the specified table.
+     *
+     * @param pageSize the size of a page
+     * @param page the number of the page (zero-based)
+     * @param table the table name
+     * @return a sorted list of reputation users
+     */
     private List<RepProfile> getRankingPage(int pageSize, int page, String table) {
         return query("""
                 SELECT
@@ -170,11 +264,21 @@ public class Ranking implements GuildHolder {
                 .all();
     }
 
+    /**
+     * Retrieves the guild associated with this instance.
+     *
+     * @return the guild
+     */
     @Override
     public Guild guild() {
         return reputation.guild();
     }
 
+    /**
+     * Retrieves the guild ID associated with this instance.
+     *
+     * @return the guild ID
+     */
     @Override
     public long guildId() {
         return reputation.guildId();

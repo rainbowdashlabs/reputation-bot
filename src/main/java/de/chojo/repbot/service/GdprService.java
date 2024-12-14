@@ -21,6 +21,9 @@ import java.util.concurrent.TimeUnit;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Service for handling GDPR-related tasks.
+ */
 public class GdprService implements Runnable {
     private static final Logger log = getLogger(GdprService.class);
     private final ShardManager shardManager;
@@ -28,6 +31,14 @@ public class GdprService implements Runnable {
     private final Guilds guilds;
     private final Gdpr gdpr;
 
+    /**
+     * Constructs a new GdprService instance.
+     *
+     * @param shardManager the ShardManager instance
+     * @param guilds the Guilds instance
+     * @param gdpr the Gdpr instance
+     * @param executorService the ExecutorService instance
+     */
     private GdprService(ShardManager shardManager, Guilds guilds, Gdpr gdpr, ExecutorService executorService) {
         this.shardManager = shardManager;
         this.guilds = guilds;
@@ -35,6 +46,15 @@ public class GdprService implements Runnable {
         this.executorService = executorService;
     }
 
+    /**
+     * Creates and schedules a new GdprService instance.
+     *
+     * @param shardManager the ShardManager instance
+     * @param guilds the Guilds instance
+     * @param gdpr the Gdpr instance
+     * @param scheduledExecutorService the ScheduledExecutorService instance
+     * @return the created GdprService instance
+     */
     public static GdprService of(ShardManager shardManager, Guilds guilds, Gdpr gdpr,
                                  ScheduledExecutorService scheduledExecutorService) {
         var service = new GdprService(shardManager, guilds, gdpr, scheduledExecutorService);
@@ -42,6 +62,9 @@ public class GdprService implements Runnable {
         return service;
     }
 
+    /**
+     * Runs the GDPR service tasks.
+     */
     @Override
     public void run() {
         var reportRequests = gdpr.getReportRequests(shardManager);
@@ -62,7 +85,12 @@ public class GdprService implements Runnable {
         cleanupGuilds();
     }
 
-
+    /**
+     * Cleans up user data for a specific guild.
+     *
+     * @param guild the Guild instance
+     * @return a CompletableFuture with the number of pruned users
+     */
     public CompletableFuture<Integer> cleanupGuildUsers(Guild guild) {
         return CompletableFuture.supplyAsync(() -> {
             log.info("Guild prune was started on {}", guild.getId());
@@ -83,11 +111,20 @@ public class GdprService implements Runnable {
         }, executorService);
     }
 
+    /**
+     * Cleans up user data for a specific user in a guild.
+     *
+     * @param guild the Guild instance
+     * @param user the user ID
+     */
     public void cleanupGuildUser(Guild guild, Long user) {
         log.info("User data of {} was pruned on guild {}.", user, guild.getIdLong());
         CompletableFuture.runAsync(() -> RemovalTask.anonymExecute(guild.getIdLong(), user), executorService);
     }
 
+    /**
+     * Cleans up guilds by checking their status and updating their GDPR deletion queue.
+     */
     private void cleanupGuilds() {
         for (var page : guilds.guilds(100)) {
             for (var guild : page) {

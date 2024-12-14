@@ -12,13 +12,27 @@ import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
+/**
+ * Handler for the announcement info command.
+ */
 public class Info implements SlashHandler {
     private final Guilds guilds;
 
+    /**
+     * Constructs a new Info handler.
+     *
+     * @param guilds the Guilds provider
+     */
     public Info(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event the SlashCommandInteractionEvent
+     * @param context the EventContext
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var announcements = guilds.guild(event.getGuild()).settings().announcements();

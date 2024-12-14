@@ -19,8 +19,19 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Represents a labeled count statistic and provides chart generation functionality.
+ *
+ * @param stats a map containing labels and their corresponding list of CountStatistics
+ */
 public record LabeledCountStatistic(Map<String, List<CountStatistics>> stats) implements ChartProvider {
 
+    /**
+     * Generates a chart with the given title.
+     *
+     * @param title the title of the chart
+     * @return a byte array representing the chart in PNG format
+     */
     @Override
     public byte[] getChart(String title) {
         var categorySeries = new XYChartBuilder().width(1200).height(600)
@@ -52,6 +63,12 @@ public record LabeledCountStatistic(Map<String, List<CountStatistics>> stats) im
         }
     }
 
+    /**
+     * Converts a LocalDateTime to a Date.
+     *
+     * @param date the LocalDateTime to convert
+     * @return the corresponding Date
+     */
     private Date toDate(LocalDateTime date) {
         return new Date(date.toEpochSecond(ZoneOffset.UTC) * 1000);
     }

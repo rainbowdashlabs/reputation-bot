@@ -18,11 +18,22 @@ import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.internal.utils.PermissionUtil;
 
+/**
+ * Utility class for handling permission errors.
+ */
 public final class PermissionErrorHandler {
     private PermissionErrorHandler() {
         throw new UnsupportedOperationException("This is a utility class.");
     }
 
+    /**
+     * Handles an InsufficientPermissionException by sending a permission error message to the appropriate channel.
+     *
+     * @param permissionException the exception to handle
+     * @param shardManager the shard manager
+     * @param localizer the localization context
+     * @param configuration the configuration
+     */
     public static void handle(InsufficientPermissionException permissionException, ShardManager shardManager,
                               LocalizationContext localizer, Configuration configuration) {
         var permission = permissionException.getPermission();
@@ -32,6 +43,14 @@ public final class PermissionErrorHandler {
         sendPermissionError(channel, permission, localizer, configuration);
     }
 
+    /**
+     * Handles an InsufficientPermissionException by sending a permission error message to the appropriate channel.
+     *
+     * @param permissionException the exception to handle
+     * @param guild the guild
+     * @param localizer the localization context
+     * @param configuration the configuration
+     */
     public static void handle(InsufficientPermissionException permissionException, Guild guild, LocalizationContext localizer,
                               Configuration configuration) {
         var permission = permissionException.getPermission();
@@ -40,6 +59,14 @@ public final class PermissionErrorHandler {
         sendPermissionError(channel, permission, localizer, configuration);
     }
 
+    /**
+     * Handles an InsufficientPermissionException by sending a permission error message to the appropriate channel.
+     *
+     * @param permissionException the exception to handle
+     * @param channel the channel
+     * @param localizer the localization context
+     * @param configuration the configuration
+     */
     public static void handle(InsufficientPermissionException permissionException, GuildMessageChannel channel,
                               LocalizationContext localizer, Configuration configuration) {
         var permission = permissionException.getPermission();
@@ -47,6 +74,14 @@ public final class PermissionErrorHandler {
         sendPermissionError(channel, permission, localizer, configuration);
     }
 
+    /**
+     * Sends a permission error message to the specified channel.
+     *
+     * @param channel the channel to send the message to
+     * @param permission the missing permission
+     * @param localizer the localization context
+     * @param configuration the configuration
+     */
     public static void sendPermissionError(GuildMessageChannel channel, Permission permission, LocalizationContext localizer,
                                            Configuration configuration) {
         var guild = channel.getGuild();
@@ -92,6 +127,13 @@ public final class PermissionErrorHandler {
         }
     }
 
+    /**
+     * Assert that the user has permissions.
+     *
+     * @param guild       guild to check
+     * @param permissions permissions to check
+     * @throws InsufficientPermissionException when the bot user doesnt have a permission
+     */
     public static void assertPermissions(Guild guild, Permission... permissions) throws InsufficientPermissionException {
         var self = guild.getSelfMember();
         for (var permission : permissions) {

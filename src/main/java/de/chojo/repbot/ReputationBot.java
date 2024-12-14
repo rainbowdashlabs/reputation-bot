@@ -17,9 +17,26 @@ import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.sql.SQLException;
 
+/**
+ * Main class for the ReputationBot application.
+ */
 public class ReputationBot {
     private static ReputationBot instance;
 
+    /**
+     * Creates a new ReputationBot instance.
+     */
+    private ReputationBot() {
+    }
+
+    /**
+     * Main method to start the ReputationBot application.
+     *
+     * @param args the command line arguments
+     * @throws SQLException If the database connection fails.
+     * @throws IOException  If the configuration file fails to load.
+     * @throws LoginException If the bot login fails.
+     */
     public static void main(String[] args) throws SQLException, IOException, LoginException {
         ReputationBot.instance = new ReputationBot();
         instance.start();
@@ -30,6 +47,7 @@ public class ReputationBot {
      *
      * @throws SQLException If the database connection fails.
      * @throws IOException  If the configuration file fails to load.
+     * @throws LoginException If the bot login fails.
      */
     private void start() throws SQLException, IOException, LoginException {
         var configuration = Configuration.create();
