@@ -8,9 +8,12 @@ package de.chojo.repbot.web.routes.v1.metrics;
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.dao.snapshots.statistics.UsersStatistic;
 import de.chojo.repbot.web.routes.v1.MetricsHolder;
-import de.chojo.repbot.web.routes.v1.MetricsRoute;
 import io.javalin.http.Context;
-import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
+import io.javalin.openapi.HttpMethod;
+import io.javalin.openapi.OpenApi;
+import io.javalin.openapi.OpenApiContent;
+import io.javalin.openapi.OpenApiParam;
+import io.javalin.openapi.OpenApiResponse;
 
 import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_MONTH;
 import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_MONTH_OFFSET;
@@ -38,6 +41,21 @@ public class Users extends MetricsHolder {
      *
      * @param ctx the context of the request
      */
+    @OpenApi(
+            summary = "Get the amount of active users per week.",
+            operationId = "activeWeek",
+            path = "users/active/week/{offset}/{count}",
+            methods = HttpMethod.GET,
+            tags = {"Users"},
+            responses = {
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = UsersStatistic.class, type = "application/json")})
+            },
+            pathParams = {
+                    @OpenApiParam(name = "offset", type = Integer.class, required = true),
+                    @OpenApiParam(name = "count", type = Integer.class, required = true)
+            }
+    )
     public void activeWeek(Context ctx) {
         var stats = metrics().users().week(offset(ctx, MAX_WEEK_OFFSET), count(ctx, MAX_WEEKS));
         if ("application/json".equalsIgnoreCase(ctx.header("Accept"))) {
@@ -52,6 +70,21 @@ public class Users extends MetricsHolder {
      *
      * @param ctx the context of the request
      */
+    @OpenApi(
+            summary = "Get the amount of active users per month.",
+            operationId = "activeMonth",
+            path = "users/active/month/{offset}/{count}",
+            methods = HttpMethod.GET,
+            tags = {"Users"},
+            responses = {
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = UsersStatistic.class, type = "application/json")})
+            },
+            pathParams = {
+                    @OpenApiParam(name = "offset", type = Integer.class, required = true),
+                    @OpenApiParam(name = "count", type = Integer.class, required = true)
+            }
+    )
     public void activeMonth(Context ctx) {
         var stats = metrics().users().month(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH));
         if ("application/json".equals(ctx.header("Accept"))) {
@@ -67,24 +100,8 @@ public class Users extends MetricsHolder {
     @Override
     public void buildRoutes() {
         path("users", () -> path("active", () -> {
-            get("week/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
-                                                                                 .operation(op -> {
-                                                                                     op.summary("Get the amount of active users per week.");
-                                                                                 })
-                                                                                 .result("200", byte[].class, "image/png")
-                                                                                 .result("200", UsersStatistic.class, "application/json")
-                                                                                 .pathParam("offset", Integer.class, MetricsRoute::offsetWeekDoc)
-                                                                                 .pathParam("count", Integer.class, MetricsRoute::countWeekDoc),
-                    cache(this::activeWeek)));
-            get("month/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
-                                                                                  .operation(op -> {
-                                                                                      op.summary("Get the amount of active users per month.");
-                                                                                  })
-                                                                                  .result("200", byte[].class, "image/png")
-                                                                                  .result("200", UsersStatistic.class, "application/json")
-                                                                                  .pathParam("offset", Integer.class, MetricsRoute::offsetMonthDoc)
-                                                                                  .pathParam("count", Integer.class, MetricsRoute::countMonthDoc),
-                    cache(this::activeMonth)));
+            get("week/{offset}/{count}", this::activeWeek);
+            get("month/{offset}/{count}", this::activeMonth);
         }));
     }
 }

@@ -12,7 +12,8 @@ import de.chojo.repbot.web.routes.v1.metrics.MetricCache;
 import de.chojo.repbot.web.routes.v1.metrics.Reputation;
 import de.chojo.repbot.web.routes.v1.metrics.Service;
 import de.chojo.repbot.web.routes.v1.metrics.Users;
-import io.swagger.v3.oas.models.parameters.Parameter;
+import io.javalin.router.matcher.PathSegment;
+import io.javalin.router.matcher.PathSegment.Parameter;
 
 /**
  * Class for building and managing metric-related routes.
@@ -96,118 +97,5 @@ public class MetricsRoute implements RoutesBuilder {
         messages.buildRoutes();
         users.buildRoutes();
         service.buildRoutes();
-    }
-
-    /**
-     * Sets the documentation for the offset parameter.
-     *
-     * @param parameter the parameter to set the documentation for
-     * @param resolution the resolution of the offset
-     * @param maxValue the maximum value for the offset
-     */
-    private static void offsetDoc(Parameter parameter, String resolution, int maxValue) {
-        setParameter(parameter, "%s offset. 0 is current %s. Max value is %s".formatted(resolution, resolution.toLowerCase(), maxValue));
-    }
-
-    /**
-     * Sets the documentation for the day offset parameter.
-     *
-     * @param p the parameter to set the documentation for
-     */
-    public static void offsetDayDoc(Parameter p) {
-        offsetDoc(p, "Day", MAX_DAY_OFFSET);
-    }
-
-    /**
-     * Sets the documentation for the hour offset parameter.
-     *
-     * @param p the parameter to set the documentation for
-     */
-    public static void offsetHourDoc(Parameter p) {
-        offsetDoc(p, "Hour", MAX_HOUR_OFFSET);
-    }
-
-    /**
-     * Sets the documentation for the week offset parameter.
-     *
-     * @param p the parameter to set the documentation for
-     */
-    public static void offsetWeekDoc(Parameter p) {
-        offsetDoc(p, "Week", MAX_WEEK_OFFSET);
-    }
-
-    /**
-     * Sets the documentation for the month offset parameter.
-     *
-     * @param p the parameter to set the documentation for
-     */
-    public static void offsetMonthDoc(Parameter p) {
-        offsetDoc(p, "Month", MAX_MONTH_OFFSET);
-    }
-
-    /**
-     * Sets the documentation for the year offset parameter.
-     *
-     * @param p the parameter to set the documentation for
-     */
-    public static void offsetYearDoc(Parameter p) {
-        offsetDoc(p, "Year", MAX_YEAR_OFFSET);
-    }
-
-    /**
-     * Sets the documentation for the count parameter.
-     *
-     * @param parameter the parameter to set the documentation for
-     * @param resolution the resolution of the count
-     * @param maxValue the maximum value for the count
-     */
-    private static void countDoc(Parameter parameter, String resolution, int maxValue) {
-        setParameter(parameter, "%s count. Amount of previously %s in the chart. Max value is %s".formatted(resolution, resolution.toLowerCase(), maxValue));
-    }
-
-    /**
-     * Sets the documentation for the hour count parameter.
-     *
-     * @param p the parameter to set the documentation for
-     */
-    public static void countHourDoc(Parameter p) {
-        countDoc(p, "Hours", MAX_HOURS);
-    }
-
-    /**
-     * Sets the documentation for the day count parameter.
-     *
-     * @param p the parameter to set the documentation for
-     */
-    public static void countDayDoc(Parameter p) {
-        countDoc(p, "Days", MAX_DAYS);
-    }
-
-    /**
-     * Sets the documentation for the week count parameter.
-     *
-     * @param p the parameter to set the documentation for
-     */
-    public static void countWeekDoc(Parameter p) {
-        countDoc(p, "Weeks", MAX_WEEKS);
-    }
-
-    /**
-     * Sets the documentation for the month count parameter.
-     *
-     * @param p the parameter to set the documentation for
-     */
-    public static void countMonthDoc(Parameter p) {
-        countDoc(p, "Months", MAX_MONTH);
-    }
-
-    /**
-     * Sets the description for the parameter.
-     *
-     * @param p the parameter to set the description for
-     * @param description the description to set
-     */
-    private static void setParameter(Parameter p, String description) {
-        p.setDescription(description);
     }
 }

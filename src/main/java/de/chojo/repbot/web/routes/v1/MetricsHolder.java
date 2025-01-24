@@ -11,8 +11,7 @@ import de.chojo.repbot.web.routes.RoutesBuilder;
 import de.chojo.repbot.web.routes.v1.metrics.MetricCache;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
-import io.javalin.http.HttpCode;
-import org.eclipse.jetty.http.HttpStatus;
+import io.javalin.http.HttpStatus;
 import org.slf4j.Logger;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -56,7 +55,7 @@ public abstract class MetricsHolder implements RoutesBuilder {
         ctx.header("X-Content-Type-Options", "nosniff");
         ctx.contentType("image/png");
 
-        ctx.result(png).status(HttpStatus.OK_200);
+        ctx.result(png).status(HttpStatus.OK);
     }
 
     /**
@@ -74,7 +73,7 @@ public abstract class MetricsHolder implements RoutesBuilder {
             assertSize(offset, 0, max);
             return offset;
         } catch (NumberFormatException e) {
-            throw new ApiException(HttpCode.BAD_REQUEST, "Offset is not a number, Got: " + param);
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Offset is not a number, Got: " + param);
         }
     }
 
@@ -93,7 +92,7 @@ public abstract class MetricsHolder implements RoutesBuilder {
             assertSize(offset, 2, max);
             return offset;
         } catch (NumberFormatException e) {
-            throw new ApiException(HttpCode.BAD_REQUEST, "Count is not a number, Got: " + param);
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Count is not a number, Got: " + param);
         }
     }
 
@@ -107,10 +106,10 @@ public abstract class MetricsHolder implements RoutesBuilder {
      */
     private void assertSize(int value, int min, int max) {
         if (value < min) {
-            throw new ApiException(HttpCode.BAD_REQUEST, String.format("Value %s is too small. Min: %s", value, min));
+            throw new ApiException(HttpStatus.BAD_REQUEST, String.format("Value %s is too small. Min: %s", value, min));
         }
         if (value > max) {
-            throw new ApiException(HttpCode.BAD_REQUEST, String.format("Value %s is too large. Max: %s", value, max));
+            throw new ApiException(HttpStatus.BAD_REQUEST, String.format("Value %s is too large. Max: %s", value, max));
         }
     }
 
