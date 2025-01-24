@@ -17,14 +17,28 @@ import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.entities.Guild;
 
+/**
+ * Class representing the scan command for the bot.
+ */
 public class Scan implements SlashProvider<Slash> {
 
     private final Scanner scanner;
 
+    /**
+     * Constructs a new Scan command.
+     *
+     * @param guilds the guilds provider
+     * @param configuration the bot configuration
+     */
     public Scan(Guilds guilds, Configuration configuration) {
         scanner = new Scanner(guilds, configuration);
     }
 
+    /**
+     * Defines the slash command for scanning.
+     *
+     * @return the slash command
+     */
     @Override
     public Slash slash() {
         return Slash.of("scan", "command.scan.description")
@@ -41,10 +55,21 @@ public class Scan implements SlashProvider<Slash> {
                 .build();
     }
 
+    /**
+     * Initializes the scanner with the message analyzer.
+     *
+     * @param messageAnalyzer the message analyzer
+     */
     public void lateInit(MessageAnalyzer messageAnalyzer) {
         scanner.lateInit(messageAnalyzer);
     }
 
+    /**
+     * Checks if the scanner is running for the given guild.
+     *
+     * @param guild the guild to check
+     * @return true if the scanner is running, false otherwise
+     */
     public boolean isRunning(Guild guild) {
         return scanner.isRunning(guild);
     }

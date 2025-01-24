@@ -19,6 +19,10 @@ import net.dv8tion.jda.api.entities.Guild;
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 
+/**
+ * Class representing the settings for a guild.
+ * Provides access to various configuration settings such as abuse protection, general settings, reputation settings, etc.
+ */
 public class Settings implements GuildHolder {
     private final RepGuild repGuild;
     private AbuseProtection abuseProtection;
@@ -29,10 +33,20 @@ public class Settings implements GuildHolder {
     private Announcements announcements;
     private Messages messages;
 
+    /**
+     * Constructs a new Settings object for the specified guild.
+     *
+     * @param repGuild the guild for which the settings are being managed
+     */
     public Settings(RepGuild repGuild) {
         this.repGuild = repGuild;
     }
 
+    /**
+     * Retrieves the abuse protection settings for the guild.
+     *
+     * @return the abuse protection settings
+     */
     public AbuseProtection abuseProtection() {
         if (abuseProtection != null) {
             return abuseProtection;
@@ -60,6 +74,11 @@ public class Settings implements GuildHolder {
         return abuseProtection;
     }
 
+    /**
+     * Retrieves the announcements settings for the guild.
+     *
+     * @return the announcements settings
+     */
     public Announcements announcements() {
         if (announcements != null) {
             return announcements;
@@ -80,6 +99,11 @@ public class Settings implements GuildHolder {
         return announcements;
     }
 
+    /**
+     * Retrieves the reputation settings for the guild.
+     *
+     * @return the reputation settings
+     */
     public Reputation reputation() {
         if (reputation != null) {
             return reputation;
@@ -103,6 +127,11 @@ public class Settings implements GuildHolder {
         return reputation;
     }
 
+    /**
+     * Retrieves the general settings for the guild.
+     *
+     * @return the general settings
+     */
     public General general() {
         if (general != null) {
             return general;
@@ -125,6 +154,11 @@ public class Settings implements GuildHolder {
         return general;
     }
 
+    /**
+     * Retrieves the thanking settings for the guild.
+     *
+     * @return the thanking settings
+     */
     public Thanking thanking() {
         if (thanking != null) {
             return thanking;
@@ -144,6 +178,11 @@ public class Settings implements GuildHolder {
         return thanking;
     }
 
+    /**
+     * Retrieves the messages settings for the guild.
+     *
+     * @return the messages settings
+     */
     public Messages messages() {
         if (messages != null) {
             return messages;
@@ -162,6 +201,11 @@ public class Settings implements GuildHolder {
         return messages;
     }
 
+    /**
+     * Retrieves the ranks settings for the guild.
+     *
+     * @return the ranks settings
+     */
     public Ranks ranks() {
         if (ranks != null) {
             return ranks;
@@ -170,15 +214,30 @@ public class Settings implements GuildHolder {
         return ranks;
     }
 
+    /**
+     * Retrieves the RepGuild object associated with this settings.
+     *
+     * @return the RepGuild object
+     */
     public RepGuild repGuild() {
         return repGuild;
     }
 
+    /**
+     * Retrieves the Guild object associated with this settings.
+     *
+     * @return the Guild object
+     */
     @Override
     public Guild guild() {
         return repGuild.guild();
     }
 
+    /**
+     * Retrieves the guild ID associated with this settings.
+     *
+     * @return the guild ID
+     */
     @Override
     public long guildId() {
         return repGuild.guildId();

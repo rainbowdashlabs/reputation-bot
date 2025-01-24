@@ -22,13 +22,28 @@ import java.awt.Color;
 import java.util.Collections;
 import java.util.function.Consumer;
 
+/**
+ * Handler for the "states" slash command.
+ * This command manages the state settings for messages in the guild.
+ */
 public class States implements SlashHandler {
     private final Guilds guilds;
 
+    /**
+     * Constructs a new States handler.
+     *
+     * @param guilds the guilds provider
+     */
     public States(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var settings = guilds.guild(event.getGuild()).settings();
@@ -62,6 +77,16 @@ public class States implements SlashHandler {
                                        .build());
     }
 
+    /**
+     * Creates a StringSelectMenu for the given parameters.
+     *
+     * @param id the menu ID
+     * @param placeholder the placeholder text
+     * @param enabledDescr the description for the enabled state
+     * @param disabledDescr the description for the disabled state
+     * @param state the current state
+     * @return the created StringSelectMenu
+     */
     private StringSelectMenu getMenu(String id, String placeholder, String enabledDescr, String disabledDescr, boolean state) {
         return StringSelectMenu.create(id)
                 .setPlaceholder(placeholder)
@@ -72,6 +97,14 @@ public class States implements SlashHandler {
                 .build();
     }
 
+    /**
+     * Refreshes the menu entry context with the new state.
+     *
+     * @param ctx the entry context
+     * @param result the result consumer
+     * @param context the event context
+     * @param guildSettings the guild settings
+     */
     private void refresh(EntryContext<StringSelectInteractionEvent, StringSelectMenu> ctx, Consumer<Boolean> result, EventContext context, Settings guildSettings) {
         var value = ctx.event().getValues().get(0);
         var copy = ctx.entry().component().createCopy();
@@ -82,6 +115,13 @@ public class States implements SlashHandler {
         ctx.refresh(settings);
     }
 
+    /**
+     * Retrieves the settings message embed for the guild.
+     *
+     * @param context the event context
+     * @param guildSettings the guild settings
+     * @return the settings message embed
+     */
     private MessageEmbed getSettings(EventContext context, Settings guildSettings) {
         var messages = guildSettings.messages();
 

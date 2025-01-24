@@ -17,9 +17,19 @@ import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Represents a statistic of counts over time and provides a method to generate a chart.
+ *
+ * @param stats the list of count statistics
+ */
 public record CountsStatistic(List<CountStatistics> stats) implements ChartProvider {
 
-
+    /**
+     * Gets the count statistics at the specified index.
+     *
+     * @param index the index of the count statistics
+     * @return the count statistics at the specified index, or a default value if the list is empty
+     */
     public CountStatistics get(int index) {
         if (stats.isEmpty()) {
             return new CountStatistics(LocalDateTime.MIN, 0);
@@ -27,6 +37,12 @@ public record CountsStatistic(List<CountStatistics> stats) implements ChartProvi
         return stats.get(index);
     }
 
+    /**
+     * Generates a chart representing the count statistics.
+     *
+     * @param title the title of the chart
+     * @return a byte array representing the chart in PNG format
+     */
     @Override
     public byte[] getChart(String title) {
         var categorySeries = new XYChartBuilder().width(1200).height(600)
@@ -58,6 +74,12 @@ public record CountsStatistic(List<CountStatistics> stats) implements ChartProvi
         }
     }
 
+    /**
+     * Converts a LocalDateTime to a Date object.
+     *
+     * @param date the LocalDateTime to convert
+     * @return the corresponding Date object
+     */
     private Date toDate(LocalDateTime date) {
         return new Date(date.toEpochSecond(ZoneOffset.UTC) * 1000);
     }

@@ -40,6 +40,9 @@ import java.util.concurrent.TimeUnit;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Listener for handling message reaction events in a guild.
+ */
 public class ReactionListener extends ListenerAdapter {
     private static final int REACTION_COOLDOWN = 30;
     private static final Logger log = getLogger(ReactionListener.class);
@@ -50,6 +53,14 @@ public class ReactionListener extends ListenerAdapter {
     private final Cache<Long, Instant> lastReaction = CacheBuilder.newBuilder().expireAfterAccess(60, TimeUnit.SECONDS)
                                                                   .build();
 
+    /**
+     * Constructs a ReactionListener.
+     *
+     * @param guilds the guilds provider
+     * @param localizer the localizer for localization
+     * @param reputationService the reputation service
+     * @param configuration the configuration settings
+     */
     public ReactionListener(Guilds guilds, ILocalizer localizer, ReputationService reputationService, Configuration configuration) {
         this.guilds = guilds;
         this.localizer = localizer;
@@ -57,6 +68,11 @@ public class ReactionListener extends ListenerAdapter {
         this.configuration = configuration;
     }
 
+    /**
+     * Handles the event when a reaction is added to a message.
+     *
+     * @param event the message reaction add event
+     */
     @Override
     public void onMessageReactionAdd(@NotNull MessageReactionAddEvent event) {
         if (event.getUser().isBot() || !event.isFromGuild()) return;
@@ -118,7 +134,11 @@ public class ReactionListener extends ListenerAdapter {
         }
     }
 
-
+    /**
+     * Handles the event when a reaction emoji is removed from a message.
+     *
+     * @param event the message reaction remove emoji event
+     */
     @Override
     public void onMessageReactionRemoveEmoji(@NotNull MessageReactionRemoveEmojiEvent event) {
         if (!event.isFromGuild()) return;
@@ -129,6 +149,11 @@ public class ReactionListener extends ListenerAdapter {
               .forEach(ReputationLogEntry::delete);
     }
 
+    /**
+     * Handles the event when a reaction is removed from a message.
+     *
+     * @param event the message reaction remove event
+     */
     @Override
     public void onMessageReactionRemove(@NotNull MessageReactionRemoveEvent event) {
         if (!event.isFromGuild()) return;
@@ -147,6 +172,11 @@ public class ReactionListener extends ListenerAdapter {
         }
     }
 
+    /**
+     * Handles the event when all reactions are removed from a message.
+     *
+     * @param event the message reaction remove all event
+     */
     @Override
     public void onMessageReactionRemoveAll(@NotNull MessageReactionRemoveAllEvent event) {
         guilds.guild(event.getGuild()).reputation().log().messageLog(event.getMessageIdLong(), 50).stream()
@@ -154,6 +184,12 @@ public class ReactionListener extends ListenerAdapter {
               .forEach(ReputationLogEntry::delete);
     }
 
+    /**
+     * Checks if the member is on cooldown for reacting.
+     *
+     * @param member the member to check
+     * @return true if the member is on cooldown, false otherwise
+     */
     public boolean isCooldown(Member member) {
         try {
             return lastReaction.get(member.getIdLong(), () -> Instant.MIN)
@@ -164,6 +200,11 @@ public class ReactionListener extends ListenerAdapter {
         return true;
     }
 
+    /**
+     * Records the time when the member reacted.
+     *
+     * @param member the member who reacted
+     */
     public void reacted(Member member) {
         lastReaction.put(member.getIdLong(), Instant.now());
     }

@@ -31,6 +31,9 @@ import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Class responsible for resolving context for messages and voice states.
+ */
 public class ContextResolver {
     private static final Logger log = getLogger(ContextResolver.class);
     private final Voice voiceData;
@@ -46,6 +49,12 @@ public class ContextResolver {
                                                                               .expireAfterWrite(10, TimeUnit.SECONDS)
                                                                               .build();
 
+    /**
+     * Constructs a ContextResolver instance with the specified voice data and configuration.
+     *
+     * @param voiceData     the voice data provider
+     * @param configuration the configuration settings
+     */
     public ContextResolver(Voice voiceData, Configuration configuration) {
         this.voiceData = voiceData;
         this.configuration = configuration;
@@ -57,20 +66,29 @@ public class ContextResolver {
      * Only members which have written in the last 100 messages which are not older than the max history and are not
      * send before the first message of the message author are returned
      *
-     * @param message  message to determine channel, author and start time
-     * @param settings setting sof the guild.
-     * @return list of members which have written in this channel
+     * @param target   the target member
+     * @param message  the message to determine channel, author, and start time
+     * @param settings the settings of the guild
+     * @return the message context
      */
     @NotNull
     public MessageContext getChannelContext(Member target, Message message, @Nullable Settings settings) {
         try {
             return messageContextCache.get(message.getIdLong(), () -> retrieveChannelContext(target, message, settings).resolve());
         } catch (ExecutionException e) {
-            log.error("Could not conpute channel context.", e);
+            log.error("Could not compute channel context.", e);
         }
         return MessageContext.byMessageAndMember(message, target);
     }
 
+    /**
+     * Retrieves the channel context for the specified message.
+     *
+     * @param target   the target member
+     * @param message  the message to determine channel, author, and start time
+     * @param settings the settings of the guild
+     * @return the message context
+     */
     private MessageContext retrieveChannelContext(Member target, Message message, Settings settings) {
         var history = message.getChannel().getHistoryBefore(message, configuration.analyzerSettings().historySize())
                              .complete();
@@ -92,12 +110,12 @@ public class ContextResolver {
     }
 
     /**
-     * Add the latest authors.
+     * Adds the latest authors to the context.
      * <p>
-     * Authors are considered latest when they have written a message in the last {@link AbuseProtection#minMessages()}
+     * Authors are considered latest when they have written a message in the last {@link AbuseProtection#minMessages()}.
      *
-     * @param context  context to add
-     * @param settings settings
+     * @param context  the message context
+     * @param settings the settings of the guild
      */
     private void addLatestAuthors(MessageContext context, @Nullable Settings settings) {
         var maxAge = Instant.now().minus(configuration.analyzerSettings().latestMaxHours(), ChronoUnit.HOURS);
@@ -111,12 +129,12 @@ public class ContextResolver {
     }
 
     /**
-     * Add the recent authors.
+     * Adds the recent authors to the context.
      * <p>
-     * Authors are considered recent when they have written a message in the {@link AbuseProtection#maxMessageAge()}
+     * Authors are considered recent when they have written a message in the {@link AbuseProtection#maxMessageAge()}.
      *
-     * @param context  context to add
-     * @param settings settings
+     * @param context  the message context
+     * @param settings the settings of the guild
      */
     private void addRecentAuthors(MessageContext context, Settings settings) {
         var maxAge = Instant.now().minus(settings == null ? Long.MAX_VALUE : settings.abuseProtection()
@@ -128,11 +146,11 @@ public class ContextResolver {
     }
 
     /**
-     * Add the ids and messages which were newer than oldest to the context
+     * Adds the IDs and messages which were newer than the oldest to the context.
      *
-     * @param messages messages
-     * @param context  context
-     * @param oldest   oldest allowed message
+     * @param messages the messages
+     * @param context  the message context
+     * @param oldest   the oldest allowed message
      */
     private void addMembersAfter(Collection<Message> messages, MessageContext context, Instant oldest) {
         // filter message for only recent messages and after the first message of the user.
@@ -151,6 +169,13 @@ public class ContextResolver {
         context.addIds(memberIds);
     }
 
+    /**
+     * Finds the oldest message by the target member in the context.
+     *
+     * @param context the message context
+     * @param maxAge  the maximum age of the message
+     * @return the oldest message instant
+     */
     private Instant findOldestMessageByTarget(MessageContext context, Instant maxAge) {
         return context.rawMessages().stream()
                       .filter(mes -> Verifier.equalSnowflake(mes.getAuthor(), context.user()))
@@ -160,6 +185,14 @@ public class ContextResolver {
                       .orElse(maxAge);
     }
 
+    /**
+     * Gets the voice context for the specified message.
+     *
+     * @param target   the target member
+     * @param message  the message to determine channel, author, and start time
+     * @param settings the settings of the guild
+     * @return the message context
+     */
     public MessageContext getVoiceContext(Member target, Message message, @Nullable Settings settings) {
         try {
             return voiceContextCache.get(message.getIdLong(), () -> retrieveVoiceContext(target, message, settings).resolve()
@@ -170,6 +203,14 @@ public class ContextResolver {
         return MessageContext.byMessageAndMember(message, target);
     }
 
+    /**
+     * Retrieves the voice context for the specified message.
+     *
+     * @param target   the target member
+     * @param message  the message to determine channel, author, and start time
+     * @param settings the settings of the guild
+     * @return the message context
+     */
     private MessageContext retrieveVoiceContext(Member target, Message message, @Nullable Settings settings) {
         var context = MessageContext.byMessageAndMember(message, target);
         var voiceState = target.getVoiceState();
@@ -193,10 +234,25 @@ public class ContextResolver {
         return context;
     }
 
+    /**
+     * Gets the combined context for the specified message.
+     *
+     * @param message  the message to determine channel, author, and start time
+     * @param settings the settings of the guild
+     * @return the combined message context
+     */
     public MessageContext getCombinedContext(Message message, @Nullable Settings settings) {
         return getCombinedContext(message.getMember(), message, settings);
     }
 
+    /**
+     * Gets the combined context for the specified member and message.
+     *
+     * @param target   the target member
+     * @param message  the message to determine channel, author, and start time
+     * @param settings the settings of the guild
+     * @return the combined message context
+     */
     public MessageContext getCombinedContext(Member target, Message message, @Nullable Settings settings) {
         return getChannelContext(target, message, settings)
                 .combine(getVoiceContext(target, message, settings));

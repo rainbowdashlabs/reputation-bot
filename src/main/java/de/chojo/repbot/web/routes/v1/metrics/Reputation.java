@@ -25,11 +25,25 @@ import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_YEAR_OFFSET;
 import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
 
+/**
+ * Class for handling reputation metrics routes.
+ */
 public class Reputation extends MetricsHolder {
+    /**
+     * Constructs a new Reputation instance.
+     *
+     * @param metrics the metrics provider
+     * @param cache   the metric cache
+     */
     public Reputation(Metrics metrics, MetricCache cache) {
         super(cache, metrics);
     }
 
+    /**
+     * Retrieves the reputation count per week.
+     *
+     * @param ctx the Javalin context
+     */
     @OpenApi(
             summary = "Get the counts of given reputation per week.",
             operationId = "countWeek",
@@ -54,6 +68,11 @@ public class Reputation extends MetricsHolder {
         }
     }
 
+    /**
+     * Retrieves the reputation count per month.
+     *
+     * @param ctx the Javalin context
+     */
     @OpenApi(
             summary = "Get the counts of given reputation per month.",
             operationId = "countMonth",
@@ -78,6 +97,11 @@ public class Reputation extends MetricsHolder {
         }
     }
 
+    /**
+     * Retrieves the reputation count per week by type.
+     *
+     * @param ctx the Javalin context
+     */
     @OpenApi(
             summary = "Get the counts of given reputation per week split into type.",
             operationId = "countTypeWeek",
@@ -102,6 +126,11 @@ public class Reputation extends MetricsHolder {
         }
     }
 
+    /**
+     * Retrieves the reputation count per month by type.
+     *
+     * @param ctx the Javalin context
+     */
     @OpenApi(
             summary = "Get the counts of given reputation per month split into type.",
             operationId = "countTypeMonth",
@@ -126,6 +155,11 @@ public class Reputation extends MetricsHolder {
         }
     }
 
+    /**
+     * Retrieves the total reputation per week by type.
+     *
+     * @param ctx the Javalin context
+     */
     @OpenApi(
             summary = "Get the total count of reputation in these weeks split into type.",
             operationId = "totalTypeWeek",
@@ -150,6 +184,11 @@ public class Reputation extends MetricsHolder {
         }
     }
 
+    /**
+     * Retrieves the total reputation per month by type.
+     *
+     * @param ctx the Javalin context
+     */
     @OpenApi(
             summary = "Get the total count of reputation in these months split into type.",
             operationId = "totalTypeMonth",
@@ -173,6 +212,12 @@ public class Reputation extends MetricsHolder {
             writeImage(ctx, stats.getChart("Total reputation per month by type"));
         }
     }
+
+    /**
+     * Retrieves the total reputation per week.
+     *
+     * @param ctx the Javalin context
+     */
 
     @OpenApi(
             summary = "Get the total count of reputation in these weeks.",
@@ -198,6 +243,11 @@ public class Reputation extends MetricsHolder {
         }
     }
 
+    /**
+     * Retrieves the total reputation per month.
+     *
+     * @param ctx the Javalin context
+     */
     @OpenApi(
             summary = "Get the total count of reputation in these months.",
             operationId = "totalMonth",
@@ -222,6 +272,11 @@ public class Reputation extends MetricsHolder {
         }
     }
 
+    /**
+     * Retrieves the reputation changes per week.
+     *
+     * @param ctx the Javalin context
+     */
     @OpenApi(
             summary = "Get the changed reputation per week.",
             operationId = "changesWeek",
@@ -246,6 +301,11 @@ public class Reputation extends MetricsHolder {
         }
     }
 
+    /**
+     * Retrieves the reputation changes per month.
+     *
+     * @param ctx the Javalin context
+     */
     @OpenApi(
             summary = "Get the changed reputation per month.",
             operationId = "changesMonth",
@@ -270,6 +330,11 @@ public class Reputation extends MetricsHolder {
         }
     }
 
+    /**
+     * Retrieves the reputation given per day of the week (weekly average).
+     *
+     * @param ctx the Javalin context
+     */
     @OpenApi(
             summary = "Get reputation per day of week.",
             operationId = "dowWeek",
@@ -293,6 +358,11 @@ public class Reputation extends MetricsHolder {
         }
     }
 
+    /**
+     * Retrieves the reputation given per day of the week (monthly average).
+     *
+     * @param ctx the Javalin context
+     */
     @OpenApi(
             summary = "Get average reputation per day of week in a month.",
             operationId = "dowMonth",
@@ -316,6 +386,11 @@ public class Reputation extends MetricsHolder {
         }
     }
 
+    /**
+     * Retrieves the reputation given per day of the week (yearly average).
+     *
+     * @param ctx the Javalin context
+     */
     @OpenApi(
             summary = "Get average reputation per day of week in a year.",
             operationId = "dowYear",
@@ -339,6 +414,9 @@ public class Reputation extends MetricsHolder {
         }
     }
 
+    /**
+     * Builds the routes for reputation metrics.
+     */
     @Override
     public void buildRoutes() {
         path("reputation", () -> {

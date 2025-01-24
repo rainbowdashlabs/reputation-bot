@@ -14,12 +14,28 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 import java.util.function.Consumer;
 
+/**
+ * Handler for the "add role" slash command, which adds a role with a specified reputation.
+ */
 public class Add extends BaseRoleModifier {
 
+    /**
+     * Constructs an Add handler with the specified refresh function and guilds provider.
+     *
+     * @param refresh the refresh function
+     * @param guilds the guilds provider
+     */
     public Add(Refresh refresh, Guilds guilds) {
         super(refresh, guilds);
     }
 
+    /**
+     * Modifies the roles by adding a new role with the specified reputation.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     * @param refresh the consumer to refresh the message embed
+     */
     @Override
     public void modify(SlashCommandInteractionEvent event, EventContext context, Consumer<MessageEmbed> refresh) {
         var role = event.getOption("role").getAsRole();

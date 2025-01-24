@@ -18,13 +18,26 @@ import org.slf4j.Logger;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Utility class for handling message reactions.
+ */
 public final class Messages {
     private static final Logger log = getLogger(Messages.class);
 
+    /**
+     * Private constructor to prevent instantiation.
+     */
     private Messages() {
         throw new UnsupportedOperationException("This is a utility class.");
     }
 
+    /**
+     * Adds a reaction to a message based on the settings.
+     *
+     * @param message the message to add a reaction to
+     * @param refMessage an optional reference message to also add the reaction to
+     * @param settings the settings containing the reaction information
+     */
     public static void markMessage(Message message, @Nullable Message refMessage, Settings settings) {
         var reaction = settings.thanking().reactions().mainReaction();
         if (settings.thanking().reactions().reactionIsEmote()) {
@@ -38,6 +51,12 @@ public final class Messages {
         }
     }
 
+    /**
+     * Adds an emoji reaction to a message.
+     *
+     * @param message the message to add a reaction to
+     * @param emote the emoji to add as a reaction
+     */
     public static void markMessage(Message message, Emoji emote) {
         if (PermissionUtil.checkPermission(message.getGuildChannel().getPermissionContainer(), message.getGuild()
                                                                                                       .getSelfMember(), Permission.MESSAGE_ADD_REACTION)) {
@@ -45,6 +64,12 @@ public final class Messages {
         }
     }
 
+    /**
+     * Adds a Unicode emoji reaction to a message.
+     *
+     * @param message the message to add a reaction to
+     * @param emoji the Unicode emoji to add as a reaction
+     */
     public static void markMessage(Message message, String emoji) {
         if (PermissionUtil.checkPermission(message.getGuildChannel().getPermissionContainer(), message.getGuild()
                                                                                                       .getSelfMember(), Permission.MESSAGE_ADD_REACTION)) {
@@ -52,6 +77,11 @@ public final class Messages {
         }
     }
 
+    /**
+     * Handles the reaction addition action, ignoring specific error responses.
+     *
+     * @param action the RestAction to handle
+     */
     private static void handleMark(RestAction<Void> action) {
         action.queue(RestAction.getDefaultSuccess(),
                 ErrorResponseException.ignore(

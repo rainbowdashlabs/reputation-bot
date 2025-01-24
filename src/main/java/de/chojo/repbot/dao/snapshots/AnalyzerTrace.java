@@ -15,7 +15,21 @@ import net.dv8tion.jda.api.utils.TimeFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a trace of the analyzer, containing the result entry and a list of submit result entries.
+ *
+ * @param resultEntry the result entry of the analyzer
+ * @param submitResultEntries the list of submit result entries
+ */
 public record AnalyzerTrace(ResultEntry resultEntry, List<SubmitResultEntry> submitResultEntries) {
+
+    /**
+     * Builds a list of message embeds representing the analyzer trace.
+     *
+     * @param guild   the guild where the trace is being built
+     * @param context the event context
+     * @return a list of message embeds
+     */
     public List<MessageEmbed> embed(Guild guild, EventContext context) {
         List<MessageEmbed> embeds = new ArrayList<>();
         if (resultEntry != null) {

@@ -15,7 +15,15 @@ import de.chojo.repbot.commands.reactions.handler.Main;
 import de.chojo.repbot.commands.reactions.handler.Remove;
 import de.chojo.repbot.dao.provider.Guilds;
 
+/**
+ * Represents the slash command for managing reactions in a guild.
+ */
 public class Reactions extends SlashCommand {
+    /**
+     * Constructs a Reactions command with the specified guilds provider.
+     *
+     * @param guilds the guilds provider
+     */
     public Reactions(Guilds guilds) {
         super(Slash.of("reactions", "command.reactions.description")
                 .guildOnly()

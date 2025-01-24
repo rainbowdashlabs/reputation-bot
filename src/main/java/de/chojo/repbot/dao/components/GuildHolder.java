@@ -7,8 +7,22 @@ package de.chojo.repbot.dao.components;
 
 import net.dv8tion.jda.api.entities.Guild;
 
+/**
+ * Interface representing a holder for a Guild.
+ */
 public interface GuildHolder {
+
+    /**
+     * Gets the Guild associated with this holder.
+     *
+     * @return the Guild
+     */
     Guild guild();
 
+    /**
+     * Gets the ID of the Guild associated with this holder.
+     *
+     * @return the Guild ID
+     */
     long guildId();
 }

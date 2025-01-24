@@ -29,6 +29,9 @@ import java.util.concurrent.TimeUnit;
 import static de.chojo.repbot.util.Guilds.prettyName;
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Service class for handling self-cleanup operations.
+ */
 public class SelfCleanupService implements Runnable {
     private static final Logger log = getLogger(SelfCleanupService.class);
     private final ShardManager shardManager;
@@ -37,6 +40,15 @@ public class SelfCleanupService implements Runnable {
     private final Configuration configuration;
     private final Cleanup cleanup;
 
+    /**
+     * Constructs a new SelfCleanupService.
+     *
+     * @param shardManager the shard manager
+     * @param localizer the localizer
+     * @param guilds the guilds provider
+     * @param cleanup the cleanup access object
+     * @param configuration the configuration object
+     */
     private SelfCleanupService(ShardManager shardManager, ILocalizer localizer, Guilds guilds, Cleanup cleanup, Configuration configuration) {
         this.shardManager = shardManager;
         this.localizer = localizer;
@@ -45,12 +57,24 @@ public class SelfCleanupService implements Runnable {
         this.configuration = configuration;
     }
 
+    /**
+     * Creates and schedules a new SelfCleanupService.
+     *
+     * @param shardManager the shard manager
+     * @param localizer the localizer
+     * @param guilds the guilds provider
+     * @param cleanup the cleanup access object
+     * @param configuration the configuration object
+     * @param service the scheduled executor service
+     */
     public static void create(ShardManager shardManager, ILocalizer localizer, Guilds guilds, Cleanup cleanup, Configuration configuration, ScheduledExecutorService service) {
         var selfCleanupService = new SelfCleanupService(shardManager, localizer, guilds, cleanup, configuration);
         service.scheduleAtFixedRate(selfCleanupService, 1, 60, TimeUnit.MINUTES);
     }
 
-
+    /**
+     * Runs the self-cleanup process.
+     */
     @Override
     public void run() {
         if (!configuration.selfCleanup().isActive()) return;
@@ -76,7 +100,6 @@ public class SelfCleanupService implements Runnable {
                 repGuild.cleanup().cleanupDone();
                 continue;
             }
-
 
             var channels = repGuild.settings().thanking().channels();
             if (channels.isWhitelist()) {
@@ -117,10 +140,15 @@ public class SelfCleanupService implements Runnable {
         }
     }
 
+    /**
+     * Prompts the guild for cleanup.
+     *
+     * @param guild the guild to prompt
+     */
     private void promptCleanup(Guild guild) {
         var repGuild = guilds.guild(guild);
 
-        // Check if a prompt was already send
+        // Check if a prompt was already sent
         if (repGuild.cleanup().getCleanupPromptTime().isPresent()) return;
 
         repGuild.cleanup().selfCleanupPrompt();
@@ -137,10 +165,15 @@ public class SelfCleanupService implements Runnable {
         log.info(LogNotify.STATUS, "Prompted guild self cleanup.");
     }
 
+    /**
+     * Notifies the guild for cleanup and leaves the guild.
+     *
+     * @param guild the guild to notify and leave
+     */
     private void notifyCleanup(Guild guild) {
         var clean = guilds.guild(guild).cleanup();
         if (clean.getCleanupPromptTime().get().isAfter(configuration.selfCleanup().getLeaveDaysOffset())) {
-            log.debug("Prompt was send {}/{} days ago on {}",
+            log.debug("Prompt was sent {}/{} days ago on {}",
                     Math.abs(Duration.between(clean.getCleanupPromptTime().get(),
                             LocalDateTime.now().atZone(ZoneOffset.UTC)).toDays()),
                     configuration.selfCleanup().leaveDays(),
@@ -160,6 +193,12 @@ public class SelfCleanupService implements Runnable {
         clean.cleanupDone();
     }
 
+    /**
+     * Notifies the guild with the given embed message.
+     *
+     * @param guild the guild to notify
+     * @param embed the embed message to send
+     */
     private void notifyGuild(Guild guild, MessageEmbed embed) {
         var selfMember = guild.getSelfMember();
         guild.retrieveMemberById(guild.getOwnerIdLong())
@@ -176,6 +215,9 @@ public class SelfCleanupService implements Runnable {
         }
     }
 
+    /**
+     * Enum representing inactivity markers.
+     */
     private enum InactivityMarker {
         NO_REPUTATION,
         NO_CHANNEL,

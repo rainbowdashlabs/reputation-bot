@@ -17,19 +17,33 @@ import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Class for handling voice-related data operations.
+ */
 public class Voice {
+    /**
+     * Logger for logging events.
+     */
     private static final Logger log = getLogger(Voice.class);
+    /**
+     * Configuration settings.
+     */
     private final Configuration configuration;
 
+    /**
+     * Constructs a new Voice instance.
+     *
+     * @param configuration the configuration settings
+     */
     public Voice(Configuration configuration) {
         this.configuration = configuration;
     }
 
     /**
-     * Log that a user was in a channel with another user.
+     * Logs that a user was in a channel with other users.
      *
-     * @param source the user which has seen the users.
-     * @param seen   the members which were seen by the user lately
+     * @param source the user who saw the other users
+     * @param seen the members who were seen by the user
      */
     public void logUser(Member source, List<Member> seen) {
         query("""
@@ -47,13 +61,13 @@ public class Voice {
     }
 
     /**
-     * Retrieve the last users which were in a voice channel with the requested user in the last minutes.
+     * Retrieves the last users who were in a voice channel with the requested user in the last minutes.
      *
-     * @param user    user to retrieve other users for
-     * @param guild   guild to check
+     * @param user the user to retrieve other users for
+     * @param guild the guild to check
      * @param minutes the amount of past minutes
-     * @param limit   max number of returned ids
-     * @return list of ids
+     * @param limit the maximum number of returned IDs
+     * @return a list of user IDs
      */
     public List<Long> getPastUser(User user, Guild guild, int minutes, int limit) {
         return query("""
@@ -81,7 +95,7 @@ public class Voice {
     }
 
     /**
-     * Cleanup the voice activity
+     * Cleans up the voice activity data.
      */
     public void cleanup() {
         query("""

@@ -13,13 +13,27 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 import java.util.Collections;
 
+/**
+ * Handles the removal of a donor role from a guild.
+ */
 public class RemoveDonor implements SlashHandler {
     private final Guilds guilds;
 
+    /**
+     * Constructs a RemoveDonor handler with the specified guilds provider.
+     *
+     * @param guilds the guilds provider
+     */
     public RemoveDonor(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event for removing a donor role.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var role = event.getOption("role").getAsRole();

@@ -26,11 +26,25 @@ import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_WEEK_OFFSET;
 import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
 
+/**
+ * Handles the metrics related to messages.
+ */
 public class Messages extends MetricsHolder {
+    /**
+     * Constructs a new Messages handler.
+     *
+     * @param metrics the Metrics provider
+     * @param cache the MetricCache
+     */
     public Messages(Metrics metrics, MetricCache cache) {
         super(cache, metrics);
     }
 
+    /**
+     * Handles the request to get the count of messages analyzed per hour.
+     *
+     * @param ctx the Javalin context
+     */
     @OpenApi(
             summary = "Get the counts of analyzed messages per hour.",
             operationId = "countHour",
@@ -55,6 +69,11 @@ public class Messages extends MetricsHolder {
         }
     }
 
+    /**
+     * Handles the request to get the count of messages analyzed per day.
+     *
+     * @param ctx the Javalin context
+     */
     @OpenApi(
             summary = "Get the counts of analyzed messages per day.",
             operationId = "countDay",
@@ -79,6 +98,11 @@ public class Messages extends MetricsHolder {
         }
     }
 
+    /**
+     * Handles the request to get the count of messages analyzed per week.
+     *
+     * @param ctx the Javalin context
+     */
     @OpenApi(
             summary = "Get the counts of analyzed messages per week.",
             operationId = "countWeek",
@@ -103,6 +127,11 @@ public class Messages extends MetricsHolder {
         }
     }
 
+    /**
+     * Handles the request to get the count of messages analyzed per month.
+     *
+     * @param ctx the Javalin context
+     */
     @OpenApi(
             summary = "Get the counts of analyzed messages per month.",
             operationId = "countMonth",
@@ -127,6 +156,11 @@ public class Messages extends MetricsHolder {
         }
     }
 
+    /**
+     * Handles the request to get the total count of messages analyzed per day.
+     *
+     * @param ctx the Javalin context
+     */
     @OpenApi(
             summary = "Get the total count of analyzed messages in these days.",
             operationId = "totalDay",
@@ -151,6 +185,11 @@ public class Messages extends MetricsHolder {
         }
     }
 
+    /**
+     * Handles the request to get the total count of messages analyzed per week.
+     *
+     * @param ctx the Javalin context
+     */
     @OpenApi(
             summary = "Get the total count of analyzed messages in these weeks.",
             operationId = "totalWeek",
@@ -175,6 +214,11 @@ public class Messages extends MetricsHolder {
         }
     }
 
+    /**
+     * Handles the request to get the total count of messages analyzed per month.
+     *
+     * @param ctx the Javalin context
+     */
     @OpenApi(
             summary = "Get the total count of analyzed messages in these months.",
             operationId = "totalMonth",
@@ -199,6 +243,9 @@ public class Messages extends MetricsHolder {
         }
     }
 
+    /**
+     * Builds the routes for message metrics.
+     */
     @Override
     public void buildRoutes() {
         path("messages", () -> {
