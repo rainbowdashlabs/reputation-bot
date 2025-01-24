@@ -12,7 +12,6 @@ import de.chojo.repbot.web.routes.v1.metrics.MetricCache;
 import de.chojo.repbot.web.routes.v1.metrics.Reputation;
 import de.chojo.repbot.web.routes.v1.metrics.Service;
 import de.chojo.repbot.web.routes.v1.metrics.Users;
-import io.swagger.v3.oas.models.parameters.Parameter;
 
 public class MetricsRoute implements RoutesBuilder {
 
@@ -51,53 +50,5 @@ public class MetricsRoute implements RoutesBuilder {
         messages.buildRoutes();
         users.buildRoutes();
         service.buildRoutes();
-    }
-
-    private static void offsetDoc(Parameter parameter, String resolution, int maxValue) {
-        setParameter(parameter, "%s offset. 0 is current %s. Max value is %s".formatted(resolution, resolution.toLowerCase(), maxValue));
-    }
-
-    public static void offsetDayDoc(Parameter p) {
-        offsetDoc(p, "Day", MAX_DAY_OFFSET);
-    }
-
-    public static void offsetHourDoc(Parameter p) {
-        offsetDoc(p, "Hour", MAX_HOUR_OFFSET);
-    }
-
-    public static void offsetWeekDoc(Parameter p) {
-        offsetDoc(p, "Week", MAX_WEEK_OFFSET);
-    }
-
-    public static void offsetMonthDoc(Parameter p) {
-        offsetDoc(p, "Month", MAX_MONTH_OFFSET);
-    }
-
-    public static void offsetYearDoc(Parameter p) {
-        offsetDoc(p, "Year", MAX_YEAR_OFFSET);
-    }
-
-    private static void countDoc(Parameter parameter, String resolution, int maxValue) {
-        setParameter(parameter, "%s count. Amount of previously %s in the chart. Max value is %s".formatted(resolution, resolution.toLowerCase(), maxValue));
-    }
-
-    public static void countHourDoc(Parameter p) {
-        countDoc(p, "Hours", MAX_HOURS);
-    }
-
-    public static void countDayDoc(Parameter p) {
-        countDoc(p, "Days", MAX_DAYS);
-    }
-
-    public static void countWeekDoc(Parameter p) {
-        countDoc(p, "Weeks", MAX_WEEKS);
-    }
-
-    public static void countMonthDoc(Parameter p) {
-        countDoc(p, "Months", MAX_MONTH);
-    }
-
-    private static void setParameter(Parameter p, String description) {
-        p.setDescription(description);
     }
 }

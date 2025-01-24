@@ -72,10 +72,10 @@ public class MetricCache implements RoutesBuilder {
         ResponseCache(Context ctx) {
             route = ctx.path();
             accept = ctx.header("Accept");
-            header = ctx.res.getHeaderNames().stream().collect(Collectors.toMap(e -> e, ctx.res::getHeader));
-            status = ctx.status();
-            contentType = ctx.res.getContentType();
-            try (var in = ctx.resultStream()) {
+            header = ctx.res().getHeaderNames().stream().collect(Collectors.toMap(e -> e, ctx.res()::getHeader));
+            status = ctx.statusCode();
+            contentType = ctx.res().getContentType();
+            try (var in = ctx.resultInputStream()) {
                 body = in.readAllBytes();
                 ctx.result(body);
             } catch (IOException e) {
@@ -86,7 +86,7 @@ public class MetricCache implements RoutesBuilder {
         void apply(Context ctx) {
             ctx.status(status);
             for (var header : header.entrySet()) {
-                if (ctx.res.containsHeader(header.getKey())) continue;
+                if (ctx.res().containsHeader(header.getKey())) continue;
                 ctx.header(header.getKey(), header.getValue());
             }
             ctx.contentType(contentType);
