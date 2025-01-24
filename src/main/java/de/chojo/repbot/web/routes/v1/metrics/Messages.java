@@ -34,7 +34,7 @@ public class Messages extends MetricsHolder {
     @OpenApi(
             summary = "Get the counts of analyzed messages per hour.",
             operationId = "countHour",
-            path = "hour/{offset}/{count}",
+            path = "messages/hour/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Messages"},
             responses = {
@@ -58,7 +58,7 @@ public class Messages extends MetricsHolder {
     @OpenApi(
             summary = "Get the counts of analyzed messages per day.",
             operationId = "countDay",
-            path = "day/{offset}/{count}",
+            path = "messages/day/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Messages"},
             responses = {
@@ -82,7 +82,7 @@ public class Messages extends MetricsHolder {
     @OpenApi(
             summary = "Get the counts of analyzed messages per week.",
             operationId = "countWeek",
-            path = "week/{offset}/{count}",
+            path = "messages/week/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Messages"},
             responses = {
@@ -106,7 +106,7 @@ public class Messages extends MetricsHolder {
     @OpenApi(
             summary = "Get the counts of analyzed messages per month.",
             operationId = "countMonth",
-            path = "month/{offset}/{count}",
+            path = "messages/month/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Messages"},
             responses = {
@@ -130,7 +130,7 @@ public class Messages extends MetricsHolder {
     @OpenApi(
             summary = "Get the total count of analyzed messages in these days.",
             operationId = "totalDay",
-            path = "day/{offset}/{count}",
+            path = "messages/day/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Messages"},
             responses = {
@@ -154,7 +154,7 @@ public class Messages extends MetricsHolder {
     @OpenApi(
             summary = "Get the total count of analyzed messages in these weeks.",
             operationId = "totalWeek",
-            path = "week/{offset}/{count}",
+            path = "messages/week/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Messages"},
             responses = {
@@ -178,7 +178,7 @@ public class Messages extends MetricsHolder {
     @OpenApi(
             summary = "Get the total count of analyzed messages in these months.",
             operationId = "totalMonth",
-            path = "month/{offset}/{count}",
+            path = "messages/month/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Messages"},
             responses = {

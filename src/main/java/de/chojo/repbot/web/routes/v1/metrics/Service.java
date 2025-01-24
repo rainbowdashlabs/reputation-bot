@@ -8,7 +8,6 @@ package de.chojo.repbot.web.routes.v1.metrics;
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.dao.snapshots.statistics.LabeledCountStatistic;
 import de.chojo.repbot.web.routes.v1.MetricsHolder;
-import de.chojo.repbot.web.routes.v1.MetricsRoute;
 import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
@@ -35,7 +34,7 @@ public class Service extends MetricsHolder {
     @OpenApi(
             summary = "Get the counts of handled interactions per hour.",
             operationId = "countHour",
-            path = "hour/{offset}/{count}",
+            path = "service/count/hour/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"User"},
             responses = {
@@ -43,8 +42,8 @@ public class Service extends MetricsHolder {
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = LabeledCountStatistic.class, type = "application/json")})
             },
             pathParams = {
-                    @OpenApiParam(name = "offset", type = Integer.class),
-                    @OpenApiParam(name = "count", type = Integer.class)
+                    @OpenApiParam(name = "offset", type = Integer.class, required = true),
+                    @OpenApiParam(name = "count", type = Integer.class, required = true)
             }
     )
     public void countHour(Context ctx) {
@@ -59,7 +58,7 @@ public class Service extends MetricsHolder {
     @OpenApi(
             summary = "Get the counts of handled interactions per day.",
             operationId = "countDay",
-            path = "day/{offset}/{count}",
+            path = "service/count/day/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"User"},
             responses = {
@@ -67,8 +66,8 @@ public class Service extends MetricsHolder {
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = LabeledCountStatistic.class, type = "application/json")})
             },
             pathParams = {
-                    @OpenApiParam(name = "offset", type = Integer.class),
-                    @OpenApiParam(name = "count", type = Integer.class)
+                    @OpenApiParam(name = "offset", type = Integer.class, required = true),
+                    @OpenApiParam(name = "count", type = Integer.class, required = true)
             }
     )
     public void countDay(Context ctx) {
@@ -83,7 +82,7 @@ public class Service extends MetricsHolder {
     @OpenApi(
             summary = "Get the counts of handled interactions per week.",
             operationId = "countWeek",
-            path = "week/{offset}/{count}",
+            path = "service/count/week/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"User"},
             responses = {
@@ -91,8 +90,8 @@ public class Service extends MetricsHolder {
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = LabeledCountStatistic.class, type = "application/json")})
             },
             pathParams = {
-                    @OpenApiParam(name = "offset", type = Integer.class),
-                    @OpenApiParam(name = "count", type = Integer.class)
+                    @OpenApiParam(name = "offset", type = Integer.class, required = true),
+                    @OpenApiParam(name = "count", type = Integer.class, required = true)
             }
     )
     public void countWeek(Context ctx) {
@@ -107,7 +106,7 @@ public class Service extends MetricsHolder {
     @OpenApi(
             summary = "Get the counts of handled interactions per month.",
             operationId = "countMonth",
-            path = "month/{offset}/{count}",
+            path = "service/count/month/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"User"},
             responses = {
@@ -115,8 +114,8 @@ public class Service extends MetricsHolder {
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = LabeledCountStatistic.class, type = "application/json")})
             },
             pathParams = {
-                    @OpenApiParam(name = "offset", type = Integer.class),
-                    @OpenApiParam(name = "count", type = Integer.class)
+                    @OpenApiParam(name = "offset", type = Integer.class, required = true),
+                    @OpenApiParam(name = "count", type = Integer.class, required = true)
             }
     )
     public void countMonth(Context ctx) {
@@ -130,11 +129,12 @@ public class Service extends MetricsHolder {
 
     @Override
     public void buildRoutes() {
-        path("service", () -> path("count", () -> {
-            get("hour/{offset}/{count}", this::countHour);
-            get("day/{offset}/{count}", this::countDay);
-            get("week/{offset}/{count}", this::countWeek);
-            get("month/{offset}/{count}", this::countMonth);
-        }));
+        path("service",
+                () -> path("count", () -> {
+                    get("hour/{offset}/{count}", this::countHour);
+                    get("day/{offset}/{count}", this::countDay);
+                    get("week/{offset}/{count}", this::countWeek);
+                    get("month/{offset}/{count}", this::countMonth);
+                }));
     }
 }

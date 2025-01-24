@@ -33,7 +33,7 @@ public class Reputation extends MetricsHolder {
     @OpenApi(
             summary = "Get the counts of given reputation per week.",
             operationId = "countWeek",
-            path = "week/{offset}/{count}",
+            path = "reputation/count/week/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Reputation"},
             responses = {
@@ -57,7 +57,7 @@ public class Reputation extends MetricsHolder {
     @OpenApi(
             summary = "Get the counts of given reputation per month.",
             operationId = "countMonth",
-            path = "month/{offset}/{count}",
+            path = "reputation/count/month/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Reputation"},
             responses = {
@@ -81,7 +81,7 @@ public class Reputation extends MetricsHolder {
     @OpenApi(
             summary = "Get the counts of given reputation per week split into type.",
             operationId = "countTypeWeek",
-            path = "type/week/{offset}/{count}",
+            path = "reputation/type/count/week/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Reputation"},
             responses = {
@@ -105,7 +105,7 @@ public class Reputation extends MetricsHolder {
     @OpenApi(
             summary = "Get the counts of given reputation per month split into type.",
             operationId = "countTypeMonth",
-            path = "type/month/{offset}/{count}",
+            path = "reputation/type/count/month/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Reputation"},
             responses = {
@@ -129,7 +129,7 @@ public class Reputation extends MetricsHolder {
     @OpenApi(
             summary = "Get the total count of reputation in these weeks split into type.",
             operationId = "totalTypeWeek",
-            path = "type/total/week/{offset}/{count}",
+            path = "reputation/type/total/week/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Reputation"},
             responses = {
@@ -153,7 +153,7 @@ public class Reputation extends MetricsHolder {
     @OpenApi(
             summary = "Get the total count of reputation in these months split into type.",
             operationId = "totalTypeMonth",
-            path = "type/total/month/{offset}/{count}",
+            path = "reputation/type/total/month/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Reputation"},
             responses = {
@@ -177,7 +177,7 @@ public class Reputation extends MetricsHolder {
     @OpenApi(
             summary = "Get the total count of reputation in these weeks.",
             operationId = "totalWeek",
-            path = "total/week/{offset}/{count}",
+            path = "reputation/total/week/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Reputation"},
             responses = {
@@ -201,7 +201,7 @@ public class Reputation extends MetricsHolder {
     @OpenApi(
             summary = "Get the total count of reputation in these months.",
             operationId = "totalMonth",
-            path = "total/month/{offset}/{count}",
+            path = "reputation/total/month/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Reputation"},
             responses = {
@@ -225,7 +225,7 @@ public class Reputation extends MetricsHolder {
     @OpenApi(
             summary = "Get the changed reputation per week.",
             operationId = "changesWeek",
-            path = "changes/week/{offset}/{count}",
+            path = "reputation/changes/week/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Reputation"},
             responses = {
@@ -249,7 +249,7 @@ public class Reputation extends MetricsHolder {
     @OpenApi(
             summary = "Get the changed reputation per month.",
             operationId = "changesMonth",
-            path = "changes/month/{offset}/{count}",
+            path = "reputation/changes/month/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Reputation"},
             responses = {
@@ -273,7 +273,7 @@ public class Reputation extends MetricsHolder {
     @OpenApi(
             summary = "Get reputation per day of week.",
             operationId = "dowWeek",
-            path = "dow/week/{offset}",
+            path = "reputation/dow/week/{offset}",
             methods = HttpMethod.GET,
             tags = {"Reputation"},
             responses = {
@@ -296,7 +296,7 @@ public class Reputation extends MetricsHolder {
     @OpenApi(
             summary = "Get average reputation per day of week in a month.",
             operationId = "dowMonth",
-            path = "dow/month/{offset}",
+            path = "reputation/dow/month/{offset}",
             methods = HttpMethod.GET,
             tags = {"Reputation"},
             responses = {
@@ -319,7 +319,7 @@ public class Reputation extends MetricsHolder {
     @OpenApi(
             summary = "Get average reputation per day of week in a year.",
             operationId = "dowYear",
-            path = "dow/year/{offset}",
+            path = "reputation/dow/year/{offset}",
             methods = HttpMethod.GET,
             tags = {"Reputation"},
             responses = {

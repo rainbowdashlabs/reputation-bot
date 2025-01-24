@@ -31,7 +31,7 @@ public class Commands extends MetricsHolder {
     @OpenApi(
             summary = "Get command usages for a week.",
             operationId = "usageWeek",
-            path = "usage/week/{offset}",
+            path = "commands/usage/week/{offset}",
             methods = HttpMethod.GET,
             tags = {"Commands"},
             responses = {
@@ -54,7 +54,7 @@ public class Commands extends MetricsHolder {
     @OpenApi(
             summary = "Get command usages for a month.",
             operationId = "usageMonth",
-            path = "usage/month/{offset}",
+            path = "commands/usage/month/{offset}",
             methods = HttpMethod.GET,
             tags = {"Commands"},
             responses = {
@@ -77,7 +77,7 @@ public class Commands extends MetricsHolder {
     @OpenApi(
             summary = "Get the amount of executed commands per week.",
             operationId = "countWeek",
-            path = "count/week/{offset}/{count}",
+            path = "commands/count/week/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Commands"},
             responses = {
@@ -101,7 +101,7 @@ public class Commands extends MetricsHolder {
     @OpenApi(
             summary = "Get the amount of executed commands per month.",
             operationId = "countMonth",
-            path = "count/month/{offset}/{count}",
+            path = "commands/count/month/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Commands"},
             responses = {
