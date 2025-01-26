@@ -58,6 +58,7 @@ public final class Messages {
                         ErrorResponse.UNKNOWN_MESSAGE,
                         ErrorResponse.TOO_MANY_REACTIONS,
                         ErrorResponse.REACTION_BLOCKED,
-                        ErrorResponse.UNKNOWN_CHANNEL));
+                        ErrorResponse.UNKNOWN_CHANNEL,
+                        ErrorResponse.THREAD_LOCKED));
     }
 }

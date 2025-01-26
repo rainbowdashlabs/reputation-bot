@@ -6,9 +6,12 @@
 package de.chojo.repbot.web;
 
 import de.chojo.repbot.dao.provider.Metrics;
-import de.chojo.repbot.web.erros.ApiException;
+import de.chojo.repbot.web.error.ApiException;
 import de.chojo.repbot.web.routes.v1.MetricsRoute;
 import io.javalin.Javalin;
+import io.javalin.apibuilder.ApiBuilder;
+import io.javalin.apibuilder.EndpointGroup;
+import io.javalin.router.Endpoint;
 import org.slf4j.Logger;
 
 import static io.javalin.apibuilder.ApiBuilder.before;
@@ -17,20 +20,14 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class Api {
     private static final Logger log = getLogger(Api.class);
-    private final Javalin javalin;
     private final MetricsRoute metricsRoute;
 
-    public Api(Javalin javalin, Metrics metrics) {
-        this.javalin = javalin;
+    public Api(Metrics metrics) {
         metricsRoute = new MetricsRoute(metrics);
     }
 
     public void init() {
-        javalin.exception(ApiException.class, (err, ctx) -> ctx.result(err.getMessage()).status(err.status()));
-        javalin.routes(() -> {
-            before(ctx -> log.debug("Received request on {}.", ctx.path()));
-
-            path("v1", () -> path("metrics", metricsRoute::buildRoutes));
-        });
+        before(ctx -> log.debug("Received request on {}.", ctx.path()));
+        path("v1", () -> path("metrics", metricsRoute::buildRoutes));
     }
 }

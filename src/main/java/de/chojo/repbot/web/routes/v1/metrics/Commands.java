@@ -9,9 +9,12 @@ import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.dao.snapshots.statistics.CommandsStatistic;
 import de.chojo.repbot.util.Text;
 import de.chojo.repbot.web.routes.v1.MetricsHolder;
-import de.chojo.repbot.web.routes.v1.MetricsRoute;
 import io.javalin.http.Context;
-import io.javalin.plugin.openapi.dsl.OpenApiBuilder;
+import io.javalin.openapi.HttpMethod;
+import io.javalin.openapi.OpenApi;
+import io.javalin.openapi.OpenApiContent;
+import io.javalin.openapi.OpenApiParam;
+import io.javalin.openapi.OpenApiResponse;
 
 import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_MONTH;
 import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_MONTH_OFFSET;
@@ -25,6 +28,20 @@ public class Commands extends MetricsHolder {
         super(cache, metrics);
     }
 
+    @OpenApi(
+            summary = "Get command usages for a week.",
+            operationId = "usageWeek",
+            path = "commands/usage/week/{offset}",
+            methods = HttpMethod.GET,
+            tags = {"Commands"},
+            responses = {
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = CommandsStatistic.class, type = "application/json")})
+            },
+            pathParams = {
+                    @OpenApiParam(name = "offset", type = Integer.class, required = true)
+            }
+    )
     public void usageWeek(Context ctx) {
         var stats = metrics().commands().week(offset(ctx, MAX_WEEK_OFFSET));
         if ("application/json".equals(ctx.header("Accept"))) {
@@ -34,6 +51,20 @@ public class Commands extends MetricsHolder {
         }
     }
 
+    @OpenApi(
+            summary = "Get command usages for a month.",
+            operationId = "usageMonth",
+            path = "commands/usage/month/{offset}",
+            methods = HttpMethod.GET,
+            tags = {"Commands"},
+            responses = {
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = CommandsStatistic.class, type = "application/json")})
+            },
+            pathParams = {
+                    @OpenApiParam(name = "offset", type = Integer.class, required = true)
+            }
+    )
     public void usageMonth(Context ctx) {
         var stats = metrics().commands().month(offset(ctx, MAX_MONTH_OFFSET));
         if ("application/json".equals(ctx.header("Accept"))) {
@@ -43,6 +74,21 @@ public class Commands extends MetricsHolder {
         }
     }
 
+    @OpenApi(
+            summary = "Get the amount of executed commands per week.",
+            operationId = "countWeek",
+            path = "commands/count/week/{offset}/{count}",
+            methods = HttpMethod.GET,
+            tags = {"Commands"},
+            responses = {
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = CommandsStatistic.class, type = "application/json")})
+            },
+            pathParams = {
+                    @OpenApiParam(name = "offset", type = Integer.class, required = true),
+                    @OpenApiParam(name = "count", type = Integer.class, required = true)
+            }
+    )
     public void countWeek(Context ctx) {
         var stats = metrics().commands().week(offset(ctx, MAX_WEEK_OFFSET), count(ctx, MAX_WEEKS));
         if ("application/json".equals(ctx.header("Accept"))) {
@@ -52,6 +98,21 @@ public class Commands extends MetricsHolder {
         }
     }
 
+    @OpenApi(
+            summary = "Get the amount of executed commands per month.",
+            operationId = "countMonth",
+            path = "commands/count/month/{offset}/{count}",
+            methods = HttpMethod.GET,
+            tags = {"Commands"},
+            responses = {
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
+                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = CommandsStatistic.class, type = "application/json")})
+            },
+            pathParams = {
+                    @OpenApiParam(name = "offset", type = Integer.class, required = true),
+                    @OpenApiParam(name = "count", type = Integer.class, required = true)
+            }
+    )
     public void countMonth(Context ctx) {
         var stats = metrics().commands().month(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH));
         if ("application/json".equals(ctx.header("Accept"))) {
@@ -65,43 +126,13 @@ public class Commands extends MetricsHolder {
     public void buildRoutes() {
         path("commands", () -> {
             path("count", () -> {
-                get("week/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
-                                                                                     .operation(op -> {
-                                                                                         op.summary("Get the amount of exectued commands per week.");
-                                                                                     })
-                                                                                     .result("200", byte[].class, "image/png")
-                                                                                     .result("200", CommandsStatistic.class, "application/json")
-                                                                                     .pathParam("offset", Integer.class, MetricsRoute::offsetWeekDoc)
-                                                                                     .pathParam("count", Integer.class, MetricsRoute::countWeekDoc),
-                        cache(this::countWeek)));
-                get("month/{offset}/{count}", OpenApiBuilder.documented(OpenApiBuilder.document()
-                                                                                      .operation(op -> {
-                                                                                          op.summary("Get the amount of exectued commands per month.");
-                                                                                      })
-                                                                                      .result("200", byte[].class, "image/png")
-                                                                                      .result("200", CommandsStatistic.class, "application/json")
-                                                                                      .pathParam("offset", Integer.class, MetricsRoute::offsetMonthDoc)
-                                                                                      .pathParam("count", Integer.class, MetricsRoute::countMonthDoc),
-                        cache(this::countMonth)));
+                get("week/{offset}/{count}", this::countWeek);
+                get("month/{offset}/{count}", this::countMonth);
             });
 
             path("usage", () -> {
-                get("week/{offset}", OpenApiBuilder.documented(OpenApiBuilder.document()
-                                                                             .operation(op -> {
-                                                                                 op.summary("Get command usages for a week.");
-                                                                             })
-                                                                             .result("200", byte[].class, "image/png")
-                                                                             .result("200", CommandsStatistic.class, "application/json")
-                                                                             .pathParam("offset", Integer.class, MetricsRoute::offsetWeekDoc),
-                        cache(this::usageWeek)));
-                get("month/{offset}", OpenApiBuilder.documented(OpenApiBuilder.document()
-                                                                              .operation(op -> {
-                                                                                  op.summary("Get command usages for a month.");
-                                                                              })
-                                                                              .result("200", byte[].class, "image/png")
-                                                                              .result("200", CommandsStatistic.class, "application/json")
-                                                                              .pathParam("offset", Integer.class, MetricsRoute::offsetMonthDoc),
-                        cache(this::usageMonth)));
+                get("week/{offset}", this::usageWeek);
+                get("month/{offset}", this::usageMonth);
             });
         });
     }
