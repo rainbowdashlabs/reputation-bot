@@ -11,13 +11,26 @@ import de.chojo.repbot.actions.messages.log.handler.MessageAnalyzer;
 import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.Permission;
 
+/**
+ * Provides a message log functionality for the bot.
+ */
 public class MessageLog implements MessageProvider<Message> {
     private final Guilds guilds;
 
+    /**
+     * Constructs a MessageLog with the specified guilds provider.
+     *
+     * @param guilds the guilds provider
+     */
     public MessageLog(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Returns a configured message for logging.
+     *
+     * @return the configured message
+     */
     @Override
     public Message message() {
         return Message.of("Message Log")

@@ -14,14 +14,29 @@ import org.slf4j.Logger;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Handler for the "shutdown" slash command.
+ * This command shuts down the bot if the user is the owner.
+ */
 public class Shudown implements SlashHandler {
     private static final Logger log = getLogger(Shudown.class);
     private final Configuration configuration;
 
+    /**
+     * Constructs a new Shudown handler.
+     *
+     * @param configuration the bot configuration
+     */
     public Shudown(Configuration configuration) {
         this.configuration = configuration;
     }
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         if (!configuration.baseSettings().isOwner(event.getUser().getIdLong())) {

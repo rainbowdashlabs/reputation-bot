@@ -15,12 +15,28 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 import java.util.function.Consumer;
 
+/**
+ * Handles the removal of roles from a guild's settings.
+ */
 public class Remove extends BaseRoleModifier {
 
+    /**
+     * Constructs a Remove handler with the specified refresh function and guilds provider.
+     *
+     * @param refresh the refresh function
+     * @param guilds the guilds provider
+     */
     public Remove(Refresh refresh, Guilds guilds) {
         super(refresh, guilds);
     }
 
+    /**
+     * Modifies the guild's settings by removing a role.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     * @param refresh the consumer to refresh the message embed
+     */
     @Override
     public void modify(SlashCommandInteractionEvent event, EventContext context, Consumer<MessageEmbed> refresh) {
         var ranks = guilds().guild(event.getGuild()).settings().ranks();

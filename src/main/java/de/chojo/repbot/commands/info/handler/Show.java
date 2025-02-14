@@ -36,6 +36,10 @@ import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Handler for the "show info" slash command.
+ * This command displays information about the bot, including contributors, version, and support links.
+ */
 public class Show implements SlashHandler {
     private static final String ART = "**SmartieFox ☆*:.｡.o(≧▽≦)o.｡.:*☆**\n[Twitter](https://twitter.com/smartiefoxart) [Twitch](https://www.twitch.tv/smartiefox)";
     private static final String SOURCE = "[rainbowdashlabs/reputation-bot](https://github.com/rainbowdashlabs/reputation-bot)";
@@ -49,16 +53,35 @@ public class Show implements SlashHandler {
     private String contributors;
     private Instant lastFetch = Instant.MIN;
 
+    /**
+     * Constructs a new Show handler.
+     *
+     * @param version the version of the bot
+     * @param configuration the bot configuration
+     */
     public Show(String version, Configuration configuration) {
         this.version = version;
         this.configuration = configuration;
     }
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         event.replyEmbeds(getResponse(event, context)).queue();
     }
 
+    /**
+     * Generates the response embed message for the slash command.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     * @return the response embed message
+     */
     @NotNull
     private MessageEmbed getResponse(SlashCommandInteractionEvent event, EventContext context) {
         if (contributors == null || lastFetch.isBefore(Instant.now().minus(5, ChronoUnit.MINUTES))) {
@@ -111,6 +134,12 @@ public class Show implements SlashHandler {
                 .build();
     }
 
+    /**
+     * Generates a string of links for the embed message.
+     *
+     * @param context the event context
+     * @return a string of links
+     */
     private String getLinks(EventContext context) {
         var links = List.of(
                 getLink(context, "command.info.message.inviteme", configuration.links().invite()),
@@ -122,17 +151,39 @@ public class Show implements SlashHandler {
         return String.join(" ᠅ ", links);
     }
 
+    /**
+     * Generates a localized link for the embed message.
+     *
+     * @param context the event context
+     * @param target the localization key for the link text
+     * @param url the URL for the link
+     * @return a localized link
+     */
     private String getLink(EventContext context, @PropertyKey(resourceBundle = "locale") String target, String url) {
         return context.localize("words.link", Replacement.create("TARGET", String.format("$%s$", target)),
                 Replacement.create("URL", url));
     }
 
+    /**
+     * Generates an untranslated link for the embed message.
+     *
+     * @param context the event context
+     * @param target the link text
+     * @param url the URL for the link
+     * @return an untranslated link
+     */
     private String getUntranslatedLink(EventContext context, String target, String url) {
         return context.localize("words.link",
                 Replacement.create("TARGET", target),
                 Replacement.create("URL", url));
     }
 
+    /**
+     * Generates a string of voting links for the embed message.
+     *
+     * @param context the event context
+     * @return a string of voting links
+     */
     private String getVoting(EventContext context) {
         List<String> voteLinks = new ArrayList<>();
 
@@ -143,6 +194,9 @@ public class Show implements SlashHandler {
         return String.join(" ᠅ ", voteLinks);
     }
 
+    /**
+     * Enum representing the type of contributor.
+     */
     @SuppressWarnings("unused")
     private enum ContributorType {
         @JsonProperty("User")
@@ -151,6 +205,9 @@ public class Show implements SlashHandler {
         BOT
     }
 
+    /**
+     * Represents a contributor to the GitHub repository.
+     */
     @SuppressWarnings("unused")
     private static class Contributor {
         private String login;
@@ -160,6 +217,9 @@ public class Show implements SlashHandler {
         private ContributorType type;
     }
 
+    /**
+     * Represents a GitHub profile.
+     */
     @SuppressWarnings("unused")
     private static class GithubProfile {
         private String login;

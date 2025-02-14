@@ -5,6 +5,27 @@
  */
 package de.chojo.repbot.commands.reactions.util;
 
+/**
+ * Enum representing the result of a check for reactions.
+ */
 public enum CheckResult {
-    EMOJI_FOUND, EMOTE_FOUND, NOT_FOUND, UNKNOWN_EMOJI
+    /**
+     * Indicates that an emoji was found.
+     */
+    EMOJI_FOUND,
+
+    /**
+     * Indicates that an emote was found.
+     */
+    EMOTE_FOUND,
+
+    /**
+     * Indicates that nothing was found.
+     */
+    NOT_FOUND,
+
+    /**
+     * Indicates that an unknown emoji was found.
+     */
+    UNKNOWN_EMOJI
 }

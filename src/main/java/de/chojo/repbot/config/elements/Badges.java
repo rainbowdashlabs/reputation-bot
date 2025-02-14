@@ -7,10 +7,19 @@ package de.chojo.repbot.config.elements;
 
 import java.util.Optional;
 
+/**
+ * Configuration class for the badges.
+ */
 @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal", "MismatchedReadAndWriteOfArray"})
 public class Badges {
     private boolean enables = true;
     private String[] badges = new String[0];
+
+    /**
+     * Creates a new badge configuration with default values.
+     */
+    public Badges(){
+    }
 
     /**
      * Retrieve the badge for the rank.

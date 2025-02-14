@@ -27,7 +27,17 @@ import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.Guilds;
 import de.chojo.repbot.statistic.Statistic;
 
+/**
+ * Class representing bot admin commands.
+ */
 public class BotAdmin extends SlashCommand {
+    /**
+     * Constructs a BotAdmin instance with the specified guilds, configuration, and statistics.
+     *
+     * @param guilds the guilds provider
+     * @param configuration the configuration
+     * @param statistics the statistics
+     */
     public BotAdmin(Guilds guilds, Configuration configuration, Statistic statistics) {
         super(Slash.of("bot", "Bot admin commands.")
                    .unlocalized()

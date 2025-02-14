@@ -10,10 +10,20 @@ import de.chojo.repbot.statistic.element.DataStatistic;
 import de.chojo.repbot.statistic.element.GlobalShardStatistic;
 import net.dv8tion.jda.api.EmbedBuilder;
 
+/**
+ * Represents a display for global information statistics.
+ *
+ * @param globalShardStatistic the global shard statistics
+ * @param dataStatistic the data statistics
+ */
 public record GlobalInfoStatisticDisplay(GlobalShardStatistic globalShardStatistic,
                                          DataStatistic dataStatistic) implements EmbedDisplay {
 
-
+    /**
+     * Appends the global information statistics to the provided embed builder.
+     *
+     * @param embedBuilder the embed builder to append the statistics to
+     */
     @Override
     public void appendTo(EmbedBuilder embedBuilder) {
         embedBuilder.addField("Global Info",

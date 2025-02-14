@@ -16,19 +16,35 @@ import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Provides GDPR-related data access methods for users.
+ */
 public class Gdpr implements MemberHolder {
     private final RepUser repUser;
     private static final Logger log = getLogger(Gdpr.class);
 
+    /**
+     * Constructs a new Gdpr instance.
+     *
+     * @param repUser the RepUser instance
+     */
     public Gdpr(RepUser repUser) {
         this.repUser = repUser;
     }
 
+    /**
+     * Retrieves the member associated with this instance.
+     *
+     * @return the member
+     */
     @Override
     public Member member() {
         return repUser.member();
     }
 
+    /**
+     * Queues the user for deletion by adding them to the cleanup schedule.
+     */
     public void queueDeletion() {
         log.info("User {} is scheduled for deletion on guild {}", userId(), guildId());
         query("""
@@ -44,6 +60,9 @@ public class Gdpr implements MemberHolder {
                 .update();
     }
 
+    /**
+     * Dequeues the user from deletion by removing them from the cleanup schedule.
+     */
     public void dequeueDeletion() {
         if (query("""
                        DELETE FROM
@@ -58,11 +77,21 @@ public class Gdpr implements MemberHolder {
         }
     }
 
+    /**
+     * Retrieves the user associated with this instance.
+     *
+     * @return the user
+     */
     @Override
     public User user() {
         return repUser.user();
     }
 
+    /**
+     * Retrieves the guild associated with this instance.
+     *
+     * @return the guild
+     */
     @Override
     public Guild guild() {
         return repUser.guild();

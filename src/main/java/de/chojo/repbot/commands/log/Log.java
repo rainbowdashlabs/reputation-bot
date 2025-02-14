@@ -16,7 +16,15 @@ import de.chojo.repbot.commands.log.handler.Received;
 import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.Permission;
 
+/**
+ * Command for managing log-related actions.
+ */
 public class Log extends SlashCommand {
+    /**
+     * Constructs a new Log command with the specified Guilds provider.
+     *
+     * @param guilds the Guilds provider
+     */
     public Log(Guilds guilds) {
         super(Slash.of("log", "command.log.description")
                 .guildOnly()

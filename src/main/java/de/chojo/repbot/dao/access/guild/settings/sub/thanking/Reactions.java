@@ -22,27 +22,53 @@ import java.util.stream.Collectors;
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 
-public class Reactions  implements GuildHolder {
+/**
+ * Manages the reactions for thanking in a guild.
+ */
+public class Reactions implements GuildHolder {
     private final Thanking thanking;
     private final Set<String> reactions;
     private String mainReaction;
 
+    /**
+     * Constructs a Reactions instance.
+     *
+     * @param thanking the thanking settings
+     * @param mainReaction the main reaction
+     * @param reactions the set of additional reactions
+     */
     public Reactions(Thanking thanking, String mainReaction, Set<String> reactions) {
         this.thanking = thanking;
         this.mainReaction = mainReaction;
         this.reactions = reactions;
     }
 
+    /**
+     * Gets the guild associated with the reactions.
+     *
+     * @return the guild
+     */
     @Override
     public Guild guild() {
         return thanking.guild();
     }
 
+    /**
+     * Gets the guild ID associated with the reactions.
+     *
+     * @return the guild ID
+     */
     @Override
     public long guildId() {
         return thanking.guildId();
     }
 
+    /**
+     * Checks if the given reaction is a valid reaction.
+     *
+     * @param reaction the message reaction
+     * @return true if the reaction is valid, false otherwise
+     */
     public boolean isReaction(MessageReaction reaction) {
         if (reaction.getEmoji() instanceof UnicodeEmoji emoji) {
             return isReaction(emoji.getAsReactionCode());
@@ -53,6 +79,12 @@ public class Reactions  implements GuildHolder {
         return false;
     }
 
+    /**
+     * Checks if the given reaction string is a valid reaction.
+     *
+     * @param reaction the reaction string
+     * @return true if the reaction is valid, false otherwise
+     */
     private boolean isReaction(String reaction) {
         if (mainReaction.equals(reaction)) {
             return true;
@@ -60,10 +92,20 @@ public class Reactions  implements GuildHolder {
         return reactions.contains(reaction);
     }
 
+    /**
+     * Checks if the main reaction is an emote.
+     *
+     * @return true if the main reaction is an emote, false otherwise
+     */
     public boolean reactionIsEmote() {
         return Verifier.isValidId(mainReaction());
     }
 
+    /**
+     * Gets the mention string for the main reaction.
+     *
+     * @return an optional containing the mention string if available, otherwise empty
+     */
     public Optional<String> reactionMention() {
         if (!reactionIsEmote()) {
             return Optional.ofNullable(mainReaction());
@@ -72,10 +114,20 @@ public class Reactions  implements GuildHolder {
                 .map(CustomEmoji::getAsMention);
     }
 
+    /**
+     * Gets the main reaction string.
+     *
+     * @return the main reaction string
+     */
     public String mainReaction() {
         return mainReaction;
     }
 
+    /**
+     * Gets the mentions for the additional reactions.
+     *
+     * @return a list of additional reaction mentions
+     */
     public List<String> getAdditionalReactionMentions() {
         return reactions.stream()
                         .map(reaction -> {
@@ -90,6 +142,12 @@ public class Reactions  implements GuildHolder {
                         .collect(Collectors.toList());
     }
 
+    /**
+     * Adds a new reaction to the set of reactions.
+     *
+     * @param reaction the reaction string
+     * @return true if the reaction was added successfully, false otherwise
+     */
     public boolean add(String reaction) {
         var result = query("""
                        INSERT INTO guild_reactions(guild_id, reaction) VALUES (?,?)
@@ -105,6 +163,12 @@ public class Reactions  implements GuildHolder {
         return result;
     }
 
+    /**
+     * Removes a reaction from the set of reactions.
+     *
+     * @param reaction the reaction string
+     * @return true if the reaction was removed successfully, false otherwise
+     */
     public boolean remove(String reaction) {
         var result = query("""
                        DELETE FROM guild_reactions WHERE guild_id = ? AND reaction = ?;
@@ -119,6 +183,12 @@ public class Reactions  implements GuildHolder {
         return result;
     }
 
+    /**
+     * Sets the main reaction.
+     *
+     * @param reaction the reaction string
+     * @return true if the main reaction was set successfully, false otherwise
+     */
     public boolean mainReaction(String reaction) {
         var result = query("""
                        INSERT INTO thank_settings(guild_id, reaction) VALUES (?,?)
@@ -135,6 +205,11 @@ public class Reactions  implements GuildHolder {
         return result;
     }
 
+    /**
+     * Gets the set of reactions.
+     *
+     * @return the set of reactions
+     */
     public Set<String> reactions() {
         return reactions;
     }

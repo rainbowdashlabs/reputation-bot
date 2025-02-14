@@ -43,6 +43,9 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
+/**
+ * Listener for handling reputation vote interactions.
+ */
 public class ReputationVoteListener extends ListenerAdapter {
     private static final ActionComponent DELETE = Button.of(ButtonStyle.DANGER, "vote:delete", Emoji.fromUnicode("🗑️"));
     private static final Pattern VOTE = Pattern.compile("vote:(?<id>\\d*?)");
@@ -52,6 +55,14 @@ public class ReputationVoteListener extends ListenerAdapter {
     private final Configuration configuration;
     private final Map<Long, VoteRequest> voteRequests = new HashMap<>();
 
+    /**
+     * Constructs a new ReputationVoteListener.
+     *
+     * @param guilds the guilds provider
+     * @param reputationService the reputation service
+     * @param localizer the localizer
+     * @param configuration the configuration
+     */
     public ReputationVoteListener(Guilds guilds, ReputationService reputationService, ILocalizer localizer, Configuration configuration) {
         this.guilds = guilds;
         this.reputationService = reputationService;
@@ -59,6 +70,11 @@ public class ReputationVoteListener extends ListenerAdapter {
         this.configuration = configuration;
     }
 
+    /**
+     * Handles button interaction events.
+     *
+     * @param event the button interaction event
+     */
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
         if (!voteRequests.containsKey(event.getMessageIdLong())) return;
@@ -109,6 +125,13 @@ public class ReputationVoteListener extends ListenerAdapter {
         }
     }
 
+    /**
+     * Registers a vote request.
+     *
+     * @param message the message
+     * @param members the list of members
+     * @param settings the settings
+     */
     public void registerVote(Message message, List<Member> members, Settings settings) {
         if (PermissionErrorHandler.assertAndHandle(message.getGuildChannel(), loc.context(LocaleProvider.guild(message.getGuild())), configuration, Permission.MESSAGE_SEND, Permission.MESSAGE_EMBED_LINKS)) {
             return;
@@ -159,7 +182,12 @@ public class ReputationVoteListener extends ListenerAdapter {
                });
     }
 
-
+    /**
+     * Creates a list of action rows from the given components.
+     *
+     * @param components the list of action components
+     * @return the list of action rows
+     */
     private List<ActionRow> getComponentRows(List<ActionComponent> components) {
         var comp = new ArrayList<>(components);
         comp.add(DELETE);

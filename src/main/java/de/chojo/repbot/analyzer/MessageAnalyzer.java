@@ -37,9 +37,21 @@ import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Class responsible for analyzing messages to detect thankwords and their targets.
+ */
 public class MessageAnalyzer {
+    /**
+     * The number of words to look around the thankword for potential targets.
+     */
     private static final int LOOKAROUND = 6;
+    /**
+     * Logger instance for logging events.
+     */
     private static final Logger log = getLogger(MessageAnalyzer.class);
+    /**
+     * Placeholder object for rejection cache.
+     */
     private static final Object PLACEHOLDER = new Object();
     private final ContextResolver contextResolver;
     private final Cache<Long, AnalyzerResult> resultCache = CacheBuilder.newBuilder()
@@ -53,6 +65,14 @@ public class MessageAnalyzer {
     private final Metrics metrics;
     private final Guilds guilds;
 
+    /**
+     * Constructs a new MessageAnalyzer.
+     *
+     * @param resolver      the context resolver
+     * @param configuration the configuration instance
+     * @param metrics       the metrics provider
+     * @param guilds        the guilds provider
+     */
     public MessageAnalyzer(ContextResolver resolver, Configuration configuration, Metrics metrics, Guilds guilds) {
         contextResolver = resolver;
         this.configuration = configuration;
@@ -61,13 +81,12 @@ public class MessageAnalyzer {
     }
 
     /**
-     * Analyze a message.
+     * Analyzes a message to detect thankwords and their targets.
      *
-     * @param pattern      regex pattern for targetwords
+     * @param pattern      regex pattern for thankwords
      * @param message      message to analyze
      * @param settings     settings of the guild
-     * @param limitTargets true if targets should be limited to users which have written in the channel in the
-     *                     maxHistoryAge
+     * @param limitTargets true if targets should be limited to users who have written in the channel in the maxHistoryAge
      * @param limit        limit for returned matches in the analyzer result
      * @return analyzer results
      */
@@ -92,6 +111,13 @@ public class MessageAnalyzer {
         return analyzer.log(message, AnalyzerResult.empty(EmptyResultReason.INTERNAL_ERROR));
     }
 
+    /**
+     * Retrieves the thankword from the message using the provided pattern.
+     *
+     * @param message the message to analyze
+     * @param pattern the regex pattern for thankwords
+     * @return an optional containing the thankword if found, otherwise empty
+     */
     @SuppressWarnings("DataFlowIssue") // We got no issues c:
     private Optional<String> getThankword(Message message, Pattern pattern) {
         return CompletableFuture.supplyAsync(() -> {
@@ -104,6 +130,16 @@ public class MessageAnalyzer {
                 .join();
     }
 
+    /**
+     * Analyzes the message to detect thankwords and their targets.
+     *
+     * @param pattern      regex pattern for thankwords
+     * @param message      message to analyze
+     * @param settings     settings of the guild
+     * @param limitTargets true if targets should be limited to users who have written in the channel in the maxHistoryAge
+     * @param limit        limit for returned matches in the analyzer result
+     * @return analyzer results
+     */
     private AnalyzerResult analyze(Pattern pattern, Message message, @Nullable Settings settings, boolean limitTargets, int limit) {
         metrics.messages().countMessage();
         if (pattern.pattern().isBlank()) return AnalyzerResult.empty(EmptyResultReason.NO_PATTERN);
@@ -166,7 +202,17 @@ public class MessageAnalyzer {
         return resolveMessage(match, message, pattern, context, limitTargets, limit);
     }
 
-
+    /**
+     * Resolves the message to detect thankwords and their targets.
+     *
+     * @param matchPattern the matched thankword pattern
+     * @param message      the message to analyze
+     * @param thankPattern the regex pattern for thankwords
+     * @param targets      the message context containing potential targets
+     * @param limitTargets true if targets should be limited to users who have written in the channel in the maxHistoryAge
+     * @param limit        limit for returned matches in the analyzer result
+     * @return analyzer results
+     */
     private AnalyzerResult resolveMessage(String matchPattern, Message message, Pattern thankPattern, MessageContext targets, boolean limitTargets, int limit) {
         var contentRaw = message.getContentRaw();
 
