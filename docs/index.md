@@ -61,9 +61,9 @@ We provide different modes
 
 Those determine the user rank, leaderboard and the reputation shown in the user profile.
 
-# Get help
+# [Get help](https://discord.gg/5DrGmz7pHj)
 
-Join our discord if you need help, have questions or ideas for a new feature.
+Join our [discord](https://discord.gg/5DrGmz7pHj) if you need help, have questions or ideas for a new feature.
 
 <iframe src="https://discord.com/widget?id=853250161915985958&theme=dark" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>
 
