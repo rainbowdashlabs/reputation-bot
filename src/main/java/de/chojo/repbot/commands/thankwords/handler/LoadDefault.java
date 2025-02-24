@@ -17,15 +17,30 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+/**
+ * Handler for the load default thank words command.
+ */
 public class LoadDefault implements SlashHandler {
     private final Guilds guilds;
     private final ThankwordsContainer thankwordsContainer;
 
+    /**
+     * Constructs a new LoadDefault handler with the specified Guilds provider and ThankwordsContainer.
+     *
+     * @param guilds the Guilds provider
+     * @param thankwordsContainer the ThankwordsContainer
+     */
     public LoadDefault(Guilds guilds, ThankwordsContainer thankwordsContainer) {
         this.guilds = guilds;
         this.thankwordsContainer = thankwordsContainer;
     }
 
+    /**
+     * Handles the slash command interaction event to load default thank words.
+     *
+     * @param event the SlashCommandInteractionEvent
+     * @param context the EventContext
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var languageOption = event.getOption("language");
@@ -51,6 +66,12 @@ public class LoadDefault implements SlashHandler {
         event.reply(context.localize("command.thankwords.loaddefault.message.added") + wordsJoined).queue();
     }
 
+    /**
+     * Handles the auto-complete interaction event for the load default thank words command.
+     *
+     * @param event the CommandAutoCompleteInteractionEvent
+     * @param context the EventContext
+     */
     @Override
     public void onAutoComplete(CommandAutoCompleteInteractionEvent event, EventContext context) {
         var option = event.getFocusedOption();

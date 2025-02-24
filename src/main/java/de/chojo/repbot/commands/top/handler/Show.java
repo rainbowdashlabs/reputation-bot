@@ -15,7 +15,6 @@ import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
 import de.chojo.repbot.dao.pagination.GuildRanking;
 import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.utils.messages.MessageEditData;
@@ -24,14 +23,29 @@ import java.awt.Color;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
+/**
+ * Handler for the "show top" slash command.
+ * This command displays the top rankings for the guild based on reputation.
+ */
 public class Show implements SlashHandler {
     private static final int TOP_PAGE_SIZE = 10;
     private final Guilds guilds;
 
+    /**
+     * Constructs a new Show handler.
+     *
+     * @param guilds the guilds provider
+     */
     public Show(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var guild = guilds.guild(event.getGuild());
@@ -52,6 +66,13 @@ public class Show implements SlashHandler {
         registerPage(ranking, event, context);
     }
 
+    /**
+     * Registers a page for the ranking.
+     *
+     * @param guildRanking the guild ranking
+     * @param event the slash command interaction event
+     * @param context the event context
+     */
     public static void registerPage(GuildRanking guildRanking, SlashCommandInteractionEvent event, EventContext context) {
         context.registerPage(new PageBag(guildRanking.pages()) {
             @Override
@@ -78,12 +99,26 @@ public class Show implements SlashHandler {
         }, true);
     }
 
+    /**
+     * Creates a base embed builder for the ranking.
+     *
+     * @param guildRanking the guild ranking
+     * @param context the event context
+     * @param guild the guild
+     * @return the localized embed builder
+     */
     private static LocalizedEmbedBuilder createBaseBuilder(GuildRanking guildRanking, EventContext context, Guild guild) {
         return new LocalizedEmbedBuilder(context.guildLocalizer())
                 .setTitle(guildRanking.title(), Replacement.create("GUILD", guild.getName()))
                 .setColor(Color.CYAN);
     }
 
+    /**
+     * Handles the auto-complete interaction event.
+     *
+     * @param event the auto-complete interaction event
+     * @param context the event context
+     */
     @Override
     public void onAutoComplete(CommandAutoCompleteInteractionEvent event, EventContext context) {
         var option = event.getFocusedOption();

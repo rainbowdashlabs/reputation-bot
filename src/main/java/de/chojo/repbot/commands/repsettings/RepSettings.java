@@ -12,8 +12,16 @@ import de.chojo.repbot.commands.repsettings.handler.EmojiInfo;
 import de.chojo.repbot.commands.repsettings.handler.Info;
 import de.chojo.repbot.dao.provider.Guilds;
 
+/**
+ * Slash command for managing reputation settings in the bot.
+ */
 public class RepSettings extends SlashCommand {
 
+    /**
+     * Constructs a RepSettings command with the specified guilds provider.
+     *
+     * @param guilds the guilds provider
+     */
     public RepSettings(Guilds guilds) {
         super(Slash.of("repsettings", "command.repsettings.description")
                 .guildOnly()

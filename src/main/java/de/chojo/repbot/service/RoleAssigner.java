@@ -37,18 +37,27 @@ import java.util.stream.Collectors;
 import static de.chojo.repbot.util.Guilds.prettyName;
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Service for assigning roles based on reputation.
+ */
 public class RoleAssigner {
     private static final Logger log = getLogger(RoleAssigner.class);
     private final Guilds guilds;
     private final ILocalizer localizer;
 
+    /**
+     * Constructs a new RoleAssigner.
+     *
+     * @param guilds the guilds provider
+     * @param localizer the localizer
+     */
     public RoleAssigner(Guilds guilds, ILocalizer localizer) {
         this.guilds = guilds;
         this.localizer = localizer;
     }
 
     /**
-     * Updates the user roles. Will handle excpetions and send a message if the role could not be assigned.
+     * Updates the user roles. Will handle exceptions and send a message if the role could not be assigned.
      *
      * @param member  member to update
      * @param channel channel to send the message to
@@ -86,7 +95,7 @@ public class RoleAssigner {
      *
      * @param member member to update
      * @return the new highest role of the member, if it changed.
-     * @throws RoleAccessException if the role cant be accessed
+     * @throws RoleAccessException if the role can't be accessed
      */
     public Optional<ReputationRank> update(@Nullable Member member) throws RoleAccessException {
         if (member == null) return Optional.empty();
@@ -114,6 +123,14 @@ public class RoleAssigner {
         return settings.ranks().currentRank(reputation);
     }
 
+    /**
+     * Removes roles from the member that are not in the provided set of roles.
+     *
+     * @param member the member
+     * @param roles the set of roles to retain
+     * @return true if any roles were removed, false otherwise
+     * @throws RoleAccessException if the role can't be accessed
+     */
     private boolean cleanMemberRoles(Member member, Set<Role> roles) throws RoleAccessException {
         var guild = member.getGuild();
 
@@ -137,6 +154,13 @@ public class RoleAssigner {
         return changed;
     }
 
+    /**
+     * Adds roles to the member that are in the provided set of roles.
+     *
+     * @param member the member
+     * @param roles the set of roles to add
+     * @return true if any roles were added, false otherwise
+     */
     private boolean addMemberRoles(Member member, Set<Role> roles) {
         var guild = member.getGuild();
         if (new HashSet<>(member.getRoles()).containsAll(roles)) return false;
@@ -154,12 +178,27 @@ public class RoleAssigner {
         return changed;
     }
 
+    /**
+     * Asserts that the bot can interact with the specified role.
+     *
+     * @param role the role
+     * @param guild the guild
+     * @throws RoleAccessException if the role can't be accessed
+     */
     private void assertInteract(Role role, Guild guild) throws RoleAccessException {
         if (!guild.getSelfMember().canInteract(role)) {
             throw new RoleAccessException(role);
         }
     }
 
+    /**
+     * Updates the roles of members in a batch.
+     *
+     * @param guild the guild
+     * @param context the event context
+     * @param message the message to update with progress
+     * @return a CompletableFuture with the batch update result
+     */
     public CompletableFuture<BatchUpdateResult> updateBatch(Guild guild, EventContext context, Message message) {
         return CompletableFuture.supplyAsync(() -> {
             log.info("Started batch update for guild {}", prettyName(guild));
@@ -185,6 +224,12 @@ public class RoleAssigner {
         });
     }
 
+    /**
+     * Result of a batch update.
+     *
+     * @param checked the number of members checked
+     * @param updated the number of members updated
+     */
     public record BatchUpdateResult(int checked, int updated) {
     }
 }

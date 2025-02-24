@@ -19,14 +19,27 @@ import java.util.Objects;
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Provides GDPR-related data access methods.
+ */
 public class Gdpr {
     private static final Logger log = getLogger(Gdpr.class);
     private final Configuration configuration;
 
+    /**
+     * Constructs a new Gdpr instance.
+     *
+     * @param configuration the configuration object
+     */
     public Gdpr(Configuration configuration) {
         this.configuration = configuration;
     }
 
+    /**
+     * Retrieves the list of removal tasks that are scheduled for deletion.
+     *
+     * @return the list of removal tasks
+     */
     public List<RemovalTask> getRemovalTasks() {
         return Query.query("""
                             SELECT
@@ -42,6 +55,9 @@ public class Gdpr {
                     .all();
     }
 
+    /**
+     * Cleans up GDPR requests that are older than the configured number of days.
+     */
     public void cleanupRequests() {
         Query.query("""
                      DELETE FROM gdpr_log
@@ -52,17 +68,22 @@ public class Gdpr {
              .update();
     }
 
+    /**
+     * Creates a new GDPR user request.
+     *
+     * @param user the user requesting their data
+     * @return the GDPR user request
+     */
     public GdprUser request(User user) {
         return new GdprUser(user);
     }
 
     /**
-     * Get a list of {@link GdprUser}s which have requested their data.
-     * <p>
-     * Only users which are known to the provided shard manager will be returned.
+     * Retrieves a list of GDPR users who have requested their data.
+     * Only users known to the provided shard manager will be returned.
      *
-     * @param shardManager shardmanager to resolve users.
-     * @return list of users
+     * @param shardManager the shard manager to resolve users
+     * @return the list of GDPR users
      */
     public List<GdprUser> getReportRequests(ShardManager shardManager) {
         return Query
@@ -70,7 +91,7 @@ public class Gdpr {
                             SELECT user_id
                             FROM gdpr_log
                             WHERE received IS NULL
-                                AND last_attempt < now() - (least(48, attempts) || ' HOURS')::INTERVAL 
+                                AND last_attempt < now() - (least(48, attempts) || ' HOURS')::INTERVAL
                         """)
                 .single()
                 .map(rs -> GdprUser.build(rs, shardManager))

@@ -11,13 +11,27 @@ import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
+/**
+ * Handler for the max message reputation command in abuse protection.
+ */
 public class MaxMessageReputation implements SlashHandler {
     private final Guilds guilds;
 
+    /**
+     * Constructs a new MaxMessageReputation handler with the specified Guilds provider.
+     *
+     * @param guilds the Guilds provider
+     */
     public MaxMessageReputation(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event for setting or getting the max message reputation.
+     *
+     * @param event the SlashCommandInteractionEvent
+     * @param context the EventContext
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var guild = guilds.guild(event.getGuild());

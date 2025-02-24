@@ -21,7 +21,13 @@ import java.util.HashSet;
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 
-public class Thanking  implements GuildHolder {
+/**
+ * Class representing the thanking settings for a guild.
+ */
+public class Thanking implements GuildHolder {
+    /**
+     * Default reaction emoji.
+     */
     private static final String DEFAULT_REACTION = "🏅";
     private final String mainReaction;
     private final Settings settings;
@@ -33,16 +39,36 @@ public class Thanking  implements GuildHolder {
     private Reactions reactions;
     private Thankwords thankwords;
 
+    /**
+     * Constructs a new Thanking instance with default reaction and channel whitelist enabled.
+     *
+     * @param settings the settings for the guild
+     */
     public Thanking(Settings settings) {
         this(settings, DEFAULT_REACTION, true);
     }
 
+    /**
+     * Constructs a new Thanking instance with specified reaction and channel whitelist setting.
+     *
+     * @param settings the settings for the guild
+     * @param mainReaction the main reaction emoji
+     * @param channelWhitelist whether the channel whitelist is enabled
+     */
     public Thanking(Settings settings, String mainReaction, boolean channelWhitelist) {
         this.settings = settings;
         this.mainReaction = mainReaction;
         this.channelWhitelist = channelWhitelist;
     }
 
+    /**
+     * Builds a Thanking instance from the given settings and database row.
+     *
+     * @param settings the settings for the guild
+     * @param row the database row containing the thanking settings
+     * @return a new Thanking instance
+     * @throws SQLException if a database access error occurs
+     */
     public static Thanking build(Settings settings, Row row) throws SQLException {
         return new Thanking(settings,
                 row.getString("reaction"),
@@ -50,6 +76,11 @@ public class Thanking  implements GuildHolder {
         );
     }
 
+    /**
+     * Retrieves the channels associated with the thanking settings.
+     *
+     * @return the channels associated with the thanking settings
+     */
     public Channels channels() {
         if (channels != null) {
             return channels;
@@ -74,6 +105,11 @@ public class Thanking  implements GuildHolder {
         return this.channels;
     }
 
+    /**
+     * Retrieves the donor roles associated with the thanking settings.
+     *
+     * @return the donor roles associated with the thanking settings
+     */
     public DonorRoles donorRoles() {
         if (donorRoles != null) {
             return donorRoles;
@@ -91,6 +127,11 @@ public class Thanking  implements GuildHolder {
         return donorRoles;
     }
 
+    /**
+     * Retrieves the receiver roles associated with the thanking settings.
+     *
+     * @return the receiver roles associated with the thanking settings
+     */
     public ReceiverRoles receiverRoles() {
         if (receiverRoles != null) {
             return receiverRoles;
@@ -108,6 +149,11 @@ public class Thanking  implements GuildHolder {
         return receiverRoles;
     }
 
+    /**
+     * Retrieves the reactions associated with the thanking settings.
+     *
+     * @return the reactions associated with the thanking settings
+     */
     public Reactions reactions() {
         if (reactions != null) {
             return reactions;
@@ -124,6 +170,11 @@ public class Thanking  implements GuildHolder {
         return this.reactions;
     }
 
+    /**
+     * Retrieves the thankwords associated with the thanking settings.
+     *
+     * @return the thankwords associated with the thanking settings
+     */
     public Thankwords thankwords() {
         if (thankwords != null) {
             return thankwords;
@@ -141,11 +192,21 @@ public class Thanking  implements GuildHolder {
         return this.thankwords;
     }
 
+    /**
+     * Retrieves the guild associated with the thanking settings.
+     *
+     * @return the guild associated with the thanking settings
+     */
     @Override
     public Guild guild() {
         return settings.guild();
     }
 
+    /**
+     * Retrieves the guild ID associated with the thanking settings.
+     *
+     * @return the guild ID associated with the thanking settings
+     */
     @Override
     public long guildId() {
         return settings.guildId();

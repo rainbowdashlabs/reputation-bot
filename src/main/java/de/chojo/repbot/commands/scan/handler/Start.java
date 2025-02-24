@@ -14,13 +14,28 @@ import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
+/**
+ * Handler for the "start scan" slash command.
+ * This command initiates a scan process in a specified text channel.
+ */
 public class Start implements SlashHandler {
     private final Scanner scanner;
 
+    /**
+     * Constructs a new Start handler.
+     *
+     * @param scanner the scanner utility
+     */
     public Start(Scanner scanner) {
         this.scanner = scanner;
     }
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         if (!event.getGuild().getSelfMember().hasPermission(Permission.MESSAGE_HISTORY)) {

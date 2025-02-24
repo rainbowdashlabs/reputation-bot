@@ -5,6 +5,9 @@
  */
 package de.chojo.repbot.config.exception;
 
+/**
+ * Exception thrown when there is a configuration error.
+ */
 public class ConfigurationException extends RuntimeException {
     /**
      * Constructs a new runtime exception with the specified detail message.

@@ -17,13 +17,28 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
+/**
+ * Handler for the "shared guilds" slash command.
+ * This command finds and lists the guilds shared between the bot and a specified user.
+ */
 public class SharedGuilds implements SlashHandler {
     private final Configuration configuration;
 
+    /**
+     * Constructs a new SharedGuilds handler.
+     *
+     * @param configuration the bot configuration
+     */
     public SharedGuilds(Configuration configuration) {
         this.configuration = configuration;
     }
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var userOpt = event.getOption("user");

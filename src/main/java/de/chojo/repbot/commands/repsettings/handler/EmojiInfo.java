@@ -24,14 +24,28 @@ import static de.chojo.repbot.util.EmojiDebug.RECEIVER_LIMIT;
 import static de.chojo.repbot.util.EmojiDebug.TARGET_NOT_IN_CONTEXT;
 import static de.chojo.repbot.util.EmojiDebug.TOO_OLD;
 
+/**
+ * Handles the emoji information slash command.
+ */
 public class EmojiInfo implements SlashHandler {
 
     private final Guilds guilds;
 
+    /**
+     * Constructs a new EmojiInfo instance.
+     *
+     * @param guilds the Guilds instance
+     */
     public EmojiInfo(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event the SlashCommandInteractionEvent
+     * @param context the EventContext
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var generalSettings = guilds.guild(event.getGuild()).settings().general();
@@ -40,6 +54,11 @@ public class EmojiInfo implements SlashHandler {
                     + "\n" + context.localize(emojiExplanation())).queue();
     }
 
+    /**
+     * Provides an explanation of the emoji debug messages.
+     *
+     * @return the explanation string
+     */
     private String emojiExplanation() {
         var emojis = List.of(
                 String.format("$%s$", "command.repsettings.emojidebug.message.title"),
@@ -56,6 +75,13 @@ public class EmojiInfo implements SlashHandler {
         return String.join("\n", emojis);
     }
 
+    /**
+     * Formats an emoji string with its corresponding message code.
+     *
+     * @param emoji the emoji string
+     * @param code the message code
+     * @return the formatted emoji string
+     */
     private String emojiString(String emoji, @PropertyKey(resourceBundle = "locale") String code) {
         return String.format("%s ➜ $%s$", emoji, code);
     }

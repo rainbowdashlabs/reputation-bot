@@ -10,24 +10,35 @@ import de.chojo.sadu.queries.api.query.Query;
 
 import java.util.Optional;
 
+/**
+ * Class for accessing and managing statistics in the database.
+ */
 public class Statistic {
+    /**
+     * Constructs a new Statistic object.
+     */
     public Statistic() {
         super();
     }
 
+    /**
+     * Retrieves the data statistics from the database.
+     *
+     * @return an Optional containing the DataStatistic if present, otherwise an empty Optional
+     */
     public Optional<DataStatistic> getStatistic() {
         return Query.query("""
                             SELECT
-                            	guilds,
-                            	active_guilds,
-                            	active_channel,
-                            	channel,
-                            	total_reputation,
-                            	today_reputation,
-                            	weekly_reputation,
-                            	weekly_avg_reputation
+                             guilds,
+                             active_guilds,
+                             active_channel,
+                             channel,
+                             total_reputation,
+                             today_reputation,
+                             weekly_reputation,
+                             weekly_avg_reputation
                             FROM
-                            	data_statistics;
+                             data_statistics;
                             """)
                     .single()
                     .map(rs -> new DataStatistic(
@@ -42,6 +53,9 @@ public class Statistic {
                     .first();
     }
 
+    /**
+     * Refreshes the materialized view of data statistics in the database.
+     */
     public void refreshStatistics() {
         Query.query("REFRESH MATERIALIZED VIEW data_statistics")
              .single()

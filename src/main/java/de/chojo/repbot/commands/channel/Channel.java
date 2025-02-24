@@ -21,7 +21,15 @@ import de.chojo.repbot.commands.channel.handler.announcement.Where;
 import de.chojo.repbot.commands.channel.handler.announcement.State;
 import de.chojo.repbot.dao.provider.Guilds;
 
+/**
+ * Class representing channel commands.
+ */
 public class Channel extends SlashCommand {
+    /**
+     * Constructs a Channel instance with the specified guilds provider.
+     *
+     * @param guilds the guilds provider
+     */
     public Channel(Guilds guilds) {
         super(Slash.of("channel", "command.channel.description")
                 .adminCommand()

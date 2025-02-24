@@ -37,6 +37,9 @@ import java.util.concurrent.TimeUnit;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Service for handling reputation submissions and related operations.
+ */
 public class ReputationService {
     private static final Logger log = getLogger(ReputationService.class);
     private final Guilds guilds;
@@ -46,6 +49,15 @@ public class ReputationService {
     private final ILocalizer localizer;
     private Instant lastEasterEggSent = Instant.EPOCH;
 
+    /**
+     * Constructs a new ReputationService.
+     *
+     * @param guilds the guilds provider
+     * @param contextResolver the context resolver
+     * @param assigner the role assigner
+     * @param magicImage the magic image configuration
+     * @param localizer the localizer
+     */
     public ReputationService(Guilds guilds, ContextResolver contextResolver, RoleAssigner assigner, MagicImage magicImage, ILocalizer localizer) {
         this.guilds = guilds;
         this.assigner = assigner;
@@ -55,16 +67,16 @@ public class ReputationService {
     }
 
     /**
-     * Submit a reputation.
+     * Submits a reputation.
      * <p>
      * This reputation will be checked by several factors based on the {@link de.chojo.repbot.dao.access.guild.settings.Settings}.
      *
-     * @param guild      guild where the vote was given
-     * @param donor      donor of the reputation
-     * @param receiver   receiver of the reputation
-     * @param message    triggered message
-     * @param refMessage reference message if present
-     * @param type       type of reputation source
+     * @param guild      the guild where the vote was given
+     * @param donor      the donor of the reputation
+     * @param receiver   the receiver of the reputation
+     * @param message    the triggered message
+     * @param refMessage the reference message if present
+     * @param type       the type of reputation source
      * @return true if the reputation was counted and is valid
      */
     public boolean submitReputation(Guild guild, Member donor, Member receiver, Message message, @Nullable Message refMessage, ThankType type) {
@@ -111,6 +123,15 @@ public class ReputationService {
         return log(guild, donor, receiver, message, refMessage, type, settings);
     }
 
+    /**
+     * Retrieves the message context based on the donor, message, type, and settings.
+     *
+     * @param donor the donor of the reputation
+     * @param message the triggered message
+     * @param type the type of reputation source
+     * @param settings the settings
+     * @return the message context
+     */
     private MessageContext getContext(Member donor, Message message, ThankType type, Settings settings) {
         MessageContext context;
         if (type == ThankType.REACTION) {
@@ -122,6 +143,17 @@ public class ReputationService {
         return context;
     }
 
+    /**
+     * Asserts abuse protection rules.
+     *
+     * @param guild the guild
+     * @param donor the donor of the reputation
+     * @param receiver the receiver of the reputation
+     * @param message the triggered message
+     * @param refMessage the reference message if present
+     * @param context the message context
+     * @return true if abuse protection rules are violated, false otherwise
+     */
     private boolean assertAbuseProtection(Guild guild, Member donor, Member receiver, Message message, @Nullable Message refMessage, MessageContext context) {
         var repGuild = guilds.guild(guild);
         var analyzer = repGuild.reputation().analyzer();
@@ -191,6 +223,14 @@ public class ReputationService {
         return false;
     }
 
+    /**
+     * Checks if the vote is a self-vote.
+     *
+     * @param donor the donor of the reputation
+     * @param receiver the receiver of the reputation
+     * @param message the triggered message
+     * @return true if it is a self-vote, false otherwise
+     */
     private boolean isSelfVote(Member donor, Member receiver, Message message) {
         // block self vote
         if (Verifier.equalSnowflake(receiver, donor)) {
@@ -215,6 +255,18 @@ public class ReputationService {
         return false;
     }
 
+    /**
+     * Logs the reputation submission.
+     *
+     * @param guild the guild
+     * @param donor the donor of the reputation
+     * @param receiver the receiver of the reputation
+     * @param message the triggered message
+     * @param refMessage the reference message if present
+     * @param type the type of reputation source
+     * @param settings the settings
+     * @return true if the reputation was logged successfully, false otherwise
+     */
     private boolean log(Guild guild, Member donor, Member receiver, Message message, @Nullable Message refMessage, ThankType type, Settings settings) {
         var repGuild = guilds.guild(guild);
         // try to log reputation
@@ -248,6 +300,13 @@ public class ReputationService {
         return true;
     }
 
+    /**
+     * Checks if the given reputation type is disabled in the settings.
+     *
+     * @param type the type of reputation source
+     * @param reputation the reputation settings
+     * @return true if the type is disabled, false otherwise
+     */
     private boolean isTypeDisabled(ThankType type, Reputation reputation) {
         // force settings
         switch (type) {
@@ -274,6 +333,16 @@ public class ReputationService {
         return false;
     }
 
+    /**
+     * Checks if the donor can vote for the receiver.
+     *
+     * @param message the triggered message
+     * @param donor the donor of the reputation
+     * @param receiver the receiver of the reputation
+     * @param guild the guild
+     * @param settings the settings
+     * @return true if the donor can vote, false otherwise
+     */
     public boolean canVote(Message message, Member donor, Member receiver, Guild guild, Settings settings) {
         var repGuild = settings.repGuild();
         var analyzer = repGuild.reputation().analyzer();

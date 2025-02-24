@@ -21,9 +21,19 @@ import java.io.IOException;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Command for setting up the bot in a guild.
+ */
 public class Setup extends SlashCommand {
     private static final Logger log = getLogger(Setup.class);
 
+    /**
+     * Constructs a new Setup command.
+     *
+     * @param guilds the guilds provider
+     * @param thankwordsContainer the container for thank words
+     * @param configuration the bot configuration
+     */
     public Setup(Guilds guilds, ThankwordsContainer thankwordsContainer, Configuration configuration) {
         super(Slash.of("setup", "command.setup.description")
                 .guildOnly()
@@ -31,6 +41,13 @@ public class Setup extends SlashCommand {
                 .command(new Start(guilds, thankwordsContainer, configuration)));
     }
 
+    /**
+     * Creates a new Setup command instance.
+     *
+     * @param guilds the guilds provider
+     * @param configuration the bot configuration
+     * @return a new Setup command instance
+     */
     public static Setup of(Guilds guilds, Configuration configuration) {
         ThankwordsContainer thankwordsContainer;
         try {

@@ -34,11 +34,17 @@ import java.nio.file.Paths;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Configuration class responsible for loading and managing the bot's configuration settings.
+ */
 public class Configuration {
     private static final Logger log = getLogger(Configuration.class);
     private final ObjectMapper objectMapper;
     private ConfigFile configFile;
 
+    /**
+     * Constructs a Configuration instance and initializes the ObjectMapper.
+     */
     private Configuration() {
         objectMapper = JsonMapper.builder()
                 .configure(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS, true)
@@ -49,12 +55,20 @@ public class Configuration {
                 .setDefaultPrettyPrinter(new DefaultPrettyPrinter());
     }
 
+    /**
+     * Creates and initializes a Configuration instance.
+     *
+     * @return a new Configuration instance
+     */
     public static Configuration create() {
         var configuration = new Configuration();
         configuration.reload();
         return configuration;
     }
 
+    /**
+     * Reloads the configuration from the file and saves it.
+     */
     public void reload() {
         try {
             reloadFile();
@@ -69,15 +83,30 @@ public class Configuration {
         }
     }
 
+    /**
+     * Saves the current configuration to the file.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     private void save() throws IOException {
         objectMapper.writerWithDefaultPrettyPrinter().writeValues(getConfig().toFile()).write(configFile);
     }
 
+    /**
+     * Reloads the configuration file and ensures consistency.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     private void reloadFile() throws IOException {
         forceConsistency();
         configFile = objectMapper.readValue(getConfig().toFile(), ConfigFile.class);
     }
 
+    /**
+     * Ensures the configuration file and its directories exist.
+     *
+     * @throws IOException if an I/O error occurs
+     */
     private void forceConsistency() throws IOException {
         Files.createDirectories(getConfig().getParent());
         if (!getConfig().toFile().exists()) {
@@ -88,6 +117,11 @@ public class Configuration {
         }
     }
 
+    /**
+     * Gets the path to the configuration file.
+     *
+     * @return the path to the configuration file
+     */
     private Path getConfig() {
         var home = new File(".").getAbsoluteFile().getParentFile().toPath();
         var property = System.getProperty("bot.config");
@@ -98,46 +132,101 @@ public class Configuration {
         return Paths.get(home.toString(), property);
     }
 
+    /**
+     * Gets the database configuration.
+     *
+     * @return the database configuration
+     */
     public Database database() {
         return configFile.database();
     }
 
+    /**
+     * Gets the base settings configuration.
+     *
+     * @return the base settings configuration
+     */
     public BaseSettings baseSettings() {
         return configFile.baseSettings();
     }
 
+    /**
+     * Gets the analyzer settings configuration.
+     *
+     * @return the analyzer settings configuration
+     */
     public AnalyzerSettings analyzerSettings() {
         return configFile.analyzerSettings();
     }
 
+    /**
+     * Gets the magic image configuration.
+     *
+     * @return the magic image configuration
+     */
     public MagicImage magicImage() {
         return configFile.magicImage();
     }
 
+    /**
+     * Gets the badges configuration.
+     *
+     * @return the badges configuration
+     */
     public Badges badges() {
         return configFile.badges();
     }
 
+    /**
+     * Gets the links configuration.
+     *
+     * @return the links configuration
+     */
     public Links links() {
         return configFile.links();
     }
 
+    /**
+     * Gets the botlist configuration.
+     *
+     * @return the botlist configuration
+     */
     public Botlist botlist() {
         return configFile.botlist();
     }
 
+    /**
+     * Gets the presence settings configuration.
+     *
+     * @return the presence settings configuration
+     */
     public PresenceSettings presence() {
         return configFile.presence();
     }
 
+    /**
+     * Gets the self-cleanup configuration.
+     *
+     * @return the self-cleanup configuration
+     */
     public SelfCleanup selfCleanup() {
         return configFile.selfCleanup();
     }
 
+    /**
+     * Gets the API configuration.
+     *
+     * @return the API configuration
+     */
     public Api api() {
         return configFile.api();
     }
 
+    /**
+     * Gets the cleanup configuration.
+     *
+     * @return the cleanup configuration
+     */
     public Cleanup cleanup() {
         return configFile.cleanup();
     }
