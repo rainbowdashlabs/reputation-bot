@@ -246,7 +246,7 @@ public class ContextResolver {
     }
 
     /**
-     * Gets the combined context for the specified member and message.
+     * Gets the combined voice and message context for the specified member and message.
      *
      * @param target   the target member
      * @param message  the message to determine channel, author, and start time
