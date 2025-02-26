@@ -17,7 +17,7 @@ import net.dv8tion.jda.api.interactions.InteractionHook;
 import static de.chojo.repbot.commands.reactions.util.EmojiCheck.checkEmoji;
 
 /**
- * Handler for the main slash command related to reactions.
+ * Handler to set the main reaction for reputation.
  */
 public class Main implements SlashHandler {
     private final Guilds guilds;
