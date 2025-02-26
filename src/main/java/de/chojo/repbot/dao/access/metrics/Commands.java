@@ -45,10 +45,10 @@ public class Commands {
     }
 
     /**
-     * Retrieves command statistics for a specific week.
+     * Retrieves command statistics in a weekly resolution.
      *
-     * @param week the week number
-     * @return the command statistics for the specified week
+     * @param week the week offset from the current week.
+     * @return the command statistics after the specified offset in weekly resolution
      */
     public CommandsStatistic week(int week) {
         return get("metrics_commands_week", "week", week);
