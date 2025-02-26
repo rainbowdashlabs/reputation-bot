@@ -16,14 +16,29 @@ import java.nio.charset.StandardCharsets;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Command class for the info command.
+ */
 public class Info extends SlashCommand {
     private static final Logger log = getLogger(Info.class);
 
+    /**
+     * Constructs a new Info command.
+     *
+     * @param version the version of the application
+     * @param configuration the configuration of the application
+     */
     private Info(String version, Configuration configuration) {
         super(Slash.of("info", "command.info.description")
                 .command(new Show(version, configuration)));
     }
 
+    /**
+     * Creates a new Info command instance.
+     *
+     * @param configuration the configuration of the application
+     * @return a new Info command instance
+     */
     public static Info create(Configuration configuration) {
         var version = "undefined";
         try (var input = Info.class.getClassLoader().getResourceAsStream("version")) {

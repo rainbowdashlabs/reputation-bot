@@ -26,11 +26,25 @@ import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_WEEK_OFFSET;
 import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
 
+/**
+ * Service class for handling metrics related to interactions.
+ */
 public class Service extends MetricsHolder {
+    /**
+     * Constructs a new Service.
+     *
+     * @param metrics the metrics provider
+     * @param cache the metric cache
+     */
     public Service(Metrics metrics, MetricCache cache) {
         super(cache, metrics);
     }
 
+    /**
+     * Handles the request to get the count of handled interactions per hour.
+     *
+     * @param ctx the context of the request
+     */
     @OpenApi(
             summary = "Get the counts of handled interactions per hour.",
             operationId = "countHour",
@@ -55,6 +69,11 @@ public class Service extends MetricsHolder {
         }
     }
 
+    /**
+     * Handles the request to get the count of handled interactions per day.
+     *
+     * @param ctx the context of the request
+     */
     @OpenApi(
             summary = "Get the counts of handled interactions per day.",
             operationId = "countDay",
@@ -79,6 +98,11 @@ public class Service extends MetricsHolder {
         }
     }
 
+    /**
+     * Handles the request to get the count of handled interactions per week.
+     *
+     * @param ctx the context of the request
+     */
     @OpenApi(
             summary = "Get the counts of handled interactions per week.",
             operationId = "countWeek",
@@ -103,6 +127,11 @@ public class Service extends MetricsHolder {
         }
     }
 
+    /**
+     * Handles the request to get the count of handled interactions per month.
+     *
+     * @param ctx the context of the request
+     */
     @OpenApi(
             summary = "Get the counts of handled interactions per month.",
             operationId = "countMonth",
@@ -127,6 +156,9 @@ public class Service extends MetricsHolder {
         }
     }
 
+    /**
+     * Builds the routes for the service metrics.
+     */
     @Override
     public void buildRoutes() {
         path("service",

@@ -13,13 +13,27 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 import java.util.Collections;
 
+/**
+ * Handler for the "add donor" slash command, which adds a role as a donor for thankwords.
+ */
 public class AddDonor implements SlashHandler {
     private final Guilds guilds;
 
+    /**
+     * Constructs an AddDonor handler with the specified guilds provider.
+     *
+     * @param guilds the guilds provider
+     */
     public AddDonor(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var role = event.getOption("role").getAsRole();

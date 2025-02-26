@@ -14,7 +14,15 @@ import de.chojo.repbot.commands.locale.handler.Reset;
 import de.chojo.repbot.commands.locale.handler.Set;
 import de.chojo.repbot.dao.provider.Guilds;
 
+/**
+ * Command for managing locale settings.
+ */
 public class Locale extends SlashCommand {
+    /**
+     * Constructs a new Locale command with the specified Guilds provider.
+     *
+     * @param guilds the Guilds provider
+     */
     public Locale(Guilds guilds) {
         super(Slash.of("locale", "command.locale.description")
                 .guildOnly()

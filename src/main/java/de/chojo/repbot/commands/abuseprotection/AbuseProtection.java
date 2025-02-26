@@ -23,7 +23,16 @@ import de.chojo.repbot.dao.provider.Guilds;
 
 import java.time.temporal.ChronoUnit;
 
+/**
+ * Slash command for managing abuse protection settings.
+ */
 public class AbuseProtection extends SlashCommand {
+
+    /**
+     * Constructs an AbuseProtection command with the specified guilds provider.
+     *
+     * @param guilds the guilds provider
+     */
     public AbuseProtection(Guilds guilds) {
         super(Slash.of("abuseprotection", "command.abuseprotection.description")
                 .adminCommand()
@@ -40,13 +49,11 @@ public class AbuseProtection extends SlashCommand {
                                 .handler(new MaxMessageReputation(guilds))
                                 .argument(Argument.integer("amount", "command.abuseprotection.message.reputation.options.amount.description")
                                                   .min(1)
-                                                  // The max amount of components without delete button
                                                   .max(49)))
                         .subCommand(SubCommand.of("min", "command.abuseprotection.message.min.description")
                                 .handler(new MinMessages(guilds))
                                 .argument(Argument.integer("messages", "command.abuseprotection.message.min.options.messages.description")
                                                   .min(0)
-                                                  // The max amount of retrieved history
                                                   .max(100))))
                 .group(Group.of("context", "command.abuseprotection.context.description")
                         .subCommand(SubCommand.of("donor", "command.abuseprotection.context.donor.description")

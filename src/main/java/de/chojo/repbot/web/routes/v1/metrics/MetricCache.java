@@ -22,6 +22,9 @@ import java.util.stream.Collectors;
 import static io.javalin.apibuilder.ApiBuilder.after;
 import static org.slf4j.LoggerFactory.getLogger;
 
+/**
+ * Handles caching of metric responses to improve performance and reduce load.
+ */
 public class MetricCache implements RoutesBuilder {
     private static final Logger log = getLogger(MetricCache.class);
     private final RateLimiter rateLimiter;
@@ -30,10 +33,19 @@ public class MetricCache implements RoutesBuilder {
                                                                      .maximumSize(100)
                                                                      .build();
 
+    /**
+     * Constructs a MetricCache with a rate limiter.
+     */
     public MetricCache() {
         rateLimiter = new RateLimiter(TimeUnit.MINUTES);
     }
 
+    /**
+     * Returns a handler that caches the response of the given handler.
+     *
+     * @param supplier the handler whose response should be cached
+     * @return a handler that caches the response
+     */
     public Handler cache(Handler supplier) {
         return ctx -> {
             var cacheKey = new CacheKey(ctx);
@@ -50,6 +62,9 @@ public class MetricCache implements RoutesBuilder {
         };
     }
 
+    /**
+     * Builds the routes for caching metric responses.
+     */
     @Override
     public void buildRoutes() {
         after(ctx -> {
@@ -61,6 +76,9 @@ public class MetricCache implements RoutesBuilder {
         });
     }
 
+    /**
+     * Represents a cached response.
+     */
     private static class ResponseCache {
         String route;
         String accept;
@@ -69,6 +87,11 @@ public class MetricCache implements RoutesBuilder {
         int status;
         byte[] body;
 
+        /**
+         * Constructs a ResponseCache from the given context.
+         *
+         * @param ctx the context
+         */
         ResponseCache(Context ctx) {
             route = ctx.path();
             accept = ctx.header("Accept");
@@ -83,6 +106,11 @@ public class MetricCache implements RoutesBuilder {
             }
         }
 
+        /**
+         * Applies the cached response to the given context.
+         *
+         * @param ctx the context
+         */
         void apply(Context ctx) {
             ctx.status(status);
             for (var header : header.entrySet()) {
@@ -94,10 +122,18 @@ public class MetricCache implements RoutesBuilder {
         }
     }
 
+    /**
+     * Represents a key for caching responses.
+     */
     private static class CacheKey {
         String route;
         String accept;
 
+        /**
+         * Constructs a CacheKey from the given context.
+         *
+         * @param ctx the context
+         */
         CacheKey(Context ctx) {
             route = ctx.path();
             accept = ctx.header("Accept");

@@ -10,14 +10,28 @@ import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.Guilds;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
+/**
+ * Handler for the invalidate cache command.
+ */
 public class InvalidateCache implements SlashHandler {
 
     private final Guilds guilds;
 
+    /**
+     * Constructs a new InvalidateCache handler.
+     *
+     * @param guilds the Guilds provider
+     */
     public InvalidateCache(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event to invalidate the guild cache.
+     *
+     * @param event the SlashCommandInteractionEvent
+     * @param context the EventContext
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         guilds.invalidate(event.getOption("guild").getAsLong());

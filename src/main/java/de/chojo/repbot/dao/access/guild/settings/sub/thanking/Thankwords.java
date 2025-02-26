@@ -18,18 +18,33 @@ import java.util.stream.Collectors;
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 
+/**
+ * Class representing the thank words settings for a guild.
+ */
 public class Thankwords implements GuildHolder {
+    /**
+     * Regular expression pattern for a thank word.
+     */
     @Language("RegExp")
     private static final String THANKWORD = "(?:^|\\b)%s(?:$|\\b)";
+
+    /**
+     * Regular expression pattern for matching thank words.
+     */
     @Language("RegExp")
     private static final String PATTERN = "(?i)(?<match>%s)";
 
     private final Thanking thanking;
-
     private final Set<String> thankwords;
     private final StampedLock lock;
     private volatile Pattern cachedPattern;
 
+    /**
+     * Constructs a new Thankwords instance.
+     *
+     * @param thanking the thanking settings
+     * @param thankwords the set of thank words
+     */
     public Thankwords(Thanking thanking, Set<String> thankwords) {
         this.thanking = thanking;
         this.thankwords = thankwords;
@@ -39,16 +54,31 @@ public class Thankwords implements GuildHolder {
         this.cachedPattern = compilePattern();
     }
 
+    /**
+     * Retrieves the guild associated with the thank words settings.
+     *
+     * @return the guild associated with the thank words settings
+     */
     @Override
     public Guild guild() {
         return thanking.guild();
     }
 
+    /**
+     * Retrieves the guild ID associated with the thank words settings.
+     *
+     * @return the guild ID associated with the thank words settings
+     */
     @Override
     public long guildId() {
         return thanking.guildId();
     }
 
+    /**
+     * Retrieves the set of thank words.
+     *
+     * @return the set of thank words
+     */
     public Set<String> words() {
         long stamp = lock.readLock();
         try {
@@ -58,6 +88,11 @@ public class Thankwords implements GuildHolder {
         }
     }
 
+    /**
+     * Retrieves the compiled pattern for matching thank words.
+     *
+     * @return the compiled pattern for matching thank words
+     */
     public Pattern thankwordPattern() {
         // even if another thread has a write-lock, we either read the old pattern before the other thread compiles the new one,
         // or we read the new one - both fine for our use
@@ -65,7 +100,10 @@ public class Thankwords implements GuildHolder {
     }
 
     /**
-     * Must be called in a write-lock if 'this' is accessible from other objects
+     * Compiles the pattern for matching thank words.
+     * Must be called in a write-lock if 'this' is accessible from other objects.
+     *
+     * @return the compiled pattern for matching thank words
      */
     private Pattern compilePattern() {
         if (thankwords.isEmpty()) return Pattern.compile("");
@@ -76,6 +114,12 @@ public class Thankwords implements GuildHolder {
                 Pattern.CASE_INSENSITIVE + Pattern.MULTILINE + Pattern.DOTALL + Pattern.COMMENTS);
     }
 
+    /**
+     * Adds a new thank word to the set.
+     *
+     * @param pattern the thank word pattern to add
+     * @return true if the thank word was added, false otherwise
+     */
     public boolean add(String pattern) {
         long stamp = lock.writeLock();
         try {
@@ -98,6 +142,12 @@ public class Thankwords implements GuildHolder {
         }
     }
 
+    /**
+     * Removes a thank word from the set.
+     *
+     * @param pattern the thank word pattern to remove
+     * @return true if the thank word was removed, false otherwise
+     */
     public boolean remove(String pattern) {
         long stamp = lock.writeLock();
         try {
@@ -120,6 +170,11 @@ public class Thankwords implements GuildHolder {
         }
     }
 
+    /**
+     * Retrieves a pretty string representation of the thank words.
+     *
+     * @return a pretty string representation of the thank words
+     */
     public String prettyString() {
         return words().stream().map("`%s`"::formatted).collect(Collectors.joining(", "));
     }
