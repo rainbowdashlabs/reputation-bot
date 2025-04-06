@@ -29,7 +29,7 @@ dependencies {
         exclude(group = "club.minnced", module = "opus-java")
     }
 
-    val openapi = "6.4.0-1"
+    val openapi = "6.5.0"
 
     annotationProcessor("io.javalin.community.openapi:openapi-annotation-processor:$openapi")
     implementation("io.javalin.community.openapi:javalin-openapi-plugin:$openapi") // for /openapi route with JSON scheme
@@ -48,7 +48,7 @@ dependencies {
     implementation("org.knowm.xchart", "xchart", "3.8.8")
 
     // unit testing
-    testImplementation(platform("org.junit:junit-bom:5.12.0"))
+    testImplementation(platform("org.junit:junit-bom:5.12.1"))
     testImplementation("org.junit.jupiter", "junit-jupiter")
     testImplementation("org.junit.platform", "junit-platform-launcher")
     testImplementation("org.knowm.xchart", "xchart", "3.8.8")
