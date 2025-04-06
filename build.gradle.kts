@@ -10,8 +10,6 @@ group = "de.chojo"
 version = "1.15.2"
 
 repositories {
-    mavenLocal(){
-    }
     mavenCentral()
     maven("https://eldonexus.de/repository/maven-public")
     maven("https://eldonexus.de/repository/maven-proxies")
@@ -27,7 +25,7 @@ spotless {
 
 dependencies {
     //discord
-    implementation("de.chojo", "cjda-util", "2.11.0+jda-5.3.2-SNAPSHOT") {
+    implementation("de.chojo", "cjda-util", "2.11.0+jda-5.3.2-DEV") {
         exclude(group = "club.minnced", module = "opus-java")
     }
 
