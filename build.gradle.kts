@@ -48,7 +48,7 @@ dependencies {
     implementation("org.knowm.xchart", "xchart", "3.8.8")
 
     // unit testing
-    testImplementation(platform("org.junit:junit-bom:5.12.1"))
+    testImplementation(platform("org.junit:junit-bom:5.12.2"))
     testImplementation("org.junit.jupiter", "junit-jupiter")
     testImplementation("org.junit.platform", "junit-platform-launcher")
     testImplementation("org.knowm.xchart", "xchart", "3.8.8")
