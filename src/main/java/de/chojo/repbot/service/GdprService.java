@@ -7,13 +7,11 @@ package de.chojo.repbot.service;
 
 import de.chojo.repbot.dao.access.Gdpr;
 import de.chojo.repbot.dao.access.gdpr.RemovalTask;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ScheduledExecutorService;
@@ -25,19 +23,19 @@ public class GdprService implements Runnable {
     private static final Logger log = getLogger(GdprService.class);
     private final ShardManager shardManager;
     private final ExecutorService executorService;
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
     private final Gdpr gdpr;
 
-    private GdprService(ShardManager shardManager, Guilds guilds, Gdpr gdpr, ExecutorService executorService) {
+    private GdprService(ShardManager shardManager, GuildRepository guildRepository, Gdpr gdpr, ExecutorService executorService) {
         this.shardManager = shardManager;
-        this.guilds = guilds;
+        this.guildRepository = guildRepository;
         this.gdpr = gdpr;
         this.executorService = executorService;
     }
 
-    public static GdprService of(ShardManager shardManager, Guilds guilds, Gdpr gdpr,
+    public static GdprService of(ShardManager shardManager, GuildRepository guildRepository, Gdpr gdpr,
                                  ScheduledExecutorService scheduledExecutorService) {
-        var service = new GdprService(shardManager, guilds, gdpr, scheduledExecutorService);
+        var service = new GdprService(shardManager, guildRepository, gdpr, scheduledExecutorService);
         scheduledExecutorService.scheduleAtFixedRate(service, 15, 3600, TimeUnit.SECONDS);
         return service;
     }
@@ -67,7 +65,7 @@ public class GdprService implements Runnable {
         return CompletableFuture.supplyAsync(() -> {
             log.info("Guild prune was started on {}", guild.getId());
             var pruned = 0;
-            var users = guilds.guild(guild).userIds();
+            var users = guildRepository.guild(guild).userIds();
             log.info("Checking {} users", users.size());
             for (var user : users) {
                 try {
@@ -89,7 +87,7 @@ public class GdprService implements Runnable {
     }
 
     private void cleanupGuilds() {
-        for (var page : guilds.guilds(100)) {
+        for (var page : guildRepository.guilds(100)) {
             for (var guild : page) {
                 if (shardManager.getGuildById(guild.guildId()) != null) {
                     guild.gdpr().dequeueDeletion();

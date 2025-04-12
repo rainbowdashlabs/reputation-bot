@@ -7,7 +7,7 @@ package de.chojo.repbot.service;
 
 import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -27,13 +27,13 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class RoleUpdater extends ListenerAdapter {
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
     private final Map<Long, Set<Long>> checked = new HashMap<>();
     private final RoleAssigner roleAssigner;
     private final ShardManager shardManager;
 
-    public static RoleUpdater create(Guilds guilds, RoleAssigner roleAssigner, ShardManager shardManager, ScheduledExecutorService executorService) {
-        var roleUpdater = new RoleUpdater(guilds, roleAssigner, shardManager);
+    public static RoleUpdater create(GuildRepository guildRepository, RoleAssigner roleAssigner, ShardManager shardManager, ScheduledExecutorService executorService) {
+        var roleUpdater = new RoleUpdater(guildRepository, roleAssigner, shardManager);
         executorService.scheduleAtFixedRate(roleUpdater.checked::clear, 30, 30, TimeUnit.MINUTES);
         var now = ZonedDateTime.now(ZoneOffset.UTC);
         var base = now.toLocalDate().atStartOfDay().plus(1, ChronoUnit.DAYS).plus(1, ChronoUnit.HOURS)
@@ -43,21 +43,21 @@ public class RoleUpdater extends ListenerAdapter {
         return roleUpdater;
     }
 
-    public RoleUpdater(Guilds guilds, RoleAssigner roleAssigner, ShardManager shardManager) {
-        this.guilds = guilds;
+    public RoleUpdater(GuildRepository guildRepository, RoleAssigner roleAssigner, ShardManager shardManager) {
+        this.guildRepository = guildRepository;
         this.roleAssigner = roleAssigner;
         this.shardManager = shardManager;
     }
 
     private void updateTimed() {
         if (ZonedDateTime.now().getDayOfMonth() == 1) {
-            for (var guild : guilds.byReputationMode(ReputationMode.MONTH)) {
+            for (var guild : guildRepository.byReputationMode(ReputationMode.MONTH)) {
                 updateRoles(guild);
             }
         }
 
         if (ZonedDateTime.now().getDayOfWeek() == DayOfWeek.MONDAY) {
-            for (var guild : guilds.byReputationMode(ReputationMode.WEEK)) {
+            for (var guild : guildRepository.byReputationMode(ReputationMode.WEEK)) {
                 updateRoles(guild);
             }
         }
@@ -82,7 +82,7 @@ public class RoleUpdater extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (!event.isFromGuild()) return;
-        if (!guilds.guild(event.getGuild()).settings().general().reputationMode().isAutoRefresh()) return;
+        if (!guildRepository.guild(event.getGuild()).settings().general().reputationMode().isAutoRefresh()) return;
         if (event.getMember() == null || isChecked(event.getMember())) return;
         roleAssigner.updateReporting(event.getMember(), event.getGuildChannel());
         guildSet(event.getGuild()).add(event.getMember().getIdLong());

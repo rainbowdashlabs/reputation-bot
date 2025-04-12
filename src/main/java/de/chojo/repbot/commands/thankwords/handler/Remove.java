@@ -10,7 +10,7 @@ import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.util.Completion;
 import de.chojo.jdautil.wrapper.EventContext;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
@@ -18,10 +18,10 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 public class Remove implements SlashHandler {
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
 
-    public Remove(Guilds guilds) {
-        this.guilds = guilds;
+    public Remove(GuildRepository guildRepository) {
+        this.guildRepository = guildRepository;
     }
 
     @Override
@@ -35,7 +35,7 @@ public class Remove implements SlashHandler {
                  .queue();
             return;
         }
-        if (guilds.guild(event.getGuild()).settings().thanking().thankwords().remove(pattern)) {
+        if (guildRepository.guild(event.getGuild()).settings().thanking().thankwords().remove(pattern)) {
             event.reply(context.localize("command.thankwords.remove.message.removed",
                     Replacement.create("PATTERN", pattern, Format.CODE))).queue();
             return;
@@ -48,7 +48,7 @@ public class Remove implements SlashHandler {
     @Override
     public void onAutoComplete(CommandAutoCompleteInteractionEvent event, EventContext context) {
         var option = event.getFocusedOption();
-        var thankwords = guilds.guild(event.getGuild()).settings().thanking().thankwords().words();
+        var thankwords = guildRepository.guild(event.getGuild()).settings().thanking().thankwords().words();
         event.replyChoices(Completion.complete(option.getValue(), thankwords)).queue();
     }
 }

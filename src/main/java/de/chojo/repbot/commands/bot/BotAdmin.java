@@ -16,6 +16,9 @@ import de.chojo.repbot.commands.bot.handler.Leave;
 import de.chojo.repbot.commands.bot.handler.Redeploy;
 import de.chojo.repbot.commands.bot.handler.Search;
 import de.chojo.repbot.commands.bot.handler.SharedGuilds;
+import de.chojo.repbot.commands.bot.handler.entitlement.Create;
+import de.chojo.repbot.commands.bot.handler.entitlement.Delete;
+import de.chojo.repbot.commands.bot.handler.entitlement.Show;
 import de.chojo.repbot.commands.bot.handler.log.Analyzer;
 import de.chojo.repbot.commands.bot.handler.system.Metrics;
 import de.chojo.repbot.commands.bot.handler.system.Reload;
@@ -24,11 +27,17 @@ import de.chojo.repbot.commands.bot.handler.system.Shudown;
 import de.chojo.repbot.commands.bot.handler.system.Status;
 import de.chojo.repbot.commands.bot.handler.system.Upgrade;
 import de.chojo.repbot.config.Configuration;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.statistic.Statistic;
 
+import static de.chojo.jdautil.interactions.slash.Argument.integer;
+import static de.chojo.jdautil.interactions.slash.Argument.number;
+import static de.chojo.jdautil.interactions.slash.Argument.text;
+import static de.chojo.jdautil.interactions.slash.Group.group;
+import static de.chojo.jdautil.interactions.slash.SubCommand.sub;
+
 public class BotAdmin extends SlashCommand {
-    public BotAdmin(Guilds guilds, Configuration configuration, Statistic statistics) {
+    public BotAdmin(GuildRepository guildRepository, Configuration configuration, Statistic statistics) {
         super(Slash.of("bot", "Bot admin commands.")
                    .unlocalized()
                    .guildOnly()
@@ -48,12 +57,12 @@ public class BotAdmin extends SlashCommand {
                                .subCommand(SubCommand.of("reload", "Reload configuration")
                                                      .handler(new Reload(configuration))))
                    .subCommand(SubCommand.of("debug", "Debug of a guild")
-                                         .handler(new Debug(guilds))
+                                         .handler(new Debug(guildRepository))
                                          .argument(Argument.text("guild_id", "Id of guild").asRequired())
                                          .argument(Argument.text("channel_id", "Id of channel")))
                    .group(Group.of("log", "log access")
                                .subCommand(SubCommand.of("analyzer", "Analyzer log")
-                                                     .handler(new Analyzer(guilds))
+                                                     .handler(new Analyzer(guildRepository))
                                                      .argument(Argument.text("guildid", "Guild id").asRequired())
                                                      .argument(Argument.text("messageid", "Id of message").asRequired())))
                    .subCommand(SubCommand.of("shared_guilds", "Shared guilds with a user")
@@ -67,10 +76,21 @@ public class BotAdmin extends SlashCommand {
                                          .handler(new Search())
                                          .argument(Argument.text("term", "Search term").asRequired()))
                    .subCommand(SubCommand.of("invalidate_cache", "Invalidates cached data for the guild")
-                                         .handler(new InvalidateCache(guilds))
+                                         .handler(new InvalidateCache(guildRepository))
                                          .argument(Argument.text("guild", "guild id").asRequired()))
                    .subCommand(SubCommand.of("leave", "Leave a guild")
                                          .handler(new Leave())
-                                         .argument(Argument.text("guild_id", "Guild id").asRequired())));
+                                         .argument(Argument.text("guild_id", "Guild id").asRequired()))
+                   .group(group("entitlement", "Manage entitlements")
+                           .subCommand(sub("create", "Create entitlements")
+                                   .handler(new Create())
+                                   .argument(Argument.text("sku", "skuid").asRequired().withAutoComplete())
+                                   .argument(integer("ownerid", "guild id")))
+                           .subCommand(sub("list", "List entitlements of a guild")
+                                   .handler(new Show())
+                                   .argument(Argument.text("guild_id", "Guild id")))
+                           .subCommand(sub("delete", "Delete Entitlement")
+                                   .handler(new Delete())
+                                   .argument(text("entitlementid", "Entitlement id").asRequired()))));
     }
 }

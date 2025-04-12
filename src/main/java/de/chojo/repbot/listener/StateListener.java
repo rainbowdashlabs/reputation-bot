@@ -7,7 +7,7 @@ package de.chojo.repbot.listener;
 
 import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.repbot.config.Configuration;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.dao.snapshots.ReputationRank;
 import net.dv8tion.jda.api.Permission;
@@ -29,13 +29,13 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class StateListener extends ListenerAdapter {
     private static final Logger log = getLogger(StateListener.class);
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
     private final ILocalizer localizer;
     private final Configuration configuration;
     private final Metrics metrics;
 
-    private StateListener(Guilds guilds, ILocalizer localizer, Configuration configuration, Metrics metrics) {
-        this.guilds = guilds;
+    private StateListener(GuildRepository guildRepository, ILocalizer localizer, Configuration configuration, Metrics metrics) {
+        this.guildRepository = guildRepository;
         this.localizer = localizer;
         this.configuration = configuration;
         this.metrics = metrics;
@@ -46,13 +46,13 @@ public class StateListener extends ListenerAdapter {
         metrics.service().countInteraction();
     }
 
-    public static StateListener of(ILocalizer localizer, Guilds guilds, Configuration configuration, Metrics metrics) {
-        return new StateListener(guilds, localizer, configuration, metrics);
+    public static StateListener of(ILocalizer localizer, GuildRepository guildRepository, Configuration configuration, Metrics metrics) {
+        return new StateListener(guildRepository, localizer, configuration, metrics);
     }
 
     @Override
     public void onGuildJoin(@NotNull GuildJoinEvent event) {
-        guilds.guild(event.getGuild()).gdpr().dequeueDeletion();
+        guildRepository.guild(event.getGuild()).gdpr().dequeueDeletion();
 
         if (configuration.botlist().isBotlistGuild(event.getGuild().getIdLong())) return;
 
@@ -70,34 +70,34 @@ public class StateListener extends ListenerAdapter {
     @Override
     public void onGuildLeave(@NotNull GuildLeaveEvent event) {
         // We want to delete all data of a guild after the bot left.
-        guilds.guild(event.getGuild()).gdpr().queueDeletion();
+        guildRepository.guild(event.getGuild()).gdpr().queueDeletion();
     }
 
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
         // We want to abort deletion of user data if a user rejoins a guild during grace period
-        guilds.guild(event.getGuild()).reputation().user(event.getMember()).gdpr().dequeueDeletion();
+        guildRepository.guild(event.getGuild()).reputation().user(event.getMember()).gdpr().dequeueDeletion();
     }
 
     @Override
     public void onGuildMemberRemove(@NotNull GuildMemberRemoveEvent event) {
         // When a user leaves a guild, there is no reason for us to keep their data.
-        guilds.guild(event.getGuild()).reputation().user(event.getUser()).gdpr().queueDeletion();
+        guildRepository.guild(event.getGuild()).reputation().user(event.getUser()).gdpr().queueDeletion();
     }
 
     @Override
     public void onRoleDelete(@NotNull RoleDeleteEvent event) {
-        guilds.guild(event.getGuild()).settings().ranks().rank(event.getRole()).ifPresent(ReputationRank::remove);
+        guildRepository.guild(event.getGuild()).settings().ranks().rank(event.getRole()).ifPresent(ReputationRank::remove);
     }
 
     @Override
     public void onChannelDelete(@NotNull ChannelDeleteEvent event) {
-        guilds.guild(event.getGuild()).settings().thanking().channels().remove(event.getChannel());
+        guildRepository.guild(event.getGuild()).settings().thanking().channels().remove(event.getChannel());
     }
 
     @Override
     public void onEmojiRemoved(@NotNull EmojiRemovedEvent event) {
-        var guildSettings = guilds.guild(event.getGuild()).settings();
+        var guildSettings = guildRepository.guild(event.getGuild()).settings();
         guildSettings.thanking().reactions().remove(event.getEmoji().getId());
 
         if (!guildSettings.thanking().reactions().reactionIsEmote()) return;

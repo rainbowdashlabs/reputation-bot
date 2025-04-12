@@ -8,7 +8,7 @@ package de.chojo.repbot.commands.thankwords.handler;
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.util.Completion;
 import de.chojo.jdautil.wrapper.EventContext;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.serialization.ThankwordsContainer;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -18,11 +18,11 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class LoadDefault implements SlashHandler {
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
     private final ThankwordsContainer thankwordsContainer;
 
-    public LoadDefault(Guilds guilds, ThankwordsContainer thankwordsContainer) {
-        this.guilds = guilds;
+    public LoadDefault(GuildRepository guildRepository, ThankwordsContainer thankwordsContainer) {
+        this.guildRepository = guildRepository;
         this.thankwordsContainer = thankwordsContainer;
     }
 
@@ -43,7 +43,7 @@ public class LoadDefault implements SlashHandler {
             return;
         }
         for (var word : words) {
-            guilds.guild(event.getGuild()).settings().thanking().thankwords().add(word);
+            guildRepository.guild(event.getGuild()).settings().thanking().thankwords().add(word);
         }
 
         var wordsJoined = words.stream().map(w -> StringUtils.wrap(w, "`")).collect(Collectors.joining(", "));

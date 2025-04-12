@@ -8,7 +8,7 @@ package de.chojo.repbot.commands.repadmin.handler.resetdate;
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.EventContext;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.time.DateTimeException;
@@ -17,10 +17,10 @@ import java.time.format.DateTimeFormatter;
 
 public class SetResetDate implements SlashHandler {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd");
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
 
-    public SetResetDate(Guilds guilds) {
-        this.guilds = guilds;
+    public SetResetDate(GuildRepository guildRepository) {
+        this.guildRepository = guildRepository;
     }
 
     @Override
@@ -37,7 +37,7 @@ public class SetResetDate implements SlashHandler {
             return;
         }
 
-        guilds.guild(event.getGuild()).settings().general().resetDate(date);
+        guildRepository.guild(event.getGuild()).settings().general().resetDate(date);
 
         event.reply(context.localize("command.repadmin.resetdate.set.message.set", Replacement.create("DATE", FORMATTER.format(date))))
              .setEphemeral(true).queue();

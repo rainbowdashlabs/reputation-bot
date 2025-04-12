@@ -19,41 +19,41 @@ import de.chojo.repbot.commands.channel.handler.announcement.Info;
 import de.chojo.repbot.commands.channel.handler.announcement.Location;
 import de.chojo.repbot.commands.channel.handler.announcement.Where;
 import de.chojo.repbot.commands.channel.handler.announcement.State;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 
 public class Channel extends SlashCommand {
-    public Channel(Guilds guilds) {
+    public Channel(GuildRepository guildRepository) {
         super(Slash.of("channel", "command.channel.description")
                 .adminCommand()
                 .guildOnly()
                 .subCommand(SubCommand.of("set", "command.channel.set.description")
-                        .handler(new Set(guilds))
+                        .handler(new Set(guildRepository))
                         .argument(Argument.channel("channel", "command.channel.set.options.channel.description").asRequired()))
                 .subCommand(SubCommand.of("add", "command.channel.add.description")
-                        .handler(new Add(guilds))
+                        .handler(new Add(guildRepository))
                         .argument(Argument.channel("channel", "command.channel.add.options.channel.description").asRequired()))
                 .subCommand(SubCommand.of("remove", "command.channel.remove.description")
-                        .handler(new Remove(guilds))
+                        .handler(new Remove(guildRepository))
                         .argument(Argument.channel("channel", "command.channel.remove.options.channel.description")
                                           .asRequired()))
                 .subCommand(SubCommand.of("listtype", "command.channel.listtype.description")
-                        .handler(new ListType(guilds))
+                        .handler(new ListType(guildRepository))
                         .argument(Argument.text("type", "command.channel.listtype.options.type.description").asRequired()
                                           .withAutoComplete()))
                 .subCommand(SubCommand.of("list", "command.channel.list.description")
-                        .handler(new List(guilds)))
+                        .handler(new List(guildRepository)))
                 .group(Group.of("announcement", "command.channel.announcement.description")
                         .subCommand(SubCommand.of("state", "command.channel.announcement.state.description")
-                                .handler(new State(guilds))
+                                .handler(new State(guildRepository))
                                 .argument(Argument.bool("active", "command.channel.announcement.state.options.active.description").asRequired()))
                         .subCommand(SubCommand.of("where", "command.channel.announcement.where.description")
-                                .handler(new Where(guilds))
+                                .handler(new Where(guildRepository))
                                 .argument(Argument.text("where", "command.channel.announcement.where.options.where.description").asRequired().withAutoComplete()))
                         .subCommand(SubCommand.of("channel", "command.channel.announcement.channel.description")
-                                .handler(new Location(guilds))
+                                .handler(new Location(guildRepository))
                                 .argument(Argument.channel("channel", "command.channel.announcement.channel.options.channel.description").asRequired()))
                         .subCommand(SubCommand.of("info", "command.channel.announcement.info.description")
-                                .handler(new Info(guilds))))
+                                .handler(new Info(guildRepository))))
         );
     }
 }

@@ -8,15 +8,15 @@ package de.chojo.repbot.commands.repadmin.handler.reputation;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.access.guild.reputation.sub.RepUser;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.service.RoleAssigner;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class Remove extends BaseReputationModifier {
 
-    public Remove(RoleAssigner roleAssigner, Guilds guilds) {
-        super(roleAssigner, guilds);
+    public Remove(RoleAssigner roleAssigner, GuildRepository guildRepository) {
+        super(roleAssigner, guildRepository);
     }
 
     @Override

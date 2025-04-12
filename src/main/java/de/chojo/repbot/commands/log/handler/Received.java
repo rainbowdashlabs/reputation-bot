@@ -8,11 +8,9 @@ package de.chojo.repbot.commands.log.handler;
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.pagination.bag.PrivatePageBag;
 import de.chojo.jdautil.wrapper.EventContext;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import net.dv8tion.jda.api.utils.messages.MessageEditData;
@@ -25,20 +23,20 @@ import static de.chojo.repbot.commands.log.handler.LogFormatter.mapUserLogEntry;
 import static de.chojo.repbot.commands.log.handler.LogFormatter.userLogEmbed;
 
 public class Received implements SlashHandler {
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
 
-    public Received(Guilds guilds) {
-        this.guilds = guilds;
+    public Received(GuildRepository guildRepository) {
+        this.guildRepository = guildRepository;
     }
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var user = event.getOption("user").getAsMember();
-        send(event,user, guilds, context);
+        send(event,user, guildRepository, context);
     }
 
-    public static void send(IReplyCallback callback, Member user, Guilds guilds, EventContext context) {
-        var logAccess = guilds.guild(callback.getGuild()).reputation().log().getUserReceivedLog(user.getUser(), PAGE_SIZE);
+    public static void send(IReplyCallback callback, Member user, GuildRepository guildRepository, EventContext context) {
+        var logAccess = guildRepository.guild(callback.getGuild()).reputation().log().getUserReceivedLog(user.getUser(), PAGE_SIZE);
         context.registerPage(new PrivatePageBag(logAccess.pages(), callback.getUser().getIdLong()) {
             @Override
             public CompletableFuture<MessageEditData> buildPage() {

@@ -8,12 +8,11 @@ package de.chojo.repbot.listener;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import de.chojo.jdautil.localization.ILocalizer;
-import de.chojo.jdautil.localization.LocalizationContext;
 import de.chojo.jdautil.localization.util.LocaleProvider;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.analyzer.results.match.ThankType;
 import de.chojo.repbot.config.Configuration;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 import de.chojo.repbot.service.reputation.ReputationService;
 import de.chojo.repbot.util.PermissionErrorHandler;
@@ -43,15 +42,15 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class ReactionListener extends ListenerAdapter {
     private static final int REACTION_COOLDOWN = 30;
     private static final Logger log = getLogger(ReactionListener.class);
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
     private final ILocalizer localizer;
     private final ReputationService reputationService;
     private final Configuration configuration;
     private final Cache<Long, Instant> lastReaction = CacheBuilder.newBuilder().expireAfterAccess(60, TimeUnit.SECONDS)
                                                                   .build();
 
-    public ReactionListener(Guilds guilds, ILocalizer localizer, ReputationService reputationService, Configuration configuration) {
-        this.guilds = guilds;
+    public ReactionListener(GuildRepository guildRepository, ILocalizer localizer, ReputationService reputationService, Configuration configuration) {
+        this.guildRepository = guildRepository;
         this.localizer = localizer;
         this.reputationService = reputationService;
         this.configuration = configuration;
@@ -60,7 +59,7 @@ public class ReactionListener extends ListenerAdapter {
     @Override
     public void onMessageReactionAdd(@NotNull MessageReactionAddEvent event) {
         if (event.getUser().isBot() || !event.isFromGuild()) return;
-        var repGuild = guilds.guild(event.getGuild());
+        var repGuild = guildRepository.guild(event.getGuild());
         var guildSettings = repGuild.settings();
 
         if (!guildSettings.thanking().channels().isEnabled(event.getGuildChannel())) return;
@@ -122,22 +121,22 @@ public class ReactionListener extends ListenerAdapter {
     @Override
     public void onMessageReactionRemoveEmoji(@NotNull MessageReactionRemoveEmojiEvent event) {
         if (!event.isFromGuild()) return;
-        var guildSettings = guilds.guild(event.getGuild()).settings();
+        var guildSettings = guildRepository.guild(event.getGuild()).settings();
         if (!guildSettings.thanking().reactions().isReaction(event.getReaction())) return;
-        guilds.guild(event.getGuild()).reputation().log().messageLog(event.getMessageIdLong(), 50).stream()
-              .filter(entry -> entry.type() == ThankType.REACTION)
-              .forEach(ReputationLogEntry::delete);
+        guildRepository.guild(event.getGuild()).reputation().log().messageLog(event.getMessageIdLong(), 50).stream()
+                       .filter(entry -> entry.type() == ThankType.REACTION)
+                       .forEach(ReputationLogEntry::delete);
     }
 
     @Override
     public void onMessageReactionRemove(@NotNull MessageReactionRemoveEvent event) {
         if (!event.isFromGuild()) return;
-        var guildSettings = guilds.guild(event.getGuild()).settings();
+        var guildSettings = guildRepository.guild(event.getGuild()).settings();
         if (!guildSettings.thanking().reactions().isReaction(event.getReaction())) return;
-        var entries = guilds.guild(event.getGuild()).reputation().log().messageLog(event.getMessageIdLong(), 50)
-                            .stream()
-                            .filter(entry -> entry.type() == ThankType.REACTION && entry.donorId() == event.getUserIdLong())
-                            .toList();
+        var entries = guildRepository.guild(event.getGuild()).reputation().log().messageLog(event.getMessageIdLong(), 50)
+                                     .stream()
+                                     .filter(entry -> entry.type() == ThankType.REACTION && entry.donorId() == event.getUserIdLong())
+                                     .toList();
         entries.forEach(ReputationLogEntry::delete);
         if (!entries.isEmpty() && guildSettings.messages().isReactionConfirmation()) {
             event.getChannel().sendMessage(localizer.localize("listener.reaction.removal", event.getGuild(),
@@ -149,9 +148,9 @@ public class ReactionListener extends ListenerAdapter {
 
     @Override
     public void onMessageReactionRemoveAll(@NotNull MessageReactionRemoveAllEvent event) {
-        guilds.guild(event.getGuild()).reputation().log().messageLog(event.getMessageIdLong(), 50).stream()
-              .filter(entry -> entry.type() == ThankType.REACTION)
-              .forEach(ReputationLogEntry::delete);
+        guildRepository.guild(event.getGuild()).reputation().log().messageLog(event.getMessageIdLong(), 50).stream()
+                       .filter(entry -> entry.type() == ThankType.REACTION)
+                       .forEach(ReputationLogEntry::delete);
     }
 
     public boolean isCooldown(Member member) {

@@ -14,7 +14,7 @@ import de.chojo.repbot.analyzer.results.empty.EmptyResultReason;
 import de.chojo.repbot.analyzer.results.match.ThankType;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;
 import de.chojo.repbot.service.RepBotCachePolicy;
@@ -47,18 +47,18 @@ public class MessageListener extends ListenerAdapter {
     private static final Logger log = getLogger(MessageListener.class);
     private final ILocalizer localizer;
     private final Configuration configuration;
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
     private final RepBotCachePolicy repBotCachePolicy;
     private final ReputationVoteListener reputationVoteListener;
     private final ReputationService reputationService;
     private final ContextResolver contextResolver;
     private final MessageAnalyzer messageAnalyzer;
 
-    public MessageListener(ILocalizer localizer, Configuration configuration, Guilds guilds, RepBotCachePolicy repBotCachePolicy,
+    public MessageListener(ILocalizer localizer, Configuration configuration, GuildRepository guildRepository, RepBotCachePolicy repBotCachePolicy,
                            ReputationVoteListener reputationVoteListener, ReputationService reputationService,
                            ContextResolver contextResolver, MessageAnalyzer messageAnalyzer) {
         this.localizer = localizer;
-        this.guilds = guilds;
+        this.guildRepository = guildRepository;
         this.configuration = configuration;
         this.repBotCachePolicy = repBotCachePolicy;
         this.reputationVoteListener = reputationVoteListener;
@@ -71,7 +71,7 @@ public class MessageListener extends ListenerAdapter {
     public void onChannelCreate(@NotNull ChannelCreateEvent event) {
         if (event.getChannelType() == ChannelType.GUILD_PUBLIC_THREAD) {
             var thread = ((ThreadChannel) event.getChannel());
-            var settings = guilds.guild(event.getGuild()).settings();
+            var settings = guildRepository.guild(event.getGuild()).settings();
             if (settings.thanking().channels().isEnabled(thread)) {
                 thread.join().queue();
             }
@@ -80,14 +80,14 @@ public class MessageListener extends ListenerAdapter {
 
     @Override
     public void onMessageDelete(@NotNull MessageDeleteEvent event) {
-        guilds.guild(event.getGuild()).reputation().log()
-              .getLogEntry(event.getMessageIdLong())
-              .ifPresent(ReputationLogEntry::deleteAll);
+        guildRepository.guild(event.getGuild()).reputation().log()
+                       .getLogEntry(event.getMessageIdLong())
+                       .ifPresent(ReputationLogEntry::deleteAll);
     }
 
     @Override
     public void onMessageBulkDelete(@NotNull MessageBulkDeleteEvent event) {
-        var reputationLog = guilds.guild(event.getGuild()).reputation().log();
+        var reputationLog = guildRepository.guild(event.getGuild()).reputation().log();
         event.getMessageIds().stream().map(Long::valueOf)
              .map(reputationLog::getLogEntry)
              .filter(Optional::isPresent)
@@ -99,7 +99,7 @@ public class MessageListener extends ListenerAdapter {
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (event.getAuthor().isBot() || event.isWebhookMessage() || !event.isFromGuild()) return;
         var guild = event.getGuild();
-        var repGuild = guilds.guild(guild);
+        var repGuild = guildRepository.guild(guild);
         var settings = repGuild.settings();
         var thank = settings.thanking();
 

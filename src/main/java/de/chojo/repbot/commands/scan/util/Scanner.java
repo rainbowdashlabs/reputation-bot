@@ -11,7 +11,7 @@ import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.commands.scan.Scan;
 import de.chojo.repbot.config.Configuration;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.repbot.util.PermissionErrorHandler;
 import de.chojo.repbot.util.Text;
@@ -48,7 +48,7 @@ public class Scanner {
                 thread.setUncaughtExceptionHandler((thr, err) -> log.error("Unhandled exception in Scanner Thread {}.", thr.getId(), err));
                 return thread;
             });
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
     private final Set<ScanProcess> activeScans = new HashSet<>();
     private final Set<Long> cancel = new HashSet<>();
     private final Queue<ScanProcess> finished = new ArrayDeque<>();
@@ -56,8 +56,8 @@ public class Scanner {
     private final Configuration configuration;
     private MessageAnalyzer messageAnalyzer;
 
-    public Scanner(Guilds guilds, Configuration configuration) {
-        this.guilds = guilds;
+    public Scanner(GuildRepository guildRepository, Configuration configuration) {
+        this.guildRepository = guildRepository;
         this.configuration = configuration;
         worker.scheduleAtFixedRate(() -> {
             finishTasks();
@@ -79,7 +79,7 @@ public class Scanner {
 
     private void preSchedule(EventContext context, TextChannel channel, int messageCount) {
         var history = channel.getHistory();
-        var pattern = guilds.guild(channel.getGuild()).settings().thanking().thankwords().thankwordPattern();
+        var pattern = guildRepository.guild(channel.getGuild()).settings().thanking().thankwords().thankwordPattern();
 
         schedule(history, context, pattern, channel, messageCount);
     }
@@ -89,7 +89,7 @@ public class Scanner {
                 context.localize("command.scan.scanner.message.progress",
                         Replacement.create("PERCENT", String.format("%.02f", 0.0d))) + " " + Text.progressBar(0, 40) +
                 "```").complete();
-        var scanProcess = new ScanProcess(messageAnalyzer, context.guildLocalizer(), progressMessage, history, pattern, calls, guilds);
+        var scanProcess = new ScanProcess(messageAnalyzer, context.guildLocalizer(), progressMessage, history, pattern, calls, guildRepository);
         setActive(scanProcess);
         reportChannel.getGuild().loadMembers().get();
         worker.schedule(() -> processScan(scanProcess), 0, TimeUnit.SECONDS);

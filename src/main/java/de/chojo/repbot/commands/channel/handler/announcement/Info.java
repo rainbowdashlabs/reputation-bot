@@ -9,19 +9,19 @@ import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.util.MentionUtil;
 import de.chojo.jdautil.wrapper.EventContext;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class Info implements SlashHandler {
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
 
-    public Info(Guilds guilds) {
-        this.guilds = guilds;
+    public Info(GuildRepository guildRepository) {
+        this.guildRepository = guildRepository;
     }
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        var announcements = guilds.guild(event.getGuild()).settings().announcements();
+        var announcements = guildRepository.guild(event.getGuild()).settings().announcements();
         if (!announcements.isActive()) {
             event.reply(context.localize("command.channel.announcement.state.message.inactive")).queue();
             return;

@@ -14,7 +14,7 @@ import de.chojo.repbot.analyzer.results.match.ThankType;
 import de.chojo.repbot.config.elements.MagicImage;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.access.guild.settings.sub.Reputation;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.service.RoleAssigner;
 import de.chojo.repbot.util.EmojiDebug;
 import de.chojo.repbot.util.Messages;
@@ -39,15 +39,15 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class ReputationService {
     private static final Logger log = getLogger(ReputationService.class);
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
     private final RoleAssigner assigner;
     private final MagicImage magicImage;
     private final ContextResolver contextResolver;
     private final ILocalizer localizer;
     private Instant lastEasterEggSent = Instant.EPOCH;
 
-    public ReputationService(Guilds guilds, ContextResolver contextResolver, RoleAssigner assigner, MagicImage magicImage, ILocalizer localizer) {
-        this.guilds = guilds;
+    public ReputationService(GuildRepository guildRepository, ContextResolver contextResolver, RoleAssigner assigner, MagicImage magicImage, ILocalizer localizer) {
+        this.guildRepository = guildRepository;
         this.assigner = assigner;
         this.magicImage = magicImage;
         this.contextResolver = contextResolver;
@@ -68,7 +68,7 @@ public class ReputationService {
      * @return true if the reputation was counted and is valid
      */
     public boolean submitReputation(Guild guild, Member donor, Member receiver, Message message, @Nullable Message refMessage, ThankType type) {
-        var repGuild = guilds.guild(guild);
+        var repGuild = guildRepository.guild(guild);
         log.trace("Submitting reputation for message {} of type {}", message.getIdLong(), type);
         // block bots
         if (receiver.getUser().isBot()) {
@@ -123,7 +123,7 @@ public class ReputationService {
     }
 
     private boolean assertAbuseProtection(Guild guild, Member donor, Member receiver, Message message, @Nullable Message refMessage, MessageContext context) {
-        var repGuild = guilds.guild(guild);
+        var repGuild = guildRepository.guild(guild);
         var analyzer = repGuild.reputation().analyzer();
         var settings = repGuild.settings();
         var addEmoji = settings.general().isEmojiDebug();
@@ -216,7 +216,7 @@ public class ReputationService {
     }
 
     private boolean log(Guild guild, Member donor, Member receiver, Message message, @Nullable Message refMessage, ThankType type, Settings settings) {
-        var repGuild = guilds.guild(guild);
+        var repGuild = guildRepository.guild(guild);
         // try to log reputation
         if (!repGuild.reputation().user(receiver)
                      .addReputation(donor, message, refMessage, type)) {// submit to database failed. Maybe this message was already voted by the user.
@@ -278,7 +278,7 @@ public class ReputationService {
         var repGuild = settings.repGuild();
         var analyzer = repGuild.reputation().analyzer();
         // block cooldown
-        var lastRated = guilds.guild(guild).reputation().user(donor).getLastRatedDuration(receiver);
+        var lastRated = guildRepository.guild(guild).reputation().user(donor).getLastRatedDuration(receiver);
         if (lastRated.toMinutes() < settings.abuseProtection().cooldown()) {
             analyzer.log(message, SubmitResult.of(SubmitResultType.COOLDOWN_ACTIVE, Replacement.createMention(receiver)));
             log.trace("The last rating is too recent. {}/{}", lastRated.toMinutes(),

@@ -23,19 +23,19 @@ import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class Guilds {
-    private static final Logger log = getLogger(Guilds.class);
-    private final Cache<Long, RepGuild> guilds = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES)
+public class GuildRepository {
+    private static final Logger log = getLogger(GuildRepository.class);
+    private final Cache<Long, RepGuild> guildRepository = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES)
                                                              .build();
     private final Configuration configuration;
 
-    public Guilds(Configuration configuration) {
+    public GuildRepository(Configuration configuration) {
         this.configuration = configuration;
     }
 
     public RepGuild guild(Guild guild) {
         try {
-            return guilds.get(guild.getIdLong(), () -> new RepGuild(guild, configuration)).refresh(guild);
+            return guildRepository.get(guild.getIdLong(), () -> new RepGuild(guild, configuration)).refresh(guild);
         } catch (ExecutionException e) {
             log.error("Could not create guild adapter", e);
             throw new RuntimeException("", e);
@@ -46,13 +46,13 @@ public class Guilds {
      * Gets a guild by id. This guild object might have limited functionality. This object is never cached.
      * It should never be used to change settings.
      * <p>
-     * There is no gurantee that this guild will have any data stored in the database.
+     * There is no guarantee that this guild will have any data stored in the database.
      *
      * @param id id of guild to create.
      * @return repguild created based on an id
      */
     public RepGuild byId(long id) {
-        var cached = guilds.getIfPresent(id);
+        var cached = guildRepository.getIfPresent(id);
         return cached != null ? cached : new RepGuildId(id, configuration);
     }
 
@@ -92,6 +92,6 @@ public class Guilds {
     }
 
     public void invalidate(long guild) {
-        guilds.invalidate(guild);
+        guildRepository.invalidate(guild);
     }
 }

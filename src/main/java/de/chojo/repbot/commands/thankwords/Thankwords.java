@@ -18,7 +18,7 @@ import de.chojo.repbot.commands.thankwords.handler.Check;
 import de.chojo.repbot.commands.thankwords.handler.List;
 import de.chojo.repbot.commands.thankwords.handler.LoadDefault;
 import de.chojo.repbot.commands.thankwords.handler.Remove;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.serialization.ThankwordsContainer;
 import org.slf4j.Logger;
 
@@ -30,31 +30,31 @@ public class Thankwords extends SlashCommand {
 
     private static final Logger log = getLogger(Thankwords.class);
 
-    private Thankwords(MessageAnalyzer messageAnalyzer, Guilds guilds, ThankwordsContainer thankwordsContainer) {
+    private Thankwords(MessageAnalyzer messageAnalyzer, GuildRepository guildRepository, ThankwordsContainer thankwordsContainer) {
         super(Slash.of("thankwords", "command.thankwords.description")
                 .guildOnly()
                 .adminCommand()
                 .subCommand(SubCommand.of("add", "command.thankwords.add.description")
-                        .handler(new Add(guilds))
+                        .handler(new Add(guildRepository))
                         .argument(Argument.text("pattern", "command.thankwords.add.options.pattern.description").asRequired()))
                 .subCommand(SubCommand.of("remove", "command.thankwords.remove.description")
-                        .handler(new Remove(guilds))
+                        .handler(new Remove(guildRepository))
                         .argument(Argument.text("pattern", "command.thankwords.remove.options.pattern.description").asRequired()
                                           .withAutoComplete()))
                 .subCommand(SubCommand.of("list", "command.thankwords.list.description")
-                        .handler(new List(guilds)))
+                        .handler(new List(guildRepository)))
                 .subCommand(SubCommand.of("check", "command.thankwords.check.description")
-                        .handler(new Check(guilds, messageAnalyzer))
+                        .handler(new Check(guildRepository, messageAnalyzer))
                         .argument(Argument.text("message", "command.thankwords.check.options.message.description")
                                           .asRequired()))
                 .subCommand(SubCommand.of("loaddefault", "command.thankwords.loaddefault.description")
-                        .handler(new LoadDefault(guilds, thankwordsContainer))
+                        .handler(new LoadDefault(guildRepository, thankwordsContainer))
                         .argument(Argument.text("language", "command.thankwords.loaddefault.options.language.description")
                                           .withAutoComplete()))
         );
     }
 
-    public static Thankwords of(MessageAnalyzer messageAnalyzer, Guilds guilds) {
+    public static Thankwords of(MessageAnalyzer messageAnalyzer, GuildRepository guildRepository) {
         ThankwordsContainer thankwordsContainer;
         try {
             thankwordsContainer = loadContainer();
@@ -62,7 +62,7 @@ public class Thankwords extends SlashCommand {
             thankwordsContainer = null;
             log.error("Could not read thankwords", e);
         }
-        return new Thankwords(messageAnalyzer, guilds, thankwordsContainer);
+        return new Thankwords(messageAnalyzer, guildRepository, thankwordsContainer);
     }
 
     public static ThankwordsContainer loadContainer() throws IOException {

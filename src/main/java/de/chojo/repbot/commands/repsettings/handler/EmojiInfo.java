@@ -7,7 +7,7 @@ package de.chojo.repbot.commands.repsettings.handler;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.wrapper.EventContext;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.util.Text;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.jetbrains.annotations.PropertyKey;
@@ -26,15 +26,15 @@ import static de.chojo.repbot.util.EmojiDebug.TOO_OLD;
 
 public class EmojiInfo implements SlashHandler {
 
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
 
-    public EmojiInfo(Guilds guilds) {
-        this.guilds = guilds;
+    public EmojiInfo(GuildRepository guildRepository) {
+        this.guildRepository = guildRepository;
     }
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        var generalSettings = guilds.guild(event.getGuild()).settings().general();
+        var generalSettings = guildRepository.guild(event.getGuild()).settings().general();
         event.reply(Text.getBooleanMessage(context, generalSettings.isEmojiDebug(),
                 "command.repsettings.emojidebug.message.true", "command.repsettings.emojidebug.message.false")
                     + "\n" + context.localize(emojiExplanation())).queue();
