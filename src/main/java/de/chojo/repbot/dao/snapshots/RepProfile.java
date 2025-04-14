@@ -27,16 +27,39 @@ import java.util.Optional;
 
 /**
  * Snapshot of a user reputation profile.
+ *
+ * @param repUser the reputation user
+ * @param rank the rank of the user
+ * @param rankDonated the rank based on donations
+ * @param userId the ID of the user
+ * @param reputation the reputation points of the user
+ * @param repOffset the reputation offset
+ * @param rawReputation the raw reputation points
+ * @param donated the amount donated
  */
 public record RepProfile(RepUser repUser, long rank, long rankDonated, long userId, long reputation, long repOffset,
-                         long rawReputation,
-                         long donated) {
+                         long rawReputation, long donated) {
     private static final int BAR_SIZE = 20;
 
+    /**
+     * Creates an empty RepProfile for the specified user.
+     *
+     * @param repuser the reputation user
+     * @param user the user
+     * @return an empty RepProfile
+     */
     public static RepProfile empty(RepUser repuser, User user) {
         return new RepProfile(repuser, 0, user.getIdLong(), 0, 0, 0, 0, 0);
     }
 
+    /**
+     * Builds a RepProfile from the given database row.
+     *
+     * @param repuser the reputation user
+     * @param rs the database row
+     * @return a RepProfile
+     * @throws SQLException if a database access error occurs
+     */
     public static RepProfile buildProfile(RepUser repuser, Row rs) throws SQLException {
         return new RepProfile(repuser,
                 rs.getLong("rank"),
@@ -49,6 +72,13 @@ public record RepProfile(RepUser repUser, long rank, long rankDonated, long user
         );
     }
 
+    /**
+     * Builds a RepProfile for received ranking from the given database row.
+     *
+     * @param rs the database row
+     * @return a RepProfile
+     * @throws SQLException if a database access error occurs
+     */
     public static RepProfile buildReceivedRanking(Row rs) throws SQLException {
         return new RepProfile(null,
                 rs.getLong("rank"),
@@ -61,16 +91,36 @@ public record RepProfile(RepUser repUser, long rank, long rankDonated, long user
         );
     }
 
+    /**
+     * Generates a fancy string representation of the profile.
+     *
+     * @param maxRank the maximum rank
+     * @return a fancy string representation
+     */
     public String fancyString(int maxRank) {
         var length = String.valueOf(maxRank).length();
         var rank = StringUtils.rightPad(String.valueOf(this.rank), length);
         return "`" + rank + "` **|** " + MentionUtil.user(userId) + " ➜ " + reputation;
     }
 
+    /**
+     * Generates a public profile message embed.
+     *
+     * @param configuration the configuration
+     * @param localizer the localization context
+     * @return a public profile message embed
+     */
     public MessageEmbed publicProfile(Configuration configuration, LocalizationContext localizer) {
         return getBaseBuilder(configuration, localizer).build();
     }
 
+    /**
+     * Generates an admin profile message embed.
+     *
+     * @param configuration the configuration
+     * @param localizer the localization context
+     * @return an admin profile message embed
+     */
     public MessageEmbed adminProfile(Configuration configuration, LocalizationContext localizer) {
         var build = getBaseBuilder(configuration, localizer);
         build.addField("words.rawReputation", String.valueOf(rawReputation()), true)
@@ -79,6 +129,13 @@ public record RepProfile(RepUser repUser, long rank, long rankDonated, long user
         return build.build();
     }
 
+    /**
+     * Creates a base embed builder for the profile.
+     *
+     * @param configuration the configuration
+     * @param localizer the localization context
+     * @return an embed builder
+     */
     private EmbedBuilder getBaseBuilder(Configuration configuration, LocalizationContext localizer) {
         var ranks = repUser.reputation().repGuild().settings().ranks();
         var current = ranks.currentRank(repUser);
@@ -108,6 +165,12 @@ public record RepProfile(RepUser repUser, long rank, long rankDonated, long user
         return build;
     }
 
+    /**
+     * Resolves the member associated with this profile in the given guild.
+     *
+     * @param guild the guild
+     * @return an optional containing the member if found, otherwise empty
+     */
     public Optional<Member> resolveMember(Guild guild) {
         try {
             return Optional.ofNullable(guild.retrieveMemberById(userId()).complete());

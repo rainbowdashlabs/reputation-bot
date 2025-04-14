@@ -27,7 +27,10 @@ import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class Channels  implements GuildHolder {
+/**
+ * Class representing the channels configuration for thanking settings.
+ */
+public class Channels implements GuildHolder {
 
     private static final Logger log = getLogger(Channels.class);
 
@@ -36,6 +39,14 @@ public class Channels  implements GuildHolder {
     private final Set<Long> categories;
     private boolean whitelist;
 
+    /**
+     * Constructs a Channels instance with the specified thanking settings, whitelist status, channels, and categories.
+     *
+     * @param thanking the thanking settings
+     * @param whitelist the whitelist status
+     * @param channels the set of channel IDs
+     * @param categories the set of category IDs
+     */
     public Channels(Thanking thanking, boolean whitelist, Set<Long> channels, Set<Long> categories) {
         this.thanking = thanking;
         this.whitelist = whitelist;
@@ -53,6 +64,12 @@ public class Channels  implements GuildHolder {
         return thanking.guildId();
     }
 
+    /**
+     * Checks if the given channel is enabled for thanking.
+     *
+     * @param channel the guild message channel
+     * @return true if the channel is enabled, false otherwise
+     */
     public boolean isEnabled(GuildMessageChannel channel) {
         StandardGuildChannel baseChannel;
         if (channel instanceof ThreadChannel bc) {
@@ -71,40 +88,72 @@ public class Channels  implements GuildHolder {
         return isEnabledByChannel(baseChannel) || isEnabledByCategory(baseChannel.getParentCategory());
     }
 
+    /**
+     * Checks if the given channel is enabled by channel ID.
+     *
+     * @param channel the standard guild channel
+     * @return true if the channel is enabled, false otherwise
+     */
     public boolean isEnabledByChannel(StandardGuildChannel channel) {
         return isWhitelist() == channels.contains(channel.getIdLong());
     }
 
+    /**
+     * Checks if the given category is enabled by category ID.
+     *
+     * @param category the category
+     * @return true if the category is enabled, false otherwise
+     */
     public boolean isEnabledByCategory(@Nullable Category category) {
         if (category == null) return false;
         return isWhitelist() == categories.contains(category.getIdLong());
     }
 
+    /**
+     * Gets the list of enabled guild channels.
+     *
+     * @return the list of enabled guild channels
+     */
     public List<GuildChannel> channels() {
         return channels.stream().map(guild()::getGuildChannelById)
                 .filter(Objects::nonNull)
                 .toList();
     }
 
+    /**
+     * Gets the list of enabled categories.
+     *
+     * @return the list of enabled categories
+     */
     public List<Category> categories() {
         return categories.stream().map(guild()::getCategoryById)
                          .filter(Objects::nonNull)
                          .toList();
     }
 
+    /**
+     * Gets the set of channel IDs.
+     *
+     * @return the set of channel IDs
+     */
     public Set<Long> channelIds() {
         return channels;
     }
 
+    /**
+     * Checks if the whitelist is enabled.
+     *
+     * @return true if the whitelist is enabled, false otherwise
+     */
     public boolean isWhitelist() {
         return whitelist;
     }
 
     /**
-     * Add a channel to reputation channel
+     * Adds a channel to the reputation channels.
      *
-     * @param channel channel
-     * @return true if a channel was added
+     * @param channel the standard guild channel
+     * @return true if the channel was added, false otherwise
      */
     public boolean add(StandardGuildChannel channel) {
         var result = query("INSERT INTO active_channel(guild_id, channel_id) VALUES(?,?) ON CONFLICT(guild_id, channel_id) DO NOTHING;")
@@ -118,10 +167,10 @@ public class Channels  implements GuildHolder {
     }
 
     /**
-     * Add a category to reputation categories
+     * Adds a category to the reputation categories.
      *
-     * @param category category
-     * @return true if a category was added
+     * @param category the category
+     * @return true if the category was added, false otherwise
      */
     public boolean add(Category category) {
         var result = query("INSERT INTO active_categories(guild_id, category_id) VALUES(?,?) ON CONFLICT(guild_id, category_id) DO NOTHING;")
@@ -135,10 +184,10 @@ public class Channels  implements GuildHolder {
     }
 
     /**
-     * Remove a reputation channel
+     * Removes a reputation channel.
      *
-     * @param channel channel
-     * @return true if the channel was removed
+     * @param channel the channel
+     * @return true if the channel was removed, false otherwise
      */
     public boolean remove(Channel channel) {
         var result = query("DELETE FROM active_channel WHERE guild_id = ? AND channel_id = ?;")
@@ -152,13 +201,13 @@ public class Channels  implements GuildHolder {
     }
 
     /**
-     * Remove a reputation category
+     * Removes a reputation category.
      *
-     * @param category category
-     * @return true if the channel was removed
+     * @param category the category
+     * @return true if the category was removed, false otherwise
      */
     public boolean remove(Category category) {
-        var result =query("DELETE FROM active_categories WHERE guild_id = ? AND category_id = ?;")
+        var result = query("DELETE FROM active_categories WHERE guild_id = ? AND category_id = ?;")
                 .single(call().bind(guildId()).bind(category.getIdLong()))
                 .update()
                 .changed();
@@ -169,9 +218,9 @@ public class Channels  implements GuildHolder {
     }
 
     /**
-     * Remove all channel of a guild
+     * Removes all channels of a guild.
      *
-     * @return the amount of removed channel
+     * @return the number of removed channels
      */
     public int clearChannel() {
         var result = query("DELETE FROM active_channel WHERE guild_id = ?;")
@@ -185,9 +234,9 @@ public class Channels  implements GuildHolder {
     }
 
     /**
-     * Remove all categories of a guild
+     * Removes all categories of a guild.
      *
-     * @return the amount of removed categories
+     * @return the number of removed categories
      */
     public int clearCategories() {
         var result = query("DELETE FROM active_categories WHERE guild_id = ?;")
@@ -200,6 +249,12 @@ public class Channels  implements GuildHolder {
         return result;
     }
 
+    /**
+     * Sets the list type to whitelist or blacklist.
+     *
+     * @param whitelist the whitelist status
+     * @return true if the whitelist status was updated, false otherwise
+     */
     public boolean listType(boolean whitelist) {
         var result = query("""
                        INSERT INTO thank_settings(guild_id, channel_whitelist) VALUES (?,?)

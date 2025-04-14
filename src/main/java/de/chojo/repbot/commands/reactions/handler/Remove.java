@@ -14,15 +14,29 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 import java.util.regex.Pattern;
 
+/**
+ * Handles the removal of reactions in a guild.
+ */
 public class Remove implements SlashHandler {
     private static final Pattern EMOTE_PATTERN = Pattern.compile("<a?:.*?:(?<id>\\d*?)>");
 
     private final Guilds guilds;
 
+    /**
+     * Constructs a Remove handler with the specified guilds provider.
+     *
+     * @param guilds the guilds provider
+     */
     public Remove(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event for removing reactions.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var reactions = guilds.guild(event.getGuild()).settings().thanking().reactions();
@@ -44,6 +58,12 @@ public class Remove implements SlashHandler {
         event.reply(context.localize("command.reactions.remove.message.notfound")).setEphemeral(true).queue();
     }
 
+    /**
+     * Handles the auto-complete interaction event for the emote option.
+     *
+     * @param event the auto-complete interaction event
+     * @param context the event context
+     */
     @Override
     public void onAutoComplete(CommandAutoCompleteInteractionEvent event, EventContext context) {
         if ("emote".equals(event.getFocusedOption().getName())) {

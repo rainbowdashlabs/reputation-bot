@@ -17,13 +17,27 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+/**
+ * Handles the removal of thank words from a guild's settings.
+ */
 public class Remove implements SlashHandler {
     private final Guilds guilds;
 
+    /**
+     * Constructs a Remove handler with the specified guilds provider.
+     *
+     * @param guilds the guilds provider
+     */
     public Remove(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event for removing a thank word pattern.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var pattern = event.getOption("pattern").getAsString();
@@ -45,6 +59,12 @@ public class Remove implements SlashHandler {
              .queue();
     }
 
+    /**
+     * Handles the auto-complete interaction event for thank word patterns.
+     *
+     * @param event the auto-complete interaction event
+     * @param context the event context
+     */
     @Override
     public void onAutoComplete(CommandAutoCompleteInteractionEvent event, EventContext context) {
         var option = event.getFocusedOption();

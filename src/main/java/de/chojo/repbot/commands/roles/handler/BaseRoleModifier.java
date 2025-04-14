@@ -17,16 +17,31 @@ import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 
 import java.util.function.Consumer;
 
+/**
+ * Abstract base class for handling role modification commands.
+ */
 public abstract class BaseRoleModifier implements SlashHandler {
 
     private final Refresh refresh;
     private final Guilds guilds;
 
+    /**
+     * Constructs a BaseRoleModifier with the specified refresh handler and guilds provider.
+     *
+     * @param refresh the refresh handler
+     * @param guilds the guilds provider
+     */
     public BaseRoleModifier(Refresh refresh, Guilds guilds) {
         this.refresh = refresh;
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         Consumer<MessageEmbed> refreshConsumer = menu -> {
@@ -37,8 +52,20 @@ public abstract class BaseRoleModifier implements SlashHandler {
         modify(event, context, refreshConsumer);
     }
 
+    /**
+     * Abstract method to modify roles, to be implemented by subclasses.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     * @param refresh the consumer to handle refresh actions
+     */
     public abstract void modify(SlashCommandInteractionEvent event, EventContext context, Consumer<MessageEmbed> refresh);
 
+    /**
+     * Gets the guilds provider.
+     *
+     * @return the guilds provider
+     */
     public Guilds guilds() {
         return guilds;
     }

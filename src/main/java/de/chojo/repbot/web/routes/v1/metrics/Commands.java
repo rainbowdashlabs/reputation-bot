@@ -23,11 +23,25 @@ import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_WEEK_OFFSET;
 import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
 
+/**
+ * Handles the metrics related to commands.
+ */
 public class Commands extends MetricsHolder {
+    /**
+     * Constructs a Commands instance with the specified metrics and cache.
+     *
+     * @param metrics the metrics provider
+     * @param cache   the metric cache
+     */
     public Commands(Metrics metrics, MetricCache cache) {
         super(cache, metrics);
     }
 
+    /**
+     * Handles the request for command usage statistics for a week.
+     *
+     * @param ctx the context of the request
+     */
     @OpenApi(
             summary = "Get command usages for a week.",
             operationId = "usageWeek",
@@ -51,6 +65,11 @@ public class Commands extends MetricsHolder {
         }
     }
 
+    /**
+     * Handles the request for command usage statistics for a month.
+     *
+     * @param ctx the context of the request
+     */
     @OpenApi(
             summary = "Get command usages for a month.",
             operationId = "usageMonth",
@@ -74,6 +93,11 @@ public class Commands extends MetricsHolder {
         }
     }
 
+    /**
+     * Handles the request for the count of commands executed per week.
+     *
+     * @param ctx the context of the request
+     */
     @OpenApi(
             summary = "Get the amount of executed commands per week.",
             operationId = "countWeek",
@@ -98,6 +122,11 @@ public class Commands extends MetricsHolder {
         }
     }
 
+    /**
+     * Handles the request for the count of commands executed per month.
+     *
+     * @param ctx the context of the request
+     */
     @OpenApi(
             summary = "Get the amount of executed commands per month.",
             operationId = "countMonth",
@@ -122,6 +151,9 @@ public class Commands extends MetricsHolder {
         }
     }
 
+    /**
+     * Builds the routes for the commands metrics.
+     */
     @Override
     public void buildRoutes() {
         path("commands", () -> {

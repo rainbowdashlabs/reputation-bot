@@ -9,7 +9,15 @@ import de.chojo.jdautil.localization.util.Replacement;
 
 import java.util.List;
 
+/**
+ * Functional interface for providing a list of replacements.
+ */
 @FunctionalInterface
 public interface ReplacementProvider {
+    /**
+     * Returns a list of replacements.
+     *
+     * @return a list of {@link Replacement} objects
+     */
     List<Replacement> replacements();
 }

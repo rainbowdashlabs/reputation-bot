@@ -14,13 +14,29 @@ import net.dv8tion.jda.api.interactions.InteractionContextType;
 
 import java.util.Set;
 
+/**
+ * Class for handling user received actions.
+ */
 public class UserReceived implements UserProvider<User> {
+    /**
+     * Provider for accessing guild data.
+     */
     private final Guilds guilds;
 
+    /**
+     * Constructs a new UserReceived instance.
+     *
+     * @param guilds the guilds provider
+     */
     public UserReceived(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Creates and returns a User object configured for received reputation.
+     *
+     * @return the configured User object
+     */
     @Override
     public User user() {
         return User.of("Received Reputation")

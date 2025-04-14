@@ -18,13 +18,27 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import static de.chojo.repbot.commands.log.handler.LogFormatter.buildFields;
 import static de.chojo.repbot.commands.log.handler.LogFormatter.mapMessageLogEntry;
 
+/**
+ * Handler for the message log command.
+ */
 public class Message implements SlashHandler {
     private final Guilds guilds;
 
+    /**
+     * Constructs a new Message handler with the specified Guilds provider.
+     *
+     * @param guilds the Guilds provider
+     */
     public Message(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event for logging a message.
+     *
+     * @param event the SlashCommandInteractionEvent
+     * @param context the EventContext
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         event.getOption("messageid");
@@ -38,6 +52,14 @@ public class Message implements SlashHandler {
              .setEphemeral(true).queue();
     }
 
+    /**
+     * Retrieves the message log and constructs a MessageEmbed.
+     *
+     * @param context the EventContext
+     * @param guild the Guild
+     * @param messageId the ID of the message
+     * @return the constructed MessageEmbed
+     */
     private MessageEmbed getMessageLog(EventContext context, Guild guild, long messageId) {
         var messageLog = guilds.guild(guild).reputation().log().messageLog(messageId, 50);
 

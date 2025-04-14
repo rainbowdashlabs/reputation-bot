@@ -15,14 +15,29 @@ import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Handler for the "set reset date" slash command.
+ * This command sets the reset date for the guild's settings.
+ */
 public class SetResetDate implements SlashHandler {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd");
     private final Guilds guilds;
 
+    /**
+     * Constructs a new SetResetDate handler.
+     *
+     * @param guilds the guilds provider
+     */
     public SetResetDate(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event the slash command interaction event
+     * @param context the event context
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var year = event.getOption("year").getAsInt();

@@ -11,11 +11,24 @@ import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.entities.emoji.RichCustomEmoji;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 
+/**
+ * Utility class for checking and validating emojis in messages.
+ */
 public final class EmojiCheck {
+    /**
+     * Private constructor to prevent instantiation.
+     */
     private EmojiCheck() {
         throw new UnsupportedOperationException("This is a utility class.");
     }
 
+    /**
+     * Checks the provided emoji in the context of the given message.
+     *
+     * @param message the message containing the emoji
+     * @param emote   the emoji to check
+     * @return the result of the emoji check
+     */
     public static EmojiCheckResult checkEmoji(Message message, String emote) {
         // Check for emote id
         if (Verifier.isValidId(emote)) {
@@ -42,16 +55,22 @@ public final class EmojiCheck {
                                                                                      .getId(), CheckResult.EMOTE_FOUND);
         }
 
-        // check for unicode
+        // Check for unicode
         try {
             message.addReaction(Emoji.fromUnicode(emote)).complete();
         } catch (ErrorResponseException e) {
-
             return new EmojiCheckResult(null, "", CheckResult.UNKNOWN_EMOJI);
         }
         return new EmojiCheckResult(emote, "", CheckResult.EMOJI_FOUND);
     }
 
+    /**
+     * Checks if the given custom emoji can be used in the context of the provided message.
+     *
+     * @param emote   the custom emoji to check
+     * @param message the message containing the emoji
+     * @return true if the emoji can be used, false otherwise
+     */
     private static boolean canUse(RichCustomEmoji emote, Message message) {
         if (emote == null) {
             return false;
@@ -63,5 +82,4 @@ public final class EmojiCheck {
         }
         return true;
     }
-
 }

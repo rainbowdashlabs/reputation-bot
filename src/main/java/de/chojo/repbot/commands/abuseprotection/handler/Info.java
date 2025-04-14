@@ -18,18 +18,39 @@ import java.util.List;
 
 import static de.chojo.repbot.util.Text.getSetting;
 
+/**
+ * Handler for the abuse protection info command.
+ */
 public class Info implements SlashHandler {
     private final Guilds guilds;
 
+    /**
+     * Constructs a new Info handler.
+     *
+     * @param guilds the Guilds provider
+     */
     public Info(Guilds guilds) {
         this.guilds = guilds;
     }
 
+    /**
+     * Handles the slash command interaction event.
+     *
+     * @param event the SlashCommandInteractionEvent
+     * @param context the EventContext
+     */
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         event.replyEmbeds(getSettings(context, guilds.guild(event.getGuild()))).queue();
     }
 
+    /**
+     * Retrieves the abuse protection settings for the specified guild.
+     *
+     * @param context the EventContext
+     * @param guild the RepGuild instance
+     * @return a MessageEmbed containing the settings
+     */
     private MessageEmbed getSettings(EventContext context, RepGuild guild) {
         var abuseProt = guild.settings().abuseProtection();
         var setting = List.of(

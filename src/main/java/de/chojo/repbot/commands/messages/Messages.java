@@ -11,7 +11,15 @@ import de.chojo.jdautil.interactions.slash.provider.SlashCommand;
 import de.chojo.repbot.commands.messages.handler.States;
 import de.chojo.repbot.dao.provider.Guilds;
 
+/**
+ * Represents the messages command for the bot.
+ */
 public class Messages extends SlashCommand {
+    /**
+     * Constructs a Messages command with the specified guilds provider.
+     *
+     * @param guilds the guilds provider
+     */
     public Messages(Guilds guilds) {
         super(Slash.of("messages", "command.messages.description")
                 .guildOnly()
