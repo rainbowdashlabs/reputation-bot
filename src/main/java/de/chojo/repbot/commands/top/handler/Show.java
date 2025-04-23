@@ -13,9 +13,8 @@ import de.chojo.jdautil.util.Completion;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
 import de.chojo.repbot.dao.pagination.GuildRanking;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.utils.messages.MessageEditData;
@@ -26,15 +25,15 @@ import java.util.stream.Collectors;
 
 public class Show implements SlashHandler {
     private static final int TOP_PAGE_SIZE = 10;
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
 
-    public Show(Guilds guilds) {
-        this.guilds = guilds;
+    public Show(GuildRepository guildRepository) {
+        this.guildRepository = guildRepository;
     }
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        var guild = guilds.guild(event.getGuild());
+        var guild = guildRepository.guild(event.getGuild());
         var reputationMode = guild.settings().general().reputationMode();
         if (event.getOption("mode") != null) {
             var mode = event.getOption("mode").getAsString();

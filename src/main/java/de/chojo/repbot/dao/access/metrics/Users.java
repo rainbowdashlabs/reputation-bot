@@ -52,7 +52,7 @@ public class Users {
                      SELECT week, receiver_count, donor_count, total_count
                      FROM metrics_unique_users_week
                      WHERE week = date_trunc('week', now()  - INTERVAL '1 WEEK')
-                     ON CONFLICT(week) 
+                     ON CONFLICT(week)
                          DO UPDATE SET receiver_count = excluded.receiver_count,
                              donor_count = excluded.donor_count,
                              total_count = excluded.donor_count

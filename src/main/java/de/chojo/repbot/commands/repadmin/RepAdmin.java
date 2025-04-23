@@ -18,20 +18,20 @@ import de.chojo.repbot.commands.repadmin.handler.resetdate.CurrentResetDate;
 import de.chojo.repbot.commands.repadmin.handler.resetdate.RemoveResetDate;
 import de.chojo.repbot.commands.repadmin.handler.resetdate.SetResetDate;
 import de.chojo.repbot.config.Configuration;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.service.RoleAssigner;
 
 import java.time.LocalDate;
 
 public class RepAdmin extends SlashCommand {
 
-    public RepAdmin(Guilds guilds, Configuration configuration, RoleAssigner roleAssigner) {
+    public RepAdmin(GuildRepository guildRepository, Configuration configuration, RoleAssigner roleAssigner) {
         super(Slash.of("repadmin", "command.repadmin.description")
                 .guildOnly()
                 .adminCommand()
                 .group(Group.of("reputation", "command.repadmin.reputation.description")
                         .subCommand(SubCommand.of("add", "command.repadmin.reputation.add.description")
-                                .handler(new Add(roleAssigner, guilds))
+                                .handler(new Add(roleAssigner, guildRepository))
                                 .argument(Argument.user("user", "command.repadmin.reputation.add.options.user.description")
                                                   .asRequired())
                                 .argument(Argument.integer("amount", "command.repadmin.reputation.add.options.amount.description")
@@ -39,7 +39,7 @@ public class RepAdmin extends SlashCommand {
                                                   .max(1_000_000)
                                                   .asRequired()))
                         .subCommand(SubCommand.of("remove", "command.repadmin.reputation.remove.description")
-                                .handler(new Remove(roleAssigner, guilds))
+                                .handler(new Remove(roleAssigner, guildRepository))
                                 .argument(Argument.user("user", "command.repadmin.reputation.remove.options.user.description")
                                                   .asRequired())
                                 .argument(Argument.integer("amount", "command.repadmin.reputation.remove.options.amount.description")
@@ -47,7 +47,7 @@ public class RepAdmin extends SlashCommand {
                                                   .max(1_000_000)
                                                   .asRequired()))
                         .subCommand(SubCommand.of("set", "command.repadmin.reputation.set.description")
-                                .handler(new Set(roleAssigner, guilds))
+                                .handler(new Set(roleAssigner, guildRepository))
                                 .argument(Argument.user("user", "command.repadmin.reputation.set.options.user.description")
                                                   .asRequired())
                                 .argument(Argument.integer("amount", "command.repadmin.reputation.set.options.amount.description")
@@ -56,7 +56,7 @@ public class RepAdmin extends SlashCommand {
                                                   .asRequired())))
                 .group(Group.of("resetdate", "command.repadmin.resetdate.description")
                         .subCommand(SubCommand.of("set", "command.repadmin.resetdate.set.description")
-                                .handler(new SetResetDate(guilds))
+                                .handler(new SetResetDate(guildRepository))
                                 .argument(Argument.integer("year", "command.repadmin.resetdate.set.options.year.description")
                                                   .asRequired()
                                                   .min(2016)
@@ -70,11 +70,11 @@ public class RepAdmin extends SlashCommand {
                                                   .min(1)
                                                   .max(31)))
                         .subCommand(SubCommand.of("remove", "command.repadmin.resetdate.remove.description")
-                                .handler(new RemoveResetDate(guilds)))
+                                .handler(new RemoveResetDate(guildRepository)))
                         .subCommand(SubCommand.of("current", "command.repadmin.resetdate.current.description")
-                                .handler(new CurrentResetDate(guilds))))
+                                .handler(new CurrentResetDate(guildRepository))))
                 .subCommand(SubCommand.of("profile", "command.repadmin.profile.description")
-                        .handler(new Profile(guilds, configuration))
+                        .handler(new Profile(guildRepository, configuration))
                         .argument(Argument.user("user", "command.repadmin.profile.options.user.description").asRequired()))
         );
     }

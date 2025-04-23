@@ -8,21 +8,21 @@ package de.chojo.repbot.commands.repadmin.handler;
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.config.Configuration;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class Profile implements SlashHandler {
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
     private final Configuration configuration;
 
-    public Profile(Guilds guilds, Configuration configuration) {
-        this.guilds = guilds;
+    public Profile(GuildRepository guildRepository, Configuration configuration) {
+        this.guildRepository = guildRepository;
         this.configuration = configuration;
     }
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        var user = guilds.guild(event.getGuild()).reputation().user(event.getOption("user").getAsMember());
+        var user = guildRepository.guild(event.getGuild()).reputation().user(event.getOption("user").getAsMember());
         var profile = user.profile().adminProfile(configuration, context.guildLocalizer());
         event.replyEmbeds(profile).setEphemeral(true).queue();
     }

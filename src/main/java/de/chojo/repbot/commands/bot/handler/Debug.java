@@ -8,7 +8,7 @@ package de.chojo.repbot.commands.bot.handler;
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.pagination.bag.ListPageBag;
 import de.chojo.jdautil.wrapper.EventContext;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -35,10 +35,10 @@ import java.util.stream.Collectors;
 import static de.chojo.jdautil.util.Guilds.prettyName;
 
 public class Debug implements SlashHandler {
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
 
-    public Debug(Guilds guilds) {
-        this.guilds = guilds;
+    public Debug(GuildRepository guildRepository) {
+        this.guildRepository = guildRepository;
     }
 
     @Override
@@ -53,7 +53,7 @@ public class Debug implements SlashHandler {
         var channel = guild.getGuildChannelById(event.getOption("channel_id", () -> 0L, OptionMapping::getAsLong));
 
         var selfMember = guild.getSelfMember();
-        var repGuild = guilds.guild(guild);
+        var repGuild = guildRepository.guild(guild);
         var settings = repGuild.settings();
         var reputation = repGuild.reputation();
 

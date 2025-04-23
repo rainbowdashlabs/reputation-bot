@@ -8,7 +8,7 @@ package de.chojo.repbot.commands.roles.handler;
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.wrapper.EventContext;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -19,10 +19,10 @@ import java.util.Comparator;
 import java.util.stream.Collectors;
 
 public class List implements SlashHandler {
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
 
-    public List(Guilds guilds) {
-        this.guilds = guilds;
+    public List(GuildRepository guildRepository) {
+        this.guildRepository = guildRepository;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class List implements SlashHandler {
     }
 
     private MessageEmbed getRoleList(EventContext context, Guild guild) {
-        var settings = guilds.guild(guild).settings();
+        var settings = guildRepository.guild(guild).settings();
         var ranks = settings.ranks();
 
         var reputationRoles = ranks.ranks()

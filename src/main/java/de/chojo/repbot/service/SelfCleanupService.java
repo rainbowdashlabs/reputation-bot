@@ -10,7 +10,7 @@ import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.Cleanup;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.util.LogNotify;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
@@ -33,20 +33,20 @@ public class SelfCleanupService implements Runnable {
     private static final Logger log = getLogger(SelfCleanupService.class);
     private final ShardManager shardManager;
     private final ILocalizer localizer;
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
     private final Configuration configuration;
     private final Cleanup cleanup;
 
-    private SelfCleanupService(ShardManager shardManager, ILocalizer localizer, Guilds guilds, Cleanup cleanup, Configuration configuration) {
+    private SelfCleanupService(ShardManager shardManager, ILocalizer localizer, GuildRepository guildRepository, Cleanup cleanup, Configuration configuration) {
         this.shardManager = shardManager;
         this.localizer = localizer;
-        this.guilds = guilds;
+        this.guildRepository = guildRepository;
         this.cleanup = cleanup;
         this.configuration = configuration;
     }
 
-    public static void create(ShardManager shardManager, ILocalizer localizer, Guilds guilds, Cleanup cleanup, Configuration configuration, ScheduledExecutorService service) {
-        var selfCleanupService = new SelfCleanupService(shardManager, localizer, guilds, cleanup, configuration);
+    public static void create(ShardManager shardManager, ILocalizer localizer, GuildRepository guildRepository, Cleanup cleanup, Configuration configuration, ScheduledExecutorService service) {
+        var selfCleanupService = new SelfCleanupService(shardManager, localizer, guildRepository, cleanup, configuration);
         service.scheduleAtFixedRate(selfCleanupService, 1, 60, TimeUnit.MINUTES);
     }
 
@@ -56,7 +56,7 @@ public class SelfCleanupService implements Runnable {
         if (!configuration.selfCleanup().isActive()) return;
 
         for (var guild : shardManager.getGuilds()) {
-            var repGuild = guilds.guild(guild);
+            var repGuild = guildRepository.guild(guild);
 
             var joined = guild.getSelfMember().getTimeJoined();
             if (joined.isAfter(configuration.selfCleanup().getInactiveDaysOffset().atOffset(ZoneOffset.UTC))) {
@@ -118,7 +118,7 @@ public class SelfCleanupService implements Runnable {
     }
 
     private void promptCleanup(Guild guild) {
-        var repGuild = guilds.guild(guild);
+        var repGuild = guildRepository.guild(guild);
 
         // Check if a prompt was already send
         if (repGuild.cleanup().getCleanupPromptTime().isPresent()) return;
@@ -138,7 +138,7 @@ public class SelfCleanupService implements Runnable {
     }
 
     private void notifyCleanup(Guild guild) {
-        var clean = guilds.guild(guild).cleanup();
+        var clean = guildRepository.guild(guild).cleanup();
         if (clean.getCleanupPromptTime().get().isAfter(configuration.selfCleanup().getLeaveDaysOffset())) {
             log.debug("Prompt was send {}/{} days ago on {}",
                     Math.abs(Duration.between(clean.getCleanupPromptTime().get(),

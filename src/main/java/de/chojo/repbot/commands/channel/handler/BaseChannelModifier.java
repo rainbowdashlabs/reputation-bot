@@ -8,7 +8,7 @@ package de.chojo.repbot.commands.channel.handler;
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.access.guild.settings.sub.thanking.Channels;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildChannel;
@@ -21,15 +21,15 @@ public abstract class BaseChannelModifier implements SlashHandler {
             Set.of(ChannelType.TEXT, ChannelType.FORUM, ChannelType.CATEGORY, ChannelType.VOICE);
     private static final java.util.Set<ChannelType> TEXT_CHANNEL =
             Set.of(ChannelType.TEXT, ChannelType.FORUM, ChannelType.VOICE);
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
 
-    public BaseChannelModifier(Guilds guilds) {
-        this.guilds = guilds;
+    public BaseChannelModifier(GuildRepository guildRepository) {
+        this.guildRepository = guildRepository;
     }
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        var channels = guilds.guild(event.getGuild()).settings().thanking().channels();
+        var channels = guildRepository.guild(event.getGuild()).settings().thanking().channels();
         var channelType = event.getOption("channel").getChannelType();
         if (!ALLOWED_CHANNEL.contains(channelType)) {
             event.reply(context.localize("error.onlyTextOrCategory")).setEphemeral(true).queue();

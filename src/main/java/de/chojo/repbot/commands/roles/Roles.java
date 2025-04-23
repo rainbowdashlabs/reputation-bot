@@ -19,17 +19,17 @@ import de.chojo.repbot.commands.roles.handler.Remove;
 import de.chojo.repbot.commands.roles.handler.donor.RemoveDonor;
 import de.chojo.repbot.commands.roles.handler.receiver.RemoveReceiver;
 import de.chojo.repbot.commands.roles.handler.StackRoles;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.service.RoleAssigner;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 
 public class Roles implements SlashProvider<Slash> {
     private final Refresh refresh;
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
 
-    public Roles(Guilds guilds, RoleAssigner roleAssigner) {
-        this.guilds = guilds;
+    public Roles(GuildRepository guildRepository, RoleAssigner roleAssigner) {
+        this.guildRepository = guildRepository;
         refresh = new Refresh(roleAssigner);
     }
 
@@ -39,39 +39,39 @@ public class Roles implements SlashProvider<Slash> {
                 .guildOnly()
                 .withPermission(Permission.MANAGE_ROLES)
                 .subCommand(SubCommand.of("add", "command.roles.add.description")
-                        .handler(new Add(refresh, guilds))
+                        .handler(new Add(refresh, guildRepository))
                         .argument(Argument.role("role", "command.roles.add.options.role.description").asRequired())
                         .argument(Argument.integer("reputation", "command.roles.add.options.reputation.description")
                                           .min(0)
                                           .max(1_000_000)
                                           .asRequired()))
                 .subCommand(SubCommand.of("remove", "command.roles.remove.description")
-                        .handler(new Remove(refresh, guilds))
+                        .handler(new Remove(refresh, guildRepository))
                         .argument(Argument.role("role", "command.roles.remove.options.role.description").asRequired()))
                 .group(Group.of("receiver", "command.roles.receiver.description")
                         .subCommand(SubCommand.of("add", "command.roles.receiver.add.description")
-                                .handler(new AddReceiver(guilds))
+                                .handler(new AddReceiver(guildRepository))
                                 .argument(Argument.role("role", "command.roles.receiver.add.options.role.description")
                                                   .asRequired()))
                         .subCommand(SubCommand.of("remove", "command.roles.receiver.remove.description")
-                                .handler(new RemoveReceiver(guilds))
+                                .handler(new RemoveReceiver(guildRepository))
                                 .argument(Argument.role("role", "command.roles.receiver.remove.options.role.description")
                                                   .asRequired())))
                 .group(Group.of("donor", "command.roles.donor.description")
                         .subCommand(SubCommand.of("add", "command.roles.donor.add.description")
-                                .handler(new AddDonor(guilds))
+                                .handler(new AddDonor(guildRepository))
                                 .argument(Argument.role("role", "command.roles.donor.add.options.role.description")
                                                   .asRequired()))
                         .subCommand(SubCommand.of("remove", "command.roles.donor.remove.description")
-                                .handler(new RemoveDonor(guilds))
+                                .handler(new RemoveDonor(guildRepository))
                                 .argument(Argument.role("role", "command.roles.donor.remove.options.role.description")
                                                   .asRequired())))
                 .subCommand(SubCommand.of("refresh", "command.roles.refresh.description")
                         .handler(refresh))
                 .subCommand(SubCommand.of("list", "command.roles.list.description")
-                        .handler(new List(guilds)))
+                        .handler(new List(guildRepository)))
                 .subCommand(SubCommand.of("stackroles", "command.roles.stackroles.description")
-                        .handler(new StackRoles(refresh, guilds))
+                        .handler(new StackRoles(refresh, guildRepository))
                         .argument(Argument.bool("stack", "command.roles.stackroles.options.stack.description"))
                 ).build();
     }

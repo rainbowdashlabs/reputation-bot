@@ -11,7 +11,7 @@ import de.chojo.repbot.dao.access.Analyzer;
 import de.chojo.repbot.dao.access.Cleanup;
 import de.chojo.repbot.dao.access.Gdpr;
 import de.chojo.repbot.dao.access.gdpr.RemovalTask;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.dao.provider.Voice;
 import de.chojo.repbot.util.LogNotify;
@@ -35,7 +35,7 @@ public class Data {
     private final Threading threading;
     private final Configuration configuration;
     private HikariDataSource dataSource;
-    private Guilds guilds;
+    private GuildRepository guildRepository;
     private Gdpr gdpr;
     private Cleanup cleanup;
     private Metrics metrics;
@@ -97,7 +97,7 @@ public class Data {
 
     private void initDao() {
         log.info("Creating DAOs");
-        guilds = new Guilds(configuration);
+        guildRepository = new GuildRepository(configuration);
         gdpr = new Gdpr(configuration);
         cleanup = new Cleanup();
         metrics = new Metrics(dataSource);
@@ -122,8 +122,8 @@ public class Data {
                                 .build();
     }
 
-    public Guilds guilds() {
-        return guilds;
+    public GuildRepository guilds() {
+        return guildRepository;
     }
 
     public Gdpr gdpr() {

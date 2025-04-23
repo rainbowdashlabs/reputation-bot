@@ -15,7 +15,7 @@ import de.chojo.repbot.analyzer.results.empty.EmptyResultReason;
 import de.chojo.repbot.analyzer.results.match.fuzzy.MemberMatch;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.util.LogNotify;
 import net.dv8tion.jda.api.entities.Member;
@@ -51,13 +51,13 @@ public class MessageAnalyzer {
             .build();
     private final Configuration configuration;
     private final Metrics metrics;
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
 
-    public MessageAnalyzer(ContextResolver resolver, Configuration configuration, Metrics metrics, Guilds guilds) {
+    public MessageAnalyzer(ContextResolver resolver, Configuration configuration, Metrics metrics, GuildRepository guildRepository) {
         contextResolver = resolver;
         this.configuration = configuration;
         this.metrics = metrics;
-        this.guilds = guilds;
+        this.guildRepository = guildRepository;
     }
 
     /**
@@ -75,7 +75,7 @@ public class MessageAnalyzer {
         if (rejectionCache.getIfPresent(settings.guildId()) != null) {
             return AnalyzerResult.empty(EmptyResultReason.INTERNAL_ERROR);
         }
-        var analyzer = guilds.guild(message.getGuild()).reputation().analyzer();
+        var analyzer = guildRepository.guild(message.getGuild()).reputation().analyzer();
         try {
             return analyzer.log(message, resultCache.get(message.getIdLong(), () -> analyze(pattern, message, settings, limitTargets, limit)));
         } catch (ExecutionException | UncheckedExecutionException e) {

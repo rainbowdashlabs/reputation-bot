@@ -43,6 +43,7 @@ import de.chojo.repbot.listener.voting.ReputationVoteListener;
 import de.chojo.repbot.service.AnalyzerService;
 import de.chojo.repbot.service.GdprService;
 import de.chojo.repbot.service.MetricService;
+import de.chojo.repbot.service.PremiumService;
 import de.chojo.repbot.service.PresenceService;
 import de.chojo.repbot.service.RepBotCachePolicy;
 import de.chojo.repbot.service.RoleAssigner;
@@ -250,6 +251,7 @@ public class Bot {
         var logListener = LogListener.create(threading.repBotWorker());
         var stateListener = StateListener.of(localizer, guilds, configuration, data.metrics());
         var roleUpdater = RoleUpdater.create(guilds, roleAssigner, shardManager, threading.repBotWorker());
+        PremiumService premiumService = PremiumService.of(guilds, threading);
 
         shardManager.addEventListener(
                 reactionListener,
@@ -258,7 +260,8 @@ public class Bot {
                 voiceStateListener,
                 logListener,
                 stateListener,
-                roleUpdater);
+                roleUpdater,
+                premiumService);
     }
 
     public ShardManager shardManager() {

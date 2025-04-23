@@ -8,17 +8,17 @@ package de.chojo.repbot.commands.reputation.handler;
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.config.Configuration;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.service.RoleAssigner;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class Profile implements SlashHandler {
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
     private final Configuration configuration;
     private final RoleAssigner roleAssigner;
 
-    public Profile(Guilds guilds, Configuration configuration, RoleAssigner roleAssigner) {
-        this.guilds = guilds;
+    public Profile(GuildRepository guildRepository, Configuration configuration, RoleAssigner roleAssigner) {
+        this.guildRepository = guildRepository;
         this.configuration = configuration;
         this.roleAssigner = roleAssigner;
     }
@@ -31,11 +31,11 @@ public class Profile implements SlashHandler {
             event.reply(context.localize("error.userNotFound")).queue();
             return;
         }
-        var reputation = guilds.guild(event.getGuild())
-                               .reputation()
-                               .user(member)
-                               .profile()
-                               .publicProfile(configuration, context.guildLocalizer());
+        var reputation = guildRepository.guild(event.getGuild())
+                                        .reputation()
+                                        .user(member)
+                                        .profile()
+                                        .publicProfile(configuration, context.guildLocalizer());
         event.replyEmbeds(reputation).queue();
         roleAssigner.updateReporting(member, event.getGuildChannel());
     }

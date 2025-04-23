@@ -13,7 +13,7 @@ import de.chojo.jdautil.menus.entries.MenuEntry;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
@@ -24,15 +24,15 @@ import java.util.Collections;
 import java.util.function.Consumer;
 
 public class Info implements SlashHandler {
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
 
-    public Info(Guilds guilds) {
-        this.guilds = guilds;
+    public Info(GuildRepository guildRepository) {
+        this.guildRepository = guildRepository;
     }
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        var guildSettings = guilds.guild(event.getGuild()).settings();
+        var guildSettings = guildRepository.guild(event.getGuild()).settings();
         var settings = StringSelectMenu.create("settings")
                 .setPlaceholder("command.repsettings.info.message.choose")
                 .setRequiredRange(1, 1)

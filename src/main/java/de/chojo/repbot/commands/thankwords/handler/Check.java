@@ -13,21 +13,21 @@ import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.analyzer.results.match.MatchAnalyzerResult;
 import de.chojo.repbot.analyzer.results.match.ThankType;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class Check implements SlashHandler {
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
     private final MessageAnalyzer messageAnalyzer;
 
-    public Check(Guilds guilds, MessageAnalyzer messageAnalyzer) {
-        this.guilds = guilds;
+    public Check(GuildRepository guildRepository, MessageAnalyzer messageAnalyzer) {
+        this.guildRepository = guildRepository;
         this.messageAnalyzer = messageAnalyzer;
     }
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        var settings = guilds.guild(event.getGuild()).settings();
+        var settings = guildRepository.guild(event.getGuild()).settings();
         var guildSettings = settings.thanking().thankwords();
         var messageId = event.getOption("message").getAsString();
 
