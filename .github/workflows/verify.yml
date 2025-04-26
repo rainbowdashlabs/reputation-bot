@@ -16,7 +16,7 @@ jobs:
           java-version: 21
       - uses: gradle/actions/wrapper-validation@v4
       - name: Build with Gradle
-        run: ./gradlew --build-cache build
+        run: ./gradlew --build-cache build -x test
       - name: Test with Gradle
         run: ./gradlew test --info
 
