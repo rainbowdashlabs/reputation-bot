@@ -21,6 +21,6 @@ public class SKUEntrySerializer extends StdSerializer<SKUEntry> {
 
     @Override
     public void serialize(SKUEntry value, JsonGenerator gen, SerializerProvider provider) throws IOException {
-        gen.writeObject(value.sku().stream().mapToLong(SKU::getSkuIdLong).toArray());
+        gen.writeObject(value.sku().stream().mapToLong(SKU::skuId).toArray());
     }
 }

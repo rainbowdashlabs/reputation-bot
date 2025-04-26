@@ -57,7 +57,7 @@ public class PremiumService extends ListenerAdapter {
                     guildRepository.byId(sub.id()).subscriptions().addSubscription(sub);
             default -> log.error(LogNotify.NOTIFY_ADMIN, "Unknown entitlement type {} for sku {} for {} {}",
                     entitlement.getType(),
-                    sub.getSkuIdLong(),
+                    sub.skuId(),
                     sub.skuTarget(),
                     sub.id());
         }

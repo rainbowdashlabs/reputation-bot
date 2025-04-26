@@ -27,7 +27,7 @@ public class Analyzer {
 
     public void cleanup() {
         int extendedHours = configuration.skus().features().analyzerLog().extendedLogHours();
-        List<Long> skuEntry = configuration.skus().features().analyzerLog().longerLogTime().sku().stream().map(SKU::getSkuIdLong).toList();
+        List<Long> skuEntry = configuration.skus().features().analyzerLog().longerLogTime().sku().stream().map(SKU::skuId).toList();
 
         var delete = Query.query("""
                                   WITH

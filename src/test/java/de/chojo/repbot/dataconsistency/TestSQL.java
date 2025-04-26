@@ -5,7 +5,6 @@
  */
 package de.chojo.repbot.dataconsistency;
 
-<<<<<<< HEAD
 import com.zaxxer.hikari.HikariDataSource;
 import de.chojo.sadu.datasource.DataSourceCreator;
 import de.chojo.sadu.postgresql.databases.PostgreSql;
@@ -52,17 +51,4 @@ public class TestSQL {
         self.start();
         return self;
     }
-=======
-import de.chojo.sadu.postgresql.databases.PostgreSql;
-import de.chojo.sadu.testing.SaduTests;
-import org.junit.jupiter.api.Test;
-
-import java.io.IOException;
-
-public class TestSQL {
-    @Test
-    void test() throws IOException {
-        SaduTests.execute(1, PostgreSql.get());
-    }
->>>>>>> 75aef07 (Implement features #668, #669 #675)
 }
