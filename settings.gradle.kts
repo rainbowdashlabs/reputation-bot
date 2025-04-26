@@ -13,7 +13,6 @@ dependencyResolutionManagement {
             library("sadu-updater", "de.chojo.sadu", "sadu-updater").versionRef("sadu")
             library("sadu-postgresql", "de.chojo.sadu", "sadu-postgresql").versionRef("sadu")
             library("sadu-datasource", "de.chojo.sadu", "sadu-datasource").versionRef("sadu")
-            library("sadu-testing", "de.chojo.sadu", "sadu-testing").versionRef("sadu")
             bundle("sadu", listOf("sadu-queries", "sadu-updater", "sadu-postgresql", "sadu-datasource"))
 
             version("log4j", "2.24.3")
@@ -33,6 +32,9 @@ dependencyResolutionManagement {
             library("junit-jupiter", "org.junit.jupiter", "junit-jupiter").versionRef("junit")
             library("junit-params", "org.junit.jupiter", "junit-jupiter-params").versionRef("junit")
             bundle("junit", listOf("junit-jupiter", "junit-params", "slf4j-simple"))
+
+            version("sadu", "2.3.2")
+            library("sadu-testing", "de.chojo.sadu", "sadu-testing").versionRef("sadu")
 
             version("testcontainers", "1.20.4")
             library("testcontainers-postgres", "org.testcontainers", "postgresql").versionRef("testcontainers")

@@ -52,7 +52,7 @@ dependencies {
     testImplementation(testlibs.bundles.junit)
     testImplementation("org.junit.platform", "junit-platform-launcher")
     testImplementation("org.knowm.xchart", "xchart", "3.8.8")
-    testImplementation(libs.sadu.testing)
+    testImplementation(testlibs.sadu.testing)
     testImplementation(testlibs.bundles.database.postgres)
     testImplementation(testlibs.slf4j.noop)
 }
