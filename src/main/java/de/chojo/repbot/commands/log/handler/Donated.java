@@ -7,7 +7,9 @@ package de.chojo.repbot.commands.log.handler;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.pagination.bag.PrivatePageBag;
+import de.chojo.jdautil.util.Premium;
 import de.chojo.jdautil.wrapper.EventContext;
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 import net.dv8tion.jda.api.entities.Member;
@@ -24,18 +26,20 @@ import static de.chojo.repbot.commands.log.handler.LogFormatter.userLogEmbed;
 
 public class Donated implements SlashHandler {
     private final GuildRepository guildRepository;
+    private final Configuration configuration;
 
-    public Donated(GuildRepository guildRepository) {
+    public Donated(GuildRepository guildRepository, Configuration configuration) {
         this.guildRepository = guildRepository;
+        this.configuration = configuration;
     }
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var user = event.getOption("user").getAsMember();
-        send(event, user, guildRepository, context);
+        send(event, user, guildRepository, context, configuration);
     }
 
-    public static void send(IReplyCallback event, Member user, GuildRepository guildRepository, EventContext context) {
+    public static void send(IReplyCallback event, Member user, GuildRepository guildRepository, EventContext context, Configuration configuration) {
         var logAccess = guildRepository.guild(event.getGuild()).reputation().log().userDonatedLog(user.getUser(), PAGE_SIZE);
         context.registerPage(new PrivatePageBag(logAccess.pages(), event.getUser().getIdLong()) {
             @Override
@@ -48,6 +52,14 @@ public class Donated implements SlashHandler {
             public CompletableFuture<MessageEditData> buildEmptyPage() {
                 return CompletableFuture.completedFuture(userLogEmbed(context, user, "command.log.donated.message.log",
                         mapUserLogEntry(context, Collections.emptyList(), ReputationLogEntry::receiverId)));
+            }
+
+            @Override
+            public int pages() {
+                if (Premium.isNotEntitled(event, configuration.skus().features().reputationLog().extendedPages())) {
+                    return Math.min(configuration.skus().features().reputationLog().defaultSize(), PAGE_SIZE);
+                }
+                return super.pages();
             }
         }, true);
     }

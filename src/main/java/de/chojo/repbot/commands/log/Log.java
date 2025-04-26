@@ -13,11 +13,12 @@ import de.chojo.repbot.commands.log.handler.Analyzer;
 import de.chojo.repbot.commands.log.handler.Donated;
 import de.chojo.repbot.commands.log.handler.Message;
 import de.chojo.repbot.commands.log.handler.Received;
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import net.dv8tion.jda.api.Permission;
 
 public class Log extends SlashCommand {
-    public Log(GuildRepository guildRepository) {
+    public Log(GuildRepository guildRepository, Configuration configuration) {
         super(Slash.of("log", "command.log.description")
                 .guildOnly()
                 .withPermission(Permission.MESSAGE_MANAGE)
@@ -25,7 +26,7 @@ public class Log extends SlashCommand {
                         .handler(new Received(guildRepository))
                         .argument(Argument.user("user", "command.log.received.options.user.description").asRequired()))
                 .subCommand(SubCommand.of("donated", "command.log.donated.description")
-                        .handler(new Donated(guildRepository))
+                        .handler(new Donated(guildRepository, configuration))
                         .argument(Argument.user("user", "command.log.donated.options.user.description").asRequired()))
                 .subCommand(SubCommand.of("message", "command.log.message.description")
                         .handler(new Message(guildRepository))

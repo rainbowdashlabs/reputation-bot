@@ -14,8 +14,13 @@ import java.util.List;
 public class ReputationLog {
 
     private SKUEntry extendedPages = new SKUEntry();
+    private int defaultSize = 2;
 
     public SKUEntry extendedPages() {
         return extendedPages;
+    }
+
+    public int defaultSize() {
+        return defaultSize;
     }
 }

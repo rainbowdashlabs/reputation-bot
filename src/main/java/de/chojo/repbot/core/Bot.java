@@ -193,7 +193,7 @@ public class Bot {
         InteractionHub.builder(shardManager)
                       .withConversationSystem()
                       .withCommands(
-                              new Channel(guilds),
+                              new Channel(guilds, configuration),
                               new Reputation(guilds, configuration, roleAssigner),
                               roles,
                               new RepSettings(guilds),
@@ -203,7 +203,7 @@ public class Bot {
                               new Locale(guilds),
                               new Invite(configuration),
                               Info.create(configuration),
-                              new Log(guilds),
+                              new Log(guilds, configuration),
                               Setup.of(guilds, configuration),
                               new Gdpr(data.gdpr()),
                               new Prune(gdprService),
@@ -216,7 +216,7 @@ public class Bot {
                               new BotAdmin(guilds, configuration, statistic))
                       .withMessages(new MessageLog(guilds))
                       .withUsers(new UserReceived(guilds),
-                              new UserDonated(guilds))
+                              new UserDonated(guilds, configuration))
                       .withLocalizer(localizer)
                       .cleanGuildCommands("true".equals(System.getProperty("bot.cleancommands", "false")))
                       .testMode("true".equals(System.getProperty("bot.testmode", "false")))
