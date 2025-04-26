@@ -49,10 +49,15 @@ dependencies {
     implementation("org.knowm.xchart", "xchart", "3.8.8")
 
     // unit testing
-    testImplementation(platform("org.junit:junit-bom:5.12.2"))
-    testImplementation("org.junit.jupiter", "junit-jupiter")
+    testImplementation(testlibs.bundles.junit)
     testImplementation("org.junit.platform", "junit-platform-launcher")
     testImplementation("org.knowm.xchart", "xchart", "3.8.8")
+<<<<<<< Updated upstream
+=======
+    testImplementation(libs.sadu.testing)
+    testImplementation(testlibs.bundles.database.postgres)
+    testImplementation(testlibs.slf4j.noop)
+>>>>>>> Stashed changes
 }
 
 java {
