@@ -1,7 +1,7 @@
 rootProject.name = "rep-bot"
 
 plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version("0.10.0")
+    id("org.gradle.toolchains.foojay-resolver-convention") version ("0.10.0")
 }
 
 dependencyResolutionManagement {
@@ -19,12 +19,35 @@ dependencyResolutionManagement {
             library("slf4j-api", "org.slf4j:slf4j-api:2.0.17")
             library("log4j-core", "org.apache.logging.log4j", "log4j-core").versionRef("log4j")
             library("log4j-slf4j2", "org.apache.logging.log4j", "log4j-slf4j2-impl").versionRef("log4j")
-            library("log4j-jsontemplate","org.apache.logging.log4j", "log4j-layout-template-json").versionRef("log4j")
+            library("log4j-jsontemplate", "org.apache.logging.log4j", "log4j-layout-template-json").versionRef("log4j")
             bundle("log4j", listOf("slf4j-api", "log4j-core", "log4j-slf4j2", "log4j-jsontemplate"))
 
             // plugins
             plugin("spotless", "com.diffplug.spotless").version("7.0.3")
             plugin("shadow", "com.gradleup.shadow").version("8.3.6")
+        }
+
+        create("testlibs") {
+            version("junit", "5.11.4")
+            library("junit-jupiter", "org.junit.jupiter", "junit-jupiter").versionRef("junit")
+            library("junit-params", "org.junit.jupiter", "junit-jupiter-params").versionRef("junit")
+            bundle("junit", listOf("junit-jupiter", "junit-params", "slf4j-simple"))
+
+            version("sadu", "2.3.2")
+            library("sadu-testing", "de.chojo.sadu", "sadu-testing").versionRef("sadu")
+
+            version("testcontainers", "1.20.4")
+            library("testcontainers-postgres", "org.testcontainers", "postgresql").versionRef("testcontainers")
+            library("testcontainers-core", "org.testcontainers", "testcontainers").versionRef("testcontainers")
+            library("testcontainers-junit", "org.testcontainers", "junit-jupiter").versionRef("testcontainers")
+
+            version("slf4j", "2.0.16")
+            library("slf4j-noop", "org.slf4j", "slf4j-nop").versionRef("slf4j")
+            library("slf4j-simple", "org.slf4j", "slf4j-simple").versionRef("slf4j")
+
+            library("driver-postgres", "org.postgresql:postgresql:42.7.5")
+
+            bundle("database-postgres", listOf("testcontainers-junit", "testcontainers-core", "testcontainers-postgres", "driver-postgres"))
         }
     }
 }
