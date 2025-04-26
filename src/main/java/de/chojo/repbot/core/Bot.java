@@ -215,7 +215,7 @@ public class Bot {
                               new Messages(guilds),
                               new BotAdmin(guilds, configuration, statistic))
                       .withMessages(new MessageLog(guilds))
-                      .withUsers(new UserReceived(guilds),
+                      .withUsers(new UserReceived(guilds, configuration),
                               new UserDonated(guilds, configuration))
                       .withLocalizer(localizer)
                       .cleanGuildCommands("true".equals(System.getProperty("bot.cleancommands", "false")))

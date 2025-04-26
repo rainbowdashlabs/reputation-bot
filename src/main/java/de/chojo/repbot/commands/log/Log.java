@@ -23,7 +23,7 @@ public class Log extends SlashCommand {
                 .guildOnly()
                 .withPermission(Permission.MESSAGE_MANAGE)
                 .subCommand(SubCommand.of("received", "command.log.received.description")
-                        .handler(new Received(guildRepository))
+                        .handler(new Received(guildRepository, configuration))
                         .argument(Argument.user("user", "command.log.received.options.user.description").asRequired()))
                 .subCommand(SubCommand.of("donated", "command.log.donated.description")
                         .handler(new Donated(guildRepository, configuration))
