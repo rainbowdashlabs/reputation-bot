@@ -1,3 +1,8 @@
+/*
+ *     SPDX-License-Identifier: AGPL-3.0-only
+ *
+ *     Copyright (C) RainbowDashLabs and Contributor
+ */
 package de.chojo.repbot.dao.access.guild;
 
 import de.chojo.jdautil.container.Pair;
@@ -44,10 +49,10 @@ public class LocaleOverrides implements GuildHolder {
                 .ifChanged(i -> overrides.put(code, value));
     }
 
-    public void removeOverride(String code, String value) {
+    public void removeOverride(String code) {
         query("DELETE FROM guild_locale_overrides WHERE guild_id =? AND  code =?")
                 .single(call().bind(guildId()).bind(code))
                 .delete()
-                .ifChanged(i -> overrides.put(code, value));
+                .ifChanged(i -> overrides.remove(code));
     }
 }
