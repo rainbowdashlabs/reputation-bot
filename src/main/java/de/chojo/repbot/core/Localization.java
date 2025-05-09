@@ -30,6 +30,7 @@ public class Localization {
                         DiscordLocale.PORTUGUESE_BRAZILIAN,
                         DiscordLocale.RUSSIAN)
                 .withLanguageProvider(guild -> data.guilds().guild(guild).settings().general().language())
+                .withGuildLocaleCodeProvider((guild, code) -> data.guilds().guild(guild).localeOverrides().getOverride(code))
                 .withBundlePath("locale")
                 .build();
     }

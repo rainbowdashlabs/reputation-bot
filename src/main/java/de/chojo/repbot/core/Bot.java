@@ -27,7 +27,7 @@ import de.chojo.repbot.commands.prune.Prune;
 import de.chojo.repbot.commands.reactions.Reactions;
 import de.chojo.repbot.commands.repadmin.RepAdmin;
 import de.chojo.repbot.commands.repsettings.RepSettings;
-import de.chojo.repbot.commands.reputation.Reputation;
+import de.chojo.repbot.commands.profile.Profile;
 import de.chojo.repbot.commands.roles.Roles;
 import de.chojo.repbot.commands.scan.Scan;
 import de.chojo.repbot.commands.setup.Setup;
@@ -194,7 +194,7 @@ public class Bot {
                       .withConversationSystem()
                       .withCommands(
                               new Channel(guilds, configuration),
-                              new Reputation(guilds, configuration, roleAssigner),
+                              new Profile(guilds, configuration, roleAssigner),
                               roles,
                               new RepSettings(guilds),
                               new Top(guilds),

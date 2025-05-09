@@ -31,6 +31,7 @@ public class RepGuild implements GuildHolder {
     private final Settings settings;
     private Guild guild;
     private final Configuration configuration;
+    private final LocaleOverrides localeOverrides;
 
     public RepGuild(Guild guild, Configuration configuration) {
         super();
@@ -38,6 +39,7 @@ public class RepGuild implements GuildHolder {
         subscriptions = new Subscriptions(this);
         reputation = new Reputation(this);
         settings = new Settings(this);
+        localeOverrides = new LocaleOverrides(this);
         this.guild = guild;
     }
 
@@ -106,6 +108,10 @@ public class RepGuild implements GuildHolder {
 
     public Subscriptions subscriptions() {
         return subscriptions;
+    }
+
+    public LocaleOverrides localeOverrides() {
+        return localeOverrides;
     }
 
     public Cleanup cleanup() {
