@@ -23,11 +23,11 @@ import de.chojo.repbot.commands.invite.Invite;
 import de.chojo.repbot.commands.locale.Locale;
 import de.chojo.repbot.commands.log.Log;
 import de.chojo.repbot.commands.messages.Messages;
+import de.chojo.repbot.commands.profile.Profile;
 import de.chojo.repbot.commands.prune.Prune;
 import de.chojo.repbot.commands.reactions.Reactions;
 import de.chojo.repbot.commands.repadmin.RepAdmin;
 import de.chojo.repbot.commands.repsettings.RepSettings;
-import de.chojo.repbot.commands.profile.Profile;
 import de.chojo.repbot.commands.roles.Roles;
 import de.chojo.repbot.commands.scan.Scan;
 import de.chojo.repbot.commands.setup.Setup;
@@ -196,7 +196,7 @@ public class Bot {
                               new Channel(guilds, configuration),
                               new Profile(guilds, configuration, roleAssigner),
                               roles,
-                              new RepSettings(guilds),
+                              new RepSettings(guilds, configuration),
                               new Top(guilds),
                               Thankwords.of(messageAnalyzer, guilds),
                               scan,
