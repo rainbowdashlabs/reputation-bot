@@ -67,9 +67,12 @@ public final class LogFormatter {
         return String.format("**%s** %s", jump, refJump == null ? "" : "➜ **" + refJump + "**");
     }
 
-    static MessageEditData userLogEmbed(EventContext context, Member user, String title, List<String> log) {
+    static MessageEditData userLogEmbed(EventContext context, Member user, String title, List<String> log, boolean supporter) {
         var builder = new LocalizedEmbedBuilder(context.guildLocalizer())
                 .setAuthor(title, null, user.getEffectiveAvatarUrl(), Replacement.create("USER", user.getEffectiveName()));
+        if (!supporter) {
+            builder.setFooter("supporter.fullreputationlog");
+        }
         buildFields(log, builder);
         return MessageEditData.fromEmbeds(builder.build());
     }

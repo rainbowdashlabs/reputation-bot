@@ -72,7 +72,7 @@ public class Subscriptions implements GuildHolder, SkuMeta {
                 VALUES
                     (?, ?, ?, ?)
                 ON CONFLICT(id, sku) DO UPDATE SET ends_at = excluded.ends_at""")
-                .single(call().bind(subscription.id()).bind(subscription.getSkuIdLong()).bind(subscription.skuTarget()).bind(subscription.endsAt(), StandardAdapter.INSTANT_AS_TIMESTAMP))
+                .single(call().bind(subscription.id()).bind(subscription.skuId()).bind(subscription.skuTarget()).bind(subscription.endsAt(), StandardAdapter.INSTANT_AS_TIMESTAMP))
                 .insert();
         if (result.changed()) {
             subscriptions().remove(subscription);

@@ -22,6 +22,7 @@ import de.chojo.repbot.config.elements.Database;
 import de.chojo.repbot.config.elements.Links;
 import de.chojo.repbot.config.elements.MagicImage;
 import de.chojo.repbot.config.elements.PresenceSettings;
+import de.chojo.repbot.config.elements.SKU;
 import de.chojo.repbot.config.elements.SelfCleanup;
 import de.chojo.repbot.config.exception.ConfigurationException;
 import de.chojo.repbot.config.jackson.BotModule;
@@ -142,5 +143,9 @@ public class Configuration {
 
     public Cleanup cleanup() {
         return configFile.cleanup();
+    }
+
+    public SKU skus() {
+        return configFile.skus();
     }
 }

@@ -229,6 +229,8 @@ public class ReputationService {
         Messages.markMessage(message, refMessage, settings);
         // update role
 
+        // TODO: Send into channel
+
         var newRank = assigner.updateReporting(receiver, message.getGuildChannel());
 
         // Send level up message

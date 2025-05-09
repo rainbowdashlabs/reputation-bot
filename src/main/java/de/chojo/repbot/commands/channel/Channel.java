@@ -19,10 +19,11 @@ import de.chojo.repbot.commands.channel.handler.announcement.Info;
 import de.chojo.repbot.commands.channel.handler.announcement.Location;
 import de.chojo.repbot.commands.channel.handler.announcement.Where;
 import de.chojo.repbot.commands.channel.handler.announcement.State;
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.GuildRepository;
 
 public class Channel extends SlashCommand {
-    public Channel(GuildRepository guildRepository) {
+    public Channel(GuildRepository guildRepository, Configuration configuration) {
         super(Slash.of("channel", "command.channel.description")
                 .adminCommand()
                 .guildOnly()
@@ -30,7 +31,7 @@ public class Channel extends SlashCommand {
                         .handler(new Set(guildRepository))
                         .argument(Argument.channel("channel", "command.channel.set.options.channel.description").asRequired()))
                 .subCommand(SubCommand.of("add", "command.channel.add.description")
-                        .handler(new Add(guildRepository))
+                        .handler(new Add(guildRepository, configuration))
                         .argument(Argument.channel("channel", "command.channel.add.options.channel.description").asRequired()))
                 .subCommand(SubCommand.of("remove", "command.channel.remove.description")
                         .handler(new Remove(guildRepository))
