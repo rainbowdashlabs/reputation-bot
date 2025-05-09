@@ -7,3 +7,10 @@ CREATE TABLE subscriptions (
         PRIMARY KEY (id, sku)
 );
 
+CREATE TABLE guild_locale_overrides (
+    guild_id BIGINT NOT NULL,
+    code     TEXT   NOT NULL,
+    value    TEXT   NOT NULL,
+    CONSTRAINT guild_locale_overrides_pk
+        PRIMARY KEY (guild_id, code)
+);
