@@ -7,11 +7,14 @@ package de.chojo.repbot.dao.provider;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import de.chojo.jdautil.interactions.premium.SKU;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.access.guild.RepGuildId;
 import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
+import de.chojo.repbot.dao.access.guild.settings.sub.autopost.RefreshInterval;
 import de.chojo.repbot.dao.pagination.GuildList;
+import de.chojo.sadu.postgresql.types.PostgreSqlTypes;
 import net.dv8tion.jda.api.entities.Guild;
 import org.slf4j.Logger;
 
@@ -59,6 +62,20 @@ public class GuildRepository {
     public List<RepGuild> byReputationMode(ReputationMode mode) {
         return query("SELECT guild_id FROM guild_settings WHERE reputation_mode = ?")
                 .single(call().bind(mode.name()))
+                .map(row -> byId(row.getLong("guild_id")))
+                .all();
+    }
+
+    public List<RepGuild> byAutopostRefreshInterval(RefreshInterval mode) {
+        List<Long> skus = configuration.skus().features().autopost().autopostChannel().sku().stream().map(SKU::skuId).toList();
+        return query("""
+                        SELECT
+                            guild_id
+                        FROM
+                            autopost a LEFT JOIN subscriptions s ON a.guild_id = s.id
+                        WHERE active AND refresh_interval = ?
+                        AND s.sku = ANY (:sku) OR array_length(:sku, 1) IS NULL""")
+                .single(call().bind(mode.name()).bind("sku", skus, PostgreSqlTypes.BIGINT))
                 .map(row -> byId(row.getLong("guild_id")))
                 .all();
     }
