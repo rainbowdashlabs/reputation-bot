@@ -6,7 +6,9 @@
 package de.chojo.repbot.commands.channel.handler.autopost;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
+import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.util.Completion;
+import de.chojo.jdautil.util.MentionUtil;
 import de.chojo.jdautil.util.Premium;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.config.Configuration;
@@ -24,11 +26,11 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 import java.util.List;
 
-public class Enable implements SlashHandler {
+public class AutopostEnable implements SlashHandler {
     private final GuildRepository guildRepository;
     private final Configuration configuration;
 
-    public Enable(GuildRepository guildRepository, Configuration configuration) {
+    public AutopostEnable(GuildRepository guildRepository, Configuration configuration) {
         this.guildRepository = guildRepository;
         this.configuration = configuration;
     }
@@ -61,6 +63,10 @@ public class Enable implements SlashHandler {
             String refreshType = event.getOption("refreshtype").getAsString();
             autopost.refreshType(RefreshType.valueOf(refreshType));
         }
+        event.reply(context.localize("command.channel.autopost.enable.message.enabled",
+                Replacement.create("CHANNEL", MentionUtil.channel(autopost.channelId())))).setEphemeral(true).queue();
+
+        //TODO register at service to send first post.
     }
 
     @Override

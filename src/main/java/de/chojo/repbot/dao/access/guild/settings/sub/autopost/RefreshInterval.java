@@ -22,4 +22,9 @@ public enum RefreshInterval {
      * Send at midnight UTC every first day of the month.
      */
     MONTHLY;
+
+    @Override
+    public String toString() {
+        return "%s.%s.name".formatted(getClass().getName().toLowerCase(), name().toLowerCase());
+    }
 }

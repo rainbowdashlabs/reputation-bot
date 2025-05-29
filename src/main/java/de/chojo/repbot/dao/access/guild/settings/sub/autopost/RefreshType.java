@@ -18,4 +18,9 @@ public enum RefreshType {
      * Update the original message.
      */
     UPDATE;
+
+    @Override
+    public String toString() {
+        return "%s.%s.name".formatted(getClass().getName().toLowerCase().replace("_", ""), name().toLowerCase());
+    }
 }

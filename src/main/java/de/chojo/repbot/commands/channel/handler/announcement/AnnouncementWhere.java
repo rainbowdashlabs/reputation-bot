@@ -13,10 +13,10 @@ import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInterac
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
-public class Where implements SlashHandler {
+public class AnnouncementWhere implements SlashHandler {
     private final GuildRepository guildRepository;
 
-    public Where(GuildRepository guildRepository) {
+    public AnnouncementWhere(GuildRepository guildRepository) {
         this.guildRepository = guildRepository;
     }
 

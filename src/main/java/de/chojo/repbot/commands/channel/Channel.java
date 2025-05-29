@@ -12,11 +12,13 @@ import de.chojo.repbot.commands.channel.handler.List;
 import de.chojo.repbot.commands.channel.handler.ListType;
 import de.chojo.repbot.commands.channel.handler.Remove;
 import de.chojo.repbot.commands.channel.handler.Set;
-import de.chojo.repbot.commands.channel.handler.announcement.Info;
-import de.chojo.repbot.commands.channel.handler.announcement.Location;
-import de.chojo.repbot.commands.channel.handler.announcement.State;
-import de.chojo.repbot.commands.channel.handler.announcement.Where;
-import de.chojo.repbot.commands.channel.handler.autopost.Enable;
+import de.chojo.repbot.commands.channel.handler.announcement.AnnouncementInfo;
+import de.chojo.repbot.commands.channel.handler.announcement.AnnouncementLocation;
+import de.chojo.repbot.commands.channel.handler.announcement.AnnouncementState;
+import de.chojo.repbot.commands.channel.handler.announcement.AnnouncementWhere;
+import de.chojo.repbot.commands.channel.handler.autopost.AutopostDisable;
+import de.chojo.repbot.commands.channel.handler.autopost.AutopostEnable;
+import de.chojo.repbot.commands.channel.handler.autopost.AutopostInfo;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.GuildRepository;
 
@@ -49,22 +51,26 @@ public class Channel extends SlashCommand {
                            .handler(new List(guildRepository)))
                    .group(group("announcement", "command.channel.announcement.description")
                            .subCommand(sub("state", "command.channel.announcement.state.description")
-                                   .handler(new State(guildRepository))
+                                   .handler(new AnnouncementState(guildRepository))
                                    .argument(bool("active", "command.channel.announcement.state.options.active.description").asRequired()))
                            .subCommand(sub("where", "command.channel.announcement.where.description")
-                                   .handler(new Where(guildRepository))
+                                   .handler(new AnnouncementWhere(guildRepository))
                                    .argument(text("where", "command.channel.announcement.where.options.where.description").asRequired().withAutoComplete()))
                            .subCommand(sub("channel", "command.channel.announcement.channel.description")
-                                   .handler(new Location(guildRepository))
+                                   .handler(new AnnouncementLocation(guildRepository))
                                    .argument(channel("channel", "command.channel.announcement.channel.options.channel.description").asRequired()))
                            .subCommand(sub("info", "command.channel.announcement.info.description")
-                                   .handler(new Info(guildRepository))))
+                                   .handler(new AnnouncementInfo(guildRepository))))
                    .group(group("autopost", "command.channel.autopost.description")
                            .subCommand(sub("enable", "command.channel.autopost.enable.description")
-                                   .handler(new Enable(guildRepository, configuration))
+                                   .handler(new AutopostEnable(guildRepository, configuration))
                                    .argument(channel("channel", "command.channel.autopost.enable.options.channel.description").asRequired())
                                    .argument(text("refreshtype", "command.channel.autopost.enable.options.refreshtype.description").withAutoComplete())
-                                   .argument(text("refreshinterval", "command.channel.autopost.enable.options.refreshinterval.description").withAutoComplete())))
+                                   .argument(text("refreshinterval", "command.channel.autopost.enable.options.refreshinterval.description").withAutoComplete()))
+                           .subCommand(sub("disable", "command.channel.autopost.disable.description")
+                                   .handler(new AutopostDisable(guildRepository)))
+                           .subCommand(sub("info", "command.channel.autopost.info.description")
+                                   .handler(new AutopostInfo(guildRepository))))
         );
     }
 }
