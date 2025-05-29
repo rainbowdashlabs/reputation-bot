@@ -9,8 +9,9 @@ from deepl import Formality, ModelType
 
 client = deepl.DeepLClient(os.getenv('DEEPL_API_KEY'))
 
-with open("lang_mapper.json", "r") as f:
-    lang_mapper:dict = json.loads(f.read())
+with Path(__file__).parent.joinpath('lang_mapper.json').open("r") as f:
+    lang_mapper: dict = json.loads(f.read())
+
 
 class Language:
     def __init__(self, code: str, location: Path, entries: dict):
@@ -18,8 +19,10 @@ class Language:
         self.location = location
         self.entries = entries
 
+
 def map_lang(lang: str) -> str:
     return lang_mapper.get(lang, lang).replace("_", "-").upper()
+
 
 def load_properties(path: Path) -> Language:
     lang = map_lang(file.name.replace(prefix, "").replace(".properties", ""))
@@ -32,8 +35,8 @@ def load_properties(path: Path) -> Language:
 def translate_missing(target: Language, reference: Language):
     key: str
     value: str
-    for key, value in target.entries.items():
-        if not value:
+    for key, value in reference.entries.items():
+        if key not in target.entries or not target.entries[key]:
             print(f"Missing translation for {key}@{target.code}. Translating from {reference.code.upper()}")
             orig = reference.entries[key]
             # Escape lang code references
@@ -54,11 +57,13 @@ def translate_missing(target: Language, reference: Language):
             print(orig, " -> ", translated)
             target.entries[key] = translated
 
+
 def write_properties(lang: Language):
     with lang.location.open("w") as f:
         dump = dict(sorted(lang.entries.items()))
         for key, value in dump.items():
             f.write(f"{key}={value}\n")
+
 
 prefix, reference_lang, path = sys.argv[1:]
 reference_lang = map_lang(reference_lang)
@@ -78,5 +83,3 @@ for lang in langs.values():
 
 for lang in langs.values():
     write_properties(lang)
-
-
