@@ -1,0 +1,69 @@
+name: Auto Translate
+
+on:
+  push:
+    branches:
+      - dev
+      - feature/*
+
+jobs:
+  check_commit_message:
+    runs-on: ubuntu-latest
+    outputs:
+      should_run: ${{ steps.check_message.outputs.should_run }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # Fetch the previous commit
+
+      - name: Check commit message
+        id: check_message
+        run: |
+          COMMIT_MSG=$(git log --format=%B -n 1 ${{ github.sha }})
+          if [[ $COMMIT_MSG == \[translate\]* ]]; then
+            echo "should_run=true" >> $GITHUB_OUTPUT
+          else
+            echo "should_run=false" >> $GITHUB_OUTPUT
+          fi
+
+  translate:
+    needs: check_commit_message
+    if: needs.check_commit_message.outputs.should_run == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: 3.11
+
+    - name: Install dependencies
+      run: pip install pipenv && pipenv install
+
+    - name: Run translation script
+      env:
+        DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
+      run: |
+        python tools/translate.py locale_ EN-US ./src/main/resources/
+
+    - name: Check for changes
+      id: check_changes
+      run: |
+        if [[ -n "$(git status --porcelain)" ]]; then
+          echo "changes=true" >> $GITHUB_OUTPUT
+        else
+          echo "changes=false" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Commit changes
+      if: steps.check_changes.outputs.changes == 'true'
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add .
+        git commit -m "Auto translate missing keys"
+        git push

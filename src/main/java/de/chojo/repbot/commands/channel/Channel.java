@@ -5,10 +5,7 @@
  */
 package de.chojo.repbot.commands.channel;
 
-import de.chojo.jdautil.interactions.slash.Argument;
-import de.chojo.jdautil.interactions.slash.Group;
 import de.chojo.jdautil.interactions.slash.Slash;
-import de.chojo.jdautil.interactions.slash.SubCommand;
 import de.chojo.jdautil.interactions.slash.provider.SlashCommand;
 import de.chojo.repbot.commands.channel.handler.Add;
 import de.chojo.repbot.commands.channel.handler.List;
@@ -17,44 +14,57 @@ import de.chojo.repbot.commands.channel.handler.Remove;
 import de.chojo.repbot.commands.channel.handler.Set;
 import de.chojo.repbot.commands.channel.handler.announcement.Info;
 import de.chojo.repbot.commands.channel.handler.announcement.Location;
-import de.chojo.repbot.commands.channel.handler.announcement.Where;
 import de.chojo.repbot.commands.channel.handler.announcement.State;
+import de.chojo.repbot.commands.channel.handler.announcement.Where;
+import de.chojo.repbot.commands.channel.handler.autopost.Enable;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.GuildRepository;
+
+import static de.chojo.jdautil.interactions.slash.Argument.bool;
+import static de.chojo.jdautil.interactions.slash.Argument.channel;
+import static de.chojo.jdautil.interactions.slash.Argument.text;
+import static de.chojo.jdautil.interactions.slash.Group.group;
+import static de.chojo.jdautil.interactions.slash.SubCommand.sub;
 
 public class Channel extends SlashCommand {
     public Channel(GuildRepository guildRepository, Configuration configuration) {
         super(Slash.of("channel", "command.channel.description")
-                .adminCommand()
-                .guildOnly()
-                .subCommand(SubCommand.of("set", "command.channel.set.description")
-                        .handler(new Set(guildRepository))
-                        .argument(Argument.channel("channel", "command.channel.set.options.channel.description").asRequired()))
-                .subCommand(SubCommand.of("add", "command.channel.add.description")
-                        .handler(new Add(guildRepository, configuration))
-                        .argument(Argument.channel("channel", "command.channel.add.options.channel.description").asRequired()))
-                .subCommand(SubCommand.of("remove", "command.channel.remove.description")
-                        .handler(new Remove(guildRepository))
-                        .argument(Argument.channel("channel", "command.channel.remove.options.channel.description")
-                                          .asRequired()))
-                .subCommand(SubCommand.of("listtype", "command.channel.listtype.description")
-                        .handler(new ListType(guildRepository))
-                        .argument(Argument.text("type", "command.channel.listtype.options.type.description").asRequired()
-                                          .withAutoComplete()))
-                .subCommand(SubCommand.of("list", "command.channel.list.description")
-                        .handler(new List(guildRepository)))
-                .group(Group.of("announcement", "command.channel.announcement.description")
-                        .subCommand(SubCommand.of("state", "command.channel.announcement.state.description")
-                                .handler(new State(guildRepository))
-                                .argument(Argument.bool("active", "command.channel.announcement.state.options.active.description").asRequired()))
-                        .subCommand(SubCommand.of("where", "command.channel.announcement.where.description")
-                                .handler(new Where(guildRepository))
-                                .argument(Argument.text("where", "command.channel.announcement.where.options.where.description").asRequired().withAutoComplete()))
-                        .subCommand(SubCommand.of("channel", "command.channel.announcement.channel.description")
-                                .handler(new Location(guildRepository))
-                                .argument(Argument.channel("channel", "command.channel.announcement.channel.options.channel.description").asRequired()))
-                        .subCommand(SubCommand.of("info", "command.channel.announcement.info.description")
-                                .handler(new Info(guildRepository))))
+                   .adminCommand()
+                   .guildOnly()
+                   .subCommand(sub("set", "command.channel.set.description")
+                           .handler(new Set(guildRepository))
+                           .argument(channel("channel", "command.channel.set.options.channel.description").asRequired()))
+                   .subCommand(sub("add", "command.channel.add.description")
+                           .handler(new Add(guildRepository, configuration))
+                           .argument(channel("channel", "command.channel.add.options.channel.description").asRequired()))
+                   .subCommand(sub("remove", "command.channel.remove.description")
+                           .handler(new Remove(guildRepository))
+                           .argument(channel("channel", "command.channel.remove.options.channel.description")
+                                   .asRequired()))
+                   .subCommand(sub("listtype", "command.channel.listtype.description")
+                           .handler(new ListType(guildRepository))
+                           .argument(text("type", "command.channel.listtype.options.type.description").asRequired()
+                                                                                                      .withAutoComplete()))
+                   .subCommand(sub("list", "command.channel.list.description")
+                           .handler(new List(guildRepository)))
+                   .group(group("announcement", "command.channel.announcement.description")
+                           .subCommand(sub("state", "command.channel.announcement.state.description")
+                                   .handler(new State(guildRepository))
+                                   .argument(bool("active", "command.channel.announcement.state.options.active.description").asRequired()))
+                           .subCommand(sub("where", "command.channel.announcement.where.description")
+                                   .handler(new Where(guildRepository))
+                                   .argument(text("where", "command.channel.announcement.where.options.where.description").asRequired().withAutoComplete()))
+                           .subCommand(sub("channel", "command.channel.announcement.channel.description")
+                                   .handler(new Location(guildRepository))
+                                   .argument(channel("channel", "command.channel.announcement.channel.options.channel.description").asRequired()))
+                           .subCommand(sub("info", "command.channel.announcement.info.description")
+                                   .handler(new Info(guildRepository))))
+                   .group(group("autopost", "command.channel.autopost.description")
+                           .subCommand(sub("enable", "command.channel.autopost.enable.description")
+                                   .handler(new Enable(guildRepository, configuration))
+                                   .argument(channel("channel", "command.channel.autopost.enable.options.channel.description").asRequired())
+                                   .argument(text("refreshtype", "command.channel.autopost.enable.options.refreshtype.description").withAutoComplete())
+                                   .argument(text("refreshinterval", "command.channel.autopost.enable.options.refreshinterval.description").withAutoComplete())))
         );
     }
 }
