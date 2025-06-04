@@ -49,7 +49,7 @@ jobs:
       env:
         DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
       run: |
-        pipenv run python tooling/translate.py locale_ EN-US ./src/main/resources/
+        pipenv run python tooling/translate.py locale EN-US ./src/main/resources/
 
     - name: Check for changes
       id: check_changes

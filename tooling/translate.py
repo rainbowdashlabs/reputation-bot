@@ -25,7 +25,7 @@ def map_lang(lang: str) -> str:
 
 
 def load_properties(path: Path) -> Language:
-    lang = map_lang(file.name.replace(prefix, "").replace(".properties", ""))
+    lang = map_lang(file.name.replace(f"{prefix}_", "").replace(".properties", ""))
     print("Loading", lang, "from", file)
     with path.open() as f:
         entries = {k: v for k, v in (line.strip().split('=', 1) for line in f.readlines())}
@@ -70,7 +70,7 @@ reference_lang = map_lang(reference_lang)
 
 langs = dict()
 
-for file in Path(path).rglob(f"{prefix}*.properties"):
+for file in Path(path).rglob(f"{prefix}_*.properties"):
     lang = load_properties(file)
     langs[lang.code] = lang
 
