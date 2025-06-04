@@ -28,7 +28,7 @@ dependencyResolutionManagement {
         }
 
         create("testlibs") {
-            version("junit", "5.12.2")
+            version("junit", "5.13.0")
             library("junit-jupiter", "org.junit.jupiter", "junit-jupiter").versionRef("junit")
             library("junit-params", "org.junit.jupiter", "junit-jupiter-params").versionRef("junit")
             bundle("junit", listOf("junit-jupiter", "junit-params", "slf4j-simple"))
@@ -36,7 +36,7 @@ dependencyResolutionManagement {
             version("sadu", "2.3.2")
             library("sadu-testing", "de.chojo.sadu", "sadu-testing").versionRef("sadu")
 
-            version("testcontainers", "1.21.0")
+            version("testcontainers", "1.21.1")
             library("testcontainers-postgres", "org.testcontainers", "postgresql").versionRef("testcontainers")
             library("testcontainers-core", "org.testcontainers", "testcontainers").versionRef("testcontainers")
             library("testcontainers-junit", "org.testcontainers", "junit-jupiter").versionRef("testcontainers")
