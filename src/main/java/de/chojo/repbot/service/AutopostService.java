@@ -77,10 +77,9 @@ public class AutopostService {
         Autopost autopost = guild.settings().autopost();
         RefreshType refreshType = autopost.refreshType();
         TextChannel channel = guild.guild().getTextChannelById(autopost.channelId());
-        if (channel == null) {
-            // TODO: Send message that the channel was deleted or decide to ignore the autopost
-            return;
-        }
+
+        // TODO: Send message that the channel was deleted or decide to ignore the autopost
+        if (channel == null) return;
 
         switch (refreshType) {
             case DELETE_AND_REPOST:
@@ -101,7 +100,6 @@ public class AutopostService {
                     }
                 }
         }
-        // TODO: Send/refresh/save message
     }
 
     public void delete(Guild guild) {

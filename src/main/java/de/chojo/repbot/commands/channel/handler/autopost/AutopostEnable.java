@@ -38,8 +38,6 @@ public class AutopostEnable implements SlashHandler {
         this.autopostService = autopostService;
     }
 
-    //channel autopost enable <channel> [refresh_interval] [refresh_type]
-
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         if (Premium.isNotEntitled(event, configuration.skus().features().autopost().autopostChannel())) {
