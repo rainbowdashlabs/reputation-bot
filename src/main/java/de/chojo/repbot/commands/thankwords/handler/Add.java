@@ -45,27 +45,6 @@ public class Add implements SlashHandler {
             return;
         }
 
-        if (pattern.contains("(") || pattern.contains(")")) {
-
-            return;
-        }
-
-        if (pattern.contains("{") || pattern.contains("}")) {
-            return;
-        }
-
-        if (pattern.contains(" ")) {
-            return;
-        }
-
-        if (pattern.contains("\\s")) {
-            return;
-        }
-
-        if (pattern.contains("*")) {
-            return;
-        }
-
         if (guildRepository.guild(event.getGuild()).settings().thanking().thankwords().add(pattern)) {
             event.reply(context.localize("command.thankwords.add.message.added",
                     Replacement.create("REGEX", pattern, Format.CODE))).queue();
