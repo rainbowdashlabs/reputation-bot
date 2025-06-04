@@ -7,10 +7,10 @@ package de.chojo.repbot.config.elements.sku.feature;
 
 import de.chojo.repbot.config.elements.sku.SKUEntry;
 
-public class LocaleOverrides {
-    private SKUEntry reputationNameOverride = new SKUEntry();
+public class Autopost {
+    private SKUEntry autopostChannel = new SKUEntry();
 
-    public SKUEntry reputationNameOverride() {
-        return reputationNameOverride;
+    public SKUEntry autopostChannel() {
+        return autopostChannel;
     }
 }

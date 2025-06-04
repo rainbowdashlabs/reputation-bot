@@ -6,30 +6,25 @@
 package de.chojo.repbot.commands.channel.handler.announcement;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
-import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.GuildRepository;
-import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
-public class Location implements SlashHandler {
+public class AnnouncementState implements SlashHandler {
     private final GuildRepository guildRepository;
 
-    public Location(GuildRepository guildRepository) {
+    public AnnouncementState(GuildRepository guildRepository) {
         this.guildRepository = guildRepository;
     }
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var announcements = guildRepository.guild(event.getGuild()).settings().announcements();
-        var channel = event.getOption("channel");
-        if (channel.getChannelType() != ChannelType.TEXT) {
-            event.reply(context.localize("error.onlyTextChannel")).setEphemeral(true).queue();
-            return;
+        if (announcements.active(event.getOption("active", OptionMapping::getAsBoolean))) {
+            event.reply(context.localize("command.channel.announcement.state.message.active")).queue();
+        } else {
+            event.reply(context.localize("command.channel.announcement.state.message.inactive")).queue();
         }
-
-        announcements.channel(channel.getAsChannel().asTextChannel());
-        event.reply(context.localize("command.channel.announcement.channel.message.set",
-                Replacement.createMention(channel.getAsChannel().asTextChannel()))).queue();
     }
 }

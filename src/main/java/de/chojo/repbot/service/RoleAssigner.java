@@ -48,7 +48,7 @@ public class RoleAssigner {
     }
 
     /**
-     * Updates the user roles. Will handle excpetions and send a message if the role could not be assigned.
+     * Updates the user roles. Will handle exceptions and send a message if the role could not be assigned.
      *
      * @param member  member to update
      * @param channel channel to send the message to

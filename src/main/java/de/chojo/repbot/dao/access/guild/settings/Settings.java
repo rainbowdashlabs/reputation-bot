@@ -12,6 +12,7 @@ import de.chojo.repbot.dao.access.guild.settings.sub.Messages;
 import de.chojo.repbot.dao.access.guild.settings.sub.Ranks;
 import de.chojo.repbot.dao.access.guild.settings.sub.Reputation;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
+import de.chojo.repbot.dao.access.guild.settings.sub.autopost.Autopost;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.dao.access.guild.settings.sub.Announcements;
 import net.dv8tion.jda.api.entities.Guild;
@@ -27,6 +28,7 @@ public class Settings implements GuildHolder {
     private Ranks ranks;
     private Thanking thanking;
     private Announcements announcements;
+    private Autopost autopost;
     private Messages messages;
 
     public Settings(RepGuild repGuild) {
@@ -182,5 +184,27 @@ public class Settings implements GuildHolder {
     @Override
     public long guildId() {
         return repGuild.guildId();
+    }
+
+    public Autopost autopost() {
+        if (autopost != null) {
+            return autopost;
+        }
+        autopost = query("""
+                SELECT
+                    active,
+                    message_id,
+                    channel_id,
+                    refresh_type,
+                    refresh_interval
+                FROM
+                    autopost
+                WHERE guild_id = ?;
+                """)
+                .single(call().bind(guildId()))
+                .map(rs -> Autopost.build(this, rs))
+                .first()
+                .orElseGet(() -> new Autopost(this));
+        return autopost;
     }
 }

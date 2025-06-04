@@ -6,6 +6,7 @@
 package de.chojo.repbot.commands.top.handler;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
+import de.chojo.jdautil.localization.LocalizationContext;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.pagination.bag.PageBag;
@@ -14,12 +15,14 @@ import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
 import de.chojo.repbot.dao.pagination.GuildRanking;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.dao.snapshots.RepProfile;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.utils.messages.MessageEditData;
 
-import java.awt.Color;
+import java.awt.*;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -62,7 +65,7 @@ public class Show implements SlashHandler {
                     var rankString = ranking.stream().map(rank -> rank.fancyString((int) maxRank))
                                             .collect(Collectors.joining("\n"));
 
-                    return MessageEditData.fromEmbeds(createBaseBuilder(guildRanking, context, event.getGuild())
+                    return MessageEditData.fromEmbeds(createBaseBuilder(guildRanking, context.guildLocalizer(), event.getGuild())
                             .setDescription(rankString)
                             .build());
                 });
@@ -70,15 +73,34 @@ public class Show implements SlashHandler {
 
             @Override
             public CompletableFuture<MessageEditData> buildEmptyPage() {
-                return CompletableFuture.completedFuture(MessageEditData.fromEmbeds(createBaseBuilder(guildRanking, context, event.getGuild())
+                return CompletableFuture.completedFuture(MessageEditData.fromEmbeds(createBaseBuilder(guildRanking, context.guildLocalizer(), event.getGuild())
                         .setDescription("*" + context.localize("command.top.message.empty") + "*")
                         .build()));
             }
         }, true);
     }
 
-    private static LocalizedEmbedBuilder createBaseBuilder(GuildRanking guildRanking, EventContext context, Guild guild) {
-        return new LocalizedEmbedBuilder(context.guildLocalizer())
+    public static MessageEditData buildRanking(List<RepProfile> ranking, GuildRanking guildRanking, Guild guild, LocalizationContext context) {
+        if (ranking.isEmpty()) {
+            return buildEmptyRanking(guildRanking, guild, context);
+        }
+        var maxRank = ranking.get(ranking.size() - 1).rank();
+        var rankString = ranking.stream().map(rank -> rank.fancyString((int) maxRank))
+                                .collect(Collectors.joining("\n"));
+
+        return MessageEditData.fromEmbeds(createBaseBuilder(guildRanking, context, guild)
+                .setDescription(rankString)
+                .build());
+    }
+
+    private static MessageEditData buildEmptyRanking(GuildRanking guildRanking, Guild guild, LocalizationContext context) {
+        return MessageEditData.fromEmbeds(createBaseBuilder(guildRanking, context, guild)
+                .setDescription("*" + context.localize("command.top.message.empty") + "*")
+                .build());
+    }
+
+    private static LocalizedEmbedBuilder createBaseBuilder(GuildRanking guildRanking, LocalizationContext context, Guild guild) {
+        return new LocalizedEmbedBuilder(context)
                 .setTitle(guildRanking.title(), Replacement.create("GUILD", guild.getName()))
                 .setColor(Color.CYAN);
     }

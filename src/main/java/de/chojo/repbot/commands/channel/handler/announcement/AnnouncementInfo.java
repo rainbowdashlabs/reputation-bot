@@ -12,10 +12,10 @@ import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-public class Info implements SlashHandler {
+public class AnnouncementInfo implements SlashHandler {
     private final GuildRepository guildRepository;
 
-    public Info(GuildRepository guildRepository) {
+    public AnnouncementInfo(GuildRepository guildRepository) {
         this.guildRepository = guildRepository;
     }
 
