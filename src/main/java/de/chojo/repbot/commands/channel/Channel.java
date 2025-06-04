@@ -19,8 +19,10 @@ import de.chojo.repbot.commands.channel.handler.announcement.AnnouncementWhere;
 import de.chojo.repbot.commands.channel.handler.autopost.AutopostDisable;
 import de.chojo.repbot.commands.channel.handler.autopost.AutopostEnable;
 import de.chojo.repbot.commands.channel.handler.autopost.AutopostInfo;
+import de.chojo.repbot.commands.channel.handler.autopost.AutopostRefresh;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.service.AutopostService;
 
 import static de.chojo.jdautil.interactions.slash.Argument.bool;
 import static de.chojo.jdautil.interactions.slash.Argument.channel;
@@ -29,7 +31,7 @@ import static de.chojo.jdautil.interactions.slash.Group.group;
 import static de.chojo.jdautil.interactions.slash.SubCommand.sub;
 
 public class Channel extends SlashCommand {
-    public Channel(GuildRepository guildRepository, Configuration configuration) {
+    public Channel(GuildRepository guildRepository, Configuration configuration, AutopostService autopostService) {
         super(Slash.of("channel", "command.channel.description")
                    .adminCommand()
                    .guildOnly()
@@ -63,14 +65,16 @@ public class Channel extends SlashCommand {
                                    .handler(new AnnouncementInfo(guildRepository))))
                    .group(group("autopost", "command.channel.autopost.description")
                            .subCommand(sub("enable", "command.channel.autopost.enable.description")
-                                   .handler(new AutopostEnable(guildRepository, configuration))
+                                   .handler(new AutopostEnable(guildRepository, configuration, autopostService))
                                    .argument(channel("channel", "command.channel.autopost.enable.options.channel.description").asRequired())
                                    .argument(text("refreshtype", "command.channel.autopost.enable.options.refreshtype.description").withAutoComplete())
                                    .argument(text("refreshinterval", "command.channel.autopost.enable.options.refreshinterval.description").withAutoComplete()))
                            .subCommand(sub("disable", "command.channel.autopost.disable.description")
-                                   .handler(new AutopostDisable(guildRepository)))
+                                   .handler(new AutopostDisable(guildRepository, autopostService)))
                            .subCommand(sub("info", "command.channel.autopost.info.description")
-                                   .handler(new AutopostInfo(guildRepository))))
+                                   .handler(new AutopostInfo(guildRepository)))
+                           .subCommand(sub("refresh", "command.channel.autopost.refresh.description")
+                                   .handler(new AutopostRefresh(autopostService, guildRepository))))
         );
     }
 }

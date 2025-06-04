@@ -26,3 +26,5 @@ CREATE TABLE autopost (
     refresh_interval TEXT    DEFAULT 'DAILY'  NOT NULL
 );
 
+ALTER TABLE guild_settings
+    ALTER COLUMN emoji_debug SET DEFAULT FALSE;

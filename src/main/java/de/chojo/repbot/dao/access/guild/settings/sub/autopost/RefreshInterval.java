@@ -39,6 +39,6 @@ public enum RefreshInterval {
 
     @Override
     public String toString() {
-        return "%s.%s.name".formatted(getClass().getName().toLowerCase(), name().toLowerCase());
+        return "%s.%s.name".formatted(getClass().getSimpleName().toLowerCase(), name().toLowerCase());
     }
 }

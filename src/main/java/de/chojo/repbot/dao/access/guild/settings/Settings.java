@@ -196,7 +196,7 @@ public class Settings implements GuildHolder {
                     message_id,
                     channel_id,
                     refresh_type,
-                    post_interval,
+                    refresh_interval
                 FROM
                     autopost
                 WHERE guild_id = ?;

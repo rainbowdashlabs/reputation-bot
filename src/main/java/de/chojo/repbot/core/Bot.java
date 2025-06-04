@@ -41,6 +41,7 @@ import de.chojo.repbot.listener.StateListener;
 import de.chojo.repbot.listener.VoiceStateListener;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;
 import de.chojo.repbot.service.AnalyzerService;
+import de.chojo.repbot.service.AutopostService;
 import de.chojo.repbot.service.GdprService;
 import de.chojo.repbot.service.MetricService;
 import de.chojo.repbot.service.PremiumService;
@@ -85,6 +86,7 @@ public class Bot {
     private ContextResolver contextResolver;
     private Statistic statistic;
     private GdprService gdprService;
+    private AutopostService autopostService;
 
     private Bot(Data data, Threading threading, Configuration configuration, Localization localization) {
         this.data = data;
@@ -105,34 +107,6 @@ public class Bot {
         initServices();
         initInteractions();
         initListener();
-    }
-
-    private void configureRestActions() {
-        log.info("Configuring rest actions.");
-        RestAction.setDefaultFailure(throwable -> {
-            if (throwable instanceof InsufficientPermissionException perm) {
-                PermissionErrorHandler.handle(perm, shardManager, localization.localizer().context(LocaleProvider.empty()), configuration);
-                return;
-            }
-            if (throwable.getCause() instanceof InsufficientPermissionException insuf) {
-                PermissionErrorHandler.handle(insuf, shardManager, localization.localizer().context(LocaleProvider.empty()), configuration);
-                return;
-            }
-            if (throwable instanceof ErrorResponseException e) {
-                if (e.getErrorResponse() == ErrorResponse.UNKNOWN_INTERACTION) {
-                    data.metrics().service().failedInteraction();
-                    log.debug("Interaction timed out", e);
-                    return;
-                }
-            }
-            log.error(LogNotify.NOTIFY_ADMIN, "Unhandled exception occured: ", throwable);
-        });
-
-        RestAction.setDefaultSuccess(suc -> {
-            if (suc instanceof InteractionHook) {
-                data.metrics().service().successfulInteraction();
-            }
-        });
     }
 
     private void initShardManager() throws LoginException {
@@ -164,6 +138,34 @@ public class Bot {
                 .build();
     }
 
+    private void configureRestActions() {
+        log.info("Configuring rest actions.");
+        RestAction.setDefaultFailure(throwable -> {
+            if (throwable instanceof InsufficientPermissionException perm) {
+                PermissionErrorHandler.handle(perm, shardManager, localization.localizer().context(LocaleProvider.empty()), configuration);
+                return;
+            }
+            if (throwable.getCause() instanceof InsufficientPermissionException insuf) {
+                PermissionErrorHandler.handle(insuf, shardManager, localization.localizer().context(LocaleProvider.empty()), configuration);
+                return;
+            }
+            if (throwable instanceof ErrorResponseException e) {
+                if (e.getErrorResponse() == ErrorResponse.UNKNOWN_INTERACTION) {
+                    data.metrics().service().failedInteraction();
+                    log.debug("Interaction timed out", e);
+                    return;
+                }
+            }
+            log.error(LogNotify.NOTIFY_ADMIN, "Unhandled exception occured: ", throwable);
+        });
+
+        RestAction.setDefaultSuccess(suc -> {
+            if (suc instanceof InteractionHook) {
+                data.metrics().service().successfulInteraction();
+            }
+        });
+    }
+
     private void initServices() {
         log.info("Setting up services");
         var guilds = data.guilds();
@@ -183,6 +185,7 @@ public class Bot {
         SelfCleanupService.create(shardManager, localization.localizer(), guilds, data.cleanup(), configuration, worker);
         AnalyzerService.create(threading.repBotWorker(), data.analyzer());
         MetricService.create(threading.repBotWorker(), data.metrics());
+        autopostService = AutopostService.create(shardManager, data.guilds(), threading, localization.localizer());
     }
 
     private void initInteractions() {
@@ -193,7 +196,7 @@ public class Bot {
         InteractionHub.builder(shardManager)
                       .withConversationSystem()
                       .withCommands(
-                              new Channel(guilds, configuration),
+                              new Channel(guilds, configuration, autopostService),
                               new Profile(guilds, configuration, roleAssigner),
                               roles,
                               new RepSettings(guilds, configuration),

@@ -47,7 +47,7 @@ public class Analyzer {
                                               analyzer_results a
                                                   LEFT JOIN subs s
                                                   ON a.guild_id = s.id
-                                          WHERE analyzed < now() - ( CASE WHEN array_length(sku, 1) IS NULL THEN :defaultHours ELSE :extendedHours END )::INTERVAL
+                                          WHERE analyzed < now() - ( CASE WHEN array_length(:sku, 1) IS NULL THEN :extendedHours WHEN sku IS NULL THEN :defaultHours ELSE :extendedHours END )::INTERVAL
                                           ORDER BY message_id
                                               FOR UPDATE
                                               )

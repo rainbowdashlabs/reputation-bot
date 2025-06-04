@@ -11,19 +11,22 @@ import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.service.AutopostService;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-public class AutopostDisable implements SlashHandler {
-    private final GuildRepository guildRepository;
+public class AutopostRefresh implements SlashHandler {
     private final AutopostService autopostService;
+    private final GuildRepository guildRepository;
 
-    public AutopostDisable(GuildRepository guildRepository, AutopostService autopostService) {
-        this.guildRepository = guildRepository;
+    public AutopostRefresh(AutopostService autopostService, GuildRepository guildRepository) {
         this.autopostService = autopostService;
+        this.guildRepository = guildRepository;
     }
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        guildRepository.guild(event.getGuild()).settings().autopost().active(false);
-        autopostService.delete(event.getGuild());
-        event.reply("command.channel.autopost.disable.message.disabled").setEphemeral(true).queue();
+        if (!guildRepository.guild(event.getGuild()).settings().autopost().active()) {
+            event.reply("command.channel.autopost.refresh.message.inactive").setEphemeral(true).queue();
+            return;
+        }
+        autopostService.update(event.getGuild());
+        event.reply("command.channel.autopost.refresh.message.refreshed").setEphemeral(true).queue();
     }
 }

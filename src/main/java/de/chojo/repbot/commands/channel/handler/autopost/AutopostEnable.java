@@ -16,6 +16,7 @@ import de.chojo.repbot.dao.access.guild.settings.sub.autopost.Autopost;
 import de.chojo.repbot.dao.access.guild.settings.sub.autopost.RefreshInterval;
 import de.chojo.repbot.dao.access.guild.settings.sub.autopost.RefreshType;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.service.AutopostService;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.unions.GuildChannelUnion;
@@ -29,10 +30,12 @@ import java.util.List;
 public class AutopostEnable implements SlashHandler {
     private final GuildRepository guildRepository;
     private final Configuration configuration;
+    private final AutopostService autopostService;
 
-    public AutopostEnable(GuildRepository guildRepository, Configuration configuration) {
+    public AutopostEnable(GuildRepository guildRepository, Configuration configuration, AutopostService autopostService) {
         this.guildRepository = guildRepository;
         this.configuration = configuration;
+        this.autopostService = autopostService;
     }
 
     //channel autopost enable <channel> [refresh_interval] [refresh_type]
@@ -44,12 +47,19 @@ public class AutopostEnable implements SlashHandler {
             return;
         }
 
+        event.deferReply(true).complete();
+
         GuildChannelUnion channel = event.getOption("channel", OptionMapping::getAsChannel);
         if (channel.getType() != ChannelType.TEXT) {
             event.reply(context.localize("error.onlyTextChannel")).setEphemeral(true).queue();
             return;
         }
         Autopost autopost = guildRepository.guild(event.getGuild()).settings().autopost();
+
+        if(autopost.active()){
+            autopostService.delete(event.getGuild());
+        }
+
         autopost.active(true);
         TextChannel textChannel = channel.asTextChannel();
         autopost.channel(textChannel);
@@ -63,20 +73,21 @@ public class AutopostEnable implements SlashHandler {
             String refreshType = event.getOption("refreshtype").getAsString();
             autopost.refreshType(RefreshType.valueOf(refreshType));
         }
-        event.reply(context.localize("command.channel.autopost.enable.message.enabled",
-                Replacement.create("CHANNEL", MentionUtil.channel(autopost.channelId())))).setEphemeral(true).queue();
 
-        //TODO register at service to send first post.
+        autopostService.update(event.getGuild());
+
+        event.getHook().editOriginal(context.localize("command.channel.autopost.enable.message.enabled",
+                Replacement.create("CHANNEL", MentionUtil.channel(autopost.channelId())))).queue();
     }
 
     @Override
     public void onAutoComplete(CommandAutoCompleteInteractionEvent event, EventContext context) {
-        if (event.getFocusedOption().getName().equals("refresh_interval")) {
-            List<Command.Choice> complete = Completion.complete(event.getFocusedOption().getValue(), RefreshInterval.class);
+        if (event.getFocusedOption().getName().equals("refreshinterval")) {
+            List<Command.Choice> complete = Completion.complete(event.getFocusedOption().getValue(), RefreshInterval.class, false, false);
             event.replyChoices(complete).queue();
         }
-        if (event.getFocusedOption().getName().equals("refresh_type")) {
-            List<Command.Choice> complete = Completion.complete(event.getFocusedOption().getValue(), RefreshType.class);
+        if (event.getFocusedOption().getName().equals("refreshtype")) {
+            List<Command.Choice> complete = Completion.complete(event.getFocusedOption().getValue(), RefreshType.class, false, false);
             event.replyChoices(complete).queue();
         }
     }

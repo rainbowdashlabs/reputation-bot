@@ -20,7 +20,7 @@ public class AnalyzerService implements Runnable {
 
     public static void create(ScheduledExecutorService executorService, Analyzer analyzer) {
         var analyzerService = new AnalyzerService(analyzer);
-        executorService.scheduleAtFixedRate(analyzerService, 10, 60, TimeUnit.MINUTES);
+        executorService.scheduleAtFixedRate(analyzerService, 1, 60, TimeUnit.MINUTES);
     }
 
     @Override
