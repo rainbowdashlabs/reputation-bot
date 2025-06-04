@@ -12,12 +12,13 @@ import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
+import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 public class Add implements SlashHandler {
     private final GuildRepository guildRepository;
-
+    private final List<String> invalid = List.of("(", ")", "{", "}", "*", "\\s", " ", ".");
     public Add(GuildRepository guildRepository) {
         this.guildRepository = guildRepository;
     }
@@ -25,6 +26,16 @@ public class Add implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var pattern = event.getOption("pattern").getAsString();
+
+        for (String character : invalid) {
+            if (pattern.contains(character)) {
+                event.reply(context.localize("error.invalidcharacter", Replacement.create("INVALID", character, Format.CODE)))
+                     .setEphemeral(true)
+                     .queue();
+                return;
+            }
+        }
+
         try {
             Pattern.compile(pattern);
         } catch (PatternSyntaxException e) {
@@ -33,6 +44,7 @@ public class Add implements SlashHandler {
                  .queue();
             return;
         }
+
         if (guildRepository.guild(event.getGuild()).settings().thanking().thankwords().add(pattern)) {
             event.reply(context.localize("command.thankwords.add.message.added",
                     Replacement.create("REGEX", pattern, Format.CODE))).queue();

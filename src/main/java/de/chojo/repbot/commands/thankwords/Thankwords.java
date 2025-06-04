@@ -36,7 +36,7 @@ public class Thankwords extends SlashCommand {
                 .adminCommand()
                 .subCommand(SubCommand.of("add", "command.thankwords.add.description")
                         .handler(new Add(guildRepository))
-                        .argument(Argument.text("pattern", "command.thankwords.add.options.pattern.description").asRequired()))
+                        .argument(Argument.text("pattern", "command.thankwords.add.options.pattern.description").asRequired().maxLength(25)))
                 .subCommand(SubCommand.of("remove", "command.thankwords.remove.description")
                         .handler(new Remove(guildRepository))
                         .argument(Argument.text("pattern", "command.thankwords.remove.options.pattern.description").asRequired()
