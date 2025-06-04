@@ -28,3 +28,5 @@ CREATE TABLE repbot_schema.autopost (
 
 ALTER TABLE repbot_schema.guild_settings
     ALTER COLUMN emoji_debug SET DEFAULT FALSE;
+
+DELETE FROM repbot_schema.thankwords WHERE thankword  ~* '[(){}*. ]' OR thankword ILIKE '%\\s%';
