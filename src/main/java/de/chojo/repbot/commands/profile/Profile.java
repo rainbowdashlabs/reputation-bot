@@ -18,6 +18,7 @@ public class Profile extends SlashCommand {
                 .guildOnly()
                 .command(new de.chojo.repbot.commands.profile.handler.Profile(guildRepository, configuration, roleAssigner))
                 .argument(Argument.user("user", "command.profile.options.user.description"))
+                .argument(Argument.bool("detailed", "command.profile.options.detailed.description"))
         );
     }
 }

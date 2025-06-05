@@ -11,7 +11,9 @@ import de.chojo.repbot.dao.access.guild.reputation.Reputation;
 import de.chojo.repbot.dao.access.guild.reputation.sub.user.Gdpr;
 import de.chojo.repbot.dao.access.guild.settings.sub.AbuseProtection;
 import de.chojo.repbot.dao.components.MemberHolder;
+import de.chojo.repbot.dao.snapshots.ChannelStats;
 import de.chojo.repbot.dao.snapshots.RepProfile;
+import de.chojo.sadu.queries.converter.StandardValueConverter;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -24,6 +26,7 @@ import javax.annotation.Nullable;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
@@ -232,13 +235,13 @@ public class RepUser implements MemberHolder {
     }
 
     /**
-     * Get the amount of received reputation based on {@link AbuseProtection#maxReceivedHours()}
+     * Get the amount of the received reputation based on {@link AbuseProtection#maxReceivedHours()}
      *
-     * @return amount of received reputation
+     * @return amount of the received reputation
      */
     public int countReceived() {
         var hours = reputation().repGuild().settings().abuseProtection().maxReceivedHours();
-        return query("SELECT COUNT(1) FROM reputation_log WHERE received > NOW() - ?::interval AND receiver_id = ?")
+        return query("SELECT count(1) FROM reputation_log WHERE received > now() - ?::INTERVAL AND receiver_id = ?")
                 .single(call().bind("%s hours".formatted(hours)).bind(memberId()))
                 .map(rs -> rs.getInt(1))
                 .first()
@@ -252,11 +255,51 @@ public class RepUser implements MemberHolder {
      */
     public int countGiven() {
         var hours = reputation().repGuild().settings().abuseProtection().maxGivenHours();
-        return query("SELECT COUNT(1) FROM reputation_log WHERE received > NOW() - ?::interval AND donor_id = ?")
+        return query("SELECT count(1) FROM reputation_log WHERE received > now() - ?::INTERVAL AND donor_id = ?")
                 .single(call().bind("%s hours".formatted(hours)).bind(memberId()))
                 .map(rs -> rs.getInt(1))
                 .first()
                 .orElse(0);
+    }
+
+    public List<ChannelStats> mostReceivedChannel() {
+        return query("""
+                SELECT
+                    channel_id,
+                    count(1) AS count
+                FROM
+                    reputation_log
+                WHERE guild_id = ?
+                  AND receiver_id = ?
+                  AND received > ?
+                GROUP BY channel_id
+                LIMIT 5;
+                """)
+                .single(call().bind(guildId())
+                              .bind(memberId())
+                              .bind(reputation().repGuild().settings().general().reputationMode().dateInit(), StandardValueConverter.INSTANT_TIMESTAMP))
+                .map(ChannelStats::build)
+                .all();
+    }
+
+    public List<ChannelStats> mostGivenChannel() {
+        return query("""
+                SELECT
+                    channel_id,
+                    count(1) AS count
+                FROM
+                    reputation_log
+                WHERE guild_id = ?
+                  AND donor_id = ?
+                  AND received > ?
+                GROUP BY channel_id
+                LIMIT 5;
+                """)
+                .single(call().bind(guildId())
+                              .bind(memberId())
+                              .bind(reputation().repGuild().settings().general().reputationMode().dateInit(), StandardValueConverter.INSTANT_TIMESTAMP))
+                .map(ChannelStats::build)
+                .all();
     }
 
     @Override
