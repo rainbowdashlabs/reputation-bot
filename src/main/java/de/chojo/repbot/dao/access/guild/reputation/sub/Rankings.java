@@ -8,19 +8,19 @@ package de.chojo.repbot.dao.access.guild.reputation.sub;
 import de.chojo.repbot.dao.access.guild.reputation.Reputation;
 import de.chojo.repbot.dao.access.guild.reputation.sub.ranking.GuildReceived;
 import de.chojo.repbot.dao.access.guild.reputation.sub.ranking.GuildGiven;
-import de.chojo.repbot.dao.access.guild.reputation.sub.ranking.UserRanking;
+import de.chojo.repbot.dao.access.guild.reputation.sub.ranking.UserRankings;
 import de.chojo.repbot.dao.components.GuildHolder;
 import net.dv8tion.jda.api.entities.Guild;
 
 import static de.chojo.sadu.queries.api.query.Query.query;
 
-public class Ranking implements GuildHolder {
+public class Rankings implements GuildHolder {
     private final Reputation reputation;
     private final GuildGiven guildGiven = new GuildGiven(this);
     private final GuildReceived guildReceived = new GuildReceived(this);
-    private final UserRanking user = new UserRanking(this);
+    private final UserRankings user = new UserRankings(this);
 
-    public Ranking(Reputation reputation) {
+    public Rankings(Reputation reputation) {
         this.reputation = reputation;
     }
 
@@ -46,7 +46,7 @@ public class Ranking implements GuildHolder {
         return reputation.guildId();
     }
 
-    public UserRanking user() {
+    public UserRankings user() {
         return user;
     }
 }

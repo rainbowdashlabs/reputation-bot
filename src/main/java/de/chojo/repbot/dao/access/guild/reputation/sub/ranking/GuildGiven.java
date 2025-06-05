@@ -5,7 +5,7 @@
  */
 package de.chojo.repbot.dao.access.guild.reputation.sub.ranking;
 
-import de.chojo.repbot.dao.access.guild.reputation.sub.Ranking;
+import de.chojo.repbot.dao.access.guild.reputation.sub.Rankings;
 import de.chojo.repbot.dao.snapshots.RankingEntry;
 
 import java.util.List;
@@ -14,8 +14,8 @@ import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 
 public class GuildGiven extends GuildRanking {
-    public GuildGiven(Ranking ranking) {
-        super(ranking);
+    public GuildGiven(Rankings rankings) {
+        super(rankings, RankingType.GIVEN);
     }
 
 

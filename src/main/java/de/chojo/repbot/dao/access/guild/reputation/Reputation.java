@@ -11,7 +11,7 @@ import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.access.guild.reputation.sub.Analyzer;
 import de.chojo.repbot.dao.access.guild.reputation.sub.Log;
-import de.chojo.repbot.dao.access.guild.reputation.sub.Ranking;
+import de.chojo.repbot.dao.access.guild.reputation.sub.Rankings;
 import de.chojo.repbot.dao.access.guild.reputation.sub.RepUser;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.dao.snapshots.GuildReputationStats;
@@ -32,14 +32,14 @@ public class Reputation  implements GuildHolder {
     private static final Logger log = getLogger(Reputation.class);
     private final RepGuild repGuild;
 
-    private final Ranking ranking;
+    private final Rankings rankings;
     private final Cache<Long, RepUser> users = CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.MINUTES).build();
     private final Log logAccess;
     private final Analyzer analyzer;
 
     public Reputation(RepGuild repGuild) {
         this.repGuild = repGuild;
-        ranking = new Ranking(this);
+        rankings = new Rankings(this);
         logAccess = new Log(this);
         analyzer = new Analyzer(this);
     }
@@ -92,8 +92,8 @@ public class Reputation  implements GuildHolder {
         }
     }
 
-    public Ranking ranking() {
-        return ranking;
+    public Rankings ranking() {
+        return rankings;
     }
 
     public RepGuild repGuild() {
