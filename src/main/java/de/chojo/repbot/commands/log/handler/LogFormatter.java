@@ -5,9 +5,9 @@
  */
 package de.chojo.repbot.commands.log.handler;
 
+import de.chojo.jdautil.localization.LocalizationContext;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
-import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -27,7 +27,7 @@ public final class LogFormatter {
         throw new UnsupportedOperationException("This is a utility class.");
     }
 
-    static List<String> mapUserLogEntry(EventContext context, List<ReputationLogEntry> logEntries, Function<ReputationLogEntry, Long> userId) {
+    static List<String> mapUserLogEntry(LocalizationContext context, List<ReputationLogEntry> logEntries, Function<ReputationLogEntry, Long> userId) {
         List<String> entries = new ArrayList<>();
         for (var logEntry : logEntries) {
             var thankType = context.localize(logEntry.type().nameLocaleKey());
@@ -38,21 +38,31 @@ public final class LogFormatter {
         return entries;
     }
 
-    public static List<String> mapMessageLogEntry(EventContext context, List<ReputationLogEntry> logEntries) {
+    public static List<String> mapMessageLogEntry(LocalizationContext context, List<ReputationLogEntry> logEntries) {
         if (logEntries.isEmpty()) return Collections.emptyList();
 
         List<String> entries = new ArrayList<>();
         for (var logEntry : logEntries) {
-            var jumpLink = createJumpLink(context, logEntry);
-            var thankType = context.localize(logEntry.type().nameLocaleKey());
-            entries.add(String.format("%s **%s** %s ➜ %s **|** %s", logEntry.timestamp(),
-                    thankType, User.fromId(logEntry.donorId()).getAsMention(), User.fromId(logEntry.receiverId())
-                                                                                   .getAsMention(), jumpLink));
+            entries.add(formatMessageLogEntry(context, logEntry));
         }
         return entries;
     }
 
-    static String createJumpLink(EventContext context, ReputationLogEntry log) {
+    public static String formatMessageLogEntry(LocalizationContext context, ReputationLogEntry logEntry) {
+        var jumpLink = createJumpLink(context, logEntry);
+        var thankType = context.localize(logEntry.type().nameLocaleKey());
+        return String.format("%s **%s** %s ➜ %s **|** %s", logEntry.timestamp(),
+                thankType, User.fromId(logEntry.donorId()).getAsMention(), User.fromId(logEntry.receiverId())
+                                                                               .getAsMention(), jumpLink);
+    }
+    public static String formatMessageLogEntrySimple(LocalizationContext context, ReputationLogEntry logEntry) {
+        var thankType = context.localize(logEntry.type().nameLocaleKey());
+        return String.format("%s **%s** %s ➜ %s", logEntry.timestamp(),
+                thankType, User.fromId(logEntry.donorId()).getAsMention(), User.fromId(logEntry.receiverId())
+                                                                               .getAsMention());
+    }
+
+    static String createJumpLink(LocalizationContext context, ReputationLogEntry log) {
         var jump = context.localize("words.link",
                 Replacement.create("TARGET", "$words.message$"),
                 Replacement.create("URL", log.getMessageJumpLink()));
@@ -67,8 +77,8 @@ public final class LogFormatter {
         return String.format("**%s** %s", jump, refJump == null ? "" : "➜ **" + refJump + "**");
     }
 
-    static MessageEditData userLogEmbed(EventContext context, Member user, String title, List<String> log, boolean supporter) {
-        var builder = new LocalizedEmbedBuilder(context.guildLocalizer())
+    static MessageEditData userLogEmbed(LocalizationContext context, Member user, String title, List<String> log, boolean supporter) {
+        var builder = new LocalizedEmbedBuilder(context)
                 .setAuthor(title, null, user.getEffectiveAvatarUrl(), Replacement.create("USER", user.getEffectiveName()));
         if (!supporter) {
             builder.setFooter("supporter.fullreputationlog");

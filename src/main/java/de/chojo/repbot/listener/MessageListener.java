@@ -38,7 +38,6 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import java.util.LinkedHashSet;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -80,19 +79,12 @@ public class MessageListener extends ListenerAdapter {
 
     @Override
     public void onMessageDelete(@NotNull MessageDeleteEvent event) {
-        guildRepository.guild(event.getGuild()).reputation().log()
-                       .getLogEntry(event.getMessageIdLong())
-                       .ifPresent(ReputationLogEntry::deleteAll);
+        reputationService.delete(event.getMessageIdLong(), event.getGuildChannel(), event.getGuild());
     }
 
     @Override
     public void onMessageBulkDelete(@NotNull MessageBulkDeleteEvent event) {
-        var reputationLog = guildRepository.guild(event.getGuild()).reputation().log();
-        event.getMessageIds().stream().map(Long::valueOf)
-             .map(reputationLog::getLogEntry)
-             .filter(Optional::isPresent)
-             .map(Optional::get)
-             .forEach(ReputationLogEntry::deleteAll);
+        reputationService.deleteBulk(event.getMessageIds().stream().map(Long::valueOf).toList(), event.getChannel(), event.getGuild());
     }
 
     @Override

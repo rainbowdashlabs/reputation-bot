@@ -8,6 +8,7 @@ package de.chojo.repbot.dao.access.guild.settings;
 import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.access.guild.settings.sub.AbuseProtection;
 import de.chojo.repbot.dao.access.guild.settings.sub.General;
+import de.chojo.repbot.dao.access.guild.settings.sub.LogChannel;
 import de.chojo.repbot.dao.access.guild.settings.sub.Messages;
 import de.chojo.repbot.dao.access.guild.settings.sub.Ranks;
 import de.chojo.repbot.dao.access.guild.settings.sub.Reputation;
@@ -30,6 +31,7 @@ public class Settings implements GuildHolder {
     private Announcements announcements;
     private Autopost autopost;
     private Messages messages;
+    private LogChannel logChannel;
 
     public Settings(RepGuild repGuild) {
         this.repGuild = repGuild;
@@ -206,5 +208,24 @@ public class Settings implements GuildHolder {
                 .first()
                 .orElseGet(() -> new Autopost(this));
         return autopost;
+    }
+
+    public LogChannel logChannel() {
+        if (logChannel != null) {
+            return logChannel;
+        }
+        logChannel = query("""
+                SELECT
+                    active,
+                    channel_id
+                FROM
+                    log_channel
+                WHERE guild_id = ?;
+                """)
+                .single(call().bind(guildId()))
+                .map(rs -> LogChannel.build(this, rs))
+                .first()
+                .orElseGet(() -> new LogChannel(this));
+        return logChannel;
     }
 }
