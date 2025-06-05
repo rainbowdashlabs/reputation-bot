@@ -7,6 +7,7 @@ package de.chojo.repbot.dao.access.guild.reputation.sub.ranking.user;
 
 import de.chojo.repbot.dao.access.guild.reputation.sub.ranking.UserRanking;
 import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
+import de.chojo.repbot.dao.snapshots.RankingEntry;
 import de.chojo.repbot.dao.snapshots.RepProfile;
 import de.chojo.sadu.queries.converter.StandardValueConverter;
 import net.dv8tion.jda.api.entities.Member;
@@ -22,7 +23,7 @@ public class UserReceived extends BaseUserRanking{
     }
 
     @Override
-    protected List<RepProfile> getRankingPage(int pageSize, int page, Member member, ReputationMode mode) {
+    protected List<RankingEntry> getRankingPage(int pageSize, int page, Member member, ReputationMode mode) {
         return query("""
                 WITH
                     counts AS (
@@ -44,7 +45,7 @@ public class UserReceived extends BaseUserRanking{
                     counts;
                 """)
                 .single(call().bind(guildId()).bind(member.getIdLong()).bind(mode.dateInit(), StandardValueConverter.INSTANT_TIMESTAMP))
-                .map(RepProfile::buildReceivedRanking)
+                .map(RankingEntry::buildReceivedRanking)
                 .all();
     }
 

@@ -168,8 +168,8 @@ public class RoleAssigner {
             var updated = new AtomicInteger(0);
             var lastRefresh = new AtomicReference<>(Instant.now());
             for (var page : guildRanking) {
-                for (var repProfile : page) {
-                    repProfile.resolveMember(guild).ifPresent(member -> {
+                for (var ranking : page) {
+                    ranking.resolveMember(guild).ifPresent(member -> {
                         var newRank = updateSilent(member);
                         newRank.ifPresent(r -> updated.incrementAndGet());
                         checked.incrementAndGet();

@@ -6,6 +6,7 @@
 package de.chojo.repbot.dao.access.guild.reputation.sub.ranking;
 
 import de.chojo.repbot.dao.access.guild.reputation.sub.Ranking;
+import de.chojo.repbot.dao.snapshots.RankingEntry;
 import de.chojo.repbot.dao.snapshots.RepProfile;
 
 import java.util.List;
@@ -35,7 +36,7 @@ public class GuildGiven extends BaseRanking {
     }
 
 
-    protected List<RepProfile> getRankingPage(int pageSize, int page, String table) {
+    protected List<RankingEntry> getRankingPage(int pageSize, int page, String table) {
         return query("""
                 SELECT
                     rank_donated,
@@ -50,7 +51,7 @@ public class GuildGiven extends BaseRanking {
                 LIMIT ?;
                 """, table)
                 .single(call().bind(guildId()).bind(page * pageSize).bind(pageSize))
-                .map(RepProfile::buildGivenRanking)
+                .map(RankingEntry::buildGivenRanking)
                 .all();
     }
 }

@@ -3,7 +3,7 @@
  *
  *     Copyright (C) RainbowDashLabs and Contributor
  */
-package de.chojo.repbot.commands.top.handler;
+package de.chojo.repbot.commands.ranking.handler.guild;
 
 import de.chojo.jdautil.util.Completion;
 import de.chojo.jdautil.wrapper.EventContext;
@@ -13,10 +13,10 @@ import de.chojo.repbot.dao.provider.GuildRepository;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-public class General extends BaseTop {
+public class GuildReceived extends BaseTop {
     private final GuildRepository guildRepository;
 
-    public General(GuildRepository guildRepository) {
+    public GuildReceived(GuildRepository guildRepository) {
         this.guildRepository = guildRepository;
     }
 

@@ -3,10 +3,10 @@
  *
  *     Copyright (C) RainbowDashLabs and Contributor
  */
-package de.chojo.repbot.commands.top.handler.personal;
+package de.chojo.repbot.commands.ranking.handler.personal;
 
 import de.chojo.jdautil.wrapper.EventContext;
-import de.chojo.repbot.commands.top.handler.BaseTop;
+import de.chojo.repbot.commands.ranking.handler.BaseTop;
 import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;

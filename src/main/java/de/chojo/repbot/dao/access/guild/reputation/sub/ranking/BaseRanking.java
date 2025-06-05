@@ -9,7 +9,7 @@ import de.chojo.repbot.dao.access.guild.reputation.sub.Ranking;
 import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.dao.pagination.GuildRanking;
-import de.chojo.repbot.dao.snapshots.RepProfile;
+import de.chojo.repbot.dao.snapshots.RankingEntry;
 import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.List;
@@ -124,27 +124,27 @@ public abstract class BaseRanking implements GuildHolder {
      * @param page     the number of the page. zero based
      * @return a sorted list of reputation users
      */
-    private List<RepProfile> getRankingPage(int pageSize, int page) {
+    private List<RankingEntry> getRankingPage(int pageSize, int page) {
         return getRankingPage(pageSize, page, "user_reputation");
     }
 
-    private List<RepProfile> get7DaysRankingPage(int pageSize, int page) {
+    private List<RankingEntry> get7DaysRankingPage(int pageSize, int page) {
         return getRankingPage(pageSize, page, "user_reputation_7_days");
     }
 
-    private List<RepProfile> get30DaysRankingPage(int pageSize, int page) {
+    private List<RankingEntry> get30DaysRankingPage(int pageSize, int page) {
         return getRankingPage(pageSize, page, "user_reputation_30_days");
     }
 
-    private List<RepProfile> getWeekRankingPage(int pageSize, int page) {
+    private List<RankingEntry> getWeekRankingPage(int pageSize, int page) {
         return getRankingPage(pageSize, page, "user_reputation_week");
     }
 
-    private List<RepProfile> getMonthRankingPage(int pageSize, int page) {
+    private List<RankingEntry> getMonthRankingPage(int pageSize, int page) {
         return getRankingPage(pageSize, page, "user_reputation_month");
     }
 
-    protected abstract List<RepProfile> getRankingPage(int pageSize, int page, String table);
+    protected abstract List<RankingEntry> getRankingPage(int pageSize, int page, String table);
 
     protected abstract int pages(int pageSize, String table);
 }

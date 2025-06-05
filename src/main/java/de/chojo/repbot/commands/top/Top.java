@@ -16,6 +16,6 @@ public class Top extends SlashCommand {
         super(Slash.of("top", "command.top.description")
                 .guildOnly()
                 .command(new General(guildRepository))
-                .argument(Argument.text("mode", "command.top.general.options.mode.description").withAutoComplete()));
+                .argument(Argument.text("mode", "command.top.options.mode.description").withAutoComplete()));
     }
 }

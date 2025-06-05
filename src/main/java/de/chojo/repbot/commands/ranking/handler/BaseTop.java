@@ -3,7 +3,7 @@
  *
  *     Copyright (C) RainbowDashLabs and Contributor
  */
-package de.chojo.repbot.commands.top.handler;
+package de.chojo.repbot.commands.ranking.handler;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.LocalizationContext;
@@ -13,6 +13,7 @@ import de.chojo.jdautil.pagination.bag.PageBag;
 import de.chojo.jdautil.util.Completion;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.pagination.GuildRanking;
+import de.chojo.repbot.dao.snapshots.RankingEntry;
 import de.chojo.repbot.dao.snapshots.RepProfile;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
 public abstract class BaseTop implements SlashHandler {
     protected static final int TOP_PAGE_SIZE = 10;
 
-    public static MessageEditData buildRanking(List<RepProfile> ranking, GuildRanking guildRanking, Guild guild, LocalizationContext context) {
+    public static MessageEditData buildRanking(List<RankingEntry> ranking, GuildRanking guildRanking, Guild guild, LocalizationContext context) {
         if (ranking.isEmpty()) {
             return BaseTop.buildEmptyRanking(guildRanking, guild, context);
         }

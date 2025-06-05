@@ -49,6 +49,7 @@ public record RepProfile(RepUser repUser, long rank, long rankDonated, long user
         );
     }
 
+    @Deprecated(forRemoval = true)
     public static RepProfile buildReceivedRanking(Row rs) throws SQLException {
         return new RepProfile(null,
                 rs.getLong("rank"),
@@ -61,6 +62,7 @@ public record RepProfile(RepUser repUser, long rank, long rankDonated, long user
         );
     }
 
+    @Deprecated(forRemoval = true)
     public static RepProfile buildGivenRanking(Row rs) throws SQLException {
         return new RepProfile(null,
                 0,

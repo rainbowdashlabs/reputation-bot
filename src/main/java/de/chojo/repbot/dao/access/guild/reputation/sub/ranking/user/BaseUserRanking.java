@@ -9,6 +9,7 @@ import de.chojo.repbot.dao.access.guild.reputation.sub.ranking.UserRanking;
 import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.dao.pagination.GuildRanking;
+import de.chojo.repbot.dao.snapshots.RankingEntry;
 import de.chojo.repbot.dao.snapshots.RepProfile;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -106,7 +107,7 @@ public abstract class BaseUserRanking implements GuildHolder {
         return new GuildRanking(title, () -> pages(pageSize, member, mode), page -> getRankingPage(pageSize, page, member, mode));
     }
 
-    protected abstract List<RepProfile> getRankingPage(int pageSize, int page, Member member, ReputationMode mode);
+    protected abstract List<RankingEntry> getRankingPage(int pageSize, int page, Member member, ReputationMode mode);
 
     protected abstract int pages(int pageSize, Member member, ReputationMode mode);
 
