@@ -61,7 +61,7 @@ public class UserGiven extends UserRanking {
                   AND received >= ?
                 GROUP BY receiver_id;
                 """)
-                .single(call().bind(pageSize).bind(guildId()))
+                .single(call().bind(pageSize).bind(guildId()).bind(member.getIdLong()).bind(mode.dateInit(), StandardValueConverter.INSTANT_TIMESTAMP))
                 .map(row -> row.getInt("count"))
                 .first()
                 .orElse(1);

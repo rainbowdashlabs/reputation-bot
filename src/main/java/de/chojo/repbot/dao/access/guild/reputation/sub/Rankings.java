@@ -38,7 +38,7 @@ public class Rankings implements GuildHolder {
 
     @Override
     public Guild guild() {
-        return guildReceived.guild();
+        return reputation.guild();
     }
 
     @Override

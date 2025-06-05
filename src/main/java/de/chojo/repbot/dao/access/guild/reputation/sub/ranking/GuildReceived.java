@@ -15,7 +15,7 @@ import static de.chojo.sadu.queries.api.query.Query.query;
 
 public class GuildReceived extends GuildRanking {
     public GuildReceived(Rankings rankings) {
-        super(rankings, RankingType.GIVEN);
+        super(rankings, RankingType.RECEIVED);
     }
 
     protected int pages(int pageSize, String table) {

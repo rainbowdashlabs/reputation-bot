@@ -87,7 +87,6 @@ public abstract class BaseTop implements SlashHandler {
             public CompletableFuture<MessageEditData> buildPage() {
                 return CompletableFuture.supplyAsync(() -> {
                     var entries = ranking.page(current());
-
                     var maxRank = entries.get(entries.size() - 1).rank();
                     var rankString = entries.stream().map(rank -> rank.fancyString((int) maxRank))
                                             .collect(Collectors.joining("\n"));

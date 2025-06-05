@@ -19,12 +19,15 @@ import de.chojo.jdautil.parsing.ArgumentUtil;
 import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.jdautil.parsing.ValueParser;
 import de.chojo.jdautil.wrapper.EventContext;
+import de.chojo.repbot.commands.channel.handler.BaseChannelModifier;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.serialization.ThankwordsContainer;
 import de.chojo.repbot.util.PermissionErrorHandler;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
@@ -165,10 +168,11 @@ public class Start implements SlashHandler {
 
     private Result handleChannels(ConversationContext context) {
         var args = context.getContentRaw().replaceAll("\\s+", " ").split("\\s");
-        var channels = DiscordResolver.getTextChannels(context.getGuild(), List.of(args));
+        List<GuildChannel> mentions = context.message().getMentions().getChannels();
+        List<GuildChannel> channels = mentions.stream().filter(channel -> BaseChannelModifier.TEXT_CHANNEL.contains(channel.getType())).toList();
         var addedChannel = channels.stream()
                 .map(channel -> {
-                    guildRepository.guild(context.getGuild()).settings().thanking().channels().add(channel);
+                    guildRepository.guild(context.getGuild()).settings().thanking().channels().add((StandardGuildChannel) channel);
                     return channel.getAsMention();
                 })
                 .collect(Collectors.joining(", "));

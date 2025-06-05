@@ -224,7 +224,6 @@ public class Bot {
                               new UserDonated(guilds, configuration))
                       .withLocalizer(localizer)
                       .cleanGuildCommands("true".equals(System.getProperty("bot.cleancommands", "false")))
-                      .testMode("true".equals(System.getProperty("bot.testmode", "false")))
                       .withCommandErrorHandler((context, throwable) -> {
                           if (throwable instanceof InsufficientPermissionException) {
                               PermissionErrorHandler.handle((InsufficientPermissionException) throwable, shardManager,

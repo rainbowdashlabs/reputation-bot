@@ -57,11 +57,11 @@ public class UserReceived extends UserRanking {
                 FROM
                     reputation_log
                 WHERE guild_id = ?
-                  AND donor_id = ?
+                  AND receiver_id = ?
                   AND received >= ?
                 GROUP BY receiver_id;
                 """)
-                .single(call().bind(pageSize).bind(guildId()))
+                .single(call().bind(pageSize).bind(guildId()).bind(member.getIdLong()).bind(mode.dateInit(), StandardValueConverter.INSTANT_TIMESTAMP))
                 .map(row -> row.getInt("count"))
                 .first()
                 .orElse(1);
