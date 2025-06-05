@@ -11,7 +11,9 @@ import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.pagination.bag.PageBag;
 import de.chojo.jdautil.util.Completion;
+import de.chojo.jdautil.util.Premium;
 import de.chojo.jdautil.wrapper.EventContext;
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
 import de.chojo.repbot.dao.pagination.Ranking;
@@ -30,13 +32,20 @@ import java.util.stream.Collectors;
 public abstract class BaseTop implements SlashHandler {
     protected static final int TOP_PAGE_SIZE = 10;
     private final GuildRepository guildRepository;
+    private final Configuration configuration;
 
-    protected BaseTop(GuildRepository guildRepository) {
+    protected BaseTop(GuildRepository guildRepository, Configuration configuration) {
         this.guildRepository = guildRepository;
+        this.configuration = configuration;
     }
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
+        if (Premium.isNotEntitled(event, configuration.skus().features().advancedRankings().advancedRankings())) {
+            Premium.replyPremium(event, context, configuration.skus().features().advancedRankings().advancedRankings());
+            return;
+        }
+
         var guild = guildRepository.guild(event.getGuild());
         var reputationMode = guild.settings().general().reputationMode();
         if (event.getOption("mode") != null) {

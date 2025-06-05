@@ -11,6 +11,7 @@ import de.chojo.repbot.commands.ranking.handler.guild.GuildGiven;
 import de.chojo.repbot.commands.ranking.handler.guild.GuildReceived;
 import de.chojo.repbot.commands.ranking.handler.user.UserGiven;
 import de.chojo.repbot.commands.ranking.handler.user.UserReceived;
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.GuildRepository;
 
 import static de.chojo.jdautil.interactions.slash.Argument.text;
@@ -19,7 +20,7 @@ import static de.chojo.jdautil.interactions.slash.Group.group;
 import static de.chojo.jdautil.interactions.slash.SubCommand.sub;
 
 public class Ranking extends SlashCommand {
-    public Ranking(GuildRepository guildRepository) {
+    public Ranking(GuildRepository guildRepository, Configuration configuration) {
         super(Slash.of("ranking", "command.ranking.description")
                    .guildOnly()
                    .group(group("server", "command.ranking.server.description")
