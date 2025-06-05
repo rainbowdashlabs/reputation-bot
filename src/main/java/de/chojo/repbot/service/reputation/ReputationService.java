@@ -10,6 +10,7 @@ import de.chojo.jdautil.localization.LocalizationContext;
 import de.chojo.jdautil.localization.util.LocaleProvider;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.Verifier;
+import de.chojo.jdautil.util.MentionUtil;
 import de.chojo.jdautil.util.Premium;
 import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.MessageContext;
@@ -26,13 +27,10 @@ import de.chojo.repbot.util.EmojiDebug;
 import de.chojo.repbot.util.Messages;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import net.dv8tion.jda.api.entities.channel.unions.ChannelUnion;
 import net.dv8tion.jda.api.entities.channel.unions.GuildMessageChannelUnion;
-import net.dv8tion.jda.api.entities.channel.unions.MessageChannelUnion;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.requests.RestAction;
@@ -144,16 +142,15 @@ public class ReputationService {
         if (entries.isEmpty()) return;
         entries.forEach(ReputationLogEntry::deleteAll);
         LocalizationContext context = localizer.context(LocaleProvider.guild(guild));
-        String deleted = entries.stream().map(e -> LogFormatter.formatMessageLogEntry(context, e)).collect(Collectors.joining("\n"));
+        String deleted = entries.stream().map(e -> LogFormatter.formatMessageLogEntrySimple(context, e)).collect(Collectors.joining("\n"));
         if (entries.size() > 1) {
             String title = localizer.localize("listener.reputation.log.bulkdelete", guild, Replacement.create("CHANNEL", channel.getAsMention()));
             deleted = title + "\n" + deleted;
         } else {
-            deleted = context.localize("listener.reputation.log.deleted", Replacement.create("CHANNEL", channel.getAsMention()));
-            deleted = deleted + LogFormatter.formatMessageLogEntry(context, entries.get(0));
+            deleted = LogFormatter.formatMessageLogEntrySimple(context, entries.get(0)) + " **|** " + channel.getAsMention();
         }
 
-        logToChannel(guildRepository.guild(guild).settings(), deleted);
+        logToChannel(guildRepository.guild(guild).settings(), ":red_circle: " + deleted);
 
     }
 
@@ -272,7 +269,7 @@ public class ReputationService {
             return false;
         }
         // TODO: Send into channel
-        logToChannel(settings, guild, new ReputationLogEntry(null,
+        logReputationEntry(settings, guild, new ReputationLogEntry(null,
                 guild.getIdLong(),
                 message.getChannel().getIdLong(),
                 donor.getIdLong(),
@@ -304,9 +301,9 @@ public class ReputationService {
         return true;
     }
 
-    private void logToChannel(Settings settings, Guild guild, ReputationLogEntry reputationLogEntry) {
+    private void logReputationEntry(Settings settings, Guild guild, ReputationLogEntry reputationLogEntry) {
         String message = LogFormatter.formatMessageLogEntry(localizer.context(LocaleProvider.guild(guild)), reputationLogEntry);
-        logToChannel(settings, message);
+        logToChannel(settings, ":green_circle: " + message);
     }
 
     private void logToChannel(Settings settings, String string) {
