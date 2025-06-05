@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
@@ -84,14 +85,17 @@ public class ReactionListener extends ListenerAdapter {
 
         var receiver = event.getGuild().retrieveMember(message.getAuthor()).complete();
 
-        var logEntry = repGuild.reputation().log().getLogEntry(message);
-        if (logEntry.isPresent()) {
+        var logEntry = repGuild.reputation().log().getLogEntries(message);
+        if (!logEntry.isEmpty()) {
+            // If an entry is already present, the target is actually not the message author but the one who received the reputation.
+            // This is important if people react to the reputation emoji. In that case they agree with the reputation and second it.
             Member newReceiver;
             try {
-                newReceiver = event.getGuild().retrieveMemberById(logEntry.get().receiverId()).complete();
+                newReceiver = event.getGuild().retrieveMemberById(logEntry.get(0).receiverId()).complete();
             } catch (RuntimeException e) {
                 return;
             }
+            // If the correct receiver could not be determined, we stop, bcs why should we care.
             if (newReceiver == null) return;
             receiver = newReceiver;
         }
@@ -99,7 +103,6 @@ public class ReactionListener extends ListenerAdapter {
         if (PermissionErrorHandler.assertAndHandle(event.getGuildChannel(), localizer.context(LocaleProvider.guild(event.getGuild())), configuration, Permission.MESSAGE_SEND)) {
             return;
         }
-
 
         if (reputationService.submitReputation(event.getGuild(), event.getMember(), receiver, message, null, ThankType.REACTION)) {
             reacted(event.getMember());
@@ -123,9 +126,10 @@ public class ReactionListener extends ListenerAdapter {
         if (!event.isFromGuild()) return;
         var guildSettings = guildRepository.guild(event.getGuild()).settings();
         if (!guildSettings.thanking().reactions().isReaction(event.getReaction())) return;
-        guildRepository.guild(event.getGuild()).reputation().log().messageLog(event.getMessageIdLong(), 50).stream()
-                       .filter(entry -> entry.type() == ThankType.REACTION)
-                       .forEach(ReputationLogEntry::delete);
+        List<ReputationLogEntry> entries = guildRepository.guild(event.getGuild()).reputation().log().messageLog(event.getMessageIdLong(), 50).stream()
+                                                          .filter(entry -> entry.type() == ThankType.REACTION)
+                                                          .toList();
+        reputationService.delete(entries, event.getGuildChannel(), event.getGuild());
     }
 
     @Override
@@ -137,8 +141,8 @@ public class ReactionListener extends ListenerAdapter {
                                      .stream()
                                      .filter(entry -> entry.type() == ThankType.REACTION && entry.donorId() == event.getUserIdLong())
                                      .toList();
-        entries.forEach(ReputationLogEntry::delete);
         if (!entries.isEmpty() && guildSettings.messages().isReactionConfirmation()) {
+            reputationService.delete(entries, event.getGuildChannel(), event.getGuild());
             event.getChannel().sendMessage(localizer.localize("listener.reaction.removal", event.getGuild(),
                          Replacement.create("DONOR", User.fromId(event.getUserId()).getAsMention())))
                  .delay(30, TimeUnit.SECONDS).flatMap(Message::delete)
@@ -148,9 +152,10 @@ public class ReactionListener extends ListenerAdapter {
 
     @Override
     public void onMessageReactionRemoveAll(@NotNull MessageReactionRemoveAllEvent event) {
-        guildRepository.guild(event.getGuild()).reputation().log().messageLog(event.getMessageIdLong(), 50).stream()
-                       .filter(entry -> entry.type() == ThankType.REACTION)
-                       .forEach(ReputationLogEntry::delete);
+        List<ReputationLogEntry> entries = guildRepository.guild(event.getGuild()).reputation().log().messageLog(event.getMessageIdLong(), 50).stream()
+                                                          .filter(entry -> entry.type() == ThankType.REACTION)
+                                                          .toList();
+        reputationService.delete(entries, event.getGuildChannel(), event.getGuild());
     }
 
     public boolean isCooldown(Member member) {

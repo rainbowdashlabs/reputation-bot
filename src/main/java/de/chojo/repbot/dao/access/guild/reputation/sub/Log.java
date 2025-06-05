@@ -61,7 +61,7 @@ public class Log  implements GuildHolder {
     }
 
     /**
-     * Get the log entried for a message
+     * Get the log entries for a message
      *
      * @param messageId message id
      * @return sorted list of entries. the most recent first.
@@ -121,7 +121,7 @@ public class Log  implements GuildHolder {
      * @param message message id
      * @return a log entry if found
      */
-    public Optional<ReputationLogEntry> getLogEntry(long message) {
+    public List<ReputationLogEntry> getLogEntries(long message) {
         return query("""
                        SELECT
                            guild_id,
@@ -140,7 +140,7 @@ public class Log  implements GuildHolder {
                        """)
                 .single(call().bind(message).bind(guildId()))
                 .map(r -> ReputationLogEntry.build(this, r))
-                .first();
+                .all();
     }
 
     /**
@@ -149,8 +149,8 @@ public class Log  implements GuildHolder {
      * @param message message
      * @return a log entry if found
      */
-    public Optional<ReputationLogEntry> getLogEntry(Message message) {
-        return getLogEntry(message.getIdLong());
+    public List<ReputationLogEntry> getLogEntries(Message message) {
+        return getLogEntries(message.getIdLong());
     }
 
     private int getUserDonatedLogPages(User user, int pageSize) {

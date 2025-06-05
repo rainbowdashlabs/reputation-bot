@@ -181,7 +181,7 @@ public class Bot {
         scan.lateInit(messageAnalyzer);
 
         // init services
-        reputationService = new ReputationService(guilds, contextResolver, roleAssigner, configuration.magicImage(), localization.localizer());
+        reputationService = new ReputationService(guilds, contextResolver, roleAssigner, configuration, localization.localizer());
         gdprService = GdprService.of(shardManager, guilds, data.gdpr(), worker);
         SelfCleanupService.create(shardManager, localization.localizer(), guilds, data.cleanup(), configuration, worker);
         AnalyzerService.create(threading.repBotWorker(), data.analyzer());

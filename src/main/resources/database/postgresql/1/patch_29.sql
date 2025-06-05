@@ -66,3 +66,11 @@ FROM
     repbot_schema.thankwords
 WHERE thankword ~* '[(){}*. ]'
    OR thankword ILIKE '%\\s%';
+
+CREATE TABLE log_channel (
+    guild_id   BIGINT                NOT NULL
+        CONSTRAINT log_channel_pk
+            PRIMARY KEY,
+    active     BOOLEAN DEFAULT FALSE NOT NULL,
+    channel_id BIGINT
+);

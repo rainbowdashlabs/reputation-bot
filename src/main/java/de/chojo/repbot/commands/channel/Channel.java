@@ -20,6 +20,8 @@ import de.chojo.repbot.commands.channel.handler.autopost.AutopostDisable;
 import de.chojo.repbot.commands.channel.handler.autopost.AutopostEnable;
 import de.chojo.repbot.commands.channel.handler.autopost.AutopostInfo;
 import de.chojo.repbot.commands.channel.handler.autopost.AutopostRefresh;
+import de.chojo.repbot.commands.channel.handler.log.LogDisable;
+import de.chojo.repbot.commands.channel.handler.log.LogEnable;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.service.AutopostService;
@@ -75,6 +77,12 @@ public class Channel extends SlashCommand {
                                    .handler(new AutopostInfo(guildRepository)))
                            .subCommand(sub("refresh", "command.channel.autopost.refresh.description")
                                    .handler(new AutopostRefresh(autopostService, guildRepository))))
+                .group(group("log", "command.channel.log.description")
+                        .subCommand(sub("enable", "command.channel.log.enable.description")
+                                .handler(new LogEnable(guildRepository, configuration))
+                                .argument(channel("channel", "command.channel.log.enable.options.channel.description").asRequired()))
+                        .subCommand(sub("disable", "command.channel.log.disable.description")
+                                .handler(new LogDisable(guildRepository))))
         );
     }
 }

@@ -47,14 +47,14 @@ public class Received implements SlashHandler {
         context.registerPage(new PrivatePageBag(logAccess.pages(), event.getUser().getIdLong()) {
             @Override
             public CompletableFuture<MessageEditData> buildPage() {
-                return CompletableFuture.supplyAsync(() -> userLogEmbed(context, user, "command.log.received.message.log",
-                        mapUserLogEntry(context, logAccess.page(current()), ReputationLogEntry::donorId), premium));
+                return CompletableFuture.supplyAsync(() -> userLogEmbed(context.guildLocalizer(), user, "command.log.received.message.log",
+                        mapUserLogEntry(context.guildLocalizer(), logAccess.page(current()), ReputationLogEntry::donorId), premium));
             }
 
             @Override
             public CompletableFuture<MessageEditData> buildEmptyPage() {
-                return CompletableFuture.completedFuture(userLogEmbed(context, user, "command.log.received.message.log",
-                        mapUserLogEntry(context, Collections.emptyList(), ReputationLogEntry::donorId), premium));
+                return CompletableFuture.completedFuture(userLogEmbed(context.guildLocalizer(), user, "command.log.received.message.log",
+                        mapUserLogEntry(context.guildLocalizer(), Collections.emptyList(), ReputationLogEntry::donorId), premium));
             }
 
             @Override

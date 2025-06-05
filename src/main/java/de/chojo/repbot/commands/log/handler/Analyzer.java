@@ -39,7 +39,7 @@ public class Analyzer extends BaseAnalyzer implements SlashHandler  {
 
         var reputationLogEntries = reputation.log().messageLog(messageId, 10);
 
-        var entries = LogFormatter.mapMessageLogEntry(context, reputationLogEntries);
+        var entries = LogFormatter.mapMessageLogEntry(context.guildLocalizer(), reputationLogEntries);
 
         var builder = new LocalizedEmbedBuilder(context.guildLocalizer())
                 .setTitle("command.log.message.message.log", Replacement.create("ID", messageId));

@@ -41,7 +41,7 @@ public class Message implements SlashHandler {
     private MessageEmbed getMessageLog(EventContext context, Guild guild, long messageId) {
         var messageLog = guildRepository.guild(guild).reputation().log().messageLog(messageId, 50);
 
-        var log = mapMessageLogEntry(context, messageLog);
+        var log = mapMessageLogEntry(context.guildLocalizer(), messageLog);
 
         var builder = new LocalizedEmbedBuilder(context.guildLocalizer())
                 .setAuthor("command.log.message.message.log", Replacement.create("ID", messageId));

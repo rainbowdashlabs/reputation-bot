@@ -47,14 +47,14 @@ public class Donated implements SlashHandler {
         context.registerPage(new PrivatePageBag(logAccess.pages(), event.getUser().getIdLong()) {
             @Override
             public CompletableFuture<MessageEditData> buildPage() {
-                return CompletableFuture.supplyAsync(() -> userLogEmbed(context, user, "command.log.donated.message.log",
-                        mapUserLogEntry(context, logAccess.page(current()), ReputationLogEntry::receiverId), premium));
+                return CompletableFuture.supplyAsync(() -> userLogEmbed(context.guildLocalizer(), user, "command.log.donated.message.log",
+                        mapUserLogEntry(context.guildLocalizer(), logAccess.page(current()), ReputationLogEntry::receiverId), premium));
             }
 
             @Override
             public CompletableFuture<MessageEditData> buildEmptyPage() {
-                return CompletableFuture.completedFuture(userLogEmbed(context, user, "command.log.donated.message.log",
-                        mapUserLogEntry(context, Collections.emptyList(), ReputationLogEntry::receiverId), premium));
+                return CompletableFuture.completedFuture(userLogEmbed(context.guildLocalizer(), user, "command.log.donated.message.log",
+                        mapUserLogEntry(context.guildLocalizer(), Collections.emptyList(), ReputationLogEntry::receiverId), premium));
             }
 
             @Override
