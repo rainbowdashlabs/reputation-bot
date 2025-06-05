@@ -163,13 +163,13 @@ public class RoleAssigner {
     public CompletableFuture<BatchUpdateResult> updateBatch(Guild guild, EventContext context, Message message) {
         return CompletableFuture.supplyAsync(() -> {
             log.info("Started batch update for guild {}", prettyName(guild));
-            var guildRanking = guildRepository.guild(guild).reputation().ranking().total(100);
+            var guildRanking = guildRepository.guild(guild).reputation().ranking().received().total(100);
             var checked = new AtomicInteger(0);
             var updated = new AtomicInteger(0);
             var lastRefresh = new AtomicReference<>(Instant.now());
             for (var page : guildRanking) {
-                for (var repProfile : page) {
-                    repProfile.resolveMember(guild).ifPresent(member -> {
+                for (var ranking : page) {
+                    ranking.resolveMember(guild).ifPresent(member -> {
                         var newRank = updateSilent(member);
                         newRank.ifPresent(r -> updated.incrementAndGet());
                         checked.incrementAndGet();

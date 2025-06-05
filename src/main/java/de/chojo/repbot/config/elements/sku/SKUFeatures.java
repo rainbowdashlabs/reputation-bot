@@ -5,6 +5,7 @@
  */
 package de.chojo.repbot.config.elements.sku;
 
+import de.chojo.repbot.config.elements.sku.feature.AdvancedRankings;
 import de.chojo.repbot.config.elements.sku.feature.AnalyzerLog;
 import de.chojo.repbot.config.elements.sku.feature.Autopost;
 import de.chojo.repbot.config.elements.sku.feature.LocaleOverrides;
@@ -17,6 +18,7 @@ public class SKUFeatures {
     ReputationCategories reputationCategories = new ReputationCategories();
     LocaleOverrides localeOverrides = new LocaleOverrides();
     Autopost autopost = new Autopost();
+    AdvancedRankings advancedRankings = new AdvancedRankings();
 
     public ReputationLog reputationLog() {
         return reputationLog;
@@ -36,5 +38,9 @@ public class SKUFeatures {
 
     public Autopost autopost() {
         return autopost;
+    }
+
+    public AdvancedRankings advancedRankings() {
+        return advancedRankings;
     }
 }

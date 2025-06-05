@@ -25,6 +25,7 @@ import de.chojo.repbot.commands.log.Log;
 import de.chojo.repbot.commands.messages.Messages;
 import de.chojo.repbot.commands.profile.Profile;
 import de.chojo.repbot.commands.prune.Prune;
+import de.chojo.repbot.commands.ranking.Ranking;
 import de.chojo.repbot.commands.reactions.Reactions;
 import de.chojo.repbot.commands.repadmin.RepAdmin;
 import de.chojo.repbot.commands.repsettings.RepSettings;
@@ -216,13 +217,13 @@ public class Bot {
                               new Debug(guilds),
                               new RepAdmin(guilds, configuration, roleAssigner),
                               new Messages(guilds),
-                              new BotAdmin(guilds, configuration, statistic))
+                              new BotAdmin(guilds, configuration, statistic),
+                              new Ranking(guilds))
                       .withMessages(new MessageLog(guilds))
                       .withUsers(new UserReceived(guilds, configuration),
                               new UserDonated(guilds, configuration))
                       .withLocalizer(localizer)
                       .cleanGuildCommands("true".equals(System.getProperty("bot.cleancommands", "false")))
-                      .testMode("true".equals(System.getProperty("bot.testmode", "false")))
                       .withCommandErrorHandler((context, throwable) -> {
                           if (throwable instanceof InsufficientPermissionException) {
                               PermissionErrorHandler.handle((InsufficientPermissionException) throwable, shardManager,

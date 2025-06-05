@@ -223,7 +223,7 @@ public class RepUser implements MemberHolder {
                     """;
         }
 
-        return query(query, mode.tableName())
+        return query(query, mode.guildRanking())
                 .single(call().bind(guildId()).bind(userId()))
                 .map(row -> RepProfile.buildProfile(this, row))
                 .first()

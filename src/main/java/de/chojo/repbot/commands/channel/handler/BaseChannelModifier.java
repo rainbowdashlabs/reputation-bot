@@ -17,9 +17,9 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import java.util.Set;
 
 public abstract class BaseChannelModifier implements SlashHandler {
-    private static final java.util.Set<ChannelType> ALLOWED_CHANNEL =
+    public static final java.util.Set<ChannelType> ALLOWED_CHANNEL =
             Set.of(ChannelType.TEXT, ChannelType.FORUM, ChannelType.CATEGORY, ChannelType.VOICE);
-    private static final java.util.Set<ChannelType> TEXT_CHANNEL =
+    public static final java.util.Set<ChannelType> TEXT_CHANNEL =
             Set.of(ChannelType.TEXT, ChannelType.FORUM, ChannelType.VOICE);
     private final GuildRepository guildRepository;
 

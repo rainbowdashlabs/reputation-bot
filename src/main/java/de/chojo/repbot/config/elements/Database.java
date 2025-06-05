@@ -10,10 +10,10 @@ package de.chojo.repbot.config.elements;
 public class Database {
     private String host = "localhost";
     private String port = "5432";
-    private String database = "db";
-    private String schema = "repbot";
-    private String user = "user";
-    private String password = "pw";
+    private String database = "postgres";
+    private String schema = "repbot_schema";
+    private String user = "postgres";
+    private String password = "postgres";
     private int poolSize = 5;
 
     public String host() {
