@@ -61,6 +61,18 @@ public record RepProfile(RepUser repUser, long rank, long rankDonated, long user
         );
     }
 
+    public static RepProfile buildGivenRanking(Row rs) throws SQLException {
+        return new RepProfile(null,
+                0,
+                rs.getLong("rank_donated"),
+                rs.getLong("user_id"),
+                0,
+                0,
+                0,
+                rs.getLong("donated")
+        );
+    }
+
     public String fancyString(int maxRank) {
         var length = String.valueOf(maxRank).length();
         var rank = StringUtils.rightPad(String.valueOf(this.rank), length);

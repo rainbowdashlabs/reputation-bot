@@ -66,3 +66,20 @@ FROM
     repbot_schema.thankwords
 WHERE thankword ~* '[(){}*. ]'
    OR thankword ILIKE '%\\s%';
+
+CREATE OR REPLACE FUNCTION repbot_schema.user_ranking_received(_guild_id BIGINT, _user_id BIGINT
+                                                               )
+    RETURNS TABLE (
+        RANK       BIGINT,
+        USER_ID    BIGINT,
+        REPUTATION BIGINT
+    )
+    LANGUAGE plpgsql
+AS
+$$
+BEGIN
+
+END;
+$$;
+
+SELECT now() >

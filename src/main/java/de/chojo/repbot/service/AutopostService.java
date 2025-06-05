@@ -7,7 +7,7 @@ package de.chojo.repbot.service;
 
 import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.util.LocaleProvider;
-import de.chojo.repbot.commands.top.handler.Show;
+import de.chojo.repbot.commands.top.handler.BaseTop;
 import de.chojo.repbot.core.Threading;
 import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.access.guild.settings.sub.autopost.Autopost;
@@ -71,9 +71,9 @@ public class AutopostService {
     public void update(RepGuild guild) {
         guild.load(shardManager);
         if (guild.isById()) return;
-        GuildRanking guildRanking = guild.reputation().ranking().defaultRanking(20);
+        GuildRanking guildRanking = guild.reputation().ranking().received().defaultRanking(20);
         List<RepProfile> ranking = guildRanking.page(0);
-        MessageEditData messageEditData = Show.buildRanking(ranking, guildRanking, guild.guild(), localizer.context(LocaleProvider.guild(guild.guild())));
+        MessageEditData messageEditData = BaseTop.buildRanking(ranking, guildRanking, guild.guild(), localizer.context(LocaleProvider.guild(guild.guild())));
         Autopost autopost = guild.settings().autopost();
         RefreshType refreshType = autopost.refreshType();
         TextChannel channel = guild.guild().getTextChannelById(autopost.channelId());

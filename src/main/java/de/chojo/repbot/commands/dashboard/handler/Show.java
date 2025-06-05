@@ -33,7 +33,7 @@ public class Show implements SlashHandler {
     private MessageEmbed getDashboard(Guild guild, EventContext context) {
         var reputation = guildRepository.guild(guild).reputation();
         var stats = reputation.stats();
-        var top = reputation.ranking().total(5).page(0).stream()
+        var top = reputation.ranking().received().total(5).page(0).stream()
                             .map(r -> r.fancyString(5))
                             .collect(Collectors.joining("\n"));
 
