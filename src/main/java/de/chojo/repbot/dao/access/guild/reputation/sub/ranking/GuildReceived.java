@@ -7,14 +7,13 @@ package de.chojo.repbot.dao.access.guild.reputation.sub.ranking;
 
 import de.chojo.repbot.dao.access.guild.reputation.sub.Ranking;
 import de.chojo.repbot.dao.snapshots.RankingEntry;
-import de.chojo.repbot.dao.snapshots.RepProfile;
 
 import java.util.List;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 
-public class GuildReceived extends BaseRanking {
+public class GuildReceived extends GuildRanking {
     public GuildReceived(Ranking ranking) {
         super(ranking);
     }

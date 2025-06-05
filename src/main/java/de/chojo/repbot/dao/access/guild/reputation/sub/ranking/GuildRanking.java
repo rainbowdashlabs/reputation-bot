@@ -5,19 +5,20 @@
  */
 package de.chojo.repbot.dao.access.guild.reputation.sub.ranking;
 
-import de.chojo.repbot.dao.access.guild.reputation.sub.Ranking;
 import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.repbot.dao.pagination.GuildRanking;
+import de.chojo.repbot.dao.pagination.Ranking;
 import de.chojo.repbot.dao.snapshots.RankingEntry;
 import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.List;
 
-public abstract class BaseRanking implements GuildHolder {
-    private final Ranking ranking;
+import static de.chojo.jdautil.localization.util.Replacement.create;
 
-    protected BaseRanking(Ranking ranking) {
+public abstract class GuildRanking implements GuildHolder {
+    private final de.chojo.repbot.dao.access.guild.reputation.sub.Ranking ranking;
+
+    protected GuildRanking(de.chojo.repbot.dao.access.guild.reputation.sub.Ranking ranking) {
         this.ranking = ranking;
     }
 
@@ -31,11 +32,11 @@ public abstract class BaseRanking implements GuildHolder {
         return ranking.guildId();
     }
 
-    public GuildRanking defaultRanking(int pageSize) {
+    public Ranking defaultRanking(int pageSize) {
         return byMode(ranking.reputation().repGuild().settings().general().reputationMode(), pageSize);
     }
 
-    public GuildRanking byMode(ReputationMode mode, int pageSize) {
+    public Ranking byMode(ReputationMode mode, int pageSize) {
         return switch (mode) {
             case TOTAL -> total(pageSize);
             case ROLLING_WEEK -> days7(pageSize);
@@ -52,8 +53,8 @@ public abstract class BaseRanking implements GuildHolder {
      * @param pageSize the size of a page
      * @return a sorted list of reputation users
      */
-    public GuildRanking total(int pageSize) {
-        return new GuildRanking("command.top.message.total", () -> getRankingPageCount(pageSize), page -> getRankingPage(pageSize, page));
+    public Ranking total(int pageSize) {
+        return new Ranking("command.top.message.total", create("GUILD", guild().getName()), () -> getRankingPageCount(pageSize), page -> getRankingPage(pageSize, page));
     }
 
     /**
@@ -62,8 +63,8 @@ public abstract class BaseRanking implements GuildHolder {
      * @param pageSize the size of a page
      * @return a sorted list of reputation users
      */
-    public GuildRanking days7(int pageSize) {
-        return new GuildRanking("command.top.message.rollingweektitle", () -> get7DaysRankingPageCount(pageSize), page -> get7DaysRankingPage(pageSize, page));
+    public Ranking days7(int pageSize) {
+        return new Ranking("command.top.message.rollingweektitle", create("GUILD", guild().getName()), () -> get7DaysRankingPageCount(pageSize), page -> get7DaysRankingPage(pageSize, page));
     }
 
     /**
@@ -72,8 +73,8 @@ public abstract class BaseRanking implements GuildHolder {
      * @param pageSize the size of a page
      * @return a sorted list of reputation users
      */
-    public GuildRanking days30(int pageSize) {
-        return new GuildRanking("command.top.message.rollingmonthtitle", () -> get30DaysRankingPageCount(pageSize), page -> get30DaysRankingPage(pageSize, page));
+    public Ranking days30(int pageSize) {
+        return new Ranking("command.top.message.rollingmonthtitle", create("GUILD", guild().getName()), () -> get30DaysRankingPageCount(pageSize), page -> get30DaysRankingPage(pageSize, page));
     }
 
     /**
@@ -82,8 +83,8 @@ public abstract class BaseRanking implements GuildHolder {
      * @param pageSize the size of a page
      * @return a sorted list of reputation users
      */
-    public GuildRanking week(int pageSize) {
-        return new GuildRanking("command.top.message.weekTitle", () -> getWeekRankingPageCount(pageSize), page -> getWeekRankingPage(pageSize, page));
+    public Ranking week(int pageSize) {
+        return new Ranking("command.top.message.weekTitle", create("GUILD", guild().getName()), () -> getWeekRankingPageCount(pageSize), page -> getWeekRankingPage(pageSize, page));
     }
 
     /**
@@ -92,8 +93,8 @@ public abstract class BaseRanking implements GuildHolder {
      * @param pageSize the size of a page
      * @return a sorted list of reputation users
      */
-    public GuildRanking month(int pageSize) {
-        return new GuildRanking("command.top.message.monthTitle", () -> getMonthRankingPageCount(pageSize), page -> getMonthRankingPage(pageSize, page));
+    public Ranking month(int pageSize) {
+        return new Ranking("command.top.message.monthTitle", create("GUILD", guild().getName()), () -> getMonthRankingPageCount(pageSize), page -> getMonthRankingPage(pageSize, page));
     }
 
 

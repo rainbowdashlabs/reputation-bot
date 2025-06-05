@@ -5,22 +5,28 @@
  */
 package de.chojo.repbot.dao.pagination;
 
+import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.dao.snapshots.RankingEntry;
-import de.chojo.repbot.dao.snapshots.RepProfile;
 
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class GuildRanking extends PageAccess<RankingEntry> {
+public class Ranking extends PageAccess<RankingEntry> {
     private final String title;
+    private final Replacement replacement;
 
-    public GuildRanking(String title, Supplier<Integer> pagecount, Function<Integer, List<RankingEntry>> pageSupplier) {
+    public Ranking(String title, Replacement replacement, Supplier<Integer> pagecount, Function<Integer, List<RankingEntry>> pageSupplier) {
         super(pagecount, pageSupplier);
         this.title = title;
+        this.replacement = replacement;
     }
 
     public String title() {
         return title;
+    }
+
+    public Replacement replacement() {
+        return replacement;
     }
 }

@@ -5,10 +5,8 @@
  */
 package de.chojo.repbot.dao.access.guild.reputation.sub.ranking.user;
 
-import de.chojo.repbot.dao.access.guild.reputation.sub.ranking.UserRanking;
 import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
 import de.chojo.repbot.dao.snapshots.RankingEntry;
-import de.chojo.repbot.dao.snapshots.RepProfile;
 import de.chojo.sadu.queries.converter.StandardValueConverter;
 import net.dv8tion.jda.api.entities.Member;
 
@@ -17,8 +15,8 @@ import java.util.List;
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 
-public class UserReceived extends BaseUserRanking{
-    protected UserReceived(UserRanking user) {
+public class UserReceived extends UserRanking {
+    public UserReceived(de.chojo.repbot.dao.access.guild.reputation.sub.ranking.UserRanking user) {
         super(user);
     }
 

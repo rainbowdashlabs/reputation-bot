@@ -45,4 +45,8 @@ public class Ranking implements GuildHolder {
     public long guildId() {
         return reputation.guildId();
     }
+
+    public UserRanking user() {
+        return user;
+    }
 }
