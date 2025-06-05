@@ -24,6 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.sql.SQLException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Snapshot of a user reputation profile.
@@ -81,45 +82,77 @@ public record RepProfile(RepUser repUser, long rank, long rankDonated, long user
         return "`" + rank + "` **|** " + MentionUtil.user(userId) + " ➜ " + reputation;
     }
 
-    public MessageEmbed publicProfile(Configuration configuration, LocalizationContext localizer) {
-        return getBaseBuilder(configuration, localizer).build();
+    public MessageEmbed publicProfile(Configuration configuration, LocalizationContext localizer, boolean detailed) {
+        return getBaseBuilder(configuration, localizer, detailed).build();
     }
 
     public MessageEmbed adminProfile(Configuration configuration, LocalizationContext localizer) {
-        var build = getBaseBuilder(configuration, localizer);
+        var build = getBaseBuilder(configuration, localizer, false);
         build.addField("words.rawReputation", String.valueOf(rawReputation()), true)
              .addField("words.reputationOffset", String.valueOf(repOffset()), true)
              .addField("words.donated", String.valueOf(donated()), true);
         return build.build();
     }
 
-    private EmbedBuilder getBaseBuilder(Configuration configuration, LocalizationContext localizer) {
+    private EmbedBuilder getBaseBuilder(Configuration configuration, LocalizationContext localizer, boolean detailed) {
         var ranks = repUser.reputation().repGuild().settings().ranks();
         var current = ranks.currentRank(repUser);
         var next = ranks.nextRank(repUser);
 
         var currentRoleRep = current.map(ReputationRank::reputation).orElse(0L);
         var nextRoleRep = next.map(ReputationRank::reputation).orElse(currentRoleRep);
-        var progess = (double) (reputation() - currentRoleRep) / (nextRoleRep - currentRoleRep);
+        var progress = (double) (reputation() - currentRoleRep) / (nextRoleRep - currentRoleRep);
 
-        var progressBar = Text.progressBar(progess, BAR_SIZE);
+        var progressBar = Text.progressBar(progress, BAR_SIZE);
 
         var level = current.flatMap(r -> r.getRole(repUser.member().getGuild())).map(IMentionable::getAsMention)
                            .orElse("/");
 
         var currProgress = String.valueOf(reputation() - currentRoleRep);
         var nextLevel = nextRoleRep.equals(currentRoleRep) ? "Ꝏ" : String.valueOf(nextRoleRep - currentRoleRep);
-        var build = new LocalizedEmbedBuilder(localizer)
-                .setAuthor("%s$%s$".formatted(rank() != 0 ? "#" + rank() + " " : "", "element.profile.title"),
-                        null, repUser.member().getEffectiveAvatarUrl(),
-                        Replacement.create("NAME", repUser.member().getEffectiveName()))
-                .addField("words.level", level, true)
-                .addField("words.reputation", Format.BOLD.apply(String.valueOf(reputation())), true)
-                .addField("element.profile.nextLevel", "```ANSI%n%s/%s  %s```".formatted(currProgress, nextLevel, progressBar), false)
-                .setColor(repUser.member().getColor());
+
+        var build = new LocalizedEmbedBuilder(localizer);
+        if (detailed) {
+            build.setAuthor("element.profile.title", null, repUser.member().getEffectiveAvatarUrl(),
+                    Replacement.create("NAME", repUser.member().getEffectiveName()));
+            build.addField("words.rankreceived", rank() + "", true);
+            build.addField("words.rankdonated", rankDonated() + "", true);
+            build.addBlankField(false);
+        } else {
+            build.setAuthor("%s$%s$".formatted(rank() != 0 ? "#" + rank() + " " : "", "element.profile.title"),
+                    null, repUser.member().getEffectiveAvatarUrl(),
+                    Replacement.create("NAME", repUser.member().getEffectiveName()));
+        }
+        build.addField("words.level", level, true)
+             .addField("words.reputation", Format.BOLD.apply(String.valueOf(reputation())), true)
+             .addField("words.donated", Format.BOLD.apply(String.valueOf(donated())), true)
+             .addField("element.profile.nextLevel", "```ANSI%n%s/%s  %s```".formatted(currProgress, nextLevel, progressBar), false)
+             .setColor(repUser.member().getColor());
         var badge = configuration.badges().badge((int) rank());
         badge.ifPresent(build::setThumbnail);
+
+        if (detailed) {
+            addDetails(build);
+        }
+
         return build;
+    }
+
+    private void addDetails(EmbedBuilder build) {
+        String topDonor = repUser.reputation().ranking().user().given().defaultRanking(5, repUser.member()).page(0)
+                                 .stream().map(RankingEntry::simpleString).collect(Collectors.joining("\n"));
+        String topReceiver = repUser.reputation().ranking().user().received().defaultRanking(5, repUser.member()).page(0)
+                                    .stream().map(RankingEntry::simpleString).collect(Collectors.joining("\n"));
+        var mostReceivedChannel = repUser.mostReceivedChannel().stream().map(ChannelStats::fancyString).collect(Collectors.joining("\n"));
+        var mostGivenChannel = repUser.mostGivenChannel().stream().map(ChannelStats::fancyString).collect(Collectors.joining("\n"));
+
+        // TODO: Great case for components v2
+
+        build.addField("element.profile.topdonor", topDonor, true);
+        build.addField("element.profile.topreceiver", topReceiver, true);
+        build.addBlankField(false);
+        build.addField("element.profile.mostgivenchannel", mostGivenChannel, true);
+        build.addField("element.profile.mostreceivedchannel", mostReceivedChannel, true);
     }
 
     public Optional<Member> resolveMember(Guild guild) {

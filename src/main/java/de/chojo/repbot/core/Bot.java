@@ -201,7 +201,7 @@ public class Bot {
                               new Profile(guilds, configuration, roleAssigner),
                               roles,
                               new RepSettings(guilds, configuration),
-                              new Top(guilds),
+                              new Top(guilds, configuration),
                               Thankwords.of(messageAnalyzer, guilds),
                               scan,
                               new Locale(guilds),
@@ -218,7 +218,7 @@ public class Bot {
                               new RepAdmin(guilds, configuration, roleAssigner),
                               new Messages(guilds),
                               new BotAdmin(guilds, configuration, statistic),
-                              new Ranking(guilds))
+                              new Ranking(guilds, configuration))
                       .withMessages(new MessageLog(guilds))
                       .withUsers(new UserReceived(guilds, configuration),
                               new UserDonated(guilds, configuration))

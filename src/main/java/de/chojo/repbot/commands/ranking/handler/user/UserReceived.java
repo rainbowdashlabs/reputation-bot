@@ -6,6 +6,7 @@
 package de.chojo.repbot.commands.ranking.handler.user;
 
 import de.chojo.repbot.commands.ranking.handler.BaseTop;
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
 import de.chojo.repbot.dao.pagination.Ranking;
@@ -17,8 +18,8 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import java.util.Optional;
 
 public class UserReceived extends BaseTop {
-    public UserReceived(GuildRepository guildRepository) {
-        super(guildRepository);
+    public UserReceived(GuildRepository guildRepository, Configuration configuration) {
+        super(guildRepository, configuration);
     }
 
     @Override

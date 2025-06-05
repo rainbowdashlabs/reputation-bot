@@ -8,6 +8,7 @@ package de.chojo.repbot.config.elements.sku;
 import de.chojo.repbot.config.elements.sku.feature.AdvancedRankings;
 import de.chojo.repbot.config.elements.sku.feature.AnalyzerLog;
 import de.chojo.repbot.config.elements.sku.feature.Autopost;
+import de.chojo.repbot.config.elements.sku.feature.DetailedProfile;
 import de.chojo.repbot.config.elements.sku.feature.LocaleOverrides;
 import de.chojo.repbot.config.elements.sku.feature.ReputationCategories;
 import de.chojo.repbot.config.elements.sku.feature.ReputationLog;
@@ -19,6 +20,7 @@ public class SKUFeatures {
     LocaleOverrides localeOverrides = new LocaleOverrides();
     Autopost autopost = new Autopost();
     AdvancedRankings advancedRankings = new AdvancedRankings();
+    DetailedProfile detailedProfile = new DetailedProfile();
 
     public ReputationLog reputationLog() {
         return reputationLog;
@@ -42,5 +44,9 @@ public class SKUFeatures {
 
     public AdvancedRankings advancedRankings() {
         return advancedRankings;
+    }
+
+    public DetailedProfile detailedProfile() {
+        return detailedProfile;
     }
 }

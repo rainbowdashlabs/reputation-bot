@@ -22,6 +22,10 @@ public record RankingEntry(long rank, long userId, long value) {
         return "`" + rank + "` **|** " + MentionUtil.user(userId) + " ➜ " + value;
     }
 
+    public String simpleString() {
+        return "%s ➜ %d".formatted(MentionUtil.user(userId), value);
+    }
+
     public static RankingEntry buildReceivedRanking(Row rs) throws SQLException {
         return new RankingEntry(rs.getLong("rank"),
                 rs.getLong("user_id"),
