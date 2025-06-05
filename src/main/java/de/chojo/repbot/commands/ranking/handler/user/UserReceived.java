@@ -3,7 +3,7 @@
  *
  *     Copyright (C) RainbowDashLabs and Contributor
  */
-package de.chojo.repbot.commands.ranking.handler.personal;
+package de.chojo.repbot.commands.ranking.handler.user;
 
 import de.chojo.repbot.commands.ranking.handler.BaseTop;
 import de.chojo.repbot.dao.access.guild.RepGuild;
@@ -16,8 +16,8 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 import java.util.Optional;
 
-public class PersonalReceived extends BaseTop {
-    public PersonalReceived(GuildRepository guildRepository) {
+public class UserReceived extends BaseTop {
+    public UserReceived(GuildRepository guildRepository) {
         super(guildRepository);
     }
 

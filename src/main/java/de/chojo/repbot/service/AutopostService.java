@@ -73,7 +73,7 @@ public class AutopostService {
         if (guild.isById()) return;
         Ranking guildRanking = guild.reputation().ranking().received().defaultRanking(20);
         List<RankingEntry> ranking = guildRanking.page(0);
-        MessageEditData messageEditData = BaseTop.buildRanking(ranking, guildRanking, guild.guild(), localizer.context(LocaleProvider.guild(guild.guild())));
+        MessageEditData messageEditData = BaseTop.buildRanking(ranking, guildRanking, localizer.context(LocaleProvider.guild(guild.guild())));
         Autopost autopost = guild.settings().autopost();
         RefreshType refreshType = autopost.refreshType();
         TextChannel channel = guild.guild().getTextChannelById(autopost.channelId());
