@@ -25,12 +25,13 @@ public class Create implements SlashHandler {
         if (ownerid == null) {
             ownerid = event.getGuild().getIdLong();
         }
+        event.deferReply(true).queue();
         Entitlement complete = event.getJDA()
                                     .createTestEntitlement(event.getOption("sku", OptionMapping::getAsLong),
                                             ownerid,
                                             TestEntitlementCreateAction.OwnerType.GUILD_SUBSCRIPTION)
                                     .complete();
-        event.reply("Entitlement granted").queue();
+        event.getHook().editOriginal("Entitlement granted").queue();
     }
 
     @Override

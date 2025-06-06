@@ -13,6 +13,8 @@ import de.chojo.repbot.dao.provider.GuildRepository;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
+import java.util.Objects;
+
 public class Set implements SlashHandler {
     private static final int MAX_NAME_LENGTH = 16;
     private final GuildRepository guildRepository;

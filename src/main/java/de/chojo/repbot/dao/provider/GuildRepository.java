@@ -16,6 +16,7 @@ import de.chojo.repbot.dao.access.guild.settings.sub.autopost.RefreshInterval;
 import de.chojo.repbot.dao.pagination.GuildList;
 import de.chojo.sadu.postgresql.types.PostgreSqlTypes;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import org.slf4j.Logger;
 
 import java.util.List;

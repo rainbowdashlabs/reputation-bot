@@ -117,7 +117,8 @@ public class Settings implements GuildHolder {
                     emoji_debug,
                     stack_roles,
                     reputation_mode,
-                    reset_date
+                    reset_date,
+                    system_channel_id
                 FROM
                     guild_settings
                 WHERE guild_id = ?;

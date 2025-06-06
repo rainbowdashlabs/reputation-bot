@@ -35,6 +35,7 @@ import de.chojo.repbot.commands.setup.Setup;
 import de.chojo.repbot.commands.thankwords.Thankwords;
 import de.chojo.repbot.commands.top.Top;
 import de.chojo.repbot.config.Configuration;
+import de.chojo.repbot.exceptions.MissingSupportTier;
 import de.chojo.repbot.listener.LogListener;
 import de.chojo.repbot.listener.MessageListener;
 import de.chojo.repbot.listener.ReactionListener;
@@ -43,6 +44,7 @@ import de.chojo.repbot.listener.VoiceStateListener;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;
 import de.chojo.repbot.service.AnalyzerService;
 import de.chojo.repbot.service.AutopostService;
+import de.chojo.repbot.service.ChatSupportService;
 import de.chojo.repbot.service.GdprService;
 import de.chojo.repbot.service.MetricService;
 import de.chojo.repbot.service.PremiumService;
@@ -88,6 +90,7 @@ public class Bot {
     private Statistic statistic;
     private GdprService gdprService;
     private AutopostService autopostService;
+    private PremiumService premiumService;
 
     private Bot(Data data, Threading threading, Configuration configuration, Localization localization) {
         this.data = data;
@@ -187,6 +190,7 @@ public class Bot {
         AnalyzerService.create(threading.repBotWorker(), data.analyzer());
         MetricService.create(threading.repBotWorker(), data.metrics());
         autopostService = AutopostService.create(shardManager, data.guilds(), threading, localization.localizer());
+        premiumService = PremiumService.of(guilds, threading, configuration, localization.localizer(), shardManager);
     }
 
     private void initInteractions() {
@@ -215,7 +219,7 @@ public class Bot {
                               new Dashboard(guilds),
                               new AbuseProtection(guilds),
                               new Debug(guilds),
-                              new RepAdmin(guilds, configuration, roleAssigner),
+                              new RepAdmin(guilds, configuration, roleAssigner, premiumService),
                               new Messages(guilds),
                               new BotAdmin(guilds, configuration, statistic),
                               new Ranking(guilds, configuration))
@@ -230,6 +234,12 @@ public class Bot {
                                       localizer.context(LocaleProvider.guild(context.guild())), configuration);
                               return;
                           }
+
+                          if (throwable instanceof MissingSupportTier ex) {
+                              premiumService.handleMissingSupportTier(context, ex);
+                              return;
+                          }
+
                           log.error(LogNotify.NOTIFY_ADMIN, "Command execution of {} failed\n{}",
                                   context.interaction().meta().name(), context.args(), throwable);
                       })
@@ -255,7 +265,7 @@ public class Bot {
         var logListener = LogListener.create(threading.repBotWorker());
         var stateListener = StateListener.of(localizer, guilds, configuration, data.metrics());
         var roleUpdater = RoleUpdater.create(guilds, roleAssigner, shardManager, threading.repBotWorker());
-        PremiumService premiumService = PremiumService.of(guilds, threading);
+        ChatSupportService chatSupportService = new ChatSupportService(configuration, shardManager);
 
         shardManager.addEventListener(
                 reactionListener,
@@ -265,7 +275,8 @@ public class Bot {
                 logListener,
                 stateListener,
                 roleUpdater,
-                premiumService);
+                premiumService,
+                chatSupportService);
     }
 
     public ShardManager shardManager() {

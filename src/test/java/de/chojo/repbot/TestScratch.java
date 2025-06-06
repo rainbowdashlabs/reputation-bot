@@ -6,17 +6,31 @@
 package de.chojo.repbot;
 
 
+import de.chojo.repbot.core.Threading;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 public class TestScratch {
     @Test
-    void test() {
-        Stream.of(List.of("a", "b", "c"), Collections.emptyList(), List.of("d", "e", "f"))
-                .flatMap(List::stream)
-                .forEach(System.out::println);
+    @Disabled
+    void threadingException() throws InterruptedException {
+        Threading threading = new Threading();
+
+        threading.repBotWorker().submit(() ->{
+            throw new  RuntimeException();
+        });
+
+        threading.repBotWorker().schedule(() ->{
+            throw new  RuntimeException();
+        }, 10, TimeUnit.SECONDS);
+
+        Thread.sleep(15000);
+
+        threading.repBotWorker().shutdown();
     }
 }

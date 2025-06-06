@@ -36,7 +36,7 @@ import static de.chojo.sadu.queries.converter.StandardValueConverter.INSTANT_TIM
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class RepUser implements MemberHolder {
-    private static final String PROFILE = QueryLoader.loadQuery("rep_user", "profile");
+    private static final String PROFILE = QueryLoader.loadQuery("repuser", "profile");
     private static final Logger log = getLogger(RepUser.class);
     private final Reputation reputation;
     private final Gdpr gdpr;

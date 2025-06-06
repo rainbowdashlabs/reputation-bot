@@ -26,7 +26,7 @@ spotless {
 
 dependencies {
     //discord
-    implementation("de.chojo", "cjda-util", "2.11.0+jda-5.3.2-20250605.230753-11") {
+    implementation("de.chojo", "cjda-util", "2.11.0+jda-5.3.2-20250606.213438-13") {
         exclude(group = "club.minnced", module = "opus-java")
     }
 
@@ -54,7 +54,7 @@ dependencies {
     testImplementation("org.knowm.xchart", "xchart", "3.8.8")
     testImplementation(testlibs.sadu.testing)
     testImplementation(testlibs.bundles.database.postgres)
-    testImplementation(testlibs.slf4j.noop)
+    testImplementation(testlibs.slf4j.simple)
 }
 
 java {

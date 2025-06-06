@@ -10,14 +10,26 @@ import de.chojo.repbot.config.elements.sku.SKUFeatures;
 
 @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal", "CanBeFinal"})
 public class SKU {
-    de.chojo.jdautil.interactions.premium.SKUConfiguration interactions = new SKUConfiguration();
+    SKUConfiguration interactions = new SKUConfiguration();
     SKUFeatures features = new SKUFeatures();
 
-    public de.chojo.jdautil.interactions.premium.SKUConfiguration interactions() {
+    int subscriptionErrorMessageHours = 36;
+    int errorThresholdBlock = 10;
+
+
+    public SKUConfiguration interactions() {
         return interactions;
     }
 
     public SKUFeatures features() {
         return features;
+    }
+
+    public int subscriptionErrorMessageHours() {
+        return subscriptionErrorMessageHours;
+    }
+
+    public int errorThresholdBlock() {
+        return errorThresholdBlock;
     }
 }
