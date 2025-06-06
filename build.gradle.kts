@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "1.15.2"
+version = "1.16.0"
 
 repositories {
     mavenLocal()
