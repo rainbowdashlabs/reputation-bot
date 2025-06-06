@@ -54,7 +54,7 @@ dependencies {
     testImplementation("org.knowm.xchart", "xchart", "3.8.8")
     testImplementation(testlibs.sadu.testing)
     testImplementation(testlibs.bundles.database.postgres)
-    testImplementation(testlibs.slf4j.noop)
+    testImplementation(testlibs.slf4j.simple)
 }
 
 java {
