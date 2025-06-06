@@ -26,6 +26,7 @@ import javax.annotation.Nullable;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -210,6 +211,7 @@ public class RepUser implements MemberHolder {
      */
     public RepProfile profile() {
         var mode = reputation.repGuild().settings().general().reputationMode();
+        LocalDate resetDate = reputation.repGuild().settings().general().resetDate();
         // We probably don't want to cache the profile. There are just too many factors which can change the user reputation.
         @Language("postgresql")
         String query;
@@ -223,6 +225,7 @@ public class RepUser implements MemberHolder {
                             FROM
                                 reputation_offset o
                             WHERE o.added > :date_init
+                              AND (added > :reset_date OR :reset_date IS NULL)
                               AND guild_id = :guild_id
                             GROUP BY o.user_id
                                ),
@@ -235,6 +238,7 @@ public class RepUser implements MemberHolder {
                             FROM
                                 reputation_log r
                             WHERE r.received > :date_init
+                              AND (received > :reset_date OR :reset_date IS NULL)
                               AND guild_id = :guild_id
                                ),
                         rep_count
@@ -326,7 +330,10 @@ public class RepUser implements MemberHolder {
                     """;
 
         return query(query)
-                .single(call().bind("guild_id", guildId()).bind("user_id",userId()).bind("date_init", mode.dateInit(), INSTANT_TIMESTAMP))
+                .single(call().bind("guild_id", guildId())
+                              .bind("user_id",userId())
+                              .bind("date_init", mode.dateInit(), INSTANT_TIMESTAMP)
+                        .bind("reset_date", resetDate))
                 .map(row -> RepProfile.buildProfile(this, row))
                 .first()
                 .orElseGet(() -> RepProfile.empty(this, user()));
