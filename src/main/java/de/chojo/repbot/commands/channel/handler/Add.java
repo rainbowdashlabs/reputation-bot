@@ -25,6 +25,17 @@ public class Add extends BaseChannelModifier {
 
     @Override
     public void textChannel(SlashCommandInteractionEvent event, EventContext context, Channels channels, StandardGuildChannel channel) {
+        int maxChannel = Integer.MAX_VALUE;
+        if (Premium.isNotEntitled(event, configuration.skus().features().reputationChannel().moreChannel())) {
+            maxChannel = configuration.skus().features().reputationChannel().defaultChannel();
+        }
+        int size = channels.channels().size();
+
+        if (size > maxChannel) {
+            Premium.replyPremium(event, context, configuration.skus().features().reputationChannel().moreChannel());
+            return;
+        }
+
         channels.add(channel);
         event.getHook().editOriginal(
                 context.localize("command.channel.add.message.added",
@@ -34,13 +45,13 @@ public class Add extends BaseChannelModifier {
 
     @Override
     public void category(SlashCommandInteractionEvent event, EventContext context, Channels channels, Category category) {
-        int defaultMax = Integer.MAX_VALUE;
+        int maxCategories = Integer.MAX_VALUE;
         if (Premium.isNotEntitled(event, configuration.skus().features().reputationCategories().moreCategories())) {
-            defaultMax = configuration.skus().features().reputationCategories().defaultCategories();
+            maxCategories = configuration.skus().features().reputationCategories().defaultCategories();
         }
-        int size = channels.channelIds().size();
+        int size = channels.categories().size();
 
-        if (defaultMax <= size) {
+        if (size > maxCategories) {
             Premium.replyPremium(event, context, configuration.skus().features().reputationCategories().moreCategories());
             return;
         }

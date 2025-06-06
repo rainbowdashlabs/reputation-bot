@@ -10,6 +10,7 @@ import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.sadu.mapper.wrapper.Row;
 import de.chojo.sadu.queries.api.call.Call;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,18 +31,20 @@ public class General implements GuildHolder {
     private boolean emojiDebug;
     private ReputationMode reputationMode;
     private LocalDate resetDate;
+    private long systemChannel;
 
     public General(Settings settings) {
-        this(settings, null, true, false, ReputationMode.TOTAL, null);
+        this(settings, null, true, false, ReputationMode.TOTAL, null,0);
     }
 
-    public General(Settings settings, DiscordLocale language, boolean emojiDebug, boolean stackRoles, ReputationMode reputationMode, LocalDate resetDate) {
+    public General(Settings settings, DiscordLocale language, boolean emojiDebug, boolean stackRoles, ReputationMode reputationMode, LocalDate resetDate, long systemChannel) {
         this.settings = settings;
         this.language = language;
         this.emojiDebug = emojiDebug;
         this.stackRoles = new AtomicBoolean(stackRoles);
         this.reputationMode = reputationMode;
         this.resetDate = resetDate;
+        this.systemChannel = systemChannel;
     }
 
     public static General build(Settings settings, Row rs) throws SQLException {
@@ -51,7 +54,8 @@ public class General implements GuildHolder {
                 rs.getBoolean("emoji_debug"),
                 rs.getBoolean("stack_roles"),
                 ReputationMode.valueOf(rs.getString("reputation_mode")),
-                Optional.ofNullable(rs.getDate("reset_date")).map(Date::toLocalDate).orElse(null));
+                Optional.ofNullable(rs.getDate("reset_date")).map(Date::toLocalDate).orElse(null),
+                rs.getLong("system_channel_id"));
     }
 
     public boolean language(@Nullable DiscordLocale language) {
@@ -66,6 +70,14 @@ public class General implements GuildHolder {
         var result = set("emoji_debug", stmt -> stmt.bind(emojiDebug));
         if (result) {
             this.emojiDebug = emojiDebug;
+        }
+        return result;
+    }
+
+    public boolean systemChannel(long channel) {
+        var result = set("system_channel_id", stmt -> stmt.bind(channel));
+        if (result) {
+            this.systemChannel = channel;
         }
         return result;
     }
@@ -110,6 +122,10 @@ public class General implements GuildHolder {
         return stackRoles;
     }
 
+    public long systemChannel() {
+        return systemChannel;
+    }
+
     public LocalDate resetDate() {
         return resetDate;
     }
@@ -145,7 +161,8 @@ public class General implements GuildHolder {
                 Emoji Debug: %s
                 Language: %s
                 Reputation Mode: %s
+                System Channel: %s
                 """.stripIndent()
-                   .formatted(stackRoles.get(), emojiDebug, language != null ? language.getLanguageName() : guild().getLocale().getLanguageName(), reputationMode.name());
+                   .formatted(stackRoles.get(), emojiDebug, language != null ? language.getLanguageName() : guild().getLocale().getLanguageName(), reputationMode.name(), systemChannel);
     }
 }

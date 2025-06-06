@@ -7,16 +7,20 @@ package de.chojo.repbot.commands.channel.handler;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.util.Completion;
+import de.chojo.jdautil.util.Premium;
 import de.chojo.jdautil.wrapper.EventContext;
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class ListType implements SlashHandler {
     private final GuildRepository guildRepository;
+    private final Configuration configuration;
 
-    public ListType(GuildRepository guildRepository) {
+    public ListType(GuildRepository guildRepository, Configuration configuration) {
         this.guildRepository = guildRepository;
+        this.configuration = configuration;
     }
 
     @Override
@@ -28,7 +32,13 @@ public class ListType implements SlashHandler {
                  .queue();
             return;
         }
+
         var whitelist = "whitelist".equalsIgnoreCase(event.getOption("type").getAsString());
+
+        if(!whitelist && Premium.isNotEntitled(event, configuration.skus().features().channelBlacklist().allow())) {
+            Premium.replyPremium(event, context, configuration.skus().features().channelBlacklist().allow());
+            return;
+        }
 
         event.reply(context.localize(
                      channels.listType(whitelist) ? "command.channel.listType.message.whitelist" : "command.channel.listType.message.blacklist"))

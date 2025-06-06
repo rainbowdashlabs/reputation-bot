@@ -50,6 +50,7 @@ public final class RemovalTask {
                 conn.query("DELETE FROM reputation_log WHERE receiver_id = ?;").single(call().bind(userId())).delete();
                 conn.query("UPDATE reputation_log SET donor_id = NULL WHERE donor_id = ?;").single(call().bind(userId())).update();
                 conn.query("DELETE FROM reputation_offset WHERE user_id = ?;").single(call().bind(userId())).delete();
+                conn.query("DELETE FROM support_threads WHERE user_id = ?;").single(call().bind(userId())).delete();
                 log.trace("Removed Data of user {}", userId());
             } else {
                 // Remove user from guild

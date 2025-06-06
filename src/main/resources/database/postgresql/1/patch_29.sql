@@ -83,3 +83,23 @@ DROP VIEW IF EXISTS repbot_schema.user_reputation_week;
 DROP VIEW IF EXISTS repbot_schema.user_reputation_month;
 DROP VIEW IF EXISTS repbot_schema.truncated_reputation_log;
 DROP VIEW IF EXISTS repbot_schema.truncated_reputation_offset;
+
+ALTER TABLE repbot_schema.guild_settings
+    ADD COLUMN IF NOT EXISTS system_channel_id BIGINT;
+
+CREATE TABLE repbot_schema.subscription_error (
+    guild_id  BIGINT                  NOT NULL,
+    type      TEXT                    NOT NULL,
+    last_send TIMESTAMP DEFAULT now() NOT NULL,
+    count     INTEGER   DEFAULT 1     NOT NULL,
+    CONSTRAINT subscription_error
+        PRIMARY KEY (guild_id, type)
+);
+
+CREATE TABLE repbot_schema.support_threads (
+    user_id   BIGINT NOT NULL
+        CONSTRAINT support_threads_pk
+            PRIMARY KEY,
+    thread_id BIGINT NOT NULL
+);
+
