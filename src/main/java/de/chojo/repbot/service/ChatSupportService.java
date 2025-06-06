@@ -1,3 +1,8 @@
+/*
+ *     SPDX-License-Identifier: AGPL-3.0-only
+ *
+ *     Copyright (C) RainbowDashLabs and Contributor
+ */
 package de.chojo.repbot.service;
 
 import de.chojo.repbot.config.Configuration;
@@ -33,7 +38,7 @@ public class ChatSupportService extends ListenerAdapter {
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (event.getMessage().getAuthor().isBot()) return;
         if (!event.isFromGuild()) {
-            ThreadChannel channel = getChannel(event.getAuthor());
+            ThreadChannel channel = getThread(event.getAuthor());
             if (channel == null) return;
             channel.sendMessage(reconstruct(event.getMessage())).queue();
         } else if (event.getGuild().getIdLong() == configuration.baseSettings().botGuild()
@@ -56,13 +61,24 @@ public class ChatSupportService extends ListenerAdapter {
         return builder.build();
     }
 
-    private ThreadChannel getChannel(User user) {
+    private ThreadChannel getThread(User user) {
         Long id = query("SELECT thread_id FROM support_threads WHERE user_id = ?")
                 .single(call().bind(user.getIdLong()))
                 .mapAs(Long.class)
                 .first()
                 .orElseGet(() -> createThread(user));
-        return home().getThreadChannelById(id);
+        ThreadChannel thread = home().getThreadChannelById(id);
+        if(thread == null) return home().getThreadChannelById(createThread(user));
+
+        if (thread.isLocked() || thread.isArchived()) {
+            query("DELETE FROM support_threads WHERE user_id = ?")
+                    .single(call().bind(user.getIdLong()))
+                    .delete();
+            thread.getManager().setLocked(true).complete();
+            return getThread(user);
+        }
+
+        return thread;
     }
 
     private Optional<User> getUser(ThreadChannel channel) {
@@ -82,7 +98,7 @@ public class ChatSupportService extends ListenerAdapter {
 
         user.openPrivateChannel().complete().sendMessage("A new support chat was opened. Your request has been sent to the support team.").queue();
 
-        query("INSERT INTO support_threads (user_id, thread_id) VALUES (?, ?) ON CONFLICT(user_id) DO NOTHING;")
+        query("INSERT INTO support_threads (user_id, thread_id) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET thread_id = EXCLUDED.thread_id;")
                 .single(call().bind(user.getIdLong()).bind(thread.getIdLong()))
                 .insert();
 

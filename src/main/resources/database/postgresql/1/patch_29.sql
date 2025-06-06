@@ -93,7 +93,7 @@ CREATE TABLE repbot_schema.subscription_error (
     last_send     TIMESTAMP DEFAULT now() NOT NULL,
     count         INTEGER   DEFAULT 1     NOT NULL,
     date_inserted TIMESTAMP DEFAULT now() NOT NULL,
-    CONSTRAINT subscription_error
+    CONSTRAINT subscription_error_pk
         PRIMARY KEY (guild_id, type)
 );
 
