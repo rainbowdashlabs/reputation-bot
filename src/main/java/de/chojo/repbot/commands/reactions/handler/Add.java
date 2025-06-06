@@ -7,7 +7,9 @@ package de.chojo.repbot.commands.reactions.handler;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.Replacement;
+import de.chojo.jdautil.util.Premium;
 import de.chojo.jdautil.wrapper.EventContext;
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
@@ -18,13 +20,20 @@ import static de.chojo.repbot.commands.reactions.util.EmojiCheck.checkEmoji;
 
 public class Add implements SlashHandler {
     private final GuildRepository guildRepository;
+    private final Configuration configuration;
 
-    public Add(GuildRepository guildRepository) {
+    public Add(GuildRepository guildRepository, Configuration configuration) {
         this.guildRepository = guildRepository;
+        this.configuration = configuration;
     }
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
+        if (Premium.isNotEntitled(event, configuration.skus().features().additionalEmojis().additionalEmojis())) {
+            Premium.replyPremium(event, context, configuration.skus().features().additionalEmojis().additionalEmojis());
+            return;
+        }
+
         var emote = event.getOption("emote").getAsString();
         var message = event.reply(context.localize("command.reactions.message.checking"))
                            .flatMap(InteractionHook::retrieveOriginal).complete();
