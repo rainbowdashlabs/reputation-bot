@@ -6,7 +6,9 @@
 package de.chojo.repbot.core;
 
 import de.chojo.jdautil.localization.Localizer;
+import de.chojo.jdautil.util.Premium;
 import de.chojo.repbot.config.Configuration;
+import de.chojo.repbot.service.PremiumService;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 
 import java.util.Optional;
@@ -36,8 +38,8 @@ public class Localization {
                                      DiscordLocale.RUSSIAN)
                              .withLanguageProvider(guild -> data.guilds().guild(guild).settings().general().language())
                              .withGuildLocaleCodeProvider((guild, code) -> {
-                                 if ("words.reputation".equals(code)
-                                         && !configuration.skus().features().localeOverrides().reputationNameOverride().isEntitled(data.guilds().guild(guild).subscriptions())) {
+                                 if (!"words.reputation".equals(code)) return Optional.empty();
+                                 if (Premium.isNotEntitled(data.guilds().guild(guild).subscriptions(), configuration.skus().features().localeOverrides().reputationNameOverride())) {
                                      return Optional.empty();
                                  }
                                  return data.guilds().guild(guild).localeOverrides().getOverride(code);

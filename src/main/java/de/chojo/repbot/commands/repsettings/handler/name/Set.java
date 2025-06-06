@@ -32,10 +32,6 @@ public class Set implements SlashHandler {
             return;
         }
         String name = event.getOption("name", OptionMapping::getAsString);
-        Boolean emoji = Objects.requireNonNullElse(event.getOption("emoji", OptionMapping::getAsBoolean), false);
-        if(emoji){
-            name = ":%s:".formatted(name);
-        }
         guildRepository.guild(event.getGuild()).localeOverrides().setOverride("words.reputation", name);
         event.reply(eventContext.localize("command.repsettings.name.set.message.set")).setEphemeral(true).queue();
 

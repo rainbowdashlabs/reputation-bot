@@ -12,7 +12,7 @@ public class QueryLoader {
         String path = "queries/" + String.join("/", names) + ".sql";
         try {
             return new String(QueryLoader.class.getClassLoader().getResourceAsStream(path).readAllBytes());
-        } catch (IOException e) {
+        } catch (IOException | NullPointerException e) {
             throw new RuntimeException("Could not load query: " + path, e);
         }
     }

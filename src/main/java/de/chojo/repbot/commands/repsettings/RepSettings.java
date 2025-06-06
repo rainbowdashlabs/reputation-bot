@@ -33,8 +33,7 @@ public class RepSettings extends SlashCommand {
                 .group(group("name", "command.repsettings.name.description")
                         .subCommand(sub("set", "command.repsettings.name.set.description")
                                 .handler(new Set(guildRepository, configuration))
-                                .argument(text("name", "command.repsettings.name.set.description").minLength(1).maxLength(16).asRequired())
-                                .argument(bool("emoji", "command.repsettings.name.set.emoji.description")))
+                                .argument(text("name", "command.repsettings.name.set.options.name.description").minLength(1).maxLength(16).asRequired()))
                         .subCommand(sub("reset", "command.repsettings.name.reset.description")
                                 .handler(new Reset(guildRepository)))));
     }
