@@ -67,7 +67,7 @@ WITH
                 SELECT
                     1
                 FROM
-                    repbot_schema.cleanup_schedule clean
+                    cleanup_schedule clean
                 WHERE guild_id = :guild_id
                            )
            ),
