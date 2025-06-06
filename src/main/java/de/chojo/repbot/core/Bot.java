@@ -211,7 +211,7 @@ public class Bot {
                               Setup.of(guilds, configuration),
                               new Gdpr(data.gdpr()),
                               new Prune(gdprService),
-                              new Reactions(guilds),
+                              new Reactions(guilds, configuration),
                               new Dashboard(guilds),
                               new AbuseProtection(guilds),
                               new Debug(guilds),

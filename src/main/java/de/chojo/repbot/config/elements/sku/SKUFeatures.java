@@ -5,6 +5,7 @@
  */
 package de.chojo.repbot.config.elements.sku;
 
+import de.chojo.repbot.config.elements.sku.feature.AdditionalEmojis;
 import de.chojo.repbot.config.elements.sku.feature.AdvancedRankings;
 import de.chojo.repbot.config.elements.sku.feature.AnalyzerLog;
 import de.chojo.repbot.config.elements.sku.feature.Autopost;
@@ -23,6 +24,7 @@ public class SKUFeatures {
     AdvancedRankings advancedRankings = new AdvancedRankings();
     DetailedProfile detailedProfile = new DetailedProfile();
     LogChannel logChannel = new LogChannel();
+    AdditionalEmojis additionalEmojis = new AdditionalEmojis();
 
     public ReputationLog reputationLog() {
         return reputationLog;
@@ -54,5 +56,9 @@ public class SKUFeatures {
 
     public LogChannel logChannel() {
         return logChannel;
+    }
+
+    public AdditionalEmojis additionalEmojis() {
+        return additionalEmojis;
     }
 }
