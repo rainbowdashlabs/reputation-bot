@@ -19,7 +19,6 @@ import java.util.function.Function;
 import static de.chojo.jdautil.localization.util.Replacement.create;
 
 public enum SupporterFeature {
-    // TODO: Change to channel
     CHANNEL_LIMIT_EXCEEDED(
             (sku, repGuild) -> List.of(create("ALLOWED", sku.features().reputationChannel().defaultChannel()), create("COUNT", repGuild.settings().thanking().channels().categories().size())),
             (sku, repGuild) -> repGuild.subscriptions().isEntitled(sku.features().reputationChannel().moreChannel()),
@@ -40,7 +39,6 @@ public enum SupporterFeature {
             (sku, repGuild) -> repGuild.guild().getSelfMember().getNickname() != null,
             sku -> sku.features().nickname().allow());
 
-    private final SubscriptionError first;
     private final BiFunction<SKU, RepGuild, List<Replacement>> replacements;
     private final BiFunction<SKU, RepGuild, Boolean> isEntitled;
     private final BiFunction<SKU, RepGuild, Boolean> isApplicable;
@@ -51,11 +49,10 @@ public enum SupporterFeature {
         this.isEntitled = isEntitled;
         this.isApplicable = isApplicable;
         this.skus = skus;
-        first = new SubscriptionError(this, Instant.EPOCH, 0);
     }
 
     public SubscriptionError first() {
-        return first;
+        return new SubscriptionError(this, Instant.now(), Instant.EPOCH, 0);
     }
 
     public List<Replacement> replacements(SKU sku, RepGuild repGuild) {

@@ -88,10 +88,11 @@ ALTER TABLE repbot_schema.guild_settings
     ADD COLUMN IF NOT EXISTS system_channel_id BIGINT;
 
 CREATE TABLE repbot_schema.subscription_error (
-    guild_id  BIGINT                  NOT NULL,
-    type      TEXT                    NOT NULL,
-    last_send TIMESTAMP DEFAULT now() NOT NULL,
-    count     INTEGER   DEFAULT 1     NOT NULL,
+    guild_id      BIGINT                  NOT NULL,
+    type          TEXT                    NOT NULL,
+    last_send     TIMESTAMP DEFAULT now() NOT NULL,
+    count         INTEGER   DEFAULT 1     NOT NULL,
+    date_inserted TIMESTAMP DEFAULT now() NOT NULL,
     CONSTRAINT subscription_error
         PRIMARY KEY (guild_id, type)
 );

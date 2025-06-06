@@ -219,7 +219,7 @@ public class Bot {
                               new Dashboard(guilds),
                               new AbuseProtection(guilds),
                               new Debug(guilds),
-                              new RepAdmin(guilds, configuration, roleAssigner),
+                              new RepAdmin(guilds, configuration, roleAssigner, premiumService),
                               new Messages(guilds),
                               new BotAdmin(guilds, configuration, statistic),
                               new Ranking(guilds, configuration))

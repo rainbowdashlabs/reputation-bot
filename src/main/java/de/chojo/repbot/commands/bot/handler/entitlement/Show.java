@@ -24,7 +24,7 @@ public class Show implements SlashHandler {
 
         List<Entitlement> complete = slash.getJDA().retrieveEntitlements().guild(guildId).excludeEnded(true).complete();
         String collect = complete.stream()
-                                 .map(ent -> "%s %s till: %s (Consumed: %s) (%s)".formatted(ent.getSkuId(), ent.getType(), ent.getTimeEnding(), ent.isConsumed(), ent.getId()))
+                                 .map(ent -> "SKU: %s\nType: %s\nTill: %s (Consumed: %s)\nEntitlement Id: %s".formatted(ent.getSkuId(), ent.getType(), ent.getTimeEnding(), ent.isConsumed(), ent.getId()))
                                  .collect(Collectors.joining());
         slash.reply(collect).queue();
     }
