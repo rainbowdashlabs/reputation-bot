@@ -57,6 +57,15 @@ public class Subscriptions implements GuildHolder, SkuMeta {
         return errorMessages.values().stream().mapToInt(SubscriptionError::count).max().orElse(0);
     }
 
+    public void deleteSubscription(Subscription subscription) {
+        query("""
+                DELETE FROM subscriptions WHERE id = ? AND sku = ?;
+                """)
+                .single(call().bind(subscription.id()).bind(subscription.skuId()))
+                .delete();
+        subscriptions().remove(subscription);
+    }
+
     private synchronized Map<SupporterFeature, SubscriptionError> errorMessages() {
         if (errorMessages == null) {
             errorMessages = query("""
@@ -64,7 +73,8 @@ public class Subscriptions implements GuildHolder, SkuMeta {
                         guild_id,
                         type,
                         last_send,
-                        count
+                        count,
+                        date_inserted
                     FROM
                         subscription_error
                     WHERE guild_id = ?
@@ -90,7 +100,7 @@ public class Subscriptions implements GuildHolder, SkuMeta {
         errorMessages().remove(error);
     }
 
-    public List<SubscriptionError> getExpiredErrors(int hours){
+    public List<SubscriptionError> getExpiredErrors(int hours) {
         return errorMessages().values()
                               .stream()
                               .filter(e -> e.lastSend().plus(hours, ChronoUnit.HOURS).isAfter(Instant.now()))
@@ -109,7 +119,7 @@ public class Subscriptions implements GuildHolder, SkuMeta {
                     SET
                         last_send = now(),
                         count     = excluded.count + 1
-                RETURNING guild_id, type, last_send, count
+                RETURNING guild_id, type, last_send, count, date_inserted
                 """)
                 .single(call().bind(guildId()).bind(error))
                 .map(SubscriptionError::build)

@@ -44,7 +44,10 @@ public enum SupporterFeature {
     private final BiFunction<SKU, RepGuild, Boolean> isApplicable;
     private final Function<SKU, SKUEntry> skus;
 
-    SupporterFeature(BiFunction<SKU, RepGuild, List<Replacement>> replacements, BiFunction<SKU, RepGuild, Boolean> isEntitled, BiFunction<SKU, RepGuild, Boolean> isApplicable, Function<SKU, SKUEntry> skus) {
+    SupporterFeature(BiFunction<SKU, RepGuild, List<Replacement>> replacements,
+                     BiFunction<SKU, RepGuild, Boolean> isEntitled,
+                     BiFunction<SKU, RepGuild, Boolean> isApplicable,
+                     Function<SKU, SKUEntry> skus) {
         this.replacements = replacements;
         this.isEntitled = isEntitled;
         this.isApplicable = isApplicable;

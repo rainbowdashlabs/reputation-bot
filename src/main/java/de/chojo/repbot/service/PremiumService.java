@@ -27,6 +27,7 @@ import net.dv8tion.jda.api.entities.Entitlement.EntitlementType;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.entitlement.EntitlementCreateEvent;
+import net.dv8tion.jda.api.events.entitlement.EntitlementDeleteEvent;
 import net.dv8tion.jda.api.events.entitlement.EntitlementUpdateEvent;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateNicknameEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -40,6 +41,7 @@ import org.slf4j.Logger;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -67,7 +69,7 @@ public class PremiumService extends ListenerAdapter {
         for (List<RepGuild> guild : guildRepository.guilds(200)) {
             for (RepGuild repGuild : guild) {
                 for (SupporterFeature feature : SupporterFeature.values()) {
-                    checkForTier(repGuild.guild(), feature);
+                    checkForTier(repGuild.load(shardManager).guild(), feature);
                 }
             }
         }
@@ -88,6 +90,12 @@ public class PremiumService extends ListenerAdapter {
     @Override
     public void onEntitlementUpdate(@NotNull EntitlementUpdateEvent event) {
         updateEntitlement(event.getEntitlement());
+    }
+
+    @Override
+    public void onEntitlementDelete(@NotNull EntitlementDeleteEvent event) {
+        guildRepository.byId(event.getEntitlement().getGuildIdLong()).subscriptions()
+                       .deleteSubscription(Subscription.fromEntitlement(event.getEntitlement()));
     }
 
     @Override
@@ -118,7 +126,7 @@ public class PremiumService extends ListenerAdapter {
     }
 
     public void checkForTier(Guild guild, SupporterFeature type) {
-        if(guild == null) return;
+        if (guild == null) return;
         RepGuild repGuild = guildRepository.guild(guild);
         Subscriptions subscriptions = repGuild.subscriptions();
         if (type.isEntitled(skus(), repGuild)) {
@@ -156,7 +164,7 @@ public class PremiumService extends ListenerAdapter {
             return;
         }
 
-        List<Replacement> replacements = type.replacements(skus, settings.repGuild());
+        List<Replacement> replacements = new ArrayList<>(type.replacements(skus, settings.repGuild()));
 
         int current = subscriptions.maxErrorCount();
         int timeLeft = (skus.errorThresholdBlock() - current) * skus.subscriptionErrorMessageHours();
