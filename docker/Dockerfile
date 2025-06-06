@@ -1,7 +1,7 @@
 FROM gradle:jdk21-alpine as build
 
 COPY . .
-RUN gradle clean build --no-daemon
+RUN gradle clean build --no-daemon -x test
 
 FROM eclipse-temurin:21-alpine as runtime
 

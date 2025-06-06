@@ -8,27 +8,25 @@ package de.chojo.repbot.commands.log.handler;
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
-import de.chojo.jdautil.parsing.ValueParser;
 import de.chojo.jdautil.wrapper.EventContext;
-import de.chojo.repbot.dao.provider.Guilds;
-import net.dv8tion.jda.api.entities.Guild;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 
 public class Analyzer extends BaseAnalyzer implements SlashHandler  {
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
 
-    public Analyzer(Guilds guilds) {
-        this.guilds = guilds;
+    public Analyzer(GuildRepository guildRepository) {
+        this.guildRepository = guildRepository;
     }
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        onSlashCommand(event, context, guilds.guild(event.getGuild()).reputation());
+        onSlashCommand(event, context, guildRepository.guild(event.getGuild()).reputation());
     }
 
-    public static void sendAnalyzerLog(IReplyCallback callback, Guilds guilds, long messageId, EventContext context) {
-        var reputation = guilds.guild(callback.getGuild()).reputation();
+    public static void sendAnalyzerLog(IReplyCallback callback, GuildRepository guildRepository, long messageId, EventContext context) {
+        var reputation = guildRepository.guild(callback.getGuild()).reputation();
         var resultEntry = reputation.analyzer()
                                     .get(messageId);
 
@@ -41,7 +39,7 @@ public class Analyzer extends BaseAnalyzer implements SlashHandler  {
 
         var reputationLogEntries = reputation.log().messageLog(messageId, 10);
 
-        var entries = LogFormatter.mapMessageLogEntry(context, reputationLogEntries);
+        var entries = LogFormatter.mapMessageLogEntry(context.guildLocalizer(), reputationLogEntries);
 
         var builder = new LocalizedEmbedBuilder(context.guildLocalizer())
                 .setTitle("command.log.message.message.log", Replacement.create("ID", messageId));

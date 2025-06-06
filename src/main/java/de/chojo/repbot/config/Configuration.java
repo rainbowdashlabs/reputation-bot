@@ -22,8 +22,10 @@ import de.chojo.repbot.config.elements.Database;
 import de.chojo.repbot.config.elements.Links;
 import de.chojo.repbot.config.elements.MagicImage;
 import de.chojo.repbot.config.elements.PresenceSettings;
+import de.chojo.repbot.config.elements.SKU;
 import de.chojo.repbot.config.elements.SelfCleanup;
 import de.chojo.repbot.config.exception.ConfigurationException;
+import de.chojo.repbot.config.jackson.BotModule;
 import org.slf4j.Logger;
 
 import java.io.File;
@@ -46,7 +48,8 @@ public class Configuration {
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
                 .setVisibility(PropertyAccessor.GETTER, JsonAutoDetect.Visibility.NONE)
-                .setDefaultPrettyPrinter(new DefaultPrettyPrinter());
+                .setDefaultPrettyPrinter(new DefaultPrettyPrinter())
+                .registerModule(new BotModule());
     }
 
     public static Configuration create() {
@@ -140,5 +143,9 @@ public class Configuration {
 
     public Cleanup cleanup() {
         return configFile.cleanup();
+    }
+
+    public SKU skus() {
+        return configFile.skus();
     }
 }

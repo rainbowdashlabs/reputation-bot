@@ -14,15 +14,15 @@ import de.chojo.repbot.commands.scan.handler.Cancel;
 import de.chojo.repbot.commands.scan.handler.Start;
 import de.chojo.repbot.commands.scan.util.Scanner;
 import de.chojo.repbot.config.Configuration;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import net.dv8tion.jda.api.entities.Guild;
 
 public class Scan implements SlashProvider<Slash> {
 
     private final Scanner scanner;
 
-    public Scan(Guilds guilds, Configuration configuration) {
-        scanner = new Scanner(guilds, configuration);
+    public Scan(GuildRepository guildRepository, Configuration configuration) {
+        scanner = new Scanner(guildRepository, configuration);
     }
 
     @Override

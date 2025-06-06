@@ -15,6 +15,7 @@ import de.chojo.repbot.config.elements.Database;
 import de.chojo.repbot.config.elements.Links;
 import de.chojo.repbot.config.elements.MagicImage;
 import de.chojo.repbot.config.elements.PresenceSettings;
+import de.chojo.repbot.config.elements.SKU;
 import de.chojo.repbot.config.elements.SelfCleanup;
 
 @SuppressWarnings({"FieldMayBeFinal", "CanBeFinal"})
@@ -30,6 +31,7 @@ public class ConfigFile {
     private Api api = new Api();
     private SelfCleanup selfcleanup = new SelfCleanup();
     private Cleanup cleanup = new Cleanup();
+    private SKU skus = new SKU();
 
     public BaseSettings baseSettings() {
         return baseSettings;
@@ -73,5 +75,9 @@ public class ConfigFile {
 
     public Cleanup cleanup() {
         return cleanup;
+    }
+
+    public SKU skus() {
+        return skus;
     }
 }

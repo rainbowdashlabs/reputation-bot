@@ -23,17 +23,19 @@ import de.chojo.repbot.commands.invite.Invite;
 import de.chojo.repbot.commands.locale.Locale;
 import de.chojo.repbot.commands.log.Log;
 import de.chojo.repbot.commands.messages.Messages;
+import de.chojo.repbot.commands.profile.Profile;
 import de.chojo.repbot.commands.prune.Prune;
+import de.chojo.repbot.commands.ranking.Ranking;
 import de.chojo.repbot.commands.reactions.Reactions;
 import de.chojo.repbot.commands.repadmin.RepAdmin;
 import de.chojo.repbot.commands.repsettings.RepSettings;
-import de.chojo.repbot.commands.reputation.Reputation;
 import de.chojo.repbot.commands.roles.Roles;
 import de.chojo.repbot.commands.scan.Scan;
 import de.chojo.repbot.commands.setup.Setup;
 import de.chojo.repbot.commands.thankwords.Thankwords;
 import de.chojo.repbot.commands.top.Top;
 import de.chojo.repbot.config.Configuration;
+import de.chojo.repbot.exceptions.MissingSupportTier;
 import de.chojo.repbot.listener.LogListener;
 import de.chojo.repbot.listener.MessageListener;
 import de.chojo.repbot.listener.ReactionListener;
@@ -41,8 +43,11 @@ import de.chojo.repbot.listener.StateListener;
 import de.chojo.repbot.listener.VoiceStateListener;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;
 import de.chojo.repbot.service.AnalyzerService;
+import de.chojo.repbot.service.AutopostService;
+import de.chojo.repbot.service.ChatSupportService;
 import de.chojo.repbot.service.GdprService;
 import de.chojo.repbot.service.MetricService;
+import de.chojo.repbot.service.PremiumService;
 import de.chojo.repbot.service.PresenceService;
 import de.chojo.repbot.service.RepBotCachePolicy;
 import de.chojo.repbot.service.RoleAssigner;
@@ -84,6 +89,8 @@ public class Bot {
     private ContextResolver contextResolver;
     private Statistic statistic;
     private GdprService gdprService;
+    private AutopostService autopostService;
+    private PremiumService premiumService;
 
     private Bot(Data data, Threading threading, Configuration configuration, Localization localization) {
         this.data = data;
@@ -104,34 +111,6 @@ public class Bot {
         initServices();
         initInteractions();
         initListener();
-    }
-
-    private void configureRestActions() {
-        log.info("Configuring rest actions.");
-        RestAction.setDefaultFailure(throwable -> {
-            if (throwable instanceof InsufficientPermissionException perm) {
-                PermissionErrorHandler.handle(perm, shardManager, localization.localizer().context(LocaleProvider.empty()), configuration);
-                return;
-            }
-            if (throwable.getCause() instanceof InsufficientPermissionException insuf) {
-                PermissionErrorHandler.handle(insuf, shardManager, localization.localizer().context(LocaleProvider.empty()), configuration);
-                return;
-            }
-            if (throwable instanceof ErrorResponseException e) {
-                if (e.getErrorResponse() == ErrorResponse.UNKNOWN_INTERACTION) {
-                    data.metrics().service().failedInteraction();
-                    log.debug("Interaction timed out", e);
-                    return;
-                }
-            }
-            log.error(LogNotify.NOTIFY_ADMIN, "Unhandled exception occured: ", throwable);
-        });
-
-        RestAction.setDefaultSuccess(suc -> {
-            if (suc instanceof InteractionHook) {
-                data.metrics().service().successfulInteraction();
-            }
-        });
     }
 
     private void initShardManager() throws LoginException {
@@ -163,6 +142,34 @@ public class Bot {
                 .build();
     }
 
+    private void configureRestActions() {
+        log.info("Configuring rest actions.");
+        RestAction.setDefaultFailure(throwable -> {
+            if (throwable instanceof InsufficientPermissionException perm) {
+                PermissionErrorHandler.handle(perm, shardManager, localization.localizer().context(LocaleProvider.empty()), configuration);
+                return;
+            }
+            if (throwable.getCause() instanceof InsufficientPermissionException insuf) {
+                PermissionErrorHandler.handle(insuf, shardManager, localization.localizer().context(LocaleProvider.empty()), configuration);
+                return;
+            }
+            if (throwable instanceof ErrorResponseException e) {
+                if (e.getErrorResponse() == ErrorResponse.UNKNOWN_INTERACTION) {
+                    data.metrics().service().failedInteraction();
+                    log.debug("Interaction timed out", e);
+                    return;
+                }
+            }
+            log.error(LogNotify.NOTIFY_ADMIN, "Unhandled exception occured: ", throwable);
+        });
+
+        RestAction.setDefaultSuccess(suc -> {
+            if (suc instanceof InteractionHook) {
+                data.metrics().service().successfulInteraction();
+            }
+        });
+    }
+
     private void initServices() {
         log.info("Setting up services");
         var guilds = data.guilds();
@@ -177,11 +184,13 @@ public class Bot {
         scan.lateInit(messageAnalyzer);
 
         // init services
-        reputationService = new ReputationService(guilds, contextResolver, roleAssigner, configuration.magicImage(), localization.localizer());
+        reputationService = new ReputationService(guilds, contextResolver, roleAssigner, configuration, localization.localizer());
         gdprService = GdprService.of(shardManager, guilds, data.gdpr(), worker);
         SelfCleanupService.create(shardManager, localization.localizer(), guilds, data.cleanup(), configuration, worker);
         AnalyzerService.create(threading.repBotWorker(), data.analyzer());
         MetricService.create(threading.repBotWorker(), data.metrics());
+        autopostService = AutopostService.create(shardManager, data.guilds(), threading, localization.localizer());
+        premiumService = PremiumService.of(guilds, threading, configuration, localization.localizer(), shardManager);
     }
 
     private void initInteractions() {
@@ -192,39 +201,45 @@ public class Bot {
         InteractionHub.builder(shardManager)
                       .withConversationSystem()
                       .withCommands(
-                              new Channel(guilds),
-                              new Reputation(guilds, configuration, roleAssigner),
+                              new Channel(guilds, configuration, autopostService),
+                              new Profile(guilds, configuration, roleAssigner),
                               roles,
-                              new RepSettings(guilds),
-                              new Top(guilds),
+                              new RepSettings(guilds, configuration),
+                              new Top(guilds, configuration),
                               Thankwords.of(messageAnalyzer, guilds),
                               scan,
                               new Locale(guilds),
                               new Invite(configuration),
                               Info.create(configuration),
-                              new Log(guilds),
+                              new Log(guilds, configuration),
                               Setup.of(guilds, configuration),
                               new Gdpr(data.gdpr()),
                               new Prune(gdprService),
-                              new Reactions(guilds),
+                              new Reactions(guilds, configuration),
                               new Dashboard(guilds),
                               new AbuseProtection(guilds),
                               new Debug(guilds),
-                              new RepAdmin(guilds, configuration, roleAssigner),
+                              new RepAdmin(guilds, configuration, roleAssigner, premiumService),
                               new Messages(guilds),
-                              new BotAdmin(guilds, configuration, statistic))
+                              new BotAdmin(guilds, configuration, statistic),
+                              new Ranking(guilds, configuration))
                       .withMessages(new MessageLog(guilds))
-                      .withUsers(new UserReceived(guilds),
-                              new UserDonated(guilds))
+                      .withUsers(new UserReceived(guilds, configuration),
+                              new UserDonated(guilds, configuration))
                       .withLocalizer(localizer)
                       .cleanGuildCommands("true".equals(System.getProperty("bot.cleancommands", "false")))
-                      .testMode("true".equals(System.getProperty("bot.testmode", "false")))
                       .withCommandErrorHandler((context, throwable) -> {
                           if (throwable instanceof InsufficientPermissionException) {
                               PermissionErrorHandler.handle((InsufficientPermissionException) throwable, shardManager,
                                       localizer.context(LocaleProvider.guild(context.guild())), configuration);
                               return;
                           }
+
+                          if (throwable instanceof MissingSupportTier ex) {
+                              premiumService.handleMissingSupportTier(context, ex);
+                              return;
+                          }
+
                           log.error(LogNotify.NOTIFY_ADMIN, "Command execution of {} failed\n{}",
                                   context.interaction().meta().name(), context.args(), throwable);
                       })
@@ -250,6 +265,7 @@ public class Bot {
         var logListener = LogListener.create(threading.repBotWorker());
         var stateListener = StateListener.of(localizer, guilds, configuration, data.metrics());
         var roleUpdater = RoleUpdater.create(guilds, roleAssigner, shardManager, threading.repBotWorker());
+        ChatSupportService chatSupportService = new ChatSupportService(configuration, shardManager);
 
         shardManager.addEventListener(
                 reactionListener,
@@ -258,7 +274,9 @@ public class Bot {
                 voiceStateListener,
                 logListener,
                 stateListener,
-                roleUpdater);
+                roleUpdater,
+                premiumService,
+                chatSupportService);
     }
 
     public ShardManager shardManager() {

@@ -8,7 +8,7 @@ package de.chojo.repbot.service;
 import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.EventContext;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.snapshots.ReputationRank;
 import de.chojo.repbot.util.Roles;
 import net.dv8tion.jda.api.entities.Guild;
@@ -39,16 +39,16 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class RoleAssigner {
     private static final Logger log = getLogger(RoleAssigner.class);
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
     private final ILocalizer localizer;
 
-    public RoleAssigner(Guilds guilds, ILocalizer localizer) {
-        this.guilds = guilds;
+    public RoleAssigner(GuildRepository guildRepository, ILocalizer localizer) {
+        this.guildRepository = guildRepository;
         this.localizer = localizer;
     }
 
     /**
-     * Updates the user roles. Will handle excpetions and send a message if the role could not be assigned.
+     * Updates the user roles. Will handle exceptions and send a message if the role could not be assigned.
      *
      * @param member  member to update
      * @param channel channel to send the message to
@@ -92,7 +92,7 @@ public class RoleAssigner {
         if (member == null) return Optional.empty();
         log.debug("Updating {} on {}", member.getId(), prettyName(member.getGuild()));
         var guild = member.getGuild();
-        var repGuild = guilds.guild(member.getGuild());
+        var repGuild = guildRepository.guild(member.getGuild());
         var reputation = repGuild.reputation().user(member);
         var settings = repGuild.settings();
 
@@ -117,12 +117,12 @@ public class RoleAssigner {
     private boolean cleanMemberRoles(Member member, Set<Role> roles) throws RoleAccessException {
         var guild = member.getGuild();
 
-        var reputationRoles = guilds.guild(guild).settings().ranks().ranks()
-                                    .stream()
-                                    .map(ReputationRank::roleId)
-                                    .map(guild::getRoleById)
-                                    .filter(Objects::nonNull)
-                                    .toList();
+        var reputationRoles = guildRepository.guild(guild).settings().ranks().ranks()
+                                             .stream()
+                                             .map(ReputationRank::roleId)
+                                             .map(guild::getRoleById)
+                                             .filter(Objects::nonNull)
+                                             .toList();
         var changed = false;
 
         for (var role : reputationRoles) {
@@ -163,13 +163,13 @@ public class RoleAssigner {
     public CompletableFuture<BatchUpdateResult> updateBatch(Guild guild, EventContext context, Message message) {
         return CompletableFuture.supplyAsync(() -> {
             log.info("Started batch update for guild {}", prettyName(guild));
-            var guildRanking = guilds.guild(guild).reputation().ranking().total(100);
+            var guildRanking = guildRepository.guild(guild).reputation().ranking().received().total(100);
             var checked = new AtomicInteger(0);
             var updated = new AtomicInteger(0);
             var lastRefresh = new AtomicReference<>(Instant.now());
             for (var page : guildRanking) {
-                for (var repProfile : page) {
-                    repProfile.resolveMember(guild).ifPresent(member -> {
+                for (var ranking : page) {
+                    ranking.resolveMember(guild).ifPresent(member -> {
                         var newRank = updateSilent(member);
                         newRank.ifPresent(r -> updated.incrementAndGet());
                         checked.incrementAndGet();

@@ -6,6 +6,7 @@
 package de.chojo.repbot.dao.access.guild.settings.sub.thanking;
 
 import de.chojo.jdautil.parsing.Verifier;
+import de.chojo.jdautil.util.Premium;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
 import net.dv8tion.jda.api.entities.Guild;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 
-public class Reactions  implements GuildHolder {
+public class Reactions implements GuildHolder {
     private final Thanking thanking;
     private final Set<String> reactions;
     private String mainReaction;
@@ -57,6 +58,11 @@ public class Reactions  implements GuildHolder {
         if (mainReaction.equals(reaction)) {
             return true;
         }
+        if (Premium.isNotEntitled(
+                thanking.settings().repGuild().subscriptions(),
+                thanking.settings().repGuild().configuration().skus().features().additionalEmojis().additionalEmojis())) {
+            return false;
+        }
         return reactions.contains(reaction);
     }
 
@@ -69,7 +75,7 @@ public class Reactions  implements GuildHolder {
             return Optional.ofNullable(mainReaction());
         }
         return Optional.of(guild().retrieveEmojiById(mainReaction()).onErrorMap(err -> null).complete())
-                .map(CustomEmoji::getAsMention);
+                       .map(CustomEmoji::getAsMention);
     }
 
     public String mainReaction() {
@@ -92,10 +98,10 @@ public class Reactions  implements GuildHolder {
 
     public boolean add(String reaction) {
         var result = query("""
-                       INSERT INTO guild_reactions(guild_id, reaction) VALUES (?,?)
-                           ON CONFLICT(guild_id, reaction)
-                               DO NOTHING;
-                       """)
+                INSERT INTO guild_reactions(guild_id, reaction) VALUES (?,?)
+                    ON CONFLICT(guild_id, reaction)
+                        DO NOTHING;
+                """)
                 .single(call().bind(guildId()).bind(reaction))
                 .update()
                 .changed();
@@ -107,8 +113,8 @@ public class Reactions  implements GuildHolder {
 
     public boolean remove(String reaction) {
         var result = query("""
-                       DELETE FROM guild_reactions WHERE guild_id = ? AND reaction = ?;
-                       """)
+                DELETE FROM guild_reactions WHERE guild_id = ? AND reaction = ?;
+                """)
                 .single(call().bind(guildId()).bind(reaction))
                 .update()
                 .changed();
@@ -121,11 +127,11 @@ public class Reactions  implements GuildHolder {
 
     public boolean mainReaction(String reaction) {
         var result = query("""
-                       INSERT INTO thank_settings(guild_id, reaction) VALUES (?,?)
-                           ON CONFLICT(guild_id)
-                               DO UPDATE
-                                   SET reaction = excluded.reaction
-                       """)
+                INSERT INTO thank_settings(guild_id, reaction) VALUES (?,?)
+                    ON CONFLICT(guild_id)
+                        DO UPDATE
+                            SET reaction = excluded.reaction
+                """)
                 .single(call().bind(guildId()).bind(reaction))
                 .update()
                 .changed();

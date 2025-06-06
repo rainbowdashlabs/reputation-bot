@@ -7,7 +7,7 @@ package de.chojo.repbot.commands.roles.handler;
 
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.wrapper.EventContext;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.util.Text;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -16,8 +16,8 @@ import java.util.function.Consumer;
 
 public class StackRoles extends BaseRoleModifier {
 
-    public StackRoles(Refresh refresh, Guilds guilds) {
-        super(refresh, guilds);
+    public StackRoles(Refresh refresh, GuildRepository guildRepository) {
+        super(refresh, guildRepository);
     }
 
     @Override

@@ -6,15 +6,22 @@
 package de.chojo.repbot.service.reputation;
 
 import de.chojo.jdautil.localization.ILocalizer;
+import de.chojo.jdautil.localization.LocalizationContext;
+import de.chojo.jdautil.localization.util.LocaleProvider;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.Verifier;
+import de.chojo.jdautil.util.MentionUtil;
+import de.chojo.jdautil.util.Premium;
 import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.MessageContext;
 import de.chojo.repbot.analyzer.results.match.ThankType;
+import de.chojo.repbot.commands.log.handler.LogFormatter;
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.config.elements.MagicImage;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.access.guild.settings.sub.Reputation;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 import de.chojo.repbot.service.RoleAssigner;
 import de.chojo.repbot.util.EmojiDebug;
 import de.chojo.repbot.util.Messages;
@@ -22,34 +29,40 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.unions.GuildMessageChannelUnion;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.requests.RestAction;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
-import java.awt.Color;
+import java.awt.*;
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ReputationService {
     private static final Logger log = getLogger(ReputationService.class);
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
     private final RoleAssigner assigner;
-    private final MagicImage magicImage;
+    private final Configuration configuration;
     private final ContextResolver contextResolver;
     private final ILocalizer localizer;
     private Instant lastEasterEggSent = Instant.EPOCH;
 
-    public ReputationService(Guilds guilds, ContextResolver contextResolver, RoleAssigner assigner, MagicImage magicImage, ILocalizer localizer) {
-        this.guilds = guilds;
+    public ReputationService(GuildRepository guildRepository, ContextResolver contextResolver, RoleAssigner assigner, Configuration configuration, ILocalizer localizer) {
+        this.guildRepository = guildRepository;
         this.assigner = assigner;
-        this.magicImage = magicImage;
+        this.configuration = configuration;
         this.contextResolver = contextResolver;
         this.localizer = localizer;
     }
@@ -68,7 +81,7 @@ public class ReputationService {
      * @return true if the reputation was counted and is valid
      */
     public boolean submitReputation(Guild guild, Member donor, Member receiver, Message message, @Nullable Message refMessage, ThankType type) {
-        var repGuild = guilds.guild(guild);
+        var repGuild = guildRepository.guild(guild);
         log.trace("Submitting reputation for message {} of type {}", message.getIdLong(), type);
         // block bots
         if (receiver.getUser().isBot()) {
@@ -111,6 +124,36 @@ public class ReputationService {
         return log(guild, donor, receiver, message, refMessage, type, settings);
     }
 
+    public void deleteBulk(List<Long> messages, GuildMessageChannelUnion channel, Guild guild) {
+        var reputationLog = guildRepository.guild(guild).reputation().log();
+        List<ReputationLogEntry> entries = messages.stream()
+                                                   .map(reputationLog::getLogEntries)
+                                                   .flatMap(Collection::stream)
+                                                   .toList();
+        delete(entries, channel, guild);
+    }
+
+    public void delete(long messageIdLong, GuildMessageChannelUnion channel, Guild guild) {
+        List<ReputationLogEntry> logEntries = guildRepository.guild(guild).reputation().log().getLogEntries(messageIdLong);
+        delete(logEntries, channel, guild);
+    }
+
+    public void delete(List<ReputationLogEntry> entries, GuildMessageChannelUnion channel, Guild guild) {
+        if (entries.isEmpty()) return;
+        entries.forEach(ReputationLogEntry::deleteAll);
+        LocalizationContext context = localizer.context(LocaleProvider.guild(guild));
+        String deleted = entries.stream().map(e -> LogFormatter.formatMessageLogEntrySimple(context, e)).collect(Collectors.joining("\n"));
+        if (entries.size() > 1) {
+            String title = localizer.localize("listener.reputation.log.bulkdelete", guild, Replacement.create("CHANNEL", channel.getAsMention()));
+            deleted = title + "\n" + deleted;
+        } else {
+            deleted = LogFormatter.formatMessageLogEntrySimple(context, entries.get(0)) + " **|** " + channel.getAsMention();
+        }
+
+        logToChannel(guildRepository.guild(guild).settings(), ":red_circle: " + deleted);
+
+    }
+
     private MessageContext getContext(Member donor, Message message, ThankType type, Settings settings) {
         MessageContext context;
         if (type == ThankType.REACTION) {
@@ -123,7 +166,7 @@ public class ReputationService {
     }
 
     private boolean assertAbuseProtection(Guild guild, Member donor, Member receiver, Message message, @Nullable Message refMessage, MessageContext context) {
-        var repGuild = guilds.guild(guild);
+        var repGuild = guildRepository.guild(guild);
         var analyzer = repGuild.reputation().analyzer();
         var settings = repGuild.settings();
         var addEmoji = settings.general().isEmojiDebug();
@@ -194,8 +237,9 @@ public class ReputationService {
     private boolean isSelfVote(Member donor, Member receiver, Message message) {
         // block self vote
         if (Verifier.equalSnowflake(receiver, donor)) {
+            MagicImage magicImage = configuration.magicImage();
             if (lastEasterEggSent.until(Instant.now(), ChronoUnit.MINUTES) > magicImage.magicImageCooldown()
-                && ThreadLocalRandom.current().nextInt(magicImage.magicImagineChance()) == 0) {
+                    && ThreadLocalRandom.current().nextInt(magicImage.magicImagineChance()) == 0) {
                 lastEasterEggSent = Instant.now();
                 //TODO: Escape unknown channel 5
                 message.replyEmbeds(new EmbedBuilder()
@@ -216,22 +260,31 @@ public class ReputationService {
     }
 
     private boolean log(Guild guild, Member donor, Member receiver, Message message, @Nullable Message refMessage, ThankType type, Settings settings) {
-        var repGuild = guilds.guild(guild);
-        // try to log reputation
+        var repGuild = guildRepository.guild(guild);
+        // try to log a reputation
         if (!repGuild.reputation().user(receiver)
                      .addReputation(donor, message, refMessage, type)) {// submit to database failed. Maybe this message was already voted by the user.
             repGuild.reputation().analyzer().log(message, SubmitResult.of(SubmitResultType.ALREADY_PRESENT));
             log.trace("Could not log reputation for message {}. An equal entry was already present.", message.getIdLong());
             return false;
         }
+        // TODO: Send into channel
+        logReputationEntry(settings, guild, new ReputationLogEntry(null,
+                guild.getIdLong(),
+                message.getChannel().getIdLong(),
+                donor.getIdLong(),
+                receiver.getIdLong(),
+                message.getIdLong(),
+                refMessage == null ? 0 : refMessage.getIdLong(),
+                type,
+                LocalDateTime.now()));
 
         // mark messages
         Messages.markMessage(message, refMessage, settings);
         // update role
-
         var newRank = assigner.updateReporting(receiver, message.getGuildChannel());
 
-        // Send level up message
+        // Send a level-up message
         newRank.ifPresent(rank -> {
             var announcements = repGuild.settings().announcements();
             if (!announcements.isActive()) return;
@@ -246,6 +299,23 @@ public class ReputationService {
                    .queue();
         });
         return true;
+    }
+
+    private void logReputationEntry(Settings settings, Guild guild, ReputationLogEntry reputationLogEntry) {
+        String message = LogFormatter.formatMessageLogEntry(localizer.context(LocaleProvider.guild(guild)), reputationLogEntry);
+        logToChannel(settings, ":green_circle: " + message);
+    }
+
+    private void logToChannel(Settings settings, String string) {
+        if (!settings.repGuild().settings().logChannel().active()) return;
+
+        if (Premium.isNotEntitled(settings.repGuild().subscriptions(), configuration.skus().features().logChannel().logChannel()))
+            return;
+
+        TextChannel textChannelById = settings.guild().getTextChannelById(settings.repGuild().settings().logChannel().channelId());
+        if (textChannelById == null) return;
+
+        textChannelById.sendMessage(string).setAllowedMentions(Collections.emptyList()).queue();
     }
 
     private boolean isTypeDisabled(ThankType type, Reputation reputation) {
@@ -278,7 +348,7 @@ public class ReputationService {
         var repGuild = settings.repGuild();
         var analyzer = repGuild.reputation().analyzer();
         // block cooldown
-        var lastRated = guilds.guild(guild).reputation().user(donor).getLastRatedDuration(receiver);
+        var lastRated = guildRepository.guild(guild).reputation().user(donor).getLastRatedDuration(receiver);
         if (lastRated.toMinutes() < settings.abuseProtection().cooldown()) {
             analyzer.log(message, SubmitResult.of(SubmitResultType.COOLDOWN_ACTIVE, Replacement.createMention(receiver)));
             log.trace("The last rating is too recent. {}/{}", lastRated.toMinutes(),

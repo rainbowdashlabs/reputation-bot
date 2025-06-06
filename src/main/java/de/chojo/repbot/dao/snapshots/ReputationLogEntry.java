@@ -5,6 +5,7 @@
  */
 package de.chojo.repbot.dao.snapshots;
 
+import de.chojo.jdautil.util.MentionUtil;
 import de.chojo.repbot.analyzer.results.match.ThankType;
 import de.chojo.repbot.dao.access.guild.reputation.sub.Log;
 import de.chojo.sadu.mapper.wrapper.Row;
@@ -100,6 +101,10 @@ public class ReputationLogEntry  {
     public String timestamp() {
         var timestamp = ((messageId() >> 22) + DISCORD_EPOCH) / 1000;
         return String.format("<t:%s:d> <t:%s:t>", timestamp, timestamp);
+    }
+
+    public String simpleString(){
+        return "%s ➜ %s".formatted(MentionUtil.user(receiverId()), MentionUtil.user(receiverId()));
     }
 
     /**

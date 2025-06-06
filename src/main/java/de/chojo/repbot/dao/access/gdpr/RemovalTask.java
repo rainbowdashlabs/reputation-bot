@@ -40,7 +40,8 @@ public final class RemovalTask {
             if (userId() == 0) {
                 var tables = List.of("reputation_log", "guild_settings", "active_channel", "abuse_protection",
                         "active_categories", "reputation_settings", "guild_ranks", "thankwords", "thank_settings",
-                        "reputation_offset", "receiver_roles", "donor_roles", "guild_reactions", "announcements");
+                        "reputation_offset", "receiver_roles", "donor_roles", "guild_reactions", "announcements",
+                        "autopost", "guild_locale_overrides");
                 for (var table : tables) {
                     conn.query("DELETE FROM %s WHERE guild_id = ?;", table).single(call().bind(guildId)).delete();
                 }
@@ -49,6 +50,7 @@ public final class RemovalTask {
                 conn.query("DELETE FROM reputation_log WHERE receiver_id = ?;").single(call().bind(userId())).delete();
                 conn.query("UPDATE reputation_log SET donor_id = NULL WHERE donor_id = ?;").single(call().bind(userId())).update();
                 conn.query("DELETE FROM reputation_offset WHERE user_id = ?;").single(call().bind(userId())).delete();
+                conn.query("DELETE FROM support_threads WHERE user_id = ?;").single(call().bind(userId())).delete();
                 log.trace("Removed Data of user {}", userId());
             } else {
                 // Remove user from guild

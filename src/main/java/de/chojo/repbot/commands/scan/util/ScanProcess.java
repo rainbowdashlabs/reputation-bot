@@ -9,8 +9,7 @@ import de.chojo.jdautil.localization.LocalizationContext;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
-import de.chojo.repbot.dao.access.guild.settings.Settings;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.util.Text;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
@@ -36,7 +35,7 @@ public class ScanProcess {
     private final MessageHistory history;
     private final Pattern pattern;
     private final int calls;
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
     // This is the offset of two bot messages of the reputation bot.
     private int scanned = -2;
     private int hits;
@@ -45,7 +44,7 @@ public class ScanProcess {
     private Instant lastSeen;
     private Thread currWorker;
 
-    ScanProcess(MessageAnalyzer messageAnalyzer, LocalizationContext localizer, Message progressMessage, MessageHistory history, Pattern pattern, int calls, Guilds data) {
+    ScanProcess(MessageAnalyzer messageAnalyzer, LocalizationContext localizer, Message progressMessage, MessageHistory history, Pattern pattern, int calls, GuildRepository data) {
         this.messageAnalyzer = messageAnalyzer;
         loc = localizer;
         guild = progressMessage.getGuild();
@@ -56,7 +55,7 @@ public class ScanProcess {
         // The history will already contain two messages of the bot at this point.
         this.calls = Math.min(Math.max(0, calls + 2), MAX_MESSAGES);
         callsLeft = this.calls;
-        guilds = data;
+        guildRepository = data;
     }
 
     public void countScan() {
@@ -92,7 +91,7 @@ public class ScanProcess {
             countScan();
 
             if (message.getAuthor().isBot()) continue;
-            var settings = guilds.guild(guild).settings();
+            var settings = guildRepository.guild(guild).settings();
             var result = messageAnalyzer.processMessage(pattern, message, settings, false,
                     settings.abuseProtection().maxMessageReputation());
 
@@ -101,7 +100,7 @@ public class ScanProcess {
             var matchResult = result.asMatch();
 
             var donator = matchResult.donor();
-            var reputation = guilds.guild(guild).reputation();
+            var reputation = guildRepository.guild(guild).reputation();
             for (var resultReceiver : matchResult.receivers()) {
                 if (Verifier.equalSnowflake(donator, resultReceiver)) continue;
 

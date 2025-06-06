@@ -19,12 +19,15 @@ import de.chojo.jdautil.parsing.ArgumentUtil;
 import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.jdautil.parsing.ValueParser;
 import de.chojo.jdautil.wrapper.EventContext;
+import de.chojo.repbot.commands.channel.handler.BaseChannelModifier;
 import de.chojo.repbot.config.Configuration;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.serialization.ThankwordsContainer;
 import de.chojo.repbot.util.PermissionErrorHandler;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
@@ -37,12 +40,12 @@ import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class Start implements SlashHandler {
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
     private final ThankwordsContainer thankwordsContainer;
     private final Configuration configuration;
 
-    public Start(Guilds guilds, ThankwordsContainer thankwordsContainer, Configuration configuration) {
-        this.guilds = guilds;
+    public Start(GuildRepository guildRepository, ThankwordsContainer thankwordsContainer, Configuration configuration) {
+        this.guildRepository = guildRepository;
         this.thankwordsContainer = thankwordsContainer;
         this.configuration = configuration;
     }
@@ -79,7 +82,7 @@ public class Start implements SlashHandler {
         for (var language : context.guildLocalizer().localizer().languages()) {
             buttons.add(Button.of(ButtonStyle.PRIMARY, language.getLocale(), language.getNativeName()),
                     con -> {
-                        guilds.guild(con.getGuild()).settings().general().language(language);
+                        guildRepository.guild(con.getGuild()).settings().general().language(language);
                         con.reply(con.localize("command.locale.set.message.set",
                                 Replacement.create("LOCALE", language.getNativeName()))).queue();
                         return Result.proceed(3);
@@ -112,7 +115,7 @@ public class Start implements SlashHandler {
 
     @NotNull
     private Result responseRolesSubAdded(ConversationContext context, Role role, Integer reputation) {
-        guilds.guild(context.getGuild()).settings().ranks().add(role, reputation);
+        guildRepository.guild(context.getGuild()).settings().ranks().add(role, reputation);
         context.reply(context.localize("command.roles.add.message.added",
                         Replacement.createMention(role),
                         Replacement.create("POINTS", reputation, Format.BOLD)))
@@ -132,8 +135,8 @@ public class Start implements SlashHandler {
             buttons.add(Button.of(ButtonStyle.PRIMARY, language, language),
                     context -> {
                         var words = thankwordsContainer.get(language.toLowerCase(Locale.ROOT));
-                        words.forEach(word -> guilds.guild(context.getGuild()).settings().thanking().thankwords()
-                                .add(word));
+                        words.forEach(word -> guildRepository.guild(context.getGuild()).settings().thanking().thankwords()
+                                                             .add(word));
                         var wordsJoined = words.stream().map(w -> StringUtils.wrap(w, "`"))
                                 .collect(Collectors.joining(", "));
                         context.reply(context.localize("command.thankwords.loaddefault.message.added") + wordsJoined)
@@ -157,7 +160,7 @@ public class Start implements SlashHandler {
             return Result.finish();
         })).add(Button.primary("all", "command.setup.message.allchannel"), ctx -> {
             var guild = ctx.getGuild();
-            guilds.guild(guild).settings().thanking().channels().listType(false);
+            guildRepository.guild(guild).settings().thanking().channels().listType(false);
             ctx.reply(ctx.localize("command.channel.list.message.blacklist")).queue();
             return Result.finish();
         });
@@ -165,10 +168,11 @@ public class Start implements SlashHandler {
 
     private Result handleChannels(ConversationContext context) {
         var args = context.getContentRaw().replaceAll("\\s+", " ").split("\\s");
-        var channels = DiscordResolver.getTextChannels(context.getGuild(), List.of(args));
+        List<GuildChannel> mentions = context.message().getMentions().getChannels();
+        List<GuildChannel> channels = mentions.stream().filter(channel -> BaseChannelModifier.TEXT_CHANNEL.contains(channel.getType())).toList();
         var addedChannel = channels.stream()
                 .map(channel -> {
-                    guilds.guild(context.getGuild()).settings().thanking().channels().add(channel);
+                    guildRepository.guild(context.getGuild()).settings().thanking().channels().add((StandardGuildChannel) channel);
                     return channel.getAsMention();
                 })
                 .collect(Collectors.joining(", "));

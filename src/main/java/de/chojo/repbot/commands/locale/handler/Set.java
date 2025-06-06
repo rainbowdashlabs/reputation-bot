@@ -10,16 +10,16 @@ import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.util.Completion;
 import de.chojo.jdautil.wrapper.EventContext;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 
 public class Set implements SlashHandler {
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
 
-    public Set(Guilds guilds) {
-        this.guilds = guilds;
+    public Set(GuildRepository guildRepository) {
+        this.guildRepository = guildRepository;
     }
 
     @Override
@@ -36,7 +36,7 @@ public class Set implements SlashHandler {
             return;
         }
 
-        if (guilds.guild(event.getGuild()).settings().general().language(locale)) {
+        if (guildRepository.guild(event.getGuild()).settings().general().language(locale)) {
             event.reply(context.localize("command.locale.set.message.set",
                     Replacement.create("LOCALE", locale.getNativeName(), Format.CODE))).queue();
         }

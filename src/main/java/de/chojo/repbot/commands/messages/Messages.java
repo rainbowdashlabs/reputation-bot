@@ -9,15 +9,15 @@ import de.chojo.jdautil.interactions.slash.Slash;
 import de.chojo.jdautil.interactions.slash.SubCommand;
 import de.chojo.jdautil.interactions.slash.provider.SlashCommand;
 import de.chojo.repbot.commands.messages.handler.States;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 
 public class Messages extends SlashCommand {
-    public Messages(Guilds guilds) {
+    public Messages(GuildRepository guildRepository) {
         super(Slash.of("messages", "command.messages.description")
                 .guildOnly()
                 .adminCommand()
                 .subCommand(SubCommand.of("states", "command.messages.states.description")
-                        .handler(new States(guilds)))
+                        .handler(new States(guildRepository)))
         );
     }
 }

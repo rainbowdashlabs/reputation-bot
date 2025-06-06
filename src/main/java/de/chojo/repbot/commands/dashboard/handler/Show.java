@@ -10,7 +10,7 @@ import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.util.MentionUtil;
 import de.chojo.jdautil.wrapper.EventContext;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.util.Colors;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -19,10 +19,10 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import java.util.stream.Collectors;
 
 public class Show implements SlashHandler {
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
 
-    public Show(Guilds guilds) {
-        this.guilds = guilds;
+    public Show(GuildRepository guildRepository) {
+        this.guildRepository = guildRepository;
     }
 
     @Override
@@ -31,9 +31,9 @@ public class Show implements SlashHandler {
     }
 
     private MessageEmbed getDashboard(Guild guild, EventContext context) {
-        var reputation = guilds.guild(guild).reputation();
+        var reputation = guildRepository.guild(guild).reputation();
         var stats = reputation.stats();
-        var top = reputation.ranking().total(5).page(0).stream()
+        var top = reputation.ranking().received().total(5).page(0).stream()
                             .map(r -> r.fancyString(5))
                             .collect(Collectors.joining("\n"));
 

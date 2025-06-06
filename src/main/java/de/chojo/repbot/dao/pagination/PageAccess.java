@@ -40,6 +40,14 @@ public class PageAccess<T> implements Iterable<List<T>> {
         return pageSupplier.apply(page);
     }
 
+    /**
+     * Returns the first page.
+     * @return first page
+     */
+    public List<T> first(){
+        return page(0);
+    }
+
     @NotNull
     @Override
     public Iterator<List<T>> iterator() {

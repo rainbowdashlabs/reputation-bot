@@ -8,12 +8,12 @@ package de.chojo.repbot.commands.dashboard;
 import de.chojo.jdautil.interactions.slash.Slash;
 import de.chojo.jdautil.interactions.slash.provider.SlashCommand;
 import de.chojo.repbot.commands.dashboard.handler.Show;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 
 public class Dashboard extends SlashCommand {
-    public Dashboard(Guilds guilds) {
+    public Dashboard(GuildRepository guildRepository) {
         super(Slash.of("dashboard", "command.dashboard.description")
                 .guildOnly()
-                .command(new Show(guilds)));
+                .command(new Show(guildRepository)));
     }
 }

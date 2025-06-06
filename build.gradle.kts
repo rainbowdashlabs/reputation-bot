@@ -7,9 +7,10 @@ plugins {
 }
 
 group = "de.chojo"
-version = "1.15.2"
+version = "1.16.0"
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven("https://eldonexus.de/repository/maven-public")
     maven("https://eldonexus.de/repository/maven-proxies")
@@ -25,18 +26,18 @@ spotless {
 
 dependencies {
     //discord
-    implementation("de.chojo", "cjda-util", "2.10.3+jda-5.1.0") {
+    implementation("de.chojo", "cjda-util", "2.11.0+jda-5.3.2-20250606.213438-13") {
         exclude(group = "club.minnced", module = "opus-java")
     }
 
-    val openapi = "6.4.0"
+    val openapi = "6.6.0"
 
     annotationProcessor("io.javalin.community.openapi:openapi-annotation-processor:$openapi")
     implementation("io.javalin.community.openapi:javalin-openapi-plugin:$openapi") // for /openapi route with JSON scheme
     implementation("io.javalin.community.openapi:javalin-swagger-plugin:$openapi") // for Swagger UI
 
     // database
-    implementation("org.postgresql", "postgresql", "42.7.5")
+    implementation("org.postgresql", "postgresql", "42.7.6")
     implementation(libs.bundles.sadu)
 
     // Logging
@@ -48,9 +49,12 @@ dependencies {
     implementation("org.knowm.xchart", "xchart", "3.8.8")
 
     // unit testing
-    testImplementation(platform("org.junit:junit-bom:5.11.4"))
-    testImplementation("org.junit.jupiter", "junit-jupiter")
+    testImplementation(testlibs.bundles.junit)
+    testImplementation("org.junit.platform", "junit-platform-launcher")
     testImplementation("org.knowm.xchart", "xchart", "3.8.8")
+    testImplementation(testlibs.sadu.testing)
+    testImplementation(testlibs.bundles.database.postgres)
+    testImplementation(testlibs.slf4j.simple)
 }
 
 java {

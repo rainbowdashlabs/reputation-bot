@@ -5,31 +5,53 @@
  */
 package de.chojo.repbot.dao.access.guild.settings.sub;
 
-public enum ReputationMode {
-    TOTAL("user_reputation", "reputationMode.total", true, false),
-    ROLLING_WEEK("user_reputation_7_days", "reputationMode.rollingWeek", true, true),
-    ROLLING_MONTH("user_reputation_30_days", "reputationMode.rollingMonth", true, true),
-    WEEK("user_reputation_week", "reputationMode.week", true, true),
-    MONTH("user_reputation_month", "reputationMode.month", true, true);
+import java.time.DayOfWeek;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.TemporalAdjusters;
+import java.util.function.Supplier;
 
-    private final String tableName;
+public enum ReputationMode {
+    TOTAL("reputationMode.total",
+            () -> Instant.EPOCH,
+            false),
+    ROLLING_WEEK("reputationMode.rollingWeek",
+            () -> LocalDate.now()
+                           .minusDays(7)
+                           .atStartOfDay(ZoneId.of("UTC"))
+                           .toInstant(),
+            true),
+    ROLLING_MONTH("reputationMode.rollingMonth",
+            () -> LocalDate.now().minusDays(30)
+                           .atStartOfDay(ZoneId.of("UTC"))
+                           .toInstant(),
+            true),
+    WEEK("reputationMode.week",
+            () -> LocalDate.now()
+                           .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+                           .atStartOfDay(ZoneId.of("UTC"))
+                           .toInstant(),
+            true),
+    MONTH("reputationMode.month",
+            () -> LocalDate.now()
+                           .withDayOfMonth(1)
+                           .atStartOfDay(ZoneId.of("UTC"))
+                           .toInstant(),
+            true);
+
     private final String localeCode;
-    private final boolean supportsOffset;
+    private final Supplier<Instant> dateInit;
     private final boolean autoRefresh;
 
-    ReputationMode(String tableName, String localeCode, boolean supportsOffset, boolean autoRefresh) {
-        this.tableName = tableName;
+    ReputationMode(String localeCode, Supplier<Instant> dateInit, boolean autoRefresh) {
         this.localeCode = localeCode;
-        this.supportsOffset = supportsOffset;
+        this.dateInit = dateInit;
         this.autoRefresh = autoRefresh;
     }
 
-    public String tableName() {
-        return tableName;
-    }
-
-    public boolean isSupportsOffset() {
-        return supportsOffset;
+    public Instant dateInit() {
+        return dateInit.get();
     }
 
     public boolean isAutoRefresh() {

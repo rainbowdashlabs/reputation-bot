@@ -9,7 +9,7 @@ import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.menus.MenuAction;
 import de.chojo.jdautil.menus.entries.ButtonEntry;
 import de.chojo.jdautil.wrapper.EventContext;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
@@ -20,11 +20,11 @@ import java.util.function.Consumer;
 public abstract class BaseRoleModifier implements SlashHandler {
 
     private final Refresh refresh;
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
 
-    public BaseRoleModifier(Refresh refresh, Guilds guilds) {
+    public BaseRoleModifier(Refresh refresh, GuildRepository guildRepository) {
         this.refresh = refresh;
-        this.guilds = guilds;
+        this.guildRepository = guildRepository;
     }
 
     @Override
@@ -39,7 +39,7 @@ public abstract class BaseRoleModifier implements SlashHandler {
 
     public abstract void modify(SlashCommandInteractionEvent event, EventContext context, Consumer<MessageEmbed> refresh);
 
-    public Guilds guilds() {
-        return guilds;
+    public GuildRepository guilds() {
+        return guildRepository;
     }
 }

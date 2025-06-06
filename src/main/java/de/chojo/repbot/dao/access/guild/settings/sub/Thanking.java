@@ -141,6 +141,10 @@ public class Thanking  implements GuildHolder {
         return this.thankwords;
     }
 
+    public Settings settings() {
+        return settings;
+    }
+
     @Override
     public Guild guild() {
         return settings.guild();

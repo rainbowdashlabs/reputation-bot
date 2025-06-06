@@ -27,15 +27,19 @@ public class RepGuild implements GuildHolder {
     private static final Cache<Long, Gdpr> GDPR = CacheBuilder.newBuilder().expireAfterAccess(2, TimeUnit.MINUTES)
                                                               .build();
     private final Reputation reputation;
+    private final Subscriptions subscriptions;
     private final Settings settings;
     private Guild guild;
     private final Configuration configuration;
+    private final LocaleOverrides localeOverrides;
 
     public RepGuild(Guild guild, Configuration configuration) {
         super();
         this.configuration = configuration;
+        subscriptions = new Subscriptions(this);
         reputation = new Reputation(this);
         settings = new Settings(this);
+        localeOverrides = new LocaleOverrides(this);
         this.guild = guild;
     }
 
@@ -100,6 +104,14 @@ public class RepGuild implements GuildHolder {
 
     public Settings settings() {
         return settings;
+    }
+
+    public Subscriptions subscriptions() {
+        return subscriptions;
+    }
+
+    public LocaleOverrides localeOverrides() {
+        return localeOverrides;
     }
 
     public Cleanup cleanup() {

@@ -38,7 +38,7 @@ public class ReputationBot {
 
         var data = Data.create(threading, configuration);
 
-        var localization = Localization.create(data);
+        var localization = Localization.create(data, configuration);
 
         var bot = Bot.create(data, threading, configuration, localization);
 

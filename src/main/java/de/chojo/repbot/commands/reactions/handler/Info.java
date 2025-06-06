@@ -7,34 +7,42 @@ package de.chojo.repbot.commands.reactions.handler;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
+import de.chojo.jdautil.util.Premium;
 import de.chojo.jdautil.wrapper.EventContext;
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class Info implements SlashHandler {
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
+    private final Configuration configuration;
 
-    public Info(Guilds guilds) {
-        this.guilds = guilds;
+    public Info(GuildRepository guildRepository, Configuration configuration) {
+        this.guildRepository = guildRepository;
+        this.configuration = configuration;
     }
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        event.replyEmbeds(getInfoEmbed(guilds.guild(event.getGuild()).settings(), context)).queue();
+        event.replyEmbeds(getInfoEmbed(event, guildRepository.guild(event.getGuild()).settings(), context)).queue();
     }
 
-    private MessageEmbed getInfoEmbed(Settings settings, EventContext context) {
+    private MessageEmbed getInfoEmbed(SlashCommandInteractionEvent event, Settings settings, EventContext context) {
         var reactions = settings.thanking().reactions();
         var mainEmote = reactions.reactionMention();
         var emotes = String.join(" ", reactions.getAdditionalReactionMentions());
 
-        return new LocalizedEmbedBuilder(context.guildLocalizer())
+        EmbedBuilder build = new LocalizedEmbedBuilder(context.guildLocalizer())
                 .setTitle("command.reactions.info.message.title")
                 .addField("command.reactions.info.message.main", mainEmote.orElse("words.unknown"), true)
-                .addField("command.reactions.info.message.additional", emotes, true)
-                .build();
+                .addField("command.reactions.info.message.additional", emotes, true);
+        if (Premium.isNotEntitled(event, configuration.skus().features().additionalEmojis().additionalEmojis())) {
+            build.setFooter("command.reactions.info.message.nopremium");
+        }
+        return build.build();
     }
 
 }

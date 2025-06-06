@@ -8,10 +8,12 @@ package de.chojo.repbot.dao.access.guild.settings;
 import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.access.guild.settings.sub.AbuseProtection;
 import de.chojo.repbot.dao.access.guild.settings.sub.General;
+import de.chojo.repbot.dao.access.guild.settings.sub.LogChannel;
 import de.chojo.repbot.dao.access.guild.settings.sub.Messages;
 import de.chojo.repbot.dao.access.guild.settings.sub.Ranks;
 import de.chojo.repbot.dao.access.guild.settings.sub.Reputation;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
+import de.chojo.repbot.dao.access.guild.settings.sub.autopost.Autopost;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.dao.access.guild.settings.sub.Announcements;
 import net.dv8tion.jda.api.entities.Guild;
@@ -27,7 +29,9 @@ public class Settings implements GuildHolder {
     private Ranks ranks;
     private Thanking thanking;
     private Announcements announcements;
+    private Autopost autopost;
     private Messages messages;
+    private LogChannel logChannel;
 
     public Settings(RepGuild repGuild) {
         this.repGuild = repGuild;
@@ -113,7 +117,8 @@ public class Settings implements GuildHolder {
                     emoji_debug,
                     stack_roles,
                     reputation_mode,
-                    reset_date
+                    reset_date,
+                    system_channel_id
                 FROM
                     guild_settings
                 WHERE guild_id = ?;
@@ -182,5 +187,46 @@ public class Settings implements GuildHolder {
     @Override
     public long guildId() {
         return repGuild.guildId();
+    }
+
+    public Autopost autopost() {
+        if (autopost != null) {
+            return autopost;
+        }
+        autopost = query("""
+                SELECT
+                    active,
+                    message_id,
+                    channel_id,
+                    refresh_type,
+                    refresh_interval
+                FROM
+                    autopost
+                WHERE guild_id = ?;
+                """)
+                .single(call().bind(guildId()))
+                .map(rs -> Autopost.build(this, rs))
+                .first()
+                .orElseGet(() -> new Autopost(this));
+        return autopost;
+    }
+
+    public LogChannel logChannel() {
+        if (logChannel != null) {
+            return logChannel;
+        }
+        logChannel = query("""
+                SELECT
+                    active,
+                    channel_id
+                FROM
+                    log_channel
+                WHERE guild_id = ?;
+                """)
+                .single(call().bind(guildId()))
+                .map(rs -> LogChannel.build(this, rs))
+                .first()
+                .orElseGet(() -> new LogChannel(this));
+        return logChannel;
     }
 }

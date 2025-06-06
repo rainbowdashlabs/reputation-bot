@@ -13,7 +13,7 @@ import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.repbot.analyzer.results.match.ThankType;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
-import de.chojo.repbot.dao.provider.Guilds;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.service.reputation.ReputationService;
 import de.chojo.repbot.util.EmojiDebug;
 import de.chojo.repbot.util.Messages;
@@ -46,14 +46,14 @@ import java.util.regex.Pattern;
 public class ReputationVoteListener extends ListenerAdapter {
     private static final ActionComponent DELETE = Button.of(ButtonStyle.DANGER, "vote:delete", Emoji.fromUnicode("🗑️"));
     private static final Pattern VOTE = Pattern.compile("vote:(?<id>\\d*?)");
-    private final Guilds guilds;
+    private final GuildRepository guildRepository;
     private final ReputationService reputationService;
     private final ILocalizer loc;
     private final Configuration configuration;
     private final Map<Long, VoteRequest> voteRequests = new HashMap<>();
 
-    public ReputationVoteListener(Guilds guilds, ReputationService reputationService, ILocalizer localizer, Configuration configuration) {
-        this.guilds = guilds;
+    public ReputationVoteListener(GuildRepository guildRepository, ReputationService reputationService, ILocalizer localizer, Configuration configuration) {
+        this.guildRepository = guildRepository;
         this.reputationService = reputationService;
         loc = localizer;
         this.configuration = configuration;
@@ -131,7 +131,7 @@ public class ReputationVoteListener extends ListenerAdapter {
 
         var componentRows = getComponentRows(components.values().stream().map(VoteComponent::component).toList());
 
-        var maxMessageReputation = guilds.guild(message.getGuild()).settings().abuseProtection().maxMessageReputation();
+        var maxMessageReputation = guildRepository.guild(message.getGuild()).settings().abuseProtection().maxMessageReputation();
 
         int remaining;
         if (settings.abuseProtection().isDonorLimit()) {
