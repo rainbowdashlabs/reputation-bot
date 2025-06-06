@@ -6,50 +6,75 @@
 package de.chojo.repbot.dao.access.guild.reputation.sub.ranking;
 
 import de.chojo.repbot.dao.access.guild.reputation.sub.Rankings;
+import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
 import de.chojo.repbot.dao.snapshots.RankingEntry;
 
 import java.util.List;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
+import static de.chojo.sadu.queries.converter.StandardValueConverter.INSTANT_TIMESTAMP;
 
 public class GuildGiven extends GuildRanking {
     public GuildGiven(Rankings rankings) {
         super(rankings, RankingType.GIVEN);
     }
 
-
-    protected int pages(int pageSize, String table) {
+    @Override
+    protected int pages(int pageSize, ReputationMode mode) {
         return query("""
                 SELECT
                     ceil(count(1)::NUMERIC / ?) AS count
                 FROM
-                    %s
-                WHERE guild_id = ?
-                    AND donated != 0;
-                """, table)
-                .single(call().bind(pageSize).bind(guildId()))
+                    reputation_log
+                WHERE guild_id = :guild_id
+                  AND donor_id IS NOT NULL
+                  AND donor_id NOT IN (SELECT user_id FROM cleanup_schedule WHERE guild_id = :guild_id)
+                  AND (received > :reset_date OR :reset_date IS NULL)
+                  AND received >= :date_init;
+                """)
+                .single(call().bind("reset_date", resetDate())
+                              .bind(pageSize)
+                              .bind("guild_id", guildId()
+                              ).bind("date_init",mode.dateInit(), INSTANT_TIMESTAMP))
                 .map(row -> row.getInt("count"))
                 .first()
                 .orElse(1);
     }
 
-
-    protected List<RankingEntry> getRankingPage(int pageSize, int page, String table) {
+    @Override
+    protected List<RankingEntry> getRankingPage(int pageSize, int page, ReputationMode mode) {
         return query("""
+                WITH
+                    full_log
+                        AS (
+                        SELECT
+                            r.guild_id,
+                            r.donor_id,
+                            count(1) AS donated
+                        FROM
+                            reputation_log r
+                        WHERE r.received > :date_init
+                          AND (received > :reset_date OR :reset_date IS NULL)
+                          AND guild_id = :guild_id
+                          AND donor_id IS NOT NULL
+                          AND donor_id NOT IN (SELECT user_id FROM cleanup_schedule WHERE r.guild_id = :guild_id)
+                        GROUP BY r.guild_id, r.donor_id
+                           )
                 SELECT
-                    rank_donated,
-                    user_id,
+                    rank() OVER (ORDER BY donor_id DESC) AS rank_donated,
+                    donor_id                             AS user_id,
                     donated
                 FROM
-                    %s
-                WHERE guild_id = ?
-                    AND donated != 0
-                ORDER BY donated DESC
+                    full_log
                 OFFSET ?
                 LIMIT ?;
-                """, table)
-                .single(call().bind(guildId()).bind(page * pageSize).bind(pageSize))
+                """)
+                .single(call().bind("reset_date", resetDate())
+                              .bind("date_init",mode.dateInit(), INSTANT_TIMESTAMP)
+                              .bind("guild_id", guildId())
+                              .bind(page * pageSize)
+                              .bind(pageSize))
                 .map(RankingEntry::buildGivenRanking)
                 .all();
     }

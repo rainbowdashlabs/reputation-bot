@@ -16,6 +16,7 @@ import de.chojo.repbot.dao.snapshots.RankingEntry;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public abstract class UserRanking implements GuildHolder {
@@ -53,4 +54,11 @@ public abstract class UserRanking implements GuildHolder {
 
     protected abstract int pages(int pageSize, Member member, ReputationMode mode);
 
+    public UserRankings ranking() {
+        return user;
+    }
+
+    public LocalDate resetDate() {
+        return user.ranking().reputation().repGuild().settings().general().resetDate();
+    }
 }

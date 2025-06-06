@@ -12,6 +12,7 @@ import de.chojo.repbot.dao.snapshots.RankingEntry;
 import de.chojo.sadu.queries.converter.StandardValueConverter;
 import net.dv8tion.jda.api.entities.Member;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
@@ -35,6 +36,7 @@ public class UserGiven extends UserRanking {
                         WHERE guild_id = ?
                           AND donor_id = ?
                           AND received >= ?
+                          AND (received > :reset_date OR :reset_date IS NULL)
                         GROUP BY guild_id, receiver_id
                     )
                 SELECT
@@ -44,7 +46,7 @@ public class UserGiven extends UserRanking {
                 FROM
                     counts;
                 """)
-                .single(call().bind(guildId()).bind(member.getIdLong()).bind(mode.dateInit(), StandardValueConverter.INSTANT_TIMESTAMP))
+                .single(call().bind(guildId()).bind("reset_date", resetDate()).bind(member.getIdLong()).bind(mode.dateInit(), StandardValueConverter.INSTANT_TIMESTAMP))
                 .map(RankingEntry::buildGivenRanking)
                 .all();
     }
@@ -59,9 +61,10 @@ public class UserGiven extends UserRanking {
                 WHERE guild_id = ?
                   AND donor_id = ?
                   AND received >= ?
+                  AND (received > :reset_date OR :reset_date IS NULL)
                 GROUP BY receiver_id;
                 """)
-                .single(call().bind(pageSize).bind(guildId()).bind(member.getIdLong()).bind(mode.dateInit(), StandardValueConverter.INSTANT_TIMESTAMP))
+                .single(call().bind(pageSize).bind(guildId()).bind("reset_date", resetDate()).bind(member.getIdLong()).bind(mode.dateInit(), StandardValueConverter.INSTANT_TIMESTAMP))
                 .map(row -> row.getInt("count"))
                 .first()
                 .orElse(1);

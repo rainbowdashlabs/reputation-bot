@@ -13,7 +13,7 @@ import de.chojo.repbot.dao.access.guild.settings.sub.AbuseProtection;
 import de.chojo.repbot.dao.components.MemberHolder;
 import de.chojo.repbot.dao.snapshots.ChannelStats;
 import de.chojo.repbot.dao.snapshots.RepProfile;
-import de.chojo.sadu.queries.converter.StandardValueConverter;
+import de.chojo.repbot.util.QueryLoader;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -26,14 +26,17 @@ import javax.annotation.Nullable;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
+import static de.chojo.sadu.queries.converter.StandardValueConverter.INSTANT_TIMESTAMP;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class RepUser implements MemberHolder {
+    private static final String PROFILE = QueryLoader.loadQuery("rep_user", "profile");
     private static final Logger log = getLogger(RepUser.class);
     private final Reputation reputation;
     private final Gdpr gdpr;
@@ -136,7 +139,7 @@ public class RepUser implements MemberHolder {
      * @param message    message to log
      * @param refMessage reference message if available
      * @param type       type of reputation
-     * @return true if the repuation was logged.
+     * @return true if the reputation was logged.
      */
     public boolean addOldReputation(@Nullable Member donor, @NotNull Message message, @Nullable Message refMessage, ThankType type) {
         var success = query("""
@@ -209,25 +212,14 @@ public class RepUser implements MemberHolder {
      */
     public RepProfile profile() {
         var mode = reputation.repGuild().settings().general().reputationMode();
+        LocalDate resetDate = reputation.repGuild().settings().general().resetDate();
         // We probably don't want to cache the profile. There are just too many factors which can change the user reputation.
-        @Language("postgresql")
-        String query;
-        if (mode.isSupportsOffset()) {
-            query = """
-                    SELECT rank, rank_donated, user_id, reputation, rep_offset, raw_reputation, donated
-                    FROM %s
-                    WHERE guild_id = ? AND user_id = ?;
-                    """;
-        } else {
-            query = """
-                    SELECT rank, rank_donated, user_id, reputation, 0 AS rep_offset, reputation AS raw_reputation, donated
-                    FROM %s
-                    WHERE guild_id = ? AND user_id = ?;
-                    """;
-        }
 
-        return query(query, mode.guildRanking())
-                .single(call().bind(guildId()).bind(userId()))
+        return query(PROFILE)
+                .single(call().bind("guild_id", guildId())
+                              .bind("user_id", userId())
+                              .bind("date_init", mode.dateInit(), INSTANT_TIMESTAMP)
+                              .bind("reset_date", resetDate))
                 .map(row -> RepProfile.buildProfile(this, row))
                 .first()
                 .orElseGet(() -> RepProfile.empty(this, user()));
@@ -277,7 +269,7 @@ public class RepUser implements MemberHolder {
                 """)
                 .single(call().bind(guildId())
                               .bind(memberId())
-                              .bind(reputation().repGuild().settings().general().reputationMode().dateInit(), StandardValueConverter.INSTANT_TIMESTAMP))
+                              .bind(reputation().repGuild().settings().general().reputationMode().dateInit(), INSTANT_TIMESTAMP))
                 .map(ChannelStats::build)
                 .all();
     }
@@ -297,7 +289,7 @@ public class RepUser implements MemberHolder {
                 """)
                 .single(call().bind(guildId())
                               .bind(memberId())
-                              .bind(reputation().repGuild().settings().general().reputationMode().dateInit(), StandardValueConverter.INSTANT_TIMESTAMP))
+                              .bind(reputation().repGuild().settings().general().reputationMode().dateInit(), INSTANT_TIMESTAMP))
                 .map(ChannelStats::build)
                 .all();
     }
