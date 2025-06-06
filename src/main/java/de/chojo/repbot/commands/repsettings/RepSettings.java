@@ -15,6 +15,7 @@ import de.chojo.repbot.commands.repsettings.handler.name.Set;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.GuildRepository;
 
+import static de.chojo.jdautil.interactions.slash.Argument.bool;
 import static de.chojo.jdautil.interactions.slash.Argument.text;
 import static de.chojo.jdautil.interactions.slash.Group.group;
 import static de.chojo.jdautil.interactions.slash.SubCommand.sub;
@@ -32,8 +33,8 @@ public class RepSettings extends SlashCommand {
                 .group(group("name", "command.repsettings.name.description")
                         .subCommand(sub("set", "command.repsettings.name.set.description")
                                 .handler(new Set(guildRepository, configuration))
-                                .argument(text("name", "command.repsettings.name.set.description")
-                                        .minLength(1).maxLength(16).asRequired()))
+                                .argument(text("name", "command.repsettings.name.set.description").minLength(1).maxLength(16).asRequired())
+                                .argument(bool("emoji", "command.repsettings.name.set.emoji.description")))
                         .subCommand(sub("reset", "command.repsettings.name.reset.description")
                                 .handler(new Reset(guildRepository)))));
     }

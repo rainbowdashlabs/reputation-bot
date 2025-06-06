@@ -59,7 +59,18 @@ public class PremiumService extends ListenerAdapter {
         PremiumService service = new PremiumService(guildRepository, configuration, localizer, shardManager);
         threading.repBotWorker().scheduleAtFixedRate(service::cleanExpiredEntitlements, 10, 60, TimeUnit.MINUTES);
         threading.repBotWorker().scheduleAtFixedRate(service::checkErrors, 2, 60, TimeUnit.MINUTES);
+        threading.repBotWorker().scheduleAtFixedRate(service::checkGuilds, 1, 1440, TimeUnit.MINUTES);
         return service;
+    }
+
+    private void checkGuilds() {
+        for (List<RepGuild> guild : guildRepository.guilds(200)) {
+            for (RepGuild repGuild : guild) {
+                for (SupporterFeature feature : SupporterFeature.values()) {
+                    checkForTier(repGuild.guild(), feature);
+                }
+            }
+        }
     }
 
     private PremiumService(GuildRepository guildRepository, Configuration configuration, Localizer localizer, ShardManager shardManager) {
@@ -107,6 +118,7 @@ public class PremiumService extends ListenerAdapter {
     }
 
     public void checkForTier(Guild guild, SupporterFeature type) {
+        if(guild == null) return;
         RepGuild repGuild = guildRepository.guild(guild);
         Subscriptions subscriptions = repGuild.subscriptions();
         if (type.isEntitled(skus(), repGuild)) {

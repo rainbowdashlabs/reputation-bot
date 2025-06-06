@@ -13,6 +13,8 @@ import de.chojo.repbot.dao.provider.GuildRepository;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
+import java.util.Objects;
+
 public class Set implements SlashHandler {
     private static final int MAX_NAME_LENGTH = 16;
     private final GuildRepository guildRepository;
@@ -30,6 +32,10 @@ public class Set implements SlashHandler {
             return;
         }
         String name = event.getOption("name", OptionMapping::getAsString);
+        Boolean emoji = Objects.requireNonNullElse(event.getOption("emoji", OptionMapping::getAsBoolean), false);
+        if(emoji){
+            name = ":%s:".formatted(name);
+        }
         guildRepository.guild(event.getGuild()).localeOverrides().setOverride("words.reputation", name);
         event.reply(eventContext.localize("command.repsettings.name.set.message.set")).setEphemeral(true).queue();
 
