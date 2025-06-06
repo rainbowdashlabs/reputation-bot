@@ -67,10 +67,19 @@ FROM
 WHERE thankword ~* '[(){}*. ]'
    OR thankword ILIKE '%\\s%';
 
-CREATE TABLE log_channel (
+CREATE TABLE repbot_schema.log_channel (
     guild_id   BIGINT                NOT NULL
         CONSTRAINT log_channel_pk
             PRIMARY KEY,
     active     BOOLEAN DEFAULT FALSE NOT NULL,
     channel_id BIGINT
 );
+
+DROP VIEW IF EXISTS repbot_schema.global_user_reputation;
+DROP VIEW IF EXISTS repbot_schema.user_reputation;
+DROP VIEW IF EXISTS repbot_schema.user_reputation_7_days;
+DROP VIEW IF EXISTS repbot_schema.user_reputation_30_days;
+DROP VIEW IF EXISTS repbot_schema.user_reputation_week;
+DROP VIEW IF EXISTS repbot_schema.user_reputation_month;
+DROP VIEW IF EXISTS repbot_schema.truncated_reputation_log;
+DROP VIEW IF EXISTS repbot_schema.truncated_reputation_offset;

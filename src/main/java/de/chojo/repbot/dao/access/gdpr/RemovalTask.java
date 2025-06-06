@@ -40,7 +40,8 @@ public final class RemovalTask {
             if (userId() == 0) {
                 var tables = List.of("reputation_log", "guild_settings", "active_channel", "abuse_protection",
                         "active_categories", "reputation_settings", "guild_ranks", "thankwords", "thank_settings",
-                        "reputation_offset", "receiver_roles", "donor_roles", "guild_reactions", "announcements");
+                        "reputation_offset", "receiver_roles", "donor_roles", "guild_reactions", "announcements",
+                        "autopost", "guild_locale_overrides");
                 for (var table : tables) {
                     conn.query("DELETE FROM %s WHERE guild_id = ?;", table).single(call().bind(guildId)).delete();
                 }
