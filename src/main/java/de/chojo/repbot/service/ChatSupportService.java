@@ -50,9 +50,9 @@ public class ChatSupportService extends ListenerAdapter {
                              .filter(Attachment::isImage)
                              .map(Attachment::getUrl)
                              .collect(Collectors.joining(", "));
-        var builder = fromMessage(message)
-                .addContent("\nAttachments: " + list)
-                .addFiles();
+
+        var builder = fromMessage(message);
+        if (!list.isBlank()) builder.addContent("\nAttachments: " + list);
         return builder.build();
     }
 
