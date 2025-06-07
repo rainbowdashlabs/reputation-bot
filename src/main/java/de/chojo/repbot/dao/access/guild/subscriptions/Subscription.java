@@ -19,12 +19,14 @@ import static de.chojo.sadu.queries.converter.StandardValueConverter.INSTANT_TIM
 public class Subscription extends SKU {
     private final long id;
     private final SkuTarget skuTarget;
+    private final Entitlement.EntitlementType purchaseType;
     private final Instant endsAt;
 
-    public Subscription(long skuId, long id, SkuTarget skuTarget, Entitlement.EntitlementType purchase_type, Instant endsAt) {
+    public Subscription(long skuId, long id, SkuTarget skuTarget, Entitlement.EntitlementType purchaseType, Instant endsAt) {
         super(skuId);
         this.id = id;
         this.skuTarget = skuTarget;
+        this.purchaseType = purchaseType;
         this.endsAt = endsAt;
     }
 
@@ -38,6 +40,10 @@ public class Subscription extends SKU {
 
     public Instant endsAt() {
         return endsAt;
+    }
+
+    public Entitlement.EntitlementType purchaseType() {
+        return purchaseType;
     }
 
     public static RowMapping<Subscription> map() {

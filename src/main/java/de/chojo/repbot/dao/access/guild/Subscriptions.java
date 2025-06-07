@@ -154,11 +154,11 @@ public class Subscriptions implements GuildHolder, SkuMeta {
         InsertionResult result = query("""
                 INSERT
                 INTO
-                    subscriptions(id, sku, type, ends_at)
+                    subscriptions(id, sku, type, ends_at, purchase_type)
                 VALUES
                     (?, ?, ?, ?)
                 ON CONFLICT(id, sku) DO UPDATE SET ends_at = excluded.ends_at""")
-                .single(call().bind(subscription.id()).bind(subscription.skuId()).bind(subscription.skuTarget()).bind(subscription.endsAt(), StandardAdapter.INSTANT_AS_TIMESTAMP))
+                .single(call().bind(subscription.id()).bind(subscription.skuId()).bind(subscription.skuTarget()).bind(subscription.endsAt(), StandardAdapter.INSTANT_AS_TIMESTAMP).bind(subscription.purchaseType()))
                 .insert();
         if (result.changed()) {
             subscriptions().remove(subscription);
