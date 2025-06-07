@@ -202,7 +202,7 @@ public class PremiumService extends ListenerAdapter {
         EntitlementType type = entitlement.getType();
         Subscription sub = Subscription.fromEntitlement(entitlement);
         switch (type) {
-            case APPLICATION_SUBSCRIPTION, DEVELOPER_GIFT ->
+            case APPLICATION_SUBSCRIPTION, DEVELOPER_GIFT, PURCHASE ->
                     guildRepository.byId(sub.id()).subscriptions().addSubscription(sub);
             default -> log.error(LogNotify.NOTIFY_ADMIN, "Unknown entitlement type {} for sku {} for {} {}",
                     entitlement.getType(),
