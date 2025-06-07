@@ -68,9 +68,7 @@ public class PremiumService extends ListenerAdapter {
     private void checkGuilds() {
         for (List<RepGuild> guild : guildRepository.guilds(200)) {
             for (RepGuild repGuild : guild) {
-                for (SupporterFeature feature : SupporterFeature.values()) {
-                    checkForTier(repGuild.load(shardManager).guild(), feature);
-                }
+                checkGuild(repGuild.guild());
             }
         }
     }
@@ -117,11 +115,20 @@ public class PremiumService extends ListenerAdapter {
             Guild guildById = shardManager.getGuildById(id);
             if (guildById == null) continue;
             RepGuild repGuild = guildRepository.guild(guildById);
+            refresh(guildById);
             Subscriptions subscriptions = repGuild.subscriptions();
             List<SubscriptionError> errors = subscriptions.getExpiredErrors(skus().subscriptionErrorMessageHours());
             for (SubscriptionError error : errors) {
                 checkForTier(guildById, error.type());
             }
+        }
+    }
+
+    public void checkGuild(Guild guild) {
+        RepGuild repGuild = guildRepository.guild(guild);
+        refresh(guild);
+        for (SupporterFeature feature : SupporterFeature.values()) {
+            checkForTier(repGuild.load(shardManager).guild(), feature);
         }
     }
 
@@ -213,7 +220,7 @@ public class PremiumService extends ListenerAdapter {
                 FROM
                     subscriptions
                 WHERE ends_at < now()
-                RETURNING id, sku, type, ends_at
+                RETURNING id, sku, type, ends_at, purchase_type
                 """)
                 .single()
                 .map(Subscription.map())

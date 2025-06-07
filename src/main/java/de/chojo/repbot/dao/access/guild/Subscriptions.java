@@ -24,6 +24,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
@@ -82,7 +83,9 @@ public class Subscriptions implements GuildHolder, SkuMeta {
                         .map(SubscriptionError::build)
                         .all()
                         .stream()
-                        .collect(java.util.stream.Collectors.toMap(SubscriptionError::type, Function.identity(), (a, b) -> a, () -> new EnumMap<>(SupporterFeature.class)));
+                        .collect(Collectors.toMap(SubscriptionError::type, Function.identity(),
+                                (a, b) -> a,
+                                () -> new EnumMap<>(SupporterFeature.class)));
         }
         return errorMessages;
     }
@@ -134,7 +137,8 @@ public class Subscriptions implements GuildHolder, SkuMeta {
                         id,
                         sku,
                         type,
-                        ends_at
+                        ends_at,
+                        purchase_type
                     FROM
                         subscriptions
                     WHERE id = ?

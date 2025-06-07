@@ -21,7 +21,7 @@ public class Subscription extends SKU {
     private final SkuTarget skuTarget;
     private final Instant endsAt;
 
-    public Subscription(long skuId, long id, SkuTarget skuTarget, Instant endsAt) {
+    public Subscription(long skuId, long id, SkuTarget skuTarget, Entitlement.EntitlementType purchase_type, Instant endsAt) {
         super(skuId);
         this.id = id;
         this.skuTarget = skuTarget;
@@ -45,6 +45,7 @@ public class Subscription extends SKU {
                 row.getLong("sku"),
                 row.getLong("id"),
                 row.getEnum("type", SkuTarget.class),
+                row.getEnum("purchase_type", Entitlement.EntitlementType.class),
                 row.get("ends_at", INSTANT_TIMESTAMP));
     }
 
@@ -55,6 +56,7 @@ public class Subscription extends SKU {
         return new Subscription(entitlement.getSkuIdLong(),
                 target,
                 targetType,
+                entitlement.getType(),
                 Optional.ofNullable(entitlement.getTimeEnding()).map(OffsetDateTime::toInstant).orElse(null));
     }
 
