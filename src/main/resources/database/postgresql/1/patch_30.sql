@@ -1,2 +1,2 @@
-alter table repbot_schema.subscriptions
-    add purchase_type text default '' not null;
+ALTER TABLE repbot_schema.subscriptions
+    ADD COLUMN IF NOT EXISTS purchase_type TEXT DEFAULT '' NOT NULL;
