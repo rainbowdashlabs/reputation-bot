@@ -61,7 +61,7 @@ public class PremiumService extends ListenerAdapter {
         PremiumService service = new PremiumService(guildRepository, configuration, localizer, shardManager);
         threading.repBotWorker().scheduleAtFixedRate(service::cleanExpiredEntitlements, 10, 60, TimeUnit.MINUTES);
         threading.repBotWorker().scheduleAtFixedRate(service::checkErrors, 2, 60, TimeUnit.MINUTES);
-        threading.repBotWorker().scheduleAtFixedRate(service::checkGuilds, 50, 1440, TimeUnit.MINUTES);
+        threading.repBotWorker().scheduleAtFixedRate(service::checkGuilds, 1, 1440, TimeUnit.MINUTES);
         return service;
     }
 
@@ -184,6 +184,7 @@ public class PremiumService extends ListenerAdapter {
 
         long id = settings.general().systemChannel();
         TextChannel textChannelById = guild.getTextChannelById(id);
+        log.debug("Sending message for guild {} for {}.", guild, type.name());
         if (textChannelById != null) {
             textChannelById.sendMessage(data).queue();
         } else {
