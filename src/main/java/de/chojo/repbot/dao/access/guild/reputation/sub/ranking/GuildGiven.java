@@ -30,7 +30,7 @@ public class GuildGiven extends GuildRanking {
                 WHERE guild_id = :guild_id
                   AND donor_id IS NOT NULL
                   AND donor_id NOT IN (SELECT user_id FROM cleanup_schedule WHERE guild_id = :guild_id)
-                  AND (received > :reset_date OR :reset_date IS NULL)
+                  AND (received > :reset_date OR :reset_date::TIMESTAMP IS NULL)
                   AND received >= :date_init;
                 """)
                 .single(call().bind("reset_date", resetDate())
@@ -55,7 +55,7 @@ public class GuildGiven extends GuildRanking {
                         FROM
                             reputation_log r
                         WHERE r.received > :date_init
-                          AND (received > :reset_date OR :reset_date IS NULL)
+                          AND (received > :reset_date OR :reset_date::TIMESTAMP IS NULL)
                           AND guild_id = :guild_id
                           AND donor_id IS NOT NULL
                           AND donor_id NOT IN (SELECT user_id FROM cleanup_schedule WHERE r.guild_id = :guild_id)

@@ -35,7 +35,7 @@ public class UserReceived extends UserRanking {
                         WHERE guild_id = ?
                           AND receiver_id = ?
                           AND received >= ?
-                          AND (received > :reset_date OR :reset_date IS NULL)
+                          AND (received > :reset_date OR :reset_date::TIMESTAMP IS NULL)
                         GROUP BY guild_id, donor_id
                     )
                 SELECT
@@ -60,7 +60,7 @@ public class UserReceived extends UserRanking {
                 WHERE guild_id = ?
                   AND receiver_id = ?
                   AND received >= ?
-                  AND (received > :reset_date OR :reset_date IS NULL)
+                  AND (received > :reset_date OR :reset_date::TIMESTAMP IS NULL)
                 GROUP BY donor_id;
                 """)
                 .single(call().bind(pageSize).bind(guildId()).bind("reset_date", resetDate()).bind(member.getIdLong()).bind(mode.dateInit(), StandardValueConverter.INSTANT_TIMESTAMP))

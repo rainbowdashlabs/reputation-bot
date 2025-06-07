@@ -8,7 +8,7 @@ WITH
             reputation_offset o
         WHERE o.added > :date_init
           AND o.guild_id = :guild_id
-          AND ( added > :reset_date OR :reset_date IS NULL )
+          AND ( added > :reset_date OR :reset_date::TIMESTAMP IS NULL )
         GROUP BY o.user_id
            ),
     full_log
@@ -19,7 +19,7 @@ WITH
         FROM
             reputation_log
         WHERE received > :date_init
-          AND ( received > :reset_date OR :reset_date IS NULL )
+          AND ( received > :reset_date OR :reset_date::TIMESTAMP IS NULL )
           AND guild_id = :guild_id
           AND receiver_id NOT IN (
             SELECT

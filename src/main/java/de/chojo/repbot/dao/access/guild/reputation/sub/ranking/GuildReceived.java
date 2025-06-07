@@ -31,7 +31,7 @@ public class GuildReceived extends GuildRanking {
                 WHERE guild_id = :guild_id
                   AND received > :date_init
                   AND receiver_id NOT IN (SELECT user_id FROM cleanup_schedule WHERE guild_id = :guild_id)
-                  AND (received > :reset_date OR :reset_date IS NULL)
+                  AND (received > :reset_date OR :reset_date::TIMESTAMP IS NULL)
                 GROUP BY receiver_id;
                 """)
                 .single(call().bind("reset_date", resetDate())

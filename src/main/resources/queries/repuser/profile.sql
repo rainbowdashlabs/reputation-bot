@@ -7,7 +7,7 @@ WITH
         FROM
             reputation_offset o
         WHERE o.added > :date_init
-          AND ( added > :reset_date OR :reset_date IS NULL )
+          AND ( added > :reset_date OR :reset_date::TIMESTAMP IS NULL )
           AND guild_id = :guild_id
         GROUP BY o.user_id
            ),
@@ -20,7 +20,7 @@ WITH
         FROM
             reputation_log r
         WHERE r.received > :date_init
-          AND ( received > :reset_date OR :reset_date IS NULL )
+          AND ( received > :reset_date OR :reset_date::TIMESTAMP IS NULL )
           AND guild_id = :guild_id
            ),
     rep_count
