@@ -57,16 +57,20 @@ public class UserGiven extends UserRanking {
                 SELECT
                     ceil(count(1)::NUMERIC / ?) AS count
                 FROM
-                    reputation_log
-                WHERE guild_id = ?
-                  AND donor_id = ?
-                  AND received >= ?
-                  AND (received > :reset_date OR :reset_date::TIMESTAMP IS NULL)
-                GROUP BY receiver_id;
+                    (
+                        SELECT DISTINCT
+                            receiver_id
+                        FROM
+                            reputation_log
+                        WHERE guild_id = ?
+                          AND donor_id = ?
+                          AND received >= ?
+                          AND ( received > :reset_date OR :reset_date::TIMESTAMP IS NULL )
+                    ) a;
                 """)
                 .single(call().bind(pageSize).bind(guildId()).bind("reset_date", resetDate()).bind(member.getIdLong()).bind(mode.dateInit(), StandardValueConverter.INSTANT_TIMESTAMP))
                 .map(row -> row.getInt("count"))
                 .first()
-                .orElse(1);
+                .orElse(0);
     }
 }

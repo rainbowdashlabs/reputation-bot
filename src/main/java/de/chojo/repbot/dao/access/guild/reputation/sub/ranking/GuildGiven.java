@@ -26,12 +26,21 @@ public class GuildGiven extends GuildRanking {
                 SELECT
                     ceil(count(1)::NUMERIC / ?) AS count
                 FROM
-                    reputation_log
-                WHERE guild_id = :guild_id
-                  AND donor_id IS NOT NULL
-                  AND donor_id NOT IN (SELECT user_id FROM cleanup_schedule WHERE guild_id = :guild_id)
-                  AND (received > :reset_date OR :reset_date::TIMESTAMP IS NULL)
-                  AND received >= :date_init;
+                    (
+                        SELECT
+                            DISTINCT donor_id
+                        FROM
+                            reputation_log
+                        WHERE guild_id = :guild_id
+                          AND donor_id IS NOT NULL
+                          AND donor_id NOT IN (
+                            SELECT user_id
+                            FROM cleanup_schedule
+                            WHERE guild_id = :guild_id
+                                              )
+                          AND ( received > :reset_date OR :reset_date::TIMESTAMP IS NULL )
+                          AND received >= :date_init
+                    ) a;
                 """)
                 .single(call().bind("reset_date", resetDate())
                               .bind(pageSize)
@@ -39,7 +48,7 @@ public class GuildGiven extends GuildRanking {
                               ).bind("date_init",mode.dateInit(), INSTANT_TIMESTAMP))
                 .map(row -> row.getInt("count"))
                 .first()
-                .orElse(1);
+                .orElse(0);
     }
 
     @Override

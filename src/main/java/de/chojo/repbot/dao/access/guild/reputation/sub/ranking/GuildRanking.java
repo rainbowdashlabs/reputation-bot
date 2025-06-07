@@ -65,7 +65,7 @@ public abstract class GuildRanking implements GuildHolder {
 
     protected abstract int pages(int pageSize, ReputationMode mode);
 
-        public LocalDate resetDate() {
+    public LocalDate resetDate() {
         return rankings.reputation().repGuild().settings().general().resetDate();
     }
 }

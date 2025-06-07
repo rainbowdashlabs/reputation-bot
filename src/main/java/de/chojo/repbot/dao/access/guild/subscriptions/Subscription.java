@@ -19,12 +19,14 @@ import static de.chojo.sadu.queries.converter.StandardValueConverter.INSTANT_TIM
 public class Subscription extends SKU {
     private final long id;
     private final SkuTarget skuTarget;
+    private final Entitlement.EntitlementType purchaseType;
     private final Instant endsAt;
 
-    public Subscription(long skuId, long id, SkuTarget skuTarget, Instant endsAt) {
+    public Subscription(long skuId, long id, SkuTarget skuTarget, Entitlement.EntitlementType purchaseType, Instant endsAt) {
         super(skuId);
         this.id = id;
         this.skuTarget = skuTarget;
+        this.purchaseType = purchaseType;
         this.endsAt = endsAt;
     }
 
@@ -40,11 +42,16 @@ public class Subscription extends SKU {
         return endsAt;
     }
 
+    public Entitlement.EntitlementType purchaseType() {
+        return purchaseType;
+    }
+
     public static RowMapping<Subscription> map() {
         return row -> new Subscription(
                 row.getLong("sku"),
                 row.getLong("id"),
                 row.getEnum("type", SkuTarget.class),
+                row.getEnum("purchase_type", Entitlement.EntitlementType.class),
                 row.get("ends_at", INSTANT_TIMESTAMP));
     }
 
@@ -55,6 +62,7 @@ public class Subscription extends SKU {
         return new Subscription(entitlement.getSkuIdLong(),
                 target,
                 targetType,
+                entitlement.getType(),
                 Optional.ofNullable(entitlement.getTimeEnding()).map(OffsetDateTime::toInstant).orElse(null));
     }
 
