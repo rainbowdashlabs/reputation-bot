@@ -21,6 +21,7 @@ import de.chojo.jdautil.parsing.ValueParser;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.commands.channel.handler.BaseChannelModifier;
 import de.chojo.repbot.config.Configuration;
+import de.chojo.repbot.dao.access.guild.settings.sub.thanking.Channels;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.serialization.ThankwordsContainer;
 import de.chojo.repbot.util.PermissionErrorHandler;
@@ -37,6 +38,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Start implements SlashHandler {
@@ -69,7 +71,6 @@ public class Start implements SlashHandler {
                                          .addStep(3, buildRoles())
                                          .addStep(4, buildLoadDefaults())
                                          .addStep(5, buildChannels());
-
         return builder.build();
     }
 
@@ -170,11 +171,16 @@ public class Start implements SlashHandler {
     private Result handleChannels(ConversationContext context) {
         List<GuildChannel> mentions = context.message().getMentions().getChannels();
         List<GuildChannel> channels = mentions.stream().filter(channel -> BaseChannelModifier.TEXT_CHANNEL.contains(channel.getType())).toList();
+        Channels channelsSettings = guildRepository.guild(context.getGuild()).settings().thanking().channels();
         var addedChannel = channels.stream()
                                    .map(channel -> {
-                                       guildRepository.guild(context.getGuild()).settings().thanking().channels().add((StandardGuildChannel) channel);
+                                       if (channelsSettings.channels().size() >= configuration.skus().features().reputationChannel().defaultChannel()) {
+                                           return null;
+                                       }
+                                       channelsSettings.add((StandardGuildChannel) channel);
                                        return channel.getAsMention();
                                    })
+                                   .filter(Objects::nonNull)
                                    .collect(Collectors.joining(", "));
         context.reply(context.localize("command.channel.add.message.added",
                        Replacement.create("CHANNEL", addedChannel)))
