@@ -1,3 +1,8 @@
+/*
+ *     SPDX-License-Identifier: AGPL-3.0-only
+ *
+ *     Copyright (C) RainbowDashLabs and Contributor
+ */
 package de.chojo.repbot.service;
 
 import de.chojo.jdautil.wrapper.EventContext;
@@ -14,7 +19,6 @@ public class OnboardingService extends ListenerAdapter {
     }
 
     public void start(SlashCommandInteractionEvent event, EventContext context) {
-        context.conversationService()
 
     }
 }
