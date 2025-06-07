@@ -27,6 +27,7 @@ import de.chojo.repbot.commands.profile.Profile;
 import de.chojo.repbot.commands.prune.Prune;
 import de.chojo.repbot.commands.ranking.Ranking;
 import de.chojo.repbot.commands.reactions.Reactions;
+import de.chojo.repbot.commands.rep.Rep;
 import de.chojo.repbot.commands.repadmin.RepAdmin;
 import de.chojo.repbot.commands.repsettings.RepSettings;
 import de.chojo.repbot.commands.roles.Roles;
@@ -222,7 +223,8 @@ public class Bot {
                               new RepAdmin(guilds, configuration, roleAssigner, premiumService),
                               new Messages(guilds),
                               new BotAdmin(guilds, configuration, statistic),
-                              new Ranking(guilds, configuration))
+                              new Ranking(guilds, configuration),
+                              new Rep()/*TODO: remove rep command*/)
                       .withMessages(new MessageLog(guilds))
                       .withUsers(new UserReceived(guilds, configuration),
                               new UserDonated(guilds, configuration))

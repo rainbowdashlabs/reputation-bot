@@ -5,6 +5,7 @@
  */
 package de.chojo.repbot.service;
 
+import de.chojo.jdautil.util.Consumers;
 import de.chojo.repbot.config.Configuration;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
@@ -45,7 +46,9 @@ public class ChatSupportService extends ListenerAdapter {
                 && event.getChannel() instanceof ThreadChannel thread
                 && thread.getParentChannel().getIdLong() == configuration.baseSettings().privateSupportChannel()) {
             getUser(thread).ifPresent(user -> {
-                user.openPrivateChannel().complete().sendMessage(reconstruct(event.getMessage())).queue();
+
+                user.openPrivateChannel().complete().sendMessage(reconstruct(event.getMessage()))
+                    .queue(Consumers.empty(), err -> getThread(event.getAuthor()).sendMessage("Message could not be sent.").queue());
             });
         }
     }
@@ -68,7 +71,7 @@ public class ChatSupportService extends ListenerAdapter {
                 .first()
                 .orElseGet(() -> createThread(user));
         ThreadChannel thread = home().getThreadChannelById(id);
-        if(thread == null) return home().getThreadChannelById(createThread(user));
+        if (thread == null) return home().getThreadChannelById(createThread(user));
 
         if (thread.isLocked() || thread.isArchived()) {
             query("DELETE FROM support_threads WHERE user_id = ?")
@@ -98,7 +101,7 @@ public class ChatSupportService extends ListenerAdapter {
 
         user.openPrivateChannel().complete().sendMessage("A new support chat was opened. Your request has been sent to the support team.").queue();
 
-        query("INSERT INTO support_threads (user_id, thread_id) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET thread_id = EXCLUDED.thread_id;")
+        query("INSERT INTO support_threads (user_id, thread_id) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET thread_id = excluded.thread_id;")
                 .single(call().bind(user.getIdLong()).bind(thread.getIdLong()))
                 .insert();
 
