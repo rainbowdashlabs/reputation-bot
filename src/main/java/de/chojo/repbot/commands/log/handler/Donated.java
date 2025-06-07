@@ -60,7 +60,7 @@ public class Donated implements SlashHandler {
             @Override
             public int pages() {
                 if (premium) {
-                    return Math.min(configuration.skus().features().reputationLog().defaultSize(), PAGE_SIZE);
+                    return Math.min(configuration.skus().features().reputationLog().defaultSize(), super.pages());
                 }
                 return super.pages();
             }
