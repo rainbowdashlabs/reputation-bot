@@ -15,6 +15,11 @@ repositories {
     maven("https://eldonexus.de/repository/maven-public")
     maven("https://eldonexus.de/repository/maven-proxies")
     maven("https://m2.dv8tion.net/releases")
+    maven("https://jitpack.io"){
+        content {
+            includeGroup("net.dv8tion")
+        }
+    }
 }
 
 spotless {
@@ -28,6 +33,7 @@ dependencies {
     //discord
     implementation("de.chojo", "cjda-util", "2.11.0+jda-5.3.2-20250606.213438-13") {
         exclude(group = "club.minnced", module = "opus-java")
+        exclude(group = "net.dv8tion", module = "JDA")
     }
 
     val openapi = "6.6.0"
