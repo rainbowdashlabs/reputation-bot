@@ -67,7 +67,7 @@ public class SelfCleanupService implements Runnable {
             Set<InactivityMarker> markers = EnumSet.noneOf(InactivityMarker.class);
             // Check for latest reputation
             var lastReputation = repGuild.reputation().log().getLatestReputation();
-            if (lastReputation.isEmpty()) {
+            if (lastReputation.isPresent()) {
                 if (lastReputation.get().received().isBefore(configuration.selfCleanup().getInactiveDaysOffset())) {
                     markers.add(InactivityMarker.NO_REPUTATION);
                 }

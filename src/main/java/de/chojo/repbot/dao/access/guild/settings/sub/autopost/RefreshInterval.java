@@ -5,7 +5,7 @@
  */
 package de.chojo.repbot.dao.access.guild.settings.sub.autopost;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoField;
 import java.util.function.Predicate;
 
@@ -17,23 +17,23 @@ public enum RefreshInterval {
     /**
      * Send at midnight UTC.
      */
-    DAILY(now -> now.get(ChronoField.HOUR_OF_DAY) == 0),
+    DAILY(now -> now.getHour() == 0),
     /**
      * Send at midnight UTC every Monday.
      */
-    WEEKLY(now -> now.get(ChronoField.DAY_OF_WEEK) == 1 && now.get(ChronoField.HOUR_OF_DAY) == 0),
+    WEEKLY(now -> now.get(ChronoField.DAY_OF_WEEK) == 1 && now.getHour() == 0),
     /**
      * Send at midnight UTC every first day of the month.
      */
-    MONTHLY(now -> now.get(ChronoField.DAY_OF_MONTH) == 1 && now.get(ChronoField.HOUR_OF_DAY) == 0);
+    MONTHLY(now -> now.getDayOfMonth() == 1 && now.getHour() == 0);
 
-    private Predicate<Instant> applicable;
+    private final Predicate<LocalDateTime> applicable;
 
-    RefreshInterval(Predicate<Instant> applicable) {
+    RefreshInterval(Predicate<LocalDateTime> applicable) {
         this.applicable = applicable;
     }
 
-    public boolean isApplicable(Instant now) {
+    public boolean isApplicable(LocalDateTime now) {
         return applicable.test(now);
     }
 
