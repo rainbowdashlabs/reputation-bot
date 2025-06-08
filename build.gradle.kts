@@ -26,7 +26,7 @@ spotless {
 
 dependencies {
     //discord
-    implementation("de.chojo", "cjda-util", "2.11.0+jda-5.3.2-20250608.111726-19") {
+    implementation("de.chojo", "cjda-util", "2.11.0+jda-5.3.2-20250608.200008-20") {
         exclude(group = "club.minnced", module = "opus-java")
     }
 
