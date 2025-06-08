@@ -268,7 +268,7 @@ public class ReputationService {
             log.trace("Could not log reputation for message {}. An equal entry was already present.", message.getIdLong());
             return false;
         }
-        // TODO: Send into channel
+
         logReputationEntry(settings, guild, new ReputationLogEntry(null,
                 guild.getIdLong(),
                 message.getChannel().getIdLong(),

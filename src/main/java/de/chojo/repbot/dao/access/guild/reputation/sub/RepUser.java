@@ -148,7 +148,7 @@ public class RepUser implements MemberHolder {
                         DO NOTHING;
                 """)
                 .single(call().bind(guildId())
-                              .bind(donor == null ? 0 : donor.getIdLong())
+                              .bind(donor == null ? null : donor.getIdLong())
                               .bind(userId())
                               .bind(message.getIdLong())
                               .bind(refMessage == null ? null : refMessage.getIdLong())

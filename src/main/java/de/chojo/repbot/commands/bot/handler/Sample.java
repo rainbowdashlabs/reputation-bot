@@ -75,7 +75,7 @@ public class Sample implements SlashHandler {
                         DO NOTHING;
                 """)
                 .single(call().bind(receiver.getGuild().getIdLong())
-                              .bind(donor == null ? 0 : donor.getIdLong())
+                              .bind(donor == null ? null : donor.getIdLong())
                               .bind(receiver.getIdLong())
                               .bind(messageId)
                               .bind(thankType == ThankType.ANSWER ? refMessage : null)

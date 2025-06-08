@@ -35,6 +35,7 @@ public class UserReceived extends UserRanking {
                         WHERE guild_id = ?
                           AND receiver_id = ?
                           AND received >= ?
+                          AND donor_id IS NOT NULL
                           AND (received > :reset_date OR :reset_date::TIMESTAMP IS NULL)
                         GROUP BY guild_id, donor_id
                         ORDER BY count DESC
