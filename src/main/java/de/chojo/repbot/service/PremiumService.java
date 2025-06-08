@@ -17,6 +17,7 @@ import de.chojo.repbot.core.Threading;
 import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.access.guild.Subscriptions;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
+import de.chojo.repbot.dao.access.guild.subscriptions.SkuTarget;
 import de.chojo.repbot.dao.access.guild.subscriptions.Subscription;
 import de.chojo.repbot.dao.access.guild.subscriptions.SubscriptionError;
 import de.chojo.repbot.dao.provider.GuildRepository;
@@ -61,8 +62,13 @@ public class PremiumService extends ListenerAdapter {
         PremiumService service = new PremiumService(guildRepository, configuration, localizer, shardManager);
         threading.repBotWorker().scheduleAtFixedRate(service::cleanExpiredEntitlements, 10, 60, TimeUnit.MINUTES);
         threading.repBotWorker().scheduleAtFixedRate(service::checkErrors, 2, 60, TimeUnit.MINUTES);
-        threading.repBotWorker().scheduleAtFixedRate(service::checkGuilds, 1, 1440, TimeUnit.MINUTES);
+        threading.repBotWorker().scheduleAtFixedRate(service::checkGuilds, 40, 1440, TimeUnit.MINUTES);
         return service;
+    }
+
+    public boolean activateLifetime(Guild guild, de.chojo.repbot.config.elements.sku.Subscription subscription) {
+        Subscription sub = new Subscription(subscription.subscriptionSku(), guild.getIdLong(), SkuTarget.GUILD, EntitlementType.PURCHASE, null, true);
+        return guildRepository.guild(guild).subscriptions().addSubscription(sub);
     }
 
     private void checkGuilds() {
@@ -209,7 +215,7 @@ public class PremiumService extends ListenerAdapter {
         EntitlementType type = entitlement.getType();
         Subscription sub = Subscription.fromEntitlement(entitlement);
         switch (type) {
-            case APPLICATION_SUBSCRIPTION, DEVELOPER_GIFT, PURCHASE ->
+            case APPLICATION_SUBSCRIPTION, DEVELOPER_GIFT, PURCHASE, FREE_PURCHASE ->
                     guildRepository.byId(sub.id()).subscriptions().addSubscription(sub);
             default -> log.error(LogNotify.NOTIFY_ADMIN, "Unknown entitlement type {} for sku {} for {} {}",
                     entitlement.getType(),
@@ -225,7 +231,7 @@ public class PremiumService extends ListenerAdapter {
                 FROM
                     subscriptions
                 WHERE ends_at < now()
-                RETURNING id, sku, type, ends_at, purchase_type
+                RETURNING id, sku, type, ends_at, purchase_type, persistent
                 """)
                 .single()
                 .map(Subscription.map())

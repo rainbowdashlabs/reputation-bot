@@ -45,8 +45,8 @@ public abstract class BaseTop implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        if (premium && Premium.isNotEntitled(event, configuration.skus().features().advancedRankings().advancedRankings())) {
-            Premium.replyPremium(event, context, configuration.skus().features().advancedRankings().advancedRankings());
+        if (premium && Premium.isNotEntitled(context, configuration.skus().features().advancedRankings().advancedRankings())) {
+            Premium.replyPremium(context, configuration.skus().features().advancedRankings().advancedRankings());
             return;
         }
 

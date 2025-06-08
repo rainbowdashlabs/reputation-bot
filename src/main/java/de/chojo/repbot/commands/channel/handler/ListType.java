@@ -35,8 +35,8 @@ public class ListType implements SlashHandler {
 
         var whitelist = "whitelist".equalsIgnoreCase(event.getOption("type").getAsString());
 
-        if(!whitelist && Premium.isNotEntitled(event, configuration.skus().features().channelBlacklist().allow())) {
-            Premium.replyPremium(event, context, configuration.skus().features().channelBlacklist().allow());
+        if(!whitelist && Premium.isNotEntitled(context, configuration.skus().features().channelBlacklist().allow())) {
+            Premium.replyPremium(context, configuration.skus().features().channelBlacklist().allow());
             return;
         }
 
