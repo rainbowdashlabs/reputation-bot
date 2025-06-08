@@ -3,7 +3,7 @@
  *
  *     Copyright (C) RainbowDashLabs and Contributor
  */
-package de.chojo.repbot.commands.repadmin.handler.support;
+package de.chojo.repbot.commands.supporter.handler;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.wrapper.EventContext;
@@ -20,6 +20,6 @@ public class Refresh implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext eventContext) {
         premiumService.refresh(event.getGuild());
-        event.reply(eventContext.localize("command.repadmin.support.refresh.message.refreshed")).setEphemeral(true).queue();
+        event.reply(eventContext.localize("command.supporter.refresh.message.refreshed")).setEphemeral(true).queue();
     }
 }

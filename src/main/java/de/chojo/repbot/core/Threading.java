@@ -25,14 +25,13 @@ public class Threading {
     private static final Thread.UncaughtExceptionHandler EXCEPTION_HANDLER =
             (t, e) -> {
                 log.error(LogNotify.NOTIFY_ADMIN, "An uncaught exception occurred in {}-{}.", t.getName(), t.threadId(), e);
-                e.printStackTrace();
             };
     private final ThreadGroup eventGroup = new ThreadGroup("Event Worker");
     private final ThreadGroup workerGroup = new ThreadGroup("Scheduled Worker");
     private final ThreadGroup hikariGroup = new ThreadGroup("Hikari Worker");
     private final ThreadGroup jdaGroup = new ThreadGroup("JDA Worker");
     private final ExecutorService eventThreads = Executors.newVirtualThreadPerTaskExecutor();
-    private final ScheduledExecutorService repBotWorker = new Executor(5, createThreadFactory(workerGroup));
+    private final ScheduledExecutorService repBotWorker = new ReportingExecutor(5, createThreadFactory(workerGroup));
 
     public static ThreadFactory createThreadFactory(ThreadGroup group) {
         return r -> new Thread(group, () -> {
@@ -72,9 +71,9 @@ public class Threading {
         repBotWorker.shutdown();
     }
 
-    private static class Executor extends ScheduledThreadPoolExecutor {
+    public static class ReportingExecutor extends ScheduledThreadPoolExecutor {
 
-        public Executor(int corePoolSize, @NotNull ThreadFactory threadFactory) {
+        public ReportingExecutor(int corePoolSize, @NotNull ThreadFactory threadFactory) {
             super(corePoolSize, threadFactory);
         }
 

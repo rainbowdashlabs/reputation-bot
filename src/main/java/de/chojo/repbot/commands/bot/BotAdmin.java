@@ -83,7 +83,7 @@ public class BotAdmin extends SlashCommand {
                                          .argument(Argument.text("guild_id", "Guild id").asRequired()))
                    .group(group("entitlement", "Manage entitlements")
                            .subCommand(sub("create", "Create entitlements")
-                                   .handler(new Create())
+                                   .handler(new Create(configuration))
                                    .argument(text("sku", "skuid").asRequired().withAutoComplete())
                                    .argument(text("ownerid", "guild id")))
                            .subCommand(sub("list", "List entitlements of a guild")

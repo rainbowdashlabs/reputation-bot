@@ -26,13 +26,13 @@ public class Add extends BaseChannelModifier {
     @Override
     public void textChannel(SlashCommandInteractionEvent event, EventContext context, Channels channels, StandardGuildChannel channel) {
         int maxChannel = Integer.MAX_VALUE;
-        if (Premium.isNotEntitled(event, configuration.skus().features().reputationChannel().moreChannel())) {
+        if (Premium.isNotEntitled(context, configuration.skus().features().reputationChannel().moreChannel())) {
             maxChannel = configuration.skus().features().reputationChannel().defaultChannel();
         }
         int size = channels.channels().size();
 
         if (size > maxChannel) {
-            Premium.replyPremium(event, context, configuration.skus().features().reputationChannel().moreChannel());
+            Premium.replyPremium(context, configuration.skus().features().reputationChannel().moreChannel());
             return;
         }
 
@@ -46,13 +46,13 @@ public class Add extends BaseChannelModifier {
     @Override
     public void category(SlashCommandInteractionEvent event, EventContext context, Channels channels, Category category) {
         int maxCategories = Integer.MAX_VALUE;
-        if (Premium.isNotEntitled(event, configuration.skus().features().reputationCategories().moreCategories())) {
+        if (Premium.isNotEntitled(context, configuration.skus().features().reputationCategories().moreCategories())) {
             maxCategories = configuration.skus().features().reputationCategories().defaultCategories();
         }
         int size = channels.categories().size();
 
         if (size > maxCategories) {
-            Premium.replyPremium(event, context, configuration.skus().features().reputationCategories().moreCategories());
+            Premium.replyPremium(context, configuration.skus().features().reputationCategories().moreCategories());
             return;
         }
 

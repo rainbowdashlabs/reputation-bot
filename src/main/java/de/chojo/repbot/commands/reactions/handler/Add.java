@@ -29,8 +29,7 @@ public class Add implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        if (Premium.isNotEntitled(event, configuration.skus().features().additionalEmojis().additionalEmojis())) {
-            Premium.replyPremium(event, context, configuration.skus().features().additionalEmojis().additionalEmojis());
+        if (Premium.checkAndReplyPremium(context, configuration.skus().features().additionalEmojis().additionalEmojis())) {
             return;
         }
 

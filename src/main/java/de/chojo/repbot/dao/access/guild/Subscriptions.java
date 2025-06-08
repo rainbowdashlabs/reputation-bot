@@ -59,6 +59,7 @@ public class Subscriptions implements GuildHolder, SkuMeta {
     }
 
     public void deleteSubscription(Subscription subscription) {
+        if (subscription.isPersistent()) return;
         query("""
                 DELETE FROM subscriptions WHERE id = ? AND sku = ?;
                 """)
@@ -138,7 +139,8 @@ public class Subscriptions implements GuildHolder, SkuMeta {
                         sku,
                         type,
                         ends_at,
-                        purchase_type
+                        purchase_type,
+                        persistent
                     FROM
                         subscriptions
                     WHERE id = ?
@@ -150,20 +152,30 @@ public class Subscriptions implements GuildHolder, SkuMeta {
         return subscriptions;
     }
 
-    public void addSubscription(Subscription subscription) {
+    public boolean addSubscription(Subscription subscription) {
         InsertionResult result = query("""
                 INSERT
                 INTO
-                    subscriptions(id, sku, type, ends_at, purchase_type)
+                    subscriptions(id, sku, type, ends_at, purchase_type, persistent)
                 VALUES
-                    (?, ?, ?, ?)
-                ON CONFLICT(id, sku) DO UPDATE SET ends_at = excluded.ends_at""")
-                .single(call().bind(subscription.id()).bind(subscription.skuId()).bind(subscription.skuTarget()).bind(subscription.endsAt(), StandardAdapter.INSTANT_AS_TIMESTAMP).bind(subscription.purchaseType()))
+                    (?, ?, ?, ?, ?, ?)
+                ON CONFLICT(id, sku) DO UPDATE SET
+                                                   ends_at       = excluded.ends_at,
+                                                   persistent    = excluded.persistent,
+                                                   purchase_type = excluded.purchase_type""")
+                .single(call().bind(subscription.id())
+                              .bind(subscription.skuId())
+                              .bind(subscription.skuTarget())
+                              .bind(subscription.endsAt(), StandardAdapter.INSTANT_AS_TIMESTAMP)
+                              .bind(subscription.purchaseType())
+                              .bind(subscription.isPersistent()))
                 .insert();
         if (result.changed()) {
             subscriptions().remove(subscription);
             subscriptions().add(subscription);
+            return true;
         }
+        return false;
     }
 
     public void invalidate() {
@@ -172,7 +184,7 @@ public class Subscriptions implements GuildHolder, SkuMeta {
 
     public void clear() {
         query("""
-                DELETE FROM subscriptions WHERE id = ? AND type = ?
+                DELETE FROM subscriptions WHERE id = ? AND type = ? AND NOT persistent;
                 """)
                 .single(call().bind(repGuild.guildId()).bind(SkuTarget.GUILD))
                 .update();

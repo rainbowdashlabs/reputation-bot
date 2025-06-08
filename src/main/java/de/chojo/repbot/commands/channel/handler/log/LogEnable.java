@@ -33,8 +33,7 @@ public class LogEnable implements SlashHandler {
             return;
         }
 
-        if (Premium.isNotEntitled(event, configuration.skus().features().logChannel().logChannel())) {
-            Premium.replyPremium(event, context, configuration.skus().features().logChannel().logChannel());
+        if (Premium.checkAndReplyPremium(context, configuration.skus().features().logChannel().logChannel())) {
             return;
         }
 
