@@ -9,11 +9,13 @@ import de.chojo.jdautil.interactions.slash.Argument;
 import de.chojo.jdautil.interactions.slash.Group;
 import de.chojo.jdautil.interactions.slash.Slash;
 import de.chojo.jdautil.interactions.slash.SubCommand;
-import de.chojo.jdautil.interactions.slash.provider.SlashCommand;
+import de.chojo.jdautil.interactions.slash.provider.SlashProvider;
+import de.chojo.jdautil.pagination.PageService;
 import de.chojo.repbot.commands.bot.handler.Debug;
 import de.chojo.repbot.commands.bot.handler.InvalidateCache;
 import de.chojo.repbot.commands.bot.handler.Leave;
 import de.chojo.repbot.commands.bot.handler.Redeploy;
+import de.chojo.repbot.commands.bot.handler.Sample;
 import de.chojo.repbot.commands.bot.handler.Search;
 import de.chojo.repbot.commands.bot.handler.SharedGuilds;
 import de.chojo.repbot.commands.bot.handler.entitlement.Create;
@@ -30,15 +32,17 @@ import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.statistic.Statistic;
 
-import static de.chojo.jdautil.interactions.slash.Argument.integer;
-import static de.chojo.jdautil.interactions.slash.Argument.number;
 import static de.chojo.jdautil.interactions.slash.Argument.text;
 import static de.chojo.jdautil.interactions.slash.Group.group;
 import static de.chojo.jdautil.interactions.slash.SubCommand.sub;
 
-public class BotAdmin extends SlashCommand {
+public class BotAdmin implements SlashProvider<Slash> {
+    private final Slash slash;
+    private final Debug debug;
+
     public BotAdmin(GuildRepository guildRepository, Configuration configuration, Statistic statistics) {
-        super(Slash.of("bot", "Bot admin commands.")
+        debug = new Debug(guildRepository);
+        slash = Slash.of("bot", "Bot admin commands.")
                    .unlocalized()
                    .guildOnly()
                    .adminCommand()
@@ -91,6 +95,18 @@ public class BotAdmin extends SlashCommand {
                                    .argument(text("guild_id", "Guild id")))
                            .subCommand(sub("delete", "Delete Entitlement")
                                    .handler(new Delete())
-                                   .argument(text("entitlementid", "Entitlement id").asRequired()))));
+                                   .argument(text("entitlementid", "Entitlement id").asRequired())))
+                .subCommand(sub("sample", "Generate sample data")
+                        .handler(new Sample(guildRepository)))
+                .build();
+    }
+
+    @Override
+    public Slash slash() {
+        return slash;
+    }
+
+    public void inject(PageService service) {
+        debug.inject(service);
     }
 }
