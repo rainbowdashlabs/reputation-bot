@@ -64,7 +64,6 @@ public class UserReceived extends UserRanking {
                     ceil(count(1)::NUMERIC / ?) AS count
                 FROM
                     (
-                
                         SELECT DISTINCT
                             donor_id
                         FROM
@@ -72,6 +71,7 @@ public class UserReceived extends UserRanking {
                         WHERE guild_id = ?
                           AND receiver_id = ?
                           AND received >= ?
+                          AND donor_id IS NOT NULL
                           AND ( received > :reset_date OR :reset_date::TIMESTAMP IS NULL )
                     ) a""")
                 .single(call().bind(pageSize).bind(guildId()).bind("reset_date", resetDate()).bind(member.getIdLong()).bind(mode.dateInit(), StandardValueConverter.INSTANT_TIMESTAMP))
