@@ -7,7 +7,6 @@ package de.chojo.repbot.dao.access.guild.subscriptions;
 
 import de.chojo.jdautil.interactions.premium.SKU;
 import de.chojo.sadu.mapper.rowmapper.RowMapping;
-import de.chojo.sadu.queries.converter.StandardValueConverter;
 import net.dv8tion.jda.api.entities.Entitlement;
 
 import java.time.Instant;
@@ -21,13 +20,15 @@ public class Subscription extends SKU {
     private final SkuTarget skuTarget;
     private final Entitlement.EntitlementType purchaseType;
     private final Instant endsAt;
+    private final boolean persistent;
 
-    public Subscription(long skuId, long id, SkuTarget skuTarget, Entitlement.EntitlementType purchaseType, Instant endsAt) {
+    public Subscription(long skuId, long id, SkuTarget skuTarget, Entitlement.EntitlementType purchaseType, Instant endsAt, boolean persistent) {
         super(skuId);
         this.id = id;
         this.skuTarget = skuTarget;
         this.purchaseType = purchaseType;
         this.endsAt = endsAt;
+        this.persistent = persistent;
     }
 
     public long id() {
@@ -52,7 +53,8 @@ public class Subscription extends SKU {
                 row.getLong("id"),
                 row.getEnum("type", SkuTarget.class),
                 row.getEnum("purchase_type", Entitlement.EntitlementType.class),
-                row.get("ends_at", INSTANT_TIMESTAMP));
+                row.get("ends_at", INSTANT_TIMESTAMP),
+                row.getBoolean("persistent"));
     }
 
     public static Subscription fromEntitlement(Entitlement entitlement) {
@@ -63,7 +65,12 @@ public class Subscription extends SKU {
                 target,
                 targetType,
                 entitlement.getType(),
-                Optional.ofNullable(entitlement.getTimeEnding()).map(OffsetDateTime::toInstant).orElse(null));
+                Optional.ofNullable(entitlement.getTimeEnding()).map(OffsetDateTime::toInstant).orElse(null),
+                false);
+    }
+
+    public boolean isPersistent() {
+        return persistent;
     }
 
     @Override

@@ -33,6 +33,7 @@ import de.chojo.repbot.commands.repsettings.RepSettings;
 import de.chojo.repbot.commands.roles.Roles;
 import de.chojo.repbot.commands.scan.Scan;
 import de.chojo.repbot.commands.setup.Setup;
+import de.chojo.repbot.commands.supporter.Supporter;
 import de.chojo.repbot.commands.thankwords.Thankwords;
 import de.chojo.repbot.commands.top.Top;
 import de.chojo.repbot.config.Configuration;
@@ -70,6 +71,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.slf4j.Logger;
 
 import javax.security.auth.login.LoginException;
+import java.util.ArrayList;
 import java.util.Collections;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -123,6 +125,7 @@ public class Bot {
         repBotCachePolicy = new RepBotCachePolicy(scan, roles);
         shardManager = DefaultShardManagerBuilder
                 .createDefault(configuration.baseSettings().token())
+                .setEventPassthrough(true)
                 .enableIntents(
                         // Required to retrieve reputation emotes
                         GatewayIntent.GUILD_MESSAGE_REACTIONS,
@@ -224,7 +227,8 @@ public class Bot {
                               new Messages(guilds),
                               new BotAdmin(guilds, configuration, statistic),
                               new Ranking(guilds, configuration),
-                              new Rep()/*TODO: remove rep command*/)
+                              new Rep()/*TODO: remove rep command*/,
+                              new Supporter(premiumService, configuration, guilds))
                       .withMessages(new MessageLog(guilds))
                       .withUsers(new UserReceived(guilds, configuration),
                               new UserDonated(guilds, configuration))
@@ -251,6 +255,11 @@ public class Bot {
                                                          .logCommand(result.context().interaction().meta().name()))
                       .withPagination(builder -> builder.withLocalizer(localizer).previousText("pages.previous")
                                                         .nextText("pages.next"))
+                      .withEntitlementProvider((user, guild) -> {
+                          // currently no user skus exist that we are interested in.
+                          if (guild != null) return new ArrayList<>(guilds.guild(guild).subscriptions().sku());
+                          return Collections.emptyList();
+                      })
                       .build();
     }
 

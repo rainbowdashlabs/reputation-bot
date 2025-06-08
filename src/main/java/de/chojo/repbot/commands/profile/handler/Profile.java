@@ -38,8 +38,7 @@ public class Profile implements SlashHandler {
         }
 
         if (detailed) {
-            if (Premium.isNotEntitled(event, configuration.skus().features().detailedProfile().detailedProfile())) {
-                Premium.replyPremium(event, context, configuration.skus().features().detailedProfile().detailedProfile());
+            if (Premium.checkAndReplyPremium(context, configuration.skus().features().detailedProfile().detailedProfile())) {
                 return;
             }
         }

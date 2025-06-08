@@ -40,8 +40,7 @@ public class AutopostEnable implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        if (Premium.isNotEntitled(event, configuration.skus().features().autopost().autopostChannel())) {
-            Premium.replyPremium(event, context, configuration.skus().features().autopost().autopostChannel());
+        if (Premium.checkAndReplyPremium(context, configuration.skus().features().autopost().autopostChannel())) {
             return;
         }
 

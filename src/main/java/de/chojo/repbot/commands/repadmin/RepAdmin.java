@@ -17,7 +17,6 @@ import de.chojo.repbot.commands.repadmin.handler.reputation.Set;
 import de.chojo.repbot.commands.repadmin.handler.resetdate.CurrentResetDate;
 import de.chojo.repbot.commands.repadmin.handler.resetdate.RemoveResetDate;
 import de.chojo.repbot.commands.repadmin.handler.resetdate.SetResetDate;
-import de.chojo.repbot.commands.repadmin.handler.support.Refresh;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.service.PremiumService;
@@ -81,9 +80,6 @@ public class RepAdmin extends SlashCommand {
                    .subCommand(SubCommand.of("profile", "command.repadmin.profile.description")
                                          .handler(new Profile(guildRepository, configuration))
                                          .argument(Argument.user("user", "command.repadmin.profile.options.user.description").asRequired()))
-                   .group(group("supporter", "command.repadmin.supporter.description")
-                           .subCommand(sub("refresh", "command.repadmin.supporter.refresh.description")
-                                   .handler(new Refresh(premiumService))))
         );
     }
 }

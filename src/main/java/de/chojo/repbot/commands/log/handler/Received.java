@@ -43,7 +43,7 @@ public class Received implements SlashHandler {
 
     public static void send(IReplyCallback event, Member user, GuildRepository guildRepository, EventContext context, Configuration configuration) {
         var logAccess = guildRepository.guild(event.getGuild()).reputation().log().getUserReceivedLog(user.getUser(), PAGE_SIZE);
-        var premium = !Premium.isNotEntitled(event, configuration.skus().features().reputationLog().extendedPages());
+        var premium = !Premium.isNotEntitled(context, configuration.skus().features().reputationLog().extendedPages());
         context.registerPage(new PrivatePageBag(logAccess.pages(), event.getUser().getIdLong()) {
             @Override
             public CompletableFuture<MessageEditData> buildPage() {

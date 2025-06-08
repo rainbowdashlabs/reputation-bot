@@ -11,6 +11,7 @@ import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.commands.scan.Scan;
 import de.chojo.repbot.config.Configuration;
+import de.chojo.repbot.core.Threading;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.repbot.util.PermissionErrorHandler;
@@ -42,12 +43,8 @@ public class Scanner {
     private static final long THREAD_MAX_SEEN_SECONDS = 30L;
     private static final Logger log = getLogger(Scan.class);
     private final ThreadGroup scanner = new ThreadGroup("Scanner");
-    private final ScheduledExecutorService worker = Executors.newScheduledThreadPool(SCAN_THREADS + 1,
-            runnable -> {
-                var thread = new Thread(scanner, runnable);
-                thread.setUncaughtExceptionHandler((thr, err) -> log.error("Unhandled exception in Scanner Thread {}.", thr.getId(), err));
-                return thread;
-            });
+    private final ScheduledExecutorService worker = new Threading.ReportingExecutor(SCAN_THREADS + 1,
+            runnable -> new Thread(scanner, runnable));
     private final GuildRepository guildRepository;
     private final Set<ScanProcess> activeScans = new HashSet<>();
     private final Set<Long> cancel = new HashSet<>();
