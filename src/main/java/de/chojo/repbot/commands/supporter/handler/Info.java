@@ -6,13 +6,18 @@
 package de.chojo.repbot.commands.supporter.handler;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
+import de.chojo.jdautil.util.Premium;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.subscriptions.Subscription;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.service.PremiumService;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -58,6 +63,12 @@ public class Info extends BaseSupporter implements SlashHandler {
             content = "%s\n\n**$%s$**\n%s".formatted(content, "command.supporter.info.message.coupons", coupons);
         }
 
-        event.getHook().editOriginal(context.localize(content)).queue();
+        var buttons = configuration.skus().subscriptions().stream().map(e -> List.of(e.subscriptionSkuMeta(), e.lifetimeSkuMeta()))
+                                   .map(e -> e.stream().map(Premium::buildEntitlementButtons).flatMap(Collection::stream).toArray(Button[]::new))
+                                   .map(ActionRow::of)
+                                   .toList();
+
+        event.getHook().editOriginal(context.localize(content))
+             .setComponents(buttons).queue();
     }
 }
