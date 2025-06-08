@@ -55,7 +55,7 @@ public enum SupporterFeature {
     }
 
     public SubscriptionError first() {
-        return new SubscriptionError(this, Instant.now(), Instant.EPOCH, 0);
+        return new SubscriptionError(this, Instant.now(), Instant.EPOCH, 0, row.getBoolean("notified"));
     }
 
     public List<Replacement> replacements(SKU sku, RepGuild repGuild) {

@@ -23,9 +23,12 @@ import de.chojo.repbot.dao.access.guild.subscriptions.SubscriptionError;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.exceptions.MissingSupportTier;
 import de.chojo.repbot.util.SupporterFeature;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Entitlement;
 import net.dv8tion.jda.api.entities.Entitlement.EntitlementType;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.entitlement.EntitlementCreateEvent;
 import net.dv8tion.jda.api.events.entitlement.EntitlementDeleteEvent;
@@ -200,17 +203,46 @@ public class PremiumService extends ListenerAdapter {
         long id = settings.general().systemChannel();
         TextChannel textChannelById = guild.getTextChannelById(id);
         log.debug("Sending message for guild {} for {}.", guild, type.name());
+        var notified = false;
         if (textChannelById != null) {
-            textChannelById.sendMessage(data).queue();
-        } else {
             try {
-                guild.retrieveOwner().complete().getUser().openPrivateChannel().complete().sendMessage(data).queue();
+                textChannelById.sendMessage(data).complete();
+                notified = true;
             } catch (Exception e) {
+                // ignore
+            }
+        }
+        if (!notified) {
+            Member owner = guild.retrieveOwner().complete();
+            try {
+                owner.getUser().openPrivateChannel().complete().sendMessage(data).complete();
+                notified = true;
+            } catch (Exception e) {
+                log.debug("Ignoring exception while trying to send message to {} for {}.", owner, type.name());
                 // TODO: find other way to communicate
             }
         }
 
-        subscriptions.resendError(type);
+        if (!notified) {
+            // Check for other admins.
+            List<Role> adminRoles = guild.getRoles().stream().filter(r -> r.hasPermission(Permission.ADMINISTRATOR)).toList();
+            for (Role adminRole : adminRoles) {
+                if (notified) break;
+                List<Member> admin = guild.findMembersWithRoles(adminRole).get();
+                for (Member member : admin) {
+                    try {
+                        member.getUser().openPrivateChannel().complete().sendMessage(data).complete();
+                        notified = true;
+                        break;
+                    } catch (Exception ignored) {
+                        // Ignored. We don't want to spam the user with messages.
+                        log.debug("Ignoring exception while trying to send message to {} for {}.", member, type.name());
+                    }
+                }
+            }
+        }
+
+        subscriptions.resendError(type, notified);
     }
 
     private void updateEntitlement(Entitlement entitlement) {

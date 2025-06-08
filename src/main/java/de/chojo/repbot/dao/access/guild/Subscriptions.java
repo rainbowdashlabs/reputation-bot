@@ -76,7 +76,8 @@ public class Subscriptions implements GuildHolder, SkuMeta {
                         type,
                         last_send,
                         count,
-                        date_inserted
+                        date_inserted,
+                        notified
                     FROM
                         subscription_error
                     WHERE guild_id = ?
@@ -111,21 +112,22 @@ public class Subscriptions implements GuildHolder, SkuMeta {
                               .toList();
     }
 
-    public void resendError(SupporterFeature error) {
+    public void resendError(SupporterFeature error, boolean notified) {
         query("""
                 INSERT
                 INTO
-                    subscription_error(guild_id, type, last_send)
+                    subscription_error(guild_id, type, last_send, notified)
                 VALUES
-                    (?, ?, now())
+                    (?, ?, now(), ?)
                 ON CONFLICT(guild_id, type)
                     DO UPDATE
                     SET
                         last_send = now(),
-                        count     = excluded.count + 1
-                RETURNING guild_id, type, last_send, count, date_inserted
+                        count     = excluded.count + 1,
+                        notified  = excluded.notified
+                RETURNING guild_id, type, last_send, count, date_inserted, notified
                 """)
-                .single(call().bind(guildId()).bind(error))
+                .single(call().bind(guildId()).bind(error).bind(notified))
                 .map(SubscriptionError::build)
                 .first()
                 .ifPresent(e -> errorMessages().put(e.type(), e));

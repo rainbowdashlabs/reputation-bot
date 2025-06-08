@@ -16,11 +16,13 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
+import net.dv8tion.jda.api.entities.MessageEmbed.Field;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.Interaction;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.utils.TimeFormat;
@@ -32,9 +34,12 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Predicate;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static de.chojo.jdautil.util.Guilds.prettyName;
@@ -42,6 +47,15 @@ import static de.chojo.jdautil.util.Guilds.prettyName;
 public class Debug implements SlashHandler {
     private final GuildRepository guildRepository;
     private PageService pageService;
+    private static final Map<String, List<Permission>> PERMISSION_CATEGORIES = new LinkedHashMap<>() {{
+        put("General", List.of(Arrays.copyOfRange(Permission.values(), 0, 14)));
+        put("Membership Permissions", List.of(Arrays.copyOfRange(Permission.values(), 14, 20)));
+        put("Text Permissions", List.of(Arrays.copyOfRange(Permission.values(), 20, 34)));
+        put("Thread Permissions", List.of(Arrays.copyOfRange(Permission.values(), 34, 38)));
+        put("Voice Permissions", List.of(Arrays.copyOfRange(Permission.values(), 38, 49)));
+        put("Stage Channel Permissions", List.of(Arrays.copyOfRange(Permission.values(), 49, 50)));
+        put("Advanced", List.of(Arrays.copyOfRange(Permission.values(), 50, 51)));
+    }};
 
     public Debug(GuildRepository guildRepository) {
         this.guildRepository = guildRepository;
@@ -82,24 +96,11 @@ public class Debug implements SlashHandler {
                                             .orElse(LocalDateTime.ofEpochSecond(0L, 0, ZoneOffset.UTC))), true)
                 .build());
 
-        embeds.add(new EmbedBuilder()
-                .setTitle("Permissions")
-                .setDescription(
-                        Arrays.stream(Permission.values())
-                              .filter(Predicate.not(Permission.UNKNOWN::equals))
-                              .map(perm -> (selfMember.hasPermission(perm) ? "✅ " : "❌ ") + perm.getName())
-                              .collect(Collectors.joining("\n")))
-                .build());
+        embeds.add(buildPermissions(selfMember::hasPermission, new EmbedBuilder().setTitle("Permissions")).build());
+
         if (channel != null) {
-            embeds.add(new EmbedBuilder()
-                    .setTitle("Channel Permissions for %s".formatted(channel.getName()))
-                    .setDescription(
-                            Arrays.stream(Permission.values())
-                                  .filter(Predicate.not(Permission.UNKNOWN::equals))
-                                  .filter(Permission::isChannel)
-                                  .map(perm -> (selfMember.hasPermission(channel, perm) ? "✅ " : "❌ ") + perm.getName())
-                                  .collect(Collectors.joining("\n")))
-                    .build());
+            embeds.add(buildPermissions(p -> selfMember.hasPermission(channel, p),
+                    new EmbedBuilder().setTitle("Channel Permissions for %s".formatted(channel.getName()))).build());
         }
 
         embeds.add(new EmbedBuilder()
@@ -167,7 +168,6 @@ public class Debug implements SlashHandler {
         };
 
         pageService.registerPage(callback, pages, true);
-
     }
 
     private static String timestamp(LocalDateTime dateTime) {
@@ -180,5 +180,22 @@ public class Debug implements SlashHandler {
 
     public void inject(PageService service) {
         pageService = service;
+    }
+
+    private static EmbedBuilder buildPermissions(Function<Permission, Boolean> permissionCheck, EmbedBuilder builder) {
+        PERMISSION_CATEGORIES.entrySet()
+                             .stream()
+                             .map(
+                                     entry -> new Field(
+                                             entry.getKey(),
+                                             entry.getValue().stream()
+                                                  .sorted(Comparator.comparing(p -> permissionCheck.apply(p) ? 1 : 0, Integer::compareTo))
+                                                  .sorted(Comparator.reverseOrder())
+                                                  .map(perm -> "%s %s".formatted(permissionCheck.apply(perm) ? "✅" : "❌", perm.getName()))
+                                                  .collect(Collectors.joining("\n")),
+                                             true)
+                             )
+                             .forEachOrdered(builder::addField);
+        return builder;
     }
 }
