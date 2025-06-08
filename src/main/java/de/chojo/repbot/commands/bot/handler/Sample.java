@@ -15,19 +15,11 @@ import de.chojo.repbot.service.reputation.SubmitResult;
 import de.chojo.repbot.service.reputation.SubmitResultType;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
-<<<<<<< Updated upstream
-import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-=======
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageType;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
-import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.internal.entities.ReceivedMessage;
-import org.jetbrains.annotations.Unmodifiable;
->>>>>>> Stashed changes
 
 import java.util.Collections;
 import java.util.List;
@@ -51,11 +43,7 @@ public class Sample implements SlashHandler {
         event.deferReply().queue();
 
         List<Member> members = event.getGuild().loadMembers().get().stream().limit(100).toList();
-<<<<<<< Updated upstream
-        List<GuildChannel> channels = event.getGuild().getChannels();
-=======
         List<TextChannel> channels = event.getGuild().getTextChannels();
->>>>>>> Stashed changes
 
         for (Member member : members) {
             for (int i = 0; i < current().nextInt(100); i++) {
@@ -71,11 +59,7 @@ public class Sample implements SlashHandler {
         event.getHook().sendMessage("Done").queue();
     }
 
-<<<<<<< Updated upstream
-    private void addReputation(Member receiver, Member donor, GuildChannel channel) {
-=======
     private void addReputation(Member receiver, Member donor, TextChannel channel) {
->>>>>>> Stashed changes
         var messageId = snowflakeCreator.nextLong();
         var thankType = ThankType.values()[current().nextInt(ThankType.values().length)];
         long refMessage = snowflakeCreator.nextLong();
@@ -101,12 +85,8 @@ public class Sample implements SlashHandler {
                     donor,
                     List.of(WeightedEntry.directMatch(receiver)));
             case MENTION -> AnalyzerResult.mention(receiver.getEffectiveName(), donor, List.of(receiver));
-<<<<<<< Updated upstream
-            case ANSWER -> AnalyzerResult.answer(receiver.getEffectiveName(), donor, receiver, null);
-=======
             case ANSWER ->
                     AnalyzerResult.answer(receiver.getEffectiveName(), donor, receiver, build(refMessage, channel, receiver));
->>>>>>> Stashed changes
             case DIRECT, EMBED, REACTION ->
                     AnalyzerResult.empty(receiver.getEffectiveName(), EmptyResultReason.NO_MATCH);
         };
@@ -114,9 +94,6 @@ public class Sample implements SlashHandler {
         addAnalyzerResult(receiver.getGuild(), channel, messageId, result);
     }
 
-<<<<<<< Updated upstream
-    public void addAnalyzerResult(Guild guild, GuildChannel guildChannel, long messageId, AnalyzerResult result) {
-=======
     private Message build(long messageId, TextChannel channel, Member member) {
         return new ReceivedMessage(messageId, channel.getIdLong(), member.getIdLong(), member.getJDA(), member.getGuild(), channel, MessageType.DEFAULT, null, false,
                 0, false, false, "", "", member.getUser(), member, null, null, null, null, Collections.emptyList(),
@@ -130,7 +107,6 @@ public class Sample implements SlashHandler {
     }
 
     public void addAnalyzerResult(Guild guild, TextChannel guildChannel, long messageId, AnalyzerResult result) {
->>>>>>> Stashed changes
         String resultString;
         try {
             resultString = MAPPER.writeValueAsString(result.toSnapshot());
@@ -148,11 +124,7 @@ public class Sample implements SlashHandler {
                     .insert();
     }
 
-<<<<<<< Updated upstream
-    public void addReputationResults(Guild guild, GuildChannel guildChannel, long messageId, SubmitResult result) {
-=======
     public void addReputationResults(Guild guild, TextChannel guildChannel, long messageId, SubmitResult result) {
->>>>>>> Stashed changes
         String resultString;
         try {
             resultString = MAPPER.writeValueAsString(result);

@@ -6,21 +6,26 @@
 package de.chojo.repbot.commands.bot.handler;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
+import de.chojo.jdautil.pagination.PageService;
 import de.chojo.jdautil.pagination.bag.ListPageBag;
 import de.chojo.jdautil.wrapper.EventContext;
+import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.utils.TimeFormat;
 import net.dv8tion.jda.api.utils.messages.MessageEditData;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -36,6 +41,7 @@ import static de.chojo.jdautil.util.Guilds.prettyName;
 
 public class Debug implements SlashHandler {
     private final GuildRepository guildRepository;
+    private PageService pageService;
 
     public Debug(GuildRepository guildRepository) {
         this.guildRepository = guildRepository;
@@ -51,9 +57,12 @@ public class Debug implements SlashHandler {
         }
 
         var channel = guild.getGuildChannelById(event.getOption("channel_id", () -> 0L, OptionMapping::getAsLong));
+        sendDebug(event, pageService, guildRepository.guild(guild), channel);
+    }
 
+    public static void sendDebug(IReplyCallback callback, PageService pageService, RepGuild repGuild, @Nullable GuildChannel channel) {
+        Guild guild = repGuild.guild();
         var selfMember = guild.getSelfMember();
-        var repGuild = guildRepository.guild(guild);
         var settings = repGuild.settings();
         var reputation = repGuild.reputation();
 
@@ -68,25 +77,25 @@ public class Debug implements SlashHandler {
                 .addField("Week Reputation", String.valueOf(reputation.stats().weekReputation()), true)
                 .addField("Today Reputation", String.valueOf(reputation.stats().todayReputation()), true)
                 .addField("Latest reputation", timestamp(reputation.log().getLatestReputation()
-                        .map(ReputationLogEntry::received)
-                        .orElse(LocalDateTime.ofEpochSecond(0L, 0, ZoneOffset.UTC))), true)
+                                                                   .map(ReputationLogEntry::received)
+                                                                   .orElse(LocalDateTime.ofEpochSecond(0L, 0, ZoneOffset.UTC))), true)
                 .build());
 
         embeds.add(new EmbedBuilder()
                 .setTitle("Permissions")
                 .setDescription(Arrays.stream(Permission.values())
-                        .filter(Predicate.not(Permission.UNKNOWN::equals))
-                        .map(perm -> (selfMember.hasPermission(perm) ? "✅ " : "❌ ") + perm.getName())
-                        .collect(Collectors.joining("\n")))
+                                      .filter(Predicate.not(Permission.UNKNOWN::equals))
+                                      .map(perm -> (selfMember.hasPermission(perm) ? "✅ " : "❌ ") + perm.getName())
+                                      .collect(Collectors.joining("\n")))
                 .build());
         if (channel != null) {
             embeds.add(new EmbedBuilder()
                     .setTitle("Channel Permissions for %s".formatted(channel.getName()))
                     .setDescription(Arrays.stream(Permission.values())
-                            .filter(Predicate.not(Permission.UNKNOWN::equals))
-                            .filter(Permission::isChannel)
-                            .map(perm -> (selfMember.hasPermission(channel, perm) ? "✅ " : "❌ ") + perm.getName())
-                            .collect(Collectors.joining("\n")))
+                                          .filter(Predicate.not(Permission.UNKNOWN::equals))
+                                          .filter(Permission::isChannel)
+                                          .map(perm -> (selfMember.hasPermission(channel, perm) ? "✅ " : "❌ ") + perm.getName())
+                                          .collect(Collectors.joining("\n")))
                     .build());
         }
 
@@ -111,12 +120,12 @@ public class Debug implements SlashHandler {
             categories = thanks.channels().categories();
         } else {
             channels = guild.getChannels().stream()
-                    .filter(c -> c instanceof GuildMessageChannel)
-                    .filter(c -> thanks.channels().isEnabled((GuildMessageChannel) c))
-                    .toList();
+                            .filter(c -> c instanceof GuildMessageChannel)
+                            .filter(c -> thanks.channels().isEnabled((GuildMessageChannel) c))
+                            .toList();
             categories = guild.getCategories().stream()
-                    .filter(category -> thanks.channels().isEnabledByCategory(category))
-                    .toList();
+                              .filter(category -> thanks.channels().isEnabledByCategory(category))
+                              .toList();
         }
 
         var channelNames = channels.stream().map(Channel::getName).limit(25).collect(Collectors.joining(", "));
@@ -135,15 +144,15 @@ public class Debug implements SlashHandler {
                 .addField("Thankwords", thanks.thankwords().prettyString(), false)
                 .addField("Main Reaction", thanks.reactions().reactionMention().orElse("None"), true)
                 .addField("Additional Reactions", String.join(" ", thanks.reactions()
-                        .getAdditionalReactionMentions()), true)
+                                                                         .getAdditionalReactionMentions()), true)
                 .build());
 
         embeds.add(new EmbedBuilder()
                 .setTitle("Ranks")
                 .addField("Reputation ranks", settings.ranks().prettyString(), false)
-                .addField("Bot roles", event.getGuild().getSelfMember().getRoles().stream()
-                        .map(role -> "%s(%d)".formatted(role.getName(), role.getPosition()))
-                        .collect(Collectors.joining("\n")), false)
+                .addField("Bot roles", guild.getSelfMember().getRoles().stream()
+                                            .map(role -> "%s(%d)".formatted(role.getName(), role.getPosition()))
+                                            .collect(Collectors.joining("\n")), false)
                 .build());
 
         var pages = new ListPageBag<>(embeds) {
@@ -153,14 +162,19 @@ public class Debug implements SlashHandler {
             }
         };
 
-        context.registerPage(pages, true);
+        pageService.registerPage(callback, pages, true);
+
     }
 
-    private String timestamp(LocalDateTime dateTime) {
+    private static String timestamp(LocalDateTime dateTime) {
         return TimeFormat.DATE_TIME_SHORT.format(dateTime.toEpochSecond(ZoneOffset.UTC) * 1000);
     }
 
-    private String timestamp(OffsetDateTime dateTime) {
+    private static String timestamp(OffsetDateTime dateTime) {
         return TimeFormat.DATE_TIME_SHORT.format(dateTime.toEpochSecond() * 1000);
+    }
+
+    public void inject(PageService service) {
+        pageService = service;
     }
 }

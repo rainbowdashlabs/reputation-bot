@@ -5,20 +5,32 @@
  */
 package de.chojo.repbot.service;
 
+import de.chojo.jdautil.pagination.PageService;
 import de.chojo.jdautil.util.Consumers;
+import de.chojo.jdautil.wrapper.EventContext;
+import de.chojo.repbot.commands.bot.handler.Debug;
+import de.chojo.repbot.commands.bot.handler.SharedGuilds;
 import de.chojo.repbot.config.Configuration;
+import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.util.Guilds;
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Message.Attachment;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -29,10 +41,14 @@ import static net.dv8tion.jda.api.utils.messages.MessageCreateBuilder.fromMessag
 public class ChatSupportService extends ListenerAdapter {
     private final Configuration configuration;
     private final ShardManager shardManager;
+    private final PageService pageService;
+    private final GuildRepository guildRepository;
 
-    public ChatSupportService(Configuration configuration, ShardManager shardManager) {
+    public ChatSupportService(Configuration configuration, ShardManager shardManager, PageService pageService, GuildRepository guildRepository) {
         this.configuration = configuration;
         this.shardManager = shardManager;
+        this.pageService = pageService;
+        this.guildRepository = guildRepository;
     }
 
     @Override
@@ -92,14 +108,46 @@ public class ChatSupportService extends ListenerAdapter {
                 .map(id -> shardManager.retrieveUserById(id).complete());
     }
 
+    @Override
+    public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
+        String id = event.getButton().getId();
+        if (id == null) return;
+        if (!id.startsWith("debug:")) return;
+
+        String guildId = id.split(":")[1];
+        Guild guild = shardManager.getGuildById(Long.parseLong(guildId));
+        if(guild ==null){
+            event.reply("Guild not found.").setEphemeral(true).queue();
+            return;
+        }
+
+        Debug.sendDebug(event, pageService, guildRepository.guild(guild), null);
+    }
+
     private long createThread(User user) {
         TextChannel textChannelById = home().getTextChannelById(configuration.baseSettings().privateSupportChannel());
         if (textChannelById == null) return -1;
 
-        Message message = textChannelById.sendMessage("New request by: %s (%s)".formatted(user.getName(), user.getId())).complete();
-        ThreadChannel thread = textChannelById.createThreadChannel("%s (%s)".formatted(user.getName(), user.getIdLong()), message.getIdLong()).complete();
+        List<Guild> shared = SharedGuilds.sharedGuilds(user, true, configuration);
 
-        user.openPrivateChannel().complete().sendMessage("A new support chat was opened. Your request has been sent to the support team.").queue();
+        MessageEmbed embed = new EmbedBuilder()
+                .setTitle("New request")
+                .setAuthor("%s (%s)".formatted(user.getName(), user.getId()), null, user.getEffectiveAvatarUrl())
+                .addField("Shared Guilds", shared.stream().map(g -> SharedGuilds.format(g, user)).collect(Collectors.joining("\n")), false)
+                .build();
+
+        List<Button> buttons = shared.stream().map(g -> Button.primary("debug:%s".formatted(g.getIdLong()), g.getName())).toList();
+
+        Message message = textChannelById.sendMessage("New request from %s (%s)".formatted(user.getName(), user.getId()))
+                                         .complete();
+
+        ThreadChannel thread = textChannelById.createThreadChannel("%s (%s)".formatted(user.getName(), user.getIdLong()), message.getIdLong()).complete();
+        thread.sendMessageEmbeds(embed)
+                                .setComponents(ActionRow.partitionOf(buttons))
+                                .complete();
+
+        user.openPrivateChannel().complete().sendMessage("A new support chat was opened. Your request has been sent to the support team.")
+            .queue();
 
         query("INSERT INTO support_threads (user_id, thread_id) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET thread_id = excluded.thread_id;")
                 .single(call().bind(user.getIdLong()).bind(thread.getIdLong()))
