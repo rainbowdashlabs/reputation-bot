@@ -74,6 +74,8 @@ public class PremiumService extends ListenerAdapter {
     private void checkGuilds() {
         for (List<RepGuild> guild : guildRepository.guilds(200)) {
             for (RepGuild repGuild : guild) {
+                repGuild.load(shardManager);
+                if (repGuild.isById()) continue;
                 checkGuild(repGuild.guild());
             }
         }

@@ -73,11 +73,13 @@ import org.slf4j.Logger;
 import javax.security.auth.login.LoginException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Set;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Bot {
     private static final Logger log = getLogger(Bot.class);
+    private static final Set<ErrorResponse> IGNORE_ERRORS = Set.of(ErrorResponse.ILLEGAL_OPERATION_ARCHIVED_THREAD, ErrorResponse.MISSING_ACCESS);
     private final Data data;
     private final Threading threading;
     private final Configuration configuration;
@@ -163,8 +165,10 @@ public class Bot {
                     log.debug("Interaction timed out", e);
                     return;
                 }
+                if(e.getErrorResponse()) {
+                }
             }
-            log.error(LogNotify.NOTIFY_ADMIN, "Unhandled exception occured: ", throwable);
+            log.error(LogNotify.NOTIFY_ADMIN, "Unhandled exception occurred: ", throwable);
         });
 
         RestAction.setDefaultSuccess(suc -> {
