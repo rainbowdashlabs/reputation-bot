@@ -27,7 +27,7 @@ jobs:
     name: Docker build
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4\
       - name: Build as Docker image
         run: docker build . -f docker/Dockerfile
 

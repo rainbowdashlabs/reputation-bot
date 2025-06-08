@@ -76,26 +76,29 @@ public class Debug implements SlashHandler {
                 .addField("Total Reputation", String.valueOf(reputation.stats().totalReputation()), true)
                 .addField("Week Reputation", String.valueOf(reputation.stats().weekReputation()), true)
                 .addField("Today Reputation", String.valueOf(reputation.stats().todayReputation()), true)
-                .addField("Latest reputation", timestamp(reputation.log().getLatestReputation()
-                                                                   .map(ReputationLogEntry::received)
-                                                                   .orElse(LocalDateTime.ofEpochSecond(0L, 0, ZoneOffset.UTC))), true)
+                .addField("Latest reputation",
+                        timestamp(reputation.log().getLatestReputation()
+                                            .map(ReputationLogEntry::received)
+                                            .orElse(LocalDateTime.ofEpochSecond(0L, 0, ZoneOffset.UTC))), true)
                 .build());
 
         embeds.add(new EmbedBuilder()
                 .setTitle("Permissions")
-                .setDescription(Arrays.stream(Permission.values())
-                                      .filter(Predicate.not(Permission.UNKNOWN::equals))
-                                      .map(perm -> (selfMember.hasPermission(perm) ? "✅ " : "❌ ") + perm.getName())
-                                      .collect(Collectors.joining("\n")))
+                .setDescription(
+                        Arrays.stream(Permission.values())
+                              .filter(Predicate.not(Permission.UNKNOWN::equals))
+                              .map(perm -> (selfMember.hasPermission(perm) ? "✅ " : "❌ ") + perm.getName())
+                              .collect(Collectors.joining("\n")))
                 .build());
         if (channel != null) {
             embeds.add(new EmbedBuilder()
                     .setTitle("Channel Permissions for %s".formatted(channel.getName()))
-                    .setDescription(Arrays.stream(Permission.values())
-                                          .filter(Predicate.not(Permission.UNKNOWN::equals))
-                                          .filter(Permission::isChannel)
-                                          .map(perm -> (selfMember.hasPermission(channel, perm) ? "✅ " : "❌ ") + perm.getName())
-                                          .collect(Collectors.joining("\n")))
+                    .setDescription(
+                            Arrays.stream(Permission.values())
+                                  .filter(Predicate.not(Permission.UNKNOWN::equals))
+                                  .filter(Permission::isChannel)
+                                  .map(perm -> (selfMember.hasPermission(channel, perm) ? "✅ " : "❌ ") + perm.getName())
+                                  .collect(Collectors.joining("\n")))
                     .build());
         }
 
@@ -150,9 +153,10 @@ public class Debug implements SlashHandler {
         embeds.add(new EmbedBuilder()
                 .setTitle("Ranks")
                 .addField("Reputation ranks", settings.ranks().prettyString(), false)
-                .addField("Bot roles", guild.getSelfMember().getRoles().stream()
-                                            .map(role -> "%s(%d)".formatted(role.getName(), role.getPosition()))
-                                            .collect(Collectors.joining("\n")), false)
+                .addField("Bot roles",
+                        guild.getSelfMember().getRoles().stream()
+                             .map(role -> "%s(%d)".formatted(role.getName(), role.getPosition()))
+                             .collect(Collectors.joining("\n")), false)
                 .build());
 
         var pages = new ListPageBag<>(embeds) {
