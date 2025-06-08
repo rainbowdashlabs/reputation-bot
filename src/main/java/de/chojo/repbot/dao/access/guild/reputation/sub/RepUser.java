@@ -107,7 +107,7 @@ public class RepUser implements MemberHolder {
      * @param message    message to log
      * @param refMessage reference message if available
      * @param type       type of reputation
-     * @return true if the repuation was logged.
+     * @return true if the reputation was logged.
      */
     public boolean addReputation(@Nullable Member donor, @NotNull Message message, @Nullable Message refMessage, ThankType type) {
         var success = query("""
@@ -116,7 +116,7 @@ public class RepUser implements MemberHolder {
                     ON CONFLICT(guild_id, donor_id, receiver_id, message_id)
                         DO NOTHING;
                 """)
-                .single(call().bind(guildId()).bind(donor == null ? 0 : donor.getIdLong())
+                .single(call().bind(guildId()).bind(donor == null ? null : donor.getIdLong())
                               .bind(userId())
                               .bind(message.getIdLong())
                               .bind(refMessage == null ? null : refMessage.getIdLong())
