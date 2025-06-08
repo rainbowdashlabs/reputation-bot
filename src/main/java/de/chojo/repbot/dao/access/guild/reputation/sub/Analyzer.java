@@ -76,8 +76,8 @@ public class Analyzer implements GuildHolder {
             return;
         }
         query("""
-                         INSERT INTO reputation_results(guild_id, channel_id, message_id, result) VALUES(?, ?, ?, ?::JSONB);
-                         """).single(call().bind(message.getGuild().getIdLong())
+                 INSERT INTO reputation_results(guild_id, channel_id, message_id, result) VALUES(?, ?, ?, ?::JSONB);
+                 """).single(call().bind(message.getGuild().getIdLong())
                 .bind(message.getChannel().getIdLong())
                                                     .bind(message.getIdLong())
                                                     .bind(resultString))

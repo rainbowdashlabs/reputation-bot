@@ -14,6 +14,7 @@ import de.chojo.repbot.commands.bot.handler.Debug;
 import de.chojo.repbot.commands.bot.handler.InvalidateCache;
 import de.chojo.repbot.commands.bot.handler.Leave;
 import de.chojo.repbot.commands.bot.handler.Redeploy;
+import de.chojo.repbot.commands.bot.handler.Sample;
 import de.chojo.repbot.commands.bot.handler.Search;
 import de.chojo.repbot.commands.bot.handler.SharedGuilds;
 import de.chojo.repbot.commands.bot.handler.entitlement.Create;
@@ -91,6 +92,8 @@ public class BotAdmin extends SlashCommand {
                                    .argument(text("guild_id", "Guild id")))
                            .subCommand(sub("delete", "Delete Entitlement")
                                    .handler(new Delete())
-                                   .argument(text("entitlementid", "Entitlement id").asRequired()))));
+                                   .argument(text("entitlementid", "Entitlement id").asRequired())))
+                .subCommand(sub("sample", "Generate sample data")
+                        .handler(new Sample(guildRepository))));
     }
 }
