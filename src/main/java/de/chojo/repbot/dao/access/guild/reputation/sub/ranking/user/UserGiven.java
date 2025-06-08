@@ -38,15 +38,23 @@ public class UserGiven extends UserRanking {
                           AND received >= ?
                           AND (received > :reset_date OR :reset_date::TIMESTAMP IS NULL)
                         GROUP BY guild_id, receiver_id
+                        ORDER BY count DESC
                     )
                 SELECT
-                    rank() OVER (ORDER BY count) as rank_donated,
+                    rank() OVER (ORDER BY count DESC) as rank_donated,
                     receiver_id as user_id,
                     count as donated
                 FROM
-                    counts;
+                    counts
+                OFFSET ?
+                LIMIT ?;
                 """)
-                .single(call().bind(guildId()).bind("reset_date", resetDate()).bind(member.getIdLong()).bind(mode.dateInit(), StandardValueConverter.INSTANT_TIMESTAMP))
+                .single(call().bind(guildId())
+                              .bind("reset_date", resetDate())
+                              .bind(member.getIdLong())
+                              .bind(mode.dateInit(), StandardValueConverter.INSTANT_TIMESTAMP)
+                        .bind(page * pageSize)
+                        .bind(pageSize))
                 .map(RankingEntry::buildGivenRanking)
                 .all();
     }

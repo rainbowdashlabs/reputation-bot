@@ -139,12 +139,13 @@ public record RepProfile(RepUser repUser, long rank, long rankDonated, long user
     }
 
     private void addDetails(EmbedBuilder build) {
-        String topDonor = repUser.reputation().ranking().user().given().defaultRanking(5, repUser.member()).page(0)
+        var entries=5;
+        String topDonor = repUser.reputation().ranking().user().given().defaultRanking(entries, repUser.member()).page(0)
                                  .stream().map(RankingEntry::simpleString).collect(Collectors.joining("\n"));
-        String topReceiver = repUser.reputation().ranking().user().received().defaultRanking(5, repUser.member()).page(0)
+        String topReceiver = repUser.reputation().ranking().user().received().defaultRanking(entries, repUser.member()).page(0)
                                     .stream().map(RankingEntry::simpleString).collect(Collectors.joining("\n"));
-        var mostReceivedChannel = repUser.mostReceivedChannel().stream().map(ChannelStats::fancyString).collect(Collectors.joining("\n"));
-        var mostGivenChannel = repUser.mostGivenChannel().stream().map(ChannelStats::fancyString).collect(Collectors.joining("\n"));
+        var mostReceivedChannel = repUser.mostReceivedChannel(entries).stream().map(ChannelStats::fancyString).collect(Collectors.joining("\n"));
+        var mostGivenChannel = repUser.mostGivenChannel(entries).stream().map(ChannelStats::fancyString).collect(Collectors.joining("\n"));
 
         // TODO: Great case for components v2
 

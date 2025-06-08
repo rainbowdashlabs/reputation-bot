@@ -18,7 +18,6 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
-import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
@@ -254,7 +253,7 @@ public class RepUser implements MemberHolder {
                 .orElse(0);
     }
 
-    public List<ChannelStats> mostReceivedChannel() {
+    public List<ChannelStats> mostReceivedChannel(int count) {
         return query("""
                 SELECT
                     channel_id,
@@ -265,16 +264,18 @@ public class RepUser implements MemberHolder {
                   AND receiver_id = ?
                   AND received > ?
                 GROUP BY channel_id
-                LIMIT 5;
+                ORDER BY count DESC
+                LIMIT ?;
                 """)
                 .single(call().bind(guildId())
                               .bind(memberId())
-                              .bind(reputation().repGuild().settings().general().reputationMode().dateInit(), INSTANT_TIMESTAMP))
+                              .bind(reputation().repGuild().settings().general().reputationMode().dateInit(), INSTANT_TIMESTAMP)
+                              .bind(count))
                 .map(ChannelStats::build)
                 .all();
     }
 
-    public List<ChannelStats> mostGivenChannel() {
+    public List<ChannelStats> mostGivenChannel(int count) {
         return query("""
                 SELECT
                     channel_id,
@@ -285,11 +286,13 @@ public class RepUser implements MemberHolder {
                   AND donor_id = ?
                   AND received > ?
                 GROUP BY channel_id
-                LIMIT 5;
+                ORDER BY count DESC
+                LIMIT ?;
                 """)
                 .single(call().bind(guildId())
                               .bind(memberId())
-                              .bind(reputation().repGuild().settings().general().reputationMode().dateInit(), INSTANT_TIMESTAMP))
+                              .bind(reputation().repGuild().settings().general().reputationMode().dateInit(), INSTANT_TIMESTAMP)
+                              .bind(count))
                 .map(ChannelStats::build)
                 .all();
     }
