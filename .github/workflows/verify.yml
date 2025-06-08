@@ -16,7 +16,9 @@ jobs:
           java-version: 21
       - uses: gradle/actions/wrapper-validation@v4
       - name: Build with Gradle
-        run: ./gradlew --build-cache build -x test
+        run: ./gradlew --build-cache build -x test -x spotlessCheck
+      - name: Check license
+        run: ./gradlew spotlessCheck
       - name: Test with Gradle
         run: ./gradlew test --info
 
@@ -25,7 +27,7 @@ jobs:
     name: Docker build
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4\
       - name: Build as Docker image
         run: docker build . -f docker/Dockerfile
 

@@ -10,15 +10,30 @@ import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.util.Guilds;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
 import java.util.stream.Collectors;
+
+import static net.dv8tion.jda.api.Permission.ADMINISTRATOR;
+import static net.dv8tion.jda.api.Permission.BAN_MEMBERS;
+import static net.dv8tion.jda.api.Permission.KICK_MEMBERS;
+import static net.dv8tion.jda.api.Permission.MANAGE_CHANNEL;
+import static net.dv8tion.jda.api.Permission.MANAGE_ROLES;
+import static net.dv8tion.jda.api.Permission.MANAGE_SERVER;
+import static net.dv8tion.jda.api.Permission.MESSAGE_MANAGE;
 
 public class SharedGuilds implements SlashHandler {
     private final Configuration configuration;
+    private static final EnumSet<Permission> MODERATOR = EnumSet.of(MANAGE_SERVER, KICK_MEMBERS, BAN_MEMBERS, MESSAGE_MANAGE, MANAGE_CHANNEL, MANAGE_ROLES);
 
     public SharedGuilds(Configuration configuration) {
         this.configuration = configuration;
@@ -36,8 +51,6 @@ public class SharedGuilds implements SlashHandler {
 
         event.deferReply(true).queue();
 
-        event.getHook().editOriginal("Searching for user in cache").queue();
-
         User user;
 
         if (userOpt != null) {
@@ -51,28 +64,51 @@ public class SharedGuilds implements SlashHandler {
             }
         }
 
-        event.getHook().editOriginal("Searching for shared guilds in cache").queue();
+        MessageEmbed messageEmbed = sharedGuildsEmbed(user, deepSearch, configuration);
 
-        var mutualGuilds = new ArrayList<>(event.getJDA().getShardManager().getMutualGuilds(user));
+        event.getHook().editOriginalEmbeds(messageEmbed)
+             .queue();
+    }
+
+    public static MessageEmbed sharedGuildsEmbed(User user, boolean deepSearch, Configuration configuration) {
+        List<Guild> shared = sharedGuilds(user, deepSearch, configuration);
+        return buildEmbed(user, shared);
+    }
+
+    public static List<Guild> sharedGuilds(User user, boolean deepSearch, Configuration configuration) {
+        var mutualGuilds = new ArrayList<>(user.getMutualGuilds());
+
         mutualGuilds.removeIf(g -> configuration.baseSettings().botGuild() == g.getIdLong());
 
         if (mutualGuilds.isEmpty() || deepSearch) {
-            event.getHook().editOriginal("Performing deep search for user").queue();
-            for (var shard : event.getJDA().getShardManager().getShards()) {
+            for (var shard : user.getJDA().getShardManager().getShards()) {
                 for (var guild : shard.getGuilds()) {
                     var member = guild.retrieveMemberById(user.getIdLong()).complete();
                     if (member != null) mutualGuilds.add(guild);
                 }
             }
         }
+        return mutualGuilds;
+    }
 
+    public static MessageEmbed buildEmbed(User user, List<Guild> mutualGuilds) {
         var guilds = mutualGuilds.stream()
-                .map(g -> "%s Owner: %s".formatted(Guilds.prettyName(g), g.getOwnerIdLong() == user.getIdLong()))
-                .collect(Collectors.joining("\n"));
+                                 .map(guild -> format(guild, user))
+                                 .collect(Collectors.joining("\n"));
 
-        event.getHook().editOriginal("Search done").queue();
+        return new EmbedBuilder().setTitle("Shared Guilds").setDescription(guilds).build();
+    }
 
-        event.getHook().editOriginalEmbeds(new EmbedBuilder().setTitle("Shared Guilds").setDescription(guilds).build())
-                .queue();
+    public static String format(Guild guild, User user) {
+        return "%s Status: %s Members: %d".formatted(Guilds.prettyName(guild), userStanding(user, guild), guild.getMemberCount());
+    }
+
+    private static String userStanding(User user, Guild guild) {
+        if (guild.getOwnerIdLong() == user.getIdLong()) return "Owner";
+        Member member = guild.retrieveMemberById(user.getIdLong()).complete();
+        var permissions = member.getPermissions();
+        if (member.hasPermission(ADMINISTRATOR)) return "Admin";
+        if (MODERATOR.stream().anyMatch(permissions::contains)) return "Moderator";
+        return "Member";
     }
 }
