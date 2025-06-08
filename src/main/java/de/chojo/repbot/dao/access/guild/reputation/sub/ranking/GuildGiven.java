@@ -71,11 +71,12 @@ public class GuildGiven extends GuildRanking {
                         GROUP BY r.guild_id, r.donor_id
                            )
                 SELECT
-                    rank() OVER (ORDER BY donor_id DESC) AS rank_donated,
+                    rank() OVER (ORDER BY donated DESC) AS rank_donated,
                     donor_id                             AS user_id,
                     donated
                 FROM
                     full_log
+                ORDER BY donated DESC
                 OFFSET ?
                 LIMIT ?;
                 """)

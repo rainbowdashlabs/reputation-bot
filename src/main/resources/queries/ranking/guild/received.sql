@@ -47,4 +47,5 @@ SELECT
     reputation::BIGINT                     AS reputation
 FROM
     offset_reputation rank
+ORDER BY reputation DESC
 OFFSET ? LIMIT ?;
