@@ -67,7 +67,7 @@ public class GuildGiven extends GuildRanking {
                           AND (received > :reset_date OR :reset_date::TIMESTAMP IS NULL)
                           AND guild_id = :guild_id
                           AND donor_id IS NOT NULL
-                          AND donor_id NOT IN (SELECT user_id FROM cleanup_schedule WHERE r.guild_id = :guild_id)
+                          AND donor_id NOT IN (SELECT user_id FROM cleanup_schedule WHERE guild_id = :guild_id)
                         GROUP BY r.guild_id, r.donor_id
                            )
                 SELECT

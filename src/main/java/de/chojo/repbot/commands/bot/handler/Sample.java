@@ -51,7 +51,7 @@ public class Sample implements SlashHandler {
         List<TextChannel> channels = event.getGuild().getTextChannels();
 
         for (Member member : members) {
-            for (int i = 0; i < current().nextInt(250); i++) {
+            for (int i = 0; i < current().nextInt(1000); i++) {
                 addReputation(member, members.get(current().nextInt(members.size())), channels.get(current().nextInt(channels.size())));
             }
         }
