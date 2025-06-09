@@ -39,8 +39,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class Scanner {
     public static final int INTERVAL_MS = 2000;
-    private static final int SCAN_THREADS = 10;
-    private static final long THREAD_MAX_SEEN_SECONDS = 30L;
+    private static final int SCAN_THREADS = 20;
+    private static final long THREAD_MAX_SEEN_SECONDS = 300L;
     private static final Logger log = getLogger(Scan.class);
     private final ThreadGroup scanner = new ThreadGroup("Scanner");
     private final ScheduledExecutorService worker = new Threading.ReportingExecutor(SCAN_THREADS + 1,

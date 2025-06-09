@@ -56,6 +56,7 @@ public class ScanProcess {
         this.calls = Math.min(Math.max(0, calls + 2), MAX_MESSAGES);
         callsLeft = this.calls;
         guildRepository = data;
+        lastSeen = Instant.now();
     }
 
     public void countScan() {
@@ -132,6 +133,7 @@ public class ScanProcess {
                 "```").complete();
         time = Instant.now().until(start, ChronoUnit.MILLIS);
         currWorker = null;
+        lastSeen = Instant.now();
         return callsLeft > 0;
     }
 
