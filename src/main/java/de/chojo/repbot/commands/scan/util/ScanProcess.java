@@ -70,7 +70,7 @@ public class ScanProcess {
     public boolean scan() {
         if (currWorker != null) {
             log.debug("Scanning takes too long. Skipping execution of scan to catch up");
-            return false;
+            return true;
         }
 
         currWorker = Thread.currentThread();
