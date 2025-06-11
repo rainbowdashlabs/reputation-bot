@@ -37,7 +37,7 @@ dependencies {
     implementation("io.javalin.community.openapi:javalin-swagger-plugin:$openapi") // for Swagger UI
 
     // database
-    implementation("org.postgresql", "postgresql", "42.7.6")
+    implementation("org.postgresql", "postgresql", "42.7.7")
     implementation(libs.bundles.sadu)
 
     // Logging
