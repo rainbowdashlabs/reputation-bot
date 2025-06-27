@@ -38,10 +38,9 @@ import static de.chojo.jdautil.interactions.slash.SubCommand.sub;
 
 public class BotAdmin implements SlashProvider<Slash> {
     private final Slash slash;
-    private final Debug debug;
 
     public BotAdmin(GuildRepository guildRepository, Configuration configuration, Statistic statistics) {
-        debug = new Debug(guildRepository);
+        var debug = new Debug(guildRepository);
         slash = Slash.of("bot", "Bot admin commands.")
                    .unlocalized()
                    .guildOnly()
@@ -104,9 +103,5 @@ public class BotAdmin implements SlashProvider<Slash> {
     @Override
     public Slash slash() {
         return slash;
-    }
-
-    public void inject(PageService service) {
-        debug.inject(service);
     }
 }

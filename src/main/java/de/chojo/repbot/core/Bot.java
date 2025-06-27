@@ -272,7 +272,6 @@ public class Bot {
                                 return Collections.emptyList();
                             })
                             .build();
-        botAdmin.inject(hub.pageServices());
     }
 
     private void initListener() {
