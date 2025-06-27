@@ -21,6 +21,7 @@ public class Supporter extends SlashCommand {
     public Supporter(PremiumService premiumService, Configuration configuration, GuildRepository guildRepository) {
         super(Slash.of("supporter", "command.supporter.description")
                    .adminCommand()
+                   .guildOnly()
                    .subCommand(sub("refresh", "command.supporter.refresh.description")
                            .handler(new Refresh(premiumService)))
                    .subCommand(sub("activate", "command.supporter.activate.description")

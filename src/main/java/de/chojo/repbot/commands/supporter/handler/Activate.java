@@ -26,7 +26,14 @@ public class Activate extends BaseSupporter implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        Long coupon = event.getOption("coupon", OptionMapping::getAsLong);
+        Long coupon;
+        try {
+            coupon = event.getOption("coupon", OptionMapping::getAsLong);
+        } catch (NumberFormatException e) {
+            event.reply(context.localize("command.supporter.activate.message.invalidcoupon")).setEphemeral(true).queue();
+            return;
+        }
+
         if (coupon == null) return;
         event.deferReply().setEphemeral(true).queue();
         var match = event.getJDA().retrieveEntitlements()

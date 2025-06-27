@@ -46,7 +46,6 @@ import static de.chojo.jdautil.util.Guilds.prettyName;
 
 public class Debug implements SlashHandler {
     private final GuildRepository guildRepository;
-    private PageService pageService;
     private static final Map<String, List<Permission>> PERMISSION_CATEGORIES = new LinkedHashMap<>() {{
         put("General", List.of(Arrays.copyOfRange(Permission.values(), 0, 14)));
         put("Membership Permissions", List.of(Arrays.copyOfRange(Permission.values(), 14, 20)));
@@ -71,7 +70,7 @@ public class Debug implements SlashHandler {
         }
 
         var channel = guild.getGuildChannelById(event.getOption("channel_id", () -> 0L, OptionMapping::getAsLong));
-        sendDebug(event, pageService, guildRepository.guild(guild), channel);
+        sendDebug(event, context.interactionHub().pageServices(), guildRepository.guild(guild), channel);
     }
 
     public static void sendDebug(IReplyCallback callback, PageService pageService, RepGuild repGuild, @Nullable GuildChannel channel) {
@@ -176,10 +175,6 @@ public class Debug implements SlashHandler {
 
     private static String timestamp(OffsetDateTime dateTime) {
         return TimeFormat.DATE_TIME_SHORT.format(dateTime.toEpochSecond() * 1000);
-    }
-
-    public void inject(PageService service) {
-        pageService = service;
     }
 
     private static EmbedBuilder buildPermissions(Function<Permission, Boolean> permissionCheck, EmbedBuilder builder) {

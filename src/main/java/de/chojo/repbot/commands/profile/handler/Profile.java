@@ -33,7 +33,7 @@ public class Profile implements SlashHandler {
         var detailed = Optional.ofNullable(event.getOption("detailed")).map(OptionMapping::getAsBoolean).orElse(false);
         var member = userOption != null ? userOption.getAsMember() : event.getMember();
         if (member == null) {
-            event.reply(context.localize("error.userNotFound")).queue();
+            event.reply(context.localize("error.userNotFound")).setEphemeral(true).queue();
             return;
         }
 
