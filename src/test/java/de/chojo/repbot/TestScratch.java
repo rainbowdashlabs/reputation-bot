@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class TestScratch {
@@ -32,5 +33,11 @@ public class TestScratch {
         Thread.sleep(15000);
 
         threading.repBotWorker().shutdown();
+    }
+
+    @Test
+    void illegalRegex(){
+        Pattern.compile("(?i)(?<match>(?:^|\\b)thanks(?:$|\\b)|(?:^|\\b)vouch(?:$|\\b)|(?:^|\\b)<\\#1071818688220639353>(?:$|\\b)|(?:^|\\b)trustpilot(?:$|\\b)|(?:^|\\b)voucher(?:$|\\b)|(?:^|\\b)vouched(?:$|\\b)|(?:^|\\b)google(?:$|\\b))",
+                Pattern.CASE_INSENSITIVE + Pattern.MULTILINE + Pattern.DOTALL + Pattern.COMMENTS);
     }
 }

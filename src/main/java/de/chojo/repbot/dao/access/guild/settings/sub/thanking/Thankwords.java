@@ -9,16 +9,21 @@ import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
 import net.dv8tion.jda.api.entities.Guild;
 import org.intellij.lang.annotations.Language;
+import org.slf4j.Logger;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.locks.StampedLock;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class Thankwords implements GuildHolder {
+    private static final Logger log = getLogger(Thankwords.class);
     @Language("RegExp")
     private static final String THANKWORD = "(?:^|\\b)%s(?:$|\\b)";
     @Language("RegExp")
@@ -69,16 +74,30 @@ public class Thankwords implements GuildHolder {
      */
     private Pattern compilePattern() {
         if (thankwords.isEmpty()) return Pattern.compile("");
+        return compilePattern(thankwords);
+    }
+
+    private Pattern compilePattern(Set<String> thankwords) {
         var twPattern = thankwords.stream()
-                .map(t -> String.format(THANKWORD, t))
-                .collect(Collectors.joining("|"));
+                                  .map(t -> String.format(THANKWORD, t))
+                                  .collect(Collectors.joining("|"));
         return Pattern.compile(String.format(PATTERN, twPattern),
-                Pattern.CASE_INSENSITIVE + Pattern.MULTILINE + Pattern.DOTALL + Pattern.COMMENTS);
+                Pattern.CASE_INSENSITIVE + Pattern.MULTILINE + Pattern.DOTALL);
+
     }
 
     public boolean add(String pattern) {
         long stamp = lock.writeLock();
         try {
+            try {
+                // Check whether the pattern can be compiled after adding it.
+                HashSet<String> thankwords = new HashSet<>(this.thankwords);
+                thankwords.add(pattern);
+                compilePattern(thankwords);
+            } catch (PatternSyntaxException e) {
+                log.warn("Could not compile new pattern {} for guild {}", pattern, guildId(), e);
+                return false;
+            }
             var result = query("""
                     INSERT INTO
                         thankwords(guild_id, thankword) VALUES(?,?)
@@ -108,8 +127,8 @@ public class Thankwords implements GuildHolder {
                         guild_id = ?
                         AND thankword = ?
                     """).single(call().bind(guildId()).bind(pattern))
-                    .update()
-                    .changed();
+                        .update()
+                        .changed();
             if (result) {
                 thankwords.remove(pattern);
                 cachedPattern = compilePattern();
