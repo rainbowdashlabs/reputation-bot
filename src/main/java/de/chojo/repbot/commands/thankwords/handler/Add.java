@@ -18,7 +18,7 @@ import java.util.regex.PatternSyntaxException;
 
 public class Add implements SlashHandler {
     private final GuildRepository guildRepository;
-    private final List<String> invalid = List.of("(", ")", "{", "}", "*", "\\s", " ", ".");
+    private final List<String> invalid = List.of("(", ")", "{", "}", "*", "\\s", " ", ".", "#", "<", ">");
     public Add(GuildRepository guildRepository) {
         this.guildRepository = guildRepository;
     }
@@ -26,6 +26,9 @@ public class Add implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var pattern = event.getOption("pattern").getAsString();
+
+        // Escape channels that are smh used as thankwords.
+        pattern = pattern.replaceAll("<#(.+?)>", "$1");
 
         for (String character : invalid) {
             if (pattern.contains(character)) {
