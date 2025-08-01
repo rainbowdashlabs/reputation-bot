@@ -22,9 +22,9 @@ public class AnnouncementState implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var announcements = guildRepository.guild(event.getGuild()).settings().announcements();
         if (announcements.active(event.getOption("active", OptionMapping::getAsBoolean))) {
-            event.reply(context.localize("command.channel.announcement.state.message.active")).queue();
+            event.reply(context.localize("command.channel.announcement.state.message.active")).complete();
         } else {
-            event.reply(context.localize("command.channel.announcement.state.message.inactive")).queue();
+            event.reply(context.localize("command.channel.announcement.state.message.inactive")).complete();
         }
     }
 }

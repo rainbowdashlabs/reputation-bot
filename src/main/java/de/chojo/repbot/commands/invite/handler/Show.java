@@ -23,7 +23,7 @@ public class Show implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        event.replyEmbeds(getResponse(context)).queue();
+        event.replyEmbeds(getResponse(context)).complete();
     }
 
     @NotNull

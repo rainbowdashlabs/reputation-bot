@@ -56,7 +56,7 @@ public class Show implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        event.replyEmbeds(getResponse(event, context)).queue();
+        event.replyEmbeds(getResponse(event, context)).complete();
     }
 
     @NotNull

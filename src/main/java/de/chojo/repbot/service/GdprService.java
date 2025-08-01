@@ -5,6 +5,7 @@
  */
 package de.chojo.repbot.service;
 
+import de.chojo.jdautil.util.SysVar;
 import de.chojo.repbot.dao.access.Gdpr;
 import de.chojo.repbot.dao.access.gdpr.RemovalTask;
 import de.chojo.repbot.dao.provider.GuildRepository;
@@ -42,6 +43,7 @@ public class GdprService implements Runnable {
 
     @Override
     public void run() {
+        if (SysVar.envOrProp("BOT_GDPR_ENABLE", "bot.gdpr.enable", "true").equals("false")) return;
         var reportRequests = gdpr.getReportRequests(shardManager);
 
         for (var request : reportRequests) {

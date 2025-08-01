@@ -34,7 +34,7 @@ public class Add implements SlashHandler {
             if (pattern.contains(character)) {
                 event.reply(context.localize("error.invalidcharacter", Replacement.create("INVALID", character, Format.CODE)))
                      .setEphemeral(true)
-                     .queue();
+                     .complete();
                 return;
             }
         }

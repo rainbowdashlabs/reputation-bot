@@ -25,7 +25,7 @@ public class Restart implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         if (!configuration.baseSettings().isOwner(event.getUser().getIdLong())) {
-            event.reply("No.").setEphemeral(true).queue();
+            event.reply("No.").setEphemeral(true).complete();
             return;
         }
         log.info(LogNotify.STATUS, "Restart command received from {}. Attempting restart.", event.getUser().getAsTag());

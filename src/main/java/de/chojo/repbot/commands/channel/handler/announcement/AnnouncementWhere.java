@@ -24,16 +24,16 @@ public class AnnouncementWhere implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var announcements = guildRepository.guild(event.getGuild()).settings().announcements();
         if (announcements.sameChannel("same channel".equalsIgnoreCase(event.getOption("where", OptionMapping::getAsString)))) {
-            event.reply(context.localize("command.channel.announcement.location.message.samechannel")).queue();
+            event.reply(context.localize("command.channel.announcement.location.message.samechannel")).complete();
         } else {
-            event.reply(context.localize("command.channel.announcement.location.message.otherchannel")).queue();
+            event.reply(context.localize("command.channel.announcement.location.message.otherchannel")).complete();
         }
     }
 
     @Override
     public void onAutoComplete(CommandAutoCompleteInteractionEvent event, EventContext context) {
         if ("where".equals(event.getFocusedOption().getName())) {
-            event.replyChoices(Completion.complete("", "same channel", "custom channel")).queue();
+            event.replyChoices(Completion.complete("", "same channel", "custom channel")).complete();
         }
     }
 }

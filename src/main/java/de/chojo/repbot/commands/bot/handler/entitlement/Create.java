@@ -32,13 +32,13 @@ public class Create implements SlashHandler {
         if (ownerid == null) {
             ownerid = event.getGuild().getIdLong();
         }
-        event.deferReply(true).queue();
+        event.deferReply(true).complete();
         Entitlement complete = event.getJDA()
                                     .createTestEntitlement(event.getOption("sku", OptionMapping::getAsLong),
                                             ownerid,
                                             TestEntitlementCreateAction.OwnerType.GUILD_SUBSCRIPTION)
                                     .complete();
-        event.getHook().editOriginal("Entitlement granted").queue();
+        event.getHook().editOriginal("Entitlement granted").complete();
     }
 
     @Override
@@ -46,9 +46,9 @@ public class Create implements SlashHandler {
         switch (event.getFocusedOption().getName()) {
             case "sku" -> {
                 var choices = configuration.skus().subscriptions().stream().map(sku -> new Command.Choice(sku.name(), String.valueOf(sku.subscriptionSku()))).toList();
-                event.replyChoices(choices).queue();
+                event.replyChoices(choices).complete();
             }
-            default -> event.replyChoices().queue();
+            default -> event.replyChoices().complete();
         }
     }
 }

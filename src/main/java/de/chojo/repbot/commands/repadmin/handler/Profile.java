@@ -22,9 +22,9 @@ public class Profile implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        event.deferReply(true).queue();
+        event.deferReply(true).complete();
         var user = guildRepository.guild(event.getGuild()).reputation().user(event.getOption("user").getAsMember());
         var profile = user.profile().adminProfile(configuration, context.guildLocalizer());
-        event.getHook().editOriginalEmbeds(profile).queue();
+        event.getHook().editOriginalEmbeds(profile).complete();
     }
 }

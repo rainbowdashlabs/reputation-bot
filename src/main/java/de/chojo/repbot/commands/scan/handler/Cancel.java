@@ -20,7 +20,7 @@ public class Cancel implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         if (!scanner.isActive(event.getGuild())) {
-            event.reply(context.localize("command.scan.cancel.message.notask")).setEphemeral(true).queue();
+            event.reply(context.localize("command.scan.cancel.message.notask")).setEphemeral(true).complete();
             return;
         }
         event.reply(context.localize("command.scan.cancel.message.canceling")).queue();

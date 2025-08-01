@@ -25,6 +25,6 @@ public class RemoveReceiver implements SlashHandler {
         var role = event.getOption("role").getAsRole();
         guildRepository.guild(event.getGuild()).settings().thanking().receiverRoles().remove(role);
         event.reply(context.localize("command.roles.receiver.remove.message.remove",
-                Replacement.createMention(role))).setAllowedMentions(Collections.emptyList()).queue();
+                Replacement.createMention(role))).setAllowedMentions(Collections.emptyList()).complete();
     }
 }

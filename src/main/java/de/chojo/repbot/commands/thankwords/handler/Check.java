@@ -32,7 +32,7 @@ public class Check implements SlashHandler {
         var messageId = event.getOption("message").getAsString();
 
         if (!Verifier.isValidId(messageId)) {
-            event.reply(context.localize("error.invalidMessage")).queue();
+            event.reply(context.localize("error.invalidMessage")).complete();
             return;
         }
 

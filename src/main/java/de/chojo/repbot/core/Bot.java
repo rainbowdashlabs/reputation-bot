@@ -159,12 +159,17 @@ public class Bot {
                 PermissionErrorHandler.handle(perm, shardManager, localization.localizer().context(LocaleProvider.empty()), configuration);
                 return;
             }
-            if (throwable.getCause() instanceof InsufficientPermissionException insuf) {
-                PermissionErrorHandler.handle(insuf, shardManager, localization.localizer().context(LocaleProvider.empty()), configuration);
+            if (throwable.getCause() instanceof InsufficientPermissionException perm) {
+                PermissionErrorHandler.handle(perm, shardManager, localization.localizer().context(LocaleProvider.empty()), configuration);
                 return;
             }
             if (throwable instanceof ErrorResponseException e) {
                 if (e.getErrorResponse() == ErrorResponse.UNKNOWN_INTERACTION) {
+                    data.metrics().service().failedInteraction();
+                    log.debug("Interaction timed out", e);
+                    return;
+                }
+                if (e.getErrorResponse() == ErrorResponse.MISSING_PERMISSIONS) {
                     data.metrics().service().failedInteraction();
                     log.debug("Interaction timed out", e);
                     return;
@@ -245,9 +250,8 @@ public class Bot {
                             .withLocalizer(localizer)
                             .cleanGuildCommands("true".equals(System.getProperty("bot.cleancommands", "false")))
                             .withCommandErrorHandler((context, throwable) -> {
-                                if (throwable instanceof InsufficientPermissionException) {
-                                    PermissionErrorHandler.handle((InsufficientPermissionException) throwable, shardManager,
-                                            localizer.context(LocaleProvider.guild(context.guild())), configuration);
+                                if (throwable instanceof InsufficientPermissionException perm) {
+                                    PermissionErrorHandler.handle(perm, shardManager, localizer.context(LocaleProvider.guild(context.guild())), configuration);
                                     return;
                                 }
 

@@ -25,7 +25,7 @@ public class Shudown implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         if (!configuration.baseSettings().isOwner(event.getUser().getIdLong())) {
-            event.reply("No.").setEphemeral(true).queue();
+            event.reply("No.").setEphemeral(true).complete();
             return;
         }
         log.info(LogNotify.STATUS, "Shutdown command received from {}. Shutting down.", event.getUser().getAsTag());

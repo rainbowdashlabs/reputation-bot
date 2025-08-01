@@ -30,12 +30,12 @@ public class Message implements SlashHandler {
         event.getOption("messageid");
         var optMessageId = ValueParser.parseLong(event.getOption("messageid").getAsString());
         if (optMessageId.isEmpty()) {
-            event.reply(context.localize("error.invalidMessage")).setEphemeral(true).queue();
+            event.reply(context.localize("error.invalidMessage")).setEphemeral(true).complete();
             return;
         }
 
         event.replyEmbeds(getMessageLog(context, event.getGuild(), event.getOption("messageid").getAsLong()))
-             .setEphemeral(true).queue();
+             .setEphemeral(true).complete();
     }
 
     private MessageEmbed getMessageLog(EventContext context, Guild guild, long messageId) {

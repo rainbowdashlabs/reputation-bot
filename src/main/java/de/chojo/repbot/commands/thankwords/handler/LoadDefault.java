@@ -31,7 +31,7 @@ public class LoadDefault implements SlashHandler {
         var languageOption = event.getOption("language");
         if (languageOption == null) {
             event.reply(context.localize("command.thankwords.loaddefault.message.available")
-                        + " " + String.join(", ", thankwordsContainer.getAvailableLanguages())).queue();
+                        + " " + String.join(", ", thankwordsContainer.getAvailableLanguages())).complete();
             return;
         }
         var language = languageOption.getAsString();

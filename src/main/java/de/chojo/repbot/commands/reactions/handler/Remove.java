@@ -30,7 +30,7 @@ public class Remove implements SlashHandler {
         var matcher = EMOTE_PATTERN.matcher(emote);
         if (matcher.find()) {
             if (reactions.remove(matcher.group("id"))) {
-                event.reply(context.localize("command.reactions.remove.message.removed")).queue();
+                event.reply(context.localize("command.reactions.remove.message.removed")).complete();
                 return;
             }
             event.reply(context.localize("command.reactions.remove.message.notfound")).setEphemeral(true).queue();

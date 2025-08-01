@@ -38,7 +38,7 @@ public class Main implements SlashHandler {
             case EMOJI_FOUND -> {
                 if (reactions.mainReaction(emote)) {
                     message.editMessage(context.localize("command.reactions.main.message.set",
-                            Replacement.create("EMOTE", result.mention()))).queue();
+                            Replacement.create("EMOTE", result.mention()))).complete();
                 }
             }
             case EMOTE_FOUND -> {

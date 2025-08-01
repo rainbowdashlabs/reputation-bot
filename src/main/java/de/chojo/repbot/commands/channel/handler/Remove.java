@@ -23,7 +23,7 @@ public class Remove extends BaseChannelModifier {
         channels.remove(channel);
         event.getHook().editOriginal(
                 context.localize("command.channel.remove.message.removed",
-                        Replacement.create("CHANNEL", channel.getAsMention()))).queue();
+                        Replacement.create("CHANNEL", channel.getAsMention()))).complete();
     }
 
     @Override
@@ -31,6 +31,6 @@ public class Remove extends BaseChannelModifier {
         channels.remove(category);
         event.getHook().editOriginal(
                 context.localize("command.channel.remove.message.removed",
-                        Replacement.create("CHANNEL", category.getAsMention()))).queue();
+                        Replacement.create("CHANNEL", category.getAsMention()))).complete();
     }
 }

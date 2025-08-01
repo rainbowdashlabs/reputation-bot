@@ -37,7 +37,7 @@ public class EmojiInfo implements SlashHandler {
         var generalSettings = guildRepository.guild(event.getGuild()).settings().general();
         event.reply(Text.getBooleanMessage(context, generalSettings.isEmojiDebug(),
                 "command.repsettings.emojidebug.message.true", "command.repsettings.emojidebug.message.false")
-                    + "\n" + context.localize(emojiExplanation())).queue();
+                    + "\n" + context.localize(emojiExplanation())).complete();
     }
 
     private String emojiExplanation() {

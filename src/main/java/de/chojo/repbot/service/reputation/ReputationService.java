@@ -10,7 +10,6 @@ import de.chojo.jdautil.localization.LocalizationContext;
 import de.chojo.jdautil.localization.util.LocaleProvider;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.parsing.Verifier;
-import de.chojo.jdautil.util.MentionUtil;
 import de.chojo.jdautil.util.Premium;
 import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.MessageContext;
@@ -80,9 +79,12 @@ public class ReputationService {
      * @param type       type of reputation source
      * @return true if the reputation was counted and is valid
      */
-    public boolean submitReputation(Guild guild, Member donor, Member receiver, Message message, @Nullable Message refMessage, ThankType type) {
+    public boolean submitReputation(Guild guild, Member donor, @Nullable Member receiver, Message message, @Nullable Message refMessage, ThankType type) {
         var repGuild = guildRepository.guild(guild);
         log.trace("Submitting reputation for message {} of type {}", message.getIdLong(), type);
+        if (receiver == null) {
+            return false;
+        }
         // block bots
         if (receiver.getUser().isBot()) {
             log.trace("Author of {} is bot.", message.getIdLong());
@@ -296,7 +298,7 @@ public class ReputationService {
             channel.sendMessage(localizer.localize("message.levelAnnouncement", guild,
                            Replacement.createMention(receiver), Replacement.createMention(rank.role().get())))
                    .setAllowedMentions(Collections.emptyList())
-                   .queue();
+                   .complete();
         });
         return true;
     }
@@ -315,7 +317,7 @@ public class ReputationService {
         TextChannel textChannelById = settings.guild().getTextChannelById(settings.repGuild().settings().logChannel().channelId());
         if (textChannelById == null) return;
 
-        textChannelById.sendMessage(string).setAllowedMentions(Collections.emptyList()).queue();
+        textChannelById.sendMessage(string).setAllowedMentions(Collections.emptyList()).complete();
     }
 
     private boolean isTypeDisabled(ThankType type, Reputation reputation) {

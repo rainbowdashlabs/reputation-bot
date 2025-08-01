@@ -19,19 +19,19 @@ public class Request implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        event.deferReply(true).queue();
+        event.deferReply(true).complete();
         var user = gdpr.request(event.getUser());
         var request = user.request();
         if (request) {
             if (user.sendData()) {
                 user.requestSend();
-                event.getHook().editOriginal(context.localize("command.gdpr.request.message.send")).queue();
+                event.getHook().editOriginal(context.localize("command.gdpr.request.message.send")).complete();
             } else {
                 user.requestSendFailed();
-                event.getHook().editOriginal(context.localize("command.gdpr.request.message.failed")).queue();
+                event.getHook().editOriginal(context.localize("command.gdpr.request.message.failed")).complete();
             }
         } else {
-            event.getHook().editOriginal(context.localize("command.gdpr.request.message.requested")).queue();
+            event.getHook().editOriginal(context.localize("command.gdpr.request.message.requested")).complete();
         }
     }
 }

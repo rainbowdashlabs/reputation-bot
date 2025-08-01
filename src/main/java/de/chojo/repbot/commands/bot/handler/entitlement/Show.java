@@ -26,6 +26,6 @@ public class Show implements SlashHandler {
         String collect = complete.stream()
                                  .map(ent -> "SKU: %s\nType: %s\nTill: %s (Consumed: %s)\nEntitlement Id: %s".formatted(ent.getSkuId(), ent.getType(), ent.getTimeEnding(), ent.isConsumed(), ent.getId()))
                                  .collect(Collectors.joining());
-        slash.reply(collect).queue();
+        slash.reply(collect).complete();
     }
 }

@@ -27,7 +27,7 @@ public class Show implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        event.replyEmbeds(getDashboard(event.getGuild(), context)).queue();
+        event.replyEmbeds(getDashboard(event.getGuild(), context)).complete();
     }
 
     private MessageEmbed getDashboard(Guild guild, EventContext context) {

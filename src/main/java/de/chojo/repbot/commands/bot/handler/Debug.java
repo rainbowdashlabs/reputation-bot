@@ -65,7 +65,7 @@ public class Debug implements SlashHandler {
         var guildId = event.getOption("guild_id").getAsLong();
         var guild = event.getJDA().getShardManager().getGuildById(guildId);
         if (guild == null) {
-            event.reply("Guild not found").setEphemeral(true).queue();
+            event.reply("Guild not found").setEphemeral(true).complete();
             return;
         }
 

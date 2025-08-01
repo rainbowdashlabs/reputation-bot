@@ -33,13 +33,13 @@ public class SetResetDate implements SlashHandler {
         try {
             date = LocalDate.of(year, month, day);
         } catch (DateTimeException e) {
-            event.reply(context.localize("error.invalidDate")).setEphemeral(true).queue();
+            event.reply(context.localize("error.invalidDate")).setEphemeral(true).complete();
             return;
         }
 
         guildRepository.guild(event.getGuild()).settings().general().resetDate(date);
 
         event.reply(context.localize("command.repadmin.resetdate.set.message.set", Replacement.create("DATE", FORMATTER.format(date))))
-             .setEphemeral(true).queue();
+             .setEphemeral(true).complete();
     }
 }

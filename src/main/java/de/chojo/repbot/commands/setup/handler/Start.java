@@ -56,7 +56,7 @@ public class Start implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         PermissionErrorHandler.assertAndHandle(event.getChannel().asGuildMessageChannel(), context.guildLocalizer(),
                 configuration, Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL);
-        event.reply(context.localize("command.setup.message.starting")).queue();
+        event.reply(context.localize("command.setup.message.starting")).complete();
         context.conversationService()
                .startDialog(event.getUser(), event.getChannel().asGuildMessageChannel(), getConversation(context));
     }
@@ -85,7 +85,7 @@ public class Start implements SlashHandler {
                     con -> {
                         guildRepository.guild(con.getGuild()).settings().general().language(language);
                         con.reply(con.localize("command.locale.set.message.set",
-                                Replacement.create("LOCALE", language.getNativeName()))).queue();
+                                Replacement.create("LOCALE", language.getNativeName()))).complete();
                         return Result.proceed(3);
                     });
         }

@@ -17,11 +17,11 @@ public class Redeploy implements SlashHandler {
         var guild = event.getJDA().getShardManager().getGuildById(event.getOption("guild_id").getAsLong());
 
         if (guild == null) {
-            event.reply("Guild not present.").setEphemeral(true).queue();
+            event.reply("Guild not present.").setEphemeral(true).complete();
             return;
         }
 
-        event.reply("Refreshing commands of guild " + Guilds.prettyName(guild)).setEphemeral(true).queue();
+        event.reply("Refreshing commands of guild " + Guilds.prettyName(guild)).setEphemeral(true).complete();
         context.interactionHub().refreshGuildCommands(guild);
     }
 }

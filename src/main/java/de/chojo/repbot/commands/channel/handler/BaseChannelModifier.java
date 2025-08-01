@@ -32,11 +32,11 @@ public abstract class BaseChannelModifier implements SlashHandler {
         var channels = guildRepository.guild(event.getGuild()).settings().thanking().channels();
         var channelType = event.getOption("channel").getChannelType();
         if (!ALLOWED_CHANNEL.contains(channelType)) {
-            event.reply(context.localize("error.onlyTextOrCategory")).setEphemeral(true).queue();
+            event.reply(context.localize("error.onlyTextOrCategory")).setEphemeral(true).complete();
             return;
         }
 
-        event.deferReply().queue();
+        event.deferReply().complete();
 
         var channel = event.getOption("channel").getAsChannel();
         if (TEXT_CHANNEL.contains(channelType)) {

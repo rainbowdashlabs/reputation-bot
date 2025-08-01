@@ -57,14 +57,14 @@ public class ChatSupportService extends ListenerAdapter {
         if (!event.isFromGuild()) {
             ThreadChannel channel = getThread(event.getAuthor());
             if (channel == null) return;
-            channel.sendMessage(reconstruct(event.getMessage())).queue();
+            channel.sendMessage(reconstruct(event.getMessage())).complete();
         } else if (event.getGuild().getIdLong() == configuration.baseSettings().botGuild()
                 && event.getChannel() instanceof ThreadChannel thread
                 && thread.getParentChannel().getIdLong() == configuration.baseSettings().privateSupportChannel()) {
             getUser(thread).ifPresent(user -> {
 
                 user.openPrivateChannel().complete().sendMessage(reconstruct(event.getMessage()))
-                    .queue(Consumers.empty(), err -> getThread(event.getAuthor()).sendMessage("Message could not be sent.").queue());
+                    .queue(Consumers.empty(), err -> getThread(event.getAuthor()).sendMessage("Message could not be sent.").complete());
             });
         }
     }
@@ -117,7 +117,7 @@ public class ChatSupportService extends ListenerAdapter {
         String guildId = id.split(":")[1];
         Guild guild = shardManager.getGuildById(Long.parseLong(guildId));
         if(guild ==null){
-            event.reply("Guild not found.").setEphemeral(true).queue();
+            event.reply("Guild not found.").setEphemeral(true).complete();
             return;
         }
 
@@ -147,7 +147,7 @@ public class ChatSupportService extends ListenerAdapter {
                                 .complete();
 
         user.openPrivateChannel().complete().sendMessage("A new support chat was opened. Your request has been sent to the support team.")
-            .queue();
+            .complete();
 
         query("INSERT INTO support_threads (user_id, thread_id) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET thread_id = excluded.thread_id;")
                 .single(call().bind(user.getIdLong()).bind(thread.getIdLong()))

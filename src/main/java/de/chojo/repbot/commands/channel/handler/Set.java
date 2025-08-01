@@ -24,7 +24,7 @@ public class Set extends BaseChannelModifier {
         channels.add(channel);
         event.getHook().editOriginal(
                 context.localize("command.channel.set.message.set",
-                        Replacement.create("CHANNEL", channel.getAsMention()))).queue();
+                        Replacement.create("CHANNEL", channel.getAsMention()))).complete();
     }
 
     @Override
@@ -33,6 +33,6 @@ public class Set extends BaseChannelModifier {
         channels.add(category);
         event.getHook().editOriginal(
                 context.localize("command.channel.set.message.set",
-                        Replacement.create("CHANNEL", category.getAsMention()))).queue();
+                        Replacement.create("CHANNEL", category.getAsMention()))).complete();
     }
 }

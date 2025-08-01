@@ -16,7 +16,7 @@ public class BaseAnalyzer {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context, Reputation reputation) {
         var optMessageId = ValueParser.parseLong(event.getOption("messageid").getAsString());
         if (optMessageId.isEmpty()) {
-            event.reply(context.localize("error.invalidMessage")).setEphemeral(true).queue();
+            event.reply(context.localize("error.invalidMessage")).setEphemeral(true).complete();
             return;
         }
 
@@ -24,7 +24,7 @@ public class BaseAnalyzer {
                                     .get(optMessageId.get());
 
         if (resultEntry.isEmpty()) {
-            event.reply(context.localize("command.log.analyzer.notanalyzed")).setEphemeral(true).queue();
+            event.reply(context.localize("command.log.analyzer.notanalyzed")).setEphemeral(true).complete();
             return;
         }
 
@@ -41,7 +41,7 @@ public class BaseAnalyzer {
 
         embed.add(builder.build());
 
-        event.replyEmbeds(embed).setEphemeral(true).queue();
+        event.replyEmbeds(embed).setEphemeral(true).complete();
 
     }
 }

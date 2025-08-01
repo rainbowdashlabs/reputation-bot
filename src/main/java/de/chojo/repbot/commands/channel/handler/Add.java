@@ -39,7 +39,7 @@ public class Add extends BaseChannelModifier {
         channels.add(channel);
         event.getHook().editOriginal(
                 context.localize("command.channel.add.message.added",
-                        Replacement.create("CHANNEL", channel.getAsMention()))).queue();
+                        Replacement.create("CHANNEL", channel.getAsMention()))).complete();
 
     }
 
@@ -60,6 +60,6 @@ public class Add extends BaseChannelModifier {
 
         event.getHook().editOriginal(
                 context.localize("command.channel.add.message.added",
-                        Replacement.create("CHANNEL", category.getAsMention()))).queue();
+                        Replacement.create("CHANNEL", category.getAsMention()))).complete();
     }
 }

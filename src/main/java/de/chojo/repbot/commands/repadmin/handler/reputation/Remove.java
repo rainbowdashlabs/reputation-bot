@@ -24,6 +24,6 @@ public class Remove extends BaseReputationModifier {
         repUser.removeReputation(rep);
         event.reply(context.localize("command.repadmin.reputation.remove.message.removed",
                         Replacement.create("VALUE", rep), Replacement.createMention(user)))
-                .setEphemeral(true).queue();
+                .setEphemeral(true).complete();
     }
 }

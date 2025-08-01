@@ -155,7 +155,7 @@ public class SelfCleanupService implements Runnable {
                 .build();
 
         notifyGuild(guild, embed);
-        guild.leave().queue();
+        guild.leave().complete();
         log.info(LogNotify.STATUS, "Leave on {} caused by self cleanup.", prettyName(guild));
         clean.cleanupDone();
     }

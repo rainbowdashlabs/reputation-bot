@@ -61,7 +61,7 @@ public class RoleAssigner {
             channel.sendMessage(localizer.localize("error.roleAccess", channel.getGuild(),
                            Replacement.createMention("ROLE", e.role())))
                    .setAllowedMentions(Collections.emptyList())
-                   .queue();
+                   .complete();
         }
         return Optional.empty();
     }

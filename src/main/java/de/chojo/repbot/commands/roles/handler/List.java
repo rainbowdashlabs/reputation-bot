@@ -27,7 +27,7 @@ public class List implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        event.replyEmbeds(getRoleList(context, event.getGuild())).setAllowedMentions(Collections.emptyList()).queue();
+        event.replyEmbeds(getRoleList(context, event.getGuild())).setAllowedMentions(Collections.emptyList()).complete();
     }
 
     private MessageEmbed getRoleList(EventContext context, Guild guild) {

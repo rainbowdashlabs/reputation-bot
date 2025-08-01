@@ -23,15 +23,15 @@ public class AnnouncementInfo implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var announcements = guildRepository.guild(event.getGuild()).settings().announcements();
         if (!announcements.isActive()) {
-            event.reply(context.localize("command.channel.announcement.state.message.inactive")).queue();
+            event.reply(context.localize("command.channel.announcement.state.message.inactive")).complete();
             return;
         }
         if (announcements.isSameChannel()) {
-            event.reply(context.localize("command.channel.announcement.location.message.samechannel")).queue();
+            event.reply(context.localize("command.channel.announcement.location.message.samechannel")).complete();
             return;
         }
 
         event.reply(context.localize("command.channel.announcement.channel.message.set",
-                Replacement.create("CHANNEL", MentionUtil.channel(announcements.channelId())))).queue();
+                Replacement.create("CHANNEL", MentionUtil.channel(announcements.channelId())))).complete();
     }
 }

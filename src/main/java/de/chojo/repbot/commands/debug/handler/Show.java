@@ -41,6 +41,6 @@ public class Show implements SlashHandler {
                         true
                 )
                 .setColor(Colors.Pastel.DARK_PINK)
-                .build()).queue();
+                .build()).complete();
     }
 }

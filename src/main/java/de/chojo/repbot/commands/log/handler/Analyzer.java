@@ -31,7 +31,7 @@ public class Analyzer extends BaseAnalyzer implements SlashHandler  {
                                     .get(messageId);
 
         if (resultEntry.isEmpty()) {
-            callback.reply(context.localize("command.log.analyzer.notanalyzed")).setEphemeral(true).queue();
+            callback.reply(context.localize("command.log.analyzer.notanalyzed")).setEphemeral(true).complete();
             return;
         }
 
@@ -48,6 +48,6 @@ public class Analyzer extends BaseAnalyzer implements SlashHandler  {
 
         embed.add(builder.build());
 
-        callback.replyEmbeds(embed).setEphemeral(true).queue();
+        callback.replyEmbeds(embed).setEphemeral(true).complete();
     }
 }

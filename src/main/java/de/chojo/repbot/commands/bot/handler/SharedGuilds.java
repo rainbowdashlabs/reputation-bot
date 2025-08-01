@@ -45,11 +45,11 @@ public class SharedGuilds implements SlashHandler {
         var userIdOpt = event.getOption("user_id");
         var deepSearch = event.getOption("deep", () -> false, OptionMapping::getAsBoolean);
         if (userOpt == null && userIdOpt == null) {
-            event.reply("Provide a user").setEphemeral(true).queue();
+            event.reply("Provide a user").setEphemeral(true).complete();
             return;
         }
 
-        event.deferReply(true).queue();
+        event.deferReply(true).complete();
 
         User user;
 
@@ -59,15 +59,14 @@ public class SharedGuilds implements SlashHandler {
             try {
                 user = event.getJDA().getShardManager().retrieveUserById(event.getIdLong()).complete();
             } catch (RuntimeException e) {
-                event.getHook().editOriginal("Could not find this user.").queue();
+                event.getHook().editOriginal("Could not find this user.").complete();
                 return;
             }
         }
 
         MessageEmbed messageEmbed = sharedGuildsEmbed(user, deepSearch, configuration);
 
-        event.getHook().editOriginalEmbeds(messageEmbed)
-             .queue();
+        event.getHook().editOriginalEmbeds(messageEmbed).complete();
     }
 
     public static MessageEmbed sharedGuildsEmbed(User user, boolean deepSearch, Configuration configuration) {

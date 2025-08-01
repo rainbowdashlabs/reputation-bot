@@ -24,9 +24,9 @@ public class Reload implements SlashHandler {
         try {
             configuration.reload();
         } catch (ConfigurationException e) {
-            event.reply("Config reload failed").setEphemeral(true).queue();
+            event.reply("Config reload failed").setEphemeral(true).complete();
             return;
         }
-        event.reply("Config file reloaded.").setEphemeral(true).queue();
+        event.reply("Config file reloaded.").setEphemeral(true).complete();
     }
 }

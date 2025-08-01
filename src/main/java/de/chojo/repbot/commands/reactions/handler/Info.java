@@ -27,7 +27,7 @@ public class Info implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        event.replyEmbeds(getInfoEmbed(event, guildRepository.guild(event.getGuild()).settings(), context)).queue();
+        event.replyEmbeds(getInfoEmbed(event, guildRepository.guild(event.getGuild()).settings(), context)).complete();
     }
 
     private MessageEmbed getInfoEmbed(SlashCommandInteractionEvent event, Settings settings, EventContext context) {

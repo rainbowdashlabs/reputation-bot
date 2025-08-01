@@ -67,7 +67,7 @@ public class ReputationVoteListener extends ListenerAdapter {
         var matcher = VOTE.matcher(event.getButton().getId());
         if (!matcher.find()) return;
         if (!event.isAcknowledged()) {
-            event.deferEdit().queue();
+            event.deferEdit().complete();
         }
         var voteRequest = voteRequests.get(event.getMessageIdLong());
         if (!Verifier.equalSnowflake(voteRequest.member(), event.getMember())) {

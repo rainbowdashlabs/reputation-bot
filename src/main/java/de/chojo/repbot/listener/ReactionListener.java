@@ -115,7 +115,7 @@ public class ReactionListener extends ListenerAdapter {
                      .delay(30, TimeUnit.SECONDS)
                      .flatMap(Message::delete)
                      .onErrorMap(err -> null)
-                     .queue();
+                     .complete();
             }
         }
     }

@@ -57,7 +57,7 @@ public final class EmojiCheck {
             return false;
         }
         try {
-            message.addReaction(emote).queue();
+            message.addReaction(emote).complete();
         } catch (IllegalArgumentException e) {
             return false;
         }

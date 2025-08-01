@@ -29,7 +29,7 @@ public class ListType implements SlashHandler {
         if (event.getOptions().isEmpty()) {
             event.reply(context.localize(
                          channels.isWhitelist() ? "command.channel.listType.message.whitelist" : "command.channel.listType.message.blacklist"))
-                 .queue();
+                 .complete();
             return;
         }
 
@@ -42,14 +42,14 @@ public class ListType implements SlashHandler {
 
         event.reply(context.localize(
                      channels.listType(whitelist) ? "command.channel.listType.message.whitelist" : "command.channel.listType.message.blacklist"))
-             .queue();
+             .complete();
     }
 
     @Override
     public void onAutoComplete(CommandAutoCompleteInteractionEvent event, EventContext context) {
         if ("type".equals(event.getFocusedOption().getName())) {
             event.replyChoices(Completion.complete(event.getFocusedOption().getValue(), "whitelist", "blacklist"))
-                 .queue();
+                 .complete();
         }
     }
 }

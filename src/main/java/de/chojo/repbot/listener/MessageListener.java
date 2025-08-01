@@ -8,6 +8,7 @@ package de.chojo.repbot.listener;
 import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.util.LocaleProvider;
 import de.chojo.jdautil.localization.util.Replacement;
+import de.chojo.logutil.marker.LogNotify;
 import de.chojo.repbot.analyzer.ContextResolver;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.analyzer.results.empty.EmptyResultReason;
@@ -15,7 +16,6 @@ import de.chojo.repbot.analyzer.results.match.ThankType;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.provider.GuildRepository;
-import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;
 import de.chojo.repbot.service.RepBotCachePolicy;
 import de.chojo.repbot.service.reputation.ReputationService;
@@ -72,7 +72,7 @@ public class MessageListener extends ListenerAdapter {
             var thread = ((ThreadChannel) event.getChannel());
             var settings = guildRepository.guild(event.getGuild()).settings();
             if (settings.thanking().channels().isEnabled(thread)) {
-                thread.join().queue();
+                thread.join().complete();
             }
         }
     }
@@ -113,17 +113,18 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        var result = messageAnalyzer.processMessage(thank.thankwords()
-                                                         .thankwordPattern(), message, settings, true, settings.abuseProtection()
-                                                                                                               .maxMessageReputation());
+        var result = messageAnalyzer.processMessage(
+                thank.thankwords().thankwordPattern(), message, settings, true,
+                settings.abuseProtection().maxMessageReputation());
 
         if (result.isEmpty()
-            && (result.asEmpty().reason() == EmptyResultReason.NO_MATCH
+                && (result.asEmpty().reason() == EmptyResultReason.NO_MATCH
                 || result.asEmpty().reason() == EmptyResultReason.NO_PATTERN)) return;
 
 
         if (PermissionErrorHandler.assertAndHandle(event.getGuildChannel(), localizer.context(LocaleProvider.guild(event.getGuild())), configuration,
                 Permission.MESSAGE_SEND, Permission.MESSAGE_ADD_REACTION, Permission.MESSAGE_EMBED_LINKS)) {
+            log.debug("Permission error while analyzing on {} message {}", message.getGuild(), message.getIdLong());
             return;
         }
 
@@ -171,6 +172,7 @@ public class MessageListener extends ListenerAdapter {
                     reputationService.submitReputation(
                             guild, donator, receiver, message, match.asAnswer().referenceMessage(), resultType);
                 }
+                default -> log.error(LogNotify.NOTIFY_ADMIN, "Unknown thank type {}", resultType);
             }
         }
     }

@@ -23,7 +23,7 @@ public class User implements SlashHandler {
         var user = event.getOption("user");
         if (user != null) {
             service.cleanupGuildUser(event.getGuild(), user.getAsUser().getIdLong());
-            event.reply(context.localize("command.prune.user.message.removed")).queue();
+            event.reply(context.localize("command.prune.user.message.removed")).complete();
             return;
         }
 
@@ -32,10 +32,10 @@ public class User implements SlashHandler {
             var idRaw = Verifier.getIdRaw(user.getAsString());
             if (idRaw.isPresent()) {
                 service.cleanupGuildUser(event.getGuild(), Long.valueOf(idRaw.get()));
-                event.reply(context.localize("command.prune.user.message.removed")).queue();
+                event.reply(context.localize("command.prune.user.message.removed")).complete();
                 return;
             }
-            event.reply(context.localize("error.userNotFound")).setEphemeral(true).queue();
+            event.reply(context.localize("error.userNotFound")).setEphemeral(true).complete();
         }
     }
 }

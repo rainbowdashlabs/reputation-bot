@@ -70,7 +70,7 @@ public class Scanner {
         }
         var duration = DurationFormatUtils.formatDuration((long) messageCount / 100 * INTERVAL_MS, "mm:ss");
         event.reply(context.localize("command.scan.scanner.message.scheduling", Replacement.create("DURATION", duration)))
-             .queue();
+             .complete();
         preSchedule(context, channel, messageCount);
     }
 
@@ -138,7 +138,7 @@ public class Scanner {
         scan.progressMessage().editMessage("```ANSI\n" +
                 scan.loc().localize("command.scan.scanner.message.progress",
                         Replacement.create("PERCENT", String.format("%.02f", 100.0d))) + " " + Text.progressBar(1, 40) +
-                "```").queue();
+                "```").complete();
         var embed = new LocalizedEmbedBuilder(scan.loc())
                 .setTitle("command.scan.scanner.message.completed")
                 .setDescription("command.scan.scanner.message.result",

@@ -23,6 +23,6 @@ public class Status implements SlashHandler {
         var builder = new EmbedBuilder();
         var systemStatistic = statistic.getSystemStatistic();
         systemStatistic.appendTo(builder);
-        event.replyEmbeds(builder.build()).queue();
+        event.replyEmbeds(builder.build()).complete();
     }
 }

@@ -21,6 +21,6 @@ public class InvalidateCache implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         guildRepository.invalidate(event.getOption("guild").getAsLong());
-        event.reply("Invalidated guild cache").queue();
+        event.reply("Invalidated guild cache").setEphemeral(true).complete();
     }
 }

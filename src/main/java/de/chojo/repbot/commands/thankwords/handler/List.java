@@ -27,7 +27,7 @@ public class List implements SlashHandler {
         var pattern = getGuildPattern(event.getGuild());
         if (pattern == null) return;
 
-        event.reply(context.localize("command.thankwords.list.message.list") + "\n" + pattern).queue();
+        event.reply(context.localize("command.thankwords.list.message.list") + "\n" + pattern).complete();
     }
 
     @Nullable

@@ -28,12 +28,12 @@ public class CurrentResetDate implements SlashHandler {
         if (date == null) {
             event.reply(context.localize("command.repadmin.resetdate.current.message.notset"))
                  .setEphemeral(true)
-                 .queue();
+                 .complete();
             return;
         }
 
         event.reply(context.localize("command.repadmin.resetdate.current.message.set", Replacement.create("DATE", FORMATTER.format(date))))
              .setEphemeral(true)
-             .queue();
+             .complete();
     }
 }

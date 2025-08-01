@@ -24,6 +24,6 @@ public class Set extends BaseReputationModifier {
         repUser.setReputation(rep);
         event.reply(context.localize("command.repadmin.reputation.set.message.set",
                         Replacement.create("VALUE", rep), Replacement.createMention(user)))
-                .setEphemeral(true).queue();
+                .setEphemeral(true).complete();
     }
 }

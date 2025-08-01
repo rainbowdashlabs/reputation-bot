@@ -44,10 +44,10 @@ public class Refresh implements SlashHandler {
 
     public void refresh(EventContext context, Guild guild, IReplyCallback replyCallback) {
         if (!replyCallback.isAcknowledged()) {
-            replyCallback.deferReply().queue();
+            replyCallback.deferReply().complete();
         }
         if (running.contains(guild.getIdLong())) {
-            replyCallback.getHook().editOriginal(context.localize("command.roles.refresh.message.running")).queue();
+            replyCallback.getHook().editOriginal(context.localize("command.roles.refresh.message.running")).complete();
             return;
         }
 

@@ -25,9 +25,9 @@ public class Delete implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var success = gdpr.request(event.getUser()).queueDeletion();
         if (success) {
-            event.reply(context.localize("command.gdpr.delete.message.received")).setEphemeral(true).queue();
+            event.reply(context.localize("command.gdpr.delete.message.received")).setEphemeral(true).complete();
         } else {
-            event.reply(context.localize("command.gdpr.delete.message.scheduled")).setEphemeral(true).queue();
+            event.reply(context.localize("command.gdpr.delete.message.scheduled")).setEphemeral(true).complete();
         }
     }
 }

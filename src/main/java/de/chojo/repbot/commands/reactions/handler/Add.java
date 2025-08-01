@@ -46,7 +46,7 @@ public class Add implements SlashHandler {
             case EMOJI_FOUND -> {
                 reactions.add(emote);
                 message.editMessage(context.localize("command.reactions.add.message.add",
-                        Replacement.create("EMOTE", result.mention()))).queue();
+                        Replacement.create("EMOTE", result.mention()))).complete();
             }
             case EMOTE_FOUND -> {
                 reactions.add(result.id());

@@ -24,6 +24,6 @@ public class Add extends BaseReputationModifier {
         repUser.addReputation(rep);
         event.reply(context.localize("command.repadmin.reputation.add.message.added",
                         Replacement.create("VALUE", rep), Replacement.createMention(user)))
-                .setEphemeral(true).queue();
+                .setEphemeral(true).complete();
     }
 }
