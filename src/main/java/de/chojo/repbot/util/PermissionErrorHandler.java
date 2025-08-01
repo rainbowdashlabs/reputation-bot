@@ -76,7 +76,10 @@ public final class PermissionErrorHandler {
         guild.retrieveMemberById(ownerId)
              .flatMap(member -> member.getUser().openPrivateChannel())
              .flatMap(privateChannel -> privateChannel.sendMessage(finalErrorMessage))
-             .onErrorMap(t -> null)
+             .onErrorMap(t -> {
+                 log.trace("Could not send permission error to owner.");
+                 return null;
+             })
              .queue();
     }
 
@@ -85,7 +88,7 @@ public final class PermissionErrorHandler {
      *
      * @param channel     channel to check
      * @param permissions permissions to check
-     * @throws InsufficientPermissionException when the bot user doesnt have a permission
+     * @throws InsufficientPermissionException when the bot user doesn't have a permission
      */
     public static void assertPermissions(GuildMessageChannel channel, Permission... permissions) throws InsufficientPermissionException {
         var self = channel.getGuild().getSelfMember();

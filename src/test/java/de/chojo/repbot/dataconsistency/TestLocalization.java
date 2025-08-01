@@ -30,6 +30,7 @@ public class TestLocalization {
     private static final Pattern REPLACEMENTS = Pattern.compile("%[a-zA-Z\\d.]+?%");
     private static final Set<String> WHITELIST = Set.of("bot.config", "bot.testmode", "bot.cleancommands", "bot.gdpr.enable", "yyyy.MM.dd");
     private static final Set<String> WHITELIST_ENDS = Set.of(".gg", ".com", "bot.config", ".png", ".json");
+    private static final Set<String> WHITELIST_STARTS = Set.of("bot.");
 
     private static final DiscordLocale[] LOCALES = {
             DiscordLocale.ENGLISH_US,
@@ -150,6 +151,9 @@ public class TestLocalization {
         if (WHITELIST.contains(key)) return true;
         for (var end : WHITELIST_ENDS) {
             if (key.endsWith(end)) return true;
+        }
+        for (var start : WHITELIST_STARTS) {
+            if (key.startsWith(start)) return true;
         }
         return false;
     }

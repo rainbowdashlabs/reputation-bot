@@ -9,13 +9,12 @@ import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.Channel;
+import net.dv8tion.jda.api.entities.channel.attribute.ICategorizableChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildChannel;
-import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildMessageChannel;
-import net.dv8tion.jda.internal.entities.channel.concrete.VoiceChannelImpl;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -27,7 +26,7 @@ import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class Channels  implements GuildHolder {
+public class Channels implements GuildHolder {
 
     private static final Logger log = getLogger(Channels.class);
 
@@ -54,24 +53,18 @@ public class Channels  implements GuildHolder {
     }
 
     public boolean isEnabled(GuildMessageChannel channel) {
-        StandardGuildChannel baseChannel;
+        GuildMessageChannel baseChannel = channel;
         if (channel instanceof ThreadChannel bc) {
-            baseChannel = bc.getParentChannel().asStandardGuildChannel();
-        } else {
-            if (channel instanceof StandardGuildMessageChannel bc) {
-                baseChannel = bc;
-            } else if (channel instanceof VoiceChannelImpl bc) {
-                baseChannel = bc.asStandardGuildChannel();
-            } else {
-                log.debug("Channel is a non base guild channel, but a {}.", channel.getClass().getName());
-                return false;
-            }
+            baseChannel = bc.getParentChannel().asGuildMessageChannel();
         }
 
-        return isEnabledByChannel(baseChannel) || isEnabledByCategory(baseChannel.getParentCategory());
+        if (baseChannel instanceof ICategorizableChannel categorizableChannel) {
+            return isEnabledByCategory(categorizableChannel.getParentCategory());
+        }
+        return isEnabledByChannel(baseChannel);
     }
 
-    public boolean isEnabledByChannel(StandardGuildChannel channel) {
+    public boolean isEnabledByChannel(GuildMessageChannel channel) {
         return isWhitelist() == channels.contains(channel.getIdLong());
     }
 
@@ -82,8 +75,8 @@ public class Channels  implements GuildHolder {
 
     public List<GuildChannel> channels() {
         return channels.stream().map(guild()::getGuildChannelById)
-                .filter(Objects::nonNull)
-                .toList();
+                       .filter(Objects::nonNull)
+                       .toList();
     }
 
     public List<Category> categories() {
@@ -158,7 +151,7 @@ public class Channels  implements GuildHolder {
      * @return true if the channel was removed
      */
     public boolean remove(Category category) {
-        var result =query("DELETE FROM active_categories WHERE guild_id = ? AND category_id = ?;")
+        var result = query("DELETE FROM active_categories WHERE guild_id = ? AND category_id = ?;")
                 .single(call().bind(guildId()).bind(category.getIdLong()))
                 .update()
                 .changed();
@@ -187,7 +180,7 @@ public class Channels  implements GuildHolder {
     /**
      * Remove all categories of a guild
      *
-     * @return the amount of removed categories
+     * @return the number of removed categories
      */
     public int clearCategories() {
         var result = query("DELETE FROM active_categories WHERE guild_id = ?;")
@@ -202,11 +195,11 @@ public class Channels  implements GuildHolder {
 
     public boolean listType(boolean whitelist) {
         var result = query("""
-                       INSERT INTO thank_settings(guild_id, channel_whitelist) VALUES (?,?)
-                           ON CONFLICT(guild_id)
-                               DO UPDATE
-                                   SET channel_whitelist = excluded.channel_whitelist
-                       """)
+                INSERT INTO thank_settings(guild_id, channel_whitelist) VALUES (?,?)
+                    ON CONFLICT(guild_id)
+                        DO UPDATE
+                            SET channel_whitelist = excluded.channel_whitelist
+                """)
                 .single(call().bind(guildId()).bind(whitelist))
                 .update()
                 .changed();
