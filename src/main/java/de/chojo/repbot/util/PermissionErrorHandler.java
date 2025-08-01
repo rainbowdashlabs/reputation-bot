@@ -5,7 +5,6 @@
  */
 package de.chojo.repbot.util;
 
-import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.LocalizationContext;
 import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.Replacement;
@@ -17,8 +16,12 @@ import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.internal.utils.PermissionUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class PermissionErrorHandler {
+    private static final Logger log = LoggerFactory.getLogger(PermissionErrorHandler.class);
+
     private PermissionErrorHandler() {
         throw new UnsupportedOperationException("This is a utility class.");
     }
@@ -50,6 +53,7 @@ public final class PermissionErrorHandler {
     public static void sendPermissionError(GuildMessageChannel channel, Permission permission, LocalizationContext localizer,
                                            Configuration configuration) {
         var guild = channel.getGuild();
+        log.trace("Sending permission error for channel {} in guild {}. Permission: {}", channel.getName(), guild.getName(), permission.getName());
         var errorMessage = localizer.localize("error.missingPermission",
                 Replacement.create("PERM", permission.getName(), Format.BOLD));
         if (guild.getSelfMember().hasPermission(permission)) {
