@@ -129,6 +129,11 @@ CREATE OR REPLACE VIEW repbot_schema.v_guilds AS
     SELECT
         guild_id
     FROM
+        repbot_schema.self_cleanup
+    DISTINCT
+    SELECT
+        guild_id
+    FROM
         repbot_schema.thank_settings
     UNION
     DISTINCT
