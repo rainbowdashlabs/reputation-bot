@@ -53,19 +53,23 @@ public class Channels implements GuildHolder {
     }
 
     public boolean isEnabled(GuildMessageChannel channel) {
-        GuildMessageChannel baseChannel = channel;
+        long baseChannel = channel.getIdLong();
         if (channel instanceof ThreadChannel bc) {
-            baseChannel = bc.getParentChannel().asGuildMessageChannel();
+            baseChannel = bc.getParentChannel().getIdLong();
         }
 
-        if (baseChannel instanceof ICategorizableChannel categorizableChannel) {
+        if (channel instanceof ICategorizableChannel categorizableChannel) {
             return isEnabledByCategory(categorizableChannel.getParentCategory());
         }
         return isEnabledByChannel(baseChannel);
     }
 
     public boolean isEnabledByChannel(GuildMessageChannel channel) {
-        return isWhitelist() == channels.contains(channel.getIdLong());
+        return isEnabledByChannel(channel.getIdLong());
+    }
+
+    public boolean isEnabledByChannel(long channel) {
+        return isWhitelist() == channels.contains(channel);
     }
 
     public boolean isEnabledByCategory(@Nullable Category category) {

@@ -138,18 +138,6 @@ CREATE OR REPLACE VIEW repbot_schema.v_guilds AS
         repbot_schema.voice_activity
     ORDER BY guild_id;
 
--- SELECT string_agg(format($$
---         CONSTRAINT guilds_%s_guild_id_fk
---             REFERENCES repbot_schema.%s (guild_id) ON DELETE CASCADE$$, table_name, table_name),'')
--- FROM information_schema.columns
--- WHERE column_name = 'guild_id'
---   AND table_schema = 'repbot'
---   AND table_name IN (
---     SELECT table_name
---     FROM information_schema.tables
---     WHERE table_type = 'BASE TABLE'
---       AND table_schema = 'repbot'
---   );
 CREATE TABLE repbot_schema.guilds (
     guild_id BIGINT NOT NULL
         CONSTRAINT guilds_pk
