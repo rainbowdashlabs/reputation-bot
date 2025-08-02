@@ -16,6 +16,7 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
 import java.util.ArrayList;
@@ -82,8 +83,12 @@ public class SharedGuilds implements SlashHandler {
         if (mutualGuilds.isEmpty() || deepSearch) {
             for (var shard : user.getJDA().getShardManager().getShards()) {
                 for (var guild : shard.getGuilds()) {
-                    var member = guild.retrieveMemberById(user.getIdLong()).complete();
-                    if (member != null) mutualGuilds.add(guild);
+                    try {
+                        var member = guild.retrieveMemberById(user.getIdLong()).complete();
+                        if (member != null) mutualGuilds.add(guild);
+                    } catch (ErrorResponseException e) {
+                        // pass
+                    }
                 }
             }
         }
