@@ -59,7 +59,9 @@ public class Channels implements GuildHolder {
         }
 
         if (channel instanceof ICategorizableChannel categorizableChannel) {
-            return isEnabledByCategory(categorizableChannel.getParentCategory());
+            if (isEnabledByCategory(categorizableChannel.getParentCategory())) {
+                return true;
+            }
         }
         return isEnabledByChannel(baseChannel);
     }
