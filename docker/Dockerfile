@@ -4,6 +4,7 @@ COPY . .
 RUN gradle clean build --no-daemon -x test
 
 FROM eclipse-temurin:21-alpine as runtime
+ENV DOCKER = true
 
 WORKDIR /app
 
