@@ -6,8 +6,12 @@
 package de.chojo.repbot.commands.bot.handler;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
+import de.chojo.jdautil.menus.MenuAction;
+import de.chojo.jdautil.menus.MenuActionBuilder;
+import de.chojo.jdautil.menus.entries.MenuEntry;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.config.Configuration;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.util.Guilds;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
@@ -18,6 +22,7 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
+import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -35,9 +40,11 @@ import static net.dv8tion.jda.api.Permission.MESSAGE_MANAGE;
 public class SharedGuilds implements SlashHandler {
     private final Configuration configuration;
     private static final EnumSet<Permission> MODERATOR = EnumSet.of(MANAGE_SERVER, KICK_MEMBERS, BAN_MEMBERS, MESSAGE_MANAGE, MANAGE_CHANNEL, MANAGE_ROLES);
+    private final GuildRepository guildRepository;
 
-    public SharedGuilds(Configuration configuration) {
+    public SharedGuilds(Configuration configuration, GuildRepository guildRepository) {
         this.configuration = configuration;
+        this.guildRepository = guildRepository;
     }
 
     @Override
@@ -65,9 +72,15 @@ public class SharedGuilds implements SlashHandler {
             }
         }
 
-        MessageEmbed messageEmbed = sharedGuildsEmbed(user, deepSearch, configuration);
-
-        event.getHook().editOriginalEmbeds(messageEmbed).complete();
+        List<Guild> shared = sharedGuilds(user, deepSearch, configuration);
+        MessageEmbed messageEmbed = buildEmbed(user, shared);
+        MenuActionBuilder menuActionBuilder = MenuAction.forCallback(messageEmbed, event);
+        for (Guild guild : shared) {
+            menuActionBuilder.addComponent(MenuEntry.of(Button.primary(guild.getId(), guild.getName()), ctx -> {
+                Debug.sendDebug(ctx.event(), context.interactionHub().pageServices(), guildRepository.guild(guild), null);
+            }));
+        }
+        context.registerMenu(menuActionBuilder.build());
     }
 
     public static MessageEmbed sharedGuildsEmbed(User user, boolean deepSearch, Configuration configuration) {

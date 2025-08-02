@@ -69,7 +69,7 @@ public class BotAdmin implements SlashProvider<Slash> {
                                                      .argument(Argument.text("guildid", "Guild id").asRequired())
                                                      .argument(Argument.text("messageid", "Id of message").asRequired())))
                    .subCommand(SubCommand.of("shared_guilds", "Shared guilds with a user")
-                                         .handler(new SharedGuilds(configuration))
+                                         .handler(new SharedGuilds(configuration, guildRepository))
                                          .argument(Argument.text("user_id", "user id"))
                                          .argument(Argument.user("user", "user")))
                    .subCommand(SubCommand.of("redeploy", "Redeploy guild commands")
