@@ -76,22 +76,28 @@ public class SharedGuilds implements SlashHandler {
     }
 
     public static List<Guild> sharedGuilds(User user, boolean deepSearch, Configuration configuration) {
-        var mutualGuilds = new ArrayList<>(user.getMutualGuilds());
+        var mutualGuilds = new ArrayList<Guild>();
 
-        mutualGuilds.removeIf(g -> configuration.baseSettings().botGuild() == g.getIdLong());
+        for (var shard : user.getJDA().getShardManager().getShards()) {
+            mutualGuilds.addAll(shard.getMutualGuilds(user));
+        }
 
-        if (mutualGuilds.isEmpty() || deepSearch) {
+        if (mutualGuilds.isEmpty() && deepSearch) {
             for (var shard : user.getJDA().getShardManager().getShards()) {
-                for (var guild : shard.getGuilds()) {
+                for (Guild guild : shard.getGuilds()) {
                     try {
-                        var member = guild.retrieveMemberById(user.getIdLong()).complete();
-                        if (member != null) mutualGuilds.add(guild);
+                        Member member = guild.retrieveMemberById(user.getIdLong()).complete();
+                        if (member != null) {
+                            mutualGuilds.add(guild);
+                        }
                     } catch (ErrorResponseException e) {
-                        // pass
+                        //pass
                     }
                 }
             }
         }
+
+        mutualGuilds.removeIf(g -> configuration.baseSettings().botGuild() == g.getIdLong());
         return mutualGuilds;
     }
 
