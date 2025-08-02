@@ -45,6 +45,12 @@ CREATE OR REPLACE VIEW repbot_schema.v_guilds AS
     SELECT
         guild_id
     FROM
+        repbot_schema.cleanup_schedule
+    UNION
+    DISTINCT
+    SELECT
+        guild_id
+    FROM
         repbot_schema.donor_roles
     UNION
     DISTINCT
@@ -145,7 +151,13 @@ CREATE TABLE repbot_schema.guilds (
 );
 
 -- Pre populate to be sure that adding the foreign keys doesnt fail.
-INSERT INTO repbot_schema.guilds SELECT guild_id FROM repbot_schema.v_guilds;
+INSERT
+INTO
+    repbot_schema.guilds
+SELECT
+    guild_id
+FROM
+    repbot_schema.v_guilds;
 
 -- SELECT string_agg(format($$
 -- ALTER TABLE repbot_schema.%s
