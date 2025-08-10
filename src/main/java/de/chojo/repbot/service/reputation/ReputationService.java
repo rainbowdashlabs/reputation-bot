@@ -271,7 +271,7 @@ public class ReputationService {
             return false;
         }
 
-        logReputationEntry(settings, guild, new ReputationLogEntry(null,
+        logReputationEntry(settings, guild, new ReputationLogEntry(
                 guild.getIdLong(),
                 message.getChannel().getIdLong(),
                 donor.getIdLong(),
@@ -350,12 +350,19 @@ public class ReputationService {
         var repGuild = settings.repGuild();
         var analyzer = repGuild.reputation().analyzer();
         // block cooldown
-        var lastRated = guildRepository.guild(guild).reputation().user(donor).getLastRatedDuration(receiver);
-        if (lastRated.toMinutes() < settings.abuseProtection().cooldown()) {
-            analyzer.log(message, SubmitResult.of(SubmitResultType.COOLDOWN_ACTIVE, Replacement.createMention(receiver)));
-            log.trace("The last rating is too recent. {}/{}", lastRated.toMinutes(),
+        var optRating = guildRepository.guild(guild).reputation().user(donor).getLastReputation(receiver);
+        if(optRating.isPresent()){
+            var lastRating = optRating.get();
+        if (lastRating.tillNow().toMinutes() < settings.abuseProtection().cooldown()) {
+            analyzer.log(message, SubmitResult.of(SubmitResultType.COOLDOWN_ACTIVE,
+                    Replacement.create("TARGET", "$words.messages$"),
+                    Replacement.create("URL", lastRating.getMessageJumpLink()),
+                    Replacement.create("ENTRY", lastRating.simpleString()),
+                    Replacement.create("TIMESTAMP", lastRating.timestamp())));
+            log.trace("The last rating is too recent. {}/{}", lastRating.tillNow().toMinutes(),
                     settings.abuseProtection().cooldown());
             return false;
+        }
         }
 
         if (!settings.thanking().receiverRoles().hasRole(receiver)) {

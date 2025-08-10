@@ -13,6 +13,7 @@ import de.chojo.repbot.dao.access.guild.settings.sub.AbuseProtection;
 import de.chojo.repbot.dao.components.MemberHolder;
 import de.chojo.repbot.dao.snapshots.ChannelStats;
 import de.chojo.repbot.dao.snapshots.RepProfile;
+import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 import de.chojo.repbot.util.QueryLoader;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -170,26 +171,24 @@ public class RepUser implements MemberHolder {
      * @param other the other user
      * @return last timestamp as instant
      */
-    public Optional<Instant> getLastReputation(Member other) {
+    public Optional<ReputationLogEntry> getLastReputation(Member other) {
         return
                 query("""
                         SELECT
-                            received
+                            guild_id, donor_id, receiver_id, message_id, received, ref_message_id, channel_id, cause
                         FROM
                             reputation_log
                         WHERE
                             guild_id = ?
-                            AND ((donor_id = ? AND receiver_id = ?)
-                                OR (donor_id = ? AND receiver_id = ?))
+                            AND ((donor_id = :this AND receiver_id = :other)
+                                OR (donor_id = :other AND receiver_id = :this))
                         ORDER BY received DESC
                         LIMIT  1;
                         """)
                         .single(call().bind(reputation.guildId())
-                                      .bind(userId())
-                                      .bind(other.getIdLong())
-                                      .bind(other.getIdLong())
-                                      .bind(userId()))
-                        .map(row -> row.getTimestamp("received").toInstant())
+                                .bind("other", other.getIdLong())
+                                .bind("this", userId()))
+                        .map(ReputationLogEntry::build)
                         .first();
     }
 
@@ -199,9 +198,8 @@ public class RepUser implements MemberHolder {
      * @param other receiver
      * @return the time since the last vote in the requested time unit or 1 year if no entry was found.
      */
-    public Duration getLastRatedDuration(Member other) {
-        return getLastReputation(other).map(last -> Duration.between(last, Instant.now()))
-                                       .orElseGet(() -> Duration.ofDays(365));
+    public Optional<Duration> getLastRatedDuration(Member other) {
+        return getLastReputation(other).map(last -> Duration.between(last.received(), Instant.now()));
     }
 
     /**

@@ -10,6 +10,7 @@ public enum SubmitResultType {
     CHANNEL_INACTIVE("submitresult.channelinactive"),
     NO_TARGETS("submitresult.notargets"),
     NO_RECENT_MEMBERS("submitresult.norecentmembers"),
+    // TODO: Switch to old locale key after a few days (10.08.2025)
     COOLDOWN_ACTIVE("submitresult.cooldownactive"),
     EMBED_SEND("submitresult.embedsend"),
     DONOR_LIMIT("submitresult.donorlimit"),
