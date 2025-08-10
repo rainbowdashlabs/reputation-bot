@@ -13,12 +13,12 @@ import java.util.List;
 
 public record SubmitResult(SubmitResultType type, List<Replacement> replacements) {
 
-    public static SubmitResult of(SubmitResultType type, Replacement... replacements){
+    public static SubmitResult of(SubmitResultType type, Replacement... replacements) {
         return of(type, List.of(replacements));
     }
 
     @JsonCreator
-    public static SubmitResult of(@JsonProperty("type") SubmitResultType type,  @JsonProperty("replacements") List<Replacement> replacements){
+    public static SubmitResult of(@JsonProperty("type") SubmitResultType type, @JsonProperty("replacements") List<Replacement> replacements) {
         return new SubmitResult(type, replacements);
     }
 }

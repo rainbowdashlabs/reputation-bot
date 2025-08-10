@@ -5,9 +5,11 @@
  */
 package de.chojo.repbot.config.elements;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 
 @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
 public class SelfCleanup {
@@ -40,7 +42,7 @@ public class SelfCleanup {
         return LocalDateTime.now().minusDays(leaveDays());
     }
 
-    public LocalDateTime getInactiveDaysOffset() {
-        return LocalDateTime.now().minusDays(inactiveDays());
+    public Instant getInactiveDaysOffset() {
+        return Instant.now().minus(inactiveDays(), ChronoUnit.DAYS);
     }
 }

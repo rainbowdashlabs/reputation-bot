@@ -29,6 +29,7 @@ import net.dv8tion.jda.api.utils.TimeFormat;
 import net.dv8tion.jda.api.utils.messages.MessageEditData;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
@@ -92,7 +93,7 @@ public class Debug implements SlashHandler {
                 .addField("Latest reputation",
                         timestamp(reputation.log().getLatestReputation()
                                             .map(ReputationLogEntry::received)
-                                            .orElse(LocalDateTime.ofEpochSecond(0L, 0, ZoneOffset.UTC))), true)
+                                            .orElse(Instant.EPOCH)), true)
                 .build());
 
         embeds.add(buildPermissions(selfMember::hasPermission, new EmbedBuilder().setTitle("Permissions")).build());
@@ -171,6 +172,10 @@ public class Debug implements SlashHandler {
 
     private static String timestamp(LocalDateTime dateTime) {
         return TimeFormat.DATE_TIME_SHORT.format(dateTime.toEpochSecond(ZoneOffset.UTC) * 1000);
+    }
+
+    private static String timestamp(Instant dateTime) {
+        return TimeFormat.DATE_TIME_SHORT.format(dateTime.toEpochMilli());
     }
 
     private static String timestamp(OffsetDateTime dateTime) {

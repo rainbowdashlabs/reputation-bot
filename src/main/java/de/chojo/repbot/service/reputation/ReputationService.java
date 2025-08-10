@@ -279,7 +279,7 @@ public class ReputationService {
                 message.getIdLong(),
                 refMessage == null ? 0 : refMessage.getIdLong(),
                 type,
-                LocalDateTime.now()));
+                Instant.now()));
 
         // mark messages
         Messages.markMessage(message, refMessage, settings);
@@ -355,10 +355,12 @@ public class ReputationService {
             var lastRating = optRating.get();
         if (lastRating.tillNow().toMinutes() < settings.abuseProtection().cooldown()) {
             analyzer.log(message, SubmitResult.of(SubmitResultType.COOLDOWN_ACTIVE,
-                    Replacement.create("TARGET", "$words.messages$"),
+                    Replacement.create("TARGET", "$words.message$"),
                     Replacement.create("URL", lastRating.getMessageJumpLink()),
                     Replacement.create("ENTRY", lastRating.simpleString()),
-                    Replacement.create("TIMESTAMP", lastRating.timestamp())));
+                    Replacement.create("TIMESTAMP", lastRating.timestamp()),
+                    Replacement.create("REMAINING", lastRating.tillNow().toMinutes()),
+                    Replacement.create("TOTAL", settings.abuseProtection().cooldown())));
             log.trace("The last rating is too recent. {}/{}", lastRating.tillNow().toMinutes(),
                     settings.abuseProtection().cooldown());
             return false;

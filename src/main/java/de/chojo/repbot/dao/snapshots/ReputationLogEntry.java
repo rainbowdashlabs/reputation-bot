@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
@@ -21,9 +22,8 @@ import static de.chojo.sadu.queries.api.query.Query.query;
  * A log entry representing a single reputation.
  */
 public record ReputationLogEntry(long guildId, long channelId, long donorId, long receiverId, long messageId,
-                                 long refMessageId, ThankType type, LocalDateTime received) {
+                                 long refMessageId, ThankType type, Instant received) {
     private static final String PATH = "https://discord.com/channels/%s/%s/%s";
-    private static final long DISCORD_EPOCH = 1420070400000L;
 
     public static ReputationLogEntry build(Row rs) throws SQLException {
         return new ReputationLogEntry(
@@ -34,7 +34,7 @@ public record ReputationLogEntry(long guildId, long channelId, long donorId, lon
                 rs.getLong("message_id"),
                 rs.getLong("ref_message_id"),
                 ThankType.valueOf(rs.getString("cause")),
-                rs.getTimestamp("received").toLocalDateTime());
+                rs.getTimestamp("received").toInstant());
     }
 
     public String getMessageJumpLink() {
@@ -50,12 +50,11 @@ public record ReputationLogEntry(long guildId, long channelId, long donorId, lon
     }
 
     public String timestamp() {
-        var timestamp = ((messageId() >> 22) + DISCORD_EPOCH) / 1000;
-        return String.format("<t:%s:d> <t:%s:t>", timestamp, timestamp);
+        return String.format("<t:%s:d> <t:%s:t>", received.getEpochSecond(), received.getEpochSecond());
     }
 
     public String simpleString() {
-        return "%s ➜ %s".formatted(MentionUtil.user(receiverId()), MentionUtil.user(receiverId()));
+        return "%s ➜ %s".formatted(MentionUtil.user(donorId()), MentionUtil.user(receiverId()));
     }
 
     public Duration tillNow(){
