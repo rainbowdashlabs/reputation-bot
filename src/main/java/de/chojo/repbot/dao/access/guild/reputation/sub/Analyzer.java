@@ -20,11 +20,13 @@ import de.chojo.repbot.dao.snapshots.ResultEntry;
 import de.chojo.repbot.dao.snapshots.SubmitResultEntry;
 import de.chojo.repbot.dao.snapshots.analyzer.ResultSnapshot;
 import de.chojo.repbot.service.reputation.SubmitResult;
+import de.chojo.sadu.queries.converter.StandardValueConverter;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import org.slf4j.Logger;
 
 import java.sql.SQLException;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -130,7 +132,7 @@ public class Analyzer implements GuildHolder {
                 log.error("Could not deserialize result", e);
                 throw new SQLException(e);
             }
-            return new SubmitResultEntry(result, row.getLong("channel_id"), messageId, row.getTimestamp("submitted").toInstant());
+            return new SubmitResultEntry(result, row.getLong("channel_id"), messageId, row.get("submitted", StandardValueConverter.LOCAL_DATE_TIME).toInstant(ZoneOffset.UTC));
         }).all();
     }
 

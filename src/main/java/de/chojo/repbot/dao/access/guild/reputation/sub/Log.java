@@ -91,7 +91,7 @@ public class Log  implements GuildHolder {
                        LIMIT ?;
                        """, column)
                 .single(call().bind(id).bind(guildId()).bind(page * pageSize).bind(pageSize))
-                .map(r -> ReputationLogEntry.build(this, r))
+                .map(ReputationLogEntry::build)
                 .all();
     }
 
@@ -111,7 +111,7 @@ public class Log  implements GuildHolder {
                        ORDER BY received DESC
                        LIMIT 1;
                        """).single(call().bind(guildId()))
-                .map(r -> ReputationLogEntry.build(this, r))
+                .map(r -> ReputationLogEntry.build(r))
                 .first();
     }
 
@@ -139,7 +139,7 @@ public class Log  implements GuildHolder {
                            AND guild_id = ?;
                        """)
                 .single(call().bind(message).bind(guildId()))
-                .map(r -> ReputationLogEntry.build(this, r))
+                .map(r -> ReputationLogEntry.build(r))
                 .all();
     }
 
