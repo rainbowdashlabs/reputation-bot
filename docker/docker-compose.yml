@@ -12,7 +12,7 @@ services:
   database:
     networks:
       - repbot
-    image: postgres:17.5
+    image: postgres:17.6
     expose:
       - 5432
     volumes:
