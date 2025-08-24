@@ -186,7 +186,7 @@ public class ReputationService {
         }
 
         // Abuse protection: Cooldown
-        if (!canVote(message, donor, receiver, guild, settings)) {
+        if (!canGiveReputation(message, donor, receiver, guild, settings)) {
             log.trace("Cooldown active on {}", message.getIdLong());
             return true;
         }
@@ -336,25 +336,32 @@ public class ReputationService {
         return false;
     }
 
-    public boolean canVote(Message message, Member donor, Member receiver, Guild guild, Settings settings) {
+    public boolean canGiveReputation(Message message, Member donor, Member receiver, Guild guild, Settings settings) {
         var repGuild = settings.repGuild();
         var analyzer = repGuild.reputation().analyzer();
         // block cooldown
         var optRating = guildRepository.guild(guild).reputation().user(donor).getLastReputation(receiver);
-        if(optRating.isPresent()){
+
+        if (optRating.isPresent()) {
             var lastRating = optRating.get();
-        if (lastRating.tillNow().toMinutes() < settings.abuseProtection().cooldown()) {
-            analyzer.log(message, SubmitResult.of(SubmitResultType.COOLDOWN_ACTIVE,
-                    Replacement.create("TARGET", "$words.message$"),
-                    Replacement.create("URL", lastRating.getMessageJumpLink()),
-                    Replacement.create("ENTRY", lastRating.simpleString()),
-                    Replacement.create("TIMESTAMP", lastRating.timestamp()),
-                    Replacement.create("REMAINING", lastRating.tillNow().toMinutes()),
-                    Replacement.create("TOTAL", settings.abuseProtection().cooldown())));
-            log.trace("The last rating is too recent. {}/{}", lastRating.tillNow().toMinutes(),
-                    settings.abuseProtection().cooldown());
-            return false;
-        }
+
+            if (settings.abuseProtection().cooldown() < 0) {
+                analyzer.log(message, SubmitResult.of(SubmitResultType.COOLDOWN_ONCE));
+                return false;
+            }
+
+            if (lastRating.tillNow().toMinutes() < settings.abuseProtection().cooldown()) {
+                analyzer.log(message, SubmitResult.of(SubmitResultType.COOLDOWN_ACTIVE,
+                        Replacement.create("TARGET", "$words.message$"),
+                        Replacement.create("URL", lastRating.getMessageJumpLink()),
+                        Replacement.create("ENTRY", lastRating.simpleString()),
+                        Replacement.create("TIMESTAMP", lastRating.timestamp()),
+                        Replacement.create("REMAINING", lastRating.tillNow().toMinutes()),
+                        Replacement.create("TOTAL", settings.abuseProtection().cooldown())));
+                log.trace("The last rating is too recent. {}/{}", lastRating.tillNow().toMinutes(),
+                        settings.abuseProtection().cooldown());
+                return false;
+            }
         }
 
         if (!settings.thanking().receiverRoles().hasRole(receiver)) {

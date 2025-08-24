@@ -181,7 +181,7 @@ public class MessageListener extends ListenerAdapter {
         }
 
         var members = recentMembers.stream()
-                                   .filter(receiver -> reputationService.canVote(message, message.getMember(), receiver, message.getGuild(), settings))
+                                   .filter(receiver -> reputationService.canGiveReputation(message, message.getMember(), receiver, message.getGuild(), settings))
                                    .filter(receiver -> !settings.abuseProtection().isReceiverLimit(receiver))
                                    .limit(10)
                                    .collect(Collectors.toList());
