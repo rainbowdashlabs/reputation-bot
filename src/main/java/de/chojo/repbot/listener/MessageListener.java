@@ -21,8 +21,6 @@ import de.chojo.repbot.service.RepBotCachePolicy;
 import de.chojo.repbot.service.reputation.ReputationService;
 import de.chojo.repbot.service.reputation.SubmitResult;
 import de.chojo.repbot.service.reputation.SubmitResultType;
-import de.chojo.repbot.util.EmojiDebug;
-import de.chojo.repbot.util.Messages;
 import de.chojo.repbot.util.PermissionErrorHandler;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Message;
@@ -128,18 +126,11 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        if (settings.general().isEmojiDebug()) {
-            Messages.markMessage(message, EmojiDebug.FOUND_THANKWORD);
-        }
-
         log.trace("Found thankword in {}", message.getIdLong());
 
         if (settings.abuseProtection().isDonorLimit(event.getMember())) {
             analyzer.log(message, SubmitResult.of(SubmitResultType.DONOR_LIMIT));
             log.trace("Donor reached limit on {}", message.getIdLong());
-            if (settings.general().isEmojiDebug()) {
-                Messages.markMessage(message, EmojiDebug.DONOR_LIMIT);
-            }
             return;
         }
 
@@ -186,7 +177,6 @@ public class MessageListener extends ListenerAdapter {
             settings.repGuild().reputation().analyzer()
                     .log(message, SubmitResult.of(SubmitResultType.NO_RECENT_MEMBERS));
             log.trace("No recent members for {}", message.getIdLong());
-            if (settings.general().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.EMPTY_CONTEXT);
             return;
         }
 
@@ -199,7 +189,6 @@ public class MessageListener extends ListenerAdapter {
         if (members.isEmpty()) {
             settings.repGuild().reputation().analyzer().log(message, SubmitResult.of(SubmitResultType.ALL_COOLDOWN));
             log.trace("None of the recent members can receive reputation {}", message.getIdLong());
-            if (settings.general().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.ONLY_COOLDOWN);
             return;
         }
 

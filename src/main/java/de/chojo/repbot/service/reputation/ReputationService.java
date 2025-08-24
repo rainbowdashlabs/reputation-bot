@@ -22,7 +22,6 @@ import de.chojo.repbot.dao.access.guild.settings.sub.Reputation;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 import de.chojo.repbot.service.RoleAssigner;
-import de.chojo.repbot.util.EmojiDebug;
 import de.chojo.repbot.util.Messages;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
@@ -38,7 +37,6 @@ import org.slf4j.Logger;
 
 import java.awt.*;
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.Collections;
@@ -171,14 +169,12 @@ public class ReputationService {
         var repGuild = guildRepository.guild(guild);
         var analyzer = repGuild.reputation().analyzer();
         var settings = repGuild.settings();
-        var addEmoji = settings.general().isEmojiDebug();
         var abuseSettings = settings.abuseProtection();
 
         // Abuse Protection: target context
         if (!context.members().contains(receiver) && abuseSettings.isReceiverContext()) {
             analyzer.log(message, SubmitResult.of(SubmitResultType.TARGET_NOT_IN_CONTEXT, Replacement.createMention(receiver)));
             log.trace("Receiver is not in context of {}", message.getIdLong());
-            if (addEmoji) Messages.markMessage(message, EmojiDebug.TARGET_NOT_IN_CONTEXT);
             return true;
         }
 
@@ -186,14 +182,12 @@ public class ReputationService {
         if (!context.members().contains(donor) && abuseSettings.isDonorContext()) {
             log.trace("Donor is not in context of {}", message.getIdLong());
             analyzer.log(message, SubmitResult.of(SubmitResultType.DONOR_NOT_IN_CONTEXT, Replacement.createMention(donor)));
-            if (addEmoji) Messages.markMessage(message, EmojiDebug.DONOR_NOT_IN_CONTEXT);
             return true;
         }
 
         // Abuse protection: Cooldown
         if (!canVote(message, donor, receiver, guild, settings)) {
             log.trace("Cooldown active on {}", message.getIdLong());
-            if (addEmoji) Messages.markMessage(message, EmojiDebug.ONLY_COOLDOWN);
             return true;
         }
 
@@ -204,7 +198,6 @@ public class ReputationService {
                                                                   .contains(refMessage)) {
                 log.trace("Reference message of {} is outdated", message.getIdLong());
                 analyzer.log(message, SubmitResult.of(SubmitResultType.OUTDATED_REFERENCE_MESSAGE));
-                if (addEmoji) Messages.markMessage(message, EmojiDebug.TOO_OLD);
                 return true;
             }
         }
@@ -214,7 +207,6 @@ public class ReputationService {
         if (abuseSettings.isOldMessage(message)) {
             log.trace("Message of {} is outdated", message.getIdLong());
             analyzer.log(message, SubmitResult.of(SubmitResultType.OUTDATED_MESSAGE));
-            if (addEmoji) Messages.markMessage(message, EmojiDebug.TOO_OLD);
             return true;
         }
 
@@ -222,14 +214,12 @@ public class ReputationService {
         if (abuseSettings.isReceiverLimit(receiver)) {
             log.trace("Receiver limit is reached on {}", message.getIdLong());
             analyzer.log(message, SubmitResult.of(SubmitResultType.RECEIVER_LIMIT));
-            if (addEmoji) Messages.markMessage(message, EmojiDebug.RECEIVER_LIMIT);
             return true;
         }
 
         if (abuseSettings.isDonorLimit(donor)) {
             log.trace("Donor limit is reached on {}", message.getIdLong());
             analyzer.log(message, SubmitResult.of(SubmitResultType.DONOR_LIMIT));
-            if (addEmoji) Messages.markMessage(message, EmojiDebug.DONOR_LIMIT);
             return true;
         }
 

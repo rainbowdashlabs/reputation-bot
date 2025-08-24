@@ -8,14 +8,12 @@ package de.chojo.repbot.commands.repsettings;
 import de.chojo.jdautil.interactions.slash.Slash;
 import de.chojo.jdautil.interactions.slash.SubCommand;
 import de.chojo.jdautil.interactions.slash.provider.SlashCommand;
-import de.chojo.repbot.commands.repsettings.handler.EmojiInfo;
 import de.chojo.repbot.commands.repsettings.handler.Info;
 import de.chojo.repbot.commands.repsettings.handler.name.Reset;
 import de.chojo.repbot.commands.repsettings.handler.name.Set;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.GuildRepository;
 
-import static de.chojo.jdautil.interactions.slash.Argument.bool;
 import static de.chojo.jdautil.interactions.slash.Argument.text;
 import static de.chojo.jdautil.interactions.slash.Group.group;
 import static de.chojo.jdautil.interactions.slash.SubCommand.sub;
@@ -28,8 +26,6 @@ public class RepSettings extends SlashCommand {
                 .adminCommand()
                 .subCommand(SubCommand.of("info", "command.repsettings.info.description")
                         .handler(new Info(guildRepository)))
-                .subCommand(SubCommand.of("emojidebug", "command.repsettings.emojidebug.description")
-                        .handler(new EmojiInfo(guildRepository)))
                 .group(group("name", "command.repsettings.name.description")
                         .subCommand(sub("set", "command.repsettings.name.set.description")
                                 .handler(new Set(guildRepository, configuration))
