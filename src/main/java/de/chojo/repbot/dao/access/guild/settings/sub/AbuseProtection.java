@@ -24,6 +24,7 @@ import static de.chojo.sadu.queries.api.query.Query.query;
 public class AbuseProtection implements GuildHolder {
     private final Settings settings;
     private int cooldown;
+    private CooldownDirection cooldownDirection;
     private int maxMessageAge;
     private int minMessages;
     private boolean donorContext;
@@ -34,7 +35,7 @@ public class AbuseProtection implements GuildHolder {
     private int maxReceivedHours;
     private int maxMessageReputation;
 
-    public AbuseProtection(Settings settings, int cooldown, int maxMessageAge, int minMessages, boolean donorContext, boolean receiverContext,
+    public AbuseProtection(Settings settings, int cooldown, CooldownDirection cooldownDirection, int maxMessageAge, int minMessages, boolean donorContext, boolean receiverContext,
                            int maxGiven, int maxGivenHours, int maxReceived, int maxReceivedHours, int maxMessageReputation) {
         this.settings = settings;
         this.cooldown = cooldown;
@@ -50,12 +51,13 @@ public class AbuseProtection implements GuildHolder {
     }
 
     public AbuseProtection(Settings settings) {
-        this(settings, 30, 30, 10, true, true, 0, 1, 0, 1, 3);
+        this(settings, 30, CooldownDirection.BIDIRECTIONAL, 30, 10, true, true, 0, 1, 0, 1, 3);
     }
 
     public static AbuseProtection build(Settings settings, Row rs) throws SQLException {
         return new AbuseProtection(settings,
                 rs.getInt("cooldown"),
+                rs.getEnum("cooldown_direction", CooldownDirection.class),
                 rs.getInt("max_message_age"),
                 rs.getInt("min_messages"),
                 rs.getBoolean("donor_context"),
@@ -67,8 +69,24 @@ public class AbuseProtection implements GuildHolder {
                 rs.getInt("max_message_reputation"));
     }
 
+    /**
+     * Gets the cooldown in minutes.
+     * A cooldown of 0 means no cooldown.
+     * A negative cooldown means the cooldown is forever.
+     *
+     * @return cooldown in minutes
+     */
     public int cooldown() {
         return cooldown;
+    }
+
+    /**
+     * Gets the cooldown direction.
+     * The direction defines if the cooldown is between both users, preventing backthanking or not.
+     * @return cooldown direction
+     */
+    public CooldownDirection cooldownDirection() {
+        return cooldownDirection;
     }
 
     public int maxMessageAge() {
@@ -112,6 +130,13 @@ public class AbuseProtection implements GuildHolder {
             this.cooldown = cooldown;
         }
         return this.cooldown;
+    }
+
+    public CooldownDirection cooldownDirection(CooldownDirection cooldownDirection) {
+        if (set("cooldown_direction", stmt -> stmt.bind(cooldownDirection))) {
+            this.cooldownDirection = cooldownDirection;
+        }
+        return this.cooldownDirection;
     }
 
     public int maxMessageAge(int maxMessageAge) {
@@ -219,10 +244,10 @@ public class AbuseProtection implements GuildHolder {
 
     private boolean set(String parameter, Function<Call, Call> builder) {
         return query("""
-                       INSERT INTO abuse_protection(guild_id, %s) VALUES (?, ?)
-                       ON CONFLICT(guild_id)
-                           DO UPDATE SET %s = excluded.%s;
-                       """, parameter, parameter, parameter)
+                INSERT INTO abuse_protection(guild_id, %s) VALUES (?, ?)
+                ON CONFLICT(guild_id)
+                    DO UPDATE SET %s = excluded.%s;
+                """, parameter, parameter, parameter)
                 .single(builder.apply(call().bind(guildId())))
                 .insert()
                 .changed();
@@ -240,22 +265,22 @@ public class AbuseProtection implements GuildHolder {
 
     public String prettyString() {
         return """
-               **Context**
-               Donor: %s
-               Receiver: %s
-               
-               **Limits**
-               Given: %s in %s hours
-               Received: %s in %s hours
-               Per Message: %s
-               Cooldown: %s
-               
-               **Age**
-               Max Age: %s minutes
-               Min Messages: %s
-               """.formatted(donorContext, receiverContext,
-                maxGiven, maxGivenHours, maxReceived, maxReceivedHours, maxMessageReputation, cooldown,
-                maxMessageAge, minMessages)
-                .stripIndent();
+                **Context**
+                Donor: %s
+                Receiver: %s
+                
+                **Limits**
+                Given: %s in %s hours
+                Received: %s in %s hours
+                Per Message: %s
+                Cooldown: %s
+                
+                **Age**
+                Max Age: %s minutes
+                Min Messages: %s
+                """.formatted(donorContext, receiverContext,
+                           maxGiven, maxGivenHours, maxReceived, maxReceivedHours, maxMessageReputation, cooldown,
+                           maxMessageAge, minMessages)
+                   .stripIndent();
     }
 }

@@ -12,6 +12,7 @@ public enum SubmitResultType {
     NO_RECENT_MEMBERS("submitresult.norecentmembers"),
     // TODO: Switch to old locale key after a few days (10.08.2025)
     COOLDOWN_ACTIVE("submitresult.cooldownactive"),
+    COOLDOWN_ONCE("submitresult.cooldownonce"),
     EMBED_SEND("submitresult.embedsend"),
     DONOR_LIMIT("submitresult.donorlimit"),
     NO_RECEIVER_ROLE("submitresult.noreceiverrole"),
