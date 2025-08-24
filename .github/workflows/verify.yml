@@ -8,7 +8,7 @@ jobs:
     name: Gradle build
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
@@ -27,7 +27,7 @@ jobs:
     name: Docker build
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Build as Docker image
         run: docker build . -f docker/Dockerfile
 
@@ -36,7 +36,7 @@ jobs:
     name: Encoding check
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Remove allowed us-ascii files before check
         run: rm src/main/resources/locale.properties src/main/resources/locale_en_US.properties # This needs improvement
       - name: Check UTF-8 for resource bundles
@@ -49,7 +49,7 @@ jobs:
     name: Docs build
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-python@v5
         with:
           python-version: 3.11
