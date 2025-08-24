@@ -67,7 +67,7 @@ public class AbuseProtection extends SlashCommand {
                                                                        .asRequired()))
                                .subCommand(SubCommand.of("get", "command.abuseprotection.cooldown.get.description")
                                                      .handler(new GetCooldown(guildRepository)))
-                               .subCommand(SubCommand.of("once", "command.abuseptorection.cooldown.once.description")
+                               .subCommand(SubCommand.of("once", "command.abuseprotection.cooldown.once.description")
                                                      .handler(new OnceCooldown(guildRepository)))
                                .subCommand(SubCommand.of("direction", "command.abuseprotection.cooldown.direction.description")
                                                      .handler(new SetCooldownDirection(guildRepository))

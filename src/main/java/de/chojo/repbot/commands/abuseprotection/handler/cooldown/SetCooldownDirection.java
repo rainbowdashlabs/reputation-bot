@@ -6,6 +6,7 @@ import de.chojo.jdautil.util.Completion;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.access.guild.settings.sub.CooldownDirection;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.util.Parser;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
@@ -20,10 +21,10 @@ public class SetCooldownDirection implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var guild = guildRepository.guild(event.getGuild());
         var abuseSettings = guild.settings().abuseProtection();
-        var cooldown = CooldownDirection.valueOf(event.getOption("direction").getAsString());
+        var cooldown = Parser.parseEnum(event.getOption("direction").getAsString(), CooldownDirection.class);
 
         event.reply(context.localize("command.abuseprotection.cooldown.direction.message.set",
-                Replacement.create("DIRECTION", abuseSettings.cooldownDirection(cooldown)))).queue();
+                Replacement.create("DIRECTION", abuseSettings.cooldownDirection(cooldown).localCode()))).setEphemeral(true).queue();
     }
 
     @Override

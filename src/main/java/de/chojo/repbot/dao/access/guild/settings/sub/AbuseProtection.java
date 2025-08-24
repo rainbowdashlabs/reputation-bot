@@ -39,6 +39,7 @@ public class AbuseProtection implements GuildHolder {
                            int maxGiven, int maxGivenHours, int maxReceived, int maxReceivedHours, int maxMessageReputation) {
         this.settings = settings;
         this.cooldown = cooldown;
+        this.cooldownDirection = cooldownDirection;
         this.maxMessageAge = maxMessageAge;
         this.minMessages = minMessages;
         this.donorContext = donorContext;

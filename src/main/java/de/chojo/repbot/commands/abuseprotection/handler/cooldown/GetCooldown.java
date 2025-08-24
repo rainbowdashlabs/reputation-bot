@@ -17,15 +17,16 @@ public class GetCooldown implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var guild = guildRepository.guild(event.getGuild());
         var abuseSettings = guild.settings().abuseProtection();
+        String message="";
         if(abuseSettings.cooldown() == 0){
-            // disabled
-            event.reply(context.localize("command.abuseprotection.cooldown.get.message.disabled")).queue();
+            message = context.localize("command.abuseprotection.cooldown.get.message.disabled");
+        }else if(abuseSettings.cooldown() < 0){
+             message = context.localize("command.abuseprotection.cooldown.once.message.set");
+        }else {
+            message = context.localize("command.abuseprotection.cooldown.get.message.get",
+                    Replacement.create("MINUTES", abuseSettings.cooldown()));
         }
-        if(abuseSettings.cooldown() < 0){
-            event.reply(context.localize("command.abuseprotection.cooldown.once.message.set")).queue();
-            return;
-        }
-        event.reply(context.localize("command.abuseprotection.cooldown.get.message.get",
-                Replacement.create("MINUTES", abuseSettings.cooldown()))).queue();
+        message = message + "\n$words.direction$: $%s$".formatted(abuseSettings.cooldownDirection().localCode());
+        event.reply(context.localize(message)).setEphemeral(true).queue();
     }
 }
