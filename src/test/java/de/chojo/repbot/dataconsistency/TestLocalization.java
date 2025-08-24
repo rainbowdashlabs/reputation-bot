@@ -74,7 +74,10 @@ public class TestLocalization {
                 var defReplacements = replacements.get(key);
                 Assertions.assertTrue(localeReplacements.containsAll(defReplacements),
                         "Missing replacement key in " + keyLoc
-                        + ". Expected \"" + String.join(", ", defReplacements) + "\". Actual \"" + String.join(", ", localeReplacements) + "\"");
+                                + ". Expected \"" + String.join(", ", defReplacements) + "\". Actual \"" + String.join(", ", localeReplacements) + "\"");
+                if (key.endsWith(".description")) {
+                    Assertions.assertTrue(locale.length() <= 100, "Description is too long at " + keyLoc + ": " + locale.length() + " > 100");
+                }
             }
         }
     }
