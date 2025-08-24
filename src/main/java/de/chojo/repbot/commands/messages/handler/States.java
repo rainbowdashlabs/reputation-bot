@@ -13,10 +13,10 @@ import de.chojo.jdautil.menus.entries.MenuEntry;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import net.dv8tion.jda.api.components.selections.StringSelectMenu;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
-import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 
 import java.awt.Color;
 import java.util.Collections;
@@ -33,10 +33,10 @@ public class States implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var settings = guildRepository.guild(event.getGuild()).settings();
         var setting = StringSelectMenu.create("setting")
-                .setPlaceholder("command.messages.states.message.choose")
-                .setRequiredRange(1, 1)
-                .addOption("command.messages.states.message.option.reactionconfirmation.name", "reaction_confirmation", "command.messages.states.message.option.reactionConfirmation.description")
-                .build();
+                                      .setPlaceholder("command.messages.states.message.choose")
+                                      .setRequiredRange(1, 1)
+                                      .addOption("command.messages.states.message.option.reactionconfirmation.name", "reaction_confirmation", "command.messages.states.message.option.reactionConfirmation.description")
+                                      .build();
         var reactions = getMenu("reaction_confirmation",
                 "command.messages.states.message.option.reactionconfirmation.name",
                 "command.messages.states.message.choice.reactionConfirmation.true",

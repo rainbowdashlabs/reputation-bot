@@ -6,10 +6,10 @@
 package de.chojo.repbot.listener.voting;
 
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
+import net.dv8tion.jda.api.components.actionrow.ActionRowChildComponent;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
-import net.dv8tion.jda.api.interactions.components.ActionComponent;
 
 import java.util.List;
 import java.util.Map;
@@ -64,7 +64,7 @@ public class VoteRequest {
         return voteTargets;
     }
 
-    public List<ActionComponent> components() {
+    public List<ActionRowChildComponent> components() {
         return voteTargets.values().stream().map(VoteComponent::component).toList();
     }
 
