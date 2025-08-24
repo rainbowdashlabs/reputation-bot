@@ -15,8 +15,8 @@ import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.service.reputation.ReputationService;
-import de.chojo.repbot.util.EmojiDebug;
-import de.chojo.repbot.util.Messages;
+import de.chojo.repbot.service.reputation.SubmitResult;
+import de.chojo.repbot.service.reputation.SubmitResultType;
 import de.chojo.repbot.util.PermissionErrorHandler;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
@@ -33,7 +33,7 @@ import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.requests.RestAction;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -127,20 +127,17 @@ public class ReputationVoteListener extends ListenerAdapter {
             components.put(id, new VoteComponent(member, Button.of(ButtonStyle.PRIMARY, id, member.getEffectiveName())));
         }
 
-        if (settings.general().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.PROMPTED);
-
         var componentRows = getComponentRows(components.values().stream().map(VoteComponent::component).toList());
 
         var maxMessageReputation = guildRepository.guild(message.getGuild()).settings().abuseProtection().maxMessageReputation();
 
         int remaining;
         if (settings.abuseProtection().isDonorLimit()) {
-            remaining = Math.min(maxMessageReputation, settings.abuseProtection().maxGiven() - settings.repGuild()
-                                                                                                       .reputation()
-                                                                                                       .user(message.getMember())
-                                                                                                       .countReceived());
+            remaining = Math.min(maxMessageReputation,
+                    settings.abuseProtection().maxGiven() - settings.repGuild().reputation().user(message.getMember()).countGiven());
             if (remaining == 0) {
-                if (settings.general().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.DONOR_LIMIT);
+                // TODO: Probably checked earlier in message listener already. Prob needs further investigation.
+                settings.repGuild().reputation().analyzer().log(message, SubmitResult.of(SubmitResultType.DONOR_LIMIT));
                 return;
             }
         } else {

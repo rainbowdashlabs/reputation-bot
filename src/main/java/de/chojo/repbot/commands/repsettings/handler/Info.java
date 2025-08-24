@@ -70,11 +70,6 @@ public class Info implements SlashHandler {
                 "command.repsettings.info.message.embed.true",
                 "command.repsettings.info.message.embed.false",
                 guildSettings.reputation().isEmbedActive());
-        var emojidebug = getMenu("emojidebug",
-                "command.repsettings.info.message.option.emojidebug.description",
-                "command.repsettings.emojidebug.message.true",
-                "command.repsettings.emojidebug.message.false",
-                guildSettings.general().isEmojiDebug());
         var skipSingleEmbed = getMenu("directembed",
                 "command.repsettings.info.message.option.skipsingletarget.description",
                 "command.repsettings.info.message.skipsingleembed.true",
@@ -117,9 +112,6 @@ public class Info implements SlashHandler {
                                                .hidden())
                                        .addComponent(MenuEntry.of(embed, ctx -> refresh(ctx, res -> guildSettings.reputation()
                                                                                                                  .embedActive(res), context, guildSettings))
-                                               .hidden())
-                                       .addComponent(MenuEntry.of(emojidebug, ctx -> refresh(ctx, res -> guildSettings.general()
-                                                                                                                      .emojiDebug(res), context, guildSettings))
                                                .hidden())
                                        .addComponent(MenuEntry.of(skipSingleEmbed, ctx -> refresh(ctx, res -> guildSettings.reputation()
                                                                                                                            .directActive(res), context, guildSettings))
