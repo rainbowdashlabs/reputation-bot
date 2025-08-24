@@ -3,7 +3,7 @@
  *
  *     Copyright (C) RainbowDashLabs and Contributor
  */
-package de.chojo.repbot.commands.abuseprotection.handler.limit;
+package de.chojo.repbot.commands.abuseprotection.handler.cooldown;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.Replacement;
@@ -11,10 +11,10 @@ import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-public class Cooldown implements SlashHandler {
+public class SetCooldown implements SlashHandler {
     private final GuildRepository guildRepository;
 
-    public Cooldown(GuildRepository guildRepository) {
+    public SetCooldown(GuildRepository guildRepository) {
         this.guildRepository = guildRepository;
     }
 
@@ -22,15 +22,9 @@ public class Cooldown implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var guild = guildRepository.guild(event.getGuild());
         var abuseSettings = guild.settings().abuseProtection();
-        if (event.getOptions().isEmpty()) {
-            event.reply(context.localize("command.abuseprotection.limit.cooldown.message.get",
-                    Replacement.create("MINUTES", abuseSettings.cooldown()))).queue();
-            return;
-        }
         var cooldown = event.getOption("minutes").getAsLong();
 
-        event.reply(context.localize("command.abuseprotection.limit.cooldown.message.set",
-                Replacement.create("MINUTES", abuseSettings.cooldown((int) cooldown)))).queue();
-
+        event.reply(context.localize("command.abuseprotection.cooldown.set.message.set",
+                Replacement.create("MINUTES", abuseSettings.cooldown((int) cooldown)))).setEphemeral(true).queue();
     }
 }

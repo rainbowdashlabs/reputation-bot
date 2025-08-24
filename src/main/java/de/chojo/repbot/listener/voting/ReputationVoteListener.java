@@ -15,25 +15,26 @@ import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.service.reputation.ReputationService;
-import de.chojo.repbot.util.EmojiDebug;
-import de.chojo.repbot.util.Messages;
+import de.chojo.repbot.service.reputation.SubmitResult;
+import de.chojo.repbot.service.reputation.SubmitResultType;
 import de.chojo.repbot.util.PermissionErrorHandler;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.components.ActionComponent;
+import net.dv8tion.jda.api.components.actionrow.ActionRow;
+import net.dv8tion.jda.api.components.actionrow.ActionRowChildComponent;
+import net.dv8tion.jda.api.components.buttons.Button;
+import net.dv8tion.jda.api.components.buttons.ButtonStyle;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.components.ActionComponent;
-import net.dv8tion.jda.api.interactions.components.ActionRow;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import net.dv8tion.jda.api.requests.RestAction;
 import org.jetbrains.annotations.NotNull;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -44,7 +45,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 public class ReputationVoteListener extends ListenerAdapter {
-    private static final ActionComponent DELETE = Button.of(ButtonStyle.DANGER, "vote:delete", Emoji.fromUnicode("🗑️"));
+    private static final ActionRowChildComponent DELETE = Button.of(ButtonStyle.DANGER, "vote:delete", Emoji.fromUnicode("🗑️"));
     private static final Pattern VOTE = Pattern.compile("vote:(?<id>\\d*?)");
     private final GuildRepository guildRepository;
     private final ReputationService reputationService;
@@ -127,20 +128,17 @@ public class ReputationVoteListener extends ListenerAdapter {
             components.put(id, new VoteComponent(member, Button.of(ButtonStyle.PRIMARY, id, member.getEffectiveName())));
         }
 
-        if (settings.general().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.PROMPTED);
-
         var componentRows = getComponentRows(components.values().stream().map(VoteComponent::component).toList());
 
         var maxMessageReputation = guildRepository.guild(message.getGuild()).settings().abuseProtection().maxMessageReputation();
 
         int remaining;
         if (settings.abuseProtection().isDonorLimit()) {
-            remaining = Math.min(maxMessageReputation, settings.abuseProtection().maxGiven() - settings.repGuild()
-                                                                                                       .reputation()
-                                                                                                       .user(message.getMember())
-                                                                                                       .countReceived());
+            remaining = Math.min(maxMessageReputation,
+                    settings.abuseProtection().maxGiven() - settings.repGuild().reputation().user(message.getMember()).countGiven());
             if (remaining == 0) {
-                if (settings.general().isEmojiDebug()) Messages.markMessage(message, EmojiDebug.DONOR_LIMIT);
+                // TODO: Probably checked earlier in message listener already. Prob needs further investigation.
+                settings.repGuild().reputation().analyzer().log(message, SubmitResult.of(SubmitResultType.DONOR_LIMIT));
                 return;
             }
         } else {
@@ -160,7 +158,7 @@ public class ReputationVoteListener extends ListenerAdapter {
     }
 
 
-    private List<ActionRow> getComponentRows(List<ActionComponent> components) {
+    private List<ActionRow> getComponentRows(List<ActionRowChildComponent> components) {
         var comp = new ArrayList<>(components);
         comp.add(DELETE);
 

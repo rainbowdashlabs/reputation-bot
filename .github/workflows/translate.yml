@@ -13,7 +13,7 @@ jobs:
     outputs:
       should_run: ${{ steps.check_message.outputs.should_run }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 2  # Fetch the previous commit
 
@@ -33,14 +33,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: 3.11
+        python-version: 3.13
 
     - name: Install dependencies
       run: pip install pipenv && pipenv install

@@ -18,6 +18,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import net.dv8tion.jda.api.utils.messages.MessageEditData;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -68,7 +69,11 @@ public class Received implements SlashHandler {
             @Override
             public List<PageButton> buttons() {
                 if (premium) {
-                    return Premium.buildEntitlementButtons(configuration.skus().features().reputationLog().extendedPages()).stream().map(PageButton::of).toList();
+                    return Premium.buildEntitlementButtons(configuration.skus().features().reputationLog().extendedPages())
+                                  .stream()
+                                  .map(b -> b.getButtons().stream().map(PageButton::of).toList())
+                                  .flatMap(Collection::stream)
+                                  .toList();
                 }
                 return super.buttons();
             }

@@ -23,7 +23,7 @@ jobs:
           running-workflow-name: 'Verify'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           allowed-conclusions: success
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: gradle/actions/wrapper-validation@v4
       - name: Build Image
         run: docker build . -f docker/Dockerfile -t ghcr.io/rainbowdashlabs/reputation-bot:${{ github.sha }}

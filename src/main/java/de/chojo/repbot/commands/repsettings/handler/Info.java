@@ -14,12 +14,12 @@ import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import net.dv8tion.jda.api.components.selections.StringSelectMenu;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
-import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.Collections;
 import java.util.function.Consumer;
 
@@ -34,17 +34,17 @@ public class Info implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var guildSettings = guildRepository.guild(event.getGuild()).settings();
         var settings = StringSelectMenu.create("settings")
-                .setPlaceholder("command.repsettings.info.message.choose")
-                .setRequiredRange(1, 1)
-                .addOption("command.repsettings.info.message.option.byreaction.name", "reactions", "command.repsettings.info.message.option.byreaction.description")
-                .addOption("command.repsettings.info.message.option.byanswer.name", "answers", "command.repsettings.info.message.option.byanswer.description")
-                .addOption("command.repsettings.info.message.option.bymention.name", "mention", "command.repsettings.info.message.option.bymention.description")
-                .addOption("command.repsettings.info.message.option.byfuzzy.name", "fuzzy", "command.repsettings.info.message.option.byfuzzy.description")
-                .addOption("command.repsettings.info.message.option.byembed.name", "embed", "command.repsettings.info.message.option.byembed.description")
-                .addOption("command.repsettings.info.message.option.emojidebug.name", "emojidebug", "command.repsettings.info.message.option.emojidebug.description")
-                .addOption("command.repsettings.info.message.option.skipsingletarget.name", "directembed", "command.repsettings.info.message.option.skipsingletarget.description")
-                .addOption("command.repsettings.info.message.option.reputationmode.name", "reputationmode", "command.repsettings.info.message.option.reputationmode.description")
-                .build();
+                                       .setPlaceholder("command.repsettings.info.message.choose")
+                                       .setRequiredRange(1, 1)
+                                       .addOption("command.repsettings.info.message.option.byreaction.name", "reactions", "command.repsettings.info.message.option.byreaction.description")
+                                       .addOption("command.repsettings.info.message.option.byanswer.name", "answers", "command.repsettings.info.message.option.byanswer.description")
+                                       .addOption("command.repsettings.info.message.option.bymention.name", "mention", "command.repsettings.info.message.option.bymention.description")
+                                       .addOption("command.repsettings.info.message.option.byfuzzy.name", "fuzzy", "command.repsettings.info.message.option.byfuzzy.description")
+                                       .addOption("command.repsettings.info.message.option.byembed.name", "embed", "command.repsettings.info.message.option.byembed.description")
+                                       .addOption("command.repsettings.info.message.option.emojidebug.name", "emojidebug", "command.repsettings.info.message.option.emojidebug.description")
+                                       .addOption("command.repsettings.info.message.option.skipsingletarget.name", "directembed", "command.repsettings.info.message.option.skipsingletarget.description")
+                                       .addOption("command.repsettings.info.message.option.reputationmode.name", "reputationmode", "command.repsettings.info.message.option.reputationmode.description")
+                                       .build();
         var reactions = getMenu("reactions",
                 "command.repsettings.info.message.option.byreaction.description",
                 "command.repsettings.info.message.reactions.true",
@@ -70,26 +70,21 @@ public class Info implements SlashHandler {
                 "command.repsettings.info.message.embed.true",
                 "command.repsettings.info.message.embed.false",
                 guildSettings.reputation().isEmbedActive());
-        var emojidebug = getMenu("emojidebug",
-                "command.repsettings.info.message.option.emojidebug.description",
-                "command.repsettings.emojidebug.message.true",
-                "command.repsettings.emojidebug.message.false",
-                guildSettings.general().isEmojiDebug());
         var skipSingleEmbed = getMenu("directembed",
                 "command.repsettings.info.message.option.skipsingletarget.description",
                 "command.repsettings.info.message.skipsingleembed.true",
                 "command.repsettings.info.message.skipsingleembed.false",
                 guildSettings.reputation().isDirectActive());
         var reputationMode = StringSelectMenu.create("reputationmode")
-                .setPlaceholder("command.repsettings.info.message.option.reputationmode.description")
-                .setRequiredRange(1, 1)
-                .addOption(ReputationMode.TOTAL.localeCode(), ReputationMode.TOTAL.name(), "command.repsettings.info.message.reputationMode.total")
-                .addOption(ReputationMode.ROLLING_MONTH.localeCode(), ReputationMode.ROLLING_MONTH.name(), "command.repsettings.info.message.reputationMode.rollingMonth")
-                .addOption(ReputationMode.ROLLING_WEEK.localeCode(), ReputationMode.ROLLING_WEEK.name(), "command.repsettings.info.message.reputationMode.rollingWeek")
-                .addOption(ReputationMode.WEEK.localeCode(), ReputationMode.WEEK.name(), "command.repsettings.info.message.reputationMode.week")
-                .addOption(ReputationMode.MONTH.localeCode(), ReputationMode.MONTH.name(), "command.repsettings.info.message.reputationMode.month")
-                .setDefaultValues(Collections.singletonList(guildSettings.general().reputationMode().name()))
-                .build();
+                                             .setPlaceholder("command.repsettings.info.message.option.reputationmode.description")
+                                             .setRequiredRange(1, 1)
+                                             .addOption(ReputationMode.TOTAL.localeCode(), ReputationMode.TOTAL.name(), "command.repsettings.info.message.reputationMode.total")
+                                             .addOption(ReputationMode.ROLLING_MONTH.localeCode(), ReputationMode.ROLLING_MONTH.name(), "command.repsettings.info.message.reputationMode.rollingMonth")
+                                             .addOption(ReputationMode.ROLLING_WEEK.localeCode(), ReputationMode.ROLLING_WEEK.name(), "command.repsettings.info.message.reputationMode.rollingWeek")
+                                             .addOption(ReputationMode.WEEK.localeCode(), ReputationMode.WEEK.name(), "command.repsettings.info.message.reputationMode.week")
+                                             .addOption(ReputationMode.MONTH.localeCode(), ReputationMode.MONTH.name(), "command.repsettings.info.message.reputationMode.month")
+                                             .setDefaultValues(Collections.singletonList(guildSettings.general().reputationMode().name()))
+                                             .build();
 
         context.registerMenu(MenuAction.forCallback(getSettings(context, guildSettings), event)
                                        .addComponent(MenuEntry.of(settings, ctx -> {
@@ -105,25 +100,22 @@ public class Info implements SlashHandler {
                                        }))
                                        .addComponent(MenuEntry.of(reactions, ctx -> refresh(ctx, res -> guildSettings.reputation()
                                                                                                                      .reactionActive(res), context, guildSettings))
-                                               .hidden())
+                                                              .hidden())
                                        .addComponent(MenuEntry.of(answers, ctx -> refresh(ctx, res -> guildSettings.reputation()
                                                                                                                    .answerActive(res), context, guildSettings))
-                                               .hidden())
+                                                              .hidden())
                                        .addComponent(MenuEntry.of(mention, ctx -> refresh(ctx, res -> guildSettings.reputation()
                                                                                                                    .mentionActive(res), context, guildSettings))
-                                               .hidden())
+                                                              .hidden())
                                        .addComponent(MenuEntry.of(fuzzy, ctx -> refresh(ctx, res -> guildSettings.reputation()
                                                                                                                  .fuzzyActive(res), context, guildSettings))
-                                               .hidden())
+                                                              .hidden())
                                        .addComponent(MenuEntry.of(embed, ctx -> refresh(ctx, res -> guildSettings.reputation()
                                                                                                                  .embedActive(res), context, guildSettings))
-                                               .hidden())
-                                       .addComponent(MenuEntry.of(emojidebug, ctx -> refresh(ctx, res -> guildSettings.general()
-                                                                                                                      .emojiDebug(res), context, guildSettings))
-                                               .hidden())
+                                                              .hidden())
                                        .addComponent(MenuEntry.of(skipSingleEmbed, ctx -> refresh(ctx, res -> guildSettings.reputation()
                                                                                                                            .directActive(res), context, guildSettings))
-                                               .hidden())
+                                                              .hidden())
                                        .addComponent(MenuEntry.of(reputationMode, ctx -> {
                                            var value = ctx.event().getValues().get(0);
                                            var copy = ctx.entry().component().createCopy();
@@ -140,12 +132,12 @@ public class Info implements SlashHandler {
 
     private StringSelectMenu getMenu(String id, String placeholder, String enabledDescr, String disabledDescr, boolean state) {
         return StringSelectMenu.create(id)
-                .setPlaceholder(placeholder)
-                .setRequiredRange(1, 1)
-                .addOption("words.enabled", "enabled", enabledDescr)
-                .addOption("words.disabled", "disabled", disabledDescr)
-                .setDefaultValues(Collections.singleton(state ? "enabled" : "disabled"))
-                .build();
+                               .setPlaceholder(placeholder)
+                               .setRequiredRange(1, 1)
+                               .addOption("words.enabled", "enabled", enabledDescr)
+                               .addOption("words.disabled", "disabled", disabledDescr)
+                               .setDefaultValues(Collections.singleton(state ? "enabled" : "disabled"))
+                               .build();
     }
 
     private void refresh(EntryContext<StringSelectInteractionEvent, StringSelectMenu> ctx, Consumer<Boolean> result, EventContext

@@ -10,7 +10,6 @@ import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.sadu.mapper.wrapper.Row;
 import de.chojo.sadu.queries.api.call.Call;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,19 +27,17 @@ public class General implements GuildHolder {
     private final AtomicBoolean stackRoles;
     private final Settings settings;
     private DiscordLocale language;
-    private boolean emojiDebug;
     private ReputationMode reputationMode;
     private LocalDate resetDate;
     private long systemChannel;
 
     public General(Settings settings) {
-        this(settings, null, true, false, ReputationMode.TOTAL, null,0);
+        this(settings, null, false, ReputationMode.TOTAL, null,0);
     }
 
-    public General(Settings settings, DiscordLocale language, boolean emojiDebug, boolean stackRoles, ReputationMode reputationMode, LocalDate resetDate, long systemChannel) {
+    public General(Settings settings, DiscordLocale language, boolean stackRoles, ReputationMode reputationMode, LocalDate resetDate, long systemChannel) {
         this.settings = settings;
         this.language = language;
-        this.emojiDebug = emojiDebug;
         this.stackRoles = new AtomicBoolean(stackRoles);
         this.reputationMode = reputationMode;
         this.resetDate = resetDate;
@@ -51,7 +48,6 @@ public class General implements GuildHolder {
         var lang = rs.getString("language");
         return new General(settings,
                 lang == null ? null : DiscordLocale.from(lang),
-                rs.getBoolean("emoji_debug"),
                 rs.getBoolean("stack_roles"),
                 ReputationMode.valueOf(rs.getString("reputation_mode")),
                 Optional.ofNullable(rs.getDate("reset_date")).map(Date::toLocalDate).orElse(null),
@@ -62,14 +58,6 @@ public class General implements GuildHolder {
         var result = set("language", stmt -> stmt.bind(language == null ? null : language.getLocale()));
         if (result) {
             this.language = language;
-        }
-        return result;
-    }
-
-    public boolean emojiDebug(boolean emojiDebug) {
-        var result = set("emoji_debug", stmt -> stmt.bind(emojiDebug));
-        if (result) {
-            this.emojiDebug = emojiDebug;
         }
         return result;
     }
@@ -108,10 +96,6 @@ public class General implements GuildHolder {
 
     public Optional<DiscordLocale> language() {
         return Optional.ofNullable(language);
-    }
-
-    public boolean isEmojiDebug() {
-        return emojiDebug;
     }
 
     public boolean isStackRoles() {
@@ -158,11 +142,10 @@ public class General implements GuildHolder {
     public String prettyString() {
         return """
                 Stack roles: %s
-                Emoji Debug: %s
                 Language: %s
                 Reputation Mode: %s
                 System Channel: %s
                 """.stripIndent()
-                   .formatted(stackRoles.get(), emojiDebug, language != null ? language.getLanguageName() : guild().getLocale().getLanguageName(), reputationMode.name(), systemChannel);
+                   .formatted(stackRoles.get(), language != null ? language.getLanguageName() : guild().getLocale().getLanguageName(), reputationMode.name(), systemChannel);
     }
 }

@@ -10,6 +10,7 @@ import de.chojo.jdautil.interactions.message.Message;
 import de.chojo.jdautil.interactions.slash.Slash;
 import de.chojo.jdautil.interactions.user.User;
 import de.chojo.jdautil.localization.util.LocaleProvider;
+import de.chojo.jdautil.util.SysVar;
 import de.chojo.repbot.actions.messages.log.MessageLog;
 import de.chojo.repbot.actions.user.donated.received.UserDonated;
 import de.chojo.repbot.actions.user.received.UserReceived;
@@ -130,7 +131,7 @@ public class Bot {
 
         repBotCachePolicy = new RepBotCachePolicy(scan, roles);
         shardManager = DefaultShardManagerBuilder
-                .createDefault(configuration.baseSettings().token())
+                .createDefault(SysVar.envOrProp("BOT_TOKEN","bot.token",configuration.baseSettings().token()))
                 .setEventPassthrough(true)
                 .enableIntents(
                         // Required to retrieve reputation emotes

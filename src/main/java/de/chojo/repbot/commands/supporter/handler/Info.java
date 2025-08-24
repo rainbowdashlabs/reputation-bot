@@ -13,8 +13,6 @@ import de.chojo.repbot.dao.access.guild.subscriptions.Subscription;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.service.PremiumService;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.components.ActionRow;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 
 import java.util.Collection;
 import java.util.List;
@@ -64,8 +62,8 @@ public class Info extends BaseSupporter implements SlashHandler {
         }
 
         var buttons = configuration.skus().subscriptions().stream().map(e -> List.of(e.subscriptionSkuMeta(), e.lifetimeSkuMeta()))
-                                   .map(e -> e.stream().map(Premium::buildEntitlementButtons).flatMap(Collection::stream).toArray(Button[]::new))
-                                   .map(ActionRow::of)
+                                   .map(e -> e.stream().map(Premium::buildEntitlementButtons).flatMap(Collection::stream).toList())
+                                   .flatMap(Collection::stream)
                                    .toList();
 
         event.getHook().editOriginal(context.localize(content))

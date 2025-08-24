@@ -10,6 +10,7 @@ import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.reputation.Reputation;
 import de.chojo.repbot.dao.access.guild.reputation.sub.user.Gdpr;
 import de.chojo.repbot.dao.access.guild.settings.sub.AbuseProtection;
+import de.chojo.repbot.dao.access.guild.settings.sub.CooldownDirection;
 import de.chojo.repbot.dao.components.MemberHolder;
 import de.chojo.repbot.dao.snapshots.ChannelStats;
 import de.chojo.repbot.dao.snapshots.RepProfile;
@@ -172,8 +173,10 @@ public class RepUser implements MemberHolder {
      * @return last timestamp as instant
      */
     public Optional<ReputationLogEntry> getLastReputation(Member other) {
-        return
-                query("""
+        CooldownDirection cooldownDirection = reputation.repGuild().settings().abuseProtection().cooldownDirection();
+        switch (cooldownDirection) {
+            case BIDIRECTIONAL -> {
+                return query("""
                         SELECT
                             guild_id, donor_id, receiver_id, message_id, received, ref_message_id, channel_id, cause
                         FROM
@@ -186,10 +189,34 @@ public class RepUser implements MemberHolder {
                         LIMIT  1;
                         """)
                         .single(call().bind(reputation.guildId())
-                                .bind("other", other.getIdLong())
-                                .bind("this", userId()))
+                                      .bind("other", other.getIdLong())
+                                      .bind("this", userId()))
                         .map(ReputationLogEntry::build)
                         .first();
+            }
+            case UNIDIRECTIONAL -> {
+                return query("""
+                        SELECT
+                            guild_id, donor_id, receiver_id, message_id, received, ref_message_id, channel_id, cause
+                        FROM
+                            reputation_log
+                        WHERE
+                            guild_id = ?
+                            AND (donor_id = :this AND receiver_id = :other)
+                        ORDER BY received DESC
+                        LIMIT  1;
+                        """)
+                        .single(call().bind(reputation.guildId())
+                                      .bind("other", other.getIdLong())
+                                      .bind("this", userId()))
+                        .map(ReputationLogEntry::build)
+                        .first();
+
+            }
+            case null, default -> {
+                throw new IllegalStateException("Unknown cooldown direction: " + cooldownDirection);
+            }
+        }
     }
 
     /**

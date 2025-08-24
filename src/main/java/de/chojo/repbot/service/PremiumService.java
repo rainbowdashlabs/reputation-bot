@@ -24,6 +24,8 @@ import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.exceptions.MissingSupportTier;
 import de.chojo.repbot.util.SupporterFeature;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.components.actionrow.ActionRow;
+import net.dv8tion.jda.api.components.buttons.Button;
 import net.dv8tion.jda.api.entities.Entitlement;
 import net.dv8tion.jda.api.entities.Entitlement.EntitlementType;
 import net.dv8tion.jda.api.entities.Guild;
@@ -35,8 +37,6 @@ import net.dv8tion.jda.api.events.entitlement.EntitlementDeleteEvent;
 import net.dv8tion.jda.api.events.entitlement.EntitlementUpdateEvent;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateNicknameEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.components.ActionRow;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
@@ -194,10 +194,10 @@ public class PremiumService extends ListenerAdapter {
         var locale = localizer.context(LocaleProvider.guild(guild));
         String message = locale.localize("$%s$\n$suppertererror.timeleft$\n$supportererror.considersupporting$".formatted(type.localeCode()), replacements.toArray(Replacement[]::new));
 
-        List<Button> buttons = Premium.buildEntitlementButtons(type.skus(skus));
+        List<ActionRow> buttons = Premium.buildEntitlementButtons(type.skus(skus));
         MessageCreateData data = new MessageCreateBuilder()
                 .addContent(message)
-                .addComponents(ActionRow.of(buttons))
+                .addComponents(buttons)
                 .build();
 
         long id = settings.general().systemChannel();

@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "1.16.0"
+version = "1.17.0"
 
 repositories {
     mavenLocal()
@@ -26,18 +26,18 @@ spotless {
 
 dependencies {
     //discord
-    implementation("de.chojo", "cjda-util", "2.11.0+jda-5.3.2-20250608.200008-20") {
+    implementation("de.chojo", "cjda-util", "2.11.0+jda-6.0.0-rc.3") {
         exclude(group = "club.minnced", module = "opus-java")
     }
 
-    val openapi = "6.6.0"
+    val openapi = "6.7.0-1"
 
     annotationProcessor("io.javalin.community.openapi:openapi-annotation-processor:$openapi")
     implementation("io.javalin.community.openapi:javalin-openapi-plugin:$openapi") // for /openapi route with JSON scheme
     implementation("io.javalin.community.openapi:javalin-swagger-plugin:$openapi") // for Swagger UI
 
     // database
-    implementation("org.postgresql", "postgresql", "42.7.6")
+    implementation("org.postgresql", "postgresql", "42.7.7")
     implementation(libs.bundles.sadu)
 
     // Logging
