@@ -48,6 +48,7 @@ public class Settings implements GuildHolder {
                     receiver_context,
                     donor_context,
                     cooldown,
+                    cooldown_direction,
                     max_given,
                     max_given_hours,
                     max_received,
@@ -114,7 +115,6 @@ public class Settings implements GuildHolder {
         general = query("""
                 SELECT
                     language,
-                    emoji_debug,
                     stack_roles,
                     reputation_mode,
                     reset_date,
