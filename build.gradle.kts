@@ -94,6 +94,7 @@ tasks {
 
     shadowJar {
         transform(Log4j2PluginsCacheFileTransformer::class.java)
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
         mergeServiceFiles()
         manifest {
             attributes(mapOf("Main-Class" to "de.chojo.repbot.ReputationBot"))
