@@ -14,7 +14,6 @@ import de.chojo.sadu.queries.api.query.Query;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
@@ -52,17 +51,17 @@ public class Commands {
 
     private CountsStatistic get(String table, String timeframe, int offset, int count) {
         return Query.query("""
-                        SELECT %s,
-                            count
-                        FROM %s
-                        WHERE %s <= DATE_TRUNC(?, NOW())::date - ?::interval
-                        ORDER BY %s DESC
-                        LIMIT ?
-                        """, timeframe, table, timeframe, timeframe)
-                .single(call().bind(timeframe).bind(offset + " " + timeframe).bind(count))
-                .map(rs -> CountStatistics.build(rs, timeframe))
-                .allResults()
-                .map(CountsStatistic::new);
+                            SELECT %s,
+                                count
+                            FROM %s
+                            WHERE %s <= date_trunc(?, now())::DATE - ?::INTERVAL
+                            ORDER BY %s DESC
+                            LIMIT ?
+                            """, timeframe, table, timeframe, timeframe)
+                    .single(call().bind(timeframe).bind(offset + " " + timeframe).bind(count))
+                    .map(rs -> CountStatistics.build(rs, timeframe))
+                    .allResults()
+                    .map(CountsStatistic::new);
     }
 
     private CommandsStatistic get(String table, String timeframe, int offset) {
@@ -72,7 +71,7 @@ public class Commands {
                             command,
                             count
                         FROM %s
-                        WHERE %s = DATE_TRUNC('%s', NOW())::date - ?::interval
+                        WHERE %s = date_trunc('%s', now())::DATE - ?::INTERVAL
                         """, timeframe, table, timeframe, timeframe)
                 .single(call().bind(offset + " " + timeframe))
                 .map(rs -> CommandStatistic.build(rs, timeframe))

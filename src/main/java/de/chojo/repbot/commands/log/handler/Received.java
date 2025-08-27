@@ -21,7 +21,6 @@ import net.dv8tion.jda.api.utils.messages.MessageEditData;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 
 import static de.chojo.repbot.commands.log.handler.LogFormatter.PAGE_SIZE;
 import static de.chojo.repbot.commands.log.handler.LogFormatter.mapUserLogEntry;
@@ -47,15 +46,15 @@ public class Received implements SlashHandler {
         var premium = !Premium.isNotEntitled(context, configuration.skus().features().reputationLog().extendedPages());
         context.registerPage(new PrivatePageBag(logAccess.pages(), event.getUser().getIdLong()) {
             @Override
-            public CompletableFuture<MessageEditData> buildPage() {
-                return CompletableFuture.supplyAsync(() -> userLogEmbed(context.guildLocalizer(), user, "command.log.received.message.log",
-                        mapUserLogEntry(context.guildLocalizer(), logAccess.page(current()), ReputationLogEntry::donorId), premium));
+            public MessageEditData buildPage() {
+                return userLogEmbed(context.guildLocalizer(), user, "command.log.received.message.log",
+                        mapUserLogEntry(context.guildLocalizer(), logAccess.page(current()), ReputationLogEntry::donorId), premium);
             }
 
             @Override
-            public CompletableFuture<MessageEditData> buildEmptyPage() {
-                return CompletableFuture.completedFuture(userLogEmbed(context.guildLocalizer(), user, "command.log.received.message.log",
-                        mapUserLogEntry(context.guildLocalizer(), Collections.emptyList(), ReputationLogEntry::donorId), premium));
+            public MessageEditData buildEmptyPage() {
+                return userLogEmbed(context.guildLocalizer(), user, "command.log.received.message.log",
+                        mapUserLogEntry(context.guildLocalizer(), Collections.emptyList(), ReputationLogEntry::donorId), premium);
             }
 
             @Override

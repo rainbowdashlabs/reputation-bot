@@ -101,6 +101,10 @@ public class MessageAnalyzer {
                     return Optional.ofNullable(matcher.group("match"));
                 })
                 .orTimeout(1L, TimeUnit.SECONDS)
+                .exceptionally(throwable -> {
+                    log.error("Could not match message of guild {}",message.getGuild(), throwable);
+                    return Optional.empty();
+                })
                 .join();
     }
 

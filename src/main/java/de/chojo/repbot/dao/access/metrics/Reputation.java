@@ -13,8 +13,6 @@ import de.chojo.repbot.dao.snapshots.statistics.LabeledCountStatistic;
 import de.chojo.repbot.dao.snapshots.statistics.builder.LabeledCountStatisticBuilder;
 import de.chojo.sadu.queries.api.query.Query;
 
-import java.util.concurrent.CompletableFuture;
-
 import static de.chojo.sadu.queries.api.call.Call.call;
 
 public class Reputation {

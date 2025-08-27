@@ -10,8 +10,6 @@ import de.chojo.repbot.dao.snapshots.statistics.LabeledCountStatistic;
 import de.chojo.repbot.dao.snapshots.statistics.builder.LabeledCountStatisticBuilder;
 import de.chojo.sadu.queries.api.query.Query;
 
-import java.util.concurrent.CompletableFuture;
-
 import static de.chojo.sadu.queries.api.call.Call.call;
 
 public class Service {
@@ -60,23 +58,23 @@ public class Service {
     private LabeledCountStatistic get(String table, String timeframe, int offset, int count) {
         var builder = new LabeledCountStatisticBuilder();
         return Query.query("""
-                        SELECT %s,
-                            count,
-                            failed,
-                            success
-                        FROM %s
-                        WHERE %s <= DATE_TRUNC(?, NOW()) - ?::interval
-                        ORDER BY %s DESC
-                        LIMIT ?
-                        """, timeframe, table, timeframe, timeframe)
-                .single(call().bind(timeframe)
-                                       .bind(offset + " " + timeframe)
-                                       .bind(count))
-                .map(rs -> builder.add("count", CountStatistics.build(rs, "count", timeframe))
+                            SELECT %s,
+                                count,
+                                failed,
+                                success
+                            FROM %s
+                            WHERE %s <= date_trunc(?, now()) - ?::INTERVAL
+                            ORDER BY %s DESC
+                            LIMIT ?
+                            """, timeframe, table, timeframe, timeframe)
+                    .single(call().bind(timeframe)
+                                  .bind(offset + " " + timeframe)
+                                  .bind(count))
+                    .map(rs -> builder.add("count", CountStatistics.build(rs, "count", timeframe))
                                       .add("success", CountStatistics.build(rs, "success", timeframe))
                                       .add("failed", CountStatistics.build(rs, "failed", timeframe))
-                )
-                .allResults()
-                .map(r -> builder.build());
+                    )
+                    .allResults()
+                    .map(r -> builder.build());
     }
 }

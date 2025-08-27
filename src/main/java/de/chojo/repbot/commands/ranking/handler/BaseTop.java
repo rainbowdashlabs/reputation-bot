@@ -24,7 +24,6 @@ import net.dv8tion.jda.api.utils.messages.MessageEditData;
 
 import java.awt.*;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public abstract class BaseTop implements SlashHandler {
@@ -97,24 +96,22 @@ public abstract class BaseTop implements SlashHandler {
     public void registerPage(Ranking ranking, EventContext context) {
         context.registerPage(new PageBag(ranking.pages()) {
             @Override
-            public CompletableFuture<MessageEditData> buildPage() {
-                return CompletableFuture.supplyAsync(() -> {
-                    var entries = ranking.page(current());
-                    var maxRank = entries.get(entries.size() - 1).rank();
-                    var rankString = entries.stream().map(rank -> rank.fancyString((int) maxRank))
-                                            .collect(Collectors.joining("\n"));
+            public MessageEditData buildPage() {
+                var entries = ranking.page(current());
+                var maxRank = entries.get(entries.size() - 1).rank();
+                var rankString = entries.stream().map(rank -> rank.fancyString((int) maxRank))
+                                        .collect(Collectors.joining("\n"));
 
-                    return MessageEditData.fromEmbeds(createBaseBuilder(ranking, context.guildLocalizer())
-                            .setDescription(rankString)
-                            .build());
-                });
+                return MessageEditData.fromEmbeds(createBaseBuilder(ranking, context.guildLocalizer())
+                        .setDescription(rankString)
+                        .build());
             }
 
             @Override
-            public CompletableFuture<MessageEditData> buildEmptyPage() {
-                return CompletableFuture.completedFuture(MessageEditData.fromEmbeds(createBaseBuilder(ranking, context.guildLocalizer())
+            public MessageEditData buildEmptyPage() {
+                return MessageEditData.fromEmbeds(createBaseBuilder(ranking, context.guildLocalizer())
                         .setDescription("*" + context.localize("ranking.empty") + "*")
-                        .build()));
+                        .build());
             }
         }, true);
     }

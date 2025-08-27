@@ -22,7 +22,6 @@ import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.Interaction;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.utils.TimeFormat;
@@ -39,7 +38,6 @@ import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -162,8 +160,8 @@ public class Debug implements SlashHandler {
 
         var pages = new ListPageBag<>(embeds) {
             @Override
-            public CompletableFuture<MessageEditData> buildPage() {
-                return CompletableFuture.completedFuture(MessageEditData.fromEmbeds(currentElement()));
+            public MessageEditData buildPage() {
+                return MessageEditData.fromEmbeds(currentElement());
             }
         };
 

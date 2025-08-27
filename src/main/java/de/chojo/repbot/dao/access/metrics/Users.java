@@ -9,8 +9,6 @@ import de.chojo.repbot.dao.snapshots.statistics.UserStatistic;
 import de.chojo.repbot.dao.snapshots.statistics.UsersStatistic;
 import de.chojo.sadu.queries.api.query.Query;
 
-import java.util.concurrent.CompletableFuture;
-
 import static de.chojo.sadu.queries.api.call.Call.call;
 
 public class Users {
