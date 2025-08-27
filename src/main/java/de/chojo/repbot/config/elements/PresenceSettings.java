@@ -18,13 +18,13 @@ public class PresenceSettings {
     private boolean active;
     private int interval = 5;
     private List<Presence> status = List.of(
-            Presence.of(Activity.ActivityType.WATCHING, "%guild_count% guilds!"),
-            Presence.of(Activity.ActivityType.LISTENING, "%channel_count% channels!"),
-            Presence.of(Activity.ActivityType.WATCHING, "%total_rep% Reputations!"),
-            Presence.of(Activity.ActivityType.WATCHING, "%weekly_rep% Reputation this week!"),
-            Presence.of(Activity.ActivityType.WATCHING, "%today_rep% Reputation today!"),
-            Presence.of(Activity.ActivityType.WATCHING, "%weekly_avg_rep% Reputation per week!"),
-            Presence.of(Activity.ActivityType.LISTENING, "%analyzed_messages% messages during the last hour!")
+            Presence.of(Activity.ActivityType.CUSTOM_STATUS, "Watching over %guild_count% guilds!"),
+            Presence.of(Activity.ActivityType.CUSTOM_STATUS, "Listening in %channel_count% channels!"),
+            Presence.of(Activity.ActivityType.CUSTOM_STATUS, "%total_rep% Reputations given!"),
+            Presence.of(Activity.ActivityType.CUSTOM_STATUS, "%weekly_rep% Reputation given this week!"),
+            Presence.of(Activity.ActivityType.CUSTOM_STATUS, "%today_rep% Reputation given today!"),
+            Presence.of(Activity.ActivityType.CUSTOM_STATUS, "%weekly_avg_rep% Reputation given per week!"),
+            Presence.of(Activity.ActivityType.CUSTOM_STATUS, "Analyzed %analyzed_messages% messages during the last hour!")
     );
 
     public boolean isActive() {
