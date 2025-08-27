@@ -8,7 +8,6 @@ package de.chojo.repbot.listener;
 import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.GuildRepository;
-import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.dao.snapshots.ReputationRank;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.channel.ChannelDeleteEvent;
@@ -17,7 +16,6 @@ import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
-import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -32,22 +30,15 @@ public class StateListener extends ListenerAdapter {
     private final GuildRepository guildRepository;
     private final ILocalizer localizer;
     private final Configuration configuration;
-    private final Metrics metrics;
 
-    private StateListener(GuildRepository guildRepository, ILocalizer localizer, Configuration configuration, Metrics metrics) {
+    private StateListener(GuildRepository guildRepository, ILocalizer localizer, Configuration configuration) {
         this.guildRepository = guildRepository;
         this.localizer = localizer;
         this.configuration = configuration;
-        this.metrics = metrics;
     }
 
-    @Override
-    public void onGenericInteractionCreate(@NotNull GenericInteractionCreateEvent event) {
-        metrics.service().countInteraction();
-    }
-
-    public static StateListener of(ILocalizer localizer, GuildRepository guildRepository, Configuration configuration, Metrics metrics) {
-        return new StateListener(guildRepository, localizer, configuration, metrics);
+    public static StateListener of(ILocalizer localizer, GuildRepository guildRepository, Configuration configuration) {
+        return new StateListener(guildRepository, localizer, configuration);
     }
 
     @Override

@@ -53,6 +53,7 @@ import de.chojo.repbot.service.AutopostService;
 import de.chojo.repbot.service.ChatSupportService;
 import de.chojo.repbot.service.GdprService;
 import de.chojo.repbot.service.MetricService;
+import de.chojo.repbot.service.MonitorService;
 import de.chojo.repbot.service.PremiumService;
 import de.chojo.repbot.service.PresenceService;
 import de.chojo.repbot.service.RepBotCachePolicy;
@@ -176,6 +177,7 @@ public class Bot {
                     return;
                 }
                 if (IGNORE_ERRORS.contains(e.getErrorResponse())) {
+                    log.debug("Ignored error response", e);
                     return;
                 }
             }
@@ -290,7 +292,7 @@ public class Bot {
                 reputationService, contextResolver, messageAnalyzer);
         var voiceStateListener = VoiceStateListener.of(data.voice(), threading.repBotWorker());
         var logListener = LogListener.create(threading.repBotWorker());
-        var stateListener = StateListener.of(localizer, guilds, configuration, data.metrics());
+        var stateListener = StateListener.of(localizer, guilds, configuration);
         var roleUpdater = RoleUpdater.create(guilds, roleAssigner, shardManager, threading.repBotWorker());
         ChatSupportService chatSupportService = new ChatSupportService(configuration, shardManager, hub.pageServices(), guilds);
 
@@ -303,7 +305,8 @@ public class Bot {
                 stateListener,
                 roleUpdater,
                 premiumService,
-                chatSupportService);
+                chatSupportService,
+                new MonitorService(data));
     }
 
     public ShardManager shardManager() {
