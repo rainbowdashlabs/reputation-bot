@@ -8,7 +8,7 @@ dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
             // misc
-            version("sadu", "2.3.2")
+            version("sadu", "2.3.3")
             library("sadu-queries", "de.chojo.sadu", "sadu-queries").versionRef("sadu")
             library("sadu-updater", "de.chojo.sadu", "sadu-updater").versionRef("sadu")
             library("sadu-postgresql", "de.chojo.sadu", "sadu-postgresql").versionRef("sadu")
@@ -33,7 +33,7 @@ dependencyResolutionManagement {
             library("junit-params", "org.junit.jupiter", "junit-jupiter-params").versionRef("junit")
             bundle("junit", listOf("junit-jupiter", "junit-params", "slf4j-simple"))
 
-            version("sadu", "2.3.2")
+            version("sadu", "2.3.3")
             library("sadu-testing", "de.chojo.sadu", "sadu-testing").versionRef("sadu")
 
             version("testcontainers", "1.21.3")
