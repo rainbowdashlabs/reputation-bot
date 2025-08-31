@@ -30,7 +30,7 @@ dependencies {
         exclude(group = "club.minnced", module = "opus-java")
     }
 
-    val openapi = "6.7.0-1"
+    val openapi = "6.7.0-2"
 
     annotationProcessor("io.javalin.community.openapi:openapi-annotation-processor:$openapi")
     implementation("io.javalin.community.openapi:javalin-openapi-plugin:$openapi") // for /openapi route with JSON scheme
