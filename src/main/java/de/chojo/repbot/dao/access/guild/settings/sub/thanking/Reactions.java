@@ -126,6 +126,7 @@ public class Reactions implements GuildHolder {
     }
 
     public boolean mainReaction(String reaction) {
+        reaction = Objects.requireNonNullElse(reaction, Thanking.DEFAULT_REACTION);
         var result = query("""
                 INSERT INTO thank_settings(guild_id, reaction) VALUES (?,?)
                     ON CONFLICT(guild_id)

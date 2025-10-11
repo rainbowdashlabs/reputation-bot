@@ -108,6 +108,10 @@ public class Start implements SlashHandler {
         if (role.isEmpty()) {
             return responseInvalid(context, "error.invalidRole");
         }
+
+        if (role.get().isPublicRole()) {
+            return responseInvalid(context, "error.publicRole");
+        }
         var optionalReputation = ValueParser.parseInt(args[1]);
         return optionalReputation
                 .map(reputation -> responseRolesSubAdded(context, role.get(), reputation))

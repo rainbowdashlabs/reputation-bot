@@ -147,7 +147,14 @@ public class RoleAssigner {
             assertInteract(role, guild);
             if (!member.getRoles().contains(role)) {
                 log.debug("Assigning role {} on {}", Roles.prettyName(role), prettyName(guild));
-                guild.addRoleToMember(member, role).complete();
+                try {
+                    guild.addRoleToMember(member, role).complete();
+                } catch (ErrorResponseException e) {
+                    if (e.getErrorResponse() == ErrorResponse.UNKNOWN_ROLE) {
+                        log.warn("Role {} on {} does not exist anymore. Removing it from the rank.", Roles.prettyName(role), prettyName(guild));
+                        guildRepository.guild(guild).settings().ranks().remove(role.getIdLong());
+                    }
+                }
                 changed = true;
             }
         }

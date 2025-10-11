@@ -30,6 +30,11 @@ public class Add extends BaseRoleModifier {
             return;
         }
 
+        if (role.isPublicRole()) {
+            event.reply(context.localize("error.publicRole")).setEphemeral(true).complete();
+            return;
+        }
+
         var ranks = guilds().guild(event.getGuild()).settings().ranks();
         ranks.add(role, reputation);
         var menu = new LocalizedEmbedBuilder(context.guildLocalizer())

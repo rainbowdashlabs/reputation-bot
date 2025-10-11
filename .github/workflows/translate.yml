@@ -5,6 +5,7 @@ on:
     branches:
       - dev
       - feature/*
+      - fix/*
 
 jobs:
   check:
