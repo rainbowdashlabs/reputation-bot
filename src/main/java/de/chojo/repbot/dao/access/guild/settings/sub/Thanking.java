@@ -22,7 +22,7 @@ import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 
 public class Thanking  implements GuildHolder {
-    private static final String DEFAULT_REACTION = "🏅";
+    public static final String DEFAULT_REACTION = "🏅";
     private final String mainReaction;
     private final Settings settings;
     private final boolean channelWhitelist;

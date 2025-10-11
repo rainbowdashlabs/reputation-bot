@@ -42,17 +42,7 @@ public class Ranks implements GuildHolder {
      * @return true if the role was added or updated
      */
     public boolean add(Role role, long reputation) {
-        var deleteRank = query("""
-                DELETE FROM
-                    guild_ranks
-                WHERE
-                    guild_id = ?
-                        AND (role_id = ?
-                            OR reputation = ?);
-                """)
-                .single(call().bind(guildId()).bind(role.getIdLong()).bind(reputation))
-                .delete()
-                .changed();
+        var deleteRank = remove(role.getIdLong());
 
         var insertRank = query("""
                 INSERT INTO guild_ranks(guild_id, role_id, reputation) VALUES(?,?,?)
@@ -69,6 +59,19 @@ public class Ranks implements GuildHolder {
             ranks.add(new ReputationRank(this, role.getIdLong(), reputation));
         }
         return deleteRank;
+    }
+
+    public boolean remove(long role) {
+        return query("""
+                DELETE FROM
+                    guild_ranks
+                WHERE
+                    guild_id = ?
+                        AND role_id = ?;
+                """)
+                .single(call().bind(guildId()).bind(role))
+                .delete()
+                .changed();
     }
 
     public List<ReputationRank> ranks() {
