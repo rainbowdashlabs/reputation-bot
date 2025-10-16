@@ -1,4 +1,7 @@
 import com.github.jengelman.gradle.plugins.shadow.transformers.Log4j2PluginsCacheFileTransformer
+import java.time.ZoneOffset
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 plugins {
     alias(libs.plugins.shadow)
@@ -69,8 +72,22 @@ tasks {
     processResources {
         from(sourceSets.main.get().resources.srcDirs) {
             filesMatching("version") {
+                var version = project.version.toString()
+                var workflow = (System.getenv("GITHUB_ACTIONS")?: "false") == "true"
+                if(workflow){
+                    val now = ZonedDateTime.now(ZoneOffset.UTC)
+                    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+                    val formattedDate = now.format(formatter)
+
+                    when(System.getenv("GITHUB_REF_TYPE")){
+                        "branch" -> version = "$version ${System.getenv("GITHUB_REF_NAME")}-${System.getenv("GITHUB_SHA").substring(0, 7)} @ $formattedDate"
+                        "tag" -> version = "$version ${System.getenv("GITHUB_REF_NAME").substring(1)} @ $formattedDate"
+                        else -> version = "$version snapshot"
+                    }
+
+                }
                 expand(
-                    "version" to project.version
+                    "version" to version
                 )
             }
             duplicatesStrategy = DuplicatesStrategy.INCLUDE
