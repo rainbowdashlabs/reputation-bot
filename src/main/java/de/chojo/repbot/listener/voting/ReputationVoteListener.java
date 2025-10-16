@@ -63,9 +63,9 @@ public class ReputationVoteListener extends ListenerAdapter {
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
         if (!voteRequests.containsKey(event.getMessageIdLong())) return;
-        if (event.getButton().getId() == null) return;
+        if (event.getButton().getCustomId() == null) return;
 
-        var matcher = VOTE.matcher(event.getButton().getId());
+        var matcher = VOTE.matcher(event.getButton().getCustomId());
         if (!matcher.find()) return;
         if (!event.isAcknowledged()) {
             event.deferEdit().complete();
@@ -76,20 +76,20 @@ public class ReputationVoteListener extends ListenerAdapter {
                  .queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
             return;
         }
-        if ("vote:delete".equals(event.getButton().getId())) {
+        if ("vote:delete".equals(event.getButton().getCustomId())) {
             event.getMessage().delete()
                  .queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
             voteRequests.remove(event.getMessageIdLong());
             return;
         }
 
-        var target = voteRequest.getTarget(event.getButton().getId());
+        var target = voteRequest.getTarget(event.getButton().getCustomId());
 
         if (!voteRequest.canVote()) return;
 
         if (reputationService.submitReputation(event.getGuild(), event.getMember(), target.get(), voteRequest.refMessage(), null, ThankType.EMBED)) {
             voteRequest.voted();
-            voteRequest.remove(event.getButton().getId());
+            voteRequest.remove(event.getButton().getCustomId());
             voteRequest.voteMessage().
                        editMessageEmbeds(voteRequest.getNewEmbed(loc.localize("listener.messages.request.descrThank",
                                event.getGuild(), Replacement.create("MORE", voteRequest.remainingVotes()))))

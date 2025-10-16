@@ -29,7 +29,7 @@ spotless {
 
 dependencies {
     //discord
-    implementation("de.chojo", "cjda-util", "2.12.0+jda-6.0.0-rc.3") {
+    implementation("de.chojo", "cjda-util", "2.12.0+jda-6.0.0") {
         exclude(group = "club.minnced", module = "opus-java")
     }
 
@@ -79,12 +79,11 @@ tasks {
                     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
                     val formattedDate = now.format(formatter)
 
-                    when(System.getenv("GITHUB_REF_TYPE")){
-                        "branch" -> version = "$version ${System.getenv("GITHUB_REF_NAME")}-${System.getenv("GITHUB_SHA").substring(0, 7)} @ $formattedDate"
-                        "tag" -> version = "$version ${System.getenv("GITHUB_REF_NAME").substring(1)} @ $formattedDate"
-                        else -> version = "$version snapshot"
+                    version = when(System.getenv("GITHUB_REF_TYPE")){
+                        "branch" -> "$version ${System.getenv("GITHUB_REF_NAME")}-${System.getenv("GITHUB_SHA").substring(0, 7)} @ $formattedDate"
+                        "tag" -> "$version ${System.getenv("GITHUB_REF_NAME").substring(1)} @ $formattedDate"
+                        else -> "$version snapshot"
                     }
-
                 }
                 expand(
                     "version" to version

@@ -110,7 +110,7 @@ public class ChatSupportService extends ListenerAdapter {
 
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
-        String id = event.getButton().getId();
+        String id = event.getButton().getCustomId();
         if (id == null) return;
         if (!id.startsWith("debug:")) return;
 
