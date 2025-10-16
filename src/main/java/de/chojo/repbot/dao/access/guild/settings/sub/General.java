@@ -13,9 +13,11 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import org.jetbrains.annotations.Nullable;
 
-import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
@@ -50,7 +52,7 @@ public class General implements GuildHolder {
                 lang == null ? null : DiscordLocale.from(lang),
                 rs.getBoolean("stack_roles"),
                 ReputationMode.valueOf(rs.getString("reputation_mode")),
-                Optional.ofNullable(rs.getDate("reset_date")).map(Date::toLocalDate).orElse(null),
+                Optional.ofNullable(rs.getTimestamp("reset_date")).map(ts -> ts.toInstant().atZone(ZoneOffset.UTC).toLocalDate()).orElse(null),
                 rs.getLong("system_channel_id"));
     }
 
@@ -87,9 +89,19 @@ public class General implements GuildHolder {
     }
 
     public boolean resetDate(LocalDate resetDate) {
-        var result = set("reset_date", stmt -> stmt.bind(resetDate == null ? null : Date.valueOf(resetDate)));
+        var utcTimestamp = resetDate == null ? null : Timestamp.from(resetDate.atStartOfDay(ZoneOffset.UTC).toInstant());
+        var result = set("reset_date", stmt -> stmt.bind(utcTimestamp));
         if (result) {
             this.resetDate = resetDate;
+        }
+        return result;
+    }
+    
+    public boolean resetDateNow() {
+        var nowUtc = Timestamp.from(Instant.now());
+        var result = set("reset_date", stmt -> stmt.bind(nowUtc));
+        if (result) {
+            this.resetDate = LocalDate.now(ZoneOffset.UTC);
         }
         return result;
     }
