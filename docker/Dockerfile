@@ -12,7 +12,7 @@ ARG GITHUB_SHA=$GITHUB_SHA
 COPY . .
 RUN gradle clean shadowJar --no-daemon -x test -x javadocJar -x sourcesJar
 
-FROM eclipse-temurin:21-alpine as runtime
+FROM eclipse-temurin:25-alpine as runtime
 ENV DOCKER=true
 
 WORKDIR /app
