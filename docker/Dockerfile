@@ -1,5 +1,14 @@
 FROM gradle:jdk21-alpine as build
 
+ARG GITHUB_ACTIONS=false
+ARG GITHUB_REF_TYPE=null
+ARG GITHUB_REF_NAME=null
+ARG GITHUB_SHA=null
+ARG GITHUB_ACTIONS=$GITHUB_ACTIONS
+ARG GITHUB_REF_TYPE=$GITHUB_REF_TYPE
+ARG GITHUB_REF_NAME=$GITHUB_REF_NAME
+ARG GITHUB_SHA=$GITHUB_SHA
+
 COPY . .
 RUN gradle clean shadowJar --no-daemon -x test -x javadocJar -x sourcesJar
 
