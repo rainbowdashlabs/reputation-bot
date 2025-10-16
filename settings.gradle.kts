@@ -28,7 +28,7 @@ dependencyResolutionManagement {
         }
 
         create("testlibs") {
-            version("junit", "5.13.4")
+            version("junit", "5.14.0")
             library("junit-jupiter", "org.junit.jupiter", "junit-jupiter").versionRef("junit")
             library("junit-params", "org.junit.jupiter", "junit-jupiter-params").versionRef("junit")
             bundle("junit", listOf("junit-jupiter", "junit-params", "slf4j-simple"))
