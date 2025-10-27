@@ -6,6 +6,8 @@ This can have several reasons:
 - You gave reputation to this user recently
 - This user gave reputation to you recently
 
+Use `Apps > Message Log` to see why no reputation was given.
+
 To thank a user make sure that:
 
 - The user has written at least one message after a message of you
@@ -13,5 +15,6 @@ To thank a user make sure that:
 - You haven't received reputation from this user shortly
 
 You can also give reputation to users you currently share or recently shared a voice channel with.
+
 
 You can read more about this mechanic on our [abuse protection page](<https://rainbowdashlabs.github.io/reputation-bot/abuse_protection/>)
