@@ -6,7 +6,7 @@ Please make sure to describe your issue as precisely as possible.
 # Pull Requests
 When you create a new pull request you have to take care of a few things.
 
-- Create a feature branch based on the development branch
+- Create a feature branch based on the main branch E.g. `feature/my-feature`
 - Give your feature branch a reasonable name
 - Make your changes
 - Make sure your feature branch is rebased on the latest commit on the main branch
