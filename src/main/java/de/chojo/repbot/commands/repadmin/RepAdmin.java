@@ -17,6 +17,7 @@ import de.chojo.repbot.commands.repadmin.handler.reputation.Set;
 import de.chojo.repbot.commands.repadmin.handler.resetdate.CurrentResetDate;
 import de.chojo.repbot.commands.repadmin.handler.resetdate.RemoveResetDate;
 import de.chojo.repbot.commands.repadmin.handler.resetdate.SetResetDate;
+import de.chojo.repbot.commands.repadmin.handler.resetdate.SetResetDateNow;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.service.PremiumService;
@@ -76,7 +77,9 @@ public class RepAdmin extends SlashCommand {
                                .subCommand(SubCommand.of("remove", "command.repadmin.resetdate.remove.description")
                                                      .handler(new RemoveResetDate(guildRepository)))
                                .subCommand(SubCommand.of("current", "command.repadmin.resetdate.current.description")
-                                                     .handler(new CurrentResetDate(guildRepository))))
+                                                     .handler(new CurrentResetDate(guildRepository)))
+                               .subCommand(SubCommand.of("now", "command.repadmin.resetdate.now.description")
+                                                     .handler(new SetResetDateNow(guildRepository))))
                    .subCommand(SubCommand.of("profile", "command.repadmin.profile.description")
                                          .handler(new Profile(guildRepository, configuration))
                                          .argument(Argument.user("user", "command.repadmin.profile.options.user.description").asRequired()))

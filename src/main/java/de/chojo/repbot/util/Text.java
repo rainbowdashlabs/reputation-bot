@@ -9,6 +9,7 @@ import de.chojo.jdautil.wrapper.EventContext;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.PropertyKey;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -56,6 +57,13 @@ public final class Text {
 
     public static String time(LocalDateTime time) {
         return TIME_FORMATTER.format(time);
+    }
+
+    public static String timestampDateTime(Instant instant){
+        return "<t:%s:d> <t:%s:t>".formatted(instant.getEpochSecond(), instant.getEpochSecond());
+    }
+    public static String timestampDate(Instant instant){
+        return "<t:%s:d>".formatted(instant.getEpochSecond());
     }
 
     public static String getBooleanMessage(EventContext context, boolean value, String whenTrue, String whenFalse) {

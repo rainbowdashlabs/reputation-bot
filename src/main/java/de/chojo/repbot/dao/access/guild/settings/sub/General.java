@@ -9,33 +9,37 @@ import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.sadu.mapper.wrapper.Row;
 import de.chojo.sadu.queries.api.call.Call;
+import de.chojo.sadu.queries.converter.StandardValueConverter;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import org.jetbrains.annotations.Nullable;
 
-import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneOffset;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
+import static de.chojo.sadu.queries.converter.StandardValueConverter.INSTANT_TIMESTAMP;
 
 public class General implements GuildHolder {
     private final AtomicBoolean stackRoles;
     private final Settings settings;
     private DiscordLocale language;
     private ReputationMode reputationMode;
-    private LocalDate resetDate;
+    private Instant resetDate;
     private long systemChannel;
 
     public General(Settings settings) {
         this(settings, null, false, ReputationMode.TOTAL, null,0);
     }
 
-    public General(Settings settings, DiscordLocale language, boolean stackRoles, ReputationMode reputationMode, LocalDate resetDate, long systemChannel) {
+    public General(Settings settings, DiscordLocale language, boolean stackRoles, ReputationMode reputationMode, Instant resetDate, long systemChannel) {
         this.settings = settings;
         this.language = language;
         this.stackRoles = new AtomicBoolean(stackRoles);
@@ -50,7 +54,7 @@ public class General implements GuildHolder {
                 lang == null ? null : DiscordLocale.from(lang),
                 rs.getBoolean("stack_roles"),
                 ReputationMode.valueOf(rs.getString("reputation_mode")),
-                Optional.ofNullable(rs.getDate("reset_date")).map(Date::toLocalDate).orElse(null),
+                rs.get("reset_date", INSTANT_TIMESTAMP),
                 rs.getLong("system_channel_id"));
     }
 
@@ -86,12 +90,16 @@ public class General implements GuildHolder {
         return result;
     }
 
-    public boolean resetDate(LocalDate resetDate) {
-        var result = set("reset_date", stmt -> stmt.bind(resetDate == null ? null : Date.valueOf(resetDate)));
+    public boolean resetDate(Instant resetDate) {
+        var result = set("reset_date", stmt -> stmt.bind(resetDate, INSTANT_TIMESTAMP));
         if (result) {
             this.resetDate = resetDate;
         }
         return result;
+    }
+    
+    public boolean resetDateNow() {
+        return resetDate(Instant.now());
     }
 
     public Optional<DiscordLocale> language() {
@@ -110,7 +118,7 @@ public class General implements GuildHolder {
         return systemChannel;
     }
 
-    public LocalDate resetDate() {
+    public Instant resetDate() {
         return resetDate;
     }
 
