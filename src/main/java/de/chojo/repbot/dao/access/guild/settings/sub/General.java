@@ -32,14 +32,14 @@ public class General implements GuildHolder {
     private final Settings settings;
     private DiscordLocale language;
     private ReputationMode reputationMode;
-    private LocalDate resetDate;
+    private Instant resetDate;
     private long systemChannel;
 
     public General(Settings settings) {
         this(settings, null, false, ReputationMode.TOTAL, null,0);
     }
 
-    public General(Settings settings, DiscordLocale language, boolean stackRoles, ReputationMode reputationMode, LocalDate resetDate, long systemChannel) {
+    public General(Settings settings, DiscordLocale language, boolean stackRoles, ReputationMode reputationMode, Instant resetDate, long systemChannel) {
         this.settings = settings;
         this.language = language;
         this.stackRoles = new AtomicBoolean(stackRoles);
@@ -54,7 +54,7 @@ public class General implements GuildHolder {
                 lang == null ? null : DiscordLocale.from(lang),
                 rs.getBoolean("stack_roles"),
                 ReputationMode.valueOf(rs.getString("reputation_mode")),
-                Optional.ofNullable(rs.getTimestamp("reset_date")).map(ts -> ts.toInstant().atZone(ZoneOffset.UTC).toLocalDate()).orElse(null),
+                rs.get("reset_date", INSTANT_TIMESTAMP),
                 rs.getLong("system_channel_id"));
     }
 
@@ -90,9 +90,8 @@ public class General implements GuildHolder {
         return result;
     }
 
-    public boolean resetDate(LocalDate resetDate) {
-        var utcTimestamp = resetDate == null ? null : Timestamp.from(resetDate.atStartOfDay(ZoneOffset.UTC).toInstant());
-        var result = set("reset_date", stmt -> stmt.bind(utcTimestamp));
+    public boolean resetDate(Instant resetDate) {
+        var result = set("reset_date", stmt -> stmt.bind(resetDate, INSTANT_TIMESTAMP));
         if (result) {
             this.resetDate = resetDate;
         }
@@ -100,11 +99,7 @@ public class General implements GuildHolder {
     }
     
     public boolean resetDateNow() {
-        var result = set("reset_date", stmt -> stmt.bind(Instant.now(), INSTANT_TIMESTAMP));
-        if (result) {
-            this.resetDate = LocalDate.now(ZoneOffset.UTC);
-        }
-        return result;
+        return resetDate(Instant.now());
     }
 
     public Optional<DiscordLocale> language() {
@@ -123,7 +118,7 @@ public class General implements GuildHolder {
         return systemChannel;
     }
 
-    public LocalDate resetDate() {
+    public Instant resetDate() {
         return resetDate;
     }
 

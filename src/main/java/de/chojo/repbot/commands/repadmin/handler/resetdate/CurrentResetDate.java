@@ -9,12 +9,13 @@ import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.util.Text;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-import java.time.format.DateTimeFormatter;
+import java.time.ZoneId;
+import java.time.temporal.ChronoField;
 
 public class CurrentResetDate implements SlashHandler {
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy.MM.dd");
     private final GuildRepository guildRepository;
 
     public CurrentResetDate(GuildRepository guildRepository) {
@@ -23,16 +24,24 @@ public class CurrentResetDate implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        var date = guildRepository.guild(event.getGuild()).settings().general().resetDate();
+        var instant = guildRepository.guild(event.getGuild()).settings().general().resetDate();
 
-        if (date == null) {
+        if (instant == null) {
             event.reply(context.localize("command.repadmin.resetdate.current.message.notset"))
                  .setEphemeral(true)
                  .complete();
             return;
         }
 
-        event.reply(context.localize("command.repadmin.resetdate.current.message.set", Replacement.create("DATE", FORMATTER.format(date))))
+        var zoned = instant.atZone(ZoneId.of("UTC"));
+        String date;
+        if (zoned.get(ChronoField.SECOND_OF_DAY) == 0 && zoned.get(ChronoField.MILLI_OF_SECOND) == 0) {
+            date = Text.timestampDate(instant);
+        } else {
+            date = Text.timestampDateTime(instant);
+        }
+
+        event.reply(context.localize("command.repadmin.resetdate.current.message.set", Replacement.create("DATE", date)))
              .setEphemeral(true)
              .complete();
     }

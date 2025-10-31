@@ -42,7 +42,7 @@ public class GuildGiven extends GuildRanking {
                           AND received >= :date_init
                     ) a;
                 """)
-                .single(call().bind("reset_date", resetDate())
+                .single(call().bind("reset_date", resetDate(), INSTANT_TIMESTAMP)
                               .bind(pageSize)
                               .bind("guild_id", guildId()
                               ).bind("date_init",mode.dateInit(), INSTANT_TIMESTAMP))
@@ -80,7 +80,7 @@ public class GuildGiven extends GuildRanking {
                 OFFSET ?
                 LIMIT ?;
                 """)
-                .single(call().bind("reset_date", resetDate())
+                .single(call().bind("reset_date", resetDate(), INSTANT_TIMESTAMP)
                               .bind("date_init",mode.dateInit(), INSTANT_TIMESTAMP)
                               .bind("guild_id", guildId())
                               .bind(page * pageSize)

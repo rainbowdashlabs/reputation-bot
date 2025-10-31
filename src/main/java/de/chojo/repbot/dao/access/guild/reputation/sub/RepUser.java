@@ -236,14 +236,14 @@ public class RepUser implements MemberHolder {
      */
     public RepProfile profile() {
         var mode = reputation.repGuild().settings().general().reputationMode();
-        LocalDate resetDate = reputation.repGuild().settings().general().resetDate();
+        Instant resetDate = reputation.repGuild().settings().general().resetDate();
         // We probably don't want to cache the profile. There are just too many factors which can change the user reputation.
 
         return query(PROFILE)
                 .single(call().bind("guild_id", guildId())
                               .bind("user_id", userId())
                               .bind("date_init", mode.dateInit(), INSTANT_TIMESTAMP)
-                              .bind("reset_date", resetDate))
+                              .bind("reset_date", resetDate, INSTANT_TIMESTAMP))
                 .map(row -> RepProfile.buildProfile(this, row))
                 .first()
                 .orElseGet(() -> RepProfile.empty(this, user()));

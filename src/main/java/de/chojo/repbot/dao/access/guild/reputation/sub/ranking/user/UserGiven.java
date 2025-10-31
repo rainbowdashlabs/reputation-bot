@@ -17,6 +17,7 @@ import java.util.List;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
+import static de.chojo.sadu.queries.converter.StandardValueConverter.INSTANT_TIMESTAMP;
 
 public class UserGiven extends UserRanking {
     public UserGiven(UserRankings user) {
@@ -50,9 +51,9 @@ public class UserGiven extends UserRanking {
                 LIMIT ?;
                 """)
                 .single(call().bind(guildId())
-                              .bind("reset_date", resetDate())
+                              .bind("reset_date", resetDate(), INSTANT_TIMESTAMP)
                               .bind(member.getIdLong())
-                              .bind(mode.dateInit(), StandardValueConverter.INSTANT_TIMESTAMP)
+                              .bind(mode.dateInit(), INSTANT_TIMESTAMP)
                         .bind(page * pageSize)
                         .bind(pageSize))
                 .map(RankingEntry::buildGivenRanking)
@@ -76,7 +77,10 @@ public class UserGiven extends UserRanking {
                           AND ( received > :reset_date OR :reset_date::TIMESTAMP IS NULL )
                     ) a;
                 """)
-                .single(call().bind(pageSize).bind(guildId()).bind("reset_date", resetDate()).bind(member.getIdLong()).bind(mode.dateInit(), StandardValueConverter.INSTANT_TIMESTAMP))
+                .single(call().bind(pageSize).bind(guildId())
+                              .bind("reset_date", resetDate(), INSTANT_TIMESTAMP)
+                              .bind(member.getIdLong())
+                              .bind(mode.dateInit(), INSTANT_TIMESTAMP))
                 .map(row -> row.getInt("count"))
                 .first()
                 .orElse(0);

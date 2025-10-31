@@ -42,7 +42,7 @@ public class GuildReceived extends GuildRanking {
                           AND ( received > :reset_date OR :reset_date::TIMESTAMP IS NULL )
                     ) a;
                 """)
-                .single(call().bind("reset_date", resetDate())
+                .single(call().bind("reset_date", resetDate(), INSTANT_TIMESTAMP)
                               .bind(pageSize)
                               .bind("guild_id", guildId())
                               .bind("date_init", mode.dateInit(), INSTANT_TIMESTAMP))
@@ -54,7 +54,7 @@ public class GuildReceived extends GuildRanking {
     @Override
     protected List<RankingEntry> getRankingPage(int pageSize, int page, ReputationMode mode) {
         return query(RANKING)
-                .single(call().bind("reset_date", resetDate())
+                .single(call().bind("reset_date", resetDate(), INSTANT_TIMESTAMP)
                               .bind("guild_id", guildId())
                               .bind("date_init", mode.dateInit(), INSTANT_TIMESTAMP)
                               .bind(page * pageSize)

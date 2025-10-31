@@ -7,6 +7,7 @@ package de.chojo.repbot.dao.snapshots;
 
 import de.chojo.jdautil.util.MentionUtil;
 import de.chojo.repbot.analyzer.results.match.ThankType;
+import de.chojo.repbot.util.Text;
 import de.chojo.sadu.mapper.wrapper.Row;
 
 import java.sql.SQLException;
@@ -50,7 +51,7 @@ public record ReputationLogEntry(long guildId, long channelId, long donorId, lon
     }
 
     public String timestamp() {
-        return String.format("<t:%s:d> <t:%s:t>", received.getEpochSecond(), received.getEpochSecond());
+        return Text.timestampDateTime(received);
     }
 
     public String simpleString() {
