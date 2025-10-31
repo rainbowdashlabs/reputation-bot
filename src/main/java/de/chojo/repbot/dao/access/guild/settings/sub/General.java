@@ -9,6 +9,7 @@ import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.sadu.mapper.wrapper.Row;
 import de.chojo.sadu.queries.api.call.Call;
+import de.chojo.sadu.queries.converter.StandardValueConverter;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 import org.jetbrains.annotations.Nullable;
@@ -24,6 +25,7 @@ import java.util.function.Function;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
+import static de.chojo.sadu.queries.converter.StandardValueConverter.INSTANT_TIMESTAMP;
 
 public class General implements GuildHolder {
     private final AtomicBoolean stackRoles;
@@ -98,8 +100,7 @@ public class General implements GuildHolder {
     }
     
     public boolean resetDateNow() {
-        var nowUtc = Timestamp.from(Instant.now());
-        var result = set("reset_date", stmt -> stmt.bind(nowUtc));
+        var result = set("reset_date", stmt -> stmt.bind(Instant.now(), INSTANT_TIMESTAMP));
         if (result) {
             this.resetDate = LocalDate.now(ZoneOffset.UTC);
         }
