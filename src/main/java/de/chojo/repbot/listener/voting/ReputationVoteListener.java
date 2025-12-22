@@ -14,12 +14,12 @@ import de.chojo.repbot.analyzer.results.match.ThankType;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.service.reputation.ReputationContext;
 import de.chojo.repbot.service.reputation.ReputationService;
 import de.chojo.repbot.service.reputation.SubmitResult;
 import de.chojo.repbot.service.reputation.SubmitResultType;
 import de.chojo.repbot.util.PermissionErrorHandler;
 import net.dv8tion.jda.api.Permission;
-import net.dv8tion.jda.api.components.ActionComponent;
 import net.dv8tion.jda.api.components.actionrow.ActionRow;
 import net.dv8tion.jda.api.components.actionrow.ActionRowChildComponent;
 import net.dv8tion.jda.api.components.buttons.Button;
@@ -87,7 +87,7 @@ public class ReputationVoteListener extends ListenerAdapter {
 
         if (!voteRequest.canVote()) return;
 
-        if (reputationService.submitReputation(event.getGuild(), event.getMember(), target.get(), voteRequest.refMessage(), null, ThankType.EMBED).type() == SubmitResultType.SUCCESS) {
+        if (reputationService.submitReputation(event.getGuild(), event.getMember(), target.get(), ReputationContext.fromMessage(voteRequest.refMessage()), null, ThankType.EMBED).type() == SubmitResultType.SUCCESS) {
             voteRequest.voted();
             voteRequest.remove(event.getButton().getCustomId());
             voteRequest.voteMessage().
@@ -138,7 +138,7 @@ public class ReputationVoteListener extends ListenerAdapter {
                     settings.abuseProtection().maxGiven() - settings.repGuild().reputation().user(message.getMember()).countGiven());
             if (remaining == 0) {
                 // TODO: Probably checked earlier in message listener already. Prob needs further investigation.
-                settings.repGuild().reputation().analyzer().log(message, SubmitResult.of(SubmitResultType.DONOR_LIMIT));
+                settings.repGuild().reputation().analyzer().log(ReputationContext.fromMessage(message), SubmitResult.of(SubmitResultType.DONOR_LIMIT));
                 return;
             }
         } else {

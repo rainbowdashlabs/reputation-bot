@@ -41,7 +41,12 @@ public class States implements SlashHandler {
                 "command.messages.states.message.option.reactionconfirmation.name",
                 "command.messages.states.message.choice.reactionConfirmation.true",
                 "command.messages.states.message.choice.reactionConfirmation.false",
-                settings.reputation().isReactionActive());
+                settings.messages().isReactionConfirmation());
+        var commandReply = getMenu("reaction_confirmation",
+                "command.messages.states.message.option.reactionconfirmation.name",
+                "command.messages.states.message.choice.reactionConfirmation.true",
+                "command.messages.states.message.choice.reactionConfirmation.false",
+                settings.messages().isReactionConfirmation());
 
         context.registerMenu(MenuAction.forCallback(getSettings(context, settings), event)
                                        .addComponent(MenuEntry.of(setting, ctx -> {
@@ -57,6 +62,9 @@ public class States implements SlashHandler {
                                        }))
                                        .addComponent(MenuEntry.of(reactions, ctx -> refresh(ctx, res -> settings.messages()
                                                                                                                 .reactionConfirmation(res), context, settings))
+                                               .hidden())
+                                       .addComponent(MenuEntry.of(commandReply, ctx -> refresh(ctx, res -> settings.messages()
+                                                                                                                .commandReputationEphemeral(res), context, settings))
                                                .hidden())
                                        .asEphemeral()
                                        .build());

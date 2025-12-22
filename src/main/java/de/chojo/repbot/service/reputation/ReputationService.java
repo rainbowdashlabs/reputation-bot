@@ -151,68 +151,69 @@ public class ReputationService {
 
     }
 
-    private MessageContext getContext(Member donor, Message message, ThankType type, Settings settings) {
-        MessageContext context;
+    private MessageContext getContext(Member donor, ReputationContext context, ThankType type, Settings settings) {
+        MessageContext messageContext;
         if (type == ThankType.REACTION) {
             // Check if user was recently seen in this channel.
-            context = contextResolver.getCombinedContext(donor, message, settings);
+            messageContext = contextResolver.getCombinedContext(donor, context.asMessage(), settings);
         } else {
-            context = contextResolver.getCombinedContext(message, settings);
+            messageContext = contextResolver.getCombinedContext(context.getLastMessage(), settings);
         }
-        return context;
+        return messageContext;
     }
 
-    private SubmitResult assertAbuseProtection(Guild guild, Member donor, Member receiver, @Nullable Message message, @Nullable Message refMessage, MessageContext context) {
-        var messageId = message == null ? 0L : message.getIdLong();
+    private SubmitResult assertAbuseProtection(Guild guild, Member donor, Member receiver, ReputationContext context, @Nullable Message refMessage, MessageContext messageContext) {
+        var contextId = context.getIdLong();
         var repGuild = guildRepository.guild(guild);
         var analyzer = repGuild.reputation().analyzer();
         var settings = repGuild.settings();
         var abuseSettings = settings.abuseProtection();
 
         // Abuse Protection: target context
-        if (!context.members().contains(receiver) && abuseSettings.isReceiverContext()) {
-            log.trace("Receiver is not in context of {}", messageId);
-            return analyzer.log(message, SubmitResult.of(SubmitResultType.TARGET_NOT_IN_CONTEXT, Replacement.createMention(receiver)));
+        if (!messageContext.members().contains(receiver) && abuseSettings.isReceiverContext()) {
+            log.trace("Receiver is not in context of {}", contextId);
+            return analyzer.log(context, SubmitResult.of(SubmitResultType.TARGET_NOT_IN_CONTEXT, Replacement.createMention(receiver)));
         }
 
         // Abuse Protection: donor context
-        if (!context.members().contains(donor) && abuseSettings.isDonorContext()) {
-            log.trace("Donor is not in context of {}", messageId);
-            return analyzer.log(message, SubmitResult.of(SubmitResultType.DONOR_NOT_IN_CONTEXT, Replacement.createMention(donor)));
+        if (!messageContext.members().contains(donor) && abuseSettings.isDonorContext()) {
+            log.trace("Donor is not in context of {}", contextId);
+            return analyzer.log(context, SubmitResult.of(SubmitResultType.DONOR_NOT_IN_CONTEXT, Replacement.createMention(donor)));
         }
 
         // Abuse protection: Cooldown
-        if (!canGiveReputation(message, donor, receiver, guild, settings)) {
-            log.trace("Cooldown active on {}", messageId);
-            analyzer.log(message, SubmitResult.of(SubmitResultType.COOLDOWN_ACTIVE));
+        var canGiveReputation = checkCooldown(context, donor, receiver, guild, settings);
+        if (canGiveReputation.type() != SubmitResultType.SUCCESS) {
+            log.trace("Cooldown active on {}", contextId);
+            return canGiveReputation;
         }
 
         // block outdated ref message
         // Abuse protection: Message age
         if (refMessage != null) {
-            if (abuseSettings.isOldMessage(refMessage) && !context.latestMessages(abuseSettings.minMessages())
-                                                                  .contains(refMessage)) {
-                log.trace("Reference message of {} is outdated", messageId);
-                return analyzer.log(message, SubmitResult.of(SubmitResultType.OUTDATED_REFERENCE_MESSAGE));
+            if (abuseSettings.isOldMessage(refMessage) && !messageContext.latestMessages(abuseSettings.minMessages())
+                                                                         .contains(refMessage)) {
+                log.trace("Reference message of {} is outdated", contextId);
+                return analyzer.log(context, SubmitResult.of(SubmitResultType.OUTDATED_REFERENCE_MESSAGE));
             }
         }
 
         // block outdated message
         // Abuse protection: Message age
-        if (abuseSettings.isOldMessage(message)) {
-            log.trace("Message of {} is outdated", messageId);
-            return analyzer.log(message, SubmitResult.of(SubmitResultType.OUTDATED_MESSAGE));
+        if (abuseSettings.isOldMessage(context)) {
+            log.trace("Message of {} is outdated", contextId);
+            return analyzer.log(context, SubmitResult.of(SubmitResultType.OUTDATED_MESSAGE));
         }
 
 
         if (abuseSettings.isReceiverLimit(receiver)) {
-            log.trace("Receiver limit is reached on {}", messageId);
-            return analyzer.log(message, SubmitResult.of(SubmitResultType.RECEIVER_LIMIT));
+            log.trace("Receiver limit is reached on {}", contextId);
+            return analyzer.log(context, SubmitResult.of(SubmitResultType.RECEIVER_LIMIT));
         }
 
         if (abuseSettings.isDonorLimit(donor)) {
-            log.trace("Donor limit is reached on {}", messageId);
-            return analyzer.log(message, SubmitResult.of(SubmitResultType.DONOR_LIMIT));
+            log.trace("Donor limit is reached on {}", contextId);
+            return analyzer.log(context, SubmitResult.of(SubmitResultType.DONOR_LIMIT));
         }
 
         return SubmitResult.of(SubmitResultType.SUCCESS);
@@ -243,35 +244,37 @@ public class ReputationService {
         return false;
     }
 
-    private SubmitResult log(Guild guild, Member donor, Member receiver, Message message, @Nullable Message refMessage, ThankType type, Settings settings) {
+    private SubmitResult log(Guild guild, Member donor, Member receiver, ReputationContext context, @Nullable Message refMessage, ThankType type, Settings settings) {
         var repGuild = guildRepository.guild(guild);
         // try to log a reputation
         if (!repGuild.reputation().user(receiver)
-                     .addReputation(donor, message, refMessage, type)) {// submit to database failed. Maybe this message was already voted by the user.
-            log.trace("Could not log reputation for message {}. An equal entry was already present.", message.getIdLong());
-            return repGuild.reputation().analyzer().log(message, SubmitResult.of(SubmitResultType.ALREADY_PRESENT));
+                     .addReputation(donor, context, refMessage, type)) {// submit to database failed. Maybe this message was already voted by the user.
+            log.trace("Could not log reputation for message {}. An equal entry was already present.", context.getIdLong());
+            return repGuild.reputation().analyzer().log(context, SubmitResult.of(SubmitResultType.ALREADY_PRESENT));
         }
 
         logReputationEntry(settings, guild, new ReputationLogEntry(
                 guild.getIdLong(),
-                message.getChannel().getIdLong(),
+                context.getChannel().getIdLong(),
                 donor.getIdLong(),
                 receiver.getIdLong(),
-                message.getIdLong(),
+                context.getIdLong(),
                 refMessage == null ? 0 : refMessage.getIdLong(),
                 type,
                 Instant.now()));
 
         // mark messages
-        Messages.markMessage(message, refMessage, settings);
+        if(context.isMessage()){
+        Messages.markMessage(context.asMessage(), refMessage, settings);
+        }
         // update role
-        var newRank = assigner.updateReporting(receiver, message.getGuildChannel());
+        var newRank = assigner.updateReporting(receiver, context.getChannel());
 
         // Send a level-up message
         newRank.ifPresent(rank -> {
             var announcements = repGuild.settings().announcements();
             if (!announcements.isActive()) return;
-            var channel = message.getChannel().asGuildMessageChannel();
+            var channel = context.getChannel();
             if (!announcements.isSameChannel()) {
                 channel = guild.getTextChannelById(announcements.channelId());
             }
@@ -327,7 +330,7 @@ public class ReputationService {
         return false;
     }
 
-    public boolean canGiveReputation(Message message, Member donor, Member receiver, Guild guild, Settings settings) {
+    public SubmitResult checkCooldown(ReputationContext context, Member donor, Member receiver, Guild guild, Settings settings) {
         var repGuild = settings.repGuild();
         var analyzer = repGuild.reputation().analyzer();
         // block cooldown
@@ -337,35 +340,31 @@ public class ReputationService {
             var lastRating = optRating.get();
 
             if (settings.abuseProtection().cooldown() < 0) {
-                analyzer.log(message, SubmitResult.of(SubmitResultType.COOLDOWN_ONCE));
-                return false;
+                return analyzer.log(context, SubmitResult.of(SubmitResultType.COOLDOWN_ONCE));
             }
 
             if (lastRating.tillNow().toMinutes() < settings.abuseProtection().cooldown()) {
-                analyzer.log(message, SubmitResult.of(SubmitResultType.COOLDOWN_ACTIVE,
+                log.trace("The last rating is too recent. {}/{}", lastRating.tillNow().toMinutes(),
+                        settings.abuseProtection().cooldown());
+                return analyzer.log(context, SubmitResult.of(SubmitResultType.COOLDOWN_ACTIVE,
                         Replacement.create("TARGET", "$words.message$"),
                         Replacement.create("URL", lastRating.getMessageJumpLink()),
                         Replacement.create("ENTRY", lastRating.simpleString()),
                         Replacement.create("TIMESTAMP", lastRating.timestamp()),
                         Replacement.create("REMAINING", lastRating.tillNow().toMinutes()),
                         Replacement.create("TOTAL", settings.abuseProtection().cooldown())));
-                log.trace("The last rating is too recent. {}/{}", lastRating.tillNow().toMinutes(),
-                        settings.abuseProtection().cooldown());
-                return false;
             }
         }
 
         if (!settings.thanking().receiverRoles().hasRole(receiver)) {
-            analyzer.log(message, SubmitResult.of(SubmitResultType.NO_RECEIVER_ROLE, Replacement.createMention(receiver)));
             log.trace("The receiver does not have a receiver role.");
-            return false;
+            return analyzer.log(context, SubmitResult.of(SubmitResultType.NO_RECEIVER_ROLE, Replacement.createMention(receiver)));
         }
         if (!settings.thanking().donorRoles().hasRole(donor)) {
-            analyzer.log(message, SubmitResult.of(SubmitResultType.NO_DONOR_ROLE, Replacement.createMention(donor)));
             log.trace("The donor does not have a donor role.");
-            return false;
+            return analyzer.log(context, SubmitResult.of(SubmitResultType.NO_DONOR_ROLE, Replacement.createMention(donor)));
         }
 
-        return true;
+        return SubmitResult.of(SubmitResultType.SUCCESS);
     }
 }

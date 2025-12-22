@@ -1,11 +1,19 @@
-package de.chojo.repbot.commands.rep.handler;
+/*
+ *     SPDX-License-Identifier: AGPL-3.0-only
+ *
+ *     Copyright (C) RainbowDashLabs and Contributor
+ */
+package de.chojo.repbot.commands.reputation.handler;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
+import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.analyzer.results.match.ThankType;
 import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.service.reputation.ReputationContext;
 import de.chojo.repbot.service.reputation.ReputationService;
+import de.chojo.repbot.service.reputation.SubmitResultType;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
@@ -27,8 +35,11 @@ public class Give implements SlashHandler {
             return;
         }
 
-        event.getIdLong()
-
-        reputationService.submitReputation(event.getGuild(), event.getMember(), event.getOption("user", OptionMapping::getAsMember), null, null, ThankType.ANSWER);
+        var result = reputationService.submitReputation(event.getGuild(), event.getMember(), event.getOption("user", OptionMapping::getAsMember), ReputationContext.fromInteraction(event), null, ThankType.ANSWER);
+        if (result.type() == SubmitResultType.SUCCESS) {
+            event.reply("success").setEphemeral(guild.settings().messages().isReactionConfirmation()).queue();
+        } else {
+            event.reply(context.guildLocale(result.type().localeKey(), result.replacements().toArray(Replacement[]::new))).setEphemeral(true).queue();
+        }
     }
 }

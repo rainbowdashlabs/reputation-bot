@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -52,6 +53,8 @@ public class TestLocalization {
 
         System.out.printf("Loaded %s languages!%n", LOCALES.length);
 
+        List<String> issues = new ArrayList<>();
+
         Set<String> keySet = new HashSet<>();
         for (var resourceBundle : resourceBundles.values()) {
             keySet.addAll(resourceBundle.keySet());
@@ -61,24 +64,39 @@ public class TestLocalization {
         var english = resourceBundles.get(DiscordLocale.ENGLISH_US);
         for (var key : english.keySet()) {
             replacements.put(key, getReplacements(english.getString(key)));
-            Assertions.assertFalse(english.getString(key).isBlank(),
-                    "Blank string at " + key + "@" + DiscordLocale.ENGLISH_US);
+            if (english.getString(key).isBlank()) {
+                issues.add("Blank key at " + key + "@" + DiscordLocale.ENGLISH_US);
+            }
         }
 
         for (var resourceBundle : resourceBundles.values()) {
             for (var key : keySet) {
                 var keyLoc = key + "@" + resourceBundle.getLocale();
-                var locale = resourceBundle.getString(key);
-                Assertions.assertFalse(locale.isBlank(), "Blank or unlocalized key at " + keyLoc);
+                String locale;
+                try {
+                    locale = resourceBundle.getString(key);
+                } catch (MissingResourceException e) {
+                    issues.add("Missing key at " + keyLoc);
+                    continue;
+                }
+                if(locale.isBlank()){
+                    issues.add("Blank or unlocalized key at " + keyLoc);
+                }
                 var localeReplacements = getReplacements(locale);
                 var defReplacements = replacements.get(key);
-                Assertions.assertTrue(localeReplacements.containsAll(defReplacements),
-                        "Missing replacement key in " + keyLoc
-                                + ". Expected \"" + String.join(", ", defReplacements) + "\". Actual \"" + String.join(", ", localeReplacements) + "\"");
+                if(!localeReplacements.containsAll(defReplacements)){
+                    issues.add("Missing replacement key in " + keyLoc
+                            + ". Expected \"" + String.join(", ", defReplacements) + "\". Actual \"" + String.join(", ", localeReplacements) + "\"");
+                }
                 if (key.endsWith(".description")) {
-                    Assertions.assertTrue(locale.length() <= 100, "Description is too long at " + keyLoc + ": " + locale.length() + " > 100");
+                    if(locale.length() > 100){
+                        issues.add("Description is too long at " + keyLoc + ": " + locale.length() + " > 100");
+                    }
                 }
             }
+        }
+        if (!issues.isEmpty()) {
+            Assertions.fail(String.join("\n", issues));
         }
     }
 
@@ -112,6 +130,8 @@ public class TestLocalization {
 
         Set<String> foundKeys = new HashSet<>();
 
+        List<String> errors = new ArrayList<>();
+
         for (var file : files) {
             var localCount = 0;
             List<String> content;
@@ -127,7 +147,9 @@ public class TestLocalization {
                     localCount++;
                     var key = matcher.group(1);
                     foundKeys.add(key);
-                    Assertions.assertTrue(keys.contains(key) || whitelisted(key), "Found unknown key \"" + key + "\" in " + file + " at line " + currentLine);
+                    if (!(keys.contains(key) || whitelisted(key))) {
+                        errors.add("Found unknown key \"" + key + "\" in " + file + " at line " + currentLine);
+                    }
                 }
 
                 matcher = LOCALIZATION_CODE.matcher(line);
@@ -136,11 +158,18 @@ public class TestLocalization {
                     localCount++;
                     var key = matcher.group(1);
                     foundKeys.add(key);
-                    Assertions.assertTrue(keys.contains(key) || whitelisted(key), "Found unknown key \"" + key + "\" in " + file + " at line " + currentLine);
+                    if (!(keys.contains(key) || whitelisted(key))) {
+                        errors.add("Found unknown key \"" + key + "\" in " + file + " at line " + currentLine);
+                    }
                 }
             }
             System.out.println("Found " + localCount + " key in " + file);
         }
+
+        if (!errors.isEmpty()) {
+            Assertions.fail(String.join("\n", errors));
+        }
+
         System.out.println("Found a total of " + count + " keys in " + files.size() + " files.");
 
         keys.removeAll(foundKeys);

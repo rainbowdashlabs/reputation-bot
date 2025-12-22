@@ -31,7 +31,7 @@ import de.chojo.repbot.commands.profile.Profile;
 import de.chojo.repbot.commands.prune.Prune;
 import de.chojo.repbot.commands.ranking.Ranking;
 import de.chojo.repbot.commands.reactions.Reactions;
-import de.chojo.repbot.commands.rep.Rep;
+import de.chojo.repbot.commands.reputation.Reputation;
 import de.chojo.repbot.commands.repadmin.RepAdmin;
 import de.chojo.repbot.commands.repsettings.RepSettings;
 import de.chojo.repbot.commands.roles.Roles;
@@ -132,7 +132,7 @@ public class Bot {
 
         repBotCachePolicy = new RepBotCachePolicy(scan, roles);
         shardManager = DefaultShardManagerBuilder
-                .createDefault(SysVar.envOrProp("BOT_TOKEN","bot.token",configuration.baseSettings().token()))
+                .createDefault(SysVar.envOrProp("BOT_TOKEN", "bot.token", configuration.baseSettings().token()))
                 .setEventPassthrough(true)
                 .enableIntents(
                         // Required to retrieve reputation emotes
@@ -245,7 +245,7 @@ public class Bot {
                                     new Messages(guilds),
                                     botAdmin,
                                     new Ranking(guilds, configuration),
-                                    new Rep(guilds, reputationService)/*TODO: remove rep command*/,
+                                    new Reputation(guilds, reputationService)/*TODO: remove rep command*/,
                                     new Supporter(premiumService, configuration, guilds))
                             .withMessages(new MessageLog(guilds))
                             .withUsers(new UserReceived(guilds, configuration),
@@ -266,7 +266,11 @@ public class Bot {
                                 log.error(LogNotify.NOTIFY_ADMIN, "Command execution of {} failed\n{}",
                                         context.interaction().meta().name(), context.args(), throwable);
                             })
-                            .withGuildCommandMapper(cmd -> Collections.singletonList(configuration.baseSettings().botGuild()))
+                            .withGuildCommandMapper(cmd -> switch (cmd.name()) {
+                                case "bot" -> Collections.singletonList(configuration.baseSettings().botGuild());
+                                case "rep" -> data.guilds().byCommandReputationEnabled();
+                                default -> Collections.emptyList();
+                            })
                             .withDefaultMenuService()
                             .withPostCommandHook(result -> data.metrics().commands()
                                                                .logCommand(result.context().interaction().meta().name()))

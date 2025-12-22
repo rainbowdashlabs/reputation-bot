@@ -14,6 +14,7 @@ import de.chojo.repbot.analyzer.results.match.ThankType;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
+import de.chojo.repbot.service.reputation.ReputationContext;
 import de.chojo.repbot.service.reputation.ReputationService;
 import de.chojo.repbot.service.reputation.SubmitResultType;
 import de.chojo.repbot.util.PermissionErrorHandler;
@@ -105,7 +106,7 @@ public class ReactionListener extends ListenerAdapter {
             return;
         }
 
-        if (reputationService.submitReputation(event.getGuild(), event.getMember(), receiver, message, null, ThankType.REACTION).type() == SubmitResultType.SUCCESS) {
+        if (reputationService.submitReputation(event.getGuild(), event.getMember(), receiver, ReputationContext.fromMessage(message), null, ThankType.REACTION).type() == SubmitResultType.SUCCESS) {
             reacted(event.getMember());
             if (guildSettings.messages().isReactionConfirmation()) {
                 event.getChannel().sendMessage(localizer.localize("listener.reaction.confirmation", event.getGuild(),

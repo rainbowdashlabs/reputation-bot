@@ -22,19 +22,22 @@ import static de.chojo.sadu.queries.api.query.Query.query;
 public class Messages implements GuildHolder {
     private final Settings settings;
     private boolean reactionConfirmation;
+    private boolean commandReputationEphemeral;
 
     public Messages(Settings settings) {
-        this(settings, true);
+        this(settings, true, false);
     }
 
-    public Messages(Settings settings, boolean reactionConfirmation) {
+    public Messages(Settings settings, boolean reactionConfirmation, boolean commandReputationEphemeral) {
         this.settings = settings;
         this.reactionConfirmation = reactionConfirmation;
+        this.commandReputationEphemeral = commandReputationEphemeral;
     }
 
     public static Messages build(Settings settings, Row rs) throws SQLException {
         return new Messages(settings,
-                rs.getBoolean("reaction_confirmation"));
+                rs.getBoolean("reaction_confirmation"),
+                rs.getBoolean("command_reputation_ephemeral"));
     }
 
     public boolean reactionConfirmation(boolean reactionConfirmation) {
@@ -45,8 +48,20 @@ public class Messages implements GuildHolder {
         return this.reactionConfirmation;
     }
 
+    public boolean commandReputationEphemeral(boolean commandReputationEphemeral) {
+        var result = set("command_reputation_ephemeral", stmt -> stmt.bind(reactionConfirmation));
+        if (result) {
+            this.commandReputationEphemeral = commandReputationEphemeral;
+        }
+        return this.commandReputationEphemeral;
+    }
+
     public boolean isReactionConfirmation() {
         return reactionConfirmation;
+    }
+
+    public boolean isCommandReputationEphemeral() {
+        return commandReputationEphemeral;
     }
 
     @Override
@@ -72,7 +87,8 @@ public class Messages implements GuildHolder {
 
     public String toLocalizedString() {
         var setting = List.of(
-                getSetting("command.messages.states.message.option.reactionconfirmation.name", isReactionConfirmation())
+                getSetting("command.messages.states.message.option.reactionconfirmation.name", isReactionConfirmation()),
+                getSetting("command.messages.states.message.option.commandreputationephemeral.name", isCommandReputationEphemeral())
         );
 
         return String.join("\n", setting);
