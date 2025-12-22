@@ -27,12 +27,13 @@ public class Reputation implements GuildHolder {
     private boolean fuzzyActive;
     private boolean embedActive;
     private boolean directActive;
+    private boolean commandActive;
 
     public Reputation(Settings settings) {
-        this(settings, true, true, true, true, true, false);
+        this(settings, true, true, true, true, true, false, false);
     }
 
-    public Reputation(Settings settings, boolean reactionActive, boolean answerActive, boolean mentionActive, boolean fuzzyActive, boolean embedActive, boolean directActive) {
+    public Reputation(Settings settings, boolean reactionActive, boolean answerActive, boolean mentionActive, boolean fuzzyActive, boolean embedActive, boolean directActive, boolean commandActive) {
         this.settings = settings;
         this.reactionActive = reactionActive;
         this.answerActive = answerActive;
@@ -40,6 +41,7 @@ public class Reputation implements GuildHolder {
         this.fuzzyActive = fuzzyActive;
         this.embedActive = embedActive;
         this.directActive = directActive;
+        this.commandActive = commandActive;
     }
 
     public static Reputation build(Settings settings, Row rs) throws SQLException {
@@ -49,7 +51,8 @@ public class Reputation implements GuildHolder {
                 rs.getBoolean("mention_active"),
                 rs.getBoolean("fuzzy_active"),
                 rs.getBoolean("embed_active"),
-                rs.getBoolean("skip_single_embed"));
+                rs.getBoolean("skip_single_embed"),
+                rs.getBoolean("command_active"));
     }
 
     public boolean isReactionActive() {
@@ -76,6 +79,10 @@ public class Reputation implements GuildHolder {
         return directActive;
     }
 
+    public boolean isCommandActive() {
+        return commandActive;
+    }
+
     public boolean embedActive(boolean embedActive) {
         var result = set("embed_active", stmt -> stmt.bind(embedActive));
         if (result) {
@@ -98,6 +105,14 @@ public class Reputation implements GuildHolder {
             this.answerActive = answerActive;
         }
         return this.answerActive;
+    }
+
+    public boolean commandActive(boolean commandActive) {
+        var result = set("command_active", stmt -> stmt.bind(commandActive));
+        if (result) {
+            this.commandActive = commandActive;
+        }
+        return this.commandActive;
     }
 
     public boolean mentionActive(boolean mentionActive) {

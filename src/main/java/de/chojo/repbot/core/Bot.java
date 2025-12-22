@@ -245,7 +245,7 @@ public class Bot {
                                     new Messages(guilds),
                                     botAdmin,
                                     new Ranking(guilds, configuration),
-                                    new Rep()/*TODO: remove rep command*/,
+                                    new Rep(guilds, reputationService)/*TODO: remove rep command*/,
                                     new Supporter(premiumService, configuration, guilds))
                             .withMessages(new MessageLog(guilds))
                             .withUsers(new UserReceived(guilds, configuration),

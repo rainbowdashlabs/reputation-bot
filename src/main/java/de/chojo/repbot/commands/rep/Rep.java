@@ -5,41 +5,34 @@
  */
 package de.chojo.repbot.commands.rep;
 
+import de.chojo.jdautil.interactions.slash.Argument;
 import de.chojo.jdautil.interactions.slash.Slash;
 import de.chojo.jdautil.interactions.slash.provider.SlashProvider;
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.wrapper.EventContext;
+import de.chojo.repbot.commands.rep.handler.Give;
+import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.service.reputation.ReputationService;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.Command;
 
-public class Rep implements SlashHandler, SlashProvider<Slash> {
-    private Command profile;
+import static de.chojo.jdautil.interactions.slash.Argument.user;
 
-    public Rep() {
+public class Rep implements SlashProvider<Slash> {
+    private final GuildRepository guildRepository;
+    private ReputationService reputationService;
+
+    public Rep(GuildRepository guildRepository, ReputationService reputationService) {
+        this.guildRepository  = guildRepository;
+        this.reputationService = reputationService;
     }
 
 
     @Override
     public Slash slash() {
-        return Slash.of("rep", "This command is now named profile")
-                    .unlocalized()
-                    .command(this)
-                    .build();
-    }
-
-    @Override
-    public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        if (profile == null) {
-            event.getJDA().retrieveCommands().complete().stream()
-                 .filter(cmd -> cmd.getName().equals("profile"))
-                 .findFirst()
-                 .ifPresent(command -> profile = command);
-        }
-        if (profile != null) {
-            event.reply("This command is now named " + profile.getAsMention()).setEphemeral(true).queue();
-            return;
-        }
-        event.reply("This command is now named profile").setEphemeral(true).queue();
-
+        return Slash.of("rep", "commands.rep.description")
+                .command(new Give(guildRepository, reputationService))
+                .argument(user("user", "commands.rep.options.user.description"))
+                .build();
     }
 }
