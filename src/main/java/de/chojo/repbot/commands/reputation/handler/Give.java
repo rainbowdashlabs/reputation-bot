@@ -14,6 +14,7 @@ import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.service.reputation.ReputationContext;
 import de.chojo.repbot.service.reputation.ReputationService;
 import de.chojo.repbot.service.reputation.SubmitResultType;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
@@ -30,14 +31,17 @@ public class Give implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         RepGuild guild = guilds.guild(event.getGuild());
 
+        // The command should not be available in this case, but better check.
         if (!guild.settings().reputation().isCommandActive()) {
-            event.reply("not active").setEphemeral(true).queue();
+            event.reply("Command disabled").setEphemeral(true).queue();
             return;
         }
 
-        var result = reputationService.submitReputation(event.getGuild(), event.getMember(), event.getOption("user", OptionMapping::getAsMember), ReputationContext.fromInteraction(event), null, ThankType.COMMAND);
+        Member donor = event.getMember();
+        Member receiver = event.getOption("user", OptionMapping::getAsMember);
+        var result = reputationService.submitReputation(event.getGuild(), donor, receiver, ReputationContext.fromInteraction(event), null, ThankType.COMMAND);
         if (result.type() == SubmitResultType.SUCCESS) {
-            event.reply("success").setEphemeral(guild.settings().messages().isReactionConfirmation()).queue();
+            event.reply(context.guildLocale("command.reputation.give.message.success", Replacement.create("DONOR", donor), Replacement.create("RECEIVER", receiver))).setEphemeral(guild.settings().messages().isReactionConfirmation()).queue();
         } else {
             event.reply(context.guildLocale(result.type().localeKey(), result.replacements().toArray(Replacement[]::new))).setEphemeral(true).queue();
         }

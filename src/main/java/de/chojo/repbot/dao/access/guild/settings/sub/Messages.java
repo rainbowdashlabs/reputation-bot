@@ -88,7 +88,7 @@ public class Messages implements GuildHolder {
     public String toLocalizedString() {
         var setting = List.of(
                 getSetting("command.messages.states.message.option.reactionconfirmation.name", isReactionConfirmation()),
-                getSetting("command.messages.states.message.option.commandreply.name", isCommandReputationEphemeral())
+                getSetting("command.messages.states.message.option.commandreputationephemeral.name", isCommandReputationEphemeral())
         );
 
         return String.join("\n", setting);
