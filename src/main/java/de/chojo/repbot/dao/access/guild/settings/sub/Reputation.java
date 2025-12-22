@@ -146,8 +146,10 @@ public class Reputation implements GuildHolder {
                 getSetting("command.repsettings.info.message.option.bymention.name", isMentionActive()),
                 getSetting("command.repsettings.info.message.option.byfuzzy.name", isFuzzyActive()),
                 getSetting("command.repsettings.info.message.option.byembed.name", isEmbedActive()),
+                getSetting("command.repsettings.info.message.option.bycommand.name", settings.reputation()
+                                                                                             .isCommandActive()),
                 getSetting("command.repsettings.info.message.option.skipsingletarget.name", settings.reputation()
-                                                                                                    .isDirectActive()),
+                        .isDirectActive()),
                 getSetting("command.repsettings.info.message.option.reputationmode.name", settings.general()
                                                                                                   .reputationMode()
                                                                                                   .localeCode())

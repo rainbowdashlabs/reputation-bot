@@ -268,7 +268,7 @@ public class Bot {
                             })
                             .withGuildCommandMapper(cmd -> switch (cmd.name()) {
                                 case "bot" -> Collections.singletonList(configuration.baseSettings().botGuild());
-                                case "rep" -> data.guilds().byCommandReputationEnabled();
+                                case "reputation" -> data.guilds().byCommandReputationEnabled();
                                 default -> Collections.emptyList();
                             })
                             .withDefaultMenuService()

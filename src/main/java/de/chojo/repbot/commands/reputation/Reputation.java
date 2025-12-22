@@ -28,7 +28,7 @@ public class Reputation implements SlashProvider<Slash> {
         return Slash.of("reputation", "command.reputation.description")
                 .privateCommand()
                 .command(new Give(guildRepository, reputationService))
-                .argument(user("user", "command.reputation.user.description"))
+                .argument(user("user", "command.reputation.options.user.description").asRequired())
                 .build();
     }
 }

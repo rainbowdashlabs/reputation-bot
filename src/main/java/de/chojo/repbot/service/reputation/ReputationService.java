@@ -264,8 +264,8 @@ public class ReputationService {
                 Instant.now()));
 
         // mark messages
-        if(context.isMessage()){
-        Messages.markMessage(context.asMessage(), refMessage, settings);
+        if (context.isMessage()) {
+            Messages.markMessage(context.asMessage(), refMessage, settings);
         }
         // update role
         var newRank = assigner.updateReporting(receiver, context.getChannel());
@@ -324,6 +324,9 @@ public class ReputationService {
             }
             case DIRECT -> {
                 if (!reputation.isDirectActive()) return true;
+            }
+            case COMMAND -> {
+                if (!reputation.isCommandActive()) return true;
             }
             default -> throw new IllegalStateException("Unexpected value: " + type);
         }

@@ -18,12 +18,17 @@ import net.dv8tion.jda.api.components.selections.StringSelectMenu;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
+import org.slf4j.Logger;
 
 import java.awt.*;
 import java.util.Collections;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class Info implements SlashHandler {
+    private static final Logger log = getLogger(Info.class);
     private final GuildRepository guildRepository;
 
     public Info(GuildRepository guildRepository) {
@@ -121,7 +126,11 @@ public class Info implements SlashHandler {
                                        .addComponent(MenuEntry.of(command, ctx -> refresh(ctx, res -> {
                                                                   guildSettings.reputation().commandActive(res);
                                                                   // The command needs to be hidden or enabled additionally
-                                                                  context.interactionHub().refreshGuildCommands(event.getGuild());
+                                                                  CompletableFuture.runAsync(() -> context.interactionHub().refreshGuildCommands(event.getGuild()))
+                                                                                   .exceptionally(err -> {
+                                                                                       log.error("Error during command refresh", err);
+                                                                                       return null;
+                                                                                   });
                                                               }, context, guildSettings))
                                                               .hidden())
                                        .addComponent(MenuEntry.of(skipSingleEmbed, ctx -> refresh(ctx, res -> guildSettings.reputation()

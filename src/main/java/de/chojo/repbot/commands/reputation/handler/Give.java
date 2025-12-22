@@ -35,7 +35,7 @@ public class Give implements SlashHandler {
             return;
         }
 
-        var result = reputationService.submitReputation(event.getGuild(), event.getMember(), event.getOption("user", OptionMapping::getAsMember), ReputationContext.fromInteraction(event), null, ThankType.ANSWER);
+        var result = reputationService.submitReputation(event.getGuild(), event.getMember(), event.getOption("user", OptionMapping::getAsMember), ReputationContext.fromInteraction(event), null, ThankType.COMMAND);
         if (result.type() == SubmitResultType.SUCCESS) {
             event.reply("success").setEphemeral(guild.settings().messages().isReactionConfirmation()).queue();
         } else {
