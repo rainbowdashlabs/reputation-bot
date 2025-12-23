@@ -32,7 +32,10 @@ public final class LogFormatter {
         List<String> entries = new ArrayList<>();
         for (var logEntry : logEntries) {
             var thankType = context.localize(logEntry.type().nameLocaleKey());
-            var jumpLink = createJumpLink(context, logEntry);
+            String jumpLink = "";
+            if (logEntry.type() != ThankType.COMMAND) {
+                jumpLink = createJumpLink(context, logEntry);
+            }
             entries.add(String.format("%s **%s** %s %s", logEntry.timestamp(),
                     thankType, User.fromId(userId.apply(logEntry)).getAsMention(), jumpLink));
         }
@@ -85,10 +88,10 @@ public final class LogFormatter {
         return String.format("**%s** %s", jump, refJump == null ? "" : "➜ **" + refJump + "**");
     }
 
-    static MessageEditData userLogEmbed(LocalizationContext context, Member user, String title, List<String> log, boolean supporter) {
+    static MessageEditData userLogEmbed(LocalizationContext context, Member user, String title, List<String> log, boolean noPremium) {
         var builder = new LocalizedEmbedBuilder(context)
                 .setAuthor(title, null, user.getEffectiveAvatarUrl(), Replacement.create("USER", user.getEffectiveName()));
-        if (!supporter) {
+        if (noPremium) {
             builder.setFooter("supporter.fullreputationlog");
         }
         buildFields(log, builder);
