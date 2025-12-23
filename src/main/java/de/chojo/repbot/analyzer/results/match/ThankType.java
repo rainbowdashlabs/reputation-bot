@@ -11,7 +11,8 @@ public enum ThankType {
     ANSWER("thankType.answer.name"),
     DIRECT("thankType.direct.name"),
     REACTION("thankType.reaction.name"),
-    EMBED("thankType.embed.name");
+    EMBED("thankType.embed.name"),
+    COMMAND("thankType.command.name");
 
     private final String nameLocaleKey;
 

@@ -96,7 +96,8 @@ public class Settings implements GuildHolder {
                     mention_active,
                     fuzzy_active,
                     embed_active,
-                    skip_single_embed
+                    skip_single_embed,
+                    command_active
                 FROM
                     reputation_settings
                 WHERE guild_id = ?;

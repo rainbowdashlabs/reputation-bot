@@ -15,6 +15,7 @@ import de.chojo.repbot.dao.components.MemberHolder;
 import de.chojo.repbot.dao.snapshots.ChannelStats;
 import de.chojo.repbot.dao.snapshots.RepProfile;
 import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
+import de.chojo.repbot.service.reputation.ReputationContext;
 import de.chojo.repbot.util.QueryLoader;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
@@ -111,7 +112,7 @@ public class RepUser implements MemberHolder {
      * @param type       type of reputation
      * @return true if the reputation was logged.
      */
-    public boolean addReputation(@Nullable Member donor, @NotNull Message message, @Nullable Message refMessage, ThankType type) {
+    public boolean addReputation(@Nullable Member donor, @NotNull ReputationContext message, @Nullable Message refMessage, ThankType type) {
         var success = query("""
                 INSERT INTO
                 reputation_log(guild_id, donor_id, receiver_id, message_id, ref_message_id, channel_id, cause) VALUES(?,?,?,?,?,?,?)

@@ -25,7 +25,11 @@ public enum SubmitResultType {
     RECEIVER_LIMIT("submitresult.receiverlimit"),
     ALREADY_PRESENT("submitresult.alreadypresent"),
     SUBMITTING("submitresult.submitting"),
-    ALL_COOLDOWN("submitresult.allcooldown");
+    ALL_COOLDOWN("submitresult.allcooldown"),
+    SUCCESS("submitresult.success"),
+    NO_RECEIVER("submitresult.no_receiver"),
+    NO_DONOR("submitresult.no_receiver"),
+    BLOCK_BOTS("submitresult.block_bots");
 
     private final String localeKey;
 

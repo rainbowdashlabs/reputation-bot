@@ -8,6 +8,7 @@ package de.chojo.repbot.commands.log.handler;
 import de.chojo.jdautil.localization.LocalizationContext;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
+import de.chojo.repbot.analyzer.results.match.ThankType;
 import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -31,7 +32,10 @@ public final class LogFormatter {
         List<String> entries = new ArrayList<>();
         for (var logEntry : logEntries) {
             var thankType = context.localize(logEntry.type().nameLocaleKey());
-            var jumpLink = createJumpLink(context, logEntry);
+            String jumpLink = "";
+            if (logEntry.type() != ThankType.COMMAND) {
+                jumpLink = createJumpLink(context, logEntry);
+            }
             entries.add(String.format("%s **%s** %s %s", logEntry.timestamp(),
                     thankType, User.fromId(userId.apply(logEntry)).getAsMention(), jumpLink));
         }
@@ -49,12 +53,19 @@ public final class LogFormatter {
     }
 
     public static String formatMessageLogEntry(LocalizationContext context, ReputationLogEntry logEntry) {
-        var jumpLink = createJumpLink(context, logEntry);
+        String jumpLink = "";
+        jumpLink = createJumpLink(context, logEntry);
         var thankType = context.localize(logEntry.type().nameLocaleKey());
+        if (logEntry.type() == ThankType.COMMAND) {
+            return String.format("%s **%s** %s ➜ %s", logEntry.timestamp(),
+                    thankType, User.fromId(logEntry.donorId()).getAsMention(), User.fromId(logEntry.receiverId())
+                                                                                   .getAsMention());
+        }
         return String.format("%s **%s** %s ➜ %s **|** %s", logEntry.timestamp(),
                 thankType, User.fromId(logEntry.donorId()).getAsMention(), User.fromId(logEntry.receiverId())
                                                                                .getAsMention(), jumpLink);
     }
+
     public static String formatMessageLogEntrySimple(LocalizationContext context, ReputationLogEntry logEntry) {
         var thankType = context.localize(logEntry.type().nameLocaleKey());
         return String.format("%s **%s** %s ➜ %s", logEntry.timestamp(),
@@ -77,10 +88,10 @@ public final class LogFormatter {
         return String.format("**%s** %s", jump, refJump == null ? "" : "➜ **" + refJump + "**");
     }
 
-    static MessageEditData userLogEmbed(LocalizationContext context, Member user, String title, List<String> log, boolean supporter) {
+    static MessageEditData userLogEmbed(LocalizationContext context, Member user, String title, List<String> log, boolean noPremium) {
         var builder = new LocalizedEmbedBuilder(context)
                 .setAuthor(title, null, user.getEffectiveAvatarUrl(), Replacement.create("USER", user.getEffectiveName()));
-        if (!supporter) {
+        if (noPremium) {
             builder.setFooter("supporter.fullreputationlog");
         }
         buildFields(log, builder);

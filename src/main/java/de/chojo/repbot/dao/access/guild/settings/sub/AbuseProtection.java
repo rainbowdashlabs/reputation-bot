@@ -7,6 +7,7 @@ package de.chojo.repbot.dao.access.guild.settings.sub;
 
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
+import de.chojo.repbot.service.reputation.ReputationContext;
 import de.chojo.sadu.mapper.wrapper.Row;
 import de.chojo.sadu.queries.api.call.Call;
 import net.dv8tion.jda.api.entities.Guild;
@@ -205,6 +206,11 @@ public class AbuseProtection implements GuildHolder {
             this.maxMessageReputation = maxMessageReputation;
         }
         return this.maxMessageReputation;
+    }
+
+    public boolean isOldMessage(ReputationContext context) {
+        if(context.isInteraction()) return false;
+        return isOldMessage(context.asMessage());
     }
 
     public boolean isOldMessage(Message message) {

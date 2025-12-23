@@ -18,12 +18,17 @@ import net.dv8tion.jda.api.components.selections.StringSelectMenu;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
+import org.slf4j.Logger;
 
 import java.awt.*;
 import java.util.Collections;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class Info implements SlashHandler {
+    private static final Logger log = getLogger(Info.class);
     private final GuildRepository guildRepository;
 
     public Info(GuildRepository guildRepository) {
@@ -41,7 +46,7 @@ public class Info implements SlashHandler {
                                        .addOption("command.repsettings.info.message.option.bymention.name", "mention", "command.repsettings.info.message.option.bymention.description")
                                        .addOption("command.repsettings.info.message.option.byfuzzy.name", "fuzzy", "command.repsettings.info.message.option.byfuzzy.description")
                                        .addOption("command.repsettings.info.message.option.byembed.name", "embed", "command.repsettings.info.message.option.byembed.description")
-                                       .addOption("command.repsettings.info.message.option.emojidebug.name", "emojidebug", "command.repsettings.info.message.option.emojidebug.description")
+                                       .addOption("command.repsettings.info.message.option.bycommand.name", "command", "command.repsettings.info.message.option.bycommand.description")
                                        .addOption("command.repsettings.info.message.option.skipsingletarget.name", "directembed", "command.repsettings.info.message.option.skipsingletarget.description")
                                        .addOption("command.repsettings.info.message.option.reputationmode.name", "reputationmode", "command.repsettings.info.message.option.reputationmode.description")
                                        .build();
@@ -70,6 +75,11 @@ public class Info implements SlashHandler {
                 "command.repsettings.info.message.embed.true",
                 "command.repsettings.info.message.embed.false",
                 guildSettings.reputation().isEmbedActive());
+        var command = getMenu("command",
+                "command.repsettings.info.message.option.bycommand.description",
+                "command.repsettings.info.message.bycommand.true",
+                "command.repsettings.info.message.bycommand.false",
+                guildSettings.reputation().isCommandActive());
         var skipSingleEmbed = getMenu("directembed",
                 "command.repsettings.info.message.option.skipsingletarget.description",
                 "command.repsettings.info.message.skipsingleembed.true",
@@ -112,6 +122,16 @@ public class Info implements SlashHandler {
                                                               .hidden())
                                        .addComponent(MenuEntry.of(embed, ctx -> refresh(ctx, res -> guildSettings.reputation()
                                                                                                                  .embedActive(res), context, guildSettings))
+                                                              .hidden())
+                                       .addComponent(MenuEntry.of(command, ctx -> refresh(ctx, res -> {
+                                                                  guildSettings.reputation().commandActive(res);
+                                                                  // The command needs to be hidden or enabled additionally
+                                                                  CompletableFuture.runAsync(() -> context.interactionHub().refreshGuildCommands(event.getGuild()))
+                                                                                   .exceptionally(err -> {
+                                                                                       log.error("Error during command refresh", err);
+                                                                                       return null;
+                                                                                   });
+                                                              }, context, guildSettings))
                                                               .hidden())
                                        .addComponent(MenuEntry.of(skipSingleEmbed, ctx -> refresh(ctx, res -> guildSettings.reputation()
                                                                                                                            .directActive(res), context, guildSettings))
