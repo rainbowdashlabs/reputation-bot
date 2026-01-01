@@ -77,8 +77,8 @@ idea {
             runConfigurations {
                 register<org.jetbrains.gradle.ext.Application>("App-Testing") {
                     mainClass = "de.chojo.repbot.ReputationBot"
-                    jvmArgs = listOf("-Dbot.config=config/config-testing.json",
-                            "-Dlog4j2.configurationFile=docker/config/log4j2-testing.xml",
+                    jvmArgs = listOf("-Dbot.config=config/config.testing.json",
+                            "-Dlog4j2.configurationFile=docker/config/log4j2.testing.xml",
                             "-Dcjda.localisation.error.name=false",
                             "-Dcjda.interactions.cleanguildcommands=true",
                             "-Dcjda.interactions.testmode=true").joinToString(" ")

@@ -50,6 +50,7 @@
         <Logger name="net.dv8tion.jda" level="INFO"/>
         <Logger name="org.eclipse.jetty" level="INFO"/>
         <Logger name="com.zaxxer.hikari" level="INFO"/>
+        <Logger name="de.chojo.jdautil" level="INFO"/>
 
         <Root level="TRACE">
             <AppenderRef ref="ConsoleDebug"/>
