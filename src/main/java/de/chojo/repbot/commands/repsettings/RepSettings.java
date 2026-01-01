@@ -8,7 +8,7 @@ package de.chojo.repbot.commands.repsettings;
 import de.chojo.jdautil.interactions.slash.Slash;
 import de.chojo.jdautil.interactions.slash.SubCommand;
 import de.chojo.jdautil.interactions.slash.provider.SlashCommand;
-import de.chojo.repbot.commands.repsettings.handler.Info;
+import de.chojo.repbot.commands.repsettings.handler.General;
 import de.chojo.repbot.commands.repsettings.handler.name.Reset;
 import de.chojo.repbot.commands.repsettings.handler.name.Set;
 import de.chojo.repbot.config.Configuration;
@@ -24,8 +24,8 @@ public class RepSettings extends SlashCommand {
         super(Slash.of("repsettings", "command.repsettings.description")
                 .guildOnly()
                 .adminCommand()
-                .subCommand(SubCommand.of("info", "command.repsettings.info.description")
-                        .handler(new Info(guildRepository)))
+                .subCommand(SubCommand.of("general", "command.repsettings.general.description")
+                        .handler(new General(guildRepository)))
                 .group(group("name", "command.repsettings.name.description")
                         .subCommand(sub("set", "command.repsettings.name.set.description")
                                 .handler(new Set(guildRepository, configuration))

@@ -1,4 +1,6 @@
 import com.github.jengelman.gradle.plugins.shadow.transformers.Log4j2PluginsCacheFileTransformer
+import org.jetbrains.gradle.ext.runConfigurations
+import org.jetbrains.gradle.ext.settings
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
@@ -6,11 +8,12 @@ import java.time.format.DateTimeFormatter
 plugins {
     alias(libs.plugins.shadow)
     alias(libs.plugins.spotless)
+    id("org.jetbrains.gradle.plugin.idea-ext") version "1.3"
     java
 }
 
 group = "de.chojo"
-version = "1.17.1"
+version = "1.18.0"
 
 repositories {
     mavenLocal()
@@ -28,7 +31,7 @@ spotless {
 }
 
 dependencies {
-    //discord
+    // discord
     implementation("de.chojo", "cjda-util", "2.12.0+jda-6.0.0") {
         exclude(group = "club.minnced", module = "opus-java")
     }
@@ -68,25 +71,43 @@ java {
     withJavadocJar()
 }
 
+idea {
+    project {
+        settings {
+            runConfigurations {
+                register<org.jetbrains.gradle.ext.Application>("App-Testing") {
+                    mainClass = "de.chojo.repbot.ReputationBot"
+                    jvmArgs = listOf("-Dbot.config=config/config.testing.json",
+                            "-Dlog4j2.configurationFile=docker/config/log4j2.testing.xml",
+                            "-Dcjda.localisation.error.name=false",
+                            "-Dcjda.interactions.cleanguildcommands=true",
+                            "-Dcjda.interactions.testmode=true").joinToString(" ")
+                    moduleName = "rep-bot.main"
+                }
+            }
+        }
+    }
+}
+
 tasks {
     processResources {
         from(sourceSets.main.get().resources.srcDirs) {
             filesMatching("version") {
                 var version = project.version.toString()
-                var workflow = (System.getenv("GITHUB_ACTIONS")?: "false") == "true"
-                if(workflow){
+                var workflow = (System.getenv("GITHUB_ACTIONS") ?: "false") == "true"
+                if (workflow) {
                     val now = ZonedDateTime.now(ZoneOffset.UTC)
                     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
                     val formattedDate = now.format(formatter)
 
-                    version = when(System.getenv("GITHUB_REF_TYPE")){
+                    version = when (System.getenv("GITHUB_REF_TYPE")) {
                         "branch" -> "$version ${System.getenv("GITHUB_REF_NAME")}-${System.getenv("GITHUB_SHA").substring(0, 7)} @ $formattedDate"
                         "tag" -> "$version ${System.getenv("GITHUB_REF_NAME").substring(1)} @ $formattedDate"
                         else -> "$version snapshot"
                     }
                 }
                 expand(
-                    "version" to version
+                        "version" to version
                 )
             }
             duplicatesStrategy = DuplicatesStrategy.INCLUDE

@@ -36,12 +36,18 @@ public class States implements SlashHandler {
                                       .setPlaceholder("command.messages.states.message.choose")
                                       .setRequiredRange(1, 1)
                                       .addOption("command.messages.states.message.option.reactionconfirmation.name", "reaction_confirmation", "command.messages.states.message.option.reactionConfirmation.description")
+                                      .addOption("command.messages.states.message.option.commandreputationephemeral.name", "command_reply", "command.messages.states.message.option.commandreputationephemeral.description")
                                       .build();
         var reactions = getMenu("reaction_confirmation",
                 "command.messages.states.message.option.reactionconfirmation.name",
                 "command.messages.states.message.choice.reactionConfirmation.true",
                 "command.messages.states.message.choice.reactionConfirmation.false",
-                settings.reputation().isReactionActive());
+                settings.messages().isReactionConfirmation());
+        var commandreputationephemeral = getMenu("command_reply",
+                "command.messages.states.message.option.commandreputationephemeral.name",
+                "command.messages.states.message.choice.commandreputationephemeral.true",
+                "command.messages.states.message.choice.commandreputationephemeral.false",
+                settings.messages().isCommandReputationEphemeral());
 
         context.registerMenu(MenuAction.forCallback(getSettings(context, settings), event)
                                        .addComponent(MenuEntry.of(setting, ctx -> {
@@ -57,6 +63,9 @@ public class States implements SlashHandler {
                                        }))
                                        .addComponent(MenuEntry.of(reactions, ctx -> refresh(ctx, res -> settings.messages()
                                                                                                                 .reactionConfirmation(res), context, settings))
+                                               .hidden())
+                                       .addComponent(MenuEntry.of(commandreputationephemeral, ctx -> refresh(ctx, res -> settings.messages()
+                                                                                                                .commandReputationEphemeral(res), context, settings))
                                                .hidden())
                                        .asEphemeral()
                                        .build());

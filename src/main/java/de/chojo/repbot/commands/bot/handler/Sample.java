@@ -94,6 +94,7 @@ public class Sample implements SlashHandler {
                     AnalyzerResult.answer(receiver.getEffectiveName(), donor, receiver, build(refMessage, channel, receiver));
             case DIRECT, EMBED, REACTION ->
                     AnalyzerResult.empty(receiver.getEffectiveName(), EmptyResultReason.NO_MATCH);
+            case COMMAND -> null;
         };
 
         addAnalyzerResult(receiver.getGuild(), channel, messageId, result);
@@ -112,6 +113,7 @@ public class Sample implements SlashHandler {
     }
 
     public void addAnalyzerResult(Guild guild, TextChannel guildChannel, long messageId, AnalyzerResult result) {
+        if(result == null) return;
         String resultString;
         try {
             resultString = MAPPER.writeValueAsString(result.toSnapshot());

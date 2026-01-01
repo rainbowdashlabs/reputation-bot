@@ -19,10 +19,13 @@ import de.chojo.repbot.dao.snapshots.AnalyzerTrace;
 import de.chojo.repbot.dao.snapshots.ResultEntry;
 import de.chojo.repbot.dao.snapshots.SubmitResultEntry;
 import de.chojo.repbot.dao.snapshots.analyzer.ResultSnapshot;
+import de.chojo.repbot.service.reputation.ReputationContext;
 import de.chojo.repbot.service.reputation.SubmitResult;
 import de.chojo.sadu.queries.converter.StandardValueConverter;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.sql.SQLException;
@@ -49,7 +52,7 @@ public class Analyzer implements GuildHolder {
         this.reputation = reputation;
     }
 
-    public AnalyzerResult log(Message message, AnalyzerResult analyzerResult) {
+    public AnalyzerResult log(Message context, AnalyzerResult analyzerResult) {
         String resultString;
         try {
             resultString = MAPPER.writeValueAsString(analyzerResult.toSnapshot());
@@ -61,21 +64,21 @@ public class Analyzer implements GuildHolder {
                 INSERT INTO analyzer_results(guild_id, channel_id, message_id, result) VALUES(?, ?, ?, ?::JSONB)
                     ON CONFLICT (guild_id, message_id)
                         DO NOTHING;
-                """).single(call().bind(message.getGuild().getIdLong())
-                                  .bind(message.getChannel().getIdLong())
-                                  .bind(message.getIdLong())
+                """).single(call().bind(context.getGuild().getIdLong())
+                                  .bind(context.getChannel().getIdLong())
+                                  .bind(context.getIdLong())
                                   .bind(resultString))
                     .insert();
         return analyzerResult;
     }
 
-    public void log(Message message, SubmitResult result) {
+    public SubmitResult log(@NotNull ReputationContext message, SubmitResult result) {
         String resultString;
         try {
             resultString = MAPPER.writeValueAsString(result);
         } catch (JsonProcessingException e) {
             log.error("Could not serialize result", e);
-            return;
+            return result;
         }
         query("""
                  INSERT INTO reputation_results(guild_id, channel_id, message_id, result) VALUES(?, ?, ?, ?::JSONB);
@@ -84,6 +87,7 @@ public class Analyzer implements GuildHolder {
                                                     .bind(message.getIdLong())
                                                     .bind(resultString))
                  .insert();
+        return result;
     }
 
     public Optional<AnalyzerTrace> get(long messageId) {

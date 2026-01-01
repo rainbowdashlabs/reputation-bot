@@ -16,7 +16,6 @@ import de.chojo.repbot.dao.access.guild.settings.sub.autopost.RefreshInterval;
 import de.chojo.repbot.dao.pagination.GuildList;
 import de.chojo.sadu.postgresql.types.PostgreSqlTypes;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.sharding.ShardManager;
 import org.slf4j.Logger;
 
 import java.util.List;
@@ -30,7 +29,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class GuildRepository {
     private static final Logger log = getLogger(GuildRepository.class);
     private final Cache<Long, RepGuild> guildRepository = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES)
-                                                             .build();
+                                                                      .build();
     private final Configuration configuration;
 
     public GuildRepository(Configuration configuration) {
@@ -70,12 +69,12 @@ public class GuildRepository {
     public List<RepGuild> byAutopostRefreshInterval(RefreshInterval mode) {
         List<Long> skus = configuration.skus().features().autopost().autopostChannel().sku().stream().map(SKU::skuId).toList();
         return query("""
-                        SELECT
-                            guild_id
-                        FROM
-                            autopost a LEFT JOIN subscriptions s ON a.guild_id = s.id
-                        WHERE active AND refresh_interval = ?
-                        AND s.sku = ANY (:sku) OR array_length(:sku, 1) IS NULL""")
+                SELECT
+                    guild_id
+                FROM
+                    autopost a LEFT JOIN subscriptions s ON a.guild_id = s.id
+                WHERE active AND refresh_interval = ?
+                AND s.sku = ANY (:sku) OR array_length(:sku, 1) IS NULL""")
                 .single(call().bind(mode.name()).bind("sku", skus, PostgreSqlTypes.BIGINT))
                 .map(row -> byId(row.getLong("guild_id")))
                 .all();
@@ -87,11 +86,11 @@ public class GuildRepository {
 
     private Integer pages(int pageSize) {
         return query("""
-                       SELECT
-                           CEIL(COUNT(1)::numeric / ?)::INTEGER AS count
-                       FROM
-                           guilds
-                       """)
+                SELECT
+                    ceil(count(1)::NUMERIC / ?)::INTEGER AS count
+                FROM
+                    guilds
+                """)
                 .single(call().bind(pageSize))
                 .mapAs(Integer.class)
                 .first()
@@ -100,12 +99,19 @@ public class GuildRepository {
 
     private List<RepGuild> page(int pageSize, int page) {
         return query("""
-                       SELECT guild_id FROM guilds
-                       OFFSET ?
-                       LIMIT ?;
-                       """)
+                SELECT guild_id FROM guilds
+                OFFSET ?
+                LIMIT ?;
+                """)
                 .single(call().bind(page * pageSize).bind(pageSize))
                 .map(row -> byId(row.getLong("guild_id")))
+                .all();
+    }
+
+    public List<Long> byCommandReputationEnabled() {
+        return query("SELECT guild_id FROM reputation_settings WHERE command_active")
+                .single()
+                .mapAs(Long.class)
                 .all();
     }
 

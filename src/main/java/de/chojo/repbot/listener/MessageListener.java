@@ -18,6 +18,7 @@ import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;
 import de.chojo.repbot.service.RepBotCachePolicy;
+import de.chojo.repbot.service.reputation.ReputationContext;
 import de.chojo.repbot.service.reputation.ReputationService;
 import de.chojo.repbot.service.reputation.SubmitResult;
 import de.chojo.repbot.service.reputation.SubmitResultType;
@@ -94,6 +95,7 @@ public class MessageListener extends ListenerAdapter {
         var thank = settings.thanking();
 
         var message = event.getMessage();
+        var context = ReputationContext.fromMessage(message);
         if (message.getType() != MessageType.DEFAULT && message.getType() != MessageType.INLINE_REPLY) {
             return;
         }
@@ -101,13 +103,13 @@ public class MessageListener extends ListenerAdapter {
         var analyzer = repGuild.reputation().analyzer();
 
         if (!thank.channels().isEnabled(event.getGuildChannel())) {
-            analyzer.log(message, SubmitResult.of(SubmitResultType.CHANNEL_INACTIVE));
+            analyzer.log(context, SubmitResult.of(SubmitResultType.CHANNEL_INACTIVE));
             return;
         }
         repBotCachePolicy.seen(event.getMember());
 
         if (!thank.donorRoles().hasRole(event.getMember())) {
-            analyzer.log(message, SubmitResult.of(SubmitResultType.NO_DONOR_ROLE, Replacement.createMention(event.getMember())));
+            analyzer.log(context, SubmitResult.of(SubmitResultType.NO_DONOR_ROLE, Replacement.createMention(event.getMember())));
             return;
         }
 
@@ -129,17 +131,17 @@ public class MessageListener extends ListenerAdapter {
         log.trace("Found thankword in {}", message.getIdLong());
 
         if (settings.abuseProtection().isDonorLimit(event.getMember())) {
-            analyzer.log(message, SubmitResult.of(SubmitResultType.DONOR_LIMIT));
+            analyzer.log(context, SubmitResult.of(SubmitResultType.DONOR_LIMIT));
             log.trace("Donor reached limit on {}", message.getIdLong());
             return;
         }
 
         if (result.isEmpty() && (settings.reputation().isEmbedActive() || settings.reputation().isDirectActive())) {
-            resolveNoTarget(message, settings);
+            resolveNoTarget(context, settings);
             return;
         }
         if (result.isEmpty()) {
-            analyzer.log(message, SubmitResult.of(SubmitResultType.NO_TARGETS));
+            analyzer.log(context, SubmitResult.of(SubmitResultType.NO_TARGETS));
             return;
         }
 
@@ -152,55 +154,55 @@ public class MessageListener extends ListenerAdapter {
             switch (resultType) {
                 case FUZZY -> {
                     if (!settings.reputation().isFuzzyActive()) continue;
-                    reputationService.submitReputation(guild, donator, receiver, message, null, resultType);
+                    reputationService.submitReputation(guild, donator, receiver, context, null, resultType);
                 }
                 case MENTION -> {
                     if (!settings.reputation().isMentionActive()) continue;
-                    reputationService.submitReputation(guild, donator, receiver, message, null, resultType);
+                    reputationService.submitReputation(guild, donator, receiver, context, null, resultType);
                 }
                 case ANSWER -> {
                     if (!settings.reputation().isAnswerActive()) continue;
                     reputationService.submitReputation(
-                            guild, donator, receiver, message, match.asAnswer().referenceMessage(), resultType);
+                            guild, donator, receiver, context, match.asAnswer().referenceMessage(), resultType);
                 }
                 default -> log.error(LogNotify.NOTIFY_ADMIN, "Unknown thank type {}", resultType);
             }
         }
     }
 
-    private void resolveNoTarget(Message message, Settings settings) {
-        log.trace("Resolving missing target for {}", message.getIdLong());
-        var recentMembers = new LinkedHashSet<>(contextResolver.getCombinedContext(message, settings).members());
-        recentMembers.remove(message.getMember());
+    private void resolveNoTarget(ReputationContext context, Settings settings) {
+        log.trace("Resolving missing target for {}", context.getIdLong());
+        var recentMembers = new LinkedHashSet<>(contextResolver.getCombinedContext(context.asMessage(), settings).members());
+        recentMembers.remove(context.asMessage().getMember());
 
         if (recentMembers.isEmpty()) {
             settings.repGuild().reputation().analyzer()
-                    .log(message, SubmitResult.of(SubmitResultType.NO_RECENT_MEMBERS));
-            log.trace("No recent members for {}", message.getIdLong());
+                    .log(context, SubmitResult.of(SubmitResultType.NO_RECENT_MEMBERS));
+            log.trace("No recent members for {}", context.getIdLong());
             return;
         }
 
         var members = recentMembers.stream()
-                                   .filter(receiver -> reputationService.canGiveReputation(message, message.getMember(), receiver, message.getGuild(), settings))
+                                   .filter(receiver -> reputationService.checkCooldown(context, context.asMessage().getMember(), receiver, context.getGuild(), settings).type() == SubmitResultType.SUCCESS)
                                    .filter(receiver -> !settings.abuseProtection().isReceiverLimit(receiver))
                                    .limit(10)
                                    .collect(Collectors.toList());
 
         if (members.isEmpty()) {
-            settings.repGuild().reputation().analyzer().log(message, SubmitResult.of(SubmitResultType.ALL_COOLDOWN));
-            log.trace("None of the recent members can receive reputation {}", message.getIdLong());
+            settings.repGuild().reputation().analyzer().log(context, SubmitResult.of(SubmitResultType.ALL_COOLDOWN));
+            log.trace("None of the recent members can receive reputation {}", context.getIdLong());
             return;
         }
 
         if (members.size() == 1 && settings.reputation().isDirectActive()) {
-            log.trace("Found single target on {}. Skipping embed", message.getIdLong());
-            reputationService.submitReputation(message.getGuild(), message.getMember(), members.get(0), message, null, ThankType.DIRECT);
+            log.trace("Found single target on {}. Skipping embed", context.getIdLong());
+            reputationService.submitReputation(context.getGuild(), context.asMessage().getMember(), members.get(0), context, null, ThankType.DIRECT);
             return;
         }
 
         if (settings.reputation().isEmbedActive()) {
-            settings.repGuild().reputation().analyzer().log(message, SubmitResult.of(SubmitResultType.EMBED_SEND));
-            reputationVoteListener.registerVote(message, members, settings);
+            settings.repGuild().reputation().analyzer().log(context, SubmitResult.of(SubmitResultType.EMBED_SEND));
+            reputationVoteListener.registerVote(context.asMessage(), members, settings);
         }
     }
 }

@@ -16,34 +16,6 @@
             </Policies>
             <DefaultRolloverStrategy max="10"/>
         </RollingFile>
-
-        <DiscordWebhook name="DiscordVerbose"
-                        url="">
-            <filters>
-                <MarkerFilter marker="DISCORD" onMatch="ACCEPT" onMismatch="NEUTRAL"/>
-                <MarkerFilter marker="+" onMatch="DENY" onMismatch="NEUTRAL"/>
-                <ThresholdFilter level="INFO"/>
-            </filters>
-        </DiscordWebhook>
-
-        <DiscordWebhook name="DiscordStatus"
-                        url="">
-            <filters>
-                <MarkerFilter marker="STATUS" onMatch="ACCEPT" onMismatch="DENY"/>
-            </filters>
-        </DiscordWebhook>
-
-        <DiscordWebhook name="DiscordError"
-                        url="">
-            <MarkerFilter marker="NOTIFY_ADMIN" onMatch="ACCEPT" onMismatch="DENY"/>
-        </DiscordWebhook>
-
-        <Socket name="socket" host="localhost" port="8888" protocol="udp">
-            <JsonTemplateLayout eventTemplateUri="classpath:EcsLayout.json">
-                <EventTemplateAdditionalField key="index" value="repbot"/>
-            </JsonTemplateLayout>
-        </Socket>
-
     </Appenders>
     <Loggers>
         <!-- remove too verbose library logging -->
@@ -55,10 +27,6 @@
         <Root level="TRACE">
             <AppenderRef ref="ConsoleDebug"/>
             <AppenderRef ref="RollingFile"/>
-            <AppenderRef ref="socket"/>
-            <AppenderRef ref="DiscordVerbose"/>
-            <AppenderRef ref="DiscordStatus"/>
-            <AppenderRef ref="DiscordError"/>
         </Root>
     </Loggers>
 </Configuration>
