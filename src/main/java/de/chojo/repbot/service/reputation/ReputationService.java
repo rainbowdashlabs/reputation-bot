@@ -98,7 +98,7 @@ public class ReputationService {
                 Replacement.createMention(donor)));
 
         // block non reputation channel
-        if (!thankSettings.channels().isEnabled(context.guildChannel())) {
+        if (type != ThankType.COMMAND && !thankSettings.channels().isEnabled(context.guildChannel())) {
             log.trace("Channel of message {} is not enabled", context.getIdLong());
             return analyzer.log(context, SubmitResult.of(SubmitResultType.CHANNEL_INACTIVE));
         }
