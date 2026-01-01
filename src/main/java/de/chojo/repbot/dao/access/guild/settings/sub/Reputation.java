@@ -141,16 +141,16 @@ public class Reputation implements GuildHolder {
 
     public String toLocalizedString() {
         var setting = List.of(
-                getSetting("command.repsettings.info.message.option.byreaction.name", isReactionActive()),
-                getSetting("command.repsettings.info.message.option.byanswer.name", isAnswerActive()),
-                getSetting("command.repsettings.info.message.option.bymention.name", isMentionActive()),
-                getSetting("command.repsettings.info.message.option.byfuzzy.name", isFuzzyActive()),
-                getSetting("command.repsettings.info.message.option.byembed.name", isEmbedActive()),
-                getSetting("command.repsettings.info.message.option.bycommand.name", settings.reputation()
+                getSetting("command.repsettings.general.message.option.byreaction.name", isReactionActive()),
+                getSetting("command.repsettings.general.message.option.byanswer.name", isAnswerActive()),
+                getSetting("command.repsettings.general.message.option.bymention.name", isMentionActive()),
+                getSetting("command.repsettings.general.message.option.byfuzzy.name", isFuzzyActive()),
+                getSetting("command.repsettings.general.message.option.byembed.name", isEmbedActive()),
+                getSetting("command.repsettings.general.message.option.bycommand.name", settings.reputation()
                                                                                              .isCommandActive()),
-                getSetting("command.repsettings.info.message.option.skipsingletarget.name", settings.reputation()
+                getSetting("command.repsettings.general.message.option.skipsingletarget.name", settings.reputation()
                         .isDirectActive()),
-                getSetting("command.repsettings.info.message.option.reputationmode.name", settings.general()
+                getSetting("command.repsettings.general.message.option.reputationmode.name", settings.general()
                                                                                                   .reputationMode()
                                                                                                   .localeCode())
         );

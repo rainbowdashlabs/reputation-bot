@@ -27,11 +27,11 @@ import java.util.function.Consumer;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class Info implements SlashHandler {
-    private static final Logger log = getLogger(Info.class);
+public class General implements SlashHandler {
+    private static final Logger log = getLogger(General.class);
     private final GuildRepository guildRepository;
 
-    public Info(GuildRepository guildRepository) {
+    public General(GuildRepository guildRepository) {
         this.guildRepository = guildRepository;
     }
 
@@ -39,60 +39,60 @@ public class Info implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var guildSettings = guildRepository.guild(event.getGuild()).settings();
         var settings = StringSelectMenu.create("settings")
-                                       .setPlaceholder("command.repsettings.info.message.choose")
+                                       .setPlaceholder("command.repsettings.general.message.choose")
                                        .setRequiredRange(1, 1)
-                                       .addOption("command.repsettings.info.message.option.byreaction.name", "reactions", "command.repsettings.info.message.option.byreaction.description")
-                                       .addOption("command.repsettings.info.message.option.byanswer.name", "answers", "command.repsettings.info.message.option.byanswer.description")
-                                       .addOption("command.repsettings.info.message.option.bymention.name", "mention", "command.repsettings.info.message.option.bymention.description")
-                                       .addOption("command.repsettings.info.message.option.byfuzzy.name", "fuzzy", "command.repsettings.info.message.option.byfuzzy.description")
-                                       .addOption("command.repsettings.info.message.option.byembed.name", "embed", "command.repsettings.info.message.option.byembed.description")
-                                       .addOption("command.repsettings.info.message.option.bycommand.name", "command", "command.repsettings.info.message.option.bycommand.description")
-                                       .addOption("command.repsettings.info.message.option.skipsingletarget.name", "directembed", "command.repsettings.info.message.option.skipsingletarget.description")
-                                       .addOption("command.repsettings.info.message.option.reputationmode.name", "reputationmode", "command.repsettings.info.message.option.reputationmode.description")
+                                       .addOption("command.repsettings.general.message.option.byreaction.name", "reactions", "command.repsettings.general.message.option.byreaction.description")
+                                       .addOption("command.repsettings.general.message.option.byanswer.name", "answers", "command.repsettings.general.message.option.byanswer.description")
+                                       .addOption("command.repsettings.general.message.option.bymention.name", "mention", "command.repsettings.general.message.option.bymention.description")
+                                       .addOption("command.repsettings.general.message.option.byfuzzy.name", "fuzzy", "command.repsettings.general.message.option.byfuzzy.description")
+                                       .addOption("command.repsettings.general.message.option.byembed.name", "embed", "command.repsettings.general.message.option.byembed.description")
+                                       .addOption("command.repsettings.general.message.option.bycommand.name", "command", "command.repsettings.general.message.option.bycommand.description")
+                                       .addOption("command.repsettings.general.message.option.skipsingletarget.name", "directembed", "command.repsettings.general.message.option.skipsingletarget.description")
+                                       .addOption("command.repsettings.general.message.option.reputationmode.name", "reputationmode", "command.repsettings.general.message.option.reputationmode.description")
                                        .build();
         var reactions = getMenu("reactions",
-                "command.repsettings.info.message.option.byreaction.description",
-                "command.repsettings.info.message.reactions.true",
-                "command.repsettings.info.message.reactions.false",
+                "command.repsettings.general.message.option.byreaction.description",
+                "command.repsettings.general.message.reactions.true",
+                "command.repsettings.general.message.reactions.false",
                 guildSettings.reputation().isReactionActive());
         var answers = getMenu("answers",
-                "command.repsettings.info.message.option.byanswer.description",
-                "command.repsettings.info.message.answer.true",
-                "command.repsettings.info.message.answer.false",
+                "command.repsettings.general.message.option.byanswer.description",
+                "command.repsettings.general.message.answer.true",
+                "command.repsettings.general.message.answer.false",
                 guildSettings.reputation().isAnswerActive());
         var mention = getMenu("mention",
-                "command.repsettings.info.message.option.bymention.description",
-                "command.repsettings.info.message.mention.true",
-                "command.repsettings.info.message.mention.false",
+                "command.repsettings.general.message.option.bymention.description",
+                "command.repsettings.general.message.mention.true",
+                "command.repsettings.general.message.mention.false",
                 guildSettings.reputation().isMentionActive());
         var fuzzy = getMenu("fuzzy",
-                "command.repsettings.info.message.option.byfuzzy.description",
-                "command.repsettings.info.message.fuzzy.true",
-                "command.repsettings.info.message.fuzzy.false",
+                "command.repsettings.general.message.option.byfuzzy.description",
+                "command.repsettings.general.message.fuzzy.true",
+                "command.repsettings.general.message.fuzzy.false",
                 guildSettings.reputation().isFuzzyActive());
         var embed = getMenu("embed",
-                "command.repsettings.info.message.option.byembed.description",
-                "command.repsettings.info.message.embed.true",
-                "command.repsettings.info.message.embed.false",
+                "command.repsettings.general.message.option.byembed.description",
+                "command.repsettings.general.message.embed.true",
+                "command.repsettings.general.message.embed.false",
                 guildSettings.reputation().isEmbedActive());
         var command = getMenu("command",
-                "command.repsettings.info.message.option.bycommand.description",
-                "command.repsettings.info.message.bycommand.true",
-                "command.repsettings.info.message.bycommand.false",
+                "command.repsettings.general.message.option.bycommand.description",
+                "command.repsettings.general.message.bycommand.true",
+                "command.repsettings.general.message.bycommand.false",
                 guildSettings.reputation().isCommandActive());
         var skipSingleEmbed = getMenu("directembed",
-                "command.repsettings.info.message.option.skipsingletarget.description",
-                "command.repsettings.info.message.skipsingleembed.true",
-                "command.repsettings.info.message.skipsingleembed.false",
+                "command.repsettings.general.message.option.skipsingletarget.description",
+                "command.repsettings.general.message.skipsingleembed.true",
+                "command.repsettings.general.message.skipsingleembed.false",
                 guildSettings.reputation().isDirectActive());
         var reputationMode = StringSelectMenu.create("reputationmode")
-                                             .setPlaceholder("command.repsettings.info.message.option.reputationmode.description")
+                                             .setPlaceholder("command.repsettings.general.message.option.reputationmode.description")
                                              .setRequiredRange(1, 1)
-                                             .addOption(ReputationMode.TOTAL.localeCode(), ReputationMode.TOTAL.name(), "command.repsettings.info.message.reputationMode.total")
-                                             .addOption(ReputationMode.ROLLING_MONTH.localeCode(), ReputationMode.ROLLING_MONTH.name(), "command.repsettings.info.message.reputationMode.rollingMonth")
-                                             .addOption(ReputationMode.ROLLING_WEEK.localeCode(), ReputationMode.ROLLING_WEEK.name(), "command.repsettings.info.message.reputationMode.rollingWeek")
-                                             .addOption(ReputationMode.WEEK.localeCode(), ReputationMode.WEEK.name(), "command.repsettings.info.message.reputationMode.week")
-                                             .addOption(ReputationMode.MONTH.localeCode(), ReputationMode.MONTH.name(), "command.repsettings.info.message.reputationMode.month")
+                                             .addOption(ReputationMode.TOTAL.localeCode(), ReputationMode.TOTAL.name(), "command.repsettings.general.message.reputationMode.total")
+                                             .addOption(ReputationMode.ROLLING_MONTH.localeCode(), ReputationMode.ROLLING_MONTH.name(), "command.repsettings.general.message.reputationMode.rollingMonth")
+                                             .addOption(ReputationMode.ROLLING_WEEK.localeCode(), ReputationMode.ROLLING_WEEK.name(), "command.repsettings.general.message.reputationMode.rollingWeek")
+                                             .addOption(ReputationMode.WEEK.localeCode(), ReputationMode.WEEK.name(), "command.repsettings.general.message.reputationMode.week")
+                                             .addOption(ReputationMode.MONTH.localeCode(), ReputationMode.MONTH.name(), "command.repsettings.general.message.reputationMode.month")
                                              .setDefaultValues(Collections.singletonList(guildSettings.general().reputationMode().name()))
                                              .build();
 
@@ -175,7 +175,7 @@ public class Info implements SlashHandler {
         var messageSettings = guildSettings.reputation();
 
         return new LocalizedEmbedBuilder(context.guildLocalizer())
-                .setTitle("command.repsettings.info.message.title")
+                .setTitle("command.repsettings.general.message.title")
                 .appendDescription(messageSettings.toLocalizedString())
                 .setColor(Color.GREEN)
                 .build();
