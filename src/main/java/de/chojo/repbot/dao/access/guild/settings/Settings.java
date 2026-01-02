@@ -156,7 +156,8 @@ public class Settings implements GuildHolder {
         }
         messages = query("""
                 SELECT
-                    reaction_confirmation
+                    reaction_confirmation,
+                    command_reputation_ephemeral
                 FROM
                     message_states
                 WHERE guild_id = ?;
