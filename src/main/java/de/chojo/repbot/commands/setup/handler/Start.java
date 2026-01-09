@@ -55,7 +55,7 @@ public class Start implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         PermissionErrorHandler.assertAndHandle(event.getChannel().asGuildMessageChannel(), context.guildLocalizer(),
-                configuration, Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL);
+                configuration, Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL, Permission.MESSAGE_HISTORY);
         event.reply(context.localize("command.setup.message.starting")).complete();
         context.conversationService()
                .startDialog(event.getUser(), event.getChannel().asGuildMessageChannel(), getConversation(context));
@@ -160,8 +160,7 @@ public class Start implements SlashHandler {
 
     private void buildChannelsButton(ButtonDialog buttons) {
         buttons.add(new ComponenAction(Button.success("done", "word.done"), ctx -> {
-            ctx.reply(ctx.localize("command.setup.message.complete"))
-               .queue();
+            ctx.reply(ctx.localize("command.setup.message.complete")).complete();
             return Result.finish();
         }));
 //        })).add(Button.primary("all", "command.setup.message.allchannel"), ctx -> {
@@ -189,13 +188,13 @@ public class Start implements SlashHandler {
         context.reply(context.localize("command.channel.add.message.added",
                        Replacement.create("CHANNEL", addedChannel)))
                .setAllowedMentions(Collections.emptyList())
-               .queue();
+               .complete();
         return Result.freeze();
     }
 
     @NotNull
     private Result responseInvalid(ConversationContext context, String s) {
-        context.reply(context.localize(s)).queue();
+        context.reply(context.localize(s)).complete();
         return Result.freeze();
     }
 }
