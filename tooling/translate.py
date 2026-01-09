@@ -54,7 +54,8 @@ def translate_missing(target: Language, reference: Language):
                                         ignore_tags=["code", "placeholder"],
                                         tag_handling="xml",
                                         model_type=ModelType.PREFER_QUALITY_OPTIMIZED,
-                                        preserve_formatting=True
+                                        preserve_formatting=True,
+
                                         )
             translated = re.sub(r"<code>(.*?)</code>", r"$\1$", res.text)
             translated = re.sub(r"<placeholder>(.*?)</placeholder>", r"%\1%", translated)
