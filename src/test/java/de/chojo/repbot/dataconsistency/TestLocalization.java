@@ -34,12 +34,25 @@ public class TestLocalization {
     private static final Set<String> WHITELIST_STARTS = Set.of("bot.");
 
     private static final DiscordLocale[] LOCALES = {
-            DiscordLocale.ENGLISH_US,
-            DiscordLocale.GERMAN,
-            DiscordLocale.SPANISH,
-            DiscordLocale.FRENCH,
-            DiscordLocale.PORTUGUESE_BRAZILIAN,
-            DiscordLocale.RUSSIAN
+            DiscordLocale.ENGLISH_US, // en-US
+            DiscordLocale.GERMAN, // de
+            DiscordLocale.SPANISH, // es-ES
+            DiscordLocale.FRENCH, // fr
+            DiscordLocale.PORTUGUESE_BRAZILIAN, // pt-BR
+            DiscordLocale.RUSSIAN, // ru
+            DiscordLocale.UKRAINIAN, // uk
+            DiscordLocale.DUTCH, // nl
+            DiscordLocale.ITALIAN, // it
+            DiscordLocale.GREEK, // el
+            DiscordLocale.TURKISH, // tr
+            DiscordLocale.CHINESE_CHINA, // zh-CN
+            DiscordLocale.CZECH, // cs
+            DiscordLocale.POLISH, // pl
+            DiscordLocale.KOREAN, // ko
+            DiscordLocale.NORWEGIAN, // no
+            DiscordLocale.FINNISH, // fi
+            DiscordLocale.SWEDISH, // sv-SE
+            DiscordLocale.JAPANESE // ja
     };
 
 

@@ -8,7 +8,6 @@ package de.chojo.repbot.core;
 import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.util.Premium;
 import de.chojo.repbot.config.Configuration;
-import de.chojo.repbot.service.PremiumService;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 
 import java.util.Optional;
@@ -31,11 +30,27 @@ public class Localization {
 
     public void init() {
         localizer = Localizer.builder(DiscordLocale.ENGLISH_US)
-                             .addLanguage(DiscordLocale.GERMAN,
-                                     DiscordLocale.SPANISH,
-                                     DiscordLocale.FRENCH,
-                                     DiscordLocale.PORTUGUESE_BRAZILIAN,
-                                     DiscordLocale.RUSSIAN)
+                             .addLanguage(
+                                     DiscordLocale.ENGLISH_US, // en-US
+                                     DiscordLocale.GERMAN, // de
+                                     DiscordLocale.SPANISH, // es-ES
+                                     DiscordLocale.FRENCH, // fr
+                                     DiscordLocale.PORTUGUESE_BRAZILIAN, // pt-BR
+                                     DiscordLocale.RUSSIAN, // ru
+                                     DiscordLocale.UKRAINIAN, // uk
+                                     DiscordLocale.DUTCH, // nl
+                                     DiscordLocale.ITALIAN, // it
+                                     DiscordLocale.GREEK, // el
+                                     DiscordLocale.TURKISH, // tr
+                                     DiscordLocale.CHINESE_CHINA, // zh-CN
+                                     DiscordLocale.CZECH, // cs
+                                     DiscordLocale.POLISH, // pl
+                                     DiscordLocale.KOREAN, // ko
+                                     DiscordLocale.NORWEGIAN, // no
+                                     DiscordLocale.FINNISH, // fi
+                                     DiscordLocale.SWEDISH, // sv-SE
+                                     DiscordLocale.JAPANESE // ja
+                             )
                              .withLanguageProvider(guild -> data.guilds().guild(guild).settings().general().language())
                              .withGuildLocaleCodeProvider((guild, code) -> {
                                  if (!"words.reputation".equals(code)) return Optional.empty();
