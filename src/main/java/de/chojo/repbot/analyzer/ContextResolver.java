@@ -193,12 +193,17 @@ public class ContextResolver {
         return context;
     }
 
-    public MessageContext getCombinedContext(Message message, @Nullable Settings settings) {
+    public MessageContext getCombinedContext(@NotNull Message message, @Nullable Settings settings) {
         return getCombinedContext(message.getMember(), message, settings);
     }
 
     public MessageContext getCombinedContext(Member target, Message message, @Nullable Settings settings) {
+        if(message == null) return MessageContext.byMessageAndMember(null, target);
         return getChannelContext(target, message, settings)
                 .combine(getVoiceContext(target, message, settings));
+    }
+
+    public MessageContext getCombinedContext(Member target) {
+        return MessageContext.byMessageAndMember(null, target);
     }
 }

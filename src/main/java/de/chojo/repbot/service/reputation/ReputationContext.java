@@ -12,6 +12,9 @@ import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
+import java.util.List;
+import java.util.Optional;
+
 public record ReputationContext(GuildMessageChannel guildChannel, ISnowflake snowflake) {
     public static ReputationContext fromMessage(Message message) {
         return new ReputationContext(message.getGuildChannel(), message);
@@ -45,8 +48,8 @@ public record ReputationContext(GuildMessageChannel guildChannel, ISnowflake sno
         return (Message) snowflake;
     }
 
-    public Message getLastMessage() {
-        if (isMessage()) return asMessage();
-        return getChannel().getHistory().retrievePast(1).complete().get(0);
+    public Optional<Message> getLastMessage() {
+        if (isMessage()) return Optional.of(asMessage());
+        return getChannel().getHistory().retrievePast(1).complete().stream().findFirst();
     }
 }
