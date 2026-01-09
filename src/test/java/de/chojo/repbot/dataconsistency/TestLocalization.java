@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -82,6 +83,14 @@ public class TestLocalization {
             }
         }
 
+        Map<String, Set<String>> localeKeys = new HashMap<>();
+        for (var key : english.keySet()) {
+            localeKeys.put(key, getLocaleKeysReferences(english.getString(key)));
+            if (english.getString(key).isBlank()) {
+                issues.add("Blank key at " + key + "@" + DiscordLocale.ENGLISH_US);
+            }
+        }
+
         for (var resourceBundle : resourceBundles.values()) {
             for (var key : keySet) {
                 var keyLoc = key + "@" + resourceBundle.getLocale();
@@ -101,6 +110,15 @@ public class TestLocalization {
                     issues.add("Missing replacement key in " + keyLoc
                             + ". Expected \"" + String.join(", ", defReplacements) + "\". Actual \"" + String.join(", ", localeReplacements) + "\"");
                 }
+
+                var localeKeyReferences = getLocaleKeysReferences(locale);
+                var defLocaleKeys = localeKeys.get(key);
+                if(!localeKeyReferences.containsAll(defLocaleKeys)){
+                    issues.add("Missing locale key reference in " + keyLoc
+                            + ". Expected \"" + String.join(", ", defLocaleKeys) + "\". Actual \"" + String.join(", ", localeKeyReferences) + "\"");
+                }
+
+
                 if (key.endsWith(".description")) {
                     if(locale.length() > 100){
                         issues.add("Description is too long at " + keyLoc + ": " + locale.length() + " > 100");
@@ -116,6 +134,15 @@ public class TestLocalization {
     private Set<String> getReplacements(String message) {
         Set<String> found = new HashSet<>();
         var matcher = REPLACEMENTS.matcher(message);
+        while (matcher.find()) {
+            found.add(matcher.group());
+        }
+        return found;
+    }
+
+    private Set<String> getLocaleKeysReferences(String message) {
+        Set<String> found = new HashSet<>();
+        var matcher = LOCALIZATION_CODE.matcher(message);
         while (matcher.find()) {
             found.add(matcher.group());
         }

@@ -36,9 +36,16 @@ def translate_missing(target: Language, reference: Language):
     key: str
     value: str
     for key, value in reference.entries.items():
+        orig = reference.entries[key]
+        if re.fullmatch(r"\$[a-zA-Z.]+?\$", orig):
+            print("Skipping translation for reference in", key, "@", target.code, ":", orig)
+            target.entries[key] = orig
+            continue
+
+
         if key not in target.entries or not target.entries[key]:
             print(f"Missing translation for {key}@{target.code}. Translating from {reference.code.upper()}")
-            orig = reference.entries[key]
+
             # Escape lang code references
             escaped = orig.replace("&", "&amp;")
             escaped = escaped.replace("<", "&lt;")
