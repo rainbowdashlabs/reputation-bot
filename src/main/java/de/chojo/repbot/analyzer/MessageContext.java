@@ -9,6 +9,8 @@ import de.chojo.repbot.dao.components.MemberHolder;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -25,18 +27,19 @@ public class MessageContext implements MemberHolder {
     private final Set<Message> rawMessages = new LinkedHashSet<>();
     private final Set<Message> contextMessages = new LinkedHashSet<>();
     private final Member target;
+    @Nullable
     private Message message;
 
-    private MessageContext(Message message, Member target) {
+    private MessageContext(@Nullable Message message, Member target) {
         this.message = message;
         this.target = target;
     }
 
-    public static MessageContext byMessage(Message message) {
+    public static MessageContext byMessage(@NotNull Message message) {
         return new MessageContext(message, message.getMember());
     }
 
-    public static MessageContext byMessageAndMember(Message message, Member member) {
+    public static MessageContext byMessageAndMember(@Nullable Message message, Member member) {
         return new MessageContext(message, member);
     }
 
@@ -117,6 +120,7 @@ public class MessageContext implements MemberHolder {
         return Collections.unmodifiableSet(members);
     }
 
+    @Nullable
     public Message message() {
         return message;
     }

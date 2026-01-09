@@ -108,7 +108,7 @@ public class ReputationService {
             return analyzer.log(context, SubmitResult.of(SubmitResultType.THANK_TYPE_DISABLED, Replacement.create("thanktype", "$%s$".formatted(type.nameLocaleKey()))));
         }
 
-        var messageContext = getContext(donor, context, type, settings);
+        var messageContext = getContext(donor, receiver, context, type, settings);
 
         if (isSelfVote(donor, receiver, context)) {
             log.trace("Detected self vote on {}", context.getIdLong());
@@ -151,13 +151,15 @@ public class ReputationService {
 
     }
 
-    private MessageContext getContext(Member donor, ReputationContext context, ThankType type, Settings settings) {
+    private MessageContext getContext(Member donor, @Nullable Member receiver, ReputationContext context, ThankType type, Settings settings) {
         MessageContext messageContext;
         if (type == ThankType.REACTION) {
             // Check if user was recently seen in this channel.
             messageContext = contextResolver.getCombinedContext(donor, context.asMessage(), settings);
         } else {
-            messageContext = contextResolver.getCombinedContext(context.getLastMessage(), settings);
+            messageContext = context.getLastMessage()
+                                    .map(message -> contextResolver.getCombinedContext(message, settings))
+                                    .orElseGet(() -> contextResolver.getCombinedContext(receiver));
         }
         return messageContext;
     }
