@@ -40,10 +40,14 @@ def translate_missing(target: Language, reference: Language):
             print(f"Missing translation for {key}@{target.code}. Translating from {reference.code.upper()}")
             orig = reference.entries[key]
             # Escape lang code references
-            escaped = re.sub(r"\$([a-zA-Z.]+)\$", r'<code>\1</code>', orig)
+            escaped = orig.replace("&", "&amp;")
+            escaped = escaped.replace("<", "&lt;")
+            escaped = escaped.replace(">", "&gt;")
+            escaped = re.sub(r"\$([a-zA-Z.]+)\$", r'<code>\1</code>', escaped)
             escaped = re.sub(r"%([a-zA-Z.]+)%", r'<placeholder>\1</placeholder>', escaped)
+            print(f"Translating '{escaped}' from {reference.code.upper()} to {target.code.upper()}")
             res = client.translate_text(escaped,
-                                        target_lang=target.code,
+                                        target_lang=map_lang(target.code),
                                         source_lang=reference.code.split("-")[0],
                                         # For some reason "source" doesn't care about variants
                                         formality=Formality.PREFER_LESS,
@@ -54,6 +58,9 @@ def translate_missing(target: Language, reference: Language):
                                         )
             translated = re.sub(r"<code>(.*?)</code>", r"$\1$", res.text)
             translated = re.sub(r"<placeholder>(.*?)</placeholder>", r"%\1%", translated)
+            translated = translated.replace("&amp;", "&")
+            translated = translated.replace("&lt;", "<")
+            translated = translated.replace("&gt;", ">")
             print(orig, " -> ", translated)
             target.entries[key] = translated
 
@@ -80,6 +87,4 @@ for lang in langs.values():
     if lang.code == reference_lang.code:
         continue
     translate_missing(lang, reference_lang)
-
-for lang in langs.values():
     write_properties(lang)
