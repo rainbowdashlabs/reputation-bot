@@ -15,6 +15,8 @@ import de.chojo.repbot.analyzer.results.match.MatchAnalyzerResult;
 import de.chojo.repbot.analyzer.results.match.ThankType;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 
 public class Check implements SlashHandler {
     private final GuildRepository guildRepository;
@@ -31,12 +33,23 @@ public class Check implements SlashHandler {
         var guildSettings = settings.thanking().thankwords();
         var messageId = event.getOption("message").getAsString();
 
-        if (!Verifier.isValidId(messageId)) {
-            event.reply(context.localize("error.invalidMessage")).complete();
+        if (messageId.contains("/"))
+            messageId = messageId.substring(messageId.lastIndexOf("/") + 1);
+
+
+        if (!messageId.matches("\\d+")) {
+            event.reply(context.localize("error.invalidNumber")).queue();
             return;
         }
 
-        var message = event.getChannel().retrieveMessageById(messageId).complete();
+        Message message;
+        try {
+            message = event.getChannel().retrieveMessageById(messageId).complete();
+        } catch (ErrorResponseException e) {
+            event.reply(context.localize("error.invalidMessage")).queue();
+            return;
+        }
+
         var result = messageAnalyzer.processMessage(guildSettings.thankwordPattern(), message, settings, true, settings.abuseProtection()
                                                                                                                        .maxMessageReputation());
         if (result.isEmpty()) {
