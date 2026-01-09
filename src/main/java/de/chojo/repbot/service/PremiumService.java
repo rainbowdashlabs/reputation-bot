@@ -25,7 +25,6 @@ import de.chojo.repbot.exceptions.MissingSupportTier;
 import de.chojo.repbot.util.SupporterFeature;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.components.actionrow.ActionRow;
-import net.dv8tion.jda.api.components.buttons.Button;
 import net.dv8tion.jda.api.entities.Entitlement;
 import net.dv8tion.jda.api.entities.Entitlement.EntitlementType;
 import net.dv8tion.jda.api.entities.Guild;
@@ -47,6 +46,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.TimeUnit;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
@@ -228,7 +228,12 @@ public class PremiumService extends ListenerAdapter {
             List<Role> adminRoles = guild.getRoles().stream().filter(r -> r.hasPermission(Permission.ADMINISTRATOR)).toList();
             for (Role adminRole : adminRoles) {
                 if (notified) break;
-                List<Member> admin = guild.findMembersWithRoles(adminRole).get();
+                List<Member> admin;
+                try {
+                    admin = guild.findMembersWithRoles(adminRole).get();
+                } catch (CompletionException e) {
+                    continue;
+                }
                 for (Member member : admin) {
                     try {
                         member.getUser().openPrivateChannel().complete().sendMessage(data).complete();

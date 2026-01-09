@@ -298,7 +298,7 @@ public class Bot {
         var logListener = LogListener.create(threading.repBotWorker());
         var stateListener = StateListener.of(localizer, guilds, configuration);
         var roleUpdater = RoleUpdater.create(guilds, roleAssigner, shardManager, threading.repBotWorker());
-        ChatSupportService chatSupportService = new ChatSupportService(configuration, shardManager, hub.pageServices(), guilds);
+        ChatSupportService chatSupportService = new ChatSupportService(configuration, shardManager, hub.pageServices(), guilds, hub.buttonService());
 
         shardManager.addEventListener(
                 reactionListener,
