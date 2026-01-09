@@ -13,6 +13,7 @@ import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.util.Guilds;
+import de.chojo.repbot.util.States;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.components.buttons.Button;
@@ -110,7 +111,9 @@ public class SharedGuilds implements SlashHandler {
             }
         }
 
-        mutualGuilds.removeIf(g -> configuration.baseSettings().botGuild() == g.getIdLong());
+        if (!States.TEST_MODE) {
+            mutualGuilds.removeIf(g -> configuration.baseSettings().botGuild() == g.getIdLong());
+        }
         return mutualGuilds;
     }
 

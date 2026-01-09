@@ -1,0 +1,7 @@
+package de.chojo.repbot.util;
+
+import de.chojo.jdautil.util.SysVar;
+
+public final class States {
+    public static final boolean TEST_MODE = Boolean.parseBoolean(SysVar.envOrProp("CJDA_INTERACTIONS_TESTMODE", "cjda.interactions.testmode", "false"));
+}
