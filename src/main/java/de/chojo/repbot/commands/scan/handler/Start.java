@@ -14,7 +14,6 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.internal.utils.PermissionUtil;
 
 import java.util.Collections;
 
@@ -51,12 +50,21 @@ public class Start implements SlashHandler {
 
         var messages = ScanProcess.MAX_MESSAGES;
         var channel = event.getChannel().asTextChannel();
+
+
         if (event.getOption("numbermessages") != null) {
             messages = (int) event.getOption("numbermessages").getAsLong();
         }
         if (event.getOption("channel") != null) {
             var guildChannel = event.getOption("channel").getAsChannel();
-            if(PermissionErrorHandler.assertAndHandle(guildChannel.asGuildMessageChannel(), context.guildLocalizer().localizer(), Collections.emptyList(), Permission.MESSAGE_SEND)){
+
+            if (guildChannel.getType() == ChannelType.FORUM) {
+                event.reply(context.localize("command.scan.start.message.forum")).setEphemeral(true)
+                     .complete();
+                return;
+            }
+
+            if (PermissionErrorHandler.assertAndHandle(guildChannel.asGuildMessageChannel(), context.guildLocalizer().localizer(), Collections.emptyList(), Permission.MESSAGE_SEND)) {
                 return;
             }
             if (guildChannel.getType() != ChannelType.TEXT) {
