@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter
 plugins {
     alias(libs.plugins.shadow)
     alias(libs.plugins.spotless)
-    id("org.jetbrains.gradle.plugin.idea-ext") version "1.3"
+    id("org.jetbrains.gradle.plugin.idea-ext") version "1.4"
     java
 }
 
