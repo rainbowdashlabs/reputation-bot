@@ -8,7 +8,6 @@ package de.chojo.repbot.dao.access.guild.settings.sub;
 import com.fasterxml.jackson.annotation.JsonSerializeAs;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.repbot.web.pojo.settings.sub.AnnouncementsPOJO;
 import de.chojo.repbot.web.pojo.settings.sub.MessagesPOJO;
 import de.chojo.sadu.mapper.wrapper.Row;
 import de.chojo.sadu.queries.api.call.Call;
@@ -50,11 +49,18 @@ public class Messages extends MessagesPOJO implements GuildHolder {
     }
 
     public boolean commandReputationEphemeral(boolean commandReputationEphemeral) {
-        var result = set("command_reputation_ephemeral", stmt -> stmt.bind(reactionConfirmation));
+        var result = set("command_reputation_ephemeral", stmt -> stmt.bind(commandReputationEphemeral));
         if (result) {
             this.commandReputationEphemeral = commandReputationEphemeral;
         }
         return this.commandReputationEphemeral;
+    }
+
+    public void apply(MessagesPOJO state) {
+        if (isReactionConfirmation() != state.isReactionConfirmation())
+            reactionConfirmation(state.isReactionConfirmation());
+        if (isCommandReputationEphemeral() != state.isCommandReputationEphemeral())
+            commandReputationEphemeral(state.isCommandReputationEphemeral());
     }
 
     @Override

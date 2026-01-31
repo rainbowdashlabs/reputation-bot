@@ -8,6 +8,7 @@ package de.chojo.repbot.web;
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute;
 import de.chojo.repbot.web.routes.v1.session.SessionRoute;
+import de.chojo.repbot.web.routes.v1.settings.SettingsRoute;
 import de.chojo.repbot.web.sessions.SessionService;
 import io.javalin.http.ContentType;
 import org.slf4j.Logger;
@@ -25,11 +26,13 @@ public class Api {
     private final SessionService sessionService;
     private final MetricsRoute metricsRoute;
     private final SessionRoute sessionRoute;
+    private final SettingsRoute settingsRoute;
 
     public Api(SessionService sessionService, Metrics metrics) {
         this.sessionService = sessionService;
         metricsRoute = new MetricsRoute(metrics);
         sessionRoute = new SessionRoute(sessionService);
+        settingsRoute = new SettingsRoute();
     }
 
     public void init() {
@@ -54,6 +57,7 @@ public class Api {
         path("v1", () -> {
             metricsRoute.buildRoutes();
             sessionRoute.buildRoutes();
+            settingsRoute.buildRoutes();
         });
     }
 }

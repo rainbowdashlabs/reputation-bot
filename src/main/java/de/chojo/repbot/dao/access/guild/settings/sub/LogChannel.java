@@ -8,7 +8,6 @@ package de.chojo.repbot.dao.access.guild.settings.sub;
 import com.fasterxml.jackson.annotation.JsonSerializeAs;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.repbot.web.pojo.settings.sub.AnnouncementsPOJO;
 import de.chojo.repbot.web.pojo.settings.sub.LogChannelPOJO;
 import de.chojo.sadu.mapper.wrapper.Row;
 import de.chojo.sadu.queries.api.call.Call;
@@ -50,10 +49,19 @@ public class LogChannel extends LogChannelPOJO implements GuildHolder {
     }
 
     public long channel(TextChannel textChannel) {
-        if (set("channel_id", stmt -> stmt.bind(textChannel.getIdLong()))) {
-            this.channelId = textChannel.getIdLong();
+        return channel(textChannel.getIdLong());
+    }
+
+    public long channel(long channelId) {
+        if (set("channel_id", stmt -> stmt.bind(channelId))) {
+            this.channelId = channelId;
         }
-        return channelId;
+        return this.channelId;
+    }
+
+    public void apply(LogChannelPOJO state) {
+        if (active != state.active()) active(state.active());
+        if (channelId != state.channelId()) channel(state.channelId());
     }
 
     @Override

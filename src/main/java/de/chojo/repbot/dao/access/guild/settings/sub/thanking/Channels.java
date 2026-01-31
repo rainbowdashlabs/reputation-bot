@@ -205,4 +205,74 @@ public class Channels extends ChannelsPOJO implements GuildHolder {
         }
         return this.whitelist;
     }
+
+    public boolean addChannel(long channelId) {
+        var result = query("INSERT INTO active_channel(guild_id, channel_id) VALUES (?,?) ON CONFLICT(guild_id, channel_id) DO NOTHING")
+                .single(call().bind(guildId()).bind(channelId))
+                .update()
+                .changed();
+        if (result) {
+            channels.add(channelId);
+        }
+        return this.whitelist;
+    }
+
+    public boolean addCategory(long categoryId) {
+        var result = query("INSERT INTO active_categories(guild_id, category_id) VALUES (?,?) ON CONFLICT(guild_id, category_id) DO NOTHING")
+                .single(call().bind(guildId()).bind(categoryId))
+                .update()
+                .changed();
+        if (result) {
+            categories.add(categoryId);
+        }
+        return this.whitelist;
+    }
+
+    public boolean removeChannel(long channelId) {
+        var result = query("DELETE FROM active_channel WHERE guild_id = ? AND channel_id = ?")
+                .single(call().bind(guildId()).bind(channelId))
+                .update()
+                .changed();
+        if (result) {
+            channels.remove(channelId);
+        }
+        return this.whitelist;
+    }
+
+    public boolean removeCategory(long categoryId) {
+        var result = query("DELETE FROM active_categories WHERE guild_id = ? AND category_id = ?")
+                .single(call().bind(guildId()).bind(categoryId))
+                .update()
+                .changed();
+        if (result) {
+            categories.remove(categoryId);
+        }
+        return this.whitelist;
+    }
+
+    public void apply(ChannelsPOJO state) {
+        listType(state.isWhitelist());
+
+        for (Long channelId : state.channelIds()) {
+            if (!channels.contains(channelId)) {
+                addChannel(channelId);
+            }
+        }
+        for (Long channelId : Set.copyOf(channels)) {
+            if (!state.channelIds().contains(channelId)) {
+                removeChannel(channelId);
+            }
+        }
+
+        for (Long categoryId : state.categoryIds()) {
+            if (!categories.contains(categoryId)) {
+                addCategory(categoryId);
+            }
+        }
+        for (Long categoryId : Set.copyOf(categories)) {
+            if (!state.categoryIds().contains(categoryId)) {
+                removeCategory(categoryId);
+            }
+        }
+    }
 }

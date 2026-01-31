@@ -69,14 +69,43 @@ public abstract class RolesHolder extends RolesHolderPOJO implements GuildHolder
     }
 
     public boolean remove(Role role) {
+        return remove(role.getIdLong());
+    }
+
+    public boolean remove(long roleId) {
         var result = query("DELETE FROM %s WHERE guild_id = ? AND role_id = ?", targetTable())
-                .single(call().bind(guildId()).bind(role.getIdLong()))
+                .single(call().bind(guildId()).bind(roleId))
                 .update()
                 .changed();
         if (result) {
-            roleIds.remove(role.getIdLong());
+            roleIds.remove(roleId);
         }
         return result;
+    }
+
+    public boolean add(long roleId) {
+        var result = query("INSERT INTO %s(guild_id, role_id) VALUES (?,?) ON CONFLICT(guild_id, role_id) DO NOTHING", targetTable())
+                .single(call().bind(guildId()).bind(roleId))
+                .update()
+                .changed();
+        if (result) {
+            roleIds.add(roleId);
+        }
+        return result;
+    }
+
+    public void apply(RolesHolderPOJO state) {
+        for (Long roleId : state.roleIds()) {
+            if (!roleIds.contains(roleId)) {
+                add(roleId);
+            }
+        }
+
+        for (Long roleId : Set.copyOf(roleIds)) {
+            if (!state.roleIds().contains(roleId)) {
+                remove(roleId);
+            }
+        }
     }
 
     public String prettyString() {

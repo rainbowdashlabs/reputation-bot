@@ -139,4 +139,19 @@ public class Reactions extends ReactionsPOJO implements GuildHolder {
         return result;
     }
 
+    public void apply(ReactionsPOJO state) {
+        if (!mainReaction.equals(state.mainReaction())) mainReaction(state.mainReaction());
+
+        for (String reaction : state.reactions()) {
+            if (!reactions.contains(reaction)) {
+                add(reaction);
+            }
+        }
+
+        for (String reaction : Set.copyOf(reactions)) {
+            if (!state.reactions().contains(reaction)) {
+                remove(reaction);
+            }
+        }
+    }
 }

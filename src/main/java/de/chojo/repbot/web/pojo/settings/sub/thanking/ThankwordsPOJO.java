@@ -3,7 +3,7 @@ package de.chojo.repbot.web.pojo.settings.sub.thanking;
 import java.util.Collections;
 import java.util.Set;
 
-public abstract class ThankwordsPOJO {
+public class ThankwordsPOJO {
     protected final Set<String> thankwords;
 
     public ThankwordsPOJO(Set<String> thankwords) {

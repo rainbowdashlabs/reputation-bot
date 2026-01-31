@@ -19,4 +19,24 @@ public class ThankingPOJO {
         this.reactions = reactions;
         this.thankwords = thankwords;
     }
+
+    public ChannelsPOJO channels() {
+        return channels;
+    }
+
+    public RolesHolderPOJO donorRoles() {
+        return donorRoles;
+    }
+
+    public RolesHolderPOJO receiverRoles() {
+        return receiverRoles;
+    }
+
+    public ReactionsPOJO reactions() {
+        return reactions;
+    }
+
+    public ThankwordsPOJO thankwords() {
+        return thankwords;
+    }
 }
