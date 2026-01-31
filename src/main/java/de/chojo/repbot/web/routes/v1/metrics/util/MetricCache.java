@@ -3,7 +3,7 @@
  *
  *     Copyright (C) RainbowDashLabs and Contributor
  */
-package de.chojo.repbot.web.routes.v1.metrics;
+package de.chojo.repbot.web.routes.v1.metrics.util;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;

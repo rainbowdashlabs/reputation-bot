@@ -42,6 +42,8 @@ dependencies {
     implementation("io.javalin.community.openapi:javalin-openapi-plugin:$openapi") // for /openapi route with JSON scheme
     implementation("io.javalin.community.openapi:javalin-swagger-plugin:$openapi") // for Swagger UI
 
+    implementation(libs.bundles.jackson)
+
     // database
     implementation("org.postgresql", "postgresql", "42.7.9")
     implementation(libs.bundles.sadu)

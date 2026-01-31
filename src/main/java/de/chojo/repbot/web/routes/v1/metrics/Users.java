@@ -7,7 +7,8 @@ package de.chojo.repbot.web.routes.v1.metrics;
 
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.dao.snapshots.statistics.UsersStatistic;
-import de.chojo.repbot.web.routes.v1.MetricsHolder;
+import de.chojo.repbot.web.routes.v1.metrics.util.MetricCache;
+import de.chojo.repbot.web.routes.v1.metrics.util.MetricsHolder;
 import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
@@ -15,10 +16,10 @@ import io.javalin.openapi.OpenApiContent;
 import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiResponse;
 
-import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_MONTH;
-import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_MONTH_OFFSET;
-import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_WEEKS;
-import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_WEEK_OFFSET;
+import static de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute.MAX_MONTH;
+import static de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute.MAX_MONTH_OFFSET;
+import static de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute.MAX_WEEKS;
+import static de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute.MAX_WEEK_OFFSET;
 import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
 
@@ -30,7 +31,7 @@ public class Users extends MetricsHolder {
     @OpenApi(
             summary = "Get the amount of active users per week.",
             operationId = "activeWeek",
-            path = "users/active/week/{offset}/{count}",
+            path = "v1/metrics/users/active/week/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Users"},
             responses = {
@@ -54,7 +55,7 @@ public class Users extends MetricsHolder {
     @OpenApi(
             summary = "Get the amount of active users per month.",
             operationId = "activeMonth",
-            path = "users/active/month/{offset}/{count}",
+            path = "v1/metrics/users/active/month/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Users"},
             responses = {
