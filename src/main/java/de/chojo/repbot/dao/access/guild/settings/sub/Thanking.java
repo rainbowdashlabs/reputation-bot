@@ -97,12 +97,12 @@ public class Thanking implements GuildHolder {
                 .all();
 
         donorRoles = new DonorRoles(this, new HashSet<>(roles));
-        return (DonorRoles) donorRoles;
+        return  donorRoles;
     }
 
     public ReceiverRoles receiverRoles() {
         if (receiverRoles != null) {
-            return (ReceiverRoles) receiverRoles;
+            return  receiverRoles;
         }
         var roles = query("""
                 SELECT role_id
@@ -114,7 +114,7 @@ public class Thanking implements GuildHolder {
                 .all();
 
         receiverRoles = new ReceiverRoles(this, new HashSet<>(roles));
-        return (ReceiverRoles) receiverRoles;
+        return  receiverRoles;
     }
 
     public Reactions reactions() {
