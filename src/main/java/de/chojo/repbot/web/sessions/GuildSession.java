@@ -24,7 +24,7 @@ public class GuildSession {
         return shardManager.getGuildById(guildId);
     }
 
-    private RepGuild repGuild() {
+    public RepGuild repGuild() {
         return guildRepository.guild(guild());
     }
 

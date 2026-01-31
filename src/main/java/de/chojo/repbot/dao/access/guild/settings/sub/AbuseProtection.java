@@ -54,6 +54,19 @@ public class AbuseProtection extends AbuseProtectionPOJO implements GuildHolder 
                 rs.getInt("max_message_reputation"));
     }
 
+    public void apply(AbuseProtectionPOJO newState) {
+        if (this.cooldown != newState.cooldown()) cooldown(newState.cooldown());
+        if (this.maxMessageAge != newState.maxMessageAge()) maxMessageAge(newState.maxMessageAge());
+        if (this.minMessages != newState.minMessages()) minMessages(newState.minMessages());
+        if (this.donorContext != newState.isDonorContext()) donorContext(newState.isDonorContext());
+        if (this.receiverContext != newState.isReceiverContext()) receiverContext(newState.isReceiverContext());
+        if (this.maxGiven != newState.maxGiven()) maxGiven(newState.maxGiven());
+        if (this.maxGivenHours != newState.maxGivenHours()) maxGivenHours(newState.maxGivenHours());
+        if (this.maxReceived != newState.maxReceived()) maxReceived(newState.maxReceived());
+        if (this.maxReceivedHours != newState.maxReceivedHours()) maxReceivedHours(newState.maxReceivedHours());
+        if (this.maxMessageReputation != newState.maxMessageReputation()) maxMessageReputation(newState.maxMessageReputation());
+    }
+
     public int cooldown(int cooldown) {
         if (set("cooldown", stmt -> stmt.bind(cooldown))) {
             this.cooldown = cooldown;
