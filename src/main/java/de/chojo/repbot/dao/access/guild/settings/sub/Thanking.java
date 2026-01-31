@@ -5,7 +5,6 @@
  */
 package de.chojo.repbot.dao.access.guild.settings.sub;
 
-import com.fasterxml.jackson.annotation.JsonSerializeAs;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.access.guild.settings.sub.thanking.Channels;
 import de.chojo.repbot.dao.access.guild.settings.sub.thanking.DonorRoles;
@@ -62,37 +61,37 @@ public class Thanking implements GuildHolder {
 
     public Channels channels() {
         if (channels != null) {
-            return (Channels) channels;
+            return channels;
         }
         var channels = query("""
-                       SELECT channel_id
-                       FROM active_channel
-                       WHERE guild_id = ?
-                       """)
+                SELECT channel_id
+                FROM active_channel
+                WHERE guild_id = ?
+                """)
                 .single(call().bind(guildId()))
                 .map(r -> r.getLong("channel_id"))
                 .all();
         var categories = query("""
-                       SELECT category_id
-                       FROM active_categories
-                       WHERE guild_id = ?
-                       """)
+                SELECT category_id
+                FROM active_categories
+                WHERE guild_id = ?
+                """)
                 .single(call().bind(guildId()))
                 .mapAs(Long.class)
                 .all();
         this.channels = new Channels(this, channelWhitelist, new HashSet<>(channels), new HashSet<>(categories));
-        return (Channels) this.channels;
+        return this.channels;
     }
 
     public DonorRoles donorRoles() {
         if (donorRoles != null) {
-            return (DonorRoles) donorRoles;
+            return donorRoles;
         }
         var roles = query("""
-                       SELECT role_id
-                       FROM donor_roles
-                       WHERE guild_id = ?
-                       """)
+                SELECT role_id
+                FROM donor_roles
+                WHERE guild_id = ?
+                """)
                 .single(call().bind(guildId()))
                 .mapAs(Long.class)
                 .all();
@@ -106,10 +105,10 @@ public class Thanking implements GuildHolder {
             return (ReceiverRoles) receiverRoles;
         }
         var roles = query("""
-                       SELECT role_id
-                       FROM receiver_roles
-                       WHERE guild_id = ?
-                       """)
+                SELECT role_id
+                FROM receiver_roles
+                WHERE guild_id = ?
+                """)
                 .single(call().bind(guildId()))
                 .mapAs(Long.class)
                 .all();
@@ -120,35 +119,35 @@ public class Thanking implements GuildHolder {
 
     public Reactions reactions() {
         if (reactions != null) {
-            return (Reactions) reactions;
+            return reactions;
         }
         var reactions = query("""
-                       SELECT reaction
-                       FROM guild_reactions
-                       WHERE guild_id = ?
-                       """)
+                SELECT reaction
+                FROM guild_reactions
+                WHERE guild_id = ?
+                """)
                 .single(call().bind(guildId()))
                 .mapAs(String.class)
                 .all();
         this.reactions = new Reactions(this, mainReaction, new HashSet<>(reactions));
-        return (Reactions) this.reactions;
+        return this.reactions;
     }
 
     public Thankwords thankwords() {
         if (thankwords != null) {
-            return (Thankwords) thankwords;
+            return thankwords;
         }
         var thankwords = query("""
-                       SELECT thankword
-                       FROM thankwords
-                       WHERE guild_id = ?
-                       """)
+                SELECT thankword
+                FROM thankwords
+                WHERE guild_id = ?
+                """)
                 .single(call().bind(guildId()))
                 .mapAs(String.class)
                 .all();
 
         this.thankwords = new Thankwords(this, new HashSet<>(thankwords));
-        return (Thankwords) this.thankwords;
+        return this.thankwords;
     }
 
     public Settings settings() {
