@@ -29,6 +29,7 @@ public class ListType implements SlashHandler {
         if (event.getOptions().isEmpty()) {
             event.reply(context.localize(
                          channels.isWhitelist() ? "command.channel.listType.message.whitelist" : "command.channel.listType.message.blacklist"))
+                 .setEphemeral(true)
                  .complete();
             return;
         }
@@ -42,6 +43,7 @@ public class ListType implements SlashHandler {
 
         event.reply(context.localize(
                      channels.listType(whitelist) ? "command.channel.listType.message.whitelist" : "command.channel.listType.message.blacklist"))
+             .setEphemeral(true)
              .complete();
     }
 

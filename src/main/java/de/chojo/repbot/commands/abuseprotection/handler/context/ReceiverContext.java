@@ -25,13 +25,15 @@ public class ReceiverContext implements SlashHandler {
         if (event.getOptions().isEmpty()) {
             event.reply(Text.getBooleanMessage(context, abuseSettings.isReceiverContext(),
                          "command.abuseprotection.context.receiver.message.true", "command.abuseprotection.context.receiver.message.false"))
-                 .queue();
+                 .setEphemeral(true)
+                 .complete();
             return;
         }
         var state = event.getOption("state").getAsBoolean();
 
         event.reply(Text.getBooleanMessage(context, abuseSettings.receiverContext(state),
                      "command.abuseprotection.context.receiver.message.true", "command.abuseprotection.context.receiver.message.false"))
-             .queue();
+             .setEphemeral(true)
+             .complete();
     }
 }

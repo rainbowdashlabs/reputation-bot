@@ -25,6 +25,8 @@ public class AddDonor implements SlashHandler {
         var role = event.getOption("role").getAsRole();
         guildRepository.guild(event.getGuild()).settings().thanking().donorRoles().add(role);
         event.reply(context.localize("command.roles.donor.add.message.add",
-                Replacement.createMention(role))).setAllowedMentions(Collections.emptyList()).complete();
+                Replacement.createMention(role))).setAllowedMentions(Collections.emptyList())
+             .setEphemeral(true)
+             .complete();
     }
 }

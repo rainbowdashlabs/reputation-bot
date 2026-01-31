@@ -23,7 +23,8 @@ public class Remove extends BaseReputationModifier {
     void execute(SlashCommandInteractionEvent event, EventContext context, User user, RepUser repUser, long rep) {
         repUser.removeReputation(rep);
         event.reply(context.localize("command.repadmin.reputation.remove.message.removed",
-                        Replacement.create("VALUE", rep), Replacement.createMention(user)))
-                .setEphemeral(true).complete();
+                     Replacement.create("VALUE", rep), Replacement.createMention(user)))
+             .setEphemeral(true)
+             .complete();
     }
 }

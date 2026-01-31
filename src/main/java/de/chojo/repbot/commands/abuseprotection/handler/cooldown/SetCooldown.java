@@ -25,6 +25,8 @@ public class SetCooldown implements SlashHandler {
         var cooldown = event.getOption("minutes").getAsLong();
 
         event.reply(context.localize("command.abuseprotection.cooldown.set.message.set",
-                Replacement.create("MINUTES", abuseSettings.cooldown((int) cooldown)))).setEphemeral(true).queue();
+                Replacement.create("MINUTES", abuseSettings.cooldown((int) cooldown))))
+             .setEphemeral(true)
+             .complete();
     }
 }

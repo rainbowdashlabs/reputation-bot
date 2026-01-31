@@ -48,7 +48,8 @@ public class AutopostEnable implements SlashHandler {
 
         GuildChannelUnion channel = event.getOption("channel", OptionMapping::getAsChannel);
         if (channel.getType() != ChannelType.TEXT) {
-            event.reply(context.localize("error.onlyTextChannel")).setEphemeral(true).queue();
+            event.getHook().editOriginal(context.localize("error.onlyTextChannel"))
+                 .complete();
             return;
         }
         Autopost autopost = guildRepository.guild(event.getGuild()).settings().autopost();
@@ -74,7 +75,8 @@ public class AutopostEnable implements SlashHandler {
         autopostService.update(event.getGuild());
 
         event.getHook().editOriginal(context.localize("command.channel.autopost.enable.message.enabled",
-                Replacement.create("CHANNEL", MentionUtil.channel(autopost.channelId())))).queue();
+                Replacement.create("CHANNEL", MentionUtil.channel(autopost.channelId()))))
+             .complete();
     }
 
     @Override

@@ -33,8 +33,9 @@ public class ReceiverLimit implements SlashHandler {
         }
 
         if (protection.maxReceived() == 0) {
-            event.reply(context.localize("command.abuseprotection.limit.receiver.message.disabled")).setEphemeral(true)
-                 .queue();
+            event.reply(context.localize("command.abuseprotection.limit.receiver.message.disabled"))
+                 .setEphemeral(true)
+                 .complete();
             return;
         }
 
@@ -42,6 +43,6 @@ public class ReceiverLimit implements SlashHandler {
                      Replacement.create("AMOUNT", protection.maxReceived()),
                      Replacement.create("HOURS", protection.maxReceivedHours())))
              .setEphemeral(true)
-             .queue();
+             .complete();
     }
 }

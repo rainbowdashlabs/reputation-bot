@@ -24,12 +24,16 @@ public class AnnouncementLocation implements SlashHandler {
         var announcements = guildRepository.guild(event.getGuild()).settings().announcements();
         var channel = event.getOption("channel");
         if (channel.getChannelType() != ChannelType.TEXT) {
-            event.reply(context.localize("error.onlyTextChannel")).setEphemeral(true).complete();
+            event.reply(context.localize("error.onlyTextChannel"))
+                 .setEphemeral(true)
+                 .complete();
             return;
         }
 
         announcements.channel(channel.getAsChannel().asTextChannel());
         event.reply(context.localize("command.channel.announcement.channel.message.set",
-                Replacement.createMention(channel.getAsChannel().asTextChannel()))).complete();
+                Replacement.createMention(channel.getAsChannel().asTextChannel())))
+             .setEphemeral(true)
+             .complete();
     }
 }

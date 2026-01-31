@@ -20,6 +20,8 @@ public class Refresh implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext eventContext) {
         premiumService.refresh(event.getGuild());
-        event.reply(eventContext.localize("command.supporter.refresh.message.refreshed")).setEphemeral(true).queue();
+        event.reply(eventContext.localize("command.supporter.refresh.message.refreshed"))
+             .setEphemeral(true)
+             .complete();
     }
 }

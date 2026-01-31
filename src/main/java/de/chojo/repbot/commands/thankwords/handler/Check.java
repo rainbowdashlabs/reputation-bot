@@ -38,7 +38,9 @@ public class Check implements SlashHandler {
 
 
         if (!messageId.matches("\\d+")) {
-            event.reply(context.localize("error.invalidNumber")).queue();
+            event.reply(context.localize("error.invalidNumber"))
+                 .setEphemeral(true)
+                 .complete();
             return;
         }
 
@@ -46,20 +48,26 @@ public class Check implements SlashHandler {
         try {
             message = event.getChannel().retrieveMessageById(messageId).complete();
         } catch (ErrorResponseException e) {
-            event.reply(context.localize("error.invalidMessage")).queue();
+            event.reply(context.localize("error.invalidMessage"))
+                 .setEphemeral(true)
+                 .complete();
             return;
         }
 
         var result = messageAnalyzer.processMessage(guildSettings.thankwordPattern(), message, settings, true, settings.abuseProtection()
                                                                                                                        .maxMessageReputation());
         if (result.isEmpty()) {
-            event.reply(context.localize("command.thankwords.check.message.noMatch")).queue();
+            event.reply(context.localize("command.thankwords.check.message.noMatch"))
+                 .setEphemeral(true)
+                 .complete();
             return;
         }
 
         var builder = new LocalizedEmbedBuilder(context.guildLocalizer());
         processMessage(result.asMatch(), builder);
-        event.replyEmbeds(builder.build()).queue();
+        event.replyEmbeds(builder.build())
+             .setEphemeral(true)
+             .complete();
     }
 
     private void processMessage(MatchAnalyzerResult result, LocalizedEmbedBuilder builder) {

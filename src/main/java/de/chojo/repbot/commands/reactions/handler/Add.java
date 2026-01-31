@@ -35,7 +35,8 @@ public class Add implements SlashHandler {
 
         var emote = event.getOption("emote").getAsString();
         var message = event.reply(context.localize("command.reactions.message.checking"))
-                           .flatMap(InteractionHook::retrieveOriginal).complete();
+                           .flatMap(InteractionHook::retrieveOriginal)
+                           .complete();
         handleAddCheckResult(event.getGuild(), context, message, emote);
     }
 

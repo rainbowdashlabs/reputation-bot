@@ -30,7 +30,9 @@ public class Activate extends BaseSupporter implements SlashHandler {
         try {
             coupon = event.getOption("coupon", OptionMapping::getAsLong);
         } catch (NumberFormatException e) {
-            event.reply(context.localize("command.supporter.activate.message.invalidcoupon")).setEphemeral(true).queue();
+            event.reply(context.localize("command.supporter.activate.message.invalidcoupon"))
+                 .setEphemeral(true)
+                 .complete();
             return;
         }
 
@@ -47,7 +49,8 @@ public class Activate extends BaseSupporter implements SlashHandler {
                          .findFirst();
 
         if (match.isEmpty()) {
-            event.getHook().editOriginal(context.localize("command.supporter.activate.message.invalidcoupon")).queue();
+            event.getHook().editOriginal(context.localize("command.supporter.activate.message.invalidcoupon"))
+                 .complete();
             return;
         }
 

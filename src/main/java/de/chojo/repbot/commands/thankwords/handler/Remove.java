@@ -32,17 +32,19 @@ public class Remove implements SlashHandler {
         } catch (PatternSyntaxException e) {
             event.reply(context.localize("error.invalidRegex"))
                  .setEphemeral(true)
-                 .queue();
+                 .complete();
             return;
         }
         if (guildRepository.guild(event.getGuild()).settings().thanking().thankwords().remove(pattern)) {
             event.reply(context.localize("command.thankwords.remove.message.removed",
-                    Replacement.create("PATTERN", pattern, Format.CODE))).queue();
+                    Replacement.create("PATTERN", pattern, Format.CODE)))
+                 .setEphemeral(true)
+                 .complete();
             return;
         }
         event.reply(context.localize("command.thankwords.remove.message.patternnotfound"))
              .setEphemeral(true)
-             .queue();
+             .complete();
     }
 
     @Override

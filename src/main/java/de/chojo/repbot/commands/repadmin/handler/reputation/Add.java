@@ -23,7 +23,8 @@ public class Add extends BaseReputationModifier {
     void execute(SlashCommandInteractionEvent event, EventContext context, User user, RepUser repUser, long rep) {
         repUser.addReputation(rep);
         event.reply(context.localize("command.repadmin.reputation.add.message.added",
-                        Replacement.create("VALUE", rep), Replacement.createMention(user)))
-                .setEphemeral(true).complete();
+                     Replacement.create("VALUE", rep), Replacement.createMention(user)))
+             .setEphemeral(true)
+             .complete();
     }
 }

@@ -29,7 +29,9 @@ public class LogEnable implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         GuildChannelUnion channel = event.getOption("channel", OptionMapping::getAsChannel);
         if (channel.getType() != ChannelType.TEXT) {
-            event.reply(context.localize("error.onlyTextChannel")).setEphemeral(true).queue();
+            event.reply(context.localize("error.onlyTextChannel"))
+                 .setEphemeral(true)
+                 .complete();
             return;
         }
 
@@ -40,6 +42,8 @@ public class LogEnable implements SlashHandler {
         guildRepository.guild(event.getGuild()).settings().logChannel().channel(channel.asTextChannel());
         guildRepository.guild(event.getGuild()).settings().logChannel().active(true);
 
-        event.reply(context.localize("command.channel.log.channel.message.enabled", Replacement.createMention(channel.asTextChannel()))).setEphemeral(true).queue();
+        event.reply(context.localize("command.channel.log.channel.message.enabled", Replacement.createMention(channel.asTextChannel())))
+             .setEphemeral(true)
+             .complete();
     }
 }

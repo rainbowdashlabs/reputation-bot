@@ -67,6 +67,6 @@ public class Info extends BaseSupporter implements SlashHandler {
                                    .toList();
 
         event.getHook().editOriginal(context.localize(content))
-             .setComponents(buttons).queue();
+             .setComponents(buttons).complete();
     }
 }
