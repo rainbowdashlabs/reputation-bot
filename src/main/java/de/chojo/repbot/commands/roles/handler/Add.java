@@ -26,12 +26,16 @@ public class Add extends BaseRoleModifier {
         var reputation = event.getOption("reputation").getAsLong();
         if (!event.getGuild().getSelfMember().canInteract(role)) {
             event.reply(context.localize("error.roleAccess",
-                    Replacement.createMention(role))).setEphemeral(true).complete();
+                         Replacement.createMention(role)))
+                 .setEphemeral(true)
+                 .complete();
             return;
         }
 
         if (role.isPublicRole()) {
-            event.reply(context.localize("error.publicRole")).setEphemeral(true).complete();
+            event.reply(context.localize("error.publicRole"))
+                 .setEphemeral(true)
+                 .complete();
             return;
         }
 

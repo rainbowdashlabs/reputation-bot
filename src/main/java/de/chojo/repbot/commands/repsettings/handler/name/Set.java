@@ -32,7 +32,9 @@ public class Set implements SlashHandler {
         }
         String name = event.getOption("name", OptionMapping::getAsString);
         guildRepository.guild(event.getGuild()).localeOverrides().setOverride("words.reputation", name);
-        event.reply(eventContext.localize("command.repsettings.name.set.message.set")).setEphemeral(true).queue();
+        event.reply(eventContext.localize("command.repsettings.name.set.message.set"))
+             .setEphemeral(true)
+             .queue();
 
     }
 }

@@ -24,7 +24,9 @@ public class OnceCooldown implements SlashHandler {
         var abuseSettings = guild.settings().abuseProtection();
 
         event.reply(context.localize("command.abuseprotection.cooldown.once.message.set",
-                Replacement.create("MINUTES", abuseSettings.cooldown(-1)))).setEphemeral(true).queue();
+                Replacement.create("MINUTES", abuseSettings.cooldown(-1))))
+             .setEphemeral(true)
+             .complete();
 
     }
 }

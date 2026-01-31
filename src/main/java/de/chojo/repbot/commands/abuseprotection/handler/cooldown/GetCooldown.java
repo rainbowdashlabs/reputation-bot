@@ -32,6 +32,8 @@ public class GetCooldown implements SlashHandler {
                     Replacement.create("MINUTES", abuseSettings.cooldown()));
         }
         message = message + "\n$words.direction$: $%s$".formatted(abuseSettings.cooldownDirection().localCode());
-        event.reply(context.localize(message)).setEphemeral(true).queue();
+        event.reply(context.localize(message))
+             .setEphemeral(true)
+             .complete();
     }
 }

@@ -21,6 +21,8 @@ public class LogDisable implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         guildRepository.guild(event.getGuild()).settings().logChannel().active(false);
-        event.reply(context.localize("command.channel.log.disable.message.disabled")).setEphemeral(true).queue();
+        event.reply(context.localize("command.channel.log.disable.message.disabled"))
+             .setEphemeral(true)
+             .complete();
     }
 }

@@ -44,13 +44,15 @@ public class Add implements SlashHandler {
         } catch (PatternSyntaxException e) {
             event.reply(context.localize("error.invalidRegex"))
                  .setEphemeral(true)
-                 .queue();
+                 .complete();
             return;
         }
 
         if (guildRepository.guild(event.getGuild()).settings().thanking().thankwords().add(pattern)) {
             event.reply(context.localize("command.thankwords.add.message.added",
-                    Replacement.create("REGEX", pattern, Format.CODE))).queue();
+                    Replacement.create("REGEX", pattern, Format.CODE)))
+                 .setEphemeral(true)
+                 .complete();
         }
     }
 }

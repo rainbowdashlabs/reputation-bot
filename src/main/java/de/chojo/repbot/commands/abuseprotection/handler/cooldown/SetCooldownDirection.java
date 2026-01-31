@@ -29,7 +29,9 @@ public class SetCooldownDirection implements SlashHandler {
         var cooldown = Parser.parseEnum(event.getOption("direction").getAsString(), CooldownDirection.class);
 
         event.reply(context.localize("command.abuseprotection.cooldown.direction.message.set",
-                Replacement.create("DIRECTION", abuseSettings.cooldownDirection(cooldown).localCode()))).setEphemeral(true).queue();
+                Replacement.create("DIRECTION", abuseSettings.cooldownDirection(cooldown).localCode())))
+             .setEphemeral(true)
+             .complete();
     }
 
     @Override

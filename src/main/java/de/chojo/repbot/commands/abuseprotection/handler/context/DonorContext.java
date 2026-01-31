@@ -25,6 +25,7 @@ public class DonorContext implements SlashHandler {
         if (event.getOptions().isEmpty()) {
             event.reply(Text.getBooleanMessage(context, abuseSettings.isDonorContext(),
                          "command.abuseprotection.context.donor.message.true", "command.abuseprotection.context.donor.message.false"))
+                 .setEphemeral(true)
                  .queue();
             return;
         }
@@ -32,6 +33,7 @@ public class DonorContext implements SlashHandler {
 
         event.reply(Text.getBooleanMessage(context, abuseSettings.donorContext(state),
                      "command.abuseprotection.context.donor.message.true", "command.abuseprotection.context.donor.message.false"))
+             .setEphemeral(true)
              .queue();
 
     }

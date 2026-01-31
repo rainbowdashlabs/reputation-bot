@@ -28,7 +28,9 @@ public class List implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var channels = guildRepository.guild(event.getGuild()).settings().thanking().channels();
-        event.replyEmbeds(getChannelList(channels, context)).complete();
+        event.replyEmbeds(getChannelList(channels, context))
+             .setEphemeral(true)
+             .complete();
     }
 
     private MessageEmbed getChannelList(Channels channels, EventContext context) {

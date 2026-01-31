@@ -34,6 +34,8 @@ public class Remove extends BaseRoleModifier {
             refresh.accept(menu);
             return;
         }
-        event.reply(context.localize("command.roles.remove.message.noreprole")).setEphemeral(true).complete();
+        event.reply(context.localize("command.roles.remove.message.noreprole"))
+             .setEphemeral(true)
+             .complete();
     }
 }

@@ -30,18 +30,26 @@ public class Remove implements SlashHandler {
         var matcher = EMOTE_PATTERN.matcher(emote);
         if (matcher.find()) {
             if (reactions.remove(matcher.group("id"))) {
-                event.reply(context.localize("command.reactions.remove.message.removed")).complete();
+                event.reply(context.localize("command.reactions.remove.message.removed"))
+                     .setEphemeral(true)
+                     .complete();
                 return;
             }
-            event.reply(context.localize("command.reactions.remove.message.notfound")).setEphemeral(true).queue();
+            event.reply(context.localize("command.reactions.remove.message.notfound"))
+                 .setEphemeral(true)
+                 .queue();
             return;
         }
 
         if (reactions.remove(emote)) {
-            event.reply(context.localize("command.reactions.remove.message.removed")).queue();
+            event.reply(context.localize("command.reactions.remove.message.removed"))
+                 .setEphemeral(true)
+                 .queue();
             return;
         }
-        event.reply(context.localize("command.reactions.remove.message.notfound")).setEphemeral(true).queue();
+        event.reply(context.localize("command.reactions.remove.message.notfound"))
+             .setEphemeral(true)
+             .queue();
     }
 
     @Override

@@ -26,7 +26,9 @@ public class AutopostInfo implements SlashHandler {
         Autopost autopost = guildRepository.guild(event.getGuild()).settings().autopost();
 
         if (!autopost.active()) {
-            event.reply(context.localize("command.channel.autopost.info.message.inactive")).setEphemeral(true).queue();
+            event.reply(context.localize("command.channel.autopost.info.message.inactive"))
+                 .setEphemeral(true)
+                 .complete();
             return;
         }
 
@@ -36,6 +38,8 @@ public class AutopostInfo implements SlashHandler {
                 .addField("command.channel.autopost.info.embed.refreshinterval", autopost.refreshInterval().toString(), true)
                 .addField("command.channel.autopost.info.embed.refreshtype", autopost.refreshType().toString(), true)
                 .build();
-        event.replyEmbeds(embed).setEphemeral(true).queue();
+        event.replyEmbeds(embed)
+             .setEphemeral(true)
+             .complete();
     }
 }

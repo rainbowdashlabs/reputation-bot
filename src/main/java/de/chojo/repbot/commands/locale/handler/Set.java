@@ -32,13 +32,17 @@ public class Set implements SlashHandler {
         }
 
         if (locale == null || !context.guildLocalizer().localizer().languages().contains(locale)) {
-            event.reply(context.localize("command.locale.set.message.invalidlocale")).setEphemeral(true).complete();
+            event.reply(context.localize("command.locale.set.message.invalidlocale"))
+                 .setEphemeral(true)
+                 .complete();
             return;
         }
 
         if (guildRepository.guild(event.getGuild()).settings().general().language(locale)) {
             event.reply(context.localize("command.locale.set.message.set",
-                    Replacement.create("LOCALE", locale.getNativeName(), Format.CODE))).complete();
+                    Replacement.create("LOCALE", locale.getNativeName(), Format.CODE)))
+                 .setEphemeral(true)
+                 .complete();
         }
     }
 

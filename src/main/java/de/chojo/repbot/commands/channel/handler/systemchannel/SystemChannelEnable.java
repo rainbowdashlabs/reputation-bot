@@ -26,11 +26,15 @@ public class SystemChannelEnable implements SlashHandler {
         GuildChannelUnion channel = event.getOption("channel").getAsChannel();
 
         if(channel.getType() != TEXT){
-            event.reply(context.localize("error.onlyTextChannel")).setEphemeral(true).queue();
+            event.reply(context.localize("error.onlyTextChannel"))
+                 .setEphemeral(true)
+                 .complete();
             return;
         }
 
         guildRepository.guild(event.getGuild()).settings().general().systemChannel(channel.getIdLong());
-        event.reply(context.localize("command.channel.systemchannel.enable.message.enabled", Replacement.create("CHANNEL",channel.getAsMention()))).setEphemeral(true).queue();
+        event.reply(context.localize("command.channel.systemchannel.enable.message.enabled", Replacement.create("CHANNEL",channel.getAsMention())))
+             .setEphemeral(true)
+             .complete();
     }
 }

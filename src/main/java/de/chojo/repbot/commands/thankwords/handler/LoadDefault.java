@@ -31,7 +31,9 @@ public class LoadDefault implements SlashHandler {
         var languageOption = event.getOption("language");
         if (languageOption == null) {
             event.reply(context.localize("command.thankwords.loaddefault.message.available")
-                        + " " + String.join(", ", thankwordsContainer.getAvailableLanguages())).complete();
+                        + " " + String.join(", ", thankwordsContainer.getAvailableLanguages()))
+                 .setEphemeral(true)
+                 .complete();
             return;
         }
         var language = languageOption.getAsString();
@@ -39,7 +41,7 @@ public class LoadDefault implements SlashHandler {
         if (words == null) {
             event.reply(context.localize("command.locale.set.message.invalidlocale"))
                  .setEphemeral(true)
-                 .queue();
+                 .complete();
             return;
         }
         for (var word : words) {
@@ -48,7 +50,9 @@ public class LoadDefault implements SlashHandler {
 
         var wordsJoined = words.stream().map(w -> StringUtils.wrap(w, "`")).collect(Collectors.joining(", "));
 
-        event.reply(context.localize("command.thankwords.loaddefault.message.added") + wordsJoined).queue();
+        event.reply(context.localize("command.thankwords.loaddefault.message.added") + wordsJoined)
+             .setEphemeral(true)
+             .complete();
     }
 
     @Override
