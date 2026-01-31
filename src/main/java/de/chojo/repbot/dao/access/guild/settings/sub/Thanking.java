@@ -5,6 +5,7 @@
  */
 package de.chojo.repbot.dao.access.guild.settings.sub;
 
+import com.fasterxml.jackson.annotation.JsonSerializeAs;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.access.guild.settings.sub.thanking.Channels;
 import de.chojo.repbot.dao.access.guild.settings.sub.thanking.DonorRoles;
@@ -12,6 +13,7 @@ import de.chojo.repbot.dao.access.guild.settings.sub.thanking.Reactions;
 import de.chojo.repbot.dao.access.guild.settings.sub.thanking.ReceiverRoles;
 import de.chojo.repbot.dao.access.guild.settings.sub.thanking.Thankwords;
 import de.chojo.repbot.dao.components.GuildHolder;
+import de.chojo.repbot.web.pojo.settings.sub.ThankingPOJO;
 import de.chojo.sadu.mapper.wrapper.Row;
 import net.dv8tion.jda.api.entities.Guild;
 
@@ -21,7 +23,7 @@ import java.util.HashSet;
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 
-public class Thanking  implements GuildHolder {
+public class Thanking implements GuildHolder {
     public static final String DEFAULT_REACTION = "🏅";
     private final String mainReaction;
     private final Settings settings;
@@ -43,6 +45,14 @@ public class Thanking  implements GuildHolder {
         this.channelWhitelist = channelWhitelist;
     }
 
+    public void apply(ThankingPOJO state) {
+        channels().apply(state.channels());
+        donorRoles().apply(state.donorRoles());
+        receiverRoles().apply(state.receiverRoles());
+        reactions().apply(state.reactions());
+        thankwords().apply(state.thankwords());
+    }
+
     public static Thanking build(Settings settings, Row row) throws SQLException {
         return new Thanking(settings,
                 row.getString("reaction"),
@@ -52,7 +62,7 @@ public class Thanking  implements GuildHolder {
 
     public Channels channels() {
         if (channels != null) {
-            return channels;
+            return (Channels) channels;
         }
         var channels = query("""
                        SELECT channel_id
@@ -71,12 +81,12 @@ public class Thanking  implements GuildHolder {
                 .mapAs(Long.class)
                 .all();
         this.channels = new Channels(this, channelWhitelist, new HashSet<>(channels), new HashSet<>(categories));
-        return this.channels;
+        return (Channels) this.channels;
     }
 
     public DonorRoles donorRoles() {
         if (donorRoles != null) {
-            return donorRoles;
+            return (DonorRoles) donorRoles;
         }
         var roles = query("""
                        SELECT role_id
@@ -88,12 +98,12 @@ public class Thanking  implements GuildHolder {
                 .all();
 
         donorRoles = new DonorRoles(this, new HashSet<>(roles));
-        return donorRoles;
+        return (DonorRoles) donorRoles;
     }
 
     public ReceiverRoles receiverRoles() {
         if (receiverRoles != null) {
-            return receiverRoles;
+            return (ReceiverRoles) receiverRoles;
         }
         var roles = query("""
                        SELECT role_id
@@ -105,12 +115,12 @@ public class Thanking  implements GuildHolder {
                 .all();
 
         receiverRoles = new ReceiverRoles(this, new HashSet<>(roles));
-        return receiverRoles;
+        return (ReceiverRoles) receiverRoles;
     }
 
     public Reactions reactions() {
         if (reactions != null) {
-            return reactions;
+            return (Reactions) reactions;
         }
         var reactions = query("""
                        SELECT reaction
@@ -121,12 +131,12 @@ public class Thanking  implements GuildHolder {
                 .mapAs(String.class)
                 .all();
         this.reactions = new Reactions(this, mainReaction, new HashSet<>(reactions));
-        return this.reactions;
+        return (Reactions) this.reactions;
     }
 
     public Thankwords thankwords() {
         if (thankwords != null) {
-            return thankwords;
+            return (Thankwords) thankwords;
         }
         var thankwords = query("""
                        SELECT thankword
@@ -138,7 +148,7 @@ public class Thanking  implements GuildHolder {
                 .all();
 
         this.thankwords = new Thankwords(this, new HashSet<>(thankwords));
-        return this.thankwords;
+        return (Thankwords) this.thankwords;
     }
 
     public Settings settings() {

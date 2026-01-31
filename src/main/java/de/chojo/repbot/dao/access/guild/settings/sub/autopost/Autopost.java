@@ -43,7 +43,7 @@ public class Autopost extends AutopostPOJO implements GuildHolder {
                 rs.getBoolean("active"),
                 rs.getLong("channel_id"),
                 rs.getLong("message_id"),
-                rs.getEnum("refresh_type",RefreshType.class),
+                rs.getEnum("refresh_type", RefreshType.class),
                 rs.getEnum("refresh_interval", RefreshInterval.class));
     }
 
@@ -55,17 +55,25 @@ public class Autopost extends AutopostPOJO implements GuildHolder {
     }
 
     public long channel(TextChannel textChannel) {
-        if (set("channel_id", stmt -> stmt.bind(textChannel.getIdLong()))) {
-            this.channelId = textChannel.getIdLong();
+        return channel(textChannel.getIdLong());
+    }
+
+    public long channel(long channelId) {
+        if (set("channel_id", stmt -> stmt.bind(channelId))) {
+            this.channelId = channelId;
         }
-        return channelId;
+        return this.channelId;
     }
 
     public long message(Message message) {
-        if (set("message_id", stmt -> stmt.bind(message.getIdLong()))) {
-            this.messageId = message.getIdLong();
+        return message(message.getIdLong());
+    }
+
+    public long message(long messageId) {
+        if (set("message_id", stmt -> stmt.bind(messageId))) {
+            this.messageId = messageId;
         }
-        return message.getIdLong();
+        return this.messageId;
     }
 
     public RefreshType refreshType(RefreshType refreshType) {
@@ -80,6 +88,14 @@ public class Autopost extends AutopostPOJO implements GuildHolder {
             this.refreshInterval = refreshInterval;
         }
         return refreshInterval;
+    }
+
+    public void apply(AutopostPOJO state) {
+        if (this.active != state.active()) active(state.active());
+        if (this.channelId != state.channelId()) channel(state.channelId());
+        if (this.messageId != state.messageId()) message(state.messageId());
+        if (this.refreshType != state.refreshType()) refreshType(state.refreshType());
+        if (this.refreshInterval != state.refreshInterval()) refreshInterval(state.refreshInterval());
     }
 
     private boolean set(String parameter, Function<Call, Call> builder) {

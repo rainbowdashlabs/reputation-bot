@@ -143,6 +143,25 @@ public class Thankwords extends ThankwordsPOJO implements GuildHolder {
         }
     }
 
+    public void apply(ThankwordsPOJO state) {
+        long stamp = lock.writeLock();
+        try {
+            for (String word : state.words()) {
+                if (!thankwords.contains(word)) {
+                    add(word);
+                }
+            }
+
+            for (String word : Set.copyOf(thankwords)) {
+                if (!state.words().contains(word)) {
+                    remove(word);
+                }
+            }
+        } finally {
+            lock.unlockWrite(stamp);
+        }
+    }
+
     public String prettyString() {
         return words().stream().map("`%s`"::formatted).collect(Collectors.joining(", "));
     }

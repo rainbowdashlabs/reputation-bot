@@ -8,7 +8,6 @@ package de.chojo.repbot.dao.access.guild.settings.sub;
 import com.fasterxml.jackson.annotation.JsonSerializeAs;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.repbot.web.pojo.settings.sub.AnnouncementsPOJO;
 import de.chojo.repbot.web.pojo.settings.sub.ReputationPOJO;
 import de.chojo.sadu.mapper.wrapper.Row;
 import de.chojo.sadu.queries.api.call.Call;
@@ -102,6 +101,16 @@ public class Reputation extends ReputationPOJO implements GuildHolder {
         return this.directActive;
     }
 
+    public void apply(ReputationPOJO state) {
+        if (isReactionActive() != state.isReactionActive()) reactionActive(state.isReactionActive());
+        if (isAnswerActive() != state.isAnswerActive()) answerActive(state.isAnswerActive());
+        if (isMentionActive() != state.isMentionActive()) mentionActive(state.isMentionActive());
+        if (isFuzzyActive() != state.isFuzzyActive()) fuzzyActive(state.isFuzzyActive());
+        if (isEmbedActive() != state.isEmbedActive()) embedActive(state.isEmbedActive());
+        if (isDirectActive() != state.isDirectActive()) directActive(state.isDirectActive());
+        if (isCommandActive() != state.isCommandActive()) commandActive(state.isCommandActive());
+    }
+
     public String toLocalizedString() {
         var setting = List.of(
                 getSetting("command.repsettings.general.message.option.byreaction.name", isReactionActive()),
@@ -110,12 +119,12 @@ public class Reputation extends ReputationPOJO implements GuildHolder {
                 getSetting("command.repsettings.general.message.option.byfuzzy.name", isFuzzyActive()),
                 getSetting("command.repsettings.general.message.option.byembed.name", isEmbedActive()),
                 getSetting("command.repsettings.general.message.option.bycommand.name", settings.reputation()
-                                                                                             .isCommandActive()),
+                                                                                                .isCommandActive()),
                 getSetting("command.repsettings.general.message.option.skipsingletarget.name", settings.reputation()
-                        .isDirectActive()),
+                                                                                                       .isDirectActive()),
                 getSetting("command.repsettings.general.message.option.reputationmode.name", settings.general()
-                                                                                                  .reputationMode()
-                                                                                                  .localeCode())
+                                                                                                     .reputationMode()
+                                                                                                     .localeCode())
         );
 
         return String.join("\n", setting);

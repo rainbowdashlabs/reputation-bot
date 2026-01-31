@@ -8,7 +8,6 @@ package de.chojo.repbot.dao.access.guild.settings.sub;
 import com.fasterxml.jackson.annotation.JsonSerializeAs;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.repbot.web.pojo.settings.sub.AnnouncementsPOJO;
 import de.chojo.repbot.web.pojo.settings.sub.GeneralPOJO;
 import de.chojo.sadu.mapper.wrapper.Row;
 import de.chojo.sadu.queries.api.call.Call;
@@ -29,7 +28,7 @@ public class General extends GeneralPOJO implements GuildHolder {
     private final Settings settings;
 
     public General(Settings settings) {
-        this(settings, null, false, ReputationMode.TOTAL, null,0);
+        this(settings, null, false, ReputationMode.TOTAL, null, 0);
     }
 
     public General(Settings settings, DiscordLocale language, boolean stackRoles, ReputationMode reputationMode, Instant resetDate, long systemChannel) {
@@ -86,9 +85,16 @@ public class General extends GeneralPOJO implements GuildHolder {
         }
         return result;
     }
-    
+
     public boolean resetDateNow() {
         return resetDate(Instant.now());
+    }
+
+    public void apply(GeneralPOJO state) {
+        if (language != state.language().orElse(null)) language(state.language().orElse(null));
+        if (stackRoles != state.isStackRoles()) isStackRoles(state.isStackRoles());
+        if (reputationMode != state.reputationMode()) reputationMode(state.reputationMode());
+        if (systemChannel != state.systemChannel()) systemChannel(state.systemChannel());
     }
 
     @Override

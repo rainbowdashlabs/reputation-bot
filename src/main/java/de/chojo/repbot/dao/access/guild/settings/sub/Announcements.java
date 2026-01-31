@@ -8,7 +8,6 @@ package de.chojo.repbot.dao.access.guild.settings.sub;
 import com.fasterxml.jackson.annotation.JsonSerializeAs;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.repbot.web.pojo.settings.sub.AbuseProtectionPOJO;
 import de.chojo.repbot.web.pojo.settings.sub.AnnouncementsPOJO;
 import de.chojo.sadu.mapper.wrapper.Row;
 import de.chojo.sadu.queries.api.call.Call;
@@ -58,18 +57,28 @@ public class Announcements extends AnnouncementsPOJO implements GuildHolder {
     }
 
     public long channel(TextChannel textChannel) {
-        if (set("channel_id", stmt -> stmt.bind(textChannel.getIdLong()))) {
-            channelId = textChannel.getIdLong();
+        return channel(textChannel.getIdLong());
+    }
+
+    public long channel(long channelId) {
+        if (set("channel_id", stmt -> stmt.bind(channelId))) {
+            this.channelId = channelId;
         }
-        return channelId;
+        return this.channelId;
+    }
+
+    public void apply(AnnouncementsPOJO state) {
+        if (active != state.isActive()) active(state.isActive());
+        if (sameChannel != state.isSameChannel()) sameChannel(state.isSameChannel());
+        if (channelId != state.channelId()) channel(state.channelId());
     }
 
     private boolean set(String parameter, Function<Call, Call> builder) {
         return query("""
-                       INSERT INTO announcements(guild_id, %s) VALUES (?, ?)
-                       ON CONFLICT(guild_id)
-                           DO UPDATE SET %s = excluded.%s;
-                       """, parameter, parameter, parameter)
+                INSERT INTO announcements(guild_id, %s) VALUES (?, ?)
+                ON CONFLICT(guild_id)
+                    DO UPDATE SET %s = excluded.%s;
+                """, parameter, parameter, parameter)
                 .single(builder.apply(call().bind(guildId())))
                 .insert()
                 .changed();
@@ -84,13 +93,13 @@ public class Announcements extends AnnouncementsPOJO implements GuildHolder {
     public long guildId() {
         return settings.guildId();
     }
-      
+
     public String prettyString() {
         return """
-               Active: %s
-               Same channel: %s
-               Channel: %s
-               """.stripIndent()
-                .formatted(active, sameChannel, channelId);
+                Active: %s
+                Same channel: %s
+                Channel: %s
+                """.stripIndent()
+                   .formatted(active, sameChannel, channelId);
     }
 }
