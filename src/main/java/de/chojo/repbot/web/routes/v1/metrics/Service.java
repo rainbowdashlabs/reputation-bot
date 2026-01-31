@@ -7,7 +7,8 @@ package de.chojo.repbot.web.routes.v1.metrics;
 
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.dao.snapshots.statistics.LabeledCountStatistic;
-import de.chojo.repbot.web.routes.v1.MetricsHolder;
+import de.chojo.repbot.web.routes.v1.metrics.util.MetricCache;
+import de.chojo.repbot.web.routes.v1.metrics.util.MetricsHolder;
 import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
@@ -15,14 +16,14 @@ import io.javalin.openapi.OpenApiContent;
 import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiResponse;
 
-import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_DAYS;
-import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_DAY_OFFSET;
-import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_HOURS;
-import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_HOUR_OFFSET;
-import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_MONTH;
-import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_MONTH_OFFSET;
-import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_WEEKS;
-import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_WEEK_OFFSET;
+import static de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute.MAX_DAYS;
+import static de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute.MAX_DAY_OFFSET;
+import static de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute.MAX_HOURS;
+import static de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute.MAX_HOUR_OFFSET;
+import static de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute.MAX_MONTH;
+import static de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute.MAX_MONTH_OFFSET;
+import static de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute.MAX_WEEKS;
+import static de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute.MAX_WEEK_OFFSET;
 import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
 
@@ -33,10 +34,10 @@ public class Service extends MetricsHolder {
 
     @OpenApi(
             summary = "Get the counts of handled interactions per hour.",
-            operationId = "countHour",
-            path = "service/count/hour/{offset}/{count}",
+            operationId = "interactionCountHour",
+            path = "v1/metrics/service/count/hour/{offset}/{count}",
             methods = HttpMethod.GET,
-            tags = {"User"},
+            tags = {"Service"},
             responses = {
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = LabeledCountStatistic.class, type = "application/json")})
@@ -57,10 +58,10 @@ public class Service extends MetricsHolder {
 
     @OpenApi(
             summary = "Get the counts of handled interactions per day.",
-            operationId = "countDay",
-            path = "service/count/day/{offset}/{count}",
+            operationId = "interactionCountDay",
+            path = "v1/metrics/service/count/day/{offset}/{count}",
             methods = HttpMethod.GET,
-            tags = {"User"},
+            tags = {"Service"},
             responses = {
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = LabeledCountStatistic.class, type = "application/json")})
@@ -81,10 +82,10 @@ public class Service extends MetricsHolder {
 
     @OpenApi(
             summary = "Get the counts of handled interactions per week.",
-            operationId = "countWeek",
-            path = "service/count/week/{offset}/{count}",
+            operationId = "interactionCountWeek",
+            path = "v1/metrics/service/count/week/{offset}/{count}",
             methods = HttpMethod.GET,
-            tags = {"User"},
+            tags = {"Service"},
             responses = {
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = LabeledCountStatistic.class, type = "application/json")})
@@ -105,10 +106,10 @@ public class Service extends MetricsHolder {
 
     @OpenApi(
             summary = "Get the counts of handled interactions per month.",
-            operationId = "countMonth",
-            path = "service/count/month/{offset}/{count}",
+            operationId = "interactionCountMonth",
+            path = "v1/metrics/service/count/month/{offset}/{count}",
             methods = HttpMethod.GET,
-            tags = {"User"},
+            tags = {"Service"},
             responses = {
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
                     @OpenApiResponse(status = "200", content = {@OpenApiContent(from = LabeledCountStatistic.class, type = "application/json")})

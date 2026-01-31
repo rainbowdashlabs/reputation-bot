@@ -51,13 +51,13 @@ public class Localization {
                                      DiscordLocale.SWEDISH, // sv-SE
                                      DiscordLocale.JAPANESE // ja
                              )
-                             .withLanguageProvider(guild -> data.guilds().guild(guild).settings().general().language())
+                             .withLanguageProvider(guild -> data.guildRepository().guild(guild).settings().general().language())
                              .withGuildLocaleCodeProvider((guild, code) -> {
                                  if (!"words.reputation".equals(code)) return Optional.empty();
-                                 if (Premium.isNotEntitled(data.guilds().guild(guild).subscriptions(), configuration.skus().features().localeOverrides().reputationNameOverride())) {
+                                 if (Premium.isNotEntitled(data.guildRepository().guild(guild).subscriptions(), configuration.skus().features().localeOverrides().reputationNameOverride())) {
                                      return Optional.empty();
                                  }
-                                 return data.guilds().guild(guild).localeOverrides().getOverride(code);
+                                 return data.guildRepository().guild(guild).localeOverrides().getOverride(code);
                              })
                              .withBundlePath("locale")
                              .build();

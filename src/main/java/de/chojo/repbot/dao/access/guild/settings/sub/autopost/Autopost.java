@@ -5,8 +5,10 @@
  */
 package de.chojo.repbot.dao.access.guild.settings.sub.autopost;
 
+import com.fasterxml.jackson.annotation.JsonSerializeAs;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
+import de.chojo.repbot.web.pojo.settings.sub.AutopostPOJO;
 import de.chojo.sadu.mapper.wrapper.Row;
 import de.chojo.sadu.queries.api.call.Call;
 import net.dv8tion.jda.api.entities.Guild;
@@ -19,13 +21,9 @@ import java.util.function.Function;
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 
-public class Autopost implements GuildHolder {
+@JsonSerializeAs(AutopostPOJO.class)
+public class Autopost extends AutopostPOJO implements GuildHolder {
     private final Settings settings;
-    private boolean active = false;
-    private long channelId = 0;
-    private long messageId = 0;
-    private RefreshType refreshType = RefreshType.DELETE_AND_REPOST;
-    private RefreshInterval refreshInterval = RefreshInterval.DAILY;
 
     private Autopost(Settings settings, boolean active, long channelId, long message, RefreshType refreshType, RefreshInterval refreshInterval) {
         this.settings = settings;
@@ -47,26 +45,6 @@ public class Autopost implements GuildHolder {
                 rs.getLong("message_id"),
                 rs.getEnum("refresh_type",RefreshType.class),
                 rs.getEnum("refresh_interval", RefreshInterval.class));
-    }
-
-    public boolean active() {
-        return active;
-    }
-
-    public long channelId() {
-        return channelId;
-    }
-
-    public long messageId() {
-        return messageId;
-    }
-
-    public RefreshType refreshType() {
-        return refreshType;
-    }
-
-    public RefreshInterval refreshInterval() {
-        return refreshInterval;
     }
 
     public boolean active(boolean active) {

@@ -3,15 +3,16 @@
  *
  *     Copyright (C) RainbowDashLabs and Contributor
  */
-package de.chojo.repbot.web.routes.v1;
+package de.chojo.repbot.web.routes.v1.metrics.util;
 
 import de.chojo.repbot.web.routes.RoutesBuilder;
 import de.chojo.repbot.web.routes.v1.metrics.Commands;
 import de.chojo.repbot.web.routes.v1.metrics.Messages;
-import de.chojo.repbot.web.routes.v1.metrics.MetricCache;
 import de.chojo.repbot.web.routes.v1.metrics.Reputation;
 import de.chojo.repbot.web.routes.v1.metrics.Service;
 import de.chojo.repbot.web.routes.v1.metrics.Users;
+
+import static io.javalin.apibuilder.ApiBuilder.path;
 
 public class MetricsRoute implements RoutesBuilder {
 
@@ -44,11 +45,13 @@ public class MetricsRoute implements RoutesBuilder {
 
     @Override
     public void buildRoutes() {
-        cache.buildRoutes();
-        reputation.buildRoutes();
-        commands.buildRoutes();
-        messages.buildRoutes();
-        users.buildRoutes();
-        service.buildRoutes();
+        path("metrics", () -> {
+            cache.buildRoutes();
+            reputation.buildRoutes();
+            commands.buildRoutes();
+            messages.buildRoutes();
+            users.buildRoutes();
+            service.buildRoutes();
+        });
     }
 }

@@ -3,12 +3,11 @@
  *
  *     Copyright (C) RainbowDashLabs and Contributor
  */
-package de.chojo.repbot.web.routes.v1;
+package de.chojo.repbot.web.routes.v1.metrics.util;
 
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.web.error.ApiException;
 import de.chojo.repbot.web.routes.RoutesBuilder;
-import de.chojo.repbot.web.routes.v1.metrics.MetricCache;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.http.HttpStatus;
@@ -28,6 +27,10 @@ public abstract class MetricsHolder implements RoutesBuilder {
 
     public Metrics metrics() {
         return metrics;
+    }
+
+    public Handler cache(Handler handler) {
+        return cache.cache(handler);
     }
 
     protected void writeImage(Context ctx, byte[] png) {
@@ -67,9 +70,5 @@ public abstract class MetricsHolder implements RoutesBuilder {
         if (value > max) {
             throw new ApiException(HttpStatus.BAD_REQUEST, String.format("Value %s is too large. Max: %s", value, max));
         }
-    }
-
-    public Handler cache(Handler handler) {
-        return cache.cache(handler);
     }
 }

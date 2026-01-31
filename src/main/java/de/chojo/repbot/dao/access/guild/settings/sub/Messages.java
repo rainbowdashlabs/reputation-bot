@@ -5,8 +5,11 @@
  */
 package de.chojo.repbot.dao.access.guild.settings.sub;
 
+import com.fasterxml.jackson.annotation.JsonSerializeAs;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
+import de.chojo.repbot.web.pojo.settings.sub.AnnouncementsPOJO;
+import de.chojo.repbot.web.pojo.settings.sub.MessagesPOJO;
 import de.chojo.sadu.mapper.wrapper.Row;
 import de.chojo.sadu.queries.api.call.Call;
 import net.dv8tion.jda.api.entities.Guild;
@@ -19,19 +22,17 @@ import java.util.function.Function;
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 
-public class Messages implements GuildHolder {
+@JsonSerializeAs(MessagesPOJO.class)
+public class Messages extends MessagesPOJO implements GuildHolder {
     private final Settings settings;
-    private boolean reactionConfirmation;
-    private boolean commandReputationEphemeral;
 
     public Messages(Settings settings) {
         this(settings, true, false);
     }
 
     public Messages(Settings settings, boolean reactionConfirmation, boolean commandReputationEphemeral) {
+        super(reactionConfirmation, commandReputationEphemeral);
         this.settings = settings;
-        this.reactionConfirmation = reactionConfirmation;
-        this.commandReputationEphemeral = commandReputationEphemeral;
     }
 
     public static Messages build(Settings settings, Row rs) throws SQLException {
@@ -54,14 +55,6 @@ public class Messages implements GuildHolder {
             this.commandReputationEphemeral = commandReputationEphemeral;
         }
         return this.commandReputationEphemeral;
-    }
-
-    public boolean isReactionConfirmation() {
-        return reactionConfirmation;
-    }
-
-    public boolean isCommandReputationEphemeral() {
-        return commandReputationEphemeral;
     }
 
     @Override

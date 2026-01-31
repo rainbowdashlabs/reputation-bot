@@ -5,9 +5,10 @@
  */
 package de.chojo.repbot.web;
 
-import com.google.common.collect.Streams;
 import de.chojo.repbot.dao.provider.Metrics;
-import de.chojo.repbot.web.routes.v1.MetricsRoute;
+import de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute;
+import de.chojo.repbot.web.routes.v1.session.SessionRoute;
+import de.chojo.repbot.web.sessions.SessionService;
 import io.javalin.http.ContentType;
 import org.slf4j.Logger;
 
@@ -21,10 +22,14 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class Api {
     private static final Logger log = getLogger(Api.class);
+    private final SessionService sessionService;
     private final MetricsRoute metricsRoute;
+    private final SessionRoute sessionRoute;
 
-    public Api(Metrics metrics) {
+    public Api(SessionService sessionService, Metrics metrics) {
+        this.sessionService = sessionService;
         metricsRoute = new MetricsRoute(metrics);
+        sessionRoute = new SessionRoute(sessionService);
     }
 
     public void init() {
@@ -40,12 +45,15 @@ public class Api {
                     ctx.queryString(),
                     ctx.status(),
                     ctx.res().getHeaderNames().stream().map(h -> "   " + h + ": " + ctx.res().getHeader(h))
-                           .collect(Collectors.joining("\n")),
+                       .collect(Collectors.joining("\n")),
                     ContentType.OCTET_STREAM.equals(ctx.contentType()) ? "Bytes"
                             : Objects.requireNonNullElse(ctx.result(), "")
                                      .substring(0, Math.min(
                                              Objects.requireNonNullElse(ctx.result(), "").length(), 180)));
         });
-        path("v1", () -> path("metrics", metricsRoute::buildRoutes));
+        path("v1", () -> {
+            metricsRoute.buildRoutes();
+            sessionRoute.buildRoutes();
+        });
     }
 }

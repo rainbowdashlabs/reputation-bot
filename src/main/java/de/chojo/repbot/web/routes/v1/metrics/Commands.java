@@ -8,7 +8,8 @@ package de.chojo.repbot.web.routes.v1.metrics;
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.dao.snapshots.statistics.CommandsStatistic;
 import de.chojo.repbot.util.Text;
-import de.chojo.repbot.web.routes.v1.MetricsHolder;
+import de.chojo.repbot.web.routes.v1.metrics.util.MetricCache;
+import de.chojo.repbot.web.routes.v1.metrics.util.MetricsHolder;
 import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
@@ -16,10 +17,10 @@ import io.javalin.openapi.OpenApiContent;
 import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiResponse;
 
-import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_MONTH;
-import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_MONTH_OFFSET;
-import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_WEEKS;
-import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_WEEK_OFFSET;
+import static de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute.MAX_MONTH;
+import static de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute.MAX_MONTH_OFFSET;
+import static de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute.MAX_WEEKS;
+import static de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute.MAX_WEEK_OFFSET;
 import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
 
@@ -31,7 +32,7 @@ public class Commands extends MetricsHolder {
     @OpenApi(
             summary = "Get command usages for a week.",
             operationId = "usageWeek",
-            path = "commands/usage/week/{offset}",
+            path = "v1/metrics/commands/usage/week/{offset}",
             methods = HttpMethod.GET,
             tags = {"Commands"},
             responses = {
@@ -54,7 +55,7 @@ public class Commands extends MetricsHolder {
     @OpenApi(
             summary = "Get command usages for a month.",
             operationId = "usageMonth",
-            path = "commands/usage/month/{offset}",
+            path = "v1/metrics/commands/usage/month/{offset}",
             methods = HttpMethod.GET,
             tags = {"Commands"},
             responses = {
@@ -77,7 +78,7 @@ public class Commands extends MetricsHolder {
     @OpenApi(
             summary = "Get the amount of executed commands per week.",
             operationId = "countWeek",
-            path = "commands/count/week/{offset}/{count}",
+            path = "v1/metrics/commands/count/week/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Commands"},
             responses = {
@@ -101,7 +102,7 @@ public class Commands extends MetricsHolder {
     @OpenApi(
             summary = "Get the amount of executed commands per month.",
             operationId = "countMonth",
-            path = "commands/count/month/{offset}/{count}",
+            path = "v1/metrics/commands/count/month/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Commands"},
             responses = {

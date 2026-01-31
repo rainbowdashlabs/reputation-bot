@@ -5,20 +5,34 @@
  */
 package de.chojo.repbot.core;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.chojo.jdautil.botlist.BotlistService;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.web.Api;
+import de.chojo.repbot.web.config.Role;
+import de.chojo.repbot.web.config.SessionAttribute;
 import de.chojo.repbot.web.error.ApiException;
+import de.chojo.repbot.web.sessions.SessionService;
 import io.javalin.Javalin;
+import io.javalin.http.Context;
+import io.javalin.http.UnauthorizedResponse;
+import io.javalin.json.JavalinJackson;
 import io.javalin.openapi.OpenApiLicense;
 import io.javalin.openapi.plugin.OpenApiPlugin;
 import io.javalin.openapi.plugin.OpenApiPluginConfiguration;
 import io.javalin.openapi.plugin.swagger.SwaggerConfiguration;
 import io.javalin.openapi.plugin.swagger.SwaggerPlugin;
+import io.javalin.security.RouteRole;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.slf4j.Logger;
+
+import java.util.Set;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -28,17 +42,19 @@ public class Web {
     private final Data data;
     private final Threading threading;
     private final Configuration configuration;
+    private final SessionService sessionService;
     private Javalin javalin;
 
-    private Web(Bot bot, Data data, Threading threading, Configuration configuration) {
+    private Web(Bot bot, Data data, Threading threading, Configuration configuration, SessionService sessionService) {
         this.bot = bot;
         this.data = data;
         this.threading = threading;
         this.configuration = configuration;
+        this.sessionService = sessionService;
     }
 
-    public static Web create(Bot bot, Data data, Threading threading, Configuration configuration) {
-        var web = new Web(bot, data, threading, configuration);
+    public static Web create(Bot bot, Data data, Threading threading, Configuration configuration, SessionService sessionService) {
+        var web = new Web(bot, data, threading, configuration, sessionService);
         web.init();
         return web;
     }
@@ -61,7 +77,11 @@ public class Web {
         javalin = Javalin.create(config -> {
                              config.registerPlugin(new OpenApiPlugin(this::configureOpenApi));
                              config.registerPlugin(new SwaggerPlugin(this::configureSwagger));
-                             config.router.apiBuilder(() -> new Api(data.metrics()).init());
+                             config.router.apiBuilder(() -> new Api(sessionService, data.metrics()).init());
+                             config.router.mount(router -> {
+                                 router.beforeMatched(this::handleAccess);
+                             });
+                             config.jsonMapper(jacksonMapper());
                          })
                          .start(api.host(), api.port());
         javalin.exception(ApiException.class, (err, ctx) -> ctx.result(err.getMessage()).status(err.status()));
@@ -70,6 +90,21 @@ public class Web {
     private void configureSwagger(SwaggerConfiguration swaggerConfiguration) {
         swaggerConfiguration.setDocumentationPath("/docs");
         swaggerConfiguration.setUiPath("/swagger-ui");
+    }
+
+    public void handleAccess(Context ctx) {
+        Set<RouteRole> routeRoles = ctx.routeRoles();
+        if (routeRoles.contains(Role.ANYONE)) {
+            return;
+        }
+
+        if (routeRoles.contains(Role.GUILD_USER)) {
+            var session = sessionService.getGuildSession(ctx).orElseThrow(() -> {
+                ctx.header("WWW-Authenticate", "Authorization");
+                return new UnauthorizedResponse("You need to be logged in to access this route.");
+            });
+            ctx.sessionAttribute(SessionAttribute.GUILD_SESSION, session);
+        }
     }
 
     private void configureOpenApi(OpenApiPluginConfiguration config) {
@@ -113,5 +148,15 @@ public class Web {
                               .build()
                       )
                       .build();
+    }
+
+    public static JavalinJackson jacksonMapper() {
+        ObjectMapper mapper = JsonMapper.builder()
+                                        .addModule(new JavaTimeModule())
+                                        .build();
+
+        mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        return new JavalinJackson(mapper, true);
     }
 }

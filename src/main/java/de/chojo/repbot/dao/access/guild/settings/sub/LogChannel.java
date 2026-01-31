@@ -5,8 +5,11 @@
  */
 package de.chojo.repbot.dao.access.guild.settings.sub;
 
+import com.fasterxml.jackson.annotation.JsonSerializeAs;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
+import de.chojo.repbot.web.pojo.settings.sub.AnnouncementsPOJO;
+import de.chojo.repbot.web.pojo.settings.sub.LogChannelPOJO;
 import de.chojo.sadu.mapper.wrapper.Row;
 import de.chojo.sadu.queries.api.call.Call;
 import net.dv8tion.jda.api.entities.Guild;
@@ -18,19 +21,18 @@ import java.util.function.Function;
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 
-public class LogChannel implements GuildHolder {
+@JsonSerializeAs(LogChannelPOJO.class)
+public class LogChannel extends LogChannelPOJO implements GuildHolder {
     private final Settings settings;
-    long channelId;
-    boolean active;
 
     public LogChannel(Settings settings) {
+        super();
         this.settings = settings;
     }
 
     public LogChannel(Settings settings, long channelId, boolean active) {
+        super(channelId, active);
         this.settings = settings;
-        this.channelId = channelId;
-        this.active = active;
     }
 
     public static LogChannel build(Settings settings, Row row) throws SQLException {
@@ -38,14 +40,6 @@ public class LogChannel implements GuildHolder {
                 row.getLong("channel_id"),
                 row.getBoolean("active")
         );
-    }
-
-    public long channelId() {
-        return channelId;
-    }
-
-    public boolean active() {
-        return active;
     }
 
     public boolean active(boolean active) {
