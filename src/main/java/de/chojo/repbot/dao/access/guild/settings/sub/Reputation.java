@@ -5,8 +5,11 @@
  */
 package de.chojo.repbot.dao.access.guild.settings.sub;
 
+import com.fasterxml.jackson.annotation.JsonSerializeAs;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
+import de.chojo.repbot.web.pojo.settings.sub.AnnouncementsPOJO;
+import de.chojo.repbot.web.pojo.settings.sub.ReputationPOJO;
 import de.chojo.sadu.mapper.wrapper.Row;
 import de.chojo.sadu.queries.api.call.Call;
 import net.dv8tion.jda.api.entities.Guild;
@@ -19,29 +22,17 @@ import java.util.function.Function;
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 
-public class Reputation implements GuildHolder {
+@JsonSerializeAs(ReputationPOJO.class)
+public class Reputation extends ReputationPOJO implements GuildHolder {
     private final Settings settings;
-    private boolean reactionActive;
-    private boolean answerActive;
-    private boolean mentionActive;
-    private boolean fuzzyActive;
-    private boolean embedActive;
-    private boolean directActive;
-    private boolean commandActive;
 
     public Reputation(Settings settings) {
         this(settings, true, true, true, true, true, false, false);
     }
 
     public Reputation(Settings settings, boolean reactionActive, boolean answerActive, boolean mentionActive, boolean fuzzyActive, boolean embedActive, boolean directActive, boolean commandActive) {
+        super(reactionActive, answerActive, mentionActive, fuzzyActive, embedActive, directActive, commandActive);
         this.settings = settings;
-        this.reactionActive = reactionActive;
-        this.answerActive = answerActive;
-        this.mentionActive = mentionActive;
-        this.fuzzyActive = fuzzyActive;
-        this.embedActive = embedActive;
-        this.directActive = directActive;
-        this.commandActive = commandActive;
     }
 
     public static Reputation build(Settings settings, Row rs) throws SQLException {
@@ -53,34 +44,6 @@ public class Reputation implements GuildHolder {
                 rs.getBoolean("embed_active"),
                 rs.getBoolean("skip_single_embed"),
                 rs.getBoolean("command_active"));
-    }
-
-    public boolean isReactionActive() {
-        return reactionActive;
-    }
-
-    public boolean isAnswerActive() {
-        return answerActive;
-    }
-
-    public boolean isMentionActive() {
-        return mentionActive;
-    }
-
-    public boolean isFuzzyActive() {
-        return fuzzyActive;
-    }
-
-    public boolean isEmbedActive() {
-        return embedActive;
-    }
-
-    public boolean isDirectActive() {
-        return directActive;
-    }
-
-    public boolean isCommandActive() {
-        return commandActive;
     }
 
     public boolean embedActive(boolean embedActive) {

@@ -16,7 +16,6 @@ import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
@@ -25,11 +24,9 @@ import static de.chojo.sadu.queries.api.query.Query.query;
 public class Ranks implements GuildHolder {
     private final LinkedHashSet<ReputationRank> ranks = new LinkedHashSet<>();
     private final Settings settings;
-    private final AtomicBoolean stackRoles;
 
-    public Ranks(Settings settings, AtomicBoolean stackRoles) {
+    public Ranks(Settings settings) {
         this.settings = settings;
-        this.stackRoles = stackRoles;
     }
 
     /**
@@ -97,9 +94,9 @@ public class Ranks implements GuildHolder {
     /**
      * Gets all reputation ranks which should be assigned to the user.
      * <p>
-     * This will always contain zero or one role when {@link General#stackRoles()} is true.
+     * This will always contain zero or one role when {@link General#isStackRoles()} is true.
      * <p>
-     * This will contain up to {@link #ranks()}.size() when {@link General#stackRoles()} is false.
+     * This will contain up to {@link #ranks()}.size() when {@link General#isStackRoles()} is false.
      *
      * @param user user to check
      * @return list of ranks
@@ -109,7 +106,7 @@ public class Ranks implements GuildHolder {
         return ranks().stream()
                       .filter(rank -> rank.reputation() <= profile.reputation())
                       .sorted()
-                      .limit(stackRoles.get() ? Integer.MAX_VALUE : 1)
+                      .limit(settings.general().isStackRoles() ? Integer.MAX_VALUE : 1)
                       .toList();
     }
 

@@ -5,8 +5,11 @@
  */
 package de.chojo.repbot.dao.access.guild.settings.sub.thanking;
 
+import com.fasterxml.jackson.annotation.JsonSerializeAs;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
+import de.chojo.repbot.web.pojo.settings.sub.AutopostPOJO;
+import de.chojo.repbot.web.pojo.settings.sub.thanking.ChannelsPOJO;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.attribute.ICategorizableChannel;
@@ -26,20 +29,16 @@ import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class Channels implements GuildHolder {
+@JsonSerializeAs(ChannelsPOJO.class)
+public class Channels extends ChannelsPOJO implements GuildHolder {
 
     private static final Logger log = getLogger(Channels.class);
 
     private final Thanking thanking;
-    private final Set<Long> channels;
-    private final Set<Long> categories;
-    private boolean whitelist;
 
     public Channels(Thanking thanking, boolean whitelist, Set<Long> channels, Set<Long> categories) {
+        super(channels, categories, whitelist);
         this.thanking = thanking;
-        this.whitelist = whitelist;
-        this.channels = channels;
-        this.categories = categories;
     }
 
     @Override
@@ -89,14 +88,6 @@ public class Channels implements GuildHolder {
         return categories.stream().map(guild()::getCategoryById)
                          .filter(Objects::nonNull)
                          .toList();
-    }
-
-    public Set<Long> channelIds() {
-        return channels;
-    }
-
-    public boolean isWhitelist() {
-        return whitelist;
     }
 
     /**

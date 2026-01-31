@@ -9,7 +9,8 @@ import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.dao.snapshots.statistics.CountsStatistic;
 import de.chojo.repbot.dao.snapshots.statistics.DowsStatistic;
 import de.chojo.repbot.dao.snapshots.statistics.LabeledCountStatistic;
-import de.chojo.repbot.web.routes.v1.MetricsHolder;
+import de.chojo.repbot.web.routes.v1.metrics.util.MetricCache;
+import de.chojo.repbot.web.routes.v1.metrics.util.MetricsHolder;
 import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
@@ -17,23 +18,25 @@ import io.javalin.openapi.OpenApiContent;
 import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiResponse;
 
-import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_MONTH;
-import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_MONTH_OFFSET;
-import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_WEEKS;
-import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_WEEK_OFFSET;
-import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_YEAR_OFFSET;
+import static de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute.MAX_MONTH;
+import static de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute.MAX_MONTH_OFFSET;
+import static de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute.MAX_WEEKS;
+import static de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute.MAX_WEEK_OFFSET;
+import static de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute.MAX_YEAR_OFFSET;
 import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
 
 public class Reputation extends MetricsHolder {
+    private static final String REPUTATION_PATH = "v1/reputation";
+
     public Reputation(Metrics metrics, MetricCache cache) {
         super(cache, metrics);
     }
 
     @OpenApi(
             summary = "Get the counts of given reputation per week.",
-            operationId = "countWeek",
-            path = "reputation/count/week/{offset}/{count}",
+            operationId = "reputationCountWeek",
+            path = "v1/metrics/reputation/count/week/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Reputation"},
             responses = {
@@ -56,8 +59,8 @@ public class Reputation extends MetricsHolder {
 
     @OpenApi(
             summary = "Get the counts of given reputation per month.",
-            operationId = "countMonth",
-            path = "reputation/count/month/{offset}/{count}",
+            operationId = "reputationCountMonth",
+            path = "v1/metrics/reputation/count/month/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Reputation"},
             responses = {
@@ -80,8 +83,8 @@ public class Reputation extends MetricsHolder {
 
     @OpenApi(
             summary = "Get the counts of given reputation per week split into type.",
-            operationId = "countTypeWeek",
-            path = "reputation/type/count/week/{offset}/{count}",
+            operationId = "reputationCountTypeWeek",
+            path = "v1/metrics/reputation/type/count/week/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Reputation"},
             responses = {
@@ -104,8 +107,8 @@ public class Reputation extends MetricsHolder {
 
     @OpenApi(
             summary = "Get the counts of given reputation per month split into type.",
-            operationId = "countTypeMonth",
-            path = "reputation/type/count/month/{offset}/{count}",
+            operationId = "reputationCountTypeMonth",
+            path = "v1/metrics/reputation/type/count/month/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Reputation"},
             responses = {
@@ -128,8 +131,8 @@ public class Reputation extends MetricsHolder {
 
     @OpenApi(
             summary = "Get the total count of reputation in these weeks split into type.",
-            operationId = "totalTypeWeek",
-            path = "reputation/type/total/week/{offset}/{count}",
+            operationId = "reputationTotalTypeWeek",
+            path = "v1/metrics/reputation/type/total/week/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Reputation"},
             responses = {
@@ -152,8 +155,8 @@ public class Reputation extends MetricsHolder {
 
     @OpenApi(
             summary = "Get the total count of reputation in these months split into type.",
-            operationId = "totalTypeMonth",
-            path = "reputation/type/total/month/{offset}/{count}",
+            operationId = "reputationTotalTypeMonth",
+            path = "v1/metrics/reputation/type/total/month/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Reputation"},
             responses = {
@@ -176,8 +179,8 @@ public class Reputation extends MetricsHolder {
 
     @OpenApi(
             summary = "Get the total count of reputation in these weeks.",
-            operationId = "totalWeek",
-            path = "reputation/total/week/{offset}/{count}",
+            operationId = "reputationTotalWeek",
+            path = "v1/metrics/reputation/total/week/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Reputation"},
             responses = {
@@ -200,8 +203,8 @@ public class Reputation extends MetricsHolder {
 
     @OpenApi(
             summary = "Get the total count of reputation in these months.",
-            operationId = "totalMonth",
-            path = "reputation/total/month/{offset}/{count}",
+            operationId = "reputationTotalMonth",
+            path = "v1/metrics/reputation/total/month/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Reputation"},
             responses = {
@@ -224,8 +227,8 @@ public class Reputation extends MetricsHolder {
 
     @OpenApi(
             summary = "Get the changed reputation per week.",
-            operationId = "changesWeek",
-            path = "reputation/changes/week/{offset}/{count}",
+            operationId = "reputationChangesWeek",
+            path = "v1/metrics/reputation/changes/week/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Reputation"},
             responses = {
@@ -248,8 +251,8 @@ public class Reputation extends MetricsHolder {
 
     @OpenApi(
             summary = "Get the changed reputation per month.",
-            operationId = "changesMonth",
-            path = "reputation/changes/month/{offset}/{count}",
+            operationId = "reputationChangesMonth",
+            path = "v1/metrics/reputation/changes/month/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Reputation"},
             responses = {
@@ -272,8 +275,8 @@ public class Reputation extends MetricsHolder {
 
     @OpenApi(
             summary = "Get reputation per day of week.",
-            operationId = "dowWeek",
-            path = "reputation/dow/week/{offset}",
+            operationId = "reputationDowWeek",
+            path = "v1/metrics/reputation/dow/week/{offset}",
             methods = HttpMethod.GET,
             tags = {"Reputation"},
             responses = {
@@ -295,8 +298,8 @@ public class Reputation extends MetricsHolder {
 
     @OpenApi(
             summary = "Get average reputation per day of week in a month.",
-            operationId = "dowMonth",
-            path = "reputation/dow/month/{offset}",
+            operationId = "reputationDowMonth",
+            path = "v1/metrics/reputation/dow/month/{offset}",
             methods = HttpMethod.GET,
             tags = {"Reputation"},
             responses = {
@@ -318,8 +321,8 @@ public class Reputation extends MetricsHolder {
 
     @OpenApi(
             summary = "Get average reputation per day of week in a year.",
-            operationId = "dowYear",
-            path = "reputation/dow/year/{offset}",
+            operationId = "reputationDowYear",
+            path = "v1/metrics/reputation/dow/year/{offset}",
             methods = HttpMethod.GET,
             tags = {"Reputation"},
             responses = {

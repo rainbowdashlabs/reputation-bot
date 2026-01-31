@@ -40,6 +40,7 @@ import de.chojo.repbot.commands.setup.Setup;
 import de.chojo.repbot.commands.supporter.Supporter;
 import de.chojo.repbot.commands.thankwords.Thankwords;
 import de.chojo.repbot.commands.top.Top;
+import de.chojo.repbot.commands.web.Web;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.exceptions.MissingSupportTier;
 import de.chojo.repbot.listener.LogListener;
@@ -126,9 +127,9 @@ public class Bot {
 
     private void initShardManager() throws LoginException {
         log.info("Initializing Shardmanager.");
-        roleAssigner = new RoleAssigner(data.guilds(), localization.localizer());
-        scan = new Scan(data.guilds(), configuration);
-        roles = new Roles(data.guilds(), new RoleAssigner(data.guilds(), localization.localizer()));
+        roleAssigner = new RoleAssigner(data.guildRepository(), localization.localizer());
+        scan = new Scan(data.guildRepository(), configuration);
+        roles = new Roles(data.guildRepository(), new RoleAssigner(data.guildRepository(), localization.localizer()));
 
         repBotCachePolicy = new RepBotCachePolicy(scan, roles);
         shardManager = DefaultShardManagerBuilder
@@ -193,7 +194,7 @@ public class Bot {
 
     private void initServices() {
         log.info("Setting up services");
-        var guilds = data.guilds();
+        var guilds = data.guildRepository();
         var worker = threading.repBotWorker();
 
         statistic = Statistic.of(shardManager, data.metrics(), worker);
@@ -210,14 +211,14 @@ public class Bot {
         SelfCleanupService.create(shardManager, localization.localizer(), guilds, data.cleanup(), configuration, worker);
         AnalyzerService.create(threading.repBotWorker(), data.analyzer());
         MetricService.create(threading.repBotWorker(), data.metrics());
-        autopostService = AutopostService.create(shardManager, data.guilds(), threading, localization.localizer());
+        autopostService = AutopostService.create(shardManager, data.guildRepository(), threading, localization.localizer());
         premiumService = PremiumService.of(guilds, threading, configuration, localization.localizer(), shardManager);
     }
 
     private void initInteractions() {
         log.info("Setting up interactions");
         var localizer = localization.localizer();
-        var guilds = data.guilds();
+        var guilds = data.guildRepository();
 
         BotAdmin botAdmin = new BotAdmin(guilds, configuration, statistic);
         hub = InteractionHub.builder(shardManager)
@@ -246,7 +247,8 @@ public class Bot {
                                     botAdmin,
                                     new Ranking(guilds, configuration),
                                     new Reputation(guilds, reputationService)/*TODO: remove rep command*/,
-                                    new Supporter(premiumService, configuration, guilds))
+                                    new Supporter(premiumService, configuration, guilds),
+                                    new Web(data.sessionService()))
                             .withMessages(new MessageLog(guilds))
                             .withUsers(new UserReceived(guilds, configuration),
                                     new UserDonated(guilds, configuration))
@@ -268,7 +270,7 @@ public class Bot {
                             })
                             .withGuildCommandMapper(cmd -> switch (cmd.name()) {
                                 case "bot" -> Collections.singletonList(configuration.baseSettings().botGuild());
-                                case "reputation" -> data.guilds().byCommandReputationEnabled();
+                                case "reputation" -> data.guildRepository().byCommandReputationEnabled();
                                 default -> Collections.emptyList();
                             })
                             .withDefaultMenuService()
@@ -288,7 +290,7 @@ public class Bot {
     private void initListener() {
         log.info("Setting up listener.");
         var localizer = localization.localizer();
-        var guilds = data.guilds();
+        var guilds = data.guildRepository();
         // init listener and services
         var reactionListener = new ReactionListener(guilds, localizer, reputationService, configuration);
         var voteListener = new ReputationVoteListener(guilds, reputationService, localizer, configuration);

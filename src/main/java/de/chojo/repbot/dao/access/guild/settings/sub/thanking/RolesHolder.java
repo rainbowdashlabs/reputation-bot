@@ -5,8 +5,10 @@
  */
 package de.chojo.repbot.dao.access.guild.settings.sub.thanking;
 
+import com.fasterxml.jackson.annotation.JsonSerializeAs;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
+import de.chojo.repbot.web.pojo.settings.sub.thanking.RolesHolderPOJO;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
@@ -22,14 +24,14 @@ import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public abstract class RolesHolder implements GuildHolder {
+@JsonSerializeAs(RolesHolderPOJO.class)
+public abstract class RolesHolder extends RolesHolderPOJO implements GuildHolder {
     private static final Logger log = getLogger(RolesHolder.class);
-    protected final Set<Long> roleIds;
     protected final Thanking thanking;
 
     public RolesHolder(Thanking thanking, Set<Long> roleIds) {
+        super(roleIds);
         this.thanking = thanking;
-        this.roleIds = roleIds;
     }
 
     public boolean hasRole(@Nullable Member member) {

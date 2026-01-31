@@ -173,7 +173,7 @@ public class Settings implements GuildHolder {
         if (ranks != null) {
             return ranks;
         }
-        ranks = new Ranks(this, general().stackRoles());
+        ranks = new Ranks(this);
         return ranks;
     }
 

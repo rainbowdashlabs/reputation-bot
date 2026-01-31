@@ -5,8 +5,11 @@
  */
 package de.chojo.repbot.dao.access.guild.settings.sub.thanking;
 
+import com.fasterxml.jackson.annotation.JsonSerializeAs;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
+import de.chojo.repbot.web.pojo.settings.sub.thanking.RolesHolderPOJO;
+import de.chojo.repbot.web.pojo.settings.sub.thanking.ThankwordsPOJO;
 import net.dv8tion.jda.api.entities.Guild;
 import org.intellij.lang.annotations.Language;
 import org.slf4j.Logger;
@@ -22,7 +25,8 @@ import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class Thankwords implements GuildHolder {
+@JsonSerializeAs(ThankwordsPOJO.class)
+public class Thankwords extends ThankwordsPOJO implements GuildHolder {
     private static final Logger log = getLogger(Thankwords.class);
     @Language("RegExp")
     private static final String THANKWORD = "(?:^|\\b)%s(?:$|\\b)";
@@ -31,13 +35,12 @@ public class Thankwords implements GuildHolder {
 
     private final Thanking thanking;
 
-    private final Set<String> thankwords;
     private final StampedLock lock;
     private volatile Pattern cachedPattern;
 
     public Thankwords(Thanking thanking, Set<String> thankwords) {
+        super(thankwords);
         this.thanking = thanking;
-        this.thankwords = thankwords;
         this.lock = new StampedLock();
         // as 'this' does not escape in this constructor,
         // we don't need a write-lock here
@@ -54,6 +57,7 @@ public class Thankwords implements GuildHolder {
         return thanking.guildId();
     }
 
+    @Override
     public Set<String> words() {
         long stamp = lock.readLock();
         try {

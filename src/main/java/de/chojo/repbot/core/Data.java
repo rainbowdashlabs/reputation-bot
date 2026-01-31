@@ -15,6 +15,7 @@ import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.dao.provider.Voice;
 import de.chojo.repbot.util.LogNotify;
+import de.chojo.repbot.web.sessions.SessionService;
 import de.chojo.sadu.datasource.DataSourceCreator;
 import de.chojo.sadu.mapper.RowMapperRegistry;
 import de.chojo.sadu.mapper.rowmapper.RowMapper;
@@ -41,6 +42,7 @@ public class Data {
     private Metrics metrics;
     private Voice voice;
     private Analyzer analyzer;
+    private SessionService sessionService;
 
     private Data(Threading threading, Configuration configuration) {
         this.threading = threading;
@@ -58,6 +60,7 @@ public class Data {
         configure();
         updateDatabase();
         initDao();
+        sessionService = new SessionService(guildRepository());
     }
 
     public void initConnection() {
@@ -122,7 +125,7 @@ public class Data {
                                 .build();
     }
 
-    public GuildRepository guilds() {
+    public GuildRepository guildRepository() {
         return guildRepository;
     }
 
@@ -148,5 +151,9 @@ public class Data {
 
     public Analyzer analyzer() {
         return analyzer;
+    }
+
+    public SessionService sessionService() {
+        return sessionService;
     }
 }

@@ -32,7 +32,7 @@ public class StackRoles extends BaseRoleModifier {
         }
         var state = event.getOption("stack").getAsBoolean();
 
-        if (settings.general().stackRoles(state)) {
+        if (settings.general().isStackRoles(state)) {
             var menu = new LocalizedEmbedBuilder(context.guildLocalizer())
                     .setTitle(Text.getBooleanMessage(context, state,
                             "command.roles.stackroles.message.stacked", "command.roles.stackroles.message.notStacked"))
