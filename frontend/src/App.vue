@@ -1,5 +1,19 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import HelloWorld from './components/HelloWorld.vue'
+import { api } from './api'
+
+onMounted(() => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const token = urlParams.get('token');
+  if (token) {
+    api.setToken(token);
+    // Remove token from URL
+    urlParams.delete('token');
+    const newRelativePathQuery = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
+    window.history.replaceState(null, '', newRelativePathQuery);
+  }
+})
 </script>
 
 <template>

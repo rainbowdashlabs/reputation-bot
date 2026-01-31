@@ -9,6 +9,7 @@ Learn more about the recommended Project Setup and IDE Support in the [Vue Docs 
 - TypeScript for not crying all the time (just mostly)
 - Vite for building
 - Tailwind CSS for pretty stuff https://tailwindcss.com/docs/installation/using-vite
+- axios for making http requests without suffering
 
 #### Used Vue Plugins
 - Vue Router for site routing https://router.vuejs.org/guide/
