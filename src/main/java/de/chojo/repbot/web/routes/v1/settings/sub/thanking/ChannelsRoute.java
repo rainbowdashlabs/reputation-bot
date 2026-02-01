@@ -2,9 +2,11 @@ package de.chojo.repbot.web.routes.v1.settings.sub.thanking;
 
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
+import de.chojo.repbot.web.error.ErrorResponse;
 import de.chojo.repbot.web.pojo.settings.sub.thanking.ChannelsPOJO;
 import de.chojo.repbot.web.routes.RoutesBuilder;
 import de.chojo.repbot.web.sessions.GuildSession;
+import de.chojo.repbot.web.validation.PremiumValidator;
 import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
@@ -12,6 +14,7 @@ import io.javalin.openapi.OpenApiContent;
 import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiRequestBody;
 import io.javalin.openapi.OpenApiResponse;
+import net.dv8tion.jda.api.sharding.ShardManager;
 
 import java.util.Set;
 
@@ -27,11 +30,28 @@ public class ChannelsRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = ChannelsPOJO.class)),
-            responses = {@OpenApiResponse(status = "200")}
+            responses = {
+                    @OpenApiResponse(status = "200"),
+                    @OpenApiResponse(status = "403", content = @OpenApiContent(from = ErrorResponse.class), description = "Premium feature required or limit exceeded")
+            }
     )
     public void updateChannelsSettings(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().thanking().channels().apply(ctx.bodyAsClass(ChannelsPOJO.class));
+        ChannelsPOJO channelsPOJO = ctx.bodyAsClass(ChannelsPOJO.class);
+
+        // Validate all premium features in the combined POJO
+        PremiumValidator validator = session.premiumValidator();
+
+        // Validate channel count limit
+        validator.requireWithinLimit(channelsPOJO.channelIds().size(), validator.features().reputationChannel(), "Reputation Channels");
+
+        // Validate category count limit
+        validator.requireWithinLimit(channelsPOJO.categoryIds().size(), validator.features().reputationCategories(), "Reputation Categories");
+
+        // Validate whitelist mode (blacklist requires premium)
+        validator.requireWhitelistOrPremium(channelsPOJO.isWhitelist());
+
+        session.repGuild().settings().thanking().channels().apply(channelsPOJO);
     }
 
     @OpenApi(
@@ -42,11 +62,20 @@ public class ChannelsRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
-            responses = {@OpenApiResponse(status = "200")}
+            responses = {
+                    @OpenApiResponse(status = "200"),
+                    @OpenApiResponse(status = "403", content = @OpenApiContent(from = ErrorResponse.class), description = "Premium feature required or limit exceeded")
+            }
     )
     public void updateWhitelist(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().thanking().channels().listType(ctx.bodyAsClass(Boolean.class));
+        boolean isWhitelist = ctx.bodyAsClass(Boolean.class);
+
+        // Validate that blacklist mode is allowed
+        PremiumValidator validator = session.premiumValidator();
+        validator.requireWhitelistOrPremium(isWhitelist);
+
+        session.repGuild().settings().thanking().channels().listType(isWhitelist);
     }
 
     @OpenApi(
@@ -57,13 +86,22 @@ public class ChannelsRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Long[].class)),
-            responses = {@OpenApiResponse(status = "200")}
+            responses = {
+                    @OpenApiResponse(status = "200"),
+                    @OpenApiResponse(status = "403", content = @OpenApiContent(from = ErrorResponse.class), description = "Premium feature required or limit exceeded")
+            }
     )
     public void updateChannels(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
+        Long[] channelIds = ctx.bodyAsClass(Long[].class);
+
+        // Validate channel count limit
+        PremiumValidator validator = session.premiumValidator();
+        validator.requireWithinLimit(channelIds.length, validator.features().reputationChannel(), "Reputation Channels");
+
         var channels = session.repGuild().settings().thanking().channels();
         channels.clearChannel();
-        for (Long channelId : ctx.bodyAsClass(Long[].class)) {
+        for (Long channelId : channelIds) {
             channels.addChannel(channelId);
         }
     }
@@ -76,13 +114,22 @@ public class ChannelsRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Long[].class)),
-            responses = {@OpenApiResponse(status = "200")}
+            responses = {
+                    @OpenApiResponse(status = "200"),
+                    @OpenApiResponse(status = "403", content = @OpenApiContent(from = ErrorResponse.class), description = "Premium feature required or limit exceeded")
+            }
     )
     public void updateCategories(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
+        Long[] categoryIds = ctx.bodyAsClass(Long[].class);
+
+        // Validate category count limit
+        PremiumValidator validator = session.premiumValidator();
+        validator.requireWithinLimit(categoryIds.length, validator.features().reputationCategories(), "Reputation Categories");
+
         var channels = session.repGuild().settings().thanking().channels();
         channels.clearCategories();
-        for (Long categoryId : ctx.bodyAsClass(Long[].class)) {
+        for (Long categoryId : categoryIds) {
             channels.addCategory(categoryId);
         }
     }

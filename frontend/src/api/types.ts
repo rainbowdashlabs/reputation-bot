@@ -179,7 +179,7 @@ export interface PremiumFeaturesPOJO {
   detailedProfile: SimpleFeature;
   logChannel: SimpleFeature;
   additionalEmojis: SimpleFeature;
-  nickname: SimpleFeature;
+  profile: SimpleFeature;
   reputationChannel: FeatureLimit;
   reputationCategories: FeatureLimit;
 }
@@ -188,4 +188,17 @@ export interface GuildSessionPOJO {
   settings: SettingsPOJO;
   guild: GuildPOJO;
   premiumFeatures: PremiumFeaturesPOJO;
+}
+
+export interface PremiumFeatureErrorDetails {
+  feature: string;
+  requiredSkus: SkuInfo[];
+  currentValue?: number;
+  maxValue?: number;
+}
+
+export interface ApiErrorResponse {
+  error: string;
+  message: string;
+  details?: PremiumFeatureErrorDetails | any;
 }

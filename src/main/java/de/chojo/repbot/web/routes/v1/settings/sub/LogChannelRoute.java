@@ -3,9 +3,11 @@ package de.chojo.repbot.web.routes.v1.settings.sub;
 import de.chojo.repbot.dao.access.guild.settings.sub.LogChannel;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
+import de.chojo.repbot.web.error.ErrorResponse;
 import de.chojo.repbot.web.pojo.settings.sub.LogChannelPOJO;
 import de.chojo.repbot.web.routes.RoutesBuilder;
 import de.chojo.repbot.web.sessions.GuildSession;
+import de.chojo.repbot.web.validation.PremiumValidator;
 import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
@@ -26,12 +28,20 @@ public class LogChannelRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @io.javalin.openapi.OpenApiContent(from = LogChannelPOJO.class)),
-            responses = {@OpenApiResponse(status = "200")}
+            responses = {
+                    @OpenApiResponse(status = "200"),
+                    @OpenApiResponse(status = "403", content = @OpenApiContent(from = ErrorResponse.class), description = "Premium feature required or limit exceeded")
+            }
     )
     public void updateLogChannelSettings(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        LogChannel logChannel = session.repGuild().settings().logChannel();
         LogChannelPOJO logChannelPOJO = ctx.bodyAsClass(LogChannelPOJO.class);
+
+        // Validate log channel feature if enabling
+        PremiumValidator validator = session.premiumValidator();
+        validator.requireFeatureIfEnabled(logChannelPOJO.active(), validator.features().logChannel(), "Log Channel");
+
+        LogChannel logChannel = session.repGuild().settings().logChannel();
         logChannel.apply(logChannelPOJO);
     }
 
@@ -43,11 +53,20 @@ public class LogChannelRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
-            responses = {@OpenApiResponse(status = "200")}
+            responses = {
+                    @OpenApiResponse(status = "200"),
+                    @OpenApiResponse(status = "403", content = @OpenApiContent(from = ErrorResponse.class), description = "Premium feature required or limit exceeded")
+            }
     )
     public void updateActive(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().logChannel().active(ctx.bodyAsClass(Boolean.class));
+        boolean active = ctx.bodyAsClass(Boolean.class);
+
+        // Validate log channel feature if enabling
+        PremiumValidator validator = session.premiumValidator();
+        validator.requireFeatureIfEnabled(active, validator.features().logChannel(), "Log Channel");
+
+        session.repGuild().settings().logChannel().active(active);
     }
 
     @OpenApi(

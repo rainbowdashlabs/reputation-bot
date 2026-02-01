@@ -5,9 +5,11 @@ import de.chojo.repbot.dao.access.guild.settings.sub.autopost.RefreshInterval;
 import de.chojo.repbot.dao.access.guild.settings.sub.autopost.RefreshType;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
+import de.chojo.repbot.web.error.ErrorResponse;
 import de.chojo.repbot.web.pojo.settings.sub.AutopostPOJO;
 import de.chojo.repbot.web.routes.RoutesBuilder;
 import de.chojo.repbot.web.sessions.GuildSession;
+import de.chojo.repbot.web.validation.PremiumValidator;
 import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
@@ -28,12 +30,20 @@ public class AutopostRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = AutopostPOJO.class)),
-            responses = {@OpenApiResponse(status = "200")}
+            responses = {
+                    @OpenApiResponse(status = "200"),
+                    @OpenApiResponse(status = "403", content = @OpenApiContent(from = ErrorResponse.class), description = "Premium feature required or limit exceeded")
+            }
     )
     public void updateAutopostSettings(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        Autopost autopost = session.repGuild().settings().autopost();
         AutopostPOJO autopostPOJO = ctx.bodyAsClass(AutopostPOJO.class);
+
+        // Validate autopost feature if enabling
+        PremiumValidator validator = session.premiumValidator();
+        validator.requireFeatureIfEnabled(autopostPOJO.active(), validator.features().autopost(), "Autopost");
+
+        Autopost autopost = session.repGuild().settings().autopost();
         autopost.apply(autopostPOJO);
     }
 
@@ -45,11 +55,20 @@ public class AutopostRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
-            responses = {@OpenApiResponse(status = "200")}
+            responses = {
+                    @OpenApiResponse(status = "200"),
+                    @OpenApiResponse(status = "403", content = @OpenApiContent(from = ErrorResponse.class), description = "Premium feature required or limit exceeded")
+            }
     )
     public void updateActive(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().autopost().active(ctx.bodyAsClass(Boolean.class));
+        boolean active = ctx.bodyAsClass(Boolean.class);
+
+        // Validate autopost feature if enabling
+        PremiumValidator validator = session.premiumValidator();
+        validator.requireFeatureIfEnabled(active, validator.features().autopost(), "Autopost");
+
+        session.repGuild().settings().autopost().active(active);
     }
 
     @OpenApi(

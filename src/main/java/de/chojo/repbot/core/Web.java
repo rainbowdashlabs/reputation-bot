@@ -84,7 +84,24 @@ public class Web {
                              config.jsonMapper(jacksonMapper());
                          })
                          .start(api.host(), api.port());
-        javalin.exception(ApiException.class, (err, ctx) -> ctx.result(err.getMessage()).status(err.status()));
+        // Handle specific PremiumFeatureException with detailed JSON
+        javalin.exception(de.chojo.repbot.web.error.PremiumFeatureException.class, (err, ctx) -> {
+            var response = new de.chojo.repbot.web.error.ErrorResponse(
+                    "PREMIUM_FEATURE_REQUIRED",
+                    err.getMessage(),
+                    err.details()
+            );
+            ctx.json(response).status(err.status());
+        });
+
+        // Handle generic ApiException with simple JSON
+        javalin.exception(ApiException.class, (err, ctx) -> {
+            var response = new de.chojo.repbot.web.error.ErrorResponse(
+                    "API_ERROR",
+                    err.getMessage()
+            );
+            ctx.json(response).status(err.status());
+        });
     }
 
     private void configureSwagger(SwaggerConfiguration swaggerConfiguration) {
