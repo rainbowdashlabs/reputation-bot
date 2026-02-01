@@ -27,6 +27,7 @@ import io.javalin.openapi.plugin.OpenApiPlugin;
 import io.javalin.openapi.plugin.OpenApiPluginConfiguration;
 import io.javalin.openapi.plugin.swagger.SwaggerConfiguration;
 import io.javalin.openapi.plugin.swagger.SwaggerPlugin;
+import io.javalin.plugin.bundled.CorsPluginConfig;
 import io.javalin.security.RouteRole;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
@@ -80,6 +81,9 @@ public class Web {
         javalin = Javalin.create(config -> {
                              config.registerPlugin(new OpenApiPlugin(this::configureOpenApi));
                              config.registerPlugin(new SwaggerPlugin(this::configureSwagger));
+                             config.bundledPlugins.enableCors(cors -> {
+                                 cors.addRule(CorsPluginConfig.CorsRule::anyHost);
+                             });
                              config.router.apiBuilder(() -> new Api(sessionService, data.metrics(), bot.hub(), bot.localization()).init());
                              config.router.mount(router -> {
                                  router.beforeMatched(this::handleAccess);

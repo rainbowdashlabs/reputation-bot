@@ -1,0 +1,90 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "confirm": "Confirm",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success"
+  },
+  "navigation": {
+    "home": "Home",
+    "settings": "Settings",
+    "presets": "Presets",
+    "setup": "Setup",
+    "profile": "Profile",
+    "logout": "Logout"
+  },
+  "settings": {
+    "title": "Settings",
+    "general": "General",
+    "reputation": "Reputation",
+    "messages": "Messages",
+    "profile": "Profile",
+    "ranks": "Ranks",
+    "channels": "Channels",
+    "roles": "Roles",
+    "reactions": "Reactions",
+    "thankwords": "Thankwords",
+    "abuseProtection": "Abuse Protection",
+    "announcements": "Announcements",
+    "autopost": "Autopost",
+    "logChannel": "Log Channel"
+  },
+  "locale": {
+    "language": "Language",
+    "selectLanguage": "Select Language"
+  },
+  "error": {
+    "noToken": {
+      "title": "No Session Found",
+      "message": "You don't have a valid session token.",
+      "instruction": "Please create a new session to access this application."
+    }
+  },
+  "profile": {
+    "reset": "Reset",
+    "premiumRequired": {
+      "title": "Supporter Feature",
+      "message": "Profile customization requires you to be a supporter.",
+      "requiredSkus": "Required subscriptions:"
+    },
+    "localeOverridesRequired": {
+      "message": "Custom reputation name requires locale overrides feature."
+    },
+    "nickname": {
+      "label": "Bot Nickname",
+      "placeholder": "Enter bot nickname",
+      "description": "Set a custom nickname for the bot in this server.",
+      "reset": "Reset nickname to default"
+    },
+    "profilePicture": {
+      "label": "Profile Picture",
+      "uploadButton": "Upload Image",
+      "uploading": "Uploading...",
+      "description": "Upload a custom profile picture for the bot (max 2MB, 512x512 pixels)",
+      "reset": "Reset profile picture to default"
+    },
+    "reputationName": {
+      "label": "Reputation Name",
+      "placeholder": "Enter custom reputation name (e.g., 'Points', 'Karma')",
+      "description": "Customize the name used for reputation in this server.",
+      "reset": "Reset reputation name to default"
+    }
+  },
+  "general": {
+    "language": {
+      "label": "Bot Language",
+      "selectPlaceholder": "Select a language",
+      "description": "Choose the language the bot will use for messages and responses in this server."
+    },
+    "systemChannel": {
+      "label": "System Channel",
+      "selectPlaceholder": "Select a channel",
+      "description": "Choose the channel where the bot will send system messages and announcements."
+    }
+  }
+}

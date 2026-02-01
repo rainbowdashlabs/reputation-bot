@@ -44,12 +44,17 @@ public class GeneralRoute implements RoutesBuilder {
             methods = HttpMethod.POST,
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
-            requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = DiscordLocale.class)),
+            requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = String.class)),
             responses = {@OpenApiResponse(status = "200")}
     )
     public void updateLanguage(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().general().language(ctx.bodyAsClass(DiscordLocale.class));
+        String languageStr = ctx.bodyAsClass(String.class);
+        // Convert internal name (e.g., "SPANISH") to DiscordLocale enum
+        DiscordLocale locale = languageStr != null && !languageStr.isEmpty() 
+            ? DiscordLocale.valueOf(languageStr) 
+            : null;
+        session.repGuild().settings().general().language(locale);
     }
 
     @OpenApi(

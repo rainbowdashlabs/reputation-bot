@@ -3,18 +3,25 @@ package de.chojo.repbot.web.routes.v1.settings.sub;
 import de.chojo.repbot.dao.access.guild.settings.sub.Profile;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
+import de.chojo.repbot.web.error.ApiException;
 import de.chojo.repbot.web.error.ErrorResponse;
 import de.chojo.repbot.web.pojo.settings.sub.ProfilePOJO;
 import de.chojo.repbot.web.routes.RoutesBuilder;
 import de.chojo.repbot.web.sessions.GuildSession;
 import de.chojo.repbot.web.validation.PremiumValidator;
 import io.javalin.http.Context;
+import io.javalin.http.HttpStatus;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
 import io.javalin.openapi.OpenApiContent;
 import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiRequestBody;
 import io.javalin.openapi.OpenApiResponse;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 
 import static io.javalin.apibuilder.ApiBuilder.delete;
 import static io.javalin.apibuilder.ApiBuilder.path;
@@ -97,6 +104,26 @@ public class ProfileRoute implements RoutesBuilder {
         PremiumValidator validator = session.premiumValidator();
         validator.requireFeature(validator.features().profile(), "Profile");
 
+        // Validate file size (max 2MB)
+        int maxSize = 2 * 1024 * 1024;
+        if (profilePicture.length > maxSize) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "File too large. Maximum size is 2MB.");
+        }
+
+        // Validate image dimensions (max 512x512)
+        try {
+            BufferedImage image = ImageIO.read(new ByteArrayInputStream(profilePicture));
+            if (image == null) {
+                throw new ApiException(HttpStatus.BAD_REQUEST, "Invalid image file.");
+            }
+            
+            if (image.getWidth() > 512 || image.getHeight() > 512) {
+                throw new ApiException(HttpStatus.BAD_REQUEST, "Image dimensions too large. Maximum size is 512x512 pixels.");
+            }
+        } catch (IOException e) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Failed to read image file.");
+        }
+
         session.repGuild().settings().profile().profilePicture(profilePicture);
     }
 
@@ -166,6 +193,22 @@ public class ProfileRoute implements RoutesBuilder {
         session.repGuild().settings().profile().profilePicture(null);
     }
 
+    @OpenApi(
+            summary = "Delete reputation name",
+            operationId = "deleteReputationName",
+            path = "v1/settings/profile/reputationname",
+            methods = HttpMethod.DELETE,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
+            tags = {"Settings"},
+            responses = {
+                    @OpenApiResponse(status = "200")
+            }
+    )
+    public void deleteReputationName(Context ctx) {
+        GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
+        session.repGuild().settings().profile().reputationName(null);
+    }
+
     @Override
     public void buildRoutes() {
         path("profile", () -> {
@@ -175,6 +218,7 @@ public class ProfileRoute implements RoutesBuilder {
             post("picture", this::updateProfilePicture, Role.GUILD_USER);
             delete("picture", this::deleteProfilePicture, Role.GUILD_USER);
             post("reputationname", this::updateReputationName, Role.GUILD_USER);
+            delete("reputationname", this::deleteReputationName, Role.GUILD_USER);
         });
     }
 }

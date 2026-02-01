@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import HelloWorld from './components/HelloWorld.vue'
-import BooleanToggle from './components/BooleanToggle.vue'
+import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import AppHeader from './components/AppHeader.vue'
 import { api } from './api'
+import { useSession } from './composables/useSession'
 
-const toggleValue = ref(false)
+const router = useRouter()
+const { setSession, clearSession } = useSession()
 
-onMounted(() => {
+onMounted(async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const token = urlParams.get('token');
+  
   if (token) {
     api.setToken(token);
     // Remove token from URL
@@ -16,24 +19,38 @@ onMounted(() => {
     const newRelativePathQuery = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
     window.history.replaceState(null, '', newRelativePathQuery);
   }
+  
+  // Check if token exists in localStorage
+  const storedToken = localStorage.getItem('token');
+  
+  // Don't redirect if already on error page
+  if (!storedToken && router.currentRoute.value.path !== '/error/no-token') {
+    router.push('/error/no-token');
+    return;
+  }
+  
+  // If token exists, try to load session data
+  if (storedToken) {
+    try {
+      const sessionData = await api.getSession();
+      setSession(sessionData);
+    } catch (error) {
+      // If session loading fails, clear session and redirect to error page
+      console.error('Failed to load session:', error);
+      clearSession();
+      if (router.currentRoute.value.path !== '/error/no-token') {
+        router.push('/error/no-token');
+      }
+    }
+  }
 })
 </script>
 
 <template>
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="/favicon.ico" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
+  <AppHeader />
   
-  <div class="flex flex-col items-center justify-center p-8 gap-4">
-    <h2 class="text-xl font-bold">Toggle Demo</h2>
-    <BooleanToggle v-model="toggleValue" label="Status Toggle" />
-    <p>Current value: {{ toggleValue }}</p>
+  <div class="pt-20">
+    <router-view />
   </div>
 </template>
 

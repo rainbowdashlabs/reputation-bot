@@ -88,11 +88,11 @@ export enum ReputationMode {
 }
 
 export interface GeneralPOJO {
-  stackRoles: boolean;
-  language?: string;
-  reputationMode: ReputationMode;
-  resetDate: string; // ISO string
-  systemChannel: string;
+  stackRoles: boolean; // Implemented in roles
+  language: string; // Internal name (e.g., "SPANISH")
+  reputationMode: ReputationMode; // Implemented in reputation
+  resetDate: string; // ISO string // Implemented in reputation
+  systemChannel: number; // Channel ID as number
 }
 
 export interface LogChannelPOJO {

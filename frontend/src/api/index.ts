@@ -5,8 +5,18 @@ class ApiClient {
   private axiosInstance: AxiosInstance;
 
   constructor() {
+    const backendHost = import.meta.env.VITE_BACKEND_HOST || '';
+    const backendPort = import.meta.env.VITE_BACKEND_PORT || '';
+    
+    let baseURL = '/v1';
+    if (backendHost) {
+      const protocol = backendHost.startsWith('http') ? '' : 'http://';
+      const port = backendPort ? `:${backendPort}` : '';
+      baseURL = `${protocol}${backendHost}${port}/v1`;
+    }
+    
     this.axiosInstance = axios.create({
-      baseURL: '/v1',
+      baseURL: baseURL,
     });
 
     this.axiosInstance.interceptors.request.use((config) => {
@@ -56,7 +66,9 @@ class ApiClient {
   }
 
   public async updateGeneralSystemChannel(channelId: string) {
-    await this.axiosInstance.post('/settings/general/systemchannel', channelId, {
+    // Backend expects a Long, so parse the string to a number
+    const channelIdNumber = parseInt(channelId, 10);
+    await this.axiosInstance.post('/settings/general/systemchannel', channelIdNumber, {
       headers: { 'Content-Type': 'application/json' }
     });
   }
@@ -306,6 +318,10 @@ class ApiClient {
 
   public async deleteProfilePicture() {
     await this.axiosInstance.delete('/settings/profile/picture');
+  }
+
+  public async deleteProfileReputationName() {
+    await this.axiosInstance.delete('/settings/profile/reputationname');
   }
 
   // Thanking Settings
