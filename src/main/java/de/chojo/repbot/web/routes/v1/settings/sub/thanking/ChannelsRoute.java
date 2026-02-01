@@ -9,6 +9,7 @@ import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
 import io.javalin.openapi.OpenApiContent;
+import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiRequestBody;
 import io.javalin.openapi.OpenApiResponse;
 
@@ -23,6 +24,7 @@ public class ChannelsRoute implements RoutesBuilder {
             operationId = "updateThankingChannelsSettings",
             path = "v1/settings/thanking/channels",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = ChannelsPOJO.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -37,6 +39,7 @@ public class ChannelsRoute implements RoutesBuilder {
             operationId = "updateThankingChannelsWhitelist",
             path = "v1/settings/thanking/channels/whitelist",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -51,6 +54,7 @@ public class ChannelsRoute implements RoutesBuilder {
             operationId = "updateThankingChannelsList",
             path = "v1/settings/thanking/channels/channels",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Long[].class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -69,6 +73,7 @@ public class ChannelsRoute implements RoutesBuilder {
             operationId = "updateThankingCategories",
             path = "v1/settings/thanking/channels/categories",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Long[].class)),
             responses = {@OpenApiResponse(status = "200")}

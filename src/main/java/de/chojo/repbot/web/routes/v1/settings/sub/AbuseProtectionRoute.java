@@ -1,6 +1,7 @@
 package de.chojo.repbot.web.routes.v1.settings.sub;
 
 import de.chojo.repbot.dao.access.guild.settings.sub.AbuseProtection;
+import de.chojo.repbot.dao.access.guild.settings.sub.CooldownDirection;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
 import de.chojo.repbot.web.pojo.settings.sub.AbuseProtectionPOJO;
@@ -10,6 +11,7 @@ import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
 import io.javalin.openapi.OpenApiContent;
+import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiRequestBody;
 import io.javalin.openapi.OpenApiResponse;
 
@@ -22,8 +24,9 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             operationId = "updateAbuseProtectionSettings",
             path = "v1/settings/abuseprotection",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
-            requestBody = @OpenApiRequestBody(content = @io.javalin.openapi.OpenApiContent(from = AbuseProtectionPOJO.class)),
+            requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = AbuseProtectionPOJO.class)),
             responses = {@OpenApiResponse(status = "200")}
     )
     public void updateAbuseSettings(Context ctx) {
@@ -38,6 +41,7 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             operationId = "updateAbuseProtectionCooldown",
             path = "v1/settings/abuseprotection/cooldown",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Integer.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -52,13 +56,14 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             operationId = "updateAbuseProtectionCooldownDirection",
             path = "v1/settings/abuseprotection/cooldowndirection",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
-            requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = de.chojo.repbot.dao.access.guild.settings.sub.CooldownDirection.class)),
+            requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = CooldownDirection.class)),
             responses = {@OpenApiResponse(status = "200")}
     )
     public void updateCooldownDirection(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().abuseProtection().cooldownDirection(ctx.bodyAsClass(de.chojo.repbot.dao.access.guild.settings.sub.CooldownDirection.class));
+        session.repGuild().settings().abuseProtection().cooldownDirection(ctx.bodyAsClass(CooldownDirection.class));
     }
 
     @OpenApi(
@@ -66,6 +71,7 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             operationId = "updateAbuseProtectionMaxMessageAge",
             path = "v1/settings/abuseprotection/maxmessageage",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Integer.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -80,6 +86,7 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             operationId = "updateAbuseProtectionMinMessages",
             path = "v1/settings/abuseprotection/minmessages",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Integer.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -94,6 +101,7 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             operationId = "updateAbuseProtectionDonorContext",
             path = "v1/settings/abuseprotection/donorcontext",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -108,6 +116,7 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             operationId = "updateAbuseProtectionReceiverContext",
             path = "v1/settings/abuseprotection/receivercontext",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -122,6 +131,7 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             operationId = "updateAbuseProtectionMaxGiven",
             path = "v1/settings/abuseprotection/maxgiven",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Integer.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -136,6 +146,7 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             operationId = "updateAbuseProtectionMaxGivenHours",
             path = "v1/settings/abuseprotection/maxgivenhours",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Integer.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -150,6 +161,7 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             operationId = "updateAbuseProtectionMaxReceived",
             path = "v1/settings/abuseprotection/maxreceived",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Integer.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -164,6 +176,7 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             operationId = "updateAbuseProtectionMaxReceivedHours",
             path = "v1/settings/abuseprotection/maxreceivedhours",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Integer.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -178,6 +191,7 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             operationId = "updateAbuseProtectionMaxMessageReputation",
             path = "v1/settings/abuseprotection/maxmessagereputation",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Integer.class)),
             responses = {@OpenApiResponse(status = "200")}

@@ -153,7 +153,39 @@ export interface SettingsPOJO {
   thanking: ThankingPOJO;
 }
 
+export interface SkuInfo {
+  id: number;
+  name: string;
+}
+
+export interface SimpleFeature {
+  unlocked: boolean;
+  requiredSkus: SkuInfo[];
+}
+
+export interface FeatureLimit {
+  max: number;
+  unlocked: boolean;
+  requiredSkus: SkuInfo[];
+}
+
+export interface PremiumFeaturesPOJO {
+  reputationLog: SimpleFeature;
+  analyzerLog: SimpleFeature;
+  channelBlacklist: SimpleFeature;
+  localeOverrides: SimpleFeature;
+  autopost: SimpleFeature;
+  advancedRankings: SimpleFeature;
+  detailedProfile: SimpleFeature;
+  logChannel: SimpleFeature;
+  additionalEmojis: SimpleFeature;
+  nickname: SimpleFeature;
+  reputationChannel: FeatureLimit;
+  reputationCategories: FeatureLimit;
+}
+
 export interface GuildSessionPOJO {
   settings: SettingsPOJO;
   guild: GuildPOJO;
+  premiumFeatures: PremiumFeaturesPOJO;
 }

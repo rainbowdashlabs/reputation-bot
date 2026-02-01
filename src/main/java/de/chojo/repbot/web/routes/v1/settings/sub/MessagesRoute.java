@@ -10,6 +10,7 @@ import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
 import io.javalin.openapi.OpenApiContent;
+import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiRequestBody;
 import io.javalin.openapi.OpenApiResponse;
 
@@ -22,6 +23,7 @@ public class MessagesRoute implements RoutesBuilder {
             operationId = "updateMessagesSettings",
             path = "v1/settings/messages",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @io.javalin.openapi.OpenApiContent(from = MessagesPOJO.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -38,6 +40,7 @@ public class MessagesRoute implements RoutesBuilder {
             operationId = "updateMessagesReactionConfirmation",
             path = "v1/settings/messages/reactionconfirmation",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -52,6 +55,7 @@ public class MessagesRoute implements RoutesBuilder {
             operationId = "updateMessagesCommandReputationEphemeral",
             path = "v1/settings/messages/commandreputationephemeral",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
             responses = {@OpenApiResponse(status = "200")}

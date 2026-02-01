@@ -39,3 +39,4 @@ buildNumber.properties
 /.direnv
 .run
 .env
+.claude

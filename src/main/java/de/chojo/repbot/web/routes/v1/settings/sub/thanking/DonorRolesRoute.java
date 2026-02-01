@@ -9,6 +9,7 @@ import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
 import io.javalin.openapi.OpenApiContent;
+import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiRequestBody;
 import io.javalin.openapi.OpenApiResponse;
 
@@ -21,6 +22,7 @@ public class DonorRolesRoute implements RoutesBuilder {
             operationId = "updateThankingDonorRoles",
             path = "v1/settings/thanking/donorroles",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = RolesHolderPOJO.class)),
             responses = {@OpenApiResponse(status = "200")}

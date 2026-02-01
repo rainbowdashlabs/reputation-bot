@@ -14,6 +14,7 @@ import de.chojo.repbot.web.sessions.GuildSession;
 import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
+import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiRequestBody;
 import io.javalin.openapi.OpenApiResponse;
 
@@ -32,6 +33,7 @@ public class ThankingRoute implements RoutesBuilder {
             operationId = "updateThankingSettings",
             path = "v1/settings/thanking",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @io.javalin.openapi.OpenApiContent(from = ThankingPOJO.class)),
             responses = {@OpenApiResponse(status = "200")}

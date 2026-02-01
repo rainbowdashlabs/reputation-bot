@@ -9,6 +9,7 @@ import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
 import io.javalin.openapi.OpenApiContent;
+import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiRequestBody;
 import io.javalin.openapi.OpenApiResponse;
 
@@ -24,6 +25,7 @@ public class ThankwordsRoute implements RoutesBuilder {
             operationId = "updateThankingThankwordsSettings",
             path = "v1/settings/thanking/thankwords",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = ThankwordsPOJO.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -38,6 +40,7 @@ public class ThankwordsRoute implements RoutesBuilder {
             operationId = "updateThankingThankwordsList",
             path = "v1/settings/thanking/thankwords/words",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = String[].class)),
             responses = {@OpenApiResponse(status = "200")}

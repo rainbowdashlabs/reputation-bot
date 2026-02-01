@@ -10,6 +10,7 @@ import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
 import io.javalin.openapi.OpenApiContent;
+import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiRequestBody;
 import io.javalin.openapi.OpenApiResponse;
 
@@ -22,6 +23,7 @@ public class ReputationRoute implements RoutesBuilder {
             operationId = "updateReputationSettings",
             path = "v1/settings/reputation",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @io.javalin.openapi.OpenApiContent(from = ReputationPOJO.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -38,6 +40,7 @@ public class ReputationRoute implements RoutesBuilder {
             operationId = "updateReputationReactionActive",
             path = "v1/settings/reputation/reactionactive",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -52,6 +55,7 @@ public class ReputationRoute implements RoutesBuilder {
             operationId = "updateReputationAnswerActive",
             path = "v1/settings/reputation/answeractive",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -66,6 +70,7 @@ public class ReputationRoute implements RoutesBuilder {
             operationId = "updateReputationMentionActive",
             path = "v1/settings/reputation/mentionactive",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -80,6 +85,7 @@ public class ReputationRoute implements RoutesBuilder {
             operationId = "updateReputationFuzzyActive",
             path = "v1/settings/reputation/fuzzyactive",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -94,6 +100,7 @@ public class ReputationRoute implements RoutesBuilder {
             operationId = "updateReputationEmbedActive",
             path = "v1/settings/reputation/embedactive",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -108,6 +115,7 @@ public class ReputationRoute implements RoutesBuilder {
             operationId = "updateReputationDirectActive",
             path = "v1/settings/reputation/directactive",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -122,6 +130,7 @@ public class ReputationRoute implements RoutesBuilder {
             operationId = "updateReputationCommandActive",
             path = "v1/settings/reputation/commandactive",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
             responses = {@OpenApiResponse(status = "200")}

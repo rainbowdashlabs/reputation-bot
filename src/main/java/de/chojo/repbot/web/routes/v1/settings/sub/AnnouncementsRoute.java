@@ -10,6 +10,7 @@ import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
 import io.javalin.openapi.OpenApiContent;
+import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiRequestBody;
 import io.javalin.openapi.OpenApiResponse;
 
@@ -22,8 +23,9 @@ public class AnnouncementsRoute implements RoutesBuilder {
             operationId = "updateAnnouncementsSettings",
             path = "v1/settings/announcements",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
-            requestBody = @OpenApiRequestBody(content = @io.javalin.openapi.OpenApiContent(from = AnnouncementsPOJO.class)),
+            requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = AnnouncementsPOJO.class)),
             responses = {@OpenApiResponse(status = "200")}
     )
     public void updateAnnouncementsSettings(Context ctx) {
@@ -38,6 +40,7 @@ public class AnnouncementsRoute implements RoutesBuilder {
             operationId = "updateAnnouncementsActive",
             path = "v1/settings/announcements/active",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -52,6 +55,7 @@ public class AnnouncementsRoute implements RoutesBuilder {
             operationId = "updateAnnouncementsSameChannel",
             path = "v1/settings/announcements/samechannel",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -66,6 +70,7 @@ public class AnnouncementsRoute implements RoutesBuilder {
             operationId = "updateAnnouncementsChannel",
             path = "v1/settings/announcements/channel",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Long.class)),
             responses = {@OpenApiResponse(status = "200")}

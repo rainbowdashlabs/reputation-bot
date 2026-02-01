@@ -1,6 +1,7 @@
 package de.chojo.repbot.web.routes.v1.settings.sub;
 
 import de.chojo.repbot.dao.access.guild.settings.sub.General;
+import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
 import de.chojo.repbot.web.pojo.settings.sub.GeneralPOJO;
@@ -10,8 +11,10 @@ import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
 import io.javalin.openapi.OpenApiContent;
+import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiRequestBody;
 import io.javalin.openapi.OpenApiResponse;
+import net.dv8tion.jda.api.interactions.DiscordLocale;
 
 import static io.javalin.apibuilder.ApiBuilder.path;
 import static io.javalin.apibuilder.ApiBuilder.post;
@@ -22,6 +25,7 @@ public class GeneralRoute implements RoutesBuilder {
             operationId = "updateGeneralSettings",
             path = "v1/settings/general",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @io.javalin.openapi.OpenApiContent(from = GeneralPOJO.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -38,13 +42,14 @@ public class GeneralRoute implements RoutesBuilder {
             operationId = "updateGeneralLanguage",
             path = "v1/settings/general/language",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
-            requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = net.dv8tion.jda.api.interactions.DiscordLocale.class)),
+            requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = DiscordLocale.class)),
             responses = {@OpenApiResponse(status = "200")}
     )
     public void updateLanguage(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().general().language(ctx.bodyAsClass(net.dv8tion.jda.api.interactions.DiscordLocale.class));
+        session.repGuild().settings().general().language(ctx.bodyAsClass(DiscordLocale.class));
     }
 
     @OpenApi(
@@ -52,6 +57,7 @@ public class GeneralRoute implements RoutesBuilder {
             operationId = "updateGeneralStackRoles",
             path = "v1/settings/general/stackroles",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -66,13 +72,14 @@ public class GeneralRoute implements RoutesBuilder {
             operationId = "updateGeneralReputationMode",
             path = "v1/settings/general/reputationmode",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
-            requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode.class)),
+            requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = ReputationMode.class)),
             responses = {@OpenApiResponse(status = "200")}
     )
     public void updateReputationMode(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().general().reputationMode(ctx.bodyAsClass(de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode.class));
+        session.repGuild().settings().general().reputationMode(ctx.bodyAsClass(ReputationMode.class));
     }
 
     @OpenApi(
@@ -80,6 +87,7 @@ public class GeneralRoute implements RoutesBuilder {
             operationId = "updateGeneralSystemChannel",
             path = "v1/settings/general/systemchannel",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Long.class)),
             responses = {@OpenApiResponse(status = "200")}

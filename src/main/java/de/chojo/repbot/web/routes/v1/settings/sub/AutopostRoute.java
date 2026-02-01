@@ -1,6 +1,8 @@
 package de.chojo.repbot.web.routes.v1.settings.sub;
 
 import de.chojo.repbot.dao.access.guild.settings.sub.autopost.Autopost;
+import de.chojo.repbot.dao.access.guild.settings.sub.autopost.RefreshInterval;
+import de.chojo.repbot.dao.access.guild.settings.sub.autopost.RefreshType;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
 import de.chojo.repbot.web.pojo.settings.sub.AutopostPOJO;
@@ -10,6 +12,7 @@ import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
 import io.javalin.openapi.OpenApiContent;
+import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiRequestBody;
 import io.javalin.openapi.OpenApiResponse;
 
@@ -22,8 +25,9 @@ public class AutopostRoute implements RoutesBuilder {
             operationId = "updateAutopostSettings",
             path = "v1/settings/autopost",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
-            requestBody = @OpenApiRequestBody(content = @io.javalin.openapi.OpenApiContent(from = AutopostPOJO.class)),
+            requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = AutopostPOJO.class)),
             responses = {@OpenApiResponse(status = "200")}
     )
     public void updateAutopostSettings(Context ctx) {
@@ -38,6 +42,7 @@ public class AutopostRoute implements RoutesBuilder {
             operationId = "updateAutopostActive",
             path = "v1/settings/autopost/active",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -52,6 +57,7 @@ public class AutopostRoute implements RoutesBuilder {
             operationId = "updateAutopostChannel",
             path = "v1/settings/autopost/channel",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Long.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -66,6 +72,7 @@ public class AutopostRoute implements RoutesBuilder {
             operationId = "updateAutopostMessage",
             path = "v1/settings/autopost/message",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Long.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -80,13 +87,14 @@ public class AutopostRoute implements RoutesBuilder {
             operationId = "updateAutopostRefreshType",
             path = "v1/settings/autopost/refreshtype",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
-            requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = de.chojo.repbot.dao.access.guild.settings.sub.autopost.RefreshType.class)),
+            requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = RefreshType.class)),
             responses = {@OpenApiResponse(status = "200")}
     )
     public void updateRefreshType(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().autopost().refreshType(ctx.bodyAsClass(de.chojo.repbot.dao.access.guild.settings.sub.autopost.RefreshType.class));
+        session.repGuild().settings().autopost().refreshType(ctx.bodyAsClass(RefreshType.class));
     }
 
     @OpenApi(
@@ -94,13 +102,14 @@ public class AutopostRoute implements RoutesBuilder {
             operationId = "updateAutopostRefreshInterval",
             path = "v1/settings/autopost/refreshinterval",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
-            requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = de.chojo.repbot.dao.access.guild.settings.sub.autopost.RefreshInterval.class)),
+            requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = RefreshInterval.class)),
             responses = {@OpenApiResponse(status = "200")}
     )
     public void updateRefreshInterval(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().autopost().refreshInterval(ctx.bodyAsClass(de.chojo.repbot.dao.access.guild.settings.sub.autopost.RefreshInterval.class));
+        session.repGuild().settings().autopost().refreshInterval(ctx.bodyAsClass(RefreshInterval.class));
     }
 
     @Override

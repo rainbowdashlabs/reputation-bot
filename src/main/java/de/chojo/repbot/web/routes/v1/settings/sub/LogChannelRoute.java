@@ -10,6 +10,7 @@ import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
 import io.javalin.openapi.OpenApiContent;
+import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiRequestBody;
 import io.javalin.openapi.OpenApiResponse;
 
@@ -22,6 +23,7 @@ public class LogChannelRoute implements RoutesBuilder {
             operationId = "updateLogChannelSettings",
             path = "v1/settings/logchannel",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @io.javalin.openapi.OpenApiContent(from = LogChannelPOJO.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -38,6 +40,7 @@ public class LogChannelRoute implements RoutesBuilder {
             operationId = "updateLogChannelActive",
             path = "v1/settings/logchannel/active",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -52,6 +55,7 @@ public class LogChannelRoute implements RoutesBuilder {
             operationId = "updateLogChannelId",
             path = "v1/settings/logchannel/channel",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Long.class)),
             responses = {@OpenApiResponse(status = "200")}

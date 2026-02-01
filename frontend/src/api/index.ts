@@ -9,6 +9,14 @@ class ApiClient {
       baseURL: '/v1',
     });
 
+    this.axiosInstance.interceptors.request.use((config) => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        config.headers['Authorization'] = token;
+      }
+      return config;
+    });
+
     const token = localStorage.getItem('token');
     if (token) {
       this.setToken(token);
@@ -16,7 +24,6 @@ class ApiClient {
   }
 
   public setToken(token: string) {
-    this.axiosInstance.defaults.headers.common['Authorization'] = token;
     localStorage.setItem('token', token);
   }
 

@@ -9,6 +9,7 @@ import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
 import io.javalin.openapi.OpenApiContent;
+import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiRequestBody;
 import io.javalin.openapi.OpenApiResponse;
 
@@ -16,6 +17,7 @@ import java.util.Set;
 
 import static io.javalin.apibuilder.ApiBuilder.path;
 import static io.javalin.apibuilder.ApiBuilder.post;
+import static java.util.Arrays.*;
 
 public class ReactionsRoute implements RoutesBuilder {
     @OpenApi(
@@ -23,6 +25,7 @@ public class ReactionsRoute implements RoutesBuilder {
             operationId = "updateThankingReactionsSettings",
             path = "v1/settings/thanking/reactions",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = ReactionsPOJO.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -37,6 +40,7 @@ public class ReactionsRoute implements RoutesBuilder {
             operationId = "updateThankingMainReaction",
             path = "v1/settings/thanking/reactions/mainreaction",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = String.class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -51,6 +55,7 @@ public class ReactionsRoute implements RoutesBuilder {
             operationId = "updateThankingAdditionalReactions",
             path = "v1/settings/thanking/reactions/reactions",
             methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = String[].class)),
             responses = {@OpenApiResponse(status = "200")}
@@ -58,10 +63,7 @@ public class ReactionsRoute implements RoutesBuilder {
     public void updateAdditionalReactions(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         var reactions = session.repGuild().settings().thanking().reactions();
-        // Clear existing additional reactions and add new ones
-        // Since we don't have a clear method, we rely on apply logic if possible, 
-        // or just add/remove. The DAO apply method does exactly this.
-        reactions.apply(new ReactionsPOJO(new java.util.HashSet<>(java.util.Arrays.asList(ctx.bodyAsClass(String[].class))), reactions.mainReaction()));
+        reactions.apply(new ReactionsPOJO(new java.util.HashSet<>(asList(ctx.bodyAsClass(String[].class))), reactions.mainReaction()));
     }
 
     @Override

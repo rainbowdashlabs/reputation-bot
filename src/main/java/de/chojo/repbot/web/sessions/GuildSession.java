@@ -30,6 +30,6 @@ public class GuildSession {
 
     @NotNull
     public GuildSessionPOJO sessionData() {
-        return GuildSessionPOJO.generate(guild(), guildRepository);
+        return GuildSessionPOJO.generate(guild(), guildRepository, shardManager);
     }
 }
