@@ -109,6 +109,7 @@ export interface ProfilePOJO {
   nickname: string | null;
   description: string | null;
   profilePictureUrl: string | null;
+  reputationName: string | null;
 }
 
 export interface ReputationPOJO {
@@ -140,6 +141,15 @@ export interface ThankwordsPOJO {
   thankwords: string[];
 }
 
+export interface RankEntry {
+  roleId: string;
+  reputation: number;
+}
+
+export interface RanksPOJO {
+  ranks: RankEntry[];
+}
+
 export interface ThankingPOJO {
   channels: ChannelsSettingsPOJO;
   donorRoles: RolesHolderPOJO;
@@ -156,6 +166,7 @@ export interface SettingsPOJO {
   logChannel: LogChannelPOJO;
   messages: MessagesPOJO;
   profile: ProfilePOJO;
+  ranks: RanksPOJO;
   reputation: ReputationPOJO;
   thanking: ThankingPOJO;
 }

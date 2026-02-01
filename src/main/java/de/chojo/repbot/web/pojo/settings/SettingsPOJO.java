@@ -13,6 +13,7 @@ import de.chojo.repbot.web.pojo.settings.sub.MessagesPOJO;
 import de.chojo.repbot.web.pojo.settings.sub.ProfilePOJO;
 import de.chojo.repbot.web.pojo.settings.sub.ReputationPOJO;
 import de.chojo.repbot.web.pojo.settings.sub.ThankingPOJO;
+import de.chojo.repbot.web.pojo.settings.sub.thanking.RanksPOJO;
 import net.dv8tion.jda.api.entities.Guild;
 
 public class SettingsPOJO {
@@ -23,10 +24,11 @@ public class SettingsPOJO {
     LogChannelPOJO logChannel;
     MessagesPOJO messages;
     ProfilePOJO profile;
+    RanksPOJO ranks;
     ReputationPOJO reputation;
     ThankingPOJO thanking;
 
-    public SettingsPOJO(AbuseProtectionPOJO abuseProtection, AnnouncementsPOJO announcements, AutopostPOJO autopost, GeneralPOJO general, LogChannelPOJO logChannel, MessagesPOJO messages, ProfilePOJO profile, ReputationPOJO reputation, ThankingPOJO thanking) {
+    public SettingsPOJO(AbuseProtectionPOJO abuseProtection, AnnouncementsPOJO announcements, AutopostPOJO autopost, GeneralPOJO general, LogChannelPOJO logChannel, MessagesPOJO messages, ProfilePOJO profile, RanksPOJO ranks, ReputationPOJO reputation, ThankingPOJO thanking) {
         this.abuseProtection = abuseProtection;
         this.announcements = announcements;
         this.autopost = autopost;
@@ -34,6 +36,7 @@ public class SettingsPOJO {
         this.logChannel = logChannel;
         this.messages = messages;
         this.profile = profile;
+        this.ranks = ranks;
         this.reputation = reputation;
         this.thanking = thanking;
     }
@@ -44,6 +47,6 @@ public class SettingsPOJO {
         Thanking thanking = settings.thanking();
         ThankingPOJO thankingPOJO = new ThankingPOJO(thanking.channels(), thanking.donorRoles(), thanking.receiverRoles(), thanking.reactions(), thanking.thankwords());
         return new SettingsPOJO(settings.abuseProtection(), settings.announcements(),
-                settings.autopost(), settings.general(), settings.logChannel(), settings.messages(), settings.profile(), settings.reputation(), thankingPOJO);
+                settings.autopost(), settings.general(), settings.logChannel(), settings.messages(), settings.profile(), settings.ranks().toPOJO(), settings.reputation(), thankingPOJO);
     }
 }

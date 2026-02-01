@@ -3,10 +3,12 @@ package de.chojo.repbot.web.pojo.settings.sub;
 public class ProfilePOJO {
     protected String nickname;
     protected String profilePictureUrl;
+    protected String reputationName;
 
-    public ProfilePOJO(String nickname, String profilePictureUrl) {
+    public ProfilePOJO(String nickname, String profilePictureUrl, String reputationName) {
         this.nickname = nickname;
         this.profilePictureUrl = profilePictureUrl;
+        this.reputationName = reputationName;
     }
 
     public String nickname() {
@@ -15,5 +17,9 @@ public class ProfilePOJO {
 
     public String profilePictureUrl() {
         return profilePictureUrl;
+    }
+
+    public String reputationName() {
+        return reputationName;
     }
 }

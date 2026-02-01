@@ -35,6 +35,5 @@ public class Set implements SlashHandler {
         event.reply(eventContext.localize("command.repsettings.name.set.message.set"))
              .setEphemeral(true)
              .queue();
-
     }
 }

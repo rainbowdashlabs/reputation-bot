@@ -16,6 +16,7 @@ import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiRequestBody;
 import io.javalin.openapi.OpenApiResponse;
 
+import static io.javalin.apibuilder.ApiBuilder.delete;
 import static io.javalin.apibuilder.ApiBuilder.path;
 import static io.javalin.apibuilder.ApiBuilder.post;
 
@@ -99,13 +100,81 @@ public class ProfileRoute implements RoutesBuilder {
         session.repGuild().settings().profile().profilePicture(profilePicture);
     }
 
+    @OpenApi(
+            summary = "Update reputation name",
+            operationId = "updateReputationName",
+            path = "v1/settings/profile/reputationname",
+            methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
+            tags = {"Settings"},
+            requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = String.class)),
+            responses = {
+                    @OpenApiResponse(status = "200"),
+                    @OpenApiResponse(status = "403", content = @OpenApiContent(from = ErrorResponse.class), description = "Premium feature required or limit exceeded")
+            }
+    )
+    public void updateReputationName(Context ctx) {
+        GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
+        String reputationName = ctx.bodyAsClass(String.class);
+
+        // Validate locale overrides feature if setting a reputation name
+        PremiumValidator validator = session.premiumValidator();
+        if (reputationName != null && !reputationName.isEmpty()) {
+            validator.requireFeature(validator.features().localeOverrides(), "Locale Overrides");
+        }
+
+        session.repGuild().settings().profile().reputationName(reputationName);
+    }
+
+
+    @OpenApi(
+            summary = "Delete bot nickname",
+            operationId = "deleteBotNickname",
+            path = "v1/settings/profile/nickname",
+            methods = HttpMethod.DELETE,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
+            tags = {"Settings"},
+            responses = {
+                    @OpenApiResponse(status = "200")
+            }
+    )
+    public void deleteNickname(Context ctx) {
+        GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
+        session.repGuild().settings().profile().nickname(null);
+    }
+
+    @OpenApi(
+            summary = "Delete bot profile picture",
+            operationId = "deleteBotProfilePicture",
+            path = "v1/settings/profile/picture",
+            methods = HttpMethod.DELETE,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
+            tags = {"Settings"},
+            responses = {
+                    @OpenApiResponse(status = "200"),
+                    @OpenApiResponse(status = "403", content = @OpenApiContent(from = ErrorResponse.class), description = "Premium feature required or limit exceeded")
+            }
+    )
+    public void deleteProfilePicture(Context ctx) {
+        GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
+        
+        // Validate profile feature
+        PremiumValidator validator = session.premiumValidator();
+        validator.requireFeature(validator.features().profile(), "Profile");
+        
+        // Reset to default by setting null avatar
+        session.repGuild().settings().profile().profilePicture(null);
+    }
 
     @Override
     public void buildRoutes() {
         path("profile", () -> {
             post("", this::updateProfileSettings, Role.GUILD_USER);
             post("nickname", this::updateNickname, Role.GUILD_USER);
+            delete("nickname", this::deleteNickname, Role.GUILD_USER);
             post("picture", this::updateProfilePicture, Role.GUILD_USER);
+            delete("picture", this::deleteProfilePicture, Role.GUILD_USER);
+            post("reputationname", this::updateReputationName, Role.GUILD_USER);
         });
     }
 }

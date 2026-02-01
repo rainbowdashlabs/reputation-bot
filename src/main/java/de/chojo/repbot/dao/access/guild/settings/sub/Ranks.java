@@ -9,6 +9,7 @@ import de.chojo.repbot.dao.access.guild.reputation.sub.RepUser;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.dao.snapshots.ReputationRank;
+import de.chojo.repbot.web.pojo.settings.sub.thanking.RanksPOJO;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 
@@ -150,5 +151,31 @@ public class Ranks implements GuildHolder {
         return ranks().stream().filter(r -> r.role().isPresent())
                       .map(rank -> "%s(%d) %d".formatted(rank.role().get().getName(), rank.role().get().getPosition(), rank.reputation()))
                       .collect(Collectors.joining("\n"));
+    }
+
+    public RanksPOJO toPOJO() {
+        var rankEntries = ranks().stream()
+                .map(rank -> new RanksPOJO.RankEntry(rank.roleId(), rank.reputation()))
+                .toList();
+        return new RanksPOJO(rankEntries);
+    }
+
+    public void apply(RanksPOJO pojo) {
+        // Delete all existing ranks for this guild
+        query("DELETE FROM guild_ranks WHERE guild_id = ?")
+                .single(call().bind(guildId()))
+                .delete();
+        
+        // Insert new ranks
+        for (var entry : pojo.ranks()) {
+            query("""
+                    INSERT INTO guild_ranks(guild_id, role_id, reputation) VALUES(?,?,?)
+                    """)
+                    .single(call().bind(guildId()).bind(entry.roleId()).bind(entry.reputation()))
+                    .insert();
+        }
+        
+        // Clear cache to force reload
+        refresh();
     }
 }

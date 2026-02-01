@@ -9,6 +9,7 @@ import de.chojo.repbot.web.routes.v1.settings.sub.GeneralRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.LogChannelRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.MessagesRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.ProfileRoute;
+import de.chojo.repbot.web.routes.v1.settings.sub.RanksRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.ReputationRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.ThankingRoute;
 
@@ -23,6 +24,7 @@ public class SettingsRoute implements RoutesBuilder {
     private final AutopostRoute autopostRoute = new AutopostRoute();
     private final LogChannelRoute logChannelRoute = new LogChannelRoute();
     private final ProfileRoute profileRoute = new ProfileRoute();
+    private final RanksRoute ranksRoute = new RanksRoute();
     private final ThankingRoute thankingRoute = new ThankingRoute();
 
     public SettingsRoute(InteractionHub<?, ?, ?> hub) {
@@ -39,6 +41,7 @@ public class SettingsRoute implements RoutesBuilder {
             autopostRoute.buildRoutes();
             logChannelRoute.buildRoutes();
             profileRoute.buildRoutes();
+            ranksRoute.buildRoutes();
             thankingRoute.buildRoutes();
         });
     }

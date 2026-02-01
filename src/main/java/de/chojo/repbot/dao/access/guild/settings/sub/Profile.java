@@ -27,11 +27,14 @@ public class Profile extends ProfilePOJO implements GuildHolder {
     private final Settings settings;
 
     public Profile(Settings settings) {
-        this(settings, settings.guild().getSelfMember().getNickname(), settings.guild().getJDA().getSelfUser().getEffectiveAvatarUrl());
+        this(settings, 
+             settings.guild().getSelfMember().getNickname(), 
+             settings.guild().getJDA().getSelfUser().getEffectiveAvatarUrl(),
+             settings.repGuild().localeOverrides().getOverride("words.reputation").orElse(null));
     }
 
-    public Profile(Settings settings, String nickname, String profilePictureUrl) {
-        super(nickname, profilePictureUrl);
+    public Profile(Settings settings, String nickname, String profilePictureUrl, String reputationName) {
+        super(nickname, profilePictureUrl, reputationName);
         this.settings = settings;
     }
 
@@ -54,15 +57,34 @@ public class Profile extends ProfilePOJO implements GuildHolder {
     /**
      * Sets the profile picture.
      *
-     * @param bytes the image bytes
+     * @param bytes the image bytes, or null to reset to default
      * @return true if successfully uploaded
      */
     public boolean profilePicture(byte[] bytes) {
         try {
-            settings.guild().getSelfMember().getManager().setAvatar(Icon.from(bytes)).complete();
+            if (bytes == null) {
+                settings.guild().getJDA().getSelfUser().getManager().setAvatar(null).complete();
+            } else {
+                settings.guild().getJDA().getSelfUser().getManager().setAvatar(Icon.from(bytes)).complete();
+            }
             return true;
         } catch (Exception e) {
             return false;
+        }
+    }
+
+    /**
+     * Sets the reputation name for this guild.
+     *
+     * @param name the new reputation name, or null to reset to default
+     */
+    public void reputationName(String name) {
+        if (name == null || name.isEmpty()) {
+            settings.repGuild().localeOverrides().removeOverride("words.reputation");
+            this.reputationName = null;
+        } else {
+            settings.repGuild().localeOverrides().setOverride("words.reputation", name);
+            this.reputationName = name;
         }
     }
 
@@ -70,6 +92,10 @@ public class Profile extends ProfilePOJO implements GuildHolder {
         String newNickname = pojo.nickname();
         String currentNickname = settings.guild().getSelfMember().getNickname();
         if (!Objects.equals(newNickname, currentNickname)) nickname(newNickname);
+        
+        String newReputationName = pojo.reputationName();
+        String currentReputationName = settings.repGuild().localeOverrides().getOverride("words.reputation").orElse(null);
+        if (!Objects.equals(newReputationName, currentReputationName)) reputationName(newReputationName);
     }
 
     @Override

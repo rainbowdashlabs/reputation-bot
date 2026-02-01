@@ -294,6 +294,20 @@ class ApiClient {
     });
   }
 
+  public async updateProfileReputationName(reputationName: string | null) {
+    await this.axiosInstance.post('/settings/profile/reputationname', JSON.stringify(reputationName), {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
+  public async deleteProfileNickname() {
+    await this.axiosInstance.delete('/settings/profile/nickname');
+  }
+
+  public async deleteProfilePicture() {
+    await this.axiosInstance.delete('/settings/profile/picture');
+  }
+
   // Thanking Settings
   public async updateThanking(data: Types.ThankingPOJO) {
     await this.axiosInstance.post('/settings/thanking', data);
@@ -345,6 +359,15 @@ class ApiClient {
 
   public async updateThankingThankwordsList(words: string[]) {
     await this.axiosInstance.post('/settings/thanking/thankwords/words', words);
+  }
+
+  public async getRanks(): Promise<Types.RanksPOJO> {
+    const response = await this.axiosInstance.get<Types.RanksPOJO>('/settings/ranks');
+    return response.data;
+  }
+
+  public async updateRanks(data: Types.RanksPOJO) {
+    await this.axiosInstance.post('/settings/ranks', data);
   }
 
   // Public Data
