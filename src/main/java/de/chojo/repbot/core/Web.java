@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.chojo.jdautil.botlist.BotlistService;
+import de.chojo.jdautil.interactions.dispatching.InteractionHub;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.web.Api;
 import de.chojo.repbot.web.config.Role;
@@ -43,18 +44,20 @@ public class Web {
     private final Threading threading;
     private final Configuration configuration;
     private final SessionService sessionService;
+    private final InteractionHub<?,?,?> interactionHub;
     private Javalin javalin;
 
-    private Web(Bot bot, Data data, Threading threading, Configuration configuration, SessionService sessionService) {
+    private Web(Bot bot, Data data, Threading threading, Configuration configuration, SessionService sessionService, InteractionHub<?,?,?> interactionHub) {
         this.bot = bot;
         this.data = data;
         this.threading = threading;
         this.configuration = configuration;
         this.sessionService = sessionService;
+        this.interactionHub = interactionHub;
     }
 
-    public static Web create(Bot bot, Data data, Threading threading, Configuration configuration, SessionService sessionService) {
-        var web = new Web(bot, data, threading, configuration, sessionService);
+    public static Web create(Bot bot, Data data, Threading threading, Configuration configuration, SessionService sessionService, InteractionHub<?,?,?> interactionHub) {
+        var web = new Web(bot, data, threading, configuration, sessionService, interactionHub);
         web.init();
         return web;
     }
@@ -77,7 +80,7 @@ public class Web {
         javalin = Javalin.create(config -> {
                              config.registerPlugin(new OpenApiPlugin(this::configureOpenApi));
                              config.registerPlugin(new SwaggerPlugin(this::configureSwagger));
-                             config.router.apiBuilder(() -> new Api(sessionService, data.metrics()).init());
+                             config.router.apiBuilder(() -> new Api(sessionService, data.metrics(), bot.hub(), bot.localization()).init());
                              config.router.mount(router -> {
                                  router.beforeMatched(this::handleAccess);
                              });

@@ -44,6 +44,6 @@ public class ReputationBot {
 
         Shutdown.create(bot, threading, data);
 
-        Web.create(bot, data, threading, configuration, data.sessionService());
+        Web.create(bot, data, threading, configuration, data.sessionService(), bot.hub());
     }
 }

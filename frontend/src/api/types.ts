@@ -105,6 +105,12 @@ export interface MessagesPOJO {
   commandReputationEphemeral: boolean;
 }
 
+export interface ProfilePOJO {
+  nickname: string | null;
+  description: string | null;
+  profilePictureUrl: string | null;
+}
+
 export interface ReputationPOJO {
   reactionActive: boolean;
   answerActive: boolean;
@@ -149,6 +155,7 @@ export interface SettingsPOJO {
   general: GeneralPOJO;
   logChannel: LogChannelPOJO;
   messages: MessagesPOJO;
+  profile: ProfilePOJO;
   reputation: ReputationPOJO;
   thanking: ThankingPOJO;
 }
@@ -201,4 +208,15 @@ export interface ApiErrorResponse {
   error: string;
   message: string;
   details?: PremiumFeatureErrorDetails | any;
+}
+
+export interface ThankwordsContainer {
+  defaults: Record<string, string[]>;
+}
+
+export interface LanguageInfo {
+  code: string;
+  name: string;
+  nativeName: string;
+  internalName: string;
 }

@@ -9,7 +9,7 @@ import de.chojo.repbot.config.elements.sku.SKUEntry;
 
 /**
  * Allows having a custom bot profile.
- * Including a nickname, profile picture and description.
+ * Including a profile, profile picture and description.
  */
 public class Profile {
     private SKUEntry allow = new SKUEntry();

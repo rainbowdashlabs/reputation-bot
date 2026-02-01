@@ -38,7 +38,7 @@ public class PremiumFeaturesPOJO {
     private final SimpleFeature detailedProfile;
     private final SimpleFeature logChannel;
     private final SimpleFeature additionalEmojis;
-    private final SimpleFeature nickname;
+    private final SimpleFeature profile;
 
     // Complex features with limits
     private final FeatureLimit reputationChannel;
@@ -54,7 +54,7 @@ public class PremiumFeaturesPOJO {
             SimpleFeature detailedProfile,
             SimpleFeature logChannel,
             SimpleFeature additionalEmojis,
-            SimpleFeature nickname,
+            SimpleFeature profile,
             FeatureLimit reputationChannel,
             FeatureLimit reputationCategories) {
         this.reputationLog = reputationLog;
@@ -66,7 +66,7 @@ public class PremiumFeaturesPOJO {
         this.detailedProfile = detailedProfile;
         this.logChannel = logChannel;
         this.additionalEmojis = additionalEmojis;
-        this.nickname = nickname;
+        this.profile = profile;
         this.reputationChannel = reputationChannel;
         this.reputationCategories = reputationCategories;
     }
@@ -98,8 +98,8 @@ public class PremiumFeaturesPOJO {
                 subscriptions, features.logChannel().logChannel(), skuMap);
         SimpleFeature additionalEmojis = createSimpleFeature(
                 subscriptions, features.additionalEmojis().additionalEmojis(), skuMap);
-        SimpleFeature nickname = createSimpleFeature(
-                subscriptions, features.nickname().allow(), skuMap);
+        SimpleFeature profile = createSimpleFeature(
+                subscriptions, features.profile().allow(), skuMap);
 
         // Check complex features with limits
         int defaultChannels = features.reputationChannel().defaultChannel();
@@ -128,7 +128,7 @@ public class PremiumFeaturesPOJO {
                 detailedProfile,
                 logChannel,
                 additionalEmojis,
-                nickname,
+                profile,
                 reputationChannel,
                 reputationCategories
         );
@@ -205,8 +205,8 @@ public class PremiumFeaturesPOJO {
         return additionalEmojis;
     }
 
-    public SimpleFeature nickname() {
-        return nickname;
+    public SimpleFeature profile() {
+        return profile;
     }
 
     public FeatureLimit reputationChannel() {

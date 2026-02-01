@@ -1,5 +1,6 @@
 package de.chojo.repbot.web.routes.v1.settings.sub;
 
+import de.chojo.jdautil.interactions.dispatching.InteractionHub;
 import de.chojo.repbot.dao.access.guild.settings.sub.Reputation;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
@@ -7,17 +8,29 @@ import de.chojo.repbot.web.pojo.settings.sub.ReputationPOJO;
 import de.chojo.repbot.web.routes.RoutesBuilder;
 import de.chojo.repbot.web.sessions.GuildSession;
 import io.javalin.http.Context;
+import io.javalin.http.FailedDependencyResponse;
+import io.javalin.http.InternalServerErrorResponse;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
 import io.javalin.openapi.OpenApiContent;
 import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiRequestBody;
 import io.javalin.openapi.OpenApiResponse;
+import net.dv8tion.jda.api.entities.Guild;
+import org.slf4j.Logger;
 
 import static io.javalin.apibuilder.ApiBuilder.path;
 import static io.javalin.apibuilder.ApiBuilder.post;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class ReputationRoute implements RoutesBuilder {
+    private static final Logger log = getLogger(ReputationRoute.class);
+    private final InteractionHub<?, ?, ?> hub;
+
+    public ReputationRoute(InteractionHub<?, ?, ?> hub) {
+        this.hub = hub;
+    }
+
     @OpenApi(
             summary = "Update reputation settings",
             operationId = "updateReputationSettings",
@@ -26,13 +39,17 @@ public class ReputationRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @io.javalin.openapi.OpenApiContent(from = ReputationPOJO.class)),
-            responses = {@OpenApiResponse(status = "200")}
+            responses = {@OpenApiResponse(status = "200"), @OpenApiResponse(status = "424", description = "Could not refresh guild commands.")}
     )
     public void updateReputationSettings(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         Reputation reputation = session.repGuild().settings().reputation();
         ReputationPOJO reputationPOJO = ctx.bodyAsClass(ReputationPOJO.class);
+        var redeploy = reputation.isCommandActive() != reputationPOJO.isReactionActive();
         reputation.apply(reputationPOJO);
+        if (redeploy) {
+            refreshGuildCommands(session.repGuild().guild());
+        }
     }
 
     @OpenApi(
@@ -133,11 +150,23 @@ public class ReputationRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
-            responses = {@OpenApiResponse(status = "200")}
+            responses = {@OpenApiResponse(status = "200"), @OpenApiResponse(status = "424", description = "Could not refresh guild commands.")}
     )
     public void updateCommandActive(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         session.repGuild().settings().reputation().commandActive(ctx.bodyAsClass(Boolean.class));
+        refreshGuildCommands(session.repGuild().guild());
+    }
+
+    private boolean refreshGuildCommands(Guild guild) {
+        // The command needs to be hidden or enabled additionally
+        try {
+            hub.refreshGuildCommands(guild);
+            return true;
+        } catch (Exception err) {
+            log.error("Error during command refresh", err);
+            throw new FailedDependencyResponse("Could not refresh guild commands.");
+        }
     }
 
     @Override

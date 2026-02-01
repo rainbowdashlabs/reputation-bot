@@ -5,7 +5,12 @@
  */
 package de.chojo.repbot.web;
 
+import de.chojo.jdautil.interactions.dispatching.InteractionHub;
+import de.chojo.repbot.commands.thankwords.Thankwords;
+import de.chojo.repbot.core.Localization;
 import de.chojo.repbot.dao.provider.Metrics;
+import de.chojo.repbot.serialization.ThankwordsContainer;
+import de.chojo.repbot.web.routes.v1.data.DataRoute;
 import de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute;
 import de.chojo.repbot.web.routes.v1.session.SessionRoute;
 import de.chojo.repbot.web.routes.v1.settings.SettingsRoute;
@@ -13,6 +18,7 @@ import de.chojo.repbot.web.sessions.SessionService;
 import io.javalin.http.ContentType;
 import org.slf4j.Logger;
 
+import java.io.IOException;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -27,12 +33,23 @@ public class Api {
     private final MetricsRoute metricsRoute;
     private final SessionRoute sessionRoute;
     private final SettingsRoute settingsRoute;
+    private final DataRoute dataRoute;
 
-    public Api(SessionService sessionService, Metrics metrics) {
+    public Api(SessionService sessionService, Metrics metrics, InteractionHub<?, ?, ?> hub, Localization localization) {
         this.sessionService = sessionService;
         metricsRoute = new MetricsRoute(metrics);
         sessionRoute = new SessionRoute(sessionService);
-        settingsRoute = new SettingsRoute();
+        settingsRoute = new SettingsRoute(hub);
+        
+        // Load thankwords container
+        ThankwordsContainer thankwordsContainer;
+        try {
+            thankwordsContainer = Thankwords.loadContainer();
+        } catch (IOException e) {
+            log.error("Could not load thankwords container", e);
+            thankwordsContainer = null;
+        }
+        dataRoute = new DataRoute(thankwordsContainer, localization);
     }
 
     public void init() {
@@ -58,6 +75,7 @@ public class Api {
             metricsRoute.buildRoutes();
             sessionRoute.buildRoutes();
             settingsRoute.buildRoutes();
+            dataRoute.buildRoutes();
         });
     }
 }

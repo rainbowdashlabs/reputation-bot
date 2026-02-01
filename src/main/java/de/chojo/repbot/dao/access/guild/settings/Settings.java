@@ -10,6 +10,7 @@ import de.chojo.repbot.dao.access.guild.settings.sub.AbuseProtection;
 import de.chojo.repbot.dao.access.guild.settings.sub.General;
 import de.chojo.repbot.dao.access.guild.settings.sub.LogChannel;
 import de.chojo.repbot.dao.access.guild.settings.sub.Messages;
+import de.chojo.repbot.dao.access.guild.settings.sub.Profile;
 import de.chojo.repbot.dao.access.guild.settings.sub.Ranks;
 import de.chojo.repbot.dao.access.guild.settings.sub.Reputation;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
@@ -32,6 +33,7 @@ public class Settings implements GuildHolder {
     private Autopost autopost;
     private Messages messages;
     private LogChannel logChannel;
+    private Profile profile;
 
     public Settings(RepGuild repGuild) {
         this.repGuild = repGuild;
@@ -230,5 +232,13 @@ public class Settings implements GuildHolder {
                 .first()
                 .orElseGet(() -> new LogChannel(this));
         return logChannel;
+    }
+
+    public Profile profile() {
+        if (profile != null) {
+            return profile;
+        }
+        profile = new Profile(this);
+        return profile;
     }
 }

@@ -322,4 +322,12 @@ public class Bot {
     public void shutdown() {
         shardManager.shutdown();
     }
+
+    public InteractionHub<Slash, Message, User> hub() {
+        return hub;
+    }
+
+    public Localization localization() {
+        return localization;
+    }
 }

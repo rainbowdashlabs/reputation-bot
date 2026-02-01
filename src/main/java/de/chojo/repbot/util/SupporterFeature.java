@@ -35,9 +35,9 @@ public enum SupporterFeature {
             (sku, repGuild) -> !repGuild.settings().thanking().channels().isWhitelist(),
             sku -> sku.features().channelBlacklist().allow()),
     BOT_NICKNAMED((sku, repGuild) -> List.of(),
-            (sku, repGuild) -> repGuild.subscriptions().isEntitled(sku.features().nickname().allow()),
+            (sku, repGuild) -> repGuild.subscriptions().isEntitled(sku.features().profile().allow()),
             (sku, repGuild) -> repGuild.guild().getSelfMember().getNickname() != null,
-            sku -> sku.features().nickname().allow());
+            sku -> sku.features().profile().allow());
 
     private final BiFunction<SKU, RepGuild, List<Replacement>> replacements;
     private final BiFunction<SKU, RepGuild, Boolean> isEntitled;

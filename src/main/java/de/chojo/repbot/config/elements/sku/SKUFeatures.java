@@ -75,7 +75,7 @@ public class SKUFeatures {
         return channelBlacklist;
     }
 
-    public Profile nickname() {
+    public Profile profile() {
         return profile;
     }
 }

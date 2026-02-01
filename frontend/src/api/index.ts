@@ -271,6 +271,29 @@ class ApiClient {
     });
   }
 
+  // Profile
+  public async updateProfile(data: Types.ProfilePOJO) {
+    await this.axiosInstance.post('/settings/profile', data);
+  }
+
+  public async updateProfileNickname(nickname: string | null) {
+    await this.axiosInstance.post('/settings/profile/nickname', JSON.stringify(nickname), {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
+  public async updateProfilePicture(profilePicture: Blob | File) {
+    await this.axiosInstance.post('/settings/profile/picture', profilePicture, {
+      headers: { 'Content-Type': 'image/png' } // Or more generic image/* if needed
+    });
+  }
+
+  public async updateProfileDescription(description: string | null) {
+    await this.axiosInstance.post('/settings/profile/description', JSON.stringify(description), {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
   // Thanking Settings
   public async updateThanking(data: Types.ThankingPOJO) {
     await this.axiosInstance.post('/settings/thanking', data);
@@ -322,6 +345,17 @@ class ApiClient {
 
   public async updateThankingThankwordsList(words: string[]) {
     await this.axiosInstance.post('/settings/thanking/thankwords/words', words);
+  }
+
+  // Public Data
+  public async getThankwords(): Promise<Types.ThankwordsContainer> {
+    const response = await this.axiosInstance.get<Types.ThankwordsContainer>('/data/thankwords');
+    return response.data;
+  }
+
+  public async getLanguages(): Promise<Types.LanguageInfo[]> {
+    const response = await this.axiosInstance.get<Types.LanguageInfo[]>('/data/languages');
+    return response.data;
   }
 }
 
