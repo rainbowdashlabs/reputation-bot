@@ -1,13 +1,19 @@
 <script lang="ts" setup>
-import {useI18n} from 'vue-i18n'
+import { useI18n } from 'vue-i18n'
 import SettingsContainer from './components/SettingsContainer.vue'
+import StackRolesSettings from './ranksview/StackRolesSettings.vue'
+import RankManagement from './ranksview/RankManagement.vue'
 
-const {t} = useI18n()
+const { t } = useI18n()
 </script>
 
 <template>
   <SettingsContainer :title="t('settings.ranks')">
-    <p class="text-gray-600 dark:text-gray-400">Ranks settings content will go here.</p>
+    <div class="space-y-8">
+      <StackRolesSettings />
+      <hr class="border-gray-200 dark:border-gray-700" />
+      <RankManagement />
+    </div>
   </SettingsContainer>
 </template>
 

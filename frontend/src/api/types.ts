@@ -88,7 +88,7 @@ export enum ReputationMode {
 }
 
 export interface GeneralPOJO {
-  stackRoles: boolean; // Implemented in roles
+  stackRoles: boolean; // Implemented in ranks
   language: string; // Internal name (e.g., "SPANISH")
   reputationMode: ReputationMode; // Implemented in reputation
   resetDate: string; // ISO string // Implemented in reputation

@@ -9,7 +9,10 @@ import java.util.Collections;
 import java.util.List;
 
 public class RanksPOJO {
-    protected final List<RankEntry> ranks;
+    protected List<RankEntry> ranks;
+
+    public RanksPOJO() {
+    }
 
     public RanksPOJO(List<RankEntry> ranks) {
         this.ranks = ranks;

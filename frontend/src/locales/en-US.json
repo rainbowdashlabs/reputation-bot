@@ -88,6 +88,22 @@
       "selectPlaceholder": "Select a channel",
       "description": "Choose the channel where the bot will send system messages and announcements.",
       "note": "Note: This channel should be set and should be an internal channel. It will contain important messages concerning the bot's service and messages from the developers."
+    },
+    "roleSelect": {
+      "searchPlaceholder": "Search roles...",
+      "noRolesFound": "No roles found"
+    },
+    "ranks": {
+      "stackRoles": {
+        "label": "Stack Roles",
+        "description": "If enabled, all applicable ranks will be assigned instead of only the highest rank."
+      },
+      "addRank": "Add New Rank",
+      "reputationRequired": "Required Reputation",
+      "roleAlreadyAdded": "This role already has a rank.",
+      "reputationAlreadyUsed": "This reputation value is already used by another rank.",
+      "noRanks": "No ranks configured yet.",
+      "reputationPlaceholder": "e.g. 100"
     }
   }
 }
