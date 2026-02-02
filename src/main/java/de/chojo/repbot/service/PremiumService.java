@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.TimeUnit;
 
+import static de.chojo.repbot.util.States.GRANT_ALL_SKU;
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 import static de.chojo.sadu.queries.converter.StandardValueConverter.INSTANT_TIMESTAMP;
@@ -145,6 +146,7 @@ public class PremiumService extends ListenerAdapter {
 
     public void checkForTier(Guild guild, SupporterFeature type) {
         if (guild == null) return;
+        if (GRANT_ALL_SKU) return;
         RepGuild repGuild = guildRepository.guild(guild);
         Subscriptions subscriptions = repGuild.subscriptions();
         if (type.isEntitled(skus(), repGuild)) {

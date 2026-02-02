@@ -4,6 +4,8 @@
     "cancel": "Cancel",
     "delete": "Delete",
     "edit": "Edit",
+    "change": "Change",
+    "clear": "Clear",
     "close": "Close",
     "confirm": "Confirm",
     "loading": "Loading...",
@@ -84,7 +86,8 @@
     "systemChannel": {
       "label": "System Channel",
       "selectPlaceholder": "Select a channel",
-      "description": "Choose the channel where the bot will send system messages and announcements."
+      "description": "Choose the channel where the bot will send system messages and announcements.",
+      "note": "Note: This channel should be set and should be an internal channel. It will contain important messages concerning the bot's service and messages from the developers."
     }
   }
 }

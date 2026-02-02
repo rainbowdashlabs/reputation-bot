@@ -4,9 +4,11 @@ import { useRouter } from 'vue-router'
 import AppHeader from './components/AppHeader.vue'
 import { api } from './api'
 import { useSession } from './composables/useSession'
+import { useDarkMode } from './composables/useDarkMode'
 
 const router = useRouter()
 const { setSession, clearSession } = useSession()
+useDarkMode()
 
 onMounted(async () => {
   const urlParams = new URLSearchParams(window.location.search);

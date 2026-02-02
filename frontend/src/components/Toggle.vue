@@ -20,7 +20,7 @@ const toggle = () => {
 
 <template>
   <div class="flex items-center gap-3 cursor-pointer select-none" @click="toggle">
-    <span v-if="label" class="text-sm font-medium text-gray-700 dark:text-gray-300">
+    <span v-if="label" class="label">
       {{ label }}
     </span>
     

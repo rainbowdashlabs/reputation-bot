@@ -7,6 +7,9 @@ package de.chojo.repbot.web.pojo.premium;
 
 import java.util.List;
 
+import static de.chojo.repbot.util.States.GRANT_ALL_SKU;
+import static de.chojo.repbot.util.States.TEST_MODE;
+
 /**
  * Represents a premium feature with a limit.
  * Contains information about maximum allowed, unlock status, and which SKUs can unlock it.
@@ -34,6 +37,7 @@ public class FeatureLimit {
      * Whether the premium feature is unlocked
      */
     public boolean unlocked() {
+        if (GRANT_ALL_SKU) return true;
         return unlocked;
     }
 

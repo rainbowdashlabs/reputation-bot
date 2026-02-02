@@ -18,6 +18,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import static de.chojo.repbot.util.States.GRANT_ALL_SKU;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
@@ -166,6 +167,7 @@ public class PremiumFeaturesPOJO {
     }
 
     private static boolean isEntitled(SkuMeta subscriptions, SkuMeta required) {
+        if (GRANT_ALL_SKU) return true;
         return subscriptions.isEntitled(required);
     }
 

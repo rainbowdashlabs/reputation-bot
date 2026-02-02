@@ -1,16 +1,14 @@
-<script setup lang="ts">
-import { useI18n } from 'vue-i18n'
+<script lang="ts" setup>
+import {useI18n} from 'vue-i18n'
+import SettingsContainer from './components/SettingsContainer.vue'
 
-const { t } = useI18n()
+const {t} = useI18n()
 </script>
 
 <template>
-  <div>
-    <h2 class="text-2xl font-bold mb-4">{{ t('settings.abuseProtection') }}</h2>
-    <div class="bg-white shadow rounded-lg p-6">
-      <p class="text-gray-600">Abuse Protection settings content will go here.</p>
-    </div>
-  </div>
+  <SettingsContainer :title="t('settings.abuseProtection')">
+    <p class="text-gray-600 dark:text-gray-400">Abuse Protection settings content will go here.</p>
+  </SettingsContainer>
 </template>
 
 <style scoped>

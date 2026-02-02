@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import {useI18n} from 'vue-i18n'
+import Header1 from '@/components/heading/Header1.vue'
 
 const {t} = useI18n()
 
 const settingsSections = [
-  {key: 'profile', path: '/settings/profile'},
   {key: 'general', path: '/settings/general'},
+  {key: 'profile', path: '/settings/profile'},
   {key: 'ranks', path: '/settings/ranks'},
   {key: 'reputation', path: '/settings/reputation'},
   {key: 'channels', path: '/settings/channels'},
@@ -21,20 +22,20 @@ const settingsSections = [
 
 <template>
   <div class="mx-auto" style="max-width: 1600px;">
-    <div>
+    <div class="transition-colors">
       <!-- Heading above sidebar -->
-      <h1 class="text-3xl font-bold mb-6 px-4 pt-8">{{ t('navigation.settings') }}</h1>
+      <Header1 class="mb-6 px-4 pt-8">{{ t('navigation.settings') }}</Header1>
 
-      <div class="flex min-h-screen">
+      <div class="flex min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
         <!-- Sidebar - Full height, stretches from top to bottom -->
-        <aside class="w-64 flex-shrink-0">
-          <nav class="bg-white shadow rounded-lg p-4 top-24 ml-4 min-h-[calc(100vh-8rem)]">
+        <aside class="w-64 shrink-0">
+          <nav class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 top-24 ml-4 min-h-[calc(100vh-8rem)] transition-colors">
             <ul class="space-y-1">
               <li v-for="section in settingsSections" :key="section.key">
                 <router-link
                     :to="section.path"
-                    class="block px-4 py-2 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 rounded transition-colors"
-                    active-class="bg-indigo-100 text-indigo-700 font-medium"
+                    class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 hover:text-indigo-600 dark:hover:text-indigo-400 rounded transition-colors"
+                    active-class="bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 font-medium"
                 >
                   {{ t(`settings.${section.key}`) }}
                 </router-link>

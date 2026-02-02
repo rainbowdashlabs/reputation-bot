@@ -296,7 +296,7 @@ class ApiClient {
 
   public async updateProfilePicture(profilePicture: Blob | File) {
     await this.axiosInstance.post('/settings/profile/picture', profilePicture, {
-      headers: { 'Content-Type': 'image/png' } // Or more generic image/* if needed
+      headers: { 'Content-Type': profilePicture.type || 'image/png' }
     });
   }
 

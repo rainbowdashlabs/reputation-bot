@@ -1,25 +1,25 @@
 export interface RolePOJO {
   name: string;
-  id: string;
+  id: string | number;
   color: string;
 }
 
 export interface ReactionPOJO {
   name: string;
-  id: string;
+  id: string | number;
   url: string;
 }
 
 export interface ChannelPOJO {
   name: string;
-  id: string;
+  id: string | number;
   type: string;
 }
 
 export interface CategoryPOJO {
   channels: ChannelPOJO[];
   name: string;
-  id: string;
+  id: string | number;
 }
 
 export interface ChannelViewPOJO {

@@ -46,7 +46,7 @@ public class Profile extends ProfilePOJO implements GuildHolder {
      */
     public boolean nickname(String nickname) {
         try {
-            settings.guild().getSelfMember().modifyNickname(nickname).complete();
+            settings.guild().getSelfMember().getManager().setNickname(nickname).complete();
             this.nickname = nickname;
             return true;
         } catch (InsufficientPermissionException e) {
@@ -63,9 +63,9 @@ public class Profile extends ProfilePOJO implements GuildHolder {
     public boolean profilePicture(byte[] bytes) {
         try {
             if (bytes == null) {
-                settings.guild().getJDA().getSelfUser().getManager().setAvatar(null).complete();
+                settings.guild().getSelfMember().getManager().setAvatar(null).complete();
             } else {
-                settings.guild().getJDA().getSelfUser().getManager().setAvatar(Icon.from(bytes)).complete();
+                settings.guild().getSelfMember().getManager().setAvatar(Icon.from(bytes)).complete();
             }
             return true;
         } catch (Exception e) {
