@@ -1,13 +1,23 @@
 <script lang="ts" setup>
+import {computed} from 'vue'
 import {useI18n} from 'vue-i18n'
+import {useSession} from '@/composables/useSession'
 import SettingsContainer from './components/SettingsContainer.vue'
+import MainEmojiSettings from './reactionsview/MainEmojiSettings.vue'
+import AdditionalEmojiSettings from './reactionsview/AdditionalEmojiSettings.vue'
 
 const {t} = useI18n()
+const {session} = useSession()
+
+const mainReaction = computed(() => session.value?.settings.thanking.reactions.mainReaction || '🏅')
+const additionalReactions = computed(() => [...(session.value?.settings.thanking.reactions.reactions || [])])
 </script>
 
 <template>
-  <SettingsContainer :title="t('settings.reactions')">
-    <p class="text-gray-600 dark:text-gray-400">Reactions settings content will go here.</p>
+  <SettingsContainer :title="t('reactions.title')" :description="t('reactions.description')">
+    <MainEmojiSettings :initial-main-reaction="mainReaction"/>
+    <hr class="my-8 border-gray-200 dark:border-gray-700"/>
+    <AdditionalEmojiSettings :initial-reactions="additionalReactions"/>
   </SettingsContainer>
 </template>
 

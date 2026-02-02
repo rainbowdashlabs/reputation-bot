@@ -16,6 +16,8 @@ import io.javalin.openapi.OpenApiRequestBody;
 import io.javalin.openapi.OpenApiResponse;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 
+import java.time.Instant;
+
 import static io.javalin.apibuilder.ApiBuilder.path;
 import static io.javalin.apibuilder.ApiBuilder.post;
 
@@ -102,6 +104,21 @@ public class GeneralRoute implements RoutesBuilder {
         session.repGuild().settings().general().systemChannel(ctx.bodyAsClass(Long.class));
     }
 
+    @OpenApi(
+            summary = "Update general reset date",
+            operationId = "updateGeneralResetDate",
+            path = "v1/settings/general/resetdate",
+            methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
+            tags = {"Settings"},
+            requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Instant.class)),
+            responses = {@OpenApiResponse(status = "200")}
+    )
+    public void updateResetDate(Context ctx) {
+        GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
+        session.repGuild().settings().general().resetDate(ctx.bodyAsClass(Instant.class));
+    }
+
     @Override
     public void buildRoutes() {
         path("general", () -> {
@@ -110,6 +127,7 @@ public class GeneralRoute implements RoutesBuilder {
             post("stackroles", this::updateStackRoles, Role.GUILD_USER);
             post("reputationmode", this::updateReputationMode, Role.GUILD_USER);
             post("systemchannel", this::updateSystemChannel, Role.GUILD_USER);
+            post("resetdate", this::updateResetDate, Role.GUILD_USER);
         });
     }
 }

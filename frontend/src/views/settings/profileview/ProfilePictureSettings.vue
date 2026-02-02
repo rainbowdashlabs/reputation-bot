@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useSession } from '@/composables/useSession'
 import { api } from '@/api'
 import BaseButton from '@/components/BaseButton.vue'
 
@@ -10,6 +11,7 @@ const props = defineProps<{
 }>()
 
 const { t } = useI18n()
+const { updateProfileSettings } = useSession()
 const profilePictureUrl = ref(props.initialProfilePictureUrl)
 const isUploading = ref(false)
 const fileInputRef = ref<HTMLInputElement | null>(null)
@@ -28,8 +30,8 @@ const resetProfilePicture = async () => {
 
   try {
     await api.deleteProfilePicture()
-    const sessionData = await api.getSession()
-    profilePictureUrl.value = sessionData.settings.profile.profilePictureUrl || ''
+    updateProfileSettings({ profilePictureUrl: null })
+    profilePictureUrl.value = ''
   } catch (error) {
     console.error('Failed to reset profile picture:', error)
   }
@@ -71,7 +73,9 @@ const handleFileUpload = async (event: Event) => {
     try {
       await api.updateProfilePicture(file)
       const sessionData = await api.getSession()
-      profilePictureUrl.value = sessionData.settings.profile.profilePictureUrl || ''
+      const newUrl = sessionData.settings.profile.profilePictureUrl || ''
+      updateProfileSettings({ profilePictureUrl: newUrl })
+      profilePictureUrl.value = newUrl
     } catch (error) {
       console.error('Failed to upload profile picture:', error)
     } finally {

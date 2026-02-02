@@ -45,7 +45,7 @@ public class ReputationRoute implements RoutesBuilder {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         Reputation reputation = session.repGuild().settings().reputation();
         ReputationPOJO reputationPOJO = ctx.bodyAsClass(ReputationPOJO.class);
-        var redeploy = reputation.isCommandActive() != reputationPOJO.isReactionActive();
+        var redeploy = reputation.isCommandActive() != reputationPOJO.isCommandActive();
         reputation.apply(reputationPOJO);
         if (redeploy) {
             refreshGuildCommands(session.repGuild().guild());

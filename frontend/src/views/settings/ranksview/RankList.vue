@@ -22,6 +22,8 @@ const sortedRanks = computed(() => {
 
 const onUpdateRank = (updatedRank: RankEntry, index: number) => {
   const originalRank = sortedRanks.value[index]
+  if (!originalRank) return
+
   const updatedRanks = [...props.ranks]
   const originalIndex = updatedRanks.findIndex(r => r.roleId.toString() === originalRank.roleId.toString())
 

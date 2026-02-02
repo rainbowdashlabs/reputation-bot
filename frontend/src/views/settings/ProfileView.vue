@@ -36,7 +36,7 @@ watch(session, (newSession) => {
 </script>
 
 <template>
-  <SettingsContainer :title="t('settings.profile')">
+  <SettingsContainer :title="t('settings.profile')" :description="t('profile.description')">
     <!-- Premium Feature Warning for Profile -->
     <PremiumFeatureWarning
         v-if="!isProfileUnlocked"

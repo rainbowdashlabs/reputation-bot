@@ -101,8 +101,8 @@ export interface LogChannelPOJO {
 }
 
 export interface MessagesPOJO {
-  reactionConfirmation: boolean;
-  commandReputationEphemeral: boolean;
+  reactionConfirmation: boolean; // Implement in reputation
+  commandReputationEphemeral: boolean; // Implement in reputation
 }
 
 export interface ProfilePOJO {

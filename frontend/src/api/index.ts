@@ -73,6 +73,12 @@ class ApiClient {
     });
   }
 
+  public async updateGeneralResetDate(resetDate: string | null) {
+    await this.axiosInstance.post('/settings/general/resetdate', resetDate ? JSON.stringify(resetDate) : null, {
+      headers: { 'Content-Type': 'application/json' }
+    });
+  }
+
   // Abuse Protection
   public async updateAbuseProtection(data: Types.AbuseProtectionPOJO) {
     await this.axiosInstance.post('/settings/abuseprotection', data);

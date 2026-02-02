@@ -1,16 +1,23 @@
 <script lang="ts" setup>
-import {useI18n} from 'vue-i18n'
+import { useI18n } from 'vue-i18n'
+import { useSession } from '@/composables/useSession'
 import SettingsContainer from './components/SettingsContainer.vue'
+import ChannelListTypeSettings from './channelsview/ChannelListTypeSettings.vue'
+import ChannelSelectionSettings from './channelsview/ChannelSelectionSettings.vue'
 
-const {t} = useI18n()
+const { t } = useI18n()
+const { session } = useSession()
 </script>
 
 <template>
-  <SettingsContainer :title="t('settings.channels')">
-    <p class="text-gray-600 dark:text-gray-400">Channels settings content will go here.</p>
+  <SettingsContainer :title="t('settings.channels')" :description="t('general.channels.description')">
+    <div v-if="session?.settings?.thanking?.channels" class="space-y-8">
+      <ChannelListTypeSettings />
+      <hr class="border-gray-200 dark:border-gray-700" />
+      <ChannelSelectionSettings />
+    </div>
   </SettingsContainer>
 </template>
 
 <style scoped>
-/* Additional styles if needed */
 </style>

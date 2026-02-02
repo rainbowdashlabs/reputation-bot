@@ -4,7 +4,10 @@ import java.util.Collections;
 import java.util.Set;
 
 public class RolesHolderPOJO {
-    protected final Set<Long> roleIds;
+    protected Set<Long> roleIds;
+
+    public RolesHolderPOJO() {
+    }
 
     public RolesHolderPOJO(Set<Long> roleIds) {
         this.roleIds = roleIds;

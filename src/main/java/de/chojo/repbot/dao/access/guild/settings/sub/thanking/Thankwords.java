@@ -8,7 +8,6 @@ package de.chojo.repbot.dao.access.guild.settings.sub.thanking;
 import com.fasterxml.jackson.annotation.JsonSerializeAs;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.repbot.web.pojo.settings.sub.thanking.RolesHolderPOJO;
 import de.chojo.repbot.web.pojo.settings.sub.thanking.ThankwordsPOJO;
 import net.dv8tion.jda.api.entities.Guild;
 import org.intellij.lang.annotations.Language;
@@ -144,21 +143,16 @@ public class Thankwords extends ThankwordsPOJO implements GuildHolder {
     }
 
     public void apply(ThankwordsPOJO state) {
-        long stamp = lock.writeLock();
-        try {
-            for (String word : state.words()) {
-                if (!thankwords.contains(word)) {
-                    add(word);
-                }
+        for (String word : state.words()) {
+            if (!thankwords.contains(word)) {
+                add(word);
             }
+        }
 
-            for (String word : Set.copyOf(thankwords)) {
-                if (!state.words().contains(word)) {
-                    remove(word);
-                }
+        for (String word : Set.copyOf(thankwords)) {
+            if (!state.words().contains(word)) {
+                remove(word);
             }
-        } finally {
-            lock.unlockWrite(stamp);
         }
     }
 

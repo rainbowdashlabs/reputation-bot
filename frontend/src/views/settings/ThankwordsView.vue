@@ -1,13 +1,33 @@
 <script lang="ts" setup>
+import {ref} from 'vue'
 import {useI18n} from 'vue-i18n'
 import SettingsContainer from './components/SettingsContainer.vue'
+import ThankwordList from './thankwordsview/ThankwordList.vue'
+import ThankwordInput from './thankwordsview/ThankwordInput.vue'
+import DefaultThankwords from './thankwordsview/DefaultThankwords.vue'
 
 const {t} = useI18n()
+const isUpdating = ref(false)
 </script>
 
 <template>
-  <SettingsContainer :title="t('settings.thankwords')">
-    <p class="text-gray-600 dark:text-gray-400">Thankwords settings content will go here.</p>
+  <SettingsContainer :title="t('settings.thankwords')" :description="t('thankwords.description')">
+    <div class="space-y-6">
+      <div>
+
+        <ThankwordInput
+            v-model:is-updating="isUpdating"
+        />
+
+        <ThankwordList
+            v-model:is-updating="isUpdating"
+        />
+      </div>
+
+      <DefaultThankwords
+          v-model:is-updating="isUpdating"
+      />
+    </div>
   </SettingsContainer>
 </template>
 

@@ -95,6 +95,7 @@ public class General extends GeneralPOJO implements GuildHolder {
         if (stackRoles != state.isStackRoles()) isStackRoles(state.isStackRoles());
         if (reputationMode != state.reputationMode()) reputationMode(state.reputationMode());
         if (systemChannel != state.systemChannel()) systemChannel(state.systemChannel());
+        if (resetDate != state.resetDate()) resetDate(state.resetDate());
     }
 
     @Override

@@ -23,19 +23,24 @@
     },
     "general": {
       "stackRoles": false,
-      "language": "SPANISH",
+      "language": "GERMAN",
       "reputationMode": "TOTAL",
       "resetDate": null,
-      "systemChannel": 853252663776116700
+      "systemChannel": 853259269688262700
     },
     "logChannel": {"channelId": 0, "active": false},
     "messages": {"reactionConfirmation": true, "commandReputationEphemeral": false},
     "profile": {
       "nickname": null,
-      "profilePictureUrl": "https://cdn.discordapp.com/avatars/853255944079540254/2ae7934f37c1d13ac8504c7c1c6feb90.png",
+      "profilePictureUrl": "https://cdn.discordapp.com/avatars/853255944079540254/6c07f24efff960e4d086df92f2703f94.png",
       "reputationName": null
     },
-    "ranks": {"ranks": []},
+    "ranks": {
+      "ranks": [
+        {"roleId": 976465888939212800, "reputation": 40}, {"roleId": 855424789387804700, "reputation": 10},
+        {"roleId": 855424753983946800, "reputation": 5}
+      ]
+    },
     "reputation": {
       "reactionActive": true,
       "answerActive": true,
@@ -46,8 +51,14 @@
       "commandActive": false
     },
     "thanking": {
-      "channels": {"channels": [], "categories": [], "whitelist": true},
-      "donorRoles": {"roleIds": []},
+      "channels": {
+        "channels": [
+          853686272995491800, 1022427137891893200, 853252663776116700, 853255173787091100, 853259222624239600
+        ],
+        "categories": [853250161915985900],
+        "whitelist": true
+      },
+      "donorRoles": {"roleIds": [853250454447063000, 853250412730777600]},
       "receiverRoles": {"roleIds": []},
       "reactions": {"reactions": [], "mainReaction": "🏅"},
       "thankwords": {"thankwords": []}
@@ -77,8 +88,7 @@
     {"name": "RepBot-Beta", "id": 1459280128977928256, "color": "#ffffff"}
   ],
   "channels": {
-    "channels": [],
-    "categories": [
+    "channels": [], "categories": [
       {
         "channels": [
           {"name": "updates", "id": 853255173787091014, "type": "NEWS"},
@@ -104,6 +114,15 @@
         ],
         "name": "Testing",
         "id": 853252115312803842
+      }, {
+        "channels": [
+          {"name": "beta-forum", "id": 1022427137891893300, "type": "FORUM"},
+          {"name": "beta-talk", "id": 853259320485609502, "type": "TEXT"},
+          {"name": "beta-testing", "id": 853259349380300860, "type": "TEXT"},
+          {"name": "test voice", "id": 1026433719319404554, "type": "VOICE"}
+        ],
+        "name": "Beta Testing",
+        "id": 853254997487255573
       }
     ]
   },

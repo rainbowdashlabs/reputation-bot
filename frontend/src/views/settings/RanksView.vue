@@ -8,7 +8,7 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <SettingsContainer :title="t('settings.ranks')">
+  <SettingsContainer :title="t('settings.ranks')" :description="t('general.ranks.description')">
     <div class="space-y-8">
       <StackRolesSettings />
       <hr class="border-gray-200 dark:border-gray-700" />

@@ -28,10 +28,10 @@ const getRole = (roleId: string | number) => {
 
 const getRoleColor = (roleId: string | number) => {
   const role = getRole(roleId)
-  if (!role || !role.color || role.color === '#000000' || role.color === '#ffffff' || role.color === '0' || role.color === 0) return 'inherit'
+  if (!role || !role.color || role.color === '#000000' || role.color === '#ffffff' || role.color === '0') return 'inherit'
   if (typeof role.color === 'number') {
     if (role.color === 0xFFFFFF) return 'inherit'
-    return '#' + role.color.toString(16).padStart(6, '0')
+    return '#' + (role.color as number).toString(16).padStart(6, '0')
   }
   const colorStr = role.color.startsWith('#') ? role.color : `#${role.color}`
   return colorStr.toLowerCase() === '#ffffff' ? 'inherit' : colorStr
@@ -80,7 +80,7 @@ const saveEdit = () => {
 <template>
   <div class="py-4 first:pt-0 last:pb-0">
     <div v-if="isEditing" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <div class="flex items-center gap-3 min-h-[38px]">
+      <div class="flex items-center gap-3 min-h-9.5">
         <div
             class="w-3 h-3 rounded-full"
             :style="{ backgroundColor: getRoleColor(rank.roleId) }"

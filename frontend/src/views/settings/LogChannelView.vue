@@ -1,16 +1,46 @@
 <script lang="ts" setup>
-import {useI18n} from 'vue-i18n'
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useSession } from '@/composables/useSession'
 import SettingsContainer from './components/SettingsContainer.vue'
+import PremiumFeatureWarning from '@/components/PremiumFeatureWarning.vue'
+import LogChannelActiveSettings from './logchannelview/LogChannelActiveSettings.vue'
+import LogChannelIdSettings from './logchannelview/LogChannelIdSettings.vue'
 
-const {t} = useI18n()
+const { t } = useI18n()
+const { session } = useSession()
+
+const isLogChannelUnlocked = computed(() => {
+  return session.value?.premiumFeatures?.logChannel?.unlocked ?? false
+})
+
+const logChannelRequiredSkus = computed(() => {
+  return session.value?.premiumFeatures?.logChannel?.requiredSkus ?? []
+})
+
+const isLogChannelActive = computed(() => {
+  return session.value?.settings?.logChannel?.active ?? false
+})
 </script>
 
 <template>
-  <SettingsContainer :title="t('settings.logChannel')">
-    <p class="text-gray-600 dark:text-gray-400">Log Channel settings content will go here.</p>
+  <SettingsContainer :title="t('settings.logChannel')" :description="t('logChannel.description')">
+    <PremiumFeatureWarning
+      v-if="!isLogChannelUnlocked"
+      :message="t('logChannel.premiumRequired.message')"
+      :required-skus="logChannelRequiredSkus"
+      variant="large"
+    />
+
+    <div v-else class="space-y-8">
+      <LogChannelActiveSettings />
+
+      <div v-if="isLogChannelActive" class="space-y-8 pt-4 border-t border-gray-200 dark:border-gray-700">
+        <LogChannelIdSettings />
+      </div>
+    </div>
   </SettingsContainer>
 </template>
 
 <style scoped>
-/* Additional styles if needed */
 </style>

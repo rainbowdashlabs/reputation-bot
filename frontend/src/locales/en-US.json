@@ -29,12 +29,12 @@
     "ranks": "Ranks",
     "channels": "Channels",
     "roles": "Roles",
-    "reactions": "Reactions",
     "thankwords": "Thankwords",
     "abuseProtection": "Abuse Protection",
     "announcements": "Announcements",
     "autopost": "Autopost",
-    "logChannel": "Log Channel"
+    "logChannel": "Log Channel",
+    "reactions": "Reactions"
   },
   "locale": {
     "language": "Language",
@@ -48,11 +48,12 @@
     }
   },
   "profile": {
+    "description": "Customize how the bot appears and behaves in your server.",
     "reset": "Reset",
     "premiumRequired": {
       "title": "Supporter Feature",
       "message": "Profile customization requires you to be a supporter.",
-      "requiredSkus": "Required subscriptions:"
+      "requiredSkus": "Required Supporter Tier:"
     },
     "localeOverridesRequired": {
       "message": "Custom reputation name requires locale overrides feature."
@@ -78,6 +79,7 @@
     }
   },
   "general": {
+    "description": "Configure the basic settings of the bot for this server.",
     "language": {
       "label": "Bot Language",
       "selectPlaceholder": "Select a language",
@@ -94,6 +96,7 @@
       "noRolesFound": "No roles found"
     },
     "ranks": {
+      "description": "Configure the reputation ranks and their associated roles.",
       "stackRoles": {
         "label": "Stack Roles",
         "description": "If enabled, all applicable ranks will be assigned instead of only the highest rank."
@@ -104,6 +107,263 @@
       "reputationAlreadyUsed": "This reputation value is already used by another rank.",
       "noRanks": "No ranks configured yet.",
       "reputationPlaceholder": "e.g. 100"
+    },
+    "reputation": {
+      "description": "Configure how reputation is calculated and which features are enabled.",
+      "mode": {
+        "label": "Reputation Mode",
+        "description": "Choose how reputation is calculated and displayed.",
+        "modes": {
+          "TOTAL": "Total Reputation",
+          "ROLLING_WEEK": "Rolling Week",
+          "ROLLING_MONTH": "Rolling Month",
+          "WEEK": "This Week",
+          "MONTH": "This Month"
+        },
+        "descriptions": {
+          "TOTAL": "Use the total reputation a user has ever received.",
+          "ROLLING_WEEK": "Use reputation received in the last 7 days.",
+          "ROLLING_MONTH": "Use reputation received in the last 30 days.",
+          "WEEK": "Use reputation received since the start of the current week.",
+          "MONTH": "Use reputation received since the start of the current month."
+        }
+      },
+      "resetDate": {
+        "label": "Reset Date",
+        "description": "The date when reputation counts will be reset. Set a date in the future to schedule a reset.",
+        "set": "Set Reset Date",
+        "clear": "Clear Reset Date"
+      },
+      "types": {
+        "reaction": {
+          "label": "Reaction Reputation",
+          "description": "Give reputation when a specific reaction is added to a message.",
+          "confirmation": {
+            "label": "Reaction Confirmation",
+            "description": "Send a confirmation message when reputation is given via reaction."
+          }
+        },
+        "answer": {
+          "label": "Answer Reputation",
+          "description": "Give reputation when a user's message is thanked in an answer."
+        },
+        "mention": {
+          "label": "Mention Reputation",
+          "description": "Give reputation when a user is mentioned along with a thank word."
+        },
+        "fuzzy": {
+          "label": "Fuzzy Matching",
+          "description": "Give reputation by matching words around the thank word to user names present in the channel."
+        },
+        "embed": {
+          "label": "Embed Reputation",
+          "description": "Send an embed listing users present in the last conversation if no target can be determined."
+        },
+        "direct": {
+          "label": "Direct Embed Reputation",
+          "description": "Give reputation automatically when only one user would be contained in the embed."
+        },
+        "command": {
+          "label": "Command Reputation",
+          "description": "Give reputation via the /reputation command.",
+          "ephemeral": {
+            "label": "Ephemeral Response",
+            "description": "Send the response hidden to other users when giving reputation via command."
+          }
+        }
+      }
+    },
+    "roles": {
+      "description": "Configure which roles are allowed to give and receive reputation.",
+      "donor": {
+        "label": "Donor Roles",
+        "description": "If enabled, only users with at least one of these roles can give reputation."
+      },
+      "receiver": {
+        "label": "Receiver Roles",
+        "description": "If enabled, only users with at least one of these roles can receive reputation."
+      },
+      "list": {
+        "label": "Selected Roles",
+        "description": "Choose which roles should be required."
+      }
+    },
+    "channels": {
+      "description": "Configure where the bot should and shouldn't be active.",
+      "listType": {
+        "label": "List Type",
+        "description": "Choose whether the selected channels and categories are allowed or denied.",
+        "allow": "Allow List",
+        "deny": "Deny List",
+        "premiumRequired": "The Deny List feature is reserved for supporters. Become a supporter to use it."
+      },
+      "list": {
+        "label": "Channels and Categories",
+        "description": "Select channels and categories that should be part of the list.",
+        "channels": "Channels",
+        "categories": "Categories"
+      },
+      "premium": {
+        "limitReached": "You have reached the limit of selected channels/categories for your current plan.",
+        "limitWarning": "Selecting more than {limit} channels/categories is reserved for supporters. Become a supporter to use it.",
+        "channelLimitWarning": "Selecting more than {limit} is reserved for supporters. Become a supporter to use it.",
+        "categoryLimitWarning": "Selecting more than {limit} is reserved for supporters. Become a supporter to use it."
+      }
+    }
+  },
+  "reactions": {
+    "title": "Reactions",
+    "description": "Configure the emojis used for giving reputation.",
+    "main": {
+      "label": "Main Reaction",
+      "description": "The emoji that will be used as the primary reaction for giving reputation."
+    },
+    "additional": {
+      "label": "Additional Reactions",
+      "description": "Additional emojis that can also be used to give reputation.",
+      "premiumRequired": "Additional reactions are reserved for supporters. Become a supporter to use it.",
+      "add": "Add Reaction",
+      "none": "No additional reactions configured."
+    },
+    "picker": {
+      "search": "Search emojis...",
+      "guild": "Server Emojis",
+      "standard": "Standard Emojis",
+      "noResults": "No emojis found"
+    }
+  },
+  "thankwords": {
+    "title": "Thankwords",
+    "description": "These words will be used to detect when someone is being thanked. They are interpreted as Regular Expressions.",
+    "add": "Add Thankword",
+    "placeholder": "Enter thankword (Regex)",
+    "none": "No thankwords configured.",
+    "invalidCharacter": "The thankword contains an invalid character: {char}",
+    "alreadyExists": "This thankword already exists.",
+    "defaults": {
+      "title": "Default Thankwords",
+      "description": "Quickly add default thankwords for various languages.",
+      "add": "Add Defaults"
+    }
+  },
+  "abuseProtection": {
+    "description": "Configure limits and protections to prevent reputation abuse.",
+    "cooldown": {
+      "label": "Cooldown (minutes)",
+      "description": "The time in minutes that must pass before the same users can thank each other again. 0 means no cooldown, -1 means forever."
+    },
+    "cooldownDirection": {
+      "label": "Cooldown Direction",
+      "description": "Unidirectional means the donor has a cooldown on giving to the same person. Bidirectional means the cooldown is between the donor and receiver, preventing them from thanking each other back and forth until the time passed.",
+      "unidirectional": "Unidirectional",
+      "bidirectional": "Bidirectional"
+    },
+    "maxMessageAge": {
+      "label": "Max Message Age (minutes)",
+      "description": "The maximum age of a message (in minutes) to be eligible for reputation when answered or reacted to."
+    },
+    "minMessages": {
+      "label": "Min Messages",
+      "description": "Authors with at least this many messages in the channel are always eligible to receive reputation."
+    },
+    "donorContext": {
+      "label": "Donor must be present",
+      "description": "If enabled, the donor must have sent at least one of the last messages in the channel to give reputation."
+    },
+    "receiverContext": {
+      "label": "Receiver must be present",
+      "description": "If enabled, the receiver must have sent at least one of the last messages in the channel to receive reputation."
+    },
+    "givenLimit": {
+      "enabled": {
+        "label": "Enable Given Limit"
+      },
+      "maxGiven": {
+        "label": "Max Given"
+      },
+      "maxGivenHours": {
+        "label": "Over Hours"
+      },
+      "description": "Limit how much reputation a user can give within a certain timeframe."
+    },
+    "receivedLimit": {
+      "enabled": {
+        "label": "Enable Received Limit"
+      },
+      "maxReceived": {
+        "label": "Max Received"
+      },
+      "maxReceivedHours": {
+        "label": "Over Hours"
+      },
+      "description": "Limit how much reputation a user can receive within a certain timeframe."
+    },
+    "maxMessageReputation": {
+      "label": "Max Message Reputation",
+      "description": "The maximum amount of reputation that can be given in a single message via mentions and embeds."
+    }
+  },
+  "announcements": {
+    "description": "Configure messages sent when users reach new ranks.",
+    "active": {
+      "label": "Enable Announcements",
+      "description": "If enabled, the bot will send a message when a user reaches a new rank."
+    },
+    "sameChannel": {
+      "label": "Send in Same Channel",
+      "description": "If enabled, the announcement will be sent in the channel where the level up happened. Otherwise, it will be sent to the selected channel."
+    },
+    "channel": {
+      "label": "Announcement Channel",
+      "description": "Select the channel where rank up announcements should be sent."
+    }
+  },
+  "autopost": {
+    "description": "Configure automatic posting of the leaderboard to a channel.",
+    "premiumRequired": {
+      "title": "Supporter Feature",
+      "message": "The autopost feature is exclusive to supporters."
+    },
+    "active": {
+      "label": "Enable Autopost",
+      "description": "Enable or disable the automatic leaderboard posting."
+    },
+    "channel": {
+      "label": "Autopost Channel",
+      "description": "The channel where the leaderboard should be posted."
+    },
+    "refreshInterval": {
+      "label": "Refresh Interval",
+      "description": "How often the leaderboard should be updated.",
+      "HOURLY": "Hourly",
+      "DAILY": "Daily",
+      "WEEKLY": "Weekly",
+      "MONTHLY": "Monthly"
+    },
+    "refreshType": {
+      "label": "Refresh Type",
+      "description": "How the post should be updated.",
+      "DELETE_AND_REPOST": "Delete and Repost",
+      "REPOST": "Repost",
+      "UPDATE": "Update"
+    }
+  },
+  "messages": {
+    "description": "Configure messages and confirmations sent by the bot."
+  },
+  "logChannel": {
+    "premiumRequired": {
+      "title": "Supporter Feature",
+      "message": "The log channel feature is exclusive to supporters."
+    },
+    "description": "The log channel will contain every reputation given and taken from a user.",
+    "active": {
+      "label": "Enable Log Channel",
+      "description": "Enable or disable logging of reputation changes."
+    },
+    "channel": {
+      "label": "Log Channel",
+      "description": "The channel where reputation changes should be logged."
     }
   }
 }

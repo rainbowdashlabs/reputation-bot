@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useSession } from '@/composables/useSession'
 import { api } from '@/api'
 import BaseButton from '@/components/BaseButton.vue'
 
@@ -10,6 +11,7 @@ const props = defineProps<{
 }>()
 
 const { t } = useI18n()
+const { updateProfileSettings } = useSession()
 const nickname = ref(props.initialNickname)
 const hasChanges = computed(() => nickname.value !== props.initialNickname)
 
@@ -25,10 +27,7 @@ const updateNickname = async () => {
   isUpdating.value = true
   try {
     await api.updateProfileNickname(nickname.value || null)
-    // Refresh session or update local initial state to match
-    // Actually, we should probably emit or let the parent know, 
-    // but the current pattern seems to be direct API calls.
-    // For now, we'll just keep it simple.
+    updateProfileSettings({ nickname: nickname.value || null })
   } catch (error) {
     console.error('Failed to update nickname:', error)
   } finally {
@@ -41,9 +40,8 @@ const resetNickname = async () => {
 
   try {
     await api.deleteProfileNickname()
-    // Refresh session to get updated data
-    const sessionData = await api.getSession()
-    nickname.value = sessionData.settings.profile.nickname || ''
+    updateProfileSettings({ nickname: null })
+    nickname.value = ''
   } catch (error) {
     console.error('Failed to reset nickname:', error)
   }

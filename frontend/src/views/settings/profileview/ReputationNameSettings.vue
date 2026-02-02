@@ -1,9 +1,8 @@
 <script lang="ts" setup>
 import { computed, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useSession } from '@/composables/useSession.ts'
+import { useSession } from '@/composables/useSession'
 import { api } from '@/api'
-import PremiumFeatureWarning from '@/components/PremiumFeatureWarning.vue'
 import BaseButton from '@/components/BaseButton.vue'
 
 const props = defineProps<{
@@ -11,7 +10,7 @@ const props = defineProps<{
 }>()
 
 const { t } = useI18n()
-const { session } = useSession()
+const { session, updateProfileSettings } = useSession()
 const reputationName = ref(props.initialReputationName)
 
 watch(() => props.initialReputationName, (newVal) => {
@@ -22,10 +21,6 @@ const isLocaleOverridesUnlocked = computed(() => {
   return session.value?.premiumFeatures?.localeOverrides?.unlocked ?? false
 })
 
-const localeOverridesRequiredSkus = computed(() => {
-  return session.value?.premiumFeatures?.localeOverrides?.requiredSkus ?? []
-})
-
 let reputationNameTimeout: ReturnType<typeof setTimeout> | null = null
 const updateReputationName = () => {
   if (!isLocaleOverridesUnlocked.value) return
@@ -34,6 +29,7 @@ const updateReputationName = () => {
   reputationNameTimeout = setTimeout(async () => {
     try {
       await api.updateProfileReputationName(reputationName.value || null)
+      updateProfileSettings({ reputationName: reputationName.value || null })
     } catch (error) {
       console.error('Failed to update reputation name:', error)
     }
@@ -45,9 +41,8 @@ const resetReputationName = async () => {
 
   try {
     await api.deleteProfileReputationName()
-    // Refresh session to get updated data
-    const sessionData = await api.getSession()
-    reputationName.value = sessionData.settings.profile.reputationName || ''
+    updateProfileSettings({ reputationName: null })
+    reputationName.value = ''
   } catch (error) {
     console.error('Failed to reset reputation name:', error)
   }
@@ -59,14 +54,6 @@ const resetReputationName = async () => {
     <label class="label mb-2" for="reputationName">
       {{ t('profile.reputationName.label') }}
     </label>
-
-    <!-- Premium warning for locale overrides -->
-    <PremiumFeatureWarning
-        v-if="!isLocaleOverridesUnlocked"
-        :message="t('profile.localeOverridesRequired.message')"
-        :required-skus="localeOverridesRequiredSkus"
-        variant="small"
-    />
 
     <div class="flex gap-2">
       <input

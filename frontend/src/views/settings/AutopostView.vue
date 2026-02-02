@@ -1,16 +1,50 @@
 <script lang="ts" setup>
-import {useI18n} from 'vue-i18n'
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useSession } from '@/composables/useSession'
 import SettingsContainer from './components/SettingsContainer.vue'
+import PremiumFeatureWarning from '@/components/PremiumFeatureWarning.vue'
+import AutopostActiveSettings from './autopostview/AutopostActiveSettings.vue'
+import AutopostChannelSettings from './autopostview/AutopostChannelSettings.vue'
+import AutopostIntervalSettings from './autopostview/AutopostIntervalSettings.vue'
+import AutopostTypeSettings from './autopostview/AutopostTypeSettings.vue'
 
-const {t} = useI18n()
+const { t } = useI18n()
+const { session } = useSession()
+
+const isAutopostUnlocked = computed(() => {
+  return session.value?.premiumFeatures?.autopost?.unlocked ?? false
+})
+
+const autopostRequiredSkus = computed(() => {
+  return session.value?.premiumFeatures?.autopost?.requiredSkus ?? []
+})
+
+const isAutopostActive = computed(() => {
+  return session.value?.settings?.autopost?.active ?? false
+})
 </script>
 
 <template>
-  <SettingsContainer :title="t('settings.autopost')">
-    <p class="text-gray-600 dark:text-gray-400">Autopost settings content will go here.</p>
+  <SettingsContainer :title="t('settings.autopost')" :description="t('autopost.description')">
+    <PremiumFeatureWarning
+      v-if="!isAutopostUnlocked"
+      :message="t('autopost.premiumRequired.message')"
+      :required-skus="autopostRequiredSkus"
+      variant="large"
+    />
+
+    <div v-else class="space-y-8">
+      <AutopostActiveSettings />
+
+      <div v-if="isAutopostActive" class="space-y-8 pt-4 border-t border-gray-200 dark:border-gray-700">
+        <AutopostChannelSettings />
+        <AutopostIntervalSettings />
+        <AutopostTypeSettings />
+      </div>
+    </div>
   </SettingsContainer>
 </template>
 
 <style scoped>
-/* Additional styles if needed */
 </style>

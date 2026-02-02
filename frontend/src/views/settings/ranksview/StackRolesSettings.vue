@@ -6,7 +6,7 @@ import { api } from '@/api'
 import Toggle from '@/components/Toggle.vue'
 
 const { t } = useI18n()
-const { session } = useSession()
+const { session, updateGeneralSettings } = useSession()
 
 const stackRoles = ref(false)
 
@@ -19,6 +19,7 @@ watch(session, (newSession) => {
 const updateStackRoles = async () => {
   try {
     await api.updateGeneralStackRoles(stackRoles.value)
+    updateGeneralSettings({ stackRoles: stackRoles.value })
   } catch (error) {
     console.error('Failed to update stack roles:', error)
   }
