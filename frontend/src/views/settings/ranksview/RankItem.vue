@@ -67,7 +67,7 @@ const cancelEdit = () => {
 }
 
 const saveEdit = () => {
-  if (editReputation.value === null || !!errorMessage.value) return
+  if (editReputation.value === null || editReputation.value < 0 || !!errorMessage.value) return
   
   emit('update', {
     roleId: props.rank.roleId.toString(),
@@ -95,6 +95,7 @@ const saveEdit = () => {
               v-model.number="editReputation"
               type="number"
               class="input"
+              min="0"
               @keyup.enter="saveEdit"
           />
         </div>

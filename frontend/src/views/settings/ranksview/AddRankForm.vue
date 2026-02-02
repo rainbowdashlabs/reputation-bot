@@ -42,7 +42,7 @@ const validate = () => {
 watch([newRoleId, newReputation], validate)
 
 const addRank = () => {
-  if (newRoleId.value === null || newReputation.value === null || isNaN(newReputation.value) || !!errorMessage.value) return
+  if (newRoleId.value === null || newReputation.value === null || isNaN(newReputation.value) || newReputation.value < 0 || !!errorMessage.value) return
 
   const roleIdStr = newRoleId.value.toString()
   emit('add', {
@@ -71,6 +71,7 @@ const addRank = () => {
               v-model.number="newReputation"
               type="number"
               class="input"
+              min="0"
               :placeholder="t('general.ranks.reputationPlaceholder')"
               @keyup.enter="addRank"
           />

@@ -81,5 +81,6 @@ const resetNickname = async () => {
       </BaseButton>
     </div>
     <p class="description">{{ t('profile.nickname.description') }}</p>
+    <p class="description mt-1 text-red-500 dark:text-red-400 font-medium">{{ t('profile.tosNote') }}</p>
   </div>
 </template>

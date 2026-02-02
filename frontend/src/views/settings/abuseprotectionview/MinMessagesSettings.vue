@@ -10,6 +10,7 @@ const { session, updateAbuseProtectionSettings } = useSession()
 const minMessages = computed({
   get: () => session.value?.settings.abuseProtection.minMessages ?? 0,
   set: async (value) => {
+    if (value < 0) return
     try {
       await api.updateAbuseProtectionMinMessages(value)
       updateAbuseProtectionSettings({ minMessages: value })

@@ -20,6 +20,9 @@ public class AbuseProtectionPOJO {
     protected int maxReceivedHours;
     protected int maxMessageReputation;
 
+    public AbuseProtectionPOJO() {
+    }
+
     public AbuseProtectionPOJO(int cooldown, CooldownDirection cooldownDirection, int maxMessageAge, int minMessages, boolean donorContext, boolean receiverContext, int maxGiven, int maxGivenHours, int maxReceived, int maxReceivedHours, int maxMessageReputation) {
         this.cooldown = cooldown;
         this.cooldownDirection = cooldownDirection;

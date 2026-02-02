@@ -76,7 +76,8 @@
       "placeholder": "Enter custom reputation name (e.g., 'Points', 'Karma')",
       "description": "Customize the name used for reputation in this server.",
       "reset": "Reset reputation name to default"
-    }
+    },
+    "tosNote": "Anything that violates Discord's TOS or state law is not allowed and might result in blocking this feature for the server."
   },
   "general": {
     "description": "Configure the basic settings of the bot for this server.",
@@ -250,7 +251,12 @@
     "description": "Configure limits and protections to prevent reputation abuse.",
     "cooldown": {
       "label": "Cooldown (minutes)",
-      "description": "The time in minutes that must pass before the same users can thank each other again. 0 means no cooldown, -1 means forever."
+      "description": "The time in minutes that must pass before the same users can thank each other again. 0 means no cooldown, -1 means forever.",
+      "once": {
+        "label": "Cooldown Once",
+        "description": "If enabled, users can only thank each other once forever.",
+        "activeDescription": "Cooldown once is active. Users can only thank each other once. Direction is set to unidirectional."
+      }
     },
     "cooldownDirection": {
       "label": "Cooldown Direction",

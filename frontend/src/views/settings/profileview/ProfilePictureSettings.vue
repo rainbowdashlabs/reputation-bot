@@ -141,6 +141,7 @@ const handleFileUpload = async (event: Event) => {
           </BaseButton>
         </div>
         <p class="description">{{ t('profile.profilePicture.description') }}</p>
+        <p class="description mt-1 text-red-500 dark:text-red-400 font-medium">{{ t('profile.tosNote') }}</p>
       </div>
     </div>
   </div>

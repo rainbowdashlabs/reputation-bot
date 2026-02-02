@@ -10,6 +10,7 @@ const { session, updateAbuseProtectionSettings } = useSession()
 const maxMessageReputation = computed({
   get: () => session.value?.settings.abuseProtection.maxMessageReputation ?? 0,
   set: async (value) => {
+    if (value < 0) return
     try {
       await api.updateAbuseProtectionMaxMessageReputation(value)
       updateAbuseProtectionSettings({ maxMessageReputation: value })
