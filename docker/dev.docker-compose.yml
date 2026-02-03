@@ -36,6 +36,9 @@ services:
       - repbot
     profiles:
       - app
+    environment:
+      CJDA_INTERACTIONS_TESTMODE: true
+      BOT_GRANT_ALL_SKU: true
     volumes:
       - ../config/config.json/:/app/config/config.json
 
