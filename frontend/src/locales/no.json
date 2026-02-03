@@ -6,26 +6,19 @@
     "edit": "Rediger",
     "change": "Endring",
     "clear": "Tydelig",
-    "close": "Lukk",
     "confirm": "Bekreft",
-    "loading": "Laster...",
-    "error": "Feil",
-    "success": "Suksess"
+    "loading": "Laster..."
   },
   "navigation": {
-    "home": "Hjem",
     "settings": "Innstillinger",
     "presets": "Forhåndsinnstillinger",
-    "setup": "Oppsett",
-    "profile": "Profil",
-    "logout": "Logg ut"
+    "setup": "Oppsett"
   },
   "presets": {
     "title": "Forhåndsinnstillinger",
     "description": "Hurtigkonfigurasjonsinnstillinger for å komme i gang med vanlige oppsett.",
     "apply": "Søk",
     "applying": "Søker...",
-    "applied": "Forhåndsinnstilling påført!",
     "simpleReputation": {
       "title": "Enkelt omdømmesystem",
       "description": "Jeg ønsker et enkelt omdømmesystem hvor brukerne kun kan gi omdømme gjennom kommandoer, uten noen kompleks kontekstsporing.",
@@ -59,7 +52,6 @@
     "reactions": "Reaksjoner"
   },
   "locale": {
-    "language": "Språk",
     "selectLanguage": "Velg språk"
   },
   "error": {
@@ -78,9 +70,6 @@
     "description": "Tilpass hvordan boten vises og oppfører seg på serveren din.",
     "reset": "Tilbakestill",
     "premiumRequired": "Profil tilpasning",
-    "localeOverridesRequired": {
-      "message": "Tilpasset omdømme navn krever funksjonen for lokal overstyring."
-    },
     "nickname": {
       "label": "Bot-kallenavn",
       "placeholder": "Skriv inn botens kallenavn",
@@ -112,7 +101,6 @@
     "systemChannel": {
       "label": "Systemkanal",
       "selectPlaceholder": "Velg en kanal",
-      "description": "Velg kanalen der boten skal sende systemmeldinger og kunngjøringer.",
       "note": "Merk: Denne kanalen bør opprettes og bør være en intern kanal. Den vil inneholde viktige meldinger om botens tjeneste og meldinger fra utviklerne."
     },
     "roleSelect": {
@@ -155,7 +143,6 @@
       "resetDate": {
         "label": "Tilbakestill dato",
         "description": "Datoen da omdømmepoengene vil bli tilbakestilt. Angi en dato i fremtiden for å planlegge en tilbakestilling.",
-        "set": "Angi tilbakestillingsdato",
         "clear": "Tøm tilbakestillingsdato"
       },
       "types": {
@@ -246,16 +233,9 @@
       "premiumRequired": "Ytterligere reaksjoner",
       "add": "Legg til reaksjon",
       "none": "Ingen tilleggsreaksjoner konfigurert."
-    },
-    "picker": {
-      "search": "Søk etter emojier...",
-      "guild": "Server-emojier",
-      "standard": "Standard emojier",
-      "noResults": "Ingen emojier funnet"
     }
   },
   "thankwords": {
-    "title": "Takkord",
     "description": "Disse ordene vil bli brukt til å oppdage når noen blir takket. De tolkes som regulære uttrykk.",
     "add": "Legg til takkeord",
     "placeholder": "Skriv inn takkeord (Regex)",
@@ -264,8 +244,7 @@
     "alreadyExists": "Dette takkeordet finnes allerede.",
     "defaults": {
       "title": "Standard takkebrev",
-      "description": "Legg raskt til standard takkebrev for ulike språk.",
-      "add": "Legg til standardinnstillinger"
+      "description": "Legg raskt til standard takkebrev for ulike språk."
     }
   },
   "abuseProtection": {
@@ -372,9 +351,6 @@
       "UPDATE": "Oppdatering"
     }
   },
-  "messages": {
-    "description": "Konfigurer meldinger og bekreftelser som sendes av boten."
-  },
   "logChannel": {
     "premiumRequired": "Loggkanal",
     "description": "Loggkanalen vil inneholde alle omdømmer som er gitt og tatt fra en bruker.",
@@ -445,6 +421,14 @@
         "title": "Donor- og mottakerroller",
         "description": "Du kan eventuelt definere hvilke roller som kan gi omdømme (giverroller) og hvilke roller som kan motta omdømme (mottakerroller)."
       }
+    }
+  },
+  "roles": {
+    "donor": {
+      "label": "Donor"
+    },
+    "receiver": {
+      "label": "Mottaker"
     }
   }
 }

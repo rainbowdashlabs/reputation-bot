@@ -6,26 +6,19 @@
     "edit": "Düzenle",
     "change": "Değişiklik",
     "clear": "Temizle",
-    "close": "Kapat",
     "confirm": "Onayla",
-    "loading": "Yükleniyor...",
-    "error": "Hata",
-    "success": "Başarı"
+    "loading": "Yükleniyor..."
   },
   "navigation": {
-    "home": "Ana Sayfa",
     "settings": "Ayarlar",
     "presets": "Ön ayarlar",
-    "setup": "Kurulum",
-    "profile": "Profil",
-    "logout": "Çıkış"
+    "setup": "Kurulum"
   },
   "presets": {
     "title": "Ön ayarlar",
     "description": "Yaygın kurulumlarla çalışmaya başlamanızı sağlayan hızlı yapılandırma ön ayarları.",
     "apply": "Başvur",
     "applying": "Uygulanıyor...",
-    "applied": "Ön ayar başarıyla uygulandı!",
     "simpleReputation": {
       "title": "Basit İtibar Sistemi",
       "description": "Kullanıcıların karmaşık bağlam izleme olmadan, yalnızca komutlar aracılığıyla itibar verebilecekleri basit bir itibar sistemi istiyorum.",
@@ -59,7 +52,6 @@
     "reactions": "Tepkiler"
   },
   "locale": {
-    "language": "Dil",
     "selectLanguage": "Dili Seç"
   },
   "error": {
@@ -78,9 +70,6 @@
     "description": "Botun sunucunuzda nasıl görüneceğini ve davranacağını özelleştirin.",
     "reset": "Sıfırla",
     "premiumRequired": "Profil özelleştirme",
-    "localeOverridesRequired": {
-      "message": "Özel itibar adı, yerel ayarların geçersiz kılınması özelliğini gerektirir."
-    },
     "nickname": {
       "label": "Bot Takma Adı",
       "placeholder": "Bot takma adını girin",
@@ -112,7 +101,6 @@
     "systemChannel": {
       "label": "Sistem Kanalı",
       "selectPlaceholder": "Bir kanal seçin",
-      "description": "Botun sistem mesajlarını ve duyuruları göndereceği kanalı seçin.",
       "note": "Not: Bu kanal ayarlanmalı ve dahili bir kanal olmalıdır. Botun hizmeti ile ilgili önemli mesajları ve geliştiricilerden gelen mesajları içerecektir."
     },
     "roleSelect": {
@@ -155,7 +143,6 @@
       "resetDate": {
         "label": "Tarihi Sıfırla",
         "description": "İtibar puanının sıfırlanacağı tarih. Sıfırlamayı planlamak için gelecekteki bir tarih belirleyin.",
-        "set": "Tarihi Sıfırla",
         "clear": "Temizle Sıfırla Tarih"
       },
       "types": {
@@ -246,16 +233,9 @@
       "premiumRequired": "Ek Tepkiler",
       "add": "Tepki Ekle",
       "none": "Ek reaksiyonlar yapılandırılmamıştır."
-    },
-    "picker": {
-      "search": "Emojileri ara...",
-      "guild": "Sunucu Emojileri",
-      "standard": "Standart Emojiler",
-      "noResults": "Emoji bulunamadı"
     }
   },
   "thankwords": {
-    "title": "Teşekkürler",
     "description": "Bu kelimeler, birine teşekkür edildiğini tespit etmek için kullanılır. Düzenli ifadeler olarak yorumlanırlar.",
     "add": "Teşekkür kelimesi ekle",
     "placeholder": "Teşekkür kelimesini girin (Regex)",
@@ -264,8 +244,7 @@
     "alreadyExists": "Bu teşekkür kelimesi zaten var.",
     "defaults": {
       "title": "Varsayılan Teşekkür Sözleri",
-      "description": "Çeşitli diller için varsayılan teşekkür sözlerini hızlıca ekleyin.",
-      "add": "Varsayılanları Ekle"
+      "description": "Çeşitli diller için varsayılan teşekkür sözlerini hızlıca ekleyin."
     }
   },
   "abuseProtection": {
@@ -372,9 +351,6 @@
       "UPDATE": "Güncelleme"
     }
   },
-  "messages": {
-    "description": "Bot tarafından gönderilen mesajları ve onayları yapılandırın."
-  },
   "logChannel": {
     "premiumRequired": "Günlük Kanalı",
     "description": "Günlük kanalı, bir kullanıcıya verilen ve alınan tüm itibar bilgilerini içerecektir.",
@@ -445,6 +421,14 @@
         "title": "Bağışçı ve Alıcı Rolleri",
         "description": "İsteğe bağlı olarak, hangi roller itibar verebilir (bağışçı roller) ve hangi roller itibar alabilir (alıcı roller) tanımlayın."
       }
+    }
+  },
+  "roles": {
+    "donor": {
+      "label": "Bağışçı"
+    },
+    "receiver": {
+      "label": "Alıcı"
     }
   }
 }

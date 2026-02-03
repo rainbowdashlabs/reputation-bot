@@ -6,26 +6,19 @@
     "edit": "Modifica",
     "change": "Cambia",
     "clear": "Chiaro",
-    "close": "Chiudi",
     "confirm": "Conferma",
-    "loading": "Caricamento in corso...",
-    "error": "Errore",
-    "success": "Successo"
+    "loading": "Caricamento in corso..."
   },
   "navigation": {
-    "home": "Casa",
     "settings": "Impostazioni",
     "presets": "Preimpostazioni",
-    "setup": "Configurazione",
-    "profile": "Profilo",
-    "logout": "Esci"
+    "setup": "Configurazione"
   },
   "presets": {
     "title": "Preimpostazioni",
     "description": "Preimpostazioni di configurazione veloce per iniziare con le impostazioni più comuni.",
     "apply": "Applicare",
     "applying": "Sto facendo domanda...",
-    "applied": "Impostazione predefinita fatta!",
     "simpleReputation": {
       "title": "Sistema di reputazione semplice",
       "description": "Voglio un sistema di reputazione semplice dove gli utenti possano dare reputazione solo tramite comandi, senza dover seguire contesti complicati.",
@@ -59,7 +52,6 @@
     "reactions": "Reazioni"
   },
   "locale": {
-    "language": "Lingua",
     "selectLanguage": "Scegli la lingua"
   },
   "error": {
@@ -78,9 +70,6 @@
     "description": "Personalizza come il bot appare e si comporta sul tuo server.",
     "reset": "Reset",
     "premiumRequired": "Personalizzazione del profilo",
-    "localeOverridesRequired": {
-      "message": "Il nome personalizzato della reputazione ha bisogno della funzione di sostituzione delle impostazioni locali."
-    },
     "nickname": {
       "label": "Nickname del bot",
       "placeholder": "Inserisci il soprannome del bot",
@@ -112,7 +101,6 @@
     "systemChannel": {
       "label": "Canale di sistema",
       "selectPlaceholder": "Scegli un canale",
-      "description": "Scegli il canale dove il bot manderà i messaggi di sistema e gli annunci.",
       "note": "Nota: questo canale dovrebbe essere impostato e dovrebbe essere un canale interno. Conterrà messaggi importanti sul servizio del bot e messaggi dagli sviluppatori."
     },
     "roleSelect": {
@@ -155,7 +143,6 @@
       "resetDate": {
         "label": "Reimposta data",
         "description": "La data in cui la reputazione verrà azzerata. Scegli una data futura per pianificare l'azzeramento.",
-        "set": "Impostare la data di ripristino",
         "clear": "Cancella data di ripristino"
       },
       "types": {
@@ -246,16 +233,9 @@
       "premiumRequired": "Altre reazioni",
       "add": "Aggiungi reazione",
       "none": "Nessuna reazione aggiuntiva configurata."
-    },
-    "picker": {
-      "search": "Cerca le emoji...",
-      "guild": "Emoji del server",
-      "standard": "Emoji standard",
-      "noResults": "Nessuna emoji trovata"
     }
   },
   "thankwords": {
-    "title": "Ringraziamenti",
     "description": "Queste parole saranno usate per capire quando qualcuno viene ringraziato. Sono interpretate come espressioni regolari.",
     "add": "Aggiungi Thankword",
     "placeholder": "Inserisci thankword (Regex)",
@@ -264,8 +244,7 @@
     "alreadyExists": "Questa parola di ringraziamento c'è già.",
     "defaults": {
       "title": "Ringraziamenti predefiniti",
-      "description": "Aggiungi velocemente parole di ringraziamento predefinite per diverse lingue.",
-      "add": "Aggiungi impostazioni predefinite"
+      "description": "Aggiungi velocemente parole di ringraziamento predefinite per diverse lingue."
     }
   },
   "abuseProtection": {
@@ -372,9 +351,6 @@
       "UPDATE": "Aggiornamento"
     }
   },
-  "messages": {
-    "description": "Imposta i messaggi e le conferme che il bot manda."
-  },
   "logChannel": {
     "premiumRequired": "Canale di registrazione",
     "description": "Il canale di log avrà tutte le reputazioni date e prese da un utente.",
@@ -445,6 +421,14 @@
         "title": "Ruoli del donatore e del ricevente",
         "description": "Puoi decidere quali ruoli possono dare reputazione (ruoli donatori) e quali possono riceverla (ruoli riceventi)."
       }
+    }
+  },
+  "roles": {
+    "donor": {
+      "label": "Donatore"
+    },
+    "receiver": {
+      "label": "Ricevitore"
     }
   }
 }

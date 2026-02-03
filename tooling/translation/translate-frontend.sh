@@ -5,7 +5,7 @@
 # Default reference language is en-US
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
+PROJECT_ROOT="$(dirname "$(dirname "$SCRIPT_DIR")")"
 
 REFERENCE_LANG="${1:-en-US}"
 LOCALES_PATH="$PROJECT_ROOT/frontend/src/locales"

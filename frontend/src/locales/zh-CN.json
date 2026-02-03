@@ -6,26 +6,19 @@
     "edit": "编辑",
     "change": "改变",
     "clear": "清除",
-    "close": "关闭",
     "confirm": "确认",
-    "loading": "正在加载...",
-    "error": "错误",
-    "success": "成功"
+    "loading": "正在加载..."
   },
   "navigation": {
-    "home": "首页",
     "settings": "设置",
     "presets": "预设",
-    "setup": "设置",
-    "profile": "个人资料",
-    "logout": "注销"
+    "setup": "设置"
   },
   "presets": {
     "title": "预设",
     "description": "快速配置预设，助您轻松启动常用设置。",
     "apply": "申请",
     "applying": "正在申请...",
-    "applied": "预设已成功应用！",
     "simpleReputation": {
       "title": "简单声誉系统",
       "description": "我想要一个直截了当的声望系统，用户只能通过命令给予声望，无需任何复杂的上下文追踪。",
@@ -59,7 +52,6 @@
     "reactions": "反应"
   },
   "locale": {
-    "language": "语言",
     "selectLanguage": "选择语言"
   },
   "error": {
@@ -78,9 +70,6 @@
     "description": "自定义机器人在服务器中的外观和行为。",
     "reset": "重置",
     "premiumRequired": "个人资料定制",
-    "localeOverridesRequired": {
-      "message": "自定义声望名称需要启用区域设置覆盖功能。"
-    },
     "nickname": {
       "label": "机器人昵称",
       "placeholder": "输入机器人昵称",
@@ -112,7 +101,6 @@
     "systemChannel": {
       "label": "系统频道",
       "selectPlaceholder": "选择频道",
-      "description": "选择机器人发送系统消息和公告的频道。",
       "note": "注意：此频道应设置为内部频道。该频道将包含有关机器人服务的重要通知及开发者发布的消息。"
     },
     "roleSelect": {
@@ -155,7 +143,6 @@
       "resetDate": {
         "label": "重置日期",
         "description": "声望计数将重置的日期。请设定未来日期以安排重置。",
-        "set": "设置重置日期",
         "clear": "清除重置日期"
       },
       "types": {
@@ -246,16 +233,9 @@
       "premiumRequired": "附加反应",
       "add": "添加反应",
       "none": "未配置其他反应。"
-    },
-    "picker": {
-      "search": "搜索表情符号...",
-      "guild": "服务器表情符号",
-      "standard": "标准表情符号",
-      "noResults": "未找到表情符号"
     }
   },
   "thankwords": {
-    "title": "谢辞",
     "description": "这些词将用于检测何时有人被感谢。它们将被解释为正则表达式。",
     "add": "添加感谢词",
     "placeholder": "输入感谢词（正则表达式）",
@@ -264,8 +244,7 @@
     "alreadyExists": "这个感谢词已经存在。",
     "defaults": {
       "title": "默认致谢词",
-      "description": "快速添加多种语言的默认感谢词。",
-      "add": "添加默认值"
+      "description": "快速添加多种语言的默认感谢词。"
     }
   },
   "abuseProtection": {
@@ -372,9 +351,6 @@
       "UPDATE": "更新"
     }
   },
-  "messages": {
-    "description": "配置机器人发送的消息和确认信息。"
-  },
   "logChannel": {
     "premiumRequired": "日志通道",
     "description": "日志通道将包含用户给予和接收的所有信誉记录。",
@@ -445,6 +421,14 @@
         "title": "捐赠方与接收方角色",
         "description": "可选地定义哪些角色可以给予声望（捐赠者角色）以及哪些角色可以接收声望（接收者角色）。"
       }
+    }
+  },
+  "roles": {
+    "donor": {
+      "label": "捐赠者"
+    },
+    "receiver": {
+      "label": "接收器"
     }
   }
 }

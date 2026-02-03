@@ -6,26 +6,19 @@
     "edit": "Bewerken",
     "change": "Verandering",
     "clear": "Duidelijk",
-    "close": "Sluiten",
     "confirm": "Bevestig",
-    "loading": "Bezig met laden...",
-    "error": "Fout",
-    "success": "Succes"
+    "loading": "Bezig met laden..."
   },
   "navigation": {
-    "home": "Thuis",
     "settings": "Instellingen",
     "presets": "Voorinstellingen",
-    "setup": "Instellingen",
-    "profile": "Profiel",
-    "logout": "Uitloggen"
+    "setup": "Instellingen"
   },
   "presets": {
     "title": "Voorinstellingen",
     "description": "Snelle configuratie-instellingen om je op weg te helpen met veelgebruikte setups.",
     "apply": "Solliciteren",
     "applying": "Aan het aanvragen...",
-    "applied": "Voorinstelling is gelukt!",
     "simpleReputation": {
       "title": "Eenvoudig reputatiesysteem",
       "description": "Ik wil een simpel reputatiesysteem waarbij gebruikers alleen via commando's reputatie kunnen geven, zonder ingewikkelde context bij te houden.",
@@ -59,7 +52,6 @@
     "reactions": "Reacties"
   },
   "locale": {
-    "language": "Taal",
     "selectLanguage": "Kies je taal"
   },
   "error": {
@@ -78,9 +70,6 @@
     "description": "Pas aan hoe de bot eruitziet en zich gedraagt op je server.",
     "reset": "Reset",
     "premiumRequired": "Profiel aanpassen",
-    "localeOverridesRequired": {
-      "message": "Voor een aangepaste reputatienaam moet je de functie voor het overschrijven van locale gebruiken."
-    },
     "nickname": {
       "label": "Bot-bijnaam",
       "placeholder": "Voer de bijnaam van de bot in",
@@ -112,7 +101,6 @@
     "systemChannel": {
       "label": "Systeemkanaal",
       "selectPlaceholder": "Kies een kanaal",
-      "description": "Kies het kanaal waar de bot systeemberichten en aankondigingen naartoe stuurt.",
       "note": "Let op: dit kanaal moet worden ingesteld en moet een intern kanaal zijn. Het bevat belangrijke berichten over de service van de bot en berichten van de ontwikkelaars."
     },
     "roleSelect": {
@@ -155,7 +143,6 @@
       "resetDate": {
         "label": "Datum resetten",
         "description": "De datum waarop je reputatie wordt gereset. Kies een datum in de toekomst om een reset in te plannen.",
-        "set": "Datum opnieuw instellen",
         "clear": "Datum wissen"
       },
       "types": {
@@ -246,16 +233,9 @@
       "premiumRequired": "Extra reacties",
       "add": "Reactie toevoegen",
       "none": "Geen extra reacties ingesteld."
-    },
-    "picker": {
-      "search": "Zoek emoji's...",
-      "guild": "Server-emoji's",
-      "standard": "Standaard emoji's",
-      "noResults": "Geen emoji's gevonden"
     }
   },
   "thankwords": {
-    "title": "Bedankt!",
     "description": "Deze woorden worden gebruikt om te zien wanneer iemand bedankt wordt. Ze worden gezien als reguliere expressies.",
     "add": "Bedankt toevoegen",
     "placeholder": "Voer thankword in (Regex)",
@@ -264,8 +244,7 @@
     "alreadyExists": "Dit bedankwoord bestaat al.",
     "defaults": {
       "title": "Standaard bedankjes",
-      "description": "Voeg snel standaard bedankjes toe voor verschillende talen.",
-      "add": "Standaardinstellingen toevoegen"
+      "description": "Voeg snel standaard bedankjes toe voor verschillende talen."
     }
   },
   "abuseProtection": {
@@ -372,9 +351,6 @@
       "UPDATE": "Update"
     }
   },
-  "messages": {
-    "description": "Stel berichten en bevestigingen in die door de bot worden verstuurd."
-  },
   "logChannel": {
     "premiumRequired": "Logkanaal",
     "description": "Het logkanaal bevat alle reputaties die aan een gebruiker zijn gegeven en afgenomen.",
@@ -445,6 +421,14 @@
         "title": "Rollen van donor en ontvanger",
         "description": "Je kunt kiezen welke rollen reputatie kunnen geven (donorrollen) en welke rollen reputatie kunnen krijgen (ontvangerrollen)."
       }
+    }
+  },
+  "roles": {
+    "donor": {
+      "label": "Donor"
+    },
+    "receiver": {
+      "label": "Ontvanger"
     }
   }
 }

@@ -6,26 +6,19 @@
     "edit": "Muokkaa",
     "change": "Muutos",
     "clear": "Selkeä",
-    "close": "Sulje",
     "confirm": "Vahvista",
-    "loading": "Latautuu...",
-    "error": "Virhe",
-    "success": "Menestys"
+    "loading": "Latautuu..."
   },
   "navigation": {
-    "home": "Koti",
     "settings": "Asetukset",
     "presets": "Esiasetukset",
-    "setup": "Asennus",
-    "profile": "Profiili",
-    "logout": "Kirjaudu ulos"
+    "setup": "Asennus"
   },
   "presets": {
     "title": "Esiasetukset",
     "description": "Nopeat konfigurointiasetukset, joiden avulla pääset alkuun yleisillä asetuksilla.",
     "apply": "Hae",
     "applying": "Hakemus...",
-    "applied": "Esiasetus on otettu käyttöön onnistuneesti!",
     "simpleReputation": {
       "title": "Yksinkertainen mainejärjestelmä",
       "description": "Haluan suoraviivaisen mainejärjestelmän, jossa käyttäjät voivat antaa mainetta vain komentojen avulla, ilman monimutkaista kontekstin seurantaa.",
@@ -59,7 +52,6 @@
     "reactions": "Reaktiot"
   },
   "locale": {
-    "language": "Kieli",
     "selectLanguage": "Valitse kieli"
   },
   "error": {
@@ -78,9 +70,6 @@
     "description": "Mukauta botin ulkonäkö ja käyttäytyminen palvelimellasi.",
     "reset": "Nollaa",
     "premiumRequired": "Profiilin mukauttaminen",
-    "localeOverridesRequired": {
-      "message": "Mukautettu maine-nimi edellyttää paikallisten asetusten ohittamista."
-    },
     "nickname": {
       "label": "Bot-lempinimi",
       "placeholder": "Syötä botin lempinimi",
@@ -112,7 +101,6 @@
     "systemChannel": {
       "label": "Järjestelmäkanava",
       "selectPlaceholder": "Valitse kanava",
-      "description": "Valitse kanava, johon botti lähettää järjestelmäviestit ja ilmoitukset.",
       "note": "Huomautus: Tämä kanava on asetettava ja sen on oltava sisäinen kanava. Se sisältää tärkeitä viestejä botin palvelusta ja kehittäjiltä."
     },
     "roleSelect": {
@@ -155,7 +143,6 @@
       "resetDate": {
         "label": "Nollaa päivämäärä",
         "description": "Päivämäärä, jolloin mainepisteet nollataan. Aseta päivämäärä tulevaisuudessa, jolloin nollaus tapahtuu.",
-        "set": "Aseta nollauspäivä",
         "clear": "Tyhjennä nollauspäivä"
       },
       "types": {
@@ -246,16 +233,9 @@
       "premiumRequired": "Lisäreaktiot",
       "add": "Lisää reaktio",
       "none": "Lisäreaktioita ei ole määritetty."
-    },
-    "picker": {
-      "search": "Emojien haku...",
-      "guild": "Palvelimen emojit",
-      "standard": "Vakiomuotoiset emojit",
-      "noResults": "Emojeja ei löytynyt"
     }
   },
   "thankwords": {
-    "title": "Kiitossanat",
     "description": "Näitä sanoja käytetään tunnistamaan, kun joku saa kiitosta. Ne tulkitaan säännöllisiksi lausekkeiksi.",
     "add": "Lisää kiitos sana",
     "placeholder": "Syötä kiitos sana (Regex)",
@@ -264,8 +244,7 @@
     "alreadyExists": "Tämä kiitos sana on jo olemassa.",
     "defaults": {
       "title": "Oletuskiitokset",
-      "description": "Lisää nopeasti oletuskiitossanat eri kielille.",
-      "add": "Lisää oletusarvot"
+      "description": "Lisää nopeasti oletuskiitossanat eri kielille."
     }
   },
   "abuseProtection": {
@@ -372,9 +351,6 @@
       "UPDATE": "Päivitä"
     }
   },
-  "messages": {
-    "description": "Määritä botin lähettämät viestit ja vahvistukset."
-  },
   "logChannel": {
     "premiumRequired": "Lokikanava",
     "description": "Lokikanava sisältää kaikki käyttäjälle annetut ja häneltä saadut mainepisteet.",
@@ -445,6 +421,14 @@
         "title": "Lahjoittajan ja vastaanottajan roolit",
         "description": "Määritä valinnaisesti, mitkä roolit voivat antaa mainetta (lahjoittajaroolit) ja mitkä roolit voivat saada mainetta (vastaanottajaroolit)."
       }
+    }
+  },
+  "roles": {
+    "donor": {
+      "label": "Lahjoittaja"
+    },
+    "receiver": {
+      "label": "Vastaanotin"
     }
   }
 }

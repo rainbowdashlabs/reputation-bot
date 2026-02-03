@@ -6,26 +6,19 @@
     "edit": "편집",
     "change": "변화",
     "clear": "맑음",
-    "close": "닫기",
     "confirm": "확인",
-    "loading": "로딩 중...",
-    "error": "오류",
-    "success": "성공"
+    "loading": "로딩 중..."
   },
   "navigation": {
-    "home": "홈",
     "settings": "설정",
     "presets": "사전 설정",
-    "setup": "설정",
-    "profile": "프로필",
-    "logout": "로그아웃"
+    "setup": "설정"
   },
   "presets": {
     "title": "사전 설정",
     "description": "빠른 설정 프리셋으로 일반적인 설정을 시작하세요.",
     "apply": "지원하다",
     "applying": "신청 중...",
-    "applied": "사전 설정이 성공적으로 적용되었습니다!",
     "simpleReputation": {
       "title": "간단 평판 시스템",
       "description": "사용자가 복잡한 컨텍스트 추적 없이 명령어를 통해서만 평판을 부여할 수 있는 직관적인 평판 시스템을 원합니다.",
@@ -59,7 +52,6 @@
     "reactions": "반응들"
   },
   "locale": {
-    "language": "언어",
     "selectLanguage": "언어 선택"
   },
   "error": {
@@ -78,9 +70,6 @@
     "description": "서버에서 봇의 외관과 동작 방식을 사용자 지정하세요.",
     "reset": "재설정",
     "premiumRequired": "프로필 맞춤 설정",
-    "localeOverridesRequired": {
-      "message": "사용자 정의 평판 이름에는 로케일 재정의 기능이 필요합니다."
-    },
     "nickname": {
       "label": "봇 닉네임",
       "placeholder": "봇 닉네임 입력",
@@ -112,7 +101,6 @@
     "systemChannel": {
       "label": "시스템 채널",
       "selectPlaceholder": "채널을 선택하세요",
-      "description": "봇이 시스템 메시지와 공지사항을 보낼 채널을 선택하세요.",
       "note": "참고: 이 채널은 설정되어야 하며 내부 채널이어야 합니다. 봇 서비스와 관련된 중요한 메시지와 개발자들의 메시지가 포함될 것입니다."
     },
     "roleSelect": {
@@ -155,7 +143,6 @@
       "resetDate": {
         "label": "날짜 재설정",
         "description": "평판이 적용되는 날짜가 재설정될 예정입니다. 재설정을 예약하려면 미래의 날짜를 설정하세요.",
-        "set": "설정 초기화 날짜",
         "clear": "날짜 초기화"
       },
       "types": {
@@ -246,16 +233,9 @@
       "premiumRequired": "추가 반응",
       "add": "반응 추가",
       "none": "추가 반응이 구성되지 않았습니다."
-    },
-    "picker": {
-      "search": "이모지 검색...",
-      "guild": "서버 이모지",
-      "standard": "표준 이모지",
-      "noResults": "이모티콘을 찾을 수 없습니다"
     }
   },
   "thankwords": {
-    "title": "감사의 말씀",
     "description": "이 단어들은 누군가에게 감사를 표할 때를 감지하는 데 사용됩니다. 이들은 정규 표현식으로 해석됩니다.",
     "add": "감사말씀 추가",
     "placeholder": "감사 단어 입력 (정규 표현식)",
@@ -264,8 +244,7 @@
     "alreadyExists": "이 감사말씀은 이미 존재합니다.",
     "defaults": {
       "title": "기본 감사 인사말",
-      "description": "다양한 언어에 대한 기본 감사 문구를 빠르게 추가하세요.",
-      "add": "기본값 추가"
+      "description": "다양한 언어에 대한 기본 감사 문구를 빠르게 추가하세요."
     }
   },
   "abuseProtection": {
@@ -372,9 +351,6 @@
       "UPDATE": "업데이트"
     }
   },
-  "messages": {
-    "description": "봇이 보내는 메시지와 확인 응답을 구성합니다."
-  },
   "logChannel": {
     "premiumRequired": "로그 채널",
     "description": "로그 채널에는 사용자에게 부여되거나 사용자에게서 수신된 모든 평판 정보가 포함됩니다.",
@@ -445,6 +421,14 @@
         "title": "기증자 및 수혜자 역할",
         "description": "선택적으로 평판을 부여할 수 있는 역할(기부자 역할)과 평판을 받을 수 있는 역할(수령자 역할)을 정의할 수 있습니다."
       }
+    }
+  },
+  "roles": {
+    "donor": {
+      "label": "기부자"
+    },
+    "receiver": {
+      "label": "수신기"
     }
   }
 }

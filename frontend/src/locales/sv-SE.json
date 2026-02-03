@@ -6,26 +6,19 @@
     "edit": "Redigera",
     "change": "Förändring",
     "clear": "Tydligt",
-    "close": "Stäng",
     "confirm": "Bekräfta",
-    "loading": "Laddar...",
-    "error": "Fel",
-    "success": "Framgång"
+    "loading": "Laddar..."
   },
   "navigation": {
-    "home": "Hem",
     "settings": "Inställningar",
     "presets": "Förinställningar",
-    "setup": "Inställningar",
-    "profile": "Profil",
-    "logout": "Logga ut"
+    "setup": "Inställningar"
   },
   "presets": {
     "title": "Förinställningar",
     "description": "Snabba konfigurationsinställningar som hjälper dig att komma igång med vanliga inställningar.",
     "apply": "Ansök",
     "applying": "Ansöker...",
-    "applied": "Förinställningen har tillämpats!",
     "simpleReputation": {
       "title": "Enkelt rykte-system",
       "description": "Jag vill ha ett enkelt rykte-system där användare endast kan ge rykte genom kommandon, utan någon komplex kontextuppföljning.",
@@ -59,7 +52,6 @@
     "reactions": "Reaktioner"
   },
   "locale": {
-    "language": "Språk",
     "selectLanguage": "Välj språk"
   },
   "error": {
@@ -78,9 +70,6 @@
     "description": "Anpassa hur boten visas och beter sig på din server.",
     "reset": "Återställ",
     "premiumRequired": "Profilanpassning",
-    "localeOverridesRequired": {
-      "message": "Anpassat ryktenamn kräver funktionen för lokala överskrivningar."
-    },
     "nickname": {
       "label": "Bot-smeknamn",
       "placeholder": "Ange botens smeknamn",
@@ -112,7 +101,6 @@
     "systemChannel": {
       "label": "Systemkanal",
       "selectPlaceholder": "Välj en kanal",
-      "description": "Välj den kanal där boten ska skicka systemmeddelanden och tillkännagivanden.",
       "note": "Obs: Denna kanal ska ställas in och ska vara en intern kanal. Den kommer att innehålla viktiga meddelanden om botens tjänst och meddelanden från utvecklarna."
     },
     "roleSelect": {
@@ -155,7 +143,6 @@
       "resetDate": {
         "label": "Återställ datum",
         "description": "Datum då omdömen återställs. Ange ett datum i framtiden för att schemalägga en återställning.",
-        "set": "Ställ in återställningsdatum",
         "clear": "Rensa återställningsdatum"
       },
       "types": {
@@ -246,16 +233,9 @@
       "premiumRequired": "Ytterligare reaktioner",
       "add": "Lägg till reaktion",
       "none": "Inga ytterligare reaktioner konfigurerade."
-    },
-    "picker": {
-      "search": "Sök efter emojis...",
-      "guild": "Server-emojis",
-      "standard": "Standardemojis",
-      "noResults": "Inga emojis hittades"
     }
   },
   "thankwords": {
-    "title": "Tackord",
     "description": "Dessa ord kommer att användas för att upptäcka när någon tackas. De tolkas som reguljära uttryck.",
     "add": "Lägg till Thankword",
     "placeholder": "Ange tackord (Regex)",
@@ -264,8 +244,7 @@
     "alreadyExists": "Detta tackord finns redan.",
     "defaults": {
       "title": "Standard tackord",
-      "description": "Lägg snabbt till standardtackord för olika språk.",
-      "add": "Lägg till standardvärden"
+      "description": "Lägg snabbt till standardtackord för olika språk."
     }
   },
   "abuseProtection": {
@@ -372,9 +351,6 @@
       "UPDATE": "Uppdatering"
     }
   },
-  "messages": {
-    "description": "Konfigurera meddelanden och bekräftelser som skickas av boten."
-  },
   "logChannel": {
     "premiumRequired": "Loggkanal",
     "description": "Loggkanalen kommer att innehålla alla omdömen som ges och tas från en användare.",
@@ -445,6 +421,14 @@
         "title": "Donator- och mottagarens roller",
         "description": "Du kan också definiera vilka roller som kan ge rykte (givarroller) och vilka roller som kan få rykte (mottagarroller)."
       }
+    }
+  },
+  "roles": {
+    "donor": {
+      "label": "Donator"
+    },
+    "receiver": {
+      "label": "Mottagare"
     }
   }
 }

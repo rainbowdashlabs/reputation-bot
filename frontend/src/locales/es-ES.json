@@ -6,26 +6,19 @@
     "edit": "Editar",
     "change": "Cambiar",
     "clear": "Claro",
-    "close": "Cerrar",
     "confirm": "Confirmar",
-    "loading": "Cargando...",
-    "error": "Error",
-    "success": "Éxito"
+    "loading": "Cargando..."
   },
   "navigation": {
-    "home": "Inicio",
     "settings": "Configuración",
     "presets": "Ajustes preestablecidos",
-    "setup": "Configuración",
-    "profile": "Perfil",
-    "logout": "Cerrar sesión"
+    "setup": "Configuración"
   },
   "presets": {
     "title": "Ajustes preestablecidos",
     "description": "Ajustes preestablecidos de configuración rápida para que puedas empezar con las configuraciones más habituales.",
     "apply": "Aplicar",
     "applying": "Aplicando...",
-    "applied": "¡Preajuste aplicado correctamente!",
     "simpleReputation": {
       "title": "Sistema de reputación sencillo",
       "description": "Quiero un sistema de reputación sencillo en el que los usuarios solo puedan otorgar reputación mediante comandos, sin ningún tipo de seguimiento contextual complejo.",
@@ -59,7 +52,6 @@
     "reactions": "Reacciones"
   },
   "locale": {
-    "language": "Idioma",
     "selectLanguage": "Selecciona el idioma"
   },
   "error": {
@@ -78,9 +70,6 @@
     "description": "Personaliza cómo aparece y se comporta el bot en tu servidor.",
     "reset": "Restablecer",
     "premiumRequired": "Personalización del perfil",
-    "localeOverridesRequired": {
-      "message": "El nombre de reputación personalizado requiere la función de anulación de configuración regional."
-    },
     "nickname": {
       "label": "Apodo del bot",
       "placeholder": "Introduce el apodo del bot",
@@ -112,7 +101,6 @@
     "systemChannel": {
       "label": "Canal del sistema",
       "selectPlaceholder": "Selecciona un canal",
-      "description": "Elige el canal en el que el bot enviará mensajes del sistema y anuncios.",
       "note": "Nota: Este canal debe configurarse y debe ser un canal interno. Contendrá mensajes importantes relacionados con el servicio del bot y mensajes de los desarrolladores."
     },
     "roleSelect": {
@@ -155,7 +143,6 @@
       "resetDate": {
         "label": "Restablecer fecha",
         "description": "Fecha en la que se restablecerá el recuento de reputación. Establece una fecha en el futuro para programar un restablecimiento.",
-        "set": "Establecer fecha de restablecimiento",
         "clear": "Borrar Fecha de restablecimiento"
       },
       "types": {
@@ -246,16 +233,9 @@
       "premiumRequired": "Reacciones adicionales",
       "add": "Añadir reacción",
       "none": "No hay reacciones adicionales configuradas."
-    },
-    "picker": {
-      "search": "Buscar emojis...",
-      "guild": "Emojis de servidor",
-      "standard": "Emojis estándar",
-      "noResults": "No se han encontrado emojis."
     }
   },
   "thankwords": {
-    "title": "Agradecimientos",
     "description": "Estas palabras se utilizarán para detectar cuándo se está agradeciendo a alguien. Se interpretan como expresiones regulares.",
     "add": "Añadir Thankword",
     "placeholder": "Introducir palabra clave (Regex)",
@@ -264,8 +244,7 @@
     "alreadyExists": "Esta palabra de agradecimiento ya existe.",
     "defaults": {
       "title": "Agradecimientos predeterminados",
-      "description": "Añade rápidamente palabras de agradecimiento predeterminadas para varios idiomas.",
-      "add": "Añadir valores predeterminados"
+      "description": "Añade rápidamente palabras de agradecimiento predeterminadas para varios idiomas."
     }
   },
   "abuseProtection": {
@@ -372,9 +351,6 @@
       "UPDATE": "Actualización"
     }
   },
-  "messages": {
-    "description": "Configura los mensajes y las confirmaciones enviados por el bot."
-  },
   "logChannel": {
     "premiumRequired": "Canal de registro",
     "description": "El canal de registro contendrá toda la reputación otorgada y retirada a un usuario.",
@@ -445,6 +421,14 @@
         "title": "Funciones del donante y del receptor",
         "description": "Opcionalmente, define qué roles pueden otorgar reputación (roles de donantes) y qué roles pueden recibir reputación (roles de receptores)."
       }
+    }
+  },
+  "roles": {
+    "donor": {
+      "label": "Donante"
+    },
+    "receiver": {
+      "label": "Receptor"
     }
   }
 }

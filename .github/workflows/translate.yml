@@ -50,13 +50,13 @@ jobs:
       env:
         DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
       run: |
-        ./tooling/translate-backend.sh
+        ./tooling/translation/translate-backend.sh
 
     - name: Translate Frontend
       env:
         DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
       run: |
-        ./tooling/translate-frontend.sh
+        ./tooling/translation/translate-frontend.sh
 
     - name: Check for changes
       id: check_changes

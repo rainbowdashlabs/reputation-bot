@@ -6,26 +6,19 @@
     "edit": "Edit",
     "change": "Change",
     "clear": "Clear",
-    "close": "Close",
     "confirm": "Confirm",
-    "loading": "Loading...",
-    "error": "Error",
-    "success": "Success"
+    "loading": "Loading..."
   },
   "navigation": {
-    "home": "Home",
     "settings": "Settings",
     "presets": "Presets",
-    "setup": "Setup",
-    "profile": "Profile",
-    "logout": "Logout"
+    "setup": "Setup"
   },
   "presets": {
     "title": "Presets",
     "description": "Quick configuration presets to get you started with common setups.",
     "apply": "Apply",
     "applying": "Applying...",
-    "applied": "Preset applied successfully!",
     "simpleReputation": {
       "title": "Simple Reputation System",
       "description": "I want a straightforward reputation system where users can only give reputation through commands, without any complex context tracking.",
@@ -59,7 +52,6 @@
     "reactions": "Reactions"
   },
   "locale": {
-    "language": "Language",
     "selectLanguage": "Select Language"
   },
   "error": {
@@ -78,9 +70,6 @@
     "description": "Customize how the bot appears and behaves in your server.",
     "reset": "Reset",
     "premiumRequired": "Profile customization",
-    "localeOverridesRequired": {
-      "message": "Custom reputation name requires locale overrides feature."
-    },
     "nickname": {
       "label": "Bot Nickname",
       "placeholder": "Enter bot nickname",
@@ -112,7 +101,6 @@
     "systemChannel": {
       "label": "System Channel",
       "selectPlaceholder": "Select a channel",
-      "description": "Choose the channel where the bot will send system messages and announcements.",
       "note": "Note: This channel should be set and should be an internal channel. It will contain important messages concerning the bot's service and messages from the developers."
     },
     "roleSelect": {
@@ -155,7 +143,6 @@
       "resetDate": {
         "label": "Reset Date",
         "description": "The date when reputation counts will be reset. Set a date in the future to schedule a reset.",
-        "set": "Set Reset Date",
         "clear": "Clear Reset Date"
       },
       "types": {
@@ -246,16 +233,9 @@
       "premiumRequired": "Additional Reactions",
       "add": "Add Reaction",
       "none": "No additional reactions configured."
-    },
-    "picker": {
-      "search": "Search emojis...",
-      "guild": "Server Emojis",
-      "standard": "Standard Emojis",
-      "noResults": "No emojis found"
     }
   },
   "thankwords": {
-    "title": "Thankwords",
     "description": "These words will be used to detect when someone is being thanked. They are interpreted as Regular Expressions.",
     "add": "Add Thankword",
     "placeholder": "Enter thankword (Regex)",
@@ -264,8 +244,7 @@
     "alreadyExists": "This thankword already exists.",
     "defaults": {
       "title": "Default Thankwords",
-      "description": "Quickly add default thankwords for various languages.",
-      "add": "Add Defaults"
+      "description": "Quickly add default thankwords for various languages."
     }
   },
   "abuseProtection": {
@@ -372,9 +351,6 @@
       "UPDATE": "Update"
     }
   },
-  "messages": {
-    "description": "Configure messages and confirmations sent by the bot."
-  },
   "logChannel": {
     "premiumRequired": "Log Channel",
     "description": "The log channel will contain every reputation given and taken from a user.",
@@ -445,6 +421,14 @@
         "title": "Donor & Receiver Roles",
         "description": "Optionally define which roles can give reputation (donor roles) and which roles can receive reputation (receiver roles)."
       }
+    }
+  },
+  "roles": {
+    "donor": {
+      "label": "Donor"
+    },
+    "receiver": {
+      "label": "Receiver"
     }
   }
 }

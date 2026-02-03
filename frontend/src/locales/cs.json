@@ -6,26 +6,19 @@
     "edit": "Upravit",
     "change": "Změna",
     "clear": "Jasné",
-    "close": "Zavřít",
     "confirm": "Potvrdit",
-    "loading": "Načítání...",
-    "error": "Chyba",
-    "success": "Úspěch"
+    "loading": "Načítání..."
   },
   "navigation": {
-    "home": "Domů",
     "settings": "Nastavení",
     "presets": "Předvolby",
-    "setup": "Nastavení",
-    "profile": "Profil",
-    "logout": "Odhlásit se"
+    "setup": "Nastavení"
   },
   "presets": {
     "title": "Předvolby",
     "description": "Rychlé konfigurační předvolby, které vám pomohou začít s běžnými nastaveními.",
     "apply": "Použít",
     "applying": "Aplikace...",
-    "applied": "Předvolba byla úspěšně použita!",
     "simpleReputation": {
       "title": "Jednoduchý systém hodnocení",
       "description": "Chci jednoduchý systém hodnocení, ve kterém mohou uživatelé udělovat hodnocení pouze pomocí příkazů, bez složitého sledování kontextu.",
@@ -59,7 +52,6 @@
     "reactions": "Reakce"
   },
   "locale": {
-    "language": "Jazyk",
     "selectLanguage": "Vyberte jazyk"
   },
   "error": {
@@ -78,9 +70,6 @@
     "description": "Přizpůsobte vzhled a chování bota na vašem serveru.",
     "reset": "Resetovat",
     "premiumRequired": "Přizpůsobení profilu",
-    "localeOverridesRequired": {
-      "message": "Vlastní název reputace vyžaduje funkci přepsání locale."
-    },
     "nickname": {
       "label": "Přezdívka bota",
       "placeholder": "Zadejte přezdívku bota",
@@ -112,7 +101,6 @@
     "systemChannel": {
       "label": "Systémový kanál",
       "selectPlaceholder": "Vyberte kanál",
-      "description": "Vyberte kanál, na který bude bot odesílat systémové zprávy a oznámení.",
       "note": "Poznámka: Tento kanál by měl být nastaven a měl by být interním kanálem. Bude obsahovat důležité zprávy týkající se služeb bota a zprávy od vývojářů."
     },
     "roleSelect": {
@@ -155,7 +143,6 @@
       "resetDate": {
         "label": "Resetovat datum",
         "description": "Datum, kdy bude reputace resetována. Nastavte datum v budoucnosti, abyste naplánovali reset.",
-        "set": "Nastavit datum resetování",
         "clear": "Vymazat datum resetování"
       },
       "types": {
@@ -246,16 +233,9 @@
       "premiumRequired": "Další reakce",
       "add": "Přidat reakci",
       "none": "Nejsou nakonfigurovány žádné další reakce."
-    },
-    "picker": {
-      "search": "Hledat emodži...",
-      "guild": "Emoji serveru",
-      "standard": "Standardní emodži",
-      "noResults": "Nebyly nalezeny žádné emodži."
     }
   },
   "thankwords": {
-    "title": "Poděkování",
     "description": "Tato slova budou použita k detekci situací, kdy je někomu děkováno. Jsou interpretována jako regulární výrazy.",
     "add": "Přidat poděkování",
     "placeholder": "Zadejte thankword (Regex)",
@@ -264,8 +244,7 @@
     "alreadyExists": "Toto poděkování již existuje.",
     "defaults": {
       "title": "Výchozí poděkování",
-      "description": "Rychle přidejte výchozí poděkování pro různé jazyky.",
-      "add": "Přidat výchozí nastavení"
+      "description": "Rychle přidejte výchozí poděkování pro různé jazyky."
     }
   },
   "abuseProtection": {
@@ -372,9 +351,6 @@
       "UPDATE": "Aktualizace"
     }
   },
-  "messages": {
-    "description": "Nakonfigurujte zprávy a potvrzení odesílané botem."
-  },
   "logChannel": {
     "premiumRequired": "Kanál protokolu",
     "description": "Kanál protokolu bude obsahovat všechny reputace udělené a odebrané uživateli.",
@@ -445,6 +421,14 @@
         "title": "Role dárce a příjemce",
         "description": "Volitelně definujte, které role mohou udělovat reputaci (role dárců) a které role mohou reputaci přijímat (role příjemců)."
       }
+    }
+  },
+  "roles": {
+    "donor": {
+      "label": "Dárce"
+    },
+    "receiver": {
+      "label": "Příjemce"
     }
   }
 }

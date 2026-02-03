@@ -6,26 +6,19 @@
     "edit": "Editar",
     "change": "Mudança",
     "clear": "Limpar",
-    "close": "Fechar",
     "confirm": "Confirmar",
-    "loading": "Carregando...",
-    "error": "Erro",
-    "success": "Sucesso"
+    "loading": "Carregando..."
   },
   "navigation": {
-    "home": "Página inicial",
     "settings": "Configurações",
     "presets": "Predefinições",
-    "setup": "Configuração",
-    "profile": "Perfil",
-    "logout": "Sair"
+    "setup": "Configuração"
   },
   "presets": {
     "title": "Predefinições",
     "description": "Predefinições de configuração rápida para você começar com configurações comuns.",
     "apply": "Inscreva-se",
     "applying": "Aplicando...",
-    "applied": "A predefinição foi aplicada com sucesso!",
     "simpleReputation": {
       "title": "Sistema de Reputação Simples",
       "description": "Quero um sistema de reputação simples, onde os usuários só possam dar reputação por meio de comandos, sem precisar ficar de olho em um monte de detalhes.",
@@ -59,7 +52,6 @@
     "reactions": "Reações"
   },
   "locale": {
-    "language": "Idioma",
     "selectLanguage": "Escolha o idioma"
   },
   "error": {
@@ -78,9 +70,6 @@
     "description": "Personalize como o bot aparece e se comporta no seu servidor.",
     "reset": "Redefinir",
     "premiumRequired": "Personalização do perfil",
-    "localeOverridesRequired": {
-      "message": "O nome personalizado da reputação precisa da função de substituição de localidade."
-    },
     "nickname": {
       "label": "Apelido do bot",
       "placeholder": "Digite o apelido do bot",
@@ -112,7 +101,6 @@
     "systemChannel": {
       "label": "Canal do sistema",
       "selectPlaceholder": "Escolha um canal",
-      "description": "Escolha o canal onde o bot vai mandar mensagens do sistema e anúncios.",
       "note": "Observação: esse canal deve ser configurado e deve ser um canal interno. Ele vai ter mensagens importantes sobre o serviço do bot e mensagens dos desenvolvedores."
     },
     "roleSelect": {
@@ -155,7 +143,6 @@
       "resetDate": {
         "label": "Redefinir data",
         "description": "A data em que a contagem da reputação será reiniciada. Defina uma data futura para agendar uma reinicialização.",
-        "set": "Definir data de reinicialização",
         "clear": "Limpar Data de Reinicialização"
       },
       "types": {
@@ -246,16 +233,9 @@
       "premiumRequired": "Reações adicionais",
       "add": "Adicionar reação",
       "none": "Nenhuma reação adicional configurada."
-    },
-    "picker": {
-      "search": "Pesquisar emojis...",
-      "guild": "Emojis do servidor",
-      "standard": "Emojis padrão",
-      "noResults": "Não foram encontrados emojis"
     }
   },
   "thankwords": {
-    "title": "Agradecimentos",
     "description": "Essas palavras vão ser usadas pra detectar quando alguém está sendo agradecido. Elas são interpretadas como Expressões Regulares.",
     "add": "Adicionar Thankword",
     "placeholder": "Digite a palavra-chave (Regex)",
@@ -264,8 +244,7 @@
     "alreadyExists": "Essa palavra de agradecimento já existe.",
     "defaults": {
       "title": "Agradecimentos padrão",
-      "description": "Adicione rapidinho palavras de agradecimento padrão em vários idiomas.",
-      "add": "Adicionar padrões"
+      "description": "Adicione rapidinho palavras de agradecimento padrão em vários idiomas."
     }
   },
   "abuseProtection": {
@@ -372,9 +351,6 @@
       "UPDATE": "Atualização"
     }
   },
-  "messages": {
-    "description": "Configure as mensagens e confirmações enviadas pelo bot."
-  },
   "logChannel": {
     "premiumRequired": "Canal de registro",
     "description": "O canal de registro vai ter todas as reputações dadas e recebidas por um usuário.",
@@ -445,6 +421,14 @@
         "title": "Funções do doador e do receptor",
         "description": "Opcionalmente, defina quais funções podem dar reputação (funções de doador) e quais funções podem receber reputação (funções de receptor)."
       }
+    }
+  },
+  "roles": {
+    "donor": {
+      "label": "Doador"
+    },
+    "receiver": {
+      "label": "Receptor"
     }
   }
 }

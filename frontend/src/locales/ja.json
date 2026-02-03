@@ -6,26 +6,19 @@
     "edit": "編集",
     "change": "変更",
     "clear": "クリア",
-    "close": "閉じる",
     "confirm": "確認する",
-    "loading": "読み込み中...",
-    "error": "エラー",
-    "success": "成功"
+    "loading": "読み込み中..."
   },
   "navigation": {
-    "home": "ホーム",
     "settings": "設定",
     "presets": "プリセット",
-    "setup": "設定",
-    "profile": "プロフィール",
-    "logout": "ログアウト"
+    "setup": "設定"
   },
   "presets": {
     "title": "プリセット",
     "description": "一般的な設定を始めるためのクイック設定プリセットだ。",
     "apply": "応募する",
     "applying": "申請中だ。",
-    "applied": "プリセットが正常に適用された！",
     "simpleReputation": {
       "title": "シンプルな評価システム",
       "description": "ユーザーがコマンドを通じてのみ評価を与えられる、複雑な状況追跡を伴わないシンプルな評価システムが欲しい。",
@@ -59,7 +52,6 @@
     "reactions": "反応"
   },
   "locale": {
-    "language": "言語",
     "selectLanguage": "言語を選択"
   },
   "error": {
@@ -78,9 +70,6 @@
     "description": "サーバー内でボットの外観や動作をカスタマイズする。",
     "reset": "リセット",
     "premiumRequired": "プロフィールカスタマイズ",
-    "localeOverridesRequired": {
-      "message": "カスタム評判名にはロケール上書き機能が必要だ。"
-    },
     "nickname": {
       "label": "ボットのニックネーム",
       "placeholder": "ボットのニックネームを入力せよ",
@@ -112,7 +101,6 @@
     "systemChannel": {
       "label": "システムチャンネル",
       "selectPlaceholder": "チャンネルを選択せよ",
-      "description": "ボットがシステムメッセージや告知を送信するチャンネルを選択せよ。",
       "note": "注：このチャンネルは設定済みであるべきであり、内部チャンネルであるべきだ。ボットのサービスに関する重要なメッセージや開発者からのメッセージが含まれる。"
     },
     "roleSelect": {
@@ -155,7 +143,6 @@
       "resetDate": {
         "label": "日付をリセットする",
         "description": "評判がカウントされる日付がリセットされる。将来の日付を設定してリセットをスケジュールする。",
-        "set": "リセット日を設定する",
         "clear": "リセット日クリア"
       },
       "types": {
@@ -246,16 +233,9 @@
       "premiumRequired": "追加の反応",
       "add": "リアクションを追加する",
       "none": "追加の反応は設定されていない。"
-    },
-    "picker": {
-      "search": "絵文字を検索する…",
-      "guild": "サーバー絵文字",
-      "standard": "標準絵文字",
-      "noResults": "絵文字が見つからない"
     }
   },
   "thankwords": {
-    "title": "謝辞",
     "description": "これらの言葉は、誰かが感謝されている場合を検出するために使われる。これらは正規表現として解釈される。",
     "add": "サンクワードを追加する",
     "placeholder": "thankwordを入力せよ（正規表現）",
@@ -264,8 +244,7 @@
     "alreadyExists": "この感謝の言葉は既に存在する。",
     "defaults": {
       "title": "デフォルトの謝辞",
-      "description": "様々な言語のデフォルトの感謝の言葉を素早く追加する。",
-      "add": "デフォルトを追加する"
+      "description": "様々な言語のデフォルトの感謝の言葉を素早く追加する。"
     }
   },
   "abuseProtection": {
@@ -372,9 +351,6 @@
       "UPDATE": "更新"
     }
   },
-  "messages": {
-    "description": "ボットが送信するメッセージと確認を構成する。"
-  },
   "logChannel": {
     "premiumRequired": "ログチャネル",
     "description": "ログチャネルには、ユーザーに対して与えられた評価と受け取った評価の全てが含まれる。",
@@ -445,6 +421,14 @@
         "title": "提供者と受取人の役割",
         "description": "任意で、どの役割が評価を与えられるか（ドナー役割）、どの役割が評価を受け取れるか（レシーバー役割）を定義する。"
       }
+    }
+  },
+  "roles": {
+    "donor": {
+      "label": "寄付者"
+    },
+    "receiver": {
+      "label": "受信機"
     }
   }
 }

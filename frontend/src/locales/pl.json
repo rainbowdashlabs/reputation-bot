@@ -6,26 +6,19 @@
     "edit": "Edytuj",
     "change": "Zmiana",
     "clear": "Wyraźne",
-    "close": "Zamknij",
     "confirm": "Potwierdź",
-    "loading": "Ładowanie...",
-    "error": "Błąd",
-    "success": "Sukces"
+    "loading": "Ładowanie..."
   },
   "navigation": {
-    "home": "Strona główna",
     "settings": "Ustawienia",
     "presets": "Ustawienia wstępne",
-    "setup": "Konfiguracja",
-    "profile": "Profil",
-    "logout": "Wyloguj"
+    "setup": "Konfiguracja"
   },
   "presets": {
     "title": "Ustawienia wstępne",
     "description": "Szybkie ustawienia wstępne konfiguracji, które pomogą ci rozpocząć pracę z typowymi ustawieniami.",
     "apply": "Zastosuj",
     "applying": "Stosowanie...",
-    "applied": "Ustawienie zostało pomyślnie zastosowane!",
     "simpleReputation": {
       "title": "Prosty system reputacji",
       "description": "Chcę prostego systemu reputacji, w którym użytkownicy mogą przyznawać reputację wyłącznie za pomocą poleceń, bez konieczności śledzenia złożonego kontekstu.",
@@ -59,7 +52,6 @@
     "reactions": "Reakcje"
   },
   "locale": {
-    "language": "Język",
     "selectLanguage": "Wybierz język"
   },
   "error": {
@@ -78,9 +70,6 @@
     "description": "Dostosuj wygląd i zachowanie bota na twoim serwerze.",
     "reset": "Resetuj",
     "premiumRequired": "Dostosowywanie profilu",
-    "localeOverridesRequired": {
-      "message": "Niestandardowa nazwa reputacji wymaga funkcji nadpisywania ustawień regionalnych."
-    },
     "nickname": {
       "label": "Pseudonim bota",
       "placeholder": "Wpisz pseudonim bota",
@@ -112,7 +101,6 @@
     "systemChannel": {
       "label": "Kanał systemowy",
       "selectPlaceholder": "Wybierz kanał",
-      "description": "Wybierz kanał, na który bot będzie wysyłał wiadomości systemowe i ogłoszenia.",
       "note": "Uwaga: ten kanał powinien być skonfigurowany i powinien być kanałem wewnętrznym. Będzie zawierał ważne wiadomości dotyczące usługi bota oraz wiadomości od twórców."
     },
     "roleSelect": {
@@ -155,7 +143,6 @@
       "resetDate": {
         "label": "Resetuj datę",
         "description": "Data, kiedy reputacja zostanie zresetowana. Ustaw datę w przyszłości, aby zaplanować reset.",
-        "set": "Ustaw datę resetowania",
         "clear": "Wyczyść datę resetowania"
       },
       "types": {
@@ -246,16 +233,9 @@
       "premiumRequired": "Dodatkowe reakcje",
       "add": "Dodaj reakcję",
       "none": "Nie skonfigurowano żadnych dodatkowych reakcji."
-    },
-    "picker": {
-      "search": "Wyszukaj emoji...",
-      "guild": "Emoji serwerów",
-      "standard": "Standardowe emoji",
-      "noResults": "Nie znaleziono żadnych emotikonów"
     }
   },
   "thankwords": {
-    "title": "Podziękowania",
     "description": "Słowa te będą wykorzystywane do wykrywania sytuacji, w których ktoś otrzymuje podziękowania. Są one interpretowane jako wyrażenia regularne.",
     "add": "Dodaj słowo podziękowania",
     "placeholder": "Wprowadź słowo dziękczynne (wyrażenie regularne)",
@@ -264,8 +244,7 @@
     "alreadyExists": "To słowo już istnieje.",
     "defaults": {
       "title": "Domyślne słowa podziękowania",
-      "description": "Szybko dodawaj domyślne słowa podziękowania w różnych językach.",
-      "add": "Dodaj ustawienia domyślne"
+      "description": "Szybko dodawaj domyślne słowa podziękowania w różnych językach."
     }
   },
   "abuseProtection": {
@@ -372,9 +351,6 @@
       "UPDATE": "Aktualizacja"
     }
   },
-  "messages": {
-    "description": "Skonfiguruj wiadomości i potwierdzenia wysyłane przez bota."
-  },
   "logChannel": {
     "premiumRequired": "Kanał dziennika",
     "description": "Kanał dziennika będzie zawierał wszystkie oceny reputacji przyznane i odebrane użytkownikowi.",
@@ -445,6 +421,14 @@
         "title": "Role dawcy i odbiorcy",
         "description": "Opcjonalnie zdefiniuj, które role mogą nadawać reputację (role darczyńców), a które mogą ją otrzymywać (role odbiorców)."
       }
+    }
+  },
+  "roles": {
+    "donor": {
+      "label": "Darczyńca"
+    },
+    "receiver": {
+      "label": "Odbiornik"
     }
   }
 }
