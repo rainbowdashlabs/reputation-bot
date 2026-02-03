@@ -82,7 +82,7 @@ const isCooldownOnce = computed({
 
       <div class="flex flex-col gap-2">
         <label class="label">{{ t('abuseProtection.cooldownDirection.label') }}</label>
-        <select v-model="cooldownDirection" class="input">
+        <select v-model="cooldownDirection" class="select">
           <option :value="CooldownDirection.UNIDIRECTIONAL">{{ t('abuseProtection.cooldownDirection.unidirectional') }}</option>
           <option :value="CooldownDirection.BIDIRECTIONAL">{{ t('abuseProtection.cooldownDirection.bidirectional') }}</option>
         </select>
