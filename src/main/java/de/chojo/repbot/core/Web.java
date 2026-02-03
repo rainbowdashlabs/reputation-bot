@@ -84,11 +84,14 @@ public class Web {
                              config.bundledPlugins.enableCors(cors -> {
                                  cors.addRule(CorsPluginConfig.CorsRule::anyHost);
                              });
+                             config.staticFiles.add("/static", io.javalin.http.staticfiles.Location.CLASSPATH);
                              config.router.apiBuilder(() -> new Api(sessionService, data.metrics(), bot.hub(), bot.localization()).init());
                              config.router.mount(router -> {
                                  router.beforeMatched(this::handleAccess);
                              });
                              config.jsonMapper(jacksonMapper());
+                             // Serve frontend SPA
+                             config.spaRoot.addFile("/", "/static/index.html", io.javalin.http.staticfiles.Location.CLASSPATH);
                          })
                          .start(api.host(), api.port());
         // Handle specific PremiumFeatureException with detailed JSON

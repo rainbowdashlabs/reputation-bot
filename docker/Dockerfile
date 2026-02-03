@@ -1,4 +1,11 @@
-FROM gradle:jdk21-alpine as build
+FROM node:24-alpine AS frontend
+
+COPY frontend .
+
+RUN npm ci
+RUN npm run build
+
+FROM gradle:jdk21-alpine AS build
 
 ARG GITHUB_ACTIONS=false
 ARG GITHUB_REF_TYPE=null
@@ -9,10 +16,12 @@ ARG GITHUB_REF_TYPE=$GITHUB_REF_TYPE
 ARG GITHUB_REF_NAME=$GITHUB_REF_NAME
 ARG GITHUB_SHA=$GITHUB_SHA
 
-COPY . .
+WORKDIR /home/gradle
+COPY --from=frontend dist/* /src/main/resources/static/
+RUN mkdir -p src/main/resources/static
 RUN gradle clean shadowJar --no-daemon -x test -x javadocJar -x sourcesJar
 
-FROM eclipse-temurin:25-alpine as runtime
+FROM eclipse-temurin:25-alpine AS runtime
 ENV DOCKER=true
 
 WORKDIR /app
