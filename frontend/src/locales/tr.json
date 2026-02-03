@@ -1,25 +1,450 @@
 {
   "common": {
-    "save": "",
-    "cancel": "",
-    "delete": "",
-    "edit": "",
-    "close": "",
-    "confirm": "",
-    "loading": "",
-    "error": "",
-    "success": ""
+    "save": "Kaydet",
+    "cancel": "İptal",
+    "delete": "Sil",
+    "edit": "Düzenle",
+    "change": "Değişiklik",
+    "clear": "Temizle",
+    "close": "Kapat",
+    "confirm": "Onayla",
+    "loading": "Yükleniyor...",
+    "error": "Hata",
+    "success": "Başarı"
   },
   "navigation": {
-    "home": "",
-    "settings": "",
-    "profile": "",
-    "logout": ""
+    "home": "Ana Sayfa",
+    "settings": "Ayarlar",
+    "presets": "Ön ayarlar",
+    "setup": "Kurulum",
+    "profile": "Profil",
+    "logout": "Çıkış"
+  },
+  "presets": {
+    "title": "Ön ayarlar",
+    "description": "Yaygın kurulumlarla çalışmaya başlamanızı sağlayan hızlı yapılandırma ön ayarları.",
+    "apply": "Başvur",
+    "applying": "Uygulanıyor...",
+    "applied": "Ön ayar başarıyla uygulandı!",
+    "simpleReputation": {
+      "title": "Basit İtibar Sistemi",
+      "description": "Kullanıcıların karmaşık bağlam izleme olmadan, yalnızca komutlar aracılığıyla itibar verebilecekleri basit bir itibar sistemi istiyorum.",
+      "settings": "Bu ön ayar, komutlar hariç tüm itibar türlerini devre dışı bırakacak ve bağışçı ve alıcı bağlam izlemeyi kapatacaktır."
+    },
+    "thankOnce": {
+      "title": "Sadece Bir Kez Teşekkür Et",
+      "description": "Kullanıcıların birbirlerine yalnızca bir kez teşekkür edebilmesini istiyorum, böylece aynı kullanıcılar arasında tekrar tekrar itibar verilmesi önlenecektir.",
+      "settings": "Bu ön ayar, bekleme süresini yalnızca bir kez ayarlayacak ve bekleme süresinin yönünü tek yönlü olarak değiştirecektir."
+    },
+    "noAbuse": {
+      "title": "Kötüye Kullanım Koruması Yok",
+      "description": "Bağlam tabanlı kötüye kullanım korumasını devre dışı bırakmak ve kullanıcıların etkileşim geçmişlerini izlemeden daha özgürce itibar puanları vermelerine izin vermek istiyorum.",
+      "settings": "Bu ön ayar, hem bağışçı hem de alıcı bağlam izlemeyi devre dışı bırakacaktır."
+    }
   },
   "settings": {
-    "title": "",
-    "general": "",
-    "reputation": "",
-    "messages": ""
+    "title": "Ayarlar",
+    "general": "Genel",
+    "reputation": "İtibar",
+    "messages": "Mesajlar",
+    "profile": "Profil",
+    "ranks": "Sıralamalar",
+    "channels": "Kanallar",
+    "roles": "Roller",
+    "thankwords": "Teşekkürler",
+    "abuseProtection": "Kötüye Kullanımdan Koruma",
+    "announcements": "Duyurular",
+    "autopost": "Otomatik yayınlama",
+    "logChannel": "Günlük Kanalı",
+    "reactions": "Tepkiler"
+  },
+  "locale": {
+    "language": "Dil",
+    "selectLanguage": "Dili Seç"
+  },
+  "error": {
+    "noToken": {
+      "title": "Oturum Bulunamadı",
+      "message": "Geçerli bir oturum jetonunuz yok.",
+      "instruction": "Bu uygulamaya erişmek için lütfen yeni bir oturum oluşturun."
+    }
+  },
+  "premiumFeature": {
+    "title": "Destekçi Özelliği",
+    "requiredTier": "Gerekli Destekçi Seviyesi:",
+    "message": "{name} destekçilere ayrılmıştır. Kullanmak için destekçi olun."
+  },
+  "profile": {
+    "description": "Botun sunucunuzda nasıl görüneceğini ve davranacağını özelleştirin.",
+    "reset": "Sıfırla",
+    "premiumRequired": "Profil özelleştirme",
+    "localeOverridesRequired": {
+      "message": "Özel itibar adı, yerel ayarların geçersiz kılınması özelliğini gerektirir."
+    },
+    "nickname": {
+      "label": "Bot Takma Adı",
+      "placeholder": "Bot takma adını girin",
+      "description": "Bu sunucuda bot için özel bir takma ad belirleyin.",
+      "reset": "Takma adı varsayılana sıfırla"
+    },
+    "profilePicture": {
+      "label": "Profil Resmi",
+      "uploadButton": "Resim Yükle",
+      "uploading": "Yükleniyor...",
+      "description": "Bot için özel profil resmi yükle (maks. 2 MB, 512x512 piksel)",
+      "reset": "Profil resmini varsayılana sıfırla"
+    },
+    "reputationName": {
+      "label": "İtibar Adı",
+      "placeholder": "Özel itibar adı girin (örneğin, 'Puanlar', 'Karma')",
+      "description": "Bu sunucuda itibar için kullanılan adı özelleştirin.",
+      "reset": "İtibar adını varsayılana sıfırla"
+    },
+    "tosNote": "Discord'un Hizmet Şartları veya eyalet yasalarını ihlal eden her türlü eylem yasaktır ve sunucu için bu özelliğin engellenmesine neden olabilir."
+  },
+  "general": {
+    "description": "Bu sunucu için botun temel ayarlarını yapılandırın.",
+    "language": {
+      "label": "Bot Dili",
+      "selectPlaceholder": "Bir dil seçin",
+      "description": "Bu sunucuda botun mesajlar ve yanıtlar için kullanacağı dili seçin."
+    },
+    "systemChannel": {
+      "label": "Sistem Kanalı",
+      "selectPlaceholder": "Bir kanal seçin",
+      "description": "Botun sistem mesajlarını ve duyuruları göndereceği kanalı seçin.",
+      "note": "Not: Bu kanal ayarlanmalı ve dahili bir kanal olmalıdır. Botun hizmeti ile ilgili önemli mesajları ve geliştiricilerden gelen mesajları içerecektir."
+    },
+    "roleSelect": {
+      "searchPlaceholder": "Rol arama...",
+      "noRolesFound": "Hiçbir rol bulunamadı"
+    },
+    "ranks": {
+      "description": "İtibar sıralamalarını ve bunlarla ilişkili rolleri yapılandırın.",
+      "stackRoles": {
+        "label": "Yığın Rolleri",
+        "description": "Etkinleştirilirse, yalnızca en yüksek rütbe yerine tüm geçerli rütbeler atanacaktır."
+      },
+      "addRank": "Yeni Sıra Ekle",
+      "reputationRequired": "Gerekli İtibar",
+      "roleAlreadyAdded": "Bu rolün zaten bir rütbesi var.",
+      "reputationAlreadyUsed": "Bu itibar değeri başka bir rütbe tarafından zaten kullanılmaktadır.",
+      "noRanks": "Henüz yapılandırılmış sıralama yok.",
+      "reputationPlaceholder": "örneğin 100"
+    },
+    "reputation": {
+      "description": "İtibar hesaplama yöntemini ve hangi özelliklerin etkinleştirileceğini yapılandırın.",
+      "mode": {
+        "label": "İtibar Modu",
+        "description": "İtibarın nasıl hesaplanacağını ve görüntüleneceğini seçin.",
+        "modes": {
+          "TOTAL": "Toplam İtibar",
+          "ROLLING_WEEK": "Yuvarlanan Hafta",
+          "ROLLING_MONTH": "Yuvarlanan Ay",
+          "WEEK": "Bu Hafta",
+          "MONTH": "Bu Ay"
+        },
+        "descriptions": {
+          "TOTAL": "Bir kullanıcının şimdiye kadar aldığı toplam itibar puanını kullanın.",
+          "ROLLING_WEEK": "Son 7 gün içinde alınan itibarı kullanın.",
+          "ROLLING_MONTH": "Son 30 gün içinde alınan itibarı kullanın.",
+          "WEEK": "Bu haftanın başından itibaren elde edilen itibarı kullanın.",
+          "MONTH": "Bu ayın başından itibaren kazanılan itibarı kullanın."
+        }
+      },
+      "resetDate": {
+        "label": "Tarihi Sıfırla",
+        "description": "İtibar puanının sıfırlanacağı tarih. Sıfırlamayı planlamak için gelecekteki bir tarih belirleyin.",
+        "set": "Tarihi Sıfırla",
+        "clear": "Temizle Sıfırla Tarih"
+      },
+      "types": {
+        "reaction": {
+          "label": "Tepki İtibarı",
+          "description": "Mesaja belirli bir tepki eklendiğinde itibar verin.",
+          "confirmation": {
+            "label": "Tepki Onayı",
+            "description": "Reaksiyon yoluyla itibar verildiğinde bir onay mesajı gönderin."
+          }
+        },
+        "answer": {
+          "label": "Cevap İtibarı",
+          "description": "Bir kullanıcının mesajı bir cevapta teşekkür edildiğinde itibar verin."
+        },
+        "mention": {
+          "label": "İtibarından bahset",
+          "description": "Bir kullanıcı teşekkür sözüyle birlikte bahsedildiğinde itibar verin."
+        },
+        "fuzzy": {
+          "label": "Bulanık Eşleştirme",
+          "description": "Teşekkür kelimesinin etrafındaki kelimeleri kanalda bulunan kullanıcı adlarıyla eşleştirerek itibar verin."
+        },
+        "embed": {
+          "label": "İtibar Yerleştirme",
+          "description": "Hedef belirlenemiyorsa, son konuşmada bulunan kullanıcıların listesini içeren bir gömme gönderi gönderin."
+        },
+        "direct": {
+          "label": "Doğrudan Yerleştirme İtibarı",
+          "description": "Yerleşik öğede yalnızca bir kullanıcı bulunuyorsa otomatik olarak itibar verin."
+        },
+        "command": {
+          "label": "Komuta İtibarı",
+          "description": "/reputation komutuyla itibar verin.",
+          "ephemeral": {
+            "label": "Geçici Yanıt",
+            "description": "Komutla itibar verirken yanıtı diğer kullanıcılardan gizli olarak gönderin."
+          }
+        }
+      }
+    },
+    "roles": {
+      "description": "Hangi rollerin itibar verebileceğini ve alabileceğini yapılandırın.",
+      "donor": {
+        "label": "Bağışçıların Rolleri",
+        "description": "Etkinleştirilirse, yalnızca bu rollerden en az birine sahip kullanıcılar itibar verebilir."
+      },
+      "receiver": {
+        "label": "Alıcı Rolleri",
+        "description": "Etkinleştirilirse, yalnızca bu rollerden en az birine sahip kullanıcılar itibar alabilir."
+      },
+      "list": {
+        "label": "Seçilmiş Roller",
+        "description": "Hangi roller gerekli olmalıdır, seçin."
+      }
+    },
+    "channels": {
+      "description": "Botun aktif olması ve olmaması gereken yerleri yapılandırın.",
+      "listType": {
+        "label": "Liste Türü",
+        "description": "Seçilen kanalların ve kategorilerin izin verilip verilmeyeceğini seçin.",
+        "allow": "İzin Verilenler Listesi",
+        "deny": "Engelleme Listesi",
+        "premiumRequired": "Engelleme Listesi"
+      },
+      "list": {
+        "label": "Kanallar ve Kategoriler",
+        "description": "Listeye dahil edilmesi gereken kanalları ve kategorileri seçin.",
+        "channels": "Kanallar",
+        "categories": "Kategoriler"
+      },
+      "premium": {
+        "channelLimitWarning": "{limit}'dan fazla kanal seçmek destekçilere özeldir. Kullanmak için destekçi olun.",
+        "categoryLimitWarning": "{limit}'dan fazla kategori seçmek destekçilere özeldir. Kullanmak için destekçi olun."
+      }
+    }
+  },
+  "reactions": {
+    "title": "Tepkiler",
+    "description": "İtibar vermek için kullanılan emojileri yapılandırın.",
+    "main": {
+      "label": "Ana Reaksiyon",
+      "description": "İtibar vermek için birincil tepki olarak kullanılacak emoji."
+    },
+    "additional": {
+      "label": "Ek Tepkiler",
+      "description": "İtibar vermek için de kullanılabilen ek emojiler.",
+      "premiumRequired": "Ek Tepkiler",
+      "add": "Tepki Ekle",
+      "none": "Ek reaksiyonlar yapılandırılmamıştır."
+    },
+    "picker": {
+      "search": "Emojileri ara...",
+      "guild": "Sunucu Emojileri",
+      "standard": "Standart Emojiler",
+      "noResults": "Emoji bulunamadı"
+    }
+  },
+  "thankwords": {
+    "title": "Teşekkürler",
+    "description": "Bu kelimeler, birine teşekkür edildiğini tespit etmek için kullanılır. Düzenli ifadeler olarak yorumlanırlar.",
+    "add": "Teşekkür kelimesi ekle",
+    "placeholder": "Teşekkür kelimesini girin (Regex)",
+    "none": "Teşekkür sözcüğü yapılandırılmadı.",
+    "invalidCharacter": "Teşekkür mesajında geçersiz bir karakter var: {char}",
+    "alreadyExists": "Bu teşekkür kelimesi zaten var.",
+    "defaults": {
+      "title": "Varsayılan Teşekkür Sözleri",
+      "description": "Çeşitli diller için varsayılan teşekkür sözlerini hızlıca ekleyin.",
+      "add": "Varsayılanları Ekle"
+    }
+  },
+  "abuseProtection": {
+    "description": "İtibar suistimalini önlemek için sınırlar ve korumalar yapılandırın.",
+    "cooldown": {
+      "label": "Soğuma süresi (dakika)",
+      "description": "Aynı kullanıcıların birbirlerine tekrar teşekkür edebilmeleri için geçmesi gereken süre (dakika cinsinden). 0, bekleme süresi yok anlamına gelir, -1 ise sonsuza kadar anlamına gelir.",
+      "once": {
+        "label": "Soğuma Süresi Bir Kez",
+        "description": "Etkinleştirildiğinde, kullanıcılar birbirlerine sadece bir kez teşekkür edebilirler.",
+        "activeDescription": "Soğuma süresi bir kez etkinleştirilir. Kullanıcılar birbirlerine yalnızca bir kez teşekkür edebilir. Yön tek yönlü olarak ayarlanmıştır."
+      }
+    },
+    "cooldownDirection": {
+      "label": "Soğuma Yönü",
+      "description": "Tek yönlü, bağışçının aynı kişiye bağış yaparken bir bekleme süresi olduğu anlamına gelir. İki yönlü, bekleme süresinin bağışçı ve alıcı arasında olduğu anlamına gelir ve bu süre geçene kadar birbirlerine karşılıklı teşekkür etmelerini engeller.",
+      "unidirectional": "Tek yönlü",
+      "bidirectional": "Çift yönlü"
+    },
+    "maxMessageAge": {
+      "label": "Maksimum Mesaj Süresi (dakika)",
+      "description": "Yanıtlandığında veya tepki verildiğinde itibar kazanmaya hak kazanacak bir mesajın maksimum yaşı (dakika cinsinden)."
+    },
+    "minMessages": {
+      "label": "Min Mesajlar",
+      "description": "Kanalda en az bu kadar mesajı olan yazarlar her zaman itibar kazanmaya hak kazanırlar."
+    },
+    "donorContext": {
+      "label": "Bağışçı hazır bulunmalıdır",
+      "description": "Etkinleştirilirse, bağışçı, itibar vermek için kanaldaki son mesajlardan en az birini göndermiş olmalıdır."
+    },
+    "receiverContext": {
+      "label": "Alıcı hazır bulunmalıdır",
+      "description": "Etkinleştirilirse, alıcı, itibar almak için kanaldaki son mesajlardan en az birini göndermiş olmalıdır."
+    },
+    "givenLimit": {
+      "enabled": {
+        "label": "Verilen Sınırı Etkinleştir"
+      },
+      "maxGiven": {
+        "label": "Max Verilen"
+      },
+      "maxGivenHours": {
+        "label": "Fazla Mesai"
+      },
+      "description": "Bir kullanıcının belirli bir zaman diliminde verebileceği itibar miktarını sınırlayın."
+    },
+    "receivedLimit": {
+      "enabled": {
+        "label": "Alınan Sınırı Etkinleştir"
+      },
+      "maxReceived": {
+        "label": "Alınan Maksimum"
+      },
+      "maxReceivedHours": {
+        "label": "Fazla Mesai"
+      },
+      "description": "Bir kullanıcının belirli bir zaman aralığında alabileceği itibar miktarını sınırlayın."
+    },
+    "maxMessageReputation": {
+      "label": "Maksimum Mesaj İtibarı",
+      "description": "Tek bir mesajda, bahsetmeler ve gömüler yoluyla verilebilecek maksimum itibar miktarı."
+    }
+  },
+  "announcements": {
+    "description": "Kullanıcılar yeni sıralamalara ulaştığında gönderilen mesajları yapılandırın.",
+    "active": {
+      "label": "Duyuruları Etkinleştir",
+      "description": "Etkinleştirildiğinde, bot bir kullanıcı yeni bir rütbeye ulaştığında bir mesaj gönderir."
+    },
+    "sameChannel": {
+      "label": "Aynı Kanalda Gönder",
+      "description": "Etkinleştirilirse, duyuru seviye atlamanın gerçekleştiği kanalda gönderilir. Aksi takdirde, seçilen kanala gönderilir."
+    },
+    "channel": {
+      "label": "Duyuru Kanalı",
+      "description": "Sıralama yükseltme duyurularının gönderileceği kanalı seçin."
+    }
+  },
+  "autopost": {
+    "description": "Liderlik tablosunun bir kanala otomatik olarak gönderilmesini yapılandırın.",
+    "premiumRequired": "Otomatik yayınlama",
+    "active": {
+      "label": "Otomatik Yayınlamayı Etkinleştir",
+      "description": "Otomatik liderlik tablosu gönderimini etkinleştirin veya devre dışı bırakın."
+    },
+    "channel": {
+      "label": "Otomatik Yayın Kanalı",
+      "description": "Liderlik tablosunun yayınlanacağı kanal."
+    },
+    "refreshInterval": {
+      "label": "Yenileme Aralığı",
+      "description": "Liderlik tablosu ne sıklıkla güncellenmelidir?",
+      "HOURLY": "Saatlik",
+      "DAILY": "Günlük",
+      "WEEKLY": "Haftalık",
+      "MONTHLY": "Aylık"
+    },
+    "refreshType": {
+      "label": "Yenileme Türü",
+      "description": "Gönderi nasıl güncellenmelidir?",
+      "DELETE_AND_REPOST": "Sil ve Yeniden Yayınla",
+      "REPOST": "Yeniden yayınla",
+      "UPDATE": "Güncelleme"
+    }
+  },
+  "messages": {
+    "description": "Bot tarafından gönderilen mesajları ve onayları yapılandırın."
+  },
+  "logChannel": {
+    "premiumRequired": "Günlük Kanalı",
+    "description": "Günlük kanalı, bir kullanıcıya verilen ve alınan tüm itibar bilgilerini içerecektir.",
+    "active": {
+      "label": "Günlük Kanalını Etkinleştir",
+      "description": "İtibar değişikliklerinin günlüğe kaydedilmesini etkinleştirin veya devre dışı bırakın."
+    },
+    "channel": {
+      "label": "Günlük Kanalı",
+      "description": "İtibar değişikliklerinin kaydedilmesi gereken kanal."
+    }
+  },
+  "setup": {
+    "title": "İlk Kurulum",
+    "stepProgress": "{total}'ın {current} adımı",
+    "requiredStep": "Bu adım devam etmek için gereklidir.",
+    "navigation": {
+      "previous": "Önceki",
+      "next": "Sonraki",
+      "finish": "Kurulumu Tamamla"
+    },
+    "steps": {
+      "language": {
+        "title": "Dili Seç",
+        "description": "Sunucunuzda botun mesajlar ve yanıtlar için kullanacağı dili seçin. Ön uç dili, seçiminize göre değişecektir."
+      },
+      "systemChannel": {
+        "title": "Sistem Kanalı",
+        "description": "Botun önemli sistem mesajlarını ve bildirimlerini göndereceği bir kanal seçin.",
+        "required": "Kuruluma devam etmek için bir sistem kanalı seçmelisiniz."
+      },
+      "reputationTypes": {
+        "title": "İtibar Türleri",
+        "description": "Kullanıcıların itibar vermek için kullanabilecekleri yöntemleri seçin. Kullanıcılara esneklik sağlamak için birden fazla türü etkinleştirebilirsiniz."
+      },
+      "reputationMode": {
+        "title": "İtibar Modu",
+        "description": "Sunucunuzda itibarın nasıl hesaplanıp görüntüleneceğini seçin."
+      },
+      "ranks": {
+        "title": "İtibar Sıralaması",
+        "description": "Kullanıcıların belirli itibar seviyelerine ulaştıklarında alacakları rolleri tanımlayın. En az bir rütbe gereklidir.",
+        "required": "Devam etmek için en az bir itibar derecesi tanımlamalısınız."
+      },
+      "channels": {
+        "title": "Kanallar ve Kategoriler",
+        "description": "Hangi kanalların ve kategorilerin itibar vermesine izin verileceğini seçin. En az bir kanal veya kategori seçilmelidir.",
+        "required": "Devam etmek için en az bir kanal veya kategori seçmelisiniz (reddetme listesi modunu kullanmıyorsanız)."
+      },
+      "thankwords": {
+        "title": "Teşekkürler",
+        "description": "Kullanıcıların itibar vermek için kullanabilecekleri kelimeler veya kelime öbekleri ekleyin. Bunlar, botun tanıyacağı tetikleyici kelimelerdir.",
+        "recommendation": "Hızlı bir başlangıç için dilinizin varsayılan teşekkür sözlerini yüklemenizi öneririz."
+      },
+      "announcements": {
+        "title": "Duyurular",
+        "description": "Kullanıcılar yeni itibar sıralamalarına ulaştığında botun bunu duyurup duyurmayacağını yapılandırın."
+      },
+      "cooldown": {
+        "title": "Soğuma Ayarları",
+        "description": "Kullanıcıların çok sık itibar vermelerini önlemek için bir bekleme süresi belirleyin. Ayrıca, kullanıcıların birbirlerine yalnızca bir kez teşekkür etmelerine izin vermek için \"tek seferlik bekleme\" seçeneğini etkinleştirebilirsiniz."
+      },
+      "mainReaction": {
+        "title": "Ana Reaksiyon",
+        "description": "İtibar vermek için ana tepki olarak kullanılacak emojiyi seçin."
+      },
+      "roles": {
+        "title": "Bağışçı ve Alıcı Rolleri",
+        "description": "İsteğe bağlı olarak, hangi roller itibar verebilir (bağışçı roller) ve hangi roller itibar alabilir (alıcı roller) tanımlayın."
+      }
+    }
   }
 }

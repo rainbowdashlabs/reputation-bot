@@ -1,2 +1,450 @@
 {
+  "common": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "change": "Changer",
+    "clear": "Effacer",
+    "close": "Fermer",
+    "confirm": "Confirmer",
+    "loading": "Charge...",
+    "error": "Erreur",
+    "success": "Succès"
+  },
+  "navigation": {
+    "home": "Accueil",
+    "settings": "Paramètres",
+    "presets": "Préréglages",
+    "setup": "Configuration",
+    "profile": "Profil",
+    "logout": "Déconnexion"
+  },
+  "presets": {
+    "title": "Préréglages",
+    "description": "Des préréglages de configuration rapides pour te permettre de démarrer avec des configurations courantes.",
+    "apply": "Postuler",
+    "applying": "En cours d'application...",
+    "applied": "Le préréglage a été appliqué sans problème !",
+    "simpleReputation": {
+      "title": "Système de réputation simple",
+      "description": "Je veux un système de réputation simple où les utilisateurs peuvent juste donner de la réputation via des commandes, sans avoir à suivre un contexte compliqué.",
+      "settings": "Ce préréglage va désactiver tous les types de réputation sauf les commandes, et désactiver le suivi du contexte des donateurs et des destinataires."
+    },
+    "thankOnce": {
+      "title": "Merci juste une fois",
+      "description": "Je veux que les utilisateurs puissent se remercier une seule fois, pour éviter qu'ils ne s'attribuent plusieurs fois la réputation.",
+      "settings": "Ce préréglage va régler le temps de recharge une seule fois et le rendre unidirectionnel."
+    },
+    "noAbuse": {
+      "title": "Pas de protection contre les abus",
+      "description": "Je veux désactiver la protection contre les abus basée sur le contexte et laisser les utilisateurs donner plus librement leur avis sans suivre leur historique d'interaction.",
+      "settings": "Ce préréglage va désactiver le suivi du contexte pour le donneur et le receveur."
+    }
+  },
+  "settings": {
+    "title": "Paramètres",
+    "general": "Général",
+    "reputation": "Réputation",
+    "messages": "Messages",
+    "profile": "Profil",
+    "ranks": "Classements",
+    "channels": "Chaînes",
+    "roles": "Rôles",
+    "thankwords": "Remerciements",
+    "abuseProtection": "Protection contre les abus",
+    "announcements": "Annonces",
+    "autopost": "Publication automatique",
+    "logChannel": "Canal de journalisation",
+    "reactions": "Réactions"
+  },
+  "locale": {
+    "language": "Langue",
+    "selectLanguage": "Choisis ta langue"
+  },
+  "error": {
+    "noToken": {
+      "title": "Pas de session trouvée",
+      "message": "Tu n'as pas de jeton de session valide.",
+      "instruction": "Crée une nouvelle session pour accéder à cette appli."
+    }
+  },
+  "premiumFeature": {
+    "title": "Présentation d'un supporter",
+    "requiredTier": "Niveau de soutien requis :",
+    "message": "{name} est réservé aux supporters. Deviens supporter pour pouvoir l'utiliser."
+  },
+  "profile": {
+    "description": "Personnalise l'apparence et le comportement du bot sur ton serveur.",
+    "reset": "Réinitialiser",
+    "premiumRequired": "Personnalisation du profil",
+    "localeOverridesRequired": {
+      "message": "Pour personnaliser le nom de la réputation, il faut utiliser la fonctionnalité de remplacement des paramètres régionaux."
+    },
+    "nickname": {
+      "label": "Pseudo du bot",
+      "placeholder": "Mets le surnom du bot",
+      "description": "Donne un pseudo personnalisé au bot sur ce serveur.",
+      "reset": "Remettre le pseudo par défaut"
+    },
+    "profilePicture": {
+      "label": "Photo de profil",
+      "uploadButton": "Télécharger une image",
+      "uploading": "En cours de téléchargement...",
+      "description": "Mets en ligne une photo de profil personnalisée pour le bot (max. 2 Mo, 512 x 512 pixels)",
+      "reset": "Remettre la photo de profil par défaut"
+    },
+    "reputationName": {
+      "label": "Nom de réputation",
+      "placeholder": "Mets un nom personnalisé pour la réputation (genre « Points », « Karma »)",
+      "description": "Personnalise le nom utilisé pour la réputation sur ce serveur.",
+      "reset": "Remettre le nom de réputation à sa valeur par défaut"
+    },
+    "tosNote": "Tout ce qui va à l'encontre des conditions d'utilisation de Discord ou de la loi n'est pas autorisé et pourrait bloquer cette fonctionnalité pour le serveur."
+  },
+  "general": {
+    "description": "Configure les paramètres de base du bot pour ce serveur.",
+    "language": {
+      "label": "Langage des bots",
+      "selectPlaceholder": "Choisis une langue",
+      "description": "Choisis la langue que le bot va utiliser pour les messages et les réponses sur ce serveur."
+    },
+    "systemChannel": {
+      "label": "Chaîne système",
+      "selectPlaceholder": "Choisis un canal",
+      "description": "Choisis le canal où le bot enverra les messages système et les annonces.",
+      "note": "Remarque : ce canal doit être configuré et être un canal interne. Il contiendra des messages importants sur le service du bot et des messages des développeurs."
+    },
+    "roleSelect": {
+      "searchPlaceholder": "Chercher des rôles...",
+      "noRolesFound": "Aucun rôle trouvé"
+    },
+    "ranks": {
+      "description": "Configure les niveaux de réputation et les rôles qui vont avec.",
+      "stackRoles": {
+        "label": "Rôles de pile",
+        "description": "Si cette option est activée, tous les rangs applicables seront attribués au lieu du seul rang le plus élevé."
+      },
+      "addRank": "Ajouter un nouveau rang",
+      "reputationRequired": "Réputation requise",
+      "roleAlreadyAdded": "Ce rôle a déjà un rang.",
+      "reputationAlreadyUsed": "Cette valeur de réputation est déjà utilisée par un autre rang.",
+      "noRanks": "Pas encore de rangs configurés.",
+      "reputationPlaceholder": "par exemple 100"
+    },
+    "reputation": {
+      "description": "Configure comment la réputation est calculée et quelles fonctionnalités sont activées.",
+      "mode": {
+        "label": "Mode Réputation",
+        "description": "Choisis comment la réputation est calculée et affichée.",
+        "modes": {
+          "TOTAL": "Réputation totale",
+          "ROLLING_WEEK": "Semaine de roulement",
+          "ROLLING_MONTH": "Mois glissant",
+          "WEEK": "Cette semaine",
+          "MONTH": "Ce mois-ci"
+        },
+        "descriptions": {
+          "TOTAL": "Utilise la réputation totale qu'un utilisateur a reçue jusqu'à maintenant.",
+          "ROLLING_WEEK": "Utilise la réputation que t'as eue ces 7 derniers jours.",
+          "ROLLING_MONTH": "Utilise la réputation que t'as eue ces 30 derniers jours.",
+          "WEEK": "Utilise la réputation que t'as eue depuis le début de la semaine en cours.",
+          "MONTH": "Utilise la réputation que tu as eue depuis le début du mois."
+        }
+      },
+      "resetDate": {
+        "label": "Réinitialiser la date",
+        "description": "La date à laquelle les points de réputation seront remis à zéro. Choisis une date dans le futur pour planifier la réinitialisation.",
+        "set": "Définir la date de réinitialisation",
+        "clear": "Effacer la date de réinitialisation"
+      },
+      "types": {
+        "reaction": {
+          "label": "Réputation de réaction",
+          "description": "Donne des points de réputation quand une réaction spécifique est ajoutée à un message.",
+          "confirmation": {
+            "label": "Confirmation de la réaction",
+            "description": "Envoie un message de confirmation quand quelqu'un te donne une réputation via une réaction."
+          }
+        },
+        "answer": {
+          "label": "Réputation des réponses",
+          "description": "Donne des points de réputation quand quelqu'un remercie le message d'un utilisateur dans une réponse."
+        },
+        "mention": {
+          "label": "Mentionner la réputation",
+          "description": "Donne de la réputation quand quelqu'un est mentionné avec un mot de remerciement."
+        },
+        "fuzzy": {
+          "label": "Correspondance approximative",
+          "description": "Donne une réputation en associant les mots autour du mot « merci » aux noms d'utilisateurs présents dans le canal."
+        },
+        "embed": {
+          "label": "Intégrer la réputation",
+          "description": "Envoie une liste intégrée des utilisateurs présents dans la dernière conversation si aucune cible ne peut être trouvée."
+        },
+        "direct": {
+          "label": "Réputation d'intégration directe",
+          "description": "Donne automatiquement une réputation quand il n'y a qu'un seul utilisateur dans l'intégration."
+        },
+        "command": {
+          "label": "Réputation de commandement",
+          "description": "Donne de la réputation avec la commande /reputation.",
+          "ephemeral": {
+            "label": "Réponse éphémère",
+            "description": "Envoie la réponse cachée aux autres utilisateurs quand tu donnes une réputation via une commande."
+          }
+        }
+      }
+    },
+    "roles": {
+      "description": "Choisis les rôles qui peuvent donner et recevoir de la réputation.",
+      "donor": {
+        "label": "Rôles des donateurs",
+        "description": "Si cette option est activée, seuls les utilisateurs ayant au moins un de ces rôles peuvent donner une réputation."
+      },
+      "receiver": {
+        "label": "Rôles du récepteur",
+        "description": "Si cette option est activée, seuls les utilisateurs ayant au moins un de ces rôles peuvent recevoir une réputation."
+      },
+      "list": {
+        "label": "Rôles choisis",
+        "description": "Choisis les rôles qui devraient être obligatoires."
+      }
+    },
+    "channels": {
+      "description": "Décide où le bot devrait et ne devrait pas être actif.",
+      "listType": {
+        "label": "Type de liste",
+        "description": "Décide si les chaînes et catégories choisies sont autorisées ou bloquées.",
+        "allow": "Liste blanche",
+        "deny": "Liste noire",
+        "premiumRequired": "Liste noire"
+      },
+      "list": {
+        "label": "Chaînes et catégories",
+        "description": "Choisis les chaînes et les catégories qui devraient être dans la liste.",
+        "channels": "Chaînes",
+        "categories": "Catégories"
+      },
+      "premium": {
+        "channelLimitWarning": "Choisir plus de {limit} canaux, c'est réservé aux supporters. Deviens supporter pour pouvoir l'utiliser.",
+        "categoryLimitWarning": "Choisir plus d'une catégorie d'{limit}s, c'est réservé aux supporters. Deviens supporter pour pouvoir le faire."
+      }
+    }
+  },
+  "reactions": {
+    "title": "Réactions",
+    "description": "Configure les emojis utilisés pour donner une réputation.",
+    "main": {
+      "label": "Réaction principale",
+      "description": "L'émoji qui sera utilisé comme réaction principale pour donner une réputation."
+    },
+    "additional": {
+      "label": "Réactions supplémentaires",
+      "description": "Des emojis supplémentaires qui peuvent aussi être utilisés pour donner une réputation.",
+      "premiumRequired": "Réactions supplémentaires",
+      "add": "Ajouter une réaction",
+      "none": "Aucune réaction supplémentaire configurée."
+    },
+    "picker": {
+      "search": "Chercher des emojis...",
+      "guild": "Émojis serveur",
+      "standard": "Emojis standard",
+      "noResults": "Pas d'émojis trouvés"
+    }
+  },
+  "thankwords": {
+    "title": "Remerciements",
+    "description": "Ces mots serviront à repérer quand quelqu'un est remercié. Ils sont vus comme des expressions régulières.",
+    "add": "Ajouter un mot de remerciement",
+    "placeholder": "Entrer le mot de remerciement (Regex)",
+    "none": "Aucun mot de remerciement configuré.",
+    "invalidCharacter": "Le mot de remerciement a un caractère bizarre : {char}",
+    "alreadyExists": "Ce mot de remerciement existe déjà.",
+    "defaults": {
+      "title": "Remerciements par défaut",
+      "description": "Ajoute vite des mots de remerciement par défaut pour plein de langues.",
+      "add": "Ajouter les valeurs par défaut"
+    }
+  },
+  "abuseProtection": {
+    "description": "Configurez des limites et des protections pour éviter les abus de réputation.",
+    "cooldown": {
+      "label": "Temps de refroidissement (minutes)",
+      "description": "Le temps en minutes qui doit passer avant que les mêmes utilisateurs puissent se remercier à nouveau. 0 veut dire pas de délai, -1 veut dire pour toujours.",
+      "once": {
+        "label": "Temps de recharge unique",
+        "description": "Si cette option est activée, les utilisateurs ne peuvent se remercier qu'une seule fois pour toujours.",
+        "activeDescription": "Le temps de recharge est activé une fois. Les utilisateurs peuvent se remercier entre eux une seule fois. La direction est réglée sur unidirectionnelle."
+      }
+    },
+    "cooldownDirection": {
+      "label": "Direction de refroidissement",
+      "description": "Unidirectionnel, ça veut dire que le donateur doit attendre un peu avant de pouvoir donner à nouveau à la même personne. Bidirectionnel, ça veut dire que le délai s'applique entre le donateur et le receveur, ce qui les empêche de se remercier mutuellement avant que le temps ne soit écoulé.",
+      "unidirectional": "Unidirectionnel",
+      "bidirectional": "Bidirectionnel"
+    },
+    "maxMessageAge": {
+      "label": "Durée de vie max des messages (en minutes)",
+      "description": "Le temps max qu'un message peut avoir (en minutes) pour être pris en compte dans la réputation quand on y répond ou qu'on réagit."
+    },
+    "minMessages": {
+      "label": "Messages min.",
+      "description": "Les auteurs qui ont envoyé au moins ce nombre de messages dans le canal peuvent toujours avoir une réputation."
+    },
+    "donorContext": {
+      "label": "Le donneur doit être là",
+      "description": "Si cette option est activée, le donateur doit avoir envoyé au moins un des derniers messages dans le canal pour donner une réputation."
+    },
+    "receiverContext": {
+      "label": "Le destinataire doit être là.",
+      "description": "Si cette option est activée, le destinataire doit avoir envoyé au moins un des derniers messages du canal pour recevoir une réputation."
+    },
+    "givenLimit": {
+      "enabled": {
+        "label": "Activer la limite donnée"
+      },
+      "maxGiven": {
+        "label": "Max Given"
+      },
+      "maxGivenHours": {
+        "label": "Heures supplémentaires"
+      },
+      "description": "Limite la réputation qu'un utilisateur peut donner pendant une certaine période."
+    },
+    "receivedLimit": {
+      "enabled": {
+        "label": "Activer la limite de réception"
+      },
+      "maxReceived": {
+        "label": "Max reçu"
+      },
+      "maxReceivedHours": {
+        "label": "Heures supplémentaires"
+      },
+      "description": "Limite la réputation qu'un utilisateur peut gagner pendant une période donnée."
+    },
+    "maxMessageReputation": {
+      "label": "Réputation maximale des messages",
+      "description": "Le max de réputation qu'on peut donner dans un seul message via des mentions et des intégrations."
+    }
+  },
+  "announcements": {
+    "description": "Configure les messages envoyés quand les utilisateurs atteignent de nouveaux rangs.",
+    "active": {
+      "label": "Activer les annonces",
+      "description": "Si c'est activé, le bot enverra un message quand un utilisateur atteint un nouveau rang."
+    },
+    "sameChannel": {
+      "label": "Envoyer sur le même canal",
+      "description": "Si cette option est activée, l'annonce sera envoyée dans le canal où le passage au niveau supérieur a eu lieu. Sinon, elle sera envoyée au canal sélectionné."
+    },
+    "channel": {
+      "label": "Chaîne d'annonces",
+      "description": "Choisis le canal où les annonces de montée de niveau devraient être envoyées."
+    }
+  },
+  "autopost": {
+    "description": "Configure la publication automatique du classement sur une chaîne.",
+    "premiumRequired": "Publication automatique",
+    "active": {
+      "label": "Activer la publication automatique",
+      "description": "Active ou désactive la publication automatique du classement."
+    },
+    "channel": {
+      "label": "Chaîne de publication automatique",
+      "description": "Le canal où le classement devrait être posté."
+    },
+    "refreshInterval": {
+      "label": "Intervalle de rafraîchissement",
+      "description": "À quelle fréquence le classement devrait être mis à jour.",
+      "HOURLY": "À l'heure",
+      "DAILY": "Tous les jours",
+      "WEEKLY": "Chaque semaine",
+      "MONTHLY": "Mensuel"
+    },
+    "refreshType": {
+      "label": "Type de rafraîchissement",
+      "description": "Comment mettre à jour le message.",
+      "DELETE_AND_REPOST": "Supprimer et republier",
+      "REPOST": "Republier",
+      "UPDATE": "Mise à jour"
+    }
+  },
+  "messages": {
+    "description": "Configure les messages et les confirmations envoyés par le bot."
+  },
+  "logChannel": {
+    "premiumRequired": "Canal de journalisation",
+    "description": "Le canal de journalisation va contenir toutes les réputations données et reçues par un utilisateur.",
+    "active": {
+      "label": "Activer le canal de journalisation",
+      "description": "Activer ou désactiver l'enregistrement des changements de réputation."
+    },
+    "channel": {
+      "label": "Canal de journalisation",
+      "description": "Le canal où les changements de réputation devraient être enregistrés."
+    }
+  },
+  "setup": {
+    "title": "Configuration initiale",
+    "stepProgress": "Étape {current} de {total}",
+    "requiredStep": "Cette étape est nécessaire pour continuer.",
+    "navigation": {
+      "previous": "Précédent",
+      "next": "Suivant",
+      "finish": "Terminer la configuration"
+    },
+    "steps": {
+      "language": {
+        "title": "Choisis ta langue",
+        "description": "Choisis la langue que le bot utilisera pour les messages et les réponses sur ton serveur. La langue de l'interface utilisateur changera en fonction de ton choix."
+      },
+      "systemChannel": {
+        "title": "Chaîne système",
+        "description": "Choisis un canal où le bot enverra les messages et notifications importants du système.",
+        "required": "Tu dois choisir un canal système pour continuer l'installation."
+      },
+      "reputationTypes": {
+        "title": "Types de réputation",
+        "description": "Choisis les méthodes que les utilisateurs peuvent utiliser pour donner leur avis. Tu peux activer plusieurs types pour donner plus de flexibilité aux utilisateurs."
+      },
+      "reputationMode": {
+        "title": "Mode Réputation",
+        "description": "Choisis comment la réputation doit être calculée et affichée sur ton serveur."
+      },
+      "ranks": {
+        "title": "Classement de réputation",
+        "description": "Définis les rôles que les utilisateurs auront quand ils atteindront certains niveaux de réputation. Il faut au moins un rang.",
+        "required": "Tu dois définir au moins un rang de réputation pour continuer."
+      },
+      "channels": {
+        "title": "Chaînes et catégories",
+        "description": "Choisis les canaux et les catégories qui peuvent donner des évaluations. Il faut sélectionner au moins un canal ou une catégorie.",
+        "required": "Tu dois choisir au moins une chaîne ou une catégorie pour continuer (sauf si tu utilises le mode liste de refus)."
+      },
+      "thankwords": {
+        "title": "Remerciements",
+        "description": "Ajoute des mots ou des phrases que les utilisateurs peuvent utiliser pour donner leur avis. Ce sont les mots clés que le bot va reconnaître.",
+        "recommendation": "Pour démarrer vite, on te conseille de charger les mots de remerciement par défaut pour ta langue."
+      },
+      "announcements": {
+        "title": "Annonces",
+        "description": "Décide si le bot doit dire quand les utilisateurs atteignent de nouveaux niveaux de réputation."
+      },
+      "cooldown": {
+        "title": "Paramètres de temps de recharge",
+        "description": "Définis un délai d'attente pour éviter que les utilisateurs donnent trop souvent des réputations. Tu peux aussi activer l'option « délai d'attente unique » pour permettre aux utilisateurs de se remercier une seule fois."
+      },
+      "mainReaction": {
+        "title": "Réaction principale",
+        "description": "Choisis l'emoji qui sera utilisé comme réaction principale pour donner une réputation."
+      },
+      "roles": {
+        "title": "Les rôles du donneur et du receveur",
+        "description": "Tu peux choisir de définir quels rôles peuvent donner de la réputation (rôles de donateurs) et quels rôles peuvent en recevoir (rôles de receveurs)."
+      }
+    }
+  }
 }

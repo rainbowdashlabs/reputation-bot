@@ -1,25 +1,450 @@
 {
   "common": {
-    "save": "",
-    "cancel": "",
-    "delete": "",
-    "edit": "",
-    "close": "",
-    "confirm": "",
-    "loading": "",
-    "error": "",
-    "success": ""
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Apagar",
+    "edit": "Editar",
+    "change": "Mudança",
+    "clear": "Limpar",
+    "close": "Fechar",
+    "confirm": "Confirmar",
+    "loading": "Carregando...",
+    "error": "Erro",
+    "success": "Sucesso"
   },
   "navigation": {
-    "home": "",
-    "settings": "",
-    "profile": "",
-    "logout": ""
+    "home": "Página inicial",
+    "settings": "Configurações",
+    "presets": "Predefinições",
+    "setup": "Configuração",
+    "profile": "Perfil",
+    "logout": "Sair"
+  },
+  "presets": {
+    "title": "Predefinições",
+    "description": "Predefinições de configuração rápida para você começar com configurações comuns.",
+    "apply": "Inscreva-se",
+    "applying": "Aplicando...",
+    "applied": "A predefinição foi aplicada com sucesso!",
+    "simpleReputation": {
+      "title": "Sistema de Reputação Simples",
+      "description": "Quero um sistema de reputação simples, onde os usuários só possam dar reputação por meio de comandos, sem precisar ficar de olho em um monte de detalhes.",
+      "settings": "Essa predefinição desativará todos os tipos de reputação, exceto comandos, e desativará o rastreamento de contexto do doador e do receptor."
+    },
+    "thankOnce": {
+      "title": "Agradeça só uma vez",
+      "description": "Quero que os usuários possam agradecer uns aos outros só uma vez, evitando que a mesma pessoa receba várias vezes reputação.",
+      "settings": "Essa predefinição vai definir o tempo de recarga só uma vez e mudar a direção do tempo de recarga para unidirecional."
+    },
+    "noAbuse": {
+      "title": "Sem proteção contra abuso",
+      "description": "Quero desativar a proteção contra abusos baseada no contexto e permitir que os usuários deem reputação mais livremente, sem rastrear seu histórico de interações.",
+      "settings": "Essa configuração vai desativar o rastreamento de contexto tanto do doador quanto do receptor."
+    }
   },
   "settings": {
-    "title": "",
-    "general": "",
-    "reputation": "",
-    "messages": ""
+    "title": "Configurações",
+    "general": "Geral",
+    "reputation": "Reputação",
+    "messages": "Mensagens",
+    "profile": "Perfil",
+    "ranks": "Classificações",
+    "channels": "Canais",
+    "roles": "Funções",
+    "thankwords": "Agradecimentos",
+    "abuseProtection": "Proteção contra abusos",
+    "announcements": "Anúncios",
+    "autopost": "Postagem automática",
+    "logChannel": "Canal de registro",
+    "reactions": "Reações"
+  },
+  "locale": {
+    "language": "Idioma",
+    "selectLanguage": "Escolha o idioma"
+  },
+  "error": {
+    "noToken": {
+      "title": "Nenhuma sessão encontrada",
+      "message": "Você não tem um token de sessão válido.",
+      "instruction": "Crie uma nova sessão para acessar este aplicativo."
+    }
+  },
+  "premiumFeature": {
+    "title": "Recurso de Apoiador",
+    "requiredTier": "Nível de Apoiador necessário:",
+    "message": "{name} é só para quem é apoiador. Torne-se um apoiador para usar."
+  },
+  "profile": {
+    "description": "Personalize como o bot aparece e se comporta no seu servidor.",
+    "reset": "Redefinir",
+    "premiumRequired": "Personalização do perfil",
+    "localeOverridesRequired": {
+      "message": "O nome personalizado da reputação precisa da função de substituição de localidade."
+    },
+    "nickname": {
+      "label": "Apelido do bot",
+      "placeholder": "Digite o apelido do bot",
+      "description": "Defina um apelido personalizado para o bot neste servidor.",
+      "reset": "Redefinir apelido para o padrão"
+    },
+    "profilePicture": {
+      "label": "Foto do perfil",
+      "uploadButton": "Carregar imagem",
+      "uploading": "Carregando...",
+      "description": "Carregue uma foto de perfil personalizada para o bot (máximo de 2 MB, 512 x 512 pixels)",
+      "reset": "Redefinir foto do perfil para o padrão"
+    },
+    "reputationName": {
+      "label": "Nome da reputação",
+      "placeholder": "Digite um nome personalizado para a reputação (por exemplo, “Pontos”, “Karma”)",
+      "description": "Personalize o nome usado para reputação neste servidor.",
+      "reset": "Redefinir o nome da reputação para o padrão"
+    },
+    "tosNote": "Qualquer coisa que viole os Termos de Serviço do Discord ou a lei estadual não é permitida e pode resultar no bloqueio desse recurso para o servidor."
+  },
+  "general": {
+    "description": "Configure as configurações básicas do bot para este servidor.",
+    "language": {
+      "label": "Linguagem do bot",
+      "selectPlaceholder": "Escolha um idioma",
+      "description": "Escolha o idioma que o bot vai usar para mensagens e respostas neste servidor."
+    },
+    "systemChannel": {
+      "label": "Canal do sistema",
+      "selectPlaceholder": "Escolha um canal",
+      "description": "Escolha o canal onde o bot vai mandar mensagens do sistema e anúncios.",
+      "note": "Observação: esse canal deve ser configurado e deve ser um canal interno. Ele vai ter mensagens importantes sobre o serviço do bot e mensagens dos desenvolvedores."
+    },
+    "roleSelect": {
+      "searchPlaceholder": "Pesquisar funções...",
+      "noRolesFound": "Não foram encontradas funções"
+    },
+    "ranks": {
+      "description": "Configure as classificações de reputação e suas funções associadas.",
+      "stackRoles": {
+        "label": "Funções da pilha",
+        "description": "Se estiver ativado, todas as classificações aplicáveis serão atribuídas, em vez de apenas a classificação mais alta."
+      },
+      "addRank": "Adicionar nova classificação",
+      "reputationRequired": "Reputação necessária",
+      "roleAlreadyAdded": "Essa função já tem uma classificação.",
+      "reputationAlreadyUsed": "Esse valor de reputação já é usado por outra classificação.",
+      "noRanks": "Ainda não tem nenhuma classificação definida.",
+      "reputationPlaceholder": "por exemplo, 100"
+    },
+    "reputation": {
+      "description": "Configure como a reputação é calculada e quais recursos são ativados.",
+      "mode": {
+        "label": "Modo Reputação",
+        "description": "Escolha como a reputação é calculada e mostrada.",
+        "modes": {
+          "TOTAL": "Reputação total",
+          "ROLLING_WEEK": "Semana de rolagem",
+          "ROLLING_MONTH": "Mês contínuo",
+          "WEEK": "Esta semana",
+          "MONTH": "Este mês"
+        },
+        "descriptions": {
+          "TOTAL": "Use a reputação total que um usuário já recebeu.",
+          "ROLLING_WEEK": "Use a reputação recebida nos últimos 7 dias.",
+          "ROLLING_MONTH": "Use a reputação recebida nos últimos 30 dias.",
+          "WEEK": "Use a reputação recebida desde o início da semana atual.",
+          "MONTH": "Use a reputação recebida desde o início do mês atual."
+        }
+      },
+      "resetDate": {
+        "label": "Redefinir data",
+        "description": "A data em que a contagem da reputação será reiniciada. Defina uma data futura para agendar uma reinicialização.",
+        "set": "Definir data de reinicialização",
+        "clear": "Limpar Data de Reinicialização"
+      },
+      "types": {
+        "reaction": {
+          "label": "Reputação de reação",
+          "description": "Dê reputação quando uma reação específica for adicionada a uma mensagem.",
+          "confirmation": {
+            "label": "Confirmação da reação",
+            "description": "Manda uma mensagem de confirmação quando a reputação for dada por meio de reação."
+          }
+        },
+        "answer": {
+          "label": "Resposta Reputação",
+          "description": "Dê reputação quando a mensagem de um usuário for agradecida em uma resposta."
+        },
+        "mention": {
+          "label": "Reputação de menções",
+          "description": "Dê reputação quando um usuário for mencionado junto com uma palavra de agradecimento."
+        },
+        "fuzzy": {
+          "label": "Correspondência aproximada",
+          "description": "Dê reputação combinando palavras ao redor da palavra “obrigado” com nomes de usuários presentes no canal."
+        },
+        "embed": {
+          "label": "Incorporar reputação",
+          "description": "Manda uma lista com os usuários que estavam na última conversa se não der pra achar um alvo."
+        },
+        "direct": {
+          "label": "Reputação de incorporação direta",
+          "description": "Dá reputação automaticamente quando só um usuário estiver incluído na incorporação."
+        },
+        "command": {
+          "label": "Reputação de comando",
+          "description": "Dê reputação usando o comando /reputation.",
+          "ephemeral": {
+            "label": "Resposta efêmera",
+            "description": "Manda a resposta escondida para outros usuários quando der reputação por meio do comando."
+          }
+        }
+      }
+    },
+    "roles": {
+      "description": "Configure quais funções têm permissão para dar e receber reputação.",
+      "donor": {
+        "label": "Funções dos doadores",
+        "description": "Se estiver ativado, só os usuários com pelo menos uma dessas funções podem dar reputação."
+      },
+      "receiver": {
+        "label": "Funções do receptor",
+        "description": "Se estiver ativado, só os usuários com pelo menos uma dessas funções podem receber reputação."
+      },
+      "list": {
+        "label": "Funções selecionadas",
+        "description": "Escolha quais funções devem ser obrigatórias."
+      }
+    },
+    "channels": {
+      "description": "Configure onde o bot deve ou não estar ativo.",
+      "listType": {
+        "label": "Tipo de lista",
+        "description": "Escolha se os canais e categorias selecionados são permitidos ou negados.",
+        "allow": "Lista de permissões",
+        "deny": "Lista de recusas",
+        "premiumRequired": "Lista de recusas"
+      },
+      "list": {
+        "label": "Canais e categorias",
+        "description": "Escolha os canais e categorias que devem fazer parte da lista.",
+        "channels": "Canais",
+        "categories": "Categorias"
+      },
+      "premium": {
+        "channelLimitWarning": "A seleção de mais de {limit} canais é reservada para apoiadores. Torne-se um apoiador para usá-la.",
+        "categoryLimitWarning": "A seleção de mais de uma categori{limit}e é reservada aos apoiadores. Torne-se um apoiador para usá-la."
+      }
+    }
+  },
+  "reactions": {
+    "title": "Reações",
+    "description": "Configure os emojis usados para dar reputação.",
+    "main": {
+      "label": "Reação principal",
+      "description": "O emoji que vai ser usado como reação principal para dar reputação."
+    },
+    "additional": {
+      "label": "Reações adicionais",
+      "description": "Emojis extras que também podem ser usados pra dar reputação.",
+      "premiumRequired": "Reações adicionais",
+      "add": "Adicionar reação",
+      "none": "Nenhuma reação adicional configurada."
+    },
+    "picker": {
+      "search": "Pesquisar emojis...",
+      "guild": "Emojis do servidor",
+      "standard": "Emojis padrão",
+      "noResults": "Não foram encontrados emojis"
+    }
+  },
+  "thankwords": {
+    "title": "Agradecimentos",
+    "description": "Essas palavras vão ser usadas pra detectar quando alguém está sendo agradecido. Elas são interpretadas como Expressões Regulares.",
+    "add": "Adicionar Thankword",
+    "placeholder": "Digite a palavra-chave (Regex)",
+    "none": "Nenhuma palavra de agradecimento configurada.",
+    "invalidCharacter": "A palavra de agradecimento tem um caractere inválido: {char}",
+    "alreadyExists": "Essa palavra de agradecimento já existe.",
+    "defaults": {
+      "title": "Agradecimentos padrão",
+      "description": "Adicione rapidinho palavras de agradecimento padrão em vários idiomas.",
+      "add": "Adicionar padrões"
+    }
+  },
+  "abuseProtection": {
+    "description": "Configure limites e proteções para evitar o abuso de reputação.",
+    "cooldown": {
+      "label": "Tempo de espera (minutos)",
+      "description": "O tempo em minutos que precisa passar antes que os mesmos usuários possam agradecer uns aos outros de novo. 0 significa sem tempo de espera, -1 significa para sempre.",
+      "once": {
+        "label": "Recarga Uma vez",
+        "description": "Se estiver ativado, os usuários só podem agradecer uns aos outros uma vez para sempre.",
+        "activeDescription": "O tempo de espera é ativado uma vez. Os usuários só podem agradecer uns aos outros uma vez. A direção é definida como unidirecional."
+      }
+    },
+    "cooldownDirection": {
+      "label": "Direção do resfriamento",
+      "description": "Unidirecional quer dizer que o doador tem um tempo de espera antes de poder doar de novo para a mesma pessoa. Bidirecional quer dizer que o tempo de espera é entre o doador e o receptor, impedindo que eles troquem agradecimentos até que o tempo passe.",
+      "unidirectional": "Unidirecional",
+      "bidirectional": "Bidirecional"
+    },
+    "maxMessageAge": {
+      "label": "Idade máxima da mensagem (minutos)",
+      "description": "A idade máxima de uma mensagem (em minutos) para ser elegível para reputação quando respondida ou reagida."
+    },
+    "minMessages": {
+      "label": "Mensagens mínimas",
+      "description": "Autores com pelo menos esse número de mensagens no canal sempre podem receber reputação."
+    },
+    "donorContext": {
+      "label": "O doador precisa estar presente.",
+      "description": "Se estiver ativado, o doador precisa ter mandado pelo menos uma das últimas mensagens no canal para dar reputação."
+    },
+    "receiverContext": {
+      "label": "O destinatário precisa estar presente.",
+      "description": "Se estiver ativado, o receptor precisa ter enviado pelo menos uma das últimas mensagens no canal para receber reputação."
+    },
+    "givenLimit": {
+      "enabled": {
+        "label": "Ativar limite definido"
+      },
+      "maxGiven": {
+        "label": "Máximo permitido"
+      },
+      "maxGivenHours": {
+        "label": "Horas extras"
+      },
+      "description": "Limite a quantidade de reputação que um usuário pode dar num determinado período de tempo."
+    },
+    "receivedLimit": {
+      "enabled": {
+        "label": "Ativar limite recebido"
+      },
+      "maxReceived": {
+        "label": "Máximo recebido"
+      },
+      "maxReceivedHours": {
+        "label": "Horas extras"
+      },
+      "description": "Limite a quantidade de reputação que um usuário pode receber em um determinado período de tempo."
+    },
+    "maxMessageReputation": {
+      "label": "Reputação máxima da mensagem",
+      "description": "A quantidade máxima de reputação que pode ser dada em uma única mensagem por meio de menções e incorporações."
+    }
+  },
+  "announcements": {
+    "description": "Configure as mensagens enviadas quando os usuários alcançarem novas classificações.",
+    "active": {
+      "label": "Ativar anúncios",
+      "description": "Se estiver ativado, o bot vai mandar uma mensagem quando um usuário chegar a uma nova classificação."
+    },
+    "sameChannel": {
+      "label": "Enviar no mesmo canal",
+      "description": "Se estiver ativado, o anúncio vai ser enviado no canal onde o nível foi subido. Caso contrário, ele vai ser enviado para o canal selecionado."
+    },
+    "channel": {
+      "label": "Canal de anúncios",
+      "description": "Escolha o canal onde os avisos de subida de classificação devem ser enviados."
+    }
+  },
+  "autopost": {
+    "description": "Configure a publicação automática do quadro de líderes em um canal.",
+    "premiumRequired": "Postagem automática",
+    "active": {
+      "label": "Ativar publicação automática",
+      "description": "Ative ou desative a publicação automática do quadro de líderes."
+    },
+    "channel": {
+      "label": "Canal de postagem automática",
+      "description": "O canal onde a tabela de classificação deve ser publicada."
+    },
+    "refreshInterval": {
+      "label": "Intervalo de atualização",
+      "description": "Com que frequência o quadro de líderes deve ser atualizado.",
+      "HOURLY": "Por hora",
+      "DAILY": "Diariamente",
+      "WEEKLY": "Semanalmente",
+      "MONTHLY": "Mensal"
+    },
+    "refreshType": {
+      "label": "Tipo de atualização",
+      "description": "Como a publicação deve ser atualizada.",
+      "DELETE_AND_REPOST": "Apagar e publicar de novo",
+      "REPOST": "Repostar",
+      "UPDATE": "Atualização"
+    }
+  },
+  "messages": {
+    "description": "Configure as mensagens e confirmações enviadas pelo bot."
+  },
+  "logChannel": {
+    "premiumRequired": "Canal de registro",
+    "description": "O canal de registro vai ter todas as reputações dadas e recebidas por um usuário.",
+    "active": {
+      "label": "Ativar canal de registro",
+      "description": "Ative ou desative o registro das alterações de reputação."
+    },
+    "channel": {
+      "label": "Canal de registro",
+      "description": "O canal onde as mudanças de reputação devem ser registradas."
+    }
+  },
+  "setup": {
+    "title": "Configuração inicial",
+    "stepProgress": "Passo {current} de {total}",
+    "requiredStep": "Essa etapa é necessária para continuar.",
+    "navigation": {
+      "previous": "Anterior",
+      "next": "Próximo",
+      "finish": "Concluir configuração"
+    },
+    "steps": {
+      "language": {
+        "title": "Escolha o idioma",
+        "description": "Escolha o idioma que o bot vai usar para mensagens e respostas no seu servidor. O idioma da interface vai mudar de acordo com a sua escolha."
+      },
+      "systemChannel": {
+        "title": "Canal do sistema",
+        "description": "Escolha um canal onde o bot vai mandar mensagens e notificações importantes do sistema.",
+        "required": "Você precisa escolher um canal do sistema pra continuar com a configuração."
+      },
+      "reputationTypes": {
+        "title": "Tipos de reputação",
+        "description": "Escolha quais métodos os usuários podem usar para dar reputação. Você pode habilitar vários tipos para dar flexibilidade aos usuários."
+      },
+      "reputationMode": {
+        "title": "Modo Reputação",
+        "description": "Escolha como a reputação deve ser calculada e mostrada no seu servidor."
+      },
+      "ranks": {
+        "title": "Classificação de reputação",
+        "description": "Defina as funções que os usuários vão receber quando atingirem certos níveis de reputação. É preciso ter pelo menos uma classificação.",
+        "required": "Você precisa definir pelo menos uma classificação de reputação para continuar."
+      },
+      "channels": {
+        "title": "Canais e categorias",
+        "description": "Escolha quais canais e categorias devem permitir a atribuição de reputação. É preciso selecionar pelo menos um canal ou categoria.",
+        "required": "Você precisa escolher pelo menos um canal ou categoria para continuar (a menos que esteja usando o modo de lista de exclusão)."
+      },
+      "thankwords": {
+        "title": "Agradecimentos",
+        "description": "Adicione palavras ou frases que os usuários possam usar para dar reputação. Essas são as palavras-chave que o bot vai reconhecer.",
+        "recommendation": "A gente recomenda carregar as palavras padrão de agradecimento para o seu idioma pra começar rapidinho."
+      },
+      "announcements": {
+        "title": "Anúncios",
+        "description": "Configure se o bot deve anunciar quando os usuários alcançarem novos níveis de reputação."
+      },
+      "cooldown": {
+        "title": "Configurações de resfriamento",
+        "description": "Defina um tempo de espera pra evitar que os usuários deem reputação com muita frequência. Você também pode ativar a opção “tempo de espera único” pra permitir que os usuários agradeçam uns aos outros só uma vez."
+      },
+      "mainReaction": {
+        "title": "Reação principal",
+        "description": "Escolha o emoji que vai ser usado como reação principal para dar reputação."
+      },
+      "roles": {
+        "title": "Funções do doador e do receptor",
+        "description": "Opcionalmente, defina quais funções podem dar reputação (funções de doador) e quais funções podem receber reputação (funções de receptor)."
+      }
+    }
   }
 }

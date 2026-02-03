@@ -1,25 +1,450 @@
 {
   "common": {
-    "save": "",
-    "cancel": "",
-    "delete": "",
-    "edit": "",
-    "close": "",
-    "confirm": "",
-    "loading": "",
-    "error": "",
-    "success": ""
+    "save": "Spara",
+    "cancel": "Avbryt",
+    "delete": "Radera",
+    "edit": "Redigera",
+    "change": "Förändring",
+    "clear": "Tydligt",
+    "close": "Stäng",
+    "confirm": "Bekräfta",
+    "loading": "Laddar...",
+    "error": "Fel",
+    "success": "Framgång"
   },
   "navigation": {
-    "home": "",
-    "settings": "",
-    "profile": "",
-    "logout": ""
+    "home": "Hem",
+    "settings": "Inställningar",
+    "presets": "Förinställningar",
+    "setup": "Inställningar",
+    "profile": "Profil",
+    "logout": "Logga ut"
+  },
+  "presets": {
+    "title": "Förinställningar",
+    "description": "Snabba konfigurationsinställningar som hjälper dig att komma igång med vanliga inställningar.",
+    "apply": "Ansök",
+    "applying": "Ansöker...",
+    "applied": "Förinställningen har tillämpats!",
+    "simpleReputation": {
+      "title": "Enkelt rykte-system",
+      "description": "Jag vill ha ett enkelt rykte-system där användare endast kan ge rykte genom kommandon, utan någon komplex kontextuppföljning.",
+      "settings": "Denna förinställning inaktiverar alla typer av rykte utom kommandon och stänger av spårning av givare och mottagare."
+    },
+    "thankOnce": {
+      "title": "Tack bara en gång",
+      "description": "Jag vill att användarna ska kunna tacka varandra endast en gång, för att förhindra upprepade omdömen mellan samma användare.",
+      "settings": "Denna förinställning ställer in nedkylningstiden endast en gång och ändrar nedkylningsriktningen till enkelriktad."
+    },
+    "noAbuse": {
+      "title": "Inget skydd mot missbruk",
+      "description": "Jag vill inaktivera kontextbaserat missbruksskydd och låta användare ge omdömen mer fritt utan att spåra deras interaktionshistorik.",
+      "settings": "Denna förinställning inaktiverar både givar- och mottagarkontextspårning."
+    }
   },
   "settings": {
-    "title": "",
-    "general": "",
-    "reputation": "",
-    "messages": ""
+    "title": "Inställningar",
+    "general": "Allmänt",
+    "reputation": "Rykte",
+    "messages": "Meddelanden",
+    "profile": "Profil",
+    "ranks": "Rangordningar",
+    "channels": "Kanaler",
+    "roles": "Roller",
+    "thankwords": "Tackord",
+    "abuseProtection": "Skydd mot missbruk",
+    "announcements": "Meddelanden",
+    "autopost": "Autopost",
+    "logChannel": "Loggkanal",
+    "reactions": "Reaktioner"
+  },
+  "locale": {
+    "language": "Språk",
+    "selectLanguage": "Välj språk"
+  },
+  "error": {
+    "noToken": {
+      "title": "Ingen session hittades",
+      "message": "Du har inte ett giltigt sessionstoken.",
+      "instruction": "Skapa en ny session för att komma åt den här applikationen."
+    }
+  },
+  "premiumFeature": {
+    "title": "Supporterfunktion",
+    "requiredTier": "Krävd supporternivå:",
+    "message": "{name} är reserverad för supportrar. Bli supporter för att kunna använda den."
+  },
+  "profile": {
+    "description": "Anpassa hur boten visas och beter sig på din server.",
+    "reset": "Återställ",
+    "premiumRequired": "Profilanpassning",
+    "localeOverridesRequired": {
+      "message": "Anpassat ryktenamn kräver funktionen för lokala överskrivningar."
+    },
+    "nickname": {
+      "label": "Bot-smeknamn",
+      "placeholder": "Ange botens smeknamn",
+      "description": "Ange ett eget smeknamn för boten på denna server.",
+      "reset": "Återställ smeknamn till standard"
+    },
+    "profilePicture": {
+      "label": "Profilbild",
+      "uploadButton": "Ladda upp bild",
+      "uploading": "Laddar upp...",
+      "description": "Ladda upp en anpassad profilbild för boten (max 2 MB, 512 x 512 pixlar)",
+      "reset": "Återställ profilbilden till standard"
+    },
+    "reputationName": {
+      "label": "Rykte Namn",
+      "placeholder": "Ange ett eget namn för rykte (t.ex. \"Poäng\", \"Karma\")",
+      "description": "Anpassa namnet som används för rykte på denna server.",
+      "reset": "Återställ rykte till standardnamn"
+    },
+    "tosNote": "Allt som bryter mot Discords användarvillkor eller statlig lag är förbjudet och kan leda till att denna funktion blockeras för servern."
+  },
+  "general": {
+    "description": "Konfigurera botens grundinställningar för denna server.",
+    "language": {
+      "label": "Bot-språk",
+      "selectPlaceholder": "Välj språk",
+      "description": "Välj vilket språk boten ska använda för meddelanden och svar på denna server."
+    },
+    "systemChannel": {
+      "label": "Systemkanal",
+      "selectPlaceholder": "Välj en kanal",
+      "description": "Välj den kanal där boten ska skicka systemmeddelanden och tillkännagivanden.",
+      "note": "Obs: Denna kanal ska ställas in och ska vara en intern kanal. Den kommer att innehålla viktiga meddelanden om botens tjänst och meddelanden från utvecklarna."
+    },
+    "roleSelect": {
+      "searchPlaceholder": "Sök roller...",
+      "noRolesFound": "Inga roller hittades"
+    },
+    "ranks": {
+      "description": "Konfigurera reputationsrankningarna och deras tillhörande roller.",
+      "stackRoles": {
+        "label": "Stackroller",
+        "description": "Om denna funktion är aktiverad tilldelas alla tillämpliga rangordningar istället för endast den högsta rangordningen."
+      },
+      "addRank": "Lägg till ny rang",
+      "reputationRequired": "Krävd rykte",
+      "roleAlreadyAdded": "Denna roll har redan en rang.",
+      "reputationAlreadyUsed": "Detta ryktevärde används redan av en annan rang.",
+      "noRanks": "Inga rankningar har konfigurerats ännu.",
+      "reputationPlaceholder": "t.ex. 100"
+    },
+    "reputation": {
+      "description": "Konfigurera hur omdömet beräknas och vilka funktioner som är aktiverade.",
+      "mode": {
+        "label": "Ryktesläge",
+        "description": "Välj hur omdömet ska beräknas och visas.",
+        "modes": {
+          "TOTAL": "Total anseende",
+          "ROLLING_WEEK": "Rullningsvecka",
+          "ROLLING_MONTH": "Rullande månad",
+          "WEEK": "Denna vecka",
+          "MONTH": "Denna månad"
+        },
+        "descriptions": {
+          "TOTAL": "Använd den totala reputationen som en användare någonsin har fått.",
+          "ROLLING_WEEK": "Använd ryktet som erhållits under de senaste 7 dagarna.",
+          "ROLLING_MONTH": "Använd ryktet som erhållits under de senaste 30 dagarna.",
+          "WEEK": "Använd det rykte som erhållits sedan början av den aktuella veckan.",
+          "MONTH": "Använd det rykte som erhållits sedan början av innevarande månad."
+        }
+      },
+      "resetDate": {
+        "label": "Återställ datum",
+        "description": "Datum då omdömen återställs. Ange ett datum i framtiden för att schemalägga en återställning.",
+        "set": "Ställ in återställningsdatum",
+        "clear": "Rensa återställningsdatum"
+      },
+      "types": {
+        "reaction": {
+          "label": "Reaktionsrykte",
+          "description": "Ge rykte när en specifik reaktion läggs till ett meddelande.",
+          "confirmation": {
+            "label": "Reaktionsbekräftelse",
+            "description": "Skicka ett bekräftelsemeddelande när omdöme ges via reaktion."
+          }
+        },
+        "answer": {
+          "label": "Svar Ryktbarhet",
+          "description": "Ge rykte när en användares meddelande tackas i ett svar."
+        },
+        "mention": {
+          "label": "Omnämnande Ryktbarhet",
+          "description": "Ge rykte när en användare nämns tillsammans med ett tackord."
+        },
+        "fuzzy": {
+          "label": "Fuzzy-matchning",
+          "description": "Ge rykte genom att matcha ord runt ordet \"tack\" med användarnamn som finns i kanalen."
+        },
+        "embed": {
+          "label": "Bädda in rykte",
+          "description": "Skicka en inbäddad lista över användare som var med i den senaste konversationen om inget mål kan fastställas."
+        },
+        "direct": {
+          "label": "Direkt inbäddning av rykte",
+          "description": "Ge automatiskt rykte när endast en användare skulle ingå i inbäddningen."
+        },
+        "command": {
+          "label": "Kommandots rykte",
+          "description": "Ge rykte via kommandot /reputation.",
+          "ephemeral": {
+            "label": "Flyktig respons",
+            "description": "Skicka svaret dolt till andra användare när du ger omdöme via kommando."
+          }
+        }
+      }
+    },
+    "roles": {
+      "description": "Konfigurera vilka roller som får ge och ta emot omdömen.",
+      "donor": {
+        "label": "Donatorernas roller",
+        "description": "Om denna funktion är aktiverad kan endast användare med minst en av dessa roller ge omdömen."
+      },
+      "receiver": {
+        "label": "Mottagarens roller",
+        "description": "Om denna funktion är aktiverad kan endast användare med minst en av dessa roller få rykte."
+      },
+      "list": {
+        "label": "Utvalda roller",
+        "description": "Välj vilka roller som ska krävas."
+      }
+    },
+    "channels": {
+      "description": "Konfigurera var boten ska vara aktiv och var den inte ska vara aktiv.",
+      "listType": {
+        "label": "Listtyp",
+        "description": "Välj om de valda kanalerna och kategorierna ska tillåtas eller nekas.",
+        "allow": "Tillåt lista",
+        "deny": "Spärrlista",
+        "premiumRequired": "Spärrlista"
+      },
+      "list": {
+        "label": "Kanaler och kategorier",
+        "description": "Välj kanaler och kategorier som ska ingå i listan.",
+        "channels": "Kanaler",
+        "categories": "Kategorier"
+      },
+      "premium": {
+        "channelLimitWarning": "Att välja fler än {limit} kanaler är reserverat för supportrar. Bli supporter för att kunna använda det.",
+        "categoryLimitWarning": "Att välja fler än {limit} kategorier är reserverat för supportrar. Bli supporter för att kunna använda det."
+      }
+    }
+  },
+  "reactions": {
+    "title": "Reaktioner",
+    "description": "Konfigurera de emojis som används för att ge omdömen.",
+    "main": {
+      "label": "Huvudreaktion",
+      "description": "Den emoji som kommer att användas som primär reaktion för att ge omdöme."
+    },
+    "additional": {
+      "label": "Ytterligare reaktioner",
+      "description": "Ytterligare emojis som också kan användas för att ge rykte.",
+      "premiumRequired": "Ytterligare reaktioner",
+      "add": "Lägg till reaktion",
+      "none": "Inga ytterligare reaktioner konfigurerade."
+    },
+    "picker": {
+      "search": "Sök efter emojis...",
+      "guild": "Server-emojis",
+      "standard": "Standardemojis",
+      "noResults": "Inga emojis hittades"
+    }
+  },
+  "thankwords": {
+    "title": "Tackord",
+    "description": "Dessa ord kommer att användas för att upptäcka när någon tackas. De tolkas som reguljära uttryck.",
+    "add": "Lägg till Thankword",
+    "placeholder": "Ange tackord (Regex)",
+    "none": "Inga tackord konfigurerade.",
+    "invalidCharacter": "Tackordet innehåller ett ogiltigt tecken: {char}",
+    "alreadyExists": "Detta tackord finns redan.",
+    "defaults": {
+      "title": "Standard tackord",
+      "description": "Lägg snabbt till standardtackord för olika språk.",
+      "add": "Lägg till standardvärden"
+    }
+  },
+  "abuseProtection": {
+    "description": "Konfigurera begränsningar och skydd för att förhindra missbruk av rykte.",
+    "cooldown": {
+      "label": "Avkylning (minuter)",
+      "description": "Den tid i minuter som måste gå innan samma användare kan tacka varandra igen. 0 betyder ingen nedkylning, -1 betyder för alltid.",
+      "once": {
+        "label": "Avkylning En gång",
+        "description": "Om funktionen är aktiverad kan användarna bara tacka varandra en gång för alltid.",
+        "activeDescription": "Cooldown är aktiv. Användare kan bara tacka varandra en gång. Riktningen är inställd på enkelriktad."
+      }
+    },
+    "cooldownDirection": {
+      "label": "Avkylningsriktning",
+      "description": "Envägs innebär att givaren har en cooldown på att ge till samma person. Tvåvägs innebär att cooldown gäller mellan givaren och mottagaren, vilket förhindrar dem från att tacka varandra fram och tillbaka tills tiden har gått.",
+      "unidirectional": "Envägs",
+      "bidirectional": "Dubbelriktad"
+    },
+    "maxMessageAge": {
+      "label": "Maximal meddelandeålder (minuter)",
+      "description": "Den maximala åldern för ett meddelande (i minuter) för att vara berättigat till omdöme när det besvaras eller reageras på."
+    },
+    "minMessages": {
+      "label": "Min meddelanden",
+      "description": "Författare med minst detta antal meddelanden i kanalen är alltid berättigade att få rykte."
+    },
+    "donorContext": {
+      "label": "Donatorn måste vara närvarande",
+      "description": "Om funktionen är aktiverad måste donatorn ha skickat minst ett av de senaste meddelandena i kanalen för att ge rykte."
+    },
+    "receiverContext": {
+      "label": "Mottagaren måste vara närvarande",
+      "description": "Om funktionen är aktiverad måste mottagaren ha skickat minst ett av de senaste meddelandena i kanalen för att få ett omdöme."
+    },
+    "givenLimit": {
+      "enabled": {
+        "label": "Aktivera given gräns"
+      },
+      "maxGiven": {
+        "label": "Max Given"
+      },
+      "maxGivenHours": {
+        "label": "Övertid"
+      },
+      "description": "Begränsa hur mycket rykte en användare kan ge inom en viss tidsram."
+    },
+    "receivedLimit": {
+      "enabled": {
+        "label": "Aktivera mottagningsgräns"
+      },
+      "maxReceived": {
+        "label": "Max mottaget"
+      },
+      "maxReceivedHours": {
+        "label": "Övertid"
+      },
+      "description": "Begränsa hur mycket rykte en användare kan få inom en viss tidsram."
+    },
+    "maxMessageReputation": {
+      "label": "Maximal meddelandereputation",
+      "description": "Det maximala antalet poäng som kan ges i ett enda meddelande via omnämnanden och inbäddningar."
+    }
+  },
+  "announcements": {
+    "description": "Konfigurera meddelanden som skickas när användare når nya rankningar.",
+    "active": {
+      "label": "Aktivera meddelanden",
+      "description": "Om funktionen är aktiverad skickar boten ett meddelande när en användare når en ny rang."
+    },
+    "sameChannel": {
+      "label": "Skicka i samma kanal",
+      "description": "Om funktionen är aktiverad skickas meddelandet till den kanal där nivån höjdes. Annars skickas det till den valda kanalen."
+    },
+    "channel": {
+      "label": "Meddelandekanal",
+      "description": "Välj den kanal där meddelanden om rankningsuppgångar ska skickas."
+    }
+  },
+  "autopost": {
+    "description": "Konfigurera automatisk publicering av leaderboarden till en kanal.",
+    "premiumRequired": "Autopost",
+    "active": {
+      "label": "Aktivera automatisk publicering",
+      "description": "Aktivera eller inaktivera automatisk publicering på resultattavlan."
+    },
+    "channel": {
+      "label": "Autopost-kanal",
+      "description": "Kanalen där topplistan ska publiceras."
+    },
+    "refreshInterval": {
+      "label": "Uppdateringsintervall",
+      "description": "Hur ofta leaderboarden ska uppdateras.",
+      "HOURLY": "Per timme",
+      "DAILY": "Dagligen",
+      "WEEKLY": "Veckovis",
+      "MONTHLY": "Månadsvis"
+    },
+    "refreshType": {
+      "label": "Uppdateringstyp",
+      "description": "Hur inlägget ska uppdateras.",
+      "DELETE_AND_REPOST": "Radera och lägg upp igen",
+      "REPOST": "Repost",
+      "UPDATE": "Uppdatering"
+    }
+  },
+  "messages": {
+    "description": "Konfigurera meddelanden och bekräftelser som skickas av boten."
+  },
+  "logChannel": {
+    "premiumRequired": "Loggkanal",
+    "description": "Loggkanalen kommer att innehålla alla omdömen som ges och tas från en användare.",
+    "active": {
+      "label": "Aktivera loggkanal",
+      "description": "Aktivera eller inaktivera loggning av förändringar i rykte."
+    },
+    "channel": {
+      "label": "Loggkanal",
+      "description": "Kanalen där förändringar i rykte ska loggas."
+    }
+  },
+  "setup": {
+    "title": "Initial installation",
+    "stepProgress": "Steg {current} av {total}",
+    "requiredStep": "Detta steg krävs för att fortsätta",
+    "navigation": {
+      "previous": "Föregående",
+      "next": "Nästa",
+      "finish": "Avsluta inställningen"
+    },
+    "steps": {
+      "language": {
+        "title": "Välj språk",
+        "description": "Välj vilket språk botten ska använda för meddelanden och svar på din server. Frontend-språket ändras så att det matchar ditt val."
+      },
+      "systemChannel": {
+        "title": "Systemkanal",
+        "description": "Välj en kanal där boten ska skicka viktiga systemmeddelanden och aviseringar.",
+        "required": "Du måste välja en systemkanal för att fortsätta med installationen."
+      },
+      "reputationTypes": {
+        "title": "Typer av rykte",
+        "description": "Välj vilka metoder användarna kan använda för att ge omdömen. Du kan aktivera flera typer för att ge användarna flexibilitet."
+      },
+      "reputationMode": {
+        "title": "Ryktesläge",
+        "description": "Välj hur rykte ska beräknas och visas på din server."
+      },
+      "ranks": {
+        "title": "Ryktesrankning",
+        "description": "Definiera roller som användarna får när de når vissa reputationsnivåer. Minst en rang krävs.",
+        "required": "Du måste definiera minst en rykteklass för att kunna fortsätta."
+      },
+      "channels": {
+        "title": "Kanaler och kategorier",
+        "description": "Välj vilka kanaler och kategorier som ska tillåta omdömen. Minst en kanal eller kategori måste väljas.",
+        "required": "Du måste välja minst en kanal eller kategori för att fortsätta (om du inte använder läget för avvisningslista)."
+      },
+      "thankwords": {
+        "title": "Tackord",
+        "description": "Lägg till ord eller fraser som användarna kan använda för att ge omdömen. Det här är de utlösande ord som boten kommer att känna igen.",
+        "recommendation": "Vi rekommenderar att du laddar standardtackorden för ditt språk för att komma igång snabbt."
+      },
+      "announcements": {
+        "title": "Meddelanden",
+        "description": "Konfigurera om botten ska meddela när användare når nya rykte-rankningar."
+      },
+      "cooldown": {
+        "title": "Inställningar för nedkylning",
+        "description": "Ställ in en avkylningsperiod för att förhindra att användare ger omdömen för ofta. Du kan också aktivera \"avkylning en gång\" för att tillåta användare att tacka varandra endast en gång."
+      },
+      "mainReaction": {
+        "title": "Huvudreaktion",
+        "description": "Välj den emoji som ska användas som huvudsaklig reaktion för att ge omdömen."
+      },
+      "roles": {
+        "title": "Donator- och mottagarens roller",
+        "description": "Du kan också definiera vilka roller som kan ge rykte (givarroller) och vilka roller som kan få rykte (mottagarroller)."
+      }
+    }
   }
 }

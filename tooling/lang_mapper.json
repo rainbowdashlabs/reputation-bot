@@ -1,6 +1,9 @@
 {
   "es_ES": "ES",
+  "es-ES": "ES",
   "NO": "NB",
   "sv_SE": "SV",
-  "zh_CN": "ZH-HANS"
+  "sv-SE": "SV",
+  "zh_CN": "ZH-HANS",
+  "zh-CN": "ZH-HANS"
 }

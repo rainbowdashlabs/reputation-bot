@@ -1,25 +1,450 @@
 {
   "common": {
-    "save": "",
-    "cancel": "",
-    "delete": "",
-    "edit": "",
-    "close": "",
-    "confirm": "",
-    "loading": "",
-    "error": "",
-    "success": ""
+    "save": "保存",
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "edit": "編集",
+    "change": "変更",
+    "clear": "クリア",
+    "close": "閉じる",
+    "confirm": "確認する",
+    "loading": "読み込み中...",
+    "error": "エラー",
+    "success": "成功"
   },
   "navigation": {
-    "home": "",
-    "settings": "",
-    "profile": "",
-    "logout": ""
+    "home": "ホーム",
+    "settings": "設定",
+    "presets": "プリセット",
+    "setup": "設定",
+    "profile": "プロフィール",
+    "logout": "ログアウト"
+  },
+  "presets": {
+    "title": "プリセット",
+    "description": "一般的な設定を始めるためのクイック設定プリセットだ。",
+    "apply": "応募する",
+    "applying": "申請中だ。",
+    "applied": "プリセットが正常に適用された！",
+    "simpleReputation": {
+      "title": "シンプルな評価システム",
+      "description": "ユーザーがコマンドを通じてのみ評価を与えられる、複雑な状況追跡を伴わないシンプルな評価システムが欲しい。",
+      "settings": "このプリセットは、コマンド以外のすべての評判タイプを無効化し、寄付者と受取人のコンテキスト追跡を停止する。"
+    },
+    "thankOnce": {
+      "title": "一度だけ感謝する",
+      "description": "ユーザー同士が互いに感謝できるのは一度だけとし、同じユーザー間で繰り返し評価を与えることを防ぎたい。",
+      "settings": "このプリセットはクールダウンを一度だけ設定し、クールダウンの方向を単方向に変更する。"
+    },
+    "noAbuse": {
+      "title": "虐待防止",
+      "description": "文脈に基づく不正利用防止機能を無効化し、ユーザーのインタラクション履歴を追跡せずに、より自由に評価を与えられるようにしたい。",
+      "settings": "このプリセットは、ドナーとレシーバーの両方のコンテキスト追跡を無効にする。"
+    }
   },
   "settings": {
-    "title": "",
-    "general": "",
-    "reputation": "",
-    "messages": ""
+    "title": "設定",
+    "general": "一般",
+    "reputation": "評判",
+    "messages": "メッセージ",
+    "profile": "プロフィール",
+    "ranks": "階級",
+    "channels": "チャンネル",
+    "roles": "役割",
+    "thankwords": "謝辞",
+    "abuseProtection": "虐待防止",
+    "announcements": "お知らせ",
+    "autopost": "自動投稿",
+    "logChannel": "ログチャネル",
+    "reactions": "反応"
+  },
+  "locale": {
+    "language": "言語",
+    "selectLanguage": "言語を選択"
+  },
+  "error": {
+    "noToken": {
+      "title": "セッションが見つかりませんでした",
+      "message": "有効なセッショントークンを持っていない。",
+      "instruction": "このアプリケーションにアクセスするには、新しいセッションを作成してください。"
+    }
+  },
+  "premiumFeature": {
+    "title": "サポーター特集",
+    "requiredTier": "必要なサポーターのレベル：",
+    "message": "{name} サポーター専用だ。利用するにはサポーターになれ。"
+  },
+  "profile": {
+    "description": "サーバー内でボットの外観や動作をカスタマイズする。",
+    "reset": "リセット",
+    "premiumRequired": "プロフィールカスタマイズ",
+    "localeOverridesRequired": {
+      "message": "カスタム評判名にはロケール上書き機能が必要だ。"
+    },
+    "nickname": {
+      "label": "ボットのニックネーム",
+      "placeholder": "ボットのニックネームを入力せよ",
+      "description": "このサーバーでボットにカスタムニックネームを設定する。",
+      "reset": "ニックネームをデフォルトに戻す"
+    },
+    "profilePicture": {
+      "label": "プロフィール写真",
+      "uploadButton": "画像をアップロードする",
+      "uploading": "アップロード中だ。",
+      "description": "ボット用のカスタムプロフィール画像をアップロードする（最大2MB、512x512ピクセル）",
+      "reset": "プロフィール画像をデフォルトに戻す"
+    },
+    "reputationName": {
+      "label": "評判名",
+      "placeholder": "カスタムの評判名を入力せよ（例：『ポイント』、『カルマ』）",
+      "description": "このサーバーで評判に使用される名前をカスタマイズする。",
+      "reset": "評判名をデフォルトに戻す"
+    },
+    "tosNote": "Discordの利用規約や州法に違反する行為は一切認められず、サーバーでこの機能が利用できなくなる可能性がある。"
+  },
+  "general": {
+    "description": "このサーバー用のボットの基本設定を行う。",
+    "language": {
+      "label": "ボット言語",
+      "selectPlaceholder": "言語を選択せよ",
+      "description": "このサーバーでボットがメッセージや応答に使用する言語を選択せよ。"
+    },
+    "systemChannel": {
+      "label": "システムチャンネル",
+      "selectPlaceholder": "チャンネルを選択せよ",
+      "description": "ボットがシステムメッセージや告知を送信するチャンネルを選択せよ。",
+      "note": "注：このチャンネルは設定済みであるべきであり、内部チャンネルであるべきだ。ボットのサービスに関する重要なメッセージや開発者からのメッセージが含まれる。"
+    },
+    "roleSelect": {
+      "searchPlaceholder": "役職を検索する...",
+      "noRolesFound": "見つかりませんでした"
+    },
+    "ranks": {
+      "description": "評判ランクとその関連する役割を設定する。",
+      "stackRoles": {
+        "label": "スタックの役割",
+        "description": "有効にすると、適用可能な全てのランクが割り当てられる。最高ランクのみではなく。"
+      },
+      "addRank": "新しいランクを追加する",
+      "reputationRequired": "必要な評判",
+      "roleAlreadyAdded": "この役職には既に階級が付いている。",
+      "reputationAlreadyUsed": "この評価値は既に別のランクで使用されている。",
+      "noRanks": "まだランクは設定されていない。",
+      "reputationPlaceholder": "例：100"
+    },
+    "reputation": {
+      "description": "評判の計算方法と有効にする機能を設定する。",
+      "mode": {
+        "label": "評判モード",
+        "description": "評判の計算方法と表示方法を選択する。",
+        "modes": {
+          "TOTAL": "総評価",
+          "ROLLING_WEEK": "ローリング・ウィーク",
+          "ROLLING_MONTH": "ローリング・マンス",
+          "WEEK": "今週",
+          "MONTH": "今月"
+        },
+        "descriptions": {
+          "TOTAL": "ユーザーがこれまでに受けた総評価点を使用する。",
+          "ROLLING_WEEK": "過去7日間に受け取った評価を利用する。",
+          "ROLLING_MONTH": "過去30日間に受け取った評価を利用する。",
+          "WEEK": "今週の初めから受け取った評価点を使う。",
+          "MONTH": "今月の初めから受け取った評価を使う。"
+        }
+      },
+      "resetDate": {
+        "label": "日付をリセットする",
+        "description": "評判がカウントされる日付がリセットされる。将来の日付を設定してリセットをスケジュールする。",
+        "set": "リセット日を設定する",
+        "clear": "リセット日クリア"
+      },
+      "types": {
+        "reaction": {
+          "label": "反応評価",
+          "description": "特定のリアクションがメッセージに追加された時に評価を与える。",
+          "confirmation": {
+            "label": "反応確認",
+            "description": "リアクションで評価が与えられた際に確認メッセージを送る。"
+          }
+        },
+        "answer": {
+          "label": "回答評価",
+          "description": "ユーザーが回答で感謝された場合、そのユーザーに評価を与える。"
+        },
+        "mention": {
+          "label": "評判について言及する",
+          "description": "ユーザーが言及された際に、感謝の言葉と共に評価を与える。"
+        },
+        "fuzzy": {
+          "label": "ファジーマッチング",
+          "description": "チャンネル内のユーザー名に、感謝の言葉の周囲にある単語を一致させて評価を与える。"
+        },
+        "embed": {
+          "label": "評判を埋め込む",
+          "description": "対象を特定できない場合、直近の会話に参加していたユーザーの一覧を埋め込みで送信する。"
+        },
+        "direct": {
+          "label": "直接埋め込み評価",
+          "description": "埋め込みに1人のユーザーしか含まれない場合、自動的に評価を与える。"
+        },
+        "command": {
+          "label": "コマンド評価",
+          "description": "/reputation コマンドで評価を与える。",
+          "ephemeral": {
+            "label": "一時的な反応",
+            "description": "コマンドで評価を与える際、他のユーザーには見えないように応答を送る。"
+          }
+        }
+      }
+    },
+    "roles": {
+      "description": "どの役割が評価を与えたり受け取ったりできるかを設定する。",
+      "donor": {
+        "label": "寄付者の役割",
+        "description": "有効にすると、これらの役割のいずれか一つ以上を持つユーザーのみが評価を与えられる。"
+      },
+      "receiver": {
+        "label": "受信者の役割",
+        "description": "有効にすると、これらの役割のいずれか一つ以上を持つユーザーのみが評価を受け取れる。"
+      },
+      "list": {
+        "label": "選ばれた役割",
+        "description": "どの役割を必須とするかを選択せよ。"
+      }
+    },
+    "channels": {
+      "description": "ボットが活動すべき場所とすべきでない場所を設定する。",
+      "listType": {
+        "label": "リストの種類",
+        "description": "選択したチャンネルとカテゴリを許可するか拒否するかを選択する。",
+        "allow": "許可リスト",
+        "deny": "拒否リスト",
+        "premiumRequired": "拒否リスト"
+      },
+      "list": {
+        "label": "チャンネルとカテゴリー",
+        "description": "リストに含めるべきチャンネルとカテゴリを選択せよ。",
+        "channels": "チャンネル",
+        "categories": "カテゴリ"
+      },
+      "premium": {
+        "channelLimitWarning": "{limit}以上のチャンネルを選択するのはサポーター専用だ。それを使いたいならサポーターになれ。",
+        "categoryLimitWarning": "{limit}以上のカテゴリを選択するのはサポーター専用だ。利用するにはサポーターになれ。"
+      }
+    }
+  },
+  "reactions": {
+    "title": "反応",
+    "description": "評価を与える際に使用する絵文字を設定する。",
+    "main": {
+      "label": "主反応",
+      "description": "評価を与える際の主な反応として使われる絵文字だ。"
+    },
+    "additional": {
+      "label": "追加の反応",
+      "description": "評価を与えるために使える追加の絵文字。",
+      "premiumRequired": "追加の反応",
+      "add": "リアクションを追加する",
+      "none": "追加の反応は設定されていない。"
+    },
+    "picker": {
+      "search": "絵文字を検索する…",
+      "guild": "サーバー絵文字",
+      "standard": "標準絵文字",
+      "noResults": "絵文字が見つからない"
+    }
+  },
+  "thankwords": {
+    "title": "謝辞",
+    "description": "これらの言葉は、誰かが感謝されている場合を検出するために使われる。これらは正規表現として解釈される。",
+    "add": "サンクワードを追加する",
+    "placeholder": "thankwordを入力せよ（正規表現）",
+    "none": "感謝の言葉は設定されていない。",
+    "invalidCharacter": "この感謝の言葉には無効な文字が含まれている：{char}",
+    "alreadyExists": "この感謝の言葉は既に存在する。",
+    "defaults": {
+      "title": "デフォルトの謝辞",
+      "description": "様々な言語のデフォルトの感謝の言葉を素早く追加する。",
+      "add": "デフォルトを追加する"
+    }
+  },
+  "abuseProtection": {
+    "description": "評判の悪用を防ぐために制限と保護を設定する。",
+    "cooldown": {
+      "label": "クールダウン（分）",
+      "description": "同じユーザー同士が再び感謝し合うまでに必要な時間（分単位）。0はクールダウンなし、-1は永久に制限されることを意味する。",
+      "once": {
+        "label": "クールダウンは一度だけだ",
+        "description": "有効にすると、ユーザーは互いに一度だけ感謝できる。",
+        "activeDescription": "クールダウンが一度発動する。ユーザーは互いに一度だけ感謝できる。方向は一方向性に設定される。"
+      }
+    },
+    "cooldownDirection": {
+      "label": "クールダウンの方向",
+      "description": "一方向とは、寄付者が同じ人物に寄付する際にクールダウンが発生することを意味する。双方向とは、クールダウンが寄付者と受取人の間で発生し、時間が経過するまで互いに感謝し合うことを妨げることを意味する。",
+      "unidirectional": "一方向性",
+      "bidirectional": "双方向"
+    },
+    "maxMessageAge": {
+      "label": "最大メッセージ保存期間（分）",
+      "description": "メッセージが回答またはリアクションを受けた際に評価の対象となる最大経過時間（分単位）。"
+    },
+    "minMessages": {
+      "label": "最小メッセージ数",
+      "description": "このチャンネルで少なくともこれだけのメッセージを投稿した作者は、常に評価を受け取る資格がある。"
+    },
+    "donorContext": {
+      "label": "提供者は必ず立ち会う必要がある。",
+      "description": "有効化されている場合、レピュテーションを与えるには、ドナーがチャンネル内で直近のメッセージの少なくとも1つを送信している必要がある。"
+    },
+    "receiverContext": {
+      "label": "受信機は設置されていなければならない",
+      "description": "有効化されている場合、受信者は評判値を受け取るために、そのチャンネルで送信された直近のメッセージのうち少なくとも1通を送信している必要がある。"
+    },
+    "givenLimit": {
+      "enabled": {
+        "label": "指定された制限を有効にする"
+      },
+      "maxGiven": {
+        "label": "マックス・ギブン"
+      },
+      "maxGivenHours": {
+        "label": "時間外"
+      },
+      "description": "ユーザーが一定期間内に与えられる評価の量を制限する。"
+    },
+    "receivedLimit": {
+      "enabled": {
+        "label": "受信制限を有効にする"
+      },
+      "maxReceived": {
+        "label": "最大受信量"
+      },
+      "maxReceivedHours": {
+        "label": "時間外"
+      },
+      "description": "ユーザーが一定期間内に獲得できる評価ポイントの上限を設定する。"
+    },
+    "maxMessageReputation": {
+      "label": "最大メッセージ評価",
+      "description": "メンションや埋め込みを通じて、1つのメッセージで付与できるレピュテーションの最大量。"
+    }
+  },
+  "announcements": {
+    "description": "ユーザーが新しいランクに到達した際に送信されるメッセージを設定する。",
+    "active": {
+      "label": "通知を有効にする",
+      "description": "有効にすると、ユーザーが新しいランクに到達した際にボットがメッセージを送信する。"
+    },
+    "sameChannel": {
+      "label": "同じチャンネルで送信する",
+      "description": "有効にすると、レベルアップが発生したチャンネルに通知が送信される。そうでない場合は、選択したチャンネルに送信される。"
+    },
+    "channel": {
+      "label": "告知チャンネル",
+      "description": "ランクアップの通知を送信するチャンネルを選択せよ。"
+    }
+  },
+  "autopost": {
+    "description": "リーダーボードをチャンネルに自動投稿するように設定する。",
+    "premiumRequired": "自動投稿",
+    "active": {
+      "label": "自動投稿を有効にする",
+      "description": "自動リーダーボード投稿を有効または無効にする。"
+    },
+    "channel": {
+      "label": "自動投稿チャンネル",
+      "description": "リーダーボードを掲載すべきチャンネル。"
+    },
+    "refreshInterval": {
+      "label": "更新間隔",
+      "description": "リーダーボードの更新頻度はどれくらいか。",
+      "HOURLY": "時間単位",
+      "DAILY": "毎日",
+      "WEEKLY": "週刊",
+      "MONTHLY": "月次"
+    },
+    "refreshType": {
+      "label": "更新タイプ",
+      "description": "投稿をどのように更新すべきか。",
+      "DELETE_AND_REPOST": "削除して再投稿する",
+      "REPOST": "再投稿",
+      "UPDATE": "更新"
+    }
+  },
+  "messages": {
+    "description": "ボットが送信するメッセージと確認を構成する。"
+  },
+  "logChannel": {
+    "premiumRequired": "ログチャネル",
+    "description": "ログチャネルには、ユーザーに対して与えられた評価と受け取った評価の全てが含まれる。",
+    "active": {
+      "label": "ログチャネルを有効にする",
+      "description": "評判の変化の記録を有効または無効にする。"
+    },
+    "channel": {
+      "label": "ログチャネル",
+      "description": "評判の変更を記録すべきチャネル。"
+    }
+  },
+  "setup": {
+    "title": "初期設定",
+    "stepProgress": "ステップ{current}/{total}",
+    "requiredStep": "この手順は続行するために必要だ",
+    "navigation": {
+      "previous": "前回",
+      "next": "次",
+      "finish": "設定を完了する"
+    },
+    "steps": {
+      "language": {
+        "title": "言語を選択",
+        "description": "サーバー内でボットがメッセージや応答に使用する言語を選択する。フロントエンドの言語は選択内容に合わせて変更される。"
+      },
+      "systemChannel": {
+        "title": "システムチャンネル",
+        "description": "ボットが重要なシステムメッセージや通知を送信するチャンネルを選択せよ。",
+        "required": "セットアップを続けるには、システムチャンネルを選択しなければならない。"
+      },
+      "reputationTypes": {
+        "title": "評判の種類",
+        "description": "ユーザーが評価を付ける方法を選択する。複数のタイプを有効にすることで、ユーザーに柔軟性を与えられる。"
+      },
+      "reputationMode": {
+        "title": "評判モード",
+        "description": "サーバー内で評判をどのように計算し表示するかを設定する。"
+      },
+      "ranks": {
+        "title": "評判ランク",
+        "description": "ユーザーが特定の評判レベルに達した際に付与される役割を定義する。少なくとも1つのランクが必要だ。",
+        "required": "少なくとも1つの評価ランクを定義しないと先に進めない。"
+      },
+      "channels": {
+        "title": "チャンネルとカテゴリー",
+        "description": "評判を付けられるチャンネルとカテゴリを選択せよ。少なくとも1つのチャンネルまたはカテゴリを選択しなければならない。",
+        "required": "少なくとも1つのチャンネルまたはカテゴリを選択しないと続行できない（拒否リストモードを使用している場合を除く）。"
+      },
+      "thankwords": {
+        "title": "謝辞",
+        "description": "ユーザーが評価を与える際に使用できる単語やフレーズを追加する。これらはボットが認識するトリガーワードとなる。",
+        "recommendation": "素早く始めるには、お使いの言語のデフォルトの感謝の言葉をロードすることをお勧めする。"
+      },
+      "announcements": {
+        "title": "お知らせ",
+        "description": "ユーザーが新しいレピュテーションランクに到達した際に、ボットが通知するかどうかを設定する。"
+      },
+      "cooldown": {
+        "title": "クールダウン設定",
+        "description": "ユーザーが頻繁に評価を与えないように、クールダウン期間を設定する。また「クールダウンを1回のみ有効化」を有効にすれば、ユーザー同士が互いに感謝を伝えられるのは1回だけになる。"
+      },
+      "mainReaction": {
+        "title": "主反応",
+        "description": "評価を与える際のメインのリアクションとして使う絵文字を選べ。"
+      },
+      "roles": {
+        "title": "提供者と受取人の役割",
+        "description": "任意で、どの役割が評価を与えられるか（ドナー役割）、どの役割が評価を受け取れるか（レシーバー役割）を定義する。"
+      }
+    }
   }
 }

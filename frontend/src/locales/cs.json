@@ -1,25 +1,450 @@
 {
   "common": {
-    "save": "",
-    "cancel": "",
-    "delete": "",
-    "edit": "",
-    "close": "",
-    "confirm": "",
-    "loading": "",
-    "error": "",
-    "success": ""
+    "save": "Uložit",
+    "cancel": "Zrušit",
+    "delete": "Smazat",
+    "edit": "Upravit",
+    "change": "Změna",
+    "clear": "Jasné",
+    "close": "Zavřít",
+    "confirm": "Potvrdit",
+    "loading": "Načítání...",
+    "error": "Chyba",
+    "success": "Úspěch"
   },
   "navigation": {
-    "home": "",
-    "settings": "",
-    "profile": "",
-    "logout": ""
+    "home": "Domů",
+    "settings": "Nastavení",
+    "presets": "Předvolby",
+    "setup": "Nastavení",
+    "profile": "Profil",
+    "logout": "Odhlásit se"
+  },
+  "presets": {
+    "title": "Předvolby",
+    "description": "Rychlé konfigurační předvolby, které vám pomohou začít s běžnými nastaveními.",
+    "apply": "Použít",
+    "applying": "Aplikace...",
+    "applied": "Předvolba byla úspěšně použita!",
+    "simpleReputation": {
+      "title": "Jednoduchý systém hodnocení",
+      "description": "Chci jednoduchý systém hodnocení, ve kterém mohou uživatelé udělovat hodnocení pouze pomocí příkazů, bez složitého sledování kontextu.",
+      "settings": "Toto přednastavení zakáže všechny typy reputace kromě příkazů a vypne sledování kontextu dárce a příjemce."
+    },
+    "thankOnce": {
+      "title": "Děkuji jen jednou",
+      "description": "Chci, aby si uživatelé mohli poděkovat pouze jednou, čímž se zabrání opakovanému udělování reputace mezi stejnými uživateli.",
+      "settings": "Toto přednastavení nastaví cooldown pouze jednou a změní směr cooldownu na jednosměrný."
+    },
+    "noAbuse": {
+      "title": "Žádná ochrana proti zneužívání",
+      "description": "Chci deaktivovat ochranu proti zneužívání založenou na kontextu a umožnit uživatelům volněji udělovat reputaci bez sledování jejich historie interakcí.",
+      "settings": "Toto přednastavení zakáže sledování kontextu dárce i příjemce."
+    }
   },
   "settings": {
-    "title": "",
-    "general": "",
-    "reputation": "",
-    "messages": ""
+    "title": "Nastavení",
+    "general": "Obecné",
+    "reputation": "Reputace",
+    "messages": "Zprávy",
+    "profile": "Profil",
+    "ranks": "Hodnosti",
+    "channels": "Kanály",
+    "roles": "Role",
+    "thankwords": "Poděkování",
+    "abuseProtection": "Ochrana před zneužíváním",
+    "announcements": "Oznámení",
+    "autopost": "Automatické zveřejnění",
+    "logChannel": "Kanál protokolu",
+    "reactions": "Reakce"
+  },
+  "locale": {
+    "language": "Jazyk",
+    "selectLanguage": "Vyberte jazyk"
+  },
+  "error": {
+    "noToken": {
+      "title": "Nenalezena žádná relace",
+      "message": "Nemáte platný token relace.",
+      "instruction": "Vytvořte prosím novou relaci, abyste mohli přistupovat k této aplikaci."
+    }
+  },
+  "premiumFeature": {
+    "title": "Funkce pro příznivce",
+    "requiredTier": "Požadovaná úroveň podpory:",
+    "message": "{name} je vyhrazeno pro příznivce. Staňte se příznivcem a můžete jej používat."
+  },
+  "profile": {
+    "description": "Přizpůsobte vzhled a chování bota na vašem serveru.",
+    "reset": "Resetovat",
+    "premiumRequired": "Přizpůsobení profilu",
+    "localeOverridesRequired": {
+      "message": "Vlastní název reputace vyžaduje funkci přepsání locale."
+    },
+    "nickname": {
+      "label": "Přezdívka bota",
+      "placeholder": "Zadejte přezdívku bota",
+      "description": "Nastavte vlastní přezdívku pro bota na tomto serveru.",
+      "reset": "Obnovit přezdívku na výchozí hodnotu"
+    },
+    "profilePicture": {
+      "label": "Profilový obrázek",
+      "uploadButton": "Nahrát obrázek",
+      "uploading": "Nahrávání...",
+      "description": "Nahrajte vlastní profilový obrázek pro bota (max. 2 MB, 512 x 512 pixelů)",
+      "reset": "Obnovit profilový obrázek na výchozí nastavení"
+    },
+    "reputationName": {
+      "label": "Reputace Jméno",
+      "placeholder": "Zadejte vlastní název reputace (např. „Body“, „Karma“).",
+      "description": "Přizpůsobte si jméno používané pro reputaci na tomto serveru.",
+      "reset": "Obnovit výchozí název reputace"
+    },
+    "tosNote": "Cokoli, co porušuje podmínky služby Discord nebo státní zákony, není povoleno a může vést k zablokování této funkce pro server."
+  },
+  "general": {
+    "description": "Nakonfigurujte základní nastavení bota pro tento server.",
+    "language": {
+      "label": "Jazyk bota",
+      "selectPlaceholder": "Vyberte jazyk",
+      "description": "Vyberte jazyk, který bude bot používat pro zprávy a odpovědi na tomto serveru."
+    },
+    "systemChannel": {
+      "label": "Systémový kanál",
+      "selectPlaceholder": "Vyberte kanál",
+      "description": "Vyberte kanál, na který bude bot odesílat systémové zprávy a oznámení.",
+      "note": "Poznámka: Tento kanál by měl být nastaven a měl by být interním kanálem. Bude obsahovat důležité zprávy týkající se služeb bota a zprávy od vývojářů."
+    },
+    "roleSelect": {
+      "searchPlaceholder": "Hledat role...",
+      "noRolesFound": "Nebyly nalezeny žádné role"
+    },
+    "ranks": {
+      "description": "Nakonfigurujte hodnocení reputace a s ním spojené role.",
+      "stackRoles": {
+        "label": "Role stacku",
+        "description": "Pokud je tato možnost povolena, budou přiřazeny všechny příslušné hodnosti namísto pouze nejvyšší hodnosti."
+      },
+      "addRank": "Přidat nové hodnocení",
+      "reputationRequired": "Požadovaná reputace",
+      "roleAlreadyAdded": "Tato role již má hodnost.",
+      "reputationAlreadyUsed": "Tato hodnota reputace je již používána jiným hodnocením.",
+      "noRanks": "Zatím nejsou nakonfigurovány žádné hodnosti.",
+      "reputationPlaceholder": "např. 100"
+    },
+    "reputation": {
+      "description": "Nakonfigurujte způsob výpočtu reputace a povolené funkce.",
+      "mode": {
+        "label": "Režim reputace",
+        "description": "Vyberte, jak se bude reputace počítat a zobrazovat.",
+        "modes": {
+          "TOTAL": "Celková reputace",
+          "ROLLING_WEEK": "Rolling Week",
+          "ROLLING_MONTH": "Rolling Month",
+          "WEEK": "Tento týden",
+          "MONTH": "Tento měsíc"
+        },
+        "descriptions": {
+          "TOTAL": "Použijte celkovou reputaci, kterou uživatel kdy získal.",
+          "ROLLING_WEEK": "Použijte reputaci získanou za posledních 7 dní.",
+          "ROLLING_MONTH": "Použijte reputaci získanou za posledních 30 dní.",
+          "WEEK": "Použijte reputaci získanou od začátku aktuálního týdne.",
+          "MONTH": "Použijte reputaci získanou od začátku aktuálního měsíce."
+        }
+      },
+      "resetDate": {
+        "label": "Resetovat datum",
+        "description": "Datum, kdy bude reputace resetována. Nastavte datum v budoucnosti, abyste naplánovali reset.",
+        "set": "Nastavit datum resetování",
+        "clear": "Vymazat datum resetování"
+      },
+      "types": {
+        "reaction": {
+          "label": "Reakce Reputace",
+          "description": "Udělte reputaci, když je ke zprávě přidána konkrétní reakce.",
+          "confirmation": {
+            "label": "Potvrzení reakce",
+            "description": "Odeslat potvrzovací zprávu, když je reputace udělena prostřednictvím reakce."
+          }
+        },
+        "answer": {
+          "label": "Odpověď Reputace",
+          "description": "Udělte reputaci, když je uživateli poděkováno za jeho zprávu v odpovědi."
+        },
+        "mention": {
+          "label": "Zmínka o reputaci",
+          "description": "Udělejte reputaci, když je uživatel zmíněn spolu s poděkováním."
+        },
+        "fuzzy": {
+          "label": "Fuzzy shoda",
+          "description": "Přidělte reputaci tak, že spojíte slova kolem slova „děkuji“ s uživatelskými jmény přítomnými v kanálu."
+        },
+        "embed": {
+          "label": "Vložit reputaci",
+          "description": "Pokud nelze určit cíl, odešlete vložený seznam uživatelů přítomných v poslední konverzaci."
+        },
+        "direct": {
+          "label": "Přímé vložení reputace",
+          "description": "Automaticky udělit reputaci, pokud by vložený obsah obsahoval pouze jednoho uživatele."
+        },
+        "command": {
+          "label": "Reputace velitele",
+          "description": "Udělejte reputaci pomocí příkazu /reputation.",
+          "ephemeral": {
+            "label": "Pomíjivá reakce",
+            "description": "Při udělování reputace pomocí příkazu odešlete odpověď skrytou ostatním uživatelům."
+          }
+        }
+      }
+    },
+    "roles": {
+      "description": "Nakonfigurujte, které role mohou udělovat a přijímat reputaci.",
+      "donor": {
+        "label": "Role dárců",
+        "description": "Pokud je tato možnost povolena, mohou udělovat reputaci pouze uživatelé, kteří mají alespoň jednu z těchto rolí."
+      },
+      "receiver": {
+        "label": "Role příjemce",
+        "description": "Pokud je tato možnost povolena, mohou reputaci získat pouze uživatelé, kteří mají alespoň jednu z těchto rolí."
+      },
+      "list": {
+        "label": "Vybrané role",
+        "description": "Vyberte, které role by měly být povinné."
+      }
+    },
+    "channels": {
+      "description": "Nakonfigurujte, kde má být bot aktivní a kde ne.",
+      "listType": {
+        "label": "Typ seznamu",
+        "description": "Vyberte, zda budou vybrané kanály a kategorie povoleny nebo zakázány.",
+        "allow": "Seznam povolených položek",
+        "deny": "Seznam odmítnutých",
+        "premiumRequired": "Seznam odmítnutých"
+      },
+      "list": {
+        "label": "Kanály a kategorie",
+        "description": "Vyberte kanály a kategorie, které by měly být součástí seznamu.",
+        "channels": "Kanály",
+        "categories": "Kategorie"
+      },
+      "premium": {
+        "channelLimitWarning": "Výběr více než {limit} kanálů je vyhrazen pro podporovatele. Staňte se podporovatelem, abyste jej mohli používat.",
+        "categoryLimitWarning": "Výběr více než {limit} kategorií je vyhrazen pro podporovatele. Staňte se podporovatelem, abyste tuto funkci mohli využívat."
+      }
+    }
+  },
+  "reactions": {
+    "title": "Reakce",
+    "description": "Nakonfigurujte emodži používané pro udělování reputace.",
+    "main": {
+      "label": "Hlavní reakce",
+      "description": "Emoji, které bude použito jako primární reakce pro udělování reputace."
+    },
+    "additional": {
+      "label": "Další reakce",
+      "description": "Další emodži, které lze také použít k vyjádření reputace.",
+      "premiumRequired": "Další reakce",
+      "add": "Přidat reakci",
+      "none": "Nejsou nakonfigurovány žádné další reakce."
+    },
+    "picker": {
+      "search": "Hledat emodži...",
+      "guild": "Emoji serveru",
+      "standard": "Standardní emodži",
+      "noResults": "Nebyly nalezeny žádné emodži."
+    }
+  },
+  "thankwords": {
+    "title": "Poděkování",
+    "description": "Tato slova budou použita k detekci situací, kdy je někomu děkováno. Jsou interpretována jako regulární výrazy.",
+    "add": "Přidat poděkování",
+    "placeholder": "Zadejte thankword (Regex)",
+    "none": "Nejsou nakonfigurována žádná slova díků.",
+    "invalidCharacter": "Poděkování obsahuje neplatný znak: {char}",
+    "alreadyExists": "Toto poděkování již existuje.",
+    "defaults": {
+      "title": "Výchozí poděkování",
+      "description": "Rychle přidejte výchozí poděkování pro různé jazyky.",
+      "add": "Přidat výchozí nastavení"
+    }
+  },
+  "abuseProtection": {
+    "description": "Nakonfigurujte limity a ochrany, abyste zabránili zneužití reputace.",
+    "cooldown": {
+      "label": "Doba ochlazení (minuty)",
+      "description": "Čas v minutách, který musí uplynout, než si stejní uživatelé mohou znovu poděkovat. 0 znamená žádný časový limit, -1 znamená navždy.",
+      "once": {
+        "label": "Cooldown Jednou",
+        "description": "Pokud je tato funkce povolena, uživatelé si mohou navzájem poděkovat pouze jednou za celou dobu.",
+        "activeDescription": "Cooldown je aktivní. Uživatelé si mohou poděkovat pouze jednou. Směr je nastaven na jednosměrný."
+      }
+    },
+    "cooldownDirection": {
+      "label": "Směr ochlazování",
+      "description": "Jednosměrný znamená, že dárce má časový limit na darování stejné osobě. Obousměrný znamená, že časový limit je mezi dárcem a příjemcem, což jim brání v tom, aby si navzájem děkovali, dokud čas neuplyne.",
+      "unidirectional": "Jednosměrný",
+      "bidirectional": "Obousměrný"
+    },
+    "maxMessageAge": {
+      "label": "Maximální stáří zprávy (minuty)",
+      "description": "Maximální stáří zprávy (v minutách), aby byla způsobilá pro reputaci, když na ni někdo odpoví nebo na ni zareaguje."
+    },
+    "minMessages": {
+      "label": "Minimální počet zpráv",
+      "description": "Autoři, kteří mají v kanálu alespoň tento počet zpráv, mají vždy nárok na získání reputace."
+    },
+    "donorContext": {
+      "label": "Dárce musí být přítomen",
+      "description": "Pokud je tato funkce povolena, musí dárce odeslat alespoň jednu z posledních zpráv v kanálu, aby mohl udělit reputaci."
+    },
+    "receiverContext": {
+      "label": "Příjemce musí být přítomen",
+      "description": "Pokud je tato funkce povolena, musí příjemce odeslat alespoň jednu z posledních zpráv v kanálu, aby získal reputaci."
+    },
+    "givenLimit": {
+      "enabled": {
+        "label": "Povolit daný limit"
+      },
+      "maxGiven": {
+        "label": "Max Given"
+      },
+      "maxGivenHours": {
+        "label": "Nadčas"
+      },
+      "description": "Omezte, kolik reputace může uživatel udělit v určitém časovém období."
+    },
+    "receivedLimit": {
+      "enabled": {
+        "label": "Povolit limit přijatých dat"
+      },
+      "maxReceived": {
+        "label": "Maximální přijatá částka"
+      },
+      "maxReceivedHours": {
+        "label": "Nadčas"
+      },
+      "description": "Omezte množství reputace, které může uživatel získat v určitém časovém období."
+    },
+    "maxMessageReputation": {
+      "label": "Maximální počet zpráv Reputace",
+      "description": "Maximální množství reputace, které lze udělit v jedné zprávě prostřednictvím zmínek a vložení."
+    }
+  },
+  "announcements": {
+    "description": "Nakonfigurujte zprávy odesílané, když uživatelé dosáhnou nových hodností.",
+    "active": {
+      "label": "Povolit oznámení",
+      "description": "Pokud je tato funkce povolena, bot odešle zprávu, když uživatel dosáhne nové hodnosti."
+    },
+    "sameChannel": {
+      "label": "Odeslat ve stejném kanálu",
+      "description": "Pokud je tato funkce povolena, oznámení bude odesláno do kanálu, ve kterém došlo ke zvýšení úrovně. V opačném případě bude odesláno do vybraného kanálu."
+    },
+    "channel": {
+      "label": "Oznamovací kanál",
+      "description": "Vyberte kanál, na který mají být zasílány oznámení o postupu v žebříčku."
+    }
+  },
+  "autopost": {
+    "description": "Nakonfigurujte automatické zveřejňování žebříčku na kanálu.",
+    "premiumRequired": "Automatické zveřejnění",
+    "active": {
+      "label": "Povolit automatické zveřejňování",
+      "description": "Povolit nebo zakázat automatické zveřejňování výsledků v žebříčku."
+    },
+    "channel": {
+      "label": "Kanál automatického zveřejňování příspěvků",
+      "description": "Kanál, na kterém by měl být zveřejněn žebříček."
+    },
+    "refreshInterval": {
+      "label": "Interval obnovení",
+      "description": "Jak často by se mělo žebříček aktualizovat.",
+      "HOURLY": "Hodinově",
+      "DAILY": "Denně",
+      "WEEKLY": "Týdenní",
+      "MONTHLY": "Měsíční"
+    },
+    "refreshType": {
+      "label": "Typ obnovení",
+      "description": "Jak by měl být příspěvek aktualizován.",
+      "DELETE_AND_REPOST": "Smazat a znovu zveřejnit",
+      "REPOST": "Repost",
+      "UPDATE": "Aktualizace"
+    }
+  },
+  "messages": {
+    "description": "Nakonfigurujte zprávy a potvrzení odesílané botem."
+  },
+  "logChannel": {
+    "premiumRequired": "Kanál protokolu",
+    "description": "Kanál protokolu bude obsahovat všechny reputace udělené a odebrané uživateli.",
+    "active": {
+      "label": "Povolit protokolovací kanál",
+      "description": "Povolit nebo zakázat protokolování změn reputace."
+    },
+    "channel": {
+      "label": "Kanál protokolu",
+      "description": "Kanál, na kterém by měly být zaznamenány změny reputace."
+    }
+  },
+  "setup": {
+    "title": "Počáteční nastavení",
+    "stepProgress": "Krok {current} z {total}",
+    "requiredStep": "Tento krok je nutný pro pokračování.",
+    "navigation": {
+      "previous": "Předchozí",
+      "next": "Další",
+      "finish": "Dokončit nastavení"
+    },
+    "steps": {
+      "language": {
+        "title": "Vyberte jazyk",
+        "description": "Vyberte jazyk, který bude bot používat pro zprávy a odpovědi na vašem serveru. Jazyk rozhraní se změní podle vašeho výběru."
+      },
+      "systemChannel": {
+        "title": "Systémový kanál",
+        "description": "Vyberte kanál, na který bude bot odesílat důležité systémové zprávy a oznámení.",
+        "required": "Abyste mohli pokračovat v nastavení, musíte vybrat systémový kanál."
+      },
+      "reputationTypes": {
+        "title": "Typy reputace",
+        "description": "Vyberte metody, které mohou uživatelé použít k udělení reputace. Můžete povolit více typů, abyste uživatelům poskytli flexibilitu."
+      },
+      "reputationMode": {
+        "title": "Režim reputace",
+        "description": "Vyberte, jak se má reputace na vašem serveru počítat a zobrazovat."
+      },
+      "ranks": {
+        "title": "Hodnocení reputace",
+        "description": "Definujte role, které uživatelé získají, když dosáhnou určité úrovně reputace. Je vyžadována alespoň jedna úroveň.",
+        "required": "Abyste mohli pokračovat, musíte definovat alespoň jednu reputační úroveň."
+      },
+      "channels": {
+        "title": "Kanály a kategorie",
+        "description": "Vyberte kanály a kategorie, které mají umožňovat udělování reputace. Je nutné vybrat alespoň jeden kanál nebo kategorii.",
+        "required": "Abyste mohli pokračovat, musíte vybrat alespoň jeden kanál nebo kategorii (pokud nepoužíváte režim seznamu zakázaných položek)."
+      },
+      "thankwords": {
+        "title": "Poděkování",
+        "description": "Přidejte slova nebo fráze, které mohou uživatelé použít k udělení reputace. Jedná se o spouštěcí slova, která bot rozpozná.",
+        "recommendation": "Pro rychlý start doporučujeme načíst výchozí poděkování pro váš jazyk."
+      },
+      "announcements": {
+        "title": "Oznámení",
+        "description": "Nastavte, zda má bot oznámit, když uživatelé dosáhnou nové úrovně reputace."
+      },
+      "cooldown": {
+        "title": "Nastavení ochlazování",
+        "description": "Nastavte dobu ochlazení, aby uživatelé nemohli udělovat reputaci příliš často. Můžete také povolit „jednorázové ochlazení“, aby si uživatelé mohli poděkovat pouze jednou."
+      },
+      "mainReaction": {
+        "title": "Hlavní reakce",
+        "description": "Vyberte emoji, které bude použito jako hlavní reakce pro udělování reputace."
+      },
+      "roles": {
+        "title": "Role dárce a příjemce",
+        "description": "Volitelně definujte, které role mohou udělovat reputaci (role dárců) a které role mohou reputaci přijímat (role příjemců)."
+      }
+    }
   }
 }

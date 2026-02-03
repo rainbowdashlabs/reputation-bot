@@ -46,11 +46,17 @@ jobs:
     - name: Install dependencies
       run: pip install pipenv && pipenv install
 
-    - name: Run translation script
+    - name: Translate Backend
       env:
         DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
       run: |
-        pipenv run python tooling/translate.py locale EN-US ./src/main/resources/
+        ./tooling/translate-backend.sh
+
+    - name: Translate Frontend
+      env:
+        DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
+      run: |
+        ./tooling/translate-frontend.sh
 
     - name: Check for changes
       id: check_changes
