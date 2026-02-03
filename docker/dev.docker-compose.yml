@@ -30,12 +30,14 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
+    ports:
+      - 8888:8888
     networks:
       - repbot
     profiles:
       - app
     volumes:
-      - ./config/:/app/config/
+      - ../config/config.json/:/app/config/config.json
 
 volumes:
   database:

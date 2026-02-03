@@ -33,6 +33,8 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.slf4j.Logger;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import java.util.Set;
 
@@ -84,14 +86,24 @@ public class Web {
                              config.bundledPlugins.enableCors(cors -> {
                                  cors.addRule(CorsPluginConfig.CorsRule::anyHost);
                              });
-                             config.staticFiles.add("/static", io.javalin.http.staticfiles.Location.CLASSPATH);
+                             // Serve static files from external "public" directory when available; fall back to classpath
+                             var publicDir = Path.of("public");
+                             if (Files.isDirectory(publicDir)) {
+                                 config.staticFiles.add(publicDir.toString(), io.javalin.http.staticfiles.Location.EXTERNAL);
+                             } else {
+                                 config.staticFiles.add("/static", io.javalin.http.staticfiles.Location.CLASSPATH);
+                             }
                              config.router.apiBuilder(() -> new Api(sessionService, data.metrics(), bot.hub(), bot.localization()).init());
                              config.router.mount(router -> {
                                  router.beforeMatched(this::handleAccess);
                              });
                              config.jsonMapper(jacksonMapper());
                              // Serve frontend SPA
-                             config.spaRoot.addFile("/", "/static/index.html", io.javalin.http.staticfiles.Location.CLASSPATH);
+                             if (Files.isDirectory(publicDir)) {
+                                 config.spaRoot.addFile("/", publicDir.resolve("index.html").toString(), io.javalin.http.staticfiles.Location.EXTERNAL);
+                             } else {
+                                 config.spaRoot.addFile("/", "/static/index.html", io.javalin.http.staticfiles.Location.CLASSPATH);
+                             }
                          })
                          .start(api.host(), api.port());
         // Handle specific PremiumFeatureException with detailed JSON
