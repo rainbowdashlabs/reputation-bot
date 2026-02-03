@@ -55,7 +55,7 @@ const updateLanguage = async () => {
         <label class="label">{{ t('general.language.label') }}</label>
         <select
             v-model="language"
-            class="input"
+            class="select"
             @change="updateLanguage"
         >
           <option value="" disabled>{{ t('general.language.selectPlaceholder') }}</option>

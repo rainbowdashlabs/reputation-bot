@@ -29,7 +29,7 @@ const settingsSections = [
       <div class="flex min-h-screen">
         <!-- Sidebar - Full height, stretches from top to bottom -->
         <aside class="w-64 shrink-0">
-          <nav class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 top-24 ml-4 min-h-[calc(100vh-8rem)] transition-colors">
+          <nav class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 top-24 ml-4 transition-colors">
             <ul class="space-y-1">
               <li v-for="section in settingsSections" :key="section.key">
                 <router-link

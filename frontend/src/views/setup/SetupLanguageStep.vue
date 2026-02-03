@@ -80,7 +80,7 @@ const updateLanguage = async () => {
       </label>
       <select
         v-model="language"
-        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+        class="select"
         @change="updateLanguage"
       >
         <option value="" disabled>{{ t('general.language.selectPlaceholder') }}</option>

@@ -40,7 +40,7 @@ watch(session, (newSession) => {
     <!-- Premium Feature Warning for Profile -->
     <PremiumFeatureWarning
         v-if="!isProfileUnlocked"
-        :message="t('profile.premiumRequired.message')"
+        :feature-name="t('profile.premiumRequired')"
         :required-skus="profileRequiredSkus"
         variant="large"
     />

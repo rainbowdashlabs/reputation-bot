@@ -1,25 +1,2 @@
 {
-  "common": {
-    "save": "",
-    "cancel": "",
-    "delete": "",
-    "edit": "",
-    "close": "",
-    "confirm": "",
-    "loading": "",
-    "error": "",
-    "success": ""
-  },
-  "navigation": {
-    "home": "",
-    "settings": "",
-    "profile": "",
-    "logout": ""
-  },
-  "settings": {
-    "title": "",
-    "general": "",
-    "reputation": "",
-    "messages": ""
-  }
 }

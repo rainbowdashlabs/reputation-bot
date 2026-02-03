@@ -34,7 +34,7 @@ const updateWhitelist = async (value: boolean) => {
 
     <PremiumFeatureWarning
         v-if="!isChannelBlacklistUnlocked"
-        :message="t('general.channels.listType.premiumRequired')"
+        :feature-name="t('general.channels.listType.premiumRequired')"
         :required-skus="premiumFeatures?.channelBlacklist?.requiredSkus"
         variant="small"
     />

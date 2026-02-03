@@ -76,7 +76,7 @@ const isGuildEmoji = (val: string) => {
 
     <div v-if="!isPremium" class="mb-4">
       <PremiumFeatureWarning
-          :message="t('reactions.additional.premiumRequired')"
+          :feature-name="t('reactions.additional.premiumRequired')"
           :requiredSkus="requiredSkus"
           variant="small"
       />

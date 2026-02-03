@@ -27,7 +27,7 @@ const isLogChannelActive = computed(() => {
   <SettingsContainer :title="t('settings.logChannel')" :description="t('logChannel.description')">
     <PremiumFeatureWarning
       v-if="!isLogChannelUnlocked"
-      :message="t('logChannel.premiumRequired.message')"
+      :feature-name="t('logChannel.premiumRequired')"
       :required-skus="logChannelRequiredSkus"
       variant="large"
     />

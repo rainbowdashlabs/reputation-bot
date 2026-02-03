@@ -29,7 +29,7 @@ const isAutopostActive = computed(() => {
   <SettingsContainer :title="t('settings.autopost')" :description="t('autopost.description')">
     <PremiumFeatureWarning
       v-if="!isAutopostUnlocked"
-      :message="t('autopost.premiumRequired.message')"
+      :feature-name="t('autopost.premiumRequired')"
       :required-skus="autopostRequiredSkus"
       variant="large"
     />

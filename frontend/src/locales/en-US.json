@@ -69,14 +69,15 @@
       "instruction": "Please create a new session to access this application."
     }
   },
+  "premiumFeature": {
+    "title": "Supporter Feature",
+    "requiredTier": "Required Supporter Tier:",
+    "message": "{name} is reserved for supporters. Become a supporter to use it."
+  },
   "profile": {
     "description": "Customize how the bot appears and behaves in your server.",
     "reset": "Reset",
-    "premiumRequired": {
-      "title": "Supporter Feature",
-      "message": "Profile customization requires you to be a supporter.",
-      "requiredSkus": "Required Supporter Tier:"
-    },
+    "premiumRequired": "Profile customization",
     "localeOverridesRequired": {
       "message": "Custom reputation name requires locale overrides feature."
     },
@@ -218,7 +219,7 @@
         "description": "Choose whether the selected channels and categories are allowed or denied.",
         "allow": "Allow List",
         "deny": "Deny List",
-        "premiumRequired": "The Deny List feature is reserved for supporters. Become a supporter to use it."
+        "premiumRequired": "Deny List"
       },
       "list": {
         "label": "Channels and Categories",
@@ -227,10 +228,8 @@
         "categories": "Categories"
       },
       "premium": {
-        "limitReached": "You have reached the limit of selected channels/categories for your current plan.",
-        "limitWarning": "Selecting more than {limit} channels/categories is reserved for supporters. Become a supporter to use it.",
-        "channelLimitWarning": "Selecting more than {limit} is reserved for supporters. Become a supporter to use it.",
-        "categoryLimitWarning": "Selecting more than {limit} is reserved for supporters. Become a supporter to use it."
+        "channelLimitWarning": "Selecting more than {limit} channels is reserved for supporters. Become a supporter to use it.",
+        "categoryLimitWarning": "Selecting more than {limit} categories is reserved for supporters. Become a supporter to use it."
       }
     }
   },
@@ -244,7 +243,7 @@
     "additional": {
       "label": "Additional Reactions",
       "description": "Additional emojis that can also be used to give reputation.",
-      "premiumRequired": "Additional reactions are reserved for supporters. Become a supporter to use it.",
+      "premiumRequired": "Additional Reactions",
       "add": "Add Reaction",
       "none": "No additional reactions configured."
     },
@@ -348,10 +347,7 @@
   },
   "autopost": {
     "description": "Configure automatic posting of the leaderboard to a channel.",
-    "premiumRequired": {
-      "title": "Supporter Feature",
-      "message": "The autopost feature is exclusive to supporters."
-    },
+    "premiumRequired": "Autopost",
     "active": {
       "label": "Enable Autopost",
       "description": "Enable or disable the automatic leaderboard posting."
@@ -380,10 +376,7 @@
     "description": "Configure messages and confirmations sent by the bot."
   },
   "logChannel": {
-    "premiumRequired": {
-      "title": "Supporter Feature",
-      "message": "The log channel feature is exclusive to supporters."
-    },
+    "premiumRequired": "Log Channel",
     "description": "The log channel will contain every reputation given and taken from a user.",
     "active": {
       "label": "Enable Log Channel",
