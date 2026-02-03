@@ -7,7 +7,7 @@ const { t } = useI18n()
 </script>
 
 <template>
-  <header class="absolute top-0 left-0 z-50 flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700 w-screen bg-white dark:bg-gray-800">
+  <header class="fixed top-0 left-0 z-50 flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700 w-screen bg-white dark:bg-gray-800">
     <div class="flex items-center gap-4">
       <a>
         <img src="/favicon.ico" class="logo-small" alt="Reputation Bot Logo" />

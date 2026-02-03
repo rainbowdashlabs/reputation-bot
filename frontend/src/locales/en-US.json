@@ -393,5 +393,65 @@
       "label": "Log Channel",
       "description": "The channel where reputation changes should be logged."
     }
+  },
+  "setup": {
+    "title": "Initial Setup",
+    "stepProgress": "Step {current} of {total}",
+    "requiredStep": "This step is required to continue",
+    "navigation": {
+      "previous": "Previous",
+      "next": "Next",
+      "finish": "Finish Setup"
+    },
+    "steps": {
+      "language": {
+        "title": "Select Language",
+        "description": "Choose the language the bot will use for messages and responses in your server. The frontend language will change to match your selection."
+      },
+      "systemChannel": {
+        "title": "System Channel",
+        "description": "Select a channel where the bot will send important system messages and notifications.",
+        "required": "You must select a system channel to continue with the setup."
+      },
+      "reputationTypes": {
+        "title": "Reputation Types",
+        "description": "Choose which methods users can use to give reputation. You can enable multiple types to give users flexibility."
+      },
+      "reputationMode": {
+        "title": "Reputation Mode",
+        "description": "Select how reputation should be calculated and displayed in your server."
+      },
+      "ranks": {
+        "title": "Reputation Ranks",
+        "description": "Define roles that users will receive when they reach certain reputation levels. At least one rank is required.",
+        "required": "You must define at least one reputation rank to continue."
+      },
+      "channels": {
+        "title": "Channels & Categories",
+        "description": "Select which channels and categories should allow reputation giving. At least one channel or category must be selected.",
+        "required": "You must select at least one channel or category to continue (unless using deny list mode)."
+      },
+      "thankwords": {
+        "title": "Thankwords",
+        "description": "Add words or phrases that users can use to give reputation. These are the trigger words the bot will recognize.",
+        "recommendation": "We recommend loading the default thankwords for your language to get started quickly."
+      },
+      "announcements": {
+        "title": "Announcements",
+        "description": "Configure whether the bot should announce when users reach new reputation ranks."
+      },
+      "cooldown": {
+        "title": "Cooldown Settings",
+        "description": "Set a cooldown period to prevent users from giving reputation too frequently. You can also enable 'cooldown once' to allow users to thank each other only once."
+      },
+      "mainReaction": {
+        "title": "Main Reaction",
+        "description": "Choose the emoji that will be used as the main reaction for reputation giving."
+      },
+      "roles": {
+        "title": "Donor & Receiver Roles",
+        "description": "Optionally define which roles can give reputation (donor roles) and which roles can receive reputation (receiver roles)."
+      }
+    }
   }
 }

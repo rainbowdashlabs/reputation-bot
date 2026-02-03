@@ -2,6 +2,7 @@
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import AppHeader from './components/AppHeader.vue'
+import AppFooter from './components/AppFooter.vue'
 import { api } from './api'
 import { useSession } from './composables/useSession'
 import { useDarkMode } from './composables/useDarkMode'
@@ -54,6 +55,8 @@ onMounted(async () => {
   <div class="pt-20">
     <router-view />
   </div>
+  
+  <AppFooter />
 </template>
 
 <style scoped>

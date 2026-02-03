@@ -7,6 +7,22 @@ import BaseButton from '@/components/BaseButton.vue'
 const { t } = useI18n()
 const modelValue = defineModel<number | null>({ required: true })
 
+// Helper function to get icon for channel type
+const getChannelIcon = (type: string) => {
+  switch (type) {
+    case 'TEXT':
+      return 'hashtag'
+    case 'VOICE':
+      return 'volume-high'
+    case 'NEWS':
+      return 'bullhorn'
+    case 'FORUM':
+      return 'comments'
+    default:
+      return 'hashtag'
+  }
+}
+
 interface Props {
   label?: string
   disabled?: boolean
@@ -140,7 +156,7 @@ onUnmounted(() => {
               color="secondary"
               style="background-color: transparent; border: none; box-shadow: none; color: inherit;"
             >
-              <span class="text-gray-400 dark:text-gray-500">#</span>
+              <font-awesome-icon :icon="getChannelIcon(channel.type)" class="text-gray-400 dark:text-gray-500" />
               <span class="truncate">{{ channel.name }}</span>
             </BaseButton>
 
@@ -159,7 +175,7 @@ onUnmounted(() => {
                 color="indigo"
                 style="background-color: transparent; border: none; box-shadow: none; color: inherit;"
               >
-                <span class="text-gray-400 dark:text-gray-500">#</span>
+                <font-awesome-icon :icon="getChannelIcon(channel.type)" class="text-gray-400 dark:text-gray-500" />
                 <span class="truncate">{{ channel.name }}</span>
               </BaseButton>
             </div>
@@ -174,8 +190,9 @@ onUnmounted(() => {
       <!-- Display Mode -->
       <div v-if="!isSelecting" class="flex items-center gap-2">
         <div class="input flex items-center min-h-[38px] flex-1 truncate">
-          <span v-if="selectedChannel" class="truncate">
-            # {{ selectedChannel.name }}
+          <span v-if="selectedChannel" class="truncate flex items-center gap-2">
+            <font-awesome-icon :icon="getChannelIcon(selectedChannel.type)" class="text-gray-400 dark:text-gray-500" />
+            {{ selectedChannel.name }}
           </span>
           <span v-else class="text-gray-500">
             {{ placeholder }}

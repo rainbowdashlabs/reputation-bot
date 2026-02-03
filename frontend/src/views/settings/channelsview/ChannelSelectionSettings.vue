@@ -8,6 +8,22 @@ import PremiumFeatureWarning from '@/components/PremiumFeatureWarning.vue'
 const { t } = useI18n()
 const { session, updateThankingChannelsSettings } = useSession()
 
+// Helper function to get icon for channel type
+const getChannelIcon = (type: string) => {
+  switch (type) {
+    case 'TEXT':
+      return 'hashtag'
+    case 'VOICE':
+      return 'volume-high'
+    case 'NEWS':
+      return 'bullhorn'
+    case 'FORUM':
+      return 'comments'
+    default:
+      return 'hashtag'
+  }
+}
+
 const channelsSettings = computed(() => session.value?.settings?.thanking?.channels)
 const guildChannels = computed(() => session.value?.guild?.channels)
 const premiumFeatures = computed(() => session.value?.premiumFeatures)
@@ -15,10 +31,10 @@ const premiumFeatures = computed(() => session.value?.premiumFeatures)
 const toggleChannel = async (channelId: string | number) => {
   if (!channelsSettings.value) return
   const id = String(channelId)
-  let newChannels = [...channelsSettings.value.channels]
+  let newChannels = channelsSettings.value.channels.map(c => String(c))
   
-  if (newChannels.includes(id)) {
-    newChannels = newChannels.filter(c => c !== id)
+  if (newChannels.some(c => String(c) === id)) {
+    newChannels = newChannels.filter(c => String(c) !== id)
   } else {
     if (isChannelLimitReached.value) return
     newChannels.push(id)
@@ -35,19 +51,19 @@ const toggleChannel = async (channelId: string | number) => {
 const toggleCategory = async (categoryId: string | number) => {
   if (!channelsSettings.value) return
   const id = String(categoryId)
-  let newCategories = [...channelsSettings.value.categories]
-  let newChannels = [...channelsSettings.value.channels]
+  let newCategories = channelsSettings.value.categories.map(c => String(c))
+  let newChannels = channelsSettings.value.channels.map(c => String(c))
   
   const category = guildChannels.value?.categories.find(c => String(c.id) === id)
   const categoryChannelIds = category?.channels.map(c => String(c.id)) || []
 
-  if (newCategories.includes(id)) {
-    newCategories = newCategories.filter(c => c !== id)
+  if (newCategories.some(c => String(c) === id)) {
+    newCategories = newCategories.filter(c => String(c) !== id)
   } else {
     if (isCategoryLimitReached.value) return
     newCategories.push(id)
     // Automatically deselect all channels in this category
-    newChannels = newChannels.filter(cId => !categoryChannelIds.includes(cId))
+    newChannels = newChannels.filter(cId => !categoryChannelIds.includes(String(cId)))
   }
 
   try {
@@ -63,11 +79,13 @@ const toggleCategory = async (categoryId: string | number) => {
 }
 
 const isCategorySelected = (categoryId: string | number) => {
-  return channelsSettings.value?.categories.includes(String(categoryId))
+  const id = String(categoryId)
+  return channelsSettings.value?.categories.some(c => String(c) === id)
 }
 
 const isChannelSelected = (channelId: string | number) => {
-  return channelsSettings.value?.channels.includes(String(channelId))
+  const id = String(channelId)
+  return channelsSettings.value?.channels.some(c => String(c) === id)
 }
 
 const isChannelLimitReached = computed(() => {
@@ -149,7 +167,10 @@ const isCategoryLimitReached = computed(() => {
                   class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 disabled:opacity-50"
                   @click.stop="toggleChannel(channel.id)"
                 />
-                <span class="text-gray-700 dark:text-gray-300"># {{ channel.name }}</span>
+                <span class="text-gray-700 dark:text-gray-300 flex items-center gap-2">
+                  <font-awesome-icon :icon="getChannelIcon(channel.type)" class="text-gray-400 dark:text-gray-500" />
+                  {{ channel.name }}
+                </span>
               </div>
             </div>
           </div>
@@ -170,7 +191,10 @@ const isCategoryLimitReached = computed(() => {
               class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 disabled:opacity-50"
               @click.stop="toggleChannel(channel.id)"
             />
-            <span class="text-gray-700 dark:text-gray-300"># {{ channel.name }}</span>
+            <span class="text-gray-700 dark:text-gray-300 flex items-center gap-2">
+              <font-awesome-icon :icon="getChannelIcon(channel.type)" class="text-gray-400 dark:text-gray-500" />
+              {{ channel.name }}
+            </span>
           </div>
           <span class="text-xs text-gray-500 uppercase">{{ t('general.channels.list.channels') }}</span>
         </div>
