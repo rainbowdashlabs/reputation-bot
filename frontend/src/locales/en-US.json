@@ -20,6 +20,28 @@
     "profile": "Profile",
     "logout": "Logout"
   },
+  "presets": {
+    "title": "Presets",
+    "description": "Quick configuration presets to get you started with common setups.",
+    "apply": "Apply",
+    "applying": "Applying...",
+    "applied": "Preset applied successfully!",
+    "simpleReputation": {
+      "title": "Simple Reputation System",
+      "description": "I want a straightforward reputation system where users can only give reputation through commands, without any complex context tracking.",
+      "settings": "This preset will disable all reputation types except commands, and turn off donor and receiver context tracking."
+    },
+    "thankOnce": {
+      "title": "Thank Only Once",
+      "description": "I want users to be able to thank each other only once, preventing repeated reputation giving between the same users.",
+      "settings": "This preset will set the cooldown only once and change the cooldown direction to unidirectional."
+    },
+    "noAbuse": {
+      "title": "No Abuse Protection",
+      "description": "I want to disable context-based abuse protection and allow users to give reputation more freely without tracking their interaction history.",
+      "settings": "This preset will disable both donor and receiver context tracking."
+    }
+  },
   "settings": {
     "title": "Settings",
     "general": "General",

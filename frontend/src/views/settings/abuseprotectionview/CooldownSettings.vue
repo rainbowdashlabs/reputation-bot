@@ -38,11 +38,16 @@ const isCooldownOnce = computed({
   get: () => cooldown.value < 0,
   set: async (value) => {
     try {
-      const updates = value
-        ? { cooldown: -1, cooldownDirection: CooldownDirection.UNIDIRECTIONAL }
-        : { cooldown: 30 }
-      await api.updateAbuseProtection(updates)
-      updateAbuseProtectionSettings(updates)
+      if (value) {
+        await Promise.all([
+          api.updateAbuseProtectionCooldown(-1),
+          api.updateAbuseProtectionCooldownDirection(CooldownDirection.UNIDIRECTIONAL)
+        ])
+        updateAbuseProtectionSettings({ cooldown: -1, cooldownDirection: CooldownDirection.UNIDIRECTIONAL })
+      } else {
+        await api.updateAbuseProtectionCooldown(30)
+        updateAbuseProtectionSettings({ cooldown: 30 })
+      }
     } catch (error) {
       console.error('Failed to update cooldown once:', error)
     }
