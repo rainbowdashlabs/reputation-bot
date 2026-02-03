@@ -216,7 +216,7 @@
       },
       "premium": {
         "channelLimitWarning": "Als je meer dan {limit} kanalen wilt kiezen, moet je supporter worden. Word supporter om deze functie te kunnen gebruiken.",
-        "categoryLimitWarning": "Als je meer dan één categorie wilt kiezen, moet je een supporter zijn. Word supporter om dit te kunnen doen."
+        "categoryLimitWarning": "Als je meer dan {limit} categorie wilt kiezen, moet je een supporter zijn. Word supporter om dit te kunnen doen."
       }
     }
   },
