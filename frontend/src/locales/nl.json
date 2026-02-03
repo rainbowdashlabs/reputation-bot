@@ -33,6 +33,11 @@
       "title": "Geen bescherming tegen misbruik",
       "description": "Ik wil de bescherming tegen misbruik op basis van context uitschakelen en gebruikers de mogelijkheid geven om vrijer reputatie te geven zonder hun interactiegeschiedenis bij te houden.",
       "settings": "Deze voorinstelling schakelt zowel het bijhouden van de context van de donor als van de ontvanger uit."
+    },
+    "default": {
+      "title": "Standaardconfiguratie",
+      "description": "Ik wil een evenwichtig reputatiesysteem met redelijke standaardinstellingen die voor de meeste servers goed werken.",
+      "settings": "Deze preset zorgt voor een bidirectionele afkoelperiode van 30 minuten, zet alle reputatiemodi aan behalve commando's, maakt reputatiebevestiging mogelijk en schakelt contextcontroles voor donateurs en ontvangers in."
     }
   },
   "settings": {

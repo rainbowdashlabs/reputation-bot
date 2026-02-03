@@ -33,6 +33,11 @@
       "title": "Brak ochrony przed nadużyciami",
       "description": "Chcę wyłączyć ochronę przed nadużyciami opartą na kontekście i umożliwić wam swobodniejsze przyznawanie reputacji bez śledzenia historii waszych interakcji.",
       "settings": "To ustawienie wyłączy śledzenie kontekstu zarówno dawcy, jak i odbiorcy."
+    },
+    "default": {
+      "title": "Domyślna konfiguracja",
+      "description": "Chcę zrównoważonego systemu reputacji z rozsądnymi ustawieniami domyślnymi, które będą dobrze działać na większości serwerów.",
+      "settings": "To ustawienie wstępne spowoduje ustawienie 30-minutowego dwukierunkowego czasu odnowienia, włączenie wszystkich trybów reputacji z wyjątkiem poleceń, włączenie potwierdzenia reputacji oraz włączenie sprawdzania kontekstu dawcy i odbiorcy."
     }
   },
   "settings": {

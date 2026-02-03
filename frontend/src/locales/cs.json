@@ -33,6 +33,11 @@
       "title": "Žádná ochrana proti zneužívání",
       "description": "Chci deaktivovat ochranu proti zneužívání založenou na kontextu a umožnit uživatelům volněji udělovat reputaci bez sledování jejich historie interakcí.",
       "settings": "Toto přednastavení zakáže sledování kontextu dárce i příjemce."
+    },
+    "default": {
+      "title": "Výchozí konfigurace",
+      "description": "Chci vyvážený systém reputace s rozumnými výchozími nastaveními, který bude dobře fungovat pro většinu serverů.",
+      "settings": "Toto přednastavení nastaví 30minutovou obousměrnou dobu ochlazení, povolí všechny režimy reputace kromě příkazů, povolí potvrzení reputace a povolí kontroly kontextu dárce a příjemce."
     }
   },
   "settings": {

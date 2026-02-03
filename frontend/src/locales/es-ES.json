@@ -33,6 +33,11 @@
       "title": "Protección contra el abuso",
       "description": "Quiero desactivar la protección contra abusos basada en el contexto y permitir que los usuarios otorguen reputación más libremente sin realizar un seguimiento de su historial de interacciones.",
       "settings": "Este ajuste preestablecido desactivará el seguimiento del contexto tanto del donante como del receptor."
+    },
+    "default": {
+      "title": "Configuración predeterminada",
+      "description": "Quiero un sistema de reputación equilibrado con valores predeterminados razonables que funcionen bien para la mayoría de los servidores.",
+      "settings": "Este ajuste preestablecido establecerá un tiempo de espera bidireccional de 30 minutos, habilitará todos los modos de reputación excepto los comandos, habilitará la confirmación de reputación y habilitará las comprobaciones de contexto del donante y el receptor."
     }
   },
   "settings": {

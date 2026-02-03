@@ -33,6 +33,11 @@
       "title": "Pas de protection contre les abus",
       "description": "Je veux désactiver la protection contre les abus basée sur le contexte et laisser les utilisateurs donner plus librement leur avis sans suivre leur historique d'interaction.",
       "settings": "Ce préréglage va désactiver le suivi du contexte pour le donneur et le receveur."
+    },
+    "default": {
+      "title": "Configuration par défaut",
+      "description": "Je veux un système de réputation équilibré avec des paramètres par défaut raisonnables qui marchent bien pour la plupart des serveurs.",
+      "settings": "Ce préréglage va mettre un délai d'attente bidirectionnel de 30 minutes, activer tous les modes de réputation sauf les commandes, activer la confirmation de réputation et activer les vérifications de contexte du donneur et du receveur."
     }
   },
   "settings": {

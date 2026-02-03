@@ -33,6 +33,11 @@
       "title": "No Abuse Protection",
       "description": "I want to disable context-based abuse protection and allow users to give reputation more freely without tracking their interaction history.",
       "settings": "This preset will disable both donor and receiver context tracking."
+    },
+    "default": {
+      "title": "Default Configuration",
+      "description": "I want a balanced reputation system with reasonable defaults that work well for most servers.",
+      "settings": "This preset will set a 30-minute bidirectional cooldown, enable all reputation modes except commands, enable reputation confirmation, and enable donor and receiver context checks."
     }
   },
   "settings": {

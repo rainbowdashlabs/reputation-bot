@@ -33,6 +33,11 @@
       "title": "Kein Schutz vor Missbrauch",
       "description": "Ich will den kontextbasierten Missbrauchsschutz deaktivieren und den Nutzern erlauben, Reputation freier zu vergeben, ohne ihre Interaktionshistorie zu verfolgen.",
       "settings": "Diese Voreinstellung deaktiviert sowohl die Spender- als auch die Empfänger-Kontextverfolgung."
+    },
+    "default": {
+      "title": "Standardkonfiguration",
+      "description": "Ich will ein ausgeglichenes Reputationssystem mit vernünftigen Standardeinstellungen, die für die meisten Server gut funktionieren.",
+      "settings": "Diese Voreinstellung aktiviert eine 30-minütige bidirektionale Abkühlphase, schaltet alle Reputationsmodi außer Befehlen frei, aktiviert die Reputationsbestätigung und aktiviert Kontextprüfungen für Spender und Empfänger."
     }
   },
   "settings": {
@@ -250,8 +255,8 @@
   "abuseProtection": {
     "description": "Stell Limits und Schutzmaßnahmen ein, um zu verhindern, dass die Reputation missbraucht wird.",
     "cooldown": {
-      "label": "Abkühlzeit (Minuten)",
-      "description": "Die Zeit in Minuten, die vergehen muss, bevor dieselben Nutzer sich wieder gegenseitig danken können. 0 heißt keine Wartezeit, -1 heißt für immer.",
+      "label": "Abklingzeit (Minuten)",
+      "description": "Die Zeit in Minuten, die vergehen muss, bevor dieselben Nutzer sich wieder gegenseitig danken können. 0 heißt keine Wartezeit.",
       "once": {
         "label": "Abklingzeit Einmal",
         "description": "Wenn diese Option aktiviert ist, können sich die Nutzer nur einmal gegenseitig danken.",
@@ -259,7 +264,7 @@
       }
     },
     "cooldownDirection": {
-      "label": "Abkühlungsrichtung",
+      "label": "Abklingzeitsrichtung",
       "description": "Einseitig heißt, dass der Spender eine Wartezeit hat, bevor er derselben Person wieder was geben kann. Beidseitig heißt, dass die Wartezeit zwischen Spender und Empfänger gilt, sodass sie sich nicht gegenseitig bedanken können, bis die Zeit vorbei ist.",
       "unidirectional": "Einseitig",
       "bidirectional": "Bidirektional"
@@ -410,7 +415,7 @@
         "description": "Stell ein, ob der Bot Bescheid geben soll, wenn Leute neue Reputationsränge erreichen."
       },
       "cooldown": {
-        "title": "Abkühlungseinstellungen",
+        "title": "Abklinkzeiteinstellungen",
         "description": "Lege eine Wartezeit fest, damit Leute nicht zu oft Reputation vergeben können. Du kannst auch „Einmalige Wartezeit“ aktivieren, damit sich Leute nur einmal gegenseitig danken können."
       },
       "mainReaction": {

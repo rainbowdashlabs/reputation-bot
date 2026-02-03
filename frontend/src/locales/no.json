@@ -33,6 +33,11 @@
       "title": "Ingen beskyttelse mot misbruk",
       "description": "Jeg vil deaktivere kontekstbasert misbruksbeskyttelse og la brukerne gi omdømme mer fritt uten å spore deres interaksjonshistorikk.",
       "settings": "Denne forhåndsinnstillingen deaktiverer både donor- og mottakerkontekstsporing."
+    },
+    "default": {
+      "title": "Standardkonfigurasjon",
+      "description": "Jeg ønsker et balansert omdømmesystem med rimelige standardinnstillinger som fungerer godt for de fleste servere.",
+      "settings": "Denne forhåndsinnstillingen vil angi en 30-minutters toveis nedkjølingstid, aktivere alle omdømmemoduser unntatt kommandoer, aktivere omdømmebekreftelse og aktivere kontekstkontroller for giver og mottaker."
     }
   },
   "settings": {

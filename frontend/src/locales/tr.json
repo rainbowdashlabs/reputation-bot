@@ -33,6 +33,11 @@
       "title": "Kötüye Kullanım Koruması Yok",
       "description": "Bağlam tabanlı kötüye kullanım korumasını devre dışı bırakmak ve kullanıcıların etkileşim geçmişlerini izlemeden daha özgürce itibar puanları vermelerine izin vermek istiyorum.",
       "settings": "Bu ön ayar, hem bağışçı hem de alıcı bağlam izlemeyi devre dışı bırakacaktır."
+    },
+    "default": {
+      "title": "Varsayılan Yapılandırma",
+      "description": "Çoğu sunucu için iyi çalışan, makul varsayılan ayarlara sahip dengeli bir itibar sistemi istiyorum.",
+      "settings": "Bu ön ayar, 30 dakikalık çift yönlü bekleme süresi ayarlayacak, komutlar hariç tüm itibar modlarını etkinleştirecek, itibar onayını etkinleştirecek ve bağışçı ve alıcı bağlam kontrollerini etkinleştirecektir."
     }
   },
   "settings": {

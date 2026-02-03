@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import DefaultPreset from './presets/DefaultPreset.vue'
 import SimpleReputationPreset from './presets/SimpleReputationPreset.vue'
 import ThankOncePreset from './presets/ThankOncePreset.vue'
 import NoAbusePreset from './presets/NoAbusePreset.vue'
@@ -12,6 +13,7 @@ const { t } = useI18n()
     <h1 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white">{{ t('presets.title') }}</h1>
     <p class="text-gray-600 dark:text-gray-400 mb-6">{{ t('presets.description') }}</p>
     <div class="space-y-6">
+      <DefaultPreset />
       <SimpleReputationPreset />
       <ThankOncePreset />
       <NoAbusePreset />

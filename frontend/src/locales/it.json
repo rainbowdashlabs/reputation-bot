@@ -33,6 +33,11 @@
       "title": "Nessuna protezione contro gli abusi",
       "description": "Voglio disattivare la protezione dagli abusi basata sul contesto e permettere agli utenti di dare reputazione più liberamente senza tracciare la loro cronologia delle interazioni.",
       "settings": "Questa impostazione disattiverà il tracciamento del contesto sia per il donatore che per il ricevente."
+    },
+    "default": {
+      "title": "Configurazione predefinita",
+      "description": "Voglio un sistema di reputazione equilibrato con impostazioni predefinite ragionevoli che funzionino bene per la maggior parte dei server.",
+      "settings": "Questa impostazione fissa un tempo di attesa bidirezionale di 30 minuti, attiva tutte le modalità di reputazione tranne i comandi, attiva la conferma della reputazione e attiva i controlli del contesto del donatore e del destinatario."
     }
   },
   "settings": {
