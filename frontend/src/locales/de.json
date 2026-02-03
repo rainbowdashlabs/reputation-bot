@@ -37,7 +37,7 @@
     "default": {
       "title": "Standardkonfiguration",
       "description": "Ich will ein ausgeglichenes Reputationssystem mit vernünftigen Standardeinstellungen, die für die meisten Server gut funktionieren.",
-      "settings": "Diese Voreinstellung aktiviert eine 30-minütige bidirektionale Abkühlphase, schaltet alle Reputationsmodi außer Befehlen frei, aktiviert die Reputationsbestätigung und aktiviert Kontextprüfungen für Spender und Empfänger."
+      "settings": "Diese Voreinstellung aktiviert eine 30-minütige bidirektionale Abklingzeit, schaltet alle Reputationsmodi außer Befehl frei, aktiviert die Reputationsbestätigung und aktiviert Kontextprüfungen für Spender und Empfänger."
     }
   },
   "settings": {
@@ -160,30 +160,30 @@
           }
         },
         "answer": {
-          "label": "Antwort Reputation",
-          "description": "Vergib Reputation, wenn jemandem für seine Antwort gedankt wird."
+          "label": "Reputation via Antwort" ,
+          "description": "Vergib Reputation, wenn jemandem in einer Antwort dankt."
         },
         "mention": {
-          "label": "Erwähnung Reputation",
+          "label": "Reputation via Erwähnung",
           "description": "Gib Reputation, wenn ein Nutzer zusammen mit einem Dankeschön erwähnt wird."
         },
         "fuzzy": {
-          "label": "Ungenaue Übereinstimmung",
-          "description": "Verleihe Reputation, indem du Wörter rund um das Wort „Danke” mit den Benutzernamen im Kanal abgleichst."
+          "label": "Reputation via Fuzzy Matching",
+          "description": "Verleihe Reputation, indem Wörter rund um das Wort „Danke” mit den Benutzernamen im Kanal abgeglichen werden."
         },
         "embed": {
-          "label": "Reputation einbetten",
+          "label": "Reputation via Embed",
           "description": "Schick eine eingebettete Liste mit den Nutzern, die am letzten Gespräch teilgenommen haben, wenn kein Ziel bestimmt werden kann."
         },
         "direct": {
-          "label": "Direkte Einbettung Reputation",
+          "label": "Direkte Reputation",
           "description": "Vergib automatisch Reputation, wenn nur ein Nutzer im Embed enthalten ist."
         },
         "command": {
-          "label": "Befehlsreputation",
+          "label": "Reputation via Befehl",
           "description": "Vergib Reputation mit dem Befehl /reputation.",
           "ephemeral": {
-            "label": "Kurzfristige Reaktion",
+            "label": "Versteckte Bestätigung",
             "description": "Versteck die Antwort vor anderen Leuten, wenn du über einen Befehl Reputation gibst."
           }
         }
