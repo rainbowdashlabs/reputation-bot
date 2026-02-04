@@ -60,7 +60,7 @@ public class Data {
         configure();
         updateDatabase();
         initDao();
-        sessionService = new SessionService(guildRepository());
+        sessionService = new SessionService(configuration, guildRepository());
     }
 
     public void initConnection() {

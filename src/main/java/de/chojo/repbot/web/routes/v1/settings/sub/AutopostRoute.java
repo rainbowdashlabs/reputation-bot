@@ -8,6 +8,7 @@ package de.chojo.repbot.web.routes.v1.settings.sub;
 import de.chojo.repbot.dao.access.guild.settings.sub.autopost.Autopost;
 import de.chojo.repbot.dao.access.guild.settings.sub.autopost.RefreshInterval;
 import de.chojo.repbot.dao.access.guild.settings.sub.autopost.RefreshType;
+import de.chojo.repbot.service.AutopostService;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
 import de.chojo.repbot.web.error.ErrorResponse;
@@ -27,6 +28,12 @@ import static io.javalin.apibuilder.ApiBuilder.path;
 import static io.javalin.apibuilder.ApiBuilder.post;
 
 public class AutopostRoute implements RoutesBuilder {
+    private final AutopostService autopostService;
+
+    public AutopostRoute(AutopostService autopostService) {
+        this.autopostService = autopostService;
+    }
+
     @OpenApi(
             summary = "Update autopost settings",
             operationId = "updateAutopostSettings",
@@ -74,6 +81,10 @@ public class AutopostRoute implements RoutesBuilder {
         validator.requireFeatureIfEnabled(active, validator.features().autopost(), "Autopost");
 
         session.repGuild().settings().autopost().active(active);
+
+        if(active){
+            autopostService.update(session.repGuild().guild());
+        }
     }
 
     @OpenApi(

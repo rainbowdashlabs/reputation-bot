@@ -9,6 +9,7 @@ import de.chojo.repbot.dao.access.guild.settings.sub.General;
 import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
+import de.chojo.repbot.web.error.InvalidChannelException;
 import de.chojo.repbot.web.pojo.settings.sub.GeneralPOJO;
 import de.chojo.repbot.web.routes.RoutesBuilder;
 import de.chojo.repbot.web.sessions.GuildSession;
@@ -108,12 +109,10 @@ public class GeneralRoute implements RoutesBuilder {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         Long channelId = ctx.bodyAsClass(Long.class);
         
-        // Validate channel ID if not 0 (0 means no channel)
-        if (channelId != 0) {
-            session.guildValidator().validateChannelIds(channelId);
-        }
-        
+        session.guildValidator().validateChannelIds(channelId);
+
         session.repGuild().settings().general().systemChannel(channelId);
+        throw new InvalidChannelException(123455L);
     }
 
     @OpenApi(

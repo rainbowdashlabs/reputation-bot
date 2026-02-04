@@ -13,6 +13,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.chojo.jdautil.botlist.BotlistService;
 import de.chojo.jdautil.interactions.dispatching.InteractionHub;
 import de.chojo.repbot.config.Configuration;
+import de.chojo.repbot.service.AutopostService;
 import de.chojo.repbot.web.Api;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
@@ -33,9 +34,9 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.slf4j.Logger;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
-
 import java.util.Set;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -47,20 +48,22 @@ public class Web {
     private final Threading threading;
     private final Configuration configuration;
     private final SessionService sessionService;
-    private final InteractionHub<?,?,?> interactionHub;
+    private final InteractionHub<?, ?, ?> interactionHub;
+    private final AutopostService autopostService;
     private Javalin javalin;
 
-    private Web(Bot bot, Data data, Threading threading, Configuration configuration, SessionService sessionService, InteractionHub<?,?,?> interactionHub) {
+    private Web(Bot bot, Data data, Threading threading, Configuration configuration, SessionService sessionService, InteractionHub<?, ?, ?> interactionHub,AutopostService autopostService) {
         this.bot = bot;
         this.data = data;
         this.threading = threading;
         this.configuration = configuration;
         this.sessionService = sessionService;
         this.interactionHub = interactionHub;
+        this.autopostService = autopostService;
     }
 
-    public static Web create(Bot bot, Data data, Threading threading, Configuration configuration, SessionService sessionService, InteractionHub<?,?,?> interactionHub) {
-        var web = new Web(bot, data, threading, configuration, sessionService, interactionHub);
+    public static Web create(Bot bot, Data data, Threading threading, Configuration configuration, SessionService sessionService, InteractionHub<?, ?, ?> interactionHub, AutopostService autopostService) {
+        var web = new Web(bot, data, threading, configuration, sessionService, interactionHub, autopostService);
         web.init();
         return web;
     }
@@ -93,7 +96,7 @@ public class Web {
                              } else {
                                  config.staticFiles.add("/static", io.javalin.http.staticfiles.Location.CLASSPATH);
                              }
-                             config.router.apiBuilder(() -> new Api(sessionService, data.metrics(), bot.hub(), bot.localization()).init());
+                             config.router.apiBuilder(() -> new Api(sessionService, data.metrics(), bot.hub(), bot.localization(), autopostService).init());
                              config.router.mount(router -> {
                                  router.beforeMatched(this::handleAccess);
                              });
@@ -109,7 +112,7 @@ public class Web {
         // Handle specific PremiumFeatureException with detailed JSON
         javalin.exception(de.chojo.repbot.web.error.PremiumFeatureException.class, (err, ctx) -> {
             var response = new de.chojo.repbot.web.error.ErrorResponse(
-                    "PREMIUM_FEATURE_REQUIRED",
+                    "Supporter Required",
                     err.getMessage(),
                     err.details()
             );
@@ -119,7 +122,7 @@ public class Web {
         // Handle generic ApiException with simple JSON
         javalin.exception(ApiException.class, (err, ctx) -> {
             var response = new de.chojo.repbot.web.error.ErrorResponse(
-                    "API_ERROR",
+                    err.getClass().getSimpleName(),
                     err.getMessage()
             );
             ctx.json(response).status(err.status());

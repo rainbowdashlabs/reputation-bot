@@ -10,17 +10,17 @@ const routes: RouteRecordRaw[] = [
     path: '/settings',
     name: 'Settings',
     component: () => import('@/views/SettingsView.vue'),
-    redirect: '/settings/profile',
+    redirect: '/settings/general',
     children: [
-      {
-        path: 'profile',
-        name: 'SettingsProfile',
-        component: () => import('@/views/settings/ProfileView.vue')
-      },
       {
         path: 'general',
         name: 'SettingsGeneral',
         component: () => import('@/views/settings/GeneralView.vue')
+      },
+      {
+        path: 'profile',
+        name: 'SettingsProfile',
+        component: () => import('@/views/settings/ProfileView.vue')
       },
       {
         path: 'ranks',

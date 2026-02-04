@@ -5,6 +5,7 @@
  */
 package de.chojo.repbot.web.sessions;
 
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.web.pojo.GuildSessionPOJO;
@@ -15,6 +16,8 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.NotNull;
 
 public class GuildSession {
+    private final Configuration configuration;
+    private final String key;
     private final ShardManager shardManager;
     private final GuildRepository guildRepository;
     private final long guildId;
@@ -22,7 +25,9 @@ public class GuildSession {
     private PremiumValidator premiumValidator;
     private GuildValidator guildValidator;
 
-    public GuildSession(ShardManager shardManager, GuildRepository guildRepository, long guildId, long userId) {
+    public GuildSession(Configuration configuration, String key, ShardManager shardManager, GuildRepository guildRepository, long guildId, long userId) {
+        this.configuration = configuration;
+        this.key = key;
         this.shardManager = shardManager;
         this.guildRepository = guildRepository;
         this.guildId = guildId;
@@ -58,5 +63,18 @@ public class GuildSession {
             guildValidator = new GuildValidator(this);
         }
         return guildValidator;
+    }
+
+    public long guildId() {
+        return guildId;
+    }
+
+    public long userId() {
+        return userId;
+    }
+
+    public String sessionUrl() {
+        String url = "%s?token=%s".formatted(configuration.api().url(), key);
+        return repGuild().settings().general().language().map(lang -> "%s&lang=%s".formatted(url, lang.getLocale())).orElse(url);
     }
 }

@@ -1,4 +1,5 @@
 import { createApp } from 'vue'
+import { createPinia } from 'pinia'
 import './style.css'
 import App from './App.vue'
 import { setupI18n } from './i18n'
@@ -10,10 +11,14 @@ import { faHashtag, faVolumeHigh, faBullhorn, faComments } from '@fortawesome/fr
 // Add icons to library
 library.add(faHashtag, faVolumeHigh, faBullhorn, faComments)
 
+// Create Pinia instance
+const pinia = createPinia()
+
 // Initialize i18n and mount app
 setupI18n().then((i18n) => {
   const app = createApp(App)
   app.component('font-awesome-icon', FontAwesomeIcon)
+  app.use(pinia)
   app.use(i18n)
   app.use(router)
   app.mount('#app')

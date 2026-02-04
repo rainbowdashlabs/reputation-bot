@@ -3,6 +3,7 @@ import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import AppHeader from './components/AppHeader.vue'
 import AppFooter from './components/AppFooter.vue'
+import ErrorNotification from './components/ErrorNotification.vue'
 import { api } from './api'
 import { useSession } from './composables/useSession'
 import { useDarkMode } from './composables/useDarkMode'
@@ -57,6 +58,8 @@ onMounted(async () => {
   </div>
   
   <AppFooter />
+  
+  <ErrorNotification />
 </template>
 
 <style scoped>

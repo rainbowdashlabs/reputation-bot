@@ -10,7 +10,7 @@ import SettingsContainer from './components/SettingsContainer.vue'
 const {t} = useI18n()
 const {session, updateGeneralSettings} = useSession()
 
-const systemChannel = ref<number | null>(null)
+const systemChannel = ref<string | null>(null)
 const language = ref<string>('')
 const languages = ref<LanguageInfo[]>([])
 
@@ -32,7 +32,7 @@ watch(session, (newSession) => {
 const updateSystemChannel = async () => {
   try {
     await api.updateGeneralSystemChannel(systemChannel.value ? systemChannel.value.toString() : '0')
-    updateGeneralSettings({ systemChannel: systemChannel.value || 0 })
+    updateGeneralSettings({ systemChannel: systemChannel.value || "0" })
   } catch (error) {
     console.error('Failed to update system channel:', error)
   }
@@ -70,7 +70,6 @@ const updateLanguage = async () => {
         <ChannelSelect
             v-model="systemChannel"
             :label="t('general.systemChannel.label')"
-            allow-clear
             @update:model-value="updateSystemChannel"
         />
         <p class="description">{{ t('general.systemChannel.note') }}</p>

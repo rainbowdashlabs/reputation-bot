@@ -330,4 +330,8 @@ public class Bot {
     public Localization localization() {
         return localization;
     }
+
+    public AutopostService autopostService() {
+        return autopostService;
+    }
 }

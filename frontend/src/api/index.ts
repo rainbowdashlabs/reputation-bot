@@ -1,5 +1,7 @@
-import axios, {type AxiosInstance } from 'axios';
+import axios, {type AxiosInstance, type AxiosError } from 'axios';
 import * as Types from './types';
+import { useErrorStore } from '../stores/errorStore';
+import router from '../router';
 
 class ApiClient {
   private axiosInstance: AxiosInstance;
@@ -26,6 +28,38 @@ class ApiClient {
       }
       return config;
     });
+
+    this.axiosInstance.interceptors.response.use(
+      (response) => response,
+      (error: AxiosError<Types.ApiErrorResponse>) => {
+        // Handle 401 Unauthorized - redirect to no token page
+        if (error.response?.status === 401) {
+          router.push('/error/no-token');
+          return Promise.reject(error);
+        }
+        
+        const errorStore = useErrorStore();
+        
+        if (error.response?.data) {
+          // Backend returned an ApiErrorResponse
+          errorStore.addError(error.response.data);
+        } else if (error.request) {
+          // Request was made but no response received
+          errorStore.addError({
+            error: 'Network Error',
+            message: 'Unable to reach the server. Please check your connection.',
+          });
+        } else {
+          // Something else happened
+          errorStore.addError({
+            error: 'Request Error',
+            message: error.message || 'An unexpected error occurred',
+          });
+        }
+        
+        return Promise.reject(error);
+      }
+    );
 
     const token = localStorage.getItem('token');
     if (token) {

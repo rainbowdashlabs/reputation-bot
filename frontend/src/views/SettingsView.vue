@@ -26,7 +26,7 @@ const settingsSections = [
       <!-- Heading above sidebar -->
       <Header1 class="mb-6 px-4 pt-8">{{ t('navigation.settings') }}</Header1>
 
-      <div class="flex min-h-screen">
+      <div class="flex">
         <!-- Sidebar - Full height, stretches from top to bottom -->
         <aside class="w-64 shrink-0">
           <nav class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 top-24 ml-4 transition-colors">

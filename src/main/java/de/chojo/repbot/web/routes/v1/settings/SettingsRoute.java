@@ -6,6 +6,7 @@
 package de.chojo.repbot.web.routes.v1.settings;
 
 import de.chojo.jdautil.interactions.dispatching.InteractionHub;
+import de.chojo.repbot.service.AutopostService;
 import de.chojo.repbot.web.routes.RoutesBuilder;
 import de.chojo.repbot.web.routes.v1.settings.sub.AbuseProtectionRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.AnnouncementsRoute;
@@ -26,14 +27,15 @@ public class SettingsRoute implements RoutesBuilder {
     private final ReputationRoute reputationRoute;
     private final AnnouncementsRoute announcementsRoute = new AnnouncementsRoute();
     private final MessagesRoute messagesRoute = new MessagesRoute();
-    private final AutopostRoute autopostRoute = new AutopostRoute();
+    private final AutopostRoute autopostRoute;
     private final LogChannelRoute logChannelRoute = new LogChannelRoute();
     private final ProfileRoute profileRoute = new ProfileRoute();
     private final RanksRoute ranksRoute = new RanksRoute();
     private final ThankingRoute thankingRoute = new ThankingRoute();
 
-    public SettingsRoute(InteractionHub<?, ?, ?> hub) {
+    public SettingsRoute(InteractionHub<?, ?, ?> hub, AutopostService autopostService) {
         reputationRoute = new ReputationRoute(hub);
+        autopostRoute = new AutopostRoute(autopostService);
     }
     @Override
     public void buildRoutes() {

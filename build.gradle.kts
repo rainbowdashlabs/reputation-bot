@@ -82,7 +82,8 @@ idea {
                     "-Dcjda.localisation.error.name=false",
                     "-Dcjda.interactions.cleanguildcommands=true",
                     "-Dcjda.interactions.testmode=true",
-                    "-Dbot.db.host=localhost")
+                    "-Dbot.db.host=localhost,",
+                    "-Dbot.api.url=http://localhost:5173")
             runConfigurations {
                 register<org.jetbrains.gradle.ext.Application>("App-Testing") {
                     mainClass = "de.chojo.repbot.ReputationBot"
