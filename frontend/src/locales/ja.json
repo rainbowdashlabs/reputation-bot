@@ -123,7 +123,14 @@
       "roleAlreadyAdded": "この役職には既に階級が付いている。",
       "reputationAlreadyUsed": "この評価値は既に別のランクで使用されている。",
       "noRanks": "まだランクは設定されていない。",
-      "reputationPlaceholder": "例：100"
+      "reputationPlaceholder": "例：100",
+      "refresh": {
+        "button": "ランクを更新する",
+        "refreshing": "さわやかだ…",
+        "alreadyRunning": "更新はすでに進行中だ",
+        "success": "ランク更新が正常に開始された",
+        "failed": "ランク更新の開始に失敗した"
+      }
     },
     "reputation": {
       "description": "評判の計算方法と有効にする機能を設定する。",

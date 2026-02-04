@@ -123,7 +123,14 @@
       "roleAlreadyAdded": "이 역할에는 이미 등급이 지정되어 있습니다.",
       "reputationAlreadyUsed": "이 평판 값은 이미 다른 등급에서 사용 중입니다.",
       "noRanks": "아직 설정된 등급이 없습니다.",
-      "reputationPlaceholder": "예를 들어 100"
+      "reputationPlaceholder": "예를 들어 100",
+      "refresh": {
+        "button": "순위 새로 고침",
+        "refreshing": "상쾌한...",
+        "alreadyRunning": "새로 고침이 이미 진행 중입니다",
+        "success": "순위 새로고침이 성공적으로 시작되었습니다",
+        "failed": "순위 새로고침 시작 실패"
+      }
     },
     "reputation": {
       "description": "평판 계산 방식과 활성화할 기능을 구성합니다.",

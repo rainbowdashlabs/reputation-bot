@@ -123,7 +123,14 @@
       "roleAlreadyAdded": "Diese Rolle hat schon einen Rang.",
       "reputationAlreadyUsed": "Dieser Reputationswert wird schon von einem anderen Rang benutzt.",
       "noRanks": "Noch keine Ränge eingerichtet.",
-      "reputationPlaceholder": "z. B. 100"
+      "reputationPlaceholder": "z. B. 100",
+      "refresh": {
+        "button": "Ränge aktualisieren",
+        "refreshing": "Aktualisierung läuft...",
+        "alreadyRunning": "Die Aktualisierung läuft schon.",
+        "success": "Rang-Aktualisierung erfolgreich abgeschlossen",
+        "failed": "Das Aktualisieren der Rangliste hat nicht geklappt."
+      }
     },
     "reputation": {
       "description": "Lege fest, wie die Reputation berechnet wird und welche Funktionen aktiviert sind.",

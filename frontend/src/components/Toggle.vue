@@ -32,16 +32,16 @@ const toggle = () => {
       ]"
     >
       <span
-        class="absolute inset-0 flex items-center justify-end pl-1 text-xs font-semibold text-white pointer-events-none"
+        class="absolute inset-0 flex items-center justify-end pr-2 text-xs font-semibold text-white pointer-events-none"
         :class="modelValue ? 'opacity-0' : 'opacity-100'"
       >
-        OFF
+        <font-awesome-icon :icon="['fas', 'xmark']" />
       </span>
       <span
-        class="absolute inset-0 flex items-center justify-start pr-1 text-xs font-semibold text-white pointer-events-none"
+        class="absolute inset-0 flex items-center justify-start pl-2 text-xs font-semibold text-white pointer-events-none"
         :class="modelValue ? 'opacity-100' : 'opacity-0'"
       >
-        ON
+        <font-awesome-icon :icon="['fas', 'check']" />
       </span>
       <span
         aria-hidden="true"

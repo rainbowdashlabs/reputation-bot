@@ -123,7 +123,14 @@
       "roleAlreadyAdded": "Tato role již má hodnost.",
       "reputationAlreadyUsed": "Tato hodnota reputace je již používána jiným hodnocením.",
       "noRanks": "Zatím nejsou nakonfigurovány žádné hodnosti.",
-      "reputationPlaceholder": "např. 100"
+      "reputationPlaceholder": "např. 100",
+      "refresh": {
+        "button": "Obnovit pořadí",
+        "refreshing": "Osvěžující...",
+        "alreadyRunning": "Obnovení již probíhá",
+        "success": "Aktualizace pořadí byla úspěšně zahájena",
+        "failed": "Nepodařilo se spustit aktualizaci pořadí"
+      }
     },
     "reputation": {
       "description": "Nakonfigurujte způsob výpočtu reputace a povolené funkce.",

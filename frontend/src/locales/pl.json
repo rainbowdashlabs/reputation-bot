@@ -123,7 +123,14 @@
       "roleAlreadyAdded": "Ta rola ma już przypisaną rangę.",
       "reputationAlreadyUsed": "Ta wartość reputacji jest już używana przez inną rangę.",
       "noRanks": "Nie skonfigurowano jeszcze żadnych rang.",
-      "reputationPlaceholder": "np. 100"
+      "reputationPlaceholder": "np. 100",
+      "refresh": {
+        "button": "Odśwież rankingi",
+        "refreshing": "Orzeźwiające...",
+        "alreadyRunning": "Odświeżanie już trwa",
+        "success": "Odświeżanie rankingu rozpoczęło się pomyślnie",
+        "failed": "Nie udało się uruchomić odświeżania rankingu"
+      }
     },
     "reputation": {
       "description": "Skonfiguruj sposób obliczania reputacji i wybierz funkcje, które chcesz włączyć.",

@@ -123,7 +123,14 @@
       "roleAlreadyAdded": "Tällä roolilla on jo sijoitus.",
       "reputationAlreadyUsed": "Tämä mainearvo on jo käytössä toisessa luokassa.",
       "noRanks": "Ei vielä määritettyjä sijoitusta.",
-      "reputationPlaceholder": "esim. 100"
+      "reputationPlaceholder": "esim. 100",
+      "refresh": {
+        "button": "Päivitä sijoitus",
+        "refreshing": "Virkistävää...",
+        "alreadyRunning": "Päivittäminen on jo käynnissä",
+        "success": "Sijoitusten päivitys aloitettu onnistuneesti",
+        "failed": "Rankin päivityksen käynnistäminen epäonnistui"
+      }
     },
     "reputation": {
       "description": "Määritä, miten maine lasketaan ja mitkä ominaisuudet otetaan käyttöön.",

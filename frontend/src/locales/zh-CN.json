@@ -123,7 +123,14 @@
       "roleAlreadyAdded": "该角色已有等级。",
       "reputationAlreadyUsed": "该声望值已被其他等级使用。",
       "noRanks": "尚未配置任何等级。",
-      "reputationPlaceholder": "例如：100"
+      "reputationPlaceholder": "例如：100",
+      "refresh": {
+        "button": "刷新排名",
+        "refreshing": "清爽...",
+        "alreadyRunning": "刷新正在进行中",
+        "success": "排名刷新已成功启动",
+        "failed": "排名刷新启动失败"
+      }
     },
     "reputation": {
       "description": "配置声誉的计算方式及启用哪些功能。",

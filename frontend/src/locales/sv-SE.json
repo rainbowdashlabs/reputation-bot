@@ -123,7 +123,14 @@
       "roleAlreadyAdded": "Denna roll har redan en rang.",
       "reputationAlreadyUsed": "Detta ryktevärde används redan av en annan rang.",
       "noRanks": "Inga rankningar har konfigurerats ännu.",
-      "reputationPlaceholder": "t.ex. 100"
+      "reputationPlaceholder": "t.ex. 100",
+      "refresh": {
+        "button": "Uppdatera rankningar",
+        "refreshing": "Uppfriskande...",
+        "alreadyRunning": "Uppdateringen pågår redan",
+        "success": "Rankningsuppdateringen startade utan problem",
+        "failed": "Misslyckades med att starta rankningsuppdatering"
+      }
     },
     "reputation": {
       "description": "Konfigurera hur omdömet beräknas och vilka funktioner som är aktiverade.",

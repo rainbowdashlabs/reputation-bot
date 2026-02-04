@@ -123,7 +123,14 @@
       "roleAlreadyAdded": "Bu rolün zaten bir rütbesi var.",
       "reputationAlreadyUsed": "Bu itibar değeri başka bir rütbe tarafından zaten kullanılmaktadır.",
       "noRanks": "Henüz yapılandırılmış sıralama yok.",
-      "reputationPlaceholder": "örneğin 100"
+      "reputationPlaceholder": "örneğin 100",
+      "refresh": {
+        "button": "Sıralamaları Yenile",
+        "refreshing": "Ferahlatıcı...",
+        "alreadyRunning": "Yenileme işlemi zaten devam ediyor",
+        "success": "Sıralama yenileme başarıyla başlatıldı",
+        "failed": "Sıra yenileme başlatılamadı"
+      }
     },
     "reputation": {
       "description": "İtibar hesaplama yöntemini ve hangi özelliklerin etkinleştirileceğini yapılandırın.",

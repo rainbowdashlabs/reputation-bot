@@ -6,10 +6,10 @@ import { setupI18n } from './i18n'
 import router from './router'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faHashtag, faVolumeHigh, faBullhorn, faComments } from '@fortawesome/free-solid-svg-icons'
+import { faHashtag, faVolumeHigh, faBullhorn, faComments, faCheck, faXmark } from '@fortawesome/free-solid-svg-icons'
 
 // Add icons to library
-library.add(faHashtag, faVolumeHigh, faBullhorn, faComments)
+library.add(faHashtag, faVolumeHigh, faBullhorn, faComments, faCheck, faXmark)
 
 // Create Pinia instance
 const pinia = createPinia()

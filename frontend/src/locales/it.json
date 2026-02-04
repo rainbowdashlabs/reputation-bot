@@ -123,7 +123,14 @@
       "roleAlreadyAdded": "Questo ruolo ha già un grado.",
       "reputationAlreadyUsed": "Questo valore di reputazione è già usato da un altro grado.",
       "noRanks": "Non ci sono ancora gradi impostati.",
-      "reputationPlaceholder": "ad esempio 100"
+      "reputationPlaceholder": "ad esempio 100",
+      "refresh": {
+        "button": "Aggiorna classifiche",
+        "refreshing": "Rinfrescante...",
+        "alreadyRunning": "L'aggiornamento è già in corso",
+        "success": "Aggiornamento della classifica avviato con successo",
+        "failed": "Non si riesce ad aggiornare la classifica"
+      }
     },
     "reputation": {
       "description": "Imposta come viene calcolata la reputazione e quali funzioni sono attive.",

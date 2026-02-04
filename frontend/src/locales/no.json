@@ -123,7 +123,14 @@
       "roleAlreadyAdded": "Denne rollen har allerede en rang.",
       "reputationAlreadyUsed": "Denne omdømmeverdien brukes allerede av en annen rangering.",
       "noRanks": "Ingen rangeringer konfigurert ennå.",
-      "reputationPlaceholder": "f.eks. 100"
+      "reputationPlaceholder": "f.eks. 100",
+      "refresh": {
+        "button": "Oppdater rangeringer",
+        "refreshing": "Forfriskende...",
+        "alreadyRunning": "Oppdateringen er allerede i gang",
+        "success": "Rangeringoppdatering startet vellykket",
+        "failed": "Kunne ikke starte oppdatering av rangering"
+      }
     },
     "reputation": {
       "description": "Konfigurer hvordan omdømme beregnes og hvilke funksjoner som er aktivert.",

@@ -123,7 +123,14 @@
       "roleAlreadyAdded": "Deze functie heeft al een rang.",
       "reputationAlreadyUsed": "Deze reputatiewaarde wordt al gebruikt door een andere rang.",
       "noRanks": "Er zijn nog geen rangen ingesteld.",
-      "reputationPlaceholder": "bijvoorbeeld 100"
+      "reputationPlaceholder": "bijvoorbeeld 100",
+      "refresh": {
+        "button": "Ranglijst vernieuwen",
+        "refreshing": "Verfrissend...",
+        "alreadyRunning": "Het vernieuwen is al bezig.",
+        "success": "Het vernieuwen van de ranglijst is gelukt.",
+        "failed": "Het lukte niet om de ranglijst te vernieuwen."
+      }
     },
     "reputation": {
       "description": "Zet even op hoe je reputatie wordt berekend en welke functies je wilt gebruiken.",

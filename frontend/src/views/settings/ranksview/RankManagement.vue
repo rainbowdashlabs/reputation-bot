@@ -71,23 +71,24 @@ const refreshRanks = async () => {
 
 <template>
   <div class="space-y-6">
-    <div class="flex items-center justify-between">
+    <div class="items-center justify-between">
       <div class="flex-1">
         <AddRankForm :existing-ranks="ranks" @add="onAddRank" />
       </div>
-      <div class="ml-4 flex flex-col items-end">
-        <button
+    </div>
+    <RankList :ranks="ranks" @update="onUpdateRanks" @delete="onDeleteRank" />
+    <div class="mt-4 flex flex-col items-end">
+      <button
           @click="refreshRanks"
           :disabled="isRefreshing"
           class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
-        >
-          {{ isRefreshing ? t('general.ranks.refresh.refreshing') : t('general.ranks.refresh.button') }}
-        </button>
-        <p v-if="refreshMessage" class="mt-2 text-sm" :class="refreshMessage.includes(t('general.ranks.refresh.failed')) ? 'text-red-600' : 'text-green-600'">
-          {{ refreshMessage }}
-        </p>
-      </div>
+      >
+        {{ isRefreshing ? t('general.ranks.refresh.refreshing') : t('general.ranks.refresh.button') }}
+      </button>
+      <p v-if="refreshMessage" class="mt-2 text-sm" :class="refreshMessage.includes(t('general.ranks.refresh.failed')) ? 'text-red-600' : 'text-green-600'">
+        {{ refreshMessage }}
+      </p>
     </div>
-    <RankList :ranks="ranks" @update="onUpdateRanks" @delete="onDeleteRank" />
+
   </div>
 </template>

@@ -123,7 +123,14 @@
       "roleAlreadyAdded": "Essa função já tem uma classificação.",
       "reputationAlreadyUsed": "Esse valor de reputação já é usado por outra classificação.",
       "noRanks": "Ainda não tem nenhuma classificação definida.",
-      "reputationPlaceholder": "por exemplo, 100"
+      "reputationPlaceholder": "por exemplo, 100",
+      "refresh": {
+        "button": "Atualizar classificações",
+        "refreshing": "Refrescante...",
+        "alreadyRunning": "A atualização já tá rolando.",
+        "success": "A atualização da classificação começou com sucesso",
+        "failed": "Não deu pra começar a atualização da classificação"
+      }
     },
     "reputation": {
       "description": "Configure como a reputação é calculada e quais recursos são ativados.",
