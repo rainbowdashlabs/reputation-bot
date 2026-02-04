@@ -38,7 +38,8 @@
       "title": "Configuração padrão",
       "description": "Quero um sistema de reputação equilibrado, com padrões razoáveis que funcionem bem para a maioria dos servidores.",
       "settings": "Essa configuração vai definir um tempo de espera bidirecional de 30 minutos, ativar todos os modos de reputação, exceto comandos, ativar a confirmação de reputação e ativar as verificações de contexto do doador e do receptor."
-    }
+    },
+    "applied": "Aplicado"
   },
   "settings": {
     "title": "Configurações",

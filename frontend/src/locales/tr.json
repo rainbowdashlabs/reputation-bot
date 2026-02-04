@@ -38,7 +38,8 @@
       "title": "Varsayılan Yapılandırma",
       "description": "Çoğu sunucu için iyi çalışan, makul varsayılan ayarlara sahip dengeli bir itibar sistemi istiyorum.",
       "settings": "Bu ön ayar, 30 dakikalık çift yönlü bekleme süresi ayarlayacak, komutlar hariç tüm itibar modlarını etkinleştirecek, itibar onayını etkinleştirecek ve bağışçı ve alıcı bağlam kontrollerini etkinleştirecektir."
-    }
+    },
+    "applied": "Uygulanan"
   },
   "settings": {
     "title": "Ayarlar",

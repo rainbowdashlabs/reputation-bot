@@ -38,7 +38,8 @@
       "title": "Standardkonfigurasjon",
       "description": "Jeg ønsker et balansert omdømmesystem med rimelige standardinnstillinger som fungerer godt for de fleste servere.",
       "settings": "Denne forhåndsinnstillingen vil angi en 30-minutters toveis nedkjølingstid, aktivere alle omdømmemoduser unntatt kommandoer, aktivere omdømmebekreftelse og aktivere kontekstkontroller for giver og mottaker."
-    }
+    },
+    "applied": "Anvendt"
   },
   "settings": {
     "title": "Innstillinger",

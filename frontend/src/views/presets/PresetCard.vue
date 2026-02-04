@@ -49,7 +49,7 @@ const handleApply = async () => {
           ]"
           @click="handleApply"
       >
-        <span v-if="isApplied">✓ {{ $t('presets.applied') }}</span>
+        <span v-if="isApplied">{{ $t('presets.applied') }}</span>
         <span v-else-if="!isApplying">{{ $t('presets.apply') }}</span>
         <span v-else>{{ $t('presets.applying') }}</span>
       </button>

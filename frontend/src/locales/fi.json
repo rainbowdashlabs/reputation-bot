@@ -38,7 +38,8 @@
       "title": "Oletusasetukset",
       "description": "Haluan tasapainoisen mainejärjestelmän, jossa on kohtuulliset oletusasetukset, jotka toimivat hyvin useimmilla palvelimilla.",
       "settings": "Tämä esiasetus asettaa 30 minuutin kaksisuuntaisen viiveen, ottaa käyttöön kaikki maine-tilat komentoja lukuun ottamatta, ottaa käyttöön maineen vahvistuksen ja ottaa käyttöön lahjoittajan ja vastaanottajan kontekstin tarkistukset."
-    }
+    },
+    "applied": "Sovellettu"
   },
   "settings": {
     "title": "Asetukset",

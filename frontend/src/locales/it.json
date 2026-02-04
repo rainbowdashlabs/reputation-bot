@@ -38,7 +38,8 @@
       "title": "Configurazione predefinita",
       "description": "Voglio un sistema di reputazione equilibrato con impostazioni predefinite ragionevoli che funzionino bene per la maggior parte dei server.",
       "settings": "Questa impostazione fissa un tempo di attesa bidirezionale di 30 minuti, attiva tutte le modalità di reputazione tranne i comandi, attiva la conferma della reputazione e attiva i controlli del contesto del donatore e del destinatario."
-    }
+    },
+    "applied": "Applicato"
   },
   "settings": {
     "title": "Impostazioni",

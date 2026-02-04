@@ -38,7 +38,8 @@
       "title": "Standardkonfiguration",
       "description": "Jag vill ha ett balanserat rykte-system med rimliga standardinställningar som fungerar bra för de flesta servrar.",
       "settings": "Denna förinställning ställer in en 30-minuters dubbelriktad nedkylningsperiod, aktiverar alla rykte-lägen utom kommandon, aktiverar ryktebekräftelse och aktiverar kontextkontroller för givare och mottagare."
-    }
+    },
+    "applied": "Tillämpad"
   },
   "settings": {
     "title": "Inställningar",

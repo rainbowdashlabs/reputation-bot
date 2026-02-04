@@ -38,7 +38,8 @@
       "title": "Výchozí konfigurace",
       "description": "Chci vyvážený systém reputace s rozumnými výchozími nastaveními, který bude dobře fungovat pro většinu serverů.",
       "settings": "Toto přednastavení nastaví 30minutovou obousměrnou dobu ochlazení, povolí všechny režimy reputace kromě příkazů, povolí potvrzení reputace a povolí kontroly kontextu dárce a příjemce."
-    }
+    },
+    "applied": "Aplikováno"
   },
   "settings": {
     "title": "Nastavení",

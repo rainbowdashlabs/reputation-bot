@@ -19,6 +19,7 @@
     "description": "Quick configuration presets to get you started with common setups.",
     "apply": "Apply",
     "applying": "Applying...",
+    "applied": "Applied",
     "simpleReputation": {
       "title": "Simple Reputation System",
       "description": "I want a straightforward reputation system where users can only give reputation through commands, without any complex context tracking.",

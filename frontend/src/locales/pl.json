@@ -38,7 +38,8 @@
       "title": "Domyślna konfiguracja",
       "description": "Chcę zrównoważonego systemu reputacji z rozsądnymi ustawieniami domyślnymi, które będą dobrze działać na większości serwerów.",
       "settings": "To ustawienie wstępne spowoduje ustawienie 30-minutowego dwukierunkowego czasu odnowienia, włączenie wszystkich trybów reputacji z wyjątkiem poleceń, włączenie potwierdzenia reputacji oraz włączenie sprawdzania kontekstu dawcy i odbiorcy."
-    }
+    },
+    "applied": "Zastosowane"
   },
   "settings": {
     "title": "Ustawienia",

@@ -38,7 +38,8 @@
       "title": "Standardkonfiguration",
       "description": "Ich will ein ausgeglichenes Reputationssystem mit vernünftigen Standardeinstellungen, die für die meisten Server gut funktionieren.",
       "settings": "Diese Voreinstellung aktiviert eine 30-minütige bidirektionale Abklingzeit, schaltet alle Reputationsmodi außer Befehl frei, aktiviert die Reputationsbestätigung und aktiviert Kontextprüfungen für Spender und Empfänger."
-    }
+    },
+    "applied": "Angewandt"
   },
   "settings": {
     "title": "Einstellungen",
