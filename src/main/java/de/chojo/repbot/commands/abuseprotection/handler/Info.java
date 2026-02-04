@@ -14,6 +14,7 @@ import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
+import java.awt.*;
 import java.util.List;
 
 import static de.chojo.repbot.util.Text.getSetting;
