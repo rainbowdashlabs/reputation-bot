@@ -42,8 +42,8 @@ const handleApply = async () => {
           :disabled="isApplying"
           :class="[
             'px-4 py-2 text-white rounded-md transition-colors',
-            isApplied 
-              ? 'bg-green-600 hover:bg-green-700' 
+            isApplied
+              ? 'bg-green-600 hover:bg-green-700'
               : 'bg-blue-600 hover:bg-blue-700',
             'disabled:bg-gray-400 disabled:cursor-not-allowed'
           ]"
