@@ -13,13 +13,14 @@ on:
 jobs:
   docker-build:
     runs-on: ubuntu-latest
+    name: Deploy Docker Image
 
     steps:
       - name: Wait for checks to succeed
         uses: lewagon/wait-on-check-action@master
         with:
           ref: ${{ github.ref }}
-          check-name: 'Docker build'
+          check-name: 'Docker Build'
           running-workflow-name: 'Verify'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           allowed-conclusions: success
