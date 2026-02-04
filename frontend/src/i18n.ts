@@ -49,7 +49,7 @@ function getBrowserLocale(): SupportedLocale {
   return (match || 'en-US') as SupportedLocale
 }
 
-// Get initial locale from query parameter or browser
+// Get initial locale from query parameter, localStorage, or browser
 function getInitialLocale(): SupportedLocale {
   // Check for lang query parameter
   const urlParams = new URLSearchParams(window.location.search)
@@ -57,6 +57,12 @@ function getInitialLocale(): SupportedLocale {
   
   if (langParam && SUPPORTED_LOCALES.includes(langParam as SupportedLocale)) {
     return langParam as SupportedLocale
+  }
+  
+  // Check localStorage for saved locale
+  const savedLocale = localStorage.getItem('locale')
+  if (savedLocale && SUPPORTED_LOCALES.includes(savedLocale as SupportedLocale)) {
+    return savedLocale as SupportedLocale
   }
   
   // Fall back to browser locale
@@ -76,6 +82,9 @@ export async function setupI18n() {
   const locale = i18n.global.locale.value as string
   const messages = await loadLocaleMessages(locale)
   i18n.global.setLocaleMessage(locale, messages)
+  
+  // Save locale to localStorage for persistence
+  localStorage.setItem('locale', locale)
   
   // Remove lang parameter from URL if present
   const urlParams = new URLSearchParams(window.location.search)
@@ -97,4 +106,7 @@ export async function setLocale(locale: SupportedLocale) {
   }
   
   i18n.global.locale.value = locale
+  
+  // Save locale to localStorage for persistence
+  localStorage.setItem('locale', locale)
 }
