@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.components.buttons.Button;
 public class Settings extends SlashCommand {
     public Settings(SessionService sessionService) {
         super(Slash.of("settings", "command.settings.description")
+                   .adminCommand()
                    .command((event, ctx) -> {
                        GuildSession guildSession = sessionService.getGuildSession(event.getGuild(), event.getMember());
                        event.reply(ctx.localize("command.settings.start"))
