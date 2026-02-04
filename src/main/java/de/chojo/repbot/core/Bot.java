@@ -315,25 +315,25 @@ public class Bot {
                             .build();
 
         // TODO: Remove after decomissioning the settings commands
-        Long web;
+        Long settingsCommandId;
         if (TEST_MODE) {
-            web = shardManager.getShards().getFirst()
+            settingsCommandId = shardManager.getShards().getFirst()
                               .getGuildById(configuration.baseSettings().botGuild())
                               .retrieveCommands().complete().stream()
-                              .filter(cmd -> cmd.getName().equals("web"))
+                              .filter(cmd -> cmd.getName().equals("settings"))
                               .map(ISnowflake::getIdLong)
                               .findFirst()
                               .get();
 
         } else {
-            web = shardManager.getShards().getFirst()
+            settingsCommandId = shardManager.getShards().getFirst()
                               .retrieveCommands().complete().stream()
-                              .filter(cmd -> cmd.getName().equals("web"))
+                              .filter(cmd -> cmd.getName().equals("settings"))
                               .map(ISnowflake::getIdLong)
                               .findFirst()
                               .get();
         }
-        WEB_COMMAND_MENTION = "</settings:" + web + ">";
+        WEB_COMMAND_MENTION = "</settings:" + settingsCommandId + ">";
     }
 
     private void initListener() {
