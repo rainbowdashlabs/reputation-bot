@@ -7,6 +7,7 @@ package de.chojo.repbot.web;
 
 import de.chojo.jdautil.interactions.dispatching.InteractionHub;
 import de.chojo.repbot.commands.thankwords.Thankwords;
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.core.Localization;
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.serialization.ThankwordsContainer;
@@ -38,7 +39,7 @@ public class Api {
     private final SettingsRoute settingsRoute;
     private final DataRoute dataRoute;
 
-    public Api(SessionService sessionService, Metrics metrics, InteractionHub<?, ?, ?> hub, Localization localization, AutopostService autopostService, RoleAssigner roleAssigner, ShardManager shardManager) {
+    public Api(SessionService sessionService, Metrics metrics, InteractionHub<?, ?, ?> hub, Localization localization, AutopostService autopostService, RoleAssigner roleAssigner, ShardManager shardManager, Configuration configuration) {
         this.sessionService = sessionService;
         metricsRoute = new MetricsRoute(metrics);
         sessionRoute = new SessionRoute(sessionService);
@@ -52,7 +53,7 @@ public class Api {
             log.error("Could not load thankwords container", e);
             thankwordsContainer = null;
         }
-        dataRoute = new DataRoute(thankwordsContainer, localization);
+        dataRoute = new DataRoute(thankwordsContainer, localization, configuration);
     }
 
     public void init() {

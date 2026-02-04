@@ -14,11 +14,11 @@ import net.dv8tion.jda.api.components.buttons.Button;
 
 public class Settings extends SlashCommand {
     public Settings(SessionService sessionService) {
-        super(Slash.of("web", "command.web.description")
+        super(Slash.of("web", "command.settings.description")
                    .command((event, ctx) -> {
                        GuildSession guildSession = sessionService.getGuildSession(event.getGuild(), event.getMember());
-                       event.reply(ctx.localize("command.web.start"))
-                            .addComponents(ActionRow.of(Button.link(guildSession.sessionUrl(), ctx.localize("command.web.button"))))
+                       event.reply(ctx.localize("command.settings.start"))
+                            .addComponents(ActionRow.of(Button.link(guildSession.sessionUrl(), ctx.localize("command.settings.button"))))
                             .setEphemeral(true)
                             .complete();
                    }));

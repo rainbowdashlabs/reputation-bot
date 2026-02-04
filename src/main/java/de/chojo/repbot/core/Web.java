@@ -96,7 +96,7 @@ public class Web {
                              } else {
                                  config.staticFiles.add("/static", io.javalin.http.staticfiles.Location.CLASSPATH);
                              }
-                             config.router.apiBuilder(() -> new Api(sessionService, data.metrics(), bot.hub(), bot.localization(), autopostService, bot.roleAssigner(), bot.shardManager()).init());
+                             config.router.apiBuilder(() -> new Api(sessionService, data.metrics(), bot.hub(), bot.localization(), autopostService, bot.roleAssigner(), bot.shardManager(), configuration).init());
                              config.router.mount(router -> {
                                  router.beforeMatched(this::handleAccess);
                              });

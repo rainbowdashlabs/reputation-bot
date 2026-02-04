@@ -215,6 +215,14 @@ export interface PremiumFeaturesPOJO {
   reputationCategories: FeatureLimit;
 }
 
+export interface Links {
+  tos: string;
+  invite: string;
+  support: string;
+  website: string;
+  faq: string;
+}
+
 export interface GuildSessionPOJO {
   settings: SettingsPOJO;
   guild: GuildPOJO;

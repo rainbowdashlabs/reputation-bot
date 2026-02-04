@@ -5,6 +5,8 @@
  */
 package de.chojo.repbot.web.routes.v1.data;
 
+import de.chojo.repbot.config.Configuration;
+import de.chojo.repbot.config.elements.Links;
 import de.chojo.repbot.core.Localization;
 import de.chojo.repbot.serialization.ThankwordsContainer;
 import de.chojo.repbot.web.config.Role;
@@ -22,10 +24,12 @@ import static io.javalin.apibuilder.ApiBuilder.path;
 public class DataRoute implements RoutesBuilder {
     private final ThankwordsContainer thankwordsContainer;
     private final Localization localization;
+    private final Configuration configuration;
 
-    public DataRoute(ThankwordsContainer thankwordsContainer, Localization localization) {
+    public DataRoute(ThankwordsContainer thankwordsContainer, Localization localization, Configuration configuration) {
         this.thankwordsContainer = thankwordsContainer;
         this.localization = localization;
+        this.configuration = configuration;
     }
 
     @OpenApi(
@@ -56,11 +60,26 @@ public class DataRoute implements RoutesBuilder {
         ctx.json(localization.languages());
     }
 
+    @OpenApi(
+            summary = "Get links",
+            operationId = "getLinks",
+            path = "v1/data/links",
+            methods = HttpMethod.GET,
+            tags = {"Data"},
+            responses = {
+                    @OpenApiResponse(status = "200", content = @OpenApiContent(from = Links.class))
+            }
+    )
+    public void getLinks(Context ctx) {
+        ctx.json(configuration.links());
+    }
+
     @Override
     public void buildRoutes() {
         path("data", () -> {
             get("thankwords", this::getThankwords, Role.ANYONE);
             get("languages", this::getLanguages, Role.ANYONE);
+            get("links", this::getLinks, Role.ANYONE);
         });
     }
 }

@@ -443,6 +443,11 @@ class ApiClient {
     const response = await this.axiosInstance.get<Types.LanguageInfo[]>('/data/languages');
     return response.data;
   }
+
+  public async getLinks(): Promise<Types.Links> {
+    const response = await this.axiosInstance.get<Types.Links>('/data/links');
+    return response.data;
+  }
 }
 
 export const api = new ApiClient();
