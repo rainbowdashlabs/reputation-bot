@@ -9,6 +9,7 @@ import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class DonorLimit implements SlashHandler {
@@ -33,13 +34,12 @@ public class DonorLimit implements SlashHandler {
         }
 
         if (protection.maxGiven() == 0) {
-            event.reply(context.localize("command.abuseprotection.limit.donor.message.disabled"))
+            event.reply(WebPromo.promoString(context) + context.localize("command.abuseprotection.limit.donor.message.disabled"))
                  .setEphemeral(true)
                  .complete();
             return;
         }
-
-        event.reply(context.localize("command.abuseprotection.limit.donor.message.set",
+        event.reply(WebPromo.promoString(context)  + context.localize("command.abuseprotection.limit.donor.message.set",
                      Replacement.create("AMOUNT", protection.maxGiven()),
                      Replacement.create("HOURS", protection.maxGivenHours())))
              .setEphemeral(true)

@@ -11,7 +11,7 @@ const emit = defineEmits<{
   canProceed: [value: boolean]
 }>()
 
-const { t, locale } = useI18n()
+const { t } = useI18n()
 const { session, updateGeneralSettings } = useSession()
 
 const language = ref<string>('')

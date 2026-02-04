@@ -8,6 +8,7 @@ package de.chojo.repbot.commands.repadmin.handler.resetdate;
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class SetResetDateNow implements SlashHandler {
@@ -21,7 +22,7 @@ public class SetResetDateNow implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         guildRepository.guild(event.getGuild()).settings().general().resetDateNow();
 
-        event.reply(context.localize("command.repadmin.resetdate.now.message.set"))
+        event.reply(WebPromo.promoString(context) +context.localize("command.repadmin.resetdate.now.message.set"))
              .setEphemeral(true)
              .complete();
     }

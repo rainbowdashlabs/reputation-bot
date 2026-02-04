@@ -354,6 +354,11 @@
       "DELETE_AND_REPOST": "Cancella e ripubblica",
       "REPOST": "Ripubblicare",
       "UPDATE": "Aggiornamento"
+    },
+    "send": {
+      "label": "Invia subito il post automatico",
+      "sending": "Invio in corso...",
+      "description": "Invia o aggiorna subito il post automatico sul canale a mano."
     }
   },
   "logChannel": {

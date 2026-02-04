@@ -9,6 +9,7 @@ import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.util.Completion;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
@@ -24,11 +25,11 @@ public class AnnouncementWhere implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var announcements = guildRepository.guild(event.getGuild()).settings().announcements();
         if (announcements.sameChannel("same channel".equalsIgnoreCase(event.getOption("where", OptionMapping::getAsString)))) {
-            event.reply(context.localize("command.channel.announcement.location.message.samechannel"))
+            event.reply(WebPromo.promoString(context) + context.localize("command.channel.announcement.location.message.samechannel"))
                  .setEphemeral(true)
                  .complete();
         } else {
-            event.reply(context.localize("command.channel.announcement.location.message.otherchannel"))
+            event.reply(WebPromo.promoString(context) + context.localize("command.channel.announcement.location.message.otherchannel"))
                  .setEphemeral(true)
                  .complete();
         }

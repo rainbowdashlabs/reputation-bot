@@ -11,6 +11,7 @@ import de.chojo.jdautil.util.Premium;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -46,17 +47,17 @@ public class Add implements SlashHandler {
         switch (result.result()) {
             case EMOJI_FOUND -> {
                 reactions.add(emote);
-                message.editMessage(context.localize("command.reactions.add.message.add",
+                message.editMessage(WebPromo.promoString(context) + "\n" + context.localize("command.reactions.add.message.add",
                         Replacement.create("EMOTE", result.mention()))).complete();
             }
             case EMOTE_FOUND -> {
                 reactions.add(result.id());
-                message.editMessage(context.localize("command.reactions.add.message.add",
+                message.editMessage(WebPromo.promoString(context) + "\n" + context.localize("command.reactions.add.message.add",
                         Replacement.create("EMOTE", result.mention()))).queue();
             }
-            case NOT_FOUND -> message.editMessage(context.localize("command.reactions.message.notfound")).queue();
+            case NOT_FOUND -> message.editMessage(WebPromo.promoString(context) + "\n" + context.localize("command.reactions.message.notfound")).queue();
             case UNKNOWN_EMOJI ->
-                    message.editMessage(context.localize("command.reactions.message.emojinotfound")).queue();
+                    message.editMessage(WebPromo.promoString(context) + "\n" + context.localize("command.reactions.message.emojinotfound")).queue();
         }
     }
 }

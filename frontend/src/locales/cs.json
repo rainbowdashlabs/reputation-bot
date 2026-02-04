@@ -354,6 +354,11 @@
       "DELETE_AND_REPOST": "Smazat a znovu zveřejnit",
       "REPOST": "Repost",
       "UPDATE": "Aktualizace"
+    },
+    "send": {
+      "label": "Odeslat automatický příspěvek nyní",
+      "sending": "Odesílání...",
+      "description": "Ručně odešlete nebo aktualizujte automatický příspěvek na kanál okamžitě."
     }
   },
   "logChannel": {

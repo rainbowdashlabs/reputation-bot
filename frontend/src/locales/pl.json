@@ -354,6 +354,11 @@
       "DELETE_AND_REPOST": "Usuń i opublikuj ponownie",
       "REPOST": "Repost",
       "UPDATE": "Aktualizacja"
+    },
+    "send": {
+      "label": "Wyślij automatyczny post teraz",
+      "sending": "Wysyłanie...",
+      "description": "Ręcznie wyślij lub zaktualizuj automatyczny post na kanale natychmiast."
     }
   },
   "logChannel": {

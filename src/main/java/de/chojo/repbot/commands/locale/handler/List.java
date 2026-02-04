@@ -8,6 +8,7 @@ package de.chojo.repbot.commands.locale.handler;
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.text.TextFormatting;
 import de.chojo.jdautil.wrapper.EventContext;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class List implements SlashHandler {
@@ -17,7 +18,7 @@ public class List implements SlashHandler {
         var builder = TextFormatting.getTableBuilder(languages,
                 context.localize("words.language"), context.localize("words.code"));
         languages.forEach(lang -> builder.setNextRow(lang.getNativeName(), lang.getLocale()));
-        event.reply(context.localize("command.locale.list.message.list") + "\n" + builder)
+        event.reply(WebPromo.promoString(context) +context.localize("command.locale.list.message.list") + "\n" + builder)
              .setEphemeral(true)
              .complete();
     }

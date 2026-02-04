@@ -3,7 +3,9 @@
  *
  *     Copyright (C) RainbowDashLabs and Contributor
  */
+
 package de.chojo.repbot.commands.roles.handler.receiver;
+import de.chojo.repbot.util.WebPromo;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.Replacement;
@@ -24,7 +26,7 @@ public class RemoveReceiver implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var role = event.getOption("role").getAsRole();
         guildRepository.guild(event.getGuild()).settings().thanking().receiverRoles().remove(role);
-        event.reply(context.localize("command.roles.receiver.remove.message.remove",
+        event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.roles.receiver.remove.message.remove",
                 Replacement.createMention(role))).setAllowedMentions(Collections.emptyList())
              .setEphemeral(true)
              .complete();

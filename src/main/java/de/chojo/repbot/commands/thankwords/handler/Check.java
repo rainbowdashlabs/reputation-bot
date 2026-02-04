@@ -3,7 +3,9 @@
  *
  *     Copyright (C) RainbowDashLabs and Contributor
  */
+
 package de.chojo.repbot.commands.thankwords.handler;
+import de.chojo.repbot.util.WebPromo;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
@@ -38,7 +40,7 @@ public class Check implements SlashHandler {
 
 
         if (!messageId.matches("\\d+")) {
-            event.reply(context.localize("error.invalidNumber"))
+            event.reply(WebPromo.promoString(context) + "\n" + context.localize("error.invalidNumber"))
                  .setEphemeral(true)
                  .complete();
             return;
@@ -48,7 +50,7 @@ public class Check implements SlashHandler {
         try {
             message = event.getChannel().retrieveMessageById(messageId).complete();
         } catch (ErrorResponseException e) {
-            event.reply(context.localize("error.invalidMessage"))
+            event.reply(WebPromo.promoString(context) + "\n" + context.localize("error.invalidMessage"))
                  .setEphemeral(true)
                  .complete();
             return;
@@ -57,7 +59,7 @@ public class Check implements SlashHandler {
         var result = messageAnalyzer.processMessage(guildSettings.thankwordPattern(), message, settings, true, settings.abuseProtection()
                                                                                                                        .maxMessageReputation());
         if (result.isEmpty()) {
-            event.reply(context.localize("command.thankwords.check.message.noMatch"))
+            event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.thankwords.check.message.noMatch"))
                  .setEphemeral(true)
                  .complete();
             return;

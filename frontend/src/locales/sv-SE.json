@@ -354,6 +354,11 @@
       "DELETE_AND_REPOST": "Radera och lägg upp igen",
       "REPOST": "Repost",
       "UPDATE": "Uppdatering"
+    },
+    "send": {
+      "label": "Skicka autopost nu",
+      "sending": "Skickar...",
+      "description": "Skicka eller uppdatera autoposten manuellt till kanalen omedelbart."
     }
   },
   "logChannel": {

@@ -14,6 +14,7 @@ import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.components.selections.StringSelectMenu;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -176,6 +177,7 @@ public class General implements SlashHandler {
 
         return new LocalizedEmbedBuilder(context.guildLocalizer())
                 .setTitle("command.repsettings.general.message.title")
+                .appendDescription(WebPromo.promoString(context) + "\n\n")
                 .appendDescription(messageSettings.toLocalizedString())
                 .setColor(Color.GREEN)
                 .build();

@@ -8,6 +8,7 @@ import AutopostActiveSettings from './autopostview/AutopostActiveSettings.vue'
 import AutopostChannelSettings from './autopostview/AutopostChannelSettings.vue'
 import AutopostIntervalSettings from './autopostview/AutopostIntervalSettings.vue'
 import AutopostTypeSettings from './autopostview/AutopostTypeSettings.vue'
+import AutopostSendSettings from './autopostview/AutopostSendSettings.vue'
 
 const { t } = useI18n()
 const { session } = useSession()
@@ -41,6 +42,7 @@ const isAutopostActive = computed(() => {
         <AutopostChannelSettings />
         <AutopostIntervalSettings />
         <AutopostTypeSettings />
+        <AutopostSendSettings />
       </div>
     </div>
   </SettingsContainer>

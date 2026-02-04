@@ -354,6 +354,11 @@
       "DELETE_AND_REPOST": "删除并重新发布",
       "REPOST": "转发",
       "UPDATE": "更新"
+    },
+    "send": {
+      "label": "立即发送自动发布",
+      "sending": "发送中...",
+      "description": "立即手动向频道发送或更新自动发布内容。"
     }
   },
   "logChannel": {

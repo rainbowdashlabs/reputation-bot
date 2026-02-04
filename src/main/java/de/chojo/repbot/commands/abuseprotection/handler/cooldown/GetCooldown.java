@@ -9,6 +9,7 @@ import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class GetCooldown implements SlashHandler {
@@ -32,7 +33,7 @@ public class GetCooldown implements SlashHandler {
                     Replacement.create("MINUTES", abuseSettings.cooldown()));
         }
         message = message + "\n$words.direction$: $%s$".formatted(abuseSettings.cooldownDirection().localCode());
-        event.reply(context.localize(message))
+        event.reply(WebPromo.promoString(context)  + context.localize(message))
              .setEphemeral(true)
              .complete();
     }

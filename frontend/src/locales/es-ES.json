@@ -354,6 +354,11 @@
       "DELETE_AND_REPOST": "Eliminar y volver a publicar",
       "REPOST": "Volver a publicar",
       "UPDATE": "Actualización"
+    },
+    "send": {
+      "label": "Enviar publicación automática ahora",
+      "sending": "Enviando...",
+      "description": "Envía o actualiza manualmente la publicación automática al canal de inmediato."
     }
   },
   "logChannel": {

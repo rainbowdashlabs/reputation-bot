@@ -354,6 +354,11 @@
       "DELETE_AND_REPOST": "Poista ja lähetä uudelleen",
       "REPOST": "Uudelleenjulkaisu",
       "UPDATE": "Päivitä"
+    },
+    "send": {
+      "label": "Lähetä automaattinen viesti nyt",
+      "sending": "Lähetetään...",
+      "description": "Lähetä tai päivitä automaattinen viesti kanavalle manuaalisesti välittömästi."
     }
   },
   "logChannel": {

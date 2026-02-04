@@ -19,6 +19,7 @@ import de.chojo.repbot.commands.bot.handler.Leave;
 import de.chojo.repbot.commands.bot.handler.Redeploy;
 import de.chojo.repbot.commands.bot.handler.Sample;
 import de.chojo.repbot.commands.bot.handler.Search;
+import de.chojo.repbot.commands.bot.handler.Session;
 import de.chojo.repbot.commands.bot.handler.SharedGuilds;
 import de.chojo.repbot.commands.bot.handler.entitlement.Create;
 import de.chojo.repbot.commands.bot.handler.entitlement.Delete;
@@ -33,6 +34,7 @@ import de.chojo.repbot.commands.bot.handler.system.Upgrade;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.statistic.Statistic;
+import de.chojo.repbot.web.sessions.SessionService;
 
 import static de.chojo.jdautil.interactions.slash.Argument.text;
 import static de.chojo.jdautil.interactions.slash.Group.group;
@@ -41,7 +43,7 @@ import static de.chojo.jdautil.interactions.slash.SubCommand.sub;
 public class BotAdmin implements SlashProvider<Slash> {
     private final Slash slash;
 
-    public BotAdmin(GuildRepository guildRepository, Configuration configuration, Statistic statistics) {
+    public BotAdmin(GuildRepository guildRepository, Configuration configuration, Statistic statistics, SessionService sessionService) {
         var builder = Slash.of("bot", "Bot admin commands.")
                           .unlocalized()
                           .guildOnly()
@@ -100,6 +102,9 @@ public class BotAdmin implements SlashProvider<Slash> {
                         .subCommand(sub("delete", "Delete Entitlement")
                                 .handler(new Delete())
                                 .argument(text("entitlementid", "Entitlement id").asRequired())))
+                .subCommand(sub("session", "Open a web session for another guild")
+                        .handler(new Session(sessionService))
+                        .argument(text("guild_id", "Guild id").asRequired()))
                 .subCommand(sub("sample", "Generate sample data")
                         .handler(new Sample(guildRepository)))
                 .build();

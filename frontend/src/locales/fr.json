@@ -354,6 +354,11 @@
       "DELETE_AND_REPOST": "Supprimer et republier",
       "REPOST": "Republier",
       "UPDATE": "Mise à jour"
+    },
+    "send": {
+      "label": "Envoyer la publication automatique maintenant",
+      "sending": "Envoi...",
+      "description": "Envoie ou mets à jour manuellement la publication automatique sur le canal tout de suite."
     }
   },
   "logChannel": {

@@ -11,6 +11,7 @@ import de.chojo.jdautil.util.Premium;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
@@ -27,7 +28,7 @@ public class ListType implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var channels = guildRepository.guild(event.getGuild()).settings().thanking().channels();
         if (event.getOptions().isEmpty()) {
-            event.reply(context.localize(
+            event.reply(WebPromo.promoString(context) +context.localize(
                          channels.isWhitelist() ? "command.channel.listType.message.whitelist" : "command.channel.listType.message.blacklist"))
                  .setEphemeral(true)
                  .complete();
@@ -41,7 +42,7 @@ public class ListType implements SlashHandler {
             return;
         }
 
-        event.reply(context.localize(
+        event.reply(WebPromo.promoString(context) +context.localize(
                      channels.listType(whitelist) ? "command.channel.listType.message.whitelist" : "command.channel.listType.message.blacklist"))
              .setEphemeral(true)
              .complete();

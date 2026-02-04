@@ -74,7 +74,15 @@ public class GuildSession {
     }
 
     public String sessionUrl() {
-        String url = "%s?token=%s".formatted(configuration.api().url(), key);
+        return pathUrl("");
+    }
+
+    public String setupUrl() {
+        return pathUrl("setup");
+    }
+
+    public String pathUrl(String path) {
+        String url = "%s/%s?token=%s".formatted(configuration.api().url(), path, key);
         return repGuild().settings().general().language().map(lang -> "%s&lang=%s".formatted(url, lang.getLocale())).orElse(url);
     }
 }

@@ -3,7 +3,9 @@
  *
  *     Copyright (C) RainbowDashLabs and Contributor
  */
+
 package de.chojo.repbot.commands.roles.handler.donor;
+import de.chojo.repbot.util.WebPromo;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.Replacement;
@@ -24,7 +26,7 @@ public class AddDonor implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var role = event.getOption("role").getAsRole();
         guildRepository.guild(event.getGuild()).settings().thanking().donorRoles().add(role);
-        event.reply(context.localize("command.roles.donor.add.message.add",
+        event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.roles.donor.add.message.add",
                 Replacement.createMention(role))).setAllowedMentions(Collections.emptyList())
              .setEphemeral(true)
              .complete();

@@ -354,6 +354,11 @@
       "DELETE_AND_REPOST": "삭제 후 재게시",
       "REPOST": "재게시",
       "UPDATE": "업데이트"
+    },
+    "send": {
+      "label": "지금 자동 게시하기",
+      "sending": "보내기 중...",
+      "description": "채널에 자동 게시물을 즉시 수동으로 전송하거나 업데이트하십시오."
     }
   },
   "logChannel": {

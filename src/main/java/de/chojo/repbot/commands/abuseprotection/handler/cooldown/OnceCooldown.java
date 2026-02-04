@@ -9,6 +9,7 @@ import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class OnceCooldown implements SlashHandler {
@@ -23,7 +24,7 @@ public class OnceCooldown implements SlashHandler {
         var guild = guildRepository.guild(event.getGuild());
         var abuseSettings = guild.settings().abuseProtection();
 
-        event.reply(context.localize("command.abuseprotection.cooldown.once.message.set",
+        event.reply(WebPromo.promoString(context) + context.localize("command.abuseprotection.cooldown.once.message.set",
                 Replacement.create("MINUTES", abuseSettings.cooldown(-1))))
              .setEphemeral(true)
              .complete();

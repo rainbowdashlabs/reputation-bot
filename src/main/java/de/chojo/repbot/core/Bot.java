@@ -31,16 +31,16 @@ import de.chojo.repbot.commands.profile.Profile;
 import de.chojo.repbot.commands.prune.Prune;
 import de.chojo.repbot.commands.ranking.Ranking;
 import de.chojo.repbot.commands.reactions.Reactions;
-import de.chojo.repbot.commands.reputation.Reputation;
 import de.chojo.repbot.commands.repadmin.RepAdmin;
 import de.chojo.repbot.commands.repsettings.RepSettings;
+import de.chojo.repbot.commands.reputation.Reputation;
 import de.chojo.repbot.commands.roles.Roles;
 import de.chojo.repbot.commands.scan.Scan;
 import de.chojo.repbot.commands.setup.Setup;
 import de.chojo.repbot.commands.supporter.Supporter;
 import de.chojo.repbot.commands.thankwords.Thankwords;
 import de.chojo.repbot.commands.top.Top;
-import de.chojo.repbot.commands.web.Web;
+import de.chojo.repbot.commands.settings.Settings;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.exceptions.MissingSupportTier;
 import de.chojo.repbot.listener.LogListener;
@@ -65,6 +65,7 @@ import de.chojo.repbot.service.reputation.ReputationService;
 import de.chojo.repbot.statistic.Statistic;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.repbot.util.PermissionErrorHandler;
+import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.interactions.InteractionHook;
@@ -81,9 +82,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Set;
 
+import static de.chojo.repbot.util.States.TEST_MODE;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Bot {
+    // TODO: Remove after decomissioning the commands
+    public static String WEB_COMMAND_MENTION = "";
     private static final Logger log = getLogger(Bot.class);
     private static final Set<ErrorResponse> IGNORE_ERRORS = Set.of(ErrorResponse.ILLEGAL_OPERATION_ARCHIVED_THREAD, ErrorResponse.MISSING_ACCESS);
     private final Data data;
@@ -220,7 +224,7 @@ public class Bot {
         var localizer = localization.localizer();
         var guilds = data.guildRepository();
 
-        BotAdmin botAdmin = new BotAdmin(guilds, configuration, statistic);
+        BotAdmin botAdmin = new BotAdmin(guilds, configuration, statistic, data.sessionService());
         hub = InteractionHub.builder(shardManager)
                             .withConversationSystem()
                             .withCommands(
@@ -235,7 +239,7 @@ public class Bot {
                                     new Invite(configuration),
                                     Info.create(configuration),
                                     new Log(guilds, configuration),
-                                    Setup.of(guilds, configuration),
+                                    new Setup(data.sessionService()),
                                     new Gdpr(data.gdpr()),
                                     new Prune(gdprService),
                                     new Reactions(guilds, configuration),
@@ -248,7 +252,7 @@ public class Bot {
                                     new Ranking(guilds, configuration),
                                     new Reputation(guilds, reputationService)/*TODO: remove rep command*/,
                                     new Supporter(premiumService, configuration, guilds),
-                                    new Web(data.sessionService()))
+                                    new Settings(data.sessionService()))
                             .withMessages(new MessageLog(guilds))
                             .withUsers(new UserReceived(guilds, configuration),
                                     new UserDonated(guilds, configuration))
@@ -285,6 +289,27 @@ public class Bot {
                                 return Collections.emptyList();
                             })
                             .build();
+
+        // TODO: Remove after decomissioning the settings commands
+        Long web;
+        if (TEST_MODE) {
+            web = shardManager.getShards().getFirst()
+                              .getGuildById(configuration.baseSettings().botGuild())
+                              .retrieveCommands().complete().stream()
+                              .filter(cmd -> cmd.getName().equals("web"))
+                              .map(ISnowflake::getIdLong)
+                              .findFirst()
+                              .get();
+
+        } else {
+            web = shardManager.getShards().getFirst()
+                                   .retrieveCommands().complete().stream()
+                                   .filter(cmd -> cmd.getName().equals("web"))
+                                   .map(ISnowflake::getIdLong)
+                                   .findFirst()
+                                   .get();
+        }
+        WEB_COMMAND_MENTION = "</settings:" + web + ">";
     }
 
     private void initListener() {
@@ -333,5 +358,9 @@ public class Bot {
 
     public AutopostService autopostService() {
         return autopostService;
+    }
+
+    public RoleAssigner roleAssigner() {
+        return roleAssigner;
     }
 }

@@ -15,6 +15,7 @@ import de.chojo.repbot.commands.thankwords.Thankwords;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.serialization.ThankwordsContainer;
+import de.chojo.repbot.web.sessions.SessionService;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -22,26 +23,10 @@ import java.io.IOException;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Setup extends SlashCommand {
-    private static final Logger log = getLogger(Setup.class);
-
-    public Setup(GuildRepository guildRepository, ThankwordsContainer thankwordsContainer, Configuration configuration) {
+    public Setup(SessionService sessionService) {
         super(Slash.of("setup", "command.setup.description")
                 .guildOnly()
                 .adminCommand()
-                .command(new Start(guildRepository, thankwordsContainer, configuration)));
-    }
-
-    public static Setup of(GuildRepository guildRepository, Configuration configuration) {
-        ThankwordsContainer thankwordsContainer;
-        try {
-            thankwordsContainer = new ObjectMapper()
-                    .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
-                    .readValue(Thankwords.class.getClassLoader().getResourceAsStream("Thankswords.json"),
-                            ThankwordsContainer.class);
-        } catch (IOException e) {
-            thankwordsContainer = null;
-            log.error("Could not read thankwords", e);
-        }
-        return new Setup(guildRepository, thankwordsContainer, configuration);
+                .command(new Start(sessionService)));
     }
 }

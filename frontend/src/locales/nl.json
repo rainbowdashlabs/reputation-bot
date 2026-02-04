@@ -354,6 +354,11 @@
       "DELETE_AND_REPOST": "Verwijderen en opnieuw posten",
       "REPOST": "Opnieuw posten",
       "UPDATE": "Update"
+    },
+    "send": {
+      "label": "Stuur nu automatisch bericht",
+      "sending": "Bezig met verzenden...",
+      "description": "Stuur of werk de autopost meteen handmatig bij op het kanaal."
     }
   },
   "logChannel": {

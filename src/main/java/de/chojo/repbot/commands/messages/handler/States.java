@@ -13,6 +13,7 @@ import de.chojo.jdautil.menus.entries.MenuEntry;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.components.selections.StringSelectMenu;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -96,6 +97,7 @@ public class States implements SlashHandler {
 
         return new LocalizedEmbedBuilder(context.guildLocalizer())
                 .setTitle("command.messages.states.message.title")
+                .appendDescription(WebPromo.promoString(context) + "\n\n")
                 .appendDescription(messages.toLocalizedString())
                 .setColor(Color.GREEN)
                 .build();

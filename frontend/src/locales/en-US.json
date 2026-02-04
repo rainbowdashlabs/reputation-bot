@@ -354,6 +354,11 @@
       "DELETE_AND_REPOST": "Delete and Repost",
       "REPOST": "Repost",
       "UPDATE": "Update"
+    },
+    "send": {
+      "label": "Send Autopost Now",
+      "sending": "Sending...",
+      "description": "Manually send or update the autopost to the channel immediately."
     }
   },
   "logChannel": {

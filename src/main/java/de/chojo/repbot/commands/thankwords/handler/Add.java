@@ -3,7 +3,9 @@
  *
  *     Copyright (C) RainbowDashLabs and Contributor
  */
+
 package de.chojo.repbot.commands.thankwords.handler;
+import de.chojo.repbot.util.WebPromo;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.Format;
@@ -32,7 +34,7 @@ public class Add implements SlashHandler {
 
         for (String character : invalid) {
             if (pattern.contains(character)) {
-                event.reply(context.localize("error.invalidcharacter", Replacement.create("INVALID", character, Format.CODE)))
+                event.reply(WebPromo.promoString(context) + "\n" + context.localize("error.invalidcharacter", Replacement.create("INVALID", character, Format.CODE)))
                      .setEphemeral(true)
                      .complete();
                 return;
@@ -42,14 +44,14 @@ public class Add implements SlashHandler {
         try {
             Pattern.compile(pattern);
         } catch (PatternSyntaxException e) {
-            event.reply(context.localize("error.invalidRegex"))
+            event.reply(WebPromo.promoString(context) + "\n" + context.localize("error.invalidRegex"))
                  .setEphemeral(true)
                  .complete();
             return;
         }
 
         if (guildRepository.guild(event.getGuild()).settings().thanking().thankwords().add(pattern)) {
-            event.reply(context.localize("command.thankwords.add.message.added",
+            event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.thankwords.add.message.added",
                     Replacement.create("REGEX", pattern, Format.CODE)))
                  .setEphemeral(true)
                  .complete();

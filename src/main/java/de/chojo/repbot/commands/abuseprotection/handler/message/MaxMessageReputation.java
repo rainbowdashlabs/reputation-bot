@@ -9,6 +9,7 @@ import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class MaxMessageReputation implements SlashHandler {
@@ -23,16 +24,15 @@ public class MaxMessageReputation implements SlashHandler {
         var guild = guildRepository.guild(event.getGuild());
         var abuseSettings = guild.settings().abuseProtection();
         if (event.getOptions().isEmpty()) {
-            event.reply(context.localize("command.abuseprotection.message.reputation.message.get",
+            event.reply(WebPromo.promoString(context) + context.localize("command.abuseprotection.message.reputation.message.get",
                     Replacement.create("VALUE", abuseSettings.maxMessageReputation())))
                  .setEphemeral(true)
                  .complete();
             return;
         }
         var maxRep = event.getOption("amount").getAsInt();
-
         maxRep = Math.max(1, maxRep);
-        event.reply(context.localize("command.abuseprotection.message.reputation.message.get",
+        event.reply(WebPromo.promoString(context) + context.localize("command.abuseprotection.message.reputation.message.get",
                 Replacement.create("VALUE", abuseSettings.maxMessageReputation(maxRep))))
              .setEphemeral(true)
              .complete();

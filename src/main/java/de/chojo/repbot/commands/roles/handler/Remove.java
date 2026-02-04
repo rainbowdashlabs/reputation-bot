@@ -10,6 +10,7 @@ import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.snapshots.ReputationRank;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
@@ -29,12 +30,13 @@ public class Remove extends BaseRoleModifier {
         if (ranks.rank(role).map(ReputationRank::remove).orElse(false)) {
             var menu = new LocalizedEmbedBuilder(context.guildLocalizer())
                     .setTitle("command.roles.remove.title.removed")
+                    .appendDescription(WebPromo.promoString(context) + "\n\n")
                     .setDescription("command.roles.remove.message.removed", Replacement.createMention("ROLE", role))
                     .build();
             refresh.accept(menu);
             return;
         }
-        event.reply(context.localize("command.roles.remove.message.noreprole"))
+        event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.roles.remove.message.noreprole"))
              .setEphemeral(true)
              .complete();
     }

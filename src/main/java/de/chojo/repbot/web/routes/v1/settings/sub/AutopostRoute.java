@@ -82,7 +82,7 @@ public class AutopostRoute implements RoutesBuilder {
 
         session.repGuild().settings().autopost().active(active);
 
-        if(active){
+        if (active) {
             autopostService.update(session.repGuild().guild());
         }
     }
@@ -100,12 +100,12 @@ public class AutopostRoute implements RoutesBuilder {
     public void updateChannel(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         Long channelId = ctx.bodyAsClass(Long.class);
-        
+
         // Validate channel ID if not 0 (0 means no channel)
         if (channelId != 0) {
             session.guildValidator().validateChannelIds(channelId);
         }
-        
+
         session.repGuild().settings().autopost().channel(channelId);
     }
 
@@ -154,6 +154,20 @@ public class AutopostRoute implements RoutesBuilder {
         session.repGuild().settings().autopost().refreshInterval(ctx.bodyAsClass(RefreshInterval.class));
     }
 
+    @OpenApi(
+            summary = "Send autopost now",
+            operationId = "sendAutopost",
+            path = "v1/settings/autopost/send",
+            methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
+            tags = {"Settings"},
+            responses = {@OpenApiResponse(status = "200")}
+    )
+    public void sendAutopost(Context ctx) {
+        GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
+        autopostService.update(session.repGuild());
+    }
+
     @Override
     public void buildRoutes() {
         path("autopost", () -> {
@@ -163,6 +177,7 @@ public class AutopostRoute implements RoutesBuilder {
             post("message", this::updateMessage, Role.GUILD_USER);
             post("refreshtype", this::updateRefreshType, Role.GUILD_USER);
             post("refreshinterval", this::updateRefreshInterval, Role.GUILD_USER);
+            post("send", this::sendAutopost, Role.GUILD_USER);
         });
     }
 }

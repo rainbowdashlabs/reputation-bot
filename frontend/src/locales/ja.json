@@ -354,6 +354,11 @@
       "DELETE_AND_REPOST": "削除して再投稿する",
       "REPOST": "再投稿",
       "UPDATE": "更新"
+    },
+    "send": {
+      "label": "今すぐ自動投稿する",
+      "sending": "送信中...",
+      "description": "手動でチャンネルに自動投稿をすぐに送信または更新する。"
     }
   },
   "logChannel": {

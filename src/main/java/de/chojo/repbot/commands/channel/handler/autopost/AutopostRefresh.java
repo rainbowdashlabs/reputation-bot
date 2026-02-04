@@ -9,6 +9,7 @@ import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.service.AutopostService;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class AutopostRefresh implements SlashHandler {
@@ -23,13 +24,13 @@ public class AutopostRefresh implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         if (!guildRepository.guild(event.getGuild()).settings().autopost().active()) {
-            event.reply("command.channel.autopost.refresh.message.inactive")
+            event.reply(WebPromo.promoString(context) + "command.channel.autopost.refresh.message.inactive")
                  .setEphemeral(true)
                  .complete();
             return;
         }
         autopostService.update(event.getGuild());
-        event.reply("command.channel.autopost.refresh.message.refreshed")
+        event.reply(WebPromo.promoString(context) + "command.channel.autopost.refresh.message.refreshed")
              .setEphemeral(true)
              .complete();
     }

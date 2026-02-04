@@ -159,6 +159,10 @@ export interface RanksPOJO {
   ranks: RankEntry[];
 }
 
+export interface RefreshStatus {
+  alreadyRunning: boolean;
+}
+
 export interface ThankingPOJO {
   channels: ChannelsSettingsPOJO;
   donorRoles: RolesHolderPOJO;

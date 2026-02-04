@@ -9,6 +9,8 @@ import RankList from './RankList.vue'
 const { session } = useSession()
 
 const ranks = ref<RankEntry[]>([])
+const isRefreshing = ref(false)
+const refreshMessage = ref('')
 
 watch(session, (newSession) => {
   if (newSession?.settings?.ranks) {
@@ -38,11 +40,52 @@ const onDeleteRank = async (roleId: string) => {
   ranks.value = ranks.value.filter(r => r.roleId !== roleId)
   await saveRanks()
 }
+
+const refreshRanks = async () => {
+  if (isRefreshing.value) return
+  
+  isRefreshing.value = true
+  refreshMessage.value = ''
+  
+  try {
+    const result = await api.refreshRanks()
+    if (result.alreadyRunning) {
+      refreshMessage.value = 'Refresh is already in progress'
+    } else {
+      refreshMessage.value = 'Rank refresh started successfully'
+    }
+  } catch (error) {
+    console.error('Failed to refresh ranks:', error)
+    refreshMessage.value = 'Failed to start rank refresh'
+  } finally {
+    isRefreshing.value = false
+    // Clear message after 5 seconds
+    setTimeout(() => {
+      refreshMessage.value = ''
+    }, 5000)
+  }
+}
 </script>
 
 <template>
   <div class="space-y-6">
-    <AddRankForm :existing-ranks="ranks" @add="onAddRank" />
+    <div class="flex items-center justify-between">
+      <div class="flex-1">
+        <AddRankForm :existing-ranks="ranks" @add="onAddRank" />
+      </div>
+      <div class="ml-4 flex flex-col items-end">
+        <button
+          @click="refreshRanks"
+          :disabled="isRefreshing"
+          class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+        >
+          {{ isRefreshing ? 'Refreshing...' : 'Refresh Ranks' }}
+        </button>
+        <p v-if="refreshMessage" class="mt-2 text-sm" :class="refreshMessage.includes('Failed') ? 'text-red-600' : 'text-green-600'">
+          {{ refreshMessage }}
+        </p>
+      </div>
+    </div>
     <RankList :ranks="ranks" @update="onUpdateRanks" @delete="onDeleteRank" />
   </div>
 </template>

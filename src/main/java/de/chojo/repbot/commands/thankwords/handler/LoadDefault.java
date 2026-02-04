@@ -3,7 +3,9 @@
  *
  *     Copyright (C) RainbowDashLabs and Contributor
  */
+
 package de.chojo.repbot.commands.thankwords.handler;
+import de.chojo.repbot.util.WebPromo;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.util.Completion;
@@ -30,7 +32,7 @@ public class LoadDefault implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var languageOption = event.getOption("language");
         if (languageOption == null) {
-            event.reply(context.localize("command.thankwords.loaddefault.message.available")
+            event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.thankwords.loaddefault.message.available")
                         + " " + String.join(", ", thankwordsContainer.getAvailableLanguages()))
                  .setEphemeral(true)
                  .complete();
@@ -39,7 +41,7 @@ public class LoadDefault implements SlashHandler {
         var language = languageOption.getAsString();
         var words = thankwordsContainer.get(language.toLowerCase(Locale.ROOT));
         if (words == null) {
-            event.reply(context.localize("command.locale.set.message.invalidlocale"))
+            event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.locale.set.message.invalidlocale"))
                  .setEphemeral(true)
                  .complete();
             return;
@@ -50,7 +52,7 @@ public class LoadDefault implements SlashHandler {
 
         var wordsJoined = words.stream().map(w -> StringUtils.wrap(w, "`")).collect(Collectors.joining(", "));
 
-        event.reply(context.localize("command.thankwords.loaddefault.message.added") + wordsJoined)
+        event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.thankwords.loaddefault.message.added") + wordsJoined)
              .setEphemeral(true)
              .complete();
     }

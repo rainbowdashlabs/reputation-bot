@@ -29,7 +29,6 @@ import org.slf4j.Logger;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.temporal.ChronoField;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -116,13 +115,14 @@ public class AutopostService {
             try {
                 channel.deleteMessageById(id).complete();
             } catch (ErrorResponseException e) {
-                if(e.getErrorResponse() == ErrorResponse.UNKNOWN_MESSAGE) {
+                if (e.getErrorResponse() == ErrorResponse.UNKNOWN_MESSAGE) {
                     // ignore
                     return;
                 }
                 throw e;
             }
-        };
+        }
+        ;
     }
 
     private void sendMessage(Autopost autopost, TextChannel channel, MessageEditData data) {

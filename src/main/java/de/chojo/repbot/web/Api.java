@@ -11,12 +11,14 @@ import de.chojo.repbot.core.Localization;
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.serialization.ThankwordsContainer;
 import de.chojo.repbot.service.AutopostService;
+import de.chojo.repbot.service.RoleAssigner;
 import de.chojo.repbot.web.routes.v1.data.DataRoute;
 import de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute;
 import de.chojo.repbot.web.routes.v1.session.SessionRoute;
 import de.chojo.repbot.web.routes.v1.settings.SettingsRoute;
 import de.chojo.repbot.web.sessions.SessionService;
 import io.javalin.http.ContentType;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -36,11 +38,11 @@ public class Api {
     private final SettingsRoute settingsRoute;
     private final DataRoute dataRoute;
 
-    public Api(SessionService sessionService, Metrics metrics, InteractionHub<?, ?, ?> hub, Localization localization, AutopostService autopostService) {
+    public Api(SessionService sessionService, Metrics metrics, InteractionHub<?, ?, ?> hub, Localization localization, AutopostService autopostService, RoleAssigner roleAssigner, ShardManager shardManager) {
         this.sessionService = sessionService;
         metricsRoute = new MetricsRoute(metrics);
         sessionRoute = new SessionRoute(sessionService);
-        settingsRoute = new SettingsRoute(hub, autopostService);
+        settingsRoute = new SettingsRoute(hub, autopostService, roleAssigner, shardManager);
         
         // Load thankwords container
         ThankwordsContainer thankwordsContainer;

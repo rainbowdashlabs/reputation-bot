@@ -354,6 +354,11 @@
       "DELETE_AND_REPOST": "Sil ve Yeniden Yayınla",
       "REPOST": "Yeniden yayınla",
       "UPDATE": "Güncelleme"
+    },
+    "send": {
+      "label": "Otomatik Gönderimi Şimdi Gönder",
+      "sending": "Gönderiliyor...",
+      "description": "Otomatik gönderiyi kanala hemen manuel olarak gönderin veya güncelleyin."
     }
   },
   "logChannel": {

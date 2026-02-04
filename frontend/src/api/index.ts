@@ -304,6 +304,10 @@ class ApiClient {
     });
   }
 
+  public async sendAutopost() {
+    await this.axiosInstance.post('/settings/autopost/send');
+  }
+
   // Log Channel
   public async updateLogChannel(data: Types.LogChannelPOJO) {
     await this.axiosInstance.post('/settings/logchannel', data);
@@ -422,6 +426,11 @@ class ApiClient {
 
   public async updateRanks(data: Types.RanksPOJO) {
     await this.axiosInstance.post('/settings/ranks', data);
+  }
+
+  public async refreshRanks(): Promise<Types.RefreshStatus> {
+    const response = await this.axiosInstance.post<Types.RefreshStatus>('/settings/ranks/refresh');
+    return response.data;
   }
 
   // Public Data

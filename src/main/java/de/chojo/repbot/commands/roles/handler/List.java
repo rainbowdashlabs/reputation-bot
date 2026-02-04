@@ -9,6 +9,7 @@ import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.IMentionable;
 import net.dv8tion.jda.api.entities.MessageEmbed;
@@ -27,7 +28,7 @@ public class List implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        event.replyEmbeds(getRoleList(context, event.getGuild()))
+        event.replyEmbeds(WebPromo.promoEmbed(context), getRoleList(context, event.getGuild()))
              .setAllowedMentions(Collections.emptyList())
              .setEphemeral(true)
              .complete();

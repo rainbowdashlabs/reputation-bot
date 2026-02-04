@@ -51,7 +51,7 @@
     "roles": "Rollen",
     "thankwords": "Dankesmuster",
     "abuseProtection": "Schutz vor Missbrauch",
-    "announcements": "Ankündigungen",
+    "announcements": "Aufstiegsnachricht",
     "autopost": "Autopost",
     "logChannel": "Protokollkanal",
     "reactions": "Reaktionen"
@@ -160,7 +160,7 @@
           }
         },
         "answer": {
-          "label": "Reputation via Antwort" ,
+          "label": "Reputation via Antwort",
           "description": "Vergib Reputation, wenn jemand in einer Antwort dankt."
         },
         "mention": {
@@ -354,6 +354,11 @@
       "DELETE_AND_REPOST": "Löschen und erneut posten",
       "REPOST": "Erneut posten",
       "UPDATE": "Aktualisieren"
+    },
+    "send": {
+      "label": "Autopost jetzt senden",
+      "sending": "Wird gesendet...",
+      "description": "Sende oder aktualisiere den Autopost manuell sofort im Kanal."
     }
   },
   "logChannel": {

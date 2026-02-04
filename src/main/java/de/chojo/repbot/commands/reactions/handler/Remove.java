@@ -9,6 +9,7 @@ import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.util.Choice;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
@@ -30,24 +31,23 @@ public class Remove implements SlashHandler {
         var matcher = EMOTE_PATTERN.matcher(emote);
         if (matcher.find()) {
             if (reactions.remove(matcher.group("id"))) {
-                event.reply(context.localize("command.reactions.remove.message.removed"))
+                event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.reactions.remove.message.removed"))
                      .setEphemeral(true)
                      .complete();
                 return;
             }
-            event.reply(context.localize("command.reactions.remove.message.notfound"))
+            event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.reactions.remove.message.notfound"))
                  .setEphemeral(true)
                  .queue();
             return;
         }
-
         if (reactions.remove(emote)) {
-            event.reply(context.localize("command.reactions.remove.message.removed"))
+            event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.reactions.remove.message.removed"))
                  .setEphemeral(true)
                  .queue();
             return;
         }
-        event.reply(context.localize("command.reactions.remove.message.notfound"))
+        event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.reactions.remove.message.notfound"))
              .setEphemeral(true)
              .queue();
     }
