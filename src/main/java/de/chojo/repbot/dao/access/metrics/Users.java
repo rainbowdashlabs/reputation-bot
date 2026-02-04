@@ -24,23 +24,6 @@ public class Users {
         return get("metrics_users_month", "month", offset, count);
     }
 
-    private UsersStatistic get(String table, String timeframe, int offset, int count) {
-        return Query.query("""
-                            SELECT %s,
-                                donor_count,
-                                receiver_count,
-                                total_count
-                            FROM %s
-                            WHERE %s <= date_trunc(?, now())::DATE - ?::INTERVAL
-                            ORDER BY %s DESC
-                            LIMIT ?
-                            """, timeframe, table, timeframe, timeframe)
-                    .single(call().bind(timeframe).bind(offset + " " + timeframe).bind(count))
-                    .map(rs -> UserStatistic.build(rs, timeframe))
-                    .allResults()
-                    .map(UsersStatistic::new);
-    }
-
     /**
      * Save the user count of the last week.
      */
@@ -75,5 +58,22 @@ public class Users {
                      """)
              .single()
              .insert();
+    }
+
+    private UsersStatistic get(String table, String timeframe, int offset, int count) {
+        return Query.query("""
+                            SELECT %s,
+                                donor_count,
+                                receiver_count,
+                                total_count
+                            FROM %s
+                            WHERE %s <= date_trunc(?, now())::DATE - ?::INTERVAL
+                            ORDER BY %s DESC
+                            LIMIT ?
+                            """, timeframe, table, timeframe, timeframe)
+                    .single(call().bind(timeframe).bind(offset + " " + timeframe).bind(count))
+                    .map(rs -> UserStatistic.build(rs, timeframe))
+                    .allResults()
+                    .map(UsersStatistic::new);
     }
 }

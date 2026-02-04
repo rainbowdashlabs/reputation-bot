@@ -9,6 +9,7 @@ import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.util.Collections;
@@ -24,8 +25,8 @@ public class RemoveDonor implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var role = event.getOption("role").getAsRole();
         guildRepository.guild(event.getGuild()).settings().thanking().donorRoles().remove(role);
-        event.reply(context.localize("command.roles.donor.remove.message.remove",
-                Replacement.createMention(role))).setAllowedMentions(Collections.emptyList())
+        event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.roles.donor.remove.message.remove",
+                     Replacement.createMention(role))).setAllowedMentions(Collections.emptyList())
              .setEphemeral(true)
              .complete();
     }

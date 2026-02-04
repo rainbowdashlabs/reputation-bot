@@ -44,7 +44,6 @@ import java.util.stream.Collectors;
 import static de.chojo.jdautil.util.Guilds.prettyName;
 
 public class Debug implements SlashHandler {
-    private final GuildRepository guildRepository;
     private static final Map<String, List<Permission>> PERMISSION_CATEGORIES = new LinkedHashMap<>() {{
         put("General", List.of(Arrays.copyOfRange(Permission.values(), 0, 14)));
         put("Membership Permissions", List.of(Arrays.copyOfRange(Permission.values(), 14, 20)));
@@ -54,22 +53,10 @@ public class Debug implements SlashHandler {
         put("Stage Channel Permissions", List.of(Arrays.copyOfRange(Permission.values(), 49, 50)));
         put("Advanced", List.of(Arrays.copyOfRange(Permission.values(), 50, 51)));
     }};
+    private final GuildRepository guildRepository;
 
     public Debug(GuildRepository guildRepository) {
         this.guildRepository = guildRepository;
-    }
-
-    @Override
-    public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        var guildId = event.getOption("guild_id").getAsLong();
-        var guild = event.getJDA().getShardManager().getGuildById(guildId);
-        if (guild == null) {
-            event.reply("Guild not found").setEphemeral(true).complete();
-            return;
-        }
-
-        var channel = guild.getGuildChannelById(event.getOption("channel_id", () -> 0L, OptionMapping::getAsLong));
-        sendDebug(event, context.interactionHub().pageServices(), guildRepository.guild(guild), channel);
     }
 
     public static void sendDebug(IReplyCallback callback, PageService pageService, RepGuild repGuild, @Nullable GuildChannel channel) {
@@ -195,5 +182,18 @@ public class Debug implements SlashHandler {
                              )
                              .forEachOrdered(builder::addField);
         return builder;
+    }
+
+    @Override
+    public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
+        var guildId = event.getOption("guild_id").getAsLong();
+        var guild = event.getJDA().getShardManager().getGuildById(guildId);
+        if (guild == null) {
+            event.reply("Guild not found").setEphemeral(true).complete();
+            return;
+        }
+
+        var channel = guild.getGuildChannelById(event.getOption("channel_id", () -> 0L, OptionMapping::getAsLong));
+        sendDebug(event, context.interactionHub().pageServices(), guildRepository.guild(guild), channel);
     }
 }

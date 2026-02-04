@@ -35,12 +35,6 @@ public class Received implements SlashHandler {
         this.configuration = configuration;
     }
 
-    @Override
-    public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        var user = event.getOption("user").getAsMember();
-        send(event, user, guildRepository, context, configuration);
-    }
-
     public static void send(IReplyCallback event, Member user, GuildRepository guildRepository, EventContext context, Configuration configuration) {
         var logAccess = guildRepository.guild(event.getGuild()).reputation().log().getUserReceivedLog(user.getUser(), PAGE_SIZE);
         var noPremium = Premium.isNotEntitled(context, configuration.skus().features().reputationLog().extendedPages());
@@ -77,5 +71,11 @@ public class Received implements SlashHandler {
                 return super.buttons();
             }
         }, true);
+    }
+
+    @Override
+    public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
+        var user = event.getOption("user").getAsMember();
+        send(event, user, guildRepository, context, configuration);
     }
 }

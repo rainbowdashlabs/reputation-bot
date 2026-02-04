@@ -10,14 +10,13 @@ import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.util.Text;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.time.DateTimeException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 
 public class SetResetDate implements SlashHandler {
     private final GuildRepository guildRepository;
@@ -36,7 +35,7 @@ public class SetResetDate implements SlashHandler {
         try {
             date = LocalDate.of(year, month, day).atStartOfDay(ZoneId.of("UTC")).toInstant();
         } catch (DateTimeException e) {
-            event.reply(context.localize("error.invalidDate"))
+            event.reply(WebPromo.promoString(context) + context.localize("error.invalidDate"))
                  .setEphemeral(true)
                  .complete();
             return;
@@ -44,7 +43,7 @@ public class SetResetDate implements SlashHandler {
 
         guildRepository.guild(event.getGuild()).settings().general().resetDate(date);
 
-        event.reply(context.localize("command.repadmin.resetdate.set.message.set", Replacement.create("DATE", Text.timestampDateTime(date))))
+        event.reply(WebPromo.promoString(context) + context.localize("command.repadmin.resetdate.set.message.set", Replacement.create("DATE", Text.timestampDateTime(date))))
              .setEphemeral(true)
              .complete();
     }

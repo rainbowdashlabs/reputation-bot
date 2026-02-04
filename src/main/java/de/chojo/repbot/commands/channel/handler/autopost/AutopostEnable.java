@@ -17,6 +17,7 @@ import de.chojo.repbot.dao.access.guild.settings.sub.autopost.RefreshInterval;
 import de.chojo.repbot.dao.access.guild.settings.sub.autopost.RefreshType;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.service.AutopostService;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.unions.GuildChannelUnion;
@@ -54,7 +55,7 @@ public class AutopostEnable implements SlashHandler {
         }
         Autopost autopost = guildRepository.guild(event.getGuild()).settings().autopost();
 
-        if(autopost.active()){
+        if (autopost.active()) {
             autopostService.delete(event.getGuild());
         }
 
@@ -73,9 +74,8 @@ public class AutopostEnable implements SlashHandler {
         }
 
         autopostService.update(event.getGuild());
-
-        event.getHook().editOriginal(context.localize("command.channel.autopost.enable.message.enabled",
-                Replacement.create("CHANNEL", MentionUtil.channel(autopost.channelId()))))
+        event.getHook().editOriginal(WebPromo.promoString(context) + context.localize("command.channel.autopost.enable.message.enabled",
+                     Replacement.create("CHANNEL", MentionUtil.channel(autopost.channelId()))))
              .complete();
     }
 

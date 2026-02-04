@@ -13,12 +13,13 @@ import de.chojo.jdautil.menus.entries.MenuEntry;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.components.selections.StringSelectMenu;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.Collections;
 import java.util.function.Consumer;
 
@@ -63,22 +64,22 @@ public class States implements SlashHandler {
                                        }))
                                        .addComponent(MenuEntry.of(reactions, ctx -> refresh(ctx, res -> settings.messages()
                                                                                                                 .reactionConfirmation(res), context, settings))
-                                               .hidden())
+                                                              .hidden())
                                        .addComponent(MenuEntry.of(commandreputationephemeral, ctx -> refresh(ctx, res -> settings.messages()
-                                                                                                                .commandReputationEphemeral(res), context, settings))
-                                               .hidden())
+                                                                                                                                 .commandReputationEphemeral(res), context, settings))
+                                                              .hidden())
                                        .asEphemeral()
                                        .build());
     }
 
     private StringSelectMenu getMenu(String id, String placeholder, String enabledDescr, String disabledDescr, boolean state) {
         return StringSelectMenu.create(id)
-                .setPlaceholder(placeholder)
-                .setRequiredRange(1, 1)
-                .addOption("words.enabled", "enabled", enabledDescr)
-                .addOption("words.disabled", "disabled", disabledDescr)
-                .setDefaultValues(Collections.singleton(state ? "enabled" : "disabled"))
-                .build();
+                               .setPlaceholder(placeholder)
+                               .setRequiredRange(1, 1)
+                               .addOption("words.enabled", "enabled", enabledDescr)
+                               .addOption("words.disabled", "disabled", disabledDescr)
+                               .setDefaultValues(Collections.singleton(state ? "enabled" : "disabled"))
+                               .build();
     }
 
     private void refresh(EntryContext<StringSelectInteractionEvent, StringSelectMenu> ctx, Consumer<Boolean> result, EventContext context, Settings guildSettings) {
@@ -96,6 +97,7 @@ public class States implements SlashHandler {
 
         return new LocalizedEmbedBuilder(context.guildLocalizer())
                 .setTitle("command.messages.states.message.title")
+                .appendDescription(WebPromo.promoString(context) + "\n\n")
                 .appendDescription(messages.toLocalizedString())
                 .setColor(Color.GREEN)
                 .build();

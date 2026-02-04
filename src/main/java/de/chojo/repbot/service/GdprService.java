@@ -89,10 +89,10 @@ public class GdprService implements Runnable {
     public void cleanupGuildUser(Guild guild, Long user) {
         log.info("User data of {} was pruned on guild {}.", user, guild.getIdLong());
         CompletableFuture.runAsync(() -> RemovalTask.anonymExecute(guild.getIdLong(), user), executorService)
-                .exceptionally(ex ->{
-                    log.error("Error during user data cleanup", ex);
-                    return null;
-                });
+                         .exceptionally(ex -> {
+                             log.error("Error during user data cleanup", ex);
+                             return null;
+                         });
     }
 
     private void cleanupGuilds() {

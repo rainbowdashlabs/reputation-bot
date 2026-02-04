@@ -5,8 +5,10 @@
  */
 package de.chojo.repbot.dao.access.guild.settings.sub.thanking;
 
+import com.fasterxml.jackson.annotation.JsonSerializeAs;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
+import de.chojo.repbot.web.pojo.settings.sub.thanking.ThankwordsPOJO;
 import net.dv8tion.jda.api.entities.Guild;
 import org.intellij.lang.annotations.Language;
 import org.slf4j.Logger;
@@ -22,7 +24,8 @@ import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class Thankwords implements GuildHolder {
+@JsonSerializeAs(ThankwordsPOJO.class)
+public class Thankwords extends ThankwordsPOJO implements GuildHolder {
     private static final Logger log = getLogger(Thankwords.class);
     @Language("RegExp")
     private static final String THANKWORD = "(?:^|\\b)%s(?:$|\\b)";
@@ -31,13 +34,12 @@ public class Thankwords implements GuildHolder {
 
     private final Thanking thanking;
 
-    private final Set<String> thankwords;
     private final StampedLock lock;
     private volatile Pattern cachedPattern;
 
     public Thankwords(Thanking thanking, Set<String> thankwords) {
+        super(thankwords);
         this.thanking = thanking;
-        this.thankwords = thankwords;
         this.lock = new StampedLock();
         // as 'this' does not escape in this constructor,
         // we don't need a write-lock here
@@ -54,6 +56,7 @@ public class Thankwords implements GuildHolder {
         return thanking.guildId();
     }
 
+    @Override
     public Set<String> words() {
         long stamp = lock.readLock();
         try {
@@ -67,23 +70,6 @@ public class Thankwords implements GuildHolder {
         // even if another thread has a write-lock, we either read the old pattern before the other thread compiles the new one,
         // or we read the new one - both fine for our use
         return cachedPattern;
-    }
-
-    /**
-     * Must be called in a write-lock if 'this' is accessible from other objects
-     */
-    private Pattern compilePattern() {
-        if (thankwords.isEmpty()) return Pattern.compile("");
-        return compilePattern(thankwords);
-    }
-
-    private Pattern compilePattern(Set<String> thankwords) {
-        var twPattern = thankwords.stream()
-                                  .map(t -> String.format(THANKWORD, t))
-                                  .collect(Collectors.joining("|"));
-        return Pattern.compile(String.format(PATTERN, twPattern),
-                Pattern.CASE_INSENSITIVE + Pattern.MULTILINE + Pattern.DOTALL);
-
     }
 
     public boolean add(String pattern) {
@@ -139,7 +125,38 @@ public class Thankwords implements GuildHolder {
         }
     }
 
+    public void apply(ThankwordsPOJO state) {
+        for (String word : state.words()) {
+            if (!thankwords.contains(word)) {
+                add(word);
+            }
+        }
+
+        for (String word : Set.copyOf(thankwords)) {
+            if (!state.words().contains(word)) {
+                remove(word);
+            }
+        }
+    }
+
     public String prettyString() {
         return words().stream().map("`%s`"::formatted).collect(Collectors.joining(", "));
+    }
+
+    /**
+     * Must be called in a write-lock if 'this' is accessible from other objects
+     */
+    private Pattern compilePattern() {
+        if (thankwords.isEmpty()) return Pattern.compile("");
+        return compilePattern(thankwords);
+    }
+
+    private Pattern compilePattern(Set<String> thankwords) {
+        var twPattern = thankwords.stream()
+                                  .map(t -> String.format(THANKWORD, t))
+                                  .collect(Collectors.joining("|"));
+        return Pattern.compile(String.format(PATTERN, twPattern),
+                Pattern.CASE_INSENSITIVE + Pattern.MULTILINE + Pattern.DOTALL);
+
     }
 }

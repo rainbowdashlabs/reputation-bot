@@ -28,6 +28,16 @@ spotless {
         licenseHeaderFile(rootProject.file("HEADER.txt"))
         target("**/*.java")
     }
+    format("javascript") {
+        licenseHeaderFile(rootProject.file("HEADER.txt"), "(import|const|let|var|export|//)")
+        target("frontend/src/**/*.js", "frontend/src/**/*.ts")
+        targetExclude("frontend/node_modules/**", "frontend/dist/**")
+    }
+    format("vue") {
+        licenseHeaderFile(rootProject.file("HEADER.txt"), "(<template|<script|<style)")
+        target("frontend/src/**/*.vue")
+        targetExclude("frontend/node_modules/**", "frontend/dist/**")
+    }
 }
 
 dependencies {
@@ -41,6 +51,8 @@ dependencies {
     annotationProcessor("io.javalin.community.openapi:openapi-annotation-processor:$openapi")
     implementation("io.javalin.community.openapi:javalin-openapi-plugin:$openapi") // for /openapi route with JSON scheme
     implementation("io.javalin.community.openapi:javalin-swagger-plugin:$openapi") // for Swagger UI
+
+    implementation(libs.bundles.jackson)
 
     // database
     implementation("org.postgresql", "postgresql", "42.7.9")
@@ -74,14 +86,23 @@ java {
 idea {
     project {
         settings {
+            var shared = listOf("-Dbot.cleanup=false",
+                    "-Dbot.config=config/config.testing.json",
+                    "-Dlog4j2.configurationFile=docker/config/log4j2.testing.xml",
+                    "-Dcjda.localisation.error.name=false",
+                    "-Dcjda.interactions.cleanguildcommands=true",
+                    "-Dcjda.interactions.testmode=true",
+                    "-Dbot.db.host=localhost,",
+                    "-Dbot.api.url=http://localhost:5173")
             runConfigurations {
                 register<org.jetbrains.gradle.ext.Application>("App-Testing") {
                     mainClass = "de.chojo.repbot.ReputationBot"
-                    jvmArgs = listOf("-Dbot.config=config/config.testing.json",
-                            "-Dlog4j2.configurationFile=docker/config/log4j2.testing.xml",
-                            "-Dcjda.localisation.error.name=false",
-                            "-Dcjda.interactions.cleanguildcommands=true",
-                            "-Dcjda.interactions.testmode=true").joinToString(" ")
+                    jvmArgs = shared.joinToString(" ")
+                    moduleName = "rep-bot.main"
+                }
+                register<org.jetbrains.gradle.ext.Application>("App-Testing - All SKUs") {
+                    mainClass = "de.chojo.repbot.ReputationBot"
+                    jvmArgs = (shared + "-Dbot.grantallsku=true").joinToString(" ")
                     moduleName = "rep-bot.main"
                 }
             }
@@ -123,10 +144,50 @@ tasks {
     }
 
     test {
-        useJUnitPlatform()
+        useJUnitPlatform {
+            excludeTags("locale", "database")
+        }
         testLogging {
             events("passed", "skipped", "failed")
         }
+    }
+
+    register<Test>("testLocale") {
+        group = "verification"
+        description = "Runs locale validation tests"
+        testClassesDirs = sourceSets.test.get().output.classesDirs
+        classpath = sourceSets.test.get().runtimeClasspath
+        useJUnitPlatform {
+            includeTags("locale")
+        }
+        testLogging {
+            events("passed", "skipped", "failed")
+        }
+    }
+
+    register<Test>("testDatabase") {
+        group = "verification"
+        description = "Runs database validation tests"
+        testClassesDirs = sourceSets.test.get().output.classesDirs
+        classpath = sourceSets.test.get().runtimeClasspath
+        useJUnitPlatform {
+            includeTags("database")
+        }
+        testLogging {
+            events("passed", "skipped", "failed")
+        }
+    }
+
+    register("checkLicenseBackend") {
+        group = "verification"
+        description = "Checks license headers for backend Java files"
+        dependsOn("spotlessJavaCheck")
+    }
+
+    register("checkLicenseFrontend") {
+        group = "verification"
+        description = "Checks license headers for frontend Vue and JavaScript files"
+        dependsOn("spotlessJavascriptCheck", "spotlessVueCheck")
     }
 
     shadowJar {

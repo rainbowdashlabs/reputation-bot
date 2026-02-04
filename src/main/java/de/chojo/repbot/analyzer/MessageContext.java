@@ -81,11 +81,6 @@ public class MessageContext implements MemberHolder {
         return this;
     }
 
-    protected MessageContext refresh(Message message) {
-        this.message = message;
-        return this;
-    }
-
     @Override
     public Member member() {
         return target;
@@ -131,5 +126,10 @@ public class MessageContext implements MemberHolder {
 
     public boolean isEmpty() {
         return members.isEmpty();
+    }
+
+    protected MessageContext refresh(Message message) {
+        this.message = message;
+        return this;
     }
 }

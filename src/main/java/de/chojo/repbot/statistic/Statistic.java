@@ -37,17 +37,6 @@ public class Statistic {
         return statistic;
     }
 
-    private ShardStatistic getShardStatistic(JDA jda) {
-        var shardId = jda.getShardInfo().getShardId();
-        var analyzedMessages = metrics.messages().hour(1, 1).get(0).count();
-
-        return new ShardStatistic(
-                shardId + 1,
-                jda.getStatus(),
-                analyzedMessages,
-                jda.getGuildCache().size());
-    }
-
     public SystemStatistics getSystemStatistic() {
         var shardStatistics = shardManager.getShardCache()
                                           .stream()
@@ -57,6 +46,17 @@ public class Statistic {
         return new SystemStatistics(ProcessStatistics.create(),
                 metrics.statistic().getStatistic().orElseGet(DataStatistic::new),
                 shardStatistics);
+    }
+
+    private ShardStatistic getShardStatistic(JDA jda) {
+        var shardId = jda.getShardInfo().getShardId();
+        var analyzedMessages = metrics.messages().hour(1, 1).get(0).count();
+
+        return new ShardStatistic(
+                shardId + 1,
+                jda.getStatus(),
+                analyzedMessages,
+                jda.getGuildCache().size());
     }
 
     private void refreshStatistics() {

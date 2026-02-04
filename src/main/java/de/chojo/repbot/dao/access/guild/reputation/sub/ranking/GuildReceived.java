@@ -18,6 +18,7 @@ import static de.chojo.sadu.queries.converter.StandardValueConverter.INSTANT_TIM
 
 public class GuildReceived extends GuildRanking {
     private static final String RANKING = QueryLoader.loadQuery("ranking", "guild", "received");
+
     public GuildReceived(Rankings rankings) {
         super(rankings, RankingType.RECEIVED);
     }

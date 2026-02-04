@@ -9,6 +9,7 @@ import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.entities.channel.unions.GuildChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
@@ -25,7 +26,7 @@ public class SystemChannelEnable implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         GuildChannelUnion channel = event.getOption("channel").getAsChannel();
 
-        if(channel.getType() != TEXT){
+        if (channel.getType() != TEXT) {
             event.reply(context.localize("error.onlyTextChannel"))
                  .setEphemeral(true)
                  .complete();
@@ -33,7 +34,7 @@ public class SystemChannelEnable implements SlashHandler {
         }
 
         guildRepository.guild(event.getGuild()).settings().general().systemChannel(channel.getIdLong());
-        event.reply(context.localize("command.channel.systemchannel.enable.message.enabled", Replacement.create("CHANNEL",channel.getAsMention())))
+        event.reply(WebPromo.promoString(context) + context.localize("command.channel.systemchannel.enable.message.enabled", Replacement.create("CHANNEL", channel.getAsMention())))
              .setEphemeral(true)
              .complete();
     }

@@ -64,6 +64,42 @@ public class Sample implements SlashHandler {
         event.getHook().sendMessage("Done").queue();
     }
 
+    public void addAnalyzerResult(Guild guild, TextChannel guildChannel, long messageId, AnalyzerResult result) {
+        if (result == null) return;
+        String resultString;
+        try {
+            resultString = MAPPER.writeValueAsString(result.toSnapshot());
+        } catch (JsonProcessingException e) {
+            return;
+        }
+        query("""
+                INSERT INTO analyzer_results(guild_id, channel_id, message_id, result) VALUES(?, ?, ?, ?::JSONB)
+                    ON CONFLICT (guild_id, message_id)
+                        DO NOTHING;
+                """).single(call().bind(guild.getIdLong())
+                                  .bind(guildChannel.getIdLong())
+                                  .bind(messageId)
+                                  .bind(resultString))
+                    .insert();
+    }
+
+    public void addReputationResults(Guild guild, TextChannel guildChannel, long messageId, SubmitResult result) {
+        String resultString;
+        try {
+            resultString = MAPPER.writeValueAsString(result);
+        } catch (JsonProcessingException e) {
+            return;
+        }
+        query("""
+                INSERT INTO reputation_results(guild_id, channel_id, message_id, result) VALUES(?, ?, ?, ?::JSONB);
+                """).single(call().bind(guild.getIdLong())
+                                  .bind(guildChannel.getIdLong())
+                                  .bind(messageId)
+                                  .bind(resultString))
+                    .insert();
+
+    }
+
     private void addReputation(Member receiver, Member donor, TextChannel channel) {
         var messageId = snowflakeCreator.nextLong();
         var thankType = ThankType.values()[current().nextInt(ThankType.values().length)];
@@ -110,41 +146,5 @@ public class Sample implements SlashHandler {
                 Collections.emptyList(),
                 0, null, null, null, 0
         );
-    }
-
-    public void addAnalyzerResult(Guild guild, TextChannel guildChannel, long messageId, AnalyzerResult result) {
-        if(result == null) return;
-        String resultString;
-        try {
-            resultString = MAPPER.writeValueAsString(result.toSnapshot());
-        } catch (JsonProcessingException e) {
-            return;
-        }
-        query("""
-                INSERT INTO analyzer_results(guild_id, channel_id, message_id, result) VALUES(?, ?, ?, ?::JSONB)
-                    ON CONFLICT (guild_id, message_id)
-                        DO NOTHING;
-                """).single(call().bind(guild.getIdLong())
-                                  .bind(guildChannel.getIdLong())
-                                  .bind(messageId)
-                                  .bind(resultString))
-                    .insert();
-    }
-
-    public void addReputationResults(Guild guild, TextChannel guildChannel, long messageId, SubmitResult result) {
-        String resultString;
-        try {
-            resultString = MAPPER.writeValueAsString(result);
-        } catch (JsonProcessingException e) {
-            return;
-        }
-        query("""
-                INSERT INTO reputation_results(guild_id, channel_id, message_id, result) VALUES(?, ?, ?, ?::JSONB);
-                """).single(call().bind(guild.getIdLong())
-                                  .bind(guildChannel.getIdLong())
-                                  .bind(messageId)
-                                  .bind(resultString))
-                    .insert();
-
     }
 }

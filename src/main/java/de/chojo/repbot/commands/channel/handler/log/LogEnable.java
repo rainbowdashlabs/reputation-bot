@@ -11,6 +11,7 @@ import de.chojo.jdautil.util.Premium;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.unions.GuildChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -41,8 +42,7 @@ public class LogEnable implements SlashHandler {
 
         guildRepository.guild(event.getGuild()).settings().logChannel().channel(channel.asTextChannel());
         guildRepository.guild(event.getGuild()).settings().logChannel().active(true);
-
-        event.reply(context.localize("command.channel.log.channel.message.enabled", Replacement.createMention(channel.asTextChannel())))
+        event.reply(WebPromo.promoString(context) + context.localize("command.channel.log.channel.message.enabled", Replacement.createMention(channel.asTextChannel())))
              .setEphemeral(true)
              .complete();
     }

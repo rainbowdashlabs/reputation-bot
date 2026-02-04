@@ -12,6 +12,7 @@ import de.chojo.repbot.dao.access.guild.settings.sub.thanking.Reactions;
 import de.chojo.repbot.dao.access.guild.settings.sub.thanking.ReceiverRoles;
 import de.chojo.repbot.dao.access.guild.settings.sub.thanking.Thankwords;
 import de.chojo.repbot.dao.components.GuildHolder;
+import de.chojo.repbot.web.pojo.settings.sub.ThankingPOJO;
 import de.chojo.sadu.mapper.wrapper.Row;
 import net.dv8tion.jda.api.entities.Guild;
 
@@ -21,7 +22,7 @@ import java.util.HashSet;
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 
-public class Thanking  implements GuildHolder {
+public class Thanking implements GuildHolder {
     public static final String DEFAULT_REACTION = "🏅";
     private final String mainReaction;
     private final Settings settings;
@@ -50,23 +51,31 @@ public class Thanking  implements GuildHolder {
         );
     }
 
+    public void apply(ThankingPOJO state) {
+        channels().apply(state.channels());
+        donorRoles().apply(state.donorRoles());
+        receiverRoles().apply(state.receiverRoles());
+        reactions().apply(state.reactions());
+        thankwords().apply(state.thankwords());
+    }
+
     public Channels channels() {
         if (channels != null) {
             return channels;
         }
         var channels = query("""
-                       SELECT channel_id
-                       FROM active_channel
-                       WHERE guild_id = ?
-                       """)
+                SELECT channel_id
+                FROM active_channel
+                WHERE guild_id = ?
+                """)
                 .single(call().bind(guildId()))
                 .map(r -> r.getLong("channel_id"))
                 .all();
         var categories = query("""
-                       SELECT category_id
-                       FROM active_categories
-                       WHERE guild_id = ?
-                       """)
+                SELECT category_id
+                FROM active_categories
+                WHERE guild_id = ?
+                """)
                 .single(call().bind(guildId()))
                 .mapAs(Long.class)
                 .all();
@@ -79,10 +88,10 @@ public class Thanking  implements GuildHolder {
             return donorRoles;
         }
         var roles = query("""
-                       SELECT role_id
-                       FROM donor_roles
-                       WHERE guild_id = ?
-                       """)
+                SELECT role_id
+                FROM donor_roles
+                WHERE guild_id = ?
+                """)
                 .single(call().bind(guildId()))
                 .mapAs(Long.class)
                 .all();
@@ -96,10 +105,10 @@ public class Thanking  implements GuildHolder {
             return receiverRoles;
         }
         var roles = query("""
-                       SELECT role_id
-                       FROM receiver_roles
-                       WHERE guild_id = ?
-                       """)
+                SELECT role_id
+                FROM receiver_roles
+                WHERE guild_id = ?
+                """)
                 .single(call().bind(guildId()))
                 .mapAs(Long.class)
                 .all();
@@ -113,10 +122,10 @@ public class Thanking  implements GuildHolder {
             return reactions;
         }
         var reactions = query("""
-                       SELECT reaction
-                       FROM guild_reactions
-                       WHERE guild_id = ?
-                       """)
+                SELECT reaction
+                FROM guild_reactions
+                WHERE guild_id = ?
+                """)
                 .single(call().bind(guildId()))
                 .mapAs(String.class)
                 .all();
@@ -129,10 +138,10 @@ public class Thanking  implements GuildHolder {
             return thankwords;
         }
         var thankwords = query("""
-                       SELECT thankword
-                       FROM thankwords
-                       WHERE guild_id = ?
-                       """)
+                SELECT thankword
+                FROM thankwords
+                WHERE guild_id = ?
+                """)
                 .single(call().bind(guildId()))
                 .mapAs(String.class)
                 .all();

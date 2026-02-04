@@ -88,7 +88,7 @@ public class Threading {
                     return;
                 } catch (ExecutionException e) {
                     t = e.getCause();
-                }catch (InterruptedException e) {
+                } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
             }

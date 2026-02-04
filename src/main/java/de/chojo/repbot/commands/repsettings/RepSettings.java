@@ -22,15 +22,15 @@ public class RepSettings extends SlashCommand {
 
     public RepSettings(GuildRepository guildRepository, Configuration configuration) {
         super(Slash.of("repsettings", "command.repsettings.description")
-                .guildOnly()
-                .adminCommand()
-                .subCommand(SubCommand.of("general", "command.repsettings.general.description")
-                        .handler(new General(guildRepository)))
-                .group(group("name", "command.repsettings.name.description")
-                        .subCommand(sub("set", "command.repsettings.name.set.description")
-                                .handler(new Set(guildRepository, configuration))
-                                .argument(text("name", "command.repsettings.name.set.options.name.description").minLength(1).maxLength(16).asRequired()))
-                        .subCommand(sub("reset", "command.repsettings.name.reset.description")
-                                .handler(new Reset(guildRepository)))));
+                   .guildOnly()
+                   .adminCommand()
+                   .subCommand(SubCommand.of("general", "command.repsettings.general.description")
+                                         .handler(new General(guildRepository)))
+                   .group(group("name", "command.repsettings.name.description")
+                           .subCommand(sub("set", "command.repsettings.name.set.description")
+                                   .handler(new Set(guildRepository, configuration))
+                                   .argument(text("name", "command.repsettings.name.set.options.name.description").minLength(1).maxLength(16).asRequired()))
+                           .subCommand(sub("reset", "command.repsettings.name.reset.description")
+                                   .handler(new Reset(guildRepository)))));
     }
 }

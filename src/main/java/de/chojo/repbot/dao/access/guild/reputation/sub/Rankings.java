@@ -6,13 +6,11 @@
 package de.chojo.repbot.dao.access.guild.reputation.sub;
 
 import de.chojo.repbot.dao.access.guild.reputation.Reputation;
-import de.chojo.repbot.dao.access.guild.reputation.sub.ranking.GuildReceived;
 import de.chojo.repbot.dao.access.guild.reputation.sub.ranking.GuildGiven;
+import de.chojo.repbot.dao.access.guild.reputation.sub.ranking.GuildReceived;
 import de.chojo.repbot.dao.access.guild.reputation.sub.ranking.UserRankings;
 import de.chojo.repbot.dao.components.GuildHolder;
 import net.dv8tion.jda.api.entities.Guild;
-
-import static de.chojo.sadu.queries.api.query.Query.query;
 
 public class Rankings implements GuildHolder {
     private final Reputation reputation;

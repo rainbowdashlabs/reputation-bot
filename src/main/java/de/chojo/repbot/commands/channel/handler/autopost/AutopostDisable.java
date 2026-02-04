@@ -9,6 +9,7 @@ import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.service.AutopostService;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class AutopostDisable implements SlashHandler {
@@ -24,7 +25,7 @@ public class AutopostDisable implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         guildRepository.guild(event.getGuild()).settings().autopost().active(false);
         autopostService.delete(event.getGuild());
-        event.reply("command.channel.autopost.disable.message.disabled")
+        event.reply(WebPromo.promoString(context) + "command.channel.autopost.disable.message.disabled")
              .setEphemeral(true)
              .complete();
     }

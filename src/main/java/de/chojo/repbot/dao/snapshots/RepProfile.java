@@ -94,12 +94,20 @@ public record RepProfile(RepUser repUser, long rank, long rankDonated, long user
         return build.build();
     }
 
+    public Optional<Member> resolveMember(Guild guild) {
+        try {
+            return Optional.ofNullable(guild.retrieveMemberById(userId()).complete());
+        } catch (RuntimeException e) {
+            return Optional.empty();
+        }
+    }
+
     private EmbedBuilder getBaseBuilder(Configuration configuration, LocalizationContext localizer, boolean detailed) {
         var ranks = repUser.reputation().repGuild().settings().ranks();
         var current = ranks.currentRank(repUser);
         var next = ranks.nextRank(repUser);
 
-        var currentRoleRep = current.map(ReputationRank::reputation).orElse(0L);
+        var currentRoleRep = current.map(ReputationRank::reputation).orElse(0);
         var nextRoleRep = next.map(ReputationRank::reputation).orElse(currentRoleRep);
         var progress = (double) (reputation() - currentRoleRep) / (nextRoleRep - currentRoleRep);
 
@@ -139,7 +147,7 @@ public record RepProfile(RepUser repUser, long rank, long rankDonated, long user
     }
 
     private void addDetails(EmbedBuilder build) {
-        var entries=5;
+        var entries = 5;
         String topDonor = repUser.reputation().ranking().user().given().defaultRanking(entries, repUser.member()).page(0)
                                  .stream().map(RankingEntry::simpleString).collect(Collectors.joining("\n"));
         String topReceiver = repUser.reputation().ranking().user().received().defaultRanking(entries, repUser.member()).page(0)
@@ -154,13 +162,5 @@ public record RepProfile(RepUser repUser, long rank, long rankDonated, long user
         build.addBlankField(false);
         build.addField("element.profile.mostgivenchannel", mostGivenChannel, true);
         build.addField("element.profile.mostreceivedchannel", mostReceivedChannel, true);
-    }
-
-    public Optional<Member> resolveMember(Guild guild) {
-        try {
-            return Optional.ofNullable(guild.retrieveMemberById(userId()).complete());
-        } catch (RuntimeException e) {
-            return Optional.empty();
-        }
     }
 }

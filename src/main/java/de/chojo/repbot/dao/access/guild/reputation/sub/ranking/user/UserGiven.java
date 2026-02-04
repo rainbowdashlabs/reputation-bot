@@ -9,10 +9,8 @@ import de.chojo.repbot.dao.access.guild.reputation.sub.ranking.RankingType;
 import de.chojo.repbot.dao.access.guild.reputation.sub.ranking.UserRankings;
 import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
 import de.chojo.repbot.dao.snapshots.RankingEntry;
-import de.chojo.sadu.queries.converter.StandardValueConverter;
 import net.dv8tion.jda.api.entities.Member;
 
-import java.time.LocalDate;
 import java.util.List;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
@@ -42,9 +40,9 @@ public class UserGiven extends UserRanking {
                         ORDER BY count DESC
                     )
                 SELECT
-                    rank() OVER (ORDER BY count DESC) as rank_donated,
-                    receiver_id as user_id,
-                    count as donated
+                    rank() OVER (ORDER BY count DESC) AS rank_donated,
+                    receiver_id AS user_id,
+                    count AS donated
                 FROM
                     counts
                 OFFSET ?
@@ -54,8 +52,8 @@ public class UserGiven extends UserRanking {
                               .bind("reset_date", resetDate(), INSTANT_TIMESTAMP)
                               .bind(member.getIdLong())
                               .bind(mode.dateInit(), INSTANT_TIMESTAMP)
-                        .bind(page * pageSize)
-                        .bind(pageSize))
+                              .bind(page * pageSize)
+                              .bind(pageSize))
                 .map(RankingEntry::buildGivenRanking)
                 .all();
     }

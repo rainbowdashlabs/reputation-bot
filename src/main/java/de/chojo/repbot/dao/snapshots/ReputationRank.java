@@ -8,7 +8,6 @@ package de.chojo.repbot.dao.snapshots;
 import de.chojo.repbot.dao.access.guild.settings.sub.Ranks;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.sadu.mapper.wrapper.Row;
-import de.chojo.sadu.queries.api.call.Call;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 import org.jetbrains.annotations.NotNull;
@@ -26,11 +25,11 @@ import static de.chojo.sadu.queries.api.query.Query.query;
  */
 public class ReputationRank implements GuildHolder, Comparable<ReputationRank> {
     private final long roleId;
-    private final long reputation;
+    private final int reputation;
     private final Ranks ranks;
     private Role role;
 
-    public ReputationRank(Ranks ranks, long roleId, long reputation) {
+    public ReputationRank(Ranks ranks, long roleId, int reputation) {
         this.ranks = ranks;
         this.roleId = roleId;
         this.reputation = reputation;
@@ -39,7 +38,7 @@ public class ReputationRank implements GuildHolder, Comparable<ReputationRank> {
     public static ReputationRank build(Ranks ranks, Row rs) throws SQLException {
         return new ReputationRank(ranks,
                 rs.getLong("role_id"),
-                rs.getLong("reputation")
+                rs.getInt("reputation")
         );
     }
 
@@ -54,7 +53,7 @@ public class ReputationRank implements GuildHolder, Comparable<ReputationRank> {
         return roleId;
     }
 
-    public long reputation() {
+    public int reputation() {
         return reputation;
     }
 
@@ -94,8 +93,8 @@ public class ReputationRank implements GuildHolder, Comparable<ReputationRank> {
     @Override
     public String toString() {
         return "ReputationRank{" +
-               "roleId=" + roleId +
-               ", reputation=" + reputation +
-               '}';
+                "roleId=" + roleId +
+                ", reputation=" + reputation +
+                '}';
     }
 }

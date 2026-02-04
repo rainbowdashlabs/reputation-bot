@@ -5,8 +5,10 @@
  */
 package de.chojo.repbot.dao.access.guild.settings.sub.thanking;
 
+import com.fasterxml.jackson.annotation.JsonSerializeAs;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
+import de.chojo.repbot.web.pojo.settings.sub.thanking.RolesHolderPOJO;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
@@ -22,14 +24,14 @@ import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public abstract class RolesHolder implements GuildHolder {
+@JsonSerializeAs(RolesHolderPOJO.class)
+public abstract class RolesHolder extends RolesHolderPOJO implements GuildHolder {
     private static final Logger log = getLogger(RolesHolder.class);
-    protected final Set<Long> roleIds;
     protected final Thanking thanking;
 
     public RolesHolder(Thanking thanking, Set<Long> roleIds) {
+        super(roleIds);
         this.thanking = thanking;
-        this.roleIds = roleIds;
     }
 
     public boolean hasRole(@Nullable Member member) {
@@ -53,8 +55,6 @@ public abstract class RolesHolder implements GuildHolder {
         return thanking.guild();
     }
 
-    protected abstract String targetTable();
-
     public boolean add(Role role) {
         var result = query("INSERT INTO %s(guild_id, role_id) VALUES (?,?) ON CONFLICT(guild_id, role_id) DO NOTHING", targetTable())
                 .single(call().bind(guildId()).bind(role.getIdLong()))
@@ -67,14 +67,43 @@ public abstract class RolesHolder implements GuildHolder {
     }
 
     public boolean remove(Role role) {
+        return remove(role.getIdLong());
+    }
+
+    public boolean remove(long roleId) {
         var result = query("DELETE FROM %s WHERE guild_id = ? AND role_id = ?", targetTable())
-                .single(call().bind(guildId()).bind(role.getIdLong()))
+                .single(call().bind(guildId()).bind(roleId))
                 .update()
                 .changed();
         if (result) {
-            roleIds.remove(role.getIdLong());
+            roleIds.remove(roleId);
         }
         return result;
+    }
+
+    public boolean add(long roleId) {
+        var result = query("INSERT INTO %s(guild_id, role_id) VALUES (?,?) ON CONFLICT(guild_id, role_id) DO NOTHING", targetTable())
+                .single(call().bind(guildId()).bind(roleId))
+                .update()
+                .changed();
+        if (result) {
+            roleIds.add(roleId);
+        }
+        return result;
+    }
+
+    public void apply(RolesHolderPOJO state) {
+        for (Long roleId : state.roleIds()) {
+            if (!roleIds.contains(roleId)) {
+                add(roleId);
+            }
+        }
+
+        for (Long roleId : Set.copyOf(roleIds)) {
+            if (!state.roleIds().contains(roleId)) {
+                remove(roleId);
+            }
+        }
     }
 
     public String prettyString() {
@@ -84,4 +113,6 @@ public abstract class RolesHolder implements GuildHolder {
                                          .orElse("Unkown (%d)".formatted(id)))
                       .collect(Collectors.joining(", "));
     }
+
+    protected abstract String targetTable();
 }

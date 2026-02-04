@@ -9,9 +9,7 @@ import de.chojo.jdautil.interactions.premium.SKUConfiguration;
 import de.chojo.repbot.config.elements.sku.SKUFeatures;
 import de.chojo.repbot.config.elements.sku.Subscription;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal", "CanBeFinal"})
 public class SKU {

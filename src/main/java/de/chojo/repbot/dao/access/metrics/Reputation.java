@@ -72,6 +72,39 @@ public class Reputation {
         return get("metrics_reputation_dow_year", "year", year);
     }
 
+    /**
+     * Save reputation counts of the previous day into metric tables.
+     */
+    public void saveRepCounts() {
+        Query.query("""
+                     INSERT INTO metrics_reputation(day, cause, count)
+                     SELECT received::DATE AS day,
+                            cause,
+                            count(1)       AS count
+                     FROM reputation_log
+                     WHERE received::DATE = now()::DATE - INTERVAL '1 DAY'
+                     GROUP BY day, cause
+                     ORDER BY day DESC
+                     ON CONFLICT(day, cause)
+                     DO UPDATE
+                     SET count = excluded.count;
+                     """)
+             .single()
+             .insert();
+        Query.query("""
+                     INSERT INTO metrics_reputation_count(day, count)
+                     SELECT now() - INTERVAL '1 DAY',
+                     count(1) 
+                     FROM reputation_log
+                     WHERE received < now()::DATE
+                     ON CONFLICT(day) 
+                     DO UPDATE
+                     SET count = excluded.count;
+                     """)
+             .single()
+             .insert();
+    }
+
     private CountsStatistic get(String table, String timeframe, int offset, int count) {
         return Query.query("""
                             SELECT %s,
@@ -139,38 +172,5 @@ public class Reputation {
                     .map(rs -> DowStatistics.build(rs, timeframe))
                     .allResults()
                     .map(DowsStatistic::new);
-    }
-
-    /**
-     * Save reputation counts of the previous day into metric tables.
-     */
-    public void saveRepCounts() {
-        Query.query("""
-                     INSERT INTO metrics_reputation(day, cause, count)
-                     SELECT received::DATE AS day,
-                            cause,
-                            count(1)       AS count
-                     FROM reputation_log
-                     WHERE received::DATE = now()::DATE - INTERVAL '1 DAY'
-                     GROUP BY day, cause
-                     ORDER BY day DESC
-                     ON CONFLICT(day, cause)
-                     DO UPDATE
-                     SET count = excluded.count;
-                     """)
-             .single()
-             .insert();
-        Query.query("""
-                     INSERT INTO metrics_reputation_count(day, count)
-                     SELECT now() - INTERVAL '1 DAY',
-                     count(1) 
-                     FROM reputation_log
-                     WHERE received < now()::DATE
-                     ON CONFLICT(day) 
-                     DO UPDATE
-                     SET count = excluded.count;
-                     """)
-             .single()
-             .insert();
     }
 }

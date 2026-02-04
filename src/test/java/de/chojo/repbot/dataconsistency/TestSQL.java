@@ -10,6 +10,7 @@ import de.chojo.sadu.datasource.DataSourceCreator;
 import de.chojo.sadu.postgresql.databases.PostgreSql;
 import de.chojo.sadu.testing.SaduTests;
 import de.chojo.sadu.updater.SqlUpdater;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
@@ -18,6 +19,7 @@ import org.testcontainers.utility.DockerImageName;
 import java.io.IOException;
 import java.sql.SQLException;
 
+@Tag("database")
 public class TestSQL {
     @Test
     void verifyStructure() throws IOException {

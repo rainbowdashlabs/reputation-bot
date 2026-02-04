@@ -7,7 +7,8 @@ package de.chojo.repbot.web.routes.v1.metrics;
 
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.dao.snapshots.statistics.CountsStatistic;
-import de.chojo.repbot.web.routes.v1.MetricsHolder;
+import de.chojo.repbot.web.routes.v1.metrics.util.MetricCache;
+import de.chojo.repbot.web.routes.v1.metrics.util.MetricsHolder;
 import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
@@ -15,14 +16,14 @@ import io.javalin.openapi.OpenApiContent;
 import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiResponse;
 
-import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_DAYS;
-import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_DAY_OFFSET;
-import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_HOURS;
-import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_HOUR_OFFSET;
-import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_MONTH;
-import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_MONTH_OFFSET;
-import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_WEEKS;
-import static de.chojo.repbot.web.routes.v1.MetricsRoute.MAX_WEEK_OFFSET;
+import static de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute.MAX_DAYS;
+import static de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute.MAX_DAY_OFFSET;
+import static de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute.MAX_HOURS;
+import static de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute.MAX_HOUR_OFFSET;
+import static de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute.MAX_MONTH;
+import static de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute.MAX_MONTH_OFFSET;
+import static de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute.MAX_WEEKS;
+import static de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute.MAX_WEEK_OFFSET;
 import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
 
@@ -34,7 +35,7 @@ public class Messages extends MetricsHolder {
     @OpenApi(
             summary = "Get the counts of analyzed messages per hour.",
             operationId = "countHour",
-            path = "messages/hour/{offset}/{count}",
+            path = "v1/metrics/messages/hour/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Messages"},
             responses = {
@@ -58,7 +59,7 @@ public class Messages extends MetricsHolder {
     @OpenApi(
             summary = "Get the counts of analyzed messages per day.",
             operationId = "countDay",
-            path = "messages/day/{offset}/{count}",
+            path = "v1/metrics/messages/day/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Messages"},
             responses = {
@@ -82,7 +83,7 @@ public class Messages extends MetricsHolder {
     @OpenApi(
             summary = "Get the counts of analyzed messages per week.",
             operationId = "countWeek",
-            path = "messages/week/{offset}/{count}",
+            path = "v1/metrics/messages/week/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Messages"},
             responses = {
@@ -106,7 +107,7 @@ public class Messages extends MetricsHolder {
     @OpenApi(
             summary = "Get the counts of analyzed messages per month.",
             operationId = "countMonth",
-            path = "messages/month/{offset}/{count}",
+            path = "v1/metrics/messages/month/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Messages"},
             responses = {
@@ -130,7 +131,7 @@ public class Messages extends MetricsHolder {
     @OpenApi(
             summary = "Get the total count of analyzed messages in these days.",
             operationId = "totalDay",
-            path = "messages/day/{offset}/{count}",
+            path = "v1/metrics/messages/day/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Messages"},
             responses = {
@@ -154,7 +155,7 @@ public class Messages extends MetricsHolder {
     @OpenApi(
             summary = "Get the total count of analyzed messages in these weeks.",
             operationId = "totalWeek",
-            path = "messages/week/{offset}/{count}",
+            path = "v1/metrics/messages/week/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Messages"},
             responses = {
@@ -178,7 +179,7 @@ public class Messages extends MetricsHolder {
     @OpenApi(
             summary = "Get the total count of analyzed messages in these months.",
             operationId = "totalMonth",
-            path = "messages/month/{offset}/{count}",
+            path = "v1/metrics/messages/month/{offset}/{count}",
             methods = HttpMethod.GET,
             tags = {"Messages"},
             responses = {

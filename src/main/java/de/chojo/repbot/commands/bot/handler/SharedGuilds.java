@@ -39,49 +39,13 @@ import static net.dv8tion.jda.api.Permission.MANAGE_SERVER;
 import static net.dv8tion.jda.api.Permission.MESSAGE_MANAGE;
 
 public class SharedGuilds implements SlashHandler {
-    private final Configuration configuration;
     private static final EnumSet<Permission> MODERATOR = EnumSet.of(MANAGE_SERVER, KICK_MEMBERS, BAN_MEMBERS, MESSAGE_MANAGE, MANAGE_CHANNEL, MANAGE_ROLES);
+    private final Configuration configuration;
     private final GuildRepository guildRepository;
 
     public SharedGuilds(Configuration configuration, GuildRepository guildRepository) {
         this.configuration = configuration;
         this.guildRepository = guildRepository;
-    }
-
-    @Override
-    public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        var userOpt = event.getOption("user");
-        var userIdOpt = event.getOption("user_id");
-        var deepSearch = event.getOption("deep", () -> false, OptionMapping::getAsBoolean);
-        if (userOpt == null && userIdOpt == null) {
-            event.reply("Provide a user").setEphemeral(true).complete();
-            return;
-        }
-
-        event.deferReply(true).complete();
-
-        User user;
-
-        if (userOpt != null) {
-            user = userOpt.getAsUser();
-        } else {
-            try {
-                user = event.getJDA().getShardManager().retrieveUserById(event.getIdLong()).complete();
-            } catch (RuntimeException e) {
-                event.getHook().editOriginal("Could not find this user.").complete();
-                return;
-            }
-        }
-
-        List<Guild> shared = sharedGuilds(user, deepSearch, configuration);
-        MessageEmbed messageEmbed = buildEmbed(user, shared);
-        MenuActionBuilder menuActionBuilder = MenuAction.forCallback(messageEmbed, event);
-        for (Guild guild : shared) {
-            menuActionBuilder.addComponent(MenuEntry.of(Button.primary(guild.getId(), guild.getName()), ctx -> {
-                Debug.sendDebug(ctx.event(), context.interactionHub().pageServices(), guildRepository.guild(guild), null);
-            }));
-        }
-        context.registerMenu(menuActionBuilder.build());
     }
 
     public static MessageEmbed sharedGuildsEmbed(User user, boolean deepSearch, Configuration configuration) {
@@ -136,5 +100,41 @@ public class SharedGuilds implements SlashHandler {
         if (member.hasPermission(ADMINISTRATOR)) return "Admin";
         if (MODERATOR.stream().anyMatch(permissions::contains)) return "Moderator";
         return "Member";
+    }
+
+    @Override
+    public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
+        var userOpt = event.getOption("user");
+        var userIdOpt = event.getOption("user_id");
+        var deepSearch = event.getOption("deep", () -> false, OptionMapping::getAsBoolean);
+        if (userOpt == null && userIdOpt == null) {
+            event.reply("Provide a user").setEphemeral(true).complete();
+            return;
+        }
+
+        event.deferReply(true).complete();
+
+        User user;
+
+        if (userOpt != null) {
+            user = userOpt.getAsUser();
+        } else {
+            try {
+                user = event.getJDA().getShardManager().retrieveUserById(event.getIdLong()).complete();
+            } catch (RuntimeException e) {
+                event.getHook().editOriginal("Could not find this user.").complete();
+                return;
+            }
+        }
+
+        List<Guild> shared = sharedGuilds(user, deepSearch, configuration);
+        MessageEmbed messageEmbed = buildEmbed(user, shared);
+        MenuActionBuilder menuActionBuilder = MenuAction.forCallback(messageEmbed, event);
+        for (Guild guild : shared) {
+            menuActionBuilder.addComponent(MenuEntry.of(Button.primary(guild.getId(), guild.getName()), ctx -> {
+                Debug.sendDebug(ctx.event(), context.interactionHub().pageServices(), guildRepository.guild(guild), null);
+            }));
+        }
+        context.registerMenu(menuActionBuilder.build());
     }
 }

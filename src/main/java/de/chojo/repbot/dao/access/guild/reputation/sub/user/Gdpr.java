@@ -17,8 +17,8 @@ import static de.chojo.sadu.queries.api.query.Query.query;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Gdpr implements MemberHolder {
-    private final RepUser repUser;
     private static final Logger log = getLogger(Gdpr.class);
+    private final RepUser repUser;
 
     public Gdpr(RepUser repUser) {
         this.repUser = repUser;
@@ -32,7 +32,7 @@ public class Gdpr implements MemberHolder {
     public void queueDeletion() {
         log.debug("User {} is scheduled for deletion on guild {}", userId(), guildId());
         query("""
-                   
+                
                 INSERT
                    INTO
                        cleanup_schedule(guild_id, user_id, delete_after)
@@ -40,20 +40,20 @@ public class Gdpr implements MemberHolder {
                        (?, ?, now() + ?::INTERVAL)
                    ON CONFLICT(guild_id, user_id)
                        DO NOTHING;
-                   """, repUser.configuration().cleanup().cleanupScheduleDays())
+                """, repUser.configuration().cleanup().cleanupScheduleDays())
                 .single(call().bind(guildId())
-                                       .bind(userId())
-                                       .bind("%d DAYS".formatted(repUser.configuration().cleanup().cleanupScheduleDays())))
+                              .bind(userId())
+                              .bind("%d DAYS".formatted(repUser.configuration().cleanup().cleanupScheduleDays())))
                 .update();
     }
 
     public void dequeueDeletion() {
         if (query("""
-                       DELETE FROM
-                           cleanup_schedule
-                       WHERE guild_id = ?
-                           AND user_id = ?;
-                       """)
+                DELETE FROM
+                    cleanup_schedule
+                WHERE guild_id = ?
+                    AND user_id = ?;
+                """)
                 .single(call().bind(guildId()).bind(userId()))
                 .update()
                 .changed()) {

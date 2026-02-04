@@ -21,7 +21,7 @@ public class Info extends SlashCommand {
 
     private Info(String version, Configuration configuration) {
         super(Slash.of("info", "command.info.description")
-                .command(new Show(version, configuration)));
+                   .command(new Show(version, configuration)));
     }
 
     public static Info create(Configuration configuration) {

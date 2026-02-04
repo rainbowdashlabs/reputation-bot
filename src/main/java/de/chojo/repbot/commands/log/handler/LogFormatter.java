@@ -28,20 +28,6 @@ public final class LogFormatter {
         throw new UnsupportedOperationException("This is a utility class.");
     }
 
-    static List<String> mapUserLogEntry(LocalizationContext context, List<ReputationLogEntry> logEntries, Function<ReputationLogEntry, Long> userId) {
-        List<String> entries = new ArrayList<>();
-        for (var logEntry : logEntries) {
-            var thankType = context.localize(logEntry.type().nameLocaleKey());
-            String jumpLink = "";
-            if (logEntry.type() != ThankType.COMMAND) {
-                jumpLink = createJumpLink(context, logEntry);
-            }
-            entries.add(String.format("%s **%s** %s %s", logEntry.timestamp(),
-                    thankType, User.fromId(userId.apply(logEntry)).getAsMention(), jumpLink));
-        }
-        return entries;
-    }
-
     public static List<String> mapMessageLogEntry(LocalizationContext context, List<ReputationLogEntry> logEntries) {
         if (logEntries.isEmpty()) return Collections.emptyList();
 
@@ -73,6 +59,29 @@ public final class LogFormatter {
                                                                                .getAsMention());
     }
 
+    public static void buildFields(List<String> entries, LocalizedEmbedBuilder embedBuilder) {
+        var joiner = new StringJoiner("\n");
+        for (var entry : entries) {
+            if (joiner.length() + entry.length() > MessageEmbed.DESCRIPTION_MAX_LENGTH) break;
+            joiner.add(entry);
+        }
+        embedBuilder.setDescription(joiner.toString());
+    }
+
+    static List<String> mapUserLogEntry(LocalizationContext context, List<ReputationLogEntry> logEntries, Function<ReputationLogEntry, Long> userId) {
+        List<String> entries = new ArrayList<>();
+        for (var logEntry : logEntries) {
+            var thankType = context.localize(logEntry.type().nameLocaleKey());
+            String jumpLink = "";
+            if (logEntry.type() != ThankType.COMMAND) {
+                jumpLink = createJumpLink(context, logEntry);
+            }
+            entries.add(String.format("%s **%s** %s %s", logEntry.timestamp(),
+                    thankType, User.fromId(userId.apply(logEntry)).getAsMention(), jumpLink));
+        }
+        return entries;
+    }
+
     static String createJumpLink(LocalizationContext context, ReputationLogEntry log) {
         var jump = context.localize("words.link",
                 Replacement.create("TARGET", "$words.message$"),
@@ -96,14 +105,5 @@ public final class LogFormatter {
         }
         buildFields(log, builder);
         return MessageEditData.fromEmbeds(builder.build());
-    }
-
-    public static void buildFields(List<String> entries, LocalizedEmbedBuilder embedBuilder) {
-        var joiner = new StringJoiner("\n");
-        for (var entry : entries) {
-            if (joiner.length() + entry.length() > MessageEmbed.DESCRIPTION_MAX_LENGTH) break;
-            joiner.add(entry);
-        }
-        embedBuilder.setDescription(joiner.toString());
     }
 }

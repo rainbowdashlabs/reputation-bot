@@ -8,14 +8,14 @@ package de.chojo.repbot.commands.thankwords.handler;
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
-import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.analyzer.MessageAnalyzer;
 import de.chojo.repbot.analyzer.results.match.MatchAnalyzerResult;
 import de.chojo.repbot.analyzer.results.match.ThankType;
 import de.chojo.repbot.dao.provider.GuildRepository;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 
 public class Check implements SlashHandler {
@@ -38,7 +38,7 @@ public class Check implements SlashHandler {
 
 
         if (!messageId.matches("\\d+")) {
-            event.reply(context.localize("error.invalidNumber"))
+            event.reply(WebPromo.promoString(context) + "\n" + context.localize("error.invalidNumber"))
                  .setEphemeral(true)
                  .complete();
             return;
@@ -48,7 +48,7 @@ public class Check implements SlashHandler {
         try {
             message = event.getChannel().retrieveMessageById(messageId).complete();
         } catch (ErrorResponseException e) {
-            event.reply(context.localize("error.invalidMessage"))
+            event.reply(WebPromo.promoString(context) + "\n" + context.localize("error.invalidMessage"))
                  .setEphemeral(true)
                  .complete();
             return;
@@ -57,7 +57,7 @@ public class Check implements SlashHandler {
         var result = messageAnalyzer.processMessage(guildSettings.thankwordPattern(), message, settings, true, settings.abuseProtection()
                                                                                                                        .maxMessageReputation());
         if (result.isEmpty()) {
-            event.reply(context.localize("command.thankwords.check.message.noMatch"))
+            event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.thankwords.check.message.noMatch"))
                  .setEphemeral(true)
                  .complete();
             return;

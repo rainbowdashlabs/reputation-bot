@@ -31,11 +31,12 @@ import de.chojo.repbot.commands.profile.Profile;
 import de.chojo.repbot.commands.prune.Prune;
 import de.chojo.repbot.commands.ranking.Ranking;
 import de.chojo.repbot.commands.reactions.Reactions;
-import de.chojo.repbot.commands.reputation.Reputation;
 import de.chojo.repbot.commands.repadmin.RepAdmin;
 import de.chojo.repbot.commands.repsettings.RepSettings;
+import de.chojo.repbot.commands.reputation.Reputation;
 import de.chojo.repbot.commands.roles.Roles;
 import de.chojo.repbot.commands.scan.Scan;
+import de.chojo.repbot.commands.settings.Settings;
 import de.chojo.repbot.commands.setup.Setup;
 import de.chojo.repbot.commands.supporter.Supporter;
 import de.chojo.repbot.commands.thankwords.Thankwords;
@@ -64,6 +65,7 @@ import de.chojo.repbot.service.reputation.ReputationService;
 import de.chojo.repbot.statistic.Statistic;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.repbot.util.PermissionErrorHandler;
+import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.interactions.InteractionHook;
@@ -80,11 +82,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Set;
 
+import static de.chojo.repbot.util.States.TEST_MODE;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Bot {
     private static final Logger log = getLogger(Bot.class);
     private static final Set<ErrorResponse> IGNORE_ERRORS = Set.of(ErrorResponse.ILLEGAL_OPERATION_ARCHIVED_THREAD, ErrorResponse.MISSING_ACCESS);
+    // TODO: Remove after decomissioning the commands
+    public static String WEB_COMMAND_MENTION = "";
     private final Data data;
     private final Threading threading;
     private final Configuration configuration;
@@ -124,11 +129,35 @@ public class Bot {
         initListener();
     }
 
+    public ShardManager shardManager() {
+        return shardManager;
+    }
+
+    public void shutdown() {
+        shardManager.shutdown();
+    }
+
+    public InteractionHub<Slash, Message, User> hub() {
+        return hub;
+    }
+
+    public Localization localization() {
+        return localization;
+    }
+
+    public AutopostService autopostService() {
+        return autopostService;
+    }
+
+    public RoleAssigner roleAssigner() {
+        return roleAssigner;
+    }
+
     private void initShardManager() throws LoginException {
         log.info("Initializing Shardmanager.");
-        roleAssigner = new RoleAssigner(data.guilds(), localization.localizer());
-        scan = new Scan(data.guilds(), configuration);
-        roles = new Roles(data.guilds(), new RoleAssigner(data.guilds(), localization.localizer()));
+        roleAssigner = new RoleAssigner(data.guildRepository(), localization.localizer());
+        scan = new Scan(data.guildRepository(), configuration);
+        roles = new Roles(data.guildRepository(), new RoleAssigner(data.guildRepository(), localization.localizer()));
 
         repBotCachePolicy = new RepBotCachePolicy(scan, roles);
         shardManager = DefaultShardManagerBuilder
@@ -193,7 +222,7 @@ public class Bot {
 
     private void initServices() {
         log.info("Setting up services");
-        var guilds = data.guilds();
+        var guilds = data.guildRepository();
         var worker = threading.repBotWorker();
 
         statistic = Statistic.of(shardManager, data.metrics(), worker);
@@ -210,16 +239,16 @@ public class Bot {
         SelfCleanupService.create(shardManager, localization.localizer(), guilds, data.cleanup(), configuration, worker);
         AnalyzerService.create(threading.repBotWorker(), data.analyzer());
         MetricService.create(threading.repBotWorker(), data.metrics());
-        autopostService = AutopostService.create(shardManager, data.guilds(), threading, localization.localizer());
+        autopostService = AutopostService.create(shardManager, data.guildRepository(), threading, localization.localizer());
         premiumService = PremiumService.of(guilds, threading, configuration, localization.localizer(), shardManager);
     }
 
     private void initInteractions() {
         log.info("Setting up interactions");
         var localizer = localization.localizer();
-        var guilds = data.guilds();
+        var guilds = data.guildRepository();
 
-        BotAdmin botAdmin = new BotAdmin(guilds, configuration, statistic);
+        BotAdmin botAdmin = new BotAdmin(guilds, configuration, statistic, data.sessionService());
         hub = InteractionHub.builder(shardManager)
                             .withConversationSystem()
                             .withCommands(
@@ -234,7 +263,7 @@ public class Bot {
                                     new Invite(configuration),
                                     Info.create(configuration),
                                     new Log(guilds, configuration),
-                                    Setup.of(guilds, configuration),
+                                    new Setup(data.sessionService()),
                                     new Gdpr(data.gdpr()),
                                     new Prune(gdprService),
                                     new Reactions(guilds, configuration),
@@ -246,7 +275,8 @@ public class Bot {
                                     botAdmin,
                                     new Ranking(guilds, configuration),
                                     new Reputation(guilds, reputationService)/*TODO: remove rep command*/,
-                                    new Supporter(premiumService, configuration, guilds))
+                                    new Supporter(premiumService, configuration, guilds),
+                                    new Settings(data.sessionService()))
                             .withMessages(new MessageLog(guilds))
                             .withUsers(new UserReceived(guilds, configuration),
                                     new UserDonated(guilds, configuration))
@@ -268,7 +298,7 @@ public class Bot {
                             })
                             .withGuildCommandMapper(cmd -> switch (cmd.name()) {
                                 case "bot" -> Collections.singletonList(configuration.baseSettings().botGuild());
-                                case "reputation" -> data.guilds().byCommandReputationEnabled();
+                                case "reputation" -> data.guildRepository().byCommandReputationEnabled();
                                 default -> Collections.emptyList();
                             })
                             .withDefaultMenuService()
@@ -283,12 +313,33 @@ public class Bot {
                                 return Collections.emptyList();
                             })
                             .build();
+
+        // TODO: Remove after decomissioning the settings commands
+        Long settingsCommandId;
+        if (TEST_MODE) {
+            settingsCommandId = shardManager.getShards().getFirst()
+                              .getGuildById(configuration.baseSettings().botGuild())
+                              .retrieveCommands().complete().stream()
+                              .filter(cmd -> cmd.getName().equals("settings"))
+                              .map(ISnowflake::getIdLong)
+                              .findFirst()
+                              .get();
+
+        } else {
+            settingsCommandId = shardManager.getShards().getFirst()
+                              .retrieveCommands().complete().stream()
+                              .filter(cmd -> cmd.getName().equals("settings"))
+                              .map(ISnowflake::getIdLong)
+                              .findFirst()
+                              .get();
+        }
+        WEB_COMMAND_MENTION = "</settings:" + settingsCommandId + ">";
     }
 
     private void initListener() {
         log.info("Setting up listener.");
         var localizer = localization.localizer();
-        var guilds = data.guilds();
+        var guilds = data.guildRepository();
         // init listener and services
         var reactionListener = new ReactionListener(guilds, localizer, reputationService, configuration);
         var voteListener = new ReputationVoteListener(guilds, reputationService, localizer, configuration);
@@ -311,13 +362,5 @@ public class Bot {
                 premiumService,
                 chatSupportService,
                 new MonitorService(data));
-    }
-
-    public ShardManager shardManager() {
-        return shardManager;
-    }
-
-    public void shutdown() {
-        shardManager.shutdown();
     }
 }

@@ -19,10 +19,6 @@ public class DirectAnalyzerResult extends MatchAnalyzerResult {
         this.receivers = receivers;
     }
 
-    protected List<Long> receiverIds() {
-        return receivers.stream().map(Member::getIdLong).toList();
-    }
-
     @Override
     public List<Member> receivers() {
         return receivers;
@@ -31,5 +27,9 @@ public class DirectAnalyzerResult extends MatchAnalyzerResult {
     @Override
     public ResultSnapshot toSnapshot() {
         return new DirectResultSnapshot(thankType(), donorId(), match(), receiverIds());
+    }
+
+    protected List<Long> receiverIds() {
+        return receivers.stream().map(Member::getIdLong).toList();
     }
 }

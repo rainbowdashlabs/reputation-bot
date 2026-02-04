@@ -13,7 +13,7 @@ import de.chojo.repbot.config.elements.sku.feature.ChannelBlacklist;
 import de.chojo.repbot.config.elements.sku.feature.DetailedProfile;
 import de.chojo.repbot.config.elements.sku.feature.LocaleOverrides;
 import de.chojo.repbot.config.elements.sku.feature.LogChannel;
-import de.chojo.repbot.config.elements.sku.feature.Nickname;
+import de.chojo.repbot.config.elements.sku.feature.Profile;
 import de.chojo.repbot.config.elements.sku.feature.ReputationCategories;
 import de.chojo.repbot.config.elements.sku.feature.ReputationChannel;
 import de.chojo.repbot.config.elements.sku.feature.ReputationLog;
@@ -30,7 +30,7 @@ public class SKUFeatures {
     DetailedProfile detailedProfile = new DetailedProfile();
     LogChannel logChannel = new LogChannel();
     AdditionalEmojis additionalEmojis = new AdditionalEmojis();
-    Nickname nickname = new Nickname();
+    Profile profile = new Profile();
 
     public ReputationLog reputationLog() {
         return reputationLog;
@@ -43,6 +43,7 @@ public class SKUFeatures {
     public ReputationCategories reputationCategories() {
         return reputationCategories;
     }
+
     public ReputationChannel reputationChannel() {
         return reputationChannel;
     }
@@ -75,7 +76,7 @@ public class SKUFeatures {
         return channelBlacklist;
     }
 
-    public Nickname nickname() {
-        return nickname;
+    public Profile profile() {
+        return profile;
     }
 }

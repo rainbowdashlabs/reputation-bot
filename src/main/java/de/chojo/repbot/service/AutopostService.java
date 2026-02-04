@@ -29,7 +29,6 @@ import org.slf4j.Logger;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.temporal.ChronoField;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -41,28 +40,18 @@ public class AutopostService {
     private final GuildRepository guildRepository;
     private final ILocalizer localizer;
 
-    public static AutopostService create(ShardManager shardManager, GuildRepository guildRepository, Threading threading, ILocalizer localizer) {
-        var service = new AutopostService(shardManager, guildRepository, localizer);
-        int delay = 61 - Instant.now().atZone(ZoneId.of("UTC")).getMinute();
-        log.debug("Next autopost refresh will be in {} minutes.", delay);
-        threading.repBotWorker().scheduleAtFixedRate(service::check, delay, 60, TimeUnit.MINUTES);
-        return service;
-    }
-
     public AutopostService(ShardManager shardManager, GuildRepository guildRepository, ILocalizer localizer) {
         this.shardManager = shardManager;
         this.guildRepository = guildRepository;
         this.localizer = localizer;
     }
 
-    private void check() {
-        log.info("Refreshing autoposts.");
-        LocalDateTime now = LocalDateTime.now().atZone(ZoneId.of("UTC")).toLocalDateTime();
-        for (RefreshInterval value : RefreshInterval.values()) {
-            if (value.isApplicable(now)) {
-                guildRepository.byAutopostRefreshInterval(value).forEach(this::update);
-            }
-        }
+    public static AutopostService create(ShardManager shardManager, GuildRepository guildRepository, Threading threading, ILocalizer localizer) {
+        var service = new AutopostService(shardManager, guildRepository, localizer);
+        int delay = 61 - Instant.now().atZone(ZoneId.of("UTC")).getMinute();
+        log.debug("Next autopost refresh will be in {} minutes.", delay);
+        threading.repBotWorker().scheduleAtFixedRate(service::check, delay, 60, TimeUnit.MINUTES);
+        return service;
     }
 
     public void update(Guild guild) {
@@ -116,13 +105,24 @@ public class AutopostService {
             try {
                 channel.deleteMessageById(id).complete();
             } catch (ErrorResponseException e) {
-                if(e.getErrorResponse() == ErrorResponse.UNKNOWN_MESSAGE) {
+                if (e.getErrorResponse() == ErrorResponse.UNKNOWN_MESSAGE) {
                     // ignore
                     return;
                 }
                 throw e;
             }
-        };
+        }
+        ;
+    }
+
+    private void check() {
+        log.info("Refreshing autoposts.");
+        LocalDateTime now = LocalDateTime.now().atZone(ZoneId.of("UTC")).toLocalDateTime();
+        for (RefreshInterval value : RefreshInterval.values()) {
+            if (value.isApplicable(now)) {
+                guildRepository.byAutopostRefreshInterval(value).forEach(this::update);
+            }
+        }
     }
 
     private void sendMessage(Autopost autopost, TextChannel channel, MessageEditData data) {

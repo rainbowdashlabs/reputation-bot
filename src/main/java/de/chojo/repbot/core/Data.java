@@ -15,6 +15,7 @@ import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.dao.provider.Voice;
 import de.chojo.repbot.util.LogNotify;
+import de.chojo.repbot.web.sessions.SessionService;
 import de.chojo.sadu.datasource.DataSourceCreator;
 import de.chojo.sadu.mapper.RowMapperRegistry;
 import de.chojo.sadu.mapper.rowmapper.RowMapper;
@@ -41,6 +42,7 @@ public class Data {
     private Metrics metrics;
     private Voice voice;
     private Analyzer analyzer;
+    private SessionService sessionService;
 
     private Data(Threading threading, Configuration configuration) {
         this.threading = threading;
@@ -58,6 +60,7 @@ public class Data {
         configure();
         updateDatabase();
         initDao();
+        sessionService = new SessionService(configuration, guildRepository());
     }
 
     public void initConnection() {
@@ -71,6 +74,38 @@ public class Data {
             }
             initConnection();
         }
+    }
+
+    public GuildRepository guildRepository() {
+        return guildRepository;
+    }
+
+    public Gdpr gdpr() {
+        return gdpr;
+    }
+
+    public Cleanup cleanup() {
+        return cleanup;
+    }
+
+    public Metrics metrics() {
+        return metrics;
+    }
+
+    public Voice voice() {
+        return voice;
+    }
+
+    public void shutDown() {
+        dataSource.close();
+    }
+
+    public Analyzer analyzer() {
+        return analyzer;
+    }
+
+    public SessionService sessionService() {
+        return sessionService;
     }
 
     private void updateDatabase() throws IOException, SQLException {
@@ -120,33 +155,5 @@ public class Data {
                                 .withThreadFactory(Threading.createThreadFactory(threading.hikariGroup()))
                                 .forSchema(data.schema())
                                 .build();
-    }
-
-    public GuildRepository guilds() {
-        return guildRepository;
-    }
-
-    public Gdpr gdpr() {
-        return gdpr;
-    }
-
-    public Cleanup cleanup() {
-        return cleanup;
-    }
-
-    public Metrics metrics() {
-        return metrics;
-    }
-
-    public Voice voice() {
-        return voice;
-    }
-
-    public void shutDown() {
-        dataSource.close();
-    }
-
-    public Analyzer analyzer() {
-        return analyzer;
     }
 }

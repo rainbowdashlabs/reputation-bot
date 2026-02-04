@@ -7,7 +7,6 @@ package de.chojo.repbot.config.elements.sku;
 
 import de.chojo.jdautil.interactions.base.SkuMeta;
 import de.chojo.jdautil.interactions.premium.SKU;
-import de.chojo.repbot.dao.access.guild.subscriptions.Subscription;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -23,16 +23,16 @@ public class Cleanup implements GuildHolder {
 
     public void selfCleanupPrompt() {
         query("""
-                       INSERT INTO self_cleanup(guild_id) VALUES(?)
-                       """)
+                INSERT INTO self_cleanup(guild_id) VALUES(?)
+                """)
                 .single(call().bind(guildId()))
                 .update();
     }
 
     public Optional<LocalDateTime> getCleanupPromptTime() {
         return query("""
-                       SELECT prompted FROM self_cleanup WHERE guild_id = ?
-                       """)
+                SELECT prompted FROM self_cleanup WHERE guild_id = ?
+                """)
                 .single(call().bind(guildId()))
                 .map(rs -> rs.getTimestamp("prompted").toLocalDateTime())
                 .first();
@@ -40,8 +40,8 @@ public class Cleanup implements GuildHolder {
 
     public void cleanupDone() {
         query("""
-                       DELETE FROM self_cleanup WHERE guild_id = ?
-                       """)
+                DELETE FROM self_cleanup WHERE guild_id = ?
+                """)
                 .single(call().bind(guildId()))
                 .update();
     }

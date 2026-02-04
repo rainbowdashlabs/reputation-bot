@@ -42,32 +42,6 @@ public abstract class BaseTop implements SlashHandler {
         this(guildRepository, configuration, true);
     }
 
-    @Override
-    public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        if (premium && Premium.isNotEntitled(context, configuration.skus().features().advancedRankings().advancedRankings())) {
-            Premium.replyPremium(context, configuration.skus().features().advancedRankings().advancedRankings());
-            return;
-        }
-
-        var guild = guildRepository.guild(event.getGuild());
-        var reputationMode = guild.settings().general().reputationMode();
-        if (event.getOption("mode") != null) {
-            var mode = event.getOption("mode").getAsString();
-            reputationMode = switch (mode) {
-                case "total" -> ReputationMode.TOTAL;
-                case "7 days" -> ReputationMode.ROLLING_WEEK;
-                case "30 days" -> ReputationMode.ROLLING_MONTH;
-                case "week" -> ReputationMode.WEEK;
-                case "month" -> ReputationMode.MONTH;
-                default -> reputationMode;
-            };
-        }
-
-        registerPage(buildRanking(event, guild, reputationMode, TOP_PAGE_SIZE), context);
-    }
-
-    protected abstract Ranking buildRanking(SlashCommandInteractionEvent event, RepGuild guild, ReputationMode reputationMode, int pageSize);
-
     public static MessageEditData buildRanking(List<RankingEntry> ranking, Ranking guildRanking, LocalizationContext context) {
         if (ranking.isEmpty()) {
             return BaseTop.buildEmptyRanking(guildRanking, context);
@@ -91,6 +65,30 @@ public abstract class BaseTop implements SlashHandler {
         return new LocalizedEmbedBuilder(context)
                 .setTitle(ranking.title(), ranking.replacement())
                 .setColor(Color.CYAN);
+    }
+
+    @Override
+    public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
+        if (premium && Premium.isNotEntitled(context, configuration.skus().features().advancedRankings().advancedRankings())) {
+            Premium.replyPremium(context, configuration.skus().features().advancedRankings().advancedRankings());
+            return;
+        }
+
+        var guild = guildRepository.guild(event.getGuild());
+        var reputationMode = guild.settings().general().reputationMode();
+        if (event.getOption("mode") != null) {
+            var mode = event.getOption("mode").getAsString();
+            reputationMode = switch (mode) {
+                case "total" -> ReputationMode.TOTAL;
+                case "7 days" -> ReputationMode.ROLLING_WEEK;
+                case "30 days" -> ReputationMode.ROLLING_MONTH;
+                case "week" -> ReputationMode.WEEK;
+                case "month" -> ReputationMode.MONTH;
+                default -> reputationMode;
+            };
+        }
+
+        registerPage(buildRanking(event, guild, reputationMode, TOP_PAGE_SIZE), context);
     }
 
     public void registerPage(Ranking ranking, EventContext context) {
@@ -123,4 +121,6 @@ public abstract class BaseTop implements SlashHandler {
             event.replyChoices(Completion.complete(option.getValue(), "total", "7 days", "30 days", "week", "month")).queue();
         }
     }
+
+    protected abstract Ranking buildRanking(SlashCommandInteractionEvent event, RepGuild guild, ReputationMode reputationMode, int pageSize);
 }

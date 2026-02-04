@@ -9,6 +9,7 @@ import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
@@ -31,8 +32,8 @@ public class AnnouncementLocation implements SlashHandler {
         }
 
         announcements.channel(channel.getAsChannel().asTextChannel());
-        event.reply(context.localize("command.channel.announcement.channel.message.set",
-                Replacement.createMention(channel.getAsChannel().asTextChannel())))
+        event.reply(WebPromo.promoString(context) + context.localize("command.channel.announcement.channel.message.set",
+                     Replacement.createMention(channel.getAsChannel().asTextChannel())))
              .setEphemeral(true)
              .complete();
     }

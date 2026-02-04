@@ -46,10 +46,10 @@ public record ProcessStatistics(long total, long used, long free, long max,
     public void appendTo(EmbedBuilder embedBuilder) {
         embedBuilder.addField("Process Info",
                 String.format("""
-                              Threads: %s
-                              Memory: %s/%s MB
-                              Uptime: %s
-                              """.stripIndent(),
+                                Threads: %s
+                                Memory: %s/%s MB
+                                Uptime: %s
+                                """.stripIndent(),
                         threads, used, total,
                         DurationFormatUtils
                                 .formatDuration(uptime(), "dd:HH:mm:ss")), false);

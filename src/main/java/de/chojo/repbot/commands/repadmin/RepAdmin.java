@@ -25,9 +25,6 @@ import de.chojo.repbot.service.RoleAssigner;
 
 import java.time.LocalDate;
 
-import static de.chojo.jdautil.interactions.slash.Group.group;
-import static de.chojo.jdautil.interactions.slash.SubCommand.sub;
-
 public class RepAdmin extends SlashCommand {
 
     public RepAdmin(GuildRepository guildRepository, Configuration configuration, RoleAssigner roleAssigner, PremiumService premiumService) {

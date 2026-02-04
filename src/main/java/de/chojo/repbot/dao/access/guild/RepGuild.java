@@ -29,9 +29,9 @@ public class RepGuild implements GuildHolder {
     private final Reputation reputation;
     private final Subscriptions subscriptions;
     private final Settings settings;
-    private Guild guild;
     private final Configuration configuration;
     private final LocaleOverrides localeOverrides;
+    private Guild guild;
 
     public RepGuild(Guild guild, Configuration configuration) {
         super();
@@ -92,7 +92,7 @@ public class RepGuild implements GuildHolder {
                 		WHERE guild_id = ?
                 	) users
                 WHERE user_id != 0
-                 """)
+                """)
                 .single(call().bind(guildId()).bind(guildId()))
                 .mapAs(Long.class)
                 .all();

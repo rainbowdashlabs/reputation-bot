@@ -5,10 +5,12 @@
  */
 package de.chojo.repbot.dao.access.guild.settings.sub.thanking;
 
+import com.fasterxml.jackson.annotation.JsonSerializeAs;
 import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.jdautil.util.Premium;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
+import de.chojo.repbot.web.pojo.settings.sub.thanking.ReactionsPOJO;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.emoji.CustomEmoji;
@@ -23,15 +25,13 @@ import java.util.stream.Collectors;
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 
-public class Reactions implements GuildHolder {
+@JsonSerializeAs(ReactionsPOJO.class)
+public class Reactions extends ReactionsPOJO implements GuildHolder {
     private final Thanking thanking;
-    private final Set<String> reactions;
-    private String mainReaction;
 
     public Reactions(Thanking thanking, String mainReaction, Set<String> reactions) {
+        super(reactions, mainReaction);
         this.thanking = thanking;
-        this.mainReaction = mainReaction;
-        this.reactions = reactions;
     }
 
     @Override
@@ -54,18 +54,6 @@ public class Reactions implements GuildHolder {
         return false;
     }
 
-    private boolean isReaction(String reaction) {
-        if (mainReaction.equals(reaction)) {
-            return true;
-        }
-        if (Premium.isNotEntitled(
-                thanking.settings().repGuild().subscriptions(),
-                thanking.settings().repGuild().configuration().skus().features().additionalEmojis().additionalEmojis())) {
-            return false;
-        }
-        return reactions.contains(reaction);
-    }
-
     public boolean reactionIsEmote() {
         return Verifier.isValidId(mainReaction());
     }
@@ -76,10 +64,6 @@ public class Reactions implements GuildHolder {
         }
         return Optional.of(guild().retrieveEmojiById(mainReaction()).onErrorMap(err -> null).complete())
                        .map(CustomEmoji::getAsMention);
-    }
-
-    public String mainReaction() {
-        return mainReaction;
     }
 
     public List<String> getAdditionalReactionMentions() {
@@ -142,7 +126,31 @@ public class Reactions implements GuildHolder {
         return result;
     }
 
-    public Set<String> reactions() {
-        return reactions;
+    public void apply(ReactionsPOJO state) {
+        if (!mainReaction.equals(state.mainReaction())) mainReaction(state.mainReaction());
+
+        for (String reaction : state.reactions()) {
+            if (!reactions.contains(reaction)) {
+                add(reaction);
+            }
+        }
+
+        for (String reaction : Set.copyOf(reactions)) {
+            if (!state.reactions().contains(reaction)) {
+                remove(reaction);
+            }
+        }
+    }
+
+    private boolean isReaction(String reaction) {
+        if (mainReaction.equals(reaction)) {
+            return true;
+        }
+        if (Premium.isNotEntitled(
+                thanking.settings().repGuild().subscriptions(),
+                thanking.settings().repGuild().configuration().skus().features().additionalEmojis().additionalEmojis())) {
+            return false;
+        }
+        return reactions.contains(reaction);
     }
 }

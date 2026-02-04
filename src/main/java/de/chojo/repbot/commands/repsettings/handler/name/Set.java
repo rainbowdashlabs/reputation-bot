@@ -10,10 +10,9 @@ import de.chojo.jdautil.util.Premium;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
-
-import java.util.Objects;
 
 public class Set implements SlashHandler {
     private static final int MAX_NAME_LENGTH = 16;
@@ -32,9 +31,8 @@ public class Set implements SlashHandler {
         }
         String name = event.getOption("name", OptionMapping::getAsString);
         guildRepository.guild(event.getGuild()).localeOverrides().setOverride("words.reputation", name);
-        event.reply(eventContext.localize("command.repsettings.name.set.message.set"))
+        event.reply(WebPromo.promoString(eventContext) + "\n" + eventContext.localize("command.repsettings.name.set.message.set"))
              .setEphemeral(true)
              .queue();
-
     }
 }

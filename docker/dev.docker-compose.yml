@@ -30,12 +30,22 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
+    ports:
+      - 8888:8888
     networks:
       - repbot
     profiles:
       - app
+    environment:
+      CJDA_INTERACTIONS_TESTMODE: true
+      BOT_GRANT_ALL_SKU: true
+      BOT_DB_HOST: "pgdatabase"
+      BOT_DB_PORT: "5432"
+      BOT_DB_DATBASE: "postgres"
+      BOT_DB_USERNAME: "root"
+      BOT_DB_PASSWORD: "changeme"
     volumes:
-      - ./config/:/app/config/
+      - ../config/config.json/:/app/config/config.json
 
 volumes:
   database:

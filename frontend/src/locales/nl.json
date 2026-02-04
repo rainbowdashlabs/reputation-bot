@@ -1,0 +1,458 @@
+{
+  "common": {
+    "save": "Opslaan",
+    "cancel": "Annuleren",
+    "delete": "Verwijderen",
+    "edit": "Bewerken",
+    "change": "Verandering",
+    "clear": "Duidelijk",
+    "confirm": "Bevestig",
+    "loading": "Bezig met laden..."
+  },
+  "navigation": {
+    "settings": "Instellingen",
+    "presets": "Voorinstellingen",
+    "setup": "Instellingen"
+  },
+  "presets": {
+    "title": "Voorinstellingen",
+    "description": "Snelle configuratie-instellingen om je op weg te helpen met veelgebruikte setups.",
+    "apply": "Solliciteren",
+    "applying": "Aan het aanvragen...",
+    "simpleReputation": {
+      "title": "Eenvoudig reputatiesysteem",
+      "description": "Ik wil een simpel reputatiesysteem waarbij gebruikers alleen via commando's reputatie kunnen geven, zonder ingewikkelde context bij te houden.",
+      "settings": "Deze preset schakelt alle reputatietypes uit, behalve commando's, en zet het bijhouden van de context van de gever en ontvanger uit."
+    },
+    "thankOnce": {
+      "title": "Slechts één keer bedanken",
+      "description": "Ik wil dat mensen elkaar maar één keer kunnen bedanken, zodat dezelfde mensen elkaar niet steeds opnieuw een reputatie geven.",
+      "settings": "Met deze preset stel je de cooldown maar één keer in en maak je de cooldown eenzijdig."
+    },
+    "noAbuse": {
+      "title": "Geen bescherming tegen misbruik",
+      "description": "Ik wil de bescherming tegen misbruik op basis van context uitschakelen en gebruikers de mogelijkheid geven om vrijer reputatie te geven zonder hun interactiegeschiedenis bij te houden.",
+      "settings": "Deze voorinstelling schakelt zowel het bijhouden van de context van de donor als van de ontvanger uit."
+    },
+    "default": {
+      "title": "Standaardconfiguratie",
+      "description": "Ik wil een evenwichtig reputatiesysteem met redelijke standaardinstellingen die voor de meeste servers goed werken.",
+      "settings": "Deze preset zorgt voor een bidirectionele afkoelperiode van 30 minuten, zet alle reputatiemodi aan behalve commando's, maakt reputatiebevestiging mogelijk en schakelt contextcontroles voor donateurs en ontvangers in."
+    },
+    "applied": "Toegepast"
+  },
+  "settings": {
+    "title": "Instellingen",
+    "general": "Algemeen",
+    "reputation": "Reputatie",
+    "messages": "Berichten",
+    "profile": "Profiel",
+    "ranks": "Rangen",
+    "channels": "Kanalen",
+    "roles": "Rollen",
+    "thankwords": "Bedankt!",
+    "abuseProtection": "Bescherming tegen misbruik",
+    "announcements": "Aankondigingen",
+    "autopost": "Automatisch posten",
+    "logChannel": "Logkanaal",
+    "reactions": "Reacties"
+  },
+  "locale": {
+    "selectLanguage": "Kies je taal"
+  },
+  "error": {
+    "noToken": {
+      "title": "Geen sessie gevonden",
+      "message": "Je hebt geen geldige sessietoken.",
+      "instruction": "Maak even een nieuwe sessie aan om toegang te krijgen tot deze app."
+    }
+  },
+  "premiumFeature": {
+    "title": "Supporter-functie",
+    "requiredTier": "Vereist ondersteuningsniveau:",
+    "message": "{name} is alleen voor supporters. Word supporter om het te kunnen gebruiken."
+  },
+  "profile": {
+    "description": "Pas aan hoe de bot eruitziet en zich gedraagt op je server.",
+    "reset": "Reset",
+    "premiumRequired": "Profiel aanpassen",
+    "nickname": {
+      "label": "Bot-bijnaam",
+      "placeholder": "Voer de bijnaam van de bot in",
+      "description": "Geef de bot op deze server een eigen bijnaam.",
+      "reset": "Zet je bijnaam terug naar de standaardnaam"
+    },
+    "profilePicture": {
+      "label": "Profielfoto",
+      "uploadButton": "Afbeelding uploaden",
+      "uploading": "Bezig met uploaden...",
+      "description": "Upload een eigen profielfoto voor de bot (max. 2 MB, 512 x 512 pixels)",
+      "reset": "Stel je profielfoto weer op de standaard in"
+    },
+    "reputationName": {
+      "label": "Naam",
+      "placeholder": "Voer een eigen reputatienaam in (bijvoorbeeld 'Punten', 'Karma')",
+      "description": "Pas de naam aan die je op deze server gebruikt.",
+      "reset": "Stel de reputatienaam weer in op de standaardwaarde"
+    },
+    "tosNote": "Alles wat tegen de servicevoorwaarden van Discord of de wet gaat, is niet oké en kan ertoe leiden dat deze functie voor de server wordt geblokkeerd."
+  },
+  "general": {
+    "description": "Zet de basisinstellingen van de bot voor deze server goed.",
+    "language": {
+      "label": "Bottaal",
+      "selectPlaceholder": "Kies een taal",
+      "description": "Kies de taal die de bot gaat gebruiken voor berichten en reacties op deze server."
+    },
+    "systemChannel": {
+      "label": "Systeemkanaal",
+      "selectPlaceholder": "Kies een kanaal",
+      "note": "Let op: dit kanaal moet worden ingesteld en moet een intern kanaal zijn. Het bevat belangrijke berichten over de service van de bot en berichten van de ontwikkelaars."
+    },
+    "roleSelect": {
+      "searchPlaceholder": "Zoek functies...",
+      "noRolesFound": "Geen rollen gevonden"
+    },
+    "ranks": {
+      "description": "Stel de reputatieranglijsten en de bijbehorende rollen in.",
+      "stackRoles": {
+        "label": "Stapelrollen",
+        "description": "Als je dit aan zet, krijg je alle rangen die je kunt krijgen, in plaats van alleen de hoogste."
+      },
+      "addRank": "Nieuwe rang toevoegen",
+      "reputationRequired": "Vereiste reputatie",
+      "roleAlreadyAdded": "Deze functie heeft al een rang.",
+      "reputationAlreadyUsed": "Deze reputatiewaarde wordt al gebruikt door een andere rang.",
+      "noRanks": "Er zijn nog geen rangen ingesteld.",
+      "reputationPlaceholder": "bijvoorbeeld 100",
+      "refresh": {
+        "button": "Ranglijst vernieuwen",
+        "refreshing": "Verfrissend...",
+        "alreadyRunning": "Het vernieuwen is al bezig.",
+        "success": "Het vernieuwen van de ranglijst is gelukt.",
+        "failed": "Het lukte niet om de ranglijst te vernieuwen."
+      }
+    },
+    "reputation": {
+      "description": "Zet even op hoe je reputatie wordt berekend en welke functies je wilt gebruiken.",
+      "mode": {
+        "label": "Reputatiemodus",
+        "description": "Kies hoe je reputatie wordt berekend en weergegeven.",
+        "modes": {
+          "TOTAL": "Totale reputatie",
+          "ROLLING_WEEK": "Rollende week",
+          "ROLLING_MONTH": "Rollende maand",
+          "WEEK": "Deze week",
+          "MONTH": "Deze maand"
+        },
+        "descriptions": {
+          "TOTAL": "Gebruik de totale reputatie die een gebruiker ooit heeft gekregen.",
+          "ROLLING_WEEK": "Gebruik de reputatie die je in de afgelopen 7 dagen hebt gekregen.",
+          "ROLLING_MONTH": "Gebruik de reputatie die je in de afgelopen 30 dagen hebt gekregen.",
+          "WEEK": "Gebruik de reputatie die je sinds het begin van deze week hebt gekregen.",
+          "MONTH": "Gebruik de reputatie die je sinds het begin van deze maand hebt gekregen."
+        }
+      },
+      "resetDate": {
+        "label": "Datum resetten",
+        "description": "De datum waarop je reputatie wordt gereset. Kies een datum in de toekomst om een reset in te plannen.",
+        "clear": "Datum wissen"
+      },
+      "types": {
+        "reaction": {
+          "label": "Reactie Reputatie",
+          "description": "Geef reputatie als er een specifieke reactie aan een bericht wordt toegevoegd.",
+          "confirmation": {
+            "label": "Bevestiging van reactie",
+            "description": "Stuur een berichtje als je een reactie hebt gegeven."
+          }
+        },
+        "answer": {
+          "label": "Antwoord Reputatie",
+          "description": "Geef reputatie als iemand bedankt wordt voor een bericht in een antwoord."
+        },
+        "mention": {
+          "label": "Reputatie noemen",
+          "description": "Geef reputatie als iemand wordt genoemd met een bedankje."
+        },
+        "fuzzy": {
+          "label": "Fuzzy Matching",
+          "description": "Geef reputatie door woorden rond het woord 'bedankt' te matchen met gebruikersnamen die in het kanaal zitten."
+        },
+        "embed": {
+          "label": "Reputatie integreren",
+          "description": "Stuur een embed-lijst met gebruikers die bij het laatste gesprek betrokken waren als je geen doelwit kunt vinden."
+        },
+        "direct": {
+          "label": "Directe integratie Reputatie",
+          "description": "Geef automatisch reputatie als er maar één gebruiker in de embed zit."
+        },
+        "command": {
+          "label": "Reputatie van het commando",
+          "description": "Geef reputatie via het commando /reputation.",
+          "ephemeral": {
+            "label": "Kortstondige reactie",
+            "description": "Verstuur het antwoord verborgen voor andere gebruikers wanneer je reputatie geeft via een commando."
+          }
+        }
+      }
+    },
+    "roles": {
+      "description": "Zet even op welke rollen wel en niet reputatie mogen geven en krijgen.",
+      "donor": {
+        "label": "Rollen van donateurs",
+        "description": "Als dit is ingeschakeld, kunnen alleen mensen met minstens één van deze rollen een reputatie geven."
+      },
+      "receiver": {
+        "label": "Rollen van de ontvanger",
+        "description": "Als dit is ingeschakeld, kunnen alleen mensen met minstens één van deze rollen een reputatie krijgen."
+      },
+      "list": {
+        "label": "Geselecteerde rollen",
+        "description": "Kies welke rollen nodig zijn."
+      }
+    },
+    "channels": {
+      "description": "Zeg maar waar de bot wel en niet actief moet zijn.",
+      "listType": {
+        "label": "Lijsttype",
+        "description": "Kies of de geselecteerde kanalen en categorieën toegestaan of geweigerd worden.",
+        "allow": "Toegestane lijst",
+        "deny": "Lijst met geweigerde personen",
+        "premiumRequired": "Lijst met geweigerde personen"
+      },
+      "list": {
+        "label": "Kanalen en categorieën",
+        "description": "Kies de kanalen en categorieën die in de lijst moeten staan.",
+        "channels": "Kanalen",
+        "categories": "Categorieën"
+      },
+      "premium": {
+        "channelLimitWarning": "Als je meer dan {limit} kanalen wilt kiezen, moet je supporter worden. Word supporter om deze functie te kunnen gebruiken.",
+        "categoryLimitWarning": "Als je meer dan {limit} categorie wilt kiezen, moet je een supporter zijn. Word supporter om dit te kunnen doen."
+      }
+    }
+  },
+  "reactions": {
+    "title": "Reacties",
+    "description": "Stel de emoji's in die je gebruikt om reputatie te geven.",
+    "main": {
+      "label": "Belangrijkste reactie",
+      "description": "De emoji die je vooral gebruikt om iemand een compliment te geven."
+    },
+    "additional": {
+      "label": "Extra reacties",
+      "description": "Extra emoji's die je ook kunt gebruiken om een beoordeling te geven.",
+      "premiumRequired": "Extra reacties",
+      "add": "Reactie toevoegen",
+      "none": "Geen extra reacties ingesteld."
+    }
+  },
+  "thankwords": {
+    "description": "Deze woorden worden gebruikt om te zien wanneer iemand bedankt wordt. Ze worden gezien als reguliere expressies.",
+    "add": "Bedankt toevoegen",
+    "placeholder": "Voer thankword in (Regex)",
+    "none": "Geen bedankjes ingesteld.",
+    "invalidCharacter": "Het bedankwoord heeft een raar teken: {char}",
+    "alreadyExists": "Dit bedankwoord bestaat al.",
+    "defaults": {
+      "title": "Standaard bedankjes",
+      "description": "Voeg snel standaard bedankjes toe voor verschillende talen."
+    }
+  },
+  "abuseProtection": {
+    "description": "Zet limieten en beveiligingen op om te voorkomen dat je reputatie wordt misbruikt.",
+    "cooldown": {
+      "label": "Afkoelperiode (minuten)",
+      "description": "De tijd in minuten die moet verstrijken voordat dezelfde gebruikers elkaar weer kunnen bedanken. 0 betekent geen wachttijd, -1 betekent voor altijd.",
+      "once": {
+        "label": "Afkoelperiode Eenmaal",
+        "description": "Als deze optie aanstaat, kunnen gebruikers elkaar maar één keer bedanken.",
+        "activeDescription": "De afkoelperiode is eenmaal actief. Mensen kunnen elkaar maar één keer bedanken. De richting is ingesteld op eenrichtingsverkeer."
+      }
+    },
+    "cooldownDirection": {
+      "label": "Afkoelingsrichting",
+      "description": "Eénrichtingsverkeer betekent dat de gever even moet wachten voordat hij weer aan dezelfde persoon kan geven. Tweerichtingsverkeer betekent dat de wachttijd tussen de gever en de ontvanger geldt, zodat ze elkaar niet steeds kunnen bedanken totdat de tijd voorbij is.",
+      "unidirectional": "Eénrichtingsverkeer",
+      "bidirectional": "Tweerichtingsverkeer"
+    },
+    "maxMessageAge": {
+      "label": "Maximale leeftijd van berichten (minuten)",
+      "description": "Hoe lang een bericht maximaal mag zijn (in minuten) om nog meetellen voor je reputatie als je erop reageert of antwoordt."
+    },
+    "minMessages": {
+      "label": "Minimum aantal berichten",
+      "description": "Als je minstens zoveel berichten in het kanaal hebt, kun je altijd een reputatie krijgen."
+    },
+    "donorContext": {
+      "label": "De donor moet erbij zijn.",
+      "description": "Als dit is ingeschakeld, moet de donor minstens één van de laatste berichten in het kanaal hebben gestuurd om reputatie te kunnen geven."
+    },
+    "receiverContext": {
+      "label": "De ontvanger moet erbij zijn.",
+      "description": "Als dit is ingeschakeld, moet de ontvanger minstens één van de laatste berichten in het kanaal hebben gestuurd om reputatie te krijgen."
+    },
+    "givenLimit": {
+      "enabled": {
+        "label": "Geef limiet vrij"
+      },
+      "maxGiven": {
+        "label": "Max Given"
+      },
+      "maxGivenHours": {
+        "label": "Overuren"
+      },
+      "description": "Beperk hoeveel reputatie iemand kan geven binnen een bepaalde tijd."
+    },
+    "receivedLimit": {
+      "enabled": {
+        "label": "Ontvangstlimiet inschakelen"
+      },
+      "maxReceived": {
+        "label": "Maximaal ontvangen"
+      },
+      "maxReceivedHours": {
+        "label": "Overuren"
+      },
+      "description": "Beperk hoeveel reputatie iemand kan krijgen binnen een bepaalde tijd."
+    },
+    "maxMessageReputation": {
+      "label": "Max. aantal berichten Reputatie",
+      "description": "Het maximale aantal reputatiepunten dat je in één bericht kunt geven via vermeldingen en insluitingen."
+    }
+  },
+  "announcements": {
+    "description": "Stel berichten in die worden verstuurd als mensen een nieuwe rang halen.",
+    "active": {
+      "label": "Maak aankondigingen mogelijk",
+      "description": "Als je dit aan zet, stuurt de bot een berichtje als iemand een nieuwe rang haalt."
+    },
+    "sameChannel": {
+      "label": "Verstuur via hetzelfde kanaal",
+      "description": "Als je dit aan zet, wordt de melding verstuurd in het kanaal waar je een level omhoog bent gegaan. Anders wordt het naar het kanaal gestuurd dat je hebt gekozen."
+    },
+    "channel": {
+      "label": "Aankondigingskanaal",
+      "description": "Kies het kanaal waar je de aankondigingen over rangverhogingen naartoe wilt sturen."
+    }
+  },
+  "autopost": {
+    "description": "Zet het automatisch posten van het klassement op een kanaal in.",
+    "premiumRequired": "Automatisch posten",
+    "active": {
+      "label": "Automatisch posten inschakelen",
+      "description": "Zet het automatisch plaatsen op het scorebord aan of uit."
+    },
+    "channel": {
+      "label": "Autopost-kanaal",
+      "description": "Het kanaal waar het klassement moet worden geplaatst."
+    },
+    "refreshInterval": {
+      "label": "Vernieuwingsinterval",
+      "description": "Hoe vaak moet het klassement worden bijgewerkt?",
+      "HOURLY": "Per uur",
+      "DAILY": "Dagelijks",
+      "WEEKLY": "Wekelijks",
+      "MONTHLY": "Maandelijks"
+    },
+    "refreshType": {
+      "label": "Type vernieuwen",
+      "description": "Hoe moet het bericht worden bijgewerkt?",
+      "DELETE_AND_REPOST": "Verwijderen en opnieuw posten",
+      "REPOST": "Opnieuw posten",
+      "UPDATE": "Update"
+    },
+    "send": {
+      "label": "Stuur nu automatisch bericht",
+      "sending": "Bezig met verzenden...",
+      "description": "Stuur of werk de autopost meteen handmatig bij op het kanaal."
+    }
+  },
+  "logChannel": {
+    "premiumRequired": "Logkanaal",
+    "description": "Het logkanaal bevat alle reputaties die aan een gebruiker zijn gegeven en afgenomen.",
+    "active": {
+      "label": "Logkanaal inschakelen",
+      "description": "Zet het loggen van reputatiewijzigingen aan of uit."
+    },
+    "channel": {
+      "label": "Logkanaal",
+      "description": "Het kanaal waar veranderingen in reputatie moeten worden bijgehouden."
+    }
+  },
+  "setup": {
+    "title": "Eerste installatie",
+    "stepProgress": "Stap {current} van {total}",
+    "requiredStep": "Deze stap is nodig om verder te gaan.",
+    "navigation": {
+      "previous": "Vorige",
+      "next": "Volgende",
+      "finish": "Setup afronden"
+    },
+    "steps": {
+      "language": {
+        "title": "Kies je taal",
+        "description": "Kies de taal die de bot gaat gebruiken voor berichten en reacties op je server. De taal van de frontend past zich aan je keuze aan."
+      },
+      "systemChannel": {
+        "title": "Systeemkanaal",
+        "description": "Kies een kanaal waar de bot belangrijke systeemberichten en meldingen naartoe stuurt.",
+        "required": "Je moet een systeemkanaal kiezen om verder te gaan met de installatie."
+      },
+      "reputationTypes": {
+        "title": "Soorten reputatie",
+        "description": "Kies welke manieren gebruikers kunnen gebruiken om een beoordeling te geven. Je kunt meerdere opties inschakelen om gebruikers wat flexibiliteit te geven."
+      },
+      "reputationMode": {
+        "title": "Reputatiemodus",
+        "description": "Kies hoe je reputatie op je server berekend en weergegeven moet worden."
+      },
+      "ranks": {
+        "title": "Reputatie-ranglijsten",
+        "description": "Bepaal welke rollen mensen krijgen als ze een bepaald reputatieniveau halen. Je moet minstens één rang kiezen.",
+        "required": "Je moet minstens één reputatierang definiëren om verder te gaan."
+      },
+      "channels": {
+        "title": "Kanalen en categorieën",
+        "description": "Kies welke kanalen en categorieën je wilt toestaan om reputaties te geven. Je moet minstens één kanaal of categorie kiezen.",
+        "required": "Je moet minstens één kanaal of categorie kiezen om verder te gaan (tenzij je de weigeringlijstmodus gebruikt)."
+      },
+      "thankwords": {
+        "title": "Bedankt!",
+        "description": "Voeg woorden of zinnen toe die mensen kunnen gebruiken om een beoordeling te geven. Dit zijn de woorden die de bot herkent.",
+        "recommendation": "We raden je aan om de standaard bedankwoorden voor jouw taal te laden, zodat je snel aan de slag kunt."
+      },
+      "announcements": {
+        "title": "Aankondigingen",
+        "description": "Zet in de bot of hij moet laten weten als mensen een nieuwe reputatierang halen."
+      },
+      "cooldown": {
+        "title": "Instellingen voor afkoelperiode",
+        "description": "Zet een wachttijd in om te voorkomen dat mensen te vaak reputatie geven. Je kunt ook 'eenmalige wachttijd' inschakelen, zodat mensen elkaar maar één keer kunnen bedanken."
+      },
+      "mainReaction": {
+        "title": "Belangrijkste reactie",
+        "description": "Kies de emoji die je wilt gebruiken als belangrijkste reactie voor het geven van reputatie."
+      },
+      "roles": {
+        "title": "Rollen van donor en ontvanger",
+        "description": "Je kunt kiezen welke rollen reputatie kunnen geven (donorrollen) en welke rollen reputatie kunnen krijgen (ontvangerrollen)."
+      }
+    }
+  },
+  "roles": {
+    "donor": {
+      "label": "Donor"
+    },
+    "receiver": {
+      "label": "Ontvanger"
+    }
+  },
+  "links": {
+    "support": "Ondersteuningsserver",
+    "website": "Website",
+    "faq": "Veelgestelde vragen",
+    "tos": "Servicevoorwaarden"
+  }
+}

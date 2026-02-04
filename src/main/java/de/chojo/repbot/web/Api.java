@@ -5,12 +5,24 @@
  */
 package de.chojo.repbot.web;
 
-import com.google.common.collect.Streams;
+import de.chojo.jdautil.interactions.dispatching.InteractionHub;
+import de.chojo.repbot.commands.thankwords.Thankwords;
+import de.chojo.repbot.config.Configuration;
+import de.chojo.repbot.core.Localization;
 import de.chojo.repbot.dao.provider.Metrics;
-import de.chojo.repbot.web.routes.v1.MetricsRoute;
+import de.chojo.repbot.serialization.ThankwordsContainer;
+import de.chojo.repbot.service.AutopostService;
+import de.chojo.repbot.service.RoleAssigner;
+import de.chojo.repbot.web.routes.v1.data.DataRoute;
+import de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute;
+import de.chojo.repbot.web.routes.v1.session.SessionRoute;
+import de.chojo.repbot.web.routes.v1.settings.SettingsRoute;
+import de.chojo.repbot.web.sessions.SessionService;
 import io.javalin.http.ContentType;
+import net.dv8tion.jda.api.sharding.ShardManager;
 import org.slf4j.Logger;
 
+import java.io.IOException;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -21,10 +33,27 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class Api {
     private static final Logger log = getLogger(Api.class);
+    private final SessionService sessionService;
     private final MetricsRoute metricsRoute;
+    private final SessionRoute sessionRoute;
+    private final SettingsRoute settingsRoute;
+    private final DataRoute dataRoute;
 
-    public Api(Metrics metrics) {
+    public Api(SessionService sessionService, Metrics metrics, InteractionHub<?, ?, ?> hub, Localization localization, AutopostService autopostService, RoleAssigner roleAssigner, ShardManager shardManager, Configuration configuration) {
+        this.sessionService = sessionService;
         metricsRoute = new MetricsRoute(metrics);
+        sessionRoute = new SessionRoute(sessionService);
+        settingsRoute = new SettingsRoute(hub, autopostService, roleAssigner, shardManager);
+
+        // Load thankwords container
+        ThankwordsContainer thankwordsContainer;
+        try {
+            thankwordsContainer = Thankwords.loadContainer();
+        } catch (IOException e) {
+            log.error("Could not load thankwords container", e);
+            thankwordsContainer = null;
+        }
+        dataRoute = new DataRoute(thankwordsContainer, localization, configuration);
     }
 
     public void init() {
@@ -40,12 +69,17 @@ public class Api {
                     ctx.queryString(),
                     ctx.status(),
                     ctx.res().getHeaderNames().stream().map(h -> "   " + h + ": " + ctx.res().getHeader(h))
-                           .collect(Collectors.joining("\n")),
+                       .collect(Collectors.joining("\n")),
                     ContentType.OCTET_STREAM.equals(ctx.contentType()) ? "Bytes"
                             : Objects.requireNonNullElse(ctx.result(), "")
                                      .substring(0, Math.min(
                                              Objects.requireNonNullElse(ctx.result(), "").length(), 180)));
         });
-        path("v1", () -> path("metrics", metricsRoute::buildRoutes));
+        path("v1", () -> {
+            metricsRoute.buildRoutes();
+            sessionRoute.buildRoutes();
+            settingsRoute.buildRoutes();
+            dataRoute.buildRoutes();
+        });
     }
 }

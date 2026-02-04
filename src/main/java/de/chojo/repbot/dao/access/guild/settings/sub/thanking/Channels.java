@@ -5,8 +5,10 @@
  */
 package de.chojo.repbot.dao.access.guild.settings.sub.thanking;
 
+import com.fasterxml.jackson.annotation.JsonSerializeAs;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
+import de.chojo.repbot.web.pojo.settings.sub.thanking.ChannelsPOJO;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.attribute.ICategorizableChannel;
@@ -26,20 +28,16 @@ import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class Channels implements GuildHolder {
+@JsonSerializeAs(ChannelsPOJO.class)
+public class Channels extends ChannelsPOJO implements GuildHolder {
 
     private static final Logger log = getLogger(Channels.class);
 
     private final Thanking thanking;
-    private final Set<Long> channels;
-    private final Set<Long> categories;
-    private boolean whitelist;
 
     public Channels(Thanking thanking, boolean whitelist, Set<Long> channels, Set<Long> categories) {
+        super(channels, categories, whitelist);
         this.thanking = thanking;
-        this.whitelist = whitelist;
-        this.channels = channels;
-        this.categories = categories;
     }
 
     @Override
@@ -89,14 +87,6 @@ public class Channels implements GuildHolder {
         return categories.stream().map(guild()::getCategoryById)
                          .filter(Objects::nonNull)
                          .toList();
-    }
-
-    public Set<Long> channelIds() {
-        return channels;
-    }
-
-    public boolean isWhitelist() {
-        return whitelist;
     }
 
     /**
@@ -213,5 +203,75 @@ public class Channels implements GuildHolder {
             this.whitelist = whitelist;
         }
         return this.whitelist;
+    }
+
+    public boolean addChannel(long channelId) {
+        var result = query("INSERT INTO active_channel(guild_id, channel_id) VALUES (?,?) ON CONFLICT(guild_id, channel_id) DO NOTHING")
+                .single(call().bind(guildId()).bind(channelId))
+                .update()
+                .changed();
+        if (result) {
+            channels.add(channelId);
+        }
+        return this.whitelist;
+    }
+
+    public boolean addCategory(long categoryId) {
+        var result = query("INSERT INTO active_categories(guild_id, category_id) VALUES (?,?) ON CONFLICT(guild_id, category_id) DO NOTHING")
+                .single(call().bind(guildId()).bind(categoryId))
+                .update()
+                .changed();
+        if (result) {
+            categories.add(categoryId);
+        }
+        return this.whitelist;
+    }
+
+    public boolean removeChannel(long channelId) {
+        var result = query("DELETE FROM active_channel WHERE guild_id = ? AND channel_id = ?")
+                .single(call().bind(guildId()).bind(channelId))
+                .update()
+                .changed();
+        if (result) {
+            channels.remove(channelId);
+        }
+        return this.whitelist;
+    }
+
+    public boolean removeCategory(long categoryId) {
+        var result = query("DELETE FROM active_categories WHERE guild_id = ? AND category_id = ?")
+                .single(call().bind(guildId()).bind(categoryId))
+                .update()
+                .changed();
+        if (result) {
+            categories.remove(categoryId);
+        }
+        return this.whitelist;
+    }
+
+    public void apply(ChannelsPOJO state) {
+        listType(state.isWhitelist());
+
+        for (Long channelId : state.channelIds()) {
+            if (!channels.contains(channelId)) {
+                addChannel(channelId);
+            }
+        }
+        for (Long channelId : Set.copyOf(channels)) {
+            if (!state.channelIds().contains(channelId)) {
+                removeChannel(channelId);
+            }
+        }
+
+        for (Long categoryId : state.categoryIds()) {
+            if (!categories.contains(categoryId)) {
+                addCategory(categoryId);
+            }
+        }
+        for (Long categoryId : Set.copyOf(categories)) {
+            if (!state.categoryIds().contains(categoryId)) {
+                removeCategory(categoryId);
+            }
+        }
     }
 }

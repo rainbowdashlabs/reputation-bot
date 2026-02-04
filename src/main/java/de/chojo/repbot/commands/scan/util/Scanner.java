@@ -30,7 +30,6 @@ import java.util.ArrayDeque;
 import java.util.HashSet;
 import java.util.Queue;
 import java.util.Set;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
@@ -74,6 +73,44 @@ public class Scanner {
         preSchedule(context, channel, messageCount);
     }
 
+    public boolean isActive(Guild guild) {
+        return activeScans.stream().anyMatch(p -> p.guild().getIdLong() == guild.getIdLong());
+    }
+
+    public void setActive(ScanProcess process) {
+        activeScans.add(process);
+    }
+
+    public void setInactive(ScanProcess process) {
+        activeScans.remove(process);
+    }
+
+    public void setInactive(Guild guild) {
+        activeScans.removeIf(p -> p.guild().getIdLong() == guild.getIdLong());
+    }
+
+    public boolean isRunning(Guild guild) {
+        return isActive(guild);
+    }
+
+    public void cancelScan(Guild guild) {
+        setInactive(guild);
+        cancel.add(guild.getIdLong());
+    }
+
+    public void finishScan(ScanProcess scanProcess) {
+        setInactive(scanProcess);
+        finished.add(scanProcess);
+    }
+
+    public void lateInit(MessageAnalyzer messageAnalyzer) {
+        this.messageAnalyzer = messageAnalyzer;
+    }
+
+    public boolean limitReached() {
+        return activeScans.size() >= SCAN_THREADS;
+    }
+
     private void preSchedule(EventContext context, TextChannel channel, int messageCount) {
         var history = channel.getHistory();
         var pattern = guildRepository.guild(channel.getGuild()).settings().thanking().thankwords().thankwordPattern();
@@ -90,22 +127,6 @@ public class Scanner {
         setActive(scanProcess);
         reportChannel.getGuild().loadMembers().get();
         worker.schedule(() -> processScan(scanProcess), 0, TimeUnit.SECONDS);
-    }
-
-    public boolean isActive(Guild guild) {
-        return activeScans.stream().anyMatch(p -> p.guild().getIdLong() == guild.getIdLong());
-    }
-
-    public void setActive(ScanProcess process) {
-        activeScans.add(process);
-    }
-
-    public void setInactive(ScanProcess process) {
-        activeScans.remove(process);
-    }
-
-    public void setInactive(Guild guild) {
-        activeScans.removeIf(p -> p.guild().getIdLong() == guild.getIdLong());
     }
 
     private void processScan(ScanProcess scan) {
@@ -161,24 +182,6 @@ public class Scanner {
         scan.resultChannel().sendMessageEmbeds(embed).setMessageReference(scan.progressMessage()).queue();
     }
 
-    public boolean isRunning(Guild guild) {
-        return isActive(guild);
-    }
-
-    public void cancelScan(Guild guild) {
-        setInactive(guild);
-        cancel.add(guild.getIdLong());
-    }
-
-    public void finishScan(ScanProcess scanProcess) {
-        setInactive(scanProcess);
-        finished.add(scanProcess);
-    }
-
-    public void lateInit(MessageAnalyzer messageAnalyzer) {
-        this.messageAnalyzer = messageAnalyzer;
-    }
-
     private void checkStuckTasks() {
         for (var activeScan : activeScans) {
             if (activeScan.lastSeen().isAfter(Instant.now().minus(THREAD_MAX_SEEN_SECONDS, ChronoUnit.SECONDS))) {
@@ -190,9 +193,5 @@ public class Scanner {
                 cancelScan(activeScan.guild());
             }
         }
-    }
-
-    public boolean limitReached() {
-        return activeScans.size() >= SCAN_THREADS;
     }
 }

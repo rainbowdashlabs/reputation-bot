@@ -10,6 +10,7 @@ import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.util.Text;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.time.ZoneId;
@@ -27,7 +28,7 @@ public class CurrentResetDate implements SlashHandler {
         var instant = guildRepository.guild(event.getGuild()).settings().general().resetDate();
 
         if (instant == null) {
-            event.reply(context.localize("command.repadmin.resetdate.current.message.notset"))
+            event.reply(WebPromo.promoString(context) + context.localize("command.repadmin.resetdate.current.message.notset"))
                  .setEphemeral(true)
                  .complete();
             return;
@@ -41,7 +42,7 @@ public class CurrentResetDate implements SlashHandler {
             date = Text.timestampDateTime(instant);
         }
 
-        event.reply(context.localize("command.repadmin.resetdate.current.message.set", Replacement.create("DATE", date)))
+        event.reply(WebPromo.promoString(context) + context.localize("command.repadmin.resetdate.current.message.set", Replacement.create("DATE", date)))
              .setEphemeral(true)
              .complete();
     }

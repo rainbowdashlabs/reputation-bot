@@ -5,9 +5,11 @@
  */
 package de.chojo.repbot.dao.access.guild.settings.sub;
 
+import com.fasterxml.jackson.annotation.JsonSerializeAs;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.service.reputation.ReputationContext;
+import de.chojo.repbot.web.pojo.settings.sub.AbuseProtectionPOJO;
 import de.chojo.sadu.mapper.wrapper.Row;
 import de.chojo.sadu.queries.api.call.Call;
 import net.dv8tion.jda.api.entities.Guild;
@@ -22,34 +24,14 @@ import java.util.function.Function;
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 
-public class AbuseProtection implements GuildHolder {
+@JsonSerializeAs(AbuseProtectionPOJO.class)
+public class AbuseProtection extends AbuseProtectionPOJO implements GuildHolder {
     private final Settings settings;
-    private int cooldown;
-    private CooldownDirection cooldownDirection;
-    private int maxMessageAge;
-    private int minMessages;
-    private boolean donorContext;
-    private boolean receiverContext;
-    private int maxGiven;
-    private int maxGivenHours;
-    private int maxReceived;
-    private int maxReceivedHours;
-    private int maxMessageReputation;
 
     public AbuseProtection(Settings settings, int cooldown, CooldownDirection cooldownDirection, int maxMessageAge, int minMessages, boolean donorContext, boolean receiverContext,
                            int maxGiven, int maxGivenHours, int maxReceived, int maxReceivedHours, int maxMessageReputation) {
+        super(cooldown, cooldownDirection, maxMessageAge, minMessages, donorContext, receiverContext, maxGiven, maxGivenHours, maxReceived, maxReceivedHours, maxMessageReputation);
         this.settings = settings;
-        this.cooldown = cooldown;
-        this.cooldownDirection = cooldownDirection;
-        this.maxMessageAge = maxMessageAge;
-        this.minMessages = minMessages;
-        this.donorContext = donorContext;
-        this.receiverContext = receiverContext;
-        this.maxGiven = maxGiven;
-        this.maxGivenHours = maxGivenHours;
-        this.maxReceived = maxReceived;
-        this.maxReceivedHours = maxReceivedHours;
-        this.maxMessageReputation = maxMessageReputation;
     }
 
     public AbuseProtection(Settings settings) {
@@ -71,60 +53,18 @@ public class AbuseProtection implements GuildHolder {
                 rs.getInt("max_message_reputation"));
     }
 
-    /**
-     * Gets the cooldown in minutes.
-     * A cooldown of 0 means no cooldown.
-     * A negative cooldown means the cooldown is forever.
-     *
-     * @return cooldown in minutes
-     */
-    public int cooldown() {
-        return cooldown;
-    }
-
-    /**
-     * Gets the cooldown direction.
-     * The direction defines if the cooldown is between both users, preventing backthanking or not.
-     * @return cooldown direction
-     */
-    public CooldownDirection cooldownDirection() {
-        return cooldownDirection;
-    }
-
-    public int maxMessageAge() {
-        return maxMessageAge;
-    }
-
-    public int minMessages() {
-        return minMessages;
-    }
-
-    public int maxMessageReputation() {
-        return maxMessageReputation;
-    }
-
-    public boolean isDonorContext() {
-        return donorContext;
-    }
-
-    public boolean isReceiverContext() {
-        return receiverContext;
-    }
-
-    public int maxGiven() {
-        return maxGiven;
-    }
-
-    public int maxGivenHours() {
-        return maxGivenHours;
-    }
-
-    public int maxReceived() {
-        return maxReceived;
-    }
-
-    public int maxReceivedHours() {
-        return maxReceivedHours;
+    public void apply(AbuseProtectionPOJO newState) {
+        if (this.cooldown != newState.cooldown()) cooldown(newState.cooldown());
+        if (this.maxMessageAge != newState.maxMessageAge()) maxMessageAge(newState.maxMessageAge());
+        if (this.minMessages != newState.minMessages()) minMessages(newState.minMessages());
+        if (this.donorContext != newState.isDonorContext()) donorContext(newState.isDonorContext());
+        if (this.receiverContext != newState.isReceiverContext()) receiverContext(newState.isReceiverContext());
+        if (this.maxGiven != newState.maxGiven()) maxGiven(newState.maxGiven());
+        if (this.maxGivenHours != newState.maxGivenHours()) maxGivenHours(newState.maxGivenHours());
+        if (this.maxReceived != newState.maxReceived()) maxReceived(newState.maxReceived());
+        if (this.maxReceivedHours != newState.maxReceivedHours()) maxReceivedHours(newState.maxReceivedHours());
+        if (this.maxMessageReputation != newState.maxMessageReputation())
+            maxMessageReputation(newState.maxMessageReputation());
     }
 
     public int cooldown(int cooldown) {
@@ -209,7 +149,7 @@ public class AbuseProtection implements GuildHolder {
     }
 
     public boolean isOldMessage(ReputationContext context) {
-        if(context.isInteraction()) return false;
+        if (context.isInteraction()) return false;
         return isOldMessage(context.asMessage());
     }
 
@@ -241,25 +181,6 @@ public class AbuseProtection implements GuildHolder {
         return settings.repGuild().reputation().user(member).countReceived() >= maxReceived;
     }
 
-    public boolean isDonorLimit() {
-        return maxGiven != 0;
-    }
-
-    public boolean isReceiverLimit() {
-        return maxReceived != 0;
-    }
-
-    private boolean set(String parameter, Function<Call, Call> builder) {
-        return query("""
-                INSERT INTO abuse_protection(guild_id, %s) VALUES (?, ?)
-                ON CONFLICT(guild_id)
-                    DO UPDATE SET %s = excluded.%s;
-                """, parameter, parameter, parameter)
-                .single(builder.apply(call().bind(guildId())))
-                .insert()
-                .changed();
-    }
-
     @Override
     public Guild guild() {
         return settings.guild();
@@ -289,5 +210,16 @@ public class AbuseProtection implements GuildHolder {
                            maxGiven, maxGivenHours, maxReceived, maxReceivedHours, maxMessageReputation, cooldown,
                            maxMessageAge, minMessages)
                    .stripIndent();
+    }
+
+    private boolean set(String parameter, Function<Call, Call> builder) {
+        return query("""
+                INSERT INTO abuse_protection(guild_id, %s) VALUES (?, ?)
+                ON CONFLICT(guild_id)
+                    DO UPDATE SET %s = excluded.%s;
+                """, parameter, parameter, parameter)
+                .single(builder.apply(call().bind(guildId())))
+                .insert()
+                .changed();
     }
 }

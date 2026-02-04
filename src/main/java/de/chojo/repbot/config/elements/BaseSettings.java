@@ -14,6 +14,7 @@ public class BaseSettings {
     private List<Long> botOwner = new ArrayList<>();
     private long botGuild = 0L;
     private long privateSupportChannel = 0L;
+    private long reviewChannel = 0L;
 
     public String token() {
         return token;
@@ -29,5 +30,9 @@ public class BaseSettings {
 
     public long privateSupportChannel() {
         return privateSupportChannel;
+    }
+
+    public long reviewChannel() {
+        return reviewChannel;
     }
 }

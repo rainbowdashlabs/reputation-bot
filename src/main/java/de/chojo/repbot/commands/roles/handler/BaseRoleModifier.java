@@ -31,8 +31,8 @@ public abstract class BaseRoleModifier implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         Consumer<MessageEmbed> refreshConsumer = menu -> {
             context.registerMenu(MenuAction.forCallback(menu, event)
-                    .addComponent(ButtonEntry.of(Button.of(ButtonStyle.DANGER, "refresh", "Refresh roles"),
-                            ctx -> refresh.refresh(context, ctx.event().getGuild(), ctx.event()))).build());
+                                           .addComponent(ButtonEntry.of(Button.of(ButtonStyle.DANGER, "refresh", "Refresh roles"),
+                                                   ctx -> refresh.refresh(context, ctx.event().getGuild(), ctx.event()))).build());
         };
         modify(event, context, refreshConsumer);
     }

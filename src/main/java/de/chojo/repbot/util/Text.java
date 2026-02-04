@@ -21,6 +21,10 @@ public final class Text {
     private static final String FULL = "█";
     private static final String ORANGE = "\u001b[0;33m";
     private static final String WHITE = "\u001b[0;37;47m";
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private static final DateTimeFormatter MONTH = DateTimeFormatter.ofPattern("yyyy-MM");
+    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
     private Text() {
         throw new UnsupportedOperationException("This is a utility class.");
     }
@@ -29,11 +33,6 @@ public final class Text {
         var progressBar = StringUtils.repeat(FULL, (int) Math.round(percent * tiles)) + WHITE;
         return ORANGE + StringUtils.rightPad(progressBar, tiles + WHITE.length(), EMPTY);
     }
-
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private static final DateTimeFormatter MONTH = DateTimeFormatter.ofPattern("yyyy-MM");
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
     public static String date(LocalDate date) {
         return DATE_FORMATTER.format(date);
@@ -59,10 +58,11 @@ public final class Text {
         return TIME_FORMATTER.format(time);
     }
 
-    public static String timestampDateTime(Instant instant){
+    public static String timestampDateTime(Instant instant) {
         return "<t:%s:d> <t:%s:t>".formatted(instant.getEpochSecond(), instant.getEpochSecond());
     }
-    public static String timestampDate(Instant instant){
+
+    public static String timestampDate(Instant instant) {
         return "<t:%s:d>".formatted(instant.getEpochSecond());
     }
 

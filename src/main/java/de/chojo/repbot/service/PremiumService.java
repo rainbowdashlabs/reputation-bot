@@ -12,6 +12,7 @@ import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.util.Premium;
 import de.chojo.logutil.marker.LogNotify;
 import de.chojo.repbot.config.Configuration;
+import de.chojo.repbot.config.elements.BaseSettings;
 import de.chojo.repbot.config.elements.SKU;
 import de.chojo.repbot.core.Threading;
 import de.chojo.repbot.dao.access.guild.RepGuild;
@@ -49,6 +50,7 @@ import java.util.List;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.TimeUnit;
 
+import static de.chojo.repbot.util.States.GRANT_ALL_SKU;
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 import static de.chojo.sadu.queries.converter.StandardValueConverter.INSTANT_TIMESTAMP;
@@ -61,6 +63,13 @@ public class PremiumService extends ListenerAdapter {
     private final Localizer localizer;
     private final ShardManager shardManager;
 
+    private PremiumService(GuildRepository guildRepository, Configuration configuration, Localizer localizer, ShardManager shardManager) {
+        this.guildRepository = guildRepository;
+        this.configuration = configuration;
+        this.localizer = localizer;
+        this.shardManager = shardManager;
+    }
+
     public static PremiumService of(GuildRepository guildRepository, Threading threading, Configuration configuration, Localizer localizer, ShardManager shardManager) {
         PremiumService service = new PremiumService(guildRepository, configuration, localizer, shardManager);
         threading.repBotWorker().scheduleAtFixedRate(service::cleanExpiredEntitlements, 10, 60, TimeUnit.MINUTES);
@@ -72,23 +81,6 @@ public class PremiumService extends ListenerAdapter {
     public boolean activateLifetime(Guild guild, de.chojo.repbot.config.elements.sku.Subscription subscription) {
         Subscription sub = new Subscription(subscription.subscriptionSku(), guild.getIdLong(), SkuTarget.GUILD, EntitlementType.PURCHASE, null, true);
         return guildRepository.guild(guild).subscriptions().addSubscription(sub);
-    }
-
-    private void checkGuilds() {
-        for (List<RepGuild> guild : guildRepository.guilds(200)) {
-            for (RepGuild repGuild : guild) {
-                repGuild.load(shardManager);
-                if (repGuild.isById()) continue;
-                checkGuild(repGuild.guild());
-            }
-        }
-    }
-
-    private PremiumService(GuildRepository guildRepository, Configuration configuration, Localizer localizer, ShardManager shardManager) {
-        this.guildRepository = guildRepository;
-        this.configuration = configuration;
-        this.localizer = localizer;
-        this.shardManager = shardManager;
     }
 
     @Override
@@ -110,7 +102,13 @@ public class PremiumService extends ListenerAdapter {
     @Override
     public void onGuildMemberUpdateNickname(@NotNull GuildMemberUpdateNicknameEvent event) {
         if (event.getNewNickname() != null && event.getUser().equals(event.getGuild().getSelfMember().getUser())) {
-            checkForTier(event.getGuild(), SupporterFeature.BOT_NICKNAMED);
+            if (checkForTier(event.getGuild(), SupporterFeature.BOT_NICKNAMED)) {
+                BaseSettings settings = configuration.baseSettings();
+                TextChannel review = event.getJDA().getShardManager().getGuildById(settings.botGuild()).getTextChannelById(settings.reviewChannel());
+                if (review != null && event.getNewNickname() != null) {
+                    review.sendMessage("Guild `%s` changed bot nickname to `%s`".formatted(event.getGuild(), event.getNewNickname())).queue();
+                }
+            }
         }
     }
 
@@ -143,19 +141,21 @@ public class PremiumService extends ListenerAdapter {
         }
     }
 
-    public void checkForTier(Guild guild, SupporterFeature type) {
-        if (guild == null) return;
+    public boolean checkForTier(Guild guild, SupporterFeature type) {
+        if (guild == null) return false;
+        if (GRANT_ALL_SKU) return true;
         RepGuild repGuild = guildRepository.guild(guild);
         Subscriptions subscriptions = repGuild.subscriptions();
         if (type.isEntitled(skus(), repGuild)) {
             subscriptions.deleteError(type);
-            return;
+            return true;
         }
         if (!type.isApplicable(skus(), repGuild)) {
             subscriptions.deleteError(type);
-            return;
+            return true;
         }
         handleMissingSupportTier(guild, type);
+        return false;
     }
 
     public void handleMissingSupportTier(InteractionContext context, MissingSupportTier ex) {
@@ -250,20 +250,6 @@ public class PremiumService extends ListenerAdapter {
         subscriptions.resendError(type, notified);
     }
 
-    private void updateEntitlement(Entitlement entitlement) {
-        EntitlementType type = entitlement.getType();
-        Subscription sub = Subscription.fromEntitlement(entitlement);
-        switch (type) {
-            case APPLICATION_SUBSCRIPTION, DEVELOPER_GIFT, PURCHASE, FREE_PURCHASE ->
-                    guildRepository.byId(sub.id()).subscriptions().addSubscription(sub);
-            default -> log.error(LogNotify.NOTIFY_ADMIN, "Unknown entitlement type {} for sku {} for {} {}",
-                    entitlement.getType(),
-                    sub.skuId(),
-                    sub.skuTarget(),
-                    sub.id());
-        }
-    }
-
     public void cleanExpiredEntitlements() {
         List<Subscription> all = query("""
                 DELETE
@@ -291,5 +277,29 @@ public class PremiumService extends ListenerAdapter {
 
     public SKU skus() {
         return configuration.skus();
+    }
+
+    private void checkGuilds() {
+        for (List<RepGuild> guild : guildRepository.guilds(200)) {
+            for (RepGuild repGuild : guild) {
+                repGuild.load(shardManager);
+                if (repGuild.isById()) continue;
+                checkGuild(repGuild.guild());
+            }
+        }
+    }
+
+    private void updateEntitlement(Entitlement entitlement) {
+        EntitlementType type = entitlement.getType();
+        Subscription sub = Subscription.fromEntitlement(entitlement);
+        switch (type) {
+            case APPLICATION_SUBSCRIPTION, DEVELOPER_GIFT, PURCHASE, FREE_PURCHASE ->
+                    guildRepository.byId(sub.id()).subscriptions().addSubscription(sub);
+            default -> log.error(LogNotify.NOTIFY_ADMIN, "Unknown entitlement type {} for sku {} for {} {}",
+                    entitlement.getType(),
+                    sub.skuId(),
+                    sub.skuTarget(),
+                    sub.id());
+        }
     }
 }

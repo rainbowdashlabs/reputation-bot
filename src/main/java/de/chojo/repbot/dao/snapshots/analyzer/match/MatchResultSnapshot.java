@@ -8,8 +8,8 @@ package de.chojo.repbot.dao.snapshots.analyzer.match;
 import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.util.Colors;
 import de.chojo.repbot.analyzer.results.match.ThankType;
-import de.chojo.repbot.dao.snapshots.analyzer.ResultSnapshot;
 import de.chojo.repbot.dao.snapshots.ResultEntry;
+import de.chojo.repbot.dao.snapshots.analyzer.ResultSnapshot;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.User;
 
@@ -39,8 +39,8 @@ public abstract class MatchResultSnapshot implements ResultSnapshot {
     @Override
     public void add(Guild guild, ResultEntry entry, LocalizedEmbedBuilder builder) {
         builder.setTitle(thankType.nameLocaleKey())
-                .setColor(Colors.Pastel.DARK_GREEN)
-                .addField("command.log.analyzer.message.field.matchedWord", match, true)
-                .addField("words.donor", User.fromId(donorId).getAsMention(), true);
+               .setColor(Colors.Pastel.DARK_GREEN)
+               .addField("command.log.analyzer.message.field.matchedWord", match, true)
+               .addField("words.donor", User.fromId(donorId).getAsMention(), true);
     }
 }

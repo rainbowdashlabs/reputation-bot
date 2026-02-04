@@ -9,6 +9,7 @@ import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
@@ -23,17 +24,16 @@ public class Add extends BaseRoleModifier {
     @Override
     public void modify(SlashCommandInteractionEvent event, EventContext context, Consumer<MessageEmbed> refresh) {
         var role = event.getOption("role").getAsRole();
-        var reputation = event.getOption("reputation").getAsLong();
+        var reputation = event.getOption("reputation").getAsInt();
         if (!event.getGuild().getSelfMember().canInteract(role)) {
-            event.reply(context.localize("error.roleAccess",
+            event.reply(WebPromo.promoString(context) + "\n" + context.localize("error.roleAccess",
                          Replacement.createMention(role)))
                  .setEphemeral(true)
                  .complete();
             return;
         }
-
         if (role.isPublicRole()) {
-            event.reply(context.localize("error.publicRole"))
+            event.reply(WebPromo.promoString(context) + "\n" + context.localize("error.publicRole"))
                  .setEphemeral(true)
                  .complete();
             return;
@@ -43,6 +43,7 @@ public class Add extends BaseRoleModifier {
         ranks.add(role, reputation);
         var menu = new LocalizedEmbedBuilder(context.guildLocalizer())
                 .setTitle("command.roles.add.title.added")
+                .appendDescription(WebPromo.promoString(context) + "\n\n")
                 .setDescription("command.roles.add.message.added", Replacement.createMention("ROLE", role), Replacement.create("POINTS", reputation))
                 .build();
         refresh.accept(menu);

@@ -9,7 +9,6 @@ import de.chojo.repbot.dao.access.guild.reputation.sub.ranking.RankingType;
 import de.chojo.repbot.dao.access.guild.reputation.sub.ranking.UserRankings;
 import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
 import de.chojo.repbot.dao.snapshots.RankingEntry;
-import de.chojo.sadu.queries.converter.StandardValueConverter;
 import net.dv8tion.jda.api.entities.Member;
 
 import java.util.List;

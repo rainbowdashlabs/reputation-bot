@@ -5,8 +5,10 @@
  */
 package de.chojo.repbot.dao.access.guild.settings.sub;
 
+import com.fasterxml.jackson.annotation.JsonSerializeAs;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
+import de.chojo.repbot.web.pojo.settings.sub.ReputationPOJO;
 import de.chojo.sadu.mapper.wrapper.Row;
 import de.chojo.sadu.queries.api.call.Call;
 import net.dv8tion.jda.api.entities.Guild;
@@ -19,29 +21,17 @@ import java.util.function.Function;
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 
-public class Reputation implements GuildHolder {
+@JsonSerializeAs(ReputationPOJO.class)
+public class Reputation extends ReputationPOJO implements GuildHolder {
     private final Settings settings;
-    private boolean reactionActive;
-    private boolean answerActive;
-    private boolean mentionActive;
-    private boolean fuzzyActive;
-    private boolean embedActive;
-    private boolean directActive;
-    private boolean commandActive;
 
     public Reputation(Settings settings) {
         this(settings, true, true, true, true, true, false, false);
     }
 
     public Reputation(Settings settings, boolean reactionActive, boolean answerActive, boolean mentionActive, boolean fuzzyActive, boolean embedActive, boolean directActive, boolean commandActive) {
+        super(reactionActive, answerActive, mentionActive, fuzzyActive, embedActive, directActive, commandActive);
         this.settings = settings;
-        this.reactionActive = reactionActive;
-        this.answerActive = answerActive;
-        this.mentionActive = mentionActive;
-        this.fuzzyActive = fuzzyActive;
-        this.embedActive = embedActive;
-        this.directActive = directActive;
-        this.commandActive = commandActive;
     }
 
     public static Reputation build(Settings settings, Row rs) throws SQLException {
@@ -53,34 +43,6 @@ public class Reputation implements GuildHolder {
                 rs.getBoolean("embed_active"),
                 rs.getBoolean("skip_single_embed"),
                 rs.getBoolean("command_active"));
-    }
-
-    public boolean isReactionActive() {
-        return reactionActive;
-    }
-
-    public boolean isAnswerActive() {
-        return answerActive;
-    }
-
-    public boolean isMentionActive() {
-        return mentionActive;
-    }
-
-    public boolean isFuzzyActive() {
-        return fuzzyActive;
-    }
-
-    public boolean isEmbedActive() {
-        return embedActive;
-    }
-
-    public boolean isDirectActive() {
-        return directActive;
-    }
-
-    public boolean isCommandActive() {
-        return commandActive;
     }
 
     public boolean embedActive(boolean embedActive) {
@@ -139,6 +101,16 @@ public class Reputation implements GuildHolder {
         return this.directActive;
     }
 
+    public void apply(ReputationPOJO state) {
+        if (isReactionActive() != state.isReactionActive()) reactionActive(state.isReactionActive());
+        if (isAnswerActive() != state.isAnswerActive()) answerActive(state.isAnswerActive());
+        if (isMentionActive() != state.isMentionActive()) mentionActive(state.isMentionActive());
+        if (isFuzzyActive() != state.isFuzzyActive()) fuzzyActive(state.isFuzzyActive());
+        if (isEmbedActive() != state.isEmbedActive()) embedActive(state.isEmbedActive());
+        if (isDirectActive() != state.isDirectActive()) directActive(state.isDirectActive());
+        if (isCommandActive() != state.isCommandActive()) commandActive(state.isCommandActive());
+    }
+
     public String toLocalizedString() {
         var setting = List.of(
                 getSetting("command.repsettings.general.message.option.byreaction.name", isReactionActive()),
@@ -147,23 +119,15 @@ public class Reputation implements GuildHolder {
                 getSetting("command.repsettings.general.message.option.byfuzzy.name", isFuzzyActive()),
                 getSetting("command.repsettings.general.message.option.byembed.name", isEmbedActive()),
                 getSetting("command.repsettings.general.message.option.bycommand.name", settings.reputation()
-                                                                                             .isCommandActive()),
+                                                                                                .isCommandActive()),
                 getSetting("command.repsettings.general.message.option.skipsingletarget.name", settings.reputation()
-                        .isDirectActive()),
+                                                                                                       .isDirectActive()),
                 getSetting("command.repsettings.general.message.option.reputationmode.name", settings.general()
-                                                                                                  .reputationMode()
-                                                                                                  .localeCode())
+                                                                                                     .reputationMode()
+                                                                                                     .localeCode())
         );
 
         return String.join("\n", setting);
-    }
-
-    private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, boolean object) {
-        return getSetting(locale, object ? "words.enabled" : "words.disabled");
-    }
-
-    private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, String object) {
-        return String.format("$%s$: $%s$", locale, object);
     }
 
     @Override
@@ -176,17 +140,6 @@ public class Reputation implements GuildHolder {
         return settings.guildId();
     }
 
-    private boolean set(String parameter, Function<Call, Call> builder) {
-        return query("""
-                INSERT INTO reputation_settings(guild_id, %s) VALUES (?, ?)
-                ON CONFLICT(guild_id)
-                    DO UPDATE SET %s = excluded.%s;
-                """, parameter, parameter, parameter)
-                .single(builder.apply(call().bind(guildId())))
-                .insert()
-                .changed();
-    }
-
     public String prettyString() {
         return """
                 Reaction active: %s
@@ -197,5 +150,24 @@ public class Reputation implements GuildHolder {
                 Skip single embed: %s
                 """.formatted(reactionActive, answerActive, mentionActive, fuzzyActive, embedActive, directActive)
                    .stripIndent();
+    }
+
+    private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, boolean object) {
+        return getSetting(locale, object ? "words.enabled" : "words.disabled");
+    }
+
+    private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, String object) {
+        return String.format("$%s$: $%s$", locale, object);
+    }
+
+    private boolean set(String parameter, Function<Call, Call> builder) {
+        return query("""
+                INSERT INTO reputation_settings(guild_id, %s) VALUES (?, ?)
+                ON CONFLICT(guild_id)
+                    DO UPDATE SET %s = excluded.%s;
+                """, parameter, parameter, parameter)
+                .single(builder.apply(call().bind(guildId())))
+                .insert()
+                .changed();
     }
 }

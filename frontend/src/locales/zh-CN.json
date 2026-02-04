@@ -1,0 +1,458 @@
+{
+  "common": {
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "change": "改变",
+    "clear": "清除",
+    "confirm": "确认",
+    "loading": "正在加载..."
+  },
+  "navigation": {
+    "settings": "设置",
+    "presets": "预设",
+    "setup": "设置"
+  },
+  "presets": {
+    "title": "预设",
+    "description": "快速配置预设，助您轻松启动常用设置。",
+    "apply": "申请",
+    "applying": "正在申请...",
+    "simpleReputation": {
+      "title": "简单声誉系统",
+      "description": "我想要一个直截了当的声望系统，用户只能通过命令给予声望，无需任何复杂的上下文追踪。",
+      "settings": "此预设将禁用除命令外的所有声望类型，并关闭捐赠者和接收者的上下文追踪功能。"
+    },
+    "thankOnce": {
+      "title": "仅此一次",
+      "description": "我希望用户之间只能互相感谢一次，避免同一用户之间重复给予声望值。",
+      "settings": "此预设将仅设置一次冷却时间，并将冷却方向改为单向。"
+    },
+    "noAbuse": {
+      "title": "无滥用保护",
+      "description": "我想禁用基于上下文的滥用保护功能，允许用户更自由地给予声望值，同时不追踪他们的互动历史。",
+      "settings": "此预设将同时禁用捐赠方和接收方的上下文跟踪功能。"
+    },
+    "default": {
+      "title": "默认配置",
+      "description": "我想要一个平衡的声望系统，配备合理默认设置，能为大多数服务器提供良好支持。",
+      "settings": "此预设将设置30分钟双向冷却时间，启用除命令外的所有声望模式，启用声望确认功能，并启用捐赠方和接收方的上下文检查。"
+    },
+    "applied": "应用"
+  },
+  "settings": {
+    "title": "设置",
+    "general": "总则",
+    "reputation": "声誉",
+    "messages": "消息",
+    "profile": "个人资料",
+    "ranks": "军衔",
+    "channels": "频道",
+    "roles": "角色",
+    "thankwords": "谢辞",
+    "abuseProtection": "滥用保护",
+    "announcements": "公告",
+    "autopost": "自动发布",
+    "logChannel": "日志通道",
+    "reactions": "反应"
+  },
+  "locale": {
+    "selectLanguage": "选择语言"
+  },
+  "error": {
+    "noToken": {
+      "title": "未找到会话",
+      "message": "您没有有效的会话令牌。",
+      "instruction": "请创建一个新会话以访问此应用程序。"
+    }
+  },
+  "premiumFeature": {
+    "title": "支持者专访",
+    "requiredTier": "所需支持者等级：",
+    "message": "{name} 该功能仅限支持者使用。请成为支持者以启用此功能。"
+  },
+  "profile": {
+    "description": "自定义机器人在服务器中的外观和行为。",
+    "reset": "重置",
+    "premiumRequired": "个人资料定制",
+    "nickname": {
+      "label": "机器人昵称",
+      "placeholder": "输入机器人昵称",
+      "description": "为该服务器中的机器人设置自定义昵称。",
+      "reset": "将昵称重置为默认值"
+    },
+    "profilePicture": {
+      "label": "个人资料图片",
+      "uploadButton": "上传图片",
+      "uploading": "正在上传...",
+      "description": "为机器人上传自定义头像（最大2MB，512x512像素）",
+      "reset": "将个人资料图片重置为默认值"
+    },
+    "reputationName": {
+      "label": "声誉名称",
+      "placeholder": "输入自定义声望名称（例如“积分”、“善恶值”）",
+      "description": "自定义本服务器中声望所使用的名称。",
+      "reset": "将声誉名称重置为默认值"
+    },
+    "tosNote": "任何违反Discord服务条款或州法律的行为均不被允许，此类行为可能导致服务器被禁用该功能。"
+  },
+  "general": {
+    "description": "为该服务器配置机器人的基本设置。",
+    "language": {
+      "label": "机器人语言",
+      "selectPlaceholder": "选择语言",
+      "description": "选择机器人在本服务器中发送消息和回复时使用的语言。"
+    },
+    "systemChannel": {
+      "label": "系统频道",
+      "selectPlaceholder": "选择频道",
+      "note": "注意：此频道应设置为内部频道。该频道将包含有关机器人服务的重要通知及开发者发布的消息。"
+    },
+    "roleSelect": {
+      "searchPlaceholder": "搜索职位...",
+      "noRolesFound": "未找到角色"
+    },
+    "ranks": {
+      "description": "配置信誉等级及其关联角色。",
+      "stackRoles": {
+        "label": "堆栈角色",
+        "description": "若启用此功能，将分配所有适用的等级，而非仅分配最高等级。"
+      },
+      "addRank": "添加新等级",
+      "reputationRequired": "所需声望值",
+      "roleAlreadyAdded": "该角色已有等级。",
+      "reputationAlreadyUsed": "该声望值已被其他等级使用。",
+      "noRanks": "尚未配置任何等级。",
+      "reputationPlaceholder": "例如：100",
+      "refresh": {
+        "button": "刷新排名",
+        "refreshing": "清爽...",
+        "alreadyRunning": "刷新正在进行中",
+        "success": "排名刷新已成功启动",
+        "failed": "排名刷新启动失败"
+      }
+    },
+    "reputation": {
+      "description": "配置声誉的计算方式及启用哪些功能。",
+      "mode": {
+        "label": "声誉模式",
+        "description": "选择声誉的计算和显示方式。",
+        "modes": {
+          "TOTAL": "总声誉",
+          "ROLLING_WEEK": "滚动周",
+          "ROLLING_MONTH": "滚动月份",
+          "WEEK": "本周",
+          "MONTH": "本月"
+        },
+        "descriptions": {
+          "TOTAL": "使用用户迄今为止获得的总声望值。",
+          "ROLLING_WEEK": "使用过去7天内获得的声望值。",
+          "ROLLING_MONTH": "使用过去30天内获得的声望值。",
+          "WEEK": "使用本周开始以来获得的声望值。",
+          "MONTH": "使用本月开始以来获得的声望值。"
+        }
+      },
+      "resetDate": {
+        "label": "重置日期",
+        "description": "声望计数将重置的日期。请设定未来日期以安排重置。",
+        "clear": "清除重置日期"
+      },
+      "types": {
+        "reaction": {
+          "label": "反应声誉",
+          "description": "当消息被添加特定反应时给予声望值。",
+          "confirmation": {
+            "label": "反应确认",
+            "description": "当通过点赞授予声望时发送确认消息。"
+          }
+        },
+        "answer": {
+          "label": "回答声望",
+          "description": "当用户的留言在回答中被感谢时，给予声望值。"
+        },
+        "mention": {
+          "label": "提及声誉",
+          "description": "当用户被提及并附带感谢词时，给予声望值。"
+        },
+        "fuzzy": {
+          "label": "模糊匹配",
+          "description": "通过匹配\"感谢\"一词周围的词语与频道中现有的用户名，给予声望值。"
+        },
+        "embed": {
+          "label": "嵌入声誉",
+          "description": "若无法确定目标对象，则发送包含上次对话中所有参与用户的嵌入式列表。"
+        },
+        "direct": {
+          "label": "直接嵌入声誉",
+          "description": "当嵌入内容仅包含一名用户时，自动授予声望值。"
+        },
+        "command": {
+          "label": "命令声誉",
+          "description": "通过/reputation命令授予声望。",
+          "ephemeral": {
+            "label": "瞬息回应",
+            "description": "通过命令授予声望时，将响应隐藏对其他用户。"
+          }
+        }
+      }
+    },
+    "roles": {
+      "description": "配置哪些角色被允许给予和接收声望。",
+      "donor": {
+        "label": "捐赠者角色",
+        "description": "若启用此功能，仅拥有以下任一角色的用户可授予声望值。"
+      },
+      "receiver": {
+        "label": "接收器角色",
+        "description": "若启用此设置，仅拥有以下任一角色的用户可获得声望值。"
+      },
+      "list": {
+        "label": "精选角色",
+        "description": "选择哪些角色应为必选项。"
+      }
+    },
+    "channels": {
+      "description": "配置机器人应处于活动状态和非活动状态的位置。",
+      "listType": {
+        "label": "列表类型",
+        "description": "选择是否允许或拒绝所选频道和类别。",
+        "allow": "允许列表",
+        "deny": "拒绝列表",
+        "premiumRequired": "拒绝列表"
+      },
+      "list": {
+        "label": "频道与分类",
+        "description": "选择应列入列表的频道和类别。",
+        "channels": "频道",
+        "categories": "分类"
+      },
+      "premium": {
+        "channelLimitWarning": "选择超过{limit}个频道的功能仅限赞助用户使用。请成为赞助用户以启用该功能。",
+        "categoryLimitWarning": "选择超过{limit}个分类的功能仅限支持者使用。成为支持者即可使用该功能。"
+      }
+    }
+  },
+  "reactions": {
+    "title": "反应",
+    "description": "配置用于授予声望的表情符号。",
+    "main": {
+      "label": "主反应",
+      "description": "将作为给予声望的主要反应表情符号。"
+    },
+    "additional": {
+      "label": "附加反应",
+      "description": "其他可用于给予声望的额外表情符号。",
+      "premiumRequired": "附加反应",
+      "add": "添加反应",
+      "none": "未配置其他反应。"
+    }
+  },
+  "thankwords": {
+    "description": "这些词将用于检测何时有人被感谢。它们将被解释为正则表达式。",
+    "add": "添加感谢词",
+    "placeholder": "输入感谢词（正则表达式）",
+    "none": "未配置任何感谢词。",
+    "invalidCharacter": "该感谢词包含无效字符：{char}",
+    "alreadyExists": "这个感谢词已经存在。",
+    "defaults": {
+      "title": "默认致谢词",
+      "description": "快速添加多种语言的默认感谢词。"
+    }
+  },
+  "abuseProtection": {
+    "description": "配置限制和保护措施，以防止声誉滥用。",
+    "cooldown": {
+      "label": "冷却时间（分钟）",
+      "description": "同一用户再次互相点赞所需等待的时间（单位：分钟）。0表示无冷却时间，-1表示永久禁止。",
+      "once": {
+        "label": "冷却一次",
+        "description": "若启用此功能，用户之间仅能永久互谢一次。",
+        "activeDescription": "冷却时间启动后，用户仅能互相致谢一次。互动方向设定为单向。"
+      }
+    },
+    "cooldownDirection": {
+      "label": "冷却方向",
+      "description": "单向模式意味着捐赠者对同一对象的捐赠存在冷却时间。双向模式则表示冷却时间适用于捐赠者与接收者之间，防止双方在时间未到前反复互致感谢。",
+      "unidirectional": "单向",
+      "bidirectional": "双向"
+    },
+    "maxMessageAge": {
+      "label": "最大消息存留时间（分钟）",
+      "description": "消息在被回复或点赞时仍可获得声望的最大时效（以分钟计）。"
+    },
+    "minMessages": {
+      "label": "最小消息数",
+      "description": "频道中消息量达到或超过此数量的作者始终有资格获得声望值。"
+    },
+    "donorContext": {
+      "label": "捐赠者必须到场",
+      "description": "若启用此功能，捐赠者必须在频道中发送过至少一条最近消息才能授予声誉。"
+    },
+    "receiverContext": {
+      "label": "接收方必须到场",
+      "description": "若启用此功能，接收方必须至少发送过该频道中的最后一条消息，才能获得声誉值。"
+    },
+    "givenLimit": {
+      "enabled": {
+        "label": "启用指定限制"
+      },
+      "maxGiven": {
+        "label": "马克斯·吉文"
+      },
+      "maxGivenHours": {
+        "label": "加班时间"
+      },
+      "description": "限制用户在特定时间段内可给予的声望值上限。"
+    },
+    "receivedLimit": {
+      "enabled": {
+        "label": "启用接收限制"
+      },
+      "maxReceived": {
+        "label": "最大接收值"
+      },
+      "maxReceivedHours": {
+        "label": "加班时间"
+      },
+      "description": "限制用户在特定时间段内可获得的声望值上限。"
+    },
+    "maxMessageReputation": {
+      "label": "最大消息信誉值",
+      "description": "单条消息中通过提及和嵌入功能可授予的声望值上限。"
+    }
+  },
+  "announcements": {
+    "description": "配置用户达到新等级时发送的消息。",
+    "active": {
+      "label": "启用公告",
+      "description": "若启用此功能，当用户达到新等级时，机器人将发送一条消息。"
+    },
+    "sameChannel": {
+      "label": "通过同一渠道发送",
+      "description": "若启用此功能，公告将发送至角色升级所在的频道。否则，公告将发送至选定的频道。"
+    },
+    "channel": {
+      "label": "公告频道",
+      "description": "选择用于发送升级公告的频道。"
+    }
+  },
+  "autopost": {
+    "description": "配置排行榜的自动发布功能至频道。",
+    "premiumRequired": "自动发布",
+    "active": {
+      "label": "启用自动发布",
+      "description": "启用或禁用自动排行榜发布功能。"
+    },
+    "channel": {
+      "label": "自动发布频道",
+      "description": "排行榜应发布的频道。"
+    },
+    "refreshInterval": {
+      "label": "刷新间隔",
+      "description": "排行榜应多久更新一次。",
+      "HOURLY": "按小时计费",
+      "DAILY": "每日",
+      "WEEKLY": "每周",
+      "MONTHLY": "每月"
+    },
+    "refreshType": {
+      "label": "刷新类型",
+      "description": "如何更新该帖子。",
+      "DELETE_AND_REPOST": "删除并重新发布",
+      "REPOST": "转发",
+      "UPDATE": "更新"
+    },
+    "send": {
+      "label": "立即发送自动发布",
+      "sending": "发送中...",
+      "description": "立即手动向频道发送或更新自动发布内容。"
+    }
+  },
+  "logChannel": {
+    "premiumRequired": "日志通道",
+    "description": "日志通道将包含用户给予和接收的所有信誉记录。",
+    "active": {
+      "label": "启用日志通道",
+      "description": "启用或禁用声誉变化日志记录。"
+    },
+    "channel": {
+      "label": "日志通道",
+      "description": "应记录声誉变化的通道。"
+    }
+  },
+  "setup": {
+    "title": "初始设置",
+    "stepProgress": "步骤 {current} of {total}",
+    "requiredStep": "此步骤是继续操作的必要条件",
+    "navigation": {
+      "previous": "先前",
+      "next": "接下来",
+      "finish": "完成设置"
+    },
+    "steps": {
+      "language": {
+        "title": "选择语言",
+        "description": "选择机器人在服务器中发送消息和回复时使用的语言。前端语言将根据您的选择进行相应调整。"
+      },
+      "systemChannel": {
+        "title": "系统频道",
+        "description": "选择一个频道，机器人将在该频道发送重要的系统消息和通知。",
+        "required": "您必须选择一个系统频道才能继续设置。"
+      },
+      "reputationTypes": {
+        "title": "声誉类型",
+        "description": "选择用户可用于给予声望的方法。您可以启用多种类型，为用户提供灵活性。"
+      },
+      "reputationMode": {
+        "title": "声誉模式",
+        "description": "选择在服务器中如何计算和显示声望值。"
+      },
+      "ranks": {
+        "title": "声望等级",
+        "description": "定义用户在达到特定声望等级时将获得的角色。至少需要设置一个等级。",
+        "required": "您必须至少定义一个声望等级才能继续。"
+      },
+      "channels": {
+        "title": "频道与分类",
+        "description": "选择允许给予声誉的频道和类别。至少需选择一个频道或类别。",
+        "required": "您必须至少选择一个频道或类别才能继续（除非使用拒绝列表模式）。"
+      },
+      "thankwords": {
+        "title": "谢辞",
+        "description": "添加用户可用于给予声望的词语或短语。这些是机器人将识别的触发词。",
+        "recommendation": "我们建议您加载您语言的默认感谢词，以便快速入门。"
+      },
+      "announcements": {
+        "title": "公告",
+        "description": "配置机器人是否应在用户达到新的声望等级时进行公告。"
+      },
+      "cooldown": {
+        "title": "冷却时间设置",
+        "description": "设置冷却期以防止用户频繁给予声望。您还可以启用“单次冷却”功能，允许用户仅能互相致谢一次。"
+      },
+      "mainReaction": {
+        "title": "主反应",
+        "description": "选择将作为声望评分主要反应的表情符号。"
+      },
+      "roles": {
+        "title": "捐赠方与接收方角色",
+        "description": "可选地定义哪些角色可以给予声望（捐赠者角色）以及哪些角色可以接收声望（接收者角色）。"
+      }
+    }
+  },
+  "roles": {
+    "donor": {
+      "label": "捐赠者"
+    },
+    "receiver": {
+      "label": "接收器"
+    }
+  },
+  "links": {
+    "support": "支持服务器",
+    "website": "网站",
+    "faq": "常见问题解答",
+    "tos": "服务条款"
+  }
+}

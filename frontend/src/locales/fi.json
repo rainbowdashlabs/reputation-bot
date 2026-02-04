@@ -1,0 +1,458 @@
+{
+  "common": {
+    "save": "Tallenna",
+    "cancel": "Peruuta",
+    "delete": "Poista",
+    "edit": "Muokkaa",
+    "change": "Muutos",
+    "clear": "Selkeä",
+    "confirm": "Vahvista",
+    "loading": "Latautuu..."
+  },
+  "navigation": {
+    "settings": "Asetukset",
+    "presets": "Esiasetukset",
+    "setup": "Asennus"
+  },
+  "presets": {
+    "title": "Esiasetukset",
+    "description": "Nopeat konfigurointiasetukset, joiden avulla pääset alkuun yleisillä asetuksilla.",
+    "apply": "Hae",
+    "applying": "Hakemus...",
+    "simpleReputation": {
+      "title": "Yksinkertainen mainejärjestelmä",
+      "description": "Haluan suoraviivaisen mainejärjestelmän, jossa käyttäjät voivat antaa mainetta vain komentojen avulla, ilman monimutkaista kontekstin seurantaa.",
+      "settings": "Tämä esiasetus poistaa käytöstä kaikki maine-tyypit paitsi komennot ja sammuttaa lahjoittajan ja vastaanottajan kontekstin seurannan."
+    },
+    "thankOnce": {
+      "title": "Kiitä vain kerran",
+      "description": "Haluan, että käyttäjät voivat kiittää toisiaan vain kerran, jotta samojen käyttäjien välinen toistuva maineen antaminen estyy.",
+      "settings": "Tämä esiasetus asettaa jäähdytysajan vain kerran ja muuttaa jäähdytyssuunnan yksisuuntaiseksi."
+    },
+    "noAbuse": {
+      "title": "Ei väärinkäytön suojaa",
+      "description": "Haluan poistaa käytöstä kontekstipohjaisen väärinkäytön suojauksen ja antaa käyttäjille mahdollisuuden antaa mainepisteitä vapaammin ilman, että heidän vuorovaikutushistoriaansa seurataan.",
+      "settings": "Tämä esiasetus poistaa sekä luovuttajan että vastaanottajan kontekstin seurannan käytöstä."
+    },
+    "default": {
+      "title": "Oletusasetukset",
+      "description": "Haluan tasapainoisen mainejärjestelmän, jossa on kohtuulliset oletusasetukset, jotka toimivat hyvin useimmilla palvelimilla.",
+      "settings": "Tämä esiasetus asettaa 30 minuutin kaksisuuntaisen viiveen, ottaa käyttöön kaikki maine-tilat komentoja lukuun ottamatta, ottaa käyttöön maineen vahvistuksen ja ottaa käyttöön lahjoittajan ja vastaanottajan kontekstin tarkistukset."
+    },
+    "applied": "Sovellettu"
+  },
+  "settings": {
+    "title": "Asetukset",
+    "general": "Yleistä",
+    "reputation": "Maine",
+    "messages": "Viestit",
+    "profile": "Profiili",
+    "ranks": "Sijoitukset",
+    "channels": "Kanavat",
+    "roles": "Roolit",
+    "thankwords": "Kiitossanat",
+    "abuseProtection": "Väärinkäytön suojaus",
+    "announcements": "Ilmoitukset",
+    "autopost": "Automaattinen julkaisu",
+    "logChannel": "Lokikanava",
+    "reactions": "Reaktiot"
+  },
+  "locale": {
+    "selectLanguage": "Valitse kieli"
+  },
+  "error": {
+    "noToken": {
+      "title": "Istuntoa ei löytynyt",
+      "message": "Sinulla ei ole voimassa olevaa istuntotunnusta.",
+      "instruction": "Luo uusi istunto, jotta voit käyttää tätä sovellusta."
+    }
+  },
+  "premiumFeature": {
+    "title": "Kannattaja-ominaisuus",
+    "requiredTier": "Vaadittu tukijataso:",
+    "message": "{name} on varattu tukijoille. Ryhdy tukijaksi, jotta voit käyttää sitä."
+  },
+  "profile": {
+    "description": "Mukauta botin ulkonäkö ja käyttäytyminen palvelimellasi.",
+    "reset": "Nollaa",
+    "premiumRequired": "Profiilin mukauttaminen",
+    "nickname": {
+      "label": "Bot-lempinimi",
+      "placeholder": "Syötä botin lempinimi",
+      "description": "Aseta botille mukautettu lempinimi tällä palvelimella.",
+      "reset": "Palauta lempinimi oletusasetukseksi"
+    },
+    "profilePicture": {
+      "label": "Profiilikuva",
+      "uploadButton": "Lataa kuva",
+      "uploading": "Lataa...",
+      "description": "Lataa botille mukautettu profiilikuva (enintään 2 Mt, 512 x 512 pikseliä)",
+      "reset": "Palauta profiilikuva oletusasetuksiin"
+    },
+    "reputationName": {
+      "label": "Maine Nimi",
+      "placeholder": "Syötä mukautettu maineen nimi (esim. 'Pisteet', 'Karma')",
+      "description": "Mukauta tällä palvelimella käytettävä maineesi nimi.",
+      "reset": "Palauta maineen nimi oletusarvoon"
+    },
+    "tosNote": "Kaikki Discordin käyttöehdot tai valtion lait rikkovat toimet ovat kiellettyjä ja voivat johtaa tämän ominaisuuden estämiseen palvelimella."
+  },
+  "general": {
+    "description": "Määritä botin perusasetukset tälle palvelimelle.",
+    "language": {
+      "label": "Bot-kieli",
+      "selectPlaceholder": "Valitse kieli",
+      "description": "Valitse kieli, jota botti käyttää viesteissä ja vastauksissa tällä palvelimella."
+    },
+    "systemChannel": {
+      "label": "Järjestelmäkanava",
+      "selectPlaceholder": "Valitse kanava",
+      "note": "Huomautus: Tämä kanava on asetettava ja sen on oltava sisäinen kanava. Se sisältää tärkeitä viestejä botin palvelusta ja kehittäjiltä."
+    },
+    "roleSelect": {
+      "searchPlaceholder": "Etsi rooleja...",
+      "noRolesFound": "Roolia ei löytynyt"
+    },
+    "ranks": {
+      "description": "Määritä mainepisteet ja niihin liittyvät roolit.",
+      "stackRoles": {
+        "label": "Pino-roolit",
+        "description": "Jos tämä on käytössä, kaikki sovellettavat sijoitustasot määritetään korkeimman sijoitustason sijaan."
+      },
+      "addRank": "Lisää uusi sijoitus",
+      "reputationRequired": "Vaadittu maine",
+      "roleAlreadyAdded": "Tällä roolilla on jo sijoitus.",
+      "reputationAlreadyUsed": "Tämä mainearvo on jo käytössä toisessa luokassa.",
+      "noRanks": "Ei vielä määritettyjä sijoitusta.",
+      "reputationPlaceholder": "esim. 100",
+      "refresh": {
+        "button": "Päivitä sijoitus",
+        "refreshing": "Virkistävää...",
+        "alreadyRunning": "Päivittäminen on jo käynnissä",
+        "success": "Sijoitusten päivitys aloitettu onnistuneesti",
+        "failed": "Rankin päivityksen käynnistäminen epäonnistui"
+      }
+    },
+    "reputation": {
+      "description": "Määritä, miten maine lasketaan ja mitkä ominaisuudet otetaan käyttöön.",
+      "mode": {
+        "label": "Maine-tila",
+        "description": "Valitse, miten maine lasketaan ja näytetään.",
+        "modes": {
+          "TOTAL": "Kokonaismaine",
+          "ROLLING_WEEK": "Rullaava viikko",
+          "ROLLING_MONTH": "Rullaava kuukausi",
+          "WEEK": "Tällä viikolla",
+          "MONTH": "Tässä kuussa"
+        },
+        "descriptions": {
+          "TOTAL": "Käytä käyttäjän kaikkien aikojen kokonaismainepisteitä.",
+          "ROLLING_WEEK": "Käytä viimeisen 7 päivän aikana saatuja mainepisteitä.",
+          "ROLLING_MONTH": "Käytä viimeisen 30 päivän aikana saatuja mainepisteitä.",
+          "WEEK": "Käytä kuluvan viikon alusta saatuja mainepisteitä.",
+          "MONTH": "Käytä kuluvan kuukauden alusta saatuja mainepisteitä."
+        }
+      },
+      "resetDate": {
+        "label": "Nollaa päivämäärä",
+        "description": "Päivämäärä, jolloin mainepisteet nollataan. Aseta päivämäärä tulevaisuudessa, jolloin nollaus tapahtuu.",
+        "clear": "Tyhjennä nollauspäivä"
+      },
+      "types": {
+        "reaction": {
+          "label": "Reaktio Maine",
+          "description": "Anna maine, kun viestiin lisätään tietty reaktio.",
+          "confirmation": {
+            "label": "Reaktion vahvistus",
+            "description": "Lähetä vahvistusviesti, kun maine annetaan reaktion kautta."
+          }
+        },
+        "answer": {
+          "label": "Vastauksen maine",
+          "description": "Anna mainepisteitä, kun käyttäjän viestiin kiitetään vastauksessa."
+        },
+        "mention": {
+          "label": "Mainitse maine",
+          "description": "Anna maine, kun käyttäjä mainitaan kiitoksen yhteydessä."
+        },
+        "fuzzy": {
+          "label": "Sumea hakutulos",
+          "description": "Anna maine sovittamalla kiitos-sanan ympärillä olevat sanat kanavassa olevien käyttäjien nimiin."
+        },
+        "embed": {
+          "label": "Upota maine",
+          "description": "Lähetä upotettu luettelo viimeisessä keskustelussa olleista käyttäjistä, jos kohdetta ei voida määrittää."
+        },
+        "direct": {
+          "label": "Suora upotus Maine",
+          "description": "Anna maine automaattisesti, kun upotuksessa on vain yksi käyttäjä."
+        },
+        "command": {
+          "label": "Komennon maine",
+          "description": "Anna maine /reputation-komennolla.",
+          "ephemeral": {
+            "label": "Katoava vastaus",
+            "description": "Lähetä vastaus piilotettuna muille käyttäjille, kun annat mainepisteitä komennolla."
+          }
+        }
+      }
+    },
+    "roles": {
+      "description": "Määritä, mitkä roolit voivat antaa ja vastaanottaa mainetta.",
+      "donor": {
+        "label": "Lahjoittajien roolit",
+        "description": "Jos tämä on käytössä, vain käyttäjät, joilla on vähintään yksi näistä rooleista, voivat antaa mainepisteitä."
+      },
+      "receiver": {
+        "label": "Vastaanottajan roolit",
+        "description": "Jos tämä on käytössä, vain käyttäjät, joilla on vähintään yksi näistä rooleista, voivat saada mainetta."
+      },
+      "list": {
+        "label": "Valitut roolit",
+        "description": "Valitse, mitkä roolit ovat pakollisia."
+      }
+    },
+    "channels": {
+      "description": "Määritä, missä botin tulisi olla aktiivinen ja missä ei.",
+      "listType": {
+        "label": "Luettelotyyppi",
+        "description": "Valitse, sallitaanko vai estetäänkö valitut kanavat ja kategoriat.",
+        "allow": "Sallittujen luettelo",
+        "deny": "Estolista",
+        "premiumRequired": "Estolista"
+      },
+      "list": {
+        "label": "Kanavat ja kategoriat",
+        "description": "Valitse kanavat ja kategoriat, jotka tulisi sisällyttää luetteloon.",
+        "channels": "Kanavat",
+        "categories": "Luokat"
+      },
+      "premium": {
+        "channelLimitWarning": "{limit}-kanavan valitseminen on varattu tukijoille. Ryhdy tukijaksi, jotta voit käyttää sitä.",
+        "categoryLimitWarning": "{limit}-kategorioiden valinta on varattu tukijoille. Liity tukijaksi, jotta voit käyttää sitä."
+      }
+    }
+  },
+  "reactions": {
+    "title": "Reaktiot",
+    "description": "Määritä maineen antamiseen käytettävät emojit.",
+    "main": {
+      "label": "Pääreaktio",
+      "description": "Emoji, jota käytetään ensisijaisena reaktiona maineen antamiseen."
+    },
+    "additional": {
+      "label": "Lisäreaktiot",
+      "description": "Lisäemojit, joita voidaan käyttää myös maineen antamiseen.",
+      "premiumRequired": "Lisäreaktiot",
+      "add": "Lisää reaktio",
+      "none": "Lisäreaktioita ei ole määritetty."
+    }
+  },
+  "thankwords": {
+    "description": "Näitä sanoja käytetään tunnistamaan, kun joku saa kiitosta. Ne tulkitaan säännöllisiksi lausekkeiksi.",
+    "add": "Lisää kiitos sana",
+    "placeholder": "Syötä kiitos sana (Regex)",
+    "none": "Kiitossanoja ei ole määritetty.",
+    "invalidCharacter": "Kiitossanassa on virheellinen merkki: {char}",
+    "alreadyExists": "Tämä kiitos sana on jo olemassa.",
+    "defaults": {
+      "title": "Oletuskiitokset",
+      "description": "Lisää nopeasti oletuskiitossanat eri kielille."
+    }
+  },
+  "abuseProtection": {
+    "description": "Määritä rajoitukset ja suojaukset maineen väärinkäytön estämiseksi.",
+    "cooldown": {
+      "label": "Jäähdytysaika (minuuttia)",
+      "description": "Aika minuutteina, joka on kuluttava, ennen kuin samat käyttäjät voivat kiittää toisiaan uudelleen. 0 tarkoittaa, että viivettä ei ole, -1 tarkoittaa, että viivettä on ikuisesti.",
+      "once": {
+        "label": "Jäähdytysaika kerran",
+        "description": "Jos tämä toiminto on käytössä, käyttäjät voivat kiittää toisiaan vain kerran.",
+        "activeDescription": "Jäähdytysaika on aktiivinen. Käyttäjät voivat kiittää toisiaan vain kerran. Suunta on asetettu yksisuuntaiseksi."
+      }
+    },
+    "cooldownDirection": {
+      "label": "Jäähdytyssuunta",
+      "description": "Yksisuuntainen tarkoittaa, että lahjoittajalla on viive saman henkilön lahjoittamisessa. Kaksisuuntainen tarkoittaa, että viive on lahjoittajan ja vastaanottajan välillä, mikä estää heitä kiittämästä toisiaan edestakaisin, kunnes aika on kulunut.",
+      "unidirectional": "Yksisuuntainen",
+      "bidirectional": "Kaksisuuntainen"
+    },
+    "maxMessageAge": {
+      "label": "Viestien enimmäisikä (minuutteina)",
+      "description": "Viestin enimmäisikä (minuutteina), jonka jälkeen se on kelvollinen maineen saamiseksi, kun siihen vastataan tai siihen reagoidaan."
+    },
+    "minMessages": {
+      "label": "Minimi viestien määrä",
+      "description": "Kirjoittajat, joilla on vähintään tämä määrä viestejä kanavalla, ovat aina oikeutettuja saamaan mainetta."
+    },
+    "donorContext": {
+      "label": "Lahjoittaja on oltava läsnä",
+      "description": "Jos tämä on käytössä, lahjoittajan on lähetettävä vähintään yksi kanavan viimeisistä viesteistä, jotta hän voi antaa mainepisteitä."
+    },
+    "receiverContext": {
+      "label": "Vastaanottajan on oltava paikalla",
+      "description": "Jos tämä on käytössä, vastaanottajan on lähetettävä vähintään yksi kanavan viimeisistä viesteistä saadakseen maineen."
+    },
+    "givenLimit": {
+      "enabled": {
+        "label": "Ota käyttöön annettu raja"
+      },
+      "maxGiven": {
+        "label": "Max Given"
+      },
+      "maxGivenHours": {
+        "label": "Ylityöt"
+      },
+      "description": "Rajoita käyttäjän antaman maineen määrä tietyn ajanjakson aikana."
+    },
+    "receivedLimit": {
+      "enabled": {
+        "label": "Ota vastaanottoraja käyttöön"
+      },
+      "maxReceived": {
+        "label": "Enimmäisvastaanotettu"
+      },
+      "maxReceivedHours": {
+        "label": "Ylityöt"
+      },
+      "description": "Rajoita käyttäjän maineen kasvu tietyn ajanjakson aikana."
+    },
+    "maxMessageReputation": {
+      "label": "Viestien enimmäismäärä Maine",
+      "description": "Yhdessä viestissä mainintojen ja upotusten kautta annettavan maineen enimmäismäärä."
+    }
+  },
+  "announcements": {
+    "description": "Määritä viestit, jotka lähetetään, kun käyttäjät saavuttavat uusia tasoja.",
+    "active": {
+      "label": "Ota ilmoitukset käyttöön",
+      "description": "Jos tämä on käytössä, botti lähettää viestin, kun käyttäjä saavuttaa uuden tason."
+    },
+    "sameChannel": {
+      "label": "Lähetä samassa kanavassa",
+      "description": "Jos tämä on käytössä, ilmoitus lähetetään kanavalle, jossa taso nousi. Muussa tapauksessa se lähetetään valitulle kanavalle."
+    },
+    "channel": {
+      "label": "Ilmoituskanava",
+      "description": "Valitse kanava, johon nousuilmoitukset lähetetään."
+    }
+  },
+  "autopost": {
+    "description": "Määritä tulostaulun automaattinen julkaiseminen kanavalle.",
+    "premiumRequired": "Automaattinen julkaisu",
+    "active": {
+      "label": "Ota automaattinen julkaiseminen käyttöön",
+      "description": "Ota automaattinen tulostaulukon julkaiseminen käyttöön tai poista se käytöstä."
+    },
+    "channel": {
+      "label": "Automaattinen julkaisukanava",
+      "description": "Kanava, johon tulostaulukko tulisi julkaista."
+    },
+    "refreshInterval": {
+      "label": "Päivitä väli",
+      "description": "Kuinka usein tulostaulukko tulisi päivittää.",
+      "HOURLY": "Tuntikohtainen",
+      "DAILY": "Päivittäin",
+      "WEEKLY": "Viikoittain",
+      "MONTHLY": "Kuukausittain"
+    },
+    "refreshType": {
+      "label": "Päivitä tyyppi",
+      "description": "Kuinka viesti tulisi päivittää.",
+      "DELETE_AND_REPOST": "Poista ja lähetä uudelleen",
+      "REPOST": "Uudelleenjulkaisu",
+      "UPDATE": "Päivitä"
+    },
+    "send": {
+      "label": "Lähetä automaattinen viesti nyt",
+      "sending": "Lähetetään...",
+      "description": "Lähetä tai päivitä automaattinen viesti kanavalle manuaalisesti välittömästi."
+    }
+  },
+  "logChannel": {
+    "premiumRequired": "Lokikanava",
+    "description": "Lokikanava sisältää kaikki käyttäjälle annetut ja häneltä saadut mainepisteet.",
+    "active": {
+      "label": "Ota lokikanava käyttöön",
+      "description": "Ota käyttöön tai poista käytöstä maineen muutosten kirjaaminen."
+    },
+    "channel": {
+      "label": "Lokikanava",
+      "description": "Kanava, johon maineen muutokset tulisi kirjata."
+    }
+  },
+  "setup": {
+    "title": "Alustava asennus",
+    "stepProgress": "Vaihe {current} sivustolta {total}",
+    "requiredStep": "Tämä vaihe on välttämätön jatkamiseksi.",
+    "navigation": {
+      "previous": "Edellinen",
+      "next": "Seuraava",
+      "finish": "Viimeistele asetukset"
+    },
+    "steps": {
+      "language": {
+        "title": "Valitse kieli",
+        "description": "Valitse kieli, jota botti käyttää viesteissä ja vastauksissa palvelimellasi. Käyttöliittymän kieli muuttuu valintasi mukaiseksi."
+      },
+      "systemChannel": {
+        "title": "Järjestelmäkanava",
+        "description": "Valitse kanava, johon botti lähettää tärkeät järjestelmäviestit ja ilmoitukset.",
+        "required": "Jatkaaksesi asennusta sinun on valittava järjestelmäkanava."
+      },
+      "reputationTypes": {
+        "title": "Maineen tyypit",
+        "description": "Valitse, mitä menetelmiä käyttäjät voivat käyttää maineen antamiseen. Voit ottaa käyttöön useita tyyppejä, jotta käyttäjät voivat toimia joustavasti."
+      },
+      "reputationMode": {
+        "title": "Maine-tila",
+        "description": "Valitse, miten maine lasketaan ja näytetään palvelimellasi."
+      },
+      "ranks": {
+        "title": "Maine-sijoitukset",
+        "description": "Määritä roolit, jotka käyttäjät saavat saavuttaessaan tietyn maineen tason. Vähintään yksi taso on pakollinen.",
+        "required": "Jatkaaksesi sinun on määritettävä vähintään yksi mainepisteet."
+      },
+      "channels": {
+        "title": "Kanavat ja kategoriat",
+        "description": "Valitse, mitkä kanavat ja kategoriat sallivat maineen antamisen. Vähintään yksi kanava tai kategoria on valittava.",
+        "required": "Jatkaaksesi sinun on valittava vähintään yksi kanava tai kategoria (ellei käytä estolistatilaa)."
+      },
+      "thankwords": {
+        "title": "Kiitossanat",
+        "description": "Lisää sanoja tai lauseita, joita käyttäjät voivat käyttää maineen antamiseen. Nämä ovat avainsanoja, jotka botti tunnistaa.",
+        "recommendation": "Suosittelemme lataamaan kielesi oletuskiitossanat, jotta pääset nopeasti alkuun."
+      },
+      "announcements": {
+        "title": "Ilmoitukset",
+        "description": "Määritä, ilmoittaako botti, kun käyttäjät saavuttavat uuden mainepisteetason."
+      },
+      "cooldown": {
+        "title": "Jäähdytysasetukset",
+        "description": "Aseta viiveaika, jotta käyttäjät eivät voi antaa mainepisteitä liian usein. Voit myös ottaa käyttöön \"viive kerran\" -toiminnon, jotta käyttäjät voivat kiittää toisiaan vain kerran."
+      },
+      "mainReaction": {
+        "title": "Pääreaktio",
+        "description": "Valitse emoji, jota käytetään pääreaktiona maineen antamisessa."
+      },
+      "roles": {
+        "title": "Lahjoittajan ja vastaanottajan roolit",
+        "description": "Määritä valinnaisesti, mitkä roolit voivat antaa mainetta (lahjoittajaroolit) ja mitkä roolit voivat saada mainetta (vastaanottajaroolit)."
+      }
+    }
+  },
+  "roles": {
+    "donor": {
+      "label": "Lahjoittaja"
+    },
+    "receiver": {
+      "label": "Vastaanotin"
+    }
+  },
+  "links": {
+    "support": "Tukipalvelin",
+    "website": "Verkkosivusto",
+    "faq": "Usein kysytyt kysymykset",
+    "tos": "Käyttöehdot"
+  }
+}

@@ -12,6 +12,7 @@ import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -27,7 +28,7 @@ public class Info implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        event.replyEmbeds(getInfoEmbed(event, guildRepository.guild(event.getGuild()).settings(), context))
+        event.replyEmbeds(WebPromo.promoEmbed(context), getInfoEmbed(event, guildRepository.guild(event.getGuild()).settings(), context))
              .setEphemeral(true)
              .complete();
     }

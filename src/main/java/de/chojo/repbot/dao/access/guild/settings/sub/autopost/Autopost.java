@@ -5,8 +5,10 @@
  */
 package de.chojo.repbot.dao.access.guild.settings.sub.autopost;
 
+import com.fasterxml.jackson.annotation.JsonSerializeAs;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
+import de.chojo.repbot.web.pojo.settings.sub.AutopostPOJO;
 import de.chojo.sadu.mapper.wrapper.Row;
 import de.chojo.sadu.queries.api.call.Call;
 import net.dv8tion.jda.api.entities.Guild;
@@ -19,13 +21,9 @@ import java.util.function.Function;
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 
-public class Autopost implements GuildHolder {
+@JsonSerializeAs(AutopostPOJO.class)
+public class Autopost extends AutopostPOJO implements GuildHolder {
     private final Settings settings;
-    private boolean active = false;
-    private long channelId = 0;
-    private long messageId = 0;
-    private RefreshType refreshType = RefreshType.DELETE_AND_REPOST;
-    private RefreshInterval refreshInterval = RefreshInterval.DAILY;
 
     private Autopost(Settings settings, boolean active, long channelId, long message, RefreshType refreshType, RefreshInterval refreshInterval) {
         this.settings = settings;
@@ -45,28 +43,8 @@ public class Autopost implements GuildHolder {
                 rs.getBoolean("active"),
                 rs.getLong("channel_id"),
                 rs.getLong("message_id"),
-                rs.getEnum("refresh_type",RefreshType.class),
+                rs.getEnum("refresh_type", RefreshType.class),
                 rs.getEnum("refresh_interval", RefreshInterval.class));
-    }
-
-    public boolean active() {
-        return active;
-    }
-
-    public long channelId() {
-        return channelId;
-    }
-
-    public long messageId() {
-        return messageId;
-    }
-
-    public RefreshType refreshType() {
-        return refreshType;
-    }
-
-    public RefreshInterval refreshInterval() {
-        return refreshInterval;
     }
 
     public boolean active(boolean active) {
@@ -77,17 +55,25 @@ public class Autopost implements GuildHolder {
     }
 
     public long channel(TextChannel textChannel) {
-        if (set("channel_id", stmt -> stmt.bind(textChannel.getIdLong()))) {
-            this.channelId = textChannel.getIdLong();
+        return channel(textChannel.getIdLong());
+    }
+
+    public long channel(long channelId) {
+        if (set("channel_id", stmt -> stmt.bind(channelId))) {
+            this.channelId = channelId;
         }
-        return channelId;
+        return this.channelId;
     }
 
     public long message(Message message) {
-        if (set("message_id", stmt -> stmt.bind(message.getIdLong()))) {
-            this.messageId = message.getIdLong();
+        return message(message.getIdLong());
+    }
+
+    public long message(long messageId) {
+        if (set("message_id", stmt -> stmt.bind(messageId))) {
+            this.messageId = messageId;
         }
-        return message.getIdLong();
+        return this.messageId;
     }
 
     public RefreshType refreshType(RefreshType refreshType) {
@@ -104,15 +90,12 @@ public class Autopost implements GuildHolder {
         return refreshInterval;
     }
 
-    private boolean set(String parameter, Function<Call, Call> builder) {
-        return query("""
-                INSERT INTO autopost(guild_id, %s) VALUES (?, ?)
-                ON CONFLICT(guild_id)
-                    DO UPDATE SET %s = excluded.%s;
-                """, parameter, parameter, parameter)
-                .single(builder.apply(call().bind(guildId())))
-                .insert()
-                .changed();
+    public void apply(AutopostPOJO state) {
+        if (this.active != state.active()) active(state.active());
+        if (this.channelId != state.channelId()) channel(state.channelId());
+        if (this.messageId != state.messageId()) message(state.messageId());
+        if (this.refreshType != state.refreshType()) refreshType(state.refreshType());
+        if (this.refreshInterval != state.refreshInterval()) refreshInterval(state.refreshInterval());
     }
 
     @Override
@@ -123,5 +106,16 @@ public class Autopost implements GuildHolder {
     @Override
     public long guildId() {
         return settings.guildId();
+    }
+
+    private boolean set(String parameter, Function<Call, Call> builder) {
+        return query("""
+                INSERT INTO autopost(guild_id, %s) VALUES (?, ?)
+                ON CONFLICT(guild_id)
+                    DO UPDATE SET %s = excluded.%s;
+                """, parameter, parameter, parameter)
+                .single(builder.apply(call().bind(guildId())))
+                .insert()
+                .changed();
     }
 }

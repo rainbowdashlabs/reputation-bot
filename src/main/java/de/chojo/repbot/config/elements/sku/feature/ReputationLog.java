@@ -7,9 +7,6 @@ package de.chojo.repbot.config.elements.sku.feature;
 
 import de.chojo.repbot.config.elements.sku.SKUEntry;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal", "CanBeFinal"})
 public class ReputationLog {
 

@@ -11,6 +11,7 @@ import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.util.Completion;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
@@ -30,19 +31,19 @@ public class Remove implements SlashHandler {
         try {
             Pattern.compile(pattern);
         } catch (PatternSyntaxException e) {
-            event.reply(context.localize("error.invalidRegex"))
+            event.reply(WebPromo.promoString(context) + "\n" + context.localize("error.invalidRegex"))
                  .setEphemeral(true)
                  .complete();
             return;
         }
         if (guildRepository.guild(event.getGuild()).settings().thanking().thankwords().remove(pattern)) {
-            event.reply(context.localize("command.thankwords.remove.message.removed",
-                    Replacement.create("PATTERN", pattern, Format.CODE)))
+            event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.thankwords.remove.message.removed",
+                         Replacement.create("PATTERN", pattern, Format.CODE)))
                  .setEphemeral(true)
                  .complete();
             return;
         }
-        event.reply(context.localize("command.thankwords.remove.message.patternnotfound"))
+        event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.thankwords.remove.message.patternnotfound"))
              .setEphemeral(true)
              .complete();
     }

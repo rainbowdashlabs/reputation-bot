@@ -10,6 +10,7 @@ import de.chojo.jdautil.util.Completion;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.serialization.ThankwordsContainer;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.apache.commons.lang3.StringUtils;
@@ -30,8 +31,8 @@ public class LoadDefault implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var languageOption = event.getOption("language");
         if (languageOption == null) {
-            event.reply(context.localize("command.thankwords.loaddefault.message.available")
-                        + " " + String.join(", ", thankwordsContainer.getAvailableLanguages()))
+            event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.thankwords.loaddefault.message.available")
+                         + " " + String.join(", ", thankwordsContainer.getAvailableLanguages()))
                  .setEphemeral(true)
                  .complete();
             return;
@@ -39,7 +40,7 @@ public class LoadDefault implements SlashHandler {
         var language = languageOption.getAsString();
         var words = thankwordsContainer.get(language.toLowerCase(Locale.ROOT));
         if (words == null) {
-            event.reply(context.localize("command.locale.set.message.invalidlocale"))
+            event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.locale.set.message.invalidlocale"))
                  .setEphemeral(true)
                  .complete();
             return;
@@ -50,7 +51,7 @@ public class LoadDefault implements SlashHandler {
 
         var wordsJoined = words.stream().map(w -> StringUtils.wrap(w, "`")).collect(Collectors.joining(", "));
 
-        event.reply(context.localize("command.thankwords.loaddefault.message.added") + wordsJoined)
+        event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.thankwords.loaddefault.message.added") + wordsJoined)
              .setEphemeral(true)
              .complete();
     }

@@ -14,8 +14,8 @@ import static de.chojo.sadu.queries.api.query.Query.query;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Gdpr implements GuildHolder {
-    private final RepGuild repGuild;
     private static final Logger log = getLogger(Gdpr.class);
+    private final RepGuild repGuild;
 
     public Gdpr(RepGuild repGuild) {
         this.repGuild = repGuild;

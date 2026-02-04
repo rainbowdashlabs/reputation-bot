@@ -7,7 +7,6 @@ package de.chojo.repbot.dao.access.gdpr;
 
 import de.chojo.sadu.mapper.wrapper.Row;
 import de.chojo.sadu.queries.api.configuration.QueryConfiguration;
-import de.chojo.sadu.queries.api.query.Query;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -53,15 +52,15 @@ public class GdprUser {
     public boolean queueDeletion() {
         log.info("User {} requested deletion of their data", userId());
         return query("""
-                            INSERT INTO
-                                cleanup_schedule(user_id, delete_after)
-                                VALUES (?, now())
-                                    ON CONFLICT(guild_id, user_id)
-                                        DO NOTHING;
-                            """)
-                    .single(call().bind(userId()))
-                    .update()
-                    .changed();
+                INSERT INTO
+                    cleanup_schedule(user_id, delete_after)
+                    VALUES (?, now())
+                        ON CONFLICT(guild_id, user_id)
+                            DO NOTHING;
+                """)
+                .single(call().bind(userId()))
+                .update()
+                .changed();
     }
 
     public boolean request() {
@@ -87,14 +86,14 @@ public class GdprUser {
 
     public void requestSend() {
         query("UPDATE gdpr_log SET received = now(), last_attempt = now() WHERE user_id = ?")
-             .single(call().bind(userId()))
-             .update();
+                .single(call().bind(userId()))
+                .update();
     }
 
     public void requestSendFailed() {
         query("UPDATE gdpr_log SET attempts = attempts + 1, last_attempt = now() WHERE user_id = ?")
-             .single(call().bind(userId()))
-             .update();
+                .single(call().bind(userId()))
+                .update();
     }
 
     public Optional<String> userData() {

@@ -18,7 +18,7 @@ public class Reputation implements SlashProvider<Slash> {
     private ReputationService reputationService;
 
     public Reputation(GuildRepository guildRepository, ReputationService reputationService) {
-        this.guildRepository  = guildRepository;
+        this.guildRepository = guildRepository;
         this.reputationService = reputationService;
     }
 
@@ -26,9 +26,9 @@ public class Reputation implements SlashProvider<Slash> {
     @Override
     public Slash slash() {
         return Slash.of("reputation", "command.reputation.description")
-                .privateCommand()
-                .command(new Give(guildRepository, reputationService))
-                .argument(user("user", "command.reputation.options.user.description").asRequired())
-                .build();
+                    .privateCommand()
+                    .command(new Give(guildRepository, reputationService))
+                    .argument(user("user", "command.reputation.options.user.description").asRequired())
+                    .build();
     }
 }

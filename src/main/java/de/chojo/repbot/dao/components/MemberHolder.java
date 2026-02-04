@@ -27,7 +27,7 @@ public interface MemberHolder extends UserHolder, GuildHolder {
     }
 
     @Override
-    default long guildId(){
+    default long guildId() {
         return guild().getIdLong();
     }
 }

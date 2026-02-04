@@ -8,6 +8,7 @@ package de.chojo.repbot.commands.thankwords.handler;
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.apache.commons.lang3.StringUtils;
@@ -27,7 +28,7 @@ public class List implements SlashHandler {
         var pattern = getGuildPattern(event.getGuild());
         if (pattern == null) return;
 
-        event.reply(context.localize("command.thankwords.list.message.list") + "\n" + pattern)
+        event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.thankwords.list.message.list") + "\n" + pattern)
              .setEphemeral(true)
              .complete();
     }

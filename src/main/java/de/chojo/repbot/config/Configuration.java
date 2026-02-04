@@ -43,13 +43,13 @@ public class Configuration {
 
     private Configuration() {
         objectMapper = JsonMapper.builder()
-                .configure(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS, true)
-                .build()
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
-                .setVisibility(PropertyAccessor.GETTER, JsonAutoDetect.Visibility.NONE)
-                .setDefaultPrettyPrinter(new DefaultPrettyPrinter())
-                .registerModule(new BotModule());
+                                 .configure(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS, true)
+                                 .build()
+                                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                                 .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
+                                 .setVisibility(PropertyAccessor.GETTER, JsonAutoDetect.Visibility.NONE)
+                                 .setDefaultPrettyPrinter(new DefaultPrettyPrinter())
+                                 .registerModule(new BotModule());
     }
 
     public static Configuration create() {
@@ -70,35 +70,6 @@ public class Configuration {
         } catch (IOException e) {
             log.error("Could not save config.", e);
         }
-    }
-
-    private void save() throws IOException {
-        objectMapper.writerWithDefaultPrettyPrinter().writeValues(getConfig().toFile()).write(configFile);
-    }
-
-    private void reloadFile() throws IOException {
-        forceConsistency();
-        configFile = objectMapper.readValue(getConfig().toFile(), ConfigFile.class);
-    }
-
-    private void forceConsistency() throws IOException {
-        Files.createDirectories(getConfig().getParent());
-        if (!getConfig().toFile().exists()) {
-            if (getConfig().toFile().createNewFile()) {
-                objectMapper.writerWithDefaultPrettyPrinter().writeValues(getConfig().toFile()).write(new ConfigFile());
-                throw new ConfigurationException("Please configure the config.");
-            }
-        }
-    }
-
-    private Path getConfig() {
-        var home = new File(".").getAbsoluteFile().getParentFile().toPath();
-        var property = System.getProperty("bot.config");
-        if (property == null) {
-            log.error("bot.config property is not set.");
-            throw new ConfigurationException("Property -Dbot.config=<config path> is not set.");
-        }
-        return Paths.get(home.toString(), property);
     }
 
     public Database database() {
@@ -147,5 +118,34 @@ public class Configuration {
 
     public SKU skus() {
         return configFile.skus();
+    }
+
+    private void save() throws IOException {
+        objectMapper.writerWithDefaultPrettyPrinter().writeValues(getConfig().toFile()).write(configFile);
+    }
+
+    private void reloadFile() throws IOException {
+        forceConsistency();
+        configFile = objectMapper.readValue(getConfig().toFile(), ConfigFile.class);
+    }
+
+    private void forceConsistency() throws IOException {
+        Files.createDirectories(getConfig().getParent());
+        if (!getConfig().toFile().exists()) {
+            if (getConfig().toFile().createNewFile()) {
+                objectMapper.writerWithDefaultPrettyPrinter().writeValues(getConfig().toFile()).write(new ConfigFile());
+                throw new ConfigurationException("Please configure the config.");
+            }
+        }
+    }
+
+    private Path getConfig() {
+        var home = new File(".").getAbsoluteFile().getParentFile().toPath();
+        var property = System.getProperty("bot.config");
+        if (property == null) {
+            log.error("bot.config property is not set.");
+            throw new ConfigurationException("Property -Dbot.config=<config path> is not set.");
+        }
+        return Paths.get(home.toString(), property);
     }
 }

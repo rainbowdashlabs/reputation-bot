@@ -10,10 +10,11 @@ import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.List;
 
 import static de.chojo.repbot.util.Text.getSetting;
@@ -27,7 +28,7 @@ public class Info implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        event.replyEmbeds(getSettings(context, guildRepository.guild(event.getGuild())))
+        event.replyEmbeds(WebPromo.promoEmbed(context), getSettings(context, guildRepository.guild(event.getGuild())))
              .setEphemeral(true)
              .complete();
     }

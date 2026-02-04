@@ -11,6 +11,7 @@ import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.util.Completion;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
@@ -39,8 +40,8 @@ public class Set implements SlashHandler {
         }
 
         if (guildRepository.guild(event.getGuild()).settings().general().language(locale)) {
-            event.reply(context.localize("command.locale.set.message.set",
-                    Replacement.create("LOCALE", locale.getNativeName(), Format.CODE)))
+            event.reply(WebPromo.promoString(context) + context.localize("command.locale.set.message.set",
+                         Replacement.create("LOCALE", locale.getNativeName(), Format.CODE)))
                  .setEphemeral(true)
                  .complete();
         }
