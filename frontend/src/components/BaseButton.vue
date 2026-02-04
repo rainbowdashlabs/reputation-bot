@@ -1,8 +1,8 @@
 /*
-*     SPDX-License-Identifier: AGPL-3.0-only
-*
-*     Copyright (C) RainbowDashLabs and Contributor
-*/
+ *     SPDX-License-Identifier: AGPL-3.0-only
+ *
+ *     Copyright (C) RainbowDashLabs and Contributor
+ */
 <script lang="ts" setup>
 interface Props {
   color?: 'indigo' | 'gray' | 'red' | 'blue' | 'secondary' | 'primary' | 'danger'

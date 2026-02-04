@@ -3,7 +3,6 @@
  *
  *     Copyright (C) RainbowDashLabs and Contributor
  */
-
 // Locale metadata for display purposes
 export interface LocaleMetadata {
     code: string

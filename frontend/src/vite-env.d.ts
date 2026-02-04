@@ -3,7 +3,6 @@
  *
  *     Copyright (C) RainbowDashLabs and Contributor
  */
-
 /// <reference types="vite/client" />
 
 interface ImportMetaEnv {
