@@ -3,7 +3,6 @@
  *
  *     Copyright (C) RainbowDashLabs and Contributor
  */
-
 package de.chojo.repbot.commands.thankwords.handler;
 
 import de.chojo.repbot.util.WebPromo;

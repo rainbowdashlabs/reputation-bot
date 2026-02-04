@@ -123,7 +123,14 @@
       "roleAlreadyAdded": "This role already has a rank.",
       "reputationAlreadyUsed": "This reputation value is already used by another rank.",
       "noRanks": "No ranks configured yet.",
-      "reputationPlaceholder": "e.g. 100"
+      "reputationPlaceholder": "e.g. 100",
+      "refresh": {
+        "button": "Refresh Ranks",
+        "refreshing": "Refreshing...",
+        "alreadyRunning": "Refresh is already in progress",
+        "success": "Rank refresh started successfully",
+        "failed": "Failed to start rank refresh"
+      }
     },
     "reputation": {
       "description": "Configure how reputation is calculated and which features are enabled.",
