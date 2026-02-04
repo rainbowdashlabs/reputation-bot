@@ -12,6 +12,7 @@ import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.util.Premium;
 import de.chojo.logutil.marker.LogNotify;
 import de.chojo.repbot.config.Configuration;
+import de.chojo.repbot.config.elements.BaseSettings;
 import de.chojo.repbot.config.elements.SKU;
 import de.chojo.repbot.core.Threading;
 import de.chojo.repbot.dao.access.guild.RepGuild;
@@ -111,7 +112,13 @@ public class PremiumService extends ListenerAdapter {
     @Override
     public void onGuildMemberUpdateNickname(@NotNull GuildMemberUpdateNicknameEvent event) {
         if (event.getNewNickname() != null && event.getUser().equals(event.getGuild().getSelfMember().getUser())) {
-            checkForTier(event.getGuild(), SupporterFeature.BOT_NICKNAMED);
+            if (checkForTier(event.getGuild(), SupporterFeature.BOT_NICKNAMED)) {
+                BaseSettings settings = configuration.baseSettings();
+                TextChannel review = event.getJDA().getShardManager().getGuildById(settings.botGuild()).getTextChannelById(settings.reviewChannel());
+                if (review != null && event.getNewNickname() != null) {
+                    review.sendMessage("Guild `%s` changed bot nickname to `%s`".formatted(event.getGuild(), event.getNewNickname())).queue();
+                }
+            }
         }
     }
 
@@ -144,20 +151,21 @@ public class PremiumService extends ListenerAdapter {
         }
     }
 
-    public void checkForTier(Guild guild, SupporterFeature type) {
-        if (guild == null) return;
-        if (GRANT_ALL_SKU) return;
+    public boolean checkForTier(Guild guild, SupporterFeature type) {
+        if (guild == null) return false;
+        if (GRANT_ALL_SKU) return true;
         RepGuild repGuild = guildRepository.guild(guild);
         Subscriptions subscriptions = repGuild.subscriptions();
         if (type.isEntitled(skus(), repGuild)) {
             subscriptions.deleteError(type);
-            return;
+            return true;
         }
         if (!type.isApplicable(skus(), repGuild)) {
             subscriptions.deleteError(type);
-            return;
+            return true;
         }
         handleMissingSupportTier(guild, type);
+        return false;
     }
 
     public void handleMissingSupportTier(InteractionContext context, MissingSupportTier ex) {

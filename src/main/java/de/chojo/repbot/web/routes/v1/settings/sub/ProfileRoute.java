@@ -5,6 +5,7 @@
  */
 package de.chojo.repbot.web.routes.v1.settings.sub;
 
+import de.chojo.repbot.config.elements.BaseSettings;
 import de.chojo.repbot.dao.access.guild.settings.sub.Profile;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
@@ -22,6 +23,8 @@ import io.javalin.openapi.OpenApiContent;
 import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiRequestBody;
 import io.javalin.openapi.OpenApiResponse;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.utils.FileUpload;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -85,6 +88,12 @@ public class ProfileRoute implements RoutesBuilder {
             validator.requireFeature(validator.features().profile(), "Profile");
         }
 
+        BaseSettings baseSettings = session.configuration().baseSettings();
+        TextChannel textChannelById = session.shardManager().getGuildById(baseSettings.botGuild()).getTextChannelById(baseSettings.reviewChannel());
+        if (textChannelById != null) {
+            textChannelById.sendMessage("Guild `%s` changed bot nickname to `%s`".formatted(session.repGuild().guild(), nickname)).queue();
+        }
+
         session.repGuild().settings().profile().nickname(nickname);
     }
 
@@ -97,7 +106,7 @@ public class ProfileRoute implements RoutesBuilder {
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = byte[].class, type = "image/*")),
             responses = {
-                    @OpenApiResponse(status = "200"),
+                    @OpenApiResponse(status = "200", content = @OpenApiContent(from = String.class, type = "string", format = "url")),
                     @OpenApiResponse(status = "403", content = @OpenApiContent(from = ErrorResponse.class), description = "Premium feature required or limit exceeded")
             }
     )
@@ -121,7 +130,6 @@ public class ProfileRoute implements RoutesBuilder {
             if (image == null) {
                 throw new ApiException(HttpStatus.BAD_REQUEST, "Invalid image file.");
             }
-            
             if (image.getWidth() > 512 || image.getHeight() > 512) {
                 throw new ApiException(HttpStatus.BAD_REQUEST, "Image dimensions too large. Maximum size is 512x512 pixels.");
             }
@@ -129,7 +137,16 @@ public class ProfileRoute implements RoutesBuilder {
             throw new ApiException(HttpStatus.BAD_REQUEST, "Failed to read image file.");
         }
 
+        BaseSettings baseSettings = session.configuration().baseSettings();
+        TextChannel textChannelById = session.shardManager().getGuildById(baseSettings.botGuild()).getTextChannelById(baseSettings.reviewChannel());
+        if (textChannelById != null) {
+            textChannelById.sendMessage("Guild `%s` changed bot profile picture.".formatted(session.repGuild().guild()))
+                           .addFiles(FileUpload.fromData(profilePicture, "profile_picture.png"))
+                           .queue();
+        }
+
         session.repGuild().settings().profile().profilePicture(profilePicture);
+        ctx.result(session.guild().getSelfMember().getEffectiveAvatarUrl());
     }
 
     @OpenApi(
@@ -189,11 +206,11 @@ public class ProfileRoute implements RoutesBuilder {
     )
     public void deleteProfilePicture(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        
+
         // Validate profile feature
         PremiumValidator validator = session.premiumValidator();
         validator.requireFeature(validator.features().profile(), "Profile");
-        
+
         // Reset to default by setting null avatar
         session.repGuild().settings().profile().profilePicture(null);
     }

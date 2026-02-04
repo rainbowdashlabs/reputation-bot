@@ -34,7 +34,7 @@ public class GuildSession {
         this.userId = userId;
     }
 
-    private Guild guild() {
+    public Guild guild() {
         return shardManager.getGuildById(guildId);
     }
 
@@ -84,5 +84,9 @@ public class GuildSession {
     public String pathUrl(String path) {
         String url = "%s/%s?token=%s".formatted(configuration.api().url(), path, key);
         return repGuild().settings().general().language().map(lang -> "%s&lang=%s".formatted(url, lang.getLocale())).orElse(url);
+    }
+
+    public Configuration configuration() {
+        return configuration;
     }
 }

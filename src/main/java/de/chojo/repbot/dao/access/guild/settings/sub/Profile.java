@@ -29,7 +29,7 @@ public class Profile extends ProfilePOJO implements GuildHolder {
     public Profile(Settings settings) {
         this(settings, 
              settings.guild().getSelfMember().getNickname(), 
-             settings.guild().getJDA().getSelfUser().getEffectiveAvatarUrl(),
+             settings.guild().getSelfMember().getEffectiveAvatarUrl(),
              settings.repGuild().localeOverrides().getOverride("words.reputation").orElse(null));
     }
 
