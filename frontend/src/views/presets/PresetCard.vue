@@ -17,11 +17,13 @@ const emit = defineEmits<{
 }>()
 
 const isApplying = ref(false)
+const isApplied = ref(false)
 
 const handleApply = async () => {
   isApplying.value = true
   try {
     await emit('apply')
+    isApplied.value = true
   } finally {
     isApplying.value = false
   }
@@ -38,10 +40,17 @@ const handleApply = async () => {
     <div class="flex justify-between items-start mb-4">
       <button
           :disabled="isApplying"
-          class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+          :class="[
+            'px-4 py-2 text-white rounded-md transition-colors',
+            isApplied 
+              ? 'bg-green-600 hover:bg-green-700' 
+              : 'bg-blue-600 hover:bg-blue-700',
+            'disabled:bg-gray-400 disabled:cursor-not-allowed'
+          ]"
           @click="handleApply"
       >
-        <span v-if="!isApplying">{{ $t('presets.apply') }}</span>
+        <span v-if="isApplied">✓ {{ $t('presets.applied') }}</span>
+        <span v-else-if="!isApplying">{{ $t('presets.apply') }}</span>
         <span v-else>{{ $t('presets.applying') }}</span>
       </button>
     </div>
