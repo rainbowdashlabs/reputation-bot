@@ -1,3 +1,8 @@
+/*
+ *     SPDX-License-Identifier: AGPL-3.0-only
+ *
+ *     Copyright (C) RainbowDashLabs and Contributor
+ */
 import { createI18n } from 'vue-i18n'
 
 // Supported locales matching the bot's supported languages

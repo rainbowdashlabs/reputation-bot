@@ -1,3 +1,8 @@
+/*
+ *     SPDX-License-Identifier: AGPL-3.0-only
+ *
+ *     Copyright (C) RainbowDashLabs and Contributor
+ */
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import './style.css'

@@ -1,3 +1,8 @@
+/*
+ *     SPDX-License-Identifier: AGPL-3.0-only
+ *
+ *     Copyright (C) RainbowDashLabs and Contributor
+ */
 import { ref, readonly } from 'vue'
 import type { GuildSessionPOJO } from '@/api/types'
 import * as Types from '@/api/types'

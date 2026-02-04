@@ -1,3 +1,8 @@
+/*
+ *     SPDX-License-Identifier: AGPL-3.0-only
+ *
+ *     Copyright (C) RainbowDashLabs and Contributor
+ */
 import axios, {type AxiosInstance, type AxiosError } from 'axios';
 import * as Types from './types';
 import { useErrorStore } from '../stores/errorStore';

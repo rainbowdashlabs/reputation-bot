@@ -1,3 +1,8 @@
+/*
+ *     SPDX-License-Identifier: AGPL-3.0-only
+ *
+ *     Copyright (C) RainbowDashLabs and Contributor
+ */
 <script lang="ts" setup>
 // Common container for settings subviews
 import Header2 from "@/components/heading/Header2.vue";
