@@ -39,6 +39,11 @@ services:
     environment:
       CJDA_INTERACTIONS_TESTMODE: true
       BOT_GRANT_ALL_SKU: true
+      BOT_DB_HOST: "pgdatabase"
+      BOT_DB_PORT: "5432"
+      BOT_DB_DATBASE: "postgres"
+      BOT_DB_USERNAME: "root"
+      BOT_DB_PASSWORD: "changeme"
     volumes:
       - ../config/config.json/:/app/config/config.json
 

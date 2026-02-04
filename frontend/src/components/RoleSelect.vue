@@ -5,18 +5,20 @@ import { useI18n } from 'vue-i18n'
 import BaseButton from '@/components/BaseButton.vue'
 
 const { t } = useI18n()
-const modelValue = defineModel<number | null>({ required: true })
+const modelValue = defineModel<string | null>({ required: true })
 const emit = defineEmits(['select'])
 const { session } = useSession()
 
 interface Props {
   label?: string
   disabled?: boolean
+  disableRolesAbovePosition?: number | null
 }
 
 const props = withDefaults(defineProps<Props>(), {
   label: '',
-  disabled: false
+  disabled: false,
+  disableRolesAbovePosition: null
 })
 
 const searchQuery = ref('')
@@ -28,10 +30,10 @@ const roles = computed(() => {
 })
 
 const selectedRole = computed(() => {
-  if (modelValue.value === null || modelValue.value === undefined || modelValue.value === 0) return null
+  if (modelValue.value === null || modelValue.value === undefined || modelValue.value === '0') return null
 
-  const stringId = modelValue.value.toString()
-  return roles.value.find(r => r.id.toString() === stringId) || null
+  const stringId = modelValue.value
+  return roles.value.find(r => r.id === stringId) || null
 })
 
 const filteredRoles = computed(() => {
@@ -47,8 +49,16 @@ const startSelecting = () => {
   }
 }
 
-const selectRole = (id: string | number) => {
-  modelValue.value = typeof id === 'string' ? parseInt(id) : id
+const isRoleDisabled = (role: { position: number }) => {
+  if (props.disableRolesAbovePosition === null || props.disableRolesAbovePosition === undefined) {
+    return false
+  }
+  return role.position >= props.disableRolesAbovePosition
+}
+
+const selectRole = (id: string | number, role: any) => {
+  if (isRoleDisabled(role)) return
+  modelValue.value = typeof id === 'string' ? id : id.toString()
   isSelecting.value = false
   emit('select', modelValue.value)
 }
@@ -115,15 +125,20 @@ onUnmounted(() => {
             <BaseButton
                 v-for="role in filteredRoles"
                 :key="role.id"
-                @click="selectRole(role.id)"
-                class="w-full text-left px-3 py-2 text-sm transition-colors flex items-center gap-2"
-                :class="{ 'bg-indigo-50 dark:bg-indigo-900/50 font-medium': modelValue?.toString() === role.id.toString(), 'hover:bg-gray-100 dark:hover:bg-indigo-900/30': modelValue?.toString() !== role.id.toString() }"
+                @click="selectRole(role.id, role)"
+                class="w-full text-left pl-4 pr-3 py-2 text-sm transition-colors flex items-center gap-2"
+                :class="{ 
+                  'bg-indigo-50 dark:bg-indigo-900/50 font-medium': modelValue?.toString() === role.id.toString(), 
+                  'hover:bg-gray-100 dark:hover:bg-indigo-900/30': modelValue?.toString() !== role.id.toString() && !isRoleDisabled(role),
+                  'opacity-50 cursor-not-allowed': isRoleDisabled(role)
+                }"
                 :rounded="false"
                 color="secondary"
                 style="background-color: transparent; border: none; box-shadow: none;"
+                :disabled="isRoleDisabled(role)"
             >
               <div
-                  class="w-3 h-3 rounded-full shrink-0"
+                  class="ml-2 w-3 h-3 rounded-full shrink-0"
                   :style="{ backgroundColor: getRoleColor(role) }"
               ></div>
               <span class="truncate" :style="{ color: getRoleColor(role) }">{{ role.name }}</span>
@@ -144,10 +159,10 @@ onUnmounted(() => {
       >
         <div v-if="selectedRole" class="flex items-center gap-2 truncate">
           <div
-              class="w-3 h-3 rounded-full shrink-0"
+              class="pl-2 w-3 h-3 rounded-full shrink-0"
               :style="{ backgroundColor: getRoleColor(selectedRole) }"
           ></div>
-          <span class="truncate" :style="{ color: getRoleColor(selectedRole) }">
+          <span class="truncate pl-2" :style="{ color: getRoleColor(selectedRole) }">
             {{ selectedRole.name }}
           </span>
         </div>

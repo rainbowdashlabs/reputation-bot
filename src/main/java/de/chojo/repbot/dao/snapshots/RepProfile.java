@@ -99,7 +99,7 @@ public record RepProfile(RepUser repUser, long rank, long rankDonated, long user
         var current = ranks.currentRank(repUser);
         var next = ranks.nextRank(repUser);
 
-        var currentRoleRep = current.map(ReputationRank::reputation).orElse(0L);
+        var currentRoleRep = current.map(ReputationRank::reputation).orElse(0);
         var nextRoleRep = next.map(ReputationRank::reputation).orElse(currentRoleRep);
         var progress = (double) (reputation() - currentRoleRep) / (nextRoleRep - currentRoleRep);
 

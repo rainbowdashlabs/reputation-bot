@@ -5,6 +5,8 @@
  */
 package de.chojo.repbot.config.elements;
 
+import de.chojo.jdautil.util.SysVar;
+
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
@@ -19,7 +21,7 @@ public class SelfCleanup {
     private int inactiveDays = 90;
 
     public boolean isActive() {
-        return active;
+        return Boolean.parseBoolean(SysVar.envOrProp("BOT_SELF_CLEANUP", "bot.cleanup", String.valueOf(active)));
     }
 
     public int promptDays() {

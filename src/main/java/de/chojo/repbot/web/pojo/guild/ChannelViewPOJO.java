@@ -31,14 +31,14 @@ public class ChannelViewPOJO {
         var channels = new LinkedList<ChannelPOJO>();
         guild.getChannels(false).forEach(channel -> {
             if (channel.getType() == ChannelType.CATEGORY) {
-                categories.computeIfAbsent(channel.getIdLong(), k -> new CategoryPOJO(channel.getName(), channel.getIdLong()));
+                categories.computeIfAbsent(channel.getIdLong(), k -> new CategoryPOJO(channel.getName(), channel.getId()));
             } else if (channel instanceof ICategorizableChannel instance) {
                 if (instance.getParentCategory() != null) {
                     Category category = instance.getParentCategory();
-                    categories.computeIfAbsent(category.getIdLong(), k -> new CategoryPOJO(category.getName(), category.getIdLong()))
-                              .addChannel(new ChannelPOJO(channel.getName(), channel.getIdLong(), channel.getType()));
+                    categories.computeIfAbsent(category.getIdLong(), k -> new CategoryPOJO(category.getName(), category.getId()))
+                              .addChannel(new ChannelPOJO(channel.getName(), channel.getId(), channel.getType()));
                 } else {
-                    channels.add(new ChannelPOJO(channel.getName(), channel.getIdLong(), channel.getType()));
+                    channels.add(new ChannelPOJO(channel.getName(), channel.getId(), channel.getType()));
                 }
             }
         });

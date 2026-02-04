@@ -25,16 +25,28 @@ const toggle = () => {
     </span>
     
     <div 
-      class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2"
+      class="relative inline-flex h-6 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2"
       :class="[
         modelValue ? 'bg-green-500' : 'bg-red-500',
         disabled ? 'opacity-50 cursor-not-allowed' : ''
       ]"
     >
       <span
+        class="absolute inset-0 flex items-center justify-end pl-1 text-xs font-semibold text-white pointer-events-none"
+        :class="modelValue ? 'opacity-0' : 'opacity-100'"
+      >
+        OFF
+      </span>
+      <span
+        class="absolute inset-0 flex items-center justify-start pr-1 text-xs font-semibold text-white pointer-events-none"
+        :class="modelValue ? 'opacity-100' : 'opacity-0'"
+      >
+        ON
+      </span>
+      <span
         aria-hidden="true"
         class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
-        :class="modelValue ? 'translate-x-0' : 'translate-x-5'"
+        :class="modelValue ? 'translate-x-6' : 'translate-x-0'"
       />
     </div>
   </div>

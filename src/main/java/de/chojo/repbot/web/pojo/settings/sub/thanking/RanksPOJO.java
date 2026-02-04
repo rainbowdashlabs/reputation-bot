@@ -5,6 +5,9 @@
  */
 package de.chojo.repbot.web.pojo.settings.sub.thanking;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -22,6 +25,7 @@ public class RanksPOJO {
         return Collections.unmodifiableList(ranks);
     }
 
-    public record RankEntry(long roleId, long reputation) {
+
+    public record RankEntry(@JsonSerialize(using = ToStringSerializer.class) long roleId, int reputation) {
     }
 }

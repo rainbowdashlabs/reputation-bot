@@ -5,6 +5,8 @@
  */
 package de.chojo.repbot.config.elements;
 
+import de.chojo.jdautil.util.SysVar;
+
 @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal", "MismatchedReadAndWriteOfArray"})
 public class Api {
     private String host = "0.0.0.0";
@@ -12,14 +14,14 @@ public class Api {
     private String url = "https://repbot.chojo.de";
 
     public String host() {
-        return host;
+        return SysVar.envOrProp("BOT_API_HOST", "bot.api.host", host);
     }
 
     public int port() {
-        return port;
+        return Integer.parseInt(SysVar.envOrProp("BOT_API_PORT", "bot.api.port", String.valueOf(port)));
     }
 
     public String url() {
-        return url;
+        return SysVar.envOrProp("BOT_API_URL", "bot.api.url", url);
     }
 }

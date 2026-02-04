@@ -5,6 +5,8 @@
  */
 package de.chojo.repbot.web.pojo.settings.sub;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
 import net.dv8tion.jda.api.interactions.DiscordLocale;
 
@@ -16,6 +18,7 @@ public class GeneralPOJO {
     protected DiscordLocale language;
     protected ReputationMode reputationMode;
     protected Instant resetDate;
+    @JsonSerialize(using = ToStringSerializer.class)
     protected long systemChannel;
 
     public GeneralPOJO(boolean stackRoles, DiscordLocale language, ReputationMode reputationMode, Instant resetDate, long systemChannel) {

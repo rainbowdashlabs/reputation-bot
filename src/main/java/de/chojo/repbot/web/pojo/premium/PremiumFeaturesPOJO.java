@@ -144,7 +144,7 @@ public class PremiumFeaturesPOJO {
             return skus.stream()
                     .collect(Collectors.toMap(
                             net.dv8tion.jda.api.entities.SKU::getIdLong,
-                            sku -> new SkuInfo(sku.getIdLong(), sku.getName())
+                            sku -> new SkuInfo(sku.getId(), sku.getName())
                     ));
         } catch (Exception e) {
             log.error("Failed to resolve SKU list from Discord", e);

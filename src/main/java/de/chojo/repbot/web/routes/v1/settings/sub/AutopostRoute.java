@@ -88,7 +88,14 @@ public class AutopostRoute implements RoutesBuilder {
     )
     public void updateChannel(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().autopost().channel(ctx.bodyAsClass(Long.class));
+        Long channelId = ctx.bodyAsClass(Long.class);
+        
+        // Validate channel ID if not 0 (0 means no channel)
+        if (channelId != 0) {
+            session.guildValidator().validateChannelIds(channelId);
+        }
+        
+        session.repGuild().settings().autopost().channel(channelId);
     }
 
     @OpenApi(

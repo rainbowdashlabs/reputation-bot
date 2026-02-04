@@ -54,6 +54,12 @@ public class RanksRoute implements RoutesBuilder {
     public void updateRanks(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         RanksPOJO ranksPOJO = ctx.bodyAsClass(RanksPOJO.class);
+        
+        // Validate all role IDs
+        for (RanksPOJO.RankEntry rank : ranksPOJO.ranks()) {
+            session.guildValidator().validateRoleIds(rank.roleId());
+        }
+        
         session.repGuild().settings().ranks().apply(ranksPOJO);
     }
 

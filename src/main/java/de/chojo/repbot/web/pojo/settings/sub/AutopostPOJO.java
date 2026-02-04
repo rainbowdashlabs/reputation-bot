@@ -5,12 +5,17 @@
  */
 package de.chojo.repbot.web.pojo.settings.sub;
 
+import com.fasterxml.jackson.annotation.JsonSerializeAs;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import de.chojo.repbot.dao.access.guild.settings.sub.autopost.RefreshInterval;
 import de.chojo.repbot.dao.access.guild.settings.sub.autopost.RefreshType;
 
 public class AutopostPOJO {
     protected boolean active = false;
+    @JsonSerialize(using = ToStringSerializer.class)
     protected long channelId = 0;
+    @JsonSerialize(using = ToStringSerializer.class)
     protected long messageId = 0;
     protected RefreshType refreshType = RefreshType.DELETE_AND_REPOST;
     protected RefreshInterval refreshInterval = RefreshInterval.DAILY;

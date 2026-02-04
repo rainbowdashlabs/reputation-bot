@@ -11,9 +11,9 @@ import java.util.List;
 public class CategoryPOJO {
     protected List<ChannelPOJO> channels;
     String name;
-    long id;
+    String id;
 
-    public CategoryPOJO(String name, long id) {
+    public CategoryPOJO(String name, String id) {
         this.name = name;
         this.id = id;
         channels = new LinkedList<>();

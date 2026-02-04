@@ -28,16 +28,15 @@ const channelsSettings = computed(() => session.value?.settings?.thanking?.chann
 const guildChannels = computed(() => session.value?.guild?.channels)
 const premiumFeatures = computed(() => session.value?.premiumFeatures)
 
-const toggleChannel = async (channelId: string | number) => {
+const toggleChannel = async (channelId: string) => {
   if (!channelsSettings.value) return
-  const id = String(channelId)
-  let newChannels = channelsSettings.value.channels.map(c => String(c))
+  let newChannels = channelsSettings.value.channels.slice()
   
-  if (newChannels.some(c => String(c) === id)) {
-    newChannels = newChannels.filter(c => String(c) !== id)
+  if (newChannels.some(c => c === channelId)) {
+    newChannels = newChannels.filter(c => c !== channelId)
   } else {
     if (isChannelLimitReached.value) return
-    newChannels.push(id)
+    newChannels.push(channelId)
   }
 
   try {
@@ -48,20 +47,19 @@ const toggleChannel = async (channelId: string | number) => {
   }
 }
 
-const toggleCategory = async (categoryId: string | number) => {
+const toggleCategory = async (categoryId: string) => {
   if (!channelsSettings.value) return
-  const id = String(categoryId)
-  let newCategories = channelsSettings.value.categories.map(c => String(c))
-  let newChannels = channelsSettings.value.channels.map(c => String(c))
+  let newCategories = channelsSettings.value.categories.slice()
+  let newChannels = channelsSettings.value.channels.slice()
   
-  const category = guildChannels.value?.categories.find(c => String(c.id) === id)
-  const categoryChannelIds = category?.channels.map(c => String(c.id)) || []
+  const category = guildChannels.value?.categories.find(c => c.id === categoryId)
+  const categoryChannelIds = category?.channels.map(c => c.id) || []
 
-  if (newCategories.some(c => String(c) === id)) {
-    newCategories = newCategories.filter(c => String(c) !== id)
+  if (newCategories.some(c => c === categoryId)) {
+    newCategories = newCategories.filter(c => c !== categoryId)
   } else {
     if (isCategoryLimitReached.value) return
-    newCategories.push(id)
+    newCategories.push(categoryId)
     // Automatically deselect all channels in this category
     newChannels = newChannels.filter(cId => !categoryChannelIds.includes(String(cId)))
   }
@@ -78,14 +76,14 @@ const toggleCategory = async (categoryId: string | number) => {
   }
 }
 
-const isCategorySelected = (categoryId: string | number) => {
+const isCategorySelected = (categoryId: string) => {
   const id = String(categoryId)
-  return channelsSettings.value?.categories.some(c => String(c) === id)
+  return channelsSettings.value?.categories.some(c => c === id)
 }
 
-const isChannelSelected = (channelId: string | number) => {
+const isChannelSelected = (channelId: string) => {
   const id = String(channelId)
-  return channelsSettings.value?.channels.some(c => String(c) === id)
+  return channelsSettings.value?.channels.some(c => c === id)
 }
 
 const isChannelLimitReached = computed(() => {

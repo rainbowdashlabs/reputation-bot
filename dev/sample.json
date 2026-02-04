@@ -3,32 +3,32 @@
     "abuseProtection": {
       "cooldown": 30,
       "cooldownDirection": "BIDIRECTIONAL",
-      "maxMessageAge": 30,
-      "minMessages": 10,
-      "donorContext": true,
-      "receiverContext": true,
+      "maxMessageAge": 0,
+      "minMessages": 0,
+      "donorContext": false,
+      "receiverContext": false,
       "maxGiven": 0,
       "maxGivenHours": 1,
       "maxReceived": 0,
       "maxReceivedHours": 1,
       "maxMessageReputation": 3
     },
-    "announcements": {"active": false, "sameChannel": true, "channelId": 0},
+    "announcements": {"active": true, "sameChannel": true, "channelId": "853259349380300800"},
     "autopost": {
-      "active": false,
-      "channelId": 0,
-      "messageId": 0,
-      "refreshType": "DELETE_AND_REPOST",
+      "active": true,
+      "channelId": "853259349380300800",
+      "messageId": "0",
+      "refreshType": "UPDATE",
       "refreshInterval": "DAILY"
     },
     "general": {
-      "stackRoles": false,
+      "stackRoles": true,
       "language": "GERMAN",
       "reputationMode": "TOTAL",
       "resetDate": null,
-      "systemChannel": 853259269688262700
+      "systemChannel": "853259269688262700"
     },
-    "logChannel": {"channelId": 0, "active": false},
+    "logChannel": {"channelId": "853259349380300800", "active": true},
     "messages": {"reactionConfirmation": true, "commandReputationEphemeral": false},
     "profile": {
       "nickname": null,
@@ -37,8 +37,8 @@
     },
     "ranks": {
       "ranks": [
-        {"roleId": 976465888939212800, "reputation": 40}, {"roleId": 855424789387804700, "reputation": 10},
-        {"roleId": 855424753983946800, "reputation": 5}
+        {"roleId": "976465888939212800", "reputation": 40}, {"roleId": "855424789387804700", "reputation": 10},
+        {"roleId": "855424753983946800", "reputation": 1}
       ]
     },
     "reputation": {
@@ -48,135 +48,136 @@
       "fuzzyActive": true,
       "embedActive": true,
       "directActive": false,
-      "commandActive": false
+      "commandActive": true
     },
     "thanking": {
-      "channels": {
-        "channels": [
-          853686272995491800, 1022427137891893200, 853252663776116700, 853255173787091100, 853259222624239600
-        ],
-        "categories": [853250161915985900],
-        "whitelist": true
-      },
-      "donorRoles": {"roleIds": [853250454447063000, 853250412730777600]},
+      "channels": {"channels": ["853259349380300800", "1468571290184192084"], "categories": [], "whitelist": true},
+      "donorRoles": {"roleIds": ["853250412730777600", "853250942900502500"]},
       "receiverRoles": {"roleIds": []},
-      "reactions": {"reactions": [], "mainReaction": "🏅"},
-      "thankwords": {"thankwords": []}
+      "reactions": {"reactions": ["878760197059911800", "853912045749665900"], "mainReaction": "853912045061275600"},
+      "thankwords": {"thankwords": ["test", "thx", "ty", "tysm", "thank[sx]?", "tyvm"]}
     }
   }, "guild": {
+  "meta": {
+    "highestBotRole": {"name": "Beta", "id": "853250590338973696", "position": 17, "color": "#eb7605"},
+    "name": "Reputation Bot",
+    "id": "853250161915985958",
+    "iconUrl": "https://cdn.discordapp.com/icons/853250161915985958/0e6ceaecf9c384e5d0bf05b09fbb3a44.png"
+  },
   "roles": [
-    {"name": "Maintainer", "id": 853250412730777650, "color": "#ee01e0"},
-    {"name": "Contributor", "id": 853250454447063061, "color": "#00d49e"},
-    {"name": "Mod", "id": 853250942900502539, "color": "#046bf5"},
-    {"name": "Beta", "id": 853250590338973696, "color": "#eb7605"},
-    {"name": "Beep Boop", "id": 853256722255577108, "color": "#62e001"},
-    {"name": "--- Rep Roles---", "id": 853641195032150016, "color": "#ffffff"},
-    {"name": "Pro", "id": 853641281191936041, "color": "#e91e63"},
-    {"name": "Beginner", "id": 853641156948000769, "color": "#3498db"},
-    {"name": "--- Bots ---", "id": 853258164228456498, "color": "#ffffff"},
-    {"name": "Zira", "id": 853255875320610857, "color": "#ffffff"},
-    {"name": "Reputation Bot", "id": 905100207702810625, "color": "#ffffff"},
-    {"name": "--- Language ---", "id": 853258215697416192, "color": "#ffffff"},
-    {"name": "german", "id": 853258006681354280, "color": "#ffffff"},
-    {"name": "english", "id": 853258053007441920, "color": "#ffffff"},
-    {"name": "Bot Updates", "id": 853259659716591646, "color": "#ffffff"},
-    {"name": "Level 1 Beta", "id": 855424753983946773, "color": "#ffffff"},
-    {"name": "Level 2 Beta", "id": 855424789387804684, "color": "#ffffff"},
-    {"name": "Level 3 Beta", "id": 976465888939212841, "color": "#ffffff"},
-    {"name": "Krile", "id": 1127234173728469176, "color": "#ffffff"},
-    {"name": "Reputation Bot Testing", "id": 1400900032865112167, "color": "#ffffff"},
-    {"name": "RepBot-Beta", "id": 1459280128977928256, "color": "#ffffff"}
+    {"name": "Maintainer", "id": "853250412730777650", "position": 20, "color": "#ee01e0"},
+    {"name": "Contributor", "id": "853250454447063061", "position": 19, "color": "#00d49e"},
+    {"name": "Mod", "id": "853250942900502539", "position": 18, "color": "#046bf5"},
+    {"name": "Beta", "id": "853250590338973696", "position": 17, "color": "#eb7605"},
+    {"name": "Beep Boop", "id": "853256722255577108", "position": 16, "color": "#62e001"},
+    {"name": "--- Rep Roles---", "id": "853641195032150016", "position": 15, "color": "#ffffff"},
+    {"name": "Pro", "id": "853641281191936041", "position": 14, "color": "#e91e63"},
+    {"name": "Beginner", "id": "853641156948000769", "position": 13, "color": "#3498db"},
+    {"name": "--- Bots ---", "id": "853258164228456498", "position": 12, "color": "#ffffff"},
+    {"name": "Zira", "id": "853255875320610857", "position": 11, "color": "#ffffff"},
+    {"name": "Reputation Bot", "id": "905100207702810625", "position": 10, "color": "#ffffff"},
+    {"name": "--- Language ---", "id": "853258215697416192", "position": 9, "color": "#ffffff"},
+    {"name": "german", "id": "853258006681354280", "position": 8, "color": "#ffffff"},
+    {"name": "english", "id": "853258053007441920", "position": 7, "color": "#ffffff"},
+    {"name": "Bot Updates", "id": "853259659716591646", "position": 6, "color": "#ffffff"},
+    {"name": "Level 1 Beta", "id": "855424753983946773", "position": 5, "color": "#ffffff"},
+    {"name": "Level 2 Beta", "id": "855424789387804684", "position": 4, "color": "#ffffff"},
+    {"name": "Level 3 Beta", "id": "976465888939212841", "position": 3, "color": "#ffffff"},
+    {"name": "Krile", "id": "1127234173728469176", "position": 2, "color": "#ffffff"},
+    {"name": "Reputation Bot Testing", "id": "1400900032865112167", "position": 1, "color": "#ffffff"},
+    {"name": "RepBot-Beta", "id": "1459280128977928256", "position": 0, "color": "#ffffff"}
   ],
   "channels": {
     "channels": [], "categories": [
       {
         "channels": [
-          {"name": "updates", "id": 853255173787091014, "type": "NEWS"},
-          {"name": "rules", "id": 853252663776116777, "type": "TEXT"},
-          {"name": "git", "id": 853686272995491841, "type": "TEXT"}
+          {"name": "updates", "id": "853255173787091014", "type": "NEWS"},
+          {"name": "rules", "id": "853252663776116777", "type": "TEXT"},
+          {"name": "git", "id": "853686272995491841", "type": "TEXT"}
         ],
         "name": "Informations",
-        "id": 853252619094982656
+        "id": "853252619094982656"
       }, {
         "channels": [
-          {"name": "talk", "id": 853250162352455710, "type": "TEXT"},
-          {"name": "talk-de", "id": 853263713070088254, "type": "TEXT"},
-          {"name": "feedback", "id": 853252156617130004, "type": "TEXT"},
-          {"name": "support-en", "id": 853252202524442685, "type": "TEXT"},
-          {"name": "support-de", "id": 853255388798517278, "type": "TEXT"}
+          {"name": "talk", "id": "853250162352455710", "type": "TEXT"},
+          {"name": "talk-de", "id": "853263713070088254", "type": "TEXT"},
+          {"name": "feedback", "id": "853252156617130004", "type": "TEXT"},
+          {"name": "support-en", "id": "853252202524442685", "type": "TEXT"},
+          {"name": "support-de", "id": "853255388798517278", "type": "TEXT"}
         ],
         "name": "Conversations",
-        "id": 853250161915985959
+        "id": "853250161915985959"
       }, {
         "channels": [
-          {"name": "test-talk", "id": 853259269688262656, "type": "TEXT"},
-          {"name": "testing", "id": 853259222624239677, "type": "TEXT"}
+          {"name": "test-talk", "id": "853259269688262656", "type": "TEXT"},
+          {"name": "testing", "id": "853259222624239677", "type": "TEXT"}
         ],
         "name": "Testing",
-        "id": 853252115312803842
+        "id": "853252115312803842"
       }, {
         "channels": [
-          {"name": "beta-forum", "id": 1022427137891893300, "type": "FORUM"},
-          {"name": "beta-talk", "id": 853259320485609502, "type": "TEXT"},
-          {"name": "beta-testing", "id": 853259349380300860, "type": "TEXT"},
-          {"name": "test voice", "id": 1026433719319404554, "type": "VOICE"}
+          {"name": "beta-forum", "id": "1022427137891893300", "type": "FORUM"},
+          {"name": "beta-talk", "id": "853259320485609502", "type": "TEXT"},
+          {"name": "beta-testing", "id": "853259349380300860", "type": "TEXT"},
+          {"name": "private-testing", "id": "1468571290184192084", "type": "TEXT"},
+          {"name": "test voice", "id": "1026433719319404554", "type": "VOICE"}
         ],
         "name": "Beta Testing",
-        "id": 853254997487255573
+        "id": "853254997487255573"
       }
     ]
   },
   "reactions": [
-    {"name": "rep", "id": 853282767508209674, "url": "https://cdn.discordapp.com/emojis/853282767508209674.png"},
-    {"name": "bronze", "id": 853912044012568586, "url": "https://cdn.discordapp.com/emojis/853912044012568586.png"},
-    {"name": "gold", "id": 853912045061275669, "url": "https://cdn.discordapp.com/emojis/853912045061275669.png"},
-    {"name": "silver", "id": 853912045145161739, "url": "https://cdn.discordapp.com/emojis/853912045145161739.png"},
-    {"name": "supreme", "id": 853912045552795659, "url": "https://cdn.discordapp.com/emojis/853912045552795659.png"},
-    {"name": "diamond", "id": 853912045749665872, "url": "https://cdn.discordapp.com/emojis/853912045749665872.png"},
-    {"name": "rep_pat", "id": 878760197059911762, "url": "https://cdn.discordapp.com/emojis/878760197059911762.gif"},
-    {"name": "blank", "id": 972278990209450014, "url": "https://cdn.discordapp.com/emojis/972278990209450014.png"}
+    {"name": "rep", "id": "853282767508209674", "url": "https://cdn.discordapp.com/emojis/853282767508209674.png"},
+    {"name": "bronze", "id": "853912044012568586", "url": "https://cdn.discordapp.com/emojis/853912044012568586.png"},
+    {"name": "gold", "id": "853912045061275669", "url": "https://cdn.discordapp.com/emojis/853912045061275669.png"},
+    {"name": "silver", "id": "853912045145161739", "url": "https://cdn.discordapp.com/emojis/853912045145161739.png"},
+    {"name": "supreme", "id": "853912045552795659", "url": "https://cdn.discordapp.com/emojis/853912045552795659.png"},
+    {"name": "diamond", "id": "853912045749665872", "url": "https://cdn.discordapp.com/emojis/853912045749665872.png"},
+    {"name": "rep_pat", "id": "878760197059911762", "url": "https://cdn.discordapp.com/emojis/878760197059911762.gif"},
+    {"name": "blank", "id": "972278990209450014", "url": "https://cdn.discordapp.com/emojis/972278990209450014.png"}
   ]
 }, "premiumFeatures": {
   "reputationLog": {
-    "unlocked": false,
-    "requiredSkus": [{"id": 1380621847191883786, "name": "Tier 1"}, {"id": 1360377703743623261, "name": "Tier 2"}]
+    "unlocked": true,
+    "requiredSkus": [{"id": "1380621847191883786", "name": "Tier 1"}, {"id": "1360377703743623261", "name": "Tier 2"}]
   },
   "analyzerLog": {
-    "unlocked": false,
-    "requiredSkus": [{"id": 1380621847191883786, "name": "Tier 1"}, {"id": 1360377703743623261, "name": "Tier 2"}]
+    "unlocked": true,
+    "requiredSkus": [{"id": "1380621847191883786", "name": "Tier 1"}, {"id": "1360377703743623261", "name": "Tier 2"}]
   },
   "channelBlacklist": {
-    "unlocked": false,
-    "requiredSkus": [{"id": 1380621847191883786, "name": "Tier 1"}, {"id": 1360377703743623261, "name": "Tier 2"}]
+    "unlocked": true,
+    "requiredSkus": [{"id": "1380621847191883786", "name": "Tier 1"}, {"id": "1360377703743623261", "name": "Tier 2"}]
   },
-  "localeOverrides": {"unlocked": false, "requiredSkus": [{"id": 1360377703743623261, "name": "Tier 2"}]},
+  "localeOverrides": {"unlocked": true, "requiredSkus": [{"id": "1360377703743623261", "name": "Tier 2"}]},
   "autopost": {
-    "unlocked": false,
-    "requiredSkus": [{"id": 1380621847191883786, "name": "Tier 1"}, {"id": 1360377703743623261, "name": "Tier 2"}]
+    "unlocked": true,
+    "requiredSkus": [{"id": "1380621847191883786", "name": "Tier 1"}, {"id": "1360377703743623261", "name": "Tier 2"}]
   },
   "advancedRankings": {
-    "unlocked": false,
-    "requiredSkus": [{"id": 1380621847191883786, "name": "Tier 1"}, {"id": 1360377703743623261, "name": "Tier 2"}]
+    "unlocked": true,
+    "requiredSkus": [{"id": "1380621847191883786", "name": "Tier 1"}, {"id": "1360377703743623261", "name": "Tier 2"}]
   },
   "detailedProfile": {
-    "unlocked": false,
-    "requiredSkus": [{"id": 1380621847191883786, "name": "Tier 1"}, {"id": 1360377703743623261, "name": "Tier 2"}]
+    "unlocked": true,
+    "requiredSkus": [{"id": "1380621847191883786", "name": "Tier 1"}, {"id": "1360377703743623261", "name": "Tier 2"}]
   },
   "logChannel": {
-    "unlocked": false,
-    "requiredSkus": [{"id": 1380621847191883786, "name": "Tier 1"}, {"id": 1360377703743623261, "name": "Tier 2"}]
+    "unlocked": true,
+    "requiredSkus": [{"id": "1380621847191883786", "name": "Tier 1"}, {"id": "1360377703743623261", "name": "Tier 2"}]
   },
-  "additionalEmojis": {"unlocked": false, "requiredSkus": [{"id": 1360377703743623261, "name": "Tier 2"}]},
-  "profile": {"unlocked": false, "requiredSkus": [{"id": 1360377703743623261, "name": "Tier 2"}]},
+  "additionalEmojis": {"unlocked": true, "requiredSkus": [{"id": "1360377703743623261", "name": "Tier 2"}]},
+  "profile": {"unlocked": true, "requiredSkus": [{"id": "1360377703743623261", "name": "Tier 2"}]},
   "reputationChannel": {
-    "max": 10,
-    "unlocked": false,
-    "requiredSkus": [{"id": 1380621847191883786, "name": "Tier 1"}, {"id": 1360377703743623261, "name": "Tier 2"}]
+    "max": 2147483647,
+    "unlocked": true,
+    "requiredSkus": [{"id": "1380621847191883786", "name": "Tier 1"}, {"id": "1360377703743623261", "name": "Tier 2"}]
   },
   "reputationCategories": {
-    "max": 3,
-    "unlocked": false,
-    "requiredSkus": [{"id": 1380621847191883786, "name": "Tier 1"}, {"id": 1360377703743623261, "name": "Tier 2"}]
+    "max": 2147483647,
+    "unlocked": true,
+    "requiredSkus": [{"id": "1380621847191883786", "name": "Tier 1"}, {"id": "1360377703743623261", "name": "Tier 2"}]
   }
 }
 }

@@ -106,7 +106,14 @@ public class GeneralRoute implements RoutesBuilder {
     )
     public void updateSystemChannel(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().general().systemChannel(ctx.bodyAsClass(Long.class));
+        Long channelId = ctx.bodyAsClass(Long.class);
+        
+        // Validate channel ID if not 0 (0 means no channel)
+        if (channelId != 0) {
+            session.guildValidator().validateChannelIds(channelId);
+        }
+        
+        session.repGuild().settings().general().systemChannel(channelId);
     }
 
     @OpenApi(

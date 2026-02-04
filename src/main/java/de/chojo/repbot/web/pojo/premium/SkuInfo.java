@@ -9,15 +9,15 @@ package de.chojo.repbot.web.pojo.premium;
  * Information about a SKU that can unlock a premium feature.
  */
 public class SkuInfo {
-    private final long id;
+    private final String id;
     private final String name;
 
-    public SkuInfo(long id, String name) {
+    public SkuInfo(String id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public long id() {
+    public String id() {
         return id;
     }
 

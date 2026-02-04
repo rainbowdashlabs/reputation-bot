@@ -9,10 +9,10 @@ import net.dv8tion.jda.api.entities.channel.ChannelType;
 
 public class ChannelPOJO {
     String name;
-    long id;
+    String id;
     ChannelType type;
 
-    public ChannelPOJO(String name, long id, ChannelType type) {
+    public ChannelPOJO(String name, String id, ChannelType type) {
         this.name = name;
         this.id = id;
         this.type = type;

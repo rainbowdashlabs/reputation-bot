@@ -34,7 +34,14 @@ public class DonorRolesRoute implements RoutesBuilder {
     )
     public void updateDonorRoles(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().thanking().donorRoles().apply(ctx.bodyAsClass(RolesHolderPOJO.class));
+        RolesHolderPOJO rolesHolderPOJO = ctx.bodyAsClass(RolesHolderPOJO.class);
+        
+        // Validate all role IDs
+        for (Long roleId : rolesHolderPOJO.roleIds()) {
+            session.guildValidator().validateRoleIds(roleId);
+        }
+        
+        session.repGuild().settings().thanking().donorRoles().apply(rolesHolderPOJO);
     }
 
     @Override

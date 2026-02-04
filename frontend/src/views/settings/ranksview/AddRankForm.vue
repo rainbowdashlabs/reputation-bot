@@ -1,6 +1,7 @@
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
+import { ref, watch, computed } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useSession } from '@/composables/useSession'
 import RoleSelect from '@/components/RoleSelect.vue'
 import BaseButton from '@/components/BaseButton.vue'
 import Header2 from "@/components/heading/Header2.vue"
@@ -15,15 +16,19 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
+const { session } = useSession()
 
-const newRoleId = ref<number | null>(null)
+const newRoleId = ref<string | null>(null)
 const newReputation = ref<number | null>(null)
 const errorMessage = ref('')
 
+const highestBotRolePosition = computed(() => {
+  return session.value?.guild?.meta?.highestBotRole?.position ?? null
+})
+
 const validate = () => {
   if (newRoleId.value !== null) {
-    const roleIdStr = newRoleId.value.toString()
-    if (props.existingRanks.some(r => r.roleId.toString() === roleIdStr)) {
+    if (props.existingRanks.some(r => r.roleId === newRoleId.value)) {
       errorMessage.value = t('general.ranks.roleAlreadyAdded')
       return
     }
@@ -44,9 +49,8 @@ watch([newRoleId, newReputation], validate)
 const addRank = () => {
   if (newRoleId.value === null || newReputation.value === null || isNaN(newReputation.value) || newReputation.value < 0 || !!errorMessage.value) return
 
-  const roleIdStr = newRoleId.value.toString()
   emit('add', {
-    roleId: roleIdStr,
+    roleId: newRoleId.value,
     reputation: newReputation.value
   })
 
@@ -63,6 +67,7 @@ const addRank = () => {
         <RoleSelect
             v-model="newRoleId"
             :label="t('settings.roles')"
+            :disable-roles-above-position="highestBotRolePosition"
             @keyup.enter="addRank"
         />
         <div class="flex flex-col gap-1.5">

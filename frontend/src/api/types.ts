@@ -1,25 +1,33 @@
 export interface RolePOJO {
   name: string;
-  id: string | number;
+  id: string;
   color: string;
+  position: number;
 }
 
 export interface ReactionPOJO {
   name: string;
-  id: string | number;
+  id: string;
   url: string;
+}
+
+export interface GuildMetaPOJO {
+  highestBotRole: RolePOJO | null;
+  name: string;
+  id: string;
+  iconUrl: string | null;
 }
 
 export interface ChannelPOJO {
   name: string;
-  id: string | number;
+  id: string;
   type: string;
 }
 
 export interface CategoryPOJO {
   channels: ChannelPOJO[];
   name: string;
-  id: string | number;
+  id: string;
 }
 
 export interface ChannelViewPOJO {
@@ -28,6 +36,7 @@ export interface ChannelViewPOJO {
 }
 
 export interface GuildPOJO {
+  meta: GuildMetaPOJO;
   roles: RolePOJO[];
   channels: ChannelViewPOJO;
   reactions: ReactionPOJO[];
@@ -92,7 +101,7 @@ export interface GeneralPOJO {
   language: string; // Internal name (e.g., "SPANISH")
   reputationMode: ReputationMode; // Implemented in reputation
   resetDate: string; // ISO string // Implemented in reputation
-  systemChannel: number; // Channel ID as number
+  systemChannel: string; // Channel ID as number
 }
 
 export interface LogChannelPOJO {
@@ -172,7 +181,7 @@ export interface SettingsPOJO {
 }
 
 export interface SkuInfo {
-  id: number;
+  id: string;
   name: string;
 }
 

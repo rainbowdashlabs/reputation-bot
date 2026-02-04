@@ -23,7 +23,7 @@ public class Add extends BaseRoleModifier {
     @Override
     public void modify(SlashCommandInteractionEvent event, EventContext context, Consumer<MessageEmbed> refresh) {
         var role = event.getOption("role").getAsRole();
-        var reputation = event.getOption("reputation").getAsLong();
+        var reputation = event.getOption("reputation").getAsInt();
         if (!event.getGuild().getSelfMember().canInteract(role)) {
             event.reply(context.localize("error.roleAccess",
                          Replacement.createMention(role)))

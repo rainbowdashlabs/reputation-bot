@@ -8,6 +8,7 @@ package de.chojo.repbot.web.sessions;
 import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.web.pojo.GuildSessionPOJO;
+import de.chojo.repbot.web.validation.GuildValidator;
 import de.chojo.repbot.web.validation.PremiumValidator;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.sharding.ShardManager;
@@ -19,6 +20,7 @@ public class GuildSession {
     private final long guildId;
     private final long userId;
     private PremiumValidator premiumValidator;
+    private GuildValidator guildValidator;
 
     public GuildSession(ShardManager shardManager, GuildRepository guildRepository, long guildId, long userId) {
         this.shardManager = shardManager;
@@ -49,5 +51,12 @@ public class GuildSession {
             premiumValidator = new PremiumValidator(repGuild(), shardManager);
         }
         return premiumValidator;
+    }
+
+    public GuildValidator guildValidator() {
+        if (guildValidator == null) {
+            guildValidator = new GuildValidator(this);
+        }
+        return guildValidator;
     }
 }

@@ -19,10 +19,10 @@ const updateSameChannel = async (sameChannel: boolean) => {
   }
 }
 
-const updateChannel = async (channelId: number | null) => {
+const updateChannel = async (channelId: string | null) => {
   if (!session.value?.settings?.announcements) return
   
-  const idStr = channelId ? channelId.toString() : '0'
+  const idStr = channelId || '0'
   try {
     await api.updateAnnouncementsChannel(idStr);
     updateAnnouncementsSettings({ channelId: idStr });
@@ -48,7 +48,7 @@ const updateChannel = async (channelId: number | null) => {
     <div v-if="!session.settings.announcements.sameChannel" class="flex flex-col gap-4">
       <div class="flex flex-col gap-1">
         <ChannelSelect
-          :model-value="session.settings.announcements.channelId === '0' ? null : parseInt(session.settings.announcements.channelId)"
+          :model-value="session.settings.announcements.channelId === '0' ? null : session.settings.announcements.channelId"
           :label="t('announcements.channel.label')"
           allow-clear
           @update:model-value="updateChannel"

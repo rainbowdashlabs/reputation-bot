@@ -104,6 +104,11 @@ public class ChannelsRoute implements RoutesBuilder {
         PremiumValidator validator = session.premiumValidator();
         validator.requireWithinLimit(channelIds.length, validator.features().reputationChannel(), "Reputation Channels");
 
+        // Validate all channel IDs
+        for (Long channelId : channelIds) {
+            session.guildValidator().validateChannelIds(channelId);
+        }
+
         var channels = session.repGuild().settings().thanking().channels();
         channels.clearChannel();
         for (Long channelId : channelIds) {
@@ -131,6 +136,11 @@ public class ChannelsRoute implements RoutesBuilder {
         // Validate category count limit
         PremiumValidator validator = session.premiumValidator();
         validator.requireWithinLimit(categoryIds.length, validator.features().reputationCategories(), "Reputation Categories");
+
+        // Validate all category IDs (categories are also channels in Discord)
+        for (Long categoryId : categoryIds) {
+            session.guildValidator().validateCategoryIds(categoryId);
+        }
 
         var channels = session.repGuild().settings().thanking().channels();
         channels.clearCategories();

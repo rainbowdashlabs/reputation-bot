@@ -26,11 +26,11 @@ import static de.chojo.sadu.queries.api.query.Query.query;
  */
 public class ReputationRank implements GuildHolder, Comparable<ReputationRank> {
     private final long roleId;
-    private final long reputation;
+    private final int reputation;
     private final Ranks ranks;
     private Role role;
 
-    public ReputationRank(Ranks ranks, long roleId, long reputation) {
+    public ReputationRank(Ranks ranks, long roleId, int reputation) {
         this.ranks = ranks;
         this.roleId = roleId;
         this.reputation = reputation;
@@ -39,7 +39,7 @@ public class ReputationRank implements GuildHolder, Comparable<ReputationRank> {
     public static ReputationRank build(Ranks ranks, Row rs) throws SQLException {
         return new ReputationRank(ranks,
                 rs.getLong("role_id"),
-                rs.getLong("reputation")
+                rs.getInt("reputation")
         );
     }
 
@@ -54,7 +54,7 @@ public class ReputationRank implements GuildHolder, Comparable<ReputationRank> {
         return roleId;
     }
 
-    public long reputation() {
+    public int reputation() {
         return reputation;
     }
 

@@ -22,11 +22,11 @@ const isEditing = ref(false)
 const editReputation = ref<number | null>(null)
 const errorMessage = ref('')
 
-const getRole = (roleId: string | number) => {
-  return session.value?.guild?.roles.find(r => r.id.toString() === roleId.toString())
+const getRole = (roleId: string) => {
+  return session.value?.guild?.roles.find(r => r.id === roleId)
 }
 
-const getRoleColor = (roleId: string | number) => {
+const getRoleColor = (roleId: string) => {
   const role = getRole(roleId)
   if (!role || !role.color || role.color === '#000000' || role.color === '#ffffff' || role.color === '0') return 'inherit'
   if (typeof role.color === 'number') {
@@ -70,7 +70,7 @@ const saveEdit = () => {
   if (editReputation.value === null || editReputation.value < 0 || !!errorMessage.value) return
   
   emit('update', {
-    roleId: props.rank.roleId.toString(),
+    roleId: props.rank.roleId,
     reputation: editReputation.value
   })
   isEditing.value = false

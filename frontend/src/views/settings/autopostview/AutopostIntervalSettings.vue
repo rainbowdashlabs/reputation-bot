@@ -27,7 +27,7 @@ const updateInterval = async (event: Event) => {
     <label class="label">{{ t('autopost.refreshInterval.label') }}</label>
     <select
       :value="session.settings.autopost.refreshInterval"
-      class="input"
+      class="select"
       @change="updateInterval"
     >
       <option v-for="interval in intervals" :key="interval" :value="interval">

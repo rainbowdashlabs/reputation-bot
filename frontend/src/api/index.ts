@@ -66,9 +66,7 @@ class ApiClient {
   }
 
   public async updateGeneralSystemChannel(channelId: string) {
-    // Backend expects a Long, so parse the string to a number
-    const channelIdNumber = parseInt(channelId, 10);
-    await this.axiosInstance.post('/settings/general/systemchannel', channelIdNumber, {
+    await this.axiosInstance.post('/settings/general/systemchannel', JSON.stringify(channelId), {
       headers: { 'Content-Type': 'application/json' }
     });
   }

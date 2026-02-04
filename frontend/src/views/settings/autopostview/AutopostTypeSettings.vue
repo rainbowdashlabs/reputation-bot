@@ -27,7 +27,7 @@ const updateType = async (event: Event) => {
     <label class="label">{{ t('autopost.refreshType.label') }}</label>
     <select
       :value="session.settings.autopost.refreshType"
-      class="input"
+      class="select"
       @change="updateType"
     >
       <option v-for="type in types" :key="type" :value="type">

@@ -12,17 +12,19 @@ import java.util.Objects;
 
 public class RolePOJO {
     private final String name;
-    private final long id;
+    private final String id;
+    private final int position;
     private final String color;
 
-    public RolePOJO(String name, long id, Color color) {
+    public RolePOJO(String name, String id, Color color, int position) {
         this.name = name;
         this.id = id;
+        this.position = position;
         color = Objects.requireNonNullElse(color, Color.WHITE);
         this.color = "#%02x%02x%02x".formatted(color.getRed(), color.getGreen(), color.getBlue());
     }
 
     public static RolePOJO generate(Role role) {
-        return new RolePOJO(role.getName(), role.getIdLong(), role.getColor());
+        return new RolePOJO(role.getName(), role.getId(), role.getColor(), role.getPosition());
     }
 }

@@ -14,14 +14,13 @@ const emit = defineEmits<{
 
 const { t } = useI18n()
 
-const isRoleSelected = (roleId: string | number) => {
-  const id = String(roleId)
-  return props.selectedRoleIds.some(selectedId => String(selectedId) === id)
+const isRoleSelected = (roleId: string) => {
+  return props.selectedRoleIds.some(selectedId => selectedId === roleId)
 }
 
-const toggleRole = (roleId: string | number) => {
+const toggleRole = (roleId: string) => {
   const id = String(roleId)
-  let newSelected = props.selectedRoleIds.map(String)
+  let newSelected = props.selectedRoleIds.slice()
   if (newSelected.includes(id)) {
     newSelected = newSelected.filter(r => r !== id)
   } else {
@@ -34,9 +33,9 @@ const displayedRoles = computed(() => {
   return props.availableRoles
 })
 
-const getRoleColor = (color: string | number) => {
+const getRoleColor = (color: string) => {
   const colorStr = String(color)
-  if (!color || colorStr === '#000000' || colorStr.toLowerCase() === '#ffffff' || colorStr === '0' || color === 0) return 'currentColor'
+  if (!color || colorStr === '#000000' || colorStr.toLowerCase() === '#ffffff' || colorStr === '0') return 'currentColor'
   return colorStr
 }
 </script>

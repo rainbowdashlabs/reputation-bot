@@ -39,7 +39,7 @@ public class Ranks implements GuildHolder {
      * @param reputation required reputation of role
      * @return true if the role was added or updated
      */
-    public boolean add(Role role, long reputation) {
+    public boolean add(Role role, int reputation) {
         var deleteRank = remove(role.getIdLong());
 
         var insertRank = query("""

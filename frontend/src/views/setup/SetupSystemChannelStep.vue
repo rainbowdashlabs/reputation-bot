@@ -12,7 +12,7 @@ const emit = defineEmits<{
 const { t } = useI18n()
 const { session, updateGeneralSettings } = useSession()
 
-const systemChannel = ref<number | null>(null)
+const systemChannel = ref<string | null>(null)
 
 watch(session, (newSession) => {
   if (newSession?.settings?.general) {
@@ -22,13 +22,13 @@ watch(session, (newSession) => {
 
 // Only allow proceeding if a system channel is set
 watch(systemChannel, (newValue) => {
-  emit('canProceed', newValue !== null && newValue !== 0)
+  emit('canProceed', newValue !== null && newValue !== "0")
 }, { immediate: true })
 
 const updateSystemChannel = async () => {
   try {
     await api.updateGeneralSystemChannel(systemChannel.value ? systemChannel.value.toString() : '0')
-    updateGeneralSettings({ systemChannel: systemChannel.value || 0 })
+    updateGeneralSettings({ systemChannel: systemChannel.value || "0" })
   } catch (error) {
     console.error('Failed to update system channel:', error)
   }
@@ -53,7 +53,7 @@ const updateSystemChannel = async () => {
       </p>
     </div>
     
-    <div v-if="!systemChannel || systemChannel === 0" class="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+    <div v-if="!systemChannel || systemChannel === '0'" class="p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
       <p class="text-sm text-yellow-800 dark:text-yellow-200">
         {{ t('setup.steps.systemChannel.required') }}
       </p>

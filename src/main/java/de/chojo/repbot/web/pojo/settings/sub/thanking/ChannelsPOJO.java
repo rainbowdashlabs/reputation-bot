@@ -5,10 +5,15 @@
  */
 package de.chojo.repbot.web.pojo.settings.sub.thanking;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+
 import java.util.Set;
 
 public class ChannelsPOJO {
+    @JsonSerialize(contentUsing = ToStringSerializer.class)
     protected final Set<Long> channels;
+    @JsonSerialize(contentUsing = ToStringSerializer.class)
     protected final Set<Long> categories;
     protected boolean whitelist;
 
