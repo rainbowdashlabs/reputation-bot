@@ -1,9 +1,9 @@
 /*
- *     SPDX-License-Identifier: AGPL-3.0-only
- *
- *     Copyright (C) RainbowDashLabs and Contributor
- */
-<script setup lang="ts">
+*     SPDX-License-Identifier: AGPL-3.0-only
+*
+*     Copyright (C) RainbowDashLabs and Contributor
+*/
+<script lang="ts" setup>
 import {useI18n} from 'vue-i18n'
 import Header1 from '@/components/heading/Header1.vue'
 
@@ -39,8 +39,8 @@ const settingsSections = [
               <li v-for="section in settingsSections" :key="section.key">
                 <router-link
                     :to="section.path"
-                    class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 hover:text-indigo-600 dark:hover:text-indigo-400 rounded transition-colors"
                     active-class="bg-indigo-100 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 font-medium"
+                    class="block px-4 py-2 text-gray-700 dark:text-gray-300 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 hover:text-indigo-600 dark:hover:text-indigo-400 rounded transition-colors"
                 >
                   {{ t(`settings.${section.key}`) }}
                 </router-link>

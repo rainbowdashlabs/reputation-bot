@@ -72,23 +72,6 @@ public class Thankwords extends ThankwordsPOJO implements GuildHolder {
         return cachedPattern;
     }
 
-    /**
-     * Must be called in a write-lock if 'this' is accessible from other objects
-     */
-    private Pattern compilePattern() {
-        if (thankwords.isEmpty()) return Pattern.compile("");
-        return compilePattern(thankwords);
-    }
-
-    private Pattern compilePattern(Set<String> thankwords) {
-        var twPattern = thankwords.stream()
-                                  .map(t -> String.format(THANKWORD, t))
-                                  .collect(Collectors.joining("|"));
-        return Pattern.compile(String.format(PATTERN, twPattern),
-                Pattern.CASE_INSENSITIVE + Pattern.MULTILINE + Pattern.DOTALL);
-
-    }
-
     public boolean add(String pattern) {
         long stamp = lock.writeLock();
         try {
@@ -158,5 +141,22 @@ public class Thankwords extends ThankwordsPOJO implements GuildHolder {
 
     public String prettyString() {
         return words().stream().map("`%s`"::formatted).collect(Collectors.joining(", "));
+    }
+
+    /**
+     * Must be called in a write-lock if 'this' is accessible from other objects
+     */
+    private Pattern compilePattern() {
+        if (thankwords.isEmpty()) return Pattern.compile("");
+        return compilePattern(thankwords);
+    }
+
+    private Pattern compilePattern(Set<String> thankwords) {
+        var twPattern = thankwords.stream()
+                                  .map(t -> String.format(THANKWORD, t))
+                                  .collect(Collectors.joining("|"));
+        return Pattern.compile(String.format(PATTERN, twPattern),
+                Pattern.CASE_INSENSITIVE + Pattern.MULTILINE + Pattern.DOTALL);
+
     }
 }

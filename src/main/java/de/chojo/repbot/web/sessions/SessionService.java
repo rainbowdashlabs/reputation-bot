@@ -71,7 +71,7 @@ public class SessionService {
         } else {
             key = Hashing.sha256().hashBytes("%s%s%s".formatted(guild.getId(), member.getId(), randomString).getBytes(StandardCharsets.UTF_8)).toString();
         }
-        GuildSession session = new GuildSession(configuration,key, guild.getJDA().getShardManager(), guildRepository, guild.getIdLong(), member.getIdLong());
+        GuildSession session = new GuildSession(configuration, key, guild.getJDA().getShardManager(), guildRepository, guild.getIdLong(), member.getIdLong());
         guildSessions.put(key, session);
         return session;
     }
@@ -81,6 +81,14 @@ public class SessionService {
     }
 
     record SessionKey(long guildId, long memberId, String key) {
+        public static SessionKey from(GuildSession session) {
+            return new SessionKey(session.guildId(), session.userId(), null);
+        }
+
+        public static SessionKey from(Guild guild, Member member) {
+            return new SessionKey(guild.getIdLong(), member.getIdLong(), null);
+        }
+
         @Override
         public boolean equals(Object o) {
             if (o == null || getClass() != o.getClass()) return false;
@@ -94,14 +102,6 @@ public class SessionService {
             int result = Long.hashCode(guildId);
             result = 31 * result + Long.hashCode(memberId);
             return result;
-        }
-
-        public static SessionKey from(GuildSession session) {
-            return new SessionKey(session.guildId(), session.userId(), null);
-        }
-
-        public static SessionKey from(Guild guild, Member member) {
-            return new SessionKey(guild.getIdLong(), member.getIdLong(), null);
         }
     }
 }

@@ -1,21 +1,21 @@
 /*
- *     SPDX-License-Identifier: AGPL-3.0-only
- *
- *     Copyright (C) RainbowDashLabs and Contributor
- */
+*     SPDX-License-Identifier: AGPL-3.0-only
+*
+*     Copyright (C) RainbowDashLabs and Contributor
+*/
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useSession } from '@/composables/useSession'
-import { api } from '@/api'
+import {computed, ref, watch} from 'vue'
+import {useI18n} from 'vue-i18n'
+import {useSession} from '@/composables/useSession'
+import {api} from '@/api'
 import BaseButton from '@/components/BaseButton.vue'
 
 const props = defineProps<{
   initialReputationName: string
 }>()
 
-const { t } = useI18n()
-const { session, updateProfileSettings } = useSession()
+const {t} = useI18n()
+const {session, updateProfileSettings} = useSession()
 const reputationName = ref(props.initialReputationName)
 
 watch(() => props.initialReputationName, (newVal) => {
@@ -34,7 +34,7 @@ const updateReputationName = () => {
   reputationNameTimeout = setTimeout(async () => {
     try {
       await api.updateProfileReputationName(reputationName.value || null)
-      updateProfileSettings({ reputationName: reputationName.value || null })
+      updateProfileSettings({reputationName: reputationName.value || null})
     } catch (error) {
       console.error('Failed to update reputation name:', error)
     }
@@ -46,7 +46,7 @@ const resetReputationName = async () => {
 
   try {
     await api.deleteProfileReputationName()
-    updateProfileSettings({ reputationName: null })
+    updateProfileSettings({reputationName: null})
     reputationName.value = ''
   } catch (error) {
     console.error('Failed to reset reputation name:', error)

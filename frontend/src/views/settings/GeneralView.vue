@@ -1,8 +1,8 @@
 /*
- *     SPDX-License-Identifier: AGPL-3.0-only
- *
- *     Copyright (C) RainbowDashLabs and Contributor
- */
+*     SPDX-License-Identifier: AGPL-3.0-only
+*
+*     Copyright (C) RainbowDashLabs and Contributor
+*/
 <script lang="ts" setup>
 import {onMounted, ref, watch} from 'vue'
 import {useI18n} from 'vue-i18n'
@@ -37,7 +37,7 @@ watch(session, (newSession) => {
 const updateSystemChannel = async () => {
   try {
     await api.updateGeneralSystemChannel(systemChannel.value ? systemChannel.value.toString() : '0')
-    updateGeneralSettings({ systemChannel: systemChannel.value || "0" })
+    updateGeneralSettings({systemChannel: systemChannel.value || "0"})
   } catch (error) {
     console.error('Failed to update system channel:', error)
   }
@@ -46,7 +46,7 @@ const updateSystemChannel = async () => {
 const updateLanguage = async () => {
   try {
     await api.updateGeneralLanguage(language.value)
-    updateGeneralSettings({ language: language.value })
+    updateGeneralSettings({language: language.value})
   } catch (error) {
     console.error('Failed to update language:', error)
   }
@@ -54,7 +54,7 @@ const updateLanguage = async () => {
 </script>
 
 <template>
-  <SettingsContainer :title="t('settings.general')" :description="t('general.description')">
+  <SettingsContainer :description="t('general.description')" :title="t('settings.general')">
     <div class="grid grid-cols-1 gap-6">
       <div class="flex flex-col gap-1.5">
         <label class="label">{{ t('general.language.label') }}</label>
@@ -63,7 +63,7 @@ const updateLanguage = async () => {
             class="select"
             @change="updateLanguage"
         >
-          <option value="" disabled>{{ t('general.language.selectPlaceholder') }}</option>
+          <option disabled value="">{{ t('general.language.selectPlaceholder') }}</option>
           <option v-for="lang in languages" :key="lang.internalName" :value="lang.internalName">
             {{ lang.nativeName }} ({{ lang.name }})
           </option>

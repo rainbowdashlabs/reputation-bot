@@ -7,7 +7,6 @@ package de.chojo.repbot.dao.access.metrics;
 
 import de.chojo.repbot.dao.snapshots.statistics.CountStatistics;
 import de.chojo.repbot.dao.snapshots.statistics.CountsStatistic;
-import de.chojo.sadu.queries.api.call.Call;
 import de.chojo.sadu.queries.api.query.Query;
 
 import static de.chojo.sadu.queries.api.call.Call.call;

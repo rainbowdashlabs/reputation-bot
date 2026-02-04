@@ -71,6 +71,22 @@ public class ChatSupportService extends ListenerAdapter {
         }
     }
 
+    @Override
+    public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
+        String id = event.getButton().getCustomId();
+        if (id == null) return;
+        if (!id.startsWith("debug:")) return;
+
+        String guildId = id.split(":")[1];
+        Guild guild = shardManager.getGuildById(Long.parseLong(guildId));
+        if (guild == null) {
+            event.reply("Guild not found.").setEphemeral(true).complete();
+            return;
+        }
+
+        Debug.sendDebug(event, pageService, guildRepository.guild(guild), null);
+    }
+
     private MessageCreateData reconstruct(Message message) {
         String list = message.getAttachments().stream()
                              .filter(Attachment::isImage)
@@ -111,22 +127,6 @@ public class ChatSupportService extends ListenerAdapter {
                 .mapAs(Long.class)
                 .first()
                 .map(id -> shardManager.retrieveUserById(id).complete());
-    }
-
-    @Override
-    public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
-        String id = event.getButton().getCustomId();
-        if (id == null) return;
-        if (!id.startsWith("debug:")) return;
-
-        String guildId = id.split(":")[1];
-        Guild guild = shardManager.getGuildById(Long.parseLong(guildId));
-        if (guild == null) {
-            event.reply("Guild not found.").setEphemeral(true).complete();
-            return;
-        }
-
-        Debug.sendDebug(event, pageService, guildRepository.guild(guild), null);
     }
 
     private void promptThread(User user, Message initMessage) {

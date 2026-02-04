@@ -73,6 +73,22 @@ public class Messages extends MessagesPOJO implements GuildHolder {
         return settings.guildId();
     }
 
+    public String toLocalizedString() {
+        var setting = List.of(
+                getSetting("command.messages.states.message.option.reactionconfirmation.name", isReactionConfirmation()),
+                getSetting("command.messages.states.message.option.commandreputationephemeral.name", isCommandReputationEphemeral())
+        );
+
+        return String.join("\n", setting);
+    }
+
+    public String prettyString() {
+        return """
+                Reaction confirmation: %s
+                """.stripIndent()
+                   .formatted(reactionConfirmation);
+    }
+
     private boolean set(String parameter, Function<Call, Call> builder) {
         return query("""
                 INSERT INTO message_states(guild_id, %s) VALUES (?, ?)
@@ -84,23 +100,7 @@ public class Messages extends MessagesPOJO implements GuildHolder {
                 .changed();
     }
 
-    public String toLocalizedString() {
-        var setting = List.of(
-                getSetting("command.messages.states.message.option.reactionconfirmation.name", isReactionConfirmation()),
-                getSetting("command.messages.states.message.option.commandreputationephemeral.name", isCommandReputationEphemeral())
-        );
-
-        return String.join("\n", setting);
-    }
-
     private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, boolean object) {
         return String.format("$%s$: $%s$", locale, object ? "words.enabled" : "words.disabled");
-    }
-
-    public String prettyString() {
-        return """
-                Reaction confirmation: %s
-                """.stripIndent()
-                   .formatted(reactionConfirmation);
     }
 }

@@ -18,14 +18,14 @@ public class Prune extends SlashCommand {
 
     public Prune(GdprService service) {
         super(Slash.of("prune", "command.prune.description")
-                .guildOnly()
-                .withPermission(Permission.MESSAGE_MANAGE)
-                .subCommand(SubCommand.of("user", "command.prune.user.description")
-                        .handler(new User(service))
-                        .argument(Argument.user("user", "command.prune.user.options.user.description"))
-                        .argument(Argument.text("userid", "command.prune.user.options.userid.description")))
-                .subCommand(SubCommand.of("guild", "command.prune.guild.description")
-                        .handler(new Guild(service)))
+                   .guildOnly()
+                   .withPermission(Permission.MESSAGE_MANAGE)
+                   .subCommand(SubCommand.of("user", "command.prune.user.description")
+                                         .handler(new User(service))
+                                         .argument(Argument.user("user", "command.prune.user.options.user.description"))
+                                         .argument(Argument.text("userid", "command.prune.user.options.userid.description")))
+                   .subCommand(SubCommand.of("guild", "command.prune.guild.description")
+                                         .handler(new Guild(service)))
         );
     }
 }

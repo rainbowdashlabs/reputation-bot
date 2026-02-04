@@ -1,10 +1,10 @@
 /*
- *     SPDX-License-Identifier: AGPL-3.0-only
- *
- *     Copyright (C) RainbowDashLabs and Contributor
- */
-<script setup lang="ts">
-import { computed } from 'vue'
+*     SPDX-License-Identifier: AGPL-3.0-only
+*
+*     Copyright (C) RainbowDashLabs and Contributor
+*/
+<script lang="ts" setup>
+import {computed} from 'vue'
 
 interface Props {
   color?: 'default' | 'indigo' | 'green' | 'red' | 'blue';
@@ -32,6 +32,6 @@ const colorClasses = computed(() => {
 
 <template>
   <h2 :class="['text-2xl font-bold mb-4 transition-colors', colorClasses]">
-    <slot />
+    <slot/>
   </h2>
 </template>

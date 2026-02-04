@@ -1,14 +1,14 @@
 /*
- *     SPDX-License-Identifier: AGPL-3.0-only
- *
- *     Copyright (C) RainbowDashLabs and Contributor
- */
+*     SPDX-License-Identifier: AGPL-3.0-only
+*
+*     Copyright (C) RainbowDashLabs and Contributor
+*/
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useSession } from '@/composables/useSession'
+import {ref, watch} from 'vue'
+import {useI18n} from 'vue-i18n'
+import {useSession} from '@/composables/useSession'
 import BaseButton from '@/components/BaseButton.vue'
-import type { RankEntry } from '@/api/types'
+import type {RankEntry} from '@/api/types'
 
 const props = defineProps<{
   rank: RankEntry
@@ -20,8 +20,8 @@ const emit = defineEmits<{
   (e: 'delete'): void
 }>()
 
-const { t } = useI18n()
-const { session } = useSession()
+const {t} = useI18n()
+const {session} = useSession()
 
 const isEditing = ref(false)
 const editReputation = ref<number | null>(null)
@@ -73,7 +73,7 @@ const cancelEdit = () => {
 
 const saveEdit = () => {
   if (editReputation.value === null || editReputation.value < 0 || !!errorMessage.value) return
-  
+
   emit('update', {
     roleId: props.rank.roleId,
     reputation: editReputation.value
@@ -87,10 +87,10 @@ const saveEdit = () => {
     <div v-if="isEditing" class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div class="flex items-center gap-3 min-h-9.5">
         <div
-            class="w-3 h-3 rounded-full"
             :style="{ backgroundColor: getRoleColor(rank.roleId) }"
+            class="w-3 h-3 rounded-full"
         ></div>
-        <span class="font-medium" :style="{ color: getRoleColor(rank.roleId) }">
+        <span :style="{ color: getRoleColor(rank.roleId) }" class="font-medium">
           {{ getRole(rank.roleId)?.name || rank.roleId }}
         </span>
       </div>
@@ -98,13 +98,13 @@ const saveEdit = () => {
         <div class="flex flex-col gap-2">
           <input
               v-model.number="editReputation"
-              type="number"
               class="input"
               min="0"
+              type="number"
               @keyup.enter="saveEdit"
           />
         </div>
-        <BaseButton color="primary" :disabled="editReputation === null || !!errorMessage" @click="saveEdit">
+        <BaseButton :disabled="editReputation === null || !!errorMessage" color="primary" @click="saveEdit">
           {{ t('common.save') }}
         </BaseButton>
         <BaseButton color="secondary" @click="cancelEdit">
@@ -118,10 +118,10 @@ const saveEdit = () => {
     <div v-else class="flex items-center justify-between">
       <div class="flex items-center gap-3">
         <div
-            class="w-3 h-3 rounded-full"
             :style="{ backgroundColor: getRoleColor(rank.roleId) }"
+            class="w-3 h-3 rounded-full"
         ></div>
-        <span class="font-medium" :style="{ color: getRoleColor(rank.roleId) }">
+        <span :style="{ color: getRoleColor(rank.roleId) }" class="font-medium">
           {{ getRole(rank.roleId)?.name || rank.roleId }}
         </span>
         <span class="text-gray-500 dark:text-gray-400">

@@ -27,17 +27,13 @@ public class PremiumFeatureException extends ApiException {
         this.details = new PremiumFeatureErrorDetails(feature, requiredSkus, currentValue, maxValue);
     }
 
-    public PremiumFeatureErrorDetails details() {
-        return details;
-    }
-
     private static String buildMessage(String feature, List<SkuInfo> requiredSkus) {
         if (requiredSkus.isEmpty()) {
             return String.format("Premium feature '%s' is not available", feature);
         }
         String skuNames = requiredSkus.stream()
-                .map(SkuInfo::name)
-                .collect(Collectors.joining(", "));
+                                      .map(SkuInfo::name)
+                                      .collect(Collectors.joining(", "));
         return String.format("Premium feature '%s' requires one of: %s", feature, skuNames);
     }
 
@@ -46,8 +42,12 @@ public class PremiumFeatureException extends ApiException {
             return String.format("Premium feature '%s' limit exceeded (current: %d, max: %d)", feature, currentValue, maxValue);
         }
         String skuNames = requiredSkus.stream()
-                .map(SkuInfo::name)
-                .collect(Collectors.joining(", "));
+                                      .map(SkuInfo::name)
+                                      .collect(Collectors.joining(", "));
         return String.format("Premium feature '%s' limit exceeded (current: %d, max: %d). Requires one of: %s", feature, currentValue, maxValue, skuNames);
+    }
+
+    public PremiumFeatureErrorDetails details() {
+        return details;
     }
 }

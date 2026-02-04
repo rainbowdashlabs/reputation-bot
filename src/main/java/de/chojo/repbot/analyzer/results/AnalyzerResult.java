@@ -21,16 +21,6 @@ import net.dv8tion.jda.api.entities.Message;
 import java.util.List;
 
 public interface AnalyzerResult {
-    ResultType resultType();
-
-    default EmptyAnalyzerResult asEmpty() {
-        return (EmptyAnalyzerResult) this;
-    }
-
-    default MatchAnalyzerResult asMatch() {
-        return (MatchAnalyzerResult) this;
-    }
-
     static AnalyzerResult empty(EmptyResultReason resultReason) {
         return new EmptyAnalyzerResult(null, resultReason);
     }
@@ -49,6 +39,16 @@ public interface AnalyzerResult {
 
     static AnalyzerResult fuzzy(String match, List<String> thankwords, List<MemberMatch> memberMatches, Member donator, List<WeightedEntry<Member>> receivers) {
         return new FuzzyAnalyzerResult(match, thankwords, memberMatches, donator, receivers);
+    }
+
+    ResultType resultType();
+
+    default EmptyAnalyzerResult asEmpty() {
+        return (EmptyAnalyzerResult) this;
+    }
+
+    default MatchAnalyzerResult asMatch() {
+        return (MatchAnalyzerResult) this;
     }
 
     default boolean isEmpty() {

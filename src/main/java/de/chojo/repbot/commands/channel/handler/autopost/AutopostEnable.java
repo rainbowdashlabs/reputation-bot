@@ -55,7 +55,7 @@ public class AutopostEnable implements SlashHandler {
         }
         Autopost autopost = guildRepository.guild(event.getGuild()).settings().autopost();
 
-        if(autopost.active()){
+        if (autopost.active()) {
             autopostService.delete(event.getGuild());
         }
 
@@ -75,7 +75,7 @@ public class AutopostEnable implements SlashHandler {
 
         autopostService.update(event.getGuild());
         event.getHook().editOriginal(WebPromo.promoString(context) + context.localize("command.channel.autopost.enable.message.enabled",
-                Replacement.create("CHANNEL", MentionUtil.channel(autopost.channelId()))))
+                     Replacement.create("CHANNEL", MentionUtil.channel(autopost.channelId()))))
              .complete();
     }
 

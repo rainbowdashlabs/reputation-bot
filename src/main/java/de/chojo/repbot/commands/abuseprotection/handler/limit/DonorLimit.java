@@ -39,7 +39,7 @@ public class DonorLimit implements SlashHandler {
                  .complete();
             return;
         }
-        event.reply(WebPromo.promoString(context)  + context.localize("command.abuseprotection.limit.donor.message.set",
+        event.reply(WebPromo.promoString(context) + context.localize("command.abuseprotection.limit.donor.message.set",
                      Replacement.create("AMOUNT", protection.maxGiven()),
                      Replacement.create("HOURS", protection.maxGivenHours())))
              .setEphemeral(true)

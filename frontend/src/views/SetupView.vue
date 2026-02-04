@@ -1,13 +1,13 @@
 /*
- *     SPDX-License-Identifier: AGPL-3.0-only
- *
- *     Copyright (C) RainbowDashLabs and Contributor
- */
-<script setup lang="ts">
-import { ref, computed, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useRouter, useRoute } from 'vue-router'
-import { useSession } from '@/composables/useSession'
+*     SPDX-License-Identifier: AGPL-3.0-only
+*
+*     Copyright (C) RainbowDashLabs and Contributor
+*/
+<script lang="ts" setup>
+import {computed, ref, watch} from 'vue'
+import {useI18n} from 'vue-i18n'
+import {useRoute, useRouter} from 'vue-router'
+import {useSession} from '@/composables/useSession'
 
 // Import step components
 import SetupLanguageStep from './setup/SetupLanguageStep.vue'
@@ -22,10 +22,10 @@ import SetupCooldownStep from './setup/SetupCooldownStep.vue'
 import SetupMainReactionStep from './setup/SetupMainReactionStep.vue'
 import SetupRolesStep from './setup/SetupRolesStep.vue'
 
-const { t } = useI18n()
+const {t} = useI18n()
 const router = useRouter()
 const route = useRoute()
-const { session } = useSession()
+const {session} = useSession()
 
 const SETUP_STEP_KEY = 'reputation-bot-setup-current-step'
 const totalSteps = 11
@@ -40,7 +40,7 @@ const getInitialStep = (): number => {
       return step
     }
   }
-  
+
   // Fall back to localStorage
   try {
     const saved = localStorage.getItem(SETUP_STEP_KEY)
@@ -53,7 +53,7 @@ const getInitialStep = (): number => {
   } catch (error) {
     console.error('Failed to load saved setup step:', error)
   }
-  
+
   return 1
 }
 
@@ -62,11 +62,11 @@ const currentStep = ref(getInitialStep())
 // Update URL and localStorage whenever currentStep changes
 watch(currentStep, (newStep) => {
   // Update URL query parameter
-  router.replace({ 
-    path: '/setup', 
-    query: { step: String(newStep) } 
+  router.replace({
+    path: '/setup',
+    query: {step: String(newStep)}
   })
-  
+
   // Save to localStorage as backup
   try {
     localStorage.setItem(SETUP_STEP_KEY, String(newStep))
@@ -86,17 +86,17 @@ watch(() => route.query.step, (newStepQuery) => {
 })
 
 const steps = [
-  { id: 1, component: SetupLanguageStep, titleKey: 'setup.steps.language.title', required: false },
-  { id: 2, component: SetupSystemChannelStep, titleKey: 'setup.steps.systemChannel.title', required: true },
-  { id: 3, component: SetupReputationTypesStep, titleKey: 'setup.steps.reputationTypes.title', required: false },
-  { id: 4, component: SetupReputationModeStep, titleKey: 'setup.steps.reputationMode.title', required: false },
-  { id: 5, component: SetupRanksStep, titleKey: 'setup.steps.ranks.title', required: true },
-  { id: 6, component: SetupChannelsStep, titleKey: 'setup.steps.channels.title', required: true },
-  { id: 7, component: SetupThankwordsStep, titleKey: 'setup.steps.thankwords.title', required: false },
-  { id: 8, component: SetupAnnouncementsStep, titleKey: 'setup.steps.announcements.title', required: false },
-  { id: 9, component: SetupCooldownStep, titleKey: 'setup.steps.cooldown.title', required: false },
-  { id: 10, component: SetupMainReactionStep, titleKey: 'setup.steps.mainReaction.title', required: false },
-  { id: 11, component: SetupRolesStep, titleKey: 'setup.steps.roles.title', required: false }
+  {id: 1, component: SetupLanguageStep, titleKey: 'setup.steps.language.title', required: false},
+  {id: 2, component: SetupSystemChannelStep, titleKey: 'setup.steps.systemChannel.title', required: true},
+  {id: 3, component: SetupReputationTypesStep, titleKey: 'setup.steps.reputationTypes.title', required: false},
+  {id: 4, component: SetupReputationModeStep, titleKey: 'setup.steps.reputationMode.title', required: false},
+  {id: 5, component: SetupRanksStep, titleKey: 'setup.steps.ranks.title', required: true},
+  {id: 6, component: SetupChannelsStep, titleKey: 'setup.steps.channels.title', required: true},
+  {id: 7, component: SetupThankwordsStep, titleKey: 'setup.steps.thankwords.title', required: false},
+  {id: 8, component: SetupAnnouncementsStep, titleKey: 'setup.steps.announcements.title', required: false},
+  {id: 9, component: SetupCooldownStep, titleKey: 'setup.steps.cooldown.title', required: false},
+  {id: 10, component: SetupMainReactionStep, titleKey: 'setup.steps.mainReaction.title', required: false},
+  {id: 11, component: SetupRolesStep, titleKey: 'setup.steps.roles.title', required: false}
 ]
 
 const currentStepData = computed(() => steps.find(s => s.id === currentStep.value))
@@ -146,43 +146,43 @@ const progressPercentage = computed(() => {
               {{ t('setup.title') }}
             </h1>
             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
-              {{ t('setup.stepProgress', { current: currentStep, total: totalSteps }) }}
+              {{ t('setup.stepProgress', {current: currentStep, total: totalSteps}) }}
             </p>
           </div>
-          
+
           <div class="flex items-center gap-3">
             <button
-              :disabled="currentStep === 1"
-              class="px-4 py-2 text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600"
-              @click="goToPreviousStep"
+                :disabled="currentStep === 1"
+                class="px-4 py-2 text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-300 dark:hover:bg-gray-600"
+                @click="goToPreviousStep"
             >
               {{ t('setup.navigation.previous') }}
             </button>
-            
+
             <button
-              v-if="currentStep < totalSteps"
-              :disabled="!canProceed"
-              class="px-4 py-2 text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-indigo-600 text-white hover:bg-indigo-700"
-              @click="goToNextStep"
+                v-if="currentStep < totalSteps"
+                :disabled="!canProceed"
+                class="px-4 py-2 text-sm font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed bg-indigo-600 text-white hover:bg-indigo-700"
+                @click="goToNextStep"
             >
               {{ t('setup.navigation.next') }}
             </button>
-            
+
             <button
-              v-else
-              class="px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-green-600 text-white hover:bg-green-700"
-              @click="finishSetup"
+                v-else
+                class="px-4 py-2 text-sm font-medium rounded-lg transition-colors bg-green-600 text-white hover:bg-green-700"
+                @click="finishSetup"
             >
               {{ t('setup.navigation.finish') }}
             </button>
           </div>
         </div>
-        
+
         <!-- Progress Bar -->
         <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-          <div 
-            class="bg-indigo-600 h-2 rounded-full transition-all duration-300"
-            :style="{ width: `${progressPercentage}%` }"
+          <div
+              :style="{ width: `${progressPercentage}%` }"
+              class="bg-indigo-600 h-2 rounded-full transition-all duration-300"
           />
         </div>
       </div>
@@ -200,11 +200,11 @@ const progressPercentage = computed(() => {
               {{ t('setup.requiredStep') }}
             </p>
           </div>
-          
+
           <component
-            :is="currentStepData?.component"
-            v-if="currentStepData && session"
-            @can-proceed="updateCanProceed"
+              :is="currentStepData?.component"
+              v-if="currentStepData && session"
+              @can-proceed="updateCanProceed"
           />
         </div>
       </div>

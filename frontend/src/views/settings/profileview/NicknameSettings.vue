@@ -1,13 +1,13 @@
 /*
- *     SPDX-License-Identifier: AGPL-3.0-only
- *
- *     Copyright (C) RainbowDashLabs and Contributor
- */
+*     SPDX-License-Identifier: AGPL-3.0-only
+*
+*     Copyright (C) RainbowDashLabs and Contributor
+*/
 <script lang="ts" setup>
-import { computed, ref, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useSession } from '@/composables/useSession'
-import { api } from '@/api'
+import {computed, ref, watch} from 'vue'
+import {useI18n} from 'vue-i18n'
+import {useSession} from '@/composables/useSession'
+import {api} from '@/api'
 import BaseButton from '@/components/BaseButton.vue'
 
 const props = defineProps<{
@@ -15,8 +15,8 @@ const props = defineProps<{
   disabled: boolean
 }>()
 
-const { t } = useI18n()
-const { updateProfileSettings } = useSession()
+const {t} = useI18n()
+const {updateProfileSettings} = useSession()
 const nickname = ref(props.initialNickname)
 const hasChanges = computed(() => nickname.value !== props.initialNickname)
 
@@ -32,7 +32,7 @@ const updateNickname = async () => {
   isUpdating.value = true
   try {
     await api.updateProfileNickname(nickname.value || null)
-    updateProfileSettings({ nickname: nickname.value || null })
+    updateProfileSettings({nickname: nickname.value || null})
   } catch (error) {
     console.error('Failed to update nickname:', error)
   } finally {
@@ -45,7 +45,7 @@ const resetNickname = async () => {
 
   try {
     await api.deleteProfileNickname()
-    updateProfileSettings({ nickname: null })
+    updateProfileSettings({nickname: null})
     nickname.value = ''
   } catch (error) {
     console.error('Failed to reset nickname:', error)

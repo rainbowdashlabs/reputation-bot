@@ -10,7 +10,6 @@ import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.jdautil.util.Premium;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.repbot.web.pojo.settings.sub.AutopostPOJO;
 import de.chojo.repbot.web.pojo.settings.sub.thanking.ReactionsPOJO;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageReaction;
@@ -53,18 +52,6 @@ public class Reactions extends ReactionsPOJO implements GuildHolder {
             return isReaction(emoji.getId());
         }
         return false;
-    }
-
-    private boolean isReaction(String reaction) {
-        if (mainReaction.equals(reaction)) {
-            return true;
-        }
-        if (Premium.isNotEntitled(
-                thanking.settings().repGuild().subscriptions(),
-                thanking.settings().repGuild().configuration().skus().features().additionalEmojis().additionalEmojis())) {
-            return false;
-        }
-        return reactions.contains(reaction);
     }
 
     public boolean reactionIsEmote() {
@@ -153,5 +140,17 @@ public class Reactions extends ReactionsPOJO implements GuildHolder {
                 remove(reaction);
             }
         }
+    }
+
+    private boolean isReaction(String reaction) {
+        if (mainReaction.equals(reaction)) {
+            return true;
+        }
+        if (Premium.isNotEntitled(
+                thanking.settings().repGuild().subscriptions(),
+                thanking.settings().repGuild().configuration().skus().features().additionalEmojis().additionalEmojis())) {
+            return false;
+        }
+        return reactions.contains(reaction);
     }
 }

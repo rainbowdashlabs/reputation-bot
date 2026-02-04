@@ -98,6 +98,16 @@ public class Autopost extends AutopostPOJO implements GuildHolder {
         if (this.refreshInterval != state.refreshInterval()) refreshInterval(state.refreshInterval());
     }
 
+    @Override
+    public Guild guild() {
+        return settings.guild();
+    }
+
+    @Override
+    public long guildId() {
+        return settings.guildId();
+    }
+
     private boolean set(String parameter, Function<Call, Call> builder) {
         return query("""
                 INSERT INTO autopost(guild_id, %s) VALUES (?, ?)
@@ -107,15 +117,5 @@ public class Autopost extends AutopostPOJO implements GuildHolder {
                 .single(builder.apply(call().bind(guildId())))
                 .insert()
                 .changed();
-    }
-
-    @Override
-    public Guild guild() {
-        return settings.guild();
-    }
-
-    @Override
-    public long guildId() {
-        return settings.guildId();
     }
 }

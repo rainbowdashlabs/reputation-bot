@@ -32,21 +32,38 @@ public class RoleUpdater extends ListenerAdapter {
     private final RoleAssigner roleAssigner;
     private final ShardManager shardManager;
 
+    public RoleUpdater(GuildRepository guildRepository, RoleAssigner roleAssigner, ShardManager shardManager) {
+        this.guildRepository = guildRepository;
+        this.roleAssigner = roleAssigner;
+        this.shardManager = shardManager;
+    }
+
     public static RoleUpdater create(GuildRepository guildRepository, RoleAssigner roleAssigner, ShardManager shardManager, ScheduledExecutorService executorService) {
         var roleUpdater = new RoleUpdater(guildRepository, roleAssigner, shardManager);
         executorService.scheduleAtFixedRate(roleUpdater.checked::clear, 30, 30, TimeUnit.MINUTES);
         var now = ZonedDateTime.now(ZoneOffset.UTC);
         var base = now.toLocalDate().atStartOfDay().plus(1, ChronoUnit.DAYS).plus(1, ChronoUnit.HOURS)
-                .atOffset(ZoneOffset.UTC);
+                      .atOffset(ZoneOffset.UTC);
         var minutes = now.until(base, ChronoUnit.MINUTES);
         executorService.scheduleAtFixedRate(roleUpdater::updateTimed, minutes, 1440, TimeUnit.MINUTES);
         return roleUpdater;
     }
 
-    public RoleUpdater(GuildRepository guildRepository, RoleAssigner roleAssigner, ShardManager shardManager) {
-        this.guildRepository = guildRepository;
-        this.roleAssigner = roleAssigner;
-        this.shardManager = shardManager;
+    @Override
+    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+        if (!event.isFromGuild()) return;
+        if (!guildRepository.guild(event.getGuild()).settings().general().reputationMode().isAutoRefresh()) return;
+        if (event.getMember() == null || isChecked(event.getMember())) return;
+        roleAssigner.updateReporting(event.getMember(), event.getGuildChannel());
+        guildSet(event.getGuild()).add(event.getMember().getIdLong());
+    }
+
+    public boolean isChecked(Member member) {
+        return guildSet(member.getGuild()).contains(member.getIdLong());
+    }
+
+    public Set<Long> guildSet(Guild guild) {
+        return checked.computeIfAbsent(guild.getIdLong(), k -> new HashSet<>());
     }
 
     private void updateTimed() {
@@ -77,22 +94,5 @@ public class RoleUpdater extends ListenerAdapter {
                 }
             });
         }
-    }
-
-    @Override
-    public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-        if (!event.isFromGuild()) return;
-        if (!guildRepository.guild(event.getGuild()).settings().general().reputationMode().isAutoRefresh()) return;
-        if (event.getMember() == null || isChecked(event.getMember())) return;
-        roleAssigner.updateReporting(event.getMember(), event.getGuildChannel());
-        guildSet(event.getGuild()).add(event.getMember().getIdLong());
-    }
-
-    public boolean isChecked(Member member) {
-        return guildSet(member.getGuild()).contains(member.getIdLong());
-    }
-
-    public Set<Long> guildSet(Guild guild) {
-        return checked.computeIfAbsent(guild.getIdLong(), k -> new HashSet<>());
     }
 }

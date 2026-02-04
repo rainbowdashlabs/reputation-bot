@@ -26,7 +26,7 @@ public class StackRoles extends BaseRoleModifier {
         var settings = guilds().guild(event.getGuild()).settings();
         if (event.getOptions().isEmpty()) {
             event.reply(WebPromo.promoString(context) + "\n" + Text.getBooleanMessage(context, settings.general().isStackRoles(),
-                    "command.roles.stackroles.message.stacked", "command.roles.stackroles.message.notStacked"))
+                         "command.roles.stackroles.message.stacked", "command.roles.stackroles.message.notStacked"))
                  .setEphemeral(true)
                  .complete();
             return;

@@ -40,8 +40,8 @@ public class Set implements SlashHandler {
         }
 
         if (guildRepository.guild(event.getGuild()).settings().general().language(locale)) {
-            event.reply(WebPromo.promoString(context) +context.localize("command.locale.set.message.set",
-                    Replacement.create("LOCALE", locale.getNativeName(), Format.CODE)))
+            event.reply(WebPromo.promoString(context) + context.localize("command.locale.set.message.set",
+                         Replacement.create("LOCALE", locale.getNativeName(), Format.CODE)))
                  .setEphemeral(true)
                  .complete();
         }

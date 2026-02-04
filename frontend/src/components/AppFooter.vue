@@ -1,8 +1,8 @@
 /*
- *     SPDX-License-Identifier: AGPL-3.0-only
- *
- *     Copyright (C) RainbowDashLabs and Contributor
- */
+*     SPDX-License-Identifier: AGPL-3.0-only
+*
+*     Copyright (C) RainbowDashLabs and Contributor
+*/
 <template>
   <footer
       class="footer-with-fade w-full bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-6 mt-8">
@@ -12,12 +12,12 @@
           <div>
 
             <a
-                href="https://github.com/RainbowDashLabs/reputation-bot"
-                target="_blank"
-                rel="noopener noreferrer"
                 class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors inline-flex items-center gap-1"
+                href="https://github.com/RainbowDashLabs/reputation-bot"
+                rel="noopener noreferrer"
+                target="_blank"
             >
-              <font-awesome-icon :icon="['fab', 'github']" />
+              <font-awesome-icon :icon="['fab', 'github']"/>
               GitHub
             </a>
             <template v-if="links">
@@ -25,11 +25,11 @@
                 <span> • </span>
                 <a
                     :href="links.website"
-                    target="_blank"
-                    rel="noopener noreferrer"
                     class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors inline-flex items-center gap-1"
+                    rel="noopener noreferrer"
+                    target="_blank"
                 >
-                  <font-awesome-icon :icon="['fas', 'globe']" />
+                  <font-awesome-icon :icon="['fas', 'globe']"/>
                   Website
                 </a>
               </template>
@@ -37,11 +37,11 @@
                 <span> • </span>
                 <a
                     :href="links.faq"
-                    target="_blank"
-                    rel="noopener noreferrer"
                     class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors inline-flex items-center gap-1"
+                    rel="noopener noreferrer"
+                    target="_blank"
                 >
-                  <font-awesome-icon :icon="['fas', 'question-circle']" />
+                  <font-awesome-icon :icon="['fas', 'question-circle']"/>
                   FAQ
                 </a>
               </template>
@@ -49,11 +49,11 @@
                 <span> • </span>
                 <a
                     :href="links.support"
-                    target="_blank"
-                    rel="noopener noreferrer"
                     class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors inline-flex items-center gap-1"
+                    rel="noopener noreferrer"
+                    target="_blank"
                 >
-                  <font-awesome-icon :icon="['fas', 'life-ring']" />
+                  <font-awesome-icon :icon="['fas', 'life-ring']"/>
                   Support
                 </a>
               </template>
@@ -61,20 +61,20 @@
                 <span> • </span>
                 <a
                     :href="links.tos"
-                    target="_blank"
-                    rel="noopener noreferrer"
                     class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors inline-flex items-center gap-1"
+                    rel="noopener noreferrer"
+                    target="_blank"
                 >
-                  <font-awesome-icon :icon="['fas', 'file-contract']" />
+                  <font-awesome-icon :icon="['fas', 'file-contract']"/>
                   TOS
                 </a>
               </template>
             </template>
           </div>
           <div>
-          <span>© 2026 RainbowDashLabs and Contributor</span>
-          <span> • </span>
-          <span>Licensed under AGPL-3.0</span>
+            <span>© 2026 RainbowDashLabs and Contributor</span>
+            <span> • </span>
+            <span>Licensed under AGPL-3.0</span>
           </div>
         </div>
         <div>
@@ -85,7 +85,7 @@
   </footer>
 </template>
 
-<script setup lang="ts">
+<script lang="ts" setup>
 import {onMounted, ref} from 'vue'
 import {api} from '@/api'
 import type {Links} from '@/api/types'

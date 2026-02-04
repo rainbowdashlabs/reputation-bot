@@ -72,21 +72,6 @@ public class LogListener extends ListenerAdapter implements Runnable {
         handleShardReconnect(event.getJDA());
     }
 
-    private void handleShardReconnect(JDA jda) {
-        var shardId = jda.getShardInfo().getShardId();
-        var seconds = Duration.between(
-                                      disconnected.getOrDefault(shardId, Instant.now()), Instant.now())
-                              .getSeconds();
-        disconnected.remove(shardId);
-        if (seconds > 5) {
-            log.info(LogNotify.STATUS,
-                    "Shard {} was disconnected for {} seconds. Everything is fine.",
-                    shardId, seconds);
-        } else {
-            log.debug("Shard {} reconnected", jda.getShardInfo().getShardId());
-        }
-    }
-
     @Override
     public void onReady(@Nonnull ReadyEvent event) {
         handleShardReconnect(event.getJDA());
@@ -111,5 +96,20 @@ public class LogListener extends ListenerAdapter implements Runnable {
         if (message.isBlank()) return;
 
         log.warn(LogNotify.NOTIFY_ADMIN, message);
+    }
+
+    private void handleShardReconnect(JDA jda) {
+        var shardId = jda.getShardInfo().getShardId();
+        var seconds = Duration.between(
+                                      disconnected.getOrDefault(shardId, Instant.now()), Instant.now())
+                              .getSeconds();
+        disconnected.remove(shardId);
+        if (seconds > 5) {
+            log.info(LogNotify.STATUS,
+                    "Shard {} was disconnected for {} seconds. Everything is fine.",
+                    shardId, seconds);
+        } else {
+            log.debug("Shard {} reconnected", jda.getShardInfo().getShardId());
+        }
     }
 }

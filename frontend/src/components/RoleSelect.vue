@@ -1,18 +1,18 @@
 /*
- *     SPDX-License-Identifier: AGPL-3.0-only
- *
- *     Copyright (C) RainbowDashLabs and Contributor
- */
-<script setup lang="ts">
-import { useSession } from '@/composables/useSession'
-import { computed, ref, onMounted, onUnmounted } from 'vue'
-import { useI18n } from 'vue-i18n'
+*     SPDX-License-Identifier: AGPL-3.0-only
+*
+*     Copyright (C) RainbowDashLabs and Contributor
+*/
+<script lang="ts" setup>
+import {useSession} from '@/composables/useSession'
+import {computed, onMounted, onUnmounted, ref} from 'vue'
+import {useI18n} from 'vue-i18n'
 import BaseButton from '@/components/BaseButton.vue'
 
-const { t } = useI18n()
-const modelValue = defineModel<string | null>({ required: true })
+const {t} = useI18n()
+const modelValue = defineModel<string | null>({required: true})
 const emit = defineEmits(['select'])
-const { session } = useSession()
+const {session} = useSession()
 
 interface Props {
   label?: string
@@ -117,11 +117,11 @@ onUnmounted(() => {
           <div class="p-2 border-b border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800">
             <input
                 v-model="searchQuery"
-                type="text"
-                class="input py-1 text-sm"
                 :placeholder="t('general.roleSelect.searchPlaceholder')"
-                @click.stop
                 autofocus
+                class="input py-1 text-sm"
+                type="text"
+                @click.stop
             />
           </div>
 
@@ -130,23 +130,23 @@ onUnmounted(() => {
             <BaseButton
                 v-for="role in filteredRoles"
                 :key="role.id"
-                @click="selectRole(role.id, role)"
-                class="w-full text-left pl-4 pr-3 py-2 text-sm transition-colors flex items-center gap-2"
-                :class="{ 
-                  'bg-indigo-50 dark:bg-indigo-900/50 font-medium': modelValue?.toString() === role.id.toString(), 
+                :class="{
+                  'bg-indigo-50 dark:bg-indigo-900/50 font-medium': modelValue?.toString() === role.id.toString(),
                   'hover:bg-gray-100 dark:hover:bg-indigo-900/30': modelValue?.toString() !== role.id.toString() && !isRoleDisabled(role),
                   'opacity-50 cursor-not-allowed': isRoleDisabled(role)
                 }"
+                :disabled="isRoleDisabled(role)"
                 :rounded="false"
+                class="w-full text-left pl-4 pr-3 py-2 text-sm transition-colors flex items-center gap-2"
                 color="secondary"
                 style="background-color: transparent; border: none; box-shadow: none;"
-                :disabled="isRoleDisabled(role)"
+                @click="selectRole(role.id, role)"
             >
               <div
-                  class="ml-2 w-3 h-3 rounded-full shrink-0"
                   :style="{ backgroundColor: getRoleColor(role) }"
+                  class="ml-2 w-3 h-3 rounded-full shrink-0"
               ></div>
-              <span class="truncate" :style="{ color: getRoleColor(role) }">{{ role.name }}</span>
+              <span :style="{ color: getRoleColor(role) }" class="truncate">{{ role.name }}</span>
             </BaseButton>
 
             <div v-if="filteredRoles.length === 0" class="px-3 py-4 text-center text-sm text-gray-500">
@@ -164,10 +164,10 @@ onUnmounted(() => {
       >
         <div v-if="selectedRole" class="flex items-center gap-2 truncate">
           <div
-              class="pl-2 w-3 h-3 rounded-full shrink-0"
               :style="{ backgroundColor: getRoleColor(selectedRole) }"
+              class="pl-2 w-3 h-3 rounded-full shrink-0"
           ></div>
-          <span class="truncate pl-2" :style="{ color: getRoleColor(selectedRole) }">
+          <span :style="{ color: getRoleColor(selectedRole) }" class="truncate pl-2">
             {{ selectedRole.name }}
           </span>
         </div>
@@ -183,19 +183,24 @@ onUnmounted(() => {
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px;
 }
+
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
+
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background: #d1d5db; /* gray-300 */
   border-radius: 9999px;
 }
+
 .dark .custom-scrollbar::-webkit-scrollbar-thumb {
   background: #4b5563; /* gray-600 */
 }
+
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #9ca3af; /* gray-400 */
 }
+
 .dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #6b7280; /* gray-500 */
 }

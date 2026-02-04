@@ -45,6 +45,6 @@ public class FuzzyAnalyzerResult extends MatchAnalyzerResult {
 
     @Override
     public ResultSnapshot toSnapshot() {
-        return new FuzzyResultSnapshot(donorId(), match(),thankwords, memberMatches);
+        return new FuzzyResultSnapshot(donorId(), match(), thankwords, memberMatches);
     }
 }

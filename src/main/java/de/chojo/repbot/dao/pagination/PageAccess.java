@@ -42,9 +42,10 @@ public class PageAccess<T> implements Iterable<List<T>> {
 
     /**
      * Returns the first page.
+     *
      * @return first page
      */
-    public List<T> first(){
+    public List<T> first() {
         return page(0);
     }
 
@@ -52,8 +53,8 @@ public class PageAccess<T> implements Iterable<List<T>> {
     @Override
     public Iterator<List<T>> iterator() {
         return new Iterator<>() {
-            private int currPage = 0;
             private final int pages = pages();
+            private int currPage = 0;
 
             @Override
             public boolean hasNext() {

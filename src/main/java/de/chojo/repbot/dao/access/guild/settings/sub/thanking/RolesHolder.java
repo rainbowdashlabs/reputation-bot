@@ -55,8 +55,6 @@ public abstract class RolesHolder extends RolesHolderPOJO implements GuildHolder
         return thanking.guild();
     }
 
-    protected abstract String targetTable();
-
     public boolean add(Role role) {
         var result = query("INSERT INTO %s(guild_id, role_id) VALUES (?,?) ON CONFLICT(guild_id, role_id) DO NOTHING", targetTable())
                 .single(call().bind(guildId()).bind(role.getIdLong()))
@@ -115,4 +113,6 @@ public abstract class RolesHolder extends RolesHolderPOJO implements GuildHolder
                                          .orElse("Unkown (%d)".formatted(id)))
                       .collect(Collectors.joining(", "));
     }
+
+    protected abstract String targetTable();
 }

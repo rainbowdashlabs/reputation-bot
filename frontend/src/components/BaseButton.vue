@@ -1,9 +1,9 @@
 /*
- *     SPDX-License-Identifier: AGPL-3.0-only
- *
- *     Copyright (C) RainbowDashLabs and Contributor
- */
-<script setup lang="ts">
+*     SPDX-License-Identifier: AGPL-3.0-only
+*
+*     Copyright (C) RainbowDashLabs and Contributor
+*/
+<script lang="ts" setup>
 interface Props {
   color?: 'indigo' | 'gray' | 'red' | 'blue' | 'secondary' | 'primary' | 'danger'
   rounded?: boolean
@@ -33,16 +33,16 @@ const colorClasses = {
 
 <template>
   <button
-      :type="type"
-      :disabled="disabled"
-      class="text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       :class="[
       colorClasses[color as keyof typeof colorClasses],
       rounded ? 'rounded-md' : 'rounded-none',
       props.class
     ]"
+      :disabled="disabled"
+      :type="type"
+      class="text-sm font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
   >
-      <slot/>
+    <slot/>
   </button>
 </template>
 

@@ -1,6 +1,7 @@
 # Frontend Internationalization (i18n)
 
-This directory contains the internationalization setup for the frontend, supporting all languages that the bot itself supports.
+This directory contains the internationalization setup for the frontend, supporting all languages that the bot itself
+supports.
 
 ## Supported Languages
 
@@ -54,23 +55,24 @@ locales/
 ### Using translations in script
 
 ```vue
+
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n'
+    import {useI18n} from 'vue-i18n'
 
-const { t, locale } = useI18n()
+    const {t, locale} = useI18n()
 
-// Use translation
-const saveText = t('common.save')
+    // Use translation
+    const saveText = t('common.save')
 
-// Get current locale
-console.log(locale.value) // e.g., 'en-US'
+    // Get current locale
+    console.log(locale.value) // e.g., 'en-US'
 </script>
 ```
 
 ### Changing locale dynamically
 
 ```typescript
-import { setLocale } from '@/i18n'
+import {setLocale} from '@/i18n'
 
 // Change to German
 await setLocale('de')
@@ -138,6 +140,7 @@ Each locale file follows this structure:
 ## Browser Locale Detection
 
 The i18n system automatically detects the user's browser locale on first load:
+
 - Exact match: If browser locale matches a supported locale (e.g., `en-US`)
 - Language match: If only language code matches (e.g., `en` → `en-US`)
 - Fallback: Defaults to `en-US` if no match found

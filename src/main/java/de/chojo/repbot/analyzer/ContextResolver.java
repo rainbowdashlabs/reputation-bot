@@ -71,6 +71,30 @@ public class ContextResolver {
         return MessageContext.byMessageAndMember(message, target);
     }
 
+    public MessageContext getVoiceContext(Member target, Message message, @Nullable Settings settings) {
+        try {
+            return voiceContextCache.get(message.getIdLong(), () -> retrieveVoiceContext(target, message, settings).resolve()
+                                                                                                                   .resolve());
+        } catch (ExecutionException e) {
+            log.error("Could not compute voice cache", e);
+        }
+        return MessageContext.byMessageAndMember(message, target);
+    }
+
+    public MessageContext getCombinedContext(@NotNull Message message, @Nullable Settings settings) {
+        return getCombinedContext(message.getMember(), message, settings);
+    }
+
+    public MessageContext getCombinedContext(Member target, Message message, @Nullable Settings settings) {
+        if (message == null) return MessageContext.byMessageAndMember(null, target);
+        return getChannelContext(target, message, settings)
+                .combine(getVoiceContext(target, message, settings));
+    }
+
+    public MessageContext getCombinedContext(Member target) {
+        return MessageContext.byMessageAndMember(null, target);
+    }
+
     private MessageContext retrieveChannelContext(Member target, Message message, Settings settings) {
         var history = message.getChannel().getHistoryBefore(message, configuration.analyzerSettings().historySize())
                              .complete();
@@ -160,16 +184,6 @@ public class ContextResolver {
                       .orElse(maxAge);
     }
 
-    public MessageContext getVoiceContext(Member target, Message message, @Nullable Settings settings) {
-        try {
-            return voiceContextCache.get(message.getIdLong(), () -> retrieveVoiceContext(target, message, settings).resolve()
-                                                                                                                   .resolve());
-        } catch (ExecutionException e) {
-            log.error("Could not compute voice cache", e);
-        }
-        return MessageContext.byMessageAndMember(message, target);
-    }
-
     private MessageContext retrieveVoiceContext(Member target, Message message, @Nullable Settings settings) {
         var context = MessageContext.byMessageAndMember(message, target);
         var voiceState = target.getVoiceState();
@@ -191,19 +205,5 @@ public class ContextResolver {
                                .map(Member::getIdLong)
                                .toList());
         return context;
-    }
-
-    public MessageContext getCombinedContext(@NotNull Message message, @Nullable Settings settings) {
-        return getCombinedContext(message.getMember(), message, settings);
-    }
-
-    public MessageContext getCombinedContext(Member target, Message message, @Nullable Settings settings) {
-        if(message == null) return MessageContext.byMessageAndMember(null, target);
-        return getChannelContext(target, message, settings)
-                .combine(getVoiceContext(target, message, settings));
-    }
-
-    public MessageContext getCombinedContext(Member target) {
-        return MessageContext.byMessageAndMember(null, target);
     }
 }

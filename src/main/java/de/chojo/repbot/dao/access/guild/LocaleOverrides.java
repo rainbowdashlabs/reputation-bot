@@ -34,18 +34,6 @@ public class LocaleOverrides implements GuildHolder {
         return Optional.ofNullable(overrides().get(code));
     }
 
-    private Map<String, String> overrides() {
-        if (overrides == null) {
-            overrides = query("SELECT code, value FROM guild_locale_overrides WHERE guild_id = ?")
-                    .single(call().bind(guildId()))
-                    .map(r -> Pair.of(r.getString("code"), r.getString("value")))
-                    .all()
-                    .stream()
-                    .collect(Collectors.toMap(p -> p.first, p -> p.second, (a, b) -> a, HashMap::new));
-        }
-        return overrides;
-    }
-
     public void setOverride(String code, String value) {
         query("INSERT INTO guild_locale_overrides(guild_id, code, value) VALUES(?,?,?) ON CONFLICT(guild_id, code) DO UPDATE SET value = excluded.value")
                 .single(call().bind(guildId()).bind(code).bind(value))
@@ -58,5 +46,17 @@ public class LocaleOverrides implements GuildHolder {
                 .single(call().bind(guildId()).bind(code))
                 .delete()
                 .ifChanged(i -> overrides().remove(code));
+    }
+
+    private Map<String, String> overrides() {
+        if (overrides == null) {
+            overrides = query("SELECT code, value FROM guild_locale_overrides WHERE guild_id = ?")
+                    .single(call().bind(guildId()))
+                    .map(r -> Pair.of(r.getString("code"), r.getString("value")))
+                    .all()
+                    .stream()
+                    .collect(Collectors.toMap(p -> p.first, p -> p.second, (a, b) -> a, HashMap::new));
+        }
+        return overrides;
     }
 }

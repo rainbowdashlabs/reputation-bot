@@ -66,14 +66,14 @@ public class Refresh implements SlashHandler {
                     var duration = DurationFormatUtils.formatDuration(start.until(Instant.now(), ChronoUnit.MILLIS), "mm:ss");
                     log.info("Update of roles on {} took {}. Checked {} Updated {}", prettyName(guild), duration, res.checked(), res.updated());
                     message.editMessage(WebPromo.promoString(context) + "\n" + context.localize("command.roles.refresh.message.finished",
-                                    Replacement.create("CHECKED", res.checked()), Replacement.create("UPDATED", res.updated())))
-                            .queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
+                                   Replacement.create("CHECKED", res.checked()), Replacement.create("UPDATED", res.updated())))
+                           .queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
                 }, err -> {
                     log.warn("Update of role failed on guild {}", prettyName(guild), err);
                     if (err instanceof RoleAccessException roleException) {
                         message.editMessage(WebPromo.promoString(context) + "\n" + context.localize("error.roleAccess",
-                                        Replacement.createMention("ROLE", roleException.role())))
-                                .queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
+                                       Replacement.createMention("ROLE", roleException.role())))
+                               .queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
                     }
                 }));
     }

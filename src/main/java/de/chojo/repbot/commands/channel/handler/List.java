@@ -37,17 +37,17 @@ public class List implements SlashHandler {
     private MessageEmbed getChannelList(Channels channels, EventContext context) {
 
         var channelNames = channels.channels().stream()
-                .map(IMentionable::getAsMention)
-                .limit(40)
-                .collect(Collectors.joining(", "));
+                                   .map(IMentionable::getAsMention)
+                                   .limit(40)
+                                   .collect(Collectors.joining(", "));
         if (channels.channels().size() > 40) {
             channelNames += MORE;
         }
 
         var categoryNames = channels.categories().stream()
-                .map(IMentionable::getAsMention)
-                .limit(40)
-                .collect(Collectors.joining(", "));
+                                    .map(IMentionable::getAsMention)
+                                    .limit(40)
+                                    .collect(Collectors.joining(", "));
         if (channels.categories().size() > 40) {
             categoryNames += MORE;
         }

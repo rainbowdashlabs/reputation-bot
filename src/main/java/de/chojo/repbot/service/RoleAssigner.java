@@ -54,22 +54,6 @@ public class RoleAssigner {
         }
     }
 
-    private boolean startRefresh(Guild guild) {
-        synchronized (refreshing) {
-            if (refreshing.contains(guild.getIdLong())) {
-                return false;
-            }
-            refreshing.add(guild.getIdLong());
-            return true;
-        }
-    }
-
-    private void endRefresh(Guild guild) {
-        synchronized (refreshing) {
-            refreshing.remove(guild.getIdLong());
-        }
-    }
-
     /**
      * Updates the user roles. Will handle exceptions and send a message if the role could not be assigned.
      *
@@ -137,6 +121,57 @@ public class RoleAssigner {
         return settings.ranks().currentRank(reputation);
     }
 
+    public CompletableFuture<BatchUpdateResult> updateBatch(Guild guild, @Nullable EventContext context, @Nullable Message message) {
+        if (!startRefresh(guild)) {
+            return CompletableFuture.completedFuture(new BatchUpdateResult(0, 0, true));
+        }
+
+        return CompletableFuture.supplyAsync(() -> {
+            try {
+                log.info("Started batch update for guild {}", prettyName(guild));
+                var guildRanking = guildRepository.guild(guild).reputation().ranking().received().total(100);
+                var checked = new AtomicInteger(0);
+                var updated = new AtomicInteger(0);
+                var lastRefresh = new AtomicReference<>(Instant.now());
+                for (var page : guildRanking) {
+                    for (var ranking : page) {
+                        ranking.resolveMember(guild).ifPresent(member -> {
+                            var newRank = updateSilent(member);
+                            newRank.ifPresent(r -> updated.incrementAndGet());
+                            checked.incrementAndGet();
+
+                            if (message != null && context != null) {
+                                if (lastRefresh.get().isAfter(Instant.now().minus(5, ChronoUnit.SECONDS))) return;
+                                message.editMessage(context.localize("command.roles.refresh.message.progress",
+                                               Replacement.create("CHECKED", checked.get()), Replacement.create("UPDATED", updated.get())))
+                                       .queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
+                            }
+                        });
+                    }
+                }
+                return new BatchUpdateResult(checked.get(), updated.get(), false);
+            } finally {
+                endRefresh(guild);
+            }
+        });
+    }
+
+    private boolean startRefresh(Guild guild) {
+        synchronized (refreshing) {
+            if (refreshing.contains(guild.getIdLong())) {
+                return false;
+            }
+            refreshing.add(guild.getIdLong());
+            return true;
+        }
+    }
+
+    private void endRefresh(Guild guild) {
+        synchronized (refreshing) {
+            refreshing.remove(guild.getIdLong());
+        }
+    }
+
     private boolean cleanMemberRoles(Member member, Set<Role> roles) throws RoleAccessException {
         var guild = member.getGuild();
 
@@ -188,41 +223,6 @@ public class RoleAssigner {
         if (!guild.getSelfMember().canInteract(role)) {
             throw new RoleAccessException(role);
         }
-    }
-
-    public CompletableFuture<BatchUpdateResult> updateBatch(Guild guild, @Nullable EventContext context, @Nullable Message message) {
-        if (!startRefresh(guild)) {
-            return CompletableFuture.completedFuture(new BatchUpdateResult(0, 0, true));
-        }
-        
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                log.info("Started batch update for guild {}", prettyName(guild));
-                var guildRanking = guildRepository.guild(guild).reputation().ranking().received().total(100);
-                var checked = new AtomicInteger(0);
-                var updated = new AtomicInteger(0);
-                var lastRefresh = new AtomicReference<>(Instant.now());
-                for (var page : guildRanking) {
-                    for (var ranking : page) {
-                        ranking.resolveMember(guild).ifPresent(member -> {
-                            var newRank = updateSilent(member);
-                            newRank.ifPresent(r -> updated.incrementAndGet());
-                            checked.incrementAndGet();
-
-                            if (message != null && context != null) {
-                                if (lastRefresh.get().isAfter(Instant.now().minus(5, ChronoUnit.SECONDS))) return;
-                                message.editMessage(context.localize("command.roles.refresh.message.progress",
-                                               Replacement.create("CHECKED", checked.get()), Replacement.create("UPDATED", updated.get())))
-                                       .queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
-                            }
-                        });
-                    }
-                }
-                return new BatchUpdateResult(checked.get(), updated.get(), false);
-            } finally {
-                endRefresh(guild);
-            }
-        });
     }
 
     public record BatchUpdateResult(int checked, int updated, boolean alreadyRunning) {

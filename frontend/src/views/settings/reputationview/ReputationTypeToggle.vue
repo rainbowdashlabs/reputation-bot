@@ -1,9 +1,9 @@
 /*
- *     SPDX-License-Identifier: AGPL-3.0-only
- *
- *     Copyright (C) RainbowDashLabs and Contributor
- */
-<script setup lang="ts">
+*     SPDX-License-Identifier: AGPL-3.0-only
+*
+*     Copyright (C) RainbowDashLabs and Contributor
+*/
+<script lang="ts" setup>
 import Toggle from '@/components/Toggle.vue'
 
 interface Props {
@@ -24,12 +24,12 @@ const updateValue = (value: boolean) => {
 <template>
   <div class="flex flex-col gap-1">
     <Toggle
-      :model-value="modelValue"
-      :label="label"
-      :disabled="disabled"
-      @update:model-value="updateValue"
+        :disabled="disabled"
+        :label="label"
+        :model-value="modelValue"
+        @update:model-value="updateValue"
     />
-    <p class="description ml-0" :class="{ 'opacity-50': disabled }">
+    <p :class="{ 'opacity-50': disabled }" class="description ml-0">
       {{ description }}
     </p>
   </div>

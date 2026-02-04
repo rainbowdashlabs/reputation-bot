@@ -1,9 +1,9 @@
 /*
- *     SPDX-License-Identifier: AGPL-3.0-only
- *
- *     Copyright (C) RainbowDashLabs and Contributor
- */
-<script setup lang="ts">
+*     SPDX-License-Identifier: AGPL-3.0-only
+*
+*     Copyright (C) RainbowDashLabs and Contributor
+*/
+<script lang="ts" setup>
 import {ref} from 'vue'
 
 const props = defineProps<{
@@ -37,9 +37,9 @@ const handleApply = async () => {
     </div>
     <div class="flex justify-between items-start mb-4">
       <button
-          @click="handleApply"
           :disabled="isApplying"
           class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+          @click="handleApply"
       >
         <span v-if="!isApplying">{{ $t('presets.apply') }}</span>
         <span v-else>{{ $t('presets.applying') }}</span>

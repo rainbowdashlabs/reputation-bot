@@ -25,7 +25,6 @@ import de.chojo.sadu.queries.converter.StandardValueConverter;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.sql.SQLException;
@@ -38,14 +37,13 @@ import static de.chojo.sadu.queries.api.query.Query.query;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Analyzer implements GuildHolder {
-    private static final Logger log = getLogger(Analyzer.class);
     public static final ObjectMapper MAPPER = JsonMapper.builder()
                                                         .configure(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS, true)
                                                         .build()
                                                         .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                                                         .setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE)
                                                         .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-
+    private static final Logger log = getLogger(Analyzer.class);
     private final Reputation reputation;
 
     public Analyzer(Reputation reputation) {
@@ -81,12 +79,12 @@ public class Analyzer implements GuildHolder {
             return result;
         }
         query("""
-                 INSERT INTO reputation_results(guild_id, channel_id, message_id, result) VALUES(?, ?, ?, ?::JSONB);
-                 """).single(call().bind(message.getGuild().getIdLong())
-                .bind(message.getChannel().getIdLong())
-                                                    .bind(message.getIdLong())
-                                                    .bind(resultString))
-                 .insert();
+                INSERT INTO reputation_results(guild_id, channel_id, message_id, result) VALUES(?, ?, ?, ?::JSONB);
+                """).single(call().bind(message.getGuild().getIdLong())
+                                  .bind(message.getChannel().getIdLong())
+                                  .bind(message.getIdLong())
+                                  .bind(resultString))
+                    .insert();
         return result;
     }
 
@@ -100,46 +98,6 @@ public class Analyzer implements GuildHolder {
         return Optional.of(new AnalyzerTrace(resultEntry.orElse(null), submitResults));
     }
 
-
-    private Optional<ResultEntry> getResults(long messageId) {
-        return query("""
-                        SELECT guild_id, channel_id, message_id, result, analyzed
-                        FROM analyzer_results
-                        WHERE guild_id = ?
-                          AND message_id = ?;""")
-                .single(call().bind(guildId()).bind(messageId))
-                .map(row -> {
-            ResultSnapshot result;
-            try {
-                result = MAPPER.readValue(row.getString("result"), ResultSnapshot.class);
-            } catch (JsonProcessingException e) {
-                log.error("Could not deserialize result", e);
-                throw new SQLException(e);
-            }
-            return new ResultEntry(result, row.getLong("channel_id"), messageId);
-        }).first();
-    }
-
-    private List<SubmitResultEntry> getSubmitResults(long messageId) {
-        return query("""
-                        SELECT guild_id, channel_id, message_id, result, submitted
-                        FROM reputation_results
-                        WHERE guild_id = ?
-                          AND message_id = ?
-                        ORDER BY submitted;""")
-                .single(call().bind(guildId()).bind(messageId))
-                .map(row -> {
-            SubmitResult result;
-            try {
-                result = MAPPER.readValue(row.getString("result"), SubmitResult.class);
-            } catch (JsonProcessingException e) {
-                log.error("Could not deserialize result", e);
-                throw new SQLException(e);
-            }
-            return new SubmitResultEntry(result, row.getLong("channel_id"), messageId, row.get("submitted", StandardValueConverter.LOCAL_DATE_TIME).toInstant(ZoneOffset.UTC));
-        }).all();
-    }
-
     @Override
     public Guild guild() {
         return reputation.guild();
@@ -148,5 +106,44 @@ public class Analyzer implements GuildHolder {
     @Override
     public long guildId() {
         return reputation.guildId();
+    }
+
+    private Optional<ResultEntry> getResults(long messageId) {
+        return query("""
+                SELECT guild_id, channel_id, message_id, result, analyzed
+                FROM analyzer_results
+                WHERE guild_id = ?
+                  AND message_id = ?;""")
+                .single(call().bind(guildId()).bind(messageId))
+                .map(row -> {
+                    ResultSnapshot result;
+                    try {
+                        result = MAPPER.readValue(row.getString("result"), ResultSnapshot.class);
+                    } catch (JsonProcessingException e) {
+                        log.error("Could not deserialize result", e);
+                        throw new SQLException(e);
+                    }
+                    return new ResultEntry(result, row.getLong("channel_id"), messageId);
+                }).first();
+    }
+
+    private List<SubmitResultEntry> getSubmitResults(long messageId) {
+        return query("""
+                SELECT guild_id, channel_id, message_id, result, submitted
+                FROM reputation_results
+                WHERE guild_id = ?
+                  AND message_id = ?
+                ORDER BY submitted;""")
+                .single(call().bind(guildId()).bind(messageId))
+                .map(row -> {
+                    SubmitResult result;
+                    try {
+                        result = MAPPER.readValue(row.getString("result"), SubmitResult.class);
+                    } catch (JsonProcessingException e) {
+                        log.error("Could not deserialize result", e);
+                        throw new SQLException(e);
+                    }
+                    return new SubmitResultEntry(result, row.getLong("channel_id"), messageId, row.get("submitted", StandardValueConverter.LOCAL_DATE_TIME).toInstant(ZoneOffset.UTC));
+                }).all();
     }
 }

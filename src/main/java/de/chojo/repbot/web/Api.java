@@ -44,7 +44,7 @@ public class Api {
         metricsRoute = new MetricsRoute(metrics);
         sessionRoute = new SessionRoute(sessionService);
         settingsRoute = new SettingsRoute(hub, autopostService, roleAssigner, shardManager);
-        
+
         // Load thankwords container
         ThankwordsContainer thankwordsContainer;
         try {

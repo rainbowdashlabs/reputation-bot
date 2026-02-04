@@ -10,7 +10,6 @@ import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.service.reputation.ReputationContext;
 import de.chojo.repbot.web.pojo.settings.sub.AbuseProtectionPOJO;
-import de.chojo.repbot.web.pojo.settings.sub.thanking.ThankwordsPOJO;
 import de.chojo.sadu.mapper.wrapper.Row;
 import de.chojo.sadu.queries.api.call.Call;
 import net.dv8tion.jda.api.entities.Guild;
@@ -64,7 +63,8 @@ public class AbuseProtection extends AbuseProtectionPOJO implements GuildHolder 
         if (this.maxGivenHours != newState.maxGivenHours()) maxGivenHours(newState.maxGivenHours());
         if (this.maxReceived != newState.maxReceived()) maxReceived(newState.maxReceived());
         if (this.maxReceivedHours != newState.maxReceivedHours()) maxReceivedHours(newState.maxReceivedHours());
-        if (this.maxMessageReputation != newState.maxMessageReputation()) maxMessageReputation(newState.maxMessageReputation());
+        if (this.maxMessageReputation != newState.maxMessageReputation())
+            maxMessageReputation(newState.maxMessageReputation());
     }
 
     public int cooldown(int cooldown) {
@@ -149,7 +149,7 @@ public class AbuseProtection extends AbuseProtectionPOJO implements GuildHolder 
     }
 
     public boolean isOldMessage(ReputationContext context) {
-        if(context.isInteraction()) return false;
+        if (context.isInteraction()) return false;
         return isOldMessage(context.asMessage());
     }
 
@@ -181,17 +181,6 @@ public class AbuseProtection extends AbuseProtectionPOJO implements GuildHolder 
         return settings.repGuild().reputation().user(member).countReceived() >= maxReceived;
     }
 
-    private boolean set(String parameter, Function<Call, Call> builder) {
-        return query("""
-                INSERT INTO abuse_protection(guild_id, %s) VALUES (?, ?)
-                ON CONFLICT(guild_id)
-                    DO UPDATE SET %s = excluded.%s;
-                """, parameter, parameter, parameter)
-                .single(builder.apply(call().bind(guildId())))
-                .insert()
-                .changed();
-    }
-
     @Override
     public Guild guild() {
         return settings.guild();
@@ -221,5 +210,16 @@ public class AbuseProtection extends AbuseProtectionPOJO implements GuildHolder 
                            maxGiven, maxGivenHours, maxReceived, maxReceivedHours, maxMessageReputation, cooldown,
                            maxMessageAge, minMessages)
                    .stripIndent();
+    }
+
+    private boolean set(String parameter, Function<Call, Call> builder) {
+        return query("""
+                INSERT INTO abuse_protection(guild_id, %s) VALUES (?, ?)
+                ON CONFLICT(guild_id)
+                    DO UPDATE SET %s = excluded.%s;
+                """, parameter, parameter, parameter)
+                .single(builder.apply(call().bind(guildId())))
+                .insert()
+                .changed();
     }
 }

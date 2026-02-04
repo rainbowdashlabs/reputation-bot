@@ -1,8 +1,8 @@
 /*
- *     SPDX-License-Identifier: AGPL-3.0-only
- *
- *     Copyright (C) RainbowDashLabs and Contributor
- */
+*     SPDX-License-Identifier: AGPL-3.0-only
+*
+*     Copyright (C) RainbowDashLabs and Contributor
+*/
 <script lang="ts" setup>
 import {ref, watch} from 'vue'
 import {useI18n} from 'vue-i18n'
@@ -155,7 +155,9 @@ const handleFileUpload = async (event: Event) => {
           </BaseButton>
         </div>
         <p class="description">{{ t('profile.profilePicture.description') }}</p>
-        <p v-if="errorMessage" class="description mt-1 text-red-500 dark:text-red-400 font-medium">{{ errorMessage }}</p>
+        <p v-if="errorMessage" class="description mt-1 text-red-500 dark:text-red-400 font-medium">{{
+            errorMessage
+          }}</p>
         <p class="description mt-1 text-red-500 dark:text-red-400 font-medium">{{ t('profile.tosNote') }}</p>
       </div>
     </div>

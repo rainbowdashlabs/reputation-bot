@@ -14,8 +14,8 @@ public class Debug extends SlashCommand {
 
     public Debug(GuildRepository guildRepository) {
         super(Slash.of("debug", "command.debug.description")
-                .guildOnly()
-                .adminCommand()
-                .command(new Show(guildRepository)));
+                   .guildOnly()
+                   .adminCommand()
+                   .command(new Show(guildRepository)));
     }
 }

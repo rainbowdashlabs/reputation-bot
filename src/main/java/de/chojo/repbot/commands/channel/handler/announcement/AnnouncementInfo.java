@@ -36,7 +36,7 @@ public class AnnouncementInfo implements SlashHandler {
             return;
         }
         event.reply(WebPromo.promoString(context) + context.localize("command.channel.announcement.channel.message.set",
-                Replacement.create("CHANNEL", MentionUtil.channel(announcements.channelId()))))
+                     Replacement.create("CHANNEL", MentionUtil.channel(announcements.channelId()))))
              .setEphemeral(true)
              .complete();
     }

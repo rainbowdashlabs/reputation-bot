@@ -5,7 +5,6 @@
  */
 package de.chojo.repbot.web.pojo.settings.sub;
 
-import com.fasterxml.jackson.annotation.JsonSerializeAs;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 

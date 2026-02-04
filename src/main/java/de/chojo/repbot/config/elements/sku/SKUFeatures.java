@@ -43,6 +43,7 @@ public class SKUFeatures {
     public ReputationCategories reputationCategories() {
         return reputationCategories;
     }
+
     public ReputationChannel reputationChannel() {
         return reputationChannel;
     }

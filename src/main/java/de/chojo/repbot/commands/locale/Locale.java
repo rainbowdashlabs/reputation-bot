@@ -17,16 +17,16 @@ import de.chojo.repbot.dao.provider.GuildRepository;
 public class Locale extends SlashCommand {
     public Locale(GuildRepository guildRepository) {
         super(Slash.of("locale", "command.locale.description")
-                .guildOnly()
-                .adminCommand()
-                .subCommand(SubCommand.of("set", "command.locale.set.description")
-                        .handler(new Set(guildRepository))
-                        .argument(Argument.text("language", "command.locale.set.options.language.description").asRequired()
-                                          .withAutoComplete()))
-                .subCommand(SubCommand.of("reset", "command.locale.reset.description")
-                        .handler(new Reset(guildRepository)))
-                .subCommand(SubCommand.of("list", "command.locale.list.description")
-                        .handler(new List()))
+                   .guildOnly()
+                   .adminCommand()
+                   .subCommand(SubCommand.of("set", "command.locale.set.description")
+                                         .handler(new Set(guildRepository))
+                                         .argument(Argument.text("language", "command.locale.set.options.language.description").asRequired()
+                                                           .withAutoComplete()))
+                   .subCommand(SubCommand.of("reset", "command.locale.reset.description")
+                                         .handler(new Reset(guildRepository)))
+                   .subCommand(SubCommand.of("list", "command.locale.list.description")
+                                         .handler(new List()))
         );
     }
 }

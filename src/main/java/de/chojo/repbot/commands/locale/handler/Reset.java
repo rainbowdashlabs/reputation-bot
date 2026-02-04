@@ -21,7 +21,7 @@ public class Reset implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         guildRepository.guild(event.getGuild()).settings().general().language(null);
-        event.reply(WebPromo.promoString(context) +context.localize("command.locale.reset.message.changed"))
+        event.reply(WebPromo.promoString(context) + context.localize("command.locale.reset.message.changed"))
              .setEphemeral(true)
              .complete();
     }

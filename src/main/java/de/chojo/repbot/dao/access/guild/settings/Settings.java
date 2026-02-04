@@ -7,6 +7,7 @@ package de.chojo.repbot.dao.access.guild.settings;
 
 import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.access.guild.settings.sub.AbuseProtection;
+import de.chojo.repbot.dao.access.guild.settings.sub.Announcements;
 import de.chojo.repbot.dao.access.guild.settings.sub.General;
 import de.chojo.repbot.dao.access.guild.settings.sub.LogChannel;
 import de.chojo.repbot.dao.access.guild.settings.sub.Messages;
@@ -16,7 +17,6 @@ import de.chojo.repbot.dao.access.guild.settings.sub.Reputation;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.access.guild.settings.sub.autopost.Autopost;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.repbot.dao.access.guild.settings.sub.Announcements;
 import net.dv8tion.jda.api.entities.Guild;
 
 import static de.chojo.sadu.queries.api.call.Call.call;

@@ -68,30 +68,6 @@ public class Subscriptions implements GuildHolder, SkuMeta {
         subscriptions().remove(subscription);
     }
 
-    private synchronized Map<SupporterFeature, SubscriptionError> errorMessages() {
-        if (errorMessages == null) {
-            errorMessages = query("""
-                    SELECT
-                        guild_id,
-                        type,
-                        last_send,
-                        count,
-                        date_inserted,
-                        notified
-                    FROM
-                        subscription_error
-                    WHERE guild_id = ?
-                    """).single(call().bind(guildId()))
-                        .map(SubscriptionError::build)
-                        .all()
-                        .stream()
-                        .collect(Collectors.toMap(SubscriptionError::type, Function.identity(),
-                                (a, b) -> a,
-                                () -> new EnumMap<>(SupporterFeature.class)));
-        }
-        return errorMessages;
-    }
-
     @NotNull
     public SubscriptionError getErrorMessage(SupporterFeature error) {
         return errorMessages().getOrDefault(error, error.first());
@@ -191,5 +167,29 @@ public class Subscriptions implements GuildHolder, SkuMeta {
                 .single(call().bind(repGuild.guildId()).bind(SkuTarget.GUILD))
                 .update();
         invalidate();
+    }
+
+    private synchronized Map<SupporterFeature, SubscriptionError> errorMessages() {
+        if (errorMessages == null) {
+            errorMessages = query("""
+                    SELECT
+                        guild_id,
+                        type,
+                        last_send,
+                        count,
+                        date_inserted,
+                        notified
+                    FROM
+                        subscription_error
+                    WHERE guild_id = ?
+                    """).single(call().bind(guildId()))
+                        .map(SubscriptionError::build)
+                        .all()
+                        .stream()
+                        .collect(Collectors.toMap(SubscriptionError::type, Function.identity(),
+                                (a, b) -> a,
+                                () -> new EnumMap<>(SupporterFeature.class)));
+        }
+        return errorMessages;
     }
 }

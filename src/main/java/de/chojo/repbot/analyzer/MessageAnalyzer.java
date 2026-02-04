@@ -43,12 +43,12 @@ public class MessageAnalyzer {
     private static final Object PLACEHOLDER = new Object();
     private final ContextResolver contextResolver;
     private final Cache<Long, AnalyzerResult> resultCache = CacheBuilder.newBuilder()
-            .expireAfterWrite(10, TimeUnit.MINUTES)
-            .maximumSize(100000)
-            .build();
+                                                                        .expireAfterWrite(10, TimeUnit.MINUTES)
+                                                                        .maximumSize(100000)
+                                                                        .build();
     private final Cache<Long, Object> rejectionCache = CacheBuilder.newBuilder()
-            .expireAfterWrite(1, TimeUnit.MINUTES)
-            .build();
+                                                                   .expireAfterWrite(1, TimeUnit.MINUTES)
+                                                                   .build();
     private final Configuration configuration;
     private final Metrics metrics;
     private final GuildRepository guildRepository;
@@ -95,17 +95,17 @@ public class MessageAnalyzer {
     @SuppressWarnings("DataFlowIssue") // We got no issues c:
     private Optional<String> getThankword(Message message, Pattern pattern) {
         return CompletableFuture.supplyAsync(() -> {
-                    var contentRaw = message.getContentRaw().toLowerCase();
-                    var matcher = pattern.matcher(contentRaw);
-                    if (!matcher.find()) return Optional.ofNullable((String) null); // Yes this is intended
-                    return Optional.ofNullable(matcher.group("match"));
-                })
-                .orTimeout(1L, TimeUnit.SECONDS)
-                .exceptionally(throwable -> {
-                    log.error("Could not match message of guild {}",message.getGuild(), throwable);
-                    return Optional.empty();
-                })
-                .join();
+                                    var contentRaw = message.getContentRaw().toLowerCase();
+                                    var matcher = pattern.matcher(contentRaw);
+                                    if (!matcher.find()) return Optional.ofNullable((String) null); // Yes this is intended
+                                    return Optional.ofNullable(matcher.group("match"));
+                                })
+                                .orTimeout(1L, TimeUnit.SECONDS)
+                                .exceptionally(throwable -> {
+                                    log.error("Could not match message of guild {}", message.getGuild(), throwable);
+                                    return Optional.empty();
+                                })
+                                .join();
     }
 
     private AnalyzerResult analyze(Pattern pattern, Message message, @Nullable Settings settings, boolean limitTargets, int limit) {
@@ -216,15 +216,15 @@ public class MessageAnalyzer {
         }
 
         memberMatches = memberMatches.stream()
-                .filter(e -> e.score() >= configuration.analyzerSettings().minFuzzyScore())
-                .toList();
+                                     .filter(e -> e.score() >= configuration.analyzerSettings().minFuzzyScore())
+                                     .toList();
 
         var members = users.stream()
-                .filter(e -> e.getWeight() >= configuration.analyzerSettings().minFuzzyScore())
-                .distinct()
-                .sorted()
-                .limit(limit)
-                .collect(Collectors.toList());
+                           .filter(e -> e.getWeight() >= configuration.analyzerSettings().minFuzzyScore())
+                           .distinct()
+                           .sorted()
+                           .limit(limit)
+                           .collect(Collectors.toList());
         if (members.isEmpty()) return AnalyzerResult.empty(matchPattern, EmptyResultReason.INSUFFICIENT_SCORE);
 
         var thankwords = thankWordIndices.stream().map(words::get).collect(Collectors.toList());

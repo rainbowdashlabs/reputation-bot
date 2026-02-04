@@ -10,10 +10,7 @@ import de.chojo.repbot.web.error.PremiumFeatureException;
 import de.chojo.repbot.web.pojo.premium.FeatureLimit;
 import de.chojo.repbot.web.pojo.premium.PremiumFeaturesPOJO;
 import de.chojo.repbot.web.pojo.premium.SimpleFeature;
-import de.chojo.repbot.web.pojo.premium.SkuInfo;
 import net.dv8tion.jda.api.sharding.ShardManager;
-
-import java.util.List;
 
 /**
  * Validator for premium features.
@@ -29,7 +26,7 @@ public class PremiumValidator {
     /**
      * Validates that a simple boolean feature is unlocked.
      *
-     * @param feature The feature to check
+     * @param feature     The feature to check
      * @param featureName Display name for error messages
      * @throws PremiumFeatureException if the feature is not unlocked
      */
@@ -42,8 +39,8 @@ public class PremiumValidator {
     /**
      * Validates that a feature requiring true value is unlocked.
      *
-     * @param value The value being set
-     * @param feature The feature to check
+     * @param value       The value being set
+     * @param feature     The feature to check
      * @param featureName Display name for error messages
      * @throws PremiumFeatureException if trying to enable a locked feature
      */
@@ -56,8 +53,8 @@ public class PremiumValidator {
     /**
      * Validates that a count doesn't exceed the allowed limit.
      *
-     * @param count The count to validate
-     * @param limit The feature limit
+     * @param count       The count to validate
+     * @param limit       The feature limit
      * @param featureName Display name for error messages
      * @throws PremiumFeatureException if the count exceeds the limit
      */

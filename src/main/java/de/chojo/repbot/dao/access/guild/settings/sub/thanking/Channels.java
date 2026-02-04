@@ -8,7 +8,6 @@ package de.chojo.repbot.dao.access.guild.settings.sub.thanking;
 import com.fasterxml.jackson.annotation.JsonSerializeAs;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
-import de.chojo.repbot.web.pojo.settings.sub.AutopostPOJO;
 import de.chojo.repbot.web.pojo.settings.sub.thanking.ChannelsPOJO;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.Channel;

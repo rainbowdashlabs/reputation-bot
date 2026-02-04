@@ -4,13 +4,13 @@
  *     Copyright (C) RainbowDashLabs and Contributor
  */
 package de.chojo.repbot.commands.thankwords.handler;
-import de.chojo.repbot.util.WebPromo;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.util.Completion;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.serialization.ThankwordsContainer;
+import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.apache.commons.lang3.StringUtils;
@@ -32,7 +32,7 @@ public class LoadDefault implements SlashHandler {
         var languageOption = event.getOption("language");
         if (languageOption == null) {
             event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.thankwords.loaddefault.message.available")
-                        + " " + String.join(", ", thankwordsContainer.getAvailableLanguages()))
+                         + " " + String.join(", ", thankwordsContainer.getAvailableLanguages()))
                  .setEphemeral(true)
                  .complete();
             return;

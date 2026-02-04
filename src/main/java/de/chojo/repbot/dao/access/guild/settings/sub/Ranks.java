@@ -155,8 +155,8 @@ public class Ranks implements GuildHolder {
 
     public RanksPOJO toPOJO() {
         var rankEntries = ranks().stream()
-                .map(rank -> new RanksPOJO.RankEntry(rank.roleId(), rank.reputation()))
-                .toList();
+                                 .map(rank -> new RanksPOJO.RankEntry(rank.roleId(), rank.reputation()))
+                                 .toList();
         return new RanksPOJO(rankEntries);
     }
 
@@ -165,7 +165,7 @@ public class Ranks implements GuildHolder {
         query("DELETE FROM guild_ranks WHERE guild_id = ?")
                 .single(call().bind(guildId()))
                 .delete();
-        
+
         // Insert new ranks
         for (var entry : pojo.ranks()) {
             query("""
@@ -174,7 +174,7 @@ public class Ranks implements GuildHolder {
                     .single(call().bind(guildId()).bind(entry.roleId()).bind(entry.reputation()))
                     .insert();
         }
-        
+
         // Clear cache to force reload
         refresh();
     }

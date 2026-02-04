@@ -13,7 +13,6 @@ import de.chojo.repbot.dao.snapshots.RankingEntry;
 import net.dv8tion.jda.api.entities.Guild;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.List;
 
 import static de.chojo.jdautil.localization.util.Replacement.create;
@@ -37,10 +36,6 @@ public abstract class GuildRanking implements GuildHolder {
         return rankings.guildId();
     }
 
-    private String title(ReputationMode mode) {
-        return "$%s$ - $%s$".formatted(type.localeKey(), RankingScope.GUILD.localeKey(mode));
-    }
-
     public Ranking defaultRanking(int pageSize) {
         return byMode(rankings.reputation().repGuild().settings().general().reputationMode(), pageSize);
     }
@@ -62,11 +57,15 @@ public abstract class GuildRanking implements GuildHolder {
         return byMode(ReputationMode.TOTAL, pageSize);
     }
 
+    public Instant resetDate() {
+        return rankings.reputation().repGuild().settings().general().resetDate();
+    }
+
     protected abstract List<RankingEntry> getRankingPage(int pageSize, int page, ReputationMode mode);
 
     protected abstract int pages(int pageSize, ReputationMode mode);
 
-    public Instant resetDate() {
-        return rankings.reputation().repGuild().settings().general().resetDate();
+    private String title(ReputationMode mode) {
+        return "$%s$ - $%s$".formatted(type.localeKey(), RankingScope.GUILD.localeKey(mode));
     }
 }

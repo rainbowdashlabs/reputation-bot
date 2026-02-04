@@ -16,16 +16,6 @@ import java.util.Optional;
 
 public record RankingEntry(long rank, long userId, long value) {
 
-    public String fancyString(int maxRank) {
-        var length = String.valueOf(maxRank).length();
-        var rank = StringUtils.rightPad(String.valueOf(this.rank), length);
-        return "`" + rank + "` **|** " + MentionUtil.user(userId) + " ➜ " + value;
-    }
-
-    public String simpleString() {
-        return "%s ➜ %d".formatted(MentionUtil.user(userId), value);
-    }
-
     public static RankingEntry buildReceivedRanking(Row rs) throws SQLException {
         return new RankingEntry(rs.getLong("rank"),
                 rs.getLong("user_id"),
@@ -39,6 +29,16 @@ public record RankingEntry(long rank, long userId, long value) {
                 rs.getLong("user_id"),
                 rs.getLong("donated")
         );
+    }
+
+    public String fancyString(int maxRank) {
+        var length = String.valueOf(maxRank).length();
+        var rank = StringUtils.rightPad(String.valueOf(this.rank), length);
+        return "`" + rank + "` **|** " + MentionUtil.user(userId) + " ➜ " + value;
+    }
+
+    public String simpleString() {
+        return "%s ➜ %d".formatted(MentionUtil.user(userId), value);
     }
 
     public Optional<Member> resolveMember(Guild guild) {

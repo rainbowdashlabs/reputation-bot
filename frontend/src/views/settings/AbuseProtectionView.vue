@@ -1,10 +1,10 @@
 /*
- *     SPDX-License-Identifier: AGPL-3.0-only
- *
- *     Copyright (C) RainbowDashLabs and Contributor
- */
+*     SPDX-License-Identifier: AGPL-3.0-only
+*
+*     Copyright (C) RainbowDashLabs and Contributor
+*/
 <script lang="ts" setup>
-import { useI18n } from 'vue-i18n'
+import {useI18n} from 'vue-i18n'
 import SettingsContainer from './components/SettingsContainer.vue'
 import CooldownSettings from './abuseprotectionview/CooldownSettings.vue'
 import MaxMessageAgeSettings from './abuseprotectionview/MaxMessageAgeSettings.vue'
@@ -15,20 +15,20 @@ import GivenLimitSettings from './abuseprotectionview/GivenLimitSettings.vue'
 import ReceivedLimitSettings from './abuseprotectionview/ReceivedLimitSettings.vue'
 import MaxMessageReputationSettings from './abuseprotectionview/MaxMessageReputationSettings.vue'
 
-const { t } = useI18n()
+const {t} = useI18n()
 </script>
 
 <template>
-  <SettingsContainer :title="t('settings.abuseProtection')" :description="t('abuseProtection.description')">
+  <SettingsContainer :description="t('abuseProtection.description')" :title="t('settings.abuseProtection')">
     <div class="space-y-8">
-      <CooldownSettings />
-      <MaxMessageAgeSettings />
-      <MinMessagesSettings />
-      <DonorContextSettings />
-      <ReceiverContextSettings />
-      <GivenLimitSettings />
-      <ReceivedLimitSettings />
-      <MaxMessageReputationSettings />
+      <CooldownSettings/>
+      <MaxMessageAgeSettings/>
+      <MinMessagesSettings/>
+      <DonorContextSettings/>
+      <ReceiverContextSettings/>
+      <GivenLimitSettings/>
+      <ReceivedLimitSettings/>
+      <MaxMessageReputationSettings/>
     </div>
   </SettingsContainer>
 </template>

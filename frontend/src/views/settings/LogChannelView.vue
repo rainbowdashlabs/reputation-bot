@@ -1,19 +1,19 @@
 /*
- *     SPDX-License-Identifier: AGPL-3.0-only
- *
- *     Copyright (C) RainbowDashLabs and Contributor
- */
+*     SPDX-License-Identifier: AGPL-3.0-only
+*
+*     Copyright (C) RainbowDashLabs and Contributor
+*/
 <script lang="ts" setup>
-import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useSession } from '@/composables/useSession'
+import {computed} from 'vue'
+import {useI18n} from 'vue-i18n'
+import {useSession} from '@/composables/useSession'
 import SettingsContainer from './components/SettingsContainer.vue'
 import PremiumFeatureWarning from '@/components/PremiumFeatureWarning.vue'
 import LogChannelActiveSettings from './logchannelview/LogChannelActiveSettings.vue'
 import LogChannelIdSettings from './logchannelview/LogChannelIdSettings.vue'
 
-const { t } = useI18n()
-const { session } = useSession()
+const {t} = useI18n()
+const {session} = useSession()
 
 const isLogChannelUnlocked = computed(() => {
   return session.value?.premiumFeatures?.logChannel?.unlocked ?? false
@@ -29,19 +29,19 @@ const isLogChannelActive = computed(() => {
 </script>
 
 <template>
-  <SettingsContainer :title="t('settings.logChannel')" :description="t('logChannel.description')">
+  <SettingsContainer :description="t('logChannel.description')" :title="t('settings.logChannel')">
     <PremiumFeatureWarning
-      v-if="!isLogChannelUnlocked"
-      :feature-name="t('logChannel.premiumRequired')"
-      :required-skus="logChannelRequiredSkus"
-      variant="large"
+        v-if="!isLogChannelUnlocked"
+        :feature-name="t('logChannel.premiumRequired')"
+        :required-skus="logChannelRequiredSkus"
+        variant="large"
     />
 
     <div v-else class="space-y-8">
-      <LogChannelActiveSettings />
+      <LogChannelActiveSettings/>
 
       <div v-if="isLogChannelActive" class="space-y-8 pt-4 border-t border-gray-200 dark:border-gray-700">
-        <LogChannelIdSettings />
+        <LogChannelIdSettings/>
       </div>
     </div>
   </SettingsContainer>

@@ -17,9 +17,9 @@ import java.util.concurrent.ScheduledExecutorService;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class MonitorService extends ListenerAdapter {
+    private static final Logger log = getLogger(MonitorService.class);
     private final Data data;
     private final ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
-    private static final Logger log = getLogger(MonitorService.class);
 
     public MonitorService(Data data) {
         this.data = data;

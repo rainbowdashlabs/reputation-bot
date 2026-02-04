@@ -10,7 +10,6 @@ import de.chojo.sadu.queries.api.configuration.QueryConfiguration;
 import org.slf4j.Logger;
 
 import java.sql.SQLException;
-import java.util.List;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static org.slf4j.LoggerFactory.getLogger;

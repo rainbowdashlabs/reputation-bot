@@ -1,12 +1,12 @@
 /*
- *     SPDX-License-Identifier: AGPL-3.0-only
- *
- *     Copyright (C) RainbowDashLabs and Contributor
- */
+*     SPDX-License-Identifier: AGPL-3.0-only
+*
+*     Copyright (C) RainbowDashLabs and Contributor
+*/
 <script lang="ts" setup>
-import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useSession } from '@/composables/useSession'
+import {computed} from 'vue'
+import {useI18n} from 'vue-i18n'
+import {useSession} from '@/composables/useSession'
 import SettingsContainer from './components/SettingsContainer.vue'
 import PremiumFeatureWarning from '@/components/PremiumFeatureWarning.vue'
 import AutopostActiveSettings from './autopostview/AutopostActiveSettings.vue'
@@ -15,8 +15,8 @@ import AutopostIntervalSettings from './autopostview/AutopostIntervalSettings.vu
 import AutopostTypeSettings from './autopostview/AutopostTypeSettings.vue'
 import AutopostSendSettings from './autopostview/AutopostSendSettings.vue'
 
-const { t } = useI18n()
-const { session } = useSession()
+const {t} = useI18n()
+const {session} = useSession()
 
 const isAutopostUnlocked = computed(() => {
   return session.value?.premiumFeatures?.autopost?.unlocked ?? false
@@ -32,22 +32,22 @@ const isAutopostActive = computed(() => {
 </script>
 
 <template>
-  <SettingsContainer :title="t('settings.autopost')" :description="t('autopost.description')">
+  <SettingsContainer :description="t('autopost.description')" :title="t('settings.autopost')">
     <PremiumFeatureWarning
-      v-if="!isAutopostUnlocked"
-      :feature-name="t('autopost.premiumRequired')"
-      :required-skus="autopostRequiredSkus"
-      variant="large"
+        v-if="!isAutopostUnlocked"
+        :feature-name="t('autopost.premiumRequired')"
+        :required-skus="autopostRequiredSkus"
+        variant="large"
     />
 
     <div v-else class="space-y-8">
-      <AutopostActiveSettings />
+      <AutopostActiveSettings/>
 
       <div v-if="isAutopostActive" class="space-y-8 pt-4 border-t border-gray-200 dark:border-gray-700">
-        <AutopostChannelSettings />
-        <AutopostIntervalSettings />
-        <AutopostTypeSettings />
-        <AutopostSendSettings />
+        <AutopostChannelSettings/>
+        <AutopostIntervalSettings/>
+        <AutopostTypeSettings/>
+        <AutopostSendSettings/>
       </div>
     </div>
   </SettingsContainer>

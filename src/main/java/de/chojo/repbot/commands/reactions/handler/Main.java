@@ -49,7 +49,8 @@ public class Main implements SlashHandler {
                             Replacement.create("EMOTE", result.mention()))).queue();
                 }
             }
-            case NOT_FOUND -> message.editMessage(WebPromo.promoString(context) + "\n" + context.localize("command.reactions.message.notfound")).queue();
+            case NOT_FOUND ->
+                    message.editMessage(WebPromo.promoString(context) + "\n" + context.localize("command.reactions.message.notfound")).queue();
             case UNKNOWN_EMOJI ->
                     message.editMessage(WebPromo.promoString(context) + "\n" + context.localize("command.reactions.message.emojinotfound")).queue();
         }

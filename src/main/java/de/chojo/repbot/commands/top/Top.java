@@ -15,8 +15,8 @@ import de.chojo.repbot.dao.provider.GuildRepository;
 public class Top extends SlashCommand {
     public Top(GuildRepository guildRepository, Configuration configuration) {
         super(Slash.of("top", "command.top.description")
-                .guildOnly()
-                .command(new GuildReceived(guildRepository, configuration, false))
-                .argument(Argument.text("mode", "command.top.options.mode.description").withAutoComplete()));
+                   .guildOnly()
+                   .command(new GuildReceived(guildRepository, configuration, false))
+                   .argument(Argument.text("mode", "command.top.options.mode.description").withAutoComplete()));
     }
 }

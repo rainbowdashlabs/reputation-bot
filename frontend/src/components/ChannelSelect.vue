@@ -1,9 +1,9 @@
 /*
- *     SPDX-License-Identifier: AGPL-3.0-only
- *
- *     Copyright (C) RainbowDashLabs and Contributor
- */
-<script setup lang="ts">
+*     SPDX-License-Identifier: AGPL-3.0-only
+*
+*     Copyright (C) RainbowDashLabs and Contributor
+*/
+<script lang="ts" setup>
 import {useSession} from '@/composables/useSession'
 import {computed, onMounted, onUnmounted, ref} from 'vue'
 import {useI18n} from 'vue-i18n'
@@ -140,11 +140,11 @@ onUnmounted(() => {
           <div class="p-2 border-b border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800">
             <input
                 v-model="searchQuery"
-                type="text"
-                class="input py-1 text-sm"
                 :placeholder="t('general.systemChannel.selectPlaceholder')"
-                @click.stop
                 autofocus
+                class="input py-1 text-sm"
+                type="text"
+                @click.stop
             />
           </div>
 
@@ -154,12 +154,12 @@ onUnmounted(() => {
             <BaseButton
                 v-for="channel in filteredUncategorized"
                 :key="channel.id"
-                @click="selectChannel(channel.id.toString())"
-                class="w-full text-left px-3 py-2 text-sm transition-colors flex gap-2"
                 :class="{ 'bg-indigo-50 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 font-medium': modelValue?.toString() === channel.id.toString(), 'hover:bg-gray-100 dark:hover:bg-indigo-900/30 text-gray-700 dark:text-gray-300': modelValue?.toString() !== channel.id.toString() }"
                 :rounded="false"
+                class="w-full text-left px-3 py-2 text-sm transition-colors flex gap-2"
                 color="secondary"
                 style="background-color: transparent; border: none; box-shadow: none; color: inherit;"
+                @click="selectChannel(channel.id.toString())"
             >
               <div class="pl-2">
                 <font-awesome-icon :icon="getChannelIcon(channel.type)" class="text-gray-400 dark:text-gray-500"/>
@@ -176,12 +176,12 @@ onUnmounted(() => {
               <BaseButton
                   v-for="channel in category.channels"
                   :key="channel.id"
-                  @click="selectChannel(channel.id.toString())"
-                  class="w-full text-left px-3 py-2 text-sm transition-colors gap-2 pl-6"
                   :class="{ 'bg-indigo-50 dark:bg-indigo-900/50 text-indigo-700 dark:text-indigo-300 font-medium': modelValue?.toString() === channel.id.toString(), 'hover:bg-gray-100 dark:hover:bg-indigo-900/30 text-gray-700 dark:text-gray-300': modelValue?.toString() !== channel.id.toString() }"
                   :rounded="false"
+                  class="w-full text-left px-3 py-2 text-sm transition-colors gap-2 pl-6"
                   color="indigo"
                   style="background-color: transparent; border: none; box-shadow: none; color: inherit;"
+                  @click="selectChannel(channel.id.toString())"
               >
                 <div class="pl-2">
                   <font-awesome-icon :icon="getChannelIcon(channel.type)" class="text-gray-400 dark:text-gray-500"/>
@@ -210,21 +210,21 @@ onUnmounted(() => {
           </span>
         </div>
         <BaseButton
+            :disabled="disabled"
+            class="shrink-0 px-3 py-1.5"
+            color="secondary"
             type="button"
             @click.stop="startSelecting"
-            :disabled="disabled"
-            color="secondary"
-            class="shrink-0 px-3 py-1.5"
         >
           {{ t('common.change') }}
         </BaseButton>
         <BaseButton
             v-if="allowClear && selectedChannel"
+            :disabled="disabled"
+            class="shrink-0 px-3 py-1.5"
+            color="danger"
             type="button"
             @click="clearChannel"
-            :disabled="disabled"
-            color="danger"
-            class="shrink-0 px-3 py-1.5"
         >
           {{ t('common.clear') }}
         </BaseButton>

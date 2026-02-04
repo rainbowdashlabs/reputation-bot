@@ -42,7 +42,7 @@ public class CurrentResetDate implements SlashHandler {
             date = Text.timestampDateTime(instant);
         }
 
-        event.reply(WebPromo.promoString(context) +context.localize("command.repadmin.resetdate.current.message.set", Replacement.create("DATE", date)))
+        event.reply(WebPromo.promoString(context) + context.localize("command.repadmin.resetdate.current.message.set", Replacement.create("DATE", date)))
              .setEphemeral(true)
              .complete();
     }

@@ -108,6 +108,16 @@ public class General extends GeneralPOJO implements GuildHolder {
         return settings.guildId();
     }
 
+    public String prettyString() {
+        return """
+                Stack roles: %s
+                Language: %s
+                Reputation Mode: %s
+                System Channel: %s
+                """.stripIndent()
+                   .formatted(stackRoles, language != null ? language.getLanguageName() : guild().getLocale().getLanguageName(), reputationMode.name(), systemChannel);
+    }
+
     private boolean set(String parameter, Function<Call, Call> builder) {
         return query("""
                 INSERT INTO guild_settings(guild_id, %s) VALUES (?, ?)
@@ -117,15 +127,5 @@ public class General extends GeneralPOJO implements GuildHolder {
                 .single(builder.apply(call().bind(guildId())))
                 .insert()
                 .changed();
-    }
-
-    public String prettyString() {
-        return """
-                Stack roles: %s
-                Language: %s
-                Reputation Mode: %s
-                System Channel: %s
-                """.stripIndent()
-                   .formatted(stackRoles, language != null ? language.getLanguageName() : guild().getLocale().getLanguageName(), reputationMode.name(), systemChannel);
     }
 }

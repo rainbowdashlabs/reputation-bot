@@ -28,7 +28,7 @@ public class ListType implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var channels = guildRepository.guild(event.getGuild()).settings().thanking().channels();
         if (event.getOptions().isEmpty()) {
-            event.reply(WebPromo.promoString(context) +context.localize(
+            event.reply(WebPromo.promoString(context) + context.localize(
                          channels.isWhitelist() ? "command.channel.listType.message.whitelist" : "command.channel.listType.message.blacklist"))
                  .setEphemeral(true)
                  .complete();
@@ -37,12 +37,12 @@ public class ListType implements SlashHandler {
 
         var whitelist = "whitelist".equalsIgnoreCase(event.getOption("type").getAsString());
 
-        if(!whitelist && Premium.isNotEntitled(context, configuration.skus().features().channelBlacklist().allow())) {
+        if (!whitelist && Premium.isNotEntitled(context, configuration.skus().features().channelBlacklist().allow())) {
             Premium.replyPremium(context, configuration.skus().features().channelBlacklist().allow());
             return;
         }
 
-        event.reply(WebPromo.promoString(context) +context.localize(
+        event.reply(WebPromo.promoString(context) + context.localize(
                      channels.listType(whitelist) ? "command.channel.listType.message.whitelist" : "command.channel.listType.message.blacklist"))
              .setEphemeral(true)
              .complete();

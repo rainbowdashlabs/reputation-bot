@@ -24,7 +24,7 @@ public class ReceiverContext implements SlashHandler {
         var guild = guildRepository.guild(event.getGuild());
         var abuseSettings = guild.settings().abuseProtection();
         if (event.getOptions().isEmpty()) {
-            event.reply(WebPromo.promoString(context)  + Text.getBooleanMessage(context, abuseSettings.isReceiverContext(),
+            event.reply(WebPromo.promoString(context) + Text.getBooleanMessage(context, abuseSettings.isReceiverContext(),
                          "command.abuseprotection.context.receiver.message.true", "command.abuseprotection.context.receiver.message.false"))
                  .setEphemeral(true)
                  .complete();

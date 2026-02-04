@@ -1,8 +1,8 @@
 /*
- *     SPDX-License-Identifier: AGPL-3.0-only
- *
- *     Copyright (C) RainbowDashLabs and Contributor
- */
+*     SPDX-License-Identifier: AGPL-3.0-only
+*
+*     Copyright (C) RainbowDashLabs and Contributor
+*/
 <script lang="ts" setup>
 import {ref} from 'vue'
 import {useI18n} from 'vue-i18n'
@@ -16,7 +16,7 @@ const isUpdating = ref(false)
 </script>
 
 <template>
-  <SettingsContainer :title="t('settings.thankwords')" :description="t('thankwords.description')">
+  <SettingsContainer :description="t('thankwords.description')" :title="t('settings.thankwords')">
     <div class="space-y-6">
       <div>
 

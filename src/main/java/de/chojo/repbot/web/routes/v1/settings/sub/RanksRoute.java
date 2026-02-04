@@ -32,6 +32,7 @@ public class RanksRoute implements RoutesBuilder {
         this.roleAssigner = roleAssigner;
         this.shardManager = shardManager;
     }
+
     @OpenApi(
             summary = "Get reputation ranks",
             operationId = "getRanks",
@@ -63,12 +64,12 @@ public class RanksRoute implements RoutesBuilder {
     public void updateRanks(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         RanksPOJO ranksPOJO = ctx.bodyAsClass(RanksPOJO.class);
-        
+
         // Validate all role IDs
         for (RanksPOJO.RankEntry rank : ranksPOJO.ranks()) {
             session.guildValidator().validateRoleIds(rank.roleId());
         }
-        
+
         session.repGuild().settings().ranks().apply(ranksPOJO);
     }
 
@@ -87,26 +88,23 @@ public class RanksRoute implements RoutesBuilder {
     public void refreshRanks(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         long guildId = session.guildId();
-        
+
         var guild = shardManager.getGuildById(guildId);
         if (guild == null) {
             ctx.status(404).result("Guild not found");
             return;
         }
-        
+
         if (roleAssigner.isRefreshing(guild)) {
             ctx.status(409).json(new RefreshStatus(true));
             return;
         }
-        
+
         // Start refresh asynchronously without waiting
         // RoleAssigner handles state management internally
         roleAssigner.updateBatch(guild, null, null);
-        
-        ctx.json(new RefreshStatus(false));
-    }
 
-    public record RefreshStatus(boolean alreadyRunning) {
+        ctx.json(new RefreshStatus(false));
     }
 
     @Override
@@ -116,5 +114,8 @@ public class RanksRoute implements RoutesBuilder {
             post("", this::updateRanks, Role.GUILD_USER);
             post("refresh", this::refreshRanks, Role.GUILD_USER);
         });
+    }
+
+    public record RefreshStatus(boolean alreadyRunning) {
     }
 }

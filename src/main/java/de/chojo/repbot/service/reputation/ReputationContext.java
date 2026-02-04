@@ -12,7 +12,6 @@ import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-import java.util.List;
 import java.util.Optional;
 
 public record ReputationContext(GuildMessageChannel guildChannel, ISnowflake snowflake) {

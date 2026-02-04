@@ -151,6 +151,44 @@ public class ReputationService {
 
     }
 
+    public SubmitResult checkCooldown(ReputationContext context, Member donor, Member receiver, Guild guild, Settings settings) {
+        var repGuild = settings.repGuild();
+        var analyzer = repGuild.reputation().analyzer();
+        // block cooldown
+        var optRating = guildRepository.guild(guild).reputation().user(donor).getLastReputation(receiver);
+
+        if (optRating.isPresent()) {
+            var lastRating = optRating.get();
+
+            if (settings.abuseProtection().cooldown() < 0) {
+                return analyzer.log(context, SubmitResult.of(SubmitResultType.COOLDOWN_ONCE));
+            }
+
+            if (lastRating.tillNow().toMinutes() < settings.abuseProtection().cooldown()) {
+                log.trace("The last rating is too recent. {}/{}", lastRating.tillNow().toMinutes(),
+                        settings.abuseProtection().cooldown());
+                return analyzer.log(context, SubmitResult.of(SubmitResultType.COOLDOWN_ACTIVE,
+                        Replacement.create("TARGET", "$words.message$"),
+                        Replacement.create("URL", lastRating.getMessageJumpLink()),
+                        Replacement.create("ENTRY", lastRating.simpleString()),
+                        Replacement.create("TIMESTAMP", lastRating.timestamp()),
+                        Replacement.create("REMAINING", lastRating.tillNow().toMinutes()),
+                        Replacement.create("TOTAL", settings.abuseProtection().cooldown())));
+            }
+        }
+
+        if (!settings.thanking().receiverRoles().hasRole(receiver)) {
+            log.trace("The receiver does not have a receiver role.");
+            return analyzer.log(context, SubmitResult.of(SubmitResultType.NO_RECEIVER_ROLE, Replacement.createMention(receiver)));
+        }
+        if (!settings.thanking().donorRoles().hasRole(donor)) {
+            log.trace("The donor does not have a donor role.");
+            return analyzer.log(context, SubmitResult.of(SubmitResultType.NO_DONOR_ROLE, Replacement.createMention(donor)));
+        }
+
+        return SubmitResult.of(SubmitResultType.SUCCESS);
+    }
+
     private MessageContext getContext(Member donor, @Nullable Member receiver, ReputationContext context, ThankType type, Settings settings) {
         MessageContext messageContext;
         if (type == ThankType.REACTION) {
@@ -333,43 +371,5 @@ public class ReputationService {
             default -> throw new IllegalStateException("Unexpected value: " + type);
         }
         return false;
-    }
-
-    public SubmitResult checkCooldown(ReputationContext context, Member donor, Member receiver, Guild guild, Settings settings) {
-        var repGuild = settings.repGuild();
-        var analyzer = repGuild.reputation().analyzer();
-        // block cooldown
-        var optRating = guildRepository.guild(guild).reputation().user(donor).getLastReputation(receiver);
-
-        if (optRating.isPresent()) {
-            var lastRating = optRating.get();
-
-            if (settings.abuseProtection().cooldown() < 0) {
-                return analyzer.log(context, SubmitResult.of(SubmitResultType.COOLDOWN_ONCE));
-            }
-
-            if (lastRating.tillNow().toMinutes() < settings.abuseProtection().cooldown()) {
-                log.trace("The last rating is too recent. {}/{}", lastRating.tillNow().toMinutes(),
-                        settings.abuseProtection().cooldown());
-                return analyzer.log(context, SubmitResult.of(SubmitResultType.COOLDOWN_ACTIVE,
-                        Replacement.create("TARGET", "$words.message$"),
-                        Replacement.create("URL", lastRating.getMessageJumpLink()),
-                        Replacement.create("ENTRY", lastRating.simpleString()),
-                        Replacement.create("TIMESTAMP", lastRating.timestamp()),
-                        Replacement.create("REMAINING", lastRating.tillNow().toMinutes()),
-                        Replacement.create("TOTAL", settings.abuseProtection().cooldown())));
-            }
-        }
-
-        if (!settings.thanking().receiverRoles().hasRole(receiver)) {
-            log.trace("The receiver does not have a receiver role.");
-            return analyzer.log(context, SubmitResult.of(SubmitResultType.NO_RECEIVER_ROLE, Replacement.createMention(receiver)));
-        }
-        if (!settings.thanking().donorRoles().hasRole(donor)) {
-            log.trace("The donor does not have a donor role.");
-            return analyzer.log(context, SubmitResult.of(SubmitResultType.NO_DONOR_ROLE, Replacement.createMention(donor)));
-        }
-
-        return SubmitResult.of(SubmitResultType.SUCCESS);
     }
 }

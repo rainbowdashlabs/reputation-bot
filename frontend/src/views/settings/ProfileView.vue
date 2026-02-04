@@ -1,8 +1,8 @@
 /*
- *     SPDX-License-Identifier: AGPL-3.0-only
- *
- *     Copyright (C) RainbowDashLabs and Contributor
- */
+*     SPDX-License-Identifier: AGPL-3.0-only
+*
+*     Copyright (C) RainbowDashLabs and Contributor
+*/
 <script lang="ts" setup>
 import {computed, ref, watch} from 'vue'
 import {useI18n} from 'vue-i18n'
@@ -41,7 +41,7 @@ watch(session, (newSession) => {
 </script>
 
 <template>
-  <SettingsContainer :title="t('settings.profile')" :description="t('profile.description')">
+  <SettingsContainer :description="t('profile.description')" :title="t('settings.profile')">
     <!-- Premium Feature Warning for Profile -->
     <PremiumFeatureWarning
         v-if="!isProfileUnlocked"
@@ -51,13 +51,13 @@ watch(session, (newSession) => {
     />
     <div class="space-y-6">
       <NicknameSettings
-          :initial-nickname="initialNickname"
           :disabled="!isProfileUnlocked"
+          :initial-nickname="initialNickname"
       />
 
       <ProfilePictureSettings
-          :initial-profile-picture-url="initialProfilePictureUrl"
           :disabled="!isProfileUnlocked"
+          :initial-profile-picture-url="initialProfilePictureUrl"
       />
 
       <ReputationNameSettings

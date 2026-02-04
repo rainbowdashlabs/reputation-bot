@@ -33,7 +33,7 @@ public class AnnouncementLocation implements SlashHandler {
 
         announcements.channel(channel.getAsChannel().asTextChannel());
         event.reply(WebPromo.promoString(context) + context.localize("command.channel.announcement.channel.message.set",
-                Replacement.createMention(channel.getAsChannel().asTextChannel())))
+                     Replacement.createMention(channel.getAsChannel().asTextChannel())))
              .setEphemeral(true)
              .complete();
     }

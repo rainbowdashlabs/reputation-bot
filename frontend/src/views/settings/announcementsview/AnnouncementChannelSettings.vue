@@ -1,24 +1,24 @@
 /*
- *     SPDX-License-Identifier: AGPL-3.0-only
- *
- *     Copyright (C) RainbowDashLabs and Contributor
- */
-<script setup lang="ts">
-import { useI18n } from 'vue-i18n'
-import { useSession } from '@/composables/useSession'
-import { api } from '@/api'
+*     SPDX-License-Identifier: AGPL-3.0-only
+*
+*     Copyright (C) RainbowDashLabs and Contributor
+*/
+<script lang="ts" setup>
+import {useI18n} from 'vue-i18n'
+import {useSession} from '@/composables/useSession'
+import {api} from '@/api'
 import Toggle from '@/components/Toggle.vue'
 import ChannelSelect from '@/components/ChannelSelect.vue'
 
-const { t } = useI18n()
-const { session, updateAnnouncementsSettings } = useSession()
+const {t} = useI18n()
+const {session, updateAnnouncementsSettings} = useSession()
 
 const updateSameChannel = async (sameChannel: boolean) => {
   if (!session.value?.settings?.announcements) return
-  
+
   try {
     await api.updateAnnouncementsSameChannel(sameChannel);
-    updateAnnouncementsSettings({ sameChannel });
+    updateAnnouncementsSettings({sameChannel});
   } catch (error) {
     console.error('Failed to update same channel setting:', error)
   }
@@ -26,11 +26,11 @@ const updateSameChannel = async (sameChannel: boolean) => {
 
 const updateChannel = async (channelId: string | null) => {
   if (!session.value?.settings?.announcements) return
-  
+
   const idStr = channelId || '0'
   try {
     await api.updateAnnouncementsChannel(idStr);
-    updateAnnouncementsSettings({ channelId: idStr });
+    updateAnnouncementsSettings({channelId: idStr});
   } catch (error) {
     console.error('Failed to update announcement channel:', error)
   }
@@ -41,9 +41,9 @@ const updateChannel = async (channelId: string | null) => {
   <div v-if="session?.settings?.announcements" class="flex flex-col gap-6">
     <div class="flex flex-col gap-1">
       <Toggle
-        :model-value="session.settings.announcements.sameChannel"
-        :label="t('announcements.sameChannel.label')"
-        @update:model-value="updateSameChannel"
+          :label="t('announcements.sameChannel.label')"
+          :model-value="session.settings.announcements.sameChannel"
+          @update:model-value="updateSameChannel"
       />
       <p class="description">
         {{ t('announcements.sameChannel.description') }}
@@ -53,10 +53,10 @@ const updateChannel = async (channelId: string | null) => {
     <div v-if="!session.settings.announcements.sameChannel" class="flex flex-col gap-4">
       <div class="flex flex-col gap-1">
         <ChannelSelect
-          :model-value="session.settings.announcements.channelId === '0' ? null : session.settings.announcements.channelId"
-          :label="t('announcements.channel.label')"
-          allow-clear
-          @update:model-value="updateChannel"
+            :label="t('announcements.channel.label')"
+            :model-value="session.settings.announcements.channelId === '0' ? null : session.settings.announcements.channelId"
+            allow-clear
+            @update:model-value="updateChannel"
         />
         <p class="description">
           {{ t('announcements.channel.description') }}

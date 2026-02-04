@@ -36,11 +36,11 @@ import de.chojo.repbot.commands.repsettings.RepSettings;
 import de.chojo.repbot.commands.reputation.Reputation;
 import de.chojo.repbot.commands.roles.Roles;
 import de.chojo.repbot.commands.scan.Scan;
+import de.chojo.repbot.commands.settings.Settings;
 import de.chojo.repbot.commands.setup.Setup;
 import de.chojo.repbot.commands.supporter.Supporter;
 import de.chojo.repbot.commands.thankwords.Thankwords;
 import de.chojo.repbot.commands.top.Top;
-import de.chojo.repbot.commands.settings.Settings;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.exceptions.MissingSupportTier;
 import de.chojo.repbot.listener.LogListener;
@@ -86,10 +86,10 @@ import static de.chojo.repbot.util.States.TEST_MODE;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Bot {
-    // TODO: Remove after decomissioning the commands
-    public static String WEB_COMMAND_MENTION = "";
     private static final Logger log = getLogger(Bot.class);
     private static final Set<ErrorResponse> IGNORE_ERRORS = Set.of(ErrorResponse.ILLEGAL_OPERATION_ARCHIVED_THREAD, ErrorResponse.MISSING_ACCESS);
+    // TODO: Remove after decomissioning the commands
+    public static String WEB_COMMAND_MENTION = "";
     private final Data data;
     private final Threading threading;
     private final Configuration configuration;
@@ -127,6 +127,30 @@ public class Bot {
         initServices();
         initInteractions();
         initListener();
+    }
+
+    public ShardManager shardManager() {
+        return shardManager;
+    }
+
+    public void shutdown() {
+        shardManager.shutdown();
+    }
+
+    public InteractionHub<Slash, Message, User> hub() {
+        return hub;
+    }
+
+    public Localization localization() {
+        return localization;
+    }
+
+    public AutopostService autopostService() {
+        return autopostService;
+    }
+
+    public RoleAssigner roleAssigner() {
+        return roleAssigner;
     }
 
     private void initShardManager() throws LoginException {
@@ -303,11 +327,11 @@ public class Bot {
 
         } else {
             web = shardManager.getShards().getFirst()
-                                   .retrieveCommands().complete().stream()
-                                   .filter(cmd -> cmd.getName().equals("web"))
-                                   .map(ISnowflake::getIdLong)
-                                   .findFirst()
-                                   .get();
+                              .retrieveCommands().complete().stream()
+                              .filter(cmd -> cmd.getName().equals("web"))
+                              .map(ISnowflake::getIdLong)
+                              .findFirst()
+                              .get();
         }
         WEB_COMMAND_MENTION = "</settings:" + web + ">";
     }
@@ -338,29 +362,5 @@ public class Bot {
                 premiumService,
                 chatSupportService,
                 new MonitorService(data));
-    }
-
-    public ShardManager shardManager() {
-        return shardManager;
-    }
-
-    public void shutdown() {
-        shardManager.shutdown();
-    }
-
-    public InteractionHub<Slash, Message, User> hub() {
-        return hub;
-    }
-
-    public Localization localization() {
-        return localization;
-    }
-
-    public AutopostService autopostService() {
-        return autopostService;
-    }
-
-    public RoleAssigner roleAssigner() {
-        return roleAssigner;
     }
 }

@@ -130,14 +130,6 @@ public class Reputation extends ReputationPOJO implements GuildHolder {
         return String.join("\n", setting);
     }
 
-    private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, boolean object) {
-        return getSetting(locale, object ? "words.enabled" : "words.disabled");
-    }
-
-    private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, String object) {
-        return String.format("$%s$: $%s$", locale, object);
-    }
-
     @Override
     public Guild guild() {
         return settings.guild();
@@ -146,17 +138,6 @@ public class Reputation extends ReputationPOJO implements GuildHolder {
     @Override
     public long guildId() {
         return settings.guildId();
-    }
-
-    private boolean set(String parameter, Function<Call, Call> builder) {
-        return query("""
-                INSERT INTO reputation_settings(guild_id, %s) VALUES (?, ?)
-                ON CONFLICT(guild_id)
-                    DO UPDATE SET %s = excluded.%s;
-                """, parameter, parameter, parameter)
-                .single(builder.apply(call().bind(guildId())))
-                .insert()
-                .changed();
     }
 
     public String prettyString() {
@@ -169,5 +150,24 @@ public class Reputation extends ReputationPOJO implements GuildHolder {
                 Skip single embed: %s
                 """.formatted(reactionActive, answerActive, mentionActive, fuzzyActive, embedActive, directActive)
                    .stripIndent();
+    }
+
+    private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, boolean object) {
+        return getSetting(locale, object ? "words.enabled" : "words.disabled");
+    }
+
+    private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, String object) {
+        return String.format("$%s$: $%s$", locale, object);
+    }
+
+    private boolean set(String parameter, Function<Call, Call> builder) {
+        return query("""
+                INSERT INTO reputation_settings(guild_id, %s) VALUES (?, ?)
+                ON CONFLICT(guild_id)
+                    DO UPDATE SET %s = excluded.%s;
+                """, parameter, parameter, parameter)
+                .single(builder.apply(call().bind(guildId())))
+                .insert()
+                .changed();
     }
 }

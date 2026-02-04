@@ -18,11 +18,9 @@ import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiRequestBody;
 import io.javalin.openapi.OpenApiResponse;
 
-import java.util.Set;
-
 import static io.javalin.apibuilder.ApiBuilder.path;
 import static io.javalin.apibuilder.ApiBuilder.post;
-import static java.util.Arrays.*;
+import static java.util.Arrays.asList;
 
 public class ReactionsRoute implements RoutesBuilder {
     @OpenApi(

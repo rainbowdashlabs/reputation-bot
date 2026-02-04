@@ -138,14 +138,14 @@ public class PremiumFeaturesPOJO {
     private static Map<Long, SkuInfo> resolveSkus(ShardManager shardManager) {
         try {
             List<net.dv8tion.jda.api.entities.SKU> skus = shardManager.getShards().getFirst()
-                    .retrieveSKUList()
-                    .complete();
+                                                                      .retrieveSKUList()
+                                                                      .complete();
 
             return skus.stream()
-                    .collect(Collectors.toMap(
-                            net.dv8tion.jda.api.entities.SKU::getIdLong,
-                            sku -> new SkuInfo(sku.getId(), sku.getName())
-                    ));
+                       .collect(Collectors.toMap(
+                               net.dv8tion.jda.api.entities.SKU::getIdLong,
+                               sku -> new SkuInfo(sku.getId(), sku.getName())
+                       ));
         } catch (Exception e) {
             log.error("Failed to resolve SKU list from Discord", e);
             return new HashMap<>();
@@ -160,10 +160,10 @@ public class PremiumFeaturesPOJO {
 
     private static List<SkuInfo> extractSkuInfos(SKUEntry entry, Map<Long, SkuInfo> skuMap) {
         return entry.sku().stream()
-                .map(SKU::skuId)
-                .map(skuMap::get)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                    .map(SKU::skuId)
+                    .map(skuMap::get)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
     }
 
     private static boolean isEntitled(SkuMeta subscriptions, SkuMeta required) {

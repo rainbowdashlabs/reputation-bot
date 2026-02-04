@@ -1,17 +1,17 @@
 /*
- *     SPDX-License-Identifier: AGPL-3.0-only
- *
- *     Copyright (C) RainbowDashLabs and Contributor
- */
-<script setup lang="ts">
-import { useI18n } from 'vue-i18n'
-import { useSession } from '@/composables/useSession'
-import { api } from '@/api'
-import { CooldownDirection } from '@/api/types'
+*     SPDX-License-Identifier: AGPL-3.0-only
+*
+*     Copyright (C) RainbowDashLabs and Contributor
+*/
+<script lang="ts" setup>
+import {useI18n} from 'vue-i18n'
+import {useSession} from '@/composables/useSession'
+import {api} from '@/api'
+import {CooldownDirection} from '@/api/types'
 import PresetCard from './PresetCard.vue'
 
-const { t } = useI18n()
-const { updateReputationSettings, updateAbuseProtectionSettings, updateMessagesSettings } = useSession()
+const {t} = useI18n()
+const {updateReputationSettings, updateAbuseProtectionSettings, updateMessagesSettings} = useSession()
 
 const applyPreset = async () => {
   // Set cooldown to 30 minutes with bidirectional direction
@@ -67,9 +67,9 @@ const applyPreset = async () => {
 
 <template>
   <PresetCard
-    :title="t('presets.default.title')"
-    :description="t('presets.default.description')"
-    :settings="t('presets.default.settings')"
-    @apply="applyPreset"
+      :description="t('presets.default.description')"
+      :settings="t('presets.default.settings')"
+      :title="t('presets.default.title')"
+      @apply="applyPreset"
   />
 </template>

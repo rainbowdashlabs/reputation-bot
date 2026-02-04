@@ -18,7 +18,7 @@ public class List implements SlashHandler {
         var builder = TextFormatting.getTableBuilder(languages,
                 context.localize("words.language"), context.localize("words.code"));
         languages.forEach(lang -> builder.setNextRow(lang.getNativeName(), lang.getLocale()));
-        event.reply(WebPromo.promoString(context) +context.localize("command.locale.list.message.list") + "\n" + builder)
+        event.reply(WebPromo.promoString(context) + context.localize("command.locale.list.message.list") + "\n" + builder)
              .setEphemeral(true)
              .complete();
     }

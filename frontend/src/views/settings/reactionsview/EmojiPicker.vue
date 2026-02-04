@@ -1,14 +1,14 @@
 /*
- *     SPDX-License-Identifier: AGPL-3.0-only
- *
- *     Copyright (C) RainbowDashLabs and Contributor
- */
+*     SPDX-License-Identifier: AGPL-3.0-only
+*
+*     Copyright (C) RainbowDashLabs and Contributor
+*/
 <script lang="ts" setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue'
-import { useSession } from '@/composables/useSession'
+import {computed, onMounted, onUnmounted, ref} from 'vue'
+import {useSession} from '@/composables/useSession'
 import data from 'emoji-mart-vue-fast/data/all.json'
 // @ts-ignore
-import { Picker, EmojiIndex } from 'emoji-mart-vue-fast/src'
+import {EmojiIndex, Picker} from 'emoji-mart-vue-fast/src'
 import 'emoji-mart-vue-fast/css/emoji-mart.css'
 
 const props = defineProps<{
@@ -20,7 +20,7 @@ const emit = defineEmits<{
   (e: 'update:modelValue', value: string): void
 }>()
 
-const { session } = useSession()
+const {session} = useSession()
 
 const isOpen = ref(false)
 const pickerRef = ref<HTMLElement | null>(null)
@@ -101,12 +101,13 @@ onUnmounted(() => {
 <template>
   <div ref="pickerRef" class="relative inline-block">
     <button
-        type="button"
-        class="emoji-trigger flex items-center justify-center rounded p-0 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors border border-gray-300 dark:border-gray-600"
         :disabled="disabled"
+        class="emoji-trigger flex items-center justify-center rounded p-0 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors border border-gray-300 dark:border-gray-600"
+        type="button"
         @click.stop="togglePicker"
     >
-      <img v-if="isGuildEmoji(modelValue)" :src="getEmojiDisplay(modelValue)" class="w-10 h-10 object-contain" alt="emoji"/>
+      <img v-if="isGuildEmoji(modelValue)" :src="getEmojiDisplay(modelValue)" alt="emoji"
+           class="w-10 h-10 object-contain"/>
       <span v-else class="text-3xl">{{ modelValue || '?' }}</span>
     </button>
 
@@ -116,9 +117,9 @@ onUnmounted(() => {
         @click.stop
     >
       <Picker
+          :autoFocus="true"
           :data="emojiIndex"
           :native="true"
-          :autoFocus="true"
           :showPreview="false"
           :showSkinTones="false"
           @select="selectEmoji"

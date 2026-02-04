@@ -59,9 +59,9 @@ public class GeneralRoute implements RoutesBuilder {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         String languageStr = ctx.bodyAsClass(String.class);
         // Convert internal name (e.g., "SPANISH") to DiscordLocale enum
-        DiscordLocale locale = languageStr != null && !languageStr.isEmpty() 
-            ? DiscordLocale.valueOf(languageStr) 
-            : null;
+        DiscordLocale locale = languageStr != null && !languageStr.isEmpty()
+                ? DiscordLocale.valueOf(languageStr)
+                : null;
         session.repGuild().settings().general().language(locale);
     }
 
@@ -108,7 +108,7 @@ public class GeneralRoute implements RoutesBuilder {
     public void updateSystemChannel(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         Long channelId = ctx.bodyAsClass(Long.class);
-        
+
         session.guildValidator().validateChannelIds(channelId);
 
         session.repGuild().settings().general().systemChannel(channelId);

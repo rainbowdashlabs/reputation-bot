@@ -1,8 +1,8 @@
 /*
- *     SPDX-License-Identifier: AGPL-3.0-only
- *
- *     Copyright (C) RainbowDashLabs and Contributor
- */
+*     SPDX-License-Identifier: AGPL-3.0-only
+*
+*     Copyright (C) RainbowDashLabs and Contributor
+*/
 <script lang="ts" setup>
 import {computed} from 'vue'
 import {useI18n} from 'vue-i18n'
@@ -19,7 +19,7 @@ const additionalReactions = computed(() => [...(session.value?.settings.thanking
 </script>
 
 <template>
-  <SettingsContainer :title="t('reactions.title')" :description="t('reactions.description')">
+  <SettingsContainer :description="t('reactions.description')" :title="t('reactions.title')">
     <MainEmojiSettings :initial-main-reaction="mainReaction"/>
     <hr class="my-8 border-gray-200 dark:border-gray-700"/>
     <AdditionalEmojiSettings :initial-reactions="additionalReactions"/>

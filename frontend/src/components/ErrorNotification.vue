@@ -1,12 +1,12 @@
 /*
- *     SPDX-License-Identifier: AGPL-3.0-only
- *
- *     Copyright (C) RainbowDashLabs and Contributor
- */
-<script setup lang="ts">
-import { computed } from 'vue'
-import { useErrorStore } from '../stores/errorStore'
-import type { ApiErrorResponse } from '../api/types'
+*     SPDX-License-Identifier: AGPL-3.0-only
+*
+*     Copyright (C) RainbowDashLabs and Contributor
+*/
+<script lang="ts" setup>
+import {computed} from 'vue'
+import {useErrorStore} from '../stores/errorStore'
+import type {ApiErrorResponse} from '../api/types'
 
 const errorStore = useErrorStore()
 
@@ -26,29 +26,29 @@ const getErrorMessage = (error: ApiErrorResponse): string => {
 
 const getErrorDetails = (error: ApiErrorResponse): string | null => {
   if (!error.details) return null
-  
+
   // Handle PremiumFeatureErrorDetails
   if (error.details.feature) {
     const details = error.details
     let message = `Feature: ${details.feature}`
-    
+
     if (details.requiredSkus && details.requiredSkus.length > 0) {
       const skuNames = details.requiredSkus.map((sku: any) => sku.name).join(', ')
       message += `\nRequired: ${skuNames}`
     }
-    
+
     if (details.currentValue !== undefined && details.maxValue !== undefined) {
       message += `\nLimit: ${details.currentValue}/${details.maxValue}`
     }
-    
+
     return message
   }
-  
+
   // Handle other details as JSON string
   if (typeof error.details === 'object') {
     return JSON.stringify(error.details, null, 2)
   }
-  
+
   return String(error.details)
 }
 </script>
@@ -56,18 +56,18 @@ const getErrorDetails = (error: ApiErrorResponse): string | null => {
 <template>
   <div class="fixed bottom-4 right-4 z-50 flex flex-col gap-2 max-w-md">
     <div
-      v-for="errorItem in errors"
-      :key="errorItem.id"
-      class="bg-red-500 text-white rounded-lg shadow-lg p-4 cursor-pointer hover:bg-red-700 transition-colors duration-200 animate-slide-in"
-      @click="closeError(errorItem.id)"
+        v-for="errorItem in errors"
+        :key="errorItem.id"
+        class="bg-red-500 text-white rounded-lg shadow-lg p-4 cursor-pointer hover:bg-red-700 transition-colors duration-200 animate-slide-in"
+        @click="closeError(errorItem.id)"
     >
       <div class="flex items-start justify-between gap-2">
         <div class="flex-1">
           <h3 class="font-bold text-lg mb-1">{{ getErrorTitle(errorItem.error) }}</h3>
           <p class="text-sm mb-2">{{ getErrorMessage(errorItem.error) }}</p>
           <pre
-            v-if="getErrorDetails(errorItem.error)"
-            class="text-xs bg-red-700 bg-opacity-50 rounded p-2 mt-2 whitespace-pre-wrap break-words"
+              v-if="getErrorDetails(errorItem.error)"
+              class="text-xs bg-red-700 bg-opacity-50 rounded p-2 mt-2 whitespace-pre-wrap break-words"
           >{{ getErrorDetails(errorItem.error) }}</pre>
         </div>
       </div>

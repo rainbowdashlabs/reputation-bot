@@ -40,6 +40,7 @@ public class SettingsRoute implements RoutesBuilder {
         autopostRoute = new AutopostRoute(autopostService);
         ranksRoute = new RanksRoute(roleAssigner, shardManager);
     }
+
     @Override
     public void buildRoutes() {
         path("/settings", () -> {

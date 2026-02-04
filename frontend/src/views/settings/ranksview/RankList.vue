@@ -1,14 +1,14 @@
 /*
- *     SPDX-License-Identifier: AGPL-3.0-only
- *
- *     Copyright (C) RainbowDashLabs and Contributor
- */
+*     SPDX-License-Identifier: AGPL-3.0-only
+*
+*     Copyright (C) RainbowDashLabs and Contributor
+*/
 <script lang="ts" setup>
-import { computed } from 'vue'
-import { useI18n } from 'vue-i18n'
+import {computed} from 'vue'
+import {useI18n} from 'vue-i18n'
 import Header2 from "@/components/heading/Header2.vue"
 import RankItem from './RankItem.vue'
-import type { RankEntry } from '@/api/types'
+import type {RankEntry} from '@/api/types'
 
 const props = defineProps<{
   ranks: RankEntry[]
@@ -19,7 +19,7 @@ const emit = defineEmits<{
   (e: 'delete', roleId: string): void
 }>()
 
-const { t } = useI18n()
+const {t} = useI18n()
 
 const sortedRanks = computed(() => {
   return [...props.ranks].sort((a, b) => b.reputation - a.reputation)
@@ -50,10 +50,10 @@ const onDeleteRank = (roleId: string) => {
       <RankItem
           v-for="(rank, index) in sortedRanks"
           :key="rank.roleId"
-          :rank="rank"
           :other-ranks="ranks"
-          @update="(updatedRank) => onUpdateRank(updatedRank, index)"
+          :rank="rank"
           @delete="() => onDeleteRank(rank.roleId.toString())"
+          @update="(updatedRank) => onUpdateRank(updatedRank, index)"
       />
     </div>
     <p v-else class="text-gray-500 dark:text-gray-400 italic">

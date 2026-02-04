@@ -22,7 +22,7 @@ public class SetResetDateNow implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         guildRepository.guild(event.getGuild()).settings().general().resetDateNow();
 
-        event.reply(WebPromo.promoString(context) +context.localize("command.repadmin.resetdate.now.message.set"))
+        event.reply(WebPromo.promoString(context) + context.localize("command.repadmin.resetdate.now.message.set"))
              .setEphemeral(true)
              .complete();
     }

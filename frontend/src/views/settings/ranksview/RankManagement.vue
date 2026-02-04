@@ -1,19 +1,19 @@
 /*
- *     SPDX-License-Identifier: AGPL-3.0-only
- *
- *     Copyright (C) RainbowDashLabs and Contributor
- */
+*     SPDX-License-Identifier: AGPL-3.0-only
+*
+*     Copyright (C) RainbowDashLabs and Contributor
+*/
 <script lang="ts" setup>
-import { ref, watch } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useSession } from '@/composables/useSession'
-import { api } from '@/api'
-import type { RankEntry } from '@/api/types'
+import {ref, watch} from 'vue'
+import {useI18n} from 'vue-i18n'
+import {useSession} from '@/composables/useSession'
+import {api} from '@/api'
+import type {RankEntry} from '@/api/types'
 import AddRankForm from './AddRankForm.vue'
 import RankList from './RankList.vue'
 
-const { t } = useI18n()
-const { session } = useSession()
+const {t} = useI18n()
+const {session} = useSession()
 
 const ranks = ref<RankEntry[]>([])
 const isRefreshing = ref(false)
@@ -23,11 +23,11 @@ watch(session, (newSession) => {
   if (newSession?.settings?.ranks) {
     ranks.value = JSON.parse(JSON.stringify(newSession.settings.ranks.ranks))
   }
-}, { immediate: true })
+}, {immediate: true})
 
 const saveRanks = async () => {
   try {
-    await api.updateRanks({ ranks: ranks.value })
+    await api.updateRanks({ranks: ranks.value})
   } catch (error) {
     console.error('Failed to update ranks:', error)
   }
@@ -50,10 +50,10 @@ const onDeleteRank = async (roleId: string) => {
 
 const refreshRanks = async () => {
   if (isRefreshing.value) return
-  
+
   isRefreshing.value = true
   refreshMessage.value = ''
-  
+
   try {
     const result = await api.refreshRanks()
     if (result.alreadyRunning) {
@@ -78,19 +78,20 @@ const refreshRanks = async () => {
   <div class="space-y-6">
     <div class="items-center justify-between">
       <div class="flex-1">
-        <AddRankForm :existing-ranks="ranks" @add="onAddRank" />
+        <AddRankForm :existing-ranks="ranks" @add="onAddRank"/>
       </div>
     </div>
-    <RankList :ranks="ranks" @update="onUpdateRanks" @delete="onDeleteRank" />
+    <RankList :ranks="ranks" @delete="onDeleteRank" @update="onUpdateRanks"/>
     <div class="mt-4 flex flex-col items-end">
       <button
-          @click="refreshRanks"
           :disabled="isRefreshing"
           class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+          @click="refreshRanks"
       >
         {{ isRefreshing ? t('general.ranks.refresh.refreshing') : t('general.ranks.refresh.button') }}
       </button>
-      <p v-if="refreshMessage" class="mt-2 text-sm" :class="refreshMessage.includes(t('general.ranks.refresh.failed')) ? 'text-red-600' : 'text-green-600'">
+      <p v-if="refreshMessage" :class="refreshMessage.includes(t('general.ranks.refresh.failed')) ? 'text-red-600' : 'text-green-600'"
+         class="mt-2 text-sm">
         {{ refreshMessage }}
       </p>
     </div>

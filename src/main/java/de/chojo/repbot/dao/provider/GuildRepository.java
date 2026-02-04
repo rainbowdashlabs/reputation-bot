@@ -84,6 +84,17 @@ public class GuildRepository {
         return new GuildList(() -> pages(pageSize), page -> page(pageSize, page));
     }
 
+    public List<Long> byCommandReputationEnabled() {
+        return query("SELECT guild_id FROM reputation_settings WHERE command_active")
+                .single()
+                .mapAs(Long.class)
+                .all();
+    }
+
+    public void invalidate(long guild) {
+        guildRepository.invalidate(guild);
+    }
+
     private Integer pages(int pageSize) {
         return query("""
                 SELECT
@@ -106,16 +117,5 @@ public class GuildRepository {
                 .single(call().bind(page * pageSize).bind(pageSize))
                 .map(row -> byId(row.getLong("guild_id")))
                 .all();
-    }
-
-    public List<Long> byCommandReputationEnabled() {
-        return query("SELECT guild_id FROM reputation_settings WHERE command_active")
-                .single()
-                .mapAs(Long.class)
-                .all();
-    }
-
-    public void invalidate(long guild) {
-        guildRepository.invalidate(guild);
     }
 }

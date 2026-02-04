@@ -31,22 +31,6 @@ public class Subscription extends SKU {
         this.persistent = persistent;
     }
 
-    public long id() {
-        return id;
-    }
-
-    public SkuTarget skuTarget() {
-        return skuTarget;
-    }
-
-    public Instant endsAt() {
-        return endsAt;
-    }
-
-    public Entitlement.EntitlementType purchaseType() {
-        return purchaseType;
-    }
-
     public static RowMapping<Subscription> map() {
         return row -> new Subscription(
                 row.getLong("sku"),
@@ -67,6 +51,22 @@ public class Subscription extends SKU {
                 entitlement.getType(),
                 Optional.ofNullable(entitlement.getTimeEnding()).map(OffsetDateTime::toInstant).orElse(null),
                 false);
+    }
+
+    public long id() {
+        return id;
+    }
+
+    public SkuTarget skuTarget() {
+        return skuTarget;
+    }
+
+    public Instant endsAt() {
+        return endsAt;
+    }
+
+    public Entitlement.EntitlementType purchaseType() {
+        return purchaseType;
     }
 
     public boolean isPersistent() {

@@ -8,7 +8,6 @@ package de.chojo.repbot.dao.snapshots;
 import de.chojo.repbot.dao.access.guild.settings.sub.Ranks;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.sadu.mapper.wrapper.Row;
-import de.chojo.sadu.queries.api.call.Call;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 import org.jetbrains.annotations.NotNull;
@@ -94,8 +93,8 @@ public class ReputationRank implements GuildHolder, Comparable<ReputationRank> {
     @Override
     public String toString() {
         return "ReputationRank{" +
-               "roleId=" + roleId +
-               ", reputation=" + reputation +
-               '}';
+                "roleId=" + roleId +
+                ", reputation=" + reputation +
+                '}';
     }
 }

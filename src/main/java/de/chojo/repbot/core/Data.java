@@ -76,6 +76,38 @@ public class Data {
         }
     }
 
+    public GuildRepository guildRepository() {
+        return guildRepository;
+    }
+
+    public Gdpr gdpr() {
+        return gdpr;
+    }
+
+    public Cleanup cleanup() {
+        return cleanup;
+    }
+
+    public Metrics metrics() {
+        return metrics;
+    }
+
+    public Voice voice() {
+        return voice;
+    }
+
+    public void shutDown() {
+        dataSource.close();
+    }
+
+    public Analyzer analyzer() {
+        return analyzer;
+    }
+
+    public SessionService sessionService() {
+        return sessionService;
+    }
+
     private void updateDatabase() throws IOException, SQLException {
         var schema = configuration.database().schema();
         SqlUpdater.builder(dataSource, PostgreSql.get())
@@ -123,37 +155,5 @@ public class Data {
                                 .withThreadFactory(Threading.createThreadFactory(threading.hikariGroup()))
                                 .forSchema(data.schema())
                                 .build();
-    }
-
-    public GuildRepository guildRepository() {
-        return guildRepository;
-    }
-
-    public Gdpr gdpr() {
-        return gdpr;
-    }
-
-    public Cleanup cleanup() {
-        return cleanup;
-    }
-
-    public Metrics metrics() {
-        return metrics;
-    }
-
-    public Voice voice() {
-        return voice;
-    }
-
-    public void shutDown() {
-        dataSource.close();
-    }
-
-    public Analyzer analyzer() {
-        return analyzer;
-    }
-
-    public SessionService sessionService() {
-        return sessionService;
     }
 }

@@ -1,13 +1,13 @@
 /*
- *     SPDX-License-Identifier: AGPL-3.0-only
- *
- *     Copyright (C) RainbowDashLabs and Contributor
- */
+*     SPDX-License-Identifier: AGPL-3.0-only
+*
+*     Copyright (C) RainbowDashLabs and Contributor
+*/
 <script lang="ts" setup>
-import { ref, computed } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useSession } from '@/composables/useSession'
-import { api } from '@/api'
+import {computed, ref} from 'vue'
+import {useI18n} from 'vue-i18n'
+import {useSession} from '@/composables/useSession'
+import {api} from '@/api'
 
 const props = defineProps<{
   isUpdating: boolean
@@ -17,8 +17,8 @@ const emit = defineEmits<{
   (e: 'update:isUpdating', isUpdating: boolean): void
 }>()
 
-const { t } = useI18n()
-const { session, updateThankingThankwordsSettings } = useSession()
+const {t} = useI18n()
+const {session, updateThankingThankwordsSettings} = useSession()
 
 const newWord = ref('')
 const errorMessage = ref('')
@@ -32,7 +32,7 @@ const addWord = async () => {
 
   for (const char of invalidCharacters) {
     if (word.includes(char)) {
-      errorMessage.value = t('thankwords.invalidCharacter', { char: char })
+      errorMessage.value = t('thankwords.invalidCharacter', {char: char})
       return
     }
   }
@@ -45,16 +45,16 @@ const addWord = async () => {
   errorMessage.value = ''
   const previousWords = [...currentWords.value]
   const newList = [...currentWords.value, word]
-  
+
   emit('update:isUpdating', true)
-  updateThankingThankwordsSettings({ thankwords: newList })
+  updateThankingThankwordsSettings({thankwords: newList})
   newWord.value = ''
 
   try {
     await api.updateThankingThankwordsList(newList)
   } catch (error) {
     console.error('Failed to update thankwords:', error)
-    updateThankingThankwordsSettings({ thankwords: previousWords })
+    updateThankingThankwordsSettings({thankwords: previousWords})
     newWord.value = word
   } finally {
     emit('update:isUpdating', false)
@@ -68,16 +68,16 @@ const addWord = async () => {
       <div class="relative flex-grow">
         <input
             v-model="newWord"
-            type="text"
             :placeholder="t('thankwords.placeholder')"
             class="w-full px-4 py-2 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 dark:text-gray-100"
+            type="text"
             @keyup.enter="addWord"
         />
       </div>
       <button
-          @click="addWord"
           :disabled="isUpdating || !newWord.trim()"
           class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-md shadow-sm disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          @click="addWord"
       >
         {{ t('thankwords.add') }}
       </button>

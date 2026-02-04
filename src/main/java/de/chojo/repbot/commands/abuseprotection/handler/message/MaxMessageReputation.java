@@ -25,7 +25,7 @@ public class MaxMessageReputation implements SlashHandler {
         var abuseSettings = guild.settings().abuseProtection();
         if (event.getOptions().isEmpty()) {
             event.reply(WebPromo.promoString(context) + context.localize("command.abuseprotection.message.reputation.message.get",
-                    Replacement.create("VALUE", abuseSettings.maxMessageReputation())))
+                         Replacement.create("VALUE", abuseSettings.maxMessageReputation())))
                  .setEphemeral(true)
                  .complete();
             return;
@@ -33,7 +33,7 @@ public class MaxMessageReputation implements SlashHandler {
         var maxRep = event.getOption("amount").getAsInt();
         maxRep = Math.max(1, maxRep);
         event.reply(WebPromo.promoString(context) + context.localize("command.abuseprotection.message.reputation.message.get",
-                Replacement.create("VALUE", abuseSettings.maxMessageReputation(maxRep))))
+                     Replacement.create("VALUE", abuseSettings.maxMessageReputation(maxRep))))
              .setEphemeral(true)
              .complete();
     }

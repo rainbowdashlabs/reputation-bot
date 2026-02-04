@@ -52,7 +52,7 @@ public class Web {
     private final AutopostService autopostService;
     private Javalin javalin;
 
-    private Web(Bot bot, Data data, Threading threading, Configuration configuration, SessionService sessionService, InteractionHub<?, ?, ?> interactionHub,AutopostService autopostService) {
+    private Web(Bot bot, Data data, Threading threading, Configuration configuration, SessionService sessionService, InteractionHub<?, ?, ?> interactionHub, AutopostService autopostService) {
         this.bot = bot;
         this.data = data;
         this.threading = threading;
@@ -68,9 +68,34 @@ public class Web {
         return web;
     }
 
+    public static JavalinJackson jacksonMapper() {
+        ObjectMapper mapper = JsonMapper.builder()
+                                        .addModule(new JavaTimeModule())
+                                        .build();
+
+        mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
+        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        return new JavalinJackson(mapper, true);
+    }
+
     public void init() {
         initApi();
         initBotList();
+    }
+
+    public void handleAccess(Context ctx) {
+        Set<RouteRole> routeRoles = ctx.routeRoles();
+        if (routeRoles.contains(Role.ANYONE)) {
+            return;
+        }
+
+        if (routeRoles.contains(Role.GUILD_USER)) {
+            var session = sessionService.getGuildSession(ctx).orElseThrow(() -> {
+                ctx.header("WWW-Authenticate", "Authorization");
+                return new UnauthorizedResponse("You need to be logged in to access this route.");
+            });
+            ctx.sessionAttribute(SessionAttribute.GUILD_SESSION, session);
+        }
     }
 
     private void initApi() {
@@ -134,21 +159,6 @@ public class Web {
         swaggerConfiguration.setUiPath("/swagger-ui");
     }
 
-    public void handleAccess(Context ctx) {
-        Set<RouteRole> routeRoles = ctx.routeRoles();
-        if (routeRoles.contains(Role.ANYONE)) {
-            return;
-        }
-
-        if (routeRoles.contains(Role.GUILD_USER)) {
-            var session = sessionService.getGuildSession(ctx).orElseThrow(() -> {
-                ctx.header("WWW-Authenticate", "Authorization");
-                return new UnauthorizedResponse("You need to be logged in to access this route.");
-            });
-            ctx.sessionAttribute(SessionAttribute.GUILD_SESSION, session);
-        }
-    }
-
     private void configureOpenApi(OpenApiPluginConfiguration config) {
         config.withDocumentationPath("/docs")
               .withDefinitionConfiguration((version, definition) -> {
@@ -190,15 +200,5 @@ public class Web {
                               .build()
                       )
                       .build();
-    }
-
-    public static JavalinJackson jacksonMapper() {
-        ObjectMapper mapper = JsonMapper.builder()
-                                        .addModule(new JavaTimeModule())
-                                        .build();
-
-        mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
-        mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-        return new JavalinJackson(mapper, true);
     }
 }

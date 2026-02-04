@@ -9,28 +9,21 @@ import com.fasterxml.jackson.annotation.JsonSerializeAs;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.web.pojo.settings.sub.ProfilePOJO;
-import de.chojo.sadu.mapper.wrapper.Row;
-import de.chojo.sadu.queries.api.call.Call;
-import net.dv8tion.jda.api.entities.Icon;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Icon;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 
-import java.sql.SQLException;
 import java.util.Objects;
-import java.util.function.Function;
-
-import static de.chojo.sadu.queries.api.call.Call.call;
-import static de.chojo.sadu.queries.api.query.Query.query;
 
 @JsonSerializeAs(ProfilePOJO.class)
 public class Profile extends ProfilePOJO implements GuildHolder {
     private final Settings settings;
 
     public Profile(Settings settings) {
-        this(settings, 
-             settings.guild().getSelfMember().getNickname(), 
-             settings.guild().getSelfMember().getEffectiveAvatarUrl(),
-             settings.repGuild().localeOverrides().getOverride("words.reputation").orElse(null));
+        this(settings,
+                settings.guild().getSelfMember().getNickname(),
+                settings.guild().getSelfMember().getEffectiveAvatarUrl(),
+                settings.repGuild().localeOverrides().getOverride("words.reputation").orElse(null));
     }
 
     public Profile(Settings settings, String nickname, String profilePictureUrl, String reputationName) {
@@ -92,7 +85,7 @@ public class Profile extends ProfilePOJO implements GuildHolder {
         String newNickname = pojo.nickname();
         String currentNickname = settings.guild().getSelfMember().getNickname();
         if (!Objects.equals(newNickname, currentNickname)) nickname(newNickname);
-        
+
         String newReputationName = pojo.reputationName();
         String currentReputationName = settings.repGuild().localeOverrides().getOverride("words.reputation").orElse(null);
         if (!Objects.equals(newReputationName, currentReputationName)) reputationName(newReputationName);

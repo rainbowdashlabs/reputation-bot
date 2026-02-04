@@ -13,16 +13,11 @@ import de.chojo.repbot.dao.provider.GuildRepository;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.callbacks.IReplyCallback;
 
-public class Analyzer extends BaseAnalyzer implements SlashHandler  {
+public class Analyzer extends BaseAnalyzer implements SlashHandler {
     private final GuildRepository guildRepository;
 
     public Analyzer(GuildRepository guildRepository) {
         this.guildRepository = guildRepository;
-    }
-
-    @Override
-    public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        onSlashCommand(event, context, guildRepository.guild(event.getGuild()).reputation());
     }
 
     public static void sendAnalyzerLog(IReplyCallback callback, GuildRepository guildRepository, long messageId, EventContext context) {
@@ -53,5 +48,10 @@ public class Analyzer extends BaseAnalyzer implements SlashHandler  {
         callback.replyEmbeds(embed)
                 .setEphemeral(true)
                 .complete();
+    }
+
+    @Override
+    public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
+        onSlashCommand(event, context, guildRepository.guild(event.getGuild()).reputation());
     }
 }

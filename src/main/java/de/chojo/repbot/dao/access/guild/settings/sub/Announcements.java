@@ -73,17 +73,6 @@ public class Announcements extends AnnouncementsPOJO implements GuildHolder {
         if (channelId != state.channelId()) channel(state.channelId());
     }
 
-    private boolean set(String parameter, Function<Call, Call> builder) {
-        return query("""
-                INSERT INTO announcements(guild_id, %s) VALUES (?, ?)
-                ON CONFLICT(guild_id)
-                    DO UPDATE SET %s = excluded.%s;
-                """, parameter, parameter, parameter)
-                .single(builder.apply(call().bind(guildId())))
-                .insert()
-                .changed();
-    }
-
     @Override
     public Guild guild() {
         return settings.guild();
@@ -101,5 +90,16 @@ public class Announcements extends AnnouncementsPOJO implements GuildHolder {
                 Channel: %s
                 """.stripIndent()
                    .formatted(active, sameChannel, channelId);
+    }
+
+    private boolean set(String parameter, Function<Call, Call> builder) {
+        return query("""
+                INSERT INTO announcements(guild_id, %s) VALUES (?, ?)
+                ON CONFLICT(guild_id)
+                    DO UPDATE SET %s = excluded.%s;
+                """, parameter, parameter, parameter)
+                .single(builder.apply(call().bind(guildId())))
+                .insert()
+                .changed();
     }
 }

@@ -13,8 +13,6 @@ import de.chojo.sadu.mapper.wrapper.Row;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
@@ -58,7 +56,7 @@ public record ReputationLogEntry(long guildId, long channelId, long donorId, lon
         return "%s ➜ %s".formatted(MentionUtil.user(donorId()), MentionUtil.user(receiverId()));
     }
 
-    public Duration tillNow(){
+    public Duration tillNow() {
         return Duration.between(received(), Instant.now());
     }
 

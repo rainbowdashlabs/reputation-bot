@@ -39,8 +39,8 @@ public class Add extends BaseChannelModifier {
 
         channels.add(channel);
         event.getHook().editOriginal(
-                WebPromo.promoString(context) + context.localize("command.channel.add.message.added",
-                        Replacement.create("CHANNEL", channel.getAsMention())))
+                     WebPromo.promoString(context) + context.localize("command.channel.add.message.added",
+                             Replacement.create("CHANNEL", channel.getAsMention())))
              .complete();
 
     }
@@ -61,8 +61,8 @@ public class Add extends BaseChannelModifier {
         channels.add(category);
 
         event.getHook().editOriginal(
-                WebPromo.promoString(context) + context.localize("command.channel.add.message.added",
-                        Replacement.create("CHANNEL", category.getAsMention())))
+                     WebPromo.promoString(context) + context.localize("command.channel.add.message.added",
+                             Replacement.create("CHANNEL", category.getAsMention())))
              .complete();
     }
 }

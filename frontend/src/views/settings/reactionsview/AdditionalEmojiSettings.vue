@@ -1,10 +1,10 @@
 /*
- *     SPDX-License-Identifier: AGPL-3.0-only
- *
- *     Copyright (C) RainbowDashLabs and Contributor
- */
+*     SPDX-License-Identifier: AGPL-3.0-only
+*
+*     Copyright (C) RainbowDashLabs and Contributor
+*/
 <script lang="ts" setup>
-import {ref, watch, computed} from 'vue'
+import {computed, ref, watch} from 'vue'
 import {useI18n} from 'vue-i18n'
 import {api} from '@/api'
 import {useSession} from '@/composables/useSession'
@@ -87,27 +87,30 @@ const isGuildEmoji = (val: string) => {
       />
     </div>
 
-    <div class="space-y-4" :class="{'opacity-50 pointer-events-none': !isPremium}">
-      <div v-if="reactions.length > 0" class="flex flex-wrap gap-2 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
+    <div :class="{'opacity-50 pointer-events-none': !isPremium}" class="space-y-4">
+      <div v-if="reactions.length > 0"
+           class="flex flex-wrap gap-2 p-3 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
         <div
             v-for="(emoji, index) in reactions"
             :key="index"
             class="relative group"
         >
-          <div class="w-12 h-12 flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded">
-            <img v-if="isGuildEmoji(emoji)" :src="getEmojiDisplay(emoji)" class="w-10 h-10 object-contain" alt="emoji"/>
+          <div
+              class="w-12 h-12 flex items-center justify-center bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded">
+            <img v-if="isGuildEmoji(emoji)" :src="getEmojiDisplay(emoji)" alt="emoji" class="w-10 h-10 object-contain"/>
             <span v-else class="text-3xl">{{ emoji }}</span>
           </div>
           <button
-              type="button"
               class="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity shadow-sm"
+              type="button"
               @click="removeReaction(index)"
           >
             &times;
           </button>
         </div>
       </div>
-      <div v-else class="p-4 text-center text-gray-500 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 italic">
+      <div v-else
+           class="p-4 text-center text-gray-500 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700 italic">
         {{ t('reactions.additional.none') }}
       </div>
 

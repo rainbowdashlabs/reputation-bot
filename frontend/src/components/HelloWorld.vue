@@ -1,10 +1,10 @@
 /*
- *     SPDX-License-Identifier: AGPL-3.0-only
- *
- *     Copyright (C) RainbowDashLabs and Contributor
- */
-<script setup lang="ts">
-import { ref } from 'vue'
+*     SPDX-License-Identifier: AGPL-3.0-only
+*
+*     Copyright (C) RainbowDashLabs and Contributor
+*/
+<script lang="ts" setup>
+import {ref} from 'vue'
 
 defineProps<{ msg: string }>()
 
@@ -25,15 +25,15 @@ const count = ref(0)
   <p>
     Check out
     <a href="https://vuejs.org/guide/quick-start.html#local" target="_blank"
-      >create-vue</a
+    >create-vue</a
     >, the official Vue + Vite starter
   </p>
   <p>
     Learn more about IDE Support for Vue in the
     <a
-      href="https://vuejs.org/guide/scaling-up/tooling.html#ide-support"
-      target="_blank"
-      >Vue Docs Scaling up Guide</a
+        href="https://vuejs.org/guide/scaling-up/tooling.html#ide-support"
+        target="_blank"
+    >Vue Docs Scaling up Guide</a
     >.
   </p>
   <p class="read-the-docs">Click on the Vite and Vue logos to learn more</p>

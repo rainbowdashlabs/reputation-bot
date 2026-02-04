@@ -8,7 +8,6 @@ package de.chojo.repbot.web.pojo.premium;
 import java.util.List;
 
 import static de.chojo.repbot.util.States.GRANT_ALL_SKU;
-import static de.chojo.repbot.util.States.TEST_MODE;
 
 /**
  * Represents a premium feature with a limit.

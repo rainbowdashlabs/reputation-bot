@@ -14,7 +14,6 @@ import de.chojo.repbot.web.routes.RoutesBuilder;
 import de.chojo.repbot.web.sessions.GuildSession;
 import io.javalin.http.Context;
 import io.javalin.http.FailedDependencyResponse;
-import io.javalin.http.InternalServerErrorResponse;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
 import io.javalin.openapi.OpenApiContent;
@@ -163,17 +162,6 @@ public class ReputationRoute implements RoutesBuilder {
         refreshGuildCommands(session.repGuild().guild());
     }
 
-    private boolean refreshGuildCommands(Guild guild) {
-        // The command needs to be hidden or enabled additionally
-        try {
-            hub.refreshGuildCommands(guild);
-            return true;
-        } catch (Exception err) {
-            log.error("Error during command refresh", err);
-            throw new FailedDependencyResponse("Could not refresh guild commands.");
-        }
-    }
-
     @Override
     public void buildRoutes() {
         path("reputation", () -> {
@@ -186,5 +174,16 @@ public class ReputationRoute implements RoutesBuilder {
             post("directactive", this::updateDirectActive, Role.GUILD_USER);
             post("commandactive", this::updateCommandActive, Role.GUILD_USER);
         });
+    }
+
+    private boolean refreshGuildCommands(Guild guild) {
+        // The command needs to be hidden or enabled additionally
+        try {
+            hub.refreshGuildCommands(guild);
+            return true;
+        } catch (Exception err) {
+            log.error("Error during command refresh", err);
+            throw new FailedDependencyResponse("Could not refresh guild commands.");
+        }
     }
 }

@@ -29,8 +29,8 @@ public class SetCooldownDirection implements SlashHandler {
         var abuseSettings = guild.settings().abuseProtection();
         var cooldown = Parser.parseEnum(event.getOption("direction").getAsString(), CooldownDirection.class);
 
-        event.reply(WebPromo.promoString(context)  + context.localize("command.abuseprotection.cooldown.direction.message.set",
-                Replacement.create("DIRECTION", abuseSettings.cooldownDirection(cooldown).localCode())))
+        event.reply(WebPromo.promoString(context) + context.localize("command.abuseprotection.cooldown.direction.message.set",
+                     Replacement.create("DIRECTION", abuseSettings.cooldownDirection(cooldown).localCode())))
              .setEphemeral(true)
              .complete();
     }

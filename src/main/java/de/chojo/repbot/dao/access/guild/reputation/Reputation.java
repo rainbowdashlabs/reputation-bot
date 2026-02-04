@@ -28,7 +28,7 @@ import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class Reputation  implements GuildHolder {
+public class Reputation implements GuildHolder {
     private static final Logger log = getLogger(Reputation.class);
     private final RepGuild repGuild;
 

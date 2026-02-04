@@ -17,7 +17,6 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.List;
 
 public abstract class UserRanking implements GuildHolder {
@@ -47,19 +46,19 @@ public abstract class UserRanking implements GuildHolder {
         return new Ranking(title(mode), Replacement.create("USER", member.getEffectiveName()), () -> pages(pageSize, member, mode), page -> getRankingPage(pageSize, page, member, mode));
     }
 
-    private String title(ReputationMode mode) {
-        return "$%s$ - $%s$".formatted(type.localeKey(), RankingScope.USER.localeKey(mode));
-    }
-
-    protected abstract List<RankingEntry> getRankingPage(int pageSize, int page, Member member, ReputationMode mode);
-
-    protected abstract int pages(int pageSize, Member member, ReputationMode mode);
-
     public UserRankings ranking() {
         return user;
     }
 
     public Instant resetDate() {
         return user.ranking().reputation().repGuild().settings().general().resetDate();
+    }
+
+    protected abstract List<RankingEntry> getRankingPage(int pageSize, int page, Member member, ReputationMode mode);
+
+    protected abstract int pages(int pageSize, Member member, ReputationMode mode);
+
+    private String title(ReputationMode mode) {
+        return "$%s$ - $%s$".formatted(type.localeKey(), RankingScope.USER.localeKey(mode));
     }
 }
