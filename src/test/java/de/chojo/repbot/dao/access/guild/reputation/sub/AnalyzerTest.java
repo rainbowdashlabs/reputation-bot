@@ -34,5 +34,4 @@ class AnalyzerTest {
                 """;
         Assertions.assertDoesNotThrow(() -> Analyzer.MAPPER.readValue(str, SubmitResult.class));
     }
-
 }

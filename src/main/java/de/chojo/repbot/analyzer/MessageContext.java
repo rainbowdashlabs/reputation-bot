@@ -27,6 +27,7 @@ public class MessageContext implements MemberHolder {
     private final Set<Message> rawMessages = new LinkedHashSet<>();
     private final Set<Message> contextMessages = new LinkedHashSet<>();
     private final Member target;
+
     @Nullable
     private Message message;
 
@@ -105,9 +106,9 @@ public class MessageContext implements MemberHolder {
      */
     public MessageContext resolve() {
         addMembers(userIds.stream()
-                          .map(id -> guild().retrieveMemberById(id).onErrorMap(e -> null).complete())
-                          .filter(Objects::nonNull)
-                          .collect(Collectors.toSet()));
+                .map(id -> guild().retrieveMemberById(id).onErrorMap(e -> null).complete())
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet()));
         return this;
     }
 

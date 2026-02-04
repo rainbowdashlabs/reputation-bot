@@ -43,17 +43,20 @@ public class AutopostRoute implements RoutesBuilder {
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = AutopostPOJO.class)),
             responses = {
-                    @OpenApiResponse(status = "200"),
-                    @OpenApiResponse(status = "403", content = @OpenApiContent(from = ErrorResponse.class), description = "Premium feature required or limit exceeded")
-            }
-    )
+                @OpenApiResponse(status = "200"),
+                @OpenApiResponse(
+                        status = "403",
+                        content = @OpenApiContent(from = ErrorResponse.class),
+                        description = "Premium feature required or limit exceeded")
+            })
     public void updateAutopostSettings(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         AutopostPOJO autopostPOJO = ctx.bodyAsClass(AutopostPOJO.class);
 
         // Validate autopost feature if enabling
         PremiumValidator validator = session.premiumValidator();
-        validator.requireFeatureIfEnabled(autopostPOJO.active(), validator.features().autopost(), "Autopost");
+        validator.requireFeatureIfEnabled(
+                autopostPOJO.active(), validator.features().autopost(), "Autopost");
 
         Autopost autopost = session.repGuild().settings().autopost();
         autopost.apply(autopostPOJO);
@@ -68,10 +71,12 @@ public class AutopostRoute implements RoutesBuilder {
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
             responses = {
-                    @OpenApiResponse(status = "200"),
-                    @OpenApiResponse(status = "403", content = @OpenApiContent(from = ErrorResponse.class), description = "Premium feature required or limit exceeded")
-            }
-    )
+                @OpenApiResponse(status = "200"),
+                @OpenApiResponse(
+                        status = "403",
+                        content = @OpenApiContent(from = ErrorResponse.class),
+                        description = "Premium feature required or limit exceeded")
+            })
     public void updateActive(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         boolean active = ctx.bodyAsClass(Boolean.class);
@@ -95,8 +100,7 @@ public class AutopostRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Long.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateChannel(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         Long channelId = ctx.bodyAsClass(Long.class);
@@ -117,8 +121,7 @@ public class AutopostRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Long.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateMessage(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         session.repGuild().settings().autopost().message(ctx.bodyAsClass(Long.class));
@@ -132,8 +135,7 @@ public class AutopostRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = RefreshType.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateRefreshType(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         session.repGuild().settings().autopost().refreshType(ctx.bodyAsClass(RefreshType.class));
@@ -147,8 +149,7 @@ public class AutopostRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = RefreshInterval.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateRefreshInterval(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         session.repGuild().settings().autopost().refreshInterval(ctx.bodyAsClass(RefreshInterval.class));
@@ -161,8 +162,7 @@ public class AutopostRoute implements RoutesBuilder {
             methods = HttpMethod.POST,
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void sendAutopost(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         autopostService.update(session.repGuild());

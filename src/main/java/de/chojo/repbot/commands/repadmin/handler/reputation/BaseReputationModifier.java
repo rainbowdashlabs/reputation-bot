@@ -33,5 +33,6 @@ public abstract class BaseReputationModifier implements SlashHandler {
         roleAssigner.updateReporting(member, event.getChannel().asGuildMessageChannel());
     }
 
-    abstract void execute(SlashCommandInteractionEvent event, EventContext context, User user, RepUser repUser, long rep);
+    abstract void execute(
+            SlashCommandInteractionEvent event, EventContext context, User user, RepUser repUser, long rep);
 }

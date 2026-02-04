@@ -38,12 +38,12 @@ public class Statistic {
     }
 
     public SystemStatistics getSystemStatistic() {
-        var shardStatistics = shardManager.getShardCache()
-                                          .stream()
-                                          .map(this::getShardStatistic)
-                                          .collect(Collectors.toList());
+        var shardStatistics = shardManager.getShardCache().stream()
+                .map(this::getShardStatistic)
+                .collect(Collectors.toList());
 
-        return new SystemStatistics(ProcessStatistics.create(),
+        return new SystemStatistics(
+                ProcessStatistics.create(),
                 metrics.statistic().getStatistic().orElseGet(DataStatistic::new),
                 shardStatistics);
     }

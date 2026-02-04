@@ -18,12 +18,14 @@ public record CommandsStatistic(LocalDate date, List<CommandStatistic> commands)
 
     @Override
     public byte[] getChart(String title) {
-        var categorySeries = new CategoryChartBuilder().width(1200).height(600)
-                                                       .title(title)
-                                                       .xAxisTitle("Command")
-                                                       .yAxisTitle("Count")
-                                                       .theme(Styler.ChartTheme.Matlab)
-                                                       .build();
+        var categorySeries = new CategoryChartBuilder()
+                .width(1200)
+                .height(600)
+                .title(title)
+                .xAxisTitle("Command")
+                .yAxisTitle("Count")
+                .theme(Styler.ChartTheme.Matlab)
+                .build();
         var style = categorySeries.getStyler();
         style.setXAxisLabelAlignment(AxesChartStyler.TextAlignment.Centre);
         style.setXAxisLabelAlignmentVertical(AxesChartStyler.TextAlignment.Right);
@@ -33,11 +35,7 @@ public record CommandsStatistic(LocalDate date, List<CommandStatistic> commands)
 
         var xData = commands.stream().map(CommandStatistic::command).toList();
         var yData = commands.stream().map(CommandStatistic::count).toList();
-        categorySeries.addSeries("Command",
-                              xData,
-                              yData)
-                      .setShowInLegend(false)
-                      .setLabel("command");
+        categorySeries.addSeries("Command", xData, yData).setShowInLegend(false).setLabel("command");
 
         try {
             return BitmapEncoder.getBitmapBytes(categorySeries, BitmapEncoder.BitmapFormat.PNG);

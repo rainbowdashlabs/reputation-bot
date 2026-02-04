@@ -42,7 +42,6 @@ public class MetricsRoute implements RoutesBuilder {
         service = new Service(metrics, cache);
     }
 
-
     @Override
     public void buildRoutes() {
         path("metrics", () -> {

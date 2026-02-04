@@ -15,8 +15,8 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-public record ProcessStatistics(long total, long used, long free, long max,
-                                long threads) implements ReplacementProvider, EmbedDisplay {
+public record ProcessStatistics(long total, long used, long free, long max, long threads)
+        implements ReplacementProvider, EmbedDisplay {
 
     private static final int MB = 1024 * 1024;
     private static final Instant START = Instant.now();
@@ -37,21 +37,28 @@ public record ProcessStatistics(long total, long used, long free, long max,
 
     @Override
     public List<Replacement> replacements() {
-        return List.of(Replacement.create("total_mem", total), Replacement.create("used_mem", used),
-                Replacement.create("free_mem", free), Replacement.create("max_mem", max),
+        return List.of(
+                Replacement.create("total_mem", total),
+                Replacement.create("used_mem", used),
+                Replacement.create("free_mem", free),
+                Replacement.create("max_mem", max),
                 Replacement.create("threads", threads));
     }
 
     @Override
     public void appendTo(EmbedBuilder embedBuilder) {
-        embedBuilder.addField("Process Info",
-                String.format("""
+        embedBuilder.addField(
+                "Process Info",
+                String.format(
+                        """
                                 Threads: %s
                                 Memory: %s/%s MB
                                 Uptime: %s
                                 """.stripIndent(),
-                        threads, used, total,
-                        DurationFormatUtils
-                                .formatDuration(uptime(), "dd:HH:mm:ss")), false);
+                        threads,
+                        used,
+                        total,
+                        DurationFormatUtils.formatDuration(uptime(), "dd:HH:mm:ss")),
+                false);
     }
 }

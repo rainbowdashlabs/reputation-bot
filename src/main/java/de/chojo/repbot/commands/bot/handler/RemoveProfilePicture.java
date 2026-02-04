@@ -32,9 +32,13 @@ public class RemoveProfilePicture implements SlashHandler {
         boolean success = profile.profilePicture(null);
 
         if (success) {
-            event.reply("Successfully removed profile picture for bot in guild: " + guild.getName()).setEphemeral(true).queue();
+            event.reply("Successfully removed profile picture for bot in guild: " + guild.getName())
+                    .setEphemeral(true)
+                    .queue();
         } else {
-            event.reply("Failed to remove profile picture. Bot may lack permissions or an error occurred.").setEphemeral(true).queue();
+            event.reply("Failed to remove profile picture. Bot may lack permissions or an error occurred.")
+                    .setEphemeral(true)
+                    .queue();
         }
     }
 }

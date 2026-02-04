@@ -38,12 +38,19 @@ public class RoleUpdater extends ListenerAdapter {
         this.shardManager = shardManager;
     }
 
-    public static RoleUpdater create(GuildRepository guildRepository, RoleAssigner roleAssigner, ShardManager shardManager, ScheduledExecutorService executorService) {
+    public static RoleUpdater create(
+            GuildRepository guildRepository,
+            RoleAssigner roleAssigner,
+            ShardManager shardManager,
+            ScheduledExecutorService executorService) {
         var roleUpdater = new RoleUpdater(guildRepository, roleAssigner, shardManager);
         executorService.scheduleAtFixedRate(roleUpdater.checked::clear, 30, 30, TimeUnit.MINUTES);
         var now = ZonedDateTime.now(ZoneOffset.UTC);
-        var base = now.toLocalDate().atStartOfDay().plus(1, ChronoUnit.DAYS).plus(1, ChronoUnit.HOURS)
-                      .atOffset(ZoneOffset.UTC);
+        var base = now.toLocalDate()
+                .atStartOfDay()
+                .plus(1, ChronoUnit.DAYS)
+                .plus(1, ChronoUnit.HOURS)
+                .atOffset(ZoneOffset.UTC);
         var minutes = now.until(base, ChronoUnit.MINUTES);
         executorService.scheduleAtFixedRate(roleUpdater::updateTimed, minutes, 1440, TimeUnit.MINUTES);
         return roleUpdater;
@@ -52,7 +59,12 @@ public class RoleUpdater extends ListenerAdapter {
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (!event.isFromGuild()) return;
-        if (!guildRepository.guild(event.getGuild()).settings().general().reputationMode().isAutoRefresh()) return;
+        if (!guildRepository
+                .guild(event.getGuild())
+                .settings()
+                .general()
+                .reputationMode()
+                .isAutoRefresh()) return;
         if (event.getMember() == null || isChecked(event.getMember())) return;
         roleAssigner.updateReporting(event.getMember(), event.getGuildChannel());
         guildSet(event.getGuild()).add(event.getMember().getIdLong());

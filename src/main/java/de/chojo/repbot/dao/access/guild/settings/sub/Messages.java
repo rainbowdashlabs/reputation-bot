@@ -35,9 +35,8 @@ public class Messages extends MessagesPOJO implements GuildHolder {
     }
 
     public static Messages build(Settings settings, Row rs) throws SQLException {
-        return new Messages(settings,
-                rs.getBoolean("reaction_confirmation"),
-                rs.getBoolean("command_reputation_ephemeral"));
+        return new Messages(
+                settings, rs.getBoolean("reaction_confirmation"), rs.getBoolean("command_reputation_ephemeral"));
     }
 
     public boolean reactionConfirmation(boolean reactionConfirmation) {
@@ -75,9 +74,11 @@ public class Messages extends MessagesPOJO implements GuildHolder {
 
     public String toLocalizedString() {
         var setting = List.of(
-                getSetting("command.messages.states.message.option.reactionconfirmation.name", isReactionConfirmation()),
-                getSetting("command.messages.states.message.option.commandreputationephemeral.name", isCommandReputationEphemeral())
-        );
+                getSetting(
+                        "command.messages.states.message.option.reactionconfirmation.name", isReactionConfirmation()),
+                getSetting(
+                        "command.messages.states.message.option.commandreputationephemeral.name",
+                        isCommandReputationEphemeral()));
 
         return String.join("\n", setting);
     }
@@ -85,8 +86,7 @@ public class Messages extends MessagesPOJO implements GuildHolder {
     public String prettyString() {
         return """
                 Reaction confirmation: %s
-                """.stripIndent()
-                   .formatted(reactionConfirmation);
+                """.stripIndent().formatted(reactionConfirmation);
     }
 
     private boolean set(String parameter, Function<Call, Call> builder) {

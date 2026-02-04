@@ -21,7 +21,6 @@ public class DonatedReputation implements UserHandler {
         this.configuration = configuration;
     }
 
-
     @Override
     public void onUser(UserContextInteractionEvent event, EventContext eventContext) {
         Donated.send(event, event.getTargetMember(), guildRepository, eventContext, configuration);

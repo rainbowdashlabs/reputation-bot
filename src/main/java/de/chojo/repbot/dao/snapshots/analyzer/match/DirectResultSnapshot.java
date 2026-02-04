@@ -21,10 +21,11 @@ public class DirectResultSnapshot extends MatchResultSnapshot implements ResultS
     private final List<Long> receivers;
 
     @JsonCreator
-    public DirectResultSnapshot(@JsonProperty("thankType") ThankType thankType,
-                                @JsonProperty("donorId") long donorId,
-                                @JsonProperty("match") String match,
-                                @JsonProperty("receivers") List<Long> receivers) {
+    public DirectResultSnapshot(
+            @JsonProperty("thankType") ThankType thankType,
+            @JsonProperty("donorId") long donorId,
+            @JsonProperty("match") String match,
+            @JsonProperty("receivers") List<Long> receivers) {
         super(thankType, donorId, match);
         this.receivers = receivers;
     }
@@ -36,9 +37,9 @@ public class DirectResultSnapshot extends MatchResultSnapshot implements ResultS
     @Override
     public void add(Guild guild, ResultEntry entry, LocalizedEmbedBuilder builder) {
         super.add(guild, entry, builder);
-        builder.addField("command.log.analyzer.message.field.receivers",
-                receivers().stream()
-                           .map(id -> User.fromId(id).getAsMention())
-                           .collect(Collectors.joining("\n")), false);
+        builder.addField(
+                "command.log.analyzer.message.field.receivers",
+                receivers().stream().map(id -> User.fromId(id).getAsMention()).collect(Collectors.joining("\n")),
+                false);
     }
 }

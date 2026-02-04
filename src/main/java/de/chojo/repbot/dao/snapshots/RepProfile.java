@@ -29,9 +29,15 @@ import java.util.stream.Collectors;
 /**
  * Snapshot of a user reputation profile.
  */
-public record RepProfile(RepUser repUser, long rank, long rankDonated, long userId, long reputation, long repOffset,
-                         long rawReputation,
-                         long donated) {
+public record RepProfile(
+        RepUser repUser,
+        long rank,
+        long rankDonated,
+        long userId,
+        long reputation,
+        long repOffset,
+        long rawReputation,
+        long donated) {
     private static final int BAR_SIZE = 20;
 
     public static RepProfile empty(RepUser repuser, User user) {
@@ -39,41 +45,26 @@ public record RepProfile(RepUser repUser, long rank, long rankDonated, long user
     }
 
     public static RepProfile buildProfile(RepUser repuser, Row rs) throws SQLException {
-        return new RepProfile(repuser,
+        return new RepProfile(
+                repuser,
                 rs.getLong("rank"),
                 rs.getLong("rank_donated"),
                 rs.getLong("user_id"),
                 rs.getLong("reputation"),
                 rs.getLong("rep_offset"),
                 rs.getLong("raw_reputation"),
-                rs.getLong("donated")
-        );
+                rs.getLong("donated"));
     }
 
     @Deprecated(forRemoval = true)
     public static RepProfile buildReceivedRanking(Row rs) throws SQLException {
-        return new RepProfile(null,
-                rs.getLong("rank"),
-                0,
-                rs.getLong("user_id"),
-                rs.getLong("reputation"),
-                0,
-                0,
-                0
-        );
+        return new RepProfile(null, rs.getLong("rank"), 0, rs.getLong("user_id"), rs.getLong("reputation"), 0, 0, 0);
     }
 
     @Deprecated(forRemoval = true)
     public static RepProfile buildGivenRanking(Row rs) throws SQLException {
-        return new RepProfile(null,
-                0,
-                rs.getLong("rank_donated"),
-                rs.getLong("user_id"),
-                0,
-                0,
-                0,
-                rs.getLong("donated")
-        );
+        return new RepProfile(
+                null, 0, rs.getLong("rank_donated"), rs.getLong("user_id"), 0, 0, 0, rs.getLong("donated"));
     }
 
     public String fancyString(int maxRank) {
@@ -89,8 +80,8 @@ public record RepProfile(RepUser repUser, long rank, long rankDonated, long user
     public MessageEmbed adminProfile(Configuration configuration, LocalizationContext localizer) {
         var build = getBaseBuilder(configuration, localizer, false);
         build.addField("words.rawReputation", String.valueOf(rawReputation()), true)
-             .addField("words.reputationOffset", String.valueOf(repOffset()), true)
-             .addField("words.donated", String.valueOf(donated()), true);
+                .addField("words.reputationOffset", String.valueOf(repOffset()), true)
+                .addField("words.donated", String.valueOf(donated()), true);
         return build.build();
     }
 
@@ -113,29 +104,38 @@ public record RepProfile(RepUser repUser, long rank, long rankDonated, long user
 
         var progressBar = Text.progressBar(progress, BAR_SIZE);
 
-        var level = current.flatMap(r -> r.getRole(repUser.member().getGuild())).map(IMentionable::getAsMention)
-                           .orElse("/");
+        var level = current.flatMap(r -> r.getRole(repUser.member().getGuild()))
+                .map(IMentionable::getAsMention)
+                .orElse("/");
 
         var currProgress = String.valueOf(reputation() - currentRoleRep);
         var nextLevel = nextRoleRep.equals(currentRoleRep) ? "Ꝏ" : String.valueOf(nextRoleRep - currentRoleRep);
 
         var build = new LocalizedEmbedBuilder(localizer);
         if (detailed) {
-            build.setAuthor("element.profile.title", null, repUser.member().getEffectiveAvatarUrl(),
+            build.setAuthor(
+                    "element.profile.title",
+                    null,
+                    repUser.member().getEffectiveAvatarUrl(),
                     Replacement.create("NAME", repUser.member().getEffectiveName()));
             build.addField("words.rankreceived", rank() + "", true);
             build.addField("words.rankdonated", rankDonated() + "", true);
             build.addBlankField(false);
         } else {
-            build.setAuthor("%s$%s$".formatted(rank() != 0 ? "#" + rank() + " " : "", "element.profile.title"),
-                    null, repUser.member().getEffectiveAvatarUrl(),
+            build.setAuthor(
+                    "%s$%s$".formatted(rank() != 0 ? "#" + rank() + " " : "", "element.profile.title"),
+                    null,
+                    repUser.member().getEffectiveAvatarUrl(),
                     Replacement.create("NAME", repUser.member().getEffectiveName()));
         }
         build.addField("words.level", level, true)
-             .addField("words.reputation", Format.BOLD.apply(String.valueOf(reputation())), true)
-             .addField("words.donated", Format.BOLD.apply(String.valueOf(donated())), true)
-             .addField("element.profile.nextLevel", "```ANSI%n%s/%s  %s```".formatted(currProgress, nextLevel, progressBar), false)
-             .setColor(repUser.member().getColor());
+                .addField("words.reputation", Format.BOLD.apply(String.valueOf(reputation())), true)
+                .addField("words.donated", Format.BOLD.apply(String.valueOf(donated())), true)
+                .addField(
+                        "element.profile.nextLevel",
+                        "```ANSI%n%s/%s  %s```".formatted(currProgress, nextLevel, progressBar),
+                        false)
+                .setColor(repUser.member().getColor());
         var badge = configuration.badges().badge((int) rank());
         badge.ifPresent(build::setThumbnail);
 
@@ -148,12 +148,27 @@ public record RepProfile(RepUser repUser, long rank, long rankDonated, long user
 
     private void addDetails(EmbedBuilder build) {
         var entries = 5;
-        String topDonor = repUser.reputation().ranking().user().given().defaultRanking(entries, repUser.member()).page(0)
-                                 .stream().map(RankingEntry::simpleString).collect(Collectors.joining("\n"));
-        String topReceiver = repUser.reputation().ranking().user().received().defaultRanking(entries, repUser.member()).page(0)
-                                    .stream().map(RankingEntry::simpleString).collect(Collectors.joining("\n"));
-        var mostReceivedChannel = repUser.mostReceivedChannel(entries).stream().map(ChannelStats::fancyString).collect(Collectors.joining("\n"));
-        var mostGivenChannel = repUser.mostGivenChannel(entries).stream().map(ChannelStats::fancyString).collect(Collectors.joining("\n"));
+        String topDonor =
+                repUser.reputation().ranking().user().given().defaultRanking(entries, repUser.member()).page(0).stream()
+                        .map(RankingEntry::simpleString)
+                        .collect(Collectors.joining("\n"));
+        String topReceiver =
+                repUser
+                        .reputation()
+                        .ranking()
+                        .user()
+                        .received()
+                        .defaultRanking(entries, repUser.member())
+                        .page(0)
+                        .stream()
+                        .map(RankingEntry::simpleString)
+                        .collect(Collectors.joining("\n"));
+        var mostReceivedChannel = repUser.mostReceivedChannel(entries).stream()
+                .map(ChannelStats::fancyString)
+                .collect(Collectors.joining("\n"));
+        var mostGivenChannel = repUser.mostGivenChannel(entries).stream()
+                .map(ChannelStats::fancyString)
+                .collect(Collectors.joining("\n"));
 
         // TODO: Great case for components v2
 

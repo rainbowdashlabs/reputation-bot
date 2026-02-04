@@ -13,8 +13,8 @@ import de.chojo.repbot.web.sessions.SessionService;
 public class Setup extends SlashCommand {
     public Setup(SessionService sessionService) {
         super(Slash.of("setup", "command.setup.description")
-                   .guildOnly()
-                   .adminCommand()
-                   .command(new Start(sessionService)));
+                .guildOnly()
+                .adminCommand()
+                .command(new Start(sessionService)));
     }
 }

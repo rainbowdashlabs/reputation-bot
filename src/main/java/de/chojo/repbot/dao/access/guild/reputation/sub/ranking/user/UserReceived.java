@@ -49,11 +49,12 @@ public class UserReceived extends UserRanking {
                 OFFSET ?
                 LIMIT ?;
                 """)
-                .single(call().bind(guildId()).bind("reset_date", resetDate(), INSTANT_TIMESTAMP)
-                              .bind(member.getIdLong())
-                              .bind(mode.dateInit(), INSTANT_TIMESTAMP)
-                              .bind(page * pageSize)
-                              .bind(pageSize))
+                .single(call().bind(guildId())
+                        .bind("reset_date", resetDate(), INSTANT_TIMESTAMP)
+                        .bind(member.getIdLong())
+                        .bind(mode.dateInit(), INSTANT_TIMESTAMP)
+                        .bind(page * pageSize)
+                        .bind(pageSize))
                 .map(RankingEntry::buildReceivedRanking)
                 .all();
     }
@@ -75,10 +76,11 @@ public class UserReceived extends UserRanking {
                           AND donor_id IS NOT NULL
                           AND ( received > :reset_date OR :reset_date::TIMESTAMP IS NULL )
                     ) a""")
-                .single(call().bind(pageSize).bind(guildId())
-                              .bind("reset_date", resetDate(), INSTANT_TIMESTAMP)
-                              .bind(member.getIdLong())
-                              .bind(mode.dateInit(), INSTANT_TIMESTAMP))
+                .single(call().bind(pageSize)
+                        .bind(guildId())
+                        .bind("reset_date", resetDate(), INSTANT_TIMESTAMP)
+                        .bind(member.getIdLong())
+                        .bind(mode.dateInit(), INSTANT_TIMESTAMP))
                 .map(row -> row.getInt("count"))
                 .first()
                 .orElse(0);

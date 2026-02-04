@@ -60,12 +60,7 @@ public class PremiumValidator {
      */
     public void requireWithinLimit(int count, FeatureLimit limit, String featureName) {
         if (count > limit.max() && !limit.unlocked()) {
-            throw new PremiumFeatureException(
-                    featureName,
-                    limit.requiredSkus(),
-                    count,
-                    limit.max()
-            );
+            throw new PremiumFeatureException(featureName, limit.requiredSkus(), count, limit.max());
         }
     }
 
@@ -77,7 +72,8 @@ public class PremiumValidator {
      */
     public void requireWhitelistOrPremium(boolean isWhitelist) {
         if (!isWhitelist && !features.channelBlacklist().unlocked()) {
-            throw new PremiumFeatureException("Channel Blacklist", features.channelBlacklist().requiredSkus());
+            throw new PremiumFeatureException(
+                    "Channel Blacklist", features.channelBlacklist().requiredSkus());
         }
     }
 

@@ -28,7 +28,10 @@ public class Upgrade implements SlashHandler {
             event.reply("No.").setEphemeral(true).complete();
             return;
         }
-        log.info(LogNotify.STATUS, "Upgrade command received from {}. Attempting upgrade.", event.getUser().getAsTag());
+        log.info(
+                LogNotify.STATUS,
+                "Upgrade command received from {}. Attempting upgrade.",
+                event.getUser().getAsTag());
         event.reply("Starting upgrade. Will be back soon!").complete();
         System.exit(20);
     }

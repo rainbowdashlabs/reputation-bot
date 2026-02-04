@@ -20,22 +20,47 @@ import static de.chojo.jdautil.localization.util.Replacement.create;
 
 public enum SupporterFeature {
     CHANNEL_LIMIT_EXCEEDED(
-            (sku, repGuild) -> List.of(create("ALLOWED", sku.features().reputationChannel().defaultChannel()), create("COUNT", repGuild.settings().thanking().channels().categories().size())),
-            (sku, repGuild) -> repGuild.subscriptions().isEntitled(sku.features().reputationChannel().moreChannel()),
-            (sku, repGuild) -> repGuild.settings().thanking().channels().categories().size() > sku.features().reputationChannel().defaultChannel(),
+            (sku, repGuild) -> List.of(
+                    create("ALLOWED", sku.features().reputationChannel().defaultChannel()),
+                    create(
+                            "COUNT",
+                            repGuild.settings()
+                                    .thanking()
+                                    .channels()
+                                    .categories()
+                                    .size())),
+            (sku, repGuild) -> repGuild.subscriptions()
+                    .isEntitled(sku.features().reputationChannel().moreChannel()),
+            (sku, repGuild) ->
+                    repGuild.settings().thanking().channels().categories().size()
+                            > sku.features().reputationChannel().defaultChannel(),
             sku -> sku.features().reputationChannel().moreChannel()),
     CATEGORY_LIMIT_EXCEEDED(
-            (sku, repGuild) -> List.of(create("ALLOWED", sku.features().reputationCategories().defaultCategories()), create("COUNT", repGuild.settings().thanking().channels().categories().size())),
-            (sku, repGuild) -> repGuild.subscriptions().isEntitled(sku.features().reputationCategories().moreCategories()),
-            (sku, repGuild) -> repGuild.settings().thanking().channels().categories().size() > sku.features().reputationCategories().defaultCategories(),
+            (sku, repGuild) -> List.of(
+                    create("ALLOWED", sku.features().reputationCategories().defaultCategories()),
+                    create(
+                            "COUNT",
+                            repGuild.settings()
+                                    .thanking()
+                                    .channels()
+                                    .categories()
+                                    .size())),
+            (sku, repGuild) -> repGuild.subscriptions()
+                    .isEntitled(sku.features().reputationCategories().moreCategories()),
+            (sku, repGuild) ->
+                    repGuild.settings().thanking().channels().categories().size()
+                            > sku.features().reputationCategories().defaultCategories(),
             sku -> sku.features().reputationCategories().moreCategories()),
     BLACKLIST_USED(
             (sku, repGuild) -> List.of(),
-            (sku, repGuild) -> repGuild.subscriptions().isEntitled(sku.features().channelBlacklist().allow()),
+            (sku, repGuild) -> repGuild.subscriptions()
+                    .isEntitled(sku.features().channelBlacklist().allow()),
             (sku, repGuild) -> !repGuild.settings().thanking().channels().isWhitelist(),
             sku -> sku.features().channelBlacklist().allow()),
-    BOT_NICKNAMED((sku, repGuild) -> List.of(),
-            (sku, repGuild) -> repGuild.subscriptions().isEntitled(sku.features().profile().allow()),
+    BOT_NICKNAMED(
+            (sku, repGuild) -> List.of(),
+            (sku, repGuild) ->
+                    repGuild.subscriptions().isEntitled(sku.features().profile().allow()),
             (sku, repGuild) -> repGuild.guild().getSelfMember().getNickname() != null,
             sku -> sku.features().profile().allow());
 
@@ -44,10 +69,11 @@ public enum SupporterFeature {
     private final BiFunction<SKU, RepGuild, Boolean> isApplicable;
     private final Function<SKU, SKUEntry> skus;
 
-    SupporterFeature(BiFunction<SKU, RepGuild, List<Replacement>> replacements,
-                     BiFunction<SKU, RepGuild, Boolean> isEntitled,
-                     BiFunction<SKU, RepGuild, Boolean> isApplicable,
-                     Function<SKU, SKUEntry> skus) {
+    SupporterFeature(
+            BiFunction<SKU, RepGuild, List<Replacement>> replacements,
+            BiFunction<SKU, RepGuild, Boolean> isEntitled,
+            BiFunction<SKU, RepGuild, Boolean> isApplicable,
+            Function<SKU, SKUEntry> skus) {
         this.replacements = replacements;
         this.isEntitled = isEntitled;
         this.isApplicable = isApplicable;

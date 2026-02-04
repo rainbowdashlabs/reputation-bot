@@ -40,10 +40,7 @@ public class RanksRoute implements RoutesBuilder {
             methods = HttpMethod.GET,
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
-            responses = {
-                    @OpenApiResponse(status = "200", content = @OpenApiContent(from = RanksPOJO.class))
-            }
-    )
+            responses = {@OpenApiResponse(status = "200", content = @OpenApiContent(from = RanksPOJO.class))})
     public void getRanks(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         ctx.json(session.repGuild().settings().ranks().toPOJO());
@@ -57,10 +54,7 @@ public class RanksRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = RanksPOJO.class)),
-            responses = {
-                    @OpenApiResponse(status = "200")
-            }
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateRanks(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         RanksPOJO ranksPOJO = ctx.bodyAsClass(RanksPOJO.class);
@@ -81,10 +75,9 @@ public class RanksRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             responses = {
-                    @OpenApiResponse(status = "200", content = @OpenApiContent(from = RefreshStatus.class)),
-                    @OpenApiResponse(status = "409", description = "Refresh already in progress")
-            }
-    )
+                @OpenApiResponse(status = "200", content = @OpenApiContent(from = RefreshStatus.class)),
+                @OpenApiResponse(status = "409", description = "Refresh already in progress")
+            })
     public void refreshRanks(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         long guildId = session.guildId();
@@ -116,6 +109,5 @@ public class RanksRoute implements RoutesBuilder {
         });
     }
 
-    public record RefreshStatus(boolean alreadyRunning) {
-    }
+    public record RefreshStatus(boolean alreadyRunning) {}
 }

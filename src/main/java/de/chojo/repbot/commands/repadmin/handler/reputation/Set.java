@@ -22,9 +22,11 @@ public class Set extends BaseReputationModifier {
     @Override
     void execute(SlashCommandInteractionEvent event, EventContext context, User user, RepUser repUser, long rep) {
         repUser.setReputation(rep);
-        event.reply(context.localize("command.repadmin.reputation.set.message.set",
-                     Replacement.create("VALUE", rep), Replacement.createMention(user)))
-             .setEphemeral(true)
-             .complete();
+        event.reply(context.localize(
+                        "command.repadmin.reputation.set.message.set",
+                        Replacement.create("VALUE", rep),
+                        Replacement.createMention(user)))
+                .setEphemeral(true)
+                .complete();
     }
 }

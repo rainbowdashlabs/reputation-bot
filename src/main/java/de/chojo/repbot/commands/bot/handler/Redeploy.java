@@ -14,14 +14,18 @@ public class Redeploy implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
 
-        var guild = event.getJDA().getShardManager().getGuildById(event.getOption("guild_id").getAsLong());
+        var guild = event.getJDA()
+                .getShardManager()
+                .getGuildById(event.getOption("guild_id").getAsLong());
 
         if (guild == null) {
             event.reply("Guild not present.").setEphemeral(true).complete();
             return;
         }
 
-        event.reply("Refreshing commands of guild " + Guilds.prettyName(guild)).setEphemeral(true).complete();
+        event.reply("Refreshing commands of guild " + Guilds.prettyName(guild))
+                .setEphemeral(true)
+                .complete();
         context.interactionHub().refreshGuildCommands(guild);
     }
 }

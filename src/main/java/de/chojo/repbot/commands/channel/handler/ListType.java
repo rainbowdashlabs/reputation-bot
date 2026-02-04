@@ -26,33 +26,44 @@ public class ListType implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        var channels = guildRepository.guild(event.getGuild()).settings().thanking().channels();
+        var channels =
+                guildRepository.guild(event.getGuild()).settings().thanking().channels();
         if (event.getOptions().isEmpty()) {
-            event.reply(WebPromo.promoString(context) + context.localize(
-                         channels.isWhitelist() ? "command.channel.listType.message.whitelist" : "command.channel.listType.message.blacklist"))
-                 .setEphemeral(true)
-                 .complete();
+            event.reply(WebPromo.promoString(context)
+                            + context.localize(
+                                    channels.isWhitelist()
+                                            ? "command.channel.listType.message.whitelist"
+                                            : "command.channel.listType.message.blacklist"))
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
 
         var whitelist = "whitelist".equalsIgnoreCase(event.getOption("type").getAsString());
 
-        if (!whitelist && Premium.isNotEntitled(context, configuration.skus().features().channelBlacklist().allow())) {
-            Premium.replyPremium(context, configuration.skus().features().channelBlacklist().allow());
+        if (!whitelist
+                && Premium.isNotEntitled(
+                        context,
+                        configuration.skus().features().channelBlacklist().allow())) {
+            Premium.replyPremium(
+                    context, configuration.skus().features().channelBlacklist().allow());
             return;
         }
 
-        event.reply(WebPromo.promoString(context) + context.localize(
-                     channels.listType(whitelist) ? "command.channel.listType.message.whitelist" : "command.channel.listType.message.blacklist"))
-             .setEphemeral(true)
-             .complete();
+        event.reply(WebPromo.promoString(context)
+                        + context.localize(
+                                channels.listType(whitelist)
+                                        ? "command.channel.listType.message.whitelist"
+                                        : "command.channel.listType.message.blacklist"))
+                .setEphemeral(true)
+                .complete();
     }
 
     @Override
     public void onAutoComplete(CommandAutoCompleteInteractionEvent event, EventContext context) {
         if ("type".equals(event.getFocusedOption().getName())) {
             event.replyChoices(Completion.complete(event.getFocusedOption().getValue(), "whitelist", "blacklist"))
-                 .complete();
+                    .complete();
         }
     }
 }

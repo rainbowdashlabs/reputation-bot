@@ -47,7 +47,10 @@ public abstract class RolesHolder extends RolesHolderPOJO implements GuildHolder
     }
 
     public Set<Role> roles() {
-        return roleIds.stream().map(guild()::getRoleById).filter(Objects::nonNull).collect(Collectors.toSet());
+        return roleIds.stream()
+                .map(guild()::getRoleById)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
     }
 
     @Override
@@ -56,7 +59,9 @@ public abstract class RolesHolder extends RolesHolderPOJO implements GuildHolder
     }
 
     public boolean add(Role role) {
-        var result = query("INSERT INTO %s(guild_id, role_id) VALUES (?,?) ON CONFLICT(guild_id, role_id) DO NOTHING", targetTable())
+        var result = query(
+                        "INSERT INTO %s(guild_id, role_id) VALUES (?,?) ON CONFLICT(guild_id, role_id) DO NOTHING",
+                        targetTable())
                 .single(call().bind(guildId()).bind(role.getIdLong()))
                 .update()
                 .changed();
@@ -82,7 +87,9 @@ public abstract class RolesHolder extends RolesHolderPOJO implements GuildHolder
     }
 
     public boolean add(long roleId) {
-        var result = query("INSERT INTO %s(guild_id, role_id) VALUES (?,?) ON CONFLICT(guild_id, role_id) DO NOTHING", targetTable())
+        var result = query(
+                        "INSERT INTO %s(guild_id, role_id) VALUES (?,?) ON CONFLICT(guild_id, role_id) DO NOTHING",
+                        targetTable())
                 .single(call().bind(guildId()).bind(roleId))
                 .update()
                 .changed();
@@ -108,10 +115,10 @@ public abstract class RolesHolder extends RolesHolderPOJO implements GuildHolder
 
     public String prettyString() {
         return roleIds.stream()
-                      .map(id -> Optional.ofNullable(guild().getRoleById(id))
-                                         .map(r -> "%s | %d".formatted(r.getName(), r.getPosition()))
-                                         .orElse("Unkown (%d)".formatted(id)))
-                      .collect(Collectors.joining(", "));
+                .map(id -> Optional.ofNullable(guild().getRoleById(id))
+                        .map(r -> "%s | %d".formatted(r.getName(), r.getPosition()))
+                        .orElse("Unkown (%d)".formatted(id)))
+                .collect(Collectors.joining(", "));
     }
 
     protected abstract String targetTable();

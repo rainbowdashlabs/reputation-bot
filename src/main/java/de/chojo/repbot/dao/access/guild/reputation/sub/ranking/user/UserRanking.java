@@ -39,11 +39,16 @@ public abstract class UserRanking implements GuildHolder {
     }
 
     public Ranking defaultRanking(int pageSize, Member member) {
-        return byMode(user.ranking().reputation().repGuild().settings().general().reputationMode(), pageSize, member);
+        return byMode(
+                user.ranking().reputation().repGuild().settings().general().reputationMode(), pageSize, member);
     }
 
     public Ranking byMode(ReputationMode mode, int pageSize, Member member) {
-        return new Ranking(title(mode), Replacement.create("USER", member.getEffectiveName()), () -> pages(pageSize, member, mode), page -> getRankingPage(pageSize, page, member, mode));
+        return new Ranking(
+                title(mode),
+                Replacement.create("USER", member.getEffectiveName()),
+                () -> pages(pageSize, member, mode),
+                page -> getRankingPage(pageSize, page, member, mode));
     }
 
     public UserRankings ranking() {

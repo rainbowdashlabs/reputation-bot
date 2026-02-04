@@ -27,8 +27,8 @@ public record ShardCountStatistic(List<ShardStatistic> shardStatistics) implemen
     @Override
     public void appendTo(EmbedBuilder embedBuilder) {
         for (var shard : shardStatistics) {
-            embedBuilder.addField("#" + shard.shard(),
-                    "Status: " + shard.status().name() + "\nGuilds:" + shard.guilds(), true);
+            embedBuilder.addField(
+                    "#" + shard.shard(), "Status: " + shard.status().name() + "\nGuilds:" + shard.guilds(), true);
         }
     }
 }

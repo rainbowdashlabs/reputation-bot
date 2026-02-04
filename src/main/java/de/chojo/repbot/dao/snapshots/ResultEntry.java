@@ -16,7 +16,8 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 public record ResultEntry(ResultSnapshot result, long channelId, long messageId) {
     public MessageEmbed embed(Guild guild, EventContext context) {
         var builder = new LocalizedEmbedBuilder(context.guildLocalizer())
-                .setAuthor("command.log.analyzer.message.author",
+                .setAuthor(
+                        "command.log.analyzer.message.author",
                         Message.JUMP_URL.formatted(guild.getIdLong(), channelId, messageId),
                         Replacement.create("ID", messageId()));
         result.add(guild, this, builder);

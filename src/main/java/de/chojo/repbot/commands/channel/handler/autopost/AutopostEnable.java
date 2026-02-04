@@ -33,7 +33,8 @@ public class AutopostEnable implements SlashHandler {
     private final Configuration configuration;
     private final AutopostService autopostService;
 
-    public AutopostEnable(GuildRepository guildRepository, Configuration configuration, AutopostService autopostService) {
+    public AutopostEnable(
+            GuildRepository guildRepository, Configuration configuration, AutopostService autopostService) {
         this.guildRepository = guildRepository;
         this.configuration = configuration;
         this.autopostService = autopostService;
@@ -41,7 +42,8 @@ public class AutopostEnable implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        if (Premium.checkAndReplyPremium(context, configuration.skus().features().autopost().autopostChannel())) {
+        if (Premium.checkAndReplyPremium(
+                context, configuration.skus().features().autopost().autopostChannel())) {
             return;
         }
 
@@ -49,8 +51,9 @@ public class AutopostEnable implements SlashHandler {
 
         GuildChannelUnion channel = event.getOption("channel", OptionMapping::getAsChannel);
         if (channel.getType() != ChannelType.TEXT) {
-            event.getHook().editOriginal(context.localize("error.onlyTextChannel"))
-                 .complete();
+            event.getHook()
+                    .editOriginal(context.localize("error.onlyTextChannel"))
+                    .complete();
             return;
         }
         Autopost autopost = guildRepository.guild(event.getGuild()).settings().autopost();
@@ -74,19 +77,24 @@ public class AutopostEnable implements SlashHandler {
         }
 
         autopostService.update(event.getGuild());
-        event.getHook().editOriginal(WebPromo.promoString(context) + context.localize("command.channel.autopost.enable.message.enabled",
-                     Replacement.create("CHANNEL", MentionUtil.channel(autopost.channelId()))))
-             .complete();
+        event.getHook()
+                .editOriginal(WebPromo.promoString(context)
+                        + context.localize(
+                                "command.channel.autopost.enable.message.enabled",
+                                Replacement.create("CHANNEL", MentionUtil.channel(autopost.channelId()))))
+                .complete();
     }
 
     @Override
     public void onAutoComplete(CommandAutoCompleteInteractionEvent event, EventContext context) {
         if (event.getFocusedOption().getName().equals("refreshinterval")) {
-            List<Command.Choice> complete = Completion.complete(event.getFocusedOption().getValue(), RefreshInterval.class, false, false);
+            List<Command.Choice> complete =
+                    Completion.complete(event.getFocusedOption().getValue(), RefreshInterval.class, false, false);
             event.replyChoices(complete).queue();
         }
         if (event.getFocusedOption().getName().equals("refreshtype")) {
-            List<Command.Choice> complete = Completion.complete(event.getFocusedOption().getValue(), RefreshType.class, false, false);
+            List<Command.Choice> complete =
+                    Completion.complete(event.getFocusedOption().getValue(), RefreshType.class, false, false);
             event.replyChoices(complete).queue();
         }
     }

@@ -33,7 +33,8 @@ public class Reputation implements GuildHolder {
     private final RepGuild repGuild;
 
     private final Rankings rankings;
-    private final Cache<Long, RepUser> users = CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.MINUTES).build();
+    private final Cache<Long, RepUser> users =
+            CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.MINUTES).build();
     private final Log logAccess;
     private final Analyzer analyzer;
 
@@ -69,14 +70,15 @@ public class Reputation implements GuildHolder {
                         rs.getInt("total_reputation"),
                         rs.getInt("week_reputation"),
                         rs.getInt("today_reputation"),
-                        rs.getLong("top_channel")
-                )).first()
+                        rs.getLong("top_channel")))
+                .first()
                 .orElseGet(() -> new GuildReputationStats(0, 0, 0, 0));
     }
 
     public RepUser user(@NotNull Member member) {
         try {
-            return users.get(member.getIdLong(), () -> new RepUser(this, member)).refresh(member);
+            return users.get(member.getIdLong(), () -> new RepUser(this, member))
+                    .refresh(member);
         } catch (ExecutionException e) {
             log.error("Could not create reputation user", e);
             throw new RuntimeException(e);

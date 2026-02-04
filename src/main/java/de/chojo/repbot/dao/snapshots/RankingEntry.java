@@ -17,18 +17,11 @@ import java.util.Optional;
 public record RankingEntry(long rank, long userId, long value) {
 
     public static RankingEntry buildReceivedRanking(Row rs) throws SQLException {
-        return new RankingEntry(rs.getLong("rank"),
-                rs.getLong("user_id"),
-                rs.getLong("reputation")
-        );
+        return new RankingEntry(rs.getLong("rank"), rs.getLong("user_id"), rs.getLong("reputation"));
     }
 
     public static RankingEntry buildGivenRanking(Row rs) throws SQLException {
-        return new RankingEntry(
-                rs.getLong("rank_donated"),
-                rs.getLong("user_id"),
-                rs.getLong("donated")
-        );
+        return new RankingEntry(rs.getLong("rank_donated"), rs.getLong("user_id"), rs.getLong("donated"));
     }
 
     public String fancyString(int maxRank) {

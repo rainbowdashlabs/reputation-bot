@@ -37,10 +37,13 @@ import java.util.stream.Collectors;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Show implements SlashHandler {
-    private static final String ART = "**SmartieFox ☆*:.｡.o(≧▽≦)o.｡.:*☆**\n[Twitter](https://twitter.com/smartiefoxart) [Twitch](https://www.twitch.tv/smartiefox)";
-    private static final String SOURCE = "[rainbowdashlabs/reputation-bot](https://github.com/rainbowdashlabs/reputation-bot)";
+    private static final String ART =
+            "**SmartieFox ☆*:.｡.o(≧▽≦)o.｡.:*☆**\n[Twitter](https://twitter.com/smartiefoxart) [Twitch](https://www.twitch.tv/smartiefox)";
+    private static final String SOURCE =
+            "[rainbowdashlabs/reputation-bot](https://github.com/rainbowdashlabs/reputation-bot)";
     private static final Logger log = getLogger(Show.class);
-    private final HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
+    private final HttpClient client =
+            HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
     private final ObjectMapper mapper = new ObjectMapper()
             .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
@@ -62,11 +65,12 @@ public class Show implements SlashHandler {
     @NotNull
     private MessageEmbed getResponse(SlashCommandInteractionEvent event, EventContext context) {
         if (contributors == null || lastFetch.isBefore(Instant.now().minus(5, ChronoUnit.MINUTES))) {
-            var request = HttpRequest.newBuilder().GET()
-                                     .uri(URI.create("https://api.github.com/repos/rainbowdashlabs/reputation-bot/contributors?anon=1"))
-                                     .header("accept", "application/vnd.github.v3+json")
-                                     .header("User-Agent", "reputation-bot")
-                                     .build();
+            var request = HttpRequest.newBuilder()
+                    .GET()
+                    .uri(URI.create("https://api.github.com/repos/rainbowdashlabs/reputation-bot/contributors?anon=1"))
+                    .header("accept", "application/vnd.github.v3+json")
+                    .header("User-Agent", "reputation-bot")
+                    .build();
 
             List<Contributor> contributors;
             try {
@@ -81,11 +85,12 @@ public class Show implements SlashHandler {
             for (var contributor : contributors) {
                 if (ContributorType.BOT == contributor.type) continue;
 
-                var profile = HttpRequest.newBuilder().GET()
-                                         .uri(URI.create(contributor.url))
-                                         .header("accept", "application/vnd.github.v3+json")
-                                         .header("User-Agent", "reputation-bot")
-                                         .build();
+                var profile = HttpRequest.newBuilder()
+                        .GET()
+                        .uri(URI.create(contributor.url))
+                        .header("accept", "application/vnd.github.v3+json")
+                        .header("User-Agent", "reputation-bot")
+                        .build();
 
                 try {
                     var response = client.send(profile, HttpResponse.BodyHandlers.ofString());
@@ -113,24 +118,38 @@ public class Show implements SlashHandler {
 
     private String getLinks(EventContext context) {
         var links = List.of(
-                getLink(context, "command.info.message.inviteme", configuration.links().invite()),
-                getLink(context, "command.info.message.support", configuration.links().support()),
-                getLink(context, "command.info.message.tos", configuration.links().tos()),
-                getLink(context, "command.info.message.website", configuration.links().website()),
-                getLink(context, "command.info.message.faq", configuration.links().faq())
-        );
+                getLink(
+                        context,
+                        "command.info.message.inviteme",
+                        configuration.links().invite()),
+                getLink(
+                        context,
+                        "command.info.message.support",
+                        configuration.links().support()),
+                getLink(
+                        context,
+                        "command.info.message.tos",
+                        configuration.links().tos()),
+                getLink(
+                        context,
+                        "command.info.message.website",
+                        configuration.links().website()),
+                getLink(
+                        context,
+                        "command.info.message.faq",
+                        configuration.links().faq()));
         return String.join(" ᠅ ", links);
     }
 
     private String getLink(EventContext context, @PropertyKey(resourceBundle = "locale") String target, String url) {
-        return context.localize("words.link", Replacement.create("TARGET", String.format("$%s$", target)),
+        return context.localize(
+                "words.link",
+                Replacement.create("TARGET", String.format("$%s$", target)),
                 Replacement.create("URL", url));
     }
 
     private String getUntranslatedLink(EventContext context, String target, String url) {
-        return context.localize("words.link",
-                Replacement.create("TARGET", target),
-                Replacement.create("URL", url));
+        return context.localize("words.link", Replacement.create("TARGET", target), Replacement.create("URL", url));
     }
 
     private String getVoting(EventContext context) {
@@ -155,8 +174,10 @@ public class Show implements SlashHandler {
     private static class Contributor {
         private String login;
         private String url;
+
         @JsonProperty("html_url")
         private String htmlUrl;
+
         private ContributorType type;
     }
 
@@ -164,6 +185,7 @@ public class Show implements SlashHandler {
     private static class GithubProfile {
         private String login;
         private String name;
+
         @JsonProperty("html_url")
         private String htmlUrl;
 

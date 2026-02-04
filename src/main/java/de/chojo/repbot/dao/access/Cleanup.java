@@ -12,8 +12,8 @@ import java.util.List;
 public class Cleanup {
     public List<Long> getCleanupList() {
         return Query.query("SELECT guild_id FROM self_cleanup;")
-                    .single()
-                    .mapAs(Long.class)
-                    .all();
+                .single()
+                .mapAs(Long.class)
+                .all();
     }
 }

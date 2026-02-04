@@ -77,17 +77,19 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.slf4j.Logger;
 
-import javax.security.auth.login.LoginException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Set;
+
+import javax.security.auth.login.LoginException;
 
 import static de.chojo.repbot.util.States.TEST_MODE;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Bot {
     private static final Logger log = getLogger(Bot.class);
-    private static final Set<ErrorResponse> IGNORE_ERRORS = Set.of(ErrorResponse.ILLEGAL_OPERATION_ARCHIVED_THREAD, ErrorResponse.MISSING_ACCESS);
+    private static final Set<ErrorResponse> IGNORE_ERRORS =
+            Set.of(ErrorResponse.ILLEGAL_OPERATION_ARCHIVED_THREAD, ErrorResponse.MISSING_ACCESS);
     // TODO: Remove after decomissioning the commands
     public static String WEB_COMMAND_MENTION = "";
     private final Data data;
@@ -115,7 +117,8 @@ public class Bot {
         this.localization = localization;
     }
 
-    public static Bot create(Data data, Threading threading, Configuration configuration, Localization localizer) throws LoginException {
+    public static Bot create(Data data, Threading threading, Configuration configuration, Localization localizer)
+            throws LoginException {
         var bot = new Bot(data, threading, configuration, localizer);
         bot.init();
         return bot;
@@ -160,14 +163,15 @@ public class Bot {
         roles = new Roles(data.guildRepository(), new RoleAssigner(data.guildRepository(), localization.localizer()));
 
         repBotCachePolicy = new RepBotCachePolicy(scan, roles);
-        shardManager = DefaultShardManagerBuilder
-                .createDefault(SysVar.envOrProp("BOT_TOKEN", "bot.token", configuration.baseSettings().token()))
+        shardManager = DefaultShardManagerBuilder.createDefault(SysVar.envOrProp(
+                        "BOT_TOKEN", "bot.token", configuration.baseSettings().token()))
                 .setEventPassthrough(true)
                 .enableIntents(
                         // Required to retrieve reputation emotes
                         GatewayIntent.GUILD_MESSAGE_REACTIONS,
                         // Required to scan for thankwords
-                        GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT,
+                        GatewayIntent.GUILD_MESSAGES,
+                        GatewayIntent.MESSAGE_CONTENT,
                         // Required to resolve member without a direct mention
                         GatewayIntent.GUILD_MEMBERS,
                         // Required to cache voice states for member relationships
@@ -187,11 +191,13 @@ public class Bot {
         log.info("Configuring rest actions.");
         RestAction.setDefaultFailure(throwable -> {
             if (throwable instanceof InsufficientPermissionException perm) {
-                PermissionErrorHandler.handle(perm, shardManager, localization.localizer().context(LocaleProvider.empty()), configuration);
+                PermissionErrorHandler.handle(
+                        perm, shardManager, localization.localizer().context(LocaleProvider.empty()), configuration);
                 return;
             }
             if (throwable.getCause() instanceof InsufficientPermissionException perm) {
-                PermissionErrorHandler.handle(perm, shardManager, localization.localizer().context(LocaleProvider.empty()), configuration);
+                PermissionErrorHandler.handle(
+                        perm, shardManager, localization.localizer().context(LocaleProvider.empty()), configuration);
                 return;
             }
             if (throwable instanceof ErrorResponseException e) {
@@ -234,12 +240,15 @@ public class Bot {
         scan.lateInit(messageAnalyzer);
 
         // init services
-        reputationService = new ReputationService(guilds, contextResolver, roleAssigner, configuration, localization.localizer());
+        reputationService =
+                new ReputationService(guilds, contextResolver, roleAssigner, configuration, localization.localizer());
         gdprService = GdprService.of(shardManager, guilds, data.gdpr(), worker);
-        SelfCleanupService.create(shardManager, localization.localizer(), guilds, data.cleanup(), configuration, worker);
+        SelfCleanupService.create(
+                shardManager, localization.localizer(), guilds, data.cleanup(), configuration, worker);
         AnalyzerService.create(threading.repBotWorker(), data.analyzer());
         MetricService.create(threading.repBotWorker(), data.metrics());
-        autopostService = AutopostService.create(shardManager, data.guildRepository(), threading, localization.localizer());
+        autopostService =
+                AutopostService.create(shardManager, data.guildRepository(), threading, localization.localizer());
         premiumService = PremiumService.of(guilds, threading, configuration, localization.localizer(), shardManager);
     }
 
@@ -250,88 +259,102 @@ public class Bot {
 
         BotAdmin botAdmin = new BotAdmin(guilds, configuration, statistic, data.sessionService());
         hub = InteractionHub.builder(shardManager)
-                            .withConversationSystem()
-                            .withCommands(
-                                    new Channel(guilds, configuration, autopostService),
-                                    new Profile(guilds, configuration, roleAssigner),
-                                    roles,
-                                    new RepSettings(guilds, configuration),
-                                    new Top(guilds, configuration),
-                                    Thankwords.of(messageAnalyzer, guilds),
-                                    scan,
-                                    new Locale(guilds),
-                                    new Invite(configuration),
-                                    Info.create(configuration),
-                                    new Log(guilds, configuration),
-                                    new Setup(data.sessionService()),
-                                    new Gdpr(data.gdpr()),
-                                    new Prune(gdprService),
-                                    new Reactions(guilds, configuration),
-                                    new Dashboard(guilds),
-                                    new AbuseProtection(guilds),
-                                    new Debug(guilds),
-                                    new RepAdmin(guilds, configuration, roleAssigner, premiumService),
-                                    new Messages(guilds),
-                                    botAdmin,
-                                    new Ranking(guilds, configuration),
-                                    new Reputation(guilds, reputationService)/*TODO: remove rep command*/,
-                                    new Supporter(premiumService, configuration, guilds),
-                                    new Settings(data.sessionService()))
-                            .withMessages(new MessageLog(guilds))
-                            .withUsers(new UserReceived(guilds, configuration),
-                                    new UserDonated(guilds, configuration))
-                            .withLocalizer(localizer)
-                            .cleanGuildCommands("true".equals(System.getProperty("bot.cleancommands", "false")))
-                            .withCommandErrorHandler((context, throwable) -> {
-                                if (throwable instanceof InsufficientPermissionException perm) {
-                                    PermissionErrorHandler.handle(perm, shardManager, localizer.context(LocaleProvider.guild(context.guild())), configuration);
-                                    return;
-                                }
+                .withConversationSystem()
+                .withCommands(
+                        new Channel(guilds, configuration, autopostService),
+                        new Profile(guilds, configuration, roleAssigner),
+                        roles,
+                        new RepSettings(guilds, configuration),
+                        new Top(guilds, configuration),
+                        Thankwords.of(messageAnalyzer, guilds),
+                        scan,
+                        new Locale(guilds),
+                        new Invite(configuration),
+                        Info.create(configuration),
+                        new Log(guilds, configuration),
+                        new Setup(data.sessionService()),
+                        new Gdpr(data.gdpr()),
+                        new Prune(gdprService),
+                        new Reactions(guilds, configuration),
+                        new Dashboard(guilds),
+                        new AbuseProtection(guilds),
+                        new Debug(guilds),
+                        new RepAdmin(guilds, configuration, roleAssigner, premiumService),
+                        new Messages(guilds),
+                        botAdmin,
+                        new Ranking(guilds, configuration),
+                        new Reputation(guilds, reputationService) /*TODO: remove rep command*/,
+                        new Supporter(premiumService, configuration, guilds),
+                        new Settings(data.sessionService()))
+                .withMessages(new MessageLog(guilds))
+                .withUsers(new UserReceived(guilds, configuration), new UserDonated(guilds, configuration))
+                .withLocalizer(localizer)
+                .cleanGuildCommands("true".equals(System.getProperty("bot.cleancommands", "false")))
+                .withCommandErrorHandler((context, throwable) -> {
+                    if (throwable instanceof InsufficientPermissionException perm) {
+                        PermissionErrorHandler.handle(
+                                perm,
+                                shardManager,
+                                localizer.context(LocaleProvider.guild(context.guild())),
+                                configuration);
+                        return;
+                    }
 
-                                if (throwable instanceof MissingSupportTier ex) {
-                                    premiumService.handleMissingSupportTier(context, ex);
-                                    return;
-                                }
+                    if (throwable instanceof MissingSupportTier ex) {
+                        premiumService.handleMissingSupportTier(context, ex);
+                        return;
+                    }
 
-                                log.error(LogNotify.NOTIFY_ADMIN, "Command execution of {} failed\n{}",
-                                        context.interaction().meta().name(), context.args(), throwable);
-                            })
-                            .withGuildCommandMapper(cmd -> switch (cmd.name()) {
-                                case "bot" -> Collections.singletonList(configuration.baseSettings().botGuild());
-                                case "reputation" -> data.guildRepository().byCommandReputationEnabled();
-                                default -> Collections.emptyList();
-                            })
-                            .withDefaultMenuService()
-                            .withPostCommandHook(result -> data.metrics().commands()
-                                                               .logCommand(result.context().interaction().meta().name()))
-                            .withPagination(builder -> builder.withLocalizer(localizer).previousText("pages.previous")
-                                                              .nextText("pages.next"))
-                            .withEntitlementProvider((user, guild) -> {
-                                // currently no user skus exist that we are interested in.
-                                if (guild != null)
-                                    return new ArrayList<>(guilds.guild(guild).subscriptions().sku());
-                                return Collections.emptyList();
-                            })
-                            .build();
+                    log.error(
+                            LogNotify.NOTIFY_ADMIN,
+                            "Command execution of {} failed\n{}",
+                            context.interaction().meta().name(),
+                            context.args(),
+                            throwable);
+                })
+                .withGuildCommandMapper(cmd -> switch (cmd.name()) {
+                    case "bot" ->
+                        Collections.singletonList(configuration.baseSettings().botGuild());
+                    case "reputation" -> data.guildRepository().byCommandReputationEnabled();
+                    default -> Collections.emptyList();
+                })
+                .withDefaultMenuService()
+                .withPostCommandHook(result -> data.metrics()
+                        .commands()
+                        .logCommand(result.context().interaction().meta().name()))
+                .withPagination(builder -> builder.withLocalizer(localizer)
+                        .previousText("pages.previous")
+                        .nextText("pages.next"))
+                .withEntitlementProvider((user, guild) -> {
+                    // currently no user skus exist that we are interested in.
+                    if (guild != null)
+                        return new ArrayList<>(
+                                guilds.guild(guild).subscriptions().sku());
+                    return Collections.emptyList();
+                })
+                .build();
 
         // TODO: Remove after decomissioning the settings commands
         Long settingsCommandId;
         if (TEST_MODE) {
-            settingsCommandId = shardManager.getShards().getFirst()
-                              .getGuildById(configuration.baseSettings().botGuild())
-                              .retrieveCommands().complete().stream()
-                              .filter(cmd -> cmd.getName().equals("settings"))
-                              .map(ISnowflake::getIdLong)
-                              .findFirst()
-                              .get();
+            settingsCommandId = shardManager
+                    .getShards()
+                    .getFirst()
+                    .getGuildById(configuration.baseSettings().botGuild())
+                    .retrieveCommands()
+                    .complete()
+                    .stream()
+                    .filter(cmd -> cmd.getName().equals("settings"))
+                    .map(ISnowflake::getIdLong)
+                    .findFirst()
+                    .get();
 
         } else {
-            settingsCommandId = shardManager.getShards().getFirst()
-                              .retrieveCommands().complete().stream()
-                              .filter(cmd -> cmd.getName().equals("settings"))
-                              .map(ISnowflake::getIdLong)
-                              .findFirst()
-                              .get();
+            settingsCommandId = shardManager.getShards().getFirst().retrieveCommands().complete().stream()
+                    .filter(cmd -> cmd.getName().equals("settings"))
+                    .map(ISnowflake::getIdLong)
+                    .findFirst()
+                    .get();
         }
         WEB_COMMAND_MENTION = "</settings:" + settingsCommandId + ">";
     }
@@ -343,13 +366,21 @@ public class Bot {
         // init listener and services
         var reactionListener = new ReactionListener(guilds, localizer, reputationService, configuration);
         var voteListener = new ReputationVoteListener(guilds, reputationService, localizer, configuration);
-        var messageListener = new MessageListener(localizer, configuration, guilds, repBotCachePolicy, voteListener,
-                reputationService, contextResolver, messageAnalyzer);
+        var messageListener = new MessageListener(
+                localizer,
+                configuration,
+                guilds,
+                repBotCachePolicy,
+                voteListener,
+                reputationService,
+                contextResolver,
+                messageAnalyzer);
         var voiceStateListener = VoiceStateListener.of(data.voice(), threading.repBotWorker());
         var logListener = LogListener.create(threading.repBotWorker());
         var stateListener = StateListener.of(localizer, guilds, configuration);
         var roleUpdater = RoleUpdater.create(guilds, roleAssigner, shardManager, threading.repBotWorker());
-        ChatSupportService chatSupportService = new ChatSupportService(configuration, shardManager, hub.pageServices(), guilds, hub.buttonService());
+        ChatSupportService chatSupportService =
+                new ChatSupportService(configuration, shardManager, hub.pageServices(), guilds, hub.buttonService());
 
         shardManager.addEventListener(
                 reactionListener,

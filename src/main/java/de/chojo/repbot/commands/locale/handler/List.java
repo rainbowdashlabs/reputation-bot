@@ -15,11 +15,12 @@ public class List implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var languages = context.guildLocalizer().localizer().languages();
-        var builder = TextFormatting.getTableBuilder(languages,
-                context.localize("words.language"), context.localize("words.code"));
+        var builder = TextFormatting.getTableBuilder(
+                languages, context.localize("words.language"), context.localize("words.code"));
         languages.forEach(lang -> builder.setNextRow(lang.getNativeName(), lang.getLocale()));
-        event.reply(WebPromo.promoString(context) + context.localize("command.locale.list.message.list") + "\n" + builder)
-             .setEphemeral(true)
-             .complete();
+        event.reply(WebPromo.promoString(context) + context.localize("command.locale.list.message.list") + "\n"
+                        + builder)
+                .setEphemeral(true)
+                .complete();
     }
 }

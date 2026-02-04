@@ -13,31 +13,28 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.function.Supplier;
 
 public enum ReputationMode {
-    TOTAL("reputationMode.total",
-            () -> Instant.EPOCH,
-            false),
-    ROLLING_WEEK("reputationMode.rollingWeek",
-            () -> LocalDate.now()
-                           .minusDays(7)
-                           .atStartOfDay(ZoneId.of("UTC"))
-                           .toInstant(),
+    TOTAL("reputationMode.total", () -> Instant.EPOCH, false),
+    ROLLING_WEEK(
+            "reputationMode.rollingWeek",
+            () -> LocalDate.now().minusDays(7).atStartOfDay(ZoneId.of("UTC")).toInstant(),
             true),
-    ROLLING_MONTH("reputationMode.rollingMonth",
-            () -> LocalDate.now().minusDays(30)
-                           .atStartOfDay(ZoneId.of("UTC"))
-                           .toInstant(),
+    ROLLING_MONTH(
+            "reputationMode.rollingMonth",
+            () -> LocalDate.now().minusDays(30).atStartOfDay(ZoneId.of("UTC")).toInstant(),
             true),
-    WEEK("reputationMode.week",
+    WEEK(
+            "reputationMode.week",
             () -> LocalDate.now()
-                           .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
-                           .atStartOfDay(ZoneId.of("UTC"))
-                           .toInstant(),
+                    .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+                    .atStartOfDay(ZoneId.of("UTC"))
+                    .toInstant(),
             true),
-    MONTH("reputationMode.month",
+    MONTH(
+            "reputationMode.month",
             () -> LocalDate.now()
-                           .withDayOfMonth(1)
-                           .atStartOfDay(ZoneId.of("UTC"))
-                           .toInstant(),
+                    .withDayOfMonth(1)
+                    .atStartOfDay(ZoneId.of("UTC"))
+                    .toInstant(),
             true);
 
     private final String localeCode;

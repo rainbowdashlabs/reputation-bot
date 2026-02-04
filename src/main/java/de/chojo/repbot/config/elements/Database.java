@@ -5,7 +5,6 @@
  */
 package de.chojo.repbot.config.elements;
 
-
 import de.chojo.jdautil.util.SysVar;
 
 @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal", "CanBeFinal"})

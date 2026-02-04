@@ -33,11 +33,13 @@ public class Log implements GuildHolder {
      * @return sorted list of entries. the most recent first.
      */
     public ReputationLogAccess getUserReceivedLog(User user, int pageSize) {
-        return new ReputationLogAccess(() -> getUserReceivedLogPages(user, pageSize), page -> getUserReceivedLogPage(user, pageSize, page));
+        return new ReputationLogAccess(
+                () -> getUserReceivedLogPages(user, pageSize), page -> getUserReceivedLogPage(user, pageSize, page));
     }
 
     public ReputationLogAccess userDonatedLog(User user, int pageSize) {
-        return new ReputationLogAccess(() -> getUserDonatedLogPages(user, pageSize), page -> getUserDonatedLogPage(user, pageSize, page));
+        return new ReputationLogAccess(
+                () -> getUserDonatedLogPages(user, pageSize), page -> getUserDonatedLogPage(user, pageSize, page));
     }
 
     /**
@@ -65,9 +67,10 @@ public class Log implements GuildHolder {
                 WHERE guild_id = ?
                 ORDER BY received DESC
                 LIMIT 1;
-                """).single(call().bind(guildId()))
-                    .map(r -> ReputationLogEntry.build(r))
-                    .first();
+                """)
+                .single(call().bind(guildId()))
+                .map(r -> ReputationLogEntry.build(r))
+                .first();
     }
 
     /**

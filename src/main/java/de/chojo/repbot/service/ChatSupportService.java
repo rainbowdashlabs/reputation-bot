@@ -46,7 +46,12 @@ public class ChatSupportService extends ListenerAdapter {
     private final GuildRepository guildRepository;
     private final MenuService menuService;
 
-    public ChatSupportService(Configuration configuration, ShardManager shardManager, PageService pageService, GuildRepository guildRepository, MenuService menuService) {
+    public ChatSupportService(
+            Configuration configuration,
+            ShardManager shardManager,
+            PageService pageService,
+            GuildRepository guildRepository,
+            MenuService menuService) {
         this.configuration = configuration;
         this.shardManager = shardManager;
         this.pageService = pageService;
@@ -63,10 +68,15 @@ public class ChatSupportService extends ListenerAdapter {
             channel.sendMessage(reconstruct(event.getMessage())).complete();
         } else if (event.getGuild().getIdLong() == configuration.baseSettings().botGuild()
                 && event.getChannel() instanceof ThreadChannel thread
-                && thread.getParentChannel().getIdLong() == configuration.baseSettings().privateSupportChannel()) {
+                && thread.getParentChannel().getIdLong()
+                        == configuration.baseSettings().privateSupportChannel()) {
             getUser(thread).ifPresent(user -> {
-                user.openPrivateChannel().complete().sendMessage(reconstruct(event.getMessage()))
-                    .queue(Consumers.empty(), err -> event.getChannel().sendMessage("Message could not be sent.").complete());
+                user.openPrivateChannel()
+                        .complete()
+                        .sendMessage(reconstruct(event.getMessage()))
+                        .queue(Consumers.empty(), err -> event.getChannel()
+                                .sendMessage("Message could not be sent.")
+                                .complete());
             });
         }
     }
@@ -89,9 +99,9 @@ public class ChatSupportService extends ListenerAdapter {
 
     private MessageCreateData reconstruct(Message message) {
         String list = message.getAttachments().stream()
-                             .filter(Attachment::isImage)
-                             .map(Attachment::getUrl)
-                             .collect(Collectors.joining(", "));
+                .filter(Attachment::isImage)
+                .map(Attachment::getUrl)
+                .collect(Collectors.joining(", "));
 
         var builder = fromMessage(message);
         if (!list.isBlank()) builder.addContent("\nAttachments: " + list);
@@ -131,15 +141,16 @@ public class ChatSupportService extends ListenerAdapter {
 
     private void promptThread(User user, Message initMessage) {
         menuService.register(MenuAction.forChannel("Do you need support?", initMessage.getChannel())
-                                       .addComponent(MenuEntry.of(Button.success("yes", "Yes"),
-                                               ctx -> createThread(user, initMessage)))
-                                       .addComponent(MenuEntry.of(Button.danger("no", "No"),
-                                               ctx -> ctx.event().reply("Alright, if you need help, drop us a message here.").queue()))
-                                       .build());
+                .addComponent(MenuEntry.of(Button.success("yes", "Yes"), ctx -> createThread(user, initMessage)))
+                .addComponent(MenuEntry.of(Button.danger("no", "No"), ctx -> ctx.event()
+                        .reply("Alright, if you need help, drop us a message here.")
+                        .queue()))
+                .build());
     }
 
     private void createThread(User user, Message initMessage) {
-        TextChannel textChannelById = home().getTextChannelById(configuration.baseSettings().privateSupportChannel());
+        TextChannel textChannelById =
+                home().getTextChannelById(configuration.baseSettings().privateSupportChannel());
         if (textChannelById == null) return;
 
         List<Guild> shared = SharedGuilds.sharedGuilds(user, true, configuration);
@@ -147,24 +158,35 @@ public class ChatSupportService extends ListenerAdapter {
         MessageEmbed embed = new EmbedBuilder()
                 .setTitle("New request")
                 .setAuthor("%s (%s)".formatted(user.getName(), user.getId()), null, user.getEffectiveAvatarUrl())
-                .addField("Shared Guilds", shared.stream().map(g -> SharedGuilds.format(g, user)).collect(Collectors.joining("\n")), false)
+                .addField(
+                        "Shared Guilds",
+                        shared.stream().map(g -> SharedGuilds.format(g, user)).collect(Collectors.joining("\n")),
+                        false)
                 .build();
 
-        List<Button> buttons = shared.stream().map(g -> Button.primary("debug:%s".formatted(g.getIdLong()), g.getName())).toList();
+        List<Button> buttons = shared.stream()
+                .map(g -> Button.primary("debug:%s".formatted(g.getIdLong()), g.getName()))
+                .toList();
 
-        Message message = textChannelById.sendMessage("New request from %s (%s)".formatted(user.getName(), user.getId()))
-                                         .complete();
+        Message message = textChannelById
+                .sendMessage("New request from %s (%s)".formatted(user.getName(), user.getId()))
+                .complete();
 
-        ThreadChannel thread = textChannelById.createThreadChannel("%s (%s)".formatted(user.getName(), user.getIdLong()), message.getIdLong()).complete();
+        ThreadChannel thread = textChannelById
+                .createThreadChannel("%s (%s)".formatted(user.getName(), user.getIdLong()), message.getIdLong())
+                .complete();
         thread.sendMessageEmbeds(embed)
-              .setComponents(ActionRow.partitionOf(buttons))
-              .complete();
+                .setComponents(ActionRow.partitionOf(buttons))
+                .complete();
         thread.sendMessage(reconstruct(initMessage)).complete();
 
-        user.openPrivateChannel().complete().sendMessage("A new support chat was opened. Your request has been sent to the support team.")
-            .complete();
+        user.openPrivateChannel()
+                .complete()
+                .sendMessage("A new support chat was opened. Your request has been sent to the support team.")
+                .complete();
 
-        query("INSERT INTO support_threads (user_id, thread_id) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET thread_id = excluded.thread_id;")
+        query(
+                        "INSERT INTO support_threads (user_id, thread_id) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET thread_id = excluded.thread_id;")
                 .single(call().bind(user.getIdLong()).bind(thread.getIdLong()))
                 .insert();
     }

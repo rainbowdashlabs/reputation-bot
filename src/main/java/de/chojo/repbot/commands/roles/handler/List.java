@@ -29,44 +29,40 @@ public class List implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         event.replyEmbeds(WebPromo.promoEmbed(context), getRoleList(context, event.getGuild()))
-             .setAllowedMentions(Collections.emptyList())
-             .setEphemeral(true)
-             .complete();
+                .setAllowedMentions(Collections.emptyList())
+                .setEphemeral(true)
+                .complete();
     }
 
     private MessageEmbed getRoleList(EventContext context, Guild guild) {
         var settings = guildRepository.guild(guild).settings();
         var ranks = settings.ranks();
 
-        var reputationRoles = ranks.ranks()
-                                   .stream()
-                                   .sorted(Comparator.reverseOrder())
-                                   .filter(role -> role.getRole(guild).isPresent())
-                                   .map(role -> role.reputation() + " ➜ " + role.getRole(guild).get().getAsMention())
-                                   .collect(Collectors.joining("\n"));
+        var reputationRoles = ranks.ranks().stream()
+                .sorted(Comparator.reverseOrder())
+                .filter(role -> role.getRole(guild).isPresent())
+                .map(role ->
+                        role.reputation() + " ➜ " + role.getRole(guild).get().getAsMention())
+                .collect(Collectors.joining("\n"));
 
-        var builder = new LocalizedEmbedBuilder(context.guildLocalizer())
-                .setTitle("command.roles.info.message.roleinfo");
+        var builder =
+                new LocalizedEmbedBuilder(context.guildLocalizer()).setTitle("command.roles.info.message.roleinfo");
 
         builder.addField("command.roles.info.message.reputationrole", reputationRoles, true);
 
         var thankSettings = settings.thanking();
 
         if (!thankSettings.donorRoles().roles().isEmpty()) {
-            var donorRoles = thankSettings.donorRoles()
-                                          .roles()
-                                          .stream()
-                                          .map(IMentionable::getAsMention)
-                                          .collect(Collectors.joining("\n"));
+            var donorRoles = thankSettings.donorRoles().roles().stream()
+                    .map(IMentionable::getAsMention)
+                    .collect(Collectors.joining("\n"));
 
             builder.addField("command.roles.info.message.donorroles", donorRoles, true);
         }
         if (!thankSettings.receiverRoles().roles().isEmpty()) {
-            var receiverRoles = thankSettings.receiverRoles()
-                                             .roles()
-                                             .stream()
-                                             .map(IMentionable::getAsMention)
-                                             .collect(Collectors.joining("\n"));
+            var receiverRoles = thankSettings.receiverRoles().roles().stream()
+                    .map(IMentionable::getAsMention)
+                    .collect(Collectors.joining("\n"));
 
             builder.addField("command.roles.info.message.receiverroles", receiverRoles, true);
         }

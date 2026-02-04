@@ -24,20 +24,24 @@ public class AnnouncementInfo implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var announcements = guildRepository.guild(event.getGuild()).settings().announcements();
         if (!announcements.isActive()) {
-            event.reply(WebPromo.promoString(context) + context.localize("command.channel.announcement.state.message.inactive"))
-                 .setEphemeral(true)
-                 .complete();
+            event.reply(WebPromo.promoString(context)
+                            + context.localize("command.channel.announcement.state.message.inactive"))
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
         if (announcements.isSameChannel()) {
-            event.reply(WebPromo.promoString(context) + context.localize("command.channel.announcement.location.message.samechannel"))
-                 .setEphemeral(true)
-                 .complete();
+            event.reply(WebPromo.promoString(context)
+                            + context.localize("command.channel.announcement.location.message.samechannel"))
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
-        event.reply(WebPromo.promoString(context) + context.localize("command.channel.announcement.channel.message.set",
-                     Replacement.create("CHANNEL", MentionUtil.channel(announcements.channelId()))))
-             .setEphemeral(true)
-             .complete();
+        event.reply(WebPromo.promoString(context)
+                        + context.localize(
+                                "command.channel.announcement.channel.message.set",
+                                Replacement.create("CHANNEL", MentionUtil.channel(announcements.channelId()))))
+                .setEphemeral(true)
+                .complete();
     }
 }

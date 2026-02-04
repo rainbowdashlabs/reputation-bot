@@ -38,8 +38,7 @@ public class Voice {
                         DO UPDATE
                             SET seen = now()
                 """)
-                .batch(seen.stream().map(member -> call()
-                        .bind(source.getIdLong() ^ member.getIdLong())
+                .batch(seen.stream().map(member -> call().bind(source.getIdLong() ^ member.getIdLong())
                         .bind(source.getGuild().getIdLong())
                         .bind(source.getIdLong())
                         .bind(member.getIdLong())))
@@ -71,13 +70,17 @@ public class Voice {
                     seen DESC
                 LIMIT ?;
                 """)
-                .single(call().bind(guild.getIdLong()).bind(user.getIdLong()).bind(user.getIdLong())
-                              .bind(minutes).bind(limit))
+                .single(call().bind(guild.getIdLong())
+                        .bind(user.getIdLong())
+                        .bind(user.getIdLong())
+                        .bind(minutes)
+                        .bind(limit))
                 .map(rs -> {
                     var id1 = rs.getLong("user_id_1");
                     var id2 = rs.getLong("user_id_2");
                     return id1 == user.getIdLong() ? id2 : id1;
-                }).all();
+                })
+                .all();
     }
 
     /**

@@ -31,14 +31,21 @@ public class General extends GeneralPOJO implements GuildHolder {
         this(settings, null, false, ReputationMode.TOTAL, null, 0);
     }
 
-    public General(Settings settings, DiscordLocale language, boolean stackRoles, ReputationMode reputationMode, Instant resetDate, long systemChannel) {
+    public General(
+            Settings settings,
+            DiscordLocale language,
+            boolean stackRoles,
+            ReputationMode reputationMode,
+            Instant resetDate,
+            long systemChannel) {
         super(stackRoles, language, reputationMode, resetDate, systemChannel);
         this.settings = settings;
     }
 
     public static General build(Settings settings, Row rs) throws SQLException {
         var lang = rs.getString("language");
-        return new General(settings,
+        return new General(
+                settings,
                 lang == null ? null : DiscordLocale.from(lang),
                 rs.getBoolean("stack_roles"),
                 ReputationMode.valueOf(rs.getString("reputation_mode")),
@@ -114,8 +121,13 @@ public class General extends GeneralPOJO implements GuildHolder {
                 Language: %s
                 Reputation Mode: %s
                 System Channel: %s
-                """.stripIndent()
-                   .formatted(stackRoles, language != null ? language.getLanguageName() : guild().getLocale().getLanguageName(), reputationMode.name(), systemChannel);
+                """.stripIndent().formatted(
+                stackRoles,
+                language != null
+                        ? language.getLanguageName()
+                        : guild().getLocale().getLanguageName(),
+                reputationMode.name(),
+                systemChannel);
     }
 
     private boolean set(String parameter, Function<Call, Call> builder) {

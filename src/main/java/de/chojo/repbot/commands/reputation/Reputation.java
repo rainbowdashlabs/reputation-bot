@@ -22,13 +22,13 @@ public class Reputation implements SlashProvider<Slash> {
         this.reputationService = reputationService;
     }
 
-
     @Override
     public Slash slash() {
         return Slash.of("reputation", "command.reputation.description")
-                    .privateCommand()
-                    .command(new Give(guildRepository, reputationService))
-                    .argument(user("user", "command.reputation.options.user.description").asRequired())
-                    .build();
+                .privateCommand()
+                .command(new Give(guildRepository, reputationService))
+                .argument(user("user", "command.reputation.options.user.description")
+                        .asRequired())
+                .build();
     }
 }

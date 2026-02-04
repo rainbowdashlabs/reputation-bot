@@ -5,7 +5,6 @@
  */
 package de.chojo.repbot.web.error;
 
-
 import io.javalin.http.HttpStatus;
 
 public class ApiException extends RuntimeException {

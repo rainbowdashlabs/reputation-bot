@@ -13,8 +13,11 @@ import java.time.LocalDate;
 
 public record UserStatistic(LocalDate date, int donors, int receivers, int total) implements Comparable<UserStatistic> {
     public static UserStatistic build(Row rs, String dateKey) throws SQLException {
-        return new UserStatistic(rs.getDate(dateKey).toLocalDate(),
-                rs.getInt("donor_count"), rs.getInt("receiver_count"), rs.getInt("total_count"));
+        return new UserStatistic(
+                rs.getDate(dateKey).toLocalDate(),
+                rs.getInt("donor_count"),
+                rs.getInt("receiver_count"),
+                rs.getInt("total_count"));
     }
 
     @Override

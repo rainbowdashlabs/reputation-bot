@@ -13,8 +13,10 @@ import java.util.Set;
 public class ChannelsPOJO {
     @JsonSerialize(contentUsing = ToStringSerializer.class)
     protected final Set<Long> channels;
+
     @JsonSerialize(contentUsing = ToStringSerializer.class)
     protected final Set<Long> categories;
+
     protected boolean whitelist;
 
     public ChannelsPOJO(Set<Long> channels, Set<Long> categories, boolean whitelist) {

@@ -38,6 +38,5 @@ public class MonitorService extends ListenerAdapter {
         }
         data.metrics().service().failedInteraction();
         log.error("Interaction not acknowledged after 10 seconds. {}", event);
-
     }
 }

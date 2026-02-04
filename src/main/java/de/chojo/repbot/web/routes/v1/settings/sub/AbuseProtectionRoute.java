@@ -32,8 +32,7 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = AbuseProtectionPOJO.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateAbuseSettings(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         AbuseProtection abuseProtection = session.repGuild().settings().abuseProtection();
@@ -49,8 +48,7 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Integer.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateCooldown(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         session.repGuild().settings().abuseProtection().cooldown(ctx.bodyAsClass(Integer.class));
@@ -64,8 +62,7 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = CooldownDirection.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateCooldownDirection(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         session.repGuild().settings().abuseProtection().cooldownDirection(ctx.bodyAsClass(CooldownDirection.class));
@@ -79,8 +76,7 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Integer.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateMaxMessageAge(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         session.repGuild().settings().abuseProtection().maxMessageAge(ctx.bodyAsClass(Integer.class));
@@ -94,8 +90,7 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Integer.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateMinMessages(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         session.repGuild().settings().abuseProtection().minMessages(ctx.bodyAsClass(Integer.class));
@@ -109,8 +104,7 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateDonorContext(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         session.repGuild().settings().abuseProtection().donorContext(ctx.bodyAsClass(Boolean.class));
@@ -124,8 +118,7 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateReceiverContext(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         session.repGuild().settings().abuseProtection().receiverContext(ctx.bodyAsClass(Boolean.class));
@@ -139,8 +132,7 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Integer.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateMaxGiven(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         session.repGuild().settings().abuseProtection().maxGiven(ctx.bodyAsClass(Integer.class));
@@ -154,8 +146,7 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Integer.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateMaxGivenHours(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         session.repGuild().settings().abuseProtection().maxGivenHours(ctx.bodyAsClass(Integer.class));
@@ -169,8 +160,7 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Integer.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateMaxReceived(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         session.repGuild().settings().abuseProtection().maxReceived(ctx.bodyAsClass(Integer.class));
@@ -184,8 +174,7 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Integer.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateMaxReceivedHours(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         session.repGuild().settings().abuseProtection().maxReceivedHours(ctx.bodyAsClass(Integer.class));
@@ -199,8 +188,7 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Integer.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateMaxMessageReputation(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         session.repGuild().settings().abuseProtection().maxMessageReputation(ctx.bodyAsClass(Integer.class));

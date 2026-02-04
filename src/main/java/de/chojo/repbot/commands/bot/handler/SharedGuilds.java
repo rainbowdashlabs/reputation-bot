@@ -39,7 +39,8 @@ import static net.dv8tion.jda.api.Permission.MANAGE_SERVER;
 import static net.dv8tion.jda.api.Permission.MESSAGE_MANAGE;
 
 public class SharedGuilds implements SlashHandler {
-    private static final EnumSet<Permission> MODERATOR = EnumSet.of(MANAGE_SERVER, KICK_MEMBERS, BAN_MEMBERS, MESSAGE_MANAGE, MANAGE_CHANNEL, MANAGE_ROLES);
+    private static final EnumSet<Permission> MODERATOR =
+            EnumSet.of(MANAGE_SERVER, KICK_MEMBERS, BAN_MEMBERS, MESSAGE_MANAGE, MANAGE_CHANNEL, MANAGE_ROLES);
     private final Configuration configuration;
     private final GuildRepository guildRepository;
 
@@ -64,12 +65,13 @@ public class SharedGuilds implements SlashHandler {
             for (var shard : user.getJDA().getShardManager().getShards()) {
                 for (Guild guild : shard.getGuilds()) {
                     try {
-                        Member member = guild.retrieveMemberById(user.getIdLong()).complete();
+                        Member member =
+                                guild.retrieveMemberById(user.getIdLong()).complete();
                         if (member != null) {
                             mutualGuilds.add(guild);
                         }
                     } catch (ErrorResponseException e) {
-                        //pass
+                        // pass
                     }
                 }
             }
@@ -82,15 +84,17 @@ public class SharedGuilds implements SlashHandler {
     }
 
     public static MessageEmbed buildEmbed(User user, List<Guild> mutualGuilds) {
-        var guilds = mutualGuilds.stream()
-                                 .map(guild -> format(guild, user))
-                                 .collect(Collectors.joining("\n"));
+        var guilds = mutualGuilds.stream().map(guild -> format(guild, user)).collect(Collectors.joining("\n"));
 
-        return new EmbedBuilder().setTitle("Shared Guilds").setDescription(guilds).build();
+        return new EmbedBuilder()
+                .setTitle("Shared Guilds")
+                .setDescription(guilds)
+                .build();
     }
 
     public static String format(Guild guild, User user) {
-        return "%s Status: %s Members: %d".formatted(Guilds.prettyName(guild), userStanding(user, guild), guild.getMemberCount());
+        return "%s Status: %s Members: %d"
+                .formatted(Guilds.prettyName(guild), userStanding(user, guild), guild.getMemberCount());
     }
 
     private static String userStanding(User user, Guild guild) {
@@ -120,7 +124,10 @@ public class SharedGuilds implements SlashHandler {
             user = userOpt.getAsUser();
         } else {
             try {
-                user = event.getJDA().getShardManager().retrieveUserById(event.getIdLong()).complete();
+                user = event.getJDA()
+                        .getShardManager()
+                        .retrieveUserById(event.getIdLong())
+                        .complete();
             } catch (RuntimeException e) {
                 event.getHook().editOriginal("Could not find this user.").complete();
                 return;
@@ -132,7 +139,8 @@ public class SharedGuilds implements SlashHandler {
         MenuActionBuilder menuActionBuilder = MenuAction.forCallback(messageEmbed, event);
         for (Guild guild : shared) {
             menuActionBuilder.addComponent(MenuEntry.of(Button.primary(guild.getId(), guild.getName()), ctx -> {
-                Debug.sendDebug(ctx.event(), context.interactionHub().pageServices(), guildRepository.guild(guild), null);
+                Debug.sendDebug(
+                        ctx.event(), context.interactionHub().pageServices(), guildRepository.guild(guild), null);
             }));
         }
         context.registerMenu(menuActionBuilder.build());

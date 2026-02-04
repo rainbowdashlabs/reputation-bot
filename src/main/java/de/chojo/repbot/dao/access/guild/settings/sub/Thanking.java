@@ -45,10 +45,7 @@ public class Thanking implements GuildHolder {
     }
 
     public static Thanking build(Settings settings, Row row) throws SQLException {
-        return new Thanking(settings,
-                row.getString("reaction"),
-                row.getBoolean("channel_whitelist")
-        );
+        return new Thanking(settings, row.getString("reaction"), row.getBoolean("channel_whitelist"));
     }
 
     public void apply(ThankingPOJO state) {
@@ -71,14 +68,12 @@ public class Thanking implements GuildHolder {
                 .single(call().bind(guildId()))
                 .map(r -> r.getLong("channel_id"))
                 .all();
-        var categories = query("""
+        var categories =
+                query("""
                 SELECT category_id
                 FROM active_categories
                 WHERE guild_id = ?
-                """)
-                .single(call().bind(guildId()))
-                .mapAs(Long.class)
-                .all();
+                """).single(call().bind(guildId())).mapAs(Long.class).all();
         this.channels = new Channels(this, channelWhitelist, new HashSet<>(channels), new HashSet<>(categories));
         return this.channels;
     }
@@ -91,10 +86,7 @@ public class Thanking implements GuildHolder {
                 SELECT role_id
                 FROM donor_roles
                 WHERE guild_id = ?
-                """)
-                .single(call().bind(guildId()))
-                .mapAs(Long.class)
-                .all();
+                """).single(call().bind(guildId())).mapAs(Long.class).all();
 
         donorRoles = new DonorRoles(this, new HashSet<>(roles));
         return donorRoles;
@@ -108,10 +100,7 @@ public class Thanking implements GuildHolder {
                 SELECT role_id
                 FROM receiver_roles
                 WHERE guild_id = ?
-                """)
-                .single(call().bind(guildId()))
-                .mapAs(Long.class)
-                .all();
+                """).single(call().bind(guildId())).mapAs(Long.class).all();
 
         receiverRoles = new ReceiverRoles(this, new HashSet<>(roles));
         return receiverRoles;
@@ -121,14 +110,12 @@ public class Thanking implements GuildHolder {
         if (reactions != null) {
             return reactions;
         }
-        var reactions = query("""
+        var reactions =
+                query("""
                 SELECT reaction
                 FROM guild_reactions
                 WHERE guild_id = ?
-                """)
-                .single(call().bind(guildId()))
-                .mapAs(String.class)
-                .all();
+                """).single(call().bind(guildId())).mapAs(String.class).all();
         this.reactions = new Reactions(this, mainReaction, new HashSet<>(reactions));
         return this.reactions;
     }
@@ -137,14 +124,12 @@ public class Thanking implements GuildHolder {
         if (thankwords != null) {
             return thankwords;
         }
-        var thankwords = query("""
+        var thankwords =
+                query("""
                 SELECT thankword
                 FROM thankwords
                 WHERE guild_id = ?
-                """)
-                .single(call().bind(guildId()))
-                .mapAs(String.class)
-                .all();
+                """).single(call().bind(guildId())).mapAs(String.class).all();
 
         this.thankwords = new Thankwords(this, new HashSet<>(thankwords));
         return this.thankwords;

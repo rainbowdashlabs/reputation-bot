@@ -31,14 +31,15 @@ public class Message implements SlashHandler {
         var optMessageId = ValueParser.parseLong(event.getOption("messageid").getAsString());
         if (optMessageId.isEmpty()) {
             event.reply(context.localize("error.invalidMessage"))
-                 .setEphemeral(true)
-                 .complete();
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
 
-        event.replyEmbeds(getMessageLog(context, event.getGuild(), event.getOption("messageid").getAsLong()))
-             .setEphemeral(true)
-             .complete();
+        event.replyEmbeds(getMessageLog(
+                        context, event.getGuild(), event.getOption("messageid").getAsLong()))
+                .setEphemeral(true)
+                .complete();
     }
 
     private MessageEmbed getMessageLog(EventContext context, Guild guild, long messageId) {

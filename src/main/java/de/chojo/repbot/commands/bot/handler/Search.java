@@ -20,10 +20,10 @@ public class Search implements SlashHandler {
 
         event.deferReply(true).complete();
 
-        var guilds = event.getJDA().getShardManager().getGuildCache()
-                          .stream().filter(guild -> guild.getName().toLowerCase(Locale.ROOT).contains(term))
-                          .map(Guilds::prettyName)
-                          .collect(Collectors.joining("\n"));
+        var guilds = event.getJDA().getShardManager().getGuildCache().stream()
+                .filter(guild -> guild.getName().toLowerCase(Locale.ROOT).contains(term))
+                .map(Guilds::prettyName)
+                .collect(Collectors.joining("\n"));
 
         event.getHook().editOriginal(guilds).complete();
     }

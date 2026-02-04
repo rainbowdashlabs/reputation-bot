@@ -66,10 +66,7 @@ public class Ranks implements GuildHolder {
                 WHERE
                     guild_id = ?
                         AND role_id = ?;
-                """)
-                .single(call().bind(guildId()).bind(role))
-                .delete()
-                .changed();
+                """).single(call().bind(guildId()).bind(role)).delete().changed();
     }
 
     public List<ReputationRank> ranks() {
@@ -105,25 +102,28 @@ public class Ranks implements GuildHolder {
     public List<ReputationRank> currentRanks(RepUser user) {
         var profile = user.profile();
         return ranks().stream()
-                      .filter(rank -> rank.reputation() <= profile.reputation())
-                      .sorted()
-                      .limit(settings.general().isStackRoles() ? Integer.MAX_VALUE : 1)
-                      .toList();
+                .filter(rank -> rank.reputation() <= profile.reputation())
+                .sorted()
+                .limit(settings.general().isStackRoles() ? Integer.MAX_VALUE : 1)
+                .toList();
     }
 
     public Optional<ReputationRank> currentRank(RepUser user) {
         var profile = user.profile();
         return ranks().stream()
-                      .filter(rank -> rank.reputation() <= profile.reputation())
-                      .sorted()
-                      .limit(1)
-                      .findFirst();
+                .filter(rank -> rank.reputation() <= profile.reputation())
+                .sorted()
+                .limit(1)
+                .findFirst();
     }
 
     public Optional<ReputationRank> nextRank(RepUser user) {
         var profile = user.profile();
-        return ranks().stream().filter(rank -> rank.reputation() > profile.reputation())
-                      .sorted(Comparator.reverseOrder()).limit(1).findFirst();
+        return ranks().stream()
+                .filter(rank -> rank.reputation() > profile.reputation())
+                .sorted(Comparator.reverseOrder())
+                .limit(1)
+                .findFirst();
     }
 
     @Override
@@ -148,15 +148,18 @@ public class Ranks implements GuildHolder {
     }
 
     public String prettyString() {
-        return ranks().stream().filter(r -> r.role().isPresent())
-                      .map(rank -> "%s(%d) %d".formatted(rank.role().get().getName(), rank.role().get().getPosition(), rank.reputation()))
-                      .collect(Collectors.joining("\n"));
+        return ranks().stream()
+                .filter(r -> r.role().isPresent())
+                .map(rank -> "%s(%d) %d"
+                        .formatted(
+                                rank.role().get().getName(), rank.role().get().getPosition(), rank.reputation()))
+                .collect(Collectors.joining("\n"));
     }
 
     public RanksPOJO toPOJO() {
         var rankEntries = ranks().stream()
-                                 .map(rank -> new RanksPOJO.RankEntry(rank.roleId(), rank.reputation()))
-                                 .toList();
+                .map(rank -> new RanksPOJO.RankEntry(rank.roleId(), rank.reputation()))
+                .toList();
         return new RanksPOJO(rankEntries);
     }
 

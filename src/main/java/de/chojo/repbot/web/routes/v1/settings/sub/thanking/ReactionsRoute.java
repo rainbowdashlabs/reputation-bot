@@ -31,8 +31,7 @@ public class ReactionsRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = ReactionsPOJO.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateReactionsSettings(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         session.repGuild().settings().thanking().reactions().apply(ctx.bodyAsClass(ReactionsPOJO.class));
@@ -46,8 +45,7 @@ public class ReactionsRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = String.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateMainReaction(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         session.repGuild().settings().thanking().reactions().mainReaction(ctx.bodyAsClass(String.class));
@@ -61,12 +59,12 @@ public class ReactionsRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = String[].class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateAdditionalReactions(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         var reactions = session.repGuild().settings().thanking().reactions();
-        reactions.apply(new ReactionsPOJO(new java.util.HashSet<>(asList(ctx.bodyAsClass(String[].class))), reactions.mainReaction()));
+        reactions.apply(new ReactionsPOJO(
+                new java.util.HashSet<>(asList(ctx.bodyAsClass(String[].class))), reactions.mainReaction()));
     }
 
     @Override

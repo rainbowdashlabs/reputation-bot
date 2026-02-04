@@ -21,8 +21,9 @@ public class Reset implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext eventContext) {
         guildRepository.guild(event.getGuild()).localeOverrides().removeOverride("words.reputation");
-        event.reply(WebPromo.promoString(eventContext) + "\n" + eventContext.localize("command.repsettings.name.reset.message.reset"))
-             .setEphemeral(true)
-             .queue();
+        event.reply(WebPromo.promoString(eventContext) + "\n"
+                        + eventContext.localize("command.repsettings.name.reset.message.reset"))
+                .setEphemeral(true)
+                .queue();
     }
 }

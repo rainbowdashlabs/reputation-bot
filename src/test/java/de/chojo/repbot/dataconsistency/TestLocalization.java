@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,32 +31,38 @@ public class TestLocalization {
     private static final Pattern LOCALIZATION_CODE = Pattern.compile("\\$([a-zA-Z.]+?)\\$");
     private static final Pattern SIMPLE_LOCALIZATION_CODE = Pattern.compile("\"([a-zA-Z]+?\\.[a-zA-Z.]+)\"");
     private static final Pattern REPLACEMENTS = Pattern.compile("%[a-zA-Z\\d.]+?%");
-    private static final Set<String> WHITELIST = Set.of("index.html","bot.config", "bot.testmode", "cjda.interactions.testmode", "bot.cleancommands", "bot.gdpr.enable", "yyyy.MM.dd");
+    private static final Set<String> WHITELIST = Set.of(
+            "index.html",
+            "bot.config",
+            "bot.testmode",
+            "cjda.interactions.testmode",
+            "bot.cleancommands",
+            "bot.gdpr.enable",
+            "yyyy.MM.dd");
     private static final Set<String> WHITELIST_ENDS = Set.of(".gg", ".com", "bot.config", ".png", ".json");
     private static final Set<String> WHITELIST_STARTS = Set.of("bot.");
 
     private static final DiscordLocale[] LOCALES = {
-            DiscordLocale.ENGLISH_US, // en-US
-            DiscordLocale.GERMAN, // de
-            DiscordLocale.SPANISH, // es-ES
-            DiscordLocale.FRENCH, // fr
-            DiscordLocale.PORTUGUESE_BRAZILIAN, // pt-BR
-            DiscordLocale.RUSSIAN, // ru
-            DiscordLocale.UKRAINIAN, // uk
-            DiscordLocale.DUTCH, // nl
-            DiscordLocale.ITALIAN, // it
-            DiscordLocale.GREEK, // el
-            DiscordLocale.TURKISH, // tr
-            DiscordLocale.CHINESE_CHINA, // zh-CN
-            DiscordLocale.CZECH, // cs
-            DiscordLocale.POLISH, // pl
-            DiscordLocale.KOREAN, // ko
-            DiscordLocale.NORWEGIAN, // no
-            DiscordLocale.FINNISH, // fi
-            DiscordLocale.SWEDISH, // sv-SE
-            DiscordLocale.JAPANESE // ja
+        DiscordLocale.ENGLISH_US, // en-US
+        DiscordLocale.GERMAN, // de
+        DiscordLocale.SPANISH, // es-ES
+        DiscordLocale.FRENCH, // fr
+        DiscordLocale.PORTUGUESE_BRAZILIAN, // pt-BR
+        DiscordLocale.RUSSIAN, // ru
+        DiscordLocale.UKRAINIAN, // uk
+        DiscordLocale.DUTCH, // nl
+        DiscordLocale.ITALIAN, // it
+        DiscordLocale.GREEK, // el
+        DiscordLocale.TURKISH, // tr
+        DiscordLocale.CHINESE_CHINA, // zh-CN
+        DiscordLocale.CZECH, // cs
+        DiscordLocale.POLISH, // pl
+        DiscordLocale.KOREAN, // ko
+        DiscordLocale.NORWEGIAN, // no
+        DiscordLocale.FINNISH, // fi
+        DiscordLocale.SWEDISH, // sv-SE
+        DiscordLocale.JAPANESE // ja
     };
-
 
     @Test
     public void checkKeys() {
@@ -103,26 +108,27 @@ public class TestLocalization {
                     issues.add("Missing key at " + keyLoc);
                     continue;
                 }
-                if(locale.isBlank()){
+                if (locale.isBlank()) {
                     issues.add("Blank or unlocalized key at " + keyLoc);
                 }
                 var localeReplacements = getReplacements(locale);
                 var defReplacements = replacements.get(key);
-                if(!localeReplacements.containsAll(defReplacements)){
-                    issues.add("Missing replacement key in " + keyLoc
-                            + ". Expected \"" + String.join(", ", defReplacements) + "\". Actual \"" + String.join(", ", localeReplacements) + "\"");
+                if (!localeReplacements.containsAll(defReplacements)) {
+                    issues.add("Missing replacement key in " + keyLoc + ". Expected \""
+                            + String.join(", ", defReplacements) + "\". Actual \""
+                            + String.join(", ", localeReplacements) + "\"");
                 }
 
                 var localeKeyReferences = getLocaleKeysReferences(locale);
                 var defLocaleKeys = localeKeys.get(key);
-                if(!localeKeyReferences.containsAll(defLocaleKeys)){
-                    issues.add("Missing locale key reference in " + keyLoc
-                            + ". Expected \"" + String.join(", ", defLocaleKeys) + "\". Actual \"" + String.join(", ", localeKeyReferences) + "\"");
+                if (!localeKeyReferences.containsAll(defLocaleKeys)) {
+                    issues.add("Missing locale key reference in " + keyLoc + ". Expected \""
+                            + String.join(", ", defLocaleKeys) + "\". Actual \""
+                            + String.join(", ", localeKeyReferences) + "\"");
                 }
 
-
                 if (key.endsWith(".description")) {
-                    if(locale.length() > 100){
+                    if (locale.length() > 100) {
                         issues.add("Description is too long at " + keyLoc + ": " + locale.length() + " > 100");
                     }
                 }
@@ -156,14 +162,11 @@ public class TestLocalization {
         var keys = ResourceBundle.getBundle("locale").keySet();
         List<Path> files;
         try (var stream = Files.walk(Path.of("src", "main", "java"))) {
-            files = stream
-                    .filter(p -> p.toFile().isFile())
-                    .collect(Collectors.toCollection(ArrayList::new));
+            files = stream.filter(p -> p.toFile().isFile()).collect(Collectors.toCollection(ArrayList::new));
         }
 
         try (var stream = Files.walk(Path.of("src", "main", "resources"))) {
-            files.addAll(stream
-                    .filter(p -> p.toFile().isFile())
+            files.addAll(stream.filter(p -> p.toFile().isFile())
                     .filter(p -> p.getFileName().startsWith("locale"))
                     .toList());
         }

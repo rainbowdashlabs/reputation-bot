@@ -17,18 +17,17 @@ public class BaseAnalyzer {
         var optMessageId = ValueParser.parseLong(event.getOption("messageid").getAsString());
         if (optMessageId.isEmpty()) {
             event.reply(context.localize("error.invalidMessage"))
-                 .setEphemeral(true)
-                 .complete();
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
 
-        var resultEntry = reputation.analyzer()
-                                    .get(optMessageId.get());
+        var resultEntry = reputation.analyzer().get(optMessageId.get());
 
         if (resultEntry.isEmpty()) {
             event.reply(context.localize("command.log.analyzer.notanalyzed"))
-                 .setEphemeral(true)
-                 .complete();
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
 
@@ -45,9 +44,6 @@ public class BaseAnalyzer {
 
         embed.add(builder.build());
 
-        event.replyEmbeds(embed)
-             .setEphemeral(true)
-             .complete();
-
+        event.replyEmbeds(embed).setEphemeral(true).complete();
     }
 }

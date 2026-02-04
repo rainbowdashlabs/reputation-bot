@@ -43,13 +43,13 @@ public class Configuration {
 
     private Configuration() {
         objectMapper = JsonMapper.builder()
-                                 .configure(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS, true)
-                                 .build()
-                                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                                 .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
-                                 .setVisibility(PropertyAccessor.GETTER, JsonAutoDetect.Visibility.NONE)
-                                 .setDefaultPrettyPrinter(new DefaultPrettyPrinter())
-                                 .registerModule(new BotModule());
+                .configure(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS, true)
+                .build()
+                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+                .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
+                .setVisibility(PropertyAccessor.GETTER, JsonAutoDetect.Visibility.NONE)
+                .setDefaultPrettyPrinter(new DefaultPrettyPrinter())
+                .registerModule(new BotModule());
     }
 
     public static Configuration create() {
@@ -121,7 +121,10 @@ public class Configuration {
     }
 
     private void save() throws IOException {
-        objectMapper.writerWithDefaultPrettyPrinter().writeValues(getConfig().toFile()).write(configFile);
+        objectMapper
+                .writerWithDefaultPrettyPrinter()
+                .writeValues(getConfig().toFile())
+                .write(configFile);
     }
 
     private void reloadFile() throws IOException {
@@ -133,7 +136,10 @@ public class Configuration {
         Files.createDirectories(getConfig().getParent());
         if (!getConfig().toFile().exists()) {
             if (getConfig().toFile().createNewFile()) {
-                objectMapper.writerWithDefaultPrettyPrinter().writeValues(getConfig().toFile()).write(new ConfigFile());
+                objectMapper
+                        .writerWithDefaultPrettyPrinter()
+                        .writeValues(getConfig().toFile())
+                        .write(new ConfigFile());
                 throw new ConfigurationException("Please configure the config.");
             }
         }

@@ -44,22 +44,25 @@ import java.util.stream.Collectors;
 import static de.chojo.jdautil.util.Guilds.prettyName;
 
 public class Debug implements SlashHandler {
-    private static final Map<String, List<Permission>> PERMISSION_CATEGORIES = new LinkedHashMap<>() {{
-        put("General", List.of(Arrays.copyOfRange(Permission.values(), 0, 14)));
-        put("Membership Permissions", List.of(Arrays.copyOfRange(Permission.values(), 14, 20)));
-        put("Text Permissions", List.of(Arrays.copyOfRange(Permission.values(), 20, 34)));
-        put("Thread Permissions", List.of(Arrays.copyOfRange(Permission.values(), 34, 38)));
-        put("Voice Permissions", List.of(Arrays.copyOfRange(Permission.values(), 38, 49)));
-        put("Stage Channel Permissions", List.of(Arrays.copyOfRange(Permission.values(), 49, 50)));
-        put("Advanced", List.of(Arrays.copyOfRange(Permission.values(), 50, 51)));
-    }};
+    private static final Map<String, List<Permission>> PERMISSION_CATEGORIES = new LinkedHashMap<>() {
+        {
+            put("General", List.of(Arrays.copyOfRange(Permission.values(), 0, 14)));
+            put("Membership Permissions", List.of(Arrays.copyOfRange(Permission.values(), 14, 20)));
+            put("Text Permissions", List.of(Arrays.copyOfRange(Permission.values(), 20, 34)));
+            put("Thread Permissions", List.of(Arrays.copyOfRange(Permission.values(), 34, 38)));
+            put("Voice Permissions", List.of(Arrays.copyOfRange(Permission.values(), 38, 49)));
+            put("Stage Channel Permissions", List.of(Arrays.copyOfRange(Permission.values(), 49, 50)));
+            put("Advanced", List.of(Arrays.copyOfRange(Permission.values(), 50, 51)));
+        }
+    };
     private final GuildRepository guildRepository;
 
     public Debug(GuildRepository guildRepository) {
         this.guildRepository = guildRepository;
     }
 
-    public static void sendDebug(IReplyCallback callback, PageService pageService, RepGuild repGuild, @Nullable GuildChannel channel) {
+    public static void sendDebug(
+            IReplyCallback callback, PageService pageService, RepGuild repGuild, @Nullable GuildChannel channel) {
         Guild guild = repGuild.guild();
         var selfMember = guild.getSelfMember();
         var settings = repGuild.settings();
@@ -75,17 +78,24 @@ public class Debug implements SlashHandler {
                 .addField("Total Reputation", String.valueOf(reputation.stats().totalReputation()), true)
                 .addField("Week Reputation", String.valueOf(reputation.stats().weekReputation()), true)
                 .addField("Today Reputation", String.valueOf(reputation.stats().todayReputation()), true)
-                .addField("Latest reputation",
-                        timestamp(reputation.log().getLatestReputation()
-                                            .map(ReputationLogEntry::received)
-                                            .orElse(Instant.EPOCH)), true)
+                .addField(
+                        "Latest reputation",
+                        timestamp(reputation
+                                .log()
+                                .getLatestReputation()
+                                .map(ReputationLogEntry::received)
+                                .orElse(Instant.EPOCH)),
+                        true)
                 .build());
 
-        embeds.add(buildPermissions(selfMember::hasPermission, new EmbedBuilder().setTitle("Permissions")).build());
+        embeds.add(buildPermissions(selfMember::hasPermission, new EmbedBuilder().setTitle("Permissions"))
+                .build());
 
         if (channel != null) {
-            embeds.add(buildPermissions(p -> selfMember.hasPermission(channel, p),
-                    new EmbedBuilder().setTitle("Channel Permissions for %s".formatted(channel.getName()))).build());
+            embeds.add(buildPermissions(
+                            p -> selfMember.hasPermission(channel, p),
+                            new EmbedBuilder().setTitle("Channel Permissions for %s".formatted(channel.getName())))
+                    .build());
         }
 
         embeds.add(new EmbedBuilder()
@@ -109,12 +119,12 @@ public class Debug implements SlashHandler {
             categories = thanks.channels().categories();
         } else {
             channels = guild.getChannels().stream()
-                            .filter(c -> c instanceof GuildMessageChannel)
-                            .filter(c -> thanks.channels().isEnabled((GuildMessageChannel) c))
-                            .toList();
+                    .filter(c -> c instanceof GuildMessageChannel)
+                    .filter(c -> thanks.channels().isEnabled((GuildMessageChannel) c))
+                    .toList();
             categories = guild.getCategories().stream()
-                              .filter(category -> thanks.channels().isEnabledByCategory(category))
-                              .toList();
+                    .filter(category -> thanks.channels().isEnabledByCategory(category))
+                    .toList();
         }
 
         var channelNames = channels.stream().map(Channel::getName).limit(25).collect(Collectors.joining(", "));
@@ -132,17 +142,21 @@ public class Debug implements SlashHandler {
                 .addField("List Type", thanks.channels().isWhitelist() ? "whitelist" : "blacklist", true)
                 .addField("Thankwords", thanks.thankwords().prettyString(), false)
                 .addField("Main Reaction", thanks.reactions().reactionMention().orElse("None"), true)
-                .addField("Additional Reactions", String.join(" ", thanks.reactions()
-                                                                         .getAdditionalReactionMentions()), true)
+                .addField(
+                        "Additional Reactions",
+                        String.join(" ", thanks.reactions().getAdditionalReactionMentions()),
+                        true)
                 .build());
 
         embeds.add(new EmbedBuilder()
                 .setTitle("Ranks")
                 .addField("Reputation ranks", settings.ranks().prettyString(), false)
-                .addField("Bot roles",
+                .addField(
+                        "Bot roles",
                         guild.getSelfMember().getRoles().stream()
-                             .map(role -> "%s(%d)".formatted(role.getName(), role.getPosition()))
-                             .collect(Collectors.joining("\n")), false)
+                                .map(role -> "%s(%d)".formatted(role.getName(), role.getPosition()))
+                                .collect(Collectors.joining("\n")),
+                        false)
                 .build());
 
         var pages = new ListPageBag<>(embeds) {
@@ -168,19 +182,16 @@ public class Debug implements SlashHandler {
     }
 
     private static EmbedBuilder buildPermissions(Function<Permission, Boolean> permissionCheck, EmbedBuilder builder) {
-        PERMISSION_CATEGORIES.entrySet()
-                             .stream()
-                             .map(
-                                     entry -> new Field(
-                                             entry.getKey(),
-                                             entry.getValue().stream()
-                                                  .sorted(Comparator.comparing(p -> permissionCheck.apply(p) ? 1 : 0, Integer::compareTo))
-                                                  .sorted(Comparator.reverseOrder())
-                                                  .map(perm -> "%s %s".formatted(permissionCheck.apply(perm) ? "✅" : "❌", perm.getName()))
-                                                  .collect(Collectors.joining("\n")),
-                                             true)
-                             )
-                             .forEachOrdered(builder::addField);
+        PERMISSION_CATEGORIES.entrySet().stream()
+                .map(entry -> new Field(
+                        entry.getKey(),
+                        entry.getValue().stream()
+                                .sorted(Comparator.comparing(p -> permissionCheck.apply(p) ? 1 : 0, Integer::compareTo))
+                                .sorted(Comparator.reverseOrder())
+                                .map(perm -> "%s %s".formatted(permissionCheck.apply(perm) ? "✅" : "❌", perm.getName()))
+                                .collect(Collectors.joining("\n")),
+                        true))
+                .forEachOrdered(builder::addField);
         return builder;
     }
 

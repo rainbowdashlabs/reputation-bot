@@ -26,16 +26,16 @@ public class Add extends BaseRoleModifier {
         var role = event.getOption("role").getAsRole();
         var reputation = event.getOption("reputation").getAsInt();
         if (!event.getGuild().getSelfMember().canInteract(role)) {
-            event.reply(WebPromo.promoString(context) + "\n" + context.localize("error.roleAccess",
-                         Replacement.createMention(role)))
-                 .setEphemeral(true)
-                 .complete();
+            event.reply(WebPromo.promoString(context) + "\n"
+                            + context.localize("error.roleAccess", Replacement.createMention(role)))
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
         if (role.isPublicRole()) {
             event.reply(WebPromo.promoString(context) + "\n" + context.localize("error.publicRole"))
-                 .setEphemeral(true)
-                 .complete();
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
 
@@ -44,7 +44,10 @@ public class Add extends BaseRoleModifier {
         var menu = new LocalizedEmbedBuilder(context.guildLocalizer())
                 .setTitle("command.roles.add.title.added")
                 .appendDescription(WebPromo.promoString(context) + "\n\n")
-                .setDescription("command.roles.add.message.added", Replacement.createMention("ROLE", role), Replacement.create("POINTS", reputation))
+                .setDescription(
+                        "command.roles.add.message.added",
+                        Replacement.createMention("ROLE", role),
+                        Replacement.create("POINTS", reputation))
                 .build();
         refresh.accept(menu);
     }

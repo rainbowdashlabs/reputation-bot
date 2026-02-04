@@ -20,8 +20,7 @@ public class Info extends SlashCommand {
     private static final Logger log = getLogger(Info.class);
 
     private Info(String version, Configuration configuration) {
-        super(Slash.of("info", "command.info.description")
-                   .command(new Show(version, configuration)));
+        super(Slash.of("info", "command.info.description").command(new Show(version, configuration)));
     }
 
     public static Info create(Configuration configuration) {

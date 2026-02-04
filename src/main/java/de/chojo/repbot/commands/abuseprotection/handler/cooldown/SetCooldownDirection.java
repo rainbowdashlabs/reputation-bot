@@ -29,14 +29,21 @@ public class SetCooldownDirection implements SlashHandler {
         var abuseSettings = guild.settings().abuseProtection();
         var cooldown = Parser.parseEnum(event.getOption("direction").getAsString(), CooldownDirection.class);
 
-        event.reply(WebPromo.promoString(context) + context.localize("command.abuseprotection.cooldown.direction.message.set",
-                     Replacement.create("DIRECTION", abuseSettings.cooldownDirection(cooldown).localCode())))
-             .setEphemeral(true)
-             .complete();
+        event.reply(WebPromo.promoString(context)
+                        + context.localize(
+                                "command.abuseprotection.cooldown.direction.message.set",
+                                Replacement.create(
+                                        "DIRECTION",
+                                        abuseSettings
+                                                .cooldownDirection(cooldown)
+                                                .localCode())))
+                .setEphemeral(true)
+                .complete();
     }
 
     @Override
     public void onAutoComplete(CommandAutoCompleteInteractionEvent event, EventContext context) {
-        event.replyChoices(Completion.complete(event.getFocusedOption().getValue(), CooldownDirection.class)).queue();
+        event.replyChoices(Completion.complete(event.getFocusedOption().getValue(), CooldownDirection.class))
+                .queue();
     }
 }

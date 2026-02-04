@@ -34,15 +34,18 @@ public class DonorLimit implements SlashHandler {
         }
 
         if (protection.maxGiven() == 0) {
-            event.reply(WebPromo.promoString(context) + context.localize("command.abuseprotection.limit.donor.message.disabled"))
-                 .setEphemeral(true)
-                 .complete();
+            event.reply(WebPromo.promoString(context)
+                            + context.localize("command.abuseprotection.limit.donor.message.disabled"))
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
-        event.reply(WebPromo.promoString(context) + context.localize("command.abuseprotection.limit.donor.message.set",
-                     Replacement.create("AMOUNT", protection.maxGiven()),
-                     Replacement.create("HOURS", protection.maxGivenHours())))
-             .setEphemeral(true)
-             .complete();
+        event.reply(WebPromo.promoString(context)
+                        + context.localize(
+                                "command.abuseprotection.limit.donor.message.set",
+                                Replacement.create("AMOUNT", protection.maxGiven()),
+                                Replacement.create("HOURS", protection.maxGivenHours())))
+                .setEphemeral(true)
+                .complete();
     }
 }

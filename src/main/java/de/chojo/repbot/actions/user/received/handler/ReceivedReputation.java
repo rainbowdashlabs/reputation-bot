@@ -21,7 +21,6 @@ public class ReceivedReputation implements UserHandler {
         this.configuration = configuration;
     }
 
-
     @Override
     public void onUser(UserContextInteractionEvent event, EventContext eventContext) {
         Received.send(event, event.getTargetMember(), guildRepository, eventContext, configuration);

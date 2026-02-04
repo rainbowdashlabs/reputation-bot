@@ -29,12 +29,13 @@ public abstract class BaseChannelModifier implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        var channels = guildRepository.guild(event.getGuild()).settings().thanking().channels();
+        var channels =
+                guildRepository.guild(event.getGuild()).settings().thanking().channels();
         var channelType = event.getOption("channel").getChannelType();
         if (!ALLOWED_CHANNEL.contains(channelType)) {
             event.reply(context.localize("error.onlyTextOrCategory"))
-                 .setEphemeral(true)
-                 .complete();
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
 
@@ -48,7 +49,9 @@ public abstract class BaseChannelModifier implements SlashHandler {
         }
     }
 
-    public abstract void textChannel(SlashCommandInteractionEvent event, EventContext context, Channels channels, StandardGuildChannel channel);
+    public abstract void textChannel(
+            SlashCommandInteractionEvent event, EventContext context, Channels channels, StandardGuildChannel channel);
 
-    public abstract void category(SlashCommandInteractionEvent event, EventContext context, Channels channels, Category category);
+    public abstract void category(
+            SlashCommandInteractionEvent event, EventContext context, Channels channels, Category category);
 }

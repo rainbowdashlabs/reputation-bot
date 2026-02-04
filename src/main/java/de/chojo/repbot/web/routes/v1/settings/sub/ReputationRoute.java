@@ -42,9 +42,12 @@ public class ReputationRoute implements RoutesBuilder {
             methods = HttpMethod.POST,
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
-            requestBody = @OpenApiRequestBody(content = @io.javalin.openapi.OpenApiContent(from = ReputationPOJO.class)),
-            responses = {@OpenApiResponse(status = "200"), @OpenApiResponse(status = "424", description = "Could not refresh guild commands.")}
-    )
+            requestBody =
+                    @OpenApiRequestBody(content = @io.javalin.openapi.OpenApiContent(from = ReputationPOJO.class)),
+            responses = {
+                @OpenApiResponse(status = "200"),
+                @OpenApiResponse(status = "424", description = "Could not refresh guild commands.")
+            })
     public void updateReputationSettings(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         Reputation reputation = session.repGuild().settings().reputation();
@@ -64,8 +67,7 @@ public class ReputationRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateReactionActive(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         session.repGuild().settings().reputation().reactionActive(ctx.bodyAsClass(Boolean.class));
@@ -79,8 +81,7 @@ public class ReputationRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateAnswerActive(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         session.repGuild().settings().reputation().answerActive(ctx.bodyAsClass(Boolean.class));
@@ -94,8 +95,7 @@ public class ReputationRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateMentionActive(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         session.repGuild().settings().reputation().mentionActive(ctx.bodyAsClass(Boolean.class));
@@ -109,8 +109,7 @@ public class ReputationRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateFuzzyActive(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         session.repGuild().settings().reputation().fuzzyActive(ctx.bodyAsClass(Boolean.class));
@@ -124,8 +123,7 @@ public class ReputationRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateEmbedActive(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         session.repGuild().settings().reputation().embedActive(ctx.bodyAsClass(Boolean.class));
@@ -139,8 +137,7 @@ public class ReputationRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateDirectActive(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         session.repGuild().settings().reputation().directActive(ctx.bodyAsClass(Boolean.class));
@@ -154,8 +151,10 @@ public class ReputationRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
-            responses = {@OpenApiResponse(status = "200"), @OpenApiResponse(status = "424", description = "Could not refresh guild commands.")}
-    )
+            responses = {
+                @OpenApiResponse(status = "200"),
+                @OpenApiResponse(status = "424", description = "Could not refresh guild commands.")
+            })
     public void updateCommandActive(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         session.repGuild().settings().reputation().commandActive(ctx.bodyAsClass(Boolean.class));

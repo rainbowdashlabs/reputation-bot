@@ -21,7 +21,9 @@ public class Session implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        Guild guildId = event.getJDA().getShardManager().getGuildById(event.getOption("guild_id").getAsString());
+        Guild guildId = event.getJDA()
+                .getShardManager()
+                .getGuildById(event.getOption("guild_id").getAsString());
         GuildSession guildSession = sessionService.getGuildSession(guildId, event.getMember());
         event.reply(guildSession.sessionUrl()).setEphemeral(true).complete();
     }

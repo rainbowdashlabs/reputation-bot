@@ -25,7 +25,13 @@ public class GuildSession {
     private PremiumValidator premiumValidator;
     private GuildValidator guildValidator;
 
-    public GuildSession(Configuration configuration, String key, ShardManager shardManager, GuildRepository guildRepository, long guildId, long userId) {
+    public GuildSession(
+            Configuration configuration,
+            String key,
+            ShardManager shardManager,
+            GuildRepository guildRepository,
+            long guildId,
+            long userId) {
         this.configuration = configuration;
         this.key = key;
         this.shardManager = shardManager;
@@ -83,7 +89,12 @@ public class GuildSession {
 
     public String pathUrl(String path) {
         String url = "%s/%s?token=%s".formatted(configuration.api().url(), path, key);
-        return repGuild().settings().general().language().map(lang -> "%s&lang=%s".formatted(url, lang.getLocale())).orElse(url);
+        return repGuild()
+                .settings()
+                .general()
+                .language()
+                .map(lang -> "%s&lang=%s".formatted(url, lang.getLocale()))
+                .orElse(url);
     }
 
     public Configuration configuration() {

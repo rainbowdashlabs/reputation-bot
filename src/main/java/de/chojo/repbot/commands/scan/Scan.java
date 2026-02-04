@@ -28,17 +28,18 @@ public class Scan implements SlashProvider<Slash> {
     @Override
     public Slash slash() {
         return Slash.of("scan", "command.scan.description")
-                    .guildOnly()
-                    .adminCommand()
-                    .subCommand(SubCommand.of("start", "command.scan.start.description")
-                                          .handler(new Start(scanner))
-                                          .argument(Argument.channel("channel", "command.scan.start.options.channel.description"))
-                                          .argument(Argument.integer("numbermessages", "command.scan.start.options.numbermessages.description")
-                                                            .min(1)
-                                                            .max(10000)))
-                    .subCommand(SubCommand.of("cancel", "command.scan.cancel.description")
-                                          .handler(new Cancel(scanner)))
-                    .build();
+                .guildOnly()
+                .adminCommand()
+                .subCommand(SubCommand.of("start", "command.scan.start.description")
+                        .handler(new Start(scanner))
+                        .argument(Argument.channel("channel", "command.scan.start.options.channel.description"))
+                        .argument(Argument.integer(
+                                        "numbermessages", "command.scan.start.options.numbermessages.description")
+                                .min(1)
+                                .max(10000)))
+                .subCommand(SubCommand.of("cancel", "command.scan.cancel.description")
+                        .handler(new Cancel(scanner)))
+                .build();
     }
 
     public void lateInit(MessageAnalyzer messageAnalyzer) {

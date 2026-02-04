@@ -31,8 +31,7 @@ public class AnnouncementsRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = AnnouncementsPOJO.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateAnnouncementsSettings(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         Announcements announcements = session.repGuild().settings().announcements();
@@ -48,8 +47,7 @@ public class AnnouncementsRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateActive(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         session.repGuild().settings().announcements().active(ctx.bodyAsClass(Boolean.class));
@@ -63,8 +61,7 @@ public class AnnouncementsRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateSameChannel(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         session.repGuild().settings().announcements().sameChannel(ctx.bodyAsClass(Boolean.class));
@@ -78,8 +75,7 @@ public class AnnouncementsRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Long.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateChannel(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         Long channelId = ctx.bodyAsClass(Long.class);

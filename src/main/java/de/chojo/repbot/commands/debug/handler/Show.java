@@ -32,17 +32,22 @@ public class Show implements SlashHandler {
         settings.thanking().thankwords().words().forEach(joiner::add);
 
         event.replyEmbeds(new LocalizedEmbedBuilder(context.guildLocalizer())
-                     .setTitle("command.debug.message.title",
-                             Replacement.create("GUILD", prettyName(event.getGuild())))
-                     .addField("word.reputationSettings", settings.reputation().toLocalizedString(), false)
-                     .addField("word.thankWords", joiner.setEmptyValue("none").toString(), true)
-                     .addField("command.debug.message.channelactive", String.valueOf(
-                                     settings.thanking().channels().isEnabled(event.getChannel().asTextChannel())),
-                             true
-                     )
-                     .setColor(Colors.Pastel.DARK_PINK)
-                     .build())
-             .setEphemeral(true)
-             .complete();
+                        .setTitle(
+                                "command.debug.message.title",
+                                Replacement.create("GUILD", prettyName(event.getGuild())))
+                        .addField(
+                                "word.reputationSettings", settings.reputation().toLocalizedString(), false)
+                        .addField(
+                                "word.thankWords", joiner.setEmptyValue("none").toString(), true)
+                        .addField(
+                                "command.debug.message.channelactive",
+                                String.valueOf(settings.thanking()
+                                        .channels()
+                                        .isEnabled(event.getChannel().asTextChannel())),
+                                true)
+                        .setColor(Colors.Pastel.DARK_PINK)
+                        .build())
+                .setEphemeral(true)
+                .complete();
     }
 }

@@ -14,8 +14,7 @@ import java.util.List;
 public class RanksPOJO {
     protected List<RankEntry> ranks;
 
-    public RanksPOJO() {
-    }
+    public RanksPOJO() {}
 
     public RanksPOJO(List<RankEntry> ranks) {
         this.ranks = ranks;
@@ -25,7 +24,6 @@ public class RanksPOJO {
         return Collections.unmodifiableList(ranks);
     }
 
-
-    public record RankEntry(@JsonSerialize(using = ToStringSerializer.class) long roleId, int reputation) {
-    }
+    public record RankEntry(
+            @JsonSerialize(using = ToStringSerializer.class) long roleId, int reputation) {}
 }

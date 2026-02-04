@@ -50,9 +50,7 @@ public class Service {
                      INSERT INTO metrics_handled_interactions(hour, %s) VALUES (date_trunc('hour', now()), 1)
                      ON CONFLICT(hour)
                          DO UPDATE SET %s = metrics_handled_interactions.%s + 1
-                     """, type, type, type)
-             .single()
-             .insert();
+                     """, type, type, type).single().insert();
     }
 
     private LabeledCountStatistic get(String table, String timeframe, int offset, int count) {
@@ -67,14 +65,11 @@ public class Service {
                             ORDER BY %s DESC
                             LIMIT ?
                             """, timeframe, table, timeframe, timeframe)
-                    .single(call().bind(timeframe)
-                                  .bind(offset + " " + timeframe)
-                                  .bind(count))
-                    .map(rs -> builder.add("count", CountStatistics.build(rs, "count", timeframe))
-                                      .add("success", CountStatistics.build(rs, "success", timeframe))
-                                      .add("failed", CountStatistics.build(rs, "failed", timeframe))
-                    )
-                    .allResults()
-                    .map(r -> builder.build());
+                .single(call().bind(timeframe).bind(offset + " " + timeframe).bind(count))
+                .map(rs -> builder.add("count", CountStatistics.build(rs, "count", timeframe))
+                        .add("success", CountStatistics.build(rs, "success", timeframe))
+                        .add("failed", CountStatistics.build(rs, "failed", timeframe)))
+                .allResults()
+                .map(r -> builder.build());
     }
 }

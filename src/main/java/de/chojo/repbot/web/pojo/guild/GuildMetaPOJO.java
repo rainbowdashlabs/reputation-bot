@@ -26,8 +26,8 @@ public class GuildMetaPOJO {
     public static GuildMetaPOJO generate(Guild guild) {
         var selfMember = guild.getSelfMember();
         var highestRole = selfMember.getRoles().stream()
-                                    .max(Comparator.comparingInt(Role::getPosition))
-                                    .orElse(null);
+                .max(Comparator.comparingInt(Role::getPosition))
+                .orElse(null);
         RolePOJO highestBotRole = highestRole != null ? RolePOJO.generate(highestRole) : null;
         return new GuildMetaPOJO(highestBotRole, guild.getName(), guild.getId(), guild.getIconUrl());
     }

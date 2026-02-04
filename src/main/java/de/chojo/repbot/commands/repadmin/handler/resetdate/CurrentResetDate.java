@@ -25,12 +25,14 @@ public class CurrentResetDate implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        var instant = guildRepository.guild(event.getGuild()).settings().general().resetDate();
+        var instant =
+                guildRepository.guild(event.getGuild()).settings().general().resetDate();
 
         if (instant == null) {
-            event.reply(WebPromo.promoString(context) + context.localize("command.repadmin.resetdate.current.message.notset"))
-                 .setEphemeral(true)
-                 .complete();
+            event.reply(WebPromo.promoString(context)
+                            + context.localize("command.repadmin.resetdate.current.message.notset"))
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
 
@@ -42,8 +44,10 @@ public class CurrentResetDate implements SlashHandler {
             date = Text.timestampDateTime(instant);
         }
 
-        event.reply(WebPromo.promoString(context) + context.localize("command.repadmin.resetdate.current.message.set", Replacement.create("DATE", date)))
-             .setEphemeral(true)
-             .complete();
+        event.reply(WebPromo.promoString(context)
+                        + context.localize(
+                                "command.repadmin.resetdate.current.message.set", Replacement.create("DATE", date)))
+                .setEphemeral(true)
+                .complete();
     }
 }

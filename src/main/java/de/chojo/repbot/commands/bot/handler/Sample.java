@@ -47,18 +47,28 @@ public class Sample implements SlashHandler {
         RepGuild repGuild = guildRepository.guild(event.getGuild());
         event.deferReply().queue();
 
-        List<Member> members = event.getGuild().loadMembers().get().stream().limit(100).toList();
+        List<Member> members =
+                event.getGuild().loadMembers().get().stream().limit(100).toList();
         List<TextChannel> channels = event.getGuild().getTextChannels();
 
         for (Member member : members) {
             for (int i = 0; i < current().nextInt(1000); i++) {
-                addReputation(member, members.get(current().nextInt(members.size())), channels.get(current().nextInt(channels.size())));
+                addReputation(
+                        member,
+                        members.get(current().nextInt(members.size())),
+                        channels.get(current().nextInt(channels.size())));
             }
         }
 
         for (int i = 0; i < 200; i++) {
-            SubmitResult result = new SubmitResult(SubmitResultType.values()[current().nextInt(SubmitResultType.values().length)], Collections.emptyList());
-            addReputationResults(event.getGuild(), channels.get(current().nextInt(channels.size())), snowflakeCreator.nextLong(), result);
+            SubmitResult result = new SubmitResult(
+                    SubmitResultType.values()[current().nextInt(SubmitResultType.values().length)],
+                    Collections.emptyList());
+            addReputationResults(
+                    event.getGuild(),
+                    channels.get(current().nextInt(channels.size())),
+                    snowflakeCreator.nextLong(),
+                    result);
         }
 
         event.getHook().sendMessage("Done").queue();
@@ -76,11 +86,12 @@ public class Sample implements SlashHandler {
                 INSERT INTO analyzer_results(guild_id, channel_id, message_id, result) VALUES(?, ?, ?, ?::JSONB)
                     ON CONFLICT (guild_id, message_id)
                         DO NOTHING;
-                """).single(call().bind(guild.getIdLong())
-                                  .bind(guildChannel.getIdLong())
-                                  .bind(messageId)
-                                  .bind(resultString))
-                    .insert();
+                """)
+                .single(call().bind(guild.getIdLong())
+                        .bind(guildChannel.getIdLong())
+                        .bind(messageId)
+                        .bind(resultString))
+                .insert();
     }
 
     public void addReputationResults(Guild guild, TextChannel guildChannel, long messageId, SubmitResult result) {
@@ -92,12 +103,12 @@ public class Sample implements SlashHandler {
         }
         query("""
                 INSERT INTO reputation_results(guild_id, channel_id, message_id, result) VALUES(?, ?, ?, ?::JSONB);
-                """).single(call().bind(guild.getIdLong())
-                                  .bind(guildChannel.getIdLong())
-                                  .bind(messageId)
-                                  .bind(resultString))
-                    .insert();
-
+                """)
+                .single(call().bind(guild.getIdLong())
+                        .bind(guildChannel.getIdLong())
+                        .bind(messageId)
+                        .bind(resultString))
+                .insert();
     }
 
     private void addReputation(Member receiver, Member donor, TextChannel channel) {
@@ -111,40 +122,71 @@ public class Sample implements SlashHandler {
                         DO NOTHING;
                 """)
                 .single(call().bind(receiver.getGuild().getIdLong())
-                              .bind(donor == null ? null : donor.getIdLong())
-                              .bind(receiver.getIdLong())
-                              .bind(messageId)
-                              .bind(thankType == ThankType.ANSWER ? refMessage : null)
-                              .bind(channel.getIdLong())
-                              .bind(thankType))
+                        .bind(donor == null ? null : donor.getIdLong())
+                        .bind(receiver.getIdLong())
+                        .bind(messageId)
+                        .bind(thankType == ThankType.ANSWER ? refMessage : null)
+                        .bind(channel.getIdLong())
+                        .bind(thankType))
                 .insert();
 
-        var result = switch (thankType) {
-            case FUZZY -> AnalyzerResult.fuzzy(receiver.getEffectiveName(),
-                    List.of("thanks"),
-                    List.of(new MemberMatch(donor.getUser().getName(), donor.getUser().getName(), donor.getEffectiveName(), 1)),
-                    donor,
-                    List.of(WeightedEntry.directMatch(receiver)));
-            case MENTION -> AnalyzerResult.mention(receiver.getEffectiveName(), donor, List.of(receiver));
-            case ANSWER ->
-                    AnalyzerResult.answer(receiver.getEffectiveName(), donor, receiver, build(refMessage, channel, receiver));
-            case DIRECT, EMBED, REACTION ->
-                    AnalyzerResult.empty(receiver.getEffectiveName(), EmptyResultReason.NO_MATCH);
-            case COMMAND -> null;
-        };
+        var result =
+                switch (thankType) {
+                    case FUZZY ->
+                        AnalyzerResult.fuzzy(
+                                receiver.getEffectiveName(),
+                                List.of("thanks"),
+                                List.of(new MemberMatch(
+                                        donor.getUser().getName(),
+                                        donor.getUser().getName(),
+                                        donor.getEffectiveName(),
+                                        1)),
+                                donor,
+                                List.of(WeightedEntry.directMatch(receiver)));
+                    case MENTION -> AnalyzerResult.mention(receiver.getEffectiveName(), donor, List.of(receiver));
+                    case ANSWER ->
+                        AnalyzerResult.answer(
+                                receiver.getEffectiveName(), donor, receiver, build(refMessage, channel, receiver));
+                    case DIRECT, EMBED, REACTION ->
+                        AnalyzerResult.empty(receiver.getEffectiveName(), EmptyResultReason.NO_MATCH);
+                    case COMMAND -> null;
+                };
 
         addAnalyzerResult(receiver.getGuild(), channel, messageId, result);
     }
 
     private Message build(long messageId, TextChannel channel, Member member) {
-        return new ReceivedMessage(messageId, channel.getIdLong(), member.getIdLong(), member.getJDA(), member.getGuild(), channel, MessageType.DEFAULT, null, false,
-                0, false, false, "", "", member.getUser(), member, null, null, null, null, Collections.emptyList(),
+        return new ReceivedMessage(
+                messageId,
+                channel.getIdLong(),
+                member.getIdLong(),
+                member.getJDA(),
+                member.getGuild(),
+                channel,
+                MessageType.DEFAULT,
+                null,
+                false,
+                0,
+                false,
+                false,
+                "",
+                "",
+                member.getUser(),
+                member,
+                null,
+                null,
+                null,
+                null,
                 Collections.emptyList(),
                 Collections.emptyList(),
                 Collections.emptyList(),
                 Collections.emptyList(),
                 Collections.emptyList(),
-                0, null, null, null, 0
-        );
+                Collections.emptyList(),
+                0,
+                null,
+                null,
+                null,
+                0);
     }
 }

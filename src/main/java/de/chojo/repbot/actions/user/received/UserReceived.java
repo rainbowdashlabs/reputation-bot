@@ -27,9 +27,9 @@ public class UserReceived implements UserProvider<User> {
     @Override
     public User user() {
         return User.of("Received Reputation")
-                   .handler(new ReceivedReputation(guildRepository, configuration))
-                   .setContext(Set.of(InteractionContextType.GUILD))
-                   .withPermission(Permission.MESSAGE_MANAGE)
-                   .build();
+                .handler(new ReceivedReputation(guildRepository, configuration))
+                .setContext(Set.of(InteractionContextType.GUILD))
+                .withPermission(Permission.MESSAGE_MANAGE)
+                .build();
     }
 }

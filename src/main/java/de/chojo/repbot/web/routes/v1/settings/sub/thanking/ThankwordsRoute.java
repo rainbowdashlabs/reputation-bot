@@ -33,8 +33,7 @@ public class ThankwordsRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = ThankwordsPOJO.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateThankwordsSettings(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         session.repGuild().settings().thanking().thankwords().apply(ctx.bodyAsClass(ThankwordsPOJO.class));
@@ -48,11 +47,14 @@ public class ThankwordsRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = String[].class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateWords(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().thanking().thankwords().apply(new ThankwordsPOJO(new HashSet<>(Arrays.asList(ctx.bodyAsClass(String[].class)))));
+        session.repGuild()
+                .settings()
+                .thanking()
+                .thankwords()
+                .apply(new ThankwordsPOJO(new HashSet<>(Arrays.asList(ctx.bodyAsClass(String[].class)))));
     }
 
     @Override

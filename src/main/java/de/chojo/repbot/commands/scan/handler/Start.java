@@ -27,19 +27,23 @@ public class Start implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         if (!event.getGuild().getSelfMember().hasPermission(Permission.MESSAGE_HISTORY)) {
-            event.reply(context.localize("command.scan.start.message.history")).setEphemeral(true).complete();
+            event.reply(context.localize("command.scan.start.message.history"))
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
 
         if (scanner.isActive(event.getGuild())) {
-            event.reply(":stop_sign: " + context.localize("command.scan.start.message.running")).setEphemeral(true)
-                 .complete();
+            event.reply(":stop_sign: " + context.localize("command.scan.start.message.running"))
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
 
         if (scanner.limitReached()) {
-            event.reply(":stop_sign: " + context.localize("command.scan.start.message.queueFull")).setEphemeral(true)
-                 .complete();
+            event.reply(":stop_sign: " + context.localize("command.scan.start.message.queueFull"))
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
 
@@ -51,7 +55,6 @@ public class Start implements SlashHandler {
         var messages = ScanProcess.MAX_MESSAGES;
         var channel = event.getChannel().asTextChannel();
 
-
         if (event.getOption("numbermessages") != null) {
             messages = (int) event.getOption("numbermessages").getAsLong();
         }
@@ -59,12 +62,17 @@ public class Start implements SlashHandler {
             var guildChannel = event.getOption("channel").getAsChannel();
 
             if (guildChannel.getType() == ChannelType.FORUM) {
-                event.reply(context.localize("command.scan.start.message.forum")).setEphemeral(true)
-                     .complete();
+                event.reply(context.localize("command.scan.start.message.forum"))
+                        .setEphemeral(true)
+                        .complete();
                 return;
             }
 
-            if (PermissionErrorHandler.assertAndHandle(guildChannel.asGuildMessageChannel(), context.guildLocalizer().localizer(), Collections.emptyList(), Permission.MESSAGE_SEND)) {
+            if (PermissionErrorHandler.assertAndHandle(
+                    guildChannel.asGuildMessageChannel(),
+                    context.guildLocalizer().localizer(),
+                    Collections.emptyList(),
+                    Permission.MESSAGE_SEND)) {
                 return;
             }
             if (guildChannel.getType() != ChannelType.TEXT) {

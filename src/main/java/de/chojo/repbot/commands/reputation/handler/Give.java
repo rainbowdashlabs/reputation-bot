@@ -41,15 +41,21 @@ public class Give implements SlashHandler {
 
         Member donor = event.getMember();
         Member receiver = event.getOption("user", OptionMapping::getAsMember);
-        var result = reputationService.submitReputation(event.getGuild(), donor, receiver, ReputationContext.fromInteraction(event), null, ThankType.COMMAND);
+        var result = reputationService.submitReputation(
+                event.getGuild(), donor, receiver, ReputationContext.fromInteraction(event), null, ThankType.COMMAND);
         if (result.type() == SubmitResultType.SUCCESS) {
-            event.reply(context.guildLocale("command.reputation.give.message.success", Replacement.createMention("DONOR", donor), Replacement.createMention("RECEIVER", receiver)))
-                 .mentionUsers(Collections.emptyList()).setEphemeral(guild.settings().messages().isCommandReputationEphemeral())
-                 .queue();
+            event.reply(context.guildLocale(
+                            "command.reputation.give.message.success",
+                            Replacement.createMention("DONOR", donor),
+                            Replacement.createMention("RECEIVER", receiver)))
+                    .mentionUsers(Collections.emptyList())
+                    .setEphemeral(guild.settings().messages().isCommandReputationEphemeral())
+                    .queue();
         } else {
-            event.reply(context.guildLocale(result.type().localeKey(), result.replacements().toArray(Replacement[]::new)))
-                 .setEphemeral(true)
-                 .queue();
+            event.reply(context.guildLocale(
+                            result.type().localeKey(), result.replacements().toArray(Replacement[]::new)))
+                    .setEphemeral(true)
+                    .queue();
         }
     }
 }

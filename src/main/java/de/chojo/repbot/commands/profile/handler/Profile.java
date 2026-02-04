@@ -30,26 +30,32 @@ public class Profile implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var userOption = event.getOption("user");
-        var detailed = Optional.ofNullable(event.getOption("detailed")).map(OptionMapping::getAsBoolean).orElse(false);
+        var detailed = Optional.ofNullable(event.getOption("detailed"))
+                .map(OptionMapping::getAsBoolean)
+                .orElse(false);
         var member = userOption != null ? userOption.getAsMember() : event.getMember();
         if (member == null) {
-            event.reply(context.localize("error.userNotFound")).setEphemeral(true).queue();
+            event.reply(context.localize("error.userNotFound"))
+                    .setEphemeral(true)
+                    .queue();
             return;
         }
 
         if (detailed) {
-            if (Premium.checkAndReplyPremium(context, configuration.skus().features().detailedProfile().detailedProfile())) {
+            if (Premium.checkAndReplyPremium(
+                    context, configuration.skus().features().detailedProfile().detailedProfile())) {
                 return;
             }
         }
 
         event.deferReply().queue();
 
-        var reputation = guildRepository.guild(event.getGuild())
-                                        .reputation()
-                                        .user(member)
-                                        .profile()
-                                        .publicProfile(configuration, context.guildLocalizer(), detailed);
+        var reputation = guildRepository
+                .guild(event.getGuild())
+                .reputation()
+                .user(member)
+                .profile()
+                .publicProfile(configuration, context.guildLocalizer(), detailed);
         event.getHook().editOriginalEmbeds(reputation).queue();
         roleAssigner.updateReporting(member, event.getGuildChannel());
     }

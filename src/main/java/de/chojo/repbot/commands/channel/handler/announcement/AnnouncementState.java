@@ -23,13 +23,15 @@ public class AnnouncementState implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var announcements = guildRepository.guild(event.getGuild()).settings().announcements();
         if (announcements.active(event.getOption("active", OptionMapping::getAsBoolean))) {
-            event.reply(WebPromo.promoString(context) + context.localize("command.channel.announcement.state.message.active"))
-                 .setEphemeral(true)
-                 .complete();
+            event.reply(WebPromo.promoString(context)
+                            + context.localize("command.channel.announcement.state.message.active"))
+                    .setEphemeral(true)
+                    .complete();
         } else {
-            event.reply(WebPromo.promoString(context) + context.localize("command.channel.announcement.state.message.inactive"))
-                 .setEphemeral(true)
-                 .complete();
+            event.reply(WebPromo.promoString(context)
+                            + context.localize("command.channel.announcement.state.message.inactive"))
+                    .setEphemeral(true)
+                    .complete();
         }
     }
 }

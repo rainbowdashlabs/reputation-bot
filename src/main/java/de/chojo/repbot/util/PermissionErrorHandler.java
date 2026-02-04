@@ -26,8 +26,11 @@ public final class PermissionErrorHandler {
         throw new UnsupportedOperationException("This is a utility class.");
     }
 
-    public static void handle(InsufficientPermissionException permissionException, ShardManager shardManager,
-                              LocalizationContext localizer, Configuration configuration) {
+    public static void handle(
+            InsufficientPermissionException permissionException,
+            ShardManager shardManager,
+            LocalizationContext localizer,
+            Configuration configuration) {
         var permission = permissionException.getPermission();
         var guildById = shardManager.getGuildById(permissionException.getGuildId());
         var channel = (TextChannel) permissionException.getChannel(guildById.getJDA());
@@ -35,36 +38,54 @@ public final class PermissionErrorHandler {
         sendPermissionError(channel, permission, localizer, configuration);
     }
 
-    public static void handle(InsufficientPermissionException permissionException, Guild guild, LocalizationContext localizer,
-                              Configuration configuration) {
+    public static void handle(
+            InsufficientPermissionException permissionException,
+            Guild guild,
+            LocalizationContext localizer,
+            Configuration configuration) {
         var permission = permissionException.getPermission();
         var channel = (TextChannel) permissionException.getChannel(guild.getJDA());
         if (channel == null) return;
         sendPermissionError(channel, permission, localizer, configuration);
     }
 
-    public static void handle(InsufficientPermissionException permissionException, GuildMessageChannel channel,
-                              LocalizationContext localizer, Configuration configuration) {
+    public static void handle(
+            InsufficientPermissionException permissionException,
+            GuildMessageChannel channel,
+            LocalizationContext localizer,
+            Configuration configuration) {
         var permission = permissionException.getPermission();
         if (channel == null) return;
         sendPermissionError(channel, permission, localizer, configuration);
     }
 
-    public static void sendPermissionError(GuildMessageChannel channel, Permission permission, LocalizationContext localizer,
-                                           Configuration configuration) {
+    public static void sendPermissionError(
+            GuildMessageChannel channel,
+            Permission permission,
+            LocalizationContext localizer,
+            Configuration configuration) {
         var guild = channel.getGuild();
-        log.trace("Sending permission error for channel {} in guild {}. Permission: {}", channel.getName(), guild.getName(), permission.getName());
-        var errorMessage = localizer.localize("error.missingPermission",
-                Replacement.create("PERM", permission.getName(), Format.BOLD));
+        log.trace(
+                "Sending permission error for channel {} in guild {}. Permission: {}",
+                channel.getName(),
+                guild.getName(),
+                permission.getName());
+        var errorMessage = localizer.localize(
+                "error.missingPermission", Replacement.create("PERM", permission.getName(), Format.BOLD));
         if (guild.getSelfMember().hasPermission(permission)) {
-            errorMessage += "\n" + localizer.localize("error.missingPermissionChannel",
-                    Replacement.createMention("CHANNEL", channel));
+            errorMessage += "\n"
+                    + localizer.localize(
+                            "error.missingPermissionChannel", Replacement.createMention("CHANNEL", channel));
         } else {
             errorMessage += "\n" + localizer.localize("error.missingPermissionGuild");
         }
-        if (permission != Permission.MESSAGE_SEND && permission != Permission.VIEW_CHANNEL
-                && PermissionUtil.checkPermission(channel.getPermissionContainer(), channel.getGuild()
-                                                                                           .getSelfMember(), Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL)) {
+        if (permission != Permission.MESSAGE_SEND
+                && permission != Permission.VIEW_CHANNEL
+                && PermissionUtil.checkPermission(
+                        channel.getPermissionContainer(),
+                        channel.getGuild().getSelfMember(),
+                        Permission.MESSAGE_SEND,
+                        Permission.VIEW_CHANNEL)) {
             channel.sendMessage(errorMessage).queue();
             return;
         }
@@ -74,13 +95,13 @@ public final class PermissionErrorHandler {
         var ownerId = guild.getOwnerIdLong();
         var finalErrorMessage = errorMessage;
         guild.retrieveMemberById(ownerId)
-             .flatMap(member -> member.getUser().openPrivateChannel())
-             .flatMap(privateChannel -> privateChannel.sendMessage(finalErrorMessage))
-             .onErrorMap(t -> {
-                 log.trace("Could not send permission error to owner.");
-                 return null;
-             })
-             .queue();
+                .flatMap(member -> member.getUser().openPrivateChannel())
+                .flatMap(privateChannel -> privateChannel.sendMessage(finalErrorMessage))
+                .onErrorMap(t -> {
+                    log.trace("Could not send permission error to owner.");
+                    return null;
+                })
+                .queue();
     }
 
     /**
@@ -90,7 +111,8 @@ public final class PermissionErrorHandler {
      * @param permissions permissions to check
      * @throws InsufficientPermissionException when the bot user doesn't have a permission
      */
-    public static void assertPermissions(GuildMessageChannel channel, Permission... permissions) throws InsufficientPermissionException {
+    public static void assertPermissions(GuildMessageChannel channel, Permission... permissions)
+            throws InsufficientPermissionException {
         var self = channel.getGuild().getSelfMember();
         for (var permission : permissions) {
             if (!self.hasPermission(channel, permission)) {
@@ -99,7 +121,8 @@ public final class PermissionErrorHandler {
         }
     }
 
-    public static void assertPermissions(Guild guild, Permission... permissions) throws InsufficientPermissionException {
+    public static void assertPermissions(Guild guild, Permission... permissions)
+            throws InsufficientPermissionException {
         var self = guild.getSelfMember();
         for (var permission : permissions) {
             if (!self.hasPermission(permission)) {
@@ -117,7 +140,11 @@ public final class PermissionErrorHandler {
      * @param permissions   permissions to check
      * @return true if a permission was missing and a message was sent
      */
-    public static boolean assertAndHandle(GuildMessageChannel channel, LocalizationContext localizer, Configuration configuration, Permission... permissions) {
+    public static boolean assertAndHandle(
+            GuildMessageChannel channel,
+            LocalizationContext localizer,
+            Configuration configuration,
+            Permission... permissions) {
         try {
             assertPermissions(channel, permissions);
         } catch (InsufficientPermissionException e) {

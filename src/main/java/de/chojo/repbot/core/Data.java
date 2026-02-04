@@ -111,23 +111,24 @@ public class Data {
     private void updateDatabase() throws IOException, SQLException {
         var schema = configuration.database().schema();
         SqlUpdater.builder(dataSource, PostgreSql.get())
-                  .setReplacements(new QueryReplacement("repbot_schema", schema))
-                  .setVersionTable(schema + ".repbot_version")
-                  .setSchemas(schema)
-                  .execute();
+                .setReplacements(new QueryReplacement("repbot_schema", schema))
+                .setVersionTable(schema + ".repbot_version")
+                .setSchemas(schema)
+                .execute();
     }
 
     private void configure() {
         log.info("Configuring Query Configuration");
         var logger = getLogger("DbLogger");
         var registry = new RowMapperRegistry();
-        registry.register(RowMapper.forClass(RemovalTask.class).mapper(RemovalTask::build).build());
+        registry.register(
+                RowMapper.forClass(RemovalTask.class).mapper(RemovalTask::build).build());
         registry.register(PostgresqlMapper.getDefaultMapper());
-        QueryConfiguration.setDefault(
-                QueryConfiguration.builder(dataSource)
-                                  .setExceptionHandler(err -> logger.error(LogNotify.NOTIFY_ADMIN, "An error occurred during a database request", err))
-                                  .setRowMapperRegistry(registry)
-                                  .build());
+        QueryConfiguration.setDefault(QueryConfiguration.builder(dataSource)
+                .setExceptionHandler(
+                        err -> logger.error(LogNotify.NOTIFY_ADMIN, "An error occurred during a database request", err))
+                .setRowMapperRegistry(registry)
+                .build());
     }
 
     private void initDao() {
@@ -144,16 +145,15 @@ public class Data {
         log.info("Creating connection pool.");
         var data = configuration.database();
         return DataSourceCreator.create(PostgreSql.get())
-                                .configure(config -> config
-                                        .host(data.host())
-                                        .port(data.port())
-                                        .user(data.user())
-                                        .password(data.password())
-                                        .database(data.database()))
-                                .create()
-                                .withMaximumPoolSize(data.poolSize())
-                                .withThreadFactory(Threading.createThreadFactory(threading.hikariGroup()))
-                                .forSchema(data.schema())
-                                .build();
+                .configure(config -> config.host(data.host())
+                        .port(data.port())
+                        .user(data.user())
+                        .password(data.password())
+                        .database(data.database()))
+                .create()
+                .withMaximumPoolSize(data.poolSize())
+                .withThreadFactory(Threading.createThreadFactory(threading.hikariGroup()))
+                .forSchema(data.schema())
+                .build();
     }
 }

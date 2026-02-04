@@ -31,19 +31,23 @@ public class LogEnable implements SlashHandler {
         GuildChannelUnion channel = event.getOption("channel", OptionMapping::getAsChannel);
         if (channel.getType() != ChannelType.TEXT) {
             event.reply(context.localize("error.onlyTextChannel"))
-                 .setEphemeral(true)
-                 .complete();
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
 
-        if (Premium.checkAndReplyPremium(context, configuration.skus().features().logChannel().logChannel())) {
+        if (Premium.checkAndReplyPremium(
+                context, configuration.skus().features().logChannel().logChannel())) {
             return;
         }
 
         guildRepository.guild(event.getGuild()).settings().logChannel().channel(channel.asTextChannel());
         guildRepository.guild(event.getGuild()).settings().logChannel().active(true);
-        event.reply(WebPromo.promoString(context) + context.localize("command.channel.log.channel.message.enabled", Replacement.createMention(channel.asTextChannel())))
-             .setEphemeral(true)
-             .complete();
+        event.reply(WebPromo.promoString(context)
+                        + context.localize(
+                                "command.channel.log.channel.message.enabled",
+                                Replacement.createMention(channel.asTextChannel())))
+                .setEphemeral(true)
+                .complete();
     }
 }

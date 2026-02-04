@@ -78,15 +78,17 @@ public class Channels extends ChannelsPOJO implements GuildHolder {
     }
 
     public List<GuildChannel> channels() {
-        return channels.stream().map(guild()::getGuildChannelById)
-                       .filter(Objects::nonNull)
-                       .toList();
+        return channels.stream()
+                .map(guild()::getGuildChannelById)
+                .filter(Objects::nonNull)
+                .toList();
     }
 
     public List<Category> categories() {
-        return categories.stream().map(guild()::getCategoryById)
-                         .filter(Objects::nonNull)
-                         .toList();
+        return categories.stream()
+                .map(guild()::getCategoryById)
+                .filter(Objects::nonNull)
+                .toList();
     }
 
     /**
@@ -96,7 +98,8 @@ public class Channels extends ChannelsPOJO implements GuildHolder {
      * @return true if a channel was added
      */
     public boolean add(StandardGuildChannel channel) {
-        var result = query("INSERT INTO active_channel(guild_id, channel_id) VALUES(?,?) ON CONFLICT(guild_id, channel_id) DO NOTHING;")
+        var result = query(
+                        "INSERT INTO active_channel(guild_id, channel_id) VALUES(?,?) ON CONFLICT(guild_id, channel_id) DO NOTHING;")
                 .single(call().bind(guildId()).bind(channel.getIdLong()))
                 .update()
                 .changed();
@@ -113,7 +116,8 @@ public class Channels extends ChannelsPOJO implements GuildHolder {
      * @return true if a category was added
      */
     public boolean add(Category category) {
-        var result = query("INSERT INTO active_categories(guild_id, category_id) VALUES(?,?) ON CONFLICT(guild_id, category_id) DO NOTHING;")
+        var result = query(
+                        "INSERT INTO active_categories(guild_id, category_id) VALUES(?,?) ON CONFLICT(guild_id, category_id) DO NOTHING;")
                 .single(call().bind(guildId()).bind(category.getIdLong()))
                 .update()
                 .changed();
@@ -206,7 +210,8 @@ public class Channels extends ChannelsPOJO implements GuildHolder {
     }
 
     public boolean addChannel(long channelId) {
-        var result = query("INSERT INTO active_channel(guild_id, channel_id) VALUES (?,?) ON CONFLICT(guild_id, channel_id) DO NOTHING")
+        var result = query(
+                        "INSERT INTO active_channel(guild_id, channel_id) VALUES (?,?) ON CONFLICT(guild_id, channel_id) DO NOTHING")
                 .single(call().bind(guildId()).bind(channelId))
                 .update()
                 .changed();
@@ -217,7 +222,8 @@ public class Channels extends ChannelsPOJO implements GuildHolder {
     }
 
     public boolean addCategory(long categoryId) {
-        var result = query("INSERT INTO active_categories(guild_id, category_id) VALUES (?,?) ON CONFLICT(guild_id, category_id) DO NOTHING")
+        var result = query(
+                        "INSERT INTO active_categories(guild_id, category_id) VALUES (?,?) ON CONFLICT(guild_id, category_id) DO NOTHING")
                 .single(call().bind(guildId()).bind(categoryId))
                 .update()
                 .changed();

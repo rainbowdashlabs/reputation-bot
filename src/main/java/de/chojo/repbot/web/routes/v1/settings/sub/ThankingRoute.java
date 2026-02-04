@@ -45,10 +45,12 @@ public class ThankingRoute implements RoutesBuilder {
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = ThankingPOJO.class)),
             responses = {
-                    @OpenApiResponse(status = "200"),
-                    @OpenApiResponse(status = "403", content = @OpenApiContent(from = ErrorResponse.class), description = "Premium feature required or limit exceeded")
-            }
-    )
+                @OpenApiResponse(status = "200"),
+                @OpenApiResponse(
+                        status = "403",
+                        content = @OpenApiContent(from = ErrorResponse.class),
+                        description = "Premium feature required or limit exceeded")
+            })
     public void updateThankingSettings(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         ThankingPOJO thankingPOJO = ctx.bodyAsClass(ThankingPOJO.class);
@@ -56,8 +58,14 @@ public class ThankingRoute implements RoutesBuilder {
         // Validate premium features in the nested channels settings
         PremiumValidator validator = session.premiumValidator();
         if (thankingPOJO.channels() != null) {
-            validator.requireWithinLimit(thankingPOJO.channels().channelIds().size(), validator.features().reputationChannel(), "Reputation Channels");
-            validator.requireWithinLimit(thankingPOJO.channels().categoryIds().size(), validator.features().reputationCategories(), "Reputation Categories");
+            validator.requireWithinLimit(
+                    thankingPOJO.channels().channelIds().size(),
+                    validator.features().reputationChannel(),
+                    "Reputation Channels");
+            validator.requireWithinLimit(
+                    thankingPOJO.channels().categoryIds().size(),
+                    validator.features().reputationCategories(),
+                    "Reputation Categories");
             validator.requireWhitelistOrPremium(thankingPOJO.channels().isWhitelist());
         }
 

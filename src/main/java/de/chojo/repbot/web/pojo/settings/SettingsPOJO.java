@@ -33,7 +33,17 @@ public class SettingsPOJO {
     ReputationPOJO reputation;
     ThankingPOJO thanking;
 
-    public SettingsPOJO(AbuseProtectionPOJO abuseProtection, AnnouncementsPOJO announcements, AutopostPOJO autopost, GeneralPOJO general, LogChannelPOJO logChannel, MessagesPOJO messages, ProfilePOJO profile, RanksPOJO ranks, ReputationPOJO reputation, ThankingPOJO thanking) {
+    public SettingsPOJO(
+            AbuseProtectionPOJO abuseProtection,
+            AnnouncementsPOJO announcements,
+            AutopostPOJO autopost,
+            GeneralPOJO general,
+            LogChannelPOJO logChannel,
+            MessagesPOJO messages,
+            ProfilePOJO profile,
+            RanksPOJO ranks,
+            ReputationPOJO reputation,
+            ThankingPOJO thanking) {
         this.abuseProtection = abuseProtection;
         this.announcements = announcements;
         this.autopost = autopost;
@@ -50,8 +60,22 @@ public class SettingsPOJO {
         RepGuild repGuild = guildRepository.guild(guild);
         Settings settings = repGuild.settings();
         Thanking thanking = settings.thanking();
-        ThankingPOJO thankingPOJO = new ThankingPOJO(thanking.channels(), thanking.donorRoles(), thanking.receiverRoles(), thanking.reactions(), thanking.thankwords());
-        return new SettingsPOJO(settings.abuseProtection(), settings.announcements(),
-                settings.autopost(), settings.general(), settings.logChannel(), settings.messages(), settings.profile(), settings.ranks().toPOJO(), settings.reputation(), thankingPOJO);
+        ThankingPOJO thankingPOJO = new ThankingPOJO(
+                thanking.channels(),
+                thanking.donorRoles(),
+                thanking.receiverRoles(),
+                thanking.reactions(),
+                thanking.thankwords());
+        return new SettingsPOJO(
+                settings.abuseProtection(),
+                settings.announcements(),
+                settings.autopost(),
+                settings.general(),
+                settings.logChannel(),
+                settings.messages(),
+                settings.profile(),
+                settings.ranks().toPOJO(),
+                settings.reputation(),
+                thankingPOJO);
     }
 }

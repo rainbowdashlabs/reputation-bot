@@ -35,42 +35,78 @@ public class Received implements SlashHandler {
         this.configuration = configuration;
     }
 
-    public static void send(IReplyCallback event, Member user, GuildRepository guildRepository, EventContext context, Configuration configuration) {
-        var logAccess = guildRepository.guild(event.getGuild()).reputation().log().getUserReceivedLog(user.getUser(), PAGE_SIZE);
-        var noPremium = Premium.isNotEntitled(context, configuration.skus().features().reputationLog().extendedPages());
-        context.registerPage(new PrivatePageBag(logAccess.pages(), event.getUser().getIdLong()) {
-            @Override
-            public MessageEditData buildPage() {
-                return userLogEmbed(context.guildLocalizer(), user, "command.log.received.message.log",
-                        mapUserLogEntry(context.guildLocalizer(), logAccess.page(current()), ReputationLogEntry::donorId), noPremium);
-            }
+    public static void send(
+            IReplyCallback event,
+            Member user,
+            GuildRepository guildRepository,
+            EventContext context,
+            Configuration configuration) {
+        var logAccess = guildRepository
+                .guild(event.getGuild())
+                .reputation()
+                .log()
+                .getUserReceivedLog(user.getUser(), PAGE_SIZE);
+        var noPremium = Premium.isNotEntitled(
+                context, configuration.skus().features().reputationLog().extendedPages());
+        context.registerPage(
+                new PrivatePageBag(logAccess.pages(), event.getUser().getIdLong()) {
+                    @Override
+                    public MessageEditData buildPage() {
+                        return userLogEmbed(
+                                context.guildLocalizer(),
+                                user,
+                                "command.log.received.message.log",
+                                mapUserLogEntry(
+                                        context.guildLocalizer(),
+                                        logAccess.page(current()),
+                                        ReputationLogEntry::donorId),
+                                noPremium);
+                    }
 
-            @Override
-            public MessageEditData buildEmptyPage() {
-                return userLogEmbed(context.guildLocalizer(), user, "command.log.received.message.log",
-                        mapUserLogEntry(context.guildLocalizer(), Collections.emptyList(), ReputationLogEntry::donorId), noPremium);
-            }
+                    @Override
+                    public MessageEditData buildEmptyPage() {
+                        return userLogEmbed(
+                                context.guildLocalizer(),
+                                user,
+                                "command.log.received.message.log",
+                                mapUserLogEntry(
+                                        context.guildLocalizer(), Collections.emptyList(), ReputationLogEntry::donorId),
+                                noPremium);
+                    }
 
-            @Override
-            public int pages() {
-                if (noPremium) {
-                    return Math.min(configuration.skus().features().reputationLog().defaultSize(), PAGE_SIZE);
-                }
-                return super.pages();
-            }
+                    @Override
+                    public int pages() {
+                        if (noPremium) {
+                            return Math.min(
+                                    configuration
+                                            .skus()
+                                            .features()
+                                            .reputationLog()
+                                            .defaultSize(),
+                                    PAGE_SIZE);
+                        }
+                        return super.pages();
+                    }
 
-            @Override
-            public List<PageButton> buttons() {
-                if (noPremium) {
-                    return Premium.buildEntitlementButtons(configuration.skus().features().reputationLog().extendedPages())
-                                  .stream()
-                                  .map(b -> b.getButtons().stream().map(PageButton::of).toList())
-                                  .flatMap(Collection::stream)
-                                  .toList();
-                }
-                return super.buttons();
-            }
-        }, true);
+                    @Override
+                    public List<PageButton> buttons() {
+                        if (noPremium) {
+                            return Premium.buildEntitlementButtons(configuration
+                                            .skus()
+                                            .features()
+                                            .reputationLog()
+                                            .extendedPages())
+                                    .stream()
+                                    .map(b -> b.getButtons().stream()
+                                            .map(PageButton::of)
+                                            .toList())
+                                    .flatMap(Collection::stream)
+                                    .toList();
+                        }
+                        return super.buttons();
+                    }
+                },
+                true);
     }
 
     @Override

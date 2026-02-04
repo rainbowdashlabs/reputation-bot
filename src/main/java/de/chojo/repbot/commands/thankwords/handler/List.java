@@ -28,15 +28,16 @@ public class List implements SlashHandler {
         var pattern = getGuildPattern(event.getGuild());
         if (pattern == null) return;
 
-        event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.thankwords.list.message.list") + "\n" + pattern)
-             .setEphemeral(true)
-             .complete();
+        event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.thankwords.list.message.list")
+                        + "\n" + pattern)
+                .setEphemeral(true)
+                .complete();
     }
 
     @Nullable
     private String getGuildPattern(Guild guild) {
         return guildRepository.guild(guild).settings().thanking().thankwords().words().stream()
-                              .map(w -> StringUtils.wrap(w, "`"))
-                              .collect(Collectors.joining(", "));
+                .map(w -> StringUtils.wrap(w, "`"))
+                .collect(Collectors.joining(", "));
     }
 }

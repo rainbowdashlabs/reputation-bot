@@ -32,9 +32,13 @@ public class RemoveNickname implements SlashHandler {
         boolean success = profile.nickname(null);
 
         if (success) {
-            event.reply("Successfully removed nickname for bot in guild: " + guild.getName()).setEphemeral(true).queue();
+            event.reply("Successfully removed nickname for bot in guild: " + guild.getName())
+                    .setEphemeral(true)
+                    .queue();
         } else {
-            event.reply("Failed to remove nickname. Bot may lack permissions.").setEphemeral(true).queue();
+            event.reply("Failed to remove nickname. Bot may lack permissions.")
+                    .setEphemeral(true)
+                    .queue();
         }
     }
 }

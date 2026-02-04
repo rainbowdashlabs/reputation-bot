@@ -39,8 +39,8 @@ public abstract class MatchResultSnapshot implements ResultSnapshot {
     @Override
     public void add(Guild guild, ResultEntry entry, LocalizedEmbedBuilder builder) {
         builder.setTitle(thankType.nameLocaleKey())
-               .setColor(Colors.Pastel.DARK_GREEN)
-               .addField("command.log.analyzer.message.field.matchedWord", match, true)
-               .addField("words.donor", User.fromId(donorId).getAsMention(), true);
+                .setColor(Colors.Pastel.DARK_GREEN)
+                .addField("command.log.analyzer.message.field.matchedWord", match, true)
+                .addField("words.donor", User.fromId(donorId).getAsMention(), true);
     }
 }

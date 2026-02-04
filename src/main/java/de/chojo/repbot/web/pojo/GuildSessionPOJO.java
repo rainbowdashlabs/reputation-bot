@@ -28,7 +28,6 @@ public class GuildSessionPOJO {
         return new GuildSessionPOJO(
                 SettingsPOJO.generate(guild, guildRepository),
                 GuildPOJO.generate(guild),
-                PremiumFeaturesPOJO.generate(repGuild, shardManager)
-        );
+                PremiumFeaturesPOJO.generate(repGuild, shardManager));
     }
 }

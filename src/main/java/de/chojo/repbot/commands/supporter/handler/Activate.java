@@ -31,53 +31,67 @@ public class Activate extends BaseSupporter implements SlashHandler {
             coupon = event.getOption("coupon", OptionMapping::getAsLong);
         } catch (NumberFormatException e) {
             event.reply(context.localize("command.supporter.activate.message.invalidcoupon"))
-                 .setEphemeral(true)
-                 .complete();
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
 
         if (coupon == null) return;
         event.deferReply().setEphemeral(true).queue();
-        var match = event.getJDA().retrieveEntitlements()
-                         .user(event.getUser())
-                         .skuIds(configuration.skus().subscriptions().stream().mapToLong(Subscription::lifetimeSku).toArray())
-                         .complete()
-                         .stream()
-                         .filter(this::isLifetimeSku)
-                         .filter(this::isAvailable)
-                         .filter(e -> e.getIdLong() == coupon)
-                         .findFirst();
+        var match = event
+                .getJDA()
+                .retrieveEntitlements()
+                .user(event.getUser())
+                .skuIds(configuration.skus().subscriptions().stream()
+                        .mapToLong(Subscription::lifetimeSku)
+                        .toArray())
+                .complete()
+                .stream()
+                .filter(this::isLifetimeSku)
+                .filter(this::isAvailable)
+                .filter(e -> e.getIdLong() == coupon)
+                .findFirst();
 
         if (match.isEmpty()) {
-            event.getHook().editOriginal(context.localize("command.supporter.activate.message.invalidcoupon"))
-                 .complete();
+            event.getHook()
+                    .editOriginal(context.localize("command.supporter.activate.message.invalidcoupon"))
+                    .complete();
             return;
         }
 
         Subscription subscription = getSubscription(match.get());
         if (premiumService.activateLifetime(event.getGuild(), subscription)) {
             match.get().consume().complete();
-            event.getHook().editOriginal(context.localize("command.supporter.activate.message.activated", Replacement.create("TIER", subscription.name()))).queue();
+            event.getHook()
+                    .editOriginal(context.localize(
+                            "command.supporter.activate.message.activated",
+                            Replacement.create("TIER", subscription.name())))
+                    .queue();
             return;
         }
-        event.getHook().editOriginal(context.localize("command.supporter.activate.message.failed")).queue();
+        event.getHook()
+                .editOriginal(context.localize("command.supporter.activate.message.failed"))
+                .queue();
     }
 
     @Override
     public void onAutoComplete(CommandAutoCompleteInteractionEvent event, EventContext context) {
-        var choices = event.getJDA().retrieveEntitlements()
-                           .user(event.getUser())
-                           .skuIds(configuration.skus().subscriptions().stream().mapToLong(Subscription::lifetimeSku).toArray())
-                           .complete()
-                           .stream()
-                           .filter(this::isLifetimeSku)
-                           .filter(this::isAvailable)
-                           .map(e -> {
-                               Subscription subscription = getSubscription(e);
-                               return new Command.Choice(subscription.name(), e.getIdLong());
-                           })
-                           .toList();
+        var choices = event
+                .getJDA()
+                .retrieveEntitlements()
+                .user(event.getUser())
+                .skuIds(configuration.skus().subscriptions().stream()
+                        .mapToLong(Subscription::lifetimeSku)
+                        .toArray())
+                .complete()
+                .stream()
+                .filter(this::isLifetimeSku)
+                .filter(this::isAvailable)
+                .map(e -> {
+                    Subscription subscription = getSubscription(e);
+                    return new Command.Choice(subscription.name(), e.getIdLong());
+                })
+                .toList();
         event.replyChoices(choices).queue();
     }
-
 }

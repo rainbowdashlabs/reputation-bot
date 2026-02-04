@@ -36,10 +36,8 @@ public class Announcements extends AnnouncementsPOJO implements GuildHolder {
     }
 
     public static Announcements build(Settings settings, Row rs) throws SQLException {
-        return new Announcements(settings,
-                rs.getBoolean("active"),
-                rs.getBoolean("same_channel"),
-                rs.getLong("channel_id"));
+        return new Announcements(
+                settings, rs.getBoolean("active"), rs.getBoolean("same_channel"), rs.getLong("channel_id"));
     }
 
     public boolean active(boolean active) {
@@ -88,8 +86,7 @@ public class Announcements extends AnnouncementsPOJO implements GuildHolder {
                 Active: %s
                 Same channel: %s
                 Channel: %s
-                """.stripIndent()
-                   .formatted(active, sameChannel, channelId);
+                """.stripIndent().formatted(active, sameChannel, channelId);
     }
 
     private boolean set(String parameter, Function<Call, Call> builder) {

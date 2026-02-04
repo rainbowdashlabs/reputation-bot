@@ -38,7 +38,9 @@ public class GdprUser {
         try {
             var user = shardManager.retrieveUserById(rs.getLong("user_id")).complete();
             if (user == null) {
-                log.info("Could not process gdpr request for user {}. User could not be retrieved.", rs.getLong("user_id"));
+                log.info(
+                        "Could not process gdpr request for user {}. User could not be retrieved.",
+                        rs.getLong("user_id"));
                 return null;
             }
 
@@ -57,10 +59,7 @@ public class GdprUser {
                     VALUES (?, now())
                         ON CONFLICT(guild_id, user_id)
                             DO NOTHING;
-                """)
-                .single(call().bind(userId()))
-                .update()
-                .changed();
+                """).single(call().bind(userId())).update().changed();
     }
 
     public boolean request() {
@@ -70,17 +69,12 @@ public class GdprUser {
                                   WHERE user_id = ?
                                       AND received IS NOT NULL
                                       AND received < now() - INTERVAL '30 days';
-                                  """)
-                          .single(call().bind(userId()))
-                          .delete();
+                                  """).single(call().bind(userId())).delete();
             return conn.query("""
                                INSERT INTO gdpr_log(user_id) VALUES(?)
                                    ON CONFLICT(user_id)
                                        DO NOTHING;
-                               """)
-                       .single(call().bind(userId()))
-                       .update()
-                       .changed() && res.changed();
+                               """).single(call().bind(userId())).update().changed() && res.changed();
         }
     }
 

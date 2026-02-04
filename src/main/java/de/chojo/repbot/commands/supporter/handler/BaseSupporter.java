@@ -17,14 +17,16 @@ public class BaseSupporter {
     }
 
     protected boolean isLifetimeSku(Entitlement entitlement) {
-        return configuration.skus().subscriptions().stream().anyMatch(sub -> entitlement.getSkuIdLong() == sub.lifetimeSku());
+        return configuration.skus().subscriptions().stream()
+                .anyMatch(sub -> entitlement.getSkuIdLong() == sub.lifetimeSku());
     }
 
     protected Subscription getSubscription(Entitlement entitlement) {
         return configuration.skus().subscriptions().stream()
-                            .filter(sub -> entitlement.getSkuIdLong() == sub.lifetimeSku())
-                            .findFirst()
-                            .orElseThrow(() -> new IllegalArgumentException("No subscription found for entitlement " + entitlement.getSkuIdLong()));
+                .filter(sub -> entitlement.getSkuIdLong() == sub.lifetimeSku())
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "No subscription found for entitlement " + entitlement.getSkuIdLong()));
     }
 
     protected boolean isAvailable(Entitlement entitlement) {

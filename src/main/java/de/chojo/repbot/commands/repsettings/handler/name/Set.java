@@ -26,13 +26,15 @@ public class Set implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext eventContext) {
-        if (Premium.checkAndReplyPremium(eventContext, configuration.skus().features().localeOverrides().reputationNameOverride())) {
+        if (Premium.checkAndReplyPremium(
+                eventContext, configuration.skus().features().localeOverrides().reputationNameOverride())) {
             return;
         }
         String name = event.getOption("name", OptionMapping::getAsString);
         guildRepository.guild(event.getGuild()).localeOverrides().setOverride("words.reputation", name);
-        event.reply(WebPromo.promoString(eventContext) + "\n" + eventContext.localize("command.repsettings.name.set.message.set"))
-             .setEphemeral(true)
-             .queue();
+        event.reply(WebPromo.promoString(eventContext) + "\n"
+                        + eventContext.localize("command.repsettings.name.set.message.set"))
+                .setEphemeral(true)
+                .queue();
     }
 }

@@ -25,9 +25,11 @@ public class SetCooldown implements SlashHandler {
         var abuseSettings = guild.settings().abuseProtection();
         var cooldown = event.getOption("minutes").getAsLong();
 
-        event.reply(WebPromo.promoString(context) + context.localize("command.abuseprotection.cooldown.set.message.set",
-                     Replacement.create("MINUTES", abuseSettings.cooldown((int) cooldown))))
-             .setEphemeral(true)
-             .complete();
+        event.reply(WebPromo.promoString(context)
+                        + context.localize(
+                                "command.abuseprotection.cooldown.set.message.set",
+                                Replacement.create("MINUTES", abuseSettings.cooldown((int) cooldown))))
+                .setEphemeral(true)
+                .complete();
     }
 }

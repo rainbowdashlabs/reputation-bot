@@ -34,15 +34,18 @@ public class ReceiverLimit implements SlashHandler {
         }
 
         if (protection.maxReceived() == 0) {
-            event.reply(WebPromo.promoString(context) + context.localize("command.abuseprotection.limit.receiver.message.disabled"))
-                 .setEphemeral(true)
-                 .complete();
+            event.reply(WebPromo.promoString(context)
+                            + context.localize("command.abuseprotection.limit.receiver.message.disabled"))
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
-        event.reply(WebPromo.promoString(context) + context.localize("command.abuseprotection.limit.receiver.message.set",
-                     Replacement.create("AMOUNT", protection.maxReceived()),
-                     Replacement.create("HOURS", protection.maxReceivedHours())))
-             .setEphemeral(true)
-             .complete();
+        event.reply(WebPromo.promoString(context)
+                        + context.localize(
+                                "command.abuseprotection.limit.receiver.message.set",
+                                Replacement.create("AMOUNT", protection.maxReceived()),
+                                Replacement.create("HOURS", protection.maxReceivedHours())))
+                .setEphemeral(true)
+                .complete();
     }
 }

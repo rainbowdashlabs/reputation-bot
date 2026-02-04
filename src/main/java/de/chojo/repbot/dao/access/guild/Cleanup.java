@@ -24,9 +24,7 @@ public class Cleanup implements GuildHolder {
     public void selfCleanupPrompt() {
         query("""
                 INSERT INTO self_cleanup(guild_id) VALUES(?)
-                """)
-                .single(call().bind(guildId()))
-                .update();
+                """).single(call().bind(guildId())).update();
     }
 
     public Optional<LocalDateTime> getCleanupPromptTime() {
@@ -41,9 +39,7 @@ public class Cleanup implements GuildHolder {
     public void cleanupDone() {
         query("""
                 DELETE FROM self_cleanup WHERE guild_id = ?
-                """)
-                .single(call().bind(guildId()))
-                .update();
+                """).single(call().bind(guildId())).update();
     }
 
     @Override

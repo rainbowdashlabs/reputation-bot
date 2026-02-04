@@ -36,10 +36,7 @@ public class Gdpr {
                             FROM
                                 cleanup_schedule
                             WHERE delete_after < now();
-                            """)
-                    .single()
-                    .map(RemovalTask::build)
-                    .all();
+                            """).single().map(RemovalTask::build).all();
     }
 
     public void cleanupRequests() {
@@ -48,8 +45,8 @@ public class Gdpr {
                      WHERE received IS NOT NULL
                          AND received < now() - ?::INTERVAL;
                      """, configuration.cleanup().gdprDays())
-             .single(call().bind("%d DAYS".formatted(configuration.cleanup().gdprDays())))
-             .update();
+                .single(call().bind("%d DAYS".formatted(configuration.cleanup().gdprDays())))
+                .update();
     }
 
     public GdprUser request(User user) {
@@ -65,17 +62,12 @@ public class Gdpr {
      * @return list of users
      */
     public List<GdprUser> getReportRequests(ShardManager shardManager) {
-        return Query
-                .query("""
+        return Query.query("""
                             SELECT user_id
                             FROM gdpr_log
                             WHERE received IS NULL
-                                AND last_attempt < now() - (least(48, attempts) || ' HOURS')::INTERVAL 
-                        """)
-                .single()
-                .map(rs -> GdprUser.build(rs, shardManager))
-                .all()
-                .stream()
+                                AND last_attempt < now() - (least(48, attempts) || ' HOURS')::INTERVAL
+                        """).single().map(rs -> GdprUser.build(rs, shardManager)).all().stream()
                 .filter(Objects::nonNull)
                 .toList();
     }

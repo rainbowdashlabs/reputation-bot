@@ -20,10 +20,10 @@ public class Analyzer extends BaseAnalyzer implements SlashHandler {
         this.guildRepository = guildRepository;
     }
 
-    public static void sendAnalyzerLog(IReplyCallback callback, GuildRepository guildRepository, long messageId, EventContext context) {
+    public static void sendAnalyzerLog(
+            IReplyCallback callback, GuildRepository guildRepository, long messageId, EventContext context) {
         var reputation = guildRepository.guild(callback.getGuild()).reputation();
-        var resultEntry = reputation.analyzer()
-                                    .get(messageId);
+        var resultEntry = reputation.analyzer().get(messageId);
 
         if (resultEntry.isEmpty()) {
             callback.reply(context.localize("command.log.analyzer.notanalyzed"))
@@ -45,9 +45,7 @@ public class Analyzer extends BaseAnalyzer implements SlashHandler {
 
         embed.add(builder.build());
 
-        callback.replyEmbeds(embed)
-                .setEphemeral(true)
-                .complete();
+        callback.replyEmbeds(embed).setEphemeral(true).complete();
     }
 
     @Override

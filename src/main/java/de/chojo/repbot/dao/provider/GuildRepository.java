@@ -28,8 +28,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class GuildRepository {
     private static final Logger log = getLogger(GuildRepository.class);
-    private final Cache<Long, RepGuild> guildRepository = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES)
-                                                                      .build();
+    private final Cache<Long, RepGuild> guildRepository =
+            CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES).build();
     private final Configuration configuration;
 
     public GuildRepository(Configuration configuration) {
@@ -38,7 +38,9 @@ public class GuildRepository {
 
     public RepGuild guild(Guild guild) {
         try {
-            return guildRepository.get(guild.getIdLong(), () -> new RepGuild(guild, configuration)).refresh(guild);
+            return guildRepository
+                    .get(guild.getIdLong(), () -> new RepGuild(guild, configuration))
+                    .refresh(guild);
         } catch (ExecutionException e) {
             log.error("Could not create guild adapter", e);
             throw new RuntimeException("", e);
@@ -67,7 +69,9 @@ public class GuildRepository {
     }
 
     public List<RepGuild> byAutopostRefreshInterval(RefreshInterval mode) {
-        List<Long> skus = configuration.skus().features().autopost().autopostChannel().sku().stream().map(SKU::skuId).toList();
+        List<Long> skus = configuration.skus().features().autopost().autopostChannel().sku().stream()
+                .map(SKU::skuId)
+                .toList();
         return query("""
                 SELECT
                     guild_id

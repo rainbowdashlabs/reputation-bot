@@ -63,14 +63,23 @@ public class PremiumService extends ListenerAdapter {
     private final Localizer localizer;
     private final ShardManager shardManager;
 
-    private PremiumService(GuildRepository guildRepository, Configuration configuration, Localizer localizer, ShardManager shardManager) {
+    private PremiumService(
+            GuildRepository guildRepository,
+            Configuration configuration,
+            Localizer localizer,
+            ShardManager shardManager) {
         this.guildRepository = guildRepository;
         this.configuration = configuration;
         this.localizer = localizer;
         this.shardManager = shardManager;
     }
 
-    public static PremiumService of(GuildRepository guildRepository, Threading threading, Configuration configuration, Localizer localizer, ShardManager shardManager) {
+    public static PremiumService of(
+            GuildRepository guildRepository,
+            Threading threading,
+            Configuration configuration,
+            Localizer localizer,
+            ShardManager shardManager) {
         PremiumService service = new PremiumService(guildRepository, configuration, localizer, shardManager);
         threading.repBotWorker().scheduleAtFixedRate(service::cleanExpiredEntitlements, 10, 60, TimeUnit.MINUTES);
         threading.repBotWorker().scheduleAtFixedRate(service::checkErrors, 2, 60, TimeUnit.MINUTES);
@@ -79,7 +88,13 @@ public class PremiumService extends ListenerAdapter {
     }
 
     public boolean activateLifetime(Guild guild, de.chojo.repbot.config.elements.sku.Subscription subscription) {
-        Subscription sub = new Subscription(subscription.subscriptionSku(), guild.getIdLong(), SkuTarget.GUILD, EntitlementType.PURCHASE, null, true);
+        Subscription sub = new Subscription(
+                subscription.subscriptionSku(),
+                guild.getIdLong(),
+                SkuTarget.GUILD,
+                EntitlementType.PURCHASE,
+                null,
+                true);
         return guildRepository.guild(guild).subscriptions().addSubscription(sub);
     }
 
@@ -95,18 +110,26 @@ public class PremiumService extends ListenerAdapter {
 
     @Override
     public void onEntitlementDelete(@NotNull EntitlementDeleteEvent event) {
-        guildRepository.byId(event.getEntitlement().getGuildIdLong()).subscriptions()
-                       .deleteSubscription(Subscription.fromEntitlement(event.getEntitlement()));
+        guildRepository
+                .byId(event.getEntitlement().getGuildIdLong())
+                .subscriptions()
+                .deleteSubscription(Subscription.fromEntitlement(event.getEntitlement()));
     }
 
     @Override
     public void onGuildMemberUpdateNickname(@NotNull GuildMemberUpdateNicknameEvent event) {
-        if (event.getNewNickname() != null && event.getUser().equals(event.getGuild().getSelfMember().getUser())) {
+        if (event.getNewNickname() != null
+                && event.getUser().equals(event.getGuild().getSelfMember().getUser())) {
             if (checkForTier(event.getGuild(), SupporterFeature.BOT_NICKNAMED)) {
                 BaseSettings settings = configuration.baseSettings();
-                TextChannel review = event.getJDA().getShardManager().getGuildById(settings.botGuild()).getTextChannelById(settings.reviewChannel());
+                TextChannel review = event.getJDA()
+                        .getShardManager()
+                        .getGuildById(settings.botGuild())
+                        .getTextChannelById(settings.reviewChannel());
                 if (review != null && event.getNewNickname() != null) {
-                    review.sendMessage("Guild `%s` changed bot nickname to `%s`".formatted(event.getGuild(), event.getNewNickname())).queue();
+                    review.sendMessage("Guild `%s` changed bot nickname to `%s`"
+                                    .formatted(event.getGuild(), event.getNewNickname()))
+                            .queue();
                 }
             }
         }
@@ -116,7 +139,9 @@ public class PremiumService extends ListenerAdapter {
         List<Long> ids = query("""
                 SELECT DISTINCT guild_id FROM subscription_error WHERE last_send  < ?
                 """)
-                .single(call().bind(Instant.now().minus(skus().subscriptionErrorMessageHours(), ChronoUnit.HOURS), INSTANT_TIMESTAMP))
+                .single(call().bind(
+                                Instant.now().minus(skus().subscriptionErrorMessageHours(), ChronoUnit.HOURS),
+                                INSTANT_TIMESTAMP))
                 .mapAs(Long.class)
                 .all();
 
@@ -178,7 +203,9 @@ public class PremiumService extends ListenerAdapter {
         }
 
         SubscriptionError errorMessage = subscriptions.getErrorMessage(type);
-        if (errorMessage.lastSend().isAfter(Instant.now().minus(skus.subscriptionErrorMessageHours(), ChronoUnit.HOURS))) {
+        if (errorMessage
+                .lastSend()
+                .isAfter(Instant.now().minus(skus.subscriptionErrorMessageHours(), ChronoUnit.HOURS))) {
             return;
         }
 
@@ -192,7 +219,9 @@ public class PremiumService extends ListenerAdapter {
         replacements.add(Replacement.create("HOURS", timeLeftHours));
 
         var locale = localizer.context(LocaleProvider.guild(guild));
-        String message = locale.localize("$%s$\n$suppertererror.timeleft$\n$supportererror.considersupporting$".formatted(type.localeCode()), replacements.toArray(Replacement[]::new));
+        String message = locale.localize(
+                "$%s$\n$suppertererror.timeleft$\n$supportererror.considersupporting$".formatted(type.localeCode()),
+                replacements.toArray(Replacement[]::new));
 
         List<ActionRow> buttons = Premium.buildEntitlementButtons(type.skus(skus));
         MessageCreateData data = new MessageCreateBuilder()
@@ -215,7 +244,11 @@ public class PremiumService extends ListenerAdapter {
         if (!notified) {
             Member owner = guild.retrieveOwner().complete();
             try {
-                owner.getUser().openPrivateChannel().complete().sendMessage(data).complete();
+                owner.getUser()
+                        .openPrivateChannel()
+                        .complete()
+                        .sendMessage(data)
+                        .complete();
                 notified = true;
             } catch (Exception e) {
                 log.debug("Ignoring exception while trying to send message to {} for {}.", owner, type.name());
@@ -225,7 +258,9 @@ public class PremiumService extends ListenerAdapter {
 
         if (!notified) {
             // Check for other admins.
-            List<Role> adminRoles = guild.getRoles().stream().filter(r -> r.hasPermission(Permission.ADMINISTRATOR)).toList();
+            List<Role> adminRoles = guild.getRoles().stream()
+                    .filter(r -> r.hasPermission(Permission.ADMINISTRATOR))
+                    .toList();
             for (Role adminRole : adminRoles) {
                 if (notified) break;
                 List<Member> admin;
@@ -236,7 +271,11 @@ public class PremiumService extends ListenerAdapter {
                 }
                 for (Member member : admin) {
                     try {
-                        member.getUser().openPrivateChannel().complete().sendMessage(data).complete();
+                        member.getUser()
+                                .openPrivateChannel()
+                                .complete()
+                                .sendMessage(data)
+                                .complete();
                         notified = true;
                         break;
                     } catch (Exception ignored) {
@@ -257,17 +296,18 @@ public class PremiumService extends ListenerAdapter {
                     subscriptions
                 WHERE ends_at < now()
                 RETURNING id, sku, type, ends_at, purchase_type, persistent
-                """)
-                .single()
-                .map(Subscription.map())
-                .all();
+                """).single().map(Subscription.map()).all();
         for (Subscription subscription : all) {
             guildRepository.byId(subscription.id()).subscriptions().invalidate();
         }
     }
 
     public void refresh(Guild guild) {
-        List<Entitlement> entitlements = guild.getJDA().retrieveEntitlements().guild(guild.getIdLong()).excludeEnded(true).complete();
+        List<Entitlement> entitlements = guild.getJDA()
+                .retrieveEntitlements()
+                .guild(guild.getIdLong())
+                .excludeEnded(true)
+                .complete();
         RepGuild repGuild = guildRepository.byId(guild.getIdLong());
         repGuild.subscriptions().clear();
         for (Entitlement entitlement : entitlements) {
@@ -294,12 +334,15 @@ public class PremiumService extends ListenerAdapter {
         Subscription sub = Subscription.fromEntitlement(entitlement);
         switch (type) {
             case APPLICATION_SUBSCRIPTION, DEVELOPER_GIFT, PURCHASE, FREE_PURCHASE ->
-                    guildRepository.byId(sub.id()).subscriptions().addSubscription(sub);
-            default -> log.error(LogNotify.NOTIFY_ADMIN, "Unknown entitlement type {} for sku {} for {} {}",
-                    entitlement.getType(),
-                    sub.skuId(),
-                    sub.skuTarget(),
-                    sub.id());
+                guildRepository.byId(sub.id()).subscriptions().addSubscription(sub);
+            default ->
+                log.error(
+                        LogNotify.NOTIFY_ADMIN,
+                        "Unknown entitlement type {} for sku {} for {} {}",
+                        entitlement.getType(),
+                        sub.skuId(),
+                        sub.skuTarget(),
+                        sub.id());
         }
     }
 }

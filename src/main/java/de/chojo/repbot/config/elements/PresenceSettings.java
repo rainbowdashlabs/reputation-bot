@@ -24,8 +24,9 @@ public class PresenceSettings {
             Presence.of(Activity.ActivityType.CUSTOM_STATUS, "%weekly_rep% Reputation given this week!"),
             Presence.of(Activity.ActivityType.CUSTOM_STATUS, "%today_rep% Reputation given today!"),
             Presence.of(Activity.ActivityType.CUSTOM_STATUS, "%weekly_avg_rep% Reputation given per week!"),
-            Presence.of(Activity.ActivityType.CUSTOM_STATUS, "Analyzed %analyzed_messages% messages during the last hour!")
-    );
+            Presence.of(
+                    Activity.ActivityType.CUSTOM_STATUS,
+                    "Analyzed %analyzed_messages% messages during the last hour!"));
 
     public boolean isActive() {
         return active;

@@ -22,10 +22,15 @@ public class Show implements SlashHandler {
             guildId = slash.getGuild().getIdLong();
         }
 
-        List<Entitlement> complete = slash.getJDA().retrieveEntitlements().guild(guildId).excludeEnded(true).complete();
+        List<Entitlement> complete = slash.getJDA()
+                .retrieveEntitlements()
+                .guild(guildId)
+                .excludeEnded(true)
+                .complete();
         String collect = complete.stream()
-                                 .map(ent -> "SKU: %s\nType: %s\nTill: %s (Consumed: %s)\nEntitlement Id: %s".formatted(ent.getSkuId(), ent.getType(), ent.getTimeEnding(), ent.isConsumed(), ent.getId()))
-                                 .collect(Collectors.joining());
+                .map(ent -> "SKU: %s\nType: %s\nTill: %s (Consumed: %s)\nEntitlement Id: %s"
+                        .formatted(ent.getSkuId(), ent.getType(), ent.getTimeEnding(), ent.isConsumed(), ent.getId()))
+                .collect(Collectors.joining());
         slash.reply(collect).complete();
     }
 }

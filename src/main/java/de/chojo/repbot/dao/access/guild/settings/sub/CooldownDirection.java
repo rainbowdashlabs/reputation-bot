@@ -10,6 +10,8 @@ public enum CooldownDirection {
     BIDIRECTIONAL;
 
     public String localCode() {
-        return "$%s$".formatted(getClass().getSimpleName().toLowerCase() + "." + this.name().toLowerCase());
+        return "$%s$"
+                .formatted(getClass().getSimpleName().toLowerCase() + "."
+                        + this.name().toLowerCase());
     }
 }

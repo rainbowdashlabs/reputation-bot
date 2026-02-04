@@ -28,14 +28,17 @@ public class SystemChannelEnable implements SlashHandler {
 
         if (channel.getType() != TEXT) {
             event.reply(context.localize("error.onlyTextChannel"))
-                 .setEphemeral(true)
-                 .complete();
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
 
         guildRepository.guild(event.getGuild()).settings().general().systemChannel(channel.getIdLong());
-        event.reply(WebPromo.promoString(context) + context.localize("command.channel.systemchannel.enable.message.enabled", Replacement.create("CHANNEL", channel.getAsMention())))
-             .setEphemeral(true)
-             .complete();
+        event.reply(WebPromo.promoString(context)
+                        + context.localize(
+                                "command.channel.systemchannel.enable.message.enabled",
+                                Replacement.create("CHANNEL", channel.getAsMention())))
+                .setEphemeral(true)
+                .complete();
     }
 }

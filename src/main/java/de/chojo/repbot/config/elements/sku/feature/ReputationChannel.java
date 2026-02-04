@@ -18,5 +18,4 @@ public class ReputationChannel {
     public int defaultChannel() {
         return defaultChannel;
     }
-
 }

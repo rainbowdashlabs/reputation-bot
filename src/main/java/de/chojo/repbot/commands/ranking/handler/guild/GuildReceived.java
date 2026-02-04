@@ -20,7 +20,8 @@ public class GuildReceived extends BaseTop {
     }
 
     @Override
-    protected Ranking buildRanking(SlashCommandInteractionEvent event, RepGuild guild, ReputationMode reputationMode, int pageSize) {
+    protected Ranking buildRanking(
+            SlashCommandInteractionEvent event, RepGuild guild, ReputationMode reputationMode, int pageSize) {
         return guild.reputation().ranking().received().byMode(reputationMode, pageSize);
     }
 }

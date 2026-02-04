@@ -29,13 +29,22 @@ public class Reputation extends ReputationPOJO implements GuildHolder {
         this(settings, true, true, true, true, true, false, false);
     }
 
-    public Reputation(Settings settings, boolean reactionActive, boolean answerActive, boolean mentionActive, boolean fuzzyActive, boolean embedActive, boolean directActive, boolean commandActive) {
+    public Reputation(
+            Settings settings,
+            boolean reactionActive,
+            boolean answerActive,
+            boolean mentionActive,
+            boolean fuzzyActive,
+            boolean embedActive,
+            boolean directActive,
+            boolean commandActive) {
         super(reactionActive, answerActive, mentionActive, fuzzyActive, embedActive, directActive, commandActive);
         this.settings = settings;
     }
 
     public static Reputation build(Settings settings, Row rs) throws SQLException {
-        return new Reputation(settings,
+        return new Reputation(
+                settings,
                 rs.getBoolean("reactions_active"),
                 rs.getBoolean("answer_active"),
                 rs.getBoolean("mention_active"),
@@ -118,14 +127,15 @@ public class Reputation extends ReputationPOJO implements GuildHolder {
                 getSetting("command.repsettings.general.message.option.bymention.name", isMentionActive()),
                 getSetting("command.repsettings.general.message.option.byfuzzy.name", isFuzzyActive()),
                 getSetting("command.repsettings.general.message.option.byembed.name", isEmbedActive()),
-                getSetting("command.repsettings.general.message.option.bycommand.name", settings.reputation()
-                                                                                                .isCommandActive()),
-                getSetting("command.repsettings.general.message.option.skipsingletarget.name", settings.reputation()
-                                                                                                       .isDirectActive()),
-                getSetting("command.repsettings.general.message.option.reputationmode.name", settings.general()
-                                                                                                     .reputationMode()
-                                                                                                     .localeCode())
-        );
+                getSetting(
+                        "command.repsettings.general.message.option.bycommand.name",
+                        settings.reputation().isCommandActive()),
+                getSetting(
+                        "command.repsettings.general.message.option.skipsingletarget.name",
+                        settings.reputation().isDirectActive()),
+                getSetting(
+                        "command.repsettings.general.message.option.reputationmode.name",
+                        settings.general().reputationMode().localeCode()));
 
         return String.join("\n", setting);
     }
@@ -149,7 +159,7 @@ public class Reputation extends ReputationPOJO implements GuildHolder {
                 Embed active: %s
                 Skip single embed: %s
                 """.formatted(reactionActive, answerActive, mentionActive, fuzzyActive, embedActive, directActive)
-                   .stripIndent();
+                .stripIndent();
     }
 
     private String getSetting(@PropertyKey(resourceBundle = "locale") String locale, boolean object) {

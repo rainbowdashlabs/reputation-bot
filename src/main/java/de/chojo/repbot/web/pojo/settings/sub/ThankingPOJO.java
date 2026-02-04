@@ -17,7 +17,12 @@ public class ThankingPOJO {
     ReactionsPOJO reactions;
     ThankwordsPOJO thankwords;
 
-    public ThankingPOJO(ChannelsPOJO channels, RolesHolderPOJO donorRoles, RolesHolderPOJO receiverRoles, ReactionsPOJO reactions, ThankwordsPOJO thankwords) {
+    public ThankingPOJO(
+            ChannelsPOJO channels,
+            RolesHolderPOJO donorRoles,
+            RolesHolderPOJO receiverRoles,
+            ReactionsPOJO reactions,
+            ThankwordsPOJO thankwords) {
         this.channels = channels;
         this.donorRoles = donorRoles;
         this.receiverRoles = receiverRoles;

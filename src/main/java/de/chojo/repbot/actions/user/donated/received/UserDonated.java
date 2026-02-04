@@ -26,9 +26,10 @@ public class UserDonated implements UserProvider<User> {
 
     @Override
     public User user() {
-        return User.of("Given Reputation").handler(new DonatedReputation(guildRepository, configuration))
-                   .setContext(Set.of(InteractionContextType.GUILD))
-                   .withPermission(Permission.MESSAGE_MANAGE)
-                   .build();
+        return User.of("Given Reputation")
+                .handler(new DonatedReputation(guildRepository, configuration))
+                .setContext(Set.of(InteractionContextType.GUILD))
+                .withPermission(Permission.MESSAGE_MANAGE)
+                .build();
     }
 }

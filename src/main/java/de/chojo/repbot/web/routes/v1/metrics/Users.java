@@ -35,14 +35,17 @@ public class Users extends MetricsHolder {
             methods = HttpMethod.GET,
             tags = {"Users"},
             responses = {
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = UsersStatistic.class, type = "application/json")})
+                @OpenApiResponse(
+                        status = "200",
+                        content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
+                @OpenApiResponse(
+                        status = "200",
+                        content = {@OpenApiContent(from = UsersStatistic.class, type = "application/json")})
             },
             pathParams = {
-                    @OpenApiParam(name = "offset", type = Integer.class, required = true),
-                    @OpenApiParam(name = "count", type = Integer.class, required = true)
-            }
-    )
+                @OpenApiParam(name = "offset", type = Integer.class, required = true),
+                @OpenApiParam(name = "count", type = Integer.class, required = true)
+            })
     public void activeWeek(Context ctx) {
         var stats = metrics().users().week(offset(ctx, MAX_WEEK_OFFSET), count(ctx, MAX_WEEKS));
         if ("application/json".equalsIgnoreCase(ctx.header("Accept"))) {
@@ -59,14 +62,17 @@ public class Users extends MetricsHolder {
             methods = HttpMethod.GET,
             tags = {"Users"},
             responses = {
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = UsersStatistic.class, type = "application/json")})
+                @OpenApiResponse(
+                        status = "200",
+                        content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
+                @OpenApiResponse(
+                        status = "200",
+                        content = {@OpenApiContent(from = UsersStatistic.class, type = "application/json")})
             },
             pathParams = {
-                    @OpenApiParam(name = "offset", type = Integer.class, required = true),
-                    @OpenApiParam(name = "count", type = Integer.class, required = true)
-            }
-    )
+                @OpenApiParam(name = "offset", type = Integer.class, required = true),
+                @OpenApiParam(name = "count", type = Integer.class, required = true)
+            })
     public void activeMonth(Context ctx) {
         var stats = metrics().users().month(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH));
         if ("application/json".equals(ctx.header("Accept"))) {
@@ -78,9 +84,11 @@ public class Users extends MetricsHolder {
 
     @Override
     public void buildRoutes() {
-        path("users", () -> path("active", () -> {
-            get("week/{offset}/{count}", this::activeWeek);
-            get("month/{offset}/{count}", this::activeMonth);
-        }));
+        path(
+                "users",
+                () -> path("active", () -> {
+                    get("week/{offset}/{count}", this::activeWeek);
+                    get("month/{offset}/{count}", this::activeMonth);
+                }));
     }
 }

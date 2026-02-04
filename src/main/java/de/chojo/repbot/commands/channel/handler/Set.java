@@ -20,20 +20,28 @@ public class Set extends BaseChannelModifier {
     }
 
     @Override
-    public void textChannel(SlashCommandInteractionEvent event, EventContext context, Channels channels, StandardGuildChannel channel) {
+    public void textChannel(
+            SlashCommandInteractionEvent event, EventContext context, Channels channels, StandardGuildChannel channel) {
         channels.clearChannel();
         channels.add(channel);
-        event.getHook().editOriginal(
-                WebPromo.promoString(context) + context.localize("command.channel.set.message.set",
-                        Replacement.create("CHANNEL", channel.getAsMention()))).complete();
+        event.getHook()
+                .editOriginal(WebPromo.promoString(context)
+                        + context.localize(
+                                "command.channel.set.message.set",
+                                Replacement.create("CHANNEL", channel.getAsMention())))
+                .complete();
     }
 
     @Override
-    public void category(SlashCommandInteractionEvent event, EventContext context, Channels channels, Category category) {
+    public void category(
+            SlashCommandInteractionEvent event, EventContext context, Channels channels, Category category) {
         channels.clearCategories();
         channels.add(category);
-        event.getHook().editOriginal(
-                WebPromo.promoString(context) + context.localize("command.channel.set.message.set",
-                        Replacement.create("CHANNEL", category.getAsMention()))).complete();
+        event.getHook()
+                .editOriginal(WebPromo.promoString(context)
+                        + context.localize(
+                                "command.channel.set.message.set",
+                                Replacement.create("CHANNEL", category.getAsMention())))
+                .complete();
     }
 }

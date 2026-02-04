@@ -15,8 +15,8 @@ import net.dv8tion.jda.api.entities.Guild;
 
 import javax.annotation.Nullable;
 
-public record EmptyAnalyzerResult(@Nullable String match,
-                                  EmptyResultReason reason) implements AnalyzerResult, ResultSnapshot {
+public record EmptyAnalyzerResult(@Nullable String match, EmptyResultReason reason)
+        implements AnalyzerResult, ResultSnapshot {
 
     @Override
     public ResultType resultType() {
@@ -30,8 +30,7 @@ public record EmptyAnalyzerResult(@Nullable String match,
 
     @Override
     public void add(Guild guild, ResultEntry entry, LocalizedEmbedBuilder builder) {
-        builder.setTitle(reason.localeKey())
-               .setColor(Colors.Pastel.ORANGE);
+        builder.setTitle(reason.localeKey()).setColor(Colors.Pastel.ORANGE);
         if (match != null) {
             builder.addField("command.log.analyzer.message.field.matchedWord", match, false);
         }

@@ -29,12 +29,15 @@ public class GetCooldown implements SlashHandler {
         } else if (abuseSettings.cooldown() < 0) {
             message = context.localize("command.abuseprotection.cooldown.once.message.set");
         } else {
-            message = context.localize("command.abuseprotection.cooldown.get.message.get",
+            message = context.localize(
+                    "command.abuseprotection.cooldown.get.message.get",
                     Replacement.create("MINUTES", abuseSettings.cooldown()));
         }
-        message = message + "\n$words.direction$: $%s$".formatted(abuseSettings.cooldownDirection().localCode());
+        message = message
+                + "\n$words.direction$: $%s$"
+                        .formatted(abuseSettings.cooldownDirection().localCode());
         event.reply(WebPromo.promoString(context) + context.localize(message))
-             .setEphemeral(true)
-             .complete();
+                .setEphemeral(true)
+                .complete();
     }
 }

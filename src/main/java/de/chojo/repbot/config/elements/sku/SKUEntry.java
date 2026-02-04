@@ -15,8 +15,7 @@ import java.util.List;
 public class SKUEntry implements SkuMeta {
     private List<SKU> skus = new ArrayList<>();
 
-    public SKUEntry() {
-    }
+    public SKUEntry() {}
 
     public SKUEntry(List<SKU> skus) {
         this.skus = skus;
