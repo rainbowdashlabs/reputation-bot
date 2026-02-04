@@ -45,7 +45,6 @@ const updateSystemChannel = async () => {
       <ChannelSelect
         v-model="systemChannel"
         :label="t('general.systemChannel.label')"
-        allow-clear
         @update:model-value="updateSystemChannel"
       />
       <p class="text-sm text-gray-500 dark:text-gray-400">

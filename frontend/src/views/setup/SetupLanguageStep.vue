@@ -4,6 +4,8 @@ import { useI18n } from 'vue-i18n'
 import { useSession } from '@/composables/useSession'
 import { api } from '@/api'
 import type { LanguageInfo } from '@/api/types'
+import { setLocale } from '@/i18n'
+import type { SupportedLocale } from '@/i18n'
 
 const emit = defineEmits<{
   canProceed: [value: boolean]
@@ -42,25 +44,31 @@ const updateLanguage = async () => {
     // Change frontend language
     const selectedLang = languages.value.find(l => l.internalName === language.value)
     if (selectedLang) {
-      // Map backend language codes to frontend locale codes
+      // Map DiscordLocale enum names to frontend locale codes
       const localeMap: Record<string, string> = {
-        'en_US': 'en-US',
-        'de_DE': 'de-DE',
-        'es_ES': 'es-ES',
-        'fr_FR': 'fr-FR',
-        'it_IT': 'it-IT',
-        'nl_NL': 'nl-NL',
-        'pl_PL': 'pl-PL',
-        'pt_BR': 'pt-BR',
-        'ru_RU': 'ru-RU',
-        'tr_TR': 'tr-TR',
-        'zh_CN': 'zh-CN',
-        'ja_JP': 'ja-JP',
-        'ko_KR': 'ko-KR'
+        'ENGLISH_US': 'en-US',
+        'GERMAN': 'de',
+        'SPANISH': 'es-ES',
+        'FRENCH': 'fr',
+        'PORTUGUESE_BRAZILIAN': 'pt-BR',
+        'RUSSIAN': 'ru',
+        'UKRAINIAN': 'uk',
+        'DUTCH': 'nl',
+        'ITALIAN': 'it',
+        'GREEK': 'el',
+        'TURKISH': 'tr',
+        'CHINESE_CHINA': 'zh-CN',
+        'CZECH': 'cs',
+        'POLISH': 'pl',
+        'KOREAN': 'ko',
+        'NORWEGIAN': 'no',
+        'FINNISH': 'fi',
+        'SWEDISH': 'sv-SE',
+        'JAPANESE': 'ja'
       }
       
       const frontendLocale = localeMap[language.value] || 'en-US'
-      locale.value = frontendLocale
+      await setLocale(frontendLocale as SupportedLocale)
     }
   } catch (error) {
     console.error('Failed to update language:', error)
