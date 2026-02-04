@@ -447,5 +447,11 @@
     "receiver": {
       "label": "Vastaanotin"
     }
+  },
+  "links": {
+    "support": "Tukipalvelin",
+    "website": "Verkkosivusto",
+    "faq": "Usein kysytyt kysymykset",
+    "tos": "Käyttöehdot"
   }
 }

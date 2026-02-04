@@ -447,5 +447,11 @@
     "receiver": {
       "label": "接收器"
     }
+  },
+  "links": {
+    "support": "支持服务器",
+    "website": "网站",
+    "faq": "常见问题解答",
+    "tos": "服务条款"
   }
 }

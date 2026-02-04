@@ -447,5 +447,11 @@
     "receiver": {
       "label": "Mottagare"
     }
+  },
+  "links": {
+    "support": "Supportserver",
+    "website": "Webbplats",
+    "faq": "Vanliga frågor",
+    "tos": "Användarvillkor"
   }
 }

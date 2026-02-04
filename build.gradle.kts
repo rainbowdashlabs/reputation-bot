@@ -28,6 +28,16 @@ spotless {
         licenseHeaderFile(rootProject.file("HEADER.txt"))
         target("**/*.java")
     }
+    format("javascript") {
+        licenseHeaderFile(rootProject.file("HEADER.txt"), "(import|const|let|var|export|//)")
+        target("frontend/src/**/*.js", "frontend/src/**/*.ts")
+        targetExclude("frontend/node_modules/**", "frontend/dist/**")
+    }
+    format("vue") {
+        licenseHeaderFile(rootProject.file("HEADER.txt"), "(<template|<script|<style)")
+        target("frontend/src/**/*.vue")
+        targetExclude("frontend/node_modules/**", "frontend/dist/**")
+    }
 }
 
 dependencies {
@@ -134,10 +144,50 @@ tasks {
     }
 
     test {
-        useJUnitPlatform()
+        useJUnitPlatform {
+            excludeTags("locale", "database")
+        }
         testLogging {
             events("passed", "skipped", "failed")
         }
+    }
+
+    register<Test>("testLocale") {
+        group = "verification"
+        description = "Runs locale validation tests"
+        testClassesDirs = sourceSets.test.get().output.classesDirs
+        classpath = sourceSets.test.get().runtimeClasspath
+        useJUnitPlatform {
+            includeTags("locale")
+        }
+        testLogging {
+            events("passed", "skipped", "failed")
+        }
+    }
+
+    register<Test>("testDatabase") {
+        group = "verification"
+        description = "Runs database validation tests"
+        testClassesDirs = sourceSets.test.get().output.classesDirs
+        classpath = sourceSets.test.get().runtimeClasspath
+        useJUnitPlatform {
+            includeTags("database")
+        }
+        testLogging {
+            events("passed", "skipped", "failed")
+        }
+    }
+
+    register("checkLicenseBackend") {
+        group = "verification"
+        description = "Checks license headers for backend Java files"
+        dependsOn("spotlessJavaCheck")
+    }
+
+    register("checkLicenseFrontend") {
+        group = "verification"
+        description = "Checks license headers for frontend Vue and JavaScript files"
+        dependsOn("spotlessJavascriptCheck", "spotlessVueCheck")
     }
 
     shadowJar {

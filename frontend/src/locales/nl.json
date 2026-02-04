@@ -447,5 +447,11 @@
     "receiver": {
       "label": "Ontvanger"
     }
+  },
+  "links": {
+    "support": "Ondersteuningsserver",
+    "website": "Website",
+    "faq": "Veelgestelde vragen",
+    "tos": "Servicevoorwaarden"
   }
 }

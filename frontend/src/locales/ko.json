@@ -447,5 +447,11 @@
     "receiver": {
       "label": "수신기"
     }
+  },
+  "links": {
+    "support": "서버 지원",
+    "website": "웹사이트",
+    "faq": "자주 묻는 질문",
+    "tos": "이용 약관"
   }
 }

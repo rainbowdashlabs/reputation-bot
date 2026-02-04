@@ -447,5 +447,11 @@
     "receiver": {
       "label": "Receptor"
     }
+  },
+  "links": {
+    "support": "Servidor de suporte",
+    "website": "Site",
+    "faq": "Perguntas mais frequentes",
+    "tos": "Termos de Serviço"
   }
 }

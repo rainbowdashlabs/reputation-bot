@@ -447,5 +447,11 @@
     "receiver": {
       "label": "Příjemce"
     }
+  },
+  "links": {
+    "support": "Podpora serveru",
+    "website": "Webové stránky",
+    "faq": "Často kladené otázky",
+    "tos": "Podmínky služby"
   }
 }

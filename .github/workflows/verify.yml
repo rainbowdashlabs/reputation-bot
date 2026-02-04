@@ -3,9 +3,9 @@ name: Verify
 on: [push, pull_request]
 
 jobs:
-  build:
+  build-backend:
     runs-on: ubuntu-latest
-    name: Gradle build
+    name: Backend Build
 
     steps:
       - uses: actions/checkout@v6
@@ -17,47 +17,12 @@ jobs:
       - uses: gradle/actions/wrapper-validation@v5
       - name: Build with Gradle
         run: ./gradlew --build-cache build -x test -x spotlessCheck
-      - name: Check license
-        run: ./gradlew spotlessCheck
       - name: Test with Gradle
         run: ./gradlew test --info
 
-  build-docker:
+  build-frontend:
     runs-on: ubuntu-latest
-    name: Docker build
-
-    steps:
-      - uses: actions/checkout@v6
-      - name: Build as Docker image
-        run: docker build . -f docker/Dockerfile
-
-  enforce-encoding:
-    runs-on: ubuntu-latest
-    name: Encoding check
-
-    steps:
-      - uses: actions/checkout@v6
-      - name: Remove allowed us-ascii files before check
-        run: rm src/main/resources/locale.properties src/main/resources/locale_en_US.properties # This needs improvement
-      - name: Check UTF-8 for resource bundles
-        run: |
-          find src/main/resources/locale* -type f -exec file --mime {} \; | grep -v charset=utf-8 && NOT_UTF_FOUND=1 || true
-          [[ \"$NOT_UTF_FOUND\" == \"1\" ]] && exit 1 || true
-
-  verify-docs:
-    runs-on: ubuntu-latest
-    name: Docs build
-
-    steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-python@v6
-        with:
-          python-version: 3.14
-      - run: pip install pipenv && pipenv install && pipenv run mkdocs build
-
-  verify-frontend:
-    runs-on: ubuntu-latest
-    name: Frontend Verification
+    name: Frontend Build
 
     steps:
       - uses: actions/checkout@v6
@@ -77,7 +42,74 @@ jobs:
         working-directory: frontend
         run: npm run build
 
-  verify-locales:
+  verify-license-backend:
+    runs-on: ubuntu-latest
+    name: Backend License Check
+
+    steps:
+      - uses: actions/checkout@v6
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/wrapper-validation@v5
+      - name: Check backend license headers
+        run: ./gradlew checkLicenseBackend
+
+  verify-license-frontend:
+    runs-on: ubuntu-latest
+    name: Frontend License Check
+
+    steps:
+      - uses: actions/checkout@v6
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/wrapper-validation@v5
+      - name: Check frontend license headers
+        run: ./gradlew checkLicenseFrontend
+
+  verify-locales-backend:
+    runs-on: ubuntu-latest
+    name: Backend Locale Validation
+
+    steps:
+      - uses: actions/checkout@v6
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/wrapper-validation@v5
+      - name: Run locale validation tests
+        run: ./gradlew testLocale --info
+      - name: Remove allowed us-ascii files before check
+        run: rm src/main/resources/locale.properties src/main/resources/locale_en_US.properties # This needs improvement
+      - name: Check UTF-8 for resource bundles
+        run: |
+          find src/main/resources/locale* -type f -exec file --mime {} \; | grep -v charset=utf-8 && NOT_UTF_FOUND=1 || true
+          [[ \"$NOT_UTF_FOUND\" == \"1\" ]] && exit 1 || true
+
+  verify-database:
+    runs-on: ubuntu-latest
+    name: Backend Database Validation
+
+    steps:
+      - uses: actions/checkout@v6
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: 21
+      - uses: gradle/actions/wrapper-validation@v5
+      - name: Run database validation tests
+        run: ./gradlew testDatabase --info
+
+
+  verify-locales-frontend:
     runs-on: ubuntu-latest
     name: Frontend Locale Validation
 
@@ -108,3 +140,24 @@ jobs:
         run: |
           echo "=== Checking for extra keys ==="
           python3 -m frontend_locales 2>&1 | grep -A 20 "Check 4:" || true
+
+  build-docker:
+    runs-on: ubuntu-latest
+    name: Docker Build
+
+    steps:
+      - uses: actions/checkout@v6
+      - name: Build as Docker image
+        run: docker build . -f docker/Dockerfile
+
+  verify-docs:
+    runs-on: ubuntu-latest
+    name: Docs Build
+
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: 3.14
+      - run: pip install pipenv && pipenv install && pipenv run mkdocs build
+

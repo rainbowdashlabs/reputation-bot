@@ -447,5 +447,11 @@
     "receiver": {
       "label": "Mottaker"
     }
+  },
+  "links": {
+    "support": "Støtteserver",
+    "website": "Nettsted",
+    "faq": "Ofte stilte spørsmål",
+    "tos": "Vilkår for bruk"
   }
 }

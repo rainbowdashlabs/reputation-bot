@@ -447,5 +447,11 @@
     "receiver": {
       "label": "Alıcı"
     }
+  },
+  "links": {
+    "support": "Destek Sunucusu",
+    "website": "Web sitesi",
+    "faq": "Sıkça Sorulan Sorular",
+    "tos": "Hizmet Şartları"
   }
 }

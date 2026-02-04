@@ -447,5 +447,11 @@
     "receiver": {
       "label": "Odbiornik"
     }
+  },
+  "links": {
+    "support": "Serwer wsparcia",
+    "website": "Strona internetowa",
+    "faq": "Często zadawane pytania",
+    "tos": "Warunki korzystania z serwisu"
   }
 }
