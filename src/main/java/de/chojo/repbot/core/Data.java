@@ -42,7 +42,6 @@ public class Data {
     private Metrics metrics;
     private Voice voice;
     private Analyzer analyzer;
-    private SessionService sessionService;
 
     private Data(Threading threading, Configuration configuration) {
         this.threading = threading;
@@ -60,7 +59,6 @@ public class Data {
         configure();
         updateDatabase();
         initDao();
-        sessionService = new SessionService(configuration, guildRepository());
     }
 
     public void initConnection() {
@@ -102,10 +100,6 @@ public class Data {
 
     public Analyzer analyzer() {
         return analyzer;
-    }
-
-    public SessionService sessionService() {
-        return sessionService;
     }
 
     private void updateDatabase() throws IOException, SQLException {

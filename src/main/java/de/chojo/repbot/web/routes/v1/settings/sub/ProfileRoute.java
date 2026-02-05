@@ -13,7 +13,7 @@ import de.chojo.repbot.web.error.ApiException;
 import de.chojo.repbot.web.error.ErrorResponse;
 import de.chojo.repbot.web.pojo.settings.sub.ProfilePOJO;
 import de.chojo.repbot.web.routes.RoutesBuilder;
-import de.chojo.repbot.web.sessions.GuildSession;
+import de.chojo.repbot.dao.access.guildsession.GuildSession;
 import de.chojo.repbot.web.validation.PremiumValidator;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;

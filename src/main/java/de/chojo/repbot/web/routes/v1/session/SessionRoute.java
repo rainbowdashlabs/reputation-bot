@@ -9,7 +9,7 @@ import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
 import de.chojo.repbot.web.pojo.GuildSessionPOJO;
 import de.chojo.repbot.web.routes.RoutesBuilder;
-import de.chojo.repbot.web.sessions.GuildSession;
+import de.chojo.repbot.dao.access.guildsession.GuildSession;
 import de.chojo.repbot.web.sessions.SessionService;
 import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;

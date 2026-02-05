@@ -12,6 +12,7 @@ public class Api {
     private String host = "0.0.0.0";
     private int port = 8888;
     private String url = "https://repbot.chojo.de";
+    private int tokenValidHours = 720; // 30 Days
 
     public String host() {
         return SysVar.envOrProp("BOT_API_HOST", "bot.api.host", host);
@@ -23,5 +24,9 @@ public class Api {
 
     public String url() {
         return SysVar.envOrProp("BOT_API_URL", "bot.api.url", url);
+    }
+
+    public int tokenValidHours() {
+        return tokenValidHours;
     }
 }

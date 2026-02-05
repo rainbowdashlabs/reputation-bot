@@ -65,6 +65,7 @@ import de.chojo.repbot.service.reputation.ReputationService;
 import de.chojo.repbot.statistic.Statistic;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.repbot.util.PermissionErrorHandler;
+import de.chojo.repbot.web.sessions.SessionService;
 import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
@@ -109,6 +110,7 @@ public class Bot {
     private AutopostService autopostService;
     private PremiumService premiumService;
     private InteractionHub<Slash, Message, User> hub;
+    private SessionService sessionService;
 
     private Bot(Data data, Threading threading, Configuration configuration, Localization localization) {
         this.data = data;
@@ -154,6 +156,10 @@ public class Bot {
 
     public RoleAssigner roleAssigner() {
         return roleAssigner;
+    }
+
+    public SessionService sessionService() {
+        return sessionService;
     }
 
     private void initShardManager() throws LoginException {
@@ -230,6 +236,8 @@ public class Bot {
         log.info("Setting up services");
         var guilds = data.guildRepository();
         var worker = threading.repBotWorker();
+        sessionService = new SessionService(configuration, data.guildRepository(), shardManager);
+
 
         statistic = Statistic.of(shardManager, data.metrics(), worker);
 
@@ -257,7 +265,7 @@ public class Bot {
         var localizer = localization.localizer();
         var guilds = data.guildRepository();
 
-        BotAdmin botAdmin = new BotAdmin(guilds, configuration, statistic, data.sessionService());
+        BotAdmin botAdmin = new BotAdmin(guilds, configuration, statistic, sessionService());
         hub = InteractionHub.builder(shardManager)
                 .withConversationSystem()
                 .withCommands(

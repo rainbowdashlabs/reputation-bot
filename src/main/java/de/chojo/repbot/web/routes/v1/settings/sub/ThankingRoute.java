@@ -18,7 +18,7 @@ import de.chojo.repbot.web.routes.v1.settings.sub.thanking.DonorRolesRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.thanking.ReactionsRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.thanking.ReceiverRolesRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.thanking.ThankwordsRoute;
-import de.chojo.repbot.web.sessions.GuildSession;
+import de.chojo.repbot.dao.access.guildsession.GuildSession;
 import de.chojo.repbot.web.validation.PremiumValidator;
 import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
