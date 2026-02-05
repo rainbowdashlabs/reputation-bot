@@ -9,5 +9,19 @@
     "RainbowDashLabs",
     "Taucher2003",
     "yannicklamprecht"
+  ],
+  "packageRules": [
+    {
+      "matchManagers": ["npm"],
+      "schedule": ["before 3am on Friday"],
+      "automerge": true,
+      "automergeType": "pr"
+    },
+    {
+      "matchManagers": ["pipenv"],
+      "schedule": ["before 3am on Friday"],
+      "automerge": true,
+      "automergeType": "pr"
+    }
   ]
 }
