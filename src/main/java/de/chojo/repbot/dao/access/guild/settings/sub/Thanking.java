@@ -97,6 +97,7 @@ public class Thanking implements GuildHolder {
         donorRoles = new DonorRoles(this, new HashSet<>(roles));
         return donorRoles;
     }
+
     public DenyDonorRoles denyDonorRoles() {
         if (denyDonorRoles != null) {
             return denyDonorRoles;
