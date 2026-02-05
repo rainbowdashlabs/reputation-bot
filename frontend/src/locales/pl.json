@@ -210,6 +210,14 @@
       "list": {
         "label": "Wybrane role",
         "description": "Wybierz, które role powinny być wymagane."
+      },
+      "denyDonor": {
+        "label": "Odmów rolę darczyńcy",
+        "description": "Jeśli opcja jest włączona, użytkownicy pełniący którąkolwiek z tych ról nie mogą przyznawać reputacji."
+      },
+      "denyReceiver": {
+        "label": "Odmów role odbiorcy",
+        "description": "Jeśli opcja jest włączona, użytkownicy pełniący którąkolwiek z tych ról nie mogą otrzymywać reputacji."
       }
     },
     "channels": {

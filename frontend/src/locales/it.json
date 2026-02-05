@@ -210,6 +210,14 @@
       "list": {
         "label": "Ruoli scelti",
         "description": "Scegli quali ruoli devono essere richiesti."
+      },
+      "denyDonor": {
+        "label": "Rifiuta i ruoli dei donatori",
+        "description": "Se questa opzione è attivata, chi ha uno di questi ruoli non può dare reputazione."
+      },
+      "denyReceiver": {
+        "label": "Rifiuta i ruoli del destinatario",
+        "description": "Se questa opzione è attiva, chi ha uno di questi ruoli non può ricevere reputazione."
       }
     },
     "channels": {

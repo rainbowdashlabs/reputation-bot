@@ -210,6 +210,14 @@
       "list": {
         "label": "Seçilmiş Roller",
         "description": "Hangi roller gerekli olmalıdır, seçin."
+      },
+      "denyDonor": {
+        "label": "Bağışçı Rolleri Reddet",
+        "description": "Etkinleştirildiğinde, bu rollerden herhangi birine sahip kullanıcılar itibar veremez."
+      },
+      "denyReceiver": {
+        "label": "Alıcı Rollerini Reddet",
+        "description": "Etkinleştirildiğinde, bu rollerden herhangi birine sahip kullanıcılar itibar alamazlar."
       }
     },
     "channels": {

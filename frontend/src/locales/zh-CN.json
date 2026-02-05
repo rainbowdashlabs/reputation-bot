@@ -210,6 +210,14 @@
       "list": {
         "label": "精选角色",
         "description": "选择哪些角色应为必选项。"
+      },
+      "denyDonor": {
+        "label": "拒绝捐赠者角色",
+        "description": "若启用此设置，具有以下任一角色的用户将无法给予声望。"
+      },
+      "denyReceiver": {
+        "label": "拒绝接收者角色",
+        "description": "若启用此设置，具有以下任一角色的用户将无法获得声望值。"
       }
     },
     "channels": {

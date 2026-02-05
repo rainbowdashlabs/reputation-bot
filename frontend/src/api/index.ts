@@ -401,8 +401,16 @@ class ApiClient {
         await this.axiosInstance.post('/settings/thanking/donorroles', data);
     }
 
+    public async updateThankingDenyDonorRoles(data: Types.RolesHolderPOJO) {
+        await this.axiosInstance.post('/settings/thanking/denydonorroles', data);
+    }
+
     public async updateThankingReceiverRoles(data: Types.RolesHolderPOJO) {
         await this.axiosInstance.post('/settings/thanking/receiverroles', data);
+    }
+
+    public async updateThankingDenyReceiverRoles(data: Types.RolesHolderPOJO) {
+        await this.axiosInstance.post('/settings/thanking/denyreceiverroles', data);
     }
 
     public async updateThankingReactions(data: Types.ReactionsSettingsPOJO) {

@@ -32,12 +32,12 @@
     "noAbuse": {
       "title": "Keine Kontextüberprüfung",
       "description": "Ich will die kontextbasierte Überprüfung deaktivieren und den Nutzern erlauben, Reputation freier zu vergeben, ohne ihre Interaktionshistorie zu verfolgen.",
-      "settings": "Diese Voreinstellung deaktiviert sowohl die Spender- als auch die Empfänger-Kontextverfolgung."
+      "settings": "Diese Voreinstellung deaktiviert sowohl die Geber- als auch die Empfänger-Kontextverfolgung."
     },
     "default": {
       "title": "Standardkonfiguration",
       "description": "Ich will ein ausgeglichenes Reputationssystem mit vernünftigen Standardeinstellungen, die für die meisten Server gut funktionieren.",
-      "settings": "Diese Voreinstellung aktiviert eine 30-minütige bidirektionale Abklingzeit, schaltet alle Reputationsmodi außer Befehl frei, aktiviert die Reputationsbestätigung und aktiviert Kontextprüfungen für Spender und Empfänger."
+      "settings": "Diese Voreinstellung aktiviert eine 30-minütige bidirektionale Abklingzeit, schaltet alle Reputationsmodi außer Befehl frei, aktiviert die Reputationsbestätigung und aktiviert Kontextprüfungen für Geber und Empfänger."
     },
     "applied": "Angewandt"
   },
@@ -200,16 +200,24 @@
     "roles": {
       "description": "Lege fest, welche Rollen Reputation vergeben und erhalten dürfen.",
       "donor": {
-        "label": "Rollen der Spender",
-        "description": "Wenn das aktiviert ist, können nur Leute mit mindestens einer dieser Rollen eine Bewertung abgeben."
+        "label": "Rollen zum Vergeben",
+        "description": "Wenn das aktiviert ist, können nur Leute mit mindestens einer dieser Rollen Reputation vergeben."
       },
       "receiver": {
         "label": "Rollen der Empfänger",
-        "description": "Wenn das aktiviert ist, können nur Leute mit mindestens einer dieser Rollen eine Bewertung bekommen."
+        "description": "Wenn das aktiviert ist, können nur Leute mit mindestens einer dieser Rollen Reputation bekommen."
       },
       "list": {
         "label": "Ausgewählte Rollen",
         "description": "Entscheide, welche Rollen erforderlich sein sollen."
+      },
+      "denyDonor": {
+        "label": "Vergeben Blockieren",
+        "description": "Wenn das aktiviert ist, können Leute mit diesen Rollen keine Reputation vergeben."
+      },
+      "denyReceiver": {
+        "label": "Erhalten Blockieren",
+        "description": "Wenn das aktiviert ist, können Leute mit diesen Rollen keine Reputation bekommen."
       }
     },
     "channels": {
@@ -273,7 +281,7 @@
     },
     "cooldownDirection": {
       "label": "Abklingzeitsrichtung",
-      "description": "Einseitig heißt, dass der Spender eine Wartezeit hat, bevor er derselben Person wieder was geben kann. Beidseitig heißt, dass die Wartezeit zwischen Spender und Empfänger gilt, sodass sie sich nicht gegenseitig bedanken können, bis die Zeit vorbei ist.",
+      "description": "Einseitig heißt, dass der Geber eine Wartezeit hat, bevor er derselben Person wieder was geben kann. Bidirektional heißt, dass die Wartezeit zwischen Geber und Empfänger gilt, sodass sie sich nicht gegenseitig bedanken können, bis die Zeit vorbei ist.",
       "unidirectional": "Einseitig",
       "bidirectional": "Bidirektional"
     },
@@ -286,8 +294,8 @@
       "description": "Autoren, die die letzen x Nachrichten im Kanal gepostet haben, können immer eine Bewertung bekommen."
     },
     "donorContext": {
-      "label": "Spender war aktiv",
-      "description": "Wenn das aktiviert ist, muss der Spender mindestens eine der letzten Nachrichten im Kanal geschickt haben, um eine Bewertung abzugeben."
+      "label": "Geber war aktiv",
+      "description": "Wenn das aktiviert ist, muss der Geber mindestens eine der letzten Nachrichten im Kanal geschickt haben, um eine Bewertung abzugeben."
     },
     "receiverContext": {
       "label": "Empfänger war aktiv",
@@ -436,14 +444,14 @@
         "description": "Such dir das Emoji aus, das als Hauptreaktion für die Bewertung verwendet werden soll."
       },
       "roles": {
-        "title": "Rollen von Spendern und Empfängern",
+        "title": "Rollen von Gebern und Empfängern",
         "description": "Du kannst festlegen, welche Rollen Reputation vergeben können (Geberrollen) und welche Rollen Reputation bekommen können (Empfängerrollen)."
       }
     }
   },
   "roles": {
     "donor": {
-      "label": "Spender"
+      "label": "Geber"
     },
     "receiver": {
       "label": "Empfänger"

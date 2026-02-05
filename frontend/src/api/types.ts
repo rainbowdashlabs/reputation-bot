@@ -172,6 +172,8 @@ export interface ThankingPOJO {
     channels: ChannelsSettingsPOJO;
     donorRoles: RolesHolderPOJO;
     receiverRoles: RolesHolderPOJO;
+    denyDonorRoles: RolesHolderPOJO;
+    denyReceiverRoles: RolesHolderPOJO;
     reactions: ReactionsSettingsPOJO;
     thankwords: ThankwordsPOJO;
 }

@@ -210,6 +210,14 @@
       "list": {
         "label": "Funciones seleccionadas",
         "description": "Elige qué roles deben ser obligatorios."
+      },
+      "denyDonor": {
+        "label": "Denegar funciones de donante",
+        "description": "Si está habilitado, los usuarios con cualquiera de estas funciones no pueden otorgar reputación."
+      },
+      "denyReceiver": {
+        "label": "Denegar roles de receptor",
+        "description": "Si está habilitado, los usuarios con cualquiera de estas funciones no pueden recibir reputación."
       }
     },
     "channels": {

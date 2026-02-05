@@ -7,6 +7,8 @@ package de.chojo.repbot.dao.access.guild.settings.sub;
 
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.access.guild.settings.sub.thanking.Channels;
+import de.chojo.repbot.dao.access.guild.settings.sub.thanking.DenyDonorRoles;
+import de.chojo.repbot.dao.access.guild.settings.sub.thanking.DenyReceiverRoles;
 import de.chojo.repbot.dao.access.guild.settings.sub.thanking.DonorRoles;
 import de.chojo.repbot.dao.access.guild.settings.sub.thanking.Reactions;
 import de.chojo.repbot.dao.access.guild.settings.sub.thanking.ReceiverRoles;
@@ -30,7 +32,9 @@ public class Thanking implements GuildHolder {
 
     private Channels channels;
     private DonorRoles donorRoles;
+    private DenyDonorRoles denyDonorRoles;
     private ReceiverRoles receiverRoles;
+    private DenyReceiverRoles denyReceiverRoles;
     private Reactions reactions;
     private Thankwords thankwords;
 
@@ -51,7 +55,9 @@ public class Thanking implements GuildHolder {
     public void apply(ThankingPOJO state) {
         channels().apply(state.channels());
         donorRoles().apply(state.donorRoles());
+        denyDonorRoles().apply(state.denyDonorRoles());
         receiverRoles().apply(state.receiverRoles());
+        denyReceiverRoles().apply(state.denyReceiverRoles());
         reactions().apply(state.reactions());
         thankwords().apply(state.thankwords());
     }
@@ -92,6 +98,20 @@ public class Thanking implements GuildHolder {
         return donorRoles;
     }
 
+    public DenyDonorRoles denyDonorRoles() {
+        if (denyDonorRoles != null) {
+            return denyDonorRoles;
+        }
+        var roles = query("""
+                SELECT role_id
+                FROM deny_donor_roles
+                WHERE guild_id = ?
+                """).single(call().bind(guildId())).mapAs(Long.class).all();
+
+        denyDonorRoles = new DenyDonorRoles(this, new HashSet<>(roles));
+        return denyDonorRoles;
+    }
+
     public ReceiverRoles receiverRoles() {
         if (receiverRoles != null) {
             return receiverRoles;
@@ -104,6 +124,20 @@ public class Thanking implements GuildHolder {
 
         receiverRoles = new ReceiverRoles(this, new HashSet<>(roles));
         return receiverRoles;
+    }
+
+    public DenyReceiverRoles denyReceiverRoles() {
+        if (denyReceiverRoles != null) {
+            return denyReceiverRoles;
+        }
+        var roles = query("""
+                SELECT role_id
+                FROM deny_receiver_roles
+                WHERE guild_id = ?
+                """).single(call().bind(guildId())).mapAs(Long.class).all();
+
+        denyReceiverRoles = new DenyReceiverRoles(this, new HashSet<>(roles));
+        return denyReceiverRoles;
     }
 
     public Reactions reactions() {

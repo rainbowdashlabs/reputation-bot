@@ -210,6 +210,14 @@
       "list": {
         "label": "Utvalgte roller",
         "description": "Velg hvilke roller som skal være obligatoriske."
+      },
+      "denyDonor": {
+        "label": "Nekt donorroller",
+        "description": "Hvis denne funksjonen er aktivert, kan brukere med noen av disse rollene ikke gi omdømme."
+      },
+      "denyReceiver": {
+        "label": "Nekt mottakerroller",
+        "description": "Hvis denne funksjonen er aktivert, kan brukere med noen av disse rollene ikke motta omdømme."
       }
     },
     "channels": {

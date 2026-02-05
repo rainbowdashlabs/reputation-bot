@@ -210,6 +210,14 @@
       "list": {
         "label": "Geselecteerde rollen",
         "description": "Kies welke rollen nodig zijn."
+      },
+      "denyDonor": {
+        "label": "Donorrollen weigeren",
+        "description": "Als dit is ingeschakeld, kunnen gebruikers met een van deze rollen geen reputatie geven."
+      },
+      "denyReceiver": {
+        "label": "Ontvangstrollen weigeren",
+        "description": "Als dit is ingeschakeld, kunnen gebruikers met een van deze rollen geen reputatie krijgen."
       }
     },
     "channels": {

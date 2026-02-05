@@ -210,6 +210,14 @@
       "list": {
         "label": "Vybrané role",
         "description": "Vyberte, které role by měly být povinné."
+      },
+      "denyDonor": {
+        "label": "Odepřít role dárce",
+        "description": "Pokud je tato možnost povolena, uživatelé s některou z těchto rolí nemohou udělovat reputaci."
+      },
+      "denyReceiver": {
+        "label": "Odepřít role příjemce",
+        "description": "Pokud je tato možnost povolena, uživatelé s některou z těchto rolí nemohou získávat reputaci."
       }
     },
     "channels": {

@@ -207,6 +207,14 @@
         "label": "Receiver Roles",
         "description": "If enabled, only users with at least one of these roles can receive reputation."
       },
+      "denyDonor": {
+        "label": "Deny Donor Roles",
+        "description": "If enabled, users with any of these roles cannot give reputation."
+      },
+      "denyReceiver": {
+        "label": "Deny Receiver Roles",
+        "description": "If enabled, users with any of these roles cannot receive reputation."
+      },
       "list": {
         "label": "Selected Roles",
         "description": "Choose which roles should be required."

@@ -7,6 +7,7 @@ package de.chojo.repbot.service.reputation;
 
 public enum SubmitResultType {
     NO_DONOR_ROLE("submitresult.nodonorrole"),
+    DENY_DONOR_ROLE("submitresult.denydonorrole"),
     CHANNEL_INACTIVE("submitresult.channelinactive"),
     NO_TARGETS("submitresult.notargets"),
     NO_RECENT_MEMBERS("submitresult.norecentmembers"),
@@ -16,6 +17,7 @@ public enum SubmitResultType {
     EMBED_SEND("submitresult.embedsend"),
     DONOR_LIMIT("submitresult.donorlimit"),
     NO_RECEIVER_ROLE("submitresult.noreceiverrole"),
+    DENY_RECEIVER_ROLE("submitresult.denyreceiverrole"),
     THANK_TYPE_DISABLED("submitresult.thanktypedisabled"),
     SELF_VOTE("submitresult.selfvote"),
     TARGET_NOT_IN_CONTEXT("submitresult.targetnotincontext"),
@@ -28,7 +30,6 @@ public enum SubmitResultType {
     ALL_COOLDOWN("submitresult.allcooldown"),
     SUCCESS("submitresult.success"),
     NO_RECEIVER("submitresult.no_receiver"),
-    NO_DONOR("submitresult.no_receiver"),
     BLOCK_BOTS("submitresult.block_bots");
 
     private final String localeKey;

@@ -210,6 +210,14 @@
       "list": {
         "label": "Utvalda roller",
         "description": "Välj vilka roller som ska krävas."
+      },
+      "denyDonor": {
+        "label": "Neka donatorroller",
+        "description": "Om denna funktion är aktiverad kan användare med någon av dessa roller inte ge omdömen."
+      },
+      "denyReceiver": {
+        "label": "Neka mottagarroller",
+        "description": "Om denna funktion är aktiverad kan användare med någon av dessa roller inte få rykte."
       }
     },
     "channels": {

@@ -54,6 +54,18 @@ export function useSession() {
         }
     }
 
+    const updateThankingDenyDonorRolesSettings = (updates: Partial<Types.RolesHolderPOJO>) => {
+        if (session.value?.settings?.thanking?.denyDonorRoles) {
+            Object.assign(session.value.settings.thanking.denyDonorRoles, updates)
+        }
+    }
+
+    const updateThankingDenyReceiverRolesSettings = (updates: Partial<Types.RolesHolderPOJO>) => {
+        if (session.value?.settings?.thanking?.denyReceiverRoles) {
+            Object.assign(session.value.settings.thanking.denyReceiverRoles, updates)
+        }
+    }
+
     const updateThankingReactionsSettings = (updates: Partial<Types.ReactionsSettingsPOJO>) => {
         if (session.value?.settings?.thanking?.reactions) {
             Object.assign(session.value.settings.thanking.reactions, updates)
@@ -109,6 +121,8 @@ export function useSession() {
         updateThankingChannelsSettings,
         updateThankingDonorRolesSettings,
         updateThankingReceiverRolesSettings,
+        updateThankingDenyDonorRolesSettings,
+        updateThankingDenyReceiverRolesSettings,
         updateThankingReactionsSettings,
         updateThankingThankwordsSettings,
         updateAbuseProtectionSettings,
