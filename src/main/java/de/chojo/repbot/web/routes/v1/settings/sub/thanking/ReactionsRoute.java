@@ -5,11 +5,11 @@
  */
 package de.chojo.repbot.web.routes.v1.settings.sub.thanking;
 
+import de.chojo.repbot.dao.access.guildsession.GuildSession;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
 import de.chojo.repbot.web.pojo.settings.sub.thanking.ReactionsPOJO;
 import de.chojo.repbot.web.routes.RoutesBuilder;
-import de.chojo.repbot.web.sessions.GuildSession;
 import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
@@ -34,7 +34,11 @@ public class ReactionsRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void updateReactionsSettings(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().thanking().reactions().apply(ctx.bodyAsClass(ReactionsPOJO.class));
+        var reactions = session.repGuild().settings().thanking().reactions();
+        var oldValue = new ReactionsPOJO(reactions.reactions(), reactions.mainReaction());
+        ReactionsPOJO newValue = ctx.bodyAsClass(ReactionsPOJO.class);
+        reactions.apply(newValue);
+        session.recordChange("thanking.reactions", oldValue, newValue);
     }
 
     @OpenApi(
@@ -48,7 +52,11 @@ public class ReactionsRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void updateMainReaction(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().thanking().reactions().mainReaction(ctx.bodyAsClass(String.class));
+        var reactions = session.repGuild().settings().thanking().reactions();
+        String oldValue = reactions.mainReaction();
+        String newValue = ctx.bodyAsClass(String.class);
+        reactions.mainReaction(newValue);
+        session.recordChange("thanking.reactions.mainreaction", oldValue, newValue);
     }
 
     @OpenApi(
@@ -63,8 +71,11 @@ public class ReactionsRoute implements RoutesBuilder {
     public void updateAdditionalReactions(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         var reactions = session.repGuild().settings().thanking().reactions();
-        reactions.apply(new ReactionsPOJO(
-                new java.util.HashSet<>(asList(ctx.bodyAsClass(String[].class))), reactions.mainReaction()));
+        var oldValue = reactions.reactions();
+        ReactionsPOJO newValue = new ReactionsPOJO(
+                new java.util.HashSet<>(asList(ctx.bodyAsClass(String[].class))), reactions.mainReaction());
+        reactions.apply(newValue);
+        session.recordChange("thanking.reactions.reactions", oldValue, newValue.reactions());
     }
 
     @Override

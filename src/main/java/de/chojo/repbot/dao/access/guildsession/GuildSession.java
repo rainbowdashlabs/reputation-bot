@@ -3,7 +3,7 @@
  *
  *     Copyright (C) RainbowDashLabs and Contributor
  */
-package de.chojo.repbot.web.sessions;
+package de.chojo.repbot.dao.access.guildsession;
 
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.RepGuild;
@@ -17,31 +17,25 @@ import org.jetbrains.annotations.NotNull;
 
 public class GuildSession {
     private final Configuration configuration;
-    private final String key;
     private final ShardManager shardManager;
     private final GuildRepository guildRepository;
-    private final long guildId;
-    private final long userId;
+    private final GuildSessionMeta meta;
     private PremiumValidator premiumValidator;
     private GuildValidator guildValidator;
 
     public GuildSession(
             Configuration configuration,
-            String key,
             ShardManager shardManager,
             GuildRepository guildRepository,
-            long guildId,
-            long userId) {
+            GuildSessionMeta meta) {
         this.configuration = configuration;
-        this.key = key;
         this.shardManager = shardManager;
         this.guildRepository = guildRepository;
-        this.guildId = guildId;
-        this.userId = userId;
+        this.meta = meta;
     }
 
     public Guild guild() {
-        return shardManager.getGuildById(guildId);
+        return shardManager.getGuildById(meta.guildId());
     }
 
     public RepGuild repGuild() {
@@ -72,11 +66,11 @@ public class GuildSession {
     }
 
     public long guildId() {
-        return guildId;
+        return meta.guildId();
     }
 
-    public long userId() {
-        return userId;
+    public long memberId() {
+        return meta.memberId();
     }
 
     public String sessionUrl() {
@@ -87,8 +81,12 @@ public class GuildSession {
         return pathUrl("setup");
     }
 
+    public GuildSessionMeta meta() {
+        return meta;
+    }
+
     public String pathUrl(String path) {
-        String url = "%s/%s?token=%s".formatted(configuration.api().url(), path, key);
+        String url = "%s/%s?token=%s".formatted(configuration.api().url(), path, meta.token());
         return repGuild()
                 .settings()
                 .general()
@@ -99,5 +97,15 @@ public class GuildSession {
 
     public Configuration configuration() {
         return configuration;
+    }
+
+    /**
+     * Records a change of a guild setting.
+     * @param settingsKey A unique key identifying the setting.
+     * @param oldValue the old value of the setting before the change.
+     * @param newValue the new value of the setting after the change.
+     */
+    public void recordChange(String settingsKey, Object oldValue, Object newValue) {
+        meta.recordChange(settingsKey, oldValue, newValue);
     }
 }

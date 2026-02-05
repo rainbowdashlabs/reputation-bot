@@ -10,6 +10,82 @@ export interface RolePOJO {
     position: number;
 }
 
+export interface MemberPOJO {
+    displayName: string;
+    id: string;
+    profilePictureUrl: string;
+    color: string;
+}
+
+// abuseprotection.cooldown -> number. -1 means once
+// abuseprotection.cooldowndirection -> enum
+// abuseprotection.maxmessageage -> number
+// abuseprotection.minmessages -> number
+// abuseprotection.donorcontext -> boolean
+// abuseprotection.receivercontext -> boolean
+// abuseprotection.maxgiven -> number
+// abuseprotection.maxgivenhours -> number
+// abuseprotection.maxreceived -> number
+// abuseprotection.maxreceivedhours -> number
+// abuseprotection.maxmessagereputation -> number
+// thanking.channels.whitelist -> enum
+// thanking.channels.channels -> List of channel ids
+// thanking.channels.categories -> List of category ids
+// thanking.thankwords.words -> List of strings
+// thanking.reactions.mainreaction -> reaction id
+// thanking.reactions.reactions -> list of reaction ids or unicode emoji names
+// thanking.denydonorroles -> list of role ids
+// thanking.donorroles -> list of role ids
+// thanking.denyreceiverroles -> list of role ids
+// thanking.receiverroles -> list of role ids
+// messages.reactionconfirmation -> boolean
+// messages.commandreputationephemeral -> boolean
+// profile.nickname -> string or null
+// profile.profilepicture -> link as string
+// profile.reputationname -> string or null
+// reputation.reactionactive -> boolean
+// reputation.answeractive -> boolean
+// reputation.mentionactive -> boolean
+// reputation.fuzzyactive -> boolean
+// reputation.embedactive -> boolean
+// reputation.directactive -> boolean
+// reputation.commandactive -> boolean
+// logchannel.active -> boolean
+// logchannel.channel -> channel id
+// general.language -> language name
+// general.stackroles -> boolean
+// general.reputationmode -> enum
+// general.systemchannel -> channel id
+// general.resetdate -> ISO string
+// announcements.active -> boolean
+// announcements.samechannel -> boolean
+// announcements.channel -> channel id
+// autopost.active -> boolean
+// autopost.channel -> channel id
+// autopost.refreshtype -> enum
+// autopost.refreshinterval -> enum
+// ranks
+export interface SettingsAuditLogPOJO {
+    /*
+     * This is a log entry for a settings change. It contains the key of the setting that was changed,
+     * the ID of the member who made the change, the old value of the setting, the new value of the setting,
+     * and the timestamp of when the change was made.
+     * The type of the values depends on the settings key.
+     */
+    settingsKey: string;
+    memberId: string;
+    oldValue: Object; // Type heavily depends on the settingsKey
+    newValue: Object; // Type heavily depends on the settingsKey
+    changed: string; // ISO string
+}
+
+export interface AuditLogPagePOJO {
+    page: number;
+    maxPages: number;
+    content: SettingsAuditLogPOJO[];
+    members: Map<string, MemberPOJO>;
+}
+
 export interface ReactionPOJO {
     name: string;
     id: string;

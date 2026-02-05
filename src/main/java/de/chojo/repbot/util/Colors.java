@@ -68,4 +68,8 @@ public final class Colors {
             throw new UnsupportedOperationException("This is a utility class.");
         }
     }
+
+    public static String toHex(Color color) {
+        return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
+    }
 }

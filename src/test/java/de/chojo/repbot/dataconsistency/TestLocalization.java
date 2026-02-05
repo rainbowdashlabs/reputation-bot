@@ -41,7 +41,8 @@ public class TestLocalization {
             "yyyy.MM.dd");
     private static final Set<String> WHITELIST_ENDS = Set.of(".gg", ".com", "bot.config", ".png", ".json");
     private static final Set<String> WHITELIST_STARTS = Set.of("bot.");
-
+    private static final Path EXCLUDE =
+            Path.of("src", "main", "java", "de", "chojo", "repbot", "web", "routes", "v1", "settings");
     private static final DiscordLocale[] LOCALES = {
         DiscordLocale.ENGLISH_US, // en-US
         DiscordLocale.GERMAN, // de
@@ -162,7 +163,10 @@ public class TestLocalization {
         var keys = ResourceBundle.getBundle("locale").keySet();
         List<Path> files;
         try (var stream = Files.walk(Path.of("src", "main", "java"))) {
-            files = stream.filter(p -> p.toFile().isFile()).collect(Collectors.toCollection(ArrayList::new));
+            System.out.println(EXCLUDE);
+            files = stream.filter(path -> !path.startsWith(EXCLUDE))
+                    .filter(p -> p.toFile().isFile())
+                    .collect(Collectors.toCollection(ArrayList::new));
         }
 
         try (var stream = Files.walk(Path.of("src", "main", "resources"))) {

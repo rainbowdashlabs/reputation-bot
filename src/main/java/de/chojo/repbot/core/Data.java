@@ -12,10 +12,11 @@ import de.chojo.repbot.dao.access.Cleanup;
 import de.chojo.repbot.dao.access.Gdpr;
 import de.chojo.repbot.dao.access.gdpr.RemovalTask;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.dao.provider.GuildSessionRepository;
 import de.chojo.repbot.dao.provider.Metrics;
+import de.chojo.repbot.dao.provider.SettingsAuditLogRepository;
 import de.chojo.repbot.dao.provider.Voice;
 import de.chojo.repbot.util.LogNotify;
-import de.chojo.repbot.web.sessions.SessionService;
 import de.chojo.sadu.datasource.DataSourceCreator;
 import de.chojo.sadu.mapper.RowMapperRegistry;
 import de.chojo.sadu.mapper.rowmapper.RowMapper;
@@ -37,12 +38,13 @@ public class Data {
     private final Configuration configuration;
     private HikariDataSource dataSource;
     private GuildRepository guildRepository;
+    private GuildSessionRepository guildSessionRepository;
+    private SettingsAuditLogRepository settingsAuditLogRepository;
     private Gdpr gdpr;
     private Cleanup cleanup;
     private Metrics metrics;
     private Voice voice;
     private Analyzer analyzer;
-    private SessionService sessionService;
 
     private Data(Threading threading, Configuration configuration) {
         this.threading = threading;
@@ -60,7 +62,6 @@ public class Data {
         configure();
         updateDatabase();
         initDao();
-        sessionService = new SessionService(configuration, guildRepository());
     }
 
     public void initConnection() {
@@ -104,8 +105,12 @@ public class Data {
         return analyzer;
     }
 
-    public SessionService sessionService() {
-        return sessionService;
+    public GuildSessionRepository guildSessionRepository() {
+        return guildSessionRepository;
+    }
+
+    public SettingsAuditLogRepository settingsAuditLogRepository() {
+        return settingsAuditLogRepository;
     }
 
     private void updateDatabase() throws IOException, SQLException {
@@ -134,6 +139,8 @@ public class Data {
     private void initDao() {
         log.info("Creating DAOs");
         guildRepository = new GuildRepository(configuration);
+        guildSessionRepository = new GuildSessionRepository();
+        settingsAuditLogRepository = new SettingsAuditLogRepository();
         gdpr = new Gdpr(configuration);
         cleanup = new Cleanup();
         metrics = new Metrics(dataSource);

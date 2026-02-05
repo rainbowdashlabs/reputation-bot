@@ -5,11 +5,11 @@
  */
 package de.chojo.repbot.web.routes.v1.settings.sub.thanking;
 
+import de.chojo.repbot.dao.access.guildsession.GuildSession;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
 import de.chojo.repbot.web.pojo.settings.sub.thanking.RolesHolderPOJO;
 import de.chojo.repbot.web.routes.RoutesBuilder;
-import de.chojo.repbot.web.sessions.GuildSession;
 import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
@@ -40,7 +40,10 @@ public class DenyReceiverRolesRoute implements RoutesBuilder {
             session.guildValidator().validateRoleIds(roleId);
         }
 
-        session.repGuild().settings().thanking().denyReceiverRoles().apply(rolesHolderPOJO);
+        var denyReceiverRoles = session.repGuild().settings().thanking().denyReceiverRoles();
+        var oldValue = denyReceiverRoles.roleIds();
+        denyReceiverRoles.apply(rolesHolderPOJO);
+        session.recordChange("thanking.denyreceiverroles", oldValue, rolesHolderPOJO.roleIds());
     }
 
     @Override

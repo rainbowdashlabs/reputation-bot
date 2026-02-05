@@ -7,7 +7,7 @@ package de.chojo.repbot.commands.settings;
 
 import de.chojo.jdautil.interactions.slash.Slash;
 import de.chojo.jdautil.interactions.slash.provider.SlashCommand;
-import de.chojo.repbot.web.sessions.GuildSession;
+import de.chojo.repbot.dao.access.guildsession.GuildSession;
 import de.chojo.repbot.web.sessions.SessionService;
 import net.dv8tion.jda.api.components.actionrow.ActionRow;
 import net.dv8tion.jda.api.components.buttons.Button;

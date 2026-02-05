@@ -5,9 +5,9 @@
  */
 package de.chojo.repbot.web.validation;
 
+import de.chojo.repbot.dao.access.guildsession.GuildSession;
 import de.chojo.repbot.web.error.InvalidCategoryException;
 import de.chojo.repbot.web.error.InvalidRoleException;
-import de.chojo.repbot.web.sessions.GuildSession;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 

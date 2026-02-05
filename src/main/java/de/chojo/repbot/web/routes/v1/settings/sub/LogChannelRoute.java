@@ -6,12 +6,12 @@
 package de.chojo.repbot.web.routes.v1.settings.sub;
 
 import de.chojo.repbot.dao.access.guild.settings.sub.LogChannel;
+import de.chojo.repbot.dao.access.guildsession.GuildSession;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
 import de.chojo.repbot.web.error.ErrorResponse;
 import de.chojo.repbot.web.pojo.settings.sub.LogChannelPOJO;
 import de.chojo.repbot.web.routes.RoutesBuilder;
-import de.chojo.repbot.web.sessions.GuildSession;
 import de.chojo.repbot.web.validation.PremiumValidator;
 import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
@@ -51,7 +51,9 @@ public class LogChannelRoute implements RoutesBuilder {
                 logChannelPOJO.active(), validator.features().logChannel(), "Log Channel");
 
         LogChannel logChannel = session.repGuild().settings().logChannel();
+        LogChannelPOJO oldValue = new LogChannelPOJO(logChannel.channelId(), logChannel.active());
         logChannel.apply(logChannelPOJO);
+        session.recordChange("logchannel", oldValue, logChannelPOJO);
     }
 
     @OpenApi(
@@ -77,7 +79,10 @@ public class LogChannelRoute implements RoutesBuilder {
         PremiumValidator validator = session.premiumValidator();
         validator.requireFeatureIfEnabled(active, validator.features().logChannel(), "Log Channel");
 
-        session.repGuild().settings().logChannel().active(active);
+        LogChannel logChannel = session.repGuild().settings().logChannel();
+        boolean oldValue = logChannel.active();
+        logChannel.active(active);
+        session.recordChange("logchannel.active", oldValue, active);
     }
 
     @OpenApi(
@@ -98,7 +103,10 @@ public class LogChannelRoute implements RoutesBuilder {
             session.guildValidator().validateChannelIds(channelId);
         }
 
-        session.repGuild().settings().logChannel().channel(channelId);
+        LogChannel logChannel = session.repGuild().settings().logChannel();
+        long oldValue = logChannel.channelId();
+        logChannel.channel(channelId);
+        session.recordChange("logchannel.channel", oldValue, channelId);
     }
 
     @Override

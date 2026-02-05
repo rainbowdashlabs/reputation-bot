@@ -7,13 +7,13 @@ package de.chojo.repbot.web.routes.v1.settings.sub;
 
 import de.chojo.repbot.config.elements.BaseSettings;
 import de.chojo.repbot.dao.access.guild.settings.sub.Profile;
+import de.chojo.repbot.dao.access.guildsession.GuildSession;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
 import de.chojo.repbot.web.error.ApiException;
 import de.chojo.repbot.web.error.ErrorResponse;
 import de.chojo.repbot.web.pojo.settings.sub.ProfilePOJO;
 import de.chojo.repbot.web.routes.RoutesBuilder;
-import de.chojo.repbot.web.sessions.GuildSession;
 import de.chojo.repbot.web.validation.PremiumValidator;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
@@ -66,7 +66,10 @@ public class ProfileRoute implements RoutesBuilder {
         }
 
         Profile profile = session.repGuild().settings().profile();
+        ProfilePOJO oldValue =
+                new ProfilePOJO(profile.nickname(), profile.profilePictureUrl(), profile.reputationName());
         profile.apply(profilePOJO);
+        session.recordChange("profile", oldValue, profilePOJO);
     }
 
     @OpenApi(
@@ -105,7 +108,10 @@ public class ProfileRoute implements RoutesBuilder {
                     .queue();
         }
 
-        session.repGuild().settings().profile().nickname(nickname);
+        Profile profile = session.repGuild().settings().profile();
+        String oldValue = profile.nickname();
+        profile.nickname(nickname);
+        session.recordChange("profile.nickname", oldValue, nickname);
     }
 
     @OpenApi(
@@ -165,8 +171,12 @@ public class ProfileRoute implements RoutesBuilder {
                     .queue();
         }
 
-        session.repGuild().settings().profile().profilePicture(profilePicture);
-        ctx.result(session.guild().getSelfMember().getEffectiveAvatarUrl());
+        Profile profile = session.repGuild().settings().profile();
+        String oldValue = session.guild().getSelfMember().getEffectiveAvatarUrl();
+        profile.profilePicture(profilePicture);
+        String newValue = session.guild().getSelfMember().getEffectiveAvatarUrl();
+        session.recordChange("profile.profilepicture", oldValue, newValue);
+        ctx.result(newValue);
     }
 
     @OpenApi(
@@ -194,7 +204,10 @@ public class ProfileRoute implements RoutesBuilder {
             validator.requireFeature(validator.features().localeOverrides(), "Locale Overrides");
         }
 
-        session.repGuild().settings().profile().reputationName(reputationName);
+        Profile profile = session.repGuild().settings().profile();
+        String oldValue = profile.reputationName();
+        profile.reputationName(reputationName);
+        session.recordChange("profile.reputationname", oldValue, reputationName);
     }
 
     @OpenApi(
@@ -207,7 +220,10 @@ public class ProfileRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void deleteNickname(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().profile().nickname(null);
+        Profile profile = session.repGuild().settings().profile();
+        String oldValue = profile.nickname();
+        profile.nickname(null);
+        session.recordChange("profile.nickname", oldValue, null);
     }
 
     @OpenApi(
@@ -232,7 +248,10 @@ public class ProfileRoute implements RoutesBuilder {
         validator.requireFeature(validator.features().profile(), "Profile");
 
         // Reset to default by setting null avatar
-        session.repGuild().settings().profile().profilePicture(null);
+        Profile profile = session.repGuild().settings().profile();
+        String oldValue = profile.profilePictureUrl();
+        profile.profilePicture(null);
+        session.recordChange("profile.profilepicture", oldValue, null);
     }
 
     @OpenApi(
@@ -245,7 +264,10 @@ public class ProfileRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void deleteReputationName(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().profile().reputationName(null);
+        Profile profile = session.repGuild().settings().profile();
+        String oldValue = profile.reputationName();
+        profile.reputationName(null);
+        session.recordChange("profile.reputationname", oldValue, null);
     }
 
     @Override

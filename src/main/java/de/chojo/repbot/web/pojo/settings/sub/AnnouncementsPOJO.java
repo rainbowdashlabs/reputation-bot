@@ -15,11 +15,19 @@ public class AnnouncementsPOJO {
     @JsonSerialize(using = ToStringSerializer.class)
     protected long channelId = 0;
 
-    public boolean isActive() {
+    public AnnouncementsPOJO() {}
+
+    public AnnouncementsPOJO(boolean active, boolean sameChannel, long channelId) {
+        this.active = active;
+        this.sameChannel = sameChannel;
+        this.channelId = channelId;
+    }
+
+    public boolean active() {
         return active;
     }
 
-    public boolean isSameChannel() {
+    public boolean sameChannel() {
         return sameChannel;
     }
 

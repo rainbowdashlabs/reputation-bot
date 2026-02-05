@@ -5,12 +5,12 @@
  */
 package de.chojo.repbot.web.routes.v1.settings.sub;
 
+import de.chojo.repbot.dao.access.guildsession.GuildSession;
 import de.chojo.repbot.service.RoleAssigner;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
 import de.chojo.repbot.web.pojo.settings.sub.thanking.RanksPOJO;
 import de.chojo.repbot.web.routes.RoutesBuilder;
-import de.chojo.repbot.web.sessions.GuildSession;
 import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
@@ -64,7 +64,10 @@ public class RanksRoute implements RoutesBuilder {
             session.guildValidator().validateRoleIds(rank.roleId());
         }
 
-        session.repGuild().settings().ranks().apply(ranksPOJO);
+        var ranks = session.repGuild().settings().ranks();
+        var oldValue = ranks.toPOJO();
+        ranks.apply(ranksPOJO);
+        session.recordChange("ranks", oldValue.ranks(), ranksPOJO.ranks());
     }
 
     @OpenApi(

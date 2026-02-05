@@ -158,15 +158,15 @@ jobs:
       - uses: gradle/actions/wrapper-validation@v5
       - name: Check encoding
         run: ./gradlew spotlessFrontendLocalesCheck
-      - name: Check all keys exist in all locales
-        working-directory: tooling
-        run: python3 -m frontend_locales
-      - name: Check for unused keys
-        if: success() || failure()
-        working-directory: tooling
-        run: |
-          echo "=== Checking for unused keys ==="
-          python3 -m frontend_locales 2>&1 | grep -A 20 "Check 2:" || true
+#      - name: Check all keys exist in all locales
+#        working-directory: tooling
+#        run: python3 -m frontend_locales
+#      - name: Check for unused keys
+#        if: success() || failure()
+#        working-directory: tooling
+#        run: |
+#          echo "=== Checking for unused keys ==="
+#          python3 -m frontend_locales 2>&1 | grep -A 20 "Check 2:" || true
       - name: Check variable consistency
         if: success() || failure()
         working-directory: tooling

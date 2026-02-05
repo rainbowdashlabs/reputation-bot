@@ -5,6 +5,7 @@
  */
 package de.chojo.repbot.web.pojo.guild;
 
+import de.chojo.repbot.util.Colors;
 import net.dv8tion.jda.api.entities.Role;
 
 import java.awt.Color;
@@ -20,8 +21,7 @@ public class RolePOJO {
         this.name = name;
         this.id = id;
         this.position = position;
-        color = Objects.requireNonNullElse(color, Color.WHITE);
-        this.color = "#%02x%02x%02x".formatted(color.getRed(), color.getGreen(), color.getBlue());
+        this.color = Colors.toHex(Objects.requireNonNullElse(color, Color.WHITE));
     }
 
     public static RolePOJO generate(Role role) {

@@ -5,12 +5,12 @@
  */
 package de.chojo.repbot.web.routes.v1.settings.sub.thanking;
 
+import de.chojo.repbot.dao.access.guildsession.GuildSession;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
 import de.chojo.repbot.web.error.ErrorResponse;
 import de.chojo.repbot.web.pojo.settings.sub.thanking.ChannelsPOJO;
 import de.chojo.repbot.web.routes.RoutesBuilder;
-import de.chojo.repbot.web.sessions.GuildSession;
 import de.chojo.repbot.web.validation.PremiumValidator;
 import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
@@ -59,7 +59,10 @@ public class ChannelsRoute implements RoutesBuilder {
         // Validate whitelist mode (blacklist requires premium)
         validator.requireWhitelistOrPremium(channelsPOJO.isWhitelist());
 
-        session.repGuild().settings().thanking().channels().apply(channelsPOJO);
+        var channels = session.repGuild().settings().thanking().channels();
+        var oldValue = new ChannelsPOJO(channels.channelIds(), channels.categoryIds(), channels.isWhitelist());
+        channels.apply(channelsPOJO);
+        session.recordChange("thanking.channels", oldValue, channelsPOJO);
     }
 
     @OpenApi(
@@ -85,7 +88,10 @@ public class ChannelsRoute implements RoutesBuilder {
         PremiumValidator validator = session.premiumValidator();
         validator.requireWhitelistOrPremium(isWhitelist);
 
-        session.repGuild().settings().thanking().channels().listType(isWhitelist);
+        var channels = session.repGuild().settings().thanking().channels();
+        boolean oldValue = channels.isWhitelist();
+        channels.listType(isWhitelist);
+        session.recordChange("thanking.channels.whitelist", oldValue, isWhitelist);
     }
 
     @OpenApi(
@@ -118,10 +124,13 @@ public class ChannelsRoute implements RoutesBuilder {
         }
 
         var channels = session.repGuild().settings().thanking().channels();
+        var oldValue = channels.channelIds();
         channels.clearChannel();
         for (Long channelId : channelIds) {
             channels.addChannel(channelId);
         }
+        var newValue = channels.channelIds();
+        session.recordChange("thanking.channels.channels", oldValue, newValue);
     }
 
     @OpenApi(
@@ -154,10 +163,13 @@ public class ChannelsRoute implements RoutesBuilder {
         }
 
         var channels = session.repGuild().settings().thanking().channels();
+        var oldValue = channels.categoryIds();
         channels.clearCategories();
         for (Long categoryId : categoryIds) {
             channels.addCategory(categoryId);
         }
+        var newValue = channels.categoryIds();
+        session.recordChange("thanking.channels.categories", oldValue, newValue);
     }
 
     @Override

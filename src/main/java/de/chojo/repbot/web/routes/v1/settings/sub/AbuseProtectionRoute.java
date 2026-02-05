@@ -7,11 +7,11 @@ package de.chojo.repbot.web.routes.v1.settings.sub;
 
 import de.chojo.repbot.dao.access.guild.settings.sub.AbuseProtection;
 import de.chojo.repbot.dao.access.guild.settings.sub.CooldownDirection;
+import de.chojo.repbot.dao.access.guildsession.GuildSession;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
 import de.chojo.repbot.web.pojo.settings.sub.AbuseProtectionPOJO;
 import de.chojo.repbot.web.routes.RoutesBuilder;
-import de.chojo.repbot.web.sessions.GuildSession;
 import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
@@ -36,8 +36,21 @@ public class AbuseProtectionRoute implements RoutesBuilder {
     public void updateAbuseSettings(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         AbuseProtection abuseProtection = session.repGuild().settings().abuseProtection();
+        AbuseProtectionPOJO oldValue = new AbuseProtectionPOJO(
+                abuseProtection.cooldown(),
+                abuseProtection.cooldownDirection(),
+                abuseProtection.maxMessageAge(),
+                abuseProtection.minMessages(),
+                abuseProtection.isDonorContext(),
+                abuseProtection.isReceiverContext(),
+                abuseProtection.maxGiven(),
+                abuseProtection.maxGivenHours(),
+                abuseProtection.maxReceived(),
+                abuseProtection.maxReceivedHours(),
+                abuseProtection.maxMessageReputation());
         AbuseProtectionPOJO abuseProtectionPOJO = ctx.bodyAsClass(AbuseProtectionPOJO.class);
         abuseProtection.apply(abuseProtectionPOJO);
+        session.recordChange("abuseprotection", oldValue, abuseProtectionPOJO);
     }
 
     @OpenApi(
@@ -51,7 +64,11 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void updateCooldown(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().abuseProtection().cooldown(ctx.bodyAsClass(Integer.class));
+        AbuseProtection abuseProtection = session.repGuild().settings().abuseProtection();
+        int oldValue = abuseProtection.cooldown();
+        int newValue = ctx.bodyAsClass(Integer.class);
+        abuseProtection.cooldown(newValue);
+        session.recordChange("abuseprotection.cooldown", oldValue, newValue);
     }
 
     @OpenApi(
@@ -65,7 +82,11 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void updateCooldownDirection(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().abuseProtection().cooldownDirection(ctx.bodyAsClass(CooldownDirection.class));
+        AbuseProtection abuseProtection = session.repGuild().settings().abuseProtection();
+        CooldownDirection oldValue = abuseProtection.cooldownDirection();
+        CooldownDirection newValue = ctx.bodyAsClass(CooldownDirection.class);
+        abuseProtection.cooldownDirection(newValue);
+        session.recordChange("abuseprotection.cooldowndirection", oldValue, newValue);
     }
 
     @OpenApi(
@@ -79,7 +100,11 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void updateMaxMessageAge(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().abuseProtection().maxMessageAge(ctx.bodyAsClass(Integer.class));
+        AbuseProtection abuseProtection = session.repGuild().settings().abuseProtection();
+        int oldValue = abuseProtection.maxMessageAge();
+        int newValue = ctx.bodyAsClass(Integer.class);
+        abuseProtection.maxMessageAge(newValue);
+        session.recordChange("abuseprotection.maxmessageage", oldValue, newValue);
     }
 
     @OpenApi(
@@ -93,7 +118,11 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void updateMinMessages(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().abuseProtection().minMessages(ctx.bodyAsClass(Integer.class));
+        AbuseProtection abuseProtection = session.repGuild().settings().abuseProtection();
+        int oldValue = abuseProtection.minMessages();
+        int newValue = ctx.bodyAsClass(Integer.class);
+        abuseProtection.minMessages(newValue);
+        session.recordChange("abuseprotection.minmessages", oldValue, newValue);
     }
 
     @OpenApi(
@@ -107,7 +136,11 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void updateDonorContext(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().abuseProtection().donorContext(ctx.bodyAsClass(Boolean.class));
+        AbuseProtection abuseProtection = session.repGuild().settings().abuseProtection();
+        boolean oldValue = abuseProtection.isDonorContext();
+        boolean newValue = ctx.bodyAsClass(Boolean.class);
+        abuseProtection.donorContext(newValue);
+        session.recordChange("abuseprotection.donorcontext", oldValue, newValue);
     }
 
     @OpenApi(
@@ -121,7 +154,11 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void updateReceiverContext(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().abuseProtection().receiverContext(ctx.bodyAsClass(Boolean.class));
+        AbuseProtection abuseProtection = session.repGuild().settings().abuseProtection();
+        boolean oldValue = abuseProtection.isReceiverContext();
+        boolean newValue = ctx.bodyAsClass(Boolean.class);
+        abuseProtection.receiverContext(newValue);
+        session.recordChange("abuseprotection.receivercontext", oldValue, newValue);
     }
 
     @OpenApi(
@@ -135,7 +172,11 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void updateMaxGiven(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().abuseProtection().maxGiven(ctx.bodyAsClass(Integer.class));
+        AbuseProtection abuseProtection = session.repGuild().settings().abuseProtection();
+        int oldValue = abuseProtection.maxGiven();
+        int newValue = ctx.bodyAsClass(Integer.class);
+        abuseProtection.maxGiven(newValue);
+        session.recordChange("abuseprotection.maxgiven", oldValue, newValue);
     }
 
     @OpenApi(
@@ -149,7 +190,11 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void updateMaxGivenHours(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().abuseProtection().maxGivenHours(ctx.bodyAsClass(Integer.class));
+        AbuseProtection abuseProtection = session.repGuild().settings().abuseProtection();
+        int oldValue = abuseProtection.maxGivenHours();
+        int newValue = ctx.bodyAsClass(Integer.class);
+        abuseProtection.maxGivenHours(newValue);
+        session.recordChange("abuseprotection.maxgivenhours", oldValue, newValue);
     }
 
     @OpenApi(
@@ -163,7 +208,11 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void updateMaxReceived(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().abuseProtection().maxReceived(ctx.bodyAsClass(Integer.class));
+        AbuseProtection abuseProtection = session.repGuild().settings().abuseProtection();
+        int oldValue = abuseProtection.maxReceived();
+        int newValue = ctx.bodyAsClass(Integer.class);
+        abuseProtection.maxReceived(newValue);
+        session.recordChange("abuseprotection.maxreceived", oldValue, newValue);
     }
 
     @OpenApi(
@@ -177,7 +226,11 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void updateMaxReceivedHours(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().abuseProtection().maxReceivedHours(ctx.bodyAsClass(Integer.class));
+        AbuseProtection abuseProtection = session.repGuild().settings().abuseProtection();
+        int oldValue = abuseProtection.maxReceivedHours();
+        int newValue = ctx.bodyAsClass(Integer.class);
+        abuseProtection.maxReceivedHours(newValue);
+        session.recordChange("abuseprotection.maxreceivedhours", oldValue, newValue);
     }
 
     @OpenApi(
@@ -191,7 +244,11 @@ public class AbuseProtectionRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void updateMaxMessageReputation(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().abuseProtection().maxMessageReputation(ctx.bodyAsClass(Integer.class));
+        AbuseProtection abuseProtection = session.repGuild().settings().abuseProtection();
+        int oldValue = abuseProtection.maxMessageReputation();
+        int newValue = ctx.bodyAsClass(Integer.class);
+        abuseProtection.maxMessageReputation(newValue);
+        session.recordChange("abuseprotection.maxmessagereputation", oldValue, newValue);
     }
 
     @Override
