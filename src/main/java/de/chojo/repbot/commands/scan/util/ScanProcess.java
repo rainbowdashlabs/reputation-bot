@@ -44,7 +44,14 @@ public class ScanProcess {
     private Instant lastSeen;
     private Thread currWorker;
 
-    ScanProcess(MessageAnalyzer messageAnalyzer, LocalizationContext localizer, Message progressMessage, MessageHistory history, Pattern pattern, int calls, GuildRepository data) {
+    ScanProcess(
+            MessageAnalyzer messageAnalyzer,
+            LocalizationContext localizer,
+            Message progressMessage,
+            MessageHistory history,
+            Pattern pattern,
+            int calls,
+            GuildRepository data) {
         this.messageAnalyzer = messageAnalyzer;
         loc = localizer;
         guild = progressMessage.getGuild();
@@ -81,7 +88,9 @@ public class ScanProcess {
         }
         var start = Instant.now();
         var size = history.size();
-        var messages = history.retrievePast(Math.min(callsLeft, 100)).timeout(30, TimeUnit.SECONDS).complete();
+        var messages = history.retrievePast(Math.min(callsLeft, 100))
+                .timeout(30, TimeUnit.SECONDS)
+                .complete();
         callsLeft -= Math.min(callsLeft, 100);
         if (size == history.size()) {
             currWorker = null;
@@ -93,7 +102,11 @@ public class ScanProcess {
 
             if (message.getAuthor().isBot()) continue;
             var settings = guildRepository.guild(guild).settings();
-            var result = messageAnalyzer.processMessage(pattern, message, settings, false,
+            var result = messageAnalyzer.processMessage(
+                    pattern,
+                    message,
+                    settings,
+                    false,
                     settings.abuseProtection().maxMessageReputation());
 
             if (result.isEmpty()) continue;
@@ -107,19 +120,26 @@ public class ScanProcess {
 
                 switch (matchResult.thankType()) {
                     case FUZZY, MENTION -> {
-                        if (reputation.user(resultReceiver.getUser())
-                                      .addOldReputation(donator != null && guild.isMember(donator) ? donator : null,
-                                              message, null, matchResult.thankType())) {
+                        if (reputation
+                                .user(resultReceiver.getUser())
+                                .addOldReputation(
+                                        donator != null && guild.isMember(donator) ? donator : null,
+                                        message,
+                                        null,
+                                        matchResult.thankType())) {
                             hit();
                         }
                     }
                     case ANSWER -> {
-                        if (reputation.user(resultReceiver.getUser())
-                                      .addOldReputation(donator != null && guild.isMember(donator) ? donator : null,
-                                              message, matchResult.asAnswer().referenceMessage(), matchResult.thankType())) {
+                        if (reputation
+                                .user(resultReceiver.getUser())
+                                .addOldReputation(
+                                        donator != null && guild.isMember(donator) ? donator : null,
+                                        message,
+                                        matchResult.asAnswer().referenceMessage(),
+                                        matchResult.thankType())) {
                             hit();
                         }
-
                     }
                 }
             }
@@ -127,10 +147,12 @@ public class ScanProcess {
         var progress = (calls - Math.max(callsLeft, 0)) / (double) calls;
         var progressString = String.format("%.02f", progress * 100.0d);
         log.debug("Scan progress for guild {}: {}", guild.getIdLong(), progressString);
-        progressMessage.editMessage("```ANSI\n" +
-                loc.localize("command.scan.scanner.message.progress",
-                        Replacement.create("PERCENT", progressString)) + " " + Text.progressBar(progress, 40) +
-                "```").complete();
+        progressMessage
+                .editMessage("```ANSI\n"
+                        + loc.localize(
+                                "command.scan.scanner.message.progress", Replacement.create("PERCENT", progressString))
+                        + " " + Text.progressBar(progress, 40) + "```")
+                .complete();
         time = Instant.now().until(start, ChronoUnit.MILLIS);
         currWorker = null;
         lastSeen = Instant.now();

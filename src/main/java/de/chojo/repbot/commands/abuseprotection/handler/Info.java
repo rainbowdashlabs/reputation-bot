@@ -29,8 +29,8 @@ public class Info implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         event.replyEmbeds(WebPromo.promoEmbed(context), getSettings(context, guildRepository.guild(event.getGuild())))
-             .setEphemeral(true)
-             .complete();
+                .setEphemeral(true)
+                .complete();
     }
 
     private MessageEmbed getSettings(EventContext context, RepGuild guild) {
@@ -41,8 +41,7 @@ public class Info implements SlashHandler {
                 getSetting("command.abuseprotection.info.message.cooldown", abuseProt.cooldown()),
                 getSetting("command.abuseprotection.info.message.donorContext", abuseProt.isDonorContext()),
                 getSetting("command.abuseprotection.info.message.receiverContext", abuseProt.isReceiverContext()),
-                getSetting("command.abuseprotection.info.message.maxMessageRep", abuseProt.maxMessageReputation())
-        );
+                getSetting("command.abuseprotection.info.message.maxMessageRep", abuseProt.maxMessageReputation()));
 
         var settings = String.join("\n", setting);
 

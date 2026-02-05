@@ -18,7 +18,8 @@ public class PremiumFeatureErrorDetails {
     private final Integer currentValue;
     private final Integer maxValue;
 
-    public PremiumFeatureErrorDetails(String feature, List<SkuInfo> requiredSkus, Integer currentValue, Integer maxValue) {
+    public PremiumFeatureErrorDetails(
+            String feature, List<SkuInfo> requiredSkus, Integer currentValue, Integer maxValue) {
         this.feature = feature;
         this.requiredSkus = requiredSkus;
         this.currentValue = currentValue;

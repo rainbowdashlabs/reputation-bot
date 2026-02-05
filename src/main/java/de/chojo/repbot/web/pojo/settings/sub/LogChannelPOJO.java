@@ -11,10 +11,10 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 public class LogChannelPOJO {
     @JsonSerialize(using = ToStringSerializer.class)
     protected long channelId;
+
     protected boolean active;
 
-    public LogChannelPOJO() {
-    }
+    public LogChannelPOJO() {}
 
     public LogChannelPOJO(long channelId, boolean active) {
         this.channelId = channelId;

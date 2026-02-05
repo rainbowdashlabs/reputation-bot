@@ -24,9 +24,9 @@ public class MessageLog implements MessageProvider<Message> {
     @Override
     public Message message() {
         return Message.of("Message Log")
-                      .handler(new MessageAnalyzer(guildRepository))
-                      .setContext(Set.of(InteractionContextType.GUILD))
-                      .withPermission(Permission.MESSAGE_MANAGE)
-                      .build();
+                .handler(new MessageAnalyzer(guildRepository))
+                .setContext(Set.of(InteractionContextType.GUILD))
+                .withPermission(Permission.MESSAGE_MANAGE)
+                .build();
     }
 }

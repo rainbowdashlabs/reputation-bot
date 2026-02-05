@@ -24,10 +24,17 @@ public class RemoveReceiver implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var role = event.getOption("role").getAsRole();
-        guildRepository.guild(event.getGuild()).settings().thanking().receiverRoles().remove(role);
-        event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.roles.receiver.remove.message.remove",
-                     Replacement.createMention(role))).setAllowedMentions(Collections.emptyList())
-             .setEphemeral(true)
-             .complete();
+        guildRepository
+                .guild(event.getGuild())
+                .settings()
+                .thanking()
+                .receiverRoles()
+                .remove(role);
+        event.reply(WebPromo.promoString(context) + "\n"
+                        + context.localize(
+                                "command.roles.receiver.remove.message.remove", Replacement.createMention(role)))
+                .setAllowedMentions(Collections.emptyList())
+                .setEphemeral(true)
+                .complete();
     }
 }

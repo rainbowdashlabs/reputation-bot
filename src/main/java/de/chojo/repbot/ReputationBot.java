@@ -13,9 +13,10 @@ import de.chojo.repbot.core.Shutdown;
 import de.chojo.repbot.core.Threading;
 import de.chojo.repbot.core.Web;
 
-import javax.security.auth.login.LoginException;
 import java.io.IOException;
 import java.sql.SQLException;
+
+import javax.security.auth.login.LoginException;
 
 public class ReputationBot {
     private static ReputationBot instance;

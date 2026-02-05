@@ -35,10 +35,7 @@ public class LogChannel extends LogChannelPOJO implements GuildHolder {
     }
 
     public static LogChannel build(Settings settings, Row row) throws SQLException {
-        return new LogChannel(settings,
-                row.getLong("channel_id"),
-                row.getBoolean("active")
-        );
+        return new LogChannel(settings, row.getLong("channel_id"), row.getBoolean("active"));
     }
 
     public boolean active(boolean active) {

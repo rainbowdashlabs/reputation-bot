@@ -27,15 +27,19 @@ public class GdprService implements Runnable {
     private final GuildRepository guildRepository;
     private final Gdpr gdpr;
 
-    private GdprService(ShardManager shardManager, GuildRepository guildRepository, Gdpr gdpr, ExecutorService executorService) {
+    private GdprService(
+            ShardManager shardManager, GuildRepository guildRepository, Gdpr gdpr, ExecutorService executorService) {
         this.shardManager = shardManager;
         this.guildRepository = guildRepository;
         this.gdpr = gdpr;
         this.executorService = executorService;
     }
 
-    public static GdprService of(ShardManager shardManager, GuildRepository guildRepository, Gdpr gdpr,
-                                 ScheduledExecutorService scheduledExecutorService) {
+    public static GdprService of(
+            ShardManager shardManager,
+            GuildRepository guildRepository,
+            Gdpr gdpr,
+            ScheduledExecutorService scheduledExecutorService) {
         var service = new GdprService(shardManager, guildRepository, gdpr, scheduledExecutorService);
         scheduledExecutorService.scheduleAtFixedRate(service, 15, 3600, TimeUnit.SECONDS);
         return service;
@@ -62,37 +66,39 @@ public class GdprService implements Runnable {
         cleanupGuilds();
     }
 
-
     public CompletableFuture<Integer> cleanupGuildUsers(Guild guild) {
-        return CompletableFuture.supplyAsync(() -> {
-            log.info("Guild prune was started on {}", guild.getId());
-            var pruned = 0;
-            var users = guildRepository.guild(guild).userIds();
-            log.info("Checking {} users", users.size());
-            for (var user : users) {
-                try {
-                    guild.retrieveMemberById(user).complete();
-                } catch (RuntimeException e) {
-                    log.info("Removing user {} data during guild prune", user);
-                    RemovalTask.anonymExecute(guild.getIdLong(), user);
-                    pruned++;
-                }
-            }
-            log.info("Prune on guild {} finished. Removed {} users", guild.getId(), pruned);
-            return pruned;
-        }, executorService).exceptionally(ex -> {
-            log.error("Error during guild prune", ex);
-            return 0;
-        });
+        return CompletableFuture.supplyAsync(
+                        () -> {
+                            log.info("Guild prune was started on {}", guild.getId());
+                            var pruned = 0;
+                            var users = guildRepository.guild(guild).userIds();
+                            log.info("Checking {} users", users.size());
+                            for (var user : users) {
+                                try {
+                                    guild.retrieveMemberById(user).complete();
+                                } catch (RuntimeException e) {
+                                    log.info("Removing user {} data during guild prune", user);
+                                    RemovalTask.anonymExecute(guild.getIdLong(), user);
+                                    pruned++;
+                                }
+                            }
+                            log.info("Prune on guild {} finished. Removed {} users", guild.getId(), pruned);
+                            return pruned;
+                        },
+                        executorService)
+                .exceptionally(ex -> {
+                    log.error("Error during guild prune", ex);
+                    return 0;
+                });
     }
 
     public void cleanupGuildUser(Guild guild, Long user) {
         log.info("User data of {} was pruned on guild {}.", user, guild.getIdLong());
         CompletableFuture.runAsync(() -> RemovalTask.anonymExecute(guild.getIdLong(), user), executorService)
-                         .exceptionally(ex -> {
-                             log.error("Error during user data cleanup", ex);
-                             return null;
-                         });
+                .exceptionally(ex -> {
+                    log.error("Error during user data cleanup", ex);
+                    return null;
+                });
     }
 
     private void cleanupGuilds() {

@@ -28,9 +28,12 @@ public class Info implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        event.replyEmbeds(WebPromo.promoEmbed(context), getInfoEmbed(event, guildRepository.guild(event.getGuild()).settings(), context))
-             .setEphemeral(true)
-             .complete();
+        event.replyEmbeds(
+                        WebPromo.promoEmbed(context),
+                        getInfoEmbed(
+                                event, guildRepository.guild(event.getGuild()).settings(), context))
+                .setEphemeral(true)
+                .complete();
     }
 
     private MessageEmbed getInfoEmbed(SlashCommandInteractionEvent event, Settings settings, EventContext context) {
@@ -42,10 +45,10 @@ public class Info implements SlashHandler {
                 .setTitle("command.reactions.info.message.title")
                 .addField("command.reactions.info.message.main", mainEmote.orElse("words.unknown"), true)
                 .addField("command.reactions.info.message.additional", emotes, true);
-        if (Premium.isNotEntitled(context, configuration.skus().features().additionalEmojis().additionalEmojis())) {
+        if (Premium.isNotEntitled(
+                context, configuration.skus().features().additionalEmojis().additionalEmojis())) {
             build.setFooter("command.reactions.info.message.nopremium");
         }
         return build.build();
     }
-
 }

@@ -20,7 +20,6 @@ public class SKU {
     int subscriptionErrorMessageHours = 36;
     int errorThresholdBlock = 10;
 
-
     public SKUConfiguration interactions() {
         return interactions;
     }

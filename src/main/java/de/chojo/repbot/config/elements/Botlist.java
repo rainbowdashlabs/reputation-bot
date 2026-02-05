@@ -12,7 +12,8 @@ public class Botlist {
     private boolean submit;
     private BotListConfig topGg = new BotListConfig("top.gg", "", "", 264445053596991498L, "", "");
     private BotListConfig discordBotsGg = new BotListConfig("discord.bots.gg", "", "", 110373943822540800L, "", "");
-    private BotListConfig discordBotlistCom = new BotListConfig("discordbotlist.com", "", "", 450100127256936458L, "", "");
+    private BotListConfig discordBotlistCom =
+            new BotListConfig("discordbotlist.com", "", "", 450100127256936458L, "", "");
     private BotListConfig botListMe = new BotListConfig("discordbotlist.com", "", "", 698637043240009738L, "", "");
 
     public boolean isSubmit() {
@@ -46,6 +47,6 @@ public class Botlist {
     }
 
     public BotListConfig[] botlists() {
-        return new BotListConfig[]{topGg, discordBotsGg, discordBotlistCom, botListMe};
+        return new BotListConfig[] {topGg, discordBotsGg, discordBotlistCom, botListMe};
     }
 }

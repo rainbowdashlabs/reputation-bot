@@ -18,8 +18,7 @@ public record CountStatistics(LocalDateTime date, int count) implements Comparab
     }
 
     public static CountStatistics build(Row rs, String countKey, String dateKey) throws SQLException {
-        return new CountStatistics(rs.getTimestamp(dateKey).toLocalDateTime(),
-                rs.getInt(countKey));
+        return new CountStatistics(rs.getTimestamp(dateKey).toLocalDateTime(), rs.getInt(countKey));
     }
 
     @Override

@@ -35,7 +35,8 @@ public class LocaleOverrides implements GuildHolder {
     }
 
     public void setOverride(String code, String value) {
-        query("INSERT INTO guild_locale_overrides(guild_id, code, value) VALUES(?,?,?) ON CONFLICT(guild_id, code) DO UPDATE SET value = excluded.value")
+        query(
+                        "INSERT INTO guild_locale_overrides(guild_id, code, value) VALUES(?,?,?) ON CONFLICT(guild_id, code) DO UPDATE SET value = excluded.value")
                 .single(call().bind(guildId()).bind(code).bind(value))
                 .insert()
                 .ifChanged(i -> overrides().put(code, value));

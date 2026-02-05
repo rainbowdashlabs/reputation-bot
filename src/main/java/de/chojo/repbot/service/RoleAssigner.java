@@ -65,10 +65,10 @@ public class RoleAssigner {
         try {
             return update(member);
         } catch (RoleAccessException e) {
-            channel.sendMessage(localizer.localize("error.roleAccess", channel.getGuild(),
-                           Replacement.createMention("ROLE", e.role())))
-                   .setAllowedMentions(Collections.emptyList())
-                   .complete();
+            channel.sendMessage(localizer.localize(
+                            "error.roleAccess", channel.getGuild(), Replacement.createMention("ROLE", e.role())))
+                    .setAllowedMentions(Collections.emptyList())
+                    .complete();
         }
         return Optional.empty();
     }
@@ -83,7 +83,7 @@ public class RoleAssigner {
         try {
             return update(member);
         } catch (RoleAccessException e) {
-            //ignore
+            // ignore
         }
         return Optional.empty();
     }
@@ -103,11 +103,10 @@ public class RoleAssigner {
         var reputation = repGuild.reputation().user(member);
         var settings = repGuild.settings();
 
-        var roles = settings.ranks().currentRanks(reputation)
-                            .stream()
-                            .map(r -> guild.getRoleById(r.roleId()))
-                            .filter(Objects::nonNull)
-                            .collect(Collectors.toSet());
+        var roles = settings.ranks().currentRanks(reputation).stream()
+                .map(r -> guild.getRoleById(r.roleId()))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet());
 
         var removed = cleanMemberRoles(member, roles);
         var added = addMemberRoles(member, roles);
@@ -121,7 +120,8 @@ public class RoleAssigner {
         return settings.ranks().currentRank(reputation);
     }
 
-    public CompletableFuture<BatchUpdateResult> updateBatch(Guild guild, @Nullable EventContext context, @Nullable Message message) {
+    public CompletableFuture<BatchUpdateResult> updateBatch(
+            Guild guild, @Nullable EventContext context, @Nullable Message message) {
         if (!startRefresh(guild)) {
             return CompletableFuture.completedFuture(new BatchUpdateResult(0, 0, true));
         }
@@ -129,7 +129,12 @@ public class RoleAssigner {
         return CompletableFuture.supplyAsync(() -> {
             try {
                 log.info("Started batch update for guild {}", prettyName(guild));
-                var guildRanking = guildRepository.guild(guild).reputation().ranking().received().total(100);
+                var guildRanking = guildRepository
+                        .guild(guild)
+                        .reputation()
+                        .ranking()
+                        .received()
+                        .total(100);
                 var checked = new AtomicInteger(0);
                 var updated = new AtomicInteger(0);
                 var lastRefresh = new AtomicReference<>(Instant.now());
@@ -142,9 +147,13 @@ public class RoleAssigner {
 
                             if (message != null && context != null) {
                                 if (lastRefresh.get().isAfter(Instant.now().minus(5, ChronoUnit.SECONDS))) return;
-                                message.editMessage(context.localize("command.roles.refresh.message.progress",
-                                               Replacement.create("CHECKED", checked.get()), Replacement.create("UPDATED", updated.get())))
-                                       .queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
+                                message.editMessage(context.localize(
+                                                "command.roles.refresh.message.progress",
+                                                Replacement.create("CHECKED", checked.get()),
+                                                Replacement.create("UPDATED", updated.get())))
+                                        .queue(
+                                                RestAction.getDefaultSuccess(),
+                                                ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
                             }
                         });
                     }
@@ -175,12 +184,11 @@ public class RoleAssigner {
     private boolean cleanMemberRoles(Member member, Set<Role> roles) throws RoleAccessException {
         var guild = member.getGuild();
 
-        var reputationRoles = guildRepository.guild(guild).settings().ranks().ranks()
-                                             .stream()
-                                             .map(ReputationRank::roleId)
-                                             .map(guild::getRoleById)
-                                             .filter(Objects::nonNull)
-                                             .toList();
+        var reputationRoles = guildRepository.guild(guild).settings().ranks().ranks().stream()
+                .map(ReputationRank::roleId)
+                .map(guild::getRoleById)
+                .filter(Objects::nonNull)
+                .toList();
         var changed = false;
 
         for (var role : reputationRoles) {
@@ -209,7 +217,10 @@ public class RoleAssigner {
                     guild.addRoleToMember(member, role).complete();
                 } catch (ErrorResponseException e) {
                     if (e.getErrorResponse() == ErrorResponse.UNKNOWN_ROLE) {
-                        log.warn("Role {} on {} does not exist anymore. Removing it from the rank.", Roles.prettyName(role), prettyName(guild));
+                        log.warn(
+                                "Role {} on {} does not exist anymore. Removing it from the rank.",
+                                Roles.prettyName(role),
+                                prettyName(guild));
                         guildRepository.guild(guild).settings().ranks().remove(role.getIdLong());
                     }
                 }
@@ -225,6 +236,5 @@ public class RoleAssigner {
         }
     }
 
-    public record BatchUpdateResult(int checked, int updated, boolean alreadyRunning) {
-    }
+    public record BatchUpdateResult(int checked, int updated, boolean alreadyRunning) {}
 }

@@ -16,7 +16,11 @@ public class Ranking extends PageAccess<RankingEntry> {
     private final String title;
     private final Replacement replacement;
 
-    public Ranking(String title, Replacement replacement, Supplier<Integer> pagecount, Function<Integer, List<RankingEntry>> pageSupplier) {
+    public Ranking(
+            String title,
+            Replacement replacement,
+            Supplier<Integer> pagecount,
+            Function<Integer, List<RankingEntry>> pageSupplier) {
         super(pagecount, pageSupplier);
         this.title = title;
         this.replacement = replacement;

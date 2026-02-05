@@ -32,19 +32,23 @@ public class LogChannelRoute implements RoutesBuilder {
             methods = HttpMethod.POST,
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
-            requestBody = @OpenApiRequestBody(content = @io.javalin.openapi.OpenApiContent(from = LogChannelPOJO.class)),
+            requestBody =
+                    @OpenApiRequestBody(content = @io.javalin.openapi.OpenApiContent(from = LogChannelPOJO.class)),
             responses = {
-                    @OpenApiResponse(status = "200"),
-                    @OpenApiResponse(status = "403", content = @OpenApiContent(from = ErrorResponse.class), description = "Premium feature required or limit exceeded")
-            }
-    )
+                @OpenApiResponse(status = "200"),
+                @OpenApiResponse(
+                        status = "403",
+                        content = @OpenApiContent(from = ErrorResponse.class),
+                        description = "Premium feature required or limit exceeded")
+            })
     public void updateLogChannelSettings(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         LogChannelPOJO logChannelPOJO = ctx.bodyAsClass(LogChannelPOJO.class);
 
         // Validate log channel feature if enabling
         PremiumValidator validator = session.premiumValidator();
-        validator.requireFeatureIfEnabled(logChannelPOJO.active(), validator.features().logChannel(), "Log Channel");
+        validator.requireFeatureIfEnabled(
+                logChannelPOJO.active(), validator.features().logChannel(), "Log Channel");
 
         LogChannel logChannel = session.repGuild().settings().logChannel();
         logChannel.apply(logChannelPOJO);
@@ -59,10 +63,12 @@ public class LogChannelRoute implements RoutesBuilder {
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
             responses = {
-                    @OpenApiResponse(status = "200"),
-                    @OpenApiResponse(status = "403", content = @OpenApiContent(from = ErrorResponse.class), description = "Premium feature required or limit exceeded")
-            }
-    )
+                @OpenApiResponse(status = "200"),
+                @OpenApiResponse(
+                        status = "403",
+                        content = @OpenApiContent(from = ErrorResponse.class),
+                        description = "Premium feature required or limit exceeded")
+            })
     public void updateActive(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         boolean active = ctx.bodyAsClass(Boolean.class);
@@ -82,8 +88,7 @@ public class LogChannelRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Long.class)),
-            responses = {@OpenApiResponse(status = "200")}
-    )
+            responses = {@OpenApiResponse(status = "200")})
     public void updateChannel(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         Long channelId = ctx.bodyAsClass(Long.class);

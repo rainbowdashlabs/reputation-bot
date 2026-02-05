@@ -24,12 +24,13 @@ import net.dv8tion.jda.api.entities.User;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
-import javax.annotation.Nullable;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
+
+import javax.annotation.Nullable;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
@@ -111,22 +112,30 @@ public class RepUser implements MemberHolder {
      * @param type       type of reputation
      * @return true if the reputation was logged.
      */
-    public boolean addReputation(@Nullable Member donor, @NotNull ReputationContext message, @Nullable Message refMessage, ThankType type) {
+    public boolean addReputation(
+            @Nullable Member donor, @NotNull ReputationContext message, @Nullable Message refMessage, ThankType type) {
         var success = query("""
                 INSERT INTO
                 reputation_log(guild_id, donor_id, receiver_id, message_id, ref_message_id, channel_id, cause) VALUES(?,?,?,?,?,?,?)
                     ON CONFLICT(guild_id, donor_id, receiver_id, message_id)
                         DO NOTHING;
                 """)
-                .single(call().bind(guildId()).bind(donor == null ? null : donor.getIdLong())
-                              .bind(userId())
-                              .bind(message.getIdLong())
-                              .bind(refMessage == null ? null : refMessage.getIdLong())
-                              .bind(message.getChannel().getIdLong()).bind(type.name()))
+                .single(call().bind(guildId())
+                        .bind(donor == null ? null : donor.getIdLong())
+                        .bind(userId())
+                        .bind(message.getIdLong())
+                        .bind(refMessage == null ? null : refMessage.getIdLong())
+                        .bind(message.getChannel().getIdLong())
+                        .bind(type.name()))
                 .insert()
                 .changed();
         if (success) {
-            log.debug("{} received one reputation from {} on guild {} for message {}", userId(), donor != null ? donor.getIdLong() : "unkown", guildId(), message.getIdLong());
+            log.debug(
+                    "{} received one reputation from {} on guild {} for message {}",
+                    userId(),
+                    donor != null ? donor.getIdLong() : "unkown",
+                    guildId(),
+                    message.getIdLong());
         }
         return success;
     }
@@ -142,7 +151,8 @@ public class RepUser implements MemberHolder {
      * @param type       type of reputation
      * @return true if the reputation was logged.
      */
-    public boolean addOldReputation(@Nullable Member donor, @NotNull Message message, @Nullable Message refMessage, ThankType type) {
+    public boolean addOldReputation(
+            @Nullable Member donor, @NotNull Message message, @Nullable Message refMessage, ThankType type) {
         var success = query("""
                 INSERT INTO
                 reputation_log(guild_id, donor_id, receiver_id, message_id, ref_message_id, channel_id, cause, received) VALUES(?,?,?,?,?,?,?,?)
@@ -150,21 +160,24 @@ public class RepUser implements MemberHolder {
                         DO NOTHING;
                 """)
                 .single(call().bind(guildId())
-                              .bind(donor == null ? null : donor.getIdLong())
-                              .bind(userId())
-                              .bind(message.getIdLong())
-                              .bind(refMessage == null ? null : refMessage.getIdLong())
-                              .bind(message.getChannel().getIdLong())
-                              .bind(type.name())
-                              .bind(Timestamp.from(message.getTimeCreated().toInstant())))
+                        .bind(donor == null ? null : donor.getIdLong())
+                        .bind(userId())
+                        .bind(message.getIdLong())
+                        .bind(refMessage == null ? null : refMessage.getIdLong())
+                        .bind(message.getChannel().getIdLong())
+                        .bind(type.name())
+                        .bind(Timestamp.from(message.getTimeCreated().toInstant())))
                 .insert()
                 .changed();
         if (success) {
-            log.debug("{} received one reputation from {} for message {}", user().getName(), donor != null ? donor.getEffectiveName() : "unkown", message.getIdLong());
+            log.debug(
+                    "{} received one reputation from {} for message {}",
+                    user().getName(),
+                    donor != null ? donor.getEffectiveName() : "unkown",
+                    message.getIdLong());
         }
         return success;
     }
-
 
     /**
      * Get the last time the user gave reputation to the user or received reputation from this user
@@ -173,7 +186,8 @@ public class RepUser implements MemberHolder {
      * @return last timestamp as instant
      */
     public Optional<ReputationLogEntry> getLastReputation(Member other) {
-        CooldownDirection cooldownDirection = reputation.repGuild().settings().abuseProtection().cooldownDirection();
+        CooldownDirection cooldownDirection =
+                reputation.repGuild().settings().abuseProtection().cooldownDirection();
         switch (cooldownDirection) {
             case BIDIRECTIONAL -> {
                 return query("""
@@ -189,8 +203,8 @@ public class RepUser implements MemberHolder {
                         LIMIT  1;
                         """)
                         .single(call().bind(reputation.guildId())
-                                      .bind("other", other.getIdLong())
-                                      .bind("this", userId()))
+                                .bind("other", other.getIdLong())
+                                .bind("this", userId()))
                         .map(ReputationLogEntry::build)
                         .first();
             }
@@ -207,11 +221,10 @@ public class RepUser implements MemberHolder {
                         LIMIT  1;
                         """)
                         .single(call().bind(reputation.guildId())
-                                      .bind("other", other.getIdLong())
-                                      .bind("this", userId()))
+                                .bind("other", other.getIdLong())
+                                .bind("this", userId()))
                         .map(ReputationLogEntry::build)
                         .first();
-
             }
             case null, default -> {
                 throw new IllegalStateException("Unknown cooldown direction: " + cooldownDirection);
@@ -237,17 +250,17 @@ public class RepUser implements MemberHolder {
     public RepProfile profile() {
         var mode = reputation.repGuild().settings().general().reputationMode();
         Instant resetDate = reputation.repGuild().settings().general().resetDate();
-        // We probably don't want to cache the profile. There are just too many factors which can change the user reputation.
+        // We probably don't want to cache the profile. There are just too many factors which can change the user
+        // reputation.
 
         return query(PROFILE)
                 .single(call().bind("guild_id", guildId())
-                              .bind("user_id", userId())
-                              .bind("date_init", mode.dateInit(), INSTANT_TIMESTAMP)
-                              .bind("reset_date", resetDate, INSTANT_TIMESTAMP))
+                        .bind("user_id", userId())
+                        .bind("date_init", mode.dateInit(), INSTANT_TIMESTAMP)
+                        .bind("reset_date", resetDate, INSTANT_TIMESTAMP))
                 .map(row -> RepProfile.buildProfile(this, row))
                 .first()
                 .orElseGet(() -> RepProfile.empty(this, user()));
-
     }
 
     /**
@@ -293,9 +306,16 @@ public class RepUser implements MemberHolder {
                 LIMIT ?;
                 """)
                 .single(call().bind(guildId())
-                              .bind(memberId())
-                              .bind(reputation().repGuild().settings().general().reputationMode().dateInit(), INSTANT_TIMESTAMP)
-                              .bind(count))
+                        .bind(memberId())
+                        .bind(
+                                reputation()
+                                        .repGuild()
+                                        .settings()
+                                        .general()
+                                        .reputationMode()
+                                        .dateInit(),
+                                INSTANT_TIMESTAMP)
+                        .bind(count))
                 .map(ChannelStats::build)
                 .all();
     }
@@ -315,9 +335,16 @@ public class RepUser implements MemberHolder {
                 LIMIT ?;
                 """)
                 .single(call().bind(guildId())
-                              .bind(memberId())
-                              .bind(reputation().repGuild().settings().general().reputationMode().dateInit(), INSTANT_TIMESTAMP)
-                              .bind(count))
+                        .bind(memberId())
+                        .bind(
+                                reputation()
+                                        .repGuild()
+                                        .settings()
+                                        .general()
+                                        .reputationMode()
+                                        .dateInit(),
+                                INSTANT_TIMESTAMP)
+                        .bind(count))
                 .map(ChannelStats::build)
                 .all();
     }

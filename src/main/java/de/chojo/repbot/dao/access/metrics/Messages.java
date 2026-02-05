@@ -12,18 +12,14 @@ import de.chojo.sadu.queries.api.query.Query;
 import static de.chojo.sadu.queries.api.call.Call.call;
 
 public class Messages {
-    public Messages() {
-
-    }
+    public Messages() {}
 
     public void countMessage() {
         Query.query("""
                      INSERT INTO metrics_message_analyzed(hour, count) VALUES (date_trunc('hour', now()), 1)
                      ON CONFLICT(hour)
                          DO UPDATE SET count = metrics_message_analyzed.count + 1
-                     """)
-             .single()
-             .insert();
+                     """).single().insert();
     }
 
     public CountsStatistic hour(int hour, int count) {
@@ -63,9 +59,9 @@ public class Messages {
                             ORDER BY %s DESC
                             LIMIT ?
                             """, timeframe, table, timeframe, timeframe)
-                    .single(call().bind(timeframe).bind(offset + " " + timeframe).bind(count))
-                    .map(rs -> CountStatistics.build(rs, timeframe))
-                    .allResults()
-                    .map(CountsStatistic::new);
+                .single(call().bind(timeframe).bind(offset + " " + timeframe).bind(count))
+                .map(rs -> CountStatistics.build(rs, timeframe))
+                .allResults()
+                .map(CountsStatistic::new);
     }
 }

@@ -23,10 +23,11 @@ public class FuzzyResultSnapshot extends MatchResultSnapshot implements ResultSn
     private final List<MemberMatch> memberMatches;
 
     @JsonCreator
-    public FuzzyResultSnapshot(@JsonProperty("donor") long donor,
-                               @JsonProperty("match") String match,
-                               @JsonProperty("thankwords") List<String> thankwords,
-                               @JsonProperty("memberMatches") List<MemberMatch> memberMatches) {
+    public FuzzyResultSnapshot(
+            @JsonProperty("donor") long donor,
+            @JsonProperty("match") String match,
+            @JsonProperty("thankwords") List<String> thankwords,
+            @JsonProperty("memberMatches") List<MemberMatch> memberMatches) {
         super(ThankType.FUZZY, donor, match);
         this.thankwords = thankwords;
         this.memberMatches = memberMatches;
@@ -35,13 +36,14 @@ public class FuzzyResultSnapshot extends MatchResultSnapshot implements ResultSn
     @Override
     public void add(Guild guild, ResultEntry entry, LocalizedEmbedBuilder builder) {
         super.add(guild, entry, builder);
-        builder.addField("command.log.analyzer.message.field.matchedWords",
-                       new HashSet<>(thankwords).stream()
-                                                .map("`%s`"::formatted)
-                                                .collect(Collectors.joining(", ")), false)
-               .addField("command.log.analyzer.message.field.matchedUsers",
-                       memberMatches.stream()
-                                    .map(MemberMatch::asString)
-                                    .collect(Collectors.joining("\n")), false);
+        builder.addField(
+                        "command.log.analyzer.message.field.matchedWords",
+                        new HashSet<>(thankwords)
+                                .stream().map("`%s`"::formatted).collect(Collectors.joining(", ")),
+                        false)
+                .addField(
+                        "command.log.analyzer.message.field.matchedUsers",
+                        memberMatches.stream().map(MemberMatch::asString).collect(Collectors.joining("\n")),
+                        false);
     }
 }

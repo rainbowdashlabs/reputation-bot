@@ -38,11 +38,11 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class Analyzer implements GuildHolder {
     public static final ObjectMapper MAPPER = JsonMapper.builder()
-                                                        .configure(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS, true)
-                                                        .build()
-                                                        .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-                                                        .setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE)
-                                                        .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+            .configure(MapperFeature.ALLOW_FINAL_FIELDS_AS_MUTATORS, true)
+            .build()
+            .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            .setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE)
+            .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
     private static final Logger log = getLogger(Analyzer.class);
     private final Reputation reputation;
 
@@ -62,11 +62,12 @@ public class Analyzer implements GuildHolder {
                 INSERT INTO analyzer_results(guild_id, channel_id, message_id, result) VALUES(?, ?, ?, ?::JSONB)
                     ON CONFLICT (guild_id, message_id)
                         DO NOTHING;
-                """).single(call().bind(context.getGuild().getIdLong())
-                                  .bind(context.getChannel().getIdLong())
-                                  .bind(context.getIdLong())
-                                  .bind(resultString))
-                    .insert();
+                """)
+                .single(call().bind(context.getGuild().getIdLong())
+                        .bind(context.getChannel().getIdLong())
+                        .bind(context.getIdLong())
+                        .bind(resultString))
+                .insert();
         return analyzerResult;
     }
 
@@ -80,11 +81,12 @@ public class Analyzer implements GuildHolder {
         }
         query("""
                 INSERT INTO reputation_results(guild_id, channel_id, message_id, result) VALUES(?, ?, ?, ?::JSONB);
-                """).single(call().bind(message.getGuild().getIdLong())
-                                  .bind(message.getChannel().getIdLong())
-                                  .bind(message.getIdLong())
-                                  .bind(resultString))
-                    .insert();
+                """)
+                .single(call().bind(message.getGuild().getIdLong())
+                        .bind(message.getChannel().getIdLong())
+                        .bind(message.getIdLong())
+                        .bind(resultString))
+                .insert();
         return result;
     }
 
@@ -124,7 +126,8 @@ public class Analyzer implements GuildHolder {
                         throw new SQLException(e);
                     }
                     return new ResultEntry(result, row.getLong("channel_id"), messageId);
-                }).first();
+                })
+                .first();
     }
 
     private List<SubmitResultEntry> getSubmitResults(long messageId) {
@@ -143,7 +146,13 @@ public class Analyzer implements GuildHolder {
                         log.error("Could not deserialize result", e);
                         throw new SQLException(e);
                     }
-                    return new SubmitResultEntry(result, row.getLong("channel_id"), messageId, row.get("submitted", StandardValueConverter.LOCAL_DATE_TIME).toInstant(ZoneOffset.UTC));
-                }).all();
+                    return new SubmitResultEntry(
+                            result,
+                            row.getLong("channel_id"),
+                            messageId,
+                            row.get("submitted", StandardValueConverter.LOCAL_DATE_TIME)
+                                    .toInstant(ZoneOffset.UTC));
+                })
+                .all();
     }
 }

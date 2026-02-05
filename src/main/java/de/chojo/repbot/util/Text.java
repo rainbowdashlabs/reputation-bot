@@ -25,6 +25,7 @@ public final class Text {
     private static final DateTimeFormatter MONTH = DateTimeFormatter.ofPattern("yyyy-MM");
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
+
     private Text() {
         throw new UnsupportedOperationException("This is a utility class.");
     }

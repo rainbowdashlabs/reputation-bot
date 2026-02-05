@@ -14,7 +14,14 @@ public class ReputationPOJO {
     protected boolean directActive;
     protected boolean commandActive;
 
-    public ReputationPOJO(boolean reactionActive, boolean answerActive, boolean mentionActive, boolean fuzzyActive, boolean embedActive, boolean directActive, boolean commandActive) {
+    public ReputationPOJO(
+            boolean reactionActive,
+            boolean answerActive,
+            boolean mentionActive,
+            boolean fuzzyActive,
+            boolean embedActive,
+            boolean directActive,
+            boolean commandActive) {
         this.reactionActive = reactionActive;
         this.answerActive = answerActive;
         this.mentionActive = mentionActive;

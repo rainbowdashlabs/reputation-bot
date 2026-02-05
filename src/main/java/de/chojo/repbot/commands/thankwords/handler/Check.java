@@ -33,14 +33,12 @@ public class Check implements SlashHandler {
         var guildSettings = settings.thanking().thankwords();
         var messageId = event.getOption("message").getAsString();
 
-        if (messageId.contains("/"))
-            messageId = messageId.substring(messageId.lastIndexOf("/") + 1);
-
+        if (messageId.contains("/")) messageId = messageId.substring(messageId.lastIndexOf("/") + 1);
 
         if (!messageId.matches("\\d+")) {
             event.reply(WebPromo.promoString(context) + "\n" + context.localize("error.invalidNumber"))
-                 .setEphemeral(true)
-                 .complete();
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
 
@@ -49,49 +47,67 @@ public class Check implements SlashHandler {
             message = event.getChannel().retrieveMessageById(messageId).complete();
         } catch (ErrorResponseException e) {
             event.reply(WebPromo.promoString(context) + "\n" + context.localize("error.invalidMessage"))
-                 .setEphemeral(true)
-                 .complete();
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
 
-        var result = messageAnalyzer.processMessage(guildSettings.thankwordPattern(), message, settings, true, settings.abuseProtection()
-                                                                                                                       .maxMessageReputation());
+        var result = messageAnalyzer.processMessage(
+                guildSettings.thankwordPattern(),
+                message,
+                settings,
+                true,
+                settings.abuseProtection().maxMessageReputation());
         if (result.isEmpty()) {
-            event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.thankwords.check.message.noMatch"))
-                 .setEphemeral(true)
-                 .complete();
+            event.reply(WebPromo.promoString(context) + "\n"
+                            + context.localize("command.thankwords.check.message.noMatch"))
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
 
         var builder = new LocalizedEmbedBuilder(context.guildLocalizer());
         processMessage(result.asMatch(), builder);
-        event.replyEmbeds(builder.build())
-             .setEphemeral(true)
-             .complete();
+        event.replyEmbeds(builder.build()).setEphemeral(true).complete();
     }
 
     private void processMessage(MatchAnalyzerResult result, LocalizedEmbedBuilder builder) {
         if (result.thankType() == ThankType.FUZZY) {
             for (var receiver : result.asFuzzy().weightedReceiver()) {
-                builder.addField("command.thankwords.check.message.fuzzy",
-                        "$%s$%n$%s$".formatted("command.thankwords.check.message.result", "command.thankwords.check.message.confidence"),
-                        false, Replacement.create("DONATOR", result.donor().getAsMention()),
+                builder.addField(
+                        "command.thankwords.check.message.fuzzy",
+                        "$%s$%n$%s$"
+                                .formatted(
+                                        "command.thankwords.check.message.result",
+                                        "command.thankwords.check.message.confidence"),
+                        false,
+                        Replacement.create("DONATOR", result.donor().getAsMention()),
                         Replacement.create("RECEIVER", receiver.getReference().getAsMention()),
                         Replacement.create("SCORE", String.format("%.3f", receiver.getWeight())));
-
             }
         } else {
             for (var receiver : result.receivers()) {
                 switch (result.thankType()) {
-                    case MENTION -> builder.addField("command.thankwords.check.message.mention",
-                            "command.thankwords.check.message.result",
-                            false, Replacement.create("DONATOR", result.donor().getAsMention()),
-                            Replacement.create("RECEIVER", receiver.getAsMention()));
-                    case ANSWER -> builder.addField("command.thankwords.check.message.answer",
-                            "$%s$%n$%s$".formatted("command.thankwords.check.message.result", "command.thankwords.check.message.reference"),
-                            false, Replacement.create("URL", result.asAnswer().referenceMessage().getJumpUrl()),
-                            Replacement.create("DONATOR", result.donor().getAsMention()),
-                            Replacement.create("RECEIVER", receiver.getAsMention()));
+                    case MENTION ->
+                        builder.addField(
+                                "command.thankwords.check.message.mention",
+                                "command.thankwords.check.message.result",
+                                false,
+                                Replacement.create("DONATOR", result.donor().getAsMention()),
+                                Replacement.create("RECEIVER", receiver.getAsMention()));
+                    case ANSWER ->
+                        builder.addField(
+                                "command.thankwords.check.message.answer",
+                                "$%s$%n$%s$"
+                                        .formatted(
+                                                "command.thankwords.check.message.result",
+                                                "command.thankwords.check.message.reference"),
+                                false,
+                                Replacement.create(
+                                        "URL",
+                                        result.asAnswer().referenceMessage().getJumpUrl()),
+                                Replacement.create("DONATOR", result.donor().getAsMention()),
+                                Replacement.create("RECEIVER", receiver.getAsMention()));
                 }
             }
         }

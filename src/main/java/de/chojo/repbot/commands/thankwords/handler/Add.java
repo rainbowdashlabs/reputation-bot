@@ -34,9 +34,12 @@ public class Add implements SlashHandler {
 
         for (String character : invalid) {
             if (pattern.contains(character)) {
-                event.reply(WebPromo.promoString(context) + "\n" + context.localize("error.invalidcharacter", Replacement.create("INVALID", character, Format.CODE)))
-                     .setEphemeral(true)
-                     .complete();
+                event.reply(WebPromo.promoString(context) + "\n"
+                                + context.localize(
+                                        "error.invalidcharacter",
+                                        Replacement.create("INVALID", character, Format.CODE)))
+                        .setEphemeral(true)
+                        .complete();
                 return;
             }
         }
@@ -45,16 +48,23 @@ public class Add implements SlashHandler {
             Pattern.compile(pattern);
         } catch (PatternSyntaxException e) {
             event.reply(WebPromo.promoString(context) + "\n" + context.localize("error.invalidRegex"))
-                 .setEphemeral(true)
-                 .complete();
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
 
-        if (guildRepository.guild(event.getGuild()).settings().thanking().thankwords().add(pattern)) {
-            event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.thankwords.add.message.added",
-                         Replacement.create("REGEX", pattern, Format.CODE)))
-                 .setEphemeral(true)
-                 .complete();
+        if (guildRepository
+                .guild(event.getGuild())
+                .settings()
+                .thanking()
+                .thankwords()
+                .add(pattern)) {
+            event.reply(WebPromo.promoString(context) + "\n"
+                            + context.localize(
+                                    "command.thankwords.add.message.added",
+                                    Replacement.create("REGEX", pattern, Format.CODE)))
+                    .setEphemeral(true)
+                    .complete();
         }
     }
 }

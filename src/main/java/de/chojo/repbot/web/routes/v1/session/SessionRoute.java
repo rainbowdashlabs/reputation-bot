@@ -37,9 +37,10 @@ public class SessionRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Session"},
             responses = {
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = GuildSessionPOJO.class, type = "application/json")})
-            }
-    )
+                @OpenApiResponse(
+                        status = "200",
+                        content = {@OpenApiContent(from = GuildSessionPOJO.class, type = "application/json")})
+            })
     private static void getSessionData(@NotNull Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         ctx.json(session.sessionData());

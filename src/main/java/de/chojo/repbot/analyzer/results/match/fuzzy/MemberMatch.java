@@ -15,7 +15,11 @@ public class MemberMatch {
     private final double score;
 
     @JsonCreator
-    public MemberMatch(@JsonProperty("word") String word, @JsonProperty("name") String name, @JsonProperty("nickname") String nickname, @JsonProperty("score") double score) {
+    public MemberMatch(
+            @JsonProperty("word") String word,
+            @JsonProperty("name") String name,
+            @JsonProperty("nickname") String nickname,
+            @JsonProperty("score") double score) {
         this.word = word;
         this.name = name;
         this.nickname = nickname;

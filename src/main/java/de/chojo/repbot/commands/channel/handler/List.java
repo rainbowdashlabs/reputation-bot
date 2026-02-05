@@ -28,37 +28,46 @@ public class List implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        var channels = guildRepository.guild(event.getGuild()).settings().thanking().channels();
+        var channels =
+                guildRepository.guild(event.getGuild()).settings().thanking().channels();
         event.replyEmbeds(WebPromo.promoEmbed(context), getChannelList(channels, context))
-             .setEphemeral(true)
-             .complete();
+                .setEphemeral(true)
+                .complete();
     }
 
     private MessageEmbed getChannelList(Channels channels, EventContext context) {
 
         var channelNames = channels.channels().stream()
-                                   .map(IMentionable::getAsMention)
-                                   .limit(40)
-                                   .collect(Collectors.joining(", "));
+                .map(IMentionable::getAsMention)
+                .limit(40)
+                .collect(Collectors.joining(", "));
         if (channels.channels().size() > 40) {
             channelNames += MORE;
         }
 
         var categoryNames = channels.categories().stream()
-                                    .map(IMentionable::getAsMention)
-                                    .limit(40)
-                                    .collect(Collectors.joining(", "));
+                .map(IMentionable::getAsMention)
+                .limit(40)
+                .collect(Collectors.joining(", "));
         if (channels.categories().size() > 40) {
             categoryNames += MORE;
         }
 
         return new LocalizedEmbedBuilder(context.guildLocalizer())
-                .setTitle(channels.isWhitelist() ? "command.channel.list.message.whitelist" : "command.channel.list.message.blacklist")
-                .addField("words.channels", channelNames, false,
+                .setTitle(
+                        channels.isWhitelist()
+                                ? "command.channel.list.message.whitelist"
+                                : "command.channel.list.message.blacklist")
+                .addField(
+                        "words.channels",
+                        channelNames,
+                        false,
                         Replacement.create("MORE", channels.channels().size() - 40))
-                .addField("words.categories", categoryNames, false,
+                .addField(
+                        "words.categories",
+                        categoryNames,
+                        false,
                         Replacement.create("MORE", channels.channels().size() - 40))
                 .build();
     }
-
 }

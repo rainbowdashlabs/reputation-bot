@@ -18,10 +18,16 @@ public class GeneralPOJO {
     protected DiscordLocale language;
     protected ReputationMode reputationMode;
     protected Instant resetDate;
+
     @JsonSerialize(using = ToStringSerializer.class)
     protected long systemChannel;
 
-    public GeneralPOJO(boolean stackRoles, DiscordLocale language, ReputationMode reputationMode, Instant resetDate, long systemChannel) {
+    public GeneralPOJO(
+            boolean stackRoles,
+            DiscordLocale language,
+            ReputationMode reputationMode,
+            Instant resetDate,
+            long systemChannel) {
         this.stackRoles = stackRoles;
         this.language = language;
         this.reputationMode = reputationMode;

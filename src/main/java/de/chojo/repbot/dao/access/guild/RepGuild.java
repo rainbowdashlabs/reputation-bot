@@ -22,10 +22,10 @@ import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 
 public class RepGuild implements GuildHolder {
-    private static final Cache<Long, Cleanup> CLEANUPS = CacheBuilder.newBuilder()
-                                                                     .expireAfterAccess(2, TimeUnit.MINUTES).build();
-    private static final Cache<Long, Gdpr> GDPR = CacheBuilder.newBuilder().expireAfterAccess(2, TimeUnit.MINUTES)
-                                                              .build();
+    private static final Cache<Long, Cleanup> CLEANUPS =
+            CacheBuilder.newBuilder().expireAfterAccess(2, TimeUnit.MINUTES).build();
+    private static final Cache<Long, Gdpr> GDPR =
+            CacheBuilder.newBuilder().expireAfterAccess(2, TimeUnit.MINUTES).build();
     private final Reputation reputation;
     private final Subscriptions subscriptions;
     private final Settings settings;
@@ -65,7 +65,8 @@ public class RepGuild implements GuildHolder {
         return this;
     }
 
-    //Todo: We don't actually know how many users are on a guild and saved in the database. At some point we might want to add some pagination here.
+    // Todo: We don't actually know how many users are on a guild and saved in the database. At some point we might want
+    // to add some pagination here.
 
     /**
      * A list of user ids of all users which are connected to this guild.
@@ -128,9 +129,7 @@ public class RepGuild implements GuildHolder {
 
     @Override
     public String toString() {
-        return "RepGuild{" +
-                "guild=" + guild +
-                '}';
+        return "RepGuild{" + "guild=" + guild + '}';
     }
 
     public RepGuild load(ShardManager shardManager) {

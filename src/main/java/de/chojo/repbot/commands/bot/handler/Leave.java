@@ -13,14 +13,18 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 public class Leave implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        var guild = event.getJDA().getShardManager().getGuildById(event.getOption("guild_id").getAsLong());
+        var guild = event.getJDA()
+                .getShardManager()
+                .getGuildById(event.getOption("guild_id").getAsLong());
 
         if (guild == null) {
             event.reply("Guild not present.").setEphemeral(true).complete();
             return;
         }
 
-        event.reply("Leaving guild " + Guilds.prettyName(guild)).setEphemeral(true).complete();
+        event.reply("Leaving guild " + Guilds.prettyName(guild))
+                .setEphemeral(true)
+                .complete();
         guild.leave().complete();
     }
 }

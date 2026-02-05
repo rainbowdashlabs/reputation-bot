@@ -52,7 +52,7 @@ public class StateListener extends ListenerAdapter {
             if (selfMember.hasPermission(channel, Permission.VIEW_CHANNEL)
                     && selfMember.hasPermission(channel, Permission.MESSAGE_SEND)) {
                 channel.sendMessage(localizer.localize("message.welcome", event.getGuild()))
-                       .queueAfter(5, TimeUnit.SECONDS);
+                        .queueAfter(5, TimeUnit.SECONDS);
                 break;
             }
         }
@@ -67,18 +67,33 @@ public class StateListener extends ListenerAdapter {
     @Override
     public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
         // We want to abort deletion of user data if a user rejoins a guild during grace period
-        guildRepository.guild(event.getGuild()).reputation().user(event.getMember()).gdpr().dequeueDeletion();
+        guildRepository
+                .guild(event.getGuild())
+                .reputation()
+                .user(event.getMember())
+                .gdpr()
+                .dequeueDeletion();
     }
 
     @Override
     public void onGuildMemberRemove(@NotNull GuildMemberRemoveEvent event) {
         // When a user leaves a guild, there is no reason for us to keep their data.
-        guildRepository.guild(event.getGuild()).reputation().user(event.getUser()).gdpr().queueDeletion();
+        guildRepository
+                .guild(event.getGuild())
+                .reputation()
+                .user(event.getUser())
+                .gdpr()
+                .queueDeletion();
     }
 
     @Override
     public void onRoleDelete(@NotNull RoleDeleteEvent event) {
-        guildRepository.guild(event.getGuild()).settings().ranks().rank(event.getRole()).ifPresent(ReputationRank::remove);
+        guildRepository
+                .guild(event.getGuild())
+                .settings()
+                .ranks()
+                .rank(event.getRole())
+                .ifPresent(ReputationRank::remove);
     }
 
     @Override
@@ -92,7 +107,11 @@ public class StateListener extends ListenerAdapter {
         guildSettings.thanking().reactions().remove(event.getEmoji().getId());
 
         if (!guildSettings.thanking().reactions().reactionIsEmote()) return;
-        if (!guildSettings.thanking().reactions().mainReaction().equals(event.getEmoji().getId())) return;
+        if (!guildSettings
+                .thanking()
+                .reactions()
+                .mainReaction()
+                .equals(event.getEmoji().getId())) return;
         guildSettings.thanking().reactions().mainReaction("🏅");
     }
 }

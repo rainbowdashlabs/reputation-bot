@@ -20,18 +20,26 @@ public class Remove extends BaseChannelModifier {
     }
 
     @Override
-    public void textChannel(SlashCommandInteractionEvent event, EventContext context, Channels channels, StandardGuildChannel channel) {
+    public void textChannel(
+            SlashCommandInteractionEvent event, EventContext context, Channels channels, StandardGuildChannel channel) {
         channels.remove(channel);
-        event.getHook().editOriginal(
-                WebPromo.promoString(context) + context.localize("command.channel.remove.message.removed",
-                        Replacement.create("CHANNEL", channel.getAsMention()))).complete();
+        event.getHook()
+                .editOriginal(WebPromo.promoString(context)
+                        + context.localize(
+                                "command.channel.remove.message.removed",
+                                Replacement.create("CHANNEL", channel.getAsMention())))
+                .complete();
     }
 
     @Override
-    public void category(SlashCommandInteractionEvent event, EventContext context, Channels channels, Category category) {
+    public void category(
+            SlashCommandInteractionEvent event, EventContext context, Channels channels, Category category) {
         channels.remove(category);
-        event.getHook().editOriginal(
-                WebPromo.promoString(context) + context.localize("command.channel.remove.message.removed",
-                        Replacement.create("CHANNEL", category.getAsMention()))).complete();
+        event.getHook()
+                .editOriginal(WebPromo.promoString(context)
+                        + context.localize(
+                                "command.channel.remove.message.removed",
+                                Replacement.create("CHANNEL", category.getAsMention())))
+                .complete();
     }
 }

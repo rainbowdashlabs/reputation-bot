@@ -22,7 +22,12 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public final class Messages {
     private static final Logger log = getLogger(Messages.class);
-    private static final Set<ErrorResponse> IGNORE_ERRORS = Set.of(ErrorResponse.UNKNOWN_MESSAGE, ErrorResponse.TOO_MANY_REACTIONS, ErrorResponse.REACTION_BLOCKED, ErrorResponse.UNKNOWN_CHANNEL, ErrorResponse.THREAD_LOCKED);
+    private static final Set<ErrorResponse> IGNORE_ERRORS = Set.of(
+            ErrorResponse.UNKNOWN_MESSAGE,
+            ErrorResponse.TOO_MANY_REACTIONS,
+            ErrorResponse.REACTION_BLOCKED,
+            ErrorResponse.UNKNOWN_CHANNEL,
+            ErrorResponse.THREAD_LOCKED);
 
     private Messages() {
         throw new UnsupportedOperationException("This is a utility class.");
@@ -31,10 +36,14 @@ public final class Messages {
     public static void markMessage(Message message, @Nullable Message refMessage, Settings settings) {
         var reaction = settings.thanking().reactions().mainReaction();
         if (settings.thanking().reactions().reactionIsEmote()) {
-            message.getGuild().retrieveEmojiById(reaction).queue(e -> {
-                markMessage(message, e, settings);
-                if (refMessage != null) markMessage(refMessage, e, settings);
-            }, err -> log.error("Could not resolve emoji.", err));
+            message.getGuild()
+                    .retrieveEmojiById(reaction)
+                    .queue(
+                            e -> {
+                                markMessage(message, e, settings);
+                                if (refMessage != null) markMessage(refMessage, e, settings);
+                            },
+                            err -> log.error("Could not resolve emoji.", err));
         } else {
             if (refMessage != null) markMessage(refMessage, reaction, settings);
             markMessage(message, reaction, settings);
@@ -42,15 +51,19 @@ public final class Messages {
     }
 
     private static void markMessage(Message message, Emoji emote, Settings settings) {
-        if (PermissionUtil.checkPermission(message.getGuildChannel().getPermissionContainer(), message.getGuild()
-                                                                                                      .getSelfMember(), Permission.MESSAGE_ADD_REACTION)) {
+        if (PermissionUtil.checkPermission(
+                message.getGuildChannel().getPermissionContainer(),
+                message.getGuild().getSelfMember(),
+                Permission.MESSAGE_ADD_REACTION)) {
             handleMark(message.addReaction(emote), settings);
         }
     }
 
     private static void markMessage(Message message, String emoji, Settings settings) {
-        if (PermissionUtil.checkPermission(message.getGuildChannel().getPermissionContainer(), message.getGuild()
-                                                                                                      .getSelfMember(), Permission.MESSAGE_ADD_REACTION)) {
+        if (PermissionUtil.checkPermission(
+                message.getGuildChannel().getPermissionContainer(),
+                message.getGuild().getSelfMember(),
+                Permission.MESSAGE_ADD_REACTION)) {
             handleMark(message.addReaction(Emoji.fromUnicode(emoji)), settings);
         }
     }

@@ -29,11 +29,15 @@ public class PresenceService implements Runnable {
         this.statistic = statistic;
     }
 
-    public static void start(ShardManager shardManager, Configuration configuration, Statistic statistic, ScheduledExecutorService executorService) {
+    public static void start(
+            ShardManager shardManager,
+            Configuration configuration,
+            Statistic statistic,
+            ScheduledExecutorService executorService) {
         var presenceService = new PresenceService(shardManager, configuration, statistic);
         if (configuration.presence().isActive()) {
-            executorService.scheduleAtFixedRate(presenceService, 0,
-                    configuration.presence().interval(), TimeUnit.MINUTES);
+            executorService.scheduleAtFixedRate(
+                    presenceService, 0, configuration.presence().interval(), TimeUnit.MINUTES);
         }
     }
 
@@ -49,7 +53,6 @@ public class PresenceService implements Runnable {
         var text = currentPresence.text(replacements);
         log.debug("Changed presence to: {}", text);
 
-        shardManager.setPresence(OnlineStatus.ONLINE,
-                Activity.of(currentPresence.type(), text));
+        shardManager.setPresence(OnlineStatus.ONLINE, Activity.of(currentPresence.type(), text));
     }
 }

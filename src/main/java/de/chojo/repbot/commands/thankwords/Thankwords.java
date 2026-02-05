@@ -30,28 +30,32 @@ public class Thankwords extends SlashCommand {
 
     private static final Logger log = getLogger(Thankwords.class);
 
-    private Thankwords(MessageAnalyzer messageAnalyzer, GuildRepository guildRepository, ThankwordsContainer thankwordsContainer) {
+    private Thankwords(
+            MessageAnalyzer messageAnalyzer, GuildRepository guildRepository, ThankwordsContainer thankwordsContainer) {
         super(Slash.of("thankwords", "command.thankwords.description")
-                   .guildOnly()
-                   .adminCommand()
-                   .subCommand(SubCommand.of("add", "command.thankwords.add.description")
-                                         .handler(new Add(guildRepository))
-                                         .argument(Argument.text("pattern", "command.thankwords.add.options.pattern.description").asRequired().maxLength(25)))
-                   .subCommand(SubCommand.of("remove", "command.thankwords.remove.description")
-                                         .handler(new Remove(guildRepository))
-                                         .argument(Argument.text("pattern", "command.thankwords.remove.options.pattern.description").asRequired()
-                                                           .withAutoComplete()))
-                   .subCommand(SubCommand.of("list", "command.thankwords.list.description")
-                                         .handler(new List(guildRepository)))
-                   .subCommand(SubCommand.of("check", "command.thankwords.check.description")
-                                         .handler(new Check(guildRepository, messageAnalyzer))
-                                         .argument(Argument.text("message", "command.thankwords.check.options.message.description")
-                                                           .asRequired()))
-                   .subCommand(SubCommand.of("loaddefault", "command.thankwords.loaddefault.description")
-                                         .handler(new LoadDefault(guildRepository, thankwordsContainer))
-                                         .argument(Argument.text("language", "command.thankwords.loaddefault.options.language.description")
-                                                           .withAutoComplete()))
-        );
+                .guildOnly()
+                .adminCommand()
+                .subCommand(SubCommand.of("add", "command.thankwords.add.description")
+                        .handler(new Add(guildRepository))
+                        .argument(Argument.text("pattern", "command.thankwords.add.options.pattern.description")
+                                .asRequired()
+                                .maxLength(25)))
+                .subCommand(SubCommand.of("remove", "command.thankwords.remove.description")
+                        .handler(new Remove(guildRepository))
+                        .argument(Argument.text("pattern", "command.thankwords.remove.options.pattern.description")
+                                .asRequired()
+                                .withAutoComplete()))
+                .subCommand(SubCommand.of("list", "command.thankwords.list.description")
+                        .handler(new List(guildRepository)))
+                .subCommand(SubCommand.of("check", "command.thankwords.check.description")
+                        .handler(new Check(guildRepository, messageAnalyzer))
+                        .argument(Argument.text("message", "command.thankwords.check.options.message.description")
+                                .asRequired()))
+                .subCommand(SubCommand.of("loaddefault", "command.thankwords.loaddefault.description")
+                        .handler(new LoadDefault(guildRepository, thankwordsContainer))
+                        .argument(
+                                Argument.text("language", "command.thankwords.loaddefault.options.language.description")
+                                        .withAutoComplete())));
     }
 
     public static Thankwords of(MessageAnalyzer messageAnalyzer, GuildRepository guildRepository) {

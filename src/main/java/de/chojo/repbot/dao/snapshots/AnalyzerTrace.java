@@ -26,8 +26,12 @@ public record AnalyzerTrace(ResultEntry resultEntry, List<SubmitResultEntry> sub
             for (var entry : submitResultEntries) {
                 var timestamp = TimeFormat.TIME_LONG.format(entry.instant());
                 var message = entry.submitResult().type().localeKey();
-                events.add("%s %s".formatted(timestamp, context.localize(message, entry.submitResult().replacements()
-                                                                                       .toArray(new Replacement[0]))));
+                events.add("%s %s"
+                        .formatted(
+                                timestamp,
+                                context.localize(
+                                        message,
+                                        entry.submitResult().replacements().toArray(new Replacement[0]))));
             }
 
             var embed = new LocalizedEmbedBuilder(context.guildLocalizer())

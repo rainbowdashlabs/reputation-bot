@@ -23,8 +23,11 @@ public class MetricService implements Runnable {
 
     public static MetricService create(ScheduledExecutorService executorService, Metrics metrics) {
         var now = ZonedDateTime.now(ZoneOffset.UTC);
-        var base = now.toLocalDate().atStartOfDay().plus(1, ChronoUnit.DAYS).plus(1, ChronoUnit.HOURS)
-                      .atOffset(ZoneOffset.UTC);
+        var base = now.toLocalDate()
+                .atStartOfDay()
+                .plus(1, ChronoUnit.DAYS)
+                .plus(1, ChronoUnit.HOURS)
+                .atOffset(ZoneOffset.UTC);
         var minutes = now.until(base, ChronoUnit.MINUTES);
         var service = new MetricService(metrics);
         executorService.scheduleAtFixedRate(service, minutes, 1440, TimeUnit.MINUTES);

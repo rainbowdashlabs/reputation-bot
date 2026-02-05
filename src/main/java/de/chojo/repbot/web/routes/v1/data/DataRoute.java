@@ -38,10 +38,7 @@ public class DataRoute implements RoutesBuilder {
             path = "v1/data/thankwords",
             methods = HttpMethod.GET,
             tags = {"Data"},
-            responses = {
-                    @OpenApiResponse(status = "200", content = @OpenApiContent(from = ThankwordsContainer.class))
-            }
-    )
+            responses = {@OpenApiResponse(status = "200", content = @OpenApiContent(from = ThankwordsContainer.class))})
     public void getThankwords(Context ctx) {
         ctx.json(thankwordsContainer);
     }
@@ -52,10 +49,7 @@ public class DataRoute implements RoutesBuilder {
             path = "v1/data/languages",
             methods = HttpMethod.GET,
             tags = {"Data"},
-            responses = {
-                    @OpenApiResponse(status = "200", content = @OpenApiContent(from = LanguageInfo[].class))
-            }
-    )
+            responses = {@OpenApiResponse(status = "200", content = @OpenApiContent(from = LanguageInfo[].class))})
     public void getLanguages(Context ctx) {
         ctx.json(localization.languages());
     }
@@ -66,10 +60,7 @@ public class DataRoute implements RoutesBuilder {
             path = "v1/data/links",
             methods = HttpMethod.GET,
             tags = {"Data"},
-            responses = {
-                    @OpenApiResponse(status = "200", content = @OpenApiContent(from = Links.class))
-            }
-    )
+            responses = {@OpenApiResponse(status = "200", content = @OpenApiContent(from = Links.class))})
     public void getLinks(Context ctx) {
         ctx.json(configuration.links());
     }

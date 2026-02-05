@@ -24,8 +24,13 @@ public class GuildPOJO {
 
     public static GuildPOJO generate(Guild guild) {
         GuildMetaPOJO meta = GuildMetaPOJO.generate(guild);
-        List<RolePOJO> roles = guild.getRoles().stream().filter(r -> !r.isPublicRole()).map(RolePOJO::generate).toList();
-        List<ReactionPOJO> reactions = guild.retrieveEmojis().complete().stream().map(ReactionPOJO::generate).toList();
+        List<RolePOJO> roles = guild.getRoles().stream()
+                .filter(r -> !r.isPublicRole())
+                .map(RolePOJO::generate)
+                .toList();
+        List<ReactionPOJO> reactions = guild.retrieveEmojis().complete().stream()
+                .map(ReactionPOJO::generate)
+                .toList();
         return new GuildPOJO(meta, roles, ChannelViewPOJO.generate(guild), reactions);
     }
 }

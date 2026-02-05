@@ -30,10 +30,11 @@ public class Create implements SlashHandler {
         }
         event.deferReply(true).complete();
         Entitlement complete = event.getJDA()
-                                    .createTestEntitlement(event.getOption("sku", OptionMapping::getAsLong),
-                                            ownerid,
-                                            TestEntitlementCreateAction.OwnerType.GUILD_SUBSCRIPTION)
-                                    .complete();
+                .createTestEntitlement(
+                        event.getOption("sku", OptionMapping::getAsLong),
+                        ownerid,
+                        TestEntitlementCreateAction.OwnerType.GUILD_SUBSCRIPTION)
+                .complete();
         event.getHook().editOriginal("Entitlement granted").complete();
     }
 
@@ -41,7 +42,9 @@ public class Create implements SlashHandler {
     public void onAutoComplete(CommandAutoCompleteInteractionEvent event, EventContext context) {
         switch (event.getFocusedOption().getName()) {
             case "sku" -> {
-                var choices = configuration.skus().subscriptions().stream().map(sku -> new Command.Choice(sku.name(), String.valueOf(sku.subscriptionSku()))).toList();
+                var choices = configuration.skus().subscriptions().stream()
+                        .map(sku -> new Command.Choice(sku.name(), String.valueOf(sku.subscriptionSku())))
+                        .toList();
                 event.replyChoices(choices).complete();
             }
             default -> event.replyChoices().complete();

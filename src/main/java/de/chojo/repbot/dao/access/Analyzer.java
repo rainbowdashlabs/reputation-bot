@@ -27,7 +27,9 @@ public class Analyzer {
 
     public void cleanup() {
         int extendedHours = configuration.skus().features().analyzerLog().extendedLogHours();
-        List<Long> skuEntry = configuration.skus().features().analyzerLog().longerLogTime().sku().stream().map(SKU::skuId).toList();
+        List<Long> skuEntry = configuration.skus().features().analyzerLog().longerLogTime().sku().stream()
+                .map(SKU::skuId)
+                .toList();
 
         var delete = Query.query("""
                                   WITH
@@ -57,10 +59,12 @@ public class Analyzer {
                                       USING target t
                                   WHERE r.message_id = t.message_id;
                                   """)
-                          .single(call().bind("defaultHours", "%d HOURS".formatted(configuration.cleanup().analyzerLogHours()))
-                                        .bind("extendedHours", "%d HOURS".formatted(extendedHours))
-                                        .bind("sku", skuEntry, PostgreSqlTypes.BIGINT))
-                          .delete();
+                .single(call().bind(
+                                "defaultHours",
+                                "%d HOURS".formatted(configuration.cleanup().analyzerLogHours()))
+                        .bind("extendedHours", "%d HOURS".formatted(extendedHours))
+                        .bind("sku", skuEntry, PostgreSqlTypes.BIGINT))
+                .delete();
         if (delete.changed()) {
             log.debug("Deleted {} entries from analyzer log", delete.rows());
         } else {
@@ -94,10 +98,12 @@ public class Analyzer {
                                   USING target t
                               WHERE r.message_id = t.message_id;
                               """)
-                      .single(call().bind("defaultHours", "%d HOURS".formatted(configuration.cleanup().analyzerLogHours()))
-                                    .bind("extendedHours", "%d HOURS".formatted(extendedHours))
-                                    .bind("sku", skuEntry, PostgreSqlTypes.BIGINT))
-                      .delete();
+                .single(call().bind(
+                                "defaultHours",
+                                "%d HOURS".formatted(configuration.cleanup().analyzerLogHours()))
+                        .bind("extendedHours", "%d HOURS".formatted(extendedHours))
+                        .bind("sku", skuEntry, PostgreSqlTypes.BIGINT))
+                .delete();
         if (delete.changed()) {
             log.debug("Deleted {} entries from reputation results", delete.rows());
         } else {

@@ -24,21 +24,25 @@ public class AnnouncementWhere implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var announcements = guildRepository.guild(event.getGuild()).settings().announcements();
-        if (announcements.sameChannel("same channel".equalsIgnoreCase(event.getOption("where", OptionMapping::getAsString)))) {
-            event.reply(WebPromo.promoString(context) + context.localize("command.channel.announcement.location.message.samechannel"))
-                 .setEphemeral(true)
-                 .complete();
+        if (announcements.sameChannel(
+                "same channel".equalsIgnoreCase(event.getOption("where", OptionMapping::getAsString)))) {
+            event.reply(WebPromo.promoString(context)
+                            + context.localize("command.channel.announcement.location.message.samechannel"))
+                    .setEphemeral(true)
+                    .complete();
         } else {
-            event.reply(WebPromo.promoString(context) + context.localize("command.channel.announcement.location.message.otherchannel"))
-                 .setEphemeral(true)
-                 .complete();
+            event.reply(WebPromo.promoString(context)
+                            + context.localize("command.channel.announcement.location.message.otherchannel"))
+                    .setEphemeral(true)
+                    .complete();
         }
     }
 
     @Override
     public void onAutoComplete(CommandAutoCompleteInteractionEvent event, EventContext context) {
         if ("where".equals(event.getFocusedOption().getName())) {
-            event.replyChoices(Completion.complete("", "same channel", "custom channel")).complete();
+            event.replyChoices(Completion.complete("", "same channel", "custom channel"))
+                    .complete();
         }
     }
 }

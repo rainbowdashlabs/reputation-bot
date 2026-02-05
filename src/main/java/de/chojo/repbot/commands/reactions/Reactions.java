@@ -19,20 +19,22 @@ import de.chojo.repbot.dao.provider.GuildRepository;
 public class Reactions extends SlashCommand {
     public Reactions(GuildRepository guildRepository, Configuration configuration) {
         super(Slash.of("reactions", "command.reactions.description")
-                   .guildOnly()
-                   .adminCommand()
-                   .subCommand(SubCommand.of("main", "command.reactions.main.description")
-                                         .handler(new Main(guildRepository))
-                                         .argument(Argument.text("emote", "command.reactions.main.options.emote.description").asRequired()))
-                   .subCommand(SubCommand.of("add", "command.reactions.add.description")
-                                         .handler(new Add(guildRepository, configuration))
-                                         .argument(Argument.text("emote", "command.reactions.add.options.emote.description").asRequired()))
-                   .subCommand(SubCommand.of("remove", "command.reactions.remove.description")
-                                         .handler(new Remove(guildRepository))
-                                         .argument(Argument.text("emote", "command.reactions.remove.options.emote.description")
-                                                           .withAutoComplete().asRequired()))
-                   .subCommand(SubCommand.of("info", "command.reactions.info.description")
-                                         .handler(new Info(guildRepository, configuration)))
-        );
+                .guildOnly()
+                .adminCommand()
+                .subCommand(SubCommand.of("main", "command.reactions.main.description")
+                        .handler(new Main(guildRepository))
+                        .argument(Argument.text("emote", "command.reactions.main.options.emote.description")
+                                .asRequired()))
+                .subCommand(SubCommand.of("add", "command.reactions.add.description")
+                        .handler(new Add(guildRepository, configuration))
+                        .argument(Argument.text("emote", "command.reactions.add.options.emote.description")
+                                .asRequired()))
+                .subCommand(SubCommand.of("remove", "command.reactions.remove.description")
+                        .handler(new Remove(guildRepository))
+                        .argument(Argument.text("emote", "command.reactions.remove.options.emote.description")
+                                .withAutoComplete()
+                                .asRequired()))
+                .subCommand(SubCommand.of("info", "command.reactions.info.description")
+                        .handler(new Info(guildRepository, configuration))));
     }
 }

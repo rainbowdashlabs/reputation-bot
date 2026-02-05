@@ -22,10 +22,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class Threading {
     private static final Logger log = getLogger(Threading.class);
-    private static final Thread.UncaughtExceptionHandler EXCEPTION_HANDLER =
-            (t, e) -> {
-                log.error(LogNotify.NOTIFY_ADMIN, "An uncaught exception occurred in {}-{}.", t.getName(), t.threadId(), e);
-            };
+    private static final Thread.UncaughtExceptionHandler EXCEPTION_HANDLER = (t, e) -> {
+        log.error(LogNotify.NOTIFY_ADMIN, "An uncaught exception occurred in {}-{}.", t.getName(), t.threadId(), e);
+    };
     private final ThreadGroup eventGroup = new ThreadGroup("Event Worker");
     private final ThreadGroup workerGroup = new ThreadGroup("Scheduled Worker");
     private final ThreadGroup hikariGroup = new ThreadGroup("Hikari Worker");
@@ -34,13 +33,20 @@ public class Threading {
     private final ScheduledExecutorService repBotWorker = new ReportingExecutor(5, createThreadFactory(workerGroup));
 
     public static ThreadFactory createThreadFactory(ThreadGroup group) {
-        return r -> new Thread(group, () -> {
-            try {
-                r.run();
-            } catch (Throwable e) {
-                log.error("An uncaught exception occurred in {}-{}.", Thread.currentThread().getName(), Thread.currentThread().threadId(), e);
-            }
-        }, group.getName());
+        return r -> new Thread(
+                group,
+                () -> {
+                    try {
+                        r.run();
+                    } catch (Throwable e) {
+                        log.error(
+                                "An uncaught exception occurred in {}-{}.",
+                                Thread.currentThread().getName(),
+                                Thread.currentThread().threadId(),
+                                e);
+                    }
+                },
+                group.getName());
     }
 
     public ThreadGroup eventGroup() {

@@ -20,15 +20,17 @@ import static de.chojo.jdautil.interactions.slash.SubCommand.sub;
 public class Supporter extends SlashCommand {
     public Supporter(PremiumService premiumService, Configuration configuration, GuildRepository guildRepository) {
         super(Slash.of("supporter", "command.supporter.description")
-                   .adminCommand()
-                   .guildOnly()
-                   .subCommand(sub("refresh", "command.supporter.refresh.description")
-                           .handler(new Refresh(premiumService)))
-                   .subCommand(sub("activate", "command.supporter.activate.description")
-                           .handler(new Activate(premiumService, configuration))
-                           .argument(text("coupon", "command.supporter.activate.options.coupon.description").asRequired().withAutoComplete()))
-                   .subCommand(sub("info", "command.supporter.info.description")
-                           .handler(new Info(premiumService, configuration, guildRepository)))
-                   .build());
+                .adminCommand()
+                .guildOnly()
+                .subCommand(
+                        sub("refresh", "command.supporter.refresh.description").handler(new Refresh(premiumService)))
+                .subCommand(sub("activate", "command.supporter.activate.description")
+                        .handler(new Activate(premiumService, configuration))
+                        .argument(text("coupon", "command.supporter.activate.options.coupon.description")
+                                .asRequired()
+                                .withAutoComplete()))
+                .subCommand(sub("info", "command.supporter.info.description")
+                        .handler(new Info(premiumService, configuration, guildRepository)))
+                .build());
     }
 }

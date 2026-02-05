@@ -24,17 +24,21 @@ public class MaxMessageAge implements SlashHandler {
         var guild = guildRepository.guild(event.getGuild());
         var abuseSettings = guild.settings().abuseProtection();
         if (event.getOptions().isEmpty()) {
-            event.reply(WebPromo.promoString(context) + context.localize("command.abuseprotection.message.age.message.get",
-                         Replacement.create("MINUTES", abuseSettings.maxMessageAge())))
-                 .setEphemeral(true)
-                 .complete();
+            event.reply(WebPromo.promoString(context)
+                            + context.localize(
+                                    "command.abuseprotection.message.age.message.get",
+                                    Replacement.create("MINUTES", abuseSettings.maxMessageAge())))
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
         var age = event.getOption("minutes").getAsInt();
         age = Math.max(0, age);
-        event.reply(WebPromo.promoString(context) + context.localize("command.abuseprotection.message.age.message.get",
-                     Replacement.create("MINUTES", abuseSettings.maxMessageAge(age))))
-             .setEphemeral(true)
-             .complete();
+        event.reply(WebPromo.promoString(context)
+                        + context.localize(
+                                "command.abuseprotection.message.age.message.get",
+                                Replacement.create("MINUTES", abuseSettings.maxMessageAge(age))))
+                .setEphemeral(true)
+                .complete();
     }
 }

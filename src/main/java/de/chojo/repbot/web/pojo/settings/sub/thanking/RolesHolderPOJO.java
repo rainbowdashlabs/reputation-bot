@@ -15,8 +15,7 @@ public class RolesHolderPOJO {
     @JsonSerialize(contentUsing = ToStringSerializer.class)
     protected Set<Long> roleIds;
 
-    public RolesHolderPOJO() {
-    }
+    public RolesHolderPOJO() {}
 
     public RolesHolderPOJO(Set<Long> roleIds) {
         this.roleIds = roleIds;

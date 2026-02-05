@@ -20,8 +20,15 @@ import static de.chojo.sadu.queries.api.query.Query.query;
 /**
  * A log entry representing a single reputation.
  */
-public record ReputationLogEntry(long guildId, long channelId, long donorId, long receiverId, long messageId,
-                                 long refMessageId, ThankType type, Instant received) {
+public record ReputationLogEntry(
+        long guildId,
+        long channelId,
+        long donorId,
+        long receiverId,
+        long messageId,
+        long refMessageId,
+        ThankType type,
+        Instant received) {
     private static final String PATH = "https://discord.com/channels/%s/%s/%s";
 
     public static ReputationLogEntry build(Row rs) throws SQLException {

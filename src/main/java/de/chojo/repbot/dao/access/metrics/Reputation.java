@@ -88,21 +88,17 @@ public class Reputation {
                      ON CONFLICT(day, cause)
                      DO UPDATE
                      SET count = excluded.count;
-                     """)
-             .single()
-             .insert();
+                     """).single().insert();
         Query.query("""
                      INSERT INTO metrics_reputation_count(day, count)
                      SELECT now() - INTERVAL '1 DAY',
-                     count(1) 
+                     count(1)
                      FROM reputation_log
                      WHERE received < now()::DATE
-                     ON CONFLICT(day) 
+                     ON CONFLICT(day)
                      DO UPDATE
                      SET count = excluded.count;
-                     """)
-             .single()
-             .insert();
+                     """).single().insert();
     }
 
     private CountsStatistic get(String table, String timeframe, int offset, int count) {
@@ -114,12 +110,10 @@ public class Reputation {
                             ORDER BY %s DESC
                             LIMIT ?
                             """, timeframe, table, timeframe, timeframe)
-                    .single(call().bind(timeframe)
-                                  .bind(offset + " " + timeframe)
-                                  .bind(count))
-                    .map(rs -> CountStatistics.build(rs, timeframe))
-                    .allResults()
-                    .map(CountsStatistic::new);
+                .single(call().bind(timeframe).bind(offset + " " + timeframe).bind(count))
+                .map(rs -> CountStatistics.build(rs, timeframe))
+                .allResults()
+                .map(CountsStatistic::new);
     }
 
     private LabeledCountStatistic getType(String table, String timeframe, int offset, int count) {
@@ -133,9 +127,9 @@ public class Reputation {
                      ORDER BY %s DESC
                      LIMIT ?
                      """, timeframe, table, timeframe, timeframe)
-             .single(call().bind(timeframe).bind(offset + " " + timeframe).bind(count))
-             .map(rs -> builder.add(rs.getString("cause"), CountStatistics.build(rs, timeframe)))
-             .all();
+                .single(call().bind(timeframe).bind(offset + " " + timeframe).bind(count))
+                .map(rs -> builder.add(rs.getString("cause"), CountStatistics.build(rs, timeframe)))
+                .all();
         return builder.build();
     }
 
@@ -151,11 +145,11 @@ public class Reputation {
                      ORDER BY %s DESC
                      LIMIT ?
                      """, timeframe, table, timeframe, timeframe)
-             .single(call().bind(timeframe).bind(offset + " " + timeframe).bind(count))
-             .map(rs -> builder.add("delta", CountStatistics.build(rs, "delta", timeframe))
-                               .add("added", CountStatistics.build(rs, "added", timeframe))
-                               .add("removed", CountStatistics.build(rs, "removed", timeframe)))
-             .all();
+                .single(call().bind(timeframe).bind(offset + " " + timeframe).bind(count))
+                .map(rs -> builder.add("delta", CountStatistics.build(rs, "delta", timeframe))
+                        .add("added", CountStatistics.build(rs, "added", timeframe))
+                        .add("removed", CountStatistics.build(rs, "removed", timeframe)))
+                .all();
         return builder.build();
     }
 
@@ -168,9 +162,9 @@ public class Reputation {
                             WHERE %s = date_trunc(?, now())::DATE - ?::INTERVAL
                             ORDER BY %s DESC
                             """, timeframe, table, timeframe, timeframe)
-                    .single(call().bind(timeframe).bind(offset + " " + timeframe))
-                    .map(rs -> DowStatistics.build(rs, timeframe))
-                    .allResults()
-                    .map(DowsStatistic::new);
+                .single(call().bind(timeframe).bind(offset + " " + timeframe))
+                .map(rs -> DowStatistics.build(rs, timeframe))
+                .allResults()
+                .map(DowsStatistic::new);
     }
 }

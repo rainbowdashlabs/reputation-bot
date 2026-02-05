@@ -62,22 +62,25 @@ public class Reactions extends ReactionsPOJO implements GuildHolder {
         if (!reactionIsEmote()) {
             return Optional.ofNullable(mainReaction());
         }
-        return Optional.of(guild().retrieveEmojiById(mainReaction()).onErrorMap(err -> null).complete())
-                       .map(CustomEmoji::getAsMention);
+        return Optional.of(guild().retrieveEmojiById(mainReaction())
+                        .onErrorMap(err -> null)
+                        .complete())
+                .map(CustomEmoji::getAsMention);
     }
 
     public List<String> getAdditionalReactionMentions() {
         return reactions.stream()
-                        .map(reaction -> {
-                            if (Verifier.isValidId(reaction)) {
-                                var asMention = guild().retrieveEmojiById(reaction).onErrorMap(err -> null)
-                                                       .complete();
-                                return asMention == null ? null : asMention.getAsMention();
-                            }
-                            return reaction;
-                        })
-                        .filter(Objects::nonNull)
-                        .collect(Collectors.toList());
+                .map(reaction -> {
+                    if (Verifier.isValidId(reaction)) {
+                        var asMention = guild().retrieveEmojiById(reaction)
+                                .onErrorMap(err -> null)
+                                .complete();
+                        return asMention == null ? null : asMention.getAsMention();
+                    }
+                    return reaction;
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     public boolean add(String reaction) {
@@ -148,7 +151,13 @@ public class Reactions extends ReactionsPOJO implements GuildHolder {
         }
         if (Premium.isNotEntitled(
                 thanking.settings().repGuild().subscriptions(),
-                thanking.settings().repGuild().configuration().skus().features().additionalEmojis().additionalEmojis())) {
+                thanking.settings()
+                        .repGuild()
+                        .configuration()
+                        .skus()
+                        .features()
+                        .additionalEmojis()
+                        .additionalEmojis())) {
             return false;
         }
         return reactions.contains(reaction);

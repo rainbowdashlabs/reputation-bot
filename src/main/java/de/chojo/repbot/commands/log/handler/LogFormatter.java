@@ -43,20 +43,30 @@ public final class LogFormatter {
         jumpLink = createJumpLink(context, logEntry);
         var thankType = context.localize(logEntry.type().nameLocaleKey());
         if (logEntry.type() == ThankType.COMMAND) {
-            return String.format("%s **%s** %s ➜ %s", logEntry.timestamp(),
-                    thankType, User.fromId(logEntry.donorId()).getAsMention(), User.fromId(logEntry.receiverId())
-                                                                                   .getAsMention());
+            return String.format(
+                    "%s **%s** %s ➜ %s",
+                    logEntry.timestamp(),
+                    thankType,
+                    User.fromId(logEntry.donorId()).getAsMention(),
+                    User.fromId(logEntry.receiverId()).getAsMention());
         }
-        return String.format("%s **%s** %s ➜ %s **|** %s", logEntry.timestamp(),
-                thankType, User.fromId(logEntry.donorId()).getAsMention(), User.fromId(logEntry.receiverId())
-                                                                               .getAsMention(), jumpLink);
+        return String.format(
+                "%s **%s** %s ➜ %s **|** %s",
+                logEntry.timestamp(),
+                thankType,
+                User.fromId(logEntry.donorId()).getAsMention(),
+                User.fromId(logEntry.receiverId()).getAsMention(),
+                jumpLink);
     }
 
     public static String formatMessageLogEntrySimple(LocalizationContext context, ReputationLogEntry logEntry) {
         var thankType = context.localize(logEntry.type().nameLocaleKey());
-        return String.format("%s **%s** %s ➜ %s", logEntry.timestamp(),
-                thankType, User.fromId(logEntry.donorId()).getAsMention(), User.fromId(logEntry.receiverId())
-                                                                               .getAsMention());
+        return String.format(
+                "%s **%s** %s ➜ %s",
+                logEntry.timestamp(),
+                thankType,
+                User.fromId(logEntry.donorId()).getAsMention(),
+                User.fromId(logEntry.receiverId()).getAsMention());
     }
 
     public static void buildFields(List<String> entries, LocalizedEmbedBuilder embedBuilder) {
@@ -68,7 +78,10 @@ public final class LogFormatter {
         embedBuilder.setDescription(joiner.toString());
     }
 
-    static List<String> mapUserLogEntry(LocalizationContext context, List<ReputationLogEntry> logEntries, Function<ReputationLogEntry, Long> userId) {
+    static List<String> mapUserLogEntry(
+            LocalizationContext context,
+            List<ReputationLogEntry> logEntries,
+            Function<ReputationLogEntry, Long> userId) {
         List<String> entries = new ArrayList<>();
         for (var logEntry : logEntries) {
             var thankType = context.localize(logEntry.type().nameLocaleKey());
@@ -76,20 +89,26 @@ public final class LogFormatter {
             if (logEntry.type() != ThankType.COMMAND) {
                 jumpLink = createJumpLink(context, logEntry);
             }
-            entries.add(String.format("%s **%s** %s %s", logEntry.timestamp(),
-                    thankType, User.fromId(userId.apply(logEntry)).getAsMention(), jumpLink));
+            entries.add(String.format(
+                    "%s **%s** %s %s",
+                    logEntry.timestamp(),
+                    thankType,
+                    User.fromId(userId.apply(logEntry)).getAsMention(),
+                    jumpLink));
         }
         return entries;
     }
 
     static String createJumpLink(LocalizationContext context, ReputationLogEntry log) {
-        var jump = context.localize("words.link",
+        var jump = context.localize(
+                "words.link",
                 Replacement.create("TARGET", "$words.message$"),
                 Replacement.create("URL", log.getMessageJumpLink()));
 
         String refJump = null;
         if (log.hasRefMessage()) {
-            refJump = context.localize("words.link",
+            refJump = context.localize(
+                    "words.link",
                     Replacement.create("TARGET", "$%s$".formatted("words.refMessage")),
                     Replacement.create("URL", log.getRefMessageJumpLink()));
         }
@@ -97,9 +116,11 @@ public final class LogFormatter {
         return String.format("**%s** %s", jump, refJump == null ? "" : "➜ **" + refJump + "**");
     }
 
-    static MessageEditData userLogEmbed(LocalizationContext context, Member user, String title, List<String> log, boolean noPremium) {
+    static MessageEditData userLogEmbed(
+            LocalizationContext context, Member user, String title, List<String> log, boolean noPremium) {
         var builder = new LocalizedEmbedBuilder(context)
-                .setAuthor(title, null, user.getEffectiveAvatarUrl(), Replacement.create("USER", user.getEffectiveName()));
+                .setAuthor(
+                        title, null, user.getEffectiveAvatarUrl(), Replacement.create("USER", user.getEffectiveName()));
         if (noPremium) {
             builder.setFooter("supporter.fullreputationlog");
         }

@@ -37,7 +37,12 @@ public interface AnalyzerResult {
         return new AnswerAnalyzerResult(match, donator, receiver, referenceMessage.getIdLong());
     }
 
-    static AnalyzerResult fuzzy(String match, List<String> thankwords, List<MemberMatch> memberMatches, Member donator, List<WeightedEntry<Member>> receivers) {
+    static AnalyzerResult fuzzy(
+            String match,
+            List<String> thankwords,
+            List<MemberMatch> memberMatches,
+            Member donator,
+            List<WeightedEntry<Member>> receivers) {
         return new FuzzyAnalyzerResult(match, thankwords, memberMatches, donator, receivers);
     }
 

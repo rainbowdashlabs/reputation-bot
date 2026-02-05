@@ -23,7 +23,13 @@ public class VoteRequest {
     private final Map<String, VoteComponent> voteTargets;
     private int remainingVotes;
 
-    public VoteRequest(Member member, LocalizedEmbedBuilder embedBuilder, Message voteMessage, Message refMessage, Map<String, VoteComponent> voteTargets, int remainingVotes) {
+    public VoteRequest(
+            Member member,
+            LocalizedEmbedBuilder embedBuilder,
+            Message voteMessage,
+            Message refMessage,
+            Map<String, VoteComponent> voteTargets,
+            int remainingVotes) {
         this.member = member;
         this.embedBuilder = embedBuilder;
         this.voteMessage = voteMessage;

@@ -37,9 +37,7 @@ public class Users {
                          DO UPDATE SET receiver_count = excluded.receiver_count,
                              donor_count = excluded.donor_count,
                              total_count = excluded.donor_count
-                     """)
-             .single()
-             .insert();
+                     """).single().insert();
     }
 
     /**
@@ -51,13 +49,11 @@ public class Users {
                      SELECT month, receiver_count, donor_count, total_count
                      FROM metrics_unique_users_month
                      WHERE month = date_trunc('month', now()  - INTERVAL '1 MONTH')
-                     ON CONFLICT(month) 
+                     ON CONFLICT(month)
                          DO UPDATE SET receiver_count = excluded.receiver_count,
                              donor_count = excluded.donor_count,
                              total_count = excluded.donor_count
-                     """)
-             .single()
-             .insert();
+                     """).single().insert();
     }
 
     private UsersStatistic get(String table, String timeframe, int offset, int count) {
@@ -71,9 +67,9 @@ public class Users {
                             ORDER BY %s DESC
                             LIMIT ?
                             """, timeframe, table, timeframe, timeframe)
-                    .single(call().bind(timeframe).bind(offset + " " + timeframe).bind(count))
-                    .map(rs -> UserStatistic.build(rs, timeframe))
-                    .allResults()
-                    .map(UsersStatistic::new);
+                .single(call().bind(timeframe).bind(offset + " " + timeframe).bind(count))
+                .map(rs -> UserStatistic.build(rs, timeframe))
+                .allResults()
+                .map(UsersStatistic::new);
     }
 }

@@ -55,7 +55,10 @@ public class Subscriptions implements GuildHolder, SkuMeta {
     }
 
     public int maxErrorCount() {
-        return errorMessages.values().stream().mapToInt(SubscriptionError::count).max().orElse(0);
+        return errorMessages.values().stream()
+                .mapToInt(SubscriptionError::count)
+                .max()
+                .orElse(0);
     }
 
     public void deleteSubscription(Subscription subscription) {
@@ -76,16 +79,14 @@ public class Subscriptions implements GuildHolder, SkuMeta {
     public void deleteError(SupporterFeature error) {
         query("""
                 DELETE FROM subscription_error WHERE guild_id = ? AND type = ?
-                """).single(call().bind(guildId()).bind(error))
-                    .delete();
+                """).single(call().bind(guildId()).bind(error)).delete();
         errorMessages().remove(error);
     }
 
     public List<SubscriptionError> getExpiredErrors(int hours) {
-        return errorMessages().values()
-                              .stream()
-                              .filter(e -> e.lastSend().plus(hours, ChronoUnit.HOURS).isAfter(Instant.now()))
-                              .toList();
+        return errorMessages().values().stream()
+                .filter(e -> e.lastSend().plus(hours, ChronoUnit.HOURS).isAfter(Instant.now()))
+                .toList();
     }
 
     public void resendError(SupporterFeature error, boolean notified) {
@@ -123,9 +124,10 @@ public class Subscriptions implements GuildHolder, SkuMeta {
                         subscriptions
                     WHERE id = ?
                       AND type = ?
-                    """).single(call().bind(repGuild.guildId()).bind(SkuTarget.GUILD))
-                        .map(Subscription.map())
-                        .all();
+                    """)
+                    .single(call().bind(repGuild.guildId()).bind(SkuTarget.GUILD))
+                    .map(Subscription.map())
+                    .all();
         }
         return subscriptions;
     }
@@ -142,11 +144,11 @@ public class Subscriptions implements GuildHolder, SkuMeta {
                                                    persistent    = excluded.persistent,
                                                    purchase_type = excluded.purchase_type""")
                 .single(call().bind(subscription.id())
-                              .bind(subscription.skuId())
-                              .bind(subscription.skuTarget())
-                              .bind(subscription.endsAt(), StandardAdapter.INSTANT_AS_TIMESTAMP)
-                              .bind(subscription.purchaseType())
-                              .bind(subscription.isPersistent()))
+                        .bind(subscription.skuId())
+                        .bind(subscription.skuTarget())
+                        .bind(subscription.endsAt(), StandardAdapter.INSTANT_AS_TIMESTAMP)
+                        .bind(subscription.purchaseType())
+                        .bind(subscription.isPersistent()))
                 .insert();
         if (result.changed()) {
             subscriptions().remove(subscription);
@@ -163,9 +165,7 @@ public class Subscriptions implements GuildHolder, SkuMeta {
     public void clear() {
         query("""
                 DELETE FROM subscriptions WHERE id = ? AND type = ? AND NOT persistent;
-                """)
-                .single(call().bind(repGuild.guildId()).bind(SkuTarget.GUILD))
-                .update();
+                """).single(call().bind(repGuild.guildId()).bind(SkuTarget.GUILD)).update();
         invalidate();
     }
 
@@ -182,13 +182,12 @@ public class Subscriptions implements GuildHolder, SkuMeta {
                     FROM
                         subscription_error
                     WHERE guild_id = ?
-                    """).single(call().bind(guildId()))
-                        .map(SubscriptionError::build)
-                        .all()
-                        .stream()
-                        .collect(Collectors.toMap(SubscriptionError::type, Function.identity(),
-                                (a, b) -> a,
-                                () -> new EnumMap<>(SupporterFeature.class)));
+                    """).single(call().bind(guildId())).map(SubscriptionError::build).all().stream()
+                    .collect(Collectors.toMap(
+                            SubscriptionError::type,
+                            Function.identity(),
+                            (a, b) -> a,
+                            () -> new EnumMap<>(SupporterFeature.class)));
         }
         return errorMessages;
     }

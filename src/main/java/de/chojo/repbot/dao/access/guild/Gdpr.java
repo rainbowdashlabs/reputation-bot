@@ -39,7 +39,9 @@ public class Gdpr implements GuildHolder {
                         ON CONFLICT(guild_id, user_id)
                             DO NOTHING;
                 """)
-                .single(call().bind(guildId()).bind("%d DAYS".formatted(repGuild.configuration().cleanup().cleanupScheduleDays())))
+                .single(call().bind(guildId())
+                        .bind("%d DAYS"
+                                .formatted(repGuild.configuration().cleanup().cleanupScheduleDays())))
                 .update()
                 .changed()) {
             log.debug("Queuing guild {} for deletion.", guildId());

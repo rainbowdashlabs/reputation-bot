@@ -26,44 +26,45 @@ public class Remove implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        var reactions = guildRepository.guild(event.getGuild()).settings().thanking().reactions();
+        var reactions =
+                guildRepository.guild(event.getGuild()).settings().thanking().reactions();
         var emote = event.getOption("emote").getAsString();
         var matcher = EMOTE_PATTERN.matcher(emote);
         if (matcher.find()) {
             if (reactions.remove(matcher.group("id"))) {
-                event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.reactions.remove.message.removed"))
-                     .setEphemeral(true)
-                     .complete();
+                event.reply(WebPromo.promoString(context) + "\n"
+                                + context.localize("command.reactions.remove.message.removed"))
+                        .setEphemeral(true)
+                        .complete();
                 return;
             }
-            event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.reactions.remove.message.notfound"))
-                 .setEphemeral(true)
-                 .queue();
+            event.reply(WebPromo.promoString(context) + "\n"
+                            + context.localize("command.reactions.remove.message.notfound"))
+                    .setEphemeral(true)
+                    .queue();
             return;
         }
         if (reactions.remove(emote)) {
-            event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.reactions.remove.message.removed"))
-                 .setEphemeral(true)
-                 .queue();
+            event.reply(WebPromo.promoString(context) + "\n"
+                            + context.localize("command.reactions.remove.message.removed"))
+                    .setEphemeral(true)
+                    .queue();
             return;
         }
-        event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.reactions.remove.message.notfound"))
-             .setEphemeral(true)
-             .queue();
+        event.reply(WebPromo.promoString(context) + "\n"
+                        + context.localize("command.reactions.remove.message.notfound"))
+                .setEphemeral(true)
+                .queue();
     }
 
     @Override
     public void onAutoComplete(CommandAutoCompleteInteractionEvent event, EventContext context) {
         if ("emote".equals(event.getFocusedOption().getName())) {
-            var reactions = guildRepository.guild(event.getGuild())
-                                           .settings()
-                                           .thanking()
-                                           .reactions()
-                                           .reactions()
-                                           .stream()
-                                           .limit(25)
-                                           .map(Choice::toChoice)
-                                           .toList();
+            var reactions =
+                    guildRepository.guild(event.getGuild()).settings().thanking().reactions().reactions().stream()
+                            .limit(25)
+                            .map(Choice::toChoice)
+                            .toList();
             event.replyChoices(reactions).queue();
         }
     }

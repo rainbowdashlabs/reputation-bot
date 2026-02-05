@@ -50,7 +50,10 @@ public class Metrics implements SlashHandler {
             public MessageEditData buildPage() {
                 return MessageEditData.fromEmbeds(new EmbedBuilder()
                         .setImage(currentElement())
-                        .setAuthor("Open in Browser", currentElement(), event.getJDA().getSelfUser().getAvatarUrl())
+                        .setAuthor(
+                                "Open in Browser",
+                                currentElement(),
+                                event.getJDA().getSelfUser().getAvatarUrl())
                         .build());
             }
         });

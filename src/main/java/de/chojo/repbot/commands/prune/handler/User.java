@@ -24,8 +24,8 @@ public class User implements SlashHandler {
         if (user != null) {
             service.cleanupGuildUser(event.getGuild(), user.getAsUser().getIdLong());
             event.reply(context.localize("command.prune.user.message.removed"))
-                 .setEphemeral(true)
-                 .complete();
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
 
@@ -35,13 +35,13 @@ public class User implements SlashHandler {
             if (idRaw.isPresent()) {
                 service.cleanupGuildUser(event.getGuild(), Long.valueOf(idRaw.get()));
                 event.reply(context.localize("command.prune.user.message.removed"))
-                     .setEphemeral(true)
-                     .complete();
+                        .setEphemeral(true)
+                        .complete();
                 return;
             }
             event.reply(context.localize("error.userNotFound"))
-                 .setEphemeral(true)
-                 .complete();
+                    .setEphemeral(true)
+                    .complete();
         }
     }
 }

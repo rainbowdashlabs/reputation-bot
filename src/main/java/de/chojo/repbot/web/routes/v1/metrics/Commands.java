@@ -36,13 +36,14 @@ public class Commands extends MetricsHolder {
             methods = HttpMethod.GET,
             tags = {"Commands"},
             responses = {
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = CommandsStatistic.class, type = "application/json")})
+                @OpenApiResponse(
+                        status = "200",
+                        content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
+                @OpenApiResponse(
+                        status = "200",
+                        content = {@OpenApiContent(from = CommandsStatistic.class, type = "application/json")})
             },
-            pathParams = {
-                    @OpenApiParam(name = "offset", type = Integer.class, required = true)
-            }
-    )
+            pathParams = {@OpenApiParam(name = "offset", type = Integer.class, required = true)})
     public void usageWeek(Context ctx) {
         var stats = metrics().commands().week(offset(ctx, MAX_WEEK_OFFSET));
         if ("application/json".equals(ctx.header("Accept"))) {
@@ -59,13 +60,14 @@ public class Commands extends MetricsHolder {
             methods = HttpMethod.GET,
             tags = {"Commands"},
             responses = {
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = CommandsStatistic.class, type = "application/json")})
+                @OpenApiResponse(
+                        status = "200",
+                        content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
+                @OpenApiResponse(
+                        status = "200",
+                        content = {@OpenApiContent(from = CommandsStatistic.class, type = "application/json")})
             },
-            pathParams = {
-                    @OpenApiParam(name = "offset", type = Integer.class, required = true)
-            }
-    )
+            pathParams = {@OpenApiParam(name = "offset", type = Integer.class, required = true)})
     public void usageMonth(Context ctx) {
         var stats = metrics().commands().month(offset(ctx, MAX_MONTH_OFFSET));
         if ("application/json".equals(ctx.header("Accept"))) {
@@ -82,14 +84,17 @@ public class Commands extends MetricsHolder {
             methods = HttpMethod.GET,
             tags = {"Commands"},
             responses = {
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = CommandsStatistic.class, type = "application/json")})
+                @OpenApiResponse(
+                        status = "200",
+                        content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
+                @OpenApiResponse(
+                        status = "200",
+                        content = {@OpenApiContent(from = CommandsStatistic.class, type = "application/json")})
             },
             pathParams = {
-                    @OpenApiParam(name = "offset", type = Integer.class, required = true),
-                    @OpenApiParam(name = "count", type = Integer.class, required = true)
-            }
-    )
+                @OpenApiParam(name = "offset", type = Integer.class, required = true),
+                @OpenApiParam(name = "count", type = Integer.class, required = true)
+            })
     public void countWeek(Context ctx) {
         var stats = metrics().commands().week(offset(ctx, MAX_WEEK_OFFSET), count(ctx, MAX_WEEKS));
         if ("application/json".equals(ctx.header("Accept"))) {
@@ -106,14 +111,17 @@ public class Commands extends MetricsHolder {
             methods = HttpMethod.GET,
             tags = {"Commands"},
             responses = {
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = CommandsStatistic.class, type = "application/json")})
+                @OpenApiResponse(
+                        status = "200",
+                        content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
+                @OpenApiResponse(
+                        status = "200",
+                        content = {@OpenApiContent(from = CommandsStatistic.class, type = "application/json")})
             },
             pathParams = {
-                    @OpenApiParam(name = "offset", type = Integer.class, required = true),
-                    @OpenApiParam(name = "count", type = Integer.class, required = true)
-            }
-    )
+                @OpenApiParam(name = "offset", type = Integer.class, required = true),
+                @OpenApiParam(name = "count", type = Integer.class, required = true)
+            })
     public void countMonth(Context ctx) {
         var stats = metrics().commands().month(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH));
         if ("application/json".equals(ctx.header("Accept"))) {

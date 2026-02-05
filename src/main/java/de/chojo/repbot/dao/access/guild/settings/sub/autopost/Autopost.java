@@ -25,7 +25,13 @@ import static de.chojo.sadu.queries.api.query.Query.query;
 public class Autopost extends AutopostPOJO implements GuildHolder {
     private final Settings settings;
 
-    private Autopost(Settings settings, boolean active, long channelId, long message, RefreshType refreshType, RefreshInterval refreshInterval) {
+    private Autopost(
+            Settings settings,
+            boolean active,
+            long channelId,
+            long message,
+            RefreshType refreshType,
+            RefreshInterval refreshInterval) {
         this.settings = settings;
         this.active = active;
         this.channelId = channelId;
@@ -39,7 +45,8 @@ public class Autopost extends AutopostPOJO implements GuildHolder {
     }
 
     public static Autopost build(Settings settings, Row rs) throws SQLException {
-        return new Autopost(settings,
+        return new Autopost(
+                settings,
                 rs.getBoolean("active"),
                 rs.getLong("channel_id"),
                 rs.getLong("message_id"),

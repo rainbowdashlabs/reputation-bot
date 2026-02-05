@@ -43,9 +43,9 @@ public class GuildGiven extends GuildRanking {
                     ) a;
                 """)
                 .single(call().bind("reset_date", resetDate(), INSTANT_TIMESTAMP)
-                              .bind(pageSize)
-                              .bind("guild_id", guildId()
-                              ).bind("date_init", mode.dateInit(), INSTANT_TIMESTAMP))
+                        .bind(pageSize)
+                        .bind("guild_id", guildId())
+                        .bind("date_init", mode.dateInit(), INSTANT_TIMESTAMP))
                 .map(row -> row.getInt("count"))
                 .first()
                 .orElse(0);
@@ -81,10 +81,10 @@ public class GuildGiven extends GuildRanking {
                 LIMIT ?;
                 """)
                 .single(call().bind("reset_date", resetDate(), INSTANT_TIMESTAMP)
-                              .bind("date_init", mode.dateInit(), INSTANT_TIMESTAMP)
-                              .bind("guild_id", guildId())
-                              .bind(page * pageSize)
-                              .bind(pageSize))
+                        .bind("date_init", mode.dateInit(), INSTANT_TIMESTAMP)
+                        .bind("guild_id", guildId())
+                        .bind(page * pageSize)
+                        .bind(pageSize))
                 .map(RankingEntry::buildGivenRanking)
                 .all();
     }

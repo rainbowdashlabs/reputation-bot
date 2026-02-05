@@ -36,15 +36,18 @@ public class SetResetDate implements SlashHandler {
             date = LocalDate.of(year, month, day).atStartOfDay(ZoneId.of("UTC")).toInstant();
         } catch (DateTimeException e) {
             event.reply(WebPromo.promoString(context) + context.localize("error.invalidDate"))
-                 .setEphemeral(true)
-                 .complete();
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
 
         guildRepository.guild(event.getGuild()).settings().general().resetDate(date);
 
-        event.reply(WebPromo.promoString(context) + context.localize("command.repadmin.resetdate.set.message.set", Replacement.create("DATE", Text.timestampDateTime(date))))
-             .setEphemeral(true)
-             .complete();
+        event.reply(WebPromo.promoString(context)
+                        + context.localize(
+                                "command.repadmin.resetdate.set.message.set",
+                                Replacement.create("DATE", Text.timestampDateTime(date))))
+                .setEphemeral(true)
+                .complete();
     }
 }

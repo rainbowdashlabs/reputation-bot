@@ -42,23 +42,24 @@ public abstract class BaseTop implements SlashHandler {
         this(guildRepository, configuration, true);
     }
 
-    public static MessageEditData buildRanking(List<RankingEntry> ranking, Ranking guildRanking, LocalizationContext context) {
+    public static MessageEditData buildRanking(
+            List<RankingEntry> ranking, Ranking guildRanking, LocalizationContext context) {
         if (ranking.isEmpty()) {
             return BaseTop.buildEmptyRanking(guildRanking, context);
         }
         var maxRank = ranking.get(ranking.size() - 1).rank();
-        var rankString = ranking.stream().map(rank -> rank.fancyString((int) maxRank))
-                                .collect(Collectors.joining("\n"));
+        var rankString =
+                ranking.stream().map(rank -> rank.fancyString((int) maxRank)).collect(Collectors.joining("\n"));
 
         return MessageEditData.fromEmbeds(BaseTop.createBaseBuilder(guildRanking, context)
-                                                 .setDescription(rankString)
-                                                 .build());
+                .setDescription(rankString)
+                .build());
     }
 
     private static MessageEditData buildEmptyRanking(Ranking ranking, LocalizationContext context) {
         return MessageEditData.fromEmbeds(BaseTop.createBaseBuilder(ranking, context)
-                                                 .setDescription("*" + context.localize("ranking.empty") + "*")
-                                                 .build());
+                .setDescription("*" + context.localize("ranking.empty") + "*")
+                .build());
     }
 
     protected static LocalizedEmbedBuilder createBaseBuilder(Ranking ranking, LocalizationContext context) {
@@ -69,8 +70,12 @@ public abstract class BaseTop implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        if (premium && Premium.isNotEntitled(context, configuration.skus().features().advancedRankings().advancedRankings())) {
-            Premium.replyPremium(context, configuration.skus().features().advancedRankings().advancedRankings());
+        if (premium
+                && Premium.isNotEntitled(
+                        context,
+                        configuration.skus().features().advancedRankings().advancedRankings())) {
+            Premium.replyPremium(
+                    context, configuration.skus().features().advancedRankings().advancedRankings());
             return;
         }
 
@@ -92,35 +97,40 @@ public abstract class BaseTop implements SlashHandler {
     }
 
     public void registerPage(Ranking ranking, EventContext context) {
-        context.registerPage(new PageBag(ranking.pages()) {
-            @Override
-            public MessageEditData buildPage() {
-                var entries = ranking.page(current());
-                var maxRank = entries.get(entries.size() - 1).rank();
-                var rankString = entries.stream().map(rank -> rank.fancyString((int) maxRank))
-                                        .collect(Collectors.joining("\n"));
+        context.registerPage(
+                new PageBag(ranking.pages()) {
+                    @Override
+                    public MessageEditData buildPage() {
+                        var entries = ranking.page(current());
+                        var maxRank = entries.get(entries.size() - 1).rank();
+                        var rankString = entries.stream()
+                                .map(rank -> rank.fancyString((int) maxRank))
+                                .collect(Collectors.joining("\n"));
 
-                return MessageEditData.fromEmbeds(createBaseBuilder(ranking, context.guildLocalizer())
-                        .setDescription(rankString)
-                        .build());
-            }
+                        return MessageEditData.fromEmbeds(createBaseBuilder(ranking, context.guildLocalizer())
+                                .setDescription(rankString)
+                                .build());
+                    }
 
-            @Override
-            public MessageEditData buildEmptyPage() {
-                return MessageEditData.fromEmbeds(createBaseBuilder(ranking, context.guildLocalizer())
-                        .setDescription("*" + context.localize("ranking.empty") + "*")
-                        .build());
-            }
-        }, true);
+                    @Override
+                    public MessageEditData buildEmptyPage() {
+                        return MessageEditData.fromEmbeds(createBaseBuilder(ranking, context.guildLocalizer())
+                                .setDescription("*" + context.localize("ranking.empty") + "*")
+                                .build());
+                    }
+                },
+                true);
     }
 
     @Override
     public void onAutoComplete(CommandAutoCompleteInteractionEvent event, EventContext context) {
         var option = event.getFocusedOption();
         if ("mode".equalsIgnoreCase(option.getName())) {
-            event.replyChoices(Completion.complete(option.getValue(), "total", "7 days", "30 days", "week", "month")).queue();
+            event.replyChoices(Completion.complete(option.getValue(), "total", "7 days", "30 days", "week", "month"))
+                    .queue();
         }
     }
 
-    protected abstract Ranking buildRanking(SlashCommandInteractionEvent event, RepGuild guild, ReputationMode reputationMode, int pageSize);
+    protected abstract Ranking buildRanking(
+            SlashCommandInteractionEvent event, RepGuild guild, ReputationMode reputationMode, int pageSize);
 }

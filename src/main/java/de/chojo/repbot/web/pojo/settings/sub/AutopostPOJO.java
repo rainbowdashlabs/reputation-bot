@@ -12,10 +12,13 @@ import de.chojo.repbot.dao.access.guild.settings.sub.autopost.RefreshType;
 
 public class AutopostPOJO {
     protected boolean active = false;
+
     @JsonSerialize(using = ToStringSerializer.class)
     protected long channelId = 0;
+
     @JsonSerialize(using = ToStringSerializer.class)
     protected long messageId = 0;
+
     protected RefreshType refreshType = RefreshType.DELETE_AND_REPOST;
     protected RefreshInterval refreshInterval = RefreshInterval.DAILY;
 

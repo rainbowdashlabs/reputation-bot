@@ -81,43 +81,43 @@ public class PremiumFeaturesPOJO {
         Map<Long, SkuInfo> skuMap = resolveSkus(shardManager);
 
         // Check simple boolean features
-        SimpleFeature reputationLog = createSimpleFeature(
-                subscriptions, features.reputationLog().extendedPages(), skuMap);
-        SimpleFeature analyzerLog = createSimpleFeature(
-                subscriptions, features.analyzerLog().longerLogTime(), skuMap);
-        SimpleFeature channelBlacklist = createSimpleFeature(
-                subscriptions, features.channelBlacklist().allow(), skuMap);
-        SimpleFeature localeOverrides = createSimpleFeature(
-                subscriptions, features.localeOverrides().reputationNameOverride(), skuMap);
-        SimpleFeature autopost = createSimpleFeature(
-                subscriptions, features.autopost().autopostChannel(), skuMap);
-        SimpleFeature advancedRankings = createSimpleFeature(
-                subscriptions, features.advancedRankings().advancedRankings(), skuMap);
-        SimpleFeature detailedProfile = createSimpleFeature(
-                subscriptions, features.detailedProfile().detailedProfile(), skuMap);
-        SimpleFeature logChannel = createSimpleFeature(
-                subscriptions, features.logChannel().logChannel(), skuMap);
-        SimpleFeature additionalEmojis = createSimpleFeature(
-                subscriptions, features.additionalEmojis().additionalEmojis(), skuMap);
-        SimpleFeature profile = createSimpleFeature(
-                subscriptions, features.profile().allow(), skuMap);
+        SimpleFeature reputationLog =
+                createSimpleFeature(subscriptions, features.reputationLog().extendedPages(), skuMap);
+        SimpleFeature analyzerLog =
+                createSimpleFeature(subscriptions, features.analyzerLog().longerLogTime(), skuMap);
+        SimpleFeature channelBlacklist =
+                createSimpleFeature(subscriptions, features.channelBlacklist().allow(), skuMap);
+        SimpleFeature localeOverrides =
+                createSimpleFeature(subscriptions, features.localeOverrides().reputationNameOverride(), skuMap);
+        SimpleFeature autopost =
+                createSimpleFeature(subscriptions, features.autopost().autopostChannel(), skuMap);
+        SimpleFeature advancedRankings =
+                createSimpleFeature(subscriptions, features.advancedRankings().advancedRankings(), skuMap);
+        SimpleFeature detailedProfile =
+                createSimpleFeature(subscriptions, features.detailedProfile().detailedProfile(), skuMap);
+        SimpleFeature logChannel =
+                createSimpleFeature(subscriptions, features.logChannel().logChannel(), skuMap);
+        SimpleFeature additionalEmojis =
+                createSimpleFeature(subscriptions, features.additionalEmojis().additionalEmojis(), skuMap);
+        SimpleFeature profile =
+                createSimpleFeature(subscriptions, features.profile().allow(), skuMap);
 
         // Check complex features with limits
         int defaultChannels = features.reputationChannel().defaultChannel();
-        boolean moreChannelsUnlocked = isEntitled(subscriptions, features.reputationChannel().moreChannel());
+        boolean moreChannelsUnlocked =
+                isEntitled(subscriptions, features.reputationChannel().moreChannel());
         FeatureLimit reputationChannel = new FeatureLimit(
                 moreChannelsUnlocked ? Integer.MAX_VALUE : defaultChannels,
                 moreChannelsUnlocked,
-                extractSkuInfos(features.reputationChannel().moreChannel(), skuMap)
-        );
+                extractSkuInfos(features.reputationChannel().moreChannel(), skuMap));
 
         int defaultCategories = features.reputationCategories().defaultCategories();
-        boolean moreCategoriesUnlocked = isEntitled(subscriptions, features.reputationCategories().moreCategories());
+        boolean moreCategoriesUnlocked =
+                isEntitled(subscriptions, features.reputationCategories().moreCategories());
         FeatureLimit reputationCategories = new FeatureLimit(
                 moreCategoriesUnlocked ? Integer.MAX_VALUE : defaultCategories,
                 moreCategoriesUnlocked,
-                extractSkuInfos(features.reputationCategories().moreCategories(), skuMap)
-        );
+                extractSkuInfos(features.reputationCategories().moreCategories(), skuMap));
 
         return new PremiumFeaturesPOJO(
                 reputationLog,
@@ -131,28 +131,26 @@ public class PremiumFeaturesPOJO {
                 additionalEmojis,
                 profile,
                 reputationChannel,
-                reputationCategories
-        );
+                reputationCategories);
     }
 
     private static Map<Long, SkuInfo> resolveSkus(ShardManager shardManager) {
         try {
-            List<net.dv8tion.jda.api.entities.SKU> skus = shardManager.getShards().getFirst()
-                                                                      .retrieveSKUList()
-                                                                      .complete();
+            List<net.dv8tion.jda.api.entities.SKU> skus =
+                    shardManager.getShards().getFirst().retrieveSKUList().complete();
 
             return skus.stream()
-                       .collect(Collectors.toMap(
-                               net.dv8tion.jda.api.entities.SKU::getIdLong,
-                               sku -> new SkuInfo(sku.getId(), sku.getName())
-                       ));
+                    .collect(Collectors.toMap(
+                            net.dv8tion.jda.api.entities.SKU::getIdLong,
+                            sku -> new SkuInfo(sku.getId(), sku.getName())));
         } catch (Exception e) {
             log.error("Failed to resolve SKU list from Discord", e);
             return new HashMap<>();
         }
     }
 
-    private static SimpleFeature createSimpleFeature(SkuMeta subscriptions, SKUEntry required, Map<Long, SkuInfo> skuMap) {
+    private static SimpleFeature createSimpleFeature(
+            SkuMeta subscriptions, SKUEntry required, Map<Long, SkuInfo> skuMap) {
         boolean unlocked = isEntitled(subscriptions, required);
         List<SkuInfo> requiredSkus = extractSkuInfos(required, skuMap);
         return new SimpleFeature(unlocked, requiredSkus);
@@ -160,10 +158,10 @@ public class PremiumFeaturesPOJO {
 
     private static List<SkuInfo> extractSkuInfos(SKUEntry entry, Map<Long, SkuInfo> skuMap) {
         return entry.sku().stream()
-                    .map(SKU::skuId)
-                    .map(skuMap::get)
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
+                .map(SKU::skuId)
+                .map(skuMap::get)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     private static boolean isEntitled(SkuMeta subscriptions, SkuMeta required) {

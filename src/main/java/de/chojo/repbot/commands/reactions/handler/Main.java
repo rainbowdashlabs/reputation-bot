@@ -28,8 +28,8 @@ public class Main implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var emote = event.getOption("emote").getAsString();
         var message = event.reply(context.localize("command.reactions.message.checking"))
-                           .flatMap(InteractionHook::retrieveOriginal)
-                           .complete();
+                .flatMap(InteractionHook::retrieveOriginal)
+                .complete();
         handleSetCheckResult(event.getGuild(), context, message, emote);
     }
 
@@ -39,20 +39,30 @@ public class Main implements SlashHandler {
         switch (result.result()) {
             case EMOJI_FOUND -> {
                 if (reactions.mainReaction(emote)) {
-                    message.editMessage(WebPromo.promoString(context) + "\n" + context.localize("command.reactions.main.message.set",
-                            Replacement.create("EMOTE", result.mention()))).complete();
+                    message.editMessage(WebPromo.promoString(context) + "\n"
+                                    + context.localize(
+                                            "command.reactions.main.message.set",
+                                            Replacement.create("EMOTE", result.mention())))
+                            .complete();
                 }
             }
             case EMOTE_FOUND -> {
                 if (reactions.mainReaction(result.id())) {
-                    message.editMessage(WebPromo.promoString(context) + "\n" + context.localize("command.reactions.main.message.set",
-                            Replacement.create("EMOTE", result.mention()))).queue();
+                    message.editMessage(WebPromo.promoString(context) + "\n"
+                                    + context.localize(
+                                            "command.reactions.main.message.set",
+                                            Replacement.create("EMOTE", result.mention())))
+                            .queue();
                 }
             }
             case NOT_FOUND ->
-                    message.editMessage(WebPromo.promoString(context) + "\n" + context.localize("command.reactions.message.notfound")).queue();
+                message.editMessage(WebPromo.promoString(context) + "\n"
+                                + context.localize("command.reactions.message.notfound"))
+                        .queue();
             case UNKNOWN_EMOJI ->
-                    message.editMessage(WebPromo.promoString(context) + "\n" + context.localize("command.reactions.message.emojinotfound")).queue();
+                message.editMessage(WebPromo.promoString(context) + "\n"
+                                + context.localize("command.reactions.message.emojinotfound"))
+                        .queue();
         }
     }
 }

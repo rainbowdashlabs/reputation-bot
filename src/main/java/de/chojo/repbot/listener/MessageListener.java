@@ -51,9 +51,15 @@ public class MessageListener extends ListenerAdapter {
     private final ContextResolver contextResolver;
     private final MessageAnalyzer messageAnalyzer;
 
-    public MessageListener(ILocalizer localizer, Configuration configuration, GuildRepository guildRepository, RepBotCachePolicy repBotCachePolicy,
-                           ReputationVoteListener reputationVoteListener, ReputationService reputationService,
-                           ContextResolver contextResolver, MessageAnalyzer messageAnalyzer) {
+    public MessageListener(
+            ILocalizer localizer,
+            Configuration configuration,
+            GuildRepository guildRepository,
+            RepBotCachePolicy repBotCachePolicy,
+            ReputationVoteListener reputationVoteListener,
+            ReputationService reputationService,
+            ContextResolver contextResolver,
+            MessageAnalyzer messageAnalyzer) {
         this.localizer = localizer;
         this.guildRepository = guildRepository;
         this.configuration = configuration;
@@ -82,7 +88,8 @@ public class MessageListener extends ListenerAdapter {
 
     @Override
     public void onMessageBulkDelete(@NotNull MessageBulkDeleteEvent event) {
-        reputationService.deleteBulk(event.getMessageIds().stream().map(Long::valueOf).toList(), event.getChannel(), event.getGuild());
+        reputationService.deleteBulk(
+                event.getMessageIds().stream().map(Long::valueOf).toList(), event.getChannel(), event.getGuild());
     }
 
     @Override
@@ -108,21 +115,30 @@ public class MessageListener extends ListenerAdapter {
         repBotCachePolicy.seen(event.getMember());
 
         if (!thank.donorRoles().hasRole(event.getMember())) {
-            analyzer.log(context, SubmitResult.of(SubmitResultType.NO_DONOR_ROLE, Replacement.createMention(event.getMember())));
+            analyzer.log(
+                    context,
+                    SubmitResult.of(SubmitResultType.NO_DONOR_ROLE, Replacement.createMention(event.getMember())));
             return;
         }
 
         var result = messageAnalyzer.processMessage(
-                thank.thankwords().thankwordPattern(), message, settings, true,
+                thank.thankwords().thankwordPattern(),
+                message,
+                settings,
+                true,
                 settings.abuseProtection().maxMessageReputation());
 
         if (result.isEmpty()
                 && (result.asEmpty().reason() == EmptyResultReason.NO_MATCH
-                || result.asEmpty().reason() == EmptyResultReason.NO_PATTERN)) return;
+                        || result.asEmpty().reason() == EmptyResultReason.NO_PATTERN)) return;
 
-
-        if (PermissionErrorHandler.assertAndHandle(event.getGuildChannel(), localizer.context(LocaleProvider.guild(event.getGuild())), configuration,
-                Permission.MESSAGE_SEND, Permission.MESSAGE_ADD_REACTION, Permission.MESSAGE_EMBED_LINKS)) {
+        if (PermissionErrorHandler.assertAndHandle(
+                event.getGuildChannel(),
+                localizer.context(LocaleProvider.guild(event.getGuild())),
+                configuration,
+                Permission.MESSAGE_SEND,
+                Permission.MESSAGE_ADD_REACTION,
+                Permission.MESSAGE_EMBED_LINKS)) {
             log.debug("Permission error while analyzing on {} message {}", message.getGuild(), message.getIdLong());
             return;
         }
@@ -135,7 +151,9 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        if (result.isEmpty() && (settings.reputation().isEmbedActive() || settings.reputation().isDirectActive())) {
+        if (result.isEmpty()
+                && (settings.reputation().isEmbedActive()
+                        || settings.reputation().isDirectActive())) {
             resolveNoTarget(context, settings);
             return;
         }
@@ -171,21 +189,33 @@ public class MessageListener extends ListenerAdapter {
 
     private void resolveNoTarget(ReputationContext context, Settings settings) {
         log.trace("Resolving missing target for {}", context.getIdLong());
-        var recentMembers = new LinkedHashSet<>(contextResolver.getCombinedContext(context.asMessage(), settings).members());
+        var recentMembers = new LinkedHashSet<>(contextResolver
+                .getCombinedContext(context.asMessage(), settings)
+                .members());
         recentMembers.remove(context.asMessage().getMember());
 
         if (recentMembers.isEmpty()) {
-            settings.repGuild().reputation().analyzer()
+            settings.repGuild()
+                    .reputation()
+                    .analyzer()
                     .log(context, SubmitResult.of(SubmitResultType.NO_RECENT_MEMBERS));
             log.trace("No recent members for {}", context.getIdLong());
             return;
         }
 
         var members = recentMembers.stream()
-                                   .filter(receiver -> reputationService.checkCooldown(context, context.asMessage().getMember(), receiver, context.getGuild(), settings).type() == SubmitResultType.SUCCESS)
-                                   .filter(receiver -> !settings.abuseProtection().isReceiverLimit(receiver))
-                                   .limit(10)
-                                   .collect(Collectors.toList());
+                .filter(receiver -> reputationService
+                                .checkCooldown(
+                                        context,
+                                        context.asMessage().getMember(),
+                                        receiver,
+                                        context.getGuild(),
+                                        settings)
+                                .type()
+                        == SubmitResultType.SUCCESS)
+                .filter(receiver -> !settings.abuseProtection().isReceiverLimit(receiver))
+                .limit(10)
+                .collect(Collectors.toList());
 
         if (members.isEmpty()) {
             settings.repGuild().reputation().analyzer().log(context, SubmitResult.of(SubmitResultType.ALL_COOLDOWN));
@@ -195,7 +225,13 @@ public class MessageListener extends ListenerAdapter {
 
         if (members.size() == 1 && settings.reputation().isDirectActive()) {
             log.trace("Found single target on {}. Skipping embed", context.getIdLong());
-            reputationService.submitReputation(context.getGuild(), context.asMessage().getMember(), members.get(0), context, null, ThankType.DIRECT);
+            reputationService.submitReputation(
+                    context.getGuild(),
+                    context.asMessage().getMember(),
+                    members.get(0),
+                    context,
+                    null,
+                    ThankType.DIRECT);
             return;
         }
 

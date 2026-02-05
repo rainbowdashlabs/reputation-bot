@@ -20,10 +20,14 @@ public class Profile extends ProfilePOJO implements GuildHolder {
     private final Settings settings;
 
     public Profile(Settings settings) {
-        this(settings,
+        this(
+                settings,
                 settings.guild().getSelfMember().getNickname(),
                 settings.guild().getSelfMember().getEffectiveAvatarUrl(),
-                settings.repGuild().localeOverrides().getOverride("words.reputation").orElse(null));
+                settings.repGuild()
+                        .localeOverrides()
+                        .getOverride("words.reputation")
+                        .orElse(null));
     }
 
     public Profile(Settings settings, String nickname, String profilePictureUrl, String reputationName) {
@@ -58,7 +62,11 @@ public class Profile extends ProfilePOJO implements GuildHolder {
             if (bytes == null) {
                 settings.guild().getSelfMember().getManager().setAvatar(null).complete();
             } else {
-                settings.guild().getSelfMember().getManager().setAvatar(Icon.from(bytes)).complete();
+                settings.guild()
+                        .getSelfMember()
+                        .getManager()
+                        .setAvatar(Icon.from(bytes))
+                        .complete();
             }
             return true;
         } catch (Exception e) {
@@ -87,7 +95,10 @@ public class Profile extends ProfilePOJO implements GuildHolder {
         if (!Objects.equals(newNickname, currentNickname)) nickname(newNickname);
 
         String newReputationName = pojo.reputationName();
-        String currentReputationName = settings.repGuild().localeOverrides().getOverride("words.reputation").orElse(null);
+        String currentReputationName = settings.repGuild()
+                .localeOverrides()
+                .getOverride("words.reputation")
+                .orElse(null);
         if (!Objects.equals(newReputationName, currentReputationName)) reputationName(newReputationName);
     }
 

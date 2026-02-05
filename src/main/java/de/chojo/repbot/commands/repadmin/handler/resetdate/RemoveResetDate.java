@@ -22,8 +22,9 @@ public class RemoveResetDate implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         guildRepository.guild(event.getGuild()).settings().general().resetDate(null);
 
-        event.reply(WebPromo.promoString(context) + context.localize("command.repadmin.resetdate.remove.message.removed"))
-             .setEphemeral(true)
-             .complete();
+        event.reply(WebPromo.promoString(context)
+                        + context.localize("command.repadmin.resetdate.remove.message.removed"))
+                .setEphemeral(true)
+                .complete();
     }
 }

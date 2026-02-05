@@ -49,10 +49,14 @@ public class ReactionListener extends ListenerAdapter {
     private final ILocalizer localizer;
     private final ReputationService reputationService;
     private final Configuration configuration;
-    private final Cache<Long, Instant> lastReaction = CacheBuilder.newBuilder().expireAfterAccess(60, TimeUnit.SECONDS)
-                                                                  .build();
+    private final Cache<Long, Instant> lastReaction =
+            CacheBuilder.newBuilder().expireAfterAccess(60, TimeUnit.SECONDS).build();
 
-    public ReactionListener(GuildRepository guildRepository, ILocalizer localizer, ReputationService reputationService, Configuration configuration) {
+    public ReactionListener(
+            GuildRepository guildRepository,
+            ILocalizer localizer,
+            ReputationService reputationService,
+            Configuration configuration) {
         this.guildRepository = guildRepository;
         this.localizer = localizer;
         this.reputationService = reputationService;
@@ -74,12 +78,13 @@ public class ReactionListener extends ListenerAdapter {
         Message message;
         try {
             message = event.getChannel()
-                           .retrieveMessageById(event.getMessageId())
-                           .timeout(10, TimeUnit.SECONDS)
-                           .onErrorMap(err -> null)
-                           .complete();
+                    .retrieveMessageById(event.getMessageId())
+                    .timeout(10, TimeUnit.SECONDS)
+                    .onErrorMap(err -> null)
+                    .complete();
         } catch (InsufficientPermissionException e) {
-            PermissionErrorHandler.handle(e, event.getGuild(), localizer.context(LocaleProvider.guild(event.getGuild())), configuration);
+            PermissionErrorHandler.handle(
+                    e, event.getGuild(), localizer.context(LocaleProvider.guild(event.getGuild())), configuration);
             return;
         }
 
@@ -89,11 +94,15 @@ public class ReactionListener extends ListenerAdapter {
 
         var logEntry = repGuild.reputation().log().getLogEntries(message);
         if (!logEntry.isEmpty()) {
-            // If an entry is already present, the target is actually not the message author but the one who received the reputation.
-            // This is important if people react to the reputation emoji. In that case they agree with the reputation and second it.
+            // If an entry is already present, the target is actually not the message author but the one who received
+            // the reputation.
+            // This is important if people react to the reputation emoji. In that case they agree with the reputation
+            // and second it.
             Member newReceiver;
             try {
-                newReceiver = event.getGuild().retrieveMemberById(logEntry.get(0).receiverId()).complete();
+                newReceiver = event.getGuild()
+                        .retrieveMemberById(logEntry.get(0).receiverId())
+                        .complete();
             } catch (RuntimeException e) {
                 return;
             }
@@ -102,35 +111,56 @@ public class ReactionListener extends ListenerAdapter {
             receiver = newReceiver;
         }
 
-        if (PermissionErrorHandler.assertAndHandle(event.getGuildChannel(), localizer.context(LocaleProvider.guild(event.getGuild())), configuration, Permission.MESSAGE_SEND)) {
+        if (PermissionErrorHandler.assertAndHandle(
+                event.getGuildChannel(),
+                localizer.context(LocaleProvider.guild(event.getGuild())),
+                configuration,
+                Permission.MESSAGE_SEND)) {
             return;
         }
 
-        if (reputationService.submitReputation(event.getGuild(), event.getMember(), receiver, ReputationContext.fromMessage(message), null, ThankType.REACTION).type() == SubmitResultType.SUCCESS) {
+        if (reputationService
+                        .submitReputation(
+                                event.getGuild(),
+                                event.getMember(),
+                                receiver,
+                                ReputationContext.fromMessage(message),
+                                null,
+                                ThankType.REACTION)
+                        .type()
+                == SubmitResultType.SUCCESS) {
             reacted(event.getMember());
             if (guildSettings.messages().isReactionConfirmation()) {
-                event.getChannel().sendMessage(localizer.localize("listener.reaction.confirmation", event.getGuild(),
-                             Replacement.createMention("DONOR", event.getUser()),
-                             Replacement.createMention("RECEIVER", receiver)))
-                     .mention(event.getUser())
-                     .onErrorFlatMap(err -> null)
-                     .delay(30, TimeUnit.SECONDS)
-                     .flatMap(Message::delete)
-                     .onErrorMap(err -> null)
-                     .complete();
+                event.getChannel()
+                        .sendMessage(localizer.localize(
+                                "listener.reaction.confirmation",
+                                event.getGuild(),
+                                Replacement.createMention("DONOR", event.getUser()),
+                                Replacement.createMention("RECEIVER", receiver)))
+                        .mention(event.getUser())
+                        .onErrorFlatMap(err -> null)
+                        .delay(30, TimeUnit.SECONDS)
+                        .flatMap(Message::delete)
+                        .onErrorMap(err -> null)
+                        .complete();
             }
         }
     }
-
 
     @Override
     public void onMessageReactionRemoveEmoji(@NotNull MessageReactionRemoveEmojiEvent event) {
         if (!event.isFromGuild()) return;
         var guildSettings = guildRepository.guild(event.getGuild()).settings();
         if (!guildSettings.thanking().reactions().isReaction(event.getReaction())) return;
-        List<ReputationLogEntry> entries = guildRepository.guild(event.getGuild()).reputation().log().messageLog(event.getMessageIdLong(), 50).stream()
-                                                          .filter(entry -> entry.type() == ThankType.REACTION)
-                                                          .toList();
+        List<ReputationLogEntry> entries =
+                guildRepository
+                        .guild(event.getGuild())
+                        .reputation()
+                        .log()
+                        .messageLog(event.getMessageIdLong(), 50)
+                        .stream()
+                        .filter(entry -> entry.type() == ThankType.REACTION)
+                        .toList();
         reputationService.delete(entries, event.getGuildChannel(), event.getGuild());
     }
 
@@ -139,31 +169,50 @@ public class ReactionListener extends ListenerAdapter {
         if (!event.isFromGuild()) return;
         var guildSettings = guildRepository.guild(event.getGuild()).settings();
         if (!guildSettings.thanking().reactions().isReaction(event.getReaction())) return;
-        var entries = guildRepository.guild(event.getGuild()).reputation().log().messageLog(event.getMessageIdLong(), 50)
-                                     .stream()
-                                     .filter(entry -> entry.type() == ThankType.REACTION && entry.donorId() == event.getUserIdLong())
-                                     .toList();
+        var entries =
+                guildRepository
+                        .guild(event.getGuild())
+                        .reputation()
+                        .log()
+                        .messageLog(event.getMessageIdLong(), 50)
+                        .stream()
+                        .filter(entry -> entry.type() == ThankType.REACTION && entry.donorId() == event.getUserIdLong())
+                        .toList();
         if (!entries.isEmpty() && guildSettings.messages().isReactionConfirmation()) {
             reputationService.delete(entries, event.getGuildChannel(), event.getGuild());
-            event.getChannel().sendMessage(localizer.localize("listener.reaction.removal", event.getGuild(),
-                         Replacement.create("DONOR", User.fromId(event.getUserId()).getAsMention())))
-                 .delay(30, TimeUnit.SECONDS).flatMap(Message::delete)
-                 .queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
+            event.getChannel()
+                    .sendMessage(localizer.localize(
+                            "listener.reaction.removal",
+                            event.getGuild(),
+                            Replacement.create(
+                                    "DONOR", User.fromId(event.getUserId()).getAsMention())))
+                    .delay(30, TimeUnit.SECONDS)
+                    .flatMap(Message::delete)
+                    .queue(
+                            RestAction.getDefaultSuccess(),
+                            ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
         }
     }
 
     @Override
     public void onMessageReactionRemoveAll(@NotNull MessageReactionRemoveAllEvent event) {
-        List<ReputationLogEntry> entries = guildRepository.guild(event.getGuild()).reputation().log().messageLog(event.getMessageIdLong(), 50).stream()
-                                                          .filter(entry -> entry.type() == ThankType.REACTION)
-                                                          .toList();
+        List<ReputationLogEntry> entries =
+                guildRepository
+                        .guild(event.getGuild())
+                        .reputation()
+                        .log()
+                        .messageLog(event.getMessageIdLong(), 50)
+                        .stream()
+                        .filter(entry -> entry.type() == ThankType.REACTION)
+                        .toList();
         reputationService.delete(entries, event.getGuildChannel(), event.getGuild());
     }
 
     public boolean isCooldown(Member member) {
         try {
-            return lastReaction.get(member.getIdLong(), () -> Instant.MIN)
-                               .isAfter(Instant.now().minus(REACTION_COOLDOWN, ChronoUnit.SECONDS));
+            return lastReaction
+                    .get(member.getIdLong(), () -> Instant.MIN)
+                    .isAfter(Instant.now().minus(REACTION_COOLDOWN, ChronoUnit.SECONDS));
         } catch (ExecutionException e) {
             log.error("Could not compute instant", e);
         }

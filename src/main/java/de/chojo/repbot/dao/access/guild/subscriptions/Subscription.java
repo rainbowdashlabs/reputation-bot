@@ -22,7 +22,13 @@ public class Subscription extends SKU {
     private final Instant endsAt;
     private final boolean persistent;
 
-    public Subscription(long skuId, long id, SkuTarget skuTarget, Entitlement.EntitlementType purchaseType, Instant endsAt, boolean persistent) {
+    public Subscription(
+            long skuId,
+            long id,
+            SkuTarget skuTarget,
+            Entitlement.EntitlementType purchaseType,
+            Instant endsAt,
+            boolean persistent) {
         super(skuId);
         this.id = id;
         this.skuTarget = skuTarget;
@@ -45,11 +51,14 @@ public class Subscription extends SKU {
         SkuTarget targetType = SkuTarget.fromEntitlement(entitlement);
         long target = entitlement.getGuildId() == null ? entitlement.getUserIdLong() : entitlement.getGuildIdLong();
 
-        return new Subscription(entitlement.getSkuIdLong(),
+        return new Subscription(
+                entitlement.getSkuIdLong(),
                 target,
                 targetType,
                 entitlement.getType(),
-                Optional.ofNullable(entitlement.getTimeEnding()).map(OffsetDateTime::toInstant).orElse(null),
+                Optional.ofNullable(entitlement.getTimeEnding())
+                        .map(OffsetDateTime::toInstant)
+                        .orElse(null),
                 false);
     }
 

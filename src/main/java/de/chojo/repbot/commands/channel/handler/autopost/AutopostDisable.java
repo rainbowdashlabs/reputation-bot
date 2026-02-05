@@ -26,7 +26,7 @@ public class AutopostDisable implements SlashHandler {
         guildRepository.guild(event.getGuild()).settings().autopost().active(false);
         autopostService.delete(event.getGuild());
         event.reply(WebPromo.promoString(context) + "command.channel.autopost.disable.message.disabled")
-             .setEphemeral(true)
-             .complete();
+                .setEphemeral(true)
+                .complete();
     }
 }

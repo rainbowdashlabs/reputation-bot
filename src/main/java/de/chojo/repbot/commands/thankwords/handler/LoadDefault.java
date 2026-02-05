@@ -31,34 +31,43 @@ public class LoadDefault implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var languageOption = event.getOption("language");
         if (languageOption == null) {
-            event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.thankwords.loaddefault.message.available")
-                         + " " + String.join(", ", thankwordsContainer.getAvailableLanguages()))
-                 .setEphemeral(true)
-                 .complete();
+            event.reply(WebPromo.promoString(context) + "\n"
+                            + context.localize("command.thankwords.loaddefault.message.available") + " "
+                            + String.join(", ", thankwordsContainer.getAvailableLanguages()))
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
         var language = languageOption.getAsString();
         var words = thankwordsContainer.get(language.toLowerCase(Locale.ROOT));
         if (words == null) {
-            event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.locale.set.message.invalidlocale"))
-                 .setEphemeral(true)
-                 .complete();
+            event.reply(WebPromo.promoString(context) + "\n"
+                            + context.localize("command.locale.set.message.invalidlocale"))
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
         for (var word : words) {
-            guildRepository.guild(event.getGuild()).settings().thanking().thankwords().add(word);
+            guildRepository
+                    .guild(event.getGuild())
+                    .settings()
+                    .thanking()
+                    .thankwords()
+                    .add(word);
         }
 
         var wordsJoined = words.stream().map(w -> StringUtils.wrap(w, "`")).collect(Collectors.joining(", "));
 
-        event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.thankwords.loaddefault.message.added") + wordsJoined)
-             .setEphemeral(true)
-             .complete();
+        event.reply(WebPromo.promoString(context) + "\n"
+                        + context.localize("command.thankwords.loaddefault.message.added") + wordsJoined)
+                .setEphemeral(true)
+                .complete();
     }
 
     @Override
     public void onAutoComplete(CommandAutoCompleteInteractionEvent event, EventContext context) {
         var option = event.getFocusedOption();
-        event.replyChoices(Completion.complete(option.getValue(), thankwordsContainer.getAvailableLanguages())).queue();
+        event.replyChoices(Completion.complete(option.getValue(), thankwordsContainer.getAvailableLanguages()))
+                .queue();
     }
 }

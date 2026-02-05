@@ -35,7 +35,7 @@ public class Localization {
             DiscordLocale.FINNISH, // fi
             DiscordLocale.SWEDISH, // sv-SE
             DiscordLocale.JAPANESE // ja
-    );
+            );
 
     private final Configuration configuration;
     private final Data data;
@@ -54,17 +54,20 @@ public class Localization {
 
     public void init() {
         localizer = Localizer.builder(DiscordLocale.ENGLISH_US)
-                             .addLanguage(SUPPORTED_LANGUAGES.toArray(new DiscordLocale[0]))
-                             .withLanguageProvider(guild -> data.guildRepository().guild(guild).settings().general().language())
-                             .withGuildLocaleCodeProvider((guild, code) -> {
-                                 if (!"words.reputation".equals(code)) return Optional.empty();
-                                 if (Premium.isNotEntitled(data.guildRepository().guild(guild).subscriptions(), configuration.skus().features().localeOverrides().reputationNameOverride())) {
-                                     return Optional.empty();
-                                 }
-                                 return data.guildRepository().guild(guild).localeOverrides().getOverride(code);
-                             })
-                             .withBundlePath("locale")
-                             .build();
+                .addLanguage(SUPPORTED_LANGUAGES.toArray(new DiscordLocale[0]))
+                .withLanguageProvider(guild ->
+                        data.guildRepository().guild(guild).settings().general().language())
+                .withGuildLocaleCodeProvider((guild, code) -> {
+                    if (!"words.reputation".equals(code)) return Optional.empty();
+                    if (Premium.isNotEntitled(
+                            data.guildRepository().guild(guild).subscriptions(),
+                            configuration.skus().features().localeOverrides().reputationNameOverride())) {
+                        return Optional.empty();
+                    }
+                    return data.guildRepository().guild(guild).localeOverrides().getOverride(code);
+                })
+                .withBundlePath("locale")
+                .build();
     }
 
     public Localizer localizer() {
@@ -73,12 +76,8 @@ public class Localization {
 
     public List<LanguageInfo> languages() {
         return SUPPORTED_LANGUAGES.stream()
-                                  .map(locale -> new LanguageInfo(
-                                          locale.getLocale(),
-                                          locale.getLanguageName(),
-                                          locale.getNativeName(),
-                                          locale.name()
-                                  ))
-                                  .toList();
+                .map(locale -> new LanguageInfo(
+                        locale.getLocale(), locale.getLanguageName(), locale.getNativeName(), locale.name()))
+                .toList();
     }
 }

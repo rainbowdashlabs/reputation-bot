@@ -12,7 +12,6 @@ import de.chojo.repbot.config.Configuration;
 
 public class Invite extends SlashCommand {
     public Invite(Configuration configuration) {
-        super(Slash.of("invite", "command.invite.description")
-                   .command(new Show(configuration)));
+        super(Slash.of("invite", "command.invite.description").command(new Show(configuration)));
     }
 }

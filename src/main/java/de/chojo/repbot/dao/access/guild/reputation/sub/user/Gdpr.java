@@ -32,7 +32,7 @@ public class Gdpr implements MemberHolder {
     public void queueDeletion() {
         log.debug("User {} is scheduled for deletion on guild {}", userId(), guildId());
         query("""
-                
+
                 INSERT
                    INTO
                        cleanup_schedule(guild_id, user_id, delete_after)
@@ -42,8 +42,9 @@ public class Gdpr implements MemberHolder {
                        DO NOTHING;
                 """, repUser.configuration().cleanup().cleanupScheduleDays())
                 .single(call().bind(guildId())
-                              .bind(userId())
-                              .bind("%d DAYS".formatted(repUser.configuration().cleanup().cleanupScheduleDays())))
+                        .bind(userId())
+                        .bind("%d DAYS"
+                                .formatted(repUser.configuration().cleanup().cleanupScheduleDays())))
                 .update();
     }
 
@@ -53,10 +54,7 @@ public class Gdpr implements MemberHolder {
                     cleanup_schedule
                 WHERE guild_id = ?
                     AND user_id = ?;
-                """)
-                .single(call().bind(guildId()).bind(userId()))
-                .update()
-                .changed()) {
+                """).single(call().bind(guildId()).bind(userId())).update().changed()) {
             log.debug("User {} deletion on guild {} canceled", userId(), guildId());
         }
     }

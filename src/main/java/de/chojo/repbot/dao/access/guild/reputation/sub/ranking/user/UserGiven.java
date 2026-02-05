@@ -49,11 +49,11 @@ public class UserGiven extends UserRanking {
                 LIMIT ?;
                 """)
                 .single(call().bind(guildId())
-                              .bind("reset_date", resetDate(), INSTANT_TIMESTAMP)
-                              .bind(member.getIdLong())
-                              .bind(mode.dateInit(), INSTANT_TIMESTAMP)
-                              .bind(page * pageSize)
-                              .bind(pageSize))
+                        .bind("reset_date", resetDate(), INSTANT_TIMESTAMP)
+                        .bind(member.getIdLong())
+                        .bind(mode.dateInit(), INSTANT_TIMESTAMP)
+                        .bind(page * pageSize)
+                        .bind(pageSize))
                 .map(RankingEntry::buildGivenRanking)
                 .all();
     }
@@ -75,10 +75,11 @@ public class UserGiven extends UserRanking {
                           AND ( received > :reset_date OR :reset_date::TIMESTAMP IS NULL )
                     ) a;
                 """)
-                .single(call().bind(pageSize).bind(guildId())
-                              .bind("reset_date", resetDate(), INSTANT_TIMESTAMP)
-                              .bind(member.getIdLong())
-                              .bind(mode.dateInit(), INSTANT_TIMESTAMP))
+                .single(call().bind(pageSize)
+                        .bind(guildId())
+                        .bind("reset_date", resetDate(), INSTANT_TIMESTAMP)
+                        .bind(member.getIdLong())
+                        .bind(mode.dateInit(), INSTANT_TIMESTAMP))
                 .map(row -> row.getInt("count"))
                 .first()
                 .orElse(0);

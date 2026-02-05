@@ -27,19 +27,26 @@ public class AutopostInfo implements SlashHandler {
         Autopost autopost = guildRepository.guild(event.getGuild()).settings().autopost();
 
         if (!autopost.active()) {
-            event.reply(WebPromo.promoString(context) + context.localize("command.channel.autopost.info.message.inactive"))
-                 .setEphemeral(true)
-                 .complete();
+            event.reply(WebPromo.promoString(context)
+                            + context.localize("command.channel.autopost.info.message.inactive"))
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
         MessageEmbed embed = new LocalizedEmbedBuilder(context.guildLocalizer())
                 .setTitle("command.channel.autopost.info.embed.title")
                 .addField("words.channel", MentionUtil.channel(autopost.channelId()), true)
-                .addField("command.channel.autopost.info.embed.refreshinterval", autopost.refreshInterval().toString(), true)
-                .addField("command.channel.autopost.info.embed.refreshtype", autopost.refreshType().toString(), true)
+                .addField(
+                        "command.channel.autopost.info.embed.refreshinterval",
+                        autopost.refreshInterval().toString(),
+                        true)
+                .addField(
+                        "command.channel.autopost.info.embed.refreshtype",
+                        autopost.refreshType().toString(),
+                        true)
                 .build();
         event.replyEmbeds(WebPromo.promoEmbed(context), embed)
-             .setEphemeral(true)
-             .complete();
+                .setEphemeral(true)
+                .complete();
     }
 }

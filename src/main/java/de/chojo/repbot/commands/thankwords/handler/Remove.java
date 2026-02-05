@@ -32,26 +32,39 @@ public class Remove implements SlashHandler {
             Pattern.compile(pattern);
         } catch (PatternSyntaxException e) {
             event.reply(WebPromo.promoString(context) + "\n" + context.localize("error.invalidRegex"))
-                 .setEphemeral(true)
-                 .complete();
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
-        if (guildRepository.guild(event.getGuild()).settings().thanking().thankwords().remove(pattern)) {
-            event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.thankwords.remove.message.removed",
-                         Replacement.create("PATTERN", pattern, Format.CODE)))
-                 .setEphemeral(true)
-                 .complete();
+        if (guildRepository
+                .guild(event.getGuild())
+                .settings()
+                .thanking()
+                .thankwords()
+                .remove(pattern)) {
+            event.reply(WebPromo.promoString(context) + "\n"
+                            + context.localize(
+                                    "command.thankwords.remove.message.removed",
+                                    Replacement.create("PATTERN", pattern, Format.CODE)))
+                    .setEphemeral(true)
+                    .complete();
             return;
         }
-        event.reply(WebPromo.promoString(context) + "\n" + context.localize("command.thankwords.remove.message.patternnotfound"))
-             .setEphemeral(true)
-             .complete();
+        event.reply(WebPromo.promoString(context) + "\n"
+                        + context.localize("command.thankwords.remove.message.patternnotfound"))
+                .setEphemeral(true)
+                .complete();
     }
 
     @Override
     public void onAutoComplete(CommandAutoCompleteInteractionEvent event, EventContext context) {
         var option = event.getFocusedOption();
-        var thankwords = guildRepository.guild(event.getGuild()).settings().thanking().thankwords().words();
+        var thankwords = guildRepository
+                .guild(event.getGuild())
+                .settings()
+                .thanking()
+                .thankwords()
+                .words();
         event.replyChoices(Completion.complete(option.getValue(), thankwords)).queue();
     }
 }

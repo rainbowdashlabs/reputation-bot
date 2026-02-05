@@ -19,7 +19,12 @@ public class FuzzyAnalyzerResult extends MatchAnalyzerResult {
     private final List<MemberMatch> memberMatches;
     private final List<WeightedEntry<Member>> weightedReceiver;
 
-    public FuzzyAnalyzerResult(String match, List<String> thankwords, List<MemberMatch> memberMatches, Member donor, List<WeightedEntry<Member>> weightedReceiver) {
+    public FuzzyAnalyzerResult(
+            String match,
+            List<String> thankwords,
+            List<MemberMatch> memberMatches,
+            Member donor,
+            List<WeightedEntry<Member>> weightedReceiver) {
         super(ThankType.FUZZY, donor, match);
         this.thankwords = thankwords;
         this.memberMatches = memberMatches;

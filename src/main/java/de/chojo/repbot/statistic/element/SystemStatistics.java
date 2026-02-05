@@ -24,17 +24,14 @@ public class SystemStatistics implements ReplacementProvider, EmbedDisplay {
     private final GlobalInfoStatisticDisplay globalInfoStatisticDisplay;
     private final SystemInfoStatisticDisplay systemInfoStatisticDisplay;
 
-    public SystemStatistics(ProcessStatistics processStatistics, DataStatistic dataStatistic,
-                            List<ShardStatistic> shardStatistics) {
+    public SystemStatistics(
+            ProcessStatistics processStatistics, DataStatistic dataStatistic, List<ShardStatistic> shardStatistics) {
         this.processStatistics = processStatistics;
         this.dataStatistic = dataStatistic;
         shardCountStatistic = new ShardCountStatistic(shardStatistics);
         aggregatedShards = new GlobalShardStatistic(shardStatistics);
-        globalInfoStatisticDisplay = new GlobalInfoStatisticDisplay(aggregatedShards,
-                dataStatistic);
-        systemInfoStatisticDisplay = new SystemInfoStatisticDisplay(shardCountStatistic,
-                dataStatistic);
-
+        globalInfoStatisticDisplay = new GlobalInfoStatisticDisplay(aggregatedShards, dataStatistic);
+        systemInfoStatisticDisplay = new SystemInfoStatisticDisplay(shardCountStatistic, dataStatistic);
     }
 
     public ProcessStatistics processStatistics() {

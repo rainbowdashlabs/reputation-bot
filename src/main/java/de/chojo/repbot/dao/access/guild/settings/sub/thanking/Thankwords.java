@@ -27,8 +27,10 @@ import static org.slf4j.LoggerFactory.getLogger;
 @JsonSerializeAs(ThankwordsPOJO.class)
 public class Thankwords extends ThankwordsPOJO implements GuildHolder {
     private static final Logger log = getLogger(Thankwords.class);
+
     @Language("RegExp")
     private static final String THANKWORD = "(?:^|\\b)%s(?:$|\\b)";
+
     @Language("RegExp")
     private static final String PATTERN = "(?i)(?<match>%s)";
 
@@ -67,7 +69,8 @@ public class Thankwords extends ThankwordsPOJO implements GuildHolder {
     }
 
     public Pattern thankwordPattern() {
-        // even if another thread has a write-lock, we either read the old pattern before the other thread compiles the new one,
+        // even if another thread has a write-lock, we either read the old pattern before the other thread compiles the
+        // new one,
         // or we read the new one - both fine for our use
         return cachedPattern;
     }
@@ -112,9 +115,10 @@ public class Thankwords extends ThankwordsPOJO implements GuildHolder {
                     WHERE
                         guild_id = ?
                         AND thankword = ?
-                    """).single(call().bind(guildId()).bind(pattern))
-                        .update()
-                        .changed();
+                    """)
+                    .single(call().bind(guildId()).bind(pattern))
+                    .update()
+                    .changed();
             if (result) {
                 thankwords.remove(pattern);
                 cachedPattern = compilePattern();
@@ -152,11 +156,9 @@ public class Thankwords extends ThankwordsPOJO implements GuildHolder {
     }
 
     private Pattern compilePattern(Set<String> thankwords) {
-        var twPattern = thankwords.stream()
-                                  .map(t -> String.format(THANKWORD, t))
-                                  .collect(Collectors.joining("|"));
-        return Pattern.compile(String.format(PATTERN, twPattern),
-                Pattern.CASE_INSENSITIVE + Pattern.MULTILINE + Pattern.DOTALL);
-
+        var twPattern =
+                thankwords.stream().map(t -> String.format(THANKWORD, t)).collect(Collectors.joining("|"));
+        return Pattern.compile(
+                String.format(PATTERN, twPattern), Pattern.CASE_INSENSITIVE + Pattern.MULTILINE + Pattern.DOTALL);
     }
 }

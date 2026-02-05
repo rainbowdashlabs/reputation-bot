@@ -28,7 +28,10 @@ public class Restart implements SlashHandler {
             event.reply("No.").setEphemeral(true).complete();
             return;
         }
-        log.info(LogNotify.STATUS, "Restart command received from {}. Attempting restart.", event.getUser().getAsTag());
+        log.info(
+                LogNotify.STATUS,
+                "Restart command received from {}. Attempting restart.",
+                event.getUser().getAsTag());
         event.reply("Restarting. Will be back soon!").complete();
         System.exit(10);
     }

@@ -39,14 +39,17 @@ public class Service extends MetricsHolder {
             methods = HttpMethod.GET,
             tags = {"Service"},
             responses = {
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = LabeledCountStatistic.class, type = "application/json")})
+                @OpenApiResponse(
+                        status = "200",
+                        content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
+                @OpenApiResponse(
+                        status = "200",
+                        content = {@OpenApiContent(from = LabeledCountStatistic.class, type = "application/json")})
             },
             pathParams = {
-                    @OpenApiParam(name = "offset", type = Integer.class, required = true),
-                    @OpenApiParam(name = "count", type = Integer.class, required = true)
-            }
-    )
+                @OpenApiParam(name = "offset", type = Integer.class, required = true),
+                @OpenApiParam(name = "count", type = Integer.class, required = true)
+            })
     public void countHour(Context ctx) {
         var stats = metrics().service().hour(offset(ctx, MAX_HOUR_OFFSET), count(ctx, MAX_HOURS));
         if ("application/json".equals(ctx.header("Accept"))) {
@@ -63,14 +66,17 @@ public class Service extends MetricsHolder {
             methods = HttpMethod.GET,
             tags = {"Service"},
             responses = {
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = LabeledCountStatistic.class, type = "application/json")})
+                @OpenApiResponse(
+                        status = "200",
+                        content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
+                @OpenApiResponse(
+                        status = "200",
+                        content = {@OpenApiContent(from = LabeledCountStatistic.class, type = "application/json")})
             },
             pathParams = {
-                    @OpenApiParam(name = "offset", type = Integer.class, required = true),
-                    @OpenApiParam(name = "count", type = Integer.class, required = true)
-            }
-    )
+                @OpenApiParam(name = "offset", type = Integer.class, required = true),
+                @OpenApiParam(name = "count", type = Integer.class, required = true)
+            })
     public void countDay(Context ctx) {
         var stats = metrics().service().day(offset(ctx, MAX_DAY_OFFSET), count(ctx, MAX_DAYS));
         if ("application/json".equals(ctx.header("Accept"))) {
@@ -87,14 +93,17 @@ public class Service extends MetricsHolder {
             methods = HttpMethod.GET,
             tags = {"Service"},
             responses = {
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = LabeledCountStatistic.class, type = "application/json")})
+                @OpenApiResponse(
+                        status = "200",
+                        content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
+                @OpenApiResponse(
+                        status = "200",
+                        content = {@OpenApiContent(from = LabeledCountStatistic.class, type = "application/json")})
             },
             pathParams = {
-                    @OpenApiParam(name = "offset", type = Integer.class, required = true),
-                    @OpenApiParam(name = "count", type = Integer.class, required = true)
-            }
-    )
+                @OpenApiParam(name = "offset", type = Integer.class, required = true),
+                @OpenApiParam(name = "count", type = Integer.class, required = true)
+            })
     public void countWeek(Context ctx) {
         var stats = metrics().service().week(offset(ctx, MAX_WEEK_OFFSET), count(ctx, MAX_WEEKS));
         if ("application/json".equals(ctx.header("Accept"))) {
@@ -111,14 +120,17 @@ public class Service extends MetricsHolder {
             methods = HttpMethod.GET,
             tags = {"Service"},
             responses = {
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
-                    @OpenApiResponse(status = "200", content = {@OpenApiContent(from = LabeledCountStatistic.class, type = "application/json")})
+                @OpenApiResponse(
+                        status = "200",
+                        content = {@OpenApiContent(from = byte[].class, type = "image/png")}),
+                @OpenApiResponse(
+                        status = "200",
+                        content = {@OpenApiContent(from = LabeledCountStatistic.class, type = "application/json")})
             },
             pathParams = {
-                    @OpenApiParam(name = "offset", type = Integer.class, required = true),
-                    @OpenApiParam(name = "count", type = Integer.class, required = true)
-            }
-    )
+                @OpenApiParam(name = "offset", type = Integer.class, required = true),
+                @OpenApiParam(name = "count", type = Integer.class, required = true)
+            })
     public void countMonth(Context ctx) {
         var stats = metrics().service().month(offset(ctx, MAX_MONTH_OFFSET), count(ctx, MAX_MONTH));
         if ("application/json".equals(ctx.header("Accept"))) {
@@ -130,7 +142,8 @@ public class Service extends MetricsHolder {
 
     @Override
     public void buildRoutes() {
-        path("service",
+        path(
+                "service",
                 () -> path("count", () -> {
                     get("hour/{offset}/{count}", this::countHour);
                     get("day/{offset}/{count}", this::countDay);

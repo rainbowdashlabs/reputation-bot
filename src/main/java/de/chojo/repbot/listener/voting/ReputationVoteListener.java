@@ -45,7 +45,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 public class ReputationVoteListener extends ListenerAdapter {
-    private static final ActionRowChildComponent DELETE = Button.of(ButtonStyle.DANGER, "vote:delete", Emoji.fromUnicode("🗑️"));
+    private static final ActionRowChildComponent DELETE =
+            Button.of(ButtonStyle.DANGER, "vote:delete", Emoji.fromUnicode("🗑️"));
     private static final Pattern VOTE = Pattern.compile("vote:(?<id>\\d*?)");
     private final GuildRepository guildRepository;
     private final ReputationService reputationService;
@@ -53,7 +54,11 @@ public class ReputationVoteListener extends ListenerAdapter {
     private final Configuration configuration;
     private final Map<Long, VoteRequest> voteRequests = new HashMap<>();
 
-    public ReputationVoteListener(GuildRepository guildRepository, ReputationService reputationService, ILocalizer localizer, Configuration configuration) {
+    public ReputationVoteListener(
+            GuildRepository guildRepository,
+            ReputationService reputationService,
+            ILocalizer localizer,
+            Configuration configuration) {
         this.guildRepository = guildRepository;
         this.reputationService = reputationService;
         loc = localizer;
@@ -72,13 +77,20 @@ public class ReputationVoteListener extends ListenerAdapter {
         }
         var voteRequest = voteRequests.get(event.getMessageIdLong());
         if (!Verifier.equalSnowflake(voteRequest.member(), event.getMember())) {
-            event.getHook().sendMessage(loc.localize("error.notYourEmbed", event.getGuild())).setEphemeral(true)
-                 .queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
+            event.getHook()
+                    .sendMessage(loc.localize("error.notYourEmbed", event.getGuild()))
+                    .setEphemeral(true)
+                    .queue(
+                            RestAction.getDefaultSuccess(),
+                            ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
             return;
         }
         if ("vote:delete".equals(event.getButton().getCustomId())) {
-            event.getMessage().delete()
-                 .queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
+            event.getMessage()
+                    .delete()
+                    .queue(
+                            RestAction.getDefaultSuccess(),
+                            ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
             voteRequests.remove(event.getMessageIdLong());
             return;
         }
@@ -87,31 +99,57 @@ public class ReputationVoteListener extends ListenerAdapter {
 
         if (!voteRequest.canVote()) return;
 
-        if (reputationService.submitReputation(event.getGuild(), event.getMember(), target.get(), ReputationContext.fromMessage(voteRequest.refMessage()), null, ThankType.EMBED).type() == SubmitResultType.SUCCESS) {
+        if (reputationService
+                        .submitReputation(
+                                event.getGuild(),
+                                event.getMember(),
+                                target.get(),
+                                ReputationContext.fromMessage(voteRequest.refMessage()),
+                                null,
+                                ThankType.EMBED)
+                        .type()
+                == SubmitResultType.SUCCESS) {
             voteRequest.voted();
             voteRequest.remove(event.getButton().getCustomId());
-            voteRequest.voteMessage().
-                       editMessageEmbeds(voteRequest.getNewEmbed(loc.localize("listener.messages.request.descrThank",
-                               event.getGuild(), Replacement.create("MORE", voteRequest.remainingVotes()))))
-                       .setComponents(getComponentRows(voteRequest.components()))
-                       .queue(suc -> {
-                       }, ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
+            voteRequest
+                    .voteMessage()
+                    .editMessageEmbeds(voteRequest.getNewEmbed(loc.localize(
+                            "listener.messages.request.descrThank",
+                            event.getGuild(),
+                            Replacement.create("MORE", voteRequest.remainingVotes()))))
+                    .setComponents(getComponentRows(voteRequest.components()))
+                    .queue(suc -> {}, ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
             if (voteRequest.remainingVotes() == 0) {
-                voteRequest.voteMessage()
-                           .editMessageEmbeds(voteRequest.getNewEmbed(loc.localize("listener.messages.request.descrThank"
-                                   , event.getGuild(), Replacement.create("MORE", voteRequest.remainingVotes()))))
-                           .setComponents(Collections.emptyList())
-                           .queue(RestAction.getDefaultSuccess(),
-                                   ErrorResponseException.ignore(ErrorResponse.ILLEGAL_OPERATION_ARCHIVED_THREAD));
-                voteRequest.voteMessage().delete().queueAfter(5, TimeUnit.SECONDS,
-                        suc -> voteRequests.remove(voteRequest.voteMessage().getIdLong()),
-                        ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
+                voteRequest
+                        .voteMessage()
+                        .editMessageEmbeds(voteRequest.getNewEmbed(loc.localize(
+                                "listener.messages.request.descrThank",
+                                event.getGuild(),
+                                Replacement.create("MORE", voteRequest.remainingVotes()))))
+                        .setComponents(Collections.emptyList())
+                        .queue(
+                                RestAction.getDefaultSuccess(),
+                                ErrorResponseException.ignore(ErrorResponse.ILLEGAL_OPERATION_ARCHIVED_THREAD));
+                voteRequest
+                        .voteMessage()
+                        .delete()
+                        .queueAfter(
+                                5,
+                                TimeUnit.SECONDS,
+                                suc -> voteRequests.remove(
+                                        voteRequest.voteMessage().getIdLong()),
+                                ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
             }
         }
     }
 
     public void registerVote(Message message, List<Member> members, Settings settings) {
-        if (PermissionErrorHandler.assertAndHandle(message.getGuildChannel(), loc.context(LocaleProvider.guild(message.getGuild())), configuration, Permission.MESSAGE_SEND, Permission.MESSAGE_EMBED_LINKS)) {
+        if (PermissionErrorHandler.assertAndHandle(
+                message.getGuildChannel(),
+                loc.context(LocaleProvider.guild(message.getGuild())),
+                configuration,
+                Permission.MESSAGE_SEND,
+                Permission.MESSAGE_EMBED_LINKS)) {
             return;
         }
 
@@ -125,38 +163,62 @@ public class ReputationVoteListener extends ListenerAdapter {
 
         for (var member : members) {
             var id = "vote:" + member.getIdLong();
-            components.put(id, new VoteComponent(member, Button.of(ButtonStyle.PRIMARY, id, member.getEffectiveName())));
+            components.put(
+                    id, new VoteComponent(member, Button.of(ButtonStyle.PRIMARY, id, member.getEffectiveName())));
         }
 
-        var componentRows = getComponentRows(components.values().stream().map(VoteComponent::component).toList());
+        var componentRows = getComponentRows(
+                components.values().stream().map(VoteComponent::component).toList());
 
-        var maxMessageReputation = guildRepository.guild(message.getGuild()).settings().abuseProtection().maxMessageReputation();
+        var maxMessageReputation = guildRepository
+                .guild(message.getGuild())
+                .settings()
+                .abuseProtection()
+                .maxMessageReputation();
 
         int remaining;
         if (settings.abuseProtection().isDonorLimit()) {
-            remaining = Math.min(maxMessageReputation,
-                    settings.abuseProtection().maxGiven() - settings.repGuild().reputation().user(message.getMember()).countGiven());
+            remaining = Math.min(
+                    maxMessageReputation,
+                    settings.abuseProtection().maxGiven()
+                            - settings.repGuild()
+                                    .reputation()
+                                    .user(message.getMember())
+                                    .countGiven());
             if (remaining == 0) {
                 // TODO: Probably checked earlier in message listener already. Prob needs further investigation.
-                settings.repGuild().reputation().analyzer().log(ReputationContext.fromMessage(message), SubmitResult.of(SubmitResultType.DONOR_LIMIT));
+                settings.repGuild()
+                        .reputation()
+                        .analyzer()
+                        .log(ReputationContext.fromMessage(message), SubmitResult.of(SubmitResultType.DONOR_LIMIT));
                 return;
             }
         } else {
             remaining = maxMessageReputation;
         }
 
-        message.replyEmbeds(builder.build())
-               .addComponents(componentRows).queue(voteMessage -> {
-                   voteRequests.put(voteMessage.getIdLong(), new VoteRequest(message.getMember(), builder, voteMessage, message, components, Math.min(remaining, members.size())));
-                   voteMessage.delete().queueAfter(1, TimeUnit.MINUTES,
-                           submit -> voteRequests.remove(voteMessage.getIdLong()),
-                           ErrorResponseException.ignore(
-                                   ErrorResponse.UNKNOWN_MESSAGE,
-                                   ErrorResponse.UNKNOWN_CHANNEL,
-                                   ErrorResponse.ILLEGAL_OPERATION_ARCHIVED_THREAD));
-               });
+        message.replyEmbeds(builder.build()).addComponents(componentRows).queue(voteMessage -> {
+            voteRequests.put(
+                    voteMessage.getIdLong(),
+                    new VoteRequest(
+                            message.getMember(),
+                            builder,
+                            voteMessage,
+                            message,
+                            components,
+                            Math.min(remaining, members.size())));
+            voteMessage
+                    .delete()
+                    .queueAfter(
+                            1,
+                            TimeUnit.MINUTES,
+                            submit -> voteRequests.remove(voteMessage.getIdLong()),
+                            ErrorResponseException.ignore(
+                                    ErrorResponse.UNKNOWN_MESSAGE,
+                                    ErrorResponse.UNKNOWN_CHANNEL,
+                                    ErrorResponse.ILLEGAL_OPERATION_ARCHIVED_THREAD));
+        });
     }
-
 
     private List<ActionRow> getComponentRows(List<ActionRowChildComponent> components) {
         var comp = new ArrayList<>(components);

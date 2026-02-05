@@ -25,44 +25,55 @@ public class Add extends BaseChannelModifier {
     }
 
     @Override
-    public void textChannel(SlashCommandInteractionEvent event, EventContext context, Channels channels, StandardGuildChannel channel) {
+    public void textChannel(
+            SlashCommandInteractionEvent event, EventContext context, Channels channels, StandardGuildChannel channel) {
         int maxChannel = Integer.MAX_VALUE;
-        if (Premium.isNotEntitled(context, configuration.skus().features().reputationChannel().moreChannel())) {
+        if (Premium.isNotEntitled(
+                context, configuration.skus().features().reputationChannel().moreChannel())) {
             maxChannel = configuration.skus().features().reputationChannel().defaultChannel();
         }
         int size = channels.channels().size();
 
         if (size > maxChannel) {
-            Premium.replyPremium(context, configuration.skus().features().reputationChannel().moreChannel());
+            Premium.replyPremium(
+                    context, configuration.skus().features().reputationChannel().moreChannel());
             return;
         }
 
         channels.add(channel);
-        event.getHook().editOriginal(
-                     WebPromo.promoString(context) + context.localize("command.channel.add.message.added",
-                             Replacement.create("CHANNEL", channel.getAsMention())))
-             .complete();
-
+        event.getHook()
+                .editOriginal(WebPromo.promoString(context)
+                        + context.localize(
+                                "command.channel.add.message.added",
+                                Replacement.create("CHANNEL", channel.getAsMention())))
+                .complete();
     }
 
     @Override
-    public void category(SlashCommandInteractionEvent event, EventContext context, Channels channels, Category category) {
+    public void category(
+            SlashCommandInteractionEvent event, EventContext context, Channels channels, Category category) {
         int maxCategories = Integer.MAX_VALUE;
-        if (Premium.isNotEntitled(context, configuration.skus().features().reputationCategories().moreCategories())) {
-            maxCategories = configuration.skus().features().reputationCategories().defaultCategories();
+        if (Premium.isNotEntitled(
+                context, configuration.skus().features().reputationCategories().moreCategories())) {
+            maxCategories =
+                    configuration.skus().features().reputationCategories().defaultCategories();
         }
         int size = channels.categories().size();
 
         if (size > maxCategories) {
-            Premium.replyPremium(context, configuration.skus().features().reputationCategories().moreCategories());
+            Premium.replyPremium(
+                    context,
+                    configuration.skus().features().reputationCategories().moreCategories());
             return;
         }
 
         channels.add(category);
 
-        event.getHook().editOriginal(
-                     WebPromo.promoString(context) + context.localize("command.channel.add.message.added",
-                             Replacement.create("CHANNEL", category.getAsMention())))
-             .complete();
+        event.getHook()
+                .editOriginal(WebPromo.promoString(context)
+                        + context.localize(
+                                "command.channel.add.message.added",
+                                Replacement.create("CHANNEL", category.getAsMention())))
+                .complete();
     }
 }

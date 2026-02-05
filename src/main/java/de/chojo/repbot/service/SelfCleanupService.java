@@ -37,7 +37,12 @@ public class SelfCleanupService implements Runnable {
     private final Configuration configuration;
     private final Cleanup cleanup;
 
-    private SelfCleanupService(ShardManager shardManager, ILocalizer localizer, GuildRepository guildRepository, Cleanup cleanup, Configuration configuration) {
+    private SelfCleanupService(
+            ShardManager shardManager,
+            ILocalizer localizer,
+            GuildRepository guildRepository,
+            Cleanup cleanup,
+            Configuration configuration) {
         this.shardManager = shardManager;
         this.localizer = localizer;
         this.guildRepository = guildRepository;
@@ -45,11 +50,17 @@ public class SelfCleanupService implements Runnable {
         this.configuration = configuration;
     }
 
-    public static void create(ShardManager shardManager, ILocalizer localizer, GuildRepository guildRepository, Cleanup cleanup, Configuration configuration, ScheduledExecutorService service) {
-        var selfCleanupService = new SelfCleanupService(shardManager, localizer, guildRepository, cleanup, configuration);
+    public static void create(
+            ShardManager shardManager,
+            ILocalizer localizer,
+            GuildRepository guildRepository,
+            Cleanup cleanup,
+            Configuration configuration,
+            ScheduledExecutorService service) {
+        var selfCleanupService =
+                new SelfCleanupService(shardManager, localizer, guildRepository, cleanup, configuration);
         service.scheduleAtFixedRate(selfCleanupService, 1, 60, TimeUnit.MINUTES);
     }
-
 
     @Override
     public void run() {
@@ -59,7 +70,8 @@ public class SelfCleanupService implements Runnable {
             var repGuild = guildRepository.guild(guild);
 
             var joined = guild.getSelfMember().getTimeJoined();
-            if (joined.isAfter(configuration.selfCleanup().getInactiveDaysOffset().atOffset(ZoneOffset.UTC))) {
+            if (joined.isAfter(
+                    configuration.selfCleanup().getInactiveDaysOffset().atOffset(ZoneOffset.UTC))) {
                 // The bot just joined. We give them some days.
                 continue;
             }
@@ -68,7 +80,10 @@ public class SelfCleanupService implements Runnable {
             // Check for latest reputation
             var lastReputation = repGuild.reputation().log().getLatestReputation();
             if (lastReputation.isPresent()) {
-                if (lastReputation.get().received().isBefore(configuration.selfCleanup().getInactiveDaysOffset())) {
+                if (lastReputation
+                        .get()
+                        .received()
+                        .isBefore(configuration.selfCleanup().getInactiveDaysOffset())) {
                     markers.add(InactivityMarker.NO_REPUTATION);
                 }
             } else {
@@ -76,7 +91,6 @@ public class SelfCleanupService implements Runnable {
                 repGuild.cleanup().cleanupDone();
                 continue;
             }
-
 
             var channels = repGuild.settings().thanking().channels();
             if (channels.isWhitelist()) {
@@ -92,18 +106,22 @@ public class SelfCleanupService implements Runnable {
 
             if (markers.contains(InactivityMarker.NO_CHANNEL) && markers.contains(InactivityMarker.NO_CATEGORIES)) {
                 log.debug("No channels and categories registered on guild {}", prettyName(guild));
-                log.debug("Bot is unconfigured for {} days",
-                        Math.abs(Duration.between(joined, LocalDateTime.now().atZone(ZoneOffset.UTC)).toDays()));
+                log.debug(
+                        "Bot is unconfigured for {} days",
+                        Math.abs(Duration.between(joined, LocalDateTime.now().atZone(ZoneOffset.UTC))
+                                .toDays()));
                 promptCleanup(guild);
                 continue;
             }
 
             if (markers.contains(InactivityMarker.NO_REPUTATION)) {
                 log.debug("No reputation on guild {}", prettyName(guild));
-                log.debug("Bot is unused for {} days",
-                        Math.abs(Duration.between(lastReputation.get().received(), LocalDateTime.now()
-                                                                                                .atZone(ZoneOffset.UTC))
-                                         .toDays()));
+                log.debug(
+                        "Bot is unused for {} days",
+                        Math.abs(Duration.between(
+                                        lastReputation.get().received(),
+                                        LocalDateTime.now().atZone(ZoneOffset.UTC))
+                                .toDays()));
                 promptCleanup(guild);
                 continue;
             }
@@ -127,10 +145,14 @@ public class SelfCleanupService implements Runnable {
 
         var embed = new LocalizedEmbedBuilder(localizer, guild)
                 .setTitle("selfCleanup.prompt.title")
-                .setDescription(localizer.localize("selfCleanup.prompt", guild,
+                .setDescription(localizer.localize(
+                        "selfCleanup.prompt",
+                        guild,
                         Replacement.create("DAYS", configuration.selfCleanup().leaveDays()),
-                        Replacement.create("INACTIVE_DAYS", configuration.selfCleanup().inactiveDays()),
-                        Replacement.create("DAYS_UNCONFIGURED", configuration.selfCleanup().promptDays())))
+                        Replacement.create(
+                                "INACTIVE_DAYS", configuration.selfCleanup().inactiveDays()),
+                        Replacement.create(
+                                "DAYS_UNCONFIGURED", configuration.selfCleanup().promptDays())))
                 .build();
 
         notifyGuild(guild, embed);
@@ -139,10 +161,15 @@ public class SelfCleanupService implements Runnable {
 
     private void notifyCleanup(Guild guild) {
         var clean = guildRepository.guild(guild).cleanup();
-        if (clean.getCleanupPromptTime().get().isAfter(configuration.selfCleanup().getLeaveDaysOffset())) {
-            log.debug("Prompt was send {}/{} days ago on {}",
-                    Math.abs(Duration.between(clean.getCleanupPromptTime().get(),
-                            LocalDateTime.now().atZone(ZoneOffset.UTC)).toDays()),
+        if (clean.getCleanupPromptTime()
+                .get()
+                .isAfter(configuration.selfCleanup().getLeaveDaysOffset())) {
+            log.debug(
+                    "Prompt was send {}/{} days ago on {}",
+                    Math.abs(Duration.between(
+                                    clean.getCleanupPromptTime().get(),
+                                    LocalDateTime.now().atZone(ZoneOffset.UTC))
+                            .toDays()),
                     configuration.selfCleanup().leaveDays(),
                     prettyName(guild));
             return;
@@ -150,7 +177,9 @@ public class SelfCleanupService implements Runnable {
 
         var embed = new LocalizedEmbedBuilder(localizer, guild)
                 .setTitle("selfCleanup.leave.title")
-                .setDescription(localizer.localize("selfCleanup.leave", guild,
+                .setDescription(localizer.localize(
+                        "selfCleanup.leave",
+                        guild,
                         Replacement.create("INVITE", configuration.links().invite())))
                 .build();
 
@@ -163,10 +192,10 @@ public class SelfCleanupService implements Runnable {
     private void notifyGuild(Guild guild, MessageEmbed embed) {
         var selfMember = guild.getSelfMember();
         guild.retrieveMemberById(guild.getOwnerIdLong())
-             .flatMap(member -> member.getUser().openPrivateChannel())
-             .flatMap(privateChannel -> privateChannel.sendMessageEmbeds(embed))
-             .onErrorMap(err -> null)
-             .complete();
+                .flatMap(member -> member.getUser().openPrivateChannel())
+                .flatMap(privateChannel -> privateChannel.sendMessageEmbeds(embed))
+                .onErrorMap(err -> null)
+                .complete();
 
         for (var channel : guild.getTextChannels()) {
             if (selfMember.hasPermission(channel, Permission.VIEW_CHANNEL, Permission.MESSAGE_SEND)) {

@@ -5,5 +5,4 @@
  */
 package de.chojo.repbot.web.pojo.general;
 
-public record LanguageInfo(String code, String name, String nativeName, String internalName) {
-}
+public record LanguageInfo(String code, String name, String nativeName, String internalName) {}

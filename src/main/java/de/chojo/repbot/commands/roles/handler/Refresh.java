@@ -42,40 +42,61 @@ public class Refresh implements SlashHandler {
 
     public void refresh(EventContext context, Guild guild, IReplyCallback replyCallback) {
         if (!replyCallback.isAcknowledged()) {
-            replyCallback.deferReply()
-                         .setEphemeral(true)
-                         .complete();
+            replyCallback.deferReply().setEphemeral(true).complete();
         }
         if (roleAssigner.isRefreshing(guild)) {
-            replyCallback.getHook().editOriginal(WebPromo.promoString(context) + "\n" + context.localize("command.roles.refresh.message.running"))
-                         .complete();
+            replyCallback
+                    .getHook()
+                    .editOriginal(WebPromo.promoString(context) + "\n"
+                            + context.localize("command.roles.refresh.message.running"))
+                    .complete();
             return;
         }
 
-        var message = replyCallback.getHook().editOriginal(WebPromo.promoString(context) + "\n" + context.localize("command.roles.refresh.message.started"))
-                                   .complete();
+        var message = replyCallback
+                .getHook()
+                .editOriginal(WebPromo.promoString(context) + "\n"
+                        + context.localize("command.roles.refresh.message.started"))
+                .complete();
         var start = Instant.now();
 
         roleAssigner
                 .updateBatch(guild, context, message)
-                .whenComplete(Futures.whenComplete(res -> {
-                    if (res.alreadyRunning()) {
-                        // This shouldn't happen due to the check above, but handle it gracefully
-                        return;
-                    }
-                    var duration = DurationFormatUtils.formatDuration(start.until(Instant.now(), ChronoUnit.MILLIS), "mm:ss");
-                    log.info("Update of roles on {} took {}. Checked {} Updated {}", prettyName(guild), duration, res.checked(), res.updated());
-                    message.editMessage(WebPromo.promoString(context) + "\n" + context.localize("command.roles.refresh.message.finished",
-                                   Replacement.create("CHECKED", res.checked()), Replacement.create("UPDATED", res.updated())))
-                           .queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
-                }, err -> {
-                    log.warn("Update of role failed on guild {}", prettyName(guild), err);
-                    if (err instanceof RoleAccessException roleException) {
-                        message.editMessage(WebPromo.promoString(context) + "\n" + context.localize("error.roleAccess",
-                                       Replacement.createMention("ROLE", roleException.role())))
-                               .queue(RestAction.getDefaultSuccess(), ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
-                    }
-                }));
+                .whenComplete(Futures.whenComplete(
+                        res -> {
+                            if (res.alreadyRunning()) {
+                                // This shouldn't happen due to the check above, but handle it gracefully
+                                return;
+                            }
+                            var duration = DurationFormatUtils.formatDuration(
+                                    start.until(Instant.now(), ChronoUnit.MILLIS), "mm:ss");
+                            log.info(
+                                    "Update of roles on {} took {}. Checked {} Updated {}",
+                                    prettyName(guild),
+                                    duration,
+                                    res.checked(),
+                                    res.updated());
+                            message.editMessage(WebPromo.promoString(context) + "\n"
+                                            + context.localize(
+                                                    "command.roles.refresh.message.finished",
+                                                    Replacement.create("CHECKED", res.checked()),
+                                                    Replacement.create("UPDATED", res.updated())))
+                                    .queue(
+                                            RestAction.getDefaultSuccess(),
+                                            ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
+                        },
+                        err -> {
+                            log.warn("Update of role failed on guild {}", prettyName(guild), err);
+                            if (err instanceof RoleAccessException roleException) {
+                                message.editMessage(WebPromo.promoString(context) + "\n"
+                                                + context.localize(
+                                                        "error.roleAccess",
+                                                        Replacement.createMention("ROLE", roleException.role())))
+                                        .queue(
+                                                RestAction.getDefaultSuccess(),
+                                                ErrorResponseException.ignore(ErrorResponse.UNKNOWN_MESSAGE));
+                            }
+                        }));
     }
 
     public boolean refreshActive(Guild guild) {

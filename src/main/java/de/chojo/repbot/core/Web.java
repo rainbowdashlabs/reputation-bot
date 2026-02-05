@@ -52,7 +52,14 @@ public class Web {
     private final AutopostService autopostService;
     private Javalin javalin;
 
-    private Web(Bot bot, Data data, Threading threading, Configuration configuration, SessionService sessionService, InteractionHub<?, ?, ?> interactionHub, AutopostService autopostService) {
+    private Web(
+            Bot bot,
+            Data data,
+            Threading threading,
+            Configuration configuration,
+            SessionService sessionService,
+            InteractionHub<?, ?, ?> interactionHub,
+            AutopostService autopostService) {
         this.bot = bot;
         this.data = data;
         this.threading = threading;
@@ -62,16 +69,22 @@ public class Web {
         this.autopostService = autopostService;
     }
 
-    public static Web create(Bot bot, Data data, Threading threading, Configuration configuration, SessionService sessionService, InteractionHub<?, ?, ?> interactionHub, AutopostService autopostService) {
+    public static Web create(
+            Bot bot,
+            Data data,
+            Threading threading,
+            Configuration configuration,
+            SessionService sessionService,
+            InteractionHub<?, ?, ?> interactionHub,
+            AutopostService autopostService) {
         var web = new Web(bot, data, threading, configuration, sessionService, interactionHub, autopostService);
         web.init();
         return web;
     }
 
     public static JavalinJackson jacksonMapper() {
-        ObjectMapper mapper = JsonMapper.builder()
-                                        .addModule(new JavaTimeModule())
-                                        .build();
+        ObjectMapper mapper =
+                JsonMapper.builder().addModule(new JavaTimeModule()).build();
 
         mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
@@ -109,47 +122,55 @@ public class Web {
         OpenApiVersionUtil.INSTANCE.setLogWarnings(false);*/
 
         javalin = Javalin.create(config -> {
-                             config.registerPlugin(new OpenApiPlugin(this::configureOpenApi));
-                             config.registerPlugin(new SwaggerPlugin(this::configureSwagger));
-                             config.bundledPlugins.enableCors(cors -> {
-                                 cors.addRule(CorsPluginConfig.CorsRule::anyHost);
-                             });
-                             // Serve static files from external "public" directory when available; fall back to classpath
-                             var publicDir = Path.of("public");
-                             if (Files.isDirectory(publicDir)) {
-                                 config.staticFiles.add(publicDir.toString(), io.javalin.http.staticfiles.Location.EXTERNAL);
-                             } else {
-                                 config.staticFiles.add("/static", io.javalin.http.staticfiles.Location.CLASSPATH);
-                             }
-                             config.router.apiBuilder(() -> new Api(sessionService, data.metrics(), bot.hub(), bot.localization(), autopostService, bot.roleAssigner(), bot.shardManager(), configuration).init());
-                             config.router.mount(router -> {
-                                 router.beforeMatched(this::handleAccess);
-                             });
-                             config.jsonMapper(jacksonMapper());
-                             // Serve frontend SPA
-                             if (Files.isDirectory(publicDir)) {
-                                 config.spaRoot.addFile("/", publicDir.resolve("index.html").toString(), io.javalin.http.staticfiles.Location.EXTERNAL);
-                             } else {
-                                 config.spaRoot.addFile("/", "/static/index.html", io.javalin.http.staticfiles.Location.CLASSPATH);
-                             }
-                         })
-                         .start(api.host(), api.port());
+                    config.registerPlugin(new OpenApiPlugin(this::configureOpenApi));
+                    config.registerPlugin(new SwaggerPlugin(this::configureSwagger));
+                    config.bundledPlugins.enableCors(cors -> {
+                        cors.addRule(CorsPluginConfig.CorsRule::anyHost);
+                    });
+                    // Serve static files from external "public" directory when available; fall back to classpath
+                    var publicDir = Path.of("public");
+                    if (Files.isDirectory(publicDir)) {
+                        config.staticFiles.add(publicDir.toString(), io.javalin.http.staticfiles.Location.EXTERNAL);
+                    } else {
+                        config.staticFiles.add("/static", io.javalin.http.staticfiles.Location.CLASSPATH);
+                    }
+                    config.router.apiBuilder(() -> new Api(
+                                    sessionService,
+                                    data.metrics(),
+                                    bot.hub(),
+                                    bot.localization(),
+                                    autopostService,
+                                    bot.roleAssigner(),
+                                    bot.shardManager(),
+                                    configuration)
+                            .init());
+                    config.router.mount(router -> {
+                        router.beforeMatched(this::handleAccess);
+                    });
+                    config.jsonMapper(jacksonMapper());
+                    // Serve frontend SPA
+                    if (Files.isDirectory(publicDir)) {
+                        config.spaRoot.addFile(
+                                "/",
+                                publicDir.resolve("index.html").toString(),
+                                io.javalin.http.staticfiles.Location.EXTERNAL);
+                    } else {
+                        config.spaRoot.addFile(
+                                "/", "/static/index.html", io.javalin.http.staticfiles.Location.CLASSPATH);
+                    }
+                })
+                .start(api.host(), api.port());
         // Handle specific PremiumFeatureException with detailed JSON
         javalin.exception(de.chojo.repbot.web.error.PremiumFeatureException.class, (err, ctx) -> {
-            var response = new de.chojo.repbot.web.error.ErrorResponse(
-                    "Supporter Required",
-                    err.getMessage(),
-                    err.details()
-            );
+            var response =
+                    new de.chojo.repbot.web.error.ErrorResponse("Supporter Required", err.getMessage(), err.details());
             ctx.json(response).status(err.status());
         });
 
         // Handle generic ApiException with simple JSON
         javalin.exception(ApiException.class, (err, ctx) -> {
-            var response = new de.chojo.repbot.web.error.ErrorResponse(
-                    err.getClass().getSimpleName(),
-                    err.getMessage()
-            );
+            var response =
+                    new de.chojo.repbot.web.error.ErrorResponse(err.getClass().getSimpleName(), err.getMessage());
             ctx.json(response).status(err.status());
         });
     }
@@ -160,45 +181,41 @@ public class Web {
     }
 
     private void configureOpenApi(OpenApiPluginConfiguration config) {
-        config.withDocumentationPath("/docs")
-              .withDefinitionConfiguration((version, definition) -> {
-                  definition.withInfo(info -> {
-                      info.setTitle("Reputation Bot API");
-                      info.setVersion("1.0");
-                      info.setDescription("Documentation for the Reputation Bot API");
-                      info.setLicense(new OpenApiLicense()
-                              .name("GNU Affero General Public License v3.0")
-                              .url("https://github.com/RainbowDashLabs/reputation-bot/blob/master/LICENSE.md")
-                      );
-                  });
-                  definition.withServer(openApiServer -> {
-                      openApiServer.setUrl("https://repbot.rainbowdashlabs.de");
-                      openApiServer.setDescription("Main server");
-                  });
-              });
+        config.withDocumentationPath("/docs").withDefinitionConfiguration((version, definition) -> {
+            definition.withInfo(info -> {
+                info.setTitle("Reputation Bot API");
+                info.setVersion("1.0");
+                info.setDescription("Documentation for the Reputation Bot API");
+                info.setLicense(new OpenApiLicense()
+                        .name("GNU Affero General Public License v3.0")
+                        .url("https://github.com/RainbowDashLabs/reputation-bot/blob/master/LICENSE.md"));
+            });
+            definition.withServer(openApiServer -> {
+                openApiServer.setUrl("https://repbot.rainbowdashlabs.de");
+                openApiServer.setDescription("Main server");
+            });
+        });
     }
 
     private void initBotList() {
         var botlist = configuration.botlist();
         if (!botlist.isSubmit()) return;
         BotlistService.build(bot.shardManager())
-                      .forDiscordBotListCOM(botlist.discordBotlistCom())
-                      .forDiscordBotsGG(botlist.discordBotsGg())
-                      .forTopGG(botlist.topGg())
-                      .forBotlistMe(botlist.botListMe())
-                      .withExecutorService(threading.repBotWorker())
-                      .withVoteService(builder -> builder
-                              .withVoteWeebhooks(javalin)
-                              .onVote(voteData -> bot.shardManager()
-                                                     .retrieveUserById(voteData.userId())
-                                                     .flatMap(User::openPrivateChannel)
-                                                     .flatMap(channel -> channel.sendMessage("Thanks for voting <3"))
-                                                     .queue(message -> log.debug("Vote received"),
-                                                             err -> ErrorResponseException.ignore(ErrorResponse.UNKNOWN_USER,
-                                                                     ErrorResponse.CANNOT_SEND_TO_USER))
-                              )
-                              .build()
-                      )
-                      .build();
+                .forDiscordBotListCOM(botlist.discordBotlistCom())
+                .forDiscordBotsGG(botlist.discordBotsGg())
+                .forTopGG(botlist.topGg())
+                .forBotlistMe(botlist.botListMe())
+                .withExecutorService(threading.repBotWorker())
+                .withVoteService(builder -> builder.withVoteWeebhooks(javalin)
+                        .onVote(voteData -> bot.shardManager()
+                                .retrieveUserById(voteData.userId())
+                                .flatMap(User::openPrivateChannel)
+                                .flatMap(channel -> channel.sendMessage("Thanks for voting <3"))
+                                .queue(
+                                        message -> log.debug("Vote received"),
+                                        err -> ErrorResponseException.ignore(
+                                                ErrorResponse.UNKNOWN_USER, ErrorResponse.CANNOT_SEND_TO_USER)))
+                        .build())
+                .build();
     }
 }

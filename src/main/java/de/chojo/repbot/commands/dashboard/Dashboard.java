@@ -12,8 +12,6 @@ import de.chojo.repbot.dao.provider.GuildRepository;
 
 public class Dashboard extends SlashCommand {
     public Dashboard(GuildRepository guildRepository) {
-        super(Slash.of("dashboard", "command.dashboard.description")
-                   .guildOnly()
-                   .command(new Show(guildRepository)));
+        super(Slash.of("dashboard", "command.dashboard.description").guildOnly().command(new Show(guildRepository)));
     }
 }

@@ -33,10 +33,12 @@ public class ChannelsRoute implements RoutesBuilder {
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = ChannelsPOJO.class)),
             responses = {
-                    @OpenApiResponse(status = "200"),
-                    @OpenApiResponse(status = "403", content = @OpenApiContent(from = ErrorResponse.class), description = "Premium feature required or limit exceeded")
-            }
-    )
+                @OpenApiResponse(status = "200"),
+                @OpenApiResponse(
+                        status = "403",
+                        content = @OpenApiContent(from = ErrorResponse.class),
+                        description = "Premium feature required or limit exceeded")
+            })
     public void updateChannelsSettings(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         ChannelsPOJO channelsPOJO = ctx.bodyAsClass(ChannelsPOJO.class);
@@ -45,10 +47,14 @@ public class ChannelsRoute implements RoutesBuilder {
         PremiumValidator validator = session.premiumValidator();
 
         // Validate channel count limit
-        validator.requireWithinLimit(channelsPOJO.channelIds().size(), validator.features().reputationChannel(), "Reputation Channels");
+        validator.requireWithinLimit(
+                channelsPOJO.channelIds().size(), validator.features().reputationChannel(), "Reputation Channels");
 
         // Validate category count limit
-        validator.requireWithinLimit(channelsPOJO.categoryIds().size(), validator.features().reputationCategories(), "Reputation Categories");
+        validator.requireWithinLimit(
+                channelsPOJO.categoryIds().size(),
+                validator.features().reputationCategories(),
+                "Reputation Categories");
 
         // Validate whitelist mode (blacklist requires premium)
         validator.requireWhitelistOrPremium(channelsPOJO.isWhitelist());
@@ -65,10 +71,12 @@ public class ChannelsRoute implements RoutesBuilder {
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
             responses = {
-                    @OpenApiResponse(status = "200"),
-                    @OpenApiResponse(status = "403", content = @OpenApiContent(from = ErrorResponse.class), description = "Premium feature required or limit exceeded")
-            }
-    )
+                @OpenApiResponse(status = "200"),
+                @OpenApiResponse(
+                        status = "403",
+                        content = @OpenApiContent(from = ErrorResponse.class),
+                        description = "Premium feature required or limit exceeded")
+            })
     public void updateWhitelist(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         boolean isWhitelist = ctx.bodyAsClass(Boolean.class);
@@ -89,17 +97,20 @@ public class ChannelsRoute implements RoutesBuilder {
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Long[].class)),
             responses = {
-                    @OpenApiResponse(status = "200"),
-                    @OpenApiResponse(status = "403", content = @OpenApiContent(from = ErrorResponse.class), description = "Premium feature required or limit exceeded")
-            }
-    )
+                @OpenApiResponse(status = "200"),
+                @OpenApiResponse(
+                        status = "403",
+                        content = @OpenApiContent(from = ErrorResponse.class),
+                        description = "Premium feature required or limit exceeded")
+            })
     public void updateChannels(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         Long[] channelIds = ctx.bodyAsClass(Long[].class);
 
         // Validate channel count limit
         PremiumValidator validator = session.premiumValidator();
-        validator.requireWithinLimit(channelIds.length, validator.features().reputationChannel(), "Reputation Channels");
+        validator.requireWithinLimit(
+                channelIds.length, validator.features().reputationChannel(), "Reputation Channels");
 
         // Validate all channel IDs
         for (Long channelId : channelIds) {
@@ -122,17 +133,20 @@ public class ChannelsRoute implements RoutesBuilder {
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Long[].class)),
             responses = {
-                    @OpenApiResponse(status = "200"),
-                    @OpenApiResponse(status = "403", content = @OpenApiContent(from = ErrorResponse.class), description = "Premium feature required or limit exceeded")
-            }
-    )
+                @OpenApiResponse(status = "200"),
+                @OpenApiResponse(
+                        status = "403",
+                        content = @OpenApiContent(from = ErrorResponse.class),
+                        description = "Premium feature required or limit exceeded")
+            })
     public void updateCategories(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         Long[] categoryIds = ctx.bodyAsClass(Long[].class);
 
         // Validate category count limit
         PremiumValidator validator = session.premiumValidator();
-        validator.requireWithinLimit(categoryIds.length, validator.features().reputationCategories(), "Reputation Categories");
+        validator.requireWithinLimit(
+                categoryIds.length, validator.features().reputationCategories(), "Reputation Categories");
 
         // Validate all category IDs (categories are also channels in Discord)
         for (Long categoryId : categoryIds) {

@@ -46,7 +46,8 @@ public class AutopostService {
         this.localizer = localizer;
     }
 
-    public static AutopostService create(ShardManager shardManager, GuildRepository guildRepository, Threading threading, ILocalizer localizer) {
+    public static AutopostService create(
+            ShardManager shardManager, GuildRepository guildRepository, Threading threading, ILocalizer localizer) {
         var service = new AutopostService(shardManager, guildRepository, localizer);
         int delay = 61 - Instant.now().atZone(ZoneId.of("UTC")).getMinute();
         log.debug("Next autopost refresh will be in {} minutes.", delay);
@@ -63,7 +64,8 @@ public class AutopostService {
         if (guild.isById()) return;
         Ranking guildRanking = guild.reputation().ranking().received().defaultRanking(20);
         List<RankingEntry> ranking = guildRanking.page(0);
-        MessageEditData messageEditData = BaseTop.buildRanking(ranking, guildRanking, localizer.context(LocaleProvider.guild(guild.guild())));
+        MessageEditData messageEditData =
+                BaseTop.buildRanking(ranking, guildRanking, localizer.context(LocaleProvider.guild(guild.guild())));
         Autopost autopost = guild.settings().autopost();
         RefreshType refreshType = autopost.refreshType();
         TextChannel channel = guild.guild().getTextChannelById(autopost.channelId());
@@ -83,7 +85,8 @@ public class AutopostService {
                     break;
                 }
                 try {
-                    channel.editMessageById(autopost.messageId(), messageEditData).complete();
+                    channel.editMessageById(autopost.messageId(), messageEditData)
+                            .complete();
                 } catch (ErrorResponseException e) {
                     if (e.getErrorResponse() == ErrorResponse.UNKNOWN_MESSAGE) {
                         sendMessage(autopost, channel, messageEditData);
@@ -126,7 +129,8 @@ public class AutopostService {
     }
 
     private void sendMessage(Autopost autopost, TextChannel channel, MessageEditData data) {
-        Message complete = channel.sendMessage(MessageCreateData.fromEditData(data)).complete();
+        Message complete =
+                channel.sendMessage(MessageCreateData.fromEditData(data)).complete();
         autopost.message(complete);
     }
 }

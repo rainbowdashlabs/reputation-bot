@@ -43,17 +43,17 @@ public class MessageAnalyzer {
     private static final Object PLACEHOLDER = new Object();
     private final ContextResolver contextResolver;
     private final Cache<Long, AnalyzerResult> resultCache = CacheBuilder.newBuilder()
-                                                                        .expireAfterWrite(10, TimeUnit.MINUTES)
-                                                                        .maximumSize(100000)
-                                                                        .build();
-    private final Cache<Long, Object> rejectionCache = CacheBuilder.newBuilder()
-                                                                   .expireAfterWrite(1, TimeUnit.MINUTES)
-                                                                   .build();
+            .expireAfterWrite(10, TimeUnit.MINUTES)
+            .maximumSize(100000)
+            .build();
+    private final Cache<Long, Object> rejectionCache =
+            CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.MINUTES).build();
     private final Configuration configuration;
     private final Metrics metrics;
     private final GuildRepository guildRepository;
 
-    public MessageAnalyzer(ContextResolver resolver, Configuration configuration, Metrics metrics, GuildRepository guildRepository) {
+    public MessageAnalyzer(
+            ContextResolver resolver, Configuration configuration, Metrics metrics, GuildRepository guildRepository) {
         contextResolver = resolver;
         this.configuration = configuration;
         this.metrics = metrics;
@@ -71,19 +71,31 @@ public class MessageAnalyzer {
      * @param limit        limit for returned matches in the analyzer result
      * @return analyzer results
      */
-    public AnalyzerResult processMessage(Pattern pattern, @NotNull Message message, Settings settings, boolean limitTargets, int limit) {
+    public AnalyzerResult processMessage(
+            Pattern pattern, @NotNull Message message, Settings settings, boolean limitTargets, int limit) {
         if (rejectionCache.getIfPresent(settings.guildId()) != null) {
             return AnalyzerResult.empty(EmptyResultReason.INTERNAL_ERROR);
         }
         var analyzer = guildRepository.guild(message.getGuild()).reputation().analyzer();
         try {
-            return analyzer.log(message, resultCache.get(message.getIdLong(), () -> analyze(pattern, message, settings, limitTargets, limit)));
+            return analyzer.log(
+                    message,
+                    resultCache.get(
+                            message.getIdLong(), () -> analyze(pattern, message, settings, limitTargets, limit)));
         } catch (ExecutionException | UncheckedExecutionException e) {
             if (e.getCause() instanceof TimeoutException) {
-                log.warn(LogNotify.NOTIFY_ADMIN, "Timeout when analyzing message using pattern {} for guild {}", pattern.pattern(), settings.guildId());
+                log.warn(
+                        LogNotify.NOTIFY_ADMIN,
+                        "Timeout when analyzing message using pattern {} for guild {}",
+                        pattern.pattern(),
+                        settings.guildId());
                 rejectionCache.put(settings.guildId(), PLACEHOLDER);
             } else if (e.getCause().getCause() instanceof TimeoutException) {
-                log.warn(LogNotify.NOTIFY_ADMIN, "Timeout when analyzing message using pattern {} for guild {}", pattern.pattern(), settings.guildId());
+                log.warn(
+                        LogNotify.NOTIFY_ADMIN,
+                        "Timeout when analyzing message using pattern {} for guild {}",
+                        pattern.pattern(),
+                        settings.guildId());
                 rejectionCache.put(settings.guildId(), PLACEHOLDER);
             } else {
                 log.error("Could not compute analyzer result", e);
@@ -95,20 +107,21 @@ public class MessageAnalyzer {
     @SuppressWarnings("DataFlowIssue") // We got no issues c:
     private Optional<String> getThankword(Message message, Pattern pattern) {
         return CompletableFuture.supplyAsync(() -> {
-                                    var contentRaw = message.getContentRaw().toLowerCase();
-                                    var matcher = pattern.matcher(contentRaw);
-                                    if (!matcher.find()) return Optional.ofNullable((String) null); // Yes this is intended
-                                    return Optional.ofNullable(matcher.group("match"));
-                                })
-                                .orTimeout(1L, TimeUnit.SECONDS)
-                                .exceptionally(throwable -> {
-                                    log.error("Could not match message of guild {}", message.getGuild(), throwable);
-                                    return Optional.empty();
-                                })
-                                .join();
+                    var contentRaw = message.getContentRaw().toLowerCase();
+                    var matcher = pattern.matcher(contentRaw);
+                    if (!matcher.find()) return Optional.ofNullable((String) null); // Yes this is intended
+                    return Optional.ofNullable(matcher.group("match"));
+                })
+                .orTimeout(1L, TimeUnit.SECONDS)
+                .exceptionally(throwable -> {
+                    log.error("Could not match message of guild {}", message.getGuild(), throwable);
+                    return Optional.empty();
+                })
+                .join();
     }
 
-    private AnalyzerResult analyze(Pattern pattern, Message message, @Nullable Settings settings, boolean limitTargets, int limit) {
+    private AnalyzerResult analyze(
+            Pattern pattern, Message message, @Nullable Settings settings, boolean limitTargets, int limit) {
         metrics.messages().countMessage();
         if (pattern.pattern().isBlank()) return AnalyzerResult.empty(EmptyResultReason.NO_PATTERN);
 
@@ -126,7 +139,9 @@ public class MessageAnalyzer {
             Member user;
 
             try {
-                user = message.getGuild().retrieveMemberById(referencedMessage.getAuthor().getIdLong()).complete();
+                user = message.getGuild()
+                        .retrieveMemberById(referencedMessage.getAuthor().getIdLong())
+                        .complete();
             } catch (RuntimeException e) {
                 log.debug("Could not retrieve member. Probably not on guild anymore.");
                 return AnalyzerResult.empty(match, EmptyResultReason.TARGET_NOT_ON_GUILD);
@@ -150,7 +165,9 @@ public class MessageAnalyzer {
 
             for (var mentionedMember : mentionedMembers) {
                 try {
-                    members.add(message.getGuild().retrieveMemberById(mentionedMember.getIdLong()).complete());
+                    members.add(message.getGuild()
+                            .retrieveMemberById(mentionedMember.getIdLong())
+                            .complete());
                 } catch (RuntimeException e) {
                     log.debug("Could not retrieve member. Probably not on guild anymore.");
                 }
@@ -170,8 +187,13 @@ public class MessageAnalyzer {
         return resolveMessage(match, message, pattern, context, limitTargets, limit);
     }
 
-
-    private AnalyzerResult resolveMessage(String matchPattern, Message message, Pattern thankPattern, MessageContext targets, boolean limitTargets, int limit) {
+    private AnalyzerResult resolveMessage(
+            String matchPattern,
+            Message message,
+            Pattern thankPattern,
+            MessageContext targets,
+            boolean limitTargets,
+            int limit) {
         var contentRaw = message.getContentRaw();
 
         var words = new ArrayList<>(List.of(contentRaw.split("\\s")));
@@ -195,7 +217,9 @@ public class MessageAnalyzer {
                 resolve.addAll(words.subList(Math.max(0, thankwordindex - LOOKAROUND), thankwordindex));
             }
             if (thankwordindex != words.size() - 1) {
-                resolve.addAll(words.subList(Math.min(thankwordindex + 1, words.size() - 1), Math.min(words.size(), thankwordindex + LOOKAROUND + 1)));
+                resolve.addAll(words.subList(
+                        Math.min(thankwordindex + 1, words.size() - 1),
+                        Math.min(words.size(), thankwordindex + LOOKAROUND + 1)));
             }
 
             for (var word : resolve) {
@@ -208,23 +232,23 @@ public class MessageAnalyzer {
                 if (weightedMembers.isEmpty()) continue;
                 for (var match : weightedMembers) {
                     var member = match.getReference();
-                    memberMatches.add(new MemberMatch(word, member.getUser().getAsTag(),
-                            member.getEffectiveName(), match.getWeight()));
+                    memberMatches.add(new MemberMatch(
+                            word, member.getUser().getAsTag(), member.getEffectiveName(), match.getWeight()));
                 }
                 users.addAll(weightedMembers);
             }
         }
 
         memberMatches = memberMatches.stream()
-                                     .filter(e -> e.score() >= configuration.analyzerSettings().minFuzzyScore())
-                                     .toList();
+                .filter(e -> e.score() >= configuration.analyzerSettings().minFuzzyScore())
+                .toList();
 
         var members = users.stream()
-                           .filter(e -> e.getWeight() >= configuration.analyzerSettings().minFuzzyScore())
-                           .distinct()
-                           .sorted()
-                           .limit(limit)
-                           .collect(Collectors.toList());
+                .filter(e -> e.getWeight() >= configuration.analyzerSettings().minFuzzyScore())
+                .distinct()
+                .sorted()
+                .limit(limit)
+                .collect(Collectors.toList());
         if (members.isEmpty()) return AnalyzerResult.empty(matchPattern, EmptyResultReason.INSUFFICIENT_SCORE);
 
         var thankwords = thankWordIndices.stream().map(words::get).collect(Collectors.toList());

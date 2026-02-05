@@ -35,25 +35,33 @@ public class Info extends BaseSupporter implements SlashHandler {
         var subs = guilds.guild(event.getGuild()).subscriptions().subscriptions();
 
         String tiers = configuration.skus().subscriptions().stream()
-                                    .map(sub -> {
-                                        Optional<Subscription> match = subs.stream().filter(s -> s.skuId() == sub.subscriptionSku()).findFirst();
-                                        if (match.isEmpty())
-                                            return "%s: $%s$".formatted(sub.name(), "command.supporter.info.message.notactive");
-                                        return "%s: $%s$".formatted(sub.name(), match.get().isPersistent() ? "words.active" : "words.inactive");
-                                    }).collect(Collectors.joining("\n"));
+                .map(sub -> {
+                    Optional<Subscription> match = subs.stream()
+                            .filter(s -> s.skuId() == sub.subscriptionSku())
+                            .findFirst();
+                    if (match.isEmpty())
+                        return "%s: $%s$".formatted(sub.name(), "command.supporter.info.message.notactive");
+                    return "%s: $%s$"
+                            .formatted(sub.name(), match.get().isPersistent() ? "words.active" : "words.inactive");
+                })
+                .collect(Collectors.joining("\n"));
 
-        String coupons = event.getJDA().retrieveEntitlements()
-                              .user(event.getUser())
-                              .skuIds(configuration.skus().subscriptions().stream().mapToLong(de.chojo.repbot.config.elements.sku.Subscription::lifetimeSku).toArray())
-                              .complete()
-                              .stream()
-                              .filter(this::isLifetimeSku)
-                              .filter(this::isAvailable)
-                              .map(e -> {
-                                  de.chojo.repbot.config.elements.sku.Subscription subscription = getSubscription(e);
-                                  return subscription.name();
-                              })
-                              .collect(Collectors.joining("\n"));
+        String coupons = event
+                .getJDA()
+                .retrieveEntitlements()
+                .user(event.getUser())
+                .skuIds(configuration.skus().subscriptions().stream()
+                        .mapToLong(de.chojo.repbot.config.elements.sku.Subscription::lifetimeSku)
+                        .toArray())
+                .complete()
+                .stream()
+                .filter(this::isLifetimeSku)
+                .filter(this::isAvailable)
+                .map(e -> {
+                    de.chojo.repbot.config.elements.sku.Subscription subscription = getSubscription(e);
+                    return subscription.name();
+                })
+                .collect(Collectors.joining("\n"));
 
         var content = "**$%s$**\n%s".formatted("command.supporter.info.message.tiers", tiers);
 
@@ -61,12 +69,18 @@ public class Info extends BaseSupporter implements SlashHandler {
             content = "%s\n\n**$%s$**\n%s".formatted(content, "command.supporter.info.message.coupons", coupons);
         }
 
-        var buttons = configuration.skus().subscriptions().stream().map(e -> List.of(e.subscriptionSkuMeta(), e.lifetimeSkuMeta()))
-                                   .map(e -> e.stream().map(Premium::buildEntitlementButtons).flatMap(Collection::stream).toList())
-                                   .flatMap(Collection::stream)
-                                   .toList();
+        var buttons = configuration.skus().subscriptions().stream()
+                .map(e -> List.of(e.subscriptionSkuMeta(), e.lifetimeSkuMeta()))
+                .map(e -> e.stream()
+                        .map(Premium::buildEntitlementButtons)
+                        .flatMap(Collection::stream)
+                        .toList())
+                .flatMap(Collection::stream)
+                .toList();
 
-        event.getHook().editOriginal(context.localize(content))
-             .setComponents(buttons).complete();
+        event.getHook()
+                .editOriginal(context.localize(content))
+                .setComponents(buttons)
+                .complete();
     }
 }

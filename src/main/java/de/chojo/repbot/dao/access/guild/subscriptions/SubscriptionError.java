@@ -15,7 +15,8 @@ import java.time.Instant;
 public record SubscriptionError(SupporterFeature type, Instant created, Instant lastSend, int count, boolean notified) {
 
     public static SubscriptionError build(Row row) throws SQLException {
-        return new SubscriptionError(row.getEnum("type", SupporterFeature.class),
+        return new SubscriptionError(
+                row.getEnum("type", SupporterFeature.class),
                 row.get("date_inserted", StandardValueConverter.INSTANT_TIMESTAMP),
                 row.get("last_send", StandardValueConverter.INSTANT_TIMESTAMP),
                 row.getInt("count"),

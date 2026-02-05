@@ -23,8 +23,11 @@ public class UserGiven extends BaseTop {
     }
 
     @Override
-    protected Ranking buildRanking(SlashCommandInteractionEvent event, RepGuild guild, ReputationMode reputationMode, int pageSize) {
-        Member user = Optional.ofNullable(event.getOption("user")).map(OptionMapping::getAsMember).orElse(event.getMember());
+    protected Ranking buildRanking(
+            SlashCommandInteractionEvent event, RepGuild guild, ReputationMode reputationMode, int pageSize) {
+        Member user = Optional.ofNullable(event.getOption("user"))
+                .map(OptionMapping::getAsMember)
+                .orElse(event.getMember());
         return guild.reputation().ranking().user().given().byMode(reputationMode, pageSize, user);
     }
 }

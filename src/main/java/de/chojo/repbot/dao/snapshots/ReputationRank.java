@@ -36,10 +36,7 @@ public class ReputationRank implements GuildHolder, Comparable<ReputationRank> {
     }
 
     public static ReputationRank build(Ranks ranks, Row rs) throws SQLException {
-        return new ReputationRank(ranks,
-                rs.getLong("role_id"),
-                rs.getInt("reputation")
-        );
+        return new ReputationRank(ranks, rs.getLong("role_id"), rs.getInt("reputation"));
     }
 
     public Optional<Role> getRole(Guild guild) {
@@ -92,9 +89,6 @@ public class ReputationRank implements GuildHolder, Comparable<ReputationRank> {
 
     @Override
     public String toString() {
-        return "ReputationRank{" +
-                "roleId=" + roleId +
-                ", reputation=" + reputation +
-                '}';
+        return "ReputationRank{" + "roleId=" + roleId + ", reputation=" + reputation + '}';
     }
 }

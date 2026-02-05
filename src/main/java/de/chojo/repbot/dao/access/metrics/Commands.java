@@ -19,18 +19,14 @@ import java.util.stream.Collectors;
 import static de.chojo.sadu.queries.api.call.Call.call;
 
 public class Commands {
-    public Commands() {
-
-    }
+    public Commands() {}
 
     public void logCommand(String command) {
         Query.query("""
                      INSERT INTO metrics_commands(day, command) VALUES (now()::DATE, ?)
                      ON CONFLICT(day,command)
                          DO UPDATE SET count = metrics_commands.count + 1
-                     """)
-             .single(call().bind(command))
-             .insert();
+                     """).single(call().bind(command)).insert();
     }
 
     public CommandsStatistic week(int week) {
@@ -58,15 +54,14 @@ public class Commands {
                             ORDER BY %s DESC
                             LIMIT ?
                             """, timeframe, table, timeframe, timeframe)
-                    .single(call().bind(timeframe).bind(offset + " " + timeframe).bind(count))
-                    .map(rs -> CountStatistics.build(rs, timeframe))
-                    .allResults()
-                    .map(CountsStatistic::new);
+                .single(call().bind(timeframe).bind(offset + " " + timeframe).bind(count))
+                .map(rs -> CountStatistics.build(rs, timeframe))
+                .allResults()
+                .map(CountsStatistic::new);
     }
 
     private CommandsStatistic get(String table, String timeframe, int offset) {
-        return Query
-                .query("""
+        return Query.query("""
                         SELECT %s,
                             command,
                             count
@@ -80,13 +75,10 @@ public class Commands {
     }
 
     private CommandsStatistic mapStatistics(List<CommandStatistic> commandStatistics) {
-        return commandStatistics.stream()
-                                .collect(Collectors.groupingBy(CommandStatistic::date))
-                                .entrySet()
-                                .stream()
-                                .map(entry -> new CommandsStatistic(entry.getKey(), entry.getValue()))
-                                .limit(1)
-                                .findFirst()
-                                .orElse(new CommandsStatistic(LocalDate.MIN, Collections.emptyList()));
+        return commandStatistics.stream().collect(Collectors.groupingBy(CommandStatistic::date)).entrySet().stream()
+                .map(entry -> new CommandsStatistic(entry.getKey(), entry.getValue()))
+                .limit(1)
+                .findFirst()
+                .orElse(new CommandsStatistic(LocalDate.MIN, Collections.emptyList()));
     }
 }

@@ -33,13 +33,14 @@ public class SessionService {
     public SessionService(Configuration configuration, GuildRepository guildRepository) {
         this.configuration = configuration;
         this.guildRepository = guildRepository;
-        guildSessions = CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES)
-                                    .removalListener(notification -> {
-                                        if (notification.getValue() instanceof GuildSession) {
-                                            SessionService.this.sessionExpired((GuildSession) notification.getValue());
-                                        }
-                                    })
-                                    .build();
+        guildSessions = CacheBuilder.newBuilder()
+                .expireAfterAccess(30, TimeUnit.MINUTES)
+                .removalListener(notification -> {
+                    if (notification.getValue() instanceof GuildSession) {
+                        SessionService.this.sessionExpired((GuildSession) notification.getValue());
+                    }
+                })
+                .build();
     }
 
     public Optional<GuildSession> getGuildSession(Context ctx) {
@@ -60,18 +61,29 @@ public class SessionService {
     }
 
     private GuildSession createGuildSession(Guild guild, Member member) {
-        var randomString = ThreadLocalRandom.current().ints(10, 'a', 'z')
-                                            .limit(25)
-                                            .mapToObj(Character::toString)
-                                            .collect(Collectors.joining());
+        var randomString = ThreadLocalRandom.current()
+                .ints(10, 'a', 'z')
+                .limit(25)
+                .mapToObj(Character::toString)
+                .collect(Collectors.joining());
 
         String key;
         if (TEST_MODE) {
             key = guild.getId();
         } else {
-            key = Hashing.sha256().hashBytes("%s%s%s".formatted(guild.getId(), member.getId(), randomString).getBytes(StandardCharsets.UTF_8)).toString();
+            key = Hashing.sha256()
+                    .hashBytes("%s%s%s"
+                            .formatted(guild.getId(), member.getId(), randomString)
+                            .getBytes(StandardCharsets.UTF_8))
+                    .toString();
         }
-        GuildSession session = new GuildSession(configuration, key, guild.getJDA().getShardManager(), guildRepository, guild.getIdLong(), member.getIdLong());
+        GuildSession session = new GuildSession(
+                configuration,
+                key,
+                guild.getJDA().getShardManager(),
+                guildRepository,
+                guild.getIdLong(),
+                member.getIdLong());
         guildSessions.put(key, session);
         return session;
     }

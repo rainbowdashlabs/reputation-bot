@@ -15,14 +15,13 @@ public class GlobalShardStatistic implements ReplacementProvider {
     private final long analyzedMessages;
 
     public GlobalShardStatistic(List<ShardStatistic> shardStatistics) {
-        analyzedMessages = shardStatistics.stream()
-                                          .map(ShardStatistic::analyzedMessages).reduce(0L, Long::sum);
+        analyzedMessages =
+                shardStatistics.stream().map(ShardStatistic::analyzedMessages).reduce(0L, Long::sum);
     }
 
     public long analyzedMessages() {
         return analyzedMessages;
     }
-
 
     @Override
     public List<Replacement> replacements() {

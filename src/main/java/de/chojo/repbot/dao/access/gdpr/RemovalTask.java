@@ -37,31 +37,41 @@ public final class RemovalTask {
     public void executeRemovalTask() {
         try (var conn = QueryConfiguration.getDefault().withSingleTransaction()) {
             if (userId() == 0) {
-                conn.query("DELETE FROM guilds WHERE guild_id = ?;").single(call().bind(guildId)).delete();
+                conn.query("DELETE FROM guilds WHERE guild_id = ?;")
+                        .single(call().bind(guildId))
+                        .delete();
                 log.trace("Removed guild settings for {}", guildId());
             } else if (guildId() == 0) {
-                conn.query("DELETE FROM reputation_log WHERE receiver_id = ?;").single(call().bind(userId())).delete();
-                conn.query("UPDATE reputation_log SET donor_id = NULL WHERE donor_id = ?;").single(call().bind(userId())).update();
-                conn.query("DELETE FROM reputation_offset WHERE user_id = ?;").single(call().bind(userId())).delete();
-                conn.query("DELETE FROM support_threads WHERE user_id = ?;").single(call().bind(userId())).delete();
+                conn.query("DELETE FROM reputation_log WHERE receiver_id = ?;")
+                        .single(call().bind(userId()))
+                        .delete();
+                conn.query("UPDATE reputation_log SET donor_id = NULL WHERE donor_id = ?;")
+                        .single(call().bind(userId()))
+                        .update();
+                conn.query("DELETE FROM reputation_offset WHERE user_id = ?;")
+                        .single(call().bind(userId()))
+                        .delete();
+                conn.query("DELETE FROM support_threads WHERE user_id = ?;")
+                        .single(call().bind(userId()))
+                        .delete();
                 log.trace("Removed Data of user {}", userId());
             } else {
                 // Remove user from guild
                 conn.query("DELETE FROM reputation_log WHERE guild_id = ? AND receiver_id = ?;")
-                    .single(call().bind(guildId()).bind(userId()))
-                    .delete();
+                        .single(call().bind(guildId()).bind(userId()))
+                        .delete();
                 conn.query("UPDATE reputation_log SET donor_id = NULL WHERE guild_id = ? AND donor_id = ?;")
-                    .single(call().bind(guildId()).bind(userId()))
-                    .delete();
+                        .single(call().bind(guildId()).bind(userId()))
+                        .delete();
                 conn.query("DELETE FROM reputation_offset WHERE guild_id = ? AND user_id = ?;")
-                    .single(call().bind(guildId()).bind(userId()))
-                    .delete();
+                        .single(call().bind(guildId()).bind(userId()))
+                        .delete();
                 log.trace("Removed user reputation from guild {} of user {}", guildId(), userId());
             }
 
             conn.query("DELETE FROM cleanup_schedule WHERE task_id = ?;")
-                .single(call().bind(taskId()))
-                .delete();
+                    .single(call().bind(taskId()))
+                    .delete();
         }
     }
 

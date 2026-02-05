@@ -35,7 +35,11 @@ public class SettingsRoute implements RoutesBuilder {
     private final RanksRoute ranksRoute;
     private final ThankingRoute thankingRoute = new ThankingRoute();
 
-    public SettingsRoute(InteractionHub<?, ?, ?> hub, AutopostService autopostService, RoleAssigner roleAssigner, ShardManager shardManager) {
+    public SettingsRoute(
+            InteractionHub<?, ?, ?> hub,
+            AutopostService autopostService,
+            RoleAssigner roleAssigner,
+            ShardManager shardManager) {
         reputationRoute = new ReputationRoute(hub);
         autopostRoute = new AutopostRoute(autopostService);
         ranksRoute = new RanksRoute(roleAssigner, shardManager);

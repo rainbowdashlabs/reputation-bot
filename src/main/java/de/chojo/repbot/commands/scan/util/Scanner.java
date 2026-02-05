@@ -42,8 +42,8 @@ public class Scanner {
     private static final long THREAD_MAX_SEEN_SECONDS = 300L;
     private static final Logger log = getLogger(Scan.class);
     private final ThreadGroup scanner = new ThreadGroup("Scanner");
-    private final ScheduledExecutorService worker = new Threading.ReportingExecutor(SCAN_THREADS + 1,
-            runnable -> new Thread(scanner, runnable));
+    private final ScheduledExecutorService worker =
+            new Threading.ReportingExecutor(SCAN_THREADS + 1, runnable -> new Thread(scanner, runnable));
     private final GuildRepository guildRepository;
     private final Set<ScanProcess> activeScans = new HashSet<>();
     private final Set<Long> cancel = new HashSet<>();
@@ -55,21 +55,33 @@ public class Scanner {
     public Scanner(GuildRepository guildRepository, Configuration configuration) {
         this.guildRepository = guildRepository;
         this.configuration = configuration;
-        worker.scheduleAtFixedRate(() -> {
-            finishTasks();
-            finishCanceledTasks();
-            checkStuckTasks();
-        }, 1, 1, TimeUnit.SECONDS);
+        worker.scheduleAtFixedRate(
+                () -> {
+                    finishTasks();
+                    finishCanceledTasks();
+                    checkStuckTasks();
+                },
+                1,
+                1,
+                TimeUnit.SECONDS);
     }
 
-    public void scanChannel(SlashCommandInteractionEvent event, EventContext context, TextChannel channel, int messageCount) {
-        if (PermissionErrorHandler.assertAndHandle(channel, context.guildLocalizer(), configuration,
-                Permission.MESSAGE_SEND, Permission.VIEW_CHANNEL, Permission.VIEW_CHANNEL, Permission.MESSAGE_HISTORY)) {
+    public void scanChannel(
+            SlashCommandInteractionEvent event, EventContext context, TextChannel channel, int messageCount) {
+        if (PermissionErrorHandler.assertAndHandle(
+                channel,
+                context.guildLocalizer(),
+                configuration,
+                Permission.MESSAGE_SEND,
+                Permission.VIEW_CHANNEL,
+                Permission.VIEW_CHANNEL,
+                Permission.MESSAGE_HISTORY)) {
             return;
         }
         var duration = DurationFormatUtils.formatDuration((long) messageCount / 100 * INTERVAL_MS, "mm:ss");
-        event.reply(context.localize("command.scan.scanner.message.scheduling", Replacement.create("DURATION", duration)))
-             .complete();
+        event.reply(context.localize(
+                        "command.scan.scanner.message.scheduling", Replacement.create("DURATION", duration)))
+                .complete();
         preSchedule(context, channel, messageCount);
     }
 
@@ -113,17 +125,27 @@ public class Scanner {
 
     private void preSchedule(EventContext context, TextChannel channel, int messageCount) {
         var history = channel.getHistory();
-        var pattern = guildRepository.guild(channel.getGuild()).settings().thanking().thankwords().thankwordPattern();
+        var pattern = guildRepository
+                .guild(channel.getGuild())
+                .settings()
+                .thanking()
+                .thankwords()
+                .thankwordPattern();
 
         schedule(history, context, pattern, channel, messageCount);
     }
 
-    private void schedule(MessageHistory history, EventContext context, Pattern pattern, TextChannel reportChannel, int calls) {
-        var progressMessage = reportChannel.sendMessage("```ANSI\n" +
-                context.localize("command.scan.scanner.message.progress",
-                        Replacement.create("PERCENT", String.format("%.02f", 0.0d))) + " " + Text.progressBar(0, 40) +
-                "```").complete();
-        var scanProcess = new ScanProcess(messageAnalyzer, context.guildLocalizer(), progressMessage, history, pattern, calls, guildRepository);
+    private void schedule(
+            MessageHistory history, EventContext context, Pattern pattern, TextChannel reportChannel, int calls) {
+        var progressMessage = reportChannel
+                .sendMessage("```ANSI\n"
+                        + context.localize(
+                                "command.scan.scanner.message.progress",
+                                Replacement.create("PERCENT", String.format("%.02f", 0.0d)))
+                        + " " + Text.progressBar(0, 40) + "```")
+                .complete();
+        var scanProcess = new ScanProcess(
+                messageAnalyzer, context.guildLocalizer(), progressMessage, history, pattern, calls, guildRepository);
         setActive(scanProcess);
         reportChannel.getGuild().loadMembers().get();
         worker.schedule(() -> processScan(scanProcess), 0, TimeUnit.SECONDS);
@@ -156,17 +178,25 @@ public class Scanner {
         if (finished.isEmpty()) return;
         var scan = finished.poll();
         setInactive(scan);
-        scan.progressMessage().editMessage("```ANSI\n" +
-                scan.loc().localize("command.scan.scanner.message.progress",
-                        Replacement.create("PERCENT", String.format("%.02f", 100.0d))) + " " + Text.progressBar(1, 40) +
-                "```").complete();
+        scan.progressMessage()
+                .editMessage("```ANSI\n"
+                        + scan.loc()
+                                .localize(
+                                        "command.scan.scanner.message.progress",
+                                        Replacement.create("PERCENT", String.format("%.02f", 100.0d)))
+                        + " " + Text.progressBar(1, 40) + "```")
+                .complete();
         var embed = new LocalizedEmbedBuilder(scan.loc())
                 .setTitle("command.scan.scanner.message.completed")
-                .setDescription("command.scan.scanner.message.result",
+                .setDescription(
+                        "command.scan.scanner.message.result",
                         Replacement.create("SCANNED", scan.scanned()),
                         Replacement.create("HITS", scan.hits()))
                 .build();
-        scan.resultChannel().sendMessageEmbeds(embed).setMessageReference(scan.progressMessage()).queue();
+        scan.resultChannel()
+                .sendMessageEmbeds(embed)
+                .setMessageReference(scan.progressMessage())
+                .queue();
     }
 
     private void finishCanceledTasks() {
@@ -175,11 +205,15 @@ public class Scanner {
         setInactive(scan);
         var embed = new LocalizedEmbedBuilder(scan.loc())
                 .setTitle("command.scan.scanner.message.canceled")
-                .setDescription("command.scan.scanner.message.result",
+                .setDescription(
+                        "command.scan.scanner.message.result",
                         Replacement.create("SCANNED", scan.scanned()),
                         Replacement.create("HITS", scan.hits()))
                 .build();
-        scan.resultChannel().sendMessageEmbeds(embed).setMessageReference(scan.progressMessage()).queue();
+        scan.resultChannel()
+                .sendMessageEmbeds(embed)
+                .setMessageReference(scan.progressMessage())
+                .queue();
     }
 
     private void checkStuckTasks() {
@@ -188,8 +222,9 @@ public class Scanner {
                 continue;
             }
             if (activeScan.interrupt()) {
-                log.warn("Scan thread was stuck and interrupted. Scan was canceled on guild {}", activeScan.guild()
-                                                                                                           .getIdLong());
+                log.warn(
+                        "Scan thread was stuck and interrupted. Scan was canceled on guild {}",
+                        activeScan.guild().getIdLong());
                 cancelScan(activeScan.guild());
             }
         }

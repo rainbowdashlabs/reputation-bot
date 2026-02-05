@@ -18,7 +18,8 @@ public record SubmitResult(SubmitResultType type, List<Replacement> replacements
     }
 
     @JsonCreator
-    public static SubmitResult of(@JsonProperty("type") SubmitResultType type, @JsonProperty("replacements") List<Replacement> replacements) {
+    public static SubmitResult of(
+            @JsonProperty("type") SubmitResultType type, @JsonProperty("replacements") List<Replacement> replacements) {
         return new SubmitResult(type, replacements);
     }
 }

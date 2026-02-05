@@ -28,9 +28,31 @@ import static de.chojo.sadu.queries.api.query.Query.query;
 public class AbuseProtection extends AbuseProtectionPOJO implements GuildHolder {
     private final Settings settings;
 
-    public AbuseProtection(Settings settings, int cooldown, CooldownDirection cooldownDirection, int maxMessageAge, int minMessages, boolean donorContext, boolean receiverContext,
-                           int maxGiven, int maxGivenHours, int maxReceived, int maxReceivedHours, int maxMessageReputation) {
-        super(cooldown, cooldownDirection, maxMessageAge, minMessages, donorContext, receiverContext, maxGiven, maxGivenHours, maxReceived, maxReceivedHours, maxMessageReputation);
+    public AbuseProtection(
+            Settings settings,
+            int cooldown,
+            CooldownDirection cooldownDirection,
+            int maxMessageAge,
+            int minMessages,
+            boolean donorContext,
+            boolean receiverContext,
+            int maxGiven,
+            int maxGivenHours,
+            int maxReceived,
+            int maxReceivedHours,
+            int maxMessageReputation) {
+        super(
+                cooldown,
+                cooldownDirection,
+                maxMessageAge,
+                minMessages,
+                donorContext,
+                receiverContext,
+                maxGiven,
+                maxGivenHours,
+                maxReceived,
+                maxReceivedHours,
+                maxMessageReputation);
         this.settings = settings;
     }
 
@@ -39,7 +61,8 @@ public class AbuseProtection extends AbuseProtectionPOJO implements GuildHolder 
     }
 
     public static AbuseProtection build(Settings settings, Row rs) throws SQLException {
-        return new AbuseProtection(settings,
+        return new AbuseProtection(
+                settings,
                 rs.getInt("cooldown"),
                 rs.getEnum("cooldown_direction", CooldownDirection.class),
                 rs.getInt("max_message_age"),
@@ -196,20 +219,27 @@ public class AbuseProtection extends AbuseProtectionPOJO implements GuildHolder 
                 **Context**
                 Donor: %s
                 Receiver: %s
-                
+
                 **Limits**
                 Given: %s in %s hours
                 Received: %s in %s hours
                 Per Message: %s
                 Cooldown: %s
-                
+
                 **Age**
                 Max Age: %s minutes
                 Min Messages: %s
-                """.formatted(donorContext, receiverContext,
-                           maxGiven, maxGivenHours, maxReceived, maxReceivedHours, maxMessageReputation, cooldown,
-                           maxMessageAge, minMessages)
-                   .stripIndent();
+                """.formatted(
+                donorContext,
+                receiverContext,
+                maxGiven,
+                maxGivenHours,
+                maxReceived,
+                maxReceivedHours,
+                maxMessageReputation,
+                cooldown,
+                maxMessageAge,
+                minMessages).stripIndent();
     }
 
     private boolean set(String parameter, Function<Call, Call> builder) {

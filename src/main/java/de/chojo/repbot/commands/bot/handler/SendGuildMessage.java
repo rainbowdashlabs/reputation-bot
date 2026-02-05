@@ -42,12 +42,12 @@ public class SendGuildMessage implements SlashHandler {
         }
 
         ModalHandler modal = ModalHandler.builder("Message")
-                                         .addInput(TextInputHandler.builder("message", "Message to send", TextInputStyle.PARAGRAPH))
-                                         .withHandler((ctx) -> {
-                                             ModalMapping message = ctx.getValue("message");
-                                             textChannelById.sendMessage(message.getAsString()).complete();
-                                         })
-                                         .build();
+                .addInput(TextInputHandler.builder("message", "Message to send", TextInputStyle.PARAGRAPH))
+                .withHandler((ctx) -> {
+                    ModalMapping message = ctx.getValue("message");
+                    textChannelById.sendMessage(message.getAsString()).complete();
+                })
+                .build();
         context.modalService().registerModal(event, modal);
     }
 }

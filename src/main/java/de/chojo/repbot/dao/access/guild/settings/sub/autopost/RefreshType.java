@@ -21,6 +21,9 @@ public enum RefreshType {
 
     @Override
     public String toString() {
-        return "%s.%s.name".formatted(getClass().getSimpleName().toLowerCase(), name().toLowerCase().replace("_", ""));
+        return "%s.%s.name"
+                .formatted(
+                        getClass().getSimpleName().toLowerCase(),
+                        name().toLowerCase().replace("_", ""));
     }
 }

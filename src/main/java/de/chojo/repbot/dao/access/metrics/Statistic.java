@@ -29,22 +29,20 @@ public class Statistic {
                             FROM
                             	data_statistics;
                             """)
-                    .single()
-                    .map(rs -> new DataStatistic(
-                            rs.getInt("guilds"),
-                            rs.getInt("active_guilds"),
-                            rs.getInt("active_channel"),
-                            rs.getInt("channel"),
-                            rs.getInt("total_reputation"),
-                            rs.getInt("today_reputation"),
-                            rs.getInt("weekly_reputation"),
-                            rs.getInt("weekly_avg_reputation")))
-                    .first();
+                .single()
+                .map(rs -> new DataStatistic(
+                        rs.getInt("guilds"),
+                        rs.getInt("active_guilds"),
+                        rs.getInt("active_channel"),
+                        rs.getInt("channel"),
+                        rs.getInt("total_reputation"),
+                        rs.getInt("today_reputation"),
+                        rs.getInt("weekly_reputation"),
+                        rs.getInt("weekly_avg_reputation")))
+                .first();
     }
 
     public void refreshStatistics() {
-        Query.query("REFRESH MATERIALIZED VIEW data_statistics")
-             .single()
-             .update();
+        Query.query("REFRESH MATERIALIZED VIEW data_statistics").single().update();
     }
 }

@@ -21,8 +21,9 @@ public class SystemChannelDisable implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         guildRepository.guild(event.getGuild()).settings().general().systemChannel(0);
-        event.reply(WebPromo.promoString(context) + context.localize("command.channel.systemchannel.disable.message.disabled"))
-             .setEphemeral(true)
-             .complete();
+        event.reply(WebPromo.promoString(context)
+                        + context.localize("command.channel.systemchannel.disable.message.disabled"))
+                .setEphemeral(true)
+                .complete();
     }
 }
