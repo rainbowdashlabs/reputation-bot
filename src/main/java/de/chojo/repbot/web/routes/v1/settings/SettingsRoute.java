@@ -6,11 +6,13 @@
 package de.chojo.repbot.web.routes.v1.settings;
 
 import de.chojo.jdautil.interactions.dispatching.InteractionHub;
+import de.chojo.repbot.dao.provider.SettingsAuditLogRepository;
 import de.chojo.repbot.service.AutopostService;
 import de.chojo.repbot.service.RoleAssigner;
 import de.chojo.repbot.web.routes.RoutesBuilder;
 import de.chojo.repbot.web.routes.v1.settings.sub.AbuseProtectionRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.AnnouncementsRoute;
+import de.chojo.repbot.web.routes.v1.settings.sub.AuditLogRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.AutopostRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.GeneralRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.LogChannelRoute;
@@ -33,15 +35,18 @@ public class SettingsRoute implements RoutesBuilder {
     private final LogChannelRoute logChannelRoute = new LogChannelRoute();
     private final ProfileRoute profileRoute = new ProfileRoute();
     private final RanksRoute ranksRoute;
+    private final AuditLogRoute auditLogRoute;
     private final ThankingRoute thankingRoute = new ThankingRoute();
 
     public SettingsRoute(
             InteractionHub<?, ?, ?> hub,
             AutopostService autopostService,
             RoleAssigner roleAssigner,
-            ShardManager shardManager) {
+            ShardManager shardManager,
+            SettingsAuditLogRepository settingsAuditLogRepository) {
         reputationRoute = new ReputationRoute(hub);
         autopostRoute = new AutopostRoute(autopostService);
+        auditLogRoute = new AuditLogRoute(settingsAuditLogRepository);
         ranksRoute = new RanksRoute(roleAssigner, shardManager);
     }
 
@@ -58,6 +63,7 @@ public class SettingsRoute implements RoutesBuilder {
             profileRoute.buildRoutes();
             ranksRoute.buildRoutes();
             thankingRoute.buildRoutes();
+            auditLogRoute.buildRoutes();
         });
     }
 }

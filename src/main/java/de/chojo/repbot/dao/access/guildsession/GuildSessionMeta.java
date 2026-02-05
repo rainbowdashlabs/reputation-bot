@@ -111,8 +111,13 @@ public final class GuildSessionMeta {
             // Mostly to avoid bloat in the settings audit log.
             if (change.memberId() == memberId()
                     && change.changed().isAfter(Instant.now().minus(5, ChronoUnit.MINUTES))) {
-                query(
-                                "UPDATE settings_audit_log SET new_value = ?::JSONB WHERE settings_identifier = ? AND guild_id = ? AND member_id = ?")
+                query("""
+                        UPDATE settings_audit_log
+                        SET
+                            new_value = ?::JSONB
+                        WHERE settings_identifier = ?
+                          AND guild_id = ?
+                          AND member_id = ?""")
                         .single(call().bind(newValue, OBJECT_JSON)
                                 .bind(settingsKey)
                                 .bind(guildId())
@@ -121,8 +126,13 @@ public final class GuildSessionMeta {
                 return;
             }
         }
-        query(
-                        "INSERT INTO settings_audit_log (guild_id, member_id, settings_identifier, old_value, new_value) VALUES (?, ?, ?, ?::JSONB, ?::JSONB)")
+        query("""
+                INSERT
+                INTO
+                    settings_audit_log
+                    (guild_id, member_id, settings_identifier, old_value, new_value)
+                VALUES
+                    (?, ?, ?, ?::JSONB, ?::JSONB)""")
                 .single(call().bind(guildId())
                         .bind(memberId())
                         .bind(settingsKey)

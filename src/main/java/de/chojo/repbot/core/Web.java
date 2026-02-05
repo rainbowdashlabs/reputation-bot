@@ -142,7 +142,8 @@ public class Web {
                                     autopostService,
                                     bot.roleAssigner(),
                                     bot.shardManager(),
-                                    configuration)
+                                    configuration,
+                                    data.settingsAuditLogRepository())
                             .init());
                     config.router.mount(router -> {
                         router.beforeMatched(this::handleAccess);
