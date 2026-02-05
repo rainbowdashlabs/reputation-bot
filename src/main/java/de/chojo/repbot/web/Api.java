@@ -14,6 +14,7 @@ import de.chojo.repbot.dao.provider.SettingsAuditLogRepository;
 import de.chojo.repbot.serialization.ThankwordsContainer;
 import de.chojo.repbot.service.AutopostService;
 import de.chojo.repbot.service.RoleAssigner;
+import de.chojo.repbot.web.cache.MemberCache;
 import de.chojo.repbot.web.routes.v1.data.DataRoute;
 import de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute;
 import de.chojo.repbot.web.routes.v1.session.SessionRoute;
@@ -49,11 +50,12 @@ public class Api {
             RoleAssigner roleAssigner,
             ShardManager shardManager,
             Configuration configuration,
-            SettingsAuditLogRepository settingsAuditLogRepository) {
+            SettingsAuditLogRepository settingsAuditLogRepository,
+            MemberCache memberCache) {
         this.sessionService = sessionService;
         metricsRoute = new MetricsRoute(metrics);
         sessionRoute = new SessionRoute(sessionService);
-        settingsRoute = new SettingsRoute(hub, autopostService, roleAssigner, shardManager, settingsAuditLogRepository);
+        settingsRoute = new SettingsRoute(hub, autopostService, roleAssigner, shardManager, settingsAuditLogRepository, memberCache);
 
         // Load thankwords container
         ThankwordsContainer thankwordsContainer;

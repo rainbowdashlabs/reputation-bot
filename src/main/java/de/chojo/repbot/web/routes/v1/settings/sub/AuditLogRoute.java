@@ -8,8 +8,10 @@ package de.chojo.repbot.web.routes.v1.settings.sub;
 import de.chojo.repbot.dao.access.guildsession.GuildSession;
 import de.chojo.repbot.dao.access.guildsession.SettingsAuditLog;
 import de.chojo.repbot.dao.provider.SettingsAuditLogRepository;
+import de.chojo.repbot.web.cache.MemberCache;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
+import de.chojo.repbot.web.pojo.guild.MemberPOJO;
 import de.chojo.repbot.web.pojo.settings.sub.AuditLogPagePOJO;
 import de.chojo.repbot.web.routes.RoutesBuilder;
 import io.javalin.http.Context;
@@ -18,17 +20,21 @@ import io.javalin.openapi.OpenApi;
 import io.javalin.openapi.OpenApiContent;
 import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiResponse;
+import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
 
 public class AuditLogRoute implements RoutesBuilder {
-
+    private final MemberCache memberCache;
     private final SettingsAuditLogRepository settingsAuditLogRepository;
 
-    public AuditLogRoute(SettingsAuditLogRepository settingsAuditLogRepository) {
+    public AuditLogRoute(MemberCache memberCache, SettingsAuditLogRepository settingsAuditLogRepository) {
+        this.memberCache = memberCache;
         this.settingsAuditLogRepository = settingsAuditLogRepository;
     }
 
@@ -51,9 +57,10 @@ public class AuditLogRoute implements RoutesBuilder {
 
         long guildId = session.repGuild().guildId();
         List<SettingsAuditLog> auditLogs = settingsAuditLogRepository.getAuditLog(guildId, page, entries);
+        var members = auditLogs.stream().map(SettingsAuditLog::memberId).distinct().map(e -> memberCache.get(session.guild(), String.valueOf(e))).collect(Collectors.toMap(MemberPOJO::id, e -> e));
         long maxPages = settingsAuditLogRepository.getAuditLogPages(guildId, entries);
 
-        ctx.json(new AuditLogPagePOJO(page, maxPages, auditLogs));
+        ctx.json(new AuditLogPagePOJO(page, maxPages, auditLogs, members));
     }
 
     @Override

@@ -6,7 +6,9 @@
 package de.chojo.repbot.web.pojo.settings.sub;
 
 import de.chojo.repbot.dao.access.guildsession.SettingsAuditLog;
+import de.chojo.repbot.web.pojo.guild.MemberPOJO;
 
 import java.util.List;
+import java.util.Map;
 
-public record AuditLogPagePOJO(int page, long maxPages, List<SettingsAuditLog> content) {}
+public record AuditLogPagePOJO(int page, long maxPages, List<SettingsAuditLog> content, Map<String, MemberPOJO> members) {}

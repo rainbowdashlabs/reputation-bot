@@ -9,6 +9,7 @@ import de.chojo.jdautil.interactions.dispatching.InteractionHub;
 import de.chojo.repbot.dao.provider.SettingsAuditLogRepository;
 import de.chojo.repbot.service.AutopostService;
 import de.chojo.repbot.service.RoleAssigner;
+import de.chojo.repbot.web.cache.MemberCache;
 import de.chojo.repbot.web.routes.RoutesBuilder;
 import de.chojo.repbot.web.routes.v1.settings.sub.AbuseProtectionRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.AnnouncementsRoute;
@@ -43,10 +44,11 @@ public class SettingsRoute implements RoutesBuilder {
             AutopostService autopostService,
             RoleAssigner roleAssigner,
             ShardManager shardManager,
-            SettingsAuditLogRepository settingsAuditLogRepository) {
+            SettingsAuditLogRepository settingsAuditLogRepository,
+            MemberCache memberCache) {
         reputationRoute = new ReputationRoute(hub);
         autopostRoute = new AutopostRoute(autopostService);
-        auditLogRoute = new AuditLogRoute(settingsAuditLogRepository);
+        auditLogRoute = new AuditLogRoute(memberCache, settingsAuditLogRepository);
         ranksRoute = new RanksRoute(roleAssigner, shardManager);
     }
 

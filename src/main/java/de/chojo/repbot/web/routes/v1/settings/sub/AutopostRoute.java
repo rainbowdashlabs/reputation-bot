@@ -127,24 +127,6 @@ public class AutopostRoute implements RoutesBuilder {
     }
 
     @OpenApi(
-            summary = "Update autopost message",
-            operationId = "updateAutopostMessage",
-            path = "v1/settings/autopost/message",
-            methods = HttpMethod.POST,
-            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
-            tags = {"Settings"},
-            requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Long.class)),
-            responses = {@OpenApiResponse(status = "200")})
-    public void updateMessage(Context ctx) {
-        GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        Autopost autopost = session.repGuild().settings().autopost();
-        long oldValue = autopost.messageId();
-        long newValue = ctx.bodyAsClass(Long.class);
-        autopost.message(newValue);
-        session.recordChange("autopost.message", oldValue, newValue);
-    }
-
-    @OpenApi(
             summary = "Update autopost refresh type",
             operationId = "updateAutopostRefreshType",
             path = "v1/settings/autopost/refreshtype",
