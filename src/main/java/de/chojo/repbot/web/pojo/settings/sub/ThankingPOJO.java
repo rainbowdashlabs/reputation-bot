@@ -14,18 +14,24 @@ public class ThankingPOJO {
     ChannelsPOJO channels;
     RolesHolderPOJO donorRoles;
     RolesHolderPOJO receiverRoles;
+    RolesHolderPOJO denyDonorRoles;
+    RolesHolderPOJO denyReceiverRoles;
     ReactionsPOJO reactions;
     ThankwordsPOJO thankwords;
 
     public ThankingPOJO(
             ChannelsPOJO channels,
             RolesHolderPOJO donorRoles,
+            RolesHolderPOJO denyDonorRoles,
             RolesHolderPOJO receiverRoles,
+            RolesHolderPOJO denyReceiverRoles,
             ReactionsPOJO reactions,
             ThankwordsPOJO thankwords) {
         this.channels = channels;
         this.donorRoles = donorRoles;
+        this.denyDonorRoles = denyDonorRoles;
         this.receiverRoles = receiverRoles;
+        this.denyReceiverRoles = denyReceiverRoles;
         this.reactions = reactions;
         this.thankwords = thankwords;
     }
@@ -36,6 +42,14 @@ public class ThankingPOJO {
 
     public RolesHolderPOJO donorRoles() {
         return donorRoles;
+    }
+
+    public RolesHolderPOJO denyDonorRoles() {
+        return denyDonorRoles;
+    }
+
+    public RolesHolderPOJO denyReceiverRoles() {
+        return denyReceiverRoles;
     }
 
     public RolesHolderPOJO receiverRoles() {

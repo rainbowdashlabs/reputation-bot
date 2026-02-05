@@ -210,6 +210,14 @@
       "list": {
         "label": "Valitut roolit",
         "description": "Valitse, mitkä roolit ovat pakollisia."
+      },
+      "denyDonor": {
+        "label": "Hylkää lahjoittajan roolit",
+        "description": "Jos tämä on käytössä, käyttäjät, joilla on jokin näistä rooleista, eivät voi antaa mainepisteitä."
+      },
+      "denyReceiver": {
+        "label": "Vastaanottajan roolien kieltäminen",
+        "description": "Jos tämä on käytössä, käyttäjät, joilla on jokin näistä rooleista, eivät voi saada mainetta."
       }
     },
     "channels": {

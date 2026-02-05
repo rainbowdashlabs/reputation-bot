@@ -12,6 +12,8 @@ import de.chojo.repbot.web.error.ErrorResponse;
 import de.chojo.repbot.web.pojo.settings.sub.ThankingPOJO;
 import de.chojo.repbot.web.routes.RoutesBuilder;
 import de.chojo.repbot.web.routes.v1.settings.sub.thanking.ChannelsRoute;
+import de.chojo.repbot.web.routes.v1.settings.sub.thanking.DenyDonorRolesRoute;
+import de.chojo.repbot.web.routes.v1.settings.sub.thanking.DenyReceiverRolesRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.thanking.DonorRolesRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.thanking.ReactionsRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.thanking.ReceiverRolesRoute;
@@ -32,7 +34,9 @@ import static io.javalin.apibuilder.ApiBuilder.post;
 public class ThankingRoute implements RoutesBuilder {
     private final ChannelsRoute channelsRoute = new ChannelsRoute();
     private final DonorRolesRoute donorRolesRoute = new DonorRolesRoute();
+    private final DenyDonorRolesRoute denyDonorRolesRoute = new DenyDonorRolesRoute();
     private final ReceiverRolesRoute receiverRolesRoute = new ReceiverRolesRoute();
+    private final DenyReceiverRolesRoute denyReceiverRolesRoute = new DenyReceiverRolesRoute();
     private final ReactionsRoute reactionsRoute = new ReactionsRoute();
     private final ThankwordsRoute thankwordsRoute = new ThankwordsRoute();
 
@@ -79,7 +83,9 @@ public class ThankingRoute implements RoutesBuilder {
             post("", this::updateThankingSettings, Role.GUILD_USER);
             channelsRoute.buildRoutes();
             donorRolesRoute.buildRoutes();
+            denyDonorRolesRoute.buildRoutes();
             receiverRolesRoute.buildRoutes();
+            denyReceiverRolesRoute.buildRoutes();
             reactionsRoute.buildRoutes();
             thankwordsRoute.buildRoutes();
         });

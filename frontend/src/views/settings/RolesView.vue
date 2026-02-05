@@ -5,9 +5,11 @@
  */
 <script lang="ts" setup>
 import {useI18n} from 'vue-i18n'
-import SettingsContainer from './components/SettingsContainer.vue'
-import DonorRolesSettings from './rolesview/DonorRolesSettings.vue'
-import ReceiverRolesSettings from './rolesview/ReceiverRolesSettings.vue'
+import DenyReceiverRolesSettings from "@/views/settings/rolesview/DenyReceiverRolesSettings.vue";
+import DenyDonorRolesSettings from "@/views/settings/rolesview/DenyDonorRolesSettings.vue";
+import SettingsContainer from "@/views/settings/components/SettingsContainer.vue";
+import DonorRolesSettings from "@/views/settings/rolesview/DonorRolesSettings.vue";
+import ReceiverRolesSettings from "@/views/settings/rolesview/ReceiverRolesSettings.vue";
 
 const {t} = useI18n()
 </script>
@@ -18,6 +20,10 @@ const {t} = useI18n()
       <DonorRolesSettings/>
       <hr class="border-gray-200 dark:border-gray-700"/>
       <ReceiverRolesSettings/>
+      <hr class="border-gray-200 dark:border-gray-700"/>
+      <DenyReceiverRolesSettings/>
+      <hr class="border-gray-200 dark:border-gray-700"/>
+      <DenyDonorRolesSettings/>
     </div>
   </SettingsContainer>
 </template>

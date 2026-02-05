@@ -63,7 +63,9 @@ public class SettingsPOJO {
         ThankingPOJO thankingPOJO = new ThankingPOJO(
                 thanking.channels(),
                 thanking.donorRoles(),
+                thanking.denyDonorRoles(),
                 thanking.receiverRoles(),
+                thanking.denyReceiverRoles(),
                 thanking.reactions(),
                 thanking.thankwords());
         return new SettingsPOJO(

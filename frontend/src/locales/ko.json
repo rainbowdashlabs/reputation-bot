@@ -210,6 +210,14 @@
       "list": {
         "label": "선정된 역할",
         "description": "필수 역할을 선택하십시오."
+      },
+      "denyDonor": {
+        "label": "기부자 역할 거부",
+        "description": "이 기능이 활성화된 경우, 해당 역할 중 하나를 가진 사용자는 평판을 부여할 수 없습니다."
+      },
+      "denyReceiver": {
+        "label": "수신자 역할 거부",
+        "description": "이 기능이 활성화된 경우, 해당 역할 중 하나라도 가진 사용자는 평판을 받을 수 없습니다."
       }
     },
     "channels": {

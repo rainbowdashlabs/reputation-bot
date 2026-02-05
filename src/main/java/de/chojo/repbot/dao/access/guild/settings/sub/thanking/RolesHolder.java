@@ -117,8 +117,13 @@ public abstract class RolesHolder extends RolesHolderPOJO implements GuildHolder
         return roleIds.stream()
                 .map(id -> Optional.ofNullable(guild().getRoleById(id))
                         .map(r -> "%s | %d".formatted(r.getName(), r.getPosition()))
-                        .orElse("Unkown (%d)".formatted(id)))
+                        .orElse("Unknown (%d)".formatted(id)))
                 .collect(Collectors.joining(", "));
+    }
+
+    @Override
+    public long guildId() {
+        return thanking.guildId();
     }
 
     protected abstract String targetTable();

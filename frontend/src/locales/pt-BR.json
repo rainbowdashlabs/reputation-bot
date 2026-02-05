@@ -210,6 +210,14 @@
       "list": {
         "label": "Funções selecionadas",
         "description": "Escolha quais funções devem ser obrigatórias."
+      },
+      "denyDonor": {
+        "label": "Negar funções de doador",
+        "description": "Se estiver ativado, os usuários com qualquer uma dessas funções não podem dar reputação."
+      },
+      "denyReceiver": {
+        "label": "Negar funções de destinatário",
+        "description": "Se estiver ativado, os usuários com qualquer uma dessas funções não podem receber reputação."
       }
     },
     "channels": {

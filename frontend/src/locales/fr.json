@@ -210,6 +210,14 @@
       "list": {
         "label": "Rôles choisis",
         "description": "Choisis les rôles qui devraient être obligatoires."
+      },
+      "denyDonor": {
+        "label": "Refuser les rôles de donateur",
+        "description": "Si cette option est activée, les utilisateurs ayant l'un de ces rôles ne peuvent pas donner de réputation."
+      },
+      "denyReceiver": {
+        "label": "Refuser les rôles de destinataire",
+        "description": "Si cette option est activée, les utilisateurs ayant l'un de ces rôles ne peuvent pas recevoir de réputation."
       }
     },
     "channels": {

@@ -24,7 +24,9 @@ import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 import de.chojo.repbot.service.RoleAssigner;
 import de.chojo.repbot.util.Messages;
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.unions.GuildMessageChannelUnion;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
@@ -214,6 +216,16 @@ public class ReputationService {
             log.trace("The donor does not have a donor role.");
             return analyzer.log(
                     context, SubmitResult.of(SubmitResultType.NO_DONOR_ROLE, Replacement.createMention(donor)));
+        }
+        if (settings.thanking().denyReceiverRoles().hasRole(receiver)) {
+            log.trace("The receiver does have a deny receiver role.");
+            return analyzer.log(
+                    context, SubmitResult.of(SubmitResultType.DENY_RECEIVER_ROLE, Replacement.createMention(receiver)));
+        }
+        if (settings.thanking().denyDonorRoles().hasRole(donor)) {
+            log.trace("The donor does have a deny donor role.");
+            return analyzer.log(
+                    context, SubmitResult.of(SubmitResultType.DENY_DONOR_ROLE, Replacement.createMention(donor)));
         }
 
         return SubmitResult.of(SubmitResultType.SUCCESS);
