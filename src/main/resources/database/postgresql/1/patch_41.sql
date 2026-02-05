@@ -19,7 +19,7 @@ CREATE OR REPLACE FUNCTION repbot_schema.audit_settings_changes(
 AS
 $$
 BEGIN
-    IF old.value != new.value THEN
+    IF new.old_value != new.new_value THEN
         new.changed = now();
     END IF;
     RETURN new;
