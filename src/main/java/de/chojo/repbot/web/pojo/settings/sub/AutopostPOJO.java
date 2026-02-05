@@ -22,10 +22,10 @@ public class AutopostPOJO {
     protected RefreshType refreshType = RefreshType.DELETE_AND_REPOST;
     protected RefreshInterval refreshInterval = RefreshInterval.DAILY;
 
-    public AutopostPOJO() {
-    }
+    public AutopostPOJO() {}
 
-    public AutopostPOJO(boolean active, long channelId, long messageId, RefreshType refreshType, RefreshInterval refreshInterval) {
+    public AutopostPOJO(
+            boolean active, long channelId, long messageId, RefreshType refreshType, RefreshInterval refreshInterval) {
         this.active = active;
         this.channelId = channelId;
         this.messageId = messageId;

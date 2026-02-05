@@ -21,7 +21,6 @@ import net.dv8tion.jda.api.sharding.ShardManager;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,19 +39,23 @@ public class SessionService {
     private final Map<SessionKey, GuildSession> userSessions = new ConcurrentHashMap<>();
     private final ShardManager shardManager;
 
-    public SessionService(Configuration configuration, GuildSessionRepository guildSessionRepository, GuildRepository guildRepository, ShardManager shardManager) {
+    public SessionService(
+            Configuration configuration,
+            GuildSessionRepository guildSessionRepository,
+            GuildRepository guildRepository,
+            ShardManager shardManager) {
         this.configuration = configuration;
         this.guildSessionRepository = guildSessionRepository;
         this.guildRepository = guildRepository;
         this.shardManager = shardManager;
         guildSessions = CacheBuilder.newBuilder()
-                                    .expireAfterAccess(30, TimeUnit.MINUTES)
-                                    .removalListener(notification -> {
-                                        if (notification.getValue() instanceof GuildSession) {
-                                            SessionService.this.sessionExpired((GuildSession) notification.getValue());
-                                        }
-                                    })
-                                    .build();
+                .expireAfterAccess(30, TimeUnit.MINUTES)
+                .removalListener(notification -> {
+                    if (notification.getValue() instanceof GuildSession) {
+                        SessionService.this.sessionExpired((GuildSession) notification.getValue());
+                    }
+                })
+                .build();
     }
 
     public Optional<GuildSession> getGuildSession(Context ctx) {
@@ -112,7 +115,8 @@ public class SessionService {
 
     private GuildSession createGuildSession(Guild guild, Member member) {
         String token = generateToken(guild.getIdLong(), member.getIdLong());
-        GuildSessionMeta newSession = guildSessionRepository.createNewSession(token, guild.getIdLong(), member.getIdLong());
+        GuildSessionMeta newSession =
+                guildSessionRepository.createNewSession(token, guild.getIdLong(), member.getIdLong());
         GuildSession session = newSession.toGuildSession(configuration, shardManager, guildRepository);
         guildSessions.put(token, session);
         return session;
@@ -122,16 +126,14 @@ public class SessionService {
         if (TEST_MODE) return "test_mode%stestmode".formatted(guild);
 
         var randomString = ThreadLocalRandom.current()
-                                            .ints(10, 'a', 'z')
-                                            .limit(25)
-                                            .mapToObj(Character::toString)
-                                            .collect(Collectors.joining());
+                .ints(10, 'a', 'z')
+                .limit(25)
+                .mapToObj(Character::toString)
+                .collect(Collectors.joining());
 
         return Hashing.sha256()
-                      .hashBytes("%s%s%s"
-                              .formatted(guild, member, randomString)
-                              .getBytes(StandardCharsets.UTF_8))
-                      .toString();
+                .hashBytes("%s%s%s".formatted(guild, member, randomString).getBytes(StandardCharsets.UTF_8))
+                .toString();
     }
 
     public void invalidateMemberSession(Member member) {

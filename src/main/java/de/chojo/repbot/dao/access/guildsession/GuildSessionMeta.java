@@ -1,3 +1,8 @@
+/*
+ *     SPDX-License-Identifier: AGPL-3.0-only
+ *
+ *     Copyright (C) RainbowDashLabs and Contributor
+ */
 package de.chojo.repbot.dao.access.guildsession;
 
 import de.chojo.repbot.config.Configuration;
@@ -25,7 +30,8 @@ public final class GuildSessionMeta {
 
     @MappingProvider({"guild_id", "member_id", "token", "created", "last_used"})
     public GuildSessionMeta(Row row) throws SQLException {
-        this(row.getLong("guild_id"),
+        this(
+                row.getLong("guild_id"),
                 row.getLong("member_id"),
                 row.getString("token"),
                 row.get("created", INSTANT_TIMESTAMP),
@@ -61,7 +67,8 @@ public final class GuildSessionMeta {
     }
 
     public void used() {
-        Optional<Instant> lastUsed = query("UPDATE guild_session SET last_used = now() WHERE token = ? RETURNING last_used")
+        Optional<Instant> lastUsed = query(
+                        "UPDATE guild_session SET last_used = now() WHERE token = ? RETURNING last_used")
                 .single(call().bind(token))
                 .map(row -> row.get("last_used", INSTANT_TIMESTAMP))
                 .first();
@@ -74,7 +81,8 @@ public final class GuildSessionMeta {
                 .delete();
     }
 
-    public GuildSession toGuildSession(Configuration configuration, ShardManager shardManager, GuildRepository guildRepository) {
+    public GuildSession toGuildSession(
+            Configuration configuration, ShardManager shardManager, GuildRepository guildRepository) {
         return new GuildSession(configuration, shardManager, guildRepository, this);
     }
 
@@ -101,16 +109,25 @@ public final class GuildSessionMeta {
             SettingsAuditLog change = last.get();
             // Settings that were changed in the last 5 minutes are considered one session and are recorded together.
             // Mostly to avoid bloat in the settings audit log.
-            if (change.memberId() == memberId() && change.changed().isAfter(Instant.now().minus(5, ChronoUnit.MINUTES))) {
-                query("UPDATE settings_audit_log SET new_value = ?::JSONB WHERE settings_identifier = ? AND guild_id = ? AND member_id = ?")
-                        .single(call().bind(newValue, OBJECT_JSON).bind(settingsKey).bind(guildId()).bind(memberId()))
+            if (change.memberId() == memberId()
+                    && change.changed().isAfter(Instant.now().minus(5, ChronoUnit.MINUTES))) {
+                query(
+                                "UPDATE settings_audit_log SET new_value = ?::JSONB WHERE settings_identifier = ? AND guild_id = ? AND member_id = ?")
+                        .single(call().bind(newValue, OBJECT_JSON)
+                                .bind(settingsKey)
+                                .bind(guildId())
+                                .bind(memberId()))
                         .update();
                 return;
             }
         }
-        query("INSERT INTO settings_audit_log (guild_id, member_id, settings_identifier, old_value, new_value) VALUES (?, ?, ?, ?::JSONB, ?::JSONB)")
-                .single(call().bind(guildId()).bind(memberId()).bind(settingsKey).bind(oldValue, OBJECT_JSON).bind(newValue, OBJECT_JSON))
+        query(
+                        "INSERT INTO settings_audit_log (guild_id, member_id, settings_identifier, old_value, new_value) VALUES (?, ?, ?, ?::JSONB, ?::JSONB)")
+                .single(call().bind(guildId())
+                        .bind(memberId())
+                        .bind(settingsKey)
+                        .bind(oldValue, OBJECT_JSON)
+                        .bind(newValue, OBJECT_JSON))
                 .update();
-
     }
 }

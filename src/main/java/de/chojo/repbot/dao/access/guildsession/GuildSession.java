@@ -15,8 +15,6 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.NotNull;
 
-import static de.chojo.sadu.queries.api.query.Query.query;
-
 public class GuildSession {
     private final Configuration configuration;
     private final ShardManager shardManager;

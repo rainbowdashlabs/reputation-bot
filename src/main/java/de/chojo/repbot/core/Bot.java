@@ -236,8 +236,8 @@ public class Bot {
         log.info("Setting up services");
         var guilds = data.guildRepository();
         var worker = threading.repBotWorker();
-        sessionService = new SessionService(configuration, data.guildSessionRepository(), data.guildRepository(), shardManager);
-
+        sessionService =
+                new SessionService(configuration, data.guildSessionRepository(), data.guildRepository(), shardManager);
 
         statistic = Statistic.of(shardManager, data.metrics(), worker);
 

@@ -1,3 +1,8 @@
+/*
+ *     SPDX-License-Identifier: AGPL-3.0-only
+ *
+ *     Copyright (C) RainbowDashLabs and Contributor
+ */
 package de.chojo.repbot.dao.provider;
 
 import de.chojo.repbot.dao.access.guildsession.GuildSessionMeta;
@@ -26,7 +31,8 @@ public class GuildSessionRepository {
     }
 
     public GuildSessionMeta createNewSession(String token, long guildId, long memberId) {
-        return query("INSERT INTO guild_session (token, guild_id, member_id) VALUES (?, ?, ?) RETURNING token, guild_id, member_id, created, last_used")
+        return query(
+                        "INSERT INTO guild_session (token, guild_id, member_id) VALUES (?, ?, ?) RETURNING token, guild_id, member_id, created, last_used")
                 .single(call().bind(token).bind(guildId).bind(memberId))
                 .mapAs(GuildSessionMeta.class)
                 .first()

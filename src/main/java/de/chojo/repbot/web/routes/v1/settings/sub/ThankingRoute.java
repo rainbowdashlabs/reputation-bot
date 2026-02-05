@@ -6,6 +6,7 @@
 package de.chojo.repbot.web.routes.v1.settings.sub;
 
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
+import de.chojo.repbot.dao.access.guildsession.GuildSession;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
 import de.chojo.repbot.web.error.ErrorResponse;
@@ -18,7 +19,6 @@ import de.chojo.repbot.web.routes.v1.settings.sub.thanking.DonorRolesRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.thanking.ReactionsRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.thanking.ReceiverRolesRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.thanking.ThankwordsRoute;
-import de.chojo.repbot.dao.access.guildsession.GuildSession;
 import de.chojo.repbot.web.validation.PremiumValidator;
 import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
@@ -79,14 +79,18 @@ public class ThankingRoute implements RoutesBuilder {
                         thanking.channels().channelIds(),
                         thanking.channels().categoryIds(),
                         thanking.channels().isWhitelist()),
-                new de.chojo.repbot.web.pojo.settings.sub.thanking.RolesHolderPOJO(thanking.donorRoles().roleIds()),
-                new de.chojo.repbot.web.pojo.settings.sub.thanking.RolesHolderPOJO(thanking.denyDonorRoles().roleIds()),
-                new de.chojo.repbot.web.pojo.settings.sub.thanking.RolesHolderPOJO(thanking.receiverRoles().roleIds()),
-                new de.chojo.repbot.web.pojo.settings.sub.thanking.RolesHolderPOJO(thanking.denyReceiverRoles().roleIds()),
+                new de.chojo.repbot.web.pojo.settings.sub.thanking.RolesHolderPOJO(
+                        thanking.donorRoles().roleIds()),
+                new de.chojo.repbot.web.pojo.settings.sub.thanking.RolesHolderPOJO(
+                        thanking.denyDonorRoles().roleIds()),
+                new de.chojo.repbot.web.pojo.settings.sub.thanking.RolesHolderPOJO(
+                        thanking.receiverRoles().roleIds()),
+                new de.chojo.repbot.web.pojo.settings.sub.thanking.RolesHolderPOJO(
+                        thanking.denyReceiverRoles().roleIds()),
                 new de.chojo.repbot.web.pojo.settings.sub.thanking.ReactionsPOJO(
-                        thanking.reactions().reactions(),
-                        thanking.reactions().mainReaction()),
-                new de.chojo.repbot.web.pojo.settings.sub.thanking.ThankwordsPOJO(thanking.thankwords().words()));
+                        thanking.reactions().reactions(), thanking.reactions().mainReaction()),
+                new de.chojo.repbot.web.pojo.settings.sub.thanking.ThankwordsPOJO(
+                        thanking.thankwords().words()));
         thanking.apply(thankingPOJO);
         session.recordChange("thanking", oldValue, thankingPOJO);
     }

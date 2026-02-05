@@ -7,11 +7,11 @@ package de.chojo.repbot.web.routes.v1.settings.sub;
 
 import de.chojo.jdautil.interactions.dispatching.InteractionHub;
 import de.chojo.repbot.dao.access.guild.settings.sub.Reputation;
+import de.chojo.repbot.dao.access.guildsession.GuildSession;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
 import de.chojo.repbot.web.pojo.settings.sub.ReputationPOJO;
 import de.chojo.repbot.web.routes.RoutesBuilder;
-import de.chojo.repbot.dao.access.guildsession.GuildSession;
 import io.javalin.http.Context;
 import io.javalin.http.FailedDependencyResponse;
 import io.javalin.openapi.HttpMethod;

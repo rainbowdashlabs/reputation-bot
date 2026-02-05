@@ -16,7 +16,6 @@ import de.chojo.repbot.dao.provider.GuildSessionRepository;
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.dao.provider.Voice;
 import de.chojo.repbot.util.LogNotify;
-import de.chojo.repbot.web.sessions.SessionService;
 import de.chojo.sadu.datasource.DataSourceCreator;
 import de.chojo.sadu.mapper.RowMapperRegistry;
 import de.chojo.sadu.mapper.rowmapper.RowMapper;

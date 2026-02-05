@@ -26,10 +26,11 @@ import io.javalin.openapi.OpenApiResponse;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.utils.FileUpload;
 
-import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import static io.javalin.apibuilder.ApiBuilder.delete;
 import static io.javalin.apibuilder.ApiBuilder.path;
@@ -45,11 +46,11 @@ public class ProfileRoute implements RoutesBuilder {
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = ProfilePOJO.class)),
             responses = {
-                    @OpenApiResponse(status = "200"),
-                    @OpenApiResponse(
-                            status = "403",
-                            content = @OpenApiContent(from = ErrorResponse.class),
-                            description = "Premium feature required or limit exceeded")
+                @OpenApiResponse(status = "200"),
+                @OpenApiResponse(
+                        status = "403",
+                        content = @OpenApiContent(from = ErrorResponse.class),
+                        description = "Premium feature required or limit exceeded")
             })
     public void updateProfileSettings(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
@@ -65,7 +66,8 @@ public class ProfileRoute implements RoutesBuilder {
         }
 
         Profile profile = session.repGuild().settings().profile();
-        ProfilePOJO oldValue = new ProfilePOJO(profile.nickname(), profile.profilePictureUrl(), profile.reputationName());
+        ProfilePOJO oldValue =
+                new ProfilePOJO(profile.nickname(), profile.profilePictureUrl(), profile.reputationName());
         profile.apply(profilePOJO);
         session.recordChange("profile", oldValue, profilePOJO);
     }
@@ -79,11 +81,11 @@ public class ProfileRoute implements RoutesBuilder {
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = String.class)),
             responses = {
-                    @OpenApiResponse(status = "200"),
-                    @OpenApiResponse(
-                            status = "403",
-                            content = @OpenApiContent(from = ErrorResponse.class),
-                            description = "Premium feature required or limit exceeded")
+                @OpenApiResponse(status = "200"),
+                @OpenApiResponse(
+                        status = "403",
+                        content = @OpenApiContent(from = ErrorResponse.class),
+                        description = "Premium feature required or limit exceeded")
             })
     public void updateNickname(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
@@ -97,8 +99,8 @@ public class ProfileRoute implements RoutesBuilder {
 
         BaseSettings baseSettings = session.configuration().baseSettings();
         TextChannel textChannelById = session.shardManager()
-                                             .getGuildById(baseSettings.botGuild())
-                                             .getTextChannelById(baseSettings.reviewChannel());
+                .getGuildById(baseSettings.botGuild())
+                .getTextChannelById(baseSettings.reviewChannel());
         if (textChannelById != null) {
             textChannelById
                     .sendMessage("Guild `%s` changed bot nickname to `%s`"
@@ -121,13 +123,13 @@ public class ProfileRoute implements RoutesBuilder {
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = byte[].class, type = "image/*")),
             responses = {
-                    @OpenApiResponse(
-                            status = "200",
-                            content = @OpenApiContent(from = String.class, type = "string", format = "url")),
-                    @OpenApiResponse(
-                            status = "403",
-                            content = @OpenApiContent(from = ErrorResponse.class),
-                            description = "Premium feature required or limit exceeded")
+                @OpenApiResponse(
+                        status = "200",
+                        content = @OpenApiContent(from = String.class, type = "string", format = "url")),
+                @OpenApiResponse(
+                        status = "403",
+                        content = @OpenApiContent(from = ErrorResponse.class),
+                        description = "Premium feature required or limit exceeded")
             })
     public void updateProfilePicture(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
@@ -159,8 +161,8 @@ public class ProfileRoute implements RoutesBuilder {
 
         BaseSettings baseSettings = session.configuration().baseSettings();
         TextChannel textChannelById = session.shardManager()
-                                             .getGuildById(baseSettings.botGuild())
-                                             .getTextChannelById(baseSettings.reviewChannel());
+                .getGuildById(baseSettings.botGuild())
+                .getTextChannelById(baseSettings.reviewChannel());
         if (textChannelById != null) {
             textChannelById
                     .sendMessage("Guild `%s` changed bot profile picture."
@@ -186,11 +188,11 @@ public class ProfileRoute implements RoutesBuilder {
             tags = {"Settings"},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = String.class)),
             responses = {
-                    @OpenApiResponse(status = "200"),
-                    @OpenApiResponse(
-                            status = "403",
-                            content = @OpenApiContent(from = ErrorResponse.class),
-                            description = "Premium feature required or limit exceeded")
+                @OpenApiResponse(status = "200"),
+                @OpenApiResponse(
+                        status = "403",
+                        content = @OpenApiContent(from = ErrorResponse.class),
+                        description = "Premium feature required or limit exceeded")
             })
     public void updateReputationName(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
@@ -232,11 +234,11 @@ public class ProfileRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Settings"},
             responses = {
-                    @OpenApiResponse(status = "200"),
-                    @OpenApiResponse(
-                            status = "403",
-                            content = @OpenApiContent(from = ErrorResponse.class),
-                            description = "Premium feature required or limit exceeded")
+                @OpenApiResponse(status = "200"),
+                @OpenApiResponse(
+                        status = "403",
+                        content = @OpenApiContent(from = ErrorResponse.class),
+                        description = "Premium feature required or limit exceeded")
             })
     public void deleteProfilePicture(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
