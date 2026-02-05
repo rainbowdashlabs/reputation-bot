@@ -1,3 +1,8 @@
+/*
+ *     SPDX-License-Identifier: AGPL-3.0-only
+ *
+ *     Copyright (C) RainbowDashLabs and Contributor
+ */
 package de.chojo.repbot.web.cache;
 
 import com.google.common.cache.Cache;
@@ -12,7 +17,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class MemberCache {
-    private final Cache<Key, MemberPOJO> cache = CacheBuilder.newBuilder().expireAfterAccess(10, TimeUnit.MINUTES).build();
+    private final Cache<Key, MemberPOJO> cache =
+            CacheBuilder.newBuilder().expireAfterAccess(10, TimeUnit.MINUTES).build();
 
     @NotNull
     public MemberPOJO get(Guild guild, String userId) {
@@ -32,6 +38,5 @@ public class MemberCache {
         }
     }
 
-    record Key(String guildId, String userId) {
-    }
+    record Key(String guildId, String userId) {}
 }

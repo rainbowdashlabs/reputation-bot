@@ -67,7 +67,7 @@ public class RanksRoute implements RoutesBuilder {
         var ranks = session.repGuild().settings().ranks();
         var oldValue = ranks.toPOJO();
         ranks.apply(ranksPOJO);
-        session.recordChange("ranks", oldValue, ranksPOJO);
+        session.recordChange("ranks", oldValue.ranks(), ranksPOJO.ranks());
     }
 
     @OpenApi(

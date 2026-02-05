@@ -5,20 +5,23 @@
  */
 package de.chojo.repbot.dao.util;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.chojo.sadu.mapper.reader.ValueReader;
 import de.chojo.sadu.mapper.wrapper.Row;
 import de.chojo.sadu.queries.api.call.adapter.Adapter;
 import de.chojo.sadu.queries.converter.ValueConverter;
-import de.chojo.sadu.queries.exception.QueryExecutionException;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 
 public final class CustomValueConverter {
-    public static final ObjectMapper MAPPER = new ObjectMapper();
+    public static final ObjectMapper MAPPER = new ObjectMapper()
+            .setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE)
+            .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
 
     private static final Adapter<Object> JSON_ADAPTER =
             Adapter.create(Object.class, CustomValueConverter::mapObjectToString, Types.VARCHAR);
@@ -30,9 +33,7 @@ public final class CustomValueConverter {
         try {
             stmt.setString(index, MAPPER.writeValueAsString(value));
         } catch (JsonProcessingException e) {
-            var a = new QueryExecutionException("Could not parse object");
-            a.initCause(e);
-            throw a;
+            throw new RuntimeException("Could not parse object", e);
         }
     }
 

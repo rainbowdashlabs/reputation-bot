@@ -21,7 +21,8 @@ const settingsSections = [
   {key: 'abuseProtection', path: '/settings/abuse-protection'},
   {key: 'announcements', path: '/settings/announcements'},
   {key: 'autopost', path: '/settings/autopost'},
-  {key: 'logChannel', path: '/settings/log-channel'}
+  {key: 'logChannel', path: '/settings/log-channel'},
+  {key: 'auditLog', path: '/settings/audit-log'}
 ]
 </script>
 

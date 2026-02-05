@@ -1,3 +1,8 @@
+/*
+ *     SPDX-License-Identifier: AGPL-3.0-only
+ *
+ *     Copyright (C) RainbowDashLabs and Contributor
+ */
 package de.chojo.repbot.web.pojo.guild;
 
 import de.chojo.repbot.util.Colors;
@@ -21,11 +26,19 @@ public class MemberPOJO {
 
     public static MemberPOJO generate(Member member) {
         var color = Colors.toHex(Objects.requireNonNullElse(member.getColors().getPrimary(), Color.WHITE));
-        return new MemberPOJO(member.getEffectiveName(), member.getId(), color, member.getUser().getEffectiveAvatarUrl());
+        return new MemberPOJO(
+                member.getEffectiveName(),
+                member.getId(),
+                color,
+                member.getUser().getEffectiveAvatarUrl());
     }
 
     public static MemberPOJO generate(String id) {
-        return new MemberPOJO("unknown", id, "#ffffff", "https://cdn.discordapp.com/embed/avatars/%s.png".formatted(id.hashCode() % 5));
+        return new MemberPOJO(
+                "unknown",
+                id,
+                "#ffffff",
+                "https://cdn.discordapp.com/embed/avatars/%s.png".formatted(id.hashCode() % 5));
     }
 
     public String id() {

@@ -76,6 +76,11 @@ const routes: RouteRecordRaw[] = [
                 path: 'log-channel',
                 name: 'SettingsLogChannel',
                 component: () => import('@/views/settings/LogChannelView.vue')
+            },
+            {
+                path: 'audit-log',
+                name: 'SettingsAuditLog',
+                component: () => import('@/views/settings/AuditLogView.vue')
             }
         ]
     },

@@ -9,6 +9,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.chojo.jdautil.botlist.BotlistService;
 import de.chojo.jdautil.interactions.dispatching.InteractionHub;
@@ -38,6 +40,7 @@ import org.slf4j.Logger;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.text.SimpleDateFormat;
 import java.util.Set;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -85,11 +88,18 @@ public class Web {
     }
 
     public static JavalinJackson jacksonMapper() {
-        ObjectMapper mapper =
-                JsonMapper.builder().addModule(new JavaTimeModule()).build();
+        SimpleModule longAsStringModule = new SimpleModule();
+        longAsStringModule.addSerializer(Long.class, ToStringSerializer.instance);
+        longAsStringModule.addSerializer(Long.TYPE, ToStringSerializer.instance);
+
+        ObjectMapper mapper = JsonMapper.builder()
+                .addModule(new JavaTimeModule())
+                .addModule(longAsStringModule)
+                .build();
 
         mapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE);
         mapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        mapper.setDateFormat(new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX"));
         return new JavalinJackson(mapper, true);
     }
 
@@ -124,46 +134,46 @@ public class Web {
         OpenApiVersionUtil.INSTANCE.setLogWarnings(false);*/
 
         javalin = Javalin.create(config -> {
-                             config.registerPlugin(new OpenApiPlugin(this::configureOpenApi));
-                             config.registerPlugin(new SwaggerPlugin(this::configureSwagger));
-                             config.bundledPlugins.enableCors(cors -> {
-                                 cors.addRule(CorsPluginConfig.CorsRule::anyHost);
-                             });
-                             // Serve static files from external "public" directory when available; fall back to classpath
-                             var publicDir = Path.of("public");
-                             if (Files.isDirectory(publicDir)) {
-                                 config.staticFiles.add(publicDir.toString(), io.javalin.http.staticfiles.Location.EXTERNAL);
-                             } else {
-                                 config.staticFiles.add("/static", io.javalin.http.staticfiles.Location.CLASSPATH);
-                             }
-                             config.router.apiBuilder(() -> new Api(
-                                     sessionService,
-                                     data.metrics(),
-                                     bot.hub(),
-                                     bot.localization(),
-                                     autopostService,
-                                     bot.roleAssigner(),
-                                     bot.shardManager(),
-                                     configuration,
-                                     data.settingsAuditLogRepository(),
-                                     memberCache)
-                                     .init());
-                             config.router.mount(router -> {
-                                 router.beforeMatched(this::handleAccess);
-                             });
-                             config.jsonMapper(jacksonMapper());
-                             // Serve frontend SPA
-                             if (Files.isDirectory(publicDir)) {
-                                 config.spaRoot.addFile(
-                                         "/",
-                                         publicDir.resolve("index.html").toString(),
-                                         io.javalin.http.staticfiles.Location.EXTERNAL);
-                             } else {
-                                 config.spaRoot.addFile(
-                                         "/", "/static/index.html", io.javalin.http.staticfiles.Location.CLASSPATH);
-                             }
-                         })
-                         .start(api.host(), api.port());
+                    config.registerPlugin(new OpenApiPlugin(this::configureOpenApi));
+                    config.registerPlugin(new SwaggerPlugin(this::configureSwagger));
+                    config.bundledPlugins.enableCors(cors -> {
+                        cors.addRule(CorsPluginConfig.CorsRule::anyHost);
+                    });
+                    // Serve static files from external "public" directory when available; fall back to classpath
+                    var publicDir = Path.of("public");
+                    if (Files.isDirectory(publicDir)) {
+                        config.staticFiles.add(publicDir.toString(), io.javalin.http.staticfiles.Location.EXTERNAL);
+                    } else {
+                        config.staticFiles.add("/static", io.javalin.http.staticfiles.Location.CLASSPATH);
+                    }
+                    config.router.apiBuilder(() -> new Api(
+                                    sessionService,
+                                    data.metrics(),
+                                    bot.hub(),
+                                    bot.localization(),
+                                    autopostService,
+                                    bot.roleAssigner(),
+                                    bot.shardManager(),
+                                    configuration,
+                                    data.settingsAuditLogRepository(),
+                                    memberCache)
+                            .init());
+                    config.router.mount(router -> {
+                        router.beforeMatched(this::handleAccess);
+                    });
+                    config.jsonMapper(jacksonMapper());
+                    // Serve frontend SPA
+                    if (Files.isDirectory(publicDir)) {
+                        config.spaRoot.addFile(
+                                "/",
+                                publicDir.resolve("index.html").toString(),
+                                io.javalin.http.staticfiles.Location.EXTERNAL);
+                    } else {
+                        config.spaRoot.addFile(
+                                "/", "/static/index.html", io.javalin.http.staticfiles.Location.CLASSPATH);
+                    }
+                })
+                .start(api.host(), api.port());
         // Handle specific PremiumFeatureException with detailed JSON
         javalin.exception(de.chojo.repbot.web.error.PremiumFeatureException.class, (err, ctx) -> {
             var response =
@@ -205,21 +215,21 @@ public class Web {
         var botlist = configuration.botlist();
         if (!botlist.isSubmit()) return;
         BotlistService.build(bot.shardManager())
-                      .forDiscordBotListCOM(botlist.discordBotlistCom())
-                      .forDiscordBotsGG(botlist.discordBotsGg())
-                      .forTopGG(botlist.topGg())
-                      .forBotlistMe(botlist.botListMe())
-                      .withExecutorService(threading.repBotWorker())
-                      .withVoteService(builder -> builder.withVoteWeebhooks(javalin)
-                                                         .onVote(voteData -> bot.shardManager()
-                                                                                .retrieveUserById(voteData.userId())
-                                                                                .flatMap(User::openPrivateChannel)
-                                                                                .flatMap(channel -> channel.sendMessage("Thanks for voting <3"))
-                                                                                .queue(
-                                                                                        message -> log.debug("Vote received"),
-                                                                                        err -> ErrorResponseException.ignore(
-                                                                                                ErrorResponse.UNKNOWN_USER, ErrorResponse.CANNOT_SEND_TO_USER)))
-                                                         .build())
-                      .build();
+                .forDiscordBotListCOM(botlist.discordBotlistCom())
+                .forDiscordBotsGG(botlist.discordBotsGg())
+                .forTopGG(botlist.topGg())
+                .forBotlistMe(botlist.botListMe())
+                .withExecutorService(threading.repBotWorker())
+                .withVoteService(builder -> builder.withVoteWeebhooks(javalin)
+                        .onVote(voteData -> bot.shardManager()
+                                .retrieveUserById(voteData.userId())
+                                .flatMap(User::openPrivateChannel)
+                                .flatMap(channel -> channel.sendMessage("Thanks for voting <3"))
+                                .queue(
+                                        message -> log.debug("Vote received"),
+                                        err -> ErrorResponseException.ignore(
+                                                ErrorResponse.UNKNOWN_USER, ErrorResponse.CANNOT_SEND_TO_USER)))
+                        .build())
+                .build();
     }
 }

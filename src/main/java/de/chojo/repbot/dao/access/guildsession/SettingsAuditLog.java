@@ -5,6 +5,8 @@
  */
 package de.chojo.repbot.dao.access.guildsession;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import de.chojo.sadu.mapper.wrapper.Row;
 
 import java.sql.SQLException;
@@ -14,7 +16,12 @@ import static de.chojo.repbot.dao.util.CustomValueConverter.OBJECT_JSON;
 import static de.chojo.sadu.queries.converter.StandardValueConverter.INSTANT_TIMESTAMP;
 
 public record SettingsAuditLog(
-        String settingsKey, long guildId, long memberId, Object oldValue, Object newValue, Instant changed) {
+        String settingsKey,
+        @JsonSerialize(using = ToStringSerializer.class) long guildId,
+        @JsonSerialize(using = ToStringSerializer.class) long memberId,
+        Object oldValue,
+        Object newValue,
+        Instant changed) {
 
     public static SettingsAuditLog map(Row row) throws SQLException {
         return new SettingsAuditLog(

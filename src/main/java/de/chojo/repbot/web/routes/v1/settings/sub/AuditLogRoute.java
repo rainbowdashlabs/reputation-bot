@@ -20,10 +20,8 @@ import io.javalin.openapi.OpenApi;
 import io.javalin.openapi.OpenApiContent;
 import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiResponse;
-import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static io.javalin.apibuilder.ApiBuilder.get;
@@ -57,7 +55,11 @@ public class AuditLogRoute implements RoutesBuilder {
 
         long guildId = session.repGuild().guildId();
         List<SettingsAuditLog> auditLogs = settingsAuditLogRepository.getAuditLog(guildId, page, entries);
-        var members = auditLogs.stream().map(SettingsAuditLog::memberId).distinct().map(e -> memberCache.get(session.guild(), String.valueOf(e))).collect(Collectors.toMap(MemberPOJO::id, e -> e));
+        var members = auditLogs.stream()
+                .map(SettingsAuditLog::memberId)
+                .distinct()
+                .map(e -> memberCache.get(session.guild(), String.valueOf(e)))
+                .collect(Collectors.toMap(MemberPOJO::id, e -> e));
         long maxPages = settingsAuditLogRepository.getAuditLogPages(guildId, entries);
 
         ctx.json(new AuditLogPagePOJO(page, maxPages, auditLogs, members));

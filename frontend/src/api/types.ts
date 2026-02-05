@@ -64,6 +64,7 @@ export interface MemberPOJO {
 // autopost.channel -> channel id
 // autopost.refreshtype -> enum
 // autopost.refreshinterval -> enum
+// ranks
 export interface SettingsAuditLogPOJO {
     /*
      * This is a log entry for a settings change. It contains the key of the setting that was changed,
@@ -81,7 +82,7 @@ export interface SettingsAuditLogPOJO {
 export interface AuditLogPagePOJO {
     page: number;
     maxPages: number;
-    auditLogs: SettingsAuditLogPOJO[];
+    content: SettingsAuditLogPOJO[];
     members: Map<string, MemberPOJO>;
 }
 

@@ -181,7 +181,6 @@ public class AutopostRoute implements RoutesBuilder {
             post("", this::updateAutopostSettings, Role.GUILD_USER);
             post("active", this::updateActive, Role.GUILD_USER);
             post("channel", this::updateChannel, Role.GUILD_USER);
-            post("message", this::updateMessage, Role.GUILD_USER);
             post("refreshtype", this::updateRefreshType, Role.GUILD_USER);
             post("refreshinterval", this::updateRefreshInterval, Role.GUILD_USER);
             post("send", this::sendAutopost, Role.GUILD_USER);

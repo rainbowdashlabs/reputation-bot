@@ -25,9 +25,6 @@ const toggle = () => {
 
 <template>
   <div class="flex items-center gap-3 cursor-pointer select-none" @click="toggle">
-    <span v-if="label" class="label">
-      {{ label }}
-    </span>
 
     <div
         :class="[
@@ -54,6 +51,11 @@ const toggle = () => {
           class="pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out"
       />
     </div>
+
+    <span v-if="label" class="label">
+      {{ label }}
+    </span>
+
   </div>
 </template>
 

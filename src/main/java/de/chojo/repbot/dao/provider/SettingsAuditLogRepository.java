@@ -21,8 +21,8 @@ public class SettingsAuditLogRepository {
     }
 
     public long getAuditLogPages(long guildId, int entries) {
-        return query("SELECT count(1) / ? FROM settings_audit_log WHERE guild_id = ?")
-                .single(Call.call().bind(entries).bind(guildId))
+        return query("SELECT count(1) FROM settings_audit_log WHERE guild_id = ?")
+                .single(Call.call().bind(guildId))
                 .mapAs(Long.class)
                 .first()
                 .map(e -> Math.floorDiv(e, entries))

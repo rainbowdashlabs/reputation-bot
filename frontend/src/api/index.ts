@@ -464,6 +464,14 @@ class ApiClient {
         const response = await this.axiosInstance.get<Types.Links>('/data/links');
         return response.data;
     }
+
+    // Audit Log
+    public async getAuditLog(page: number = 0, entries: number = 50): Promise<Types.AuditLogPagePOJO> {
+        const response = await this.axiosInstance.get<Types.AuditLogPagePOJO>('/settings/auditlog', {
+            params: { page, entries }
+        });
+        return response.data;
+    }
 }
 
 export const api = new ApiClient();
