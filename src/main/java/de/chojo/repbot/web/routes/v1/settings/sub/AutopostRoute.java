@@ -59,7 +59,14 @@ public class AutopostRoute implements RoutesBuilder {
                 autopostPOJO.active(), validator.features().autopost(), "Autopost");
 
         Autopost autopost = session.repGuild().settings().autopost();
+        AutopostPOJO oldValue = new AutopostPOJO(
+                autopost.active(),
+                autopost.channelId(),
+                autopost.messageId(),
+                autopost.refreshType(),
+                autopost.refreshInterval());
         autopost.apply(autopostPOJO);
+        session.recordChange("autopost", oldValue, autopostPOJO);
     }
 
     @OpenApi(
@@ -85,7 +92,10 @@ public class AutopostRoute implements RoutesBuilder {
         PremiumValidator validator = session.premiumValidator();
         validator.requireFeatureIfEnabled(active, validator.features().autopost(), "Autopost");
 
-        session.repGuild().settings().autopost().active(active);
+        Autopost autopost = session.repGuild().settings().autopost();
+        boolean oldValue = autopost.active();
+        autopost.active(active);
+        session.recordChange("autopost.active", oldValue, active);
 
         if (active) {
             autopostService.update(session.repGuild().guild());
@@ -110,7 +120,10 @@ public class AutopostRoute implements RoutesBuilder {
             session.guildValidator().validateChannelIds(channelId);
         }
 
-        session.repGuild().settings().autopost().channel(channelId);
+        Autopost autopost = session.repGuild().settings().autopost();
+        long oldValue = autopost.channelId();
+        autopost.channel(channelId);
+        session.recordChange("autopost.channel", oldValue, channelId);
     }
 
     @OpenApi(
@@ -124,7 +137,11 @@ public class AutopostRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void updateMessage(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().autopost().message(ctx.bodyAsClass(Long.class));
+        Autopost autopost = session.repGuild().settings().autopost();
+        long oldValue = autopost.messageId();
+        long newValue = ctx.bodyAsClass(Long.class);
+        autopost.message(newValue);
+        session.recordChange("autopost.message", oldValue, newValue);
     }
 
     @OpenApi(
@@ -138,7 +155,11 @@ public class AutopostRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void updateRefreshType(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().autopost().refreshType(ctx.bodyAsClass(RefreshType.class));
+        Autopost autopost = session.repGuild().settings().autopost();
+        RefreshType oldValue = autopost.refreshType();
+        RefreshType newValue = ctx.bodyAsClass(RefreshType.class);
+        autopost.refreshType(newValue);
+        session.recordChange("autopost.refreshtype", oldValue, newValue);
     }
 
     @OpenApi(
@@ -152,7 +173,11 @@ public class AutopostRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void updateRefreshInterval(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().autopost().refreshInterval(ctx.bodyAsClass(RefreshInterval.class));
+        Autopost autopost = session.repGuild().settings().autopost();
+        RefreshInterval oldValue = autopost.refreshInterval();
+        RefreshInterval newValue = ctx.bodyAsClass(RefreshInterval.class);
+        autopost.refreshInterval(newValue);
+        session.recordChange("autopost.refreshinterval", oldValue, newValue);
     }
 
     @OpenApi(

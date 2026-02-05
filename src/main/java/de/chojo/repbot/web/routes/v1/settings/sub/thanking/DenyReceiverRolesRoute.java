@@ -40,7 +40,10 @@ public class DenyReceiverRolesRoute implements RoutesBuilder {
             session.guildValidator().validateRoleIds(roleId);
         }
 
-        session.repGuild().settings().thanking().denyReceiverRoles().apply(rolesHolderPOJO);
+        var denyReceiverRoles = session.repGuild().settings().thanking().denyReceiverRoles();
+        var oldValue = denyReceiverRoles.roleIds();
+        denyReceiverRoles.apply(rolesHolderPOJO);
+        session.recordChange("thanking.denyreceiverroles", oldValue, rolesHolderPOJO.roleIds());
     }
 
     @Override

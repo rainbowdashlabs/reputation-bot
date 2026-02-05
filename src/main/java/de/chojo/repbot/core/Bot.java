@@ -236,7 +236,7 @@ public class Bot {
         log.info("Setting up services");
         var guilds = data.guildRepository();
         var worker = threading.repBotWorker();
-        sessionService = new SessionService(configuration, data.guildRepository(), shardManager);
+        sessionService = new SessionService(configuration, data.guildSessionRepository(), data.guildRepository(), shardManager);
 
 
         statistic = Statistic.of(shardManager, data.metrics(), worker);
@@ -280,7 +280,7 @@ public class Bot {
                         new Invite(configuration),
                         Info.create(configuration),
                         new Log(guilds, configuration),
-                        new Setup(data.sessionService()),
+                        new Setup(sessionService()),
                         new Gdpr(data.gdpr()),
                         new Prune(gdprService),
                         new Reactions(guilds, configuration),
@@ -293,7 +293,7 @@ public class Bot {
                         new Ranking(guilds, configuration),
                         new Reputation(guilds, reputationService) /*TODO: remove rep command*/,
                         new Supporter(premiumService, configuration, guilds),
-                        new Settings(data.sessionService()))
+                        new Settings(sessionService()))
                 .withMessages(new MessageLog(guilds))
                 .withUsers(new UserReceived(guilds, configuration), new UserDonated(guilds, configuration))
                 .withLocalizer(localizer)

@@ -79,20 +79,36 @@ public final class GuildSessionMeta {
     }
 
     public void recordChange(String settingsKey, Object oldValue, Object newValue) {
-        Optional<SettingsAuditLog> last = query("SELECT * FROM settings_audit_log WHERE guild_id = ? AND settings_identifier = ? ORDER BY changed DESC LIMIT 1")
+        Optional<SettingsAuditLog> last = query("""
+                SELECT
+                    guild_id,
+                    member_id,
+                    settings_identifier,
+                    old_value,
+                    new_value,
+                    changed
+                FROM
+                    settings_audit_log log
+                WHERE guild_id = ?
+                  AND settings_identifier = ?
+                ORDER BY changed DESC
+                LIMIT 1
+                """)
                 .single(call().bind(guildId()).bind(settingsKey))
-                .mapAs(SettingsAuditLog.class)
+                .map(SettingsAuditLog::map)
                 .first();
         if (last.isPresent()) {
             SettingsAuditLog change = last.get();
+            // Settings that were changed in the last 5 minutes are considered one session and are recorded together.
+            // Mostly to avoid bloat in the settings audit log.
             if (change.memberId() == memberId() && change.changed().isAfter(Instant.now().minus(5, ChronoUnit.MINUTES))) {
-                query("UPDATE settings_audit_log SET old_value = ?, new_value = ? WHERE settings_identifier = ? AND guild_id = ? AND member_id = ?")
-                        .single(call().bind(oldValue, OBJECT_JSON).bind(newValue, OBJECT_JSON).bind(settingsKey).bind(guildId()).bind(memberId()))
+                query("UPDATE settings_audit_log SET new_value = ?::JSONB WHERE settings_identifier = ? AND guild_id = ? AND member_id = ?")
+                        .single(call().bind(newValue, OBJECT_JSON).bind(settingsKey).bind(guildId()).bind(memberId()))
                         .update();
                 return;
             }
         }
-        query("INSERT INTO settings_audit_log (guild_id, member_id, settings_identifier, old_value, new_value) VALUES (?, ?, ?, ?, ?)")
+        query("INSERT INTO settings_audit_log (guild_id, member_id, settings_identifier, old_value, new_value) VALUES (?, ?, ?, ?::JSONB, ?::JSONB)")
                 .single(call().bind(guildId()).bind(memberId()).bind(settingsKey).bind(oldValue, OBJECT_JSON).bind(newValue, OBJECT_JSON))
                 .update();
 

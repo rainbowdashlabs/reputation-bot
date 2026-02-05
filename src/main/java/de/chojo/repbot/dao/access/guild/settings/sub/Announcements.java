@@ -66,8 +66,8 @@ public class Announcements extends AnnouncementsPOJO implements GuildHolder {
     }
 
     public void apply(AnnouncementsPOJO state) {
-        if (active != state.isActive()) active(state.isActive());
-        if (sameChannel != state.isSameChannel()) sameChannel(state.isSameChannel());
+        if (active != state.active()) active(state.active());
+        if (sameChannel != state.sameChannel()) sameChannel(state.sameChannel());
         if (channelId != state.channelId()) channel(state.channelId());
     }
 

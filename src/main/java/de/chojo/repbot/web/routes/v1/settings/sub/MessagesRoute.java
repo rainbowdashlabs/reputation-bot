@@ -35,8 +35,10 @@ public class MessagesRoute implements RoutesBuilder {
     public void updateMessagesSettings(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         Messages messages = session.repGuild().settings().messages();
+        MessagesPOJO oldValue = new MessagesPOJO(messages.isReactionConfirmation(), messages.isCommandReputationEphemeral());
         MessagesPOJO messagesPOJO = ctx.bodyAsClass(MessagesPOJO.class);
         messages.apply(messagesPOJO);
+        session.recordChange("messages", oldValue, messagesPOJO);
     }
 
     @OpenApi(
@@ -50,7 +52,11 @@ public class MessagesRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void updateReactionConfirmation(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().messages().reactionConfirmation(ctx.bodyAsClass(Boolean.class));
+        Messages messages = session.repGuild().settings().messages();
+        boolean oldValue = messages.isReactionConfirmation();
+        boolean newValue = ctx.bodyAsClass(Boolean.class);
+        messages.reactionConfirmation(newValue);
+        session.recordChange("messages.reactionconfirmation", oldValue, newValue);
     }
 
     @OpenApi(
@@ -64,7 +70,11 @@ public class MessagesRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void updateCommandReputationEphemeral(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().messages().commandReputationEphemeral(ctx.bodyAsClass(Boolean.class));
+        Messages messages = session.repGuild().settings().messages();
+        boolean oldValue = messages.isCommandReputationEphemeral();
+        boolean newValue = ctx.bodyAsClass(Boolean.class);
+        messages.commandReputationEphemeral(newValue);
+        session.recordChange("messages.commandreputationephemeral", oldValue, newValue);
     }
 
     @Override

@@ -40,7 +40,10 @@ public class DonorRolesRoute implements RoutesBuilder {
             session.guildValidator().validateRoleIds(roleId);
         }
 
-        session.repGuild().settings().thanking().donorRoles().apply(rolesHolderPOJO);
+        var donorRoles = session.repGuild().settings().thanking().donorRoles();
+        var oldValue = donorRoles.roleIds();
+        donorRoles.apply(rolesHolderPOJO);
+        session.recordChange("thanking.donorroles", oldValue, rolesHolderPOJO.roleIds());
     }
 
     @Override

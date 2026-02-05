@@ -35,8 +35,10 @@ public class AnnouncementsRoute implements RoutesBuilder {
     public void updateAnnouncementsSettings(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         Announcements announcements = session.repGuild().settings().announcements();
+        AnnouncementsPOJO oldValue = new AnnouncementsPOJO(announcements.active(), announcements.sameChannel(), announcements.channelId());
         AnnouncementsPOJO announcementsPOJO = ctx.bodyAsClass(AnnouncementsPOJO.class);
         announcements.apply(announcementsPOJO);
+        session.recordChange("announcements", oldValue, announcementsPOJO);
     }
 
     @OpenApi(
@@ -50,7 +52,11 @@ public class AnnouncementsRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void updateActive(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().announcements().active(ctx.bodyAsClass(Boolean.class));
+        Announcements announcements = session.repGuild().settings().announcements();
+        boolean oldValue = announcements.active();
+        boolean newValue = ctx.bodyAsClass(Boolean.class);
+        announcements.active(newValue);
+        session.recordChange("announcements.active", oldValue, newValue);
     }
 
     @OpenApi(
@@ -64,7 +70,11 @@ public class AnnouncementsRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void updateSameChannel(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().announcements().sameChannel(ctx.bodyAsClass(Boolean.class));
+        Announcements announcements = session.repGuild().settings().announcements();
+        boolean oldValue = announcements.sameChannel();
+        boolean newValue = ctx.bodyAsClass(Boolean.class);
+        announcements.sameChannel(newValue);
+        session.recordChange("announcements.samechannel", oldValue, newValue);
     }
 
     @OpenApi(
@@ -85,7 +95,10 @@ public class AnnouncementsRoute implements RoutesBuilder {
             session.guildValidator().validateChannelIds(channelId);
         }
 
-        session.repGuild().settings().announcements().channel(channelId);
+        Announcements announcements = session.repGuild().settings().announcements();
+        long oldValue = announcements.channelId();
+        announcements.channel(channelId);
+        session.recordChange("announcements.channel", oldValue, channelId);
     }
 
     @Override

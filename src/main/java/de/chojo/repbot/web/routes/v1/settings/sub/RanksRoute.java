@@ -64,7 +64,10 @@ public class RanksRoute implements RoutesBuilder {
             session.guildValidator().validateRoleIds(rank.roleId());
         }
 
-        session.repGuild().settings().ranks().apply(ranksPOJO);
+        var ranks = session.repGuild().settings().ranks();
+        var oldValue = ranks.toPOJO();
+        ranks.apply(ranksPOJO);
+        session.recordChange("ranks", oldValue, ranksPOJO);
     }
 
     @OpenApi(

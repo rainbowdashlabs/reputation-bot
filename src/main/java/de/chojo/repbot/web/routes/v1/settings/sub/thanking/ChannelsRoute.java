@@ -59,7 +59,10 @@ public class ChannelsRoute implements RoutesBuilder {
         // Validate whitelist mode (blacklist requires premium)
         validator.requireWhitelistOrPremium(channelsPOJO.isWhitelist());
 
-        session.repGuild().settings().thanking().channels().apply(channelsPOJO);
+        var channels = session.repGuild().settings().thanking().channels();
+        var oldValue = new ChannelsPOJO(channels.channelIds(), channels.categoryIds(), channels.isWhitelist());
+        channels.apply(channelsPOJO);
+        session.recordChange("thanking.channels", oldValue, channelsPOJO);
     }
 
     @OpenApi(
@@ -85,7 +88,10 @@ public class ChannelsRoute implements RoutesBuilder {
         PremiumValidator validator = session.premiumValidator();
         validator.requireWhitelistOrPremium(isWhitelist);
 
-        session.repGuild().settings().thanking().channels().listType(isWhitelist);
+        var channels = session.repGuild().settings().thanking().channels();
+        boolean oldValue = channels.isWhitelist();
+        channels.listType(isWhitelist);
+        session.recordChange("thanking.channels.whitelist", oldValue, isWhitelist);
     }
 
     @OpenApi(
@@ -118,10 +124,13 @@ public class ChannelsRoute implements RoutesBuilder {
         }
 
         var channels = session.repGuild().settings().thanking().channels();
+        var oldValue = channels.channelIds();
         channels.clearChannel();
         for (Long channelId : channelIds) {
             channels.addChannel(channelId);
         }
+        var newValue = channels.channelIds();
+        session.recordChange("thanking.channels.channels", oldValue, newValue);
     }
 
     @OpenApi(
@@ -154,10 +163,13 @@ public class ChannelsRoute implements RoutesBuilder {
         }
 
         var channels = session.repGuild().settings().thanking().channels();
+        var oldValue = channels.categoryIds();
         channels.clearCategories();
         for (Long categoryId : categoryIds) {
             channels.addCategory(categoryId);
         }
+        var newValue = channels.categoryIds();
+        session.recordChange("thanking.channels.categories", oldValue, newValue);
     }
 
     @Override

@@ -12,6 +12,7 @@ import de.chojo.repbot.dao.access.Cleanup;
 import de.chojo.repbot.dao.access.Gdpr;
 import de.chojo.repbot.dao.access.gdpr.RemovalTask;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.dao.provider.GuildSessionRepository;
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.dao.provider.Voice;
 import de.chojo.repbot.util.LogNotify;
@@ -37,6 +38,7 @@ public class Data {
     private final Configuration configuration;
     private HikariDataSource dataSource;
     private GuildRepository guildRepository;
+    private GuildSessionRepository guildSessionRepository;
     private Gdpr gdpr;
     private Cleanup cleanup;
     private Metrics metrics;
@@ -102,6 +104,10 @@ public class Data {
         return analyzer;
     }
 
+    public GuildSessionRepository guildSessionRepository() {
+        return guildSessionRepository;
+    }
+
     private void updateDatabase() throws IOException, SQLException {
         var schema = configuration.database().schema();
         SqlUpdater.builder(dataSource, PostgreSql.get())
@@ -128,6 +134,7 @@ public class Data {
     private void initDao() {
         log.info("Creating DAOs");
         guildRepository = new GuildRepository(configuration);
+        guildSessionRepository = new GuildSessionRepository();
         gdpr = new Gdpr(configuration);
         cleanup = new Cleanup();
         metrics = new Metrics(dataSource);

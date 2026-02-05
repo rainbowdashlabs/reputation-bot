@@ -36,7 +36,11 @@ public class ThankwordsRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void updateThankwordsSettings(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().thanking().thankwords().apply(ctx.bodyAsClass(ThankwordsPOJO.class));
+        var thankwords = session.repGuild().settings().thanking().thankwords();
+        var oldValue = new ThankwordsPOJO(thankwords.words());
+        ThankwordsPOJO newValue = ctx.bodyAsClass(ThankwordsPOJO.class);
+        thankwords.apply(newValue);
+        session.recordChange("thanking.thankwords", oldValue, newValue);
     }
 
     @OpenApi(
@@ -50,11 +54,11 @@ public class ThankwordsRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void updateWords(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild()
-                .settings()
-                .thanking()
-                .thankwords()
-                .apply(new ThankwordsPOJO(new HashSet<>(Arrays.asList(ctx.bodyAsClass(String[].class)))));
+        var thankwords = session.repGuild().settings().thanking().thankwords();
+        var oldValue = thankwords.words();
+        ThankwordsPOJO newValue = new ThankwordsPOJO(new HashSet<>(Arrays.asList(ctx.bodyAsClass(String[].class))));
+        thankwords.apply(newValue);
+        session.recordChange("thanking.thankwords.words", oldValue, newValue.words());
     }
 
     @Override

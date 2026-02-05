@@ -26,7 +26,7 @@ public class GuildSessionRepository {
     }
 
     public GuildSessionMeta createNewSession(String token, long guildId, long memberId) {
-        return query("INSERT INTO guild_session (token, guild_id, member_id) VALUES (?, ?, ?) RETURNING token, guild_id, member_id")
+        return query("INSERT INTO guild_session (token, guild_id, member_id) VALUES (?, ?, ?) RETURNING token, guild_id, member_id, created, last_used")
                 .single(call().bind(token).bind(guildId).bind(memberId))
                 .mapAs(GuildSessionMeta.class)
                 .first()

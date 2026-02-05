@@ -24,6 +24,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -33,11 +34,10 @@ import static de.chojo.repbot.util.States.TEST_MODE;
 public class SessionService {
     private final Configuration configuration;
     // A map that maps a token to the current session.
-    // The session key is only stored inside the session and is not equal to the token
     private final Cache<String, GuildSession> guildSessions;
     private final GuildSessionRepository guildSessionRepository;
     private final GuildRepository guildRepository;
-    private final Map<SessionKey, GuildSession> userSessions = new HashMap<>();
+    private final Map<SessionKey, GuildSession> userSessions = new ConcurrentHashMap<>();
     private final ShardManager shardManager;
 
     public SessionService(Configuration configuration, GuildSessionRepository guildSessionRepository, GuildRepository guildRepository, ShardManager shardManager) {

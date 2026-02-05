@@ -387,9 +387,9 @@ public class ReputationService {
         // Send a level-up message
         newRank.ifPresent(rank -> {
             var announcements = repGuild.settings().announcements();
-            if (!announcements.isActive()) return;
+            if (!announcements.active()) return;
             var channel = context.getChannel();
-            if (!announcements.isSameChannel()) {
+            if (!announcements.sameChannel()) {
                 channel = guild.getTextChannelById(announcements.channelId());
             }
             if (channel == null || rank.getRole(guild).isEmpty()) return;

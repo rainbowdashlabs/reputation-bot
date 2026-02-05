@@ -51,9 +51,18 @@ public class ReputationRoute implements RoutesBuilder {
     public void updateReputationSettings(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         Reputation reputation = session.repGuild().settings().reputation();
+        ReputationPOJO oldValue = new ReputationPOJO(
+                reputation.isReactionActive(),
+                reputation.isAnswerActive(),
+                reputation.isMentionActive(),
+                reputation.isFuzzyActive(),
+                reputation.isEmbedActive(),
+                reputation.isDirectActive(),
+                reputation.isCommandActive());
         ReputationPOJO reputationPOJO = ctx.bodyAsClass(ReputationPOJO.class);
         var redeploy = reputation.isCommandActive() != reputationPOJO.isCommandActive();
         reputation.apply(reputationPOJO);
+        session.recordChange("reputation", oldValue, reputationPOJO);
         if (redeploy) {
             refreshGuildCommands(session.repGuild().guild());
         }
@@ -70,7 +79,11 @@ public class ReputationRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void updateReactionActive(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().reputation().reactionActive(ctx.bodyAsClass(Boolean.class));
+        Reputation reputation = session.repGuild().settings().reputation();
+        boolean oldValue = reputation.isReactionActive();
+        boolean newValue = ctx.bodyAsClass(Boolean.class);
+        reputation.reactionActive(newValue);
+        session.recordChange("reputation.reactionactive", oldValue, newValue);
     }
 
     @OpenApi(
@@ -84,7 +97,11 @@ public class ReputationRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void updateAnswerActive(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().reputation().answerActive(ctx.bodyAsClass(Boolean.class));
+        Reputation reputation = session.repGuild().settings().reputation();
+        boolean oldValue = reputation.isAnswerActive();
+        boolean newValue = ctx.bodyAsClass(Boolean.class);
+        reputation.answerActive(newValue);
+        session.recordChange("reputation.answeractive", oldValue, newValue);
     }
 
     @OpenApi(
@@ -98,7 +115,11 @@ public class ReputationRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void updateMentionActive(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().reputation().mentionActive(ctx.bodyAsClass(Boolean.class));
+        Reputation reputation = session.repGuild().settings().reputation();
+        boolean oldValue = reputation.isMentionActive();
+        boolean newValue = ctx.bodyAsClass(Boolean.class);
+        reputation.mentionActive(newValue);
+        session.recordChange("reputation.mentionactive", oldValue, newValue);
     }
 
     @OpenApi(
@@ -112,7 +133,11 @@ public class ReputationRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void updateFuzzyActive(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().reputation().fuzzyActive(ctx.bodyAsClass(Boolean.class));
+        Reputation reputation = session.repGuild().settings().reputation();
+        boolean oldValue = reputation.isFuzzyActive();
+        boolean newValue = ctx.bodyAsClass(Boolean.class);
+        reputation.fuzzyActive(newValue);
+        session.recordChange("reputation.fuzzyactive", oldValue, newValue);
     }
 
     @OpenApi(
@@ -126,7 +151,11 @@ public class ReputationRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void updateEmbedActive(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().reputation().embedActive(ctx.bodyAsClass(Boolean.class));
+        Reputation reputation = session.repGuild().settings().reputation();
+        boolean oldValue = reputation.isEmbedActive();
+        boolean newValue = ctx.bodyAsClass(Boolean.class);
+        reputation.embedActive(newValue);
+        session.recordChange("reputation.embedactive", oldValue, newValue);
     }
 
     @OpenApi(
@@ -140,7 +169,11 @@ public class ReputationRoute implements RoutesBuilder {
             responses = {@OpenApiResponse(status = "200")})
     public void updateDirectActive(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().reputation().directActive(ctx.bodyAsClass(Boolean.class));
+        Reputation reputation = session.repGuild().settings().reputation();
+        boolean oldValue = reputation.isDirectActive();
+        boolean newValue = ctx.bodyAsClass(Boolean.class);
+        reputation.directActive(newValue);
+        session.recordChange("reputation.directactive", oldValue, newValue);
     }
 
     @OpenApi(
@@ -157,7 +190,11 @@ public class ReputationRoute implements RoutesBuilder {
             })
     public void updateCommandActive(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        session.repGuild().settings().reputation().commandActive(ctx.bodyAsClass(Boolean.class));
+        Reputation reputation = session.repGuild().settings().reputation();
+        boolean oldValue = reputation.isCommandActive();
+        boolean newValue = ctx.bodyAsClass(Boolean.class);
+        reputation.commandActive(newValue);
+        session.recordChange("reputation.commandactive", oldValue, newValue);
         refreshGuildCommands(session.repGuild().guild());
     }
 
