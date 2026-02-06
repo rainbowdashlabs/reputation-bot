@@ -5,10 +5,10 @@ CREATE TABLE repbot_schema.guilds_archived (
     date_left       TIMESTAMP NOT NULL
 );
 
-ALTER TABLE guilds
+ALTER TABLE repbot_schema.guilds
     ADD date_joined TIMESTAMP DEFAULT now() NOT NULL;
 
-ALTER TABLE guilds
+ALTER TABLE repbot_schema.guilds
     ADD latest_activity TIMESTAMP DEFAULT now() NOT NULL;
 
 ALTER TABLE repbot_schema.guilds
