@@ -60,7 +60,7 @@ public class ChannelsRoute implements RoutesBuilder {
         validator.requireWhitelistOrPremium(channelsPOJO.isWhitelist());
 
         var channels = session.repGuild().settings().thanking().channels();
-        var oldValue = new ChannelsPOJO(channels.channelIds(), channels.categoryIds(), channels.isWhitelist());
+        var oldValue = new ChannelsPOJO(channels.copyChannelIds(), channels.copyCategoryIds(), channels.isWhitelist());
         channels.apply(channelsPOJO);
         session.recordChange("thanking.channels", oldValue, channelsPOJO);
     }
@@ -124,7 +124,7 @@ public class ChannelsRoute implements RoutesBuilder {
         }
 
         var channels = session.repGuild().settings().thanking().channels();
-        var oldValue = channels.channelIds();
+        var oldValue = channels.copyChannelIds();
         channels.clearChannel();
         for (Long channelId : channelIds) {
             channels.addChannel(channelId);
@@ -163,7 +163,7 @@ public class ChannelsRoute implements RoutesBuilder {
         }
 
         var channels = session.repGuild().settings().thanking().channels();
-        var oldValue = channels.categoryIds();
+        var oldValue = channels.copyCategoryIds();
         channels.clearCategories();
         for (Long categoryId : categoryIds) {
             channels.addCategory(categoryId);

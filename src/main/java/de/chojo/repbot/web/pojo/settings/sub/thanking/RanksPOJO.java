@@ -23,6 +23,9 @@ public class RanksPOJO {
     public List<RankEntry> ranks() {
         return Collections.unmodifiableList(ranks);
     }
+    public List<RankEntry> copyRanks() {
+        return List.copyOf(ranks);
+    }
 
     public record RankEntry(
             @JsonSerialize(using = ToStringSerializer.class) long roleId, int reputation) {}

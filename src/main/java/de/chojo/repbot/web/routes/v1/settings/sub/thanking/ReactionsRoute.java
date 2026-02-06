@@ -35,7 +35,7 @@ public class ReactionsRoute implements RoutesBuilder {
     public void updateReactionsSettings(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         var reactions = session.repGuild().settings().thanking().reactions();
-        var oldValue = new ReactionsPOJO(reactions.reactions(), reactions.mainReaction());
+        var oldValue = new ReactionsPOJO(reactions.copyReactions(), reactions.mainReaction());
         ReactionsPOJO newValue = ctx.bodyAsClass(ReactionsPOJO.class);
         reactions.apply(newValue);
         session.recordChange("thanking.reactions", oldValue, newValue);
@@ -71,7 +71,7 @@ public class ReactionsRoute implements RoutesBuilder {
     public void updateAdditionalReactions(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         var reactions = session.repGuild().settings().thanking().reactions();
-        var oldValue = reactions.reactions();
+        var oldValue = reactions.copyReactions();
         ReactionsPOJO newValue = new ReactionsPOJO(
                 new java.util.HashSet<>(asList(ctx.bodyAsClass(String[].class))), reactions.mainReaction());
         reactions.apply(newValue);

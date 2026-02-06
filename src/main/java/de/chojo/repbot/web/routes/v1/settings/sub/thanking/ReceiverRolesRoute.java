@@ -41,7 +41,7 @@ public class ReceiverRolesRoute implements RoutesBuilder {
         }
 
         var receiverRoles = session.repGuild().settings().thanking().receiverRoles();
-        var oldValue = receiverRoles.roleIds();
+        var oldValue = receiverRoles.copyRoleIds();
         receiverRoles.apply(rolesHolderPOJO);
         session.recordChange("thanking.receiverroles", oldValue, rolesHolderPOJO.roleIds());
     }

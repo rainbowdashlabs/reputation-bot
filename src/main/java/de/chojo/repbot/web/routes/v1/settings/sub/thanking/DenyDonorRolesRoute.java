@@ -41,7 +41,7 @@ public class DenyDonorRolesRoute implements RoutesBuilder {
         }
 
         var denyDonorRoles = session.repGuild().settings().thanking().denyDonorRoles();
-        var oldValue = denyDonorRoles.roleIds();
+        var oldValue = denyDonorRoles.copyRoleIds();
         denyDonorRoles.apply(rolesHolderPOJO);
         session.recordChange("thanking.denydonorroles", oldValue, rolesHolderPOJO.roleIds());
     }

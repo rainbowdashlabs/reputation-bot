@@ -41,7 +41,7 @@ public class DonorRolesRoute implements RoutesBuilder {
         }
 
         var donorRoles = session.repGuild().settings().thanking().donorRoles();
-        var oldValue = donorRoles.roleIds();
+        var oldValue = donorRoles.copyRoleIds();
         donorRoles.apply(rolesHolderPOJO);
         session.recordChange("thanking.donorroles", oldValue, rolesHolderPOJO.roleIds());
     }

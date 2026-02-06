@@ -76,17 +76,17 @@ public class ThankingRoute implements RoutesBuilder {
         Thanking thanking = session.repGuild().settings().thanking();
         var oldValue = new ThankingPOJO(
                 new de.chojo.repbot.web.pojo.settings.sub.thanking.ChannelsPOJO(
-                        thanking.channels().channelIds(),
-                        thanking.channels().categoryIds(),
+                        thanking.channels().copyChannelIds(),
+                        thanking.channels().copyCategoryIds(),
                         thanking.channels().isWhitelist()),
                 new de.chojo.repbot.web.pojo.settings.sub.thanking.RolesHolderPOJO(
-                        thanking.donorRoles().roleIds()),
+                        thanking.donorRoles().copyRoleIds()),
                 new de.chojo.repbot.web.pojo.settings.sub.thanking.RolesHolderPOJO(
-                        thanking.denyDonorRoles().roleIds()),
+                        thanking.denyDonorRoles().copyRoleIds()),
                 new de.chojo.repbot.web.pojo.settings.sub.thanking.RolesHolderPOJO(
-                        thanking.receiverRoles().roleIds()),
+                        thanking.receiverRoles().copyRoleIds()),
                 new de.chojo.repbot.web.pojo.settings.sub.thanking.RolesHolderPOJO(
-                        thanking.denyReceiverRoles().roleIds()),
+                        thanking.denyReceiverRoles().copyRoleIds()),
                 new de.chojo.repbot.web.pojo.settings.sub.thanking.ReactionsPOJO(
                         thanking.reactions().reactions(), thanking.reactions().mainReaction()),
                 new de.chojo.repbot.web.pojo.settings.sub.thanking.ThankwordsPOJO(
