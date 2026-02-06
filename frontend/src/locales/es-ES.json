@@ -132,7 +132,8 @@
         "alreadyRunning": "La actualización ya está en curso.",
         "success": "La actualización de la clasificación se ha iniciado correctamente.",
         "failed": "No se ha podido iniciar la actualización de la clasificación."
-      }
+      },
+      "selectionNote": "Solo se pueden seleccionar roles que no estén gestionados por una integración y que estén por debajo del rol más alto del bot."
     },
     "reputation": {
       "description": "Configura cómo se calcula la reputación y qué funciones están habilitadas.",
@@ -447,6 +448,14 @@
       "roles": {
         "title": "Funciones del donante y del receptor",
         "description": "Opcionalmente, define qué roles pueden otorgar reputación (roles de donantes) y qué roles pueden recibir reputación (roles de receptores)."
+      },
+      "welcome": {
+        "title": "Bienvenido",
+        "description": "Bienvenido a la página de configuración.\nEsta página te guiará a través de la configuración inicial del bot. Después, tendrás una configuración básica personalizada a tu gusto.\n\nSi necesitas ayuda, puedes escribir un mensaje privado al bot y te ayudaremos lo antes posible. También encontrarás un enlace a nuestro servicio de asistencia en Discord en la parte inferior de la página."
+      },
+      "finished": {
+        "title": "Configuración completada",
+        "description": "Ya has completado el último paso de la configuración. Ahora te redirigiremos a la página de configuración general, donde podrás encontrar más ajustes que te pueden resultar interesantes."
       }
     }
   },

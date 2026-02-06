@@ -111,6 +111,22 @@ export function useSession() {
         }
     }
 
+    const updateRanksSettings = (updates: Partial<Types.RanksPOJO>) => {
+        if (session.value?.settings?.ranks) {
+            // Ensure ranks array deduplication by roleId if provided
+            if (updates.ranks) {
+                const seen = new Set<string>()
+                updates.ranks = updates.ranks.filter(r => {
+                    const key = String(r.roleId)
+                    if (seen.has(key)) return false
+                    seen.add(key)
+                    return true
+                })
+            }
+            Object.assign(session.value.settings.ranks, updates)
+        }
+    }
+
     return {
         session: readonly(session),
         setSession,
@@ -129,6 +145,7 @@ export function useSession() {
         updateMessagesSettings,
         updateAnnouncementsSettings,
         updateAutopostSettings,
-        updateLogChannelSettings
+        updateLogChannelSettings,
+        updateRanksSettings
     }
 }

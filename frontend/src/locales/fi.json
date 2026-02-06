@@ -132,7 +132,8 @@
         "alreadyRunning": "Päivittäminen on jo käynnissä",
         "success": "Sijoitusten päivitys aloitettu onnistuneesti",
         "failed": "Rankin päivityksen käynnistäminen epäonnistui"
-      }
+      },
+      "selectionNote": "Vain roolit, joita ei hallita integraation avulla ja jotka ovat botin korkeimman roolin alapuolella, voidaan valita."
     },
     "reputation": {
       "description": "Määritä, miten maine lasketaan ja mitkä ominaisuudet otetaan käyttöön.",
@@ -447,6 +448,14 @@
       "roles": {
         "title": "Lahjoittajan ja vastaanottajan roolit",
         "description": "Määritä valinnaisesti, mitkä roolit voivat antaa mainetta (lahjoittajaroolit) ja mitkä roolit voivat saada mainetta (vastaanottajaroolit)."
+      },
+      "welcome": {
+        "title": "Tervetuloa",
+        "description": "Tervetuloa asetussivulle.\nTämä sivu opastaa sinut botin alkuasetusten tekemisessä. Sen jälkeen sinulla on perusasetukset, jotka on mukautettu mieltymystesi mukaan.\n\nJos tarvitset apua, voit kirjoittaa botille yksityisviestin, ja autamme sinua mahdollisimman pian. Sivun alaosasta löydät myös linkin tukipalveluumme Discordissa."
+      },
+      "finished": {
+        "title": "Asennus valmis",
+        "description": "Olet nyt suorittanut viimeisen asennusvaiheen. Siirrämme sinut nyt yleisiin asetuksiin, josta saatat löytää lisää sinua kiinnostavia asetuksia."
       }
     }
   },

@@ -132,7 +132,8 @@
         "alreadyRunning": "Yenileme işlemi zaten devam ediyor",
         "success": "Sıralama yenileme başarıyla başlatıldı",
         "failed": "Sıra yenileme başlatılamadı"
-      }
+      },
+      "selectionNote": "Yalnızca entegrasyon tarafından yönetilmeyen ve botun en üst düzey rolünün altında bulunan roller seçilebilir."
     },
     "reputation": {
       "description": "İtibar hesaplama yöntemini ve hangi özelliklerin etkinleştirileceğini yapılandırın.",
@@ -447,6 +448,14 @@
       "roles": {
         "title": "Bağışçı ve Alıcı Rolleri",
         "description": "İsteğe bağlı olarak, hangi roller itibar verebilir (bağışçı roller) ve hangi roller itibar alabilir (alıcı roller) tanımlayın."
+      },
+      "welcome": {
+        "title": "Hoş geldiniz",
+        "description": "Kurulum sayfasına hoş geldiniz.\nBu sayfa, botun ilk kurulumunu gerçekleştirmenize yardımcı olacaktır. Ardından, isteğinize göre özelleştirilmiş temel bir kurulum elde edeceksiniz.\n\nYardıma ihtiyacınız olursa, bota özel mesaj gönderebilirsiniz; mümkün olan en kısa sürede size yardımcı olacağız. Ayrıca, sayfanın altında destek discord bağlantısını da bulabilirsiniz."
+      },
+      "finished": {
+        "title": "Kurulum Tamamlandı",
+        "description": "Son kurulum adımını tamamladınız. Şimdi sizi, ilginizi çekebilecek diğer ayarları bulabileceğiniz genel ayarlar sayfasına yönlendireceğiz."
       }
     }
   },

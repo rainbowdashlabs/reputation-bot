@@ -124,6 +124,7 @@
       "reputationRequired": "Required Reputation",
       "roleAlreadyAdded": "This role already has a rank.",
       "reputationAlreadyUsed": "This reputation value is already used by another rank.",
+      "selectionNote": "Only roles that are not managed by an integration and below the highest role of the bot can be selected.",
       "noRanks": "No ranks configured yet.",
       "reputationPlaceholder": "e.g. 100",
       "refresh": {
@@ -400,6 +401,10 @@
       "finish": "Finish Setup"
     },
     "steps": {
+      "welcome": {
+        "title": "Welcome",
+        "description": "Welcome to the Setup page.\nThis page will guide you through the initial setup of the bot. After that, you will have a basic setup that is customized to your liking.\n\nIf you need help, you can write the bot a private message and we will help you as soon as we can. You also find a link to our support discord at the bottom of the page."
+      },
       "language": {
         "title": "Select Language",
         "description": "Choose the language the bot will use for messages and responses in your server. The frontend language will change to match your selection."
@@ -447,6 +452,10 @@
       "roles": {
         "title": "Donor & Receiver Roles",
         "description": "Optionally define which roles can give reputation (donor roles) and which roles can receive reputation (receiver roles)."
+      },
+      "finished": {
+        "title": "Setup Complete",
+        "description": "You have now finished the last setup step. We will now send you to the general settings page where you might find more settings that are interesting for you."
       }
     }
   },

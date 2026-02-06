@@ -132,7 +132,8 @@
         "alreadyRunning": "Obnovení již probíhá",
         "success": "Aktualizace pořadí byla úspěšně zahájena",
         "failed": "Nepodařilo se spustit aktualizaci pořadí"
-      }
+      },
+      "selectionNote": "Lze vybrat pouze role, které nejsou spravovány integrací a jsou nižší než nejvyšší role bota."
     },
     "reputation": {
       "description": "Nakonfigurujte způsob výpočtu reputace a povolené funkce.",
@@ -447,6 +448,14 @@
       "roles": {
         "title": "Role dárce a příjemce",
         "description": "Volitelně definujte, které role mohou udělovat reputaci (role dárců) a které role mohou reputaci přijímat (role příjemců)."
+      },
+      "welcome": {
+        "title": "Vítejte",
+        "description": "Vítejte na stránce Nastavení.\nTato stránka vás provede počátečním nastavením bota. Poté budete mít základní nastavení přizpůsobené podle vašich představ.\n\nPokud potřebujete pomoc, můžete botovi napsat soukromou zprávu a my vám pomůžeme, jakmile to bude možné. V dolní části stránky také najdete odkaz na naši podporu na Discord."
+      },
+      "finished": {
+        "title": "Nastavení dokončeno",
+        "description": "Právě jste dokončili poslední krok nastavení. Nyní vás přesměrujeme na stránku s obecnými nastaveními, kde můžete najít další nastavení, která by vás mohla zajímat."
       }
     }
   },

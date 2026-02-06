@@ -4,7 +4,7 @@
  *     Copyright (C) RainbowDashLabs and Contributor
  */
 <script lang="ts" setup>
-import {ref, watch} from 'vue'
+import {computed, ref} from 'vue'
 import {useI18n} from 'vue-i18n'
 import {useSession} from '@/composables/useSession'
 import {api} from '@/api'
@@ -13,17 +13,13 @@ import AddRankForm from './AddRankForm.vue'
 import RankList from './RankList.vue'
 
 const {t} = useI18n()
-const {session} = useSession()
+const {session, updateRanksSettings} = useSession()
 
-const ranks = ref<RankEntry[]>([])
 const isRefreshing = ref(false)
 const refreshMessage = ref('')
 
-watch(session, (newSession) => {
-  if (newSession?.settings?.ranks) {
-    ranks.value = JSON.parse(JSON.stringify(newSession.settings.ranks.ranks))
-  }
-}, {immediate: true})
+// Always read ranks directly from the session so the list reflects persisted changes
+const ranks = computed<RankEntry[]>(() => (session.value?.settings?.ranks?.ranks ?? []) as RankEntry[])
 
 const saveRanks = async () => {
   try {
@@ -34,17 +30,19 @@ const saveRanks = async () => {
 }
 
 const onAddRank = async (newRank: RankEntry) => {
-  ranks.value.push(newRank)
+  const next = [...ranks.value, newRank]
+  updateRanksSettings({ranks: next})
   await saveRanks()
 }
 
 const onUpdateRanks = async (updatedRanks: RankEntry[]) => {
-  ranks.value = updatedRanks
+  updateRanksSettings({ranks: updatedRanks})
   await saveRanks()
 }
 
 const onDeleteRank = async (roleId: string) => {
-  ranks.value = ranks.value.filter(r => r.roleId !== roleId)
+  const next = ranks.value.filter(r => String(r.roleId) !== String(roleId))
+  updateRanksSettings({ranks: next})
   await saveRanks()
 }
 

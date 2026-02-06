@@ -132,7 +132,8 @@
         "alreadyRunning": "Uppdateringen pågår redan",
         "success": "Rankningsuppdateringen startade utan problem",
         "failed": "Misslyckades med att starta rankningsuppdatering"
-      }
+      },
+      "selectionNote": "Endast roller som inte hanteras av en integration och som ligger under botens högsta roll kan väljas."
     },
     "reputation": {
       "description": "Konfigurera hur omdömet beräknas och vilka funktioner som är aktiverade.",
@@ -447,6 +448,14 @@
       "roles": {
         "title": "Donator- och mottagarens roller",
         "description": "Du kan också definiera vilka roller som kan ge rykte (givarroller) och vilka roller som kan få rykte (mottagarroller)."
+      },
+      "welcome": {
+        "title": "Välkommen",
+        "description": "Välkommen till inställningssidan.\nDenna sida guidar dig genom den initiala inställningen av boten. Därefter har du en grundläggande inställning som är anpassad efter dina önskemål.\n\nOm du behöver hjälp kan du skicka ett privat meddelande till boten så hjälper vi dig så snart vi kan. Du hittar också en länk till vår support på Discord längst ner på sidan."
+      },
+      "finished": {
+        "title": "Inställningen är klar",
+        "description": "Du har nu slutfört det sista steget i installationen. Vi skickar dig nu till sidan med allmänna inställningar där du kan hitta fler inställningar som kan vara intressanta för dig."
       }
     }
   },
