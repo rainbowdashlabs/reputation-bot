@@ -66,6 +66,9 @@
       "title": "Geen sessie gevonden",
       "message": "Je hebt geen geldige sessietoken.",
       "instruction": "Maak even een nieuwe sessie aan om toegang te krijgen tot deze app."
+    },
+    "notice": {
+      "workingOnIt": "We hebben het probleem gemeld en zijn bezig om het op te lossen."
     }
   },
   "premiumFeature": {
@@ -559,5 +562,9 @@
       "autopost_refreshinterval": "Autopost - Vernieuwingsinterval",
       "ranks": "Rangen - Functies"
     }
+  },
+  "help": {
+    "title": "Hulp nodig?",
+    "message": "Heb je hulp nodig? Mis je een functie? Heb je feedback? Stuur dan gewoon een privébericht naar de bot. Onderaan de pagina vind je ook een link naar onze supportdiscord."
   }
 }

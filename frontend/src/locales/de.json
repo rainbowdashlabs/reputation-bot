@@ -66,6 +66,9 @@
       "title": "Keine Sitzung gefunden",
       "message": "Du hast keine gültige Sitzung.",
       "instruction": "Mach bitte eine neue Sitzung, um auf diese App zuzugreifen."
+    },
+    "notice": {
+      "workingOnIt": "Wir haben von dem Problem erfahren und arbeiten daran, es zu beheben."
     }
   },
   "premiumFeature": {
@@ -559,5 +562,9 @@
       "autopost_refreshinterval": "Autopost – Aktualisierungsintervall",
       "ranks": "Ränge – Rollen"
     }
+  },
+  "help": {
+    "title": "Brauchst du Hilfe?",
+    "message": "Brauchst du Hilfe? Fehlt eine Funktion? Hast du Feedback? Schick einfach eine private Nachricht an den Bot. Du findest auch einen Link zu unserem Support-Discord unten auf der Seite."
   }
 }

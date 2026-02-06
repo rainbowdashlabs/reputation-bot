@@ -45,7 +45,7 @@ public final class RemovalTask {
                                 guild_id,
                                 date_joined,
                                 latest_activity,
-                                date_left
+                                coalesce(date_left, now())
                             FROM
                                 guilds
                             WHERE guild_id = ?;""").single(call().bind(guildId)).insert();

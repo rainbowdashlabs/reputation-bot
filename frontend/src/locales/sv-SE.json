@@ -66,6 +66,9 @@
       "title": "Ingen session hittades",
       "message": "Du har inte ett giltigt sessionstoken.",
       "instruction": "Skapa en ny session för att komma åt den här applikationen."
+    },
+    "notice": {
+      "workingOnIt": "Vi har fått kännedom om problemet och arbetar på att lösa det."
     }
   },
   "premiumFeature": {
@@ -559,5 +562,9 @@
       "autopost_refreshinterval": "Autopost - Uppdateringsintervall",
       "ranks": "Rangordningar – Roller"
     }
+  },
+  "help": {
+    "title": "Behöver du hjälp?",
+    "message": "Behöver du hjälp? Saknas någon funktion? Har du synpunkter? Skicka ett privat meddelande till boten. Du hittar också en länk till vår support på Discord längst ner på sidan."
   }
 }

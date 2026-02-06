@@ -66,6 +66,9 @@
       "title": "Istuntoa ei löytynyt",
       "message": "Sinulla ei ole voimassa olevaa istuntotunnusta.",
       "instruction": "Luo uusi istunto, jotta voit käyttää tätä sovellusta."
+    },
+    "notice": {
+      "workingOnIt": "Olemme saaneet ilmoituksen ongelmasta ja pyrimme ratkaisemaan sen."
     }
   },
   "premiumFeature": {
@@ -559,5 +562,9 @@
       "autopost_refreshinterval": "Automaattinen julkaisu - Päivitä väli",
       "ranks": "Arvot - Roolit"
     }
+  },
+  "help": {
+    "title": "Tarvitsetko apua?",
+    "message": "Tarvitsetko apua? Puuttuuko jokin ominaisuus? Haluatko antaa palautetta? Kirjoita yksityisviesti botille. Löydät myös linkin tukipalveluumme sivun alaosasta."
   }
 }

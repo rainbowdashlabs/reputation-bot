@@ -5,10 +5,12 @@
  */
 <script lang="ts" setup>
 import {computed} from 'vue'
+import {useI18n} from 'vue-i18n'
 import {useErrorStore} from '../stores/errorStore'
 import type {ApiErrorResponse} from '../api/types'
 
 const errorStore = useErrorStore()
+const {t} = useI18n()
 
 const errors = computed(() => errorStore.errors)
 
@@ -69,6 +71,7 @@ const getErrorDetails = (error: ApiErrorResponse): string | null => {
               v-if="getErrorDetails(errorItem.error)"
               class="text-xs bg-red-700 bg-opacity-50 rounded p-2 mt-2 whitespace-pre-wrap break-words"
           >{{ getErrorDetails(errorItem.error) }}</pre>
+          <p class="text-xs mt-2 italic">{{ t('error.notice.workingOnIt') }}</p>
         </div>
       </div>
       <p class="text-xs text-red-200 mt-2">Click to dismiss</p>

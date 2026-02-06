@@ -66,6 +66,9 @@
       "title": "Nie znaleziono sesji",
       "message": "Nie masz ważnego tokenu sesji.",
       "instruction": "Aby uzyskać dostęp do tej aplikacji, utwórz nową sesję."
+    },
+    "notice": {
+      "workingOnIt": "Zostaliśmy poinformowani o tym problemie i pracujemy nad jego rozwiązaniem."
     }
   },
   "premiumFeature": {
@@ -559,5 +562,9 @@
       "autopost_refreshinterval": "Autopost – interwał odświeżania",
       "ranks": "Rangi – role"
     }
+  },
+  "help": {
+    "title": "Potrzebujesz pomocy?",
+    "message": "Potrzebujesz pomocy? Brakuje jakiejś funkcji? Masz uwagi? Po prostu wyślij prywatną wiadomość do bota. Link do naszego serwisu pomocy technicznej Discord znajdziesz również na dole strony."
   }
 }

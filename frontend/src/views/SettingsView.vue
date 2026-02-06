@@ -30,7 +30,7 @@ const settingsSections = [
   <div class="mx-auto" style="max-width: 1600px;">
     <div class="transition-colors">
       <!-- Heading above sidebar -->
-      <Header1 class="mb-6 px-4 pt-8">{{ t('navigation.settings') }}</Header1>
+      <Header1 class="mb-2 px-4">{{ t('navigation.settings') }}</Header1>
 
       <div class="flex">
         <!-- Sidebar - Full height, stretches from top to bottom -->
