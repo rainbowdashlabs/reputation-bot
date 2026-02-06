@@ -69,6 +69,11 @@
     },
     "notice": {
       "workingOnIt": "Se nos ha notificado el problema y estamos trabajando para resolverlo."
+    },
+    "expired": {
+      "title": "Sesión caducada",
+      "message": "Tu sesión ha caducado o no es válida.",
+      "instruction": "Por favor, abre una nueva sesión desde el servidor Discord para continuar."
     }
   },
   "premiumFeature": {
@@ -566,5 +571,11 @@
   "help": {
     "title": "¿Necesitas ayuda?",
     "message": "¿Necesitas ayuda? ¿Falta alguna función? ¿Tienes algún comentario? Solo tienes que escribir un mensaje privado al bot. También puedes encontrar un enlace a nuestro servicio de asistencia en Discord en la parte inferior de la página."
+  },
+  "guildSwitcher": {
+    "title": "Cambiar servidor",
+    "current": "Servidor actual",
+    "none": "No se han encontrado otros servidores.",
+    "add": "Añade otro servidor abriendo la configuración desde el servidor."
   }
 }

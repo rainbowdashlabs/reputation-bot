@@ -69,6 +69,11 @@
     },
     "notice": {
       "workingOnIt": "Byli jsme informováni o tomto problému a pracujeme na jeho řešení."
+    },
+    "expired": {
+      "title": "Relace vypršela",
+      "message": "Vaše relace vypršela nebo je neplatná.",
+      "instruction": "Chcete-li pokračovat, otevřete novou relaci ze serveru Discord."
     }
   },
   "premiumFeature": {
@@ -566,5 +571,11 @@
   "help": {
     "title": "Potřebujete pomoc?",
     "message": "Potřebujete pomoc? Chybí vám nějaká funkce? Máte připomínky? Stačí napsat soukromou zprávu botovi. Odkaz na naši podporu Discord najdete také v dolní části stránky."
+  },
+  "guildSwitcher": {
+    "title": "Přepnout server",
+    "current": "Aktuální server",
+    "none": "Nebyly nalezeny žádné další servery",
+    "add": "Přidejte další server otevřením nastavení ze serveru."
   }
 }

@@ -69,6 +69,11 @@
     },
     "notice": {
       "workingOnIt": "Sorun bize bildirildi ve çözmek için çalışıyoruz."
+    },
+    "expired": {
+      "title": "Oturum Süresi Doldu",
+      "message": "Oturumunuzun süresi doldu veya geçersiz.",
+      "instruction": "Devam etmek için Discord sunucusundan yeni bir oturum açın."
     }
   },
   "premiumFeature": {
@@ -566,5 +571,11 @@
   "help": {
     "title": "Yardıma mı ihtiyacınız var?",
     "message": "Yardıma mı ihtiyacınız var? Bir özellik mi eksik? Geri bildiriminiz mi var? Bot'a özel mesaj yazmanız yeterlidir. Sayfanın altında destek discord bağlantısını da bulabilirsiniz."
+  },
+  "guildSwitcher": {
+    "title": "Sunucu Değiştir",
+    "current": "Mevcut Sunucu",
+    "none": "Başka sunucu bulunamadı",
+    "add": "Sunucudan ayarları açarak başka bir sunucu ekleyin."
   }
 }

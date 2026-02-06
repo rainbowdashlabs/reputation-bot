@@ -69,6 +69,11 @@
     },
     "notice": {
       "workingOnIt": "On nous a signalé le problème et on est en train de le régler."
+    },
+    "expired": {
+      "title": "Session expirée",
+      "message": "Ta session a expiré ou n'est pas valide.",
+      "instruction": "Ouvre une nouvelle session depuis le serveur Discord pour continuer."
     }
   },
   "premiumFeature": {
@@ -566,5 +571,11 @@
   "help": {
     "title": "Besoin d'un coup de main ?",
     "message": "Besoin d'aide ? Il manque une fonctionnalité ? Tu as des commentaires ? Envoie juste un message privé au bot. Tu trouveras aussi un lien vers notre Discord d'assistance en bas de la page."
+  },
+  "guildSwitcher": {
+    "title": "Serveur de commutation",
+    "current": "Serveur actuel",
+    "none": "Aucun autre serveur trouvé",
+    "add": "Ajoute un autre serveur en ouvrant les paramètres depuis le serveur."
   }
 }

@@ -69,6 +69,11 @@
     },
     "notice": {
       "workingOnIt": "Vi har fått melding om problemet og jobber med å løse det."
+    },
+    "expired": {
+      "title": "Økten utløpt",
+      "message": "Din økt har utløpt eller er ugyldig.",
+      "instruction": "Åpne en ny økt fra Discord-serveren for å fortsette."
     }
   },
   "premiumFeature": {
@@ -566,5 +571,11 @@
   "help": {
     "title": "Trenger du hjelp?",
     "message": "Trenger du hjelp? Mangler en funksjon? Har du tilbakemeldinger? Bare skriv en privat melding til boten. Du finner også en lenke til vår support-discord nederst på siden."
+  },
+  "guildSwitcher": {
+    "title": "Bytt server",
+    "current": "Nåværende server",
+    "none": "Ingen andre servere funnet",
+    "add": "Legg til en ny server ved å åpne innstillingene fra serveren."
   }
 }

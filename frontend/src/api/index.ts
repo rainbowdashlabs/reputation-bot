@@ -6,7 +6,7 @@
 import axios, {type AxiosError, type AxiosInstance} from 'axios';
 import * as Types from './types';
 import {useErrorStore} from '../stores/errorStore';
-import router from '../router';
+import {useSession} from '../composables/useSession';
 
 class ApiClient {
     private axiosInstance: AxiosInstance;
@@ -37,9 +37,10 @@ class ApiClient {
         this.axiosInstance.interceptors.response.use(
             (response) => response,
             (error: AxiosError<Types.ApiErrorResponse>) => {
-                // Handle 401 Unauthorized - redirect to no token page
+                // Handle 401 Unauthorized - show expired warning
                 if (error.response?.status === 401) {
-                    router.push('/error/no-token');
+                    const {setExpired} = useSession();
+                    setExpired(true);
                     return Promise.reject(error);
                 }
 

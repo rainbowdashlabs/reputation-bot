@@ -69,6 +69,11 @@
     },
     "notice": {
       "workingOnIt": "We hebben het probleem gemeld en zijn bezig om het op te lossen."
+    },
+    "expired": {
+      "title": "Sessie verlopen",
+      "message": "Je sessie is verlopen of niet meer geldig.",
+      "instruction": "Open een nieuwe sessie vanaf de Discord-server om verder te gaan."
     }
   },
   "premiumFeature": {
@@ -566,5 +571,11 @@
   "help": {
     "title": "Hulp nodig?",
     "message": "Heb je hulp nodig? Mis je een functie? Heb je feedback? Stuur dan gewoon een privébericht naar de bot. Onderaan de pagina vind je ook een link naar onze supportdiscord."
+  },
+  "guildSwitcher": {
+    "title": "Server wisselen",
+    "current": "Huidige server",
+    "none": "Geen andere servers gevonden",
+    "add": "Voeg nog een server toe door de instellingen van de server te openen."
   }
 }
