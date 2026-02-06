@@ -132,7 +132,8 @@
         "alreadyRunning": "Oppdateringen er allerede i gang",
         "success": "Rangeringoppdatering startet vellykket",
         "failed": "Kunne ikke starte oppdatering av rangering"
-      }
+      },
+      "selectionNote": "Bare roller som ikke administreres av en integrasjon og som ligger under den høyeste rollen til boten, kan velges."
     },
     "reputation": {
       "description": "Konfigurer hvordan omdømme beregnes og hvilke funksjoner som er aktivert.",
@@ -447,6 +448,14 @@
       "roles": {
         "title": "Donor- og mottakerroller",
         "description": "Du kan eventuelt definere hvilke roller som kan gi omdømme (giverroller) og hvilke roller som kan motta omdømme (mottakerroller)."
+      },
+      "welcome": {
+        "title": "Velkommen",
+        "description": "Velkommen til oppsettssiden.\nDenne siden vil veilede deg gjennom det innledende oppsettet av boten. Etter det vil du ha et grunnleggende oppsett som er tilpasset dine preferanser.\n\nHvis du trenger hjelp, kan du skrive en privat melding til boten, så hjelper vi deg så snart vi kan. Du finner også en lenke til vår support-discord nederst på siden."
+      },
+      "finished": {
+        "title": "Oppsett fullført",
+        "description": "Du har nå fullført det siste trinnet i oppsettet. Vi sender deg nå videre til siden for generelle innstillinger, hvor du kan finne flere innstillinger som kan være interessante for deg."
       }
     }
   },

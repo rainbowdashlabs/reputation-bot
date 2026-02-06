@@ -132,7 +132,8 @@
         "alreadyRunning": "Odświeżanie już trwa",
         "success": "Odświeżanie rankingu rozpoczęło się pomyślnie",
         "failed": "Nie udało się uruchomić odświeżania rankingu"
-      }
+      },
+      "selectionNote": "Możesz wybrać tylko role, które nie są zarządzane przez integrację i znajdują się poniżej najwyższej roli bota."
     },
     "reputation": {
       "description": "Skonfiguruj sposób obliczania reputacji i wybierz funkcje, które chcesz włączyć.",
@@ -447,6 +448,14 @@
       "roles": {
         "title": "Role dawcy i odbiorcy",
         "description": "Opcjonalnie zdefiniuj, które role mogą nadawać reputację (role darczyńców), a które mogą ją otrzymywać (role odbiorców)."
+      },
+      "welcome": {
+        "title": "Witaj",
+        "description": "Witamy na stronie konfiguracji.\nTa strona poprowadzi cię przez proces wstępnej konfiguracji bota. Po jej zakończeniu będziesz mieć podstawową konfigurację dostosowaną do twoich potrzeb.\n\nJeśli potrzebujesz pomocy, możesz wysłać botowi prywatną wiadomość, a my pomożemy ci tak szybko, jak to możliwe. Na dole strony znajdziesz również link do naszego serwisu pomocy technicznej Discord."
+      },
+      "finished": {
+        "title": "Konfiguracja zakończona",
+        "description": "Zakończyłeś ostatni etap konfiguracji. Przekierujemy cię teraz do strony ustawień ogólnych, gdzie możesz znaleźć więcej interesujących cię opcji."
       }
     }
   },

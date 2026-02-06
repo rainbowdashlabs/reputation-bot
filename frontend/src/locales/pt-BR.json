@@ -132,7 +132,8 @@
         "alreadyRunning": "A atualização já tá rolando.",
         "success": "A atualização da classificação começou com sucesso",
         "failed": "Não deu pra começar a atualização da classificação"
-      }
+      },
+      "selectionNote": "Só dá pra escolher funções que não são gerenciadas por uma integração e que estão abaixo da função mais alta do bot."
     },
     "reputation": {
       "description": "Configure como a reputação é calculada e quais recursos são ativados.",
@@ -447,6 +448,14 @@
       "roles": {
         "title": "Funções do doador e do receptor",
         "description": "Opcionalmente, defina quais funções podem dar reputação (funções de doador) e quais funções podem receber reputação (funções de receptor)."
+      },
+      "welcome": {
+        "title": "Oi, seja bem-vindo!",
+        "description": "Oi, seja bem-vindo à página de configuração.\nEssa página vai te ajudar a configurar o bot pela primeira vez. Depois disso, você vai ter uma configuração básica personalizada do jeito que você quiser.\n\nSe precisar de ajuda, manda uma mensagem privada pro bot e a gente vai te ajudar assim que puder. Você também encontra um link pro nosso suporte no Discord no final da página."
+      },
+      "finished": {
+        "title": "Configuração concluída",
+        "description": "Você acabou de concluir a última etapa da configuração. Agora vamos te levar para a página de configurações gerais, onde você pode encontrar mais configurações que podem ser do seu interesse."
       }
     }
   },

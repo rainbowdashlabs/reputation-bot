@@ -132,7 +132,8 @@
         "alreadyRunning": "Het vernieuwen is al bezig.",
         "success": "Het vernieuwen van de ranglijst is gelukt.",
         "failed": "Het lukte niet om de ranglijst te vernieuwen."
-      }
+      },
+      "selectionNote": "Je kunt alleen rollen kiezen die niet door een integratie worden beheerd en die lager zijn dan de hoogste rol van de bot."
     },
     "reputation": {
       "description": "Zet even op hoe je reputatie wordt berekend en welke functies je wilt gebruiken.",
@@ -447,6 +448,14 @@
       "roles": {
         "title": "Rollen van donor en ontvanger",
         "description": "Je kunt kiezen welke rollen reputatie kunnen geven (donorrollen) en welke rollen reputatie kunnen krijgen (ontvangerrollen)."
+      },
+      "welcome": {
+        "title": "Welkom!",
+        "description": "Hey, welkom op de instellingenpagina.\nDeze pagina helpt je met de eerste stappen om de bot in te stellen. Daarna heb je een basisinstelling die helemaal naar jouw smaak is aangepast.\n\nAls je hulp nodig hebt, stuur de bot dan een privébericht en we helpen je zo snel mogelijk. Onderaan de pagina vind je ook een link naar onze supportdiscord."
+      },
+      "finished": {
+        "title": "Installatie klaar",
+        "description": "Je bent nu klaar met de laatste stap van de installatie. We sturen je nu naar de pagina met algemene instellingen, waar je misschien nog meer instellingen vindt die je interessant vindt."
       }
     }
   },

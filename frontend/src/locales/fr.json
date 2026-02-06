@@ -132,7 +132,8 @@
         "alreadyRunning": "Le rafraîchissement est déjà en cours.",
         "success": "Le rafraîchissement du classement a bien commencé.",
         "failed": "Impossible de lancer la mise à jour du classement"
-      }
+      },
+      "selectionNote": "Seuls les rôles qui ne sont pas gérés par une intégration et qui sont en dessous du rôle le plus élevé du bot peuvent être choisis."
     },
     "reputation": {
       "description": "Configure comment la réputation est calculée et quelles fonctionnalités sont activées.",
@@ -447,6 +448,14 @@
       "roles": {
         "title": "Les rôles du donneur et du receveur",
         "description": "Tu peux choisir de définir quels rôles peuvent donner de la réputation (rôles de donateurs) et quels rôles peuvent en recevoir (rôles de receveurs)."
+      },
+      "welcome": {
+        "title": "Salut !",
+        "description": "Salut sur la page de configuration.\nCette page va te guider pour la configuration initiale du bot. Après ça, tu auras une configuration de base personnalisée selon tes goûts.\n\nSi t'as besoin d'aide, tu peux envoyer un message privé au bot et on t'aidera dès qu'on pourra. Tu trouveras aussi un lien vers notre Discord d'assistance en bas de la page."
+      },
+      "finished": {
+        "title": "Installation terminée",
+        "description": "Tu as maintenant fini la dernière étape de configuration. On va maintenant t'envoyer vers la page des paramètres généraux où tu trouveras peut-être d'autres paramètres qui pourraient t'intéresser."
       }
     }
   },

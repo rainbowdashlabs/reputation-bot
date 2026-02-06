@@ -132,7 +132,8 @@
         "alreadyRunning": "Die Aktualisierung läuft schon.",
         "success": "Rang-Aktualisierung erfolgreich abgeschlossen",
         "failed": "Das Aktualisieren der Rangliste hat nicht geklappt."
-      }
+      },
+      "selectionNote": "Nur Rollen, die nicht von einer Integration verwaltet werden und unterhalb der höchsten Rolle des Bots liegen, können ausgewählt werden."
     },
     "reputation": {
       "description": "Lege fest, wie die Reputation berechnet wird und welche Funktionen aktiviert sind.",
@@ -447,6 +448,14 @@
       "roles": {
         "title": "Rollen von Gebern und Empfängern",
         "description": "Du kannst festlegen, welche Rollen Reputation vergeben können (Geberrollen) und welche Rollen Reputation bekommen können (Empfängerrollen)."
+      },
+      "welcome": {
+        "title": "Hey, willkommen!",
+        "description": "Hey, willkommen auf der Einrichtungsseite.\nHier zeigen wir dir, wie du den Bot zum ersten Mal einrichtest. Danach hast du eine Grundeinstellung, die ganz nach deinen Wünschen angepasst ist.\n\nWenn du Hilfe brauchst, kannst du dem Bot eine private Nachricht schicken und wir helfen dir so schnell wie möglich. Unten auf der Seite findest du auch einen Link zu unserem Support-Discord."
+      },
+      "finished": {
+        "title": "Einrichtung abgeschlossen",
+        "description": "Du hast jetzt den letzten Einrichtungsschritt abgeschlossen. Wir leiten dich jetzt zur Seite mit den allgemeinen Einstellungen weiter, wo du vielleicht noch weitere Einstellungen findest, die für dich interessant sind."
       }
     }
   },

@@ -10,6 +10,7 @@ import {useRoute, useRouter} from 'vue-router'
 import {useSession} from '@/composables/useSession'
 
 // Import step components
+import SetupWelcomeStep from './setup/SetupWelcomeStep.vue'
 import SetupLanguageStep from './setup/SetupLanguageStep.vue'
 import SetupSystemChannelStep from './setup/SetupSystemChannelStep.vue'
 import SetupReputationTypesStep from './setup/SetupReputationTypesStep.vue'
@@ -21,6 +22,7 @@ import SetupAnnouncementsStep from './setup/SetupAnnouncementsStep.vue'
 import SetupCooldownStep from './setup/SetupCooldownStep.vue'
 import SetupMainReactionStep from './setup/SetupMainReactionStep.vue'
 import SetupRolesStep from './setup/SetupRolesStep.vue'
+import SetupFinishedStep from './setup/SetupFinishedStep.vue'
 
 const {t} = useI18n()
 const router = useRouter()
@@ -28,7 +30,7 @@ const route = useRoute()
 const {session} = useSession()
 
 const SETUP_STEP_KEY = 'reputation-bot-setup-current-step'
-const totalSteps = 11
+const totalSteps = 13
 
 // Initialize currentStep from URL query, then localStorage, or default to 1
 const getInitialStep = (): number => {
@@ -86,17 +88,19 @@ watch(() => route.query.step, (newStepQuery) => {
 })
 
 const steps = [
-  {id: 1, component: SetupLanguageStep, titleKey: 'setup.steps.language.title', required: false},
-  {id: 2, component: SetupSystemChannelStep, titleKey: 'setup.steps.systemChannel.title', required: true},
-  {id: 3, component: SetupReputationTypesStep, titleKey: 'setup.steps.reputationTypes.title', required: false},
-  {id: 4, component: SetupReputationModeStep, titleKey: 'setup.steps.reputationMode.title', required: false},
-  {id: 5, component: SetupRanksStep, titleKey: 'setup.steps.ranks.title', required: true},
-  {id: 6, component: SetupChannelsStep, titleKey: 'setup.steps.channels.title', required: true},
-  {id: 7, component: SetupThankwordsStep, titleKey: 'setup.steps.thankwords.title', required: false},
-  {id: 8, component: SetupAnnouncementsStep, titleKey: 'setup.steps.announcements.title', required: false},
-  {id: 9, component: SetupCooldownStep, titleKey: 'setup.steps.cooldown.title', required: false},
-  {id: 10, component: SetupMainReactionStep, titleKey: 'setup.steps.mainReaction.title', required: false},
-  {id: 11, component: SetupRolesStep, titleKey: 'setup.steps.roles.title', required: false}
+  {id: 1, component: SetupWelcomeStep, titleKey: 'setup.steps.welcome.title', required: false},
+  {id: 2, component: SetupLanguageStep, titleKey: 'setup.steps.language.title', required: false},
+  {id: 3, component: SetupSystemChannelStep, titleKey: 'setup.steps.systemChannel.title', required: true},
+  {id: 4, component: SetupReputationTypesStep, titleKey: 'setup.steps.reputationTypes.title', required: false},
+  {id: 5, component: SetupReputationModeStep, titleKey: 'setup.steps.reputationMode.title', required: false},
+  {id: 6, component: SetupRanksStep, titleKey: 'setup.steps.ranks.title', required: true},
+  {id: 7, component: SetupChannelsStep, titleKey: 'setup.steps.channels.title', required: true},
+  {id: 8, component: SetupThankwordsStep, titleKey: 'setup.steps.thankwords.title', required: false},
+  {id: 9, component: SetupAnnouncementsStep, titleKey: 'setup.steps.announcements.title', required: false},
+  {id: 10, component: SetupCooldownStep, titleKey: 'setup.steps.cooldown.title', required: false},
+  {id: 11, component: SetupMainReactionStep, titleKey: 'setup.steps.mainReaction.title', required: false},
+  {id: 12, component: SetupRolesStep, titleKey: 'setup.steps.roles.title', required: false},
+  {id: 13, component: SetupFinishedStep, titleKey: 'setup.steps.finished.title', required: false}
 ]
 
 const currentStepData = computed(() => steps.find(s => s.id === currentStep.value))
@@ -136,7 +140,7 @@ const progressPercentage = computed(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900">
+  <div class="bg-gray-50 dark:bg-gray-900">
     <!-- Navigation Bar -->
     <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-20 z-10">
       <div class="container mx-auto px-4 py-4">
