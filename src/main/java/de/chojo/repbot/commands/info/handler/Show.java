@@ -32,6 +32,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -55,6 +56,7 @@ public class Show implements SlashHandler {
     public Show(String version, Configuration configuration) {
         this.version = version;
         this.configuration = configuration;
+        refreshData();
     }
 
     @Override
@@ -64,43 +66,8 @@ public class Show implements SlashHandler {
 
     @NotNull
     private MessageEmbed getResponse(SlashCommandInteractionEvent event, EventContext context) {
-        if (contributors == null || lastFetch.isBefore(Instant.now().minus(5, ChronoUnit.MINUTES))) {
-            var request = HttpRequest.newBuilder()
-                    .GET()
-                    .uri(URI.create("https://api.github.com/repos/rainbowdashlabs/reputation-bot/contributors?anon=1"))
-                    .header("accept", "application/vnd.github.v3+json")
-                    .header("User-Agent", "reputation-bot")
-                    .build();
-
-            List<Contributor> contributors;
-            try {
-                var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-                contributors = mapper.readerForListOf(Contributor.class).readValue(response.body());
-            } catch (IOException | InterruptedException e) {
-                log.error("Could not read response", e);
-                contributors = Collections.emptyList();
-            }
-
-            List<GithubProfile> profiles = new ArrayList<>();
-            for (var contributor : contributors) {
-                if (ContributorType.BOT == contributor.type) continue;
-
-                var profile = HttpRequest.newBuilder()
-                        .GET()
-                        .uri(URI.create(contributor.url))
-                        .header("accept", "application/vnd.github.v3+json")
-                        .header("User-Agent", "reputation-bot")
-                        .build();
-
-                try {
-                    var response = client.send(profile, HttpResponse.BodyHandlers.ofString());
-                    profiles.add(mapper.readValue(response.body(), GithubProfile.class));
-                } catch (IOException | InterruptedException e) {
-                    log.error("Could not read response", e);
-                }
-            }
-            this.contributors = profiles.stream().map(GithubProfile::toString).collect(Collectors.joining(", "));
-            lastFetch = Instant.now();
+        if (contributors == null || lastFetch.isBefore(Instant.now().minus(1, ChronoUnit.HOURS))) {
+            CompletableFuture.runAsync(this::refreshData);
         }
 
         return new LocalizedEmbedBuilder(context.guildLocalizer())
@@ -114,6 +81,45 @@ public class Show implements SlashHandler {
                 .addField("", "**" + getLinks(context) + "**", false)
                 .setColor(Colors.Pastel.BLUE)
                 .build();
+    }
+
+    private void refreshData() {
+        var request = HttpRequest.newBuilder()
+                .GET()
+                .uri(URI.create("https://api.github.com/repos/rainbowdashlabs/reputation-bot/contributors?anon=1"))
+                .header("accept", "application/vnd.github.v3+json")
+                .header("User-Agent", "reputation-bot")
+                .build();
+
+        List<Contributor> contributors;
+        try {
+            var response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            contributors = mapper.readerForListOf(Contributor.class).readValue(response.body());
+        } catch (IOException | InterruptedException e) {
+            log.error("Could not read response", e);
+            contributors = Collections.emptyList();
+        }
+
+        List<GithubProfile> profiles = new ArrayList<>();
+        for (var contributor : contributors) {
+            if (ContributorType.BOT == contributor.type) continue;
+
+            var profile = HttpRequest.newBuilder()
+                    .GET()
+                    .uri(URI.create(contributor.url))
+                    .header("accept", "application/vnd.github.v3+json")
+                    .header("User-Agent", "reputation-bot")
+                    .build();
+
+            try {
+                var response = client.send(profile, HttpResponse.BodyHandlers.ofString());
+                profiles.add(mapper.readValue(response.body(), GithubProfile.class));
+            } catch (IOException | InterruptedException e) {
+                log.error("Could not read response", e);
+            }
+        }
+        this.contributors = profiles.stream().map(GithubProfile::toString).collect(Collectors.joining(", "));
+        lastFetch = Instant.now();
     }
 
     private String getLinks(EventContext context) {

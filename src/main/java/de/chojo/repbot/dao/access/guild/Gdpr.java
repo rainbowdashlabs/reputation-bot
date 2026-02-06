@@ -40,8 +40,8 @@ public class Gdpr implements GuildHolder {
                             DO NOTHING;
                 """)
                 .single(call().bind(guildId())
-                              .bind("%d DAYS"
-                                      .formatted(repGuild.configuration().cleanup().cleanupScheduleDays())))
+                        .bind("%d DAYS"
+                                .formatted(repGuild.configuration().cleanup().cleanupScheduleDays())))
                 .update()
                 .changed()) {
             query("UPDATE guilds SET date_left = now() WHERE guild_id = ?");
