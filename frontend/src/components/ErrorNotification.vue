@@ -39,7 +39,7 @@ const getErrorDetails = (error: ApiErrorResponse): string | null => {
       message += `\nRequired: ${skuNames}`
     }
 
-    if (details.currentValue !== undefined && details.maxValue !== undefined) {
+    if (details.currentValue !== undefined && details.maxValue !== undefined && details.maxValue !== null) {
       message += `\nLimit: ${details.currentValue}/${details.maxValue}`
     }
 
@@ -71,7 +71,10 @@ const getErrorDetails = (error: ApiErrorResponse): string | null => {
               v-if="getErrorDetails(errorItem.error)"
               class="text-xs bg-red-700 bg-opacity-50 rounded p-2 mt-2 whitespace-pre-wrap break-words"
           >{{ getErrorDetails(errorItem.error) }}</pre>
-          <p class="text-xs mt-2 italic">{{ t('error.notice.workingOnIt') }}</p>
+          <p
+              v-if="errorItem.error.error !== 'PremiumFeatureError'"
+              class="text-xs mt-2 italic"
+          >{{ t('error.notice.workingOnIt') }}</p>
         </div>
       </div>
       <p class="text-xs text-red-200 mt-2">Click to dismiss</p>
