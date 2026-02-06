@@ -10,13 +10,14 @@ import AppHeader from './components/AppHeader.vue'
 import AppFooter from './components/AppFooter.vue'
 import HelpIcon from './components/HelpIcon.vue'
 import ErrorNotification from './components/ErrorNotification.vue'
+import ExpiredSessionWarning from './components/ExpiredSessionWarning.vue'
 import {api} from './api'
 import {useSession} from './composables/useSession'
 import {useDarkMode} from './composables/useDarkMode'
 
 const router = useRouter()
 const route = useRoute()
-const {setSession, clearSession} = useSession()
+const {setSession, clearSession, setExpired} = useSession()
 useDarkMode()
 
 const isSettingsPage = computed(() => route.path.startsWith('/settings'))
@@ -34,11 +35,24 @@ onMounted(async () => {
   }
 
   // Check if token exists in localStorage
-  const storedToken = localStorage.getItem('token');
+  let storedToken = localStorage.getItem('token');
+
+  // If we don't have a token, but we have saved sessions, use the first one as default
+  if (!storedToken) {
+    const sessionsJson = localStorage.getItem('reputation_bot_sessions');
+    if (sessionsJson) {
+      const sessions = JSON.parse(sessionsJson);
+      if (sessions.length > 0) {
+        storedToken = sessions[0].token;
+        if (storedToken) {
+          api.setToken(storedToken);
+        }
+      }
+    }
+  }
 
   // Don't redirect if already on error page
   if (!storedToken && router.currentRoute.value.path !== '/error/no-token') {
-    router.push('/error/no-token');
     return;
   }
 
@@ -47,12 +61,12 @@ onMounted(async () => {
     try {
       const sessionData = await api.getSession();
       setSession(sessionData);
-    } catch (error) {
-      // If session loading fails, clear session and redirect to error page
+    } catch (error: any) {
+      // If session loading fails, clear session and set expired state if it's a 401
       console.error('Failed to load session:', error);
       clearSession();
-      if (router.currentRoute.value.path !== '/error/no-token') {
-        router.push('/error/no-token');
+      if (error.response?.status === 401) {
+        setExpired(true);
       }
     }
   }
@@ -72,6 +86,8 @@ onMounted(async () => {
   <HelpIcon v-if="isSettingsPage"/>
 
   <ErrorNotification/>
+
+  <ExpiredSessionWarning/>
 </template>
 
 <style scoped>

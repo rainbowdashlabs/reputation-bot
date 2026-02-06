@@ -69,6 +69,11 @@
     },
     "notice": {
       "workingOnIt": "Vi har fått kännedom om problemet och arbetar på att lösa det."
+    },
+    "expired": {
+      "title": "Sessionen har gått ut",
+      "message": "Din session har gått ut eller är ogiltig.",
+      "instruction": "Öppna en ny session från Discord-servern för att fortsätta."
     }
   },
   "premiumFeature": {
@@ -566,5 +571,11 @@
   "help": {
     "title": "Behöver du hjälp?",
     "message": "Behöver du hjälp? Saknas någon funktion? Har du synpunkter? Skicka ett privat meddelande till boten. Du hittar också en länk till vår support på Discord längst ner på sidan."
+  },
+  "guildSwitcher": {
+    "title": "Byt server",
+    "current": "Aktuell server",
+    "none": "Inga andra servrar hittades",
+    "add": "Lägg till en annan server genom att öppna inställningarna från servern."
   }
 }

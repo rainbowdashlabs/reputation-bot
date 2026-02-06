@@ -69,6 +69,11 @@
     },
     "notice": {
       "workingOnIt": "Olemme saaneet ilmoituksen ongelmasta ja pyrimme ratkaisemaan sen."
+    },
+    "expired": {
+      "title": "Istunto vanhentunut",
+      "message": "Istuntosi on vanhentunut tai se ei ole voimassa.",
+      "instruction": "Avaa uusi istunto Discord-palvelimelta jatkaaksesi."
     }
   },
   "premiumFeature": {
@@ -566,5 +571,11 @@
   "help": {
     "title": "Tarvitsetko apua?",
     "message": "Tarvitsetko apua? Puuttuuko jokin ominaisuus? Haluatko antaa palautetta? Kirjoita yksityisviesti botille. Löydät myös linkin tukipalveluumme sivun alaosasta."
+  },
+  "guildSwitcher": {
+    "title": "Vaihda palvelinta",
+    "current": "Nykyinen palvelin",
+    "none": "Muita palvelimia ei löytynyt",
+    "add": "Lisää toinen palvelin avaamalla palvelimen asetukset."
   }
 }

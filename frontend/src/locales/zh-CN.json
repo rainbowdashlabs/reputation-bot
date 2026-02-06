@@ -69,6 +69,11 @@
     },
     "notice": {
       "workingOnIt": "我们已收到该问题的通知，并正在努力解决。"
+    },
+    "expired": {
+      "title": "会话已过期",
+      "message": "您的会话已过期或无效。",
+      "instruction": "请从Discord服务器开启新会话以继续。"
     }
   },
   "premiumFeature": {
@@ -566,5 +571,11 @@
   "help": {
     "title": "需要帮助吗？",
     "message": "需要帮助？功能缺失？有反馈意见？只需给机器人发送私信。您还可以在页面底部找到我们Discord支持频道的链接。"
+  },
+  "guildSwitcher": {
+    "title": "切换服务器",
+    "current": "当前服务器",
+    "none": "未找到其他服务器",
+    "add": "通过在服务器中打开设置来添加另一台服务器。"
   }
 }

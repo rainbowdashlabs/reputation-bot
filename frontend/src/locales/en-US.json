@@ -61,11 +61,22 @@
   "locale": {
     "selectLanguage": "Select Language"
   },
+  "guildSwitcher": {
+    "title": "Switch Server",
+    "current": "Current Server",
+    "none": "No other servers found",
+    "add": "Add another server by opening settings from the server."
+  },
   "error": {
     "noToken": {
       "title": "No Session Found",
       "message": "You don't have a valid session token.",
       "instruction": "Please create a new session to access this application."
+    },
+    "expired": {
+      "title": "Session Expired",
+      "message": "Your session has expired or is invalid.",
+      "instruction": "Please open a new session from the Discord server to continue."
     },
     "notice": {
       "workingOnIt": "We got notified of the issue and are working on resolving it."

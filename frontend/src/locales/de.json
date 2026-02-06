@@ -56,7 +56,7 @@
     "autopost": "Autopost",
     "logChannel": "Protokollkanal",
     "reactions": "Reaktionen",
-    "auditLog": "Prüfprotokoll"
+    "auditLog": "Änderrungsprotokoll"
   },
   "locale": {
     "selectLanguage": "Sprache auswählen"
@@ -69,6 +69,11 @@
     },
     "notice": {
       "workingOnIt": "Wir haben von dem Problem erfahren und arbeiten daran, es zu beheben."
+    },
+    "expired": {
+      "title": "Sitzung abgelaufen",
+      "message": "Deine Sitzung ist abgelaufen oder ungültig.",
+      "instruction": "Öffne bitte eine neue Sitzung vom Discord-Server, um weiterzumachen."
     }
   },
   "premiumFeature": {
@@ -566,5 +571,11 @@
   "help": {
     "title": "Brauchst du Hilfe?",
     "message": "Brauchst du Hilfe? Fehlt eine Funktion? Hast du Feedback? Schick einfach eine private Nachricht an den Bot. Du findest auch einen Link zu unserem Support-Discord unten auf der Seite."
+  },
+  "guildSwitcher": {
+    "title": "Server wechseln",
+    "current": "Aktueller Server",
+    "none": "Keine anderen Server gefunden",
+    "add": "Füge einen weiteren Server hinzu, indem du die Einstellungen vom Server aus öffnest."
   }
 }

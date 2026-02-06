@@ -7,11 +7,60 @@ import {readonly, ref} from 'vue'
 import type {GuildSessionPOJO} from '@/api/types'
 import * as Types from '@/api/types'
 
+export interface GuildSessionInfo {
+    id: string
+    name: string
+    iconUrl: string | null
+    token: string
+}
+
+const SESSION_STORAGE_KEY = 'reputation_bot_sessions'
+
 const session = ref<GuildSessionPOJO | null>(null)
+const sessions = ref<GuildSessionInfo[]>(JSON.parse(localStorage.getItem(SESSION_STORAGE_KEY) || '[]'))
+const isExpired = ref(false)
 
 export function useSession() {
     const setSession = (data: GuildSessionPOJO) => {
         session.value = data
+        isExpired.value = false
+        updateSessionsList(data)
+    }
+
+    const setExpired = (expired: boolean) => {
+        isExpired.value = expired
+    }
+
+    const updateSessionsList = (data: GuildSessionPOJO) => {
+        const token = localStorage.getItem('token')
+        if (!token) return
+
+        const index = sessions.value.findIndex(s => s.id === data.guild.meta.id)
+        const info: GuildSessionInfo = {
+            id: data.guild.meta.id,
+            name: data.guild.meta.name,
+            iconUrl: data.guild.meta.iconUrl,
+            token: token
+        }
+
+        if (index === -1) {
+            sessions.value.push(info)
+        } else {
+            sessions.value[index] = info
+        }
+        saveSessions()
+    }
+
+    const saveSessions = () => {
+        localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(sessions.value))
+    }
+
+    const switchSession = (guildId: string) => {
+        const target = sessions.value.find(s => s.id === guildId)
+        if (target) {
+            localStorage.setItem('token', target.token)
+            window.location.reload()
+        }
     }
 
     const clearSession = () => {
@@ -129,7 +178,11 @@ export function useSession() {
 
     return {
         session: readonly(session),
+        sessions: readonly(sessions),
+        isExpired: readonly(isExpired),
         setSession,
+        setExpired,
+        switchSession,
         clearSession,
         updateGeneralSettings,
         updateReputationSettings,

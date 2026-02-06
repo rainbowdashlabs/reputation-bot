@@ -69,6 +69,11 @@
     },
     "notice": {
       "workingOnIt": "Zostaliśmy poinformowani o tym problemie i pracujemy nad jego rozwiązaniem."
+    },
+    "expired": {
+      "title": "Sesja wygasła",
+      "message": "Twoja sesja wygasła lub jest nieprawidłowa.",
+      "instruction": "Aby kontynuować, otwórz nową sesję z serwera Discord."
     }
   },
   "premiumFeature": {
@@ -566,5 +571,11 @@
   "help": {
     "title": "Potrzebujesz pomocy?",
     "message": "Potrzebujesz pomocy? Brakuje jakiejś funkcji? Masz uwagi? Po prostu wyślij prywatną wiadomość do bota. Link do naszego serwisu pomocy technicznej Discord znajdziesz również na dole strony."
+  },
+  "guildSwitcher": {
+    "title": "Przełącz serwer",
+    "current": "Aktualny serwer",
+    "none": "Nie znaleziono żadnych innych serwerów",
+    "add": "Dodaj kolejny serwer, otwierając ustawienia serwera."
   }
 }
