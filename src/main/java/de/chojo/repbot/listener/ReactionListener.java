@@ -90,7 +90,12 @@ public class ReactionListener extends ListenerAdapter {
 
         if (message == null) return;
 
-        var receiver = event.getGuild().retrieveMember(message.getAuthor()).complete();
+        Member receiver = null;
+        try {
+            receiver = event.getGuild().retrieveMember(message.getAuthor()).complete();
+        } catch (ErrorResponseException e) {
+
+        }
 
         var logEntry = repGuild.reputation().log().getLogEntries(message);
         if (!logEntry.isEmpty()) {
@@ -110,6 +115,8 @@ public class ReactionListener extends ListenerAdapter {
             if (newReceiver == null) return;
             receiver = newReceiver;
         }
+
+        if (receiver == null) return;
 
         if (PermissionErrorHandler.assertAndHandle(
                 event.getGuildChannel(),
