@@ -26,7 +26,7 @@ BEGIN
         repbot_schema.guilds
     VALUES
         (new.guild_id)
-    ON CONFLICT DO UPDATE SET latest_activity = now();
+    ON CONFLICT (guild_id) DO UPDATE SET latest_activity = now();
     RETURN new;
 END;
 $BODY$;

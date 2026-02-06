@@ -20,8 +20,9 @@ jobs:
         uses: lewagon/wait-on-check-action@master
         with:
           ref: ${{ github.ref }}
-          check-name: 'Docker Build'
-          running-workflow-name: 'Verify'
+          # Wait for all checks that start with "Verify" to succeed
+          check-regexp: "Verify.*"
+          running-workflow-name: 'Deploy Docker Image'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           allowed-conclusions: success
       - uses: actions/checkout@v6

@@ -10,7 +10,7 @@ env:
 jobs:
   build-backend:
     runs-on: ubuntu-latest
-    name: Backend Build
+    name: Verify Backend Build
 
     steps:
       - uses: actions/checkout@v6
@@ -27,7 +27,7 @@ jobs:
 
   build-frontend:
     runs-on: ubuntu-latest
-    name: Frontend Build
+    name: Verify Frontend Build
 
     steps:
       - uses: actions/checkout@v6
@@ -49,7 +49,7 @@ jobs:
 
   verify-license-backend:
     runs-on: ubuntu-latest
-    name: Backend License Check
+    name: Verify Backend License Check
 
     steps:
       - uses: actions/checkout@v6
@@ -64,7 +64,7 @@ jobs:
 
   verify-license-frontend:
     runs-on: ubuntu-latest
-    name: Frontend License Check
+    name: Verify Frontend License Check
 
     steps:
       - uses: actions/checkout@v6
@@ -79,7 +79,7 @@ jobs:
 
   verify-locales-backend:
     runs-on: ubuntu-latest
-    name: Backend Locale Validation
+    name: Verify Backend Locale Validation
 
     steps:
       - uses: actions/checkout@v6
@@ -96,7 +96,7 @@ jobs:
 
   verify-formatting-backend:
     runs-on: ubuntu-latest
-    name: Backend Format Validation
+    name: Verify Backend Format Validation
 
     steps:
       - uses: actions/checkout@v6
@@ -111,7 +111,7 @@ jobs:
 
   verify-formatting-frontend:
     runs-on: ubuntu-latest
-    name: Frontend Format Validation
+    name: Verify Frontend Format Validation
 
     steps:
       - uses: actions/checkout@v6
@@ -126,7 +126,7 @@ jobs:
 
   verify-database:
     runs-on: ubuntu-latest
-    name: Backend Database Validation
+    name: Verify Backend Database Validation
 
     steps:
       - uses: actions/checkout@v6
@@ -142,7 +142,7 @@ jobs:
 
   verify-locales-frontend:
     runs-on: ubuntu-latest
-    name: Frontend Locale Validation
+    name: Verify Frontend Locale Validation
 
     steps:
       - uses: actions/checkout@v6
@@ -182,7 +182,7 @@ jobs:
 
   build-docker:
     runs-on: ubuntu-latest
-    name: Docker Build
+    name: Verify Docker Build
 
     steps:
       - uses: actions/checkout@v6
@@ -191,7 +191,7 @@ jobs:
 
   verify-docs:
     runs-on: ubuntu-latest
-    name: Docs Build
+    name: Verify Docs Build
 
     steps:
       - uses: actions/checkout@v6
