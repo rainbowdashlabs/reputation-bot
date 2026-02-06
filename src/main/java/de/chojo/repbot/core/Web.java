@@ -119,6 +119,7 @@ public class Web {
                 ctx.header("WWW-Authenticate", "Authorization");
                 return new UnauthorizedResponse("You need to be logged in to access this route.");
             });
+            session.validate();
             ctx.sessionAttribute(SessionAttribute.GUILD_SESSION, session);
         }
     }
