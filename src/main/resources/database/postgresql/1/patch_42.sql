@@ -24,3 +24,15 @@ BEGIN
     RETURN new;
 END;
 $$;
+
+CREATE TRIGGER register_guild_id
+    BEFORE INSERT
+    ON repbot_schema.guild_session
+    FOR EACH ROW
+EXECUTE PROCEDURE repbot_schema.register_guild_id();
+
+CREATE TRIGGER register_guild_id
+    BEFORE INSERT
+    ON repbot_schema.settings_audit_log
+    FOR EACH ROW
+EXECUTE PROCEDURE repbot_schema.register_guild_id();
