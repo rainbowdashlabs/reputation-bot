@@ -21,8 +21,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static net.dv8tion.jda.api.Permission.*;
+import static net.dv8tion.jda.api.Permission.ADMINISTRATOR;
+import static net.dv8tion.jda.api.Permission.BAN_MEMBERS;
+import static net.dv8tion.jda.api.Permission.KICK_MEMBERS;
+import static net.dv8tion.jda.api.Permission.MANAGE_CHANNEL;
 import static net.dv8tion.jda.api.Permission.MANAGE_ROLES;
+import static net.dv8tion.jda.api.Permission.MANAGE_SERVER;
 
 public class GuildSession {
     private static final List<Permission> PRIVILEGED_PERMISSIONS =
@@ -125,6 +129,7 @@ public class GuildSession {
      * Validates that the member owning this session is still a member of the guild.
      */
     public void validate() {
+        if (configuration.baseSettings().isOwner(memberId())) return;
         try {
             Member member = guild().retrieveMemberById(memberId()).complete();
             if (PRIVILEGED_PERMISSIONS.stream().anyMatch(member::hasPermission)) return;
