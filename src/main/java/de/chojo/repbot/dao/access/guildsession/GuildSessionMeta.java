@@ -132,7 +132,7 @@ public final class GuildSessionMeta {
                     settings_audit_log
                     (guild_id, member_id, settings_identifier, old_value, new_value)
                 VALUES
-                    (?, ?, ?, coalesce(?::JSONB, 'null'::JSON), coalesce(?::JSONB, 'null'::JSONB))""")
+                    (?, ?, ?, coalesce(?::JSONB, 'null'::JSONB), coalesce(?::JSONB, 'null'::JSONB))""")
                 .single(call().bind(guildId())
                         .bind(memberId())
                         .bind(settingsKey)
