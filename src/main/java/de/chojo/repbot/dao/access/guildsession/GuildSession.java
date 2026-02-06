@@ -21,8 +21,12 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static net.dv8tion.jda.api.Permission.*;
+import static net.dv8tion.jda.api.Permission.MANAGE_ROLES;
+
 public class GuildSession {
-    private static final List<Permission> PRIVILEGED_PERMISSIONS = List.of(Permission.ADMINISTRATOR, Permission.MANAGE_SERVER, Permission.MANAGE_ROLES, Permission.KICK_MEMBERS, Permission.BAN_MEMBERS, Permission.MANAGE_CHANNEL);
+    private static final List<Permission> PRIVILEGED_PERMISSIONS =
+            List.of(ADMINISTRATOR, MANAGE_SERVER, MANAGE_ROLES, KICK_MEMBERS, BAN_MEMBERS, MANAGE_CHANNEL);
     private final Configuration configuration;
     private final ShardManager shardManager;
     private final GuildRepository guildRepository;
@@ -124,7 +128,10 @@ public class GuildSession {
         try {
             Member member = guild().retrieveMemberById(memberId()).complete();
             if (PRIVILEGED_PERMISSIONS.stream().anyMatch(member::hasPermission)) return;
-            throw new UnauthorizedResponse("User does not have any of the required permissions: %s".formatted(PRIVILEGED_PERMISSIONS.stream().map(Permission::getName).collect(Collectors.joining(", "))));
+            throw new UnauthorizedResponse("User does not have any of the required permissions: %s"
+                    .formatted(PRIVILEGED_PERMISSIONS.stream()
+                            .map(Permission::getName)
+                            .collect(Collectors.joining(", "))));
         } catch (Exception e) {
             throw new UnauthorizedResponse("User is not a member of this guild anymore.");
         }

@@ -1,8 +1,8 @@
-<!--
-  -     SPDX-License-Identifier: AGPL-3.0-only
-  -
-  -     Copyright (C) RainbowDashLabs and Contributor
-  -->
+/*
+ *     SPDX-License-Identifier: AGPL-3.0-only
+ *
+ *     Copyright (C) RainbowDashLabs and Contributor
+ */
 <template>
   <div v-if="session?.guild?.meta" class="relative inline-block text-left" v-click-outside="closeSwitcher">
     <button

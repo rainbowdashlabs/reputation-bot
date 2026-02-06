@@ -1,8 +1,8 @@
-<!--
-  -     SPDX-License-Identifier: AGPL-3.0-only
-  -
-  -     Copyright (C) RainbowDashLabs and Contributor
-  -->
+/*
+ *     SPDX-License-Identifier: AGPL-3.0-only
+ *
+ *     Copyright (C) RainbowDashLabs and Contributor
+ */
 <template>
   <transition
       enter-active-class="transition ease-out duration-300"
