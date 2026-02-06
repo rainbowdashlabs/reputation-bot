@@ -17,7 +17,12 @@ public class GuildPOJO {
     List<ReactionPOJO> reactions;
     List<MemberPOJO> integrations;
 
-    public GuildPOJO(GuildMetaPOJO meta, List<RolePOJO> roles, ChannelViewPOJO channels, List<ReactionPOJO> reactions, List<MemberPOJO> integrations) {
+    public GuildPOJO(
+            GuildMetaPOJO meta,
+            List<RolePOJO> roles,
+            ChannelViewPOJO channels,
+            List<ReactionPOJO> reactions,
+            List<MemberPOJO> integrations) {
         this.meta = meta;
         this.roles = roles;
         this.channels = channels;
@@ -35,12 +40,13 @@ public class GuildPOJO {
         List<ReactionPOJO> reactions = guild.retrieveEmojis().complete().stream()
                 .map(ReactionPOJO::generate)
                 .toList();
-        List<MemberPOJO> integrations = guild.getRoles().stream().filter(Role::isManaged)
-                                     .map(e -> guild.findMembersWithRoles(e).get())
-                                     .flatMap(List::stream)
-                                     .distinct()
-                                     .map(MemberPOJO::generate)
-                                     .toList();
+        List<MemberPOJO> integrations = guild.getRoles().stream()
+                .filter(Role::isManaged)
+                .map(e -> guild.findMembersWithRoles(e).get())
+                .flatMap(List::stream)
+                .distinct()
+                .map(MemberPOJO::generate)
+                .toList();
         return new GuildPOJO(meta, roles, ChannelViewPOJO.generate(guild), reactions, integrations);
     }
 }
