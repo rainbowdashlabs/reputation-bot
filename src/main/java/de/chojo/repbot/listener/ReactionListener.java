@@ -16,6 +16,7 @@ import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 import de.chojo.repbot.service.reputation.ReputationContext;
 import de.chojo.repbot.service.reputation.ReputationService;
+import de.chojo.repbot.service.reputation.SubmitResult;
 import de.chojo.repbot.service.reputation.SubmitResultType;
 import de.chojo.repbot.util.PermissionErrorHandler;
 import net.dv8tion.jda.api.Permission;
@@ -43,7 +44,7 @@ import java.util.concurrent.TimeUnit;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ReactionListener extends ListenerAdapter {
-    private static final int REACTION_COOLDOWN = 30;
+    private static final int REACTION_COOLDOWN = 5;
     private static final Logger log = getLogger(ReactionListener.class);
     private final GuildRepository guildRepository;
     private final ILocalizer localizer;
@@ -65,14 +66,13 @@ public class ReactionListener extends ListenerAdapter {
 
     @Override
     public void onMessageReactionAdd(@NotNull MessageReactionAddEvent event) {
-        if (event.getUser().isBot() || !event.isFromGuild()) return;
+        if (!event.isFromGuild()) return;
         var repGuild = guildRepository.guild(event.getGuild());
         var guildSettings = repGuild.settings();
 
-        if (!guildSettings.thanking().channels().isEnabled(event.getGuildChannel())) return;
-        if (!guildSettings.reputation().isReactionActive()) return;
         if (!guildSettings.thanking().reactions().isReaction(event.getReaction())) return;
 
+        // Internal cooldown for mass reactions
         if (isCooldown(event.getMember())) return;
 
         Message message;
@@ -126,16 +126,14 @@ public class ReactionListener extends ListenerAdapter {
             return;
         }
 
-        if (reputationService
-                        .submitReputation(
-                                event.getGuild(),
-                                event.getMember(),
-                                receiver,
-                                ReputationContext.fromMessage(message),
-                                null,
-                                ThankType.REACTION)
-                        .type()
-                == SubmitResultType.SUCCESS) {
+        SubmitResult submitResult = reputationService.submitReputation(
+                event.getGuild(),
+                event.getMember(),
+                receiver,
+                ReputationContext.fromMessage(message),
+                null,
+                ThankType.REACTION);
+        if (submitResult.type() == SubmitResultType.SUCCESS) {
             reacted(event.getMember());
             if (guildSettings.messages().isReactionConfirmation()) {
                 event.getChannel()
