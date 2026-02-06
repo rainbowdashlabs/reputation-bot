@@ -6,27 +6,119 @@
 package de.chojo.repbot.util;
 
 import de.chojo.jdautil.localization.LocalizationContext;
-import de.chojo.jdautil.localization.util.Format;
-import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.repbot.config.Configuration;
+import de.chojo.repbot.dao.access.guild.RepGuild;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.sharding.ShardManager;
-import net.dv8tion.jda.internal.utils.PermissionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static de.chojo.jdautil.localization.util.Format.BOLD;
+import static de.chojo.jdautil.localization.util.Replacement.create;
+import static de.chojo.jdautil.localization.util.Replacement.createMention;
+
 public final class PermissionErrorHandler {
     private static final Logger log = LoggerFactory.getLogger(PermissionErrorHandler.class);
+    private static final List<Permission> NON_ACCESS_PERMISSIONS =
+            List.of(Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.VIEW_CHANNEL);
 
     private PermissionErrorHandler() {
         throw new UnsupportedOperationException("This is a utility class.");
     }
 
+    public static boolean handle(
+            RepGuild repGuild,
+            LocalizationContext localizer,
+            GuildChannel channel,
+            Configuration configuration,
+            Permission... permissions) {
+        // Ignore botlists
+        Guild guild = repGuild.guild();
+        if (configuration.botlist().isBotlistGuild(guild.getIdLong())) return false;
+        // Piece together the error message
+        List<String> errorMessages = new ArrayList<>();
+        for (Permission permission : permissions) {
+            errorMessages.add(
+                    localizer.localize("error.missingPermission", create("PERM", permission.getName(), BOLD)));
+        }
+        if (guild.getSelfMember().hasPermission(permissions)) {
+            errorMessages.add(localizer.localize("error.missingPermissionChannel", createMention("CHANNEL", channel)));
+        } else {
+            errorMessages.add(localizer.localize("error.missingPermissionGuild"));
+        }
+
+        // First try the system channel
+        TextChannel systemChannel =
+                guild.getTextChannelById(repGuild.settings().general().systemChannel());
+
+        if (systemChannel != null) {
+            systemChannel.sendMessage(String.join("\n", errorMessages)).complete();
+            return true;
+        }
+
+        errorMessages.add(localizer.localize("error.nosystemchannel"));
+
+        String joinedError = String.join("\n", errorMessages);
+
+        if (sendGuildOwner(guild, joinedError)) return true;
+        if (sendGuildAdmin(guild, joinedError)) return true;
+
+        // Send directly to channel
+        if (Arrays.stream(permissions).noneMatch(NON_ACCESS_PERMISSIONS::contains)
+                && channel instanceof MessageChannel messageChannel) {
+            messageChannel.sendMessage(joinedError).complete();
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean sendGuildOwner(Guild guild, String message) {
+        try {
+            return sendUser(guild.retrieveOwner().complete().getUser(), message);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private static boolean sendGuildAdmin(Guild guild, String message) {
+        List<Member> administrators = guild.getRoles().stream()
+                .filter(r -> r.hasPermission(Permission.ADMINISTRATOR))
+                .map(guild::getMembersWithRoles)
+                .flatMap(List::stream)
+                .distinct()
+                .toList();
+        for (Member administrator : administrators) {
+            if (sendUser(administrator.getUser(), message)) return true;
+        }
+        return false;
+    }
+
+    private static boolean sendUser(User user, String message) {
+        try {
+            PrivateChannel privateChannel = user.openPrivateChannel().complete();
+            privateChannel.sendMessage(message).complete();
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
     public static void handle(
+            GuildRepository guildRepository,
             InsufficientPermissionException permissionException,
             ShardManager shardManager,
             LocalizationContext localizer,
@@ -35,73 +127,7 @@ public final class PermissionErrorHandler {
         var guildById = shardManager.getGuildById(permissionException.getGuildId());
         var channel = (TextChannel) permissionException.getChannel(guildById.getJDA());
         if (channel == null) return;
-        sendPermissionError(channel, permission, localizer, configuration);
-    }
-
-    public static void handle(
-            InsufficientPermissionException permissionException,
-            Guild guild,
-            LocalizationContext localizer,
-            Configuration configuration) {
-        var permission = permissionException.getPermission();
-        var channel = (TextChannel) permissionException.getChannel(guild.getJDA());
-        if (channel == null) return;
-        sendPermissionError(channel, permission, localizer, configuration);
-    }
-
-    public static void handle(
-            InsufficientPermissionException permissionException,
-            GuildMessageChannel channel,
-            LocalizationContext localizer,
-            Configuration configuration) {
-        var permission = permissionException.getPermission();
-        if (channel == null) return;
-        sendPermissionError(channel, permission, localizer, configuration);
-    }
-
-    public static void sendPermissionError(
-            GuildMessageChannel channel,
-            Permission permission,
-            LocalizationContext localizer,
-            Configuration configuration) {
-        var guild = channel.getGuild();
-        log.trace(
-                "Sending permission error for channel {} in guild {}. Permission: {}",
-                channel.getName(),
-                guild.getName(),
-                permission.getName());
-        var errorMessage = localizer.localize(
-                "error.missingPermission", Replacement.create("PERM", permission.getName(), Format.BOLD));
-        if (guild.getSelfMember().hasPermission(permission)) {
-            errorMessage += "\n"
-                    + localizer.localize(
-                            "error.missingPermissionChannel", Replacement.createMention("CHANNEL", channel));
-        } else {
-            errorMessage += "\n" + localizer.localize("error.missingPermissionGuild");
-        }
-        if (permission != Permission.MESSAGE_SEND
-                && permission != Permission.VIEW_CHANNEL
-                && PermissionUtil.checkPermission(
-                        channel.getPermissionContainer(),
-                        channel.getGuild().getSelfMember(),
-                        Permission.MESSAGE_SEND,
-                        Permission.VIEW_CHANNEL)) {
-            channel.sendMessage(errorMessage).queue();
-            return;
-        }
-        // botlists always have permission issues. We will ignore them and wont try to notify anyone...
-        if (configuration.botlist().isBotlistGuild(guild.getIdLong())) return;
-
-        var ownerId = guild.getOwnerIdLong();
-        var finalErrorMessage = errorMessage;
-        guild.retrieveMemberById(ownerId)
-                .flatMap(member -> member.getUser().openPrivateChannel())
-                .flatMap(privateChannel -> privateChannel.sendMessage(finalErrorMessage))
-                .onErrorMap(t -> {
-                    log.trace("Could not send permission error to owner.");
-                    return null;
-                })
-                .queue();
+        handle(guildRepository.guild(guildById), localizer, channel, configuration, permission);
     }
 
     /**
@@ -111,17 +137,15 @@ public final class PermissionErrorHandler {
      * @param permissions permissions to check
      * @throws InsufficientPermissionException when the bot user doesn't have a permission
      */
-    public static void assertPermissions(GuildMessageChannel channel, Permission... permissions)
-            throws InsufficientPermissionException {
+    private static List<Permission> assertGuildChannelPermissions(
+            GuildMessageChannel channel, Permission... permissions) throws InsufficientPermissionException {
         var self = channel.getGuild().getSelfMember();
-        for (var permission : permissions) {
-            if (!self.hasPermission(channel, permission)) {
-                throw new InsufficientPermissionException(channel, permission);
-            }
-        }
+        return Arrays.stream(permissions)
+                .filter(permission -> !self.hasPermission(channel, permission))
+                .toList();
     }
 
-    public static void assertPermissions(Guild guild, Permission... permissions)
+    public static void assertGuildPermissions(Guild guild, Permission... permissions)
             throws InsufficientPermissionException {
         var self = guild.getSelfMember();
         for (var permission : permissions) {
@@ -141,16 +165,13 @@ public final class PermissionErrorHandler {
      * @return true if a permission was missing and a message was sent
      */
     public static boolean assertAndHandle(
+            RepGuild repGuild,
             GuildMessageChannel channel,
             LocalizationContext localizer,
             Configuration configuration,
             Permission... permissions) {
-        try {
-            assertPermissions(channel, permissions);
-        } catch (InsufficientPermissionException e) {
-            handle(e, channel, localizer, configuration);
-            return true;
-        }
-        return false;
+        List<Permission> missing = assertGuildChannelPermissions(channel, permissions);
+        if (missing.isEmpty()) return false;
+        return handle(repGuild, localizer, channel, configuration, missing.toArray(Permission[]::new));
     }
 }

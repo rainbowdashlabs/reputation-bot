@@ -31,6 +31,7 @@ import net.dv8tion.jda.api.events.channel.ChannelCreateEvent;
 import net.dv8tion.jda.api.events.message.MessageBulkDeleteEvent;
 import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -94,6 +95,14 @@ public class MessageListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+        try {
+            handleOnMessageReceived(event);
+        } catch (InsufficientPermissionException e) {
+            // handle permissionsexceptions
+        }
+    }
+
+    public void handleOnMessageReceived(@NotNull MessageReceivedEvent event) {
         if (event.getAuthor().isBot() || event.isWebhookMessage() || !event.isFromGuild()) return;
         var guild = event.getGuild();
         var repGuild = guildRepository.guild(guild);
@@ -133,6 +142,7 @@ public class MessageListener extends ListenerAdapter {
                         || result.asEmpty().reason() == EmptyResultReason.NO_PATTERN)) return;
 
         if (PermissionErrorHandler.assertAndHandle(
+                guildRepository.guild(event.getGuild()),
                 event.getGuildChannel(),
                 localizer.context(LocaleProvider.guild(event.getGuild())),
                 configuration,

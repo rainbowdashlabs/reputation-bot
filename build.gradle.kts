@@ -13,7 +13,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "2.1.0"
+version = "2.1.1"
 
 repositories {
     mavenLocal()
@@ -65,7 +65,7 @@ spotless {
 
 dependencies {
     // discord
-    implementation("de.chojo", "cjda-util", "2.12.0+jda-6.3.0") {
+    implementation("de.chojo", "cjda-util", "2.13.0+jda-6.3.0") {
         exclude(group = "club.minnced", module = "opus-java")
     }
 

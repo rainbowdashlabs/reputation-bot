@@ -5,6 +5,7 @@
  */
 package de.chojo.repbot.core;
 
+import de.chojo.jdautil.eventmanager.InterceptingEventManager;
 import de.chojo.jdautil.interactions.dispatching.InteractionHub;
 import de.chojo.jdautil.interactions.message.Message;
 import de.chojo.jdautil.interactions.slash.Slash;
@@ -42,6 +43,7 @@ import de.chojo.repbot.commands.supporter.Supporter;
 import de.chojo.repbot.commands.thankwords.Thankwords;
 import de.chojo.repbot.commands.top.Top;
 import de.chojo.repbot.config.Configuration;
+import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.exceptions.MissingSupportTier;
 import de.chojo.repbot.listener.LogListener;
 import de.chojo.repbot.listener.MessageListener;
@@ -67,6 +69,8 @@ import de.chojo.repbot.util.LogNotify;
 import de.chojo.repbot.util.PermissionErrorHandler;
 import de.chojo.repbot.web.sessions.SessionService;
 import net.dv8tion.jda.api.entities.ISnowflake;
+import net.dv8tion.jda.api.events.GenericEvent;
+import net.dv8tion.jda.api.events.guild.GenericGuildEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.interactions.InteractionHook;
@@ -189,8 +193,27 @@ public class Bot {
                 .setEnableShutdownHook(false)
                 .setMemberCachePolicy(repBotCachePolicy)
                 .setEventPool(threading.eventThreads())
+                .setEventManagerProvider(shardId -> new InterceptingEventManager(this::handleListenerException))
                 .setThreadFactory(Threading.createThreadFactory(threading.jdaGroup()))
                 .build();
+    }
+
+    private void handleListenerException(GenericEvent event, Throwable throwable) {
+        if (!(event instanceof GenericGuildEvent guildEvent)) {
+            log.error(LogNotify.NOTIFY_ADMIN, "Unhandled Exception in listener: ", throwable);
+            return;
+        }
+        RepGuild repGuild = data.guildRepository().guild(guildEvent.getGuild());
+        if (throwable instanceof InsufficientPermissionException perm) {
+            PermissionErrorHandler.handle(
+                    repGuild,
+                    localization.localizer().context(LocaleProvider.guild(guildEvent.getGuild())),
+                    perm.getChannel(guildEvent.getGuild().getJDA()),
+                    configuration,
+                    perm.getPermission());
+            return;
+        }
+        log.error(LogNotify.NOTIFY_ADMIN, "Unhandled Exception in listener: ", throwable);
     }
 
     private void configureRestActions() {
@@ -198,12 +221,20 @@ public class Bot {
         RestAction.setDefaultFailure(throwable -> {
             if (throwable instanceof InsufficientPermissionException perm) {
                 PermissionErrorHandler.handle(
-                        perm, shardManager, localization.localizer().context(LocaleProvider.empty()), configuration);
+                        data.guildRepository(),
+                        perm,
+                        shardManager,
+                        localization.localizer().context(LocaleProvider.empty()),
+                        configuration);
                 return;
             }
             if (throwable.getCause() instanceof InsufficientPermissionException perm) {
                 PermissionErrorHandler.handle(
-                        perm, shardManager, localization.localizer().context(LocaleProvider.empty()), configuration);
+                        data.guildRepository(),
+                        perm,
+                        shardManager,
+                        localization.localizer().context(LocaleProvider.empty()),
+                        configuration);
                 return;
             }
             if (throwable instanceof ErrorResponseException e) {
@@ -301,6 +332,7 @@ public class Bot {
                 .withCommandErrorHandler((context, throwable) -> {
                     if (throwable instanceof InsufficientPermissionException perm) {
                         PermissionErrorHandler.handle(
+                                data.guildRepository(),
                                 perm,
                                 shardManager,
                                 localizer.context(LocaleProvider.guild(context.guild())),

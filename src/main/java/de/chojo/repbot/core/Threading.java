@@ -40,6 +40,7 @@ public class Threading {
                         r.run();
                     } catch (Throwable e) {
                         log.error(
+                                LogNotify.NOTIFY_ADMIN,
                                 "An uncaught exception occurred in {}-{}.",
                                 Thread.currentThread().getName(),
                                 Thread.currentThread().threadId(),
