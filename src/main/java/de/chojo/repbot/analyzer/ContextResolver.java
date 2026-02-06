@@ -14,6 +14,8 @@ import de.chojo.repbot.dao.access.guild.settings.sub.AbuseProtection;
 import de.chojo.repbot.dao.provider.Voice;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageHistory;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -97,9 +99,15 @@ public class ContextResolver {
     }
 
     private MessageContext retrieveChannelContext(Member target, Message message, Settings settings) {
-        var history = message.getChannel()
-                .getHistoryBefore(message, configuration.analyzerSettings().historySize())
-                .complete();
+        MessageHistory history;
+        try {
+            // The channel might be hidden, but a command was executed
+            history = message.getChannel()
+                    .getHistoryBefore(message, configuration.analyzerSettings().historySize())
+                    .complete();
+        } catch (ErrorResponseException e) {
+            return MessageContext.byMessageAndMember(message, target);
+        }
         List<Message> retrievedHistory = new ArrayList<>();
         // add user message
         retrievedHistory.add(message);
