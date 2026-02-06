@@ -123,7 +123,7 @@ public class SessionService {
     }
 
     private String generateToken(long guild, long member) {
-        if (TEST_MODE) return "test_mode%stestmode".formatted(guild);
+        if (TEST_MODE) return "testmode_%s_testmode".formatted(guild);
 
         var randomString = ThreadLocalRandom.current()
                 .ints(10, 'a', 'z')
