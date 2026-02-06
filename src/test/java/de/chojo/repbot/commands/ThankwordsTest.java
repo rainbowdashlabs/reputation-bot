@@ -8,6 +8,8 @@ package de.chojo.repbot.commands;
 import de.chojo.repbot.commands.thankwords.Thankwords;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
+import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 class ThankwordsTest {
 

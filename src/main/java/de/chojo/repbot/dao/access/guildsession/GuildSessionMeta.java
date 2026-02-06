@@ -114,7 +114,7 @@ public final class GuildSessionMeta {
                 query("""
                         UPDATE settings_audit_log
                         SET
-                            new_value = ?::JSONB
+                            new_value = coalesce(?::JSONB, 'null'::JSONB)
                         WHERE settings_identifier = ?
                           AND guild_id = ?
                           AND member_id = ?""")
@@ -132,7 +132,7 @@ public final class GuildSessionMeta {
                     settings_audit_log
                     (guild_id, member_id, settings_identifier, old_value, new_value)
                 VALUES
-                    (?, ?, ?, ?::JSONB, ?::JSONB)""")
+                    (?, ?, ?, coalesce(?::JSONB, 'null'::JSON), coalesce(?::JSONB, 'null'::JSONB))""")
                 .single(call().bind(guildId())
                         .bind(memberId())
                         .bind(settingsKey)
