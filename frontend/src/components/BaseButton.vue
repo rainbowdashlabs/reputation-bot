@@ -48,7 +48,6 @@ const colorClasses = {
 
 <style scoped>
 button {
-  border-radius: inherit;
   padding: inherit;
   font-size: inherit;
   font-weight: inherit;
