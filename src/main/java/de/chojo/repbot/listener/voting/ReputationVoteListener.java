@@ -145,6 +145,7 @@ public class ReputationVoteListener extends ListenerAdapter {
 
     public void registerVote(Message message, List<Member> members, Settings settings) {
         if (PermissionErrorHandler.assertAndHandle(
+                guildRepository.guild(message.getGuild()),
                 message.getGuildChannel(),
                 loc.context(LocaleProvider.guild(message.getGuild())),
                 configuration,

@@ -84,7 +84,11 @@ public class ReactionListener extends ListenerAdapter {
                     .complete();
         } catch (InsufficientPermissionException e) {
             PermissionErrorHandler.handle(
-                    e, event.getGuild(), localizer.context(LocaleProvider.guild(event.getGuild())), configuration);
+                    guildRepository.guild(event.getGuild()),
+                    localizer.context(LocaleProvider.guild(event.getGuild())),
+                    event.getGuildChannel(),
+                    configuration,
+                    e.getPermission());
             return;
         }
 
@@ -94,7 +98,7 @@ public class ReactionListener extends ListenerAdapter {
         try {
             receiver = event.getGuild().retrieveMember(message.getAuthor()).complete();
         } catch (ErrorResponseException e) {
-
+            return;
         }
 
         var logEntry = repGuild.reputation().log().getLogEntries(message);
@@ -116,9 +120,8 @@ public class ReactionListener extends ListenerAdapter {
             receiver = newReceiver;
         }
 
-        if (receiver == null) return;
-
         if (PermissionErrorHandler.assertAndHandle(
+                guildRepository.guild(event.getGuild()),
                 event.getGuildChannel(),
                 localizer.context(LocaleProvider.guild(event.getGuild())),
                 configuration,
@@ -133,6 +136,7 @@ public class ReactionListener extends ListenerAdapter {
                 ReputationContext.fromMessage(message),
                 null,
                 ThankType.REACTION);
+
         if (submitResult.type() == SubmitResultType.SUCCESS) {
             reacted(event.getMember());
             if (guildSettings.messages().isReactionConfirmation()) {

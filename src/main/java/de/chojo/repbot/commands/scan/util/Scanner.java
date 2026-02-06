@@ -69,6 +69,7 @@ public class Scanner {
     public void scanChannel(
             SlashCommandInteractionEvent event, EventContext context, TextChannel channel, int messageCount) {
         if (PermissionErrorHandler.assertAndHandle(
+                guildRepository.guild(channel.getGuild()),
                 channel,
                 context.guildLocalizer(),
                 configuration,
