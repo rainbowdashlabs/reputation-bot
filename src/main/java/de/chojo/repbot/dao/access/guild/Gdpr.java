@@ -40,10 +40,11 @@ public class Gdpr implements GuildHolder {
                             DO NOTHING;
                 """)
                 .single(call().bind(guildId())
-                        .bind("%d DAYS"
-                                .formatted(repGuild.configuration().cleanup().cleanupScheduleDays())))
+                              .bind("%d DAYS"
+                                      .formatted(repGuild.configuration().cleanup().cleanupScheduleDays())))
                 .update()
                 .changed()) {
+            query("UPDATE guilds SET date_left = now() WHERE guild_id = ?");
             log.debug("Queuing guild {} for deletion.", guildId());
         }
     }
@@ -53,6 +54,9 @@ public class Gdpr implements GuildHolder {
                 .single(call().bind(guildId()))
                 .update()
                 .changed()) {
+            query("UPDATE guilds SET date_left = NULL WHERE guild_id = ?")
+                    .single(call().bind(guildId()))
+                    .update();
             log.debug("Deletion of guild {} canceled.", guildId());
         }
     }
