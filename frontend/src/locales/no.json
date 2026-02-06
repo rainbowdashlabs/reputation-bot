@@ -66,6 +66,9 @@
       "title": "Ingen økt funnet",
       "message": "Du har ikke et gyldig sesjonstoken.",
       "instruction": "Opprett en ny økt for å få tilgang til denne applikasjonen."
+    },
+    "notice": {
+      "workingOnIt": "Vi har fått melding om problemet og jobber med å løse det."
     }
   },
   "premiumFeature": {
@@ -550,5 +553,9 @@
       "autopost_refreshinterval": "Autopost - Oppdateringsintervall",
       "ranks": "Ranger - Roller"
     }
+  },
+  "help": {
+    "title": "Trenger du hjelp?",
+    "message": "Trenger du hjelp? Mangler en funksjon? Har du tilbakemeldinger? Bare skriv en privat melding til boten. Du finner også en lenke til vår support-discord nederst på siden."
   }
 }

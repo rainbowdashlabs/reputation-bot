@@ -66,6 +66,9 @@
       "title": "Pas de session trouvée",
       "message": "Tu n'as pas de jeton de session valide.",
       "instruction": "Crée une nouvelle session pour accéder à cette appli."
+    },
+    "notice": {
+      "workingOnIt": "On nous a signalé le problème et on est en train de le régler."
     }
   },
   "premiumFeature": {
@@ -550,5 +553,9 @@
       "autopost_refreshinterval": "Publication automatique - Intervalle d'actualisation",
       "ranks": "Grades - Rôles"
     }
+  },
+  "help": {
+    "title": "Besoin d'un coup de main ?",
+    "message": "Besoin d'aide ? Il manque une fonctionnalité ? Tu as des commentaires ? Envoie juste un message privé au bot. Tu trouveras aussi un lien vers notre Discord d'assistance en bas de la page."
   }
 }

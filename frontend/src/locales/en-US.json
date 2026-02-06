@@ -66,6 +66,9 @@
       "title": "No Session Found",
       "message": "You don't have a valid session token.",
       "instruction": "Please create a new session to access this application."
+    },
+    "notice": {
+      "workingOnIt": "We got notified of the issue and are working on resolving it."
     }
   },
   "premiumFeature": {
@@ -457,6 +460,10 @@
     "receiver": {
       "label": "Receiver"
     }
+  },
+  "help": {
+    "title": "Need help?",
+    "message": "Need help? A feature is missing? You have feedback? Just write a private message to the bot. You can also find a link to our support discord at the bottom of the page."
   },
   "links": {
     "support": "Support Server",

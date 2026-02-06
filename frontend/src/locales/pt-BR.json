@@ -66,6 +66,9 @@
       "title": "Nenhuma sessão encontrada",
       "message": "Você não tem um token de sessão válido.",
       "instruction": "Crie uma nova sessão para acessar este aplicativo."
+    },
+    "notice": {
+      "workingOnIt": "Fomos avisados sobre o problema e estamos trabalhando para resolver isso."
     }
   },
   "premiumFeature": {
@@ -550,5 +553,9 @@
       "autopost_refreshinterval": "Postagem automática - Intervalo de atualização",
       "ranks": "Classificações - Funções"
     }
+  },
+  "help": {
+    "title": "Precisa de ajuda?",
+    "message": "Precisa de ajuda? Está faltando algum recurso? Tem algum feedback? É só mandar uma mensagem privada pro bot. Também dá pra achar um link pro nosso suporte no Discord no final da página."
   }
 }

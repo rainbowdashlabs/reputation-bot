@@ -66,6 +66,9 @@
       "title": "未找到会话",
       "message": "您没有有效的会话令牌。",
       "instruction": "请创建一个新会话以访问此应用程序。"
+    },
+    "notice": {
+      "workingOnIt": "我们已收到该问题的通知，并正在努力解决。"
     }
   },
   "premiumFeature": {
@@ -550,5 +553,9 @@
       "autopost_refreshinterval": "自动发布 - 刷新间隔",
       "ranks": "军衔 - 职务"
     }
+  },
+  "help": {
+    "title": "需要帮助吗？",
+    "message": "需要帮助？功能缺失？有反馈意见？只需给机器人发送私信。您还可以在页面底部找到我们Discord支持频道的链接。"
   }
 }

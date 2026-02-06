@@ -4,18 +4,22 @@
  *     Copyright (C) RainbowDashLabs and Contributor
  */
 <script lang="ts" setup>
-import {onMounted} from 'vue'
-import {useRouter} from 'vue-router'
+import {computed, onMounted} from 'vue'
+import {useRoute, useRouter} from 'vue-router'
 import AppHeader from './components/AppHeader.vue'
 import AppFooter from './components/AppFooter.vue'
+import HelpIcon from './components/HelpIcon.vue'
 import ErrorNotification from './components/ErrorNotification.vue'
 import {api} from './api'
 import {useSession} from './composables/useSession'
 import {useDarkMode} from './composables/useDarkMode'
 
 const router = useRouter()
+const route = useRoute()
 const {setSession, clearSession} = useSession()
 useDarkMode()
+
+const isSettingsPage = computed(() => route.path.startsWith('/settings'))
 
 onMounted(async () => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -57,12 +61,15 @@ onMounted(async () => {
 
 <template>
   <AppHeader/>
+  <div class="h-20"></div>
 
-  <div class="pt-20">
+  <div>
     <router-view/>
   </div>
 
   <AppFooter/>
+
+  <HelpIcon v-if="isSettingsPage"/>
 
   <ErrorNotification/>
 </template>

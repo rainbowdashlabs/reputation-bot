@@ -66,6 +66,9 @@
       "title": "Oturum Bulunamadı",
       "message": "Geçerli bir oturum jetonunuz yok.",
       "instruction": "Bu uygulamaya erişmek için lütfen yeni bir oturum oluşturun."
+    },
+    "notice": {
+      "workingOnIt": "Sorun bize bildirildi ve çözmek için çalışıyoruz."
     }
   },
   "premiumFeature": {
@@ -550,5 +553,9 @@
       "autopost_refreshinterval": "Otomatik Gönderme - Yenileme Aralığı",
       "ranks": "Sıralamalar - Roller"
     }
+  },
+  "help": {
+    "title": "Yardıma mı ihtiyacınız var?",
+    "message": "Yardıma mı ihtiyacınız var? Bir özellik mi eksik? Geri bildiriminiz mi var? Bot'a özel mesaj yazmanız yeterlidir. Sayfanın altında destek discord bağlantısını da bulabilirsiniz."
   }
 }

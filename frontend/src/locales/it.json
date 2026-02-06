@@ -66,6 +66,9 @@
       "title": "Nessuna sessione trovata",
       "message": "Non hai un token di sessione valido.",
       "instruction": "Crea una nuova sessione per accedere a questa app."
+    },
+    "notice": {
+      "workingOnIt": "Ci hanno detto del problema e stiamo cercando di sistemarlo."
     }
   },
   "premiumFeature": {
@@ -550,5 +553,9 @@
       "autopost_refreshinterval": "Pubblicazione automatica - Intervallo di aggiornamento",
       "ranks": "Gradi - Ruoli"
     }
+  },
+  "help": {
+    "title": "Hai bisogno di una mano?",
+    "message": "Hai bisogno di aiuto? Manca una funzione? Vuoi darci un feedback? Basta mandare un messaggio privato al bot. Puoi anche trovare un link al nostro supporto Discord in fondo alla pagina."
   }
 }

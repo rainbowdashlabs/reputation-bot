@@ -66,6 +66,9 @@
       "title": "Nenalezena žádná relace",
       "message": "Nemáte platný token relace.",
       "instruction": "Vytvořte prosím novou relaci, abyste mohli přistupovat k této aplikaci."
+    },
+    "notice": {
+      "workingOnIt": "Byli jsme informováni o tomto problému a pracujeme na jeho řešení."
     }
   },
   "premiumFeature": {
@@ -550,5 +553,9 @@
       "autopost_refreshinterval": "Automatické zveřejňování – interval aktualizace",
       "ranks": "Hodnosti - Role"
     }
+  },
+  "help": {
+    "title": "Potřebujete pomoc?",
+    "message": "Potřebujete pomoc? Chybí vám nějaká funkce? Máte připomínky? Stačí napsat soukromou zprávu botovi. Odkaz na naši podporu Discord najdete také v dolní části stránky."
   }
 }
