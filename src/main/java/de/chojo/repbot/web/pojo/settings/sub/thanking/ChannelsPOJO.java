@@ -8,7 +8,6 @@ package de.chojo.repbot.web.pojo.settings.sub.thanking;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
-import java.util.HashSet;
 import java.util.Set;
 
 public class ChannelsPOJO {
@@ -29,6 +28,7 @@ public class ChannelsPOJO {
     public Set<Long> channelIds() {
         return channels;
     }
+
     public Set<Long> copyChannelIds() {
         return Set.copyOf(channels);
     }
@@ -36,6 +36,7 @@ public class ChannelsPOJO {
     public Set<Long> categoryIds() {
         return categories;
     }
+
     public Set<Long> copyCategoryIds() {
         return Set.copyOf(categories);
     }

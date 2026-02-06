@@ -5,7 +5,6 @@
  */
 package de.chojo.repbot.web.pojo.settings.sub.thanking;
 
-import java.util.HashSet;
 import java.util.Set;
 
 public class ReactionsPOJO {
@@ -24,6 +23,7 @@ public class ReactionsPOJO {
     public Set<String> reactions() {
         return reactions;
     }
+
     public Set<String> copyReactions() {
         return Set.copyOf(reactions);
     }

@@ -112,16 +112,28 @@ public final class GuildSessionMeta {
             if (change.memberId() == memberId()
                     && change.changed().isAfter(Instant.now().minus(5, ChronoUnit.MINUTES))) {
                 query("""
+                        WITH
+                            latest AS (
+                                SELECT changed
+                                FROM settings_audit_log
+                                WHERE guild_id = :guild_id AND member_id = :member_id AND settings_identifier = :settings_identifier
+                                ORDER BY changed DESC
+                                LIMIT 1
+                            )
                         UPDATE settings_audit_log
                         SET
                             new_value = coalesce(?::JSONB, 'null'::JSONB)
-                        WHERE settings_identifier = ?
-                          AND guild_id = ?
-                          AND member_id = ?""")
+                        WHERE settings_identifier = :settings_identifier
+                          AND guild_id = :guild_id
+                          AND member_id = :member_id
+                          AND changed IN (
+                            SELECT changed
+                            FROM latest
+                                         )""")
                         .single(call().bind(newValue, OBJECT_JSON)
-                                .bind(settingsKey)
-                                .bind(guildId())
-                                .bind(memberId()))
+                                .bind("settings_identifier", settingsKey)
+                                .bind("guild_id", guildId())
+                                .bind("member_id", memberId()))
                         .update();
                 return;
             }

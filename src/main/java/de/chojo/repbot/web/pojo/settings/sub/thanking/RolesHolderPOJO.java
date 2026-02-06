@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Set;
 
 public class RolesHolderPOJO {
@@ -25,6 +24,7 @@ public class RolesHolderPOJO {
     public Set<Long> roleIds() {
         return Collections.unmodifiableSet(roleIds);
     }
+
     public Set<Long> copyRoleIds() {
         return Set.copyOf(roleIds);
     }

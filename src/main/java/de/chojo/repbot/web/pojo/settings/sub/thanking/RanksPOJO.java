@@ -23,6 +23,7 @@ public class RanksPOJO {
     public List<RankEntry> ranks() {
         return Collections.unmodifiableList(ranks);
     }
+
     public List<RankEntry> copyRanks() {
         return List.copyOf(ranks);
     }
