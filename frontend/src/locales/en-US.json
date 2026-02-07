@@ -56,7 +56,27 @@
     "autopost": "Autopost",
     "logChannel": "Log Channel",
     "reactions": "Reactions",
-    "auditLog": "Audit Log"
+    "auditLog": "Audit Log",
+    "integrationBypass": {
+      "title": "Integration Bypass",
+      "description": "Configure bypasses for integrations to allow them to give reputation even if they don't meet the regular requirements.",
+      "allowReactions": "Allow Reactions",
+      "allowAnswer": "Allow Answer",
+      "allowMention": "Allow Mention",
+      "allowFuzzy": "Allow Fuzzy",
+      "ignoreCooldown": "Ignore Cooldown",
+      "ignoreLimit": "Ignore Limit",
+      "allowReactionsDescription": "Allow giving a reputation via reactions",
+      "allowAnswerDescription": "Allow giving a reputation via answering a message",
+      "allowMentionDescription": "Allow giving a reputation via mentioning a user",
+      "allowFuzzyDescription": "Allow giving a reputation via fuzzy matching",
+      "ignoreCooldownDescription": "Ignore cooldown between users",
+      "ignoreLimitDescription": "Ignore any hourly limit set",
+      "add": "Add Integration Bypass",
+      "selectIntegration": "Select an integration",
+      "noIntegrations": "No more integrations available to add bypasses for.",
+      "deleteConfirm": "Are you sure you want to remove this integration bypass?"
+    }
   },
   "locale": {
     "selectLanguage": "Select Language"

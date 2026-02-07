@@ -160,6 +160,18 @@ export function useSession() {
         }
     }
 
+    const updateIntegrationBypass = (bypass: Types.Bypass) => {
+        if (session.value?.settings?.integrationBypass) {
+            session.value.settings.integrationBypass.bypasses[bypass.integrationId] = bypass
+        }
+    }
+
+    const removeIntegrationBypass = (integrationId: string) => {
+        if (session.value?.settings?.integrationBypass) {
+            delete session.value.settings.integrationBypass.bypasses[integrationId]
+        }
+    }
+
     const updateRanksSettings = (updates: Partial<Types.RanksPOJO>) => {
         if (session.value?.settings?.ranks) {
             // Ensure ranks array deduplication by roleId if provided
@@ -199,6 +211,8 @@ export function useSession() {
         updateAnnouncementsSettings,
         updateAutopostSettings,
         updateLogChannelSettings,
-        updateRanksSettings
+        updateRanksSettings,
+        updateIntegrationBypass,
+        removeIntegrationBypass
     }
 }

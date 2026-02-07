@@ -13,6 +13,7 @@ import ChannelsListValue from './values/ChannelsListValue.vue'
 import CategoriesListValue from './values/CategoriesListValue.vue'
 import ReactionsListValue from './values/ReactionsListValue.vue'
 import WordsListValue from './values/WordsListValue.vue'
+import IntegrationBypassValue from './values/IntegrationBypassValue.vue'
 
 interface Props {
   settingsKey: string
@@ -41,6 +42,11 @@ const valueType = computed(() => {
     if (key.includes('reaction')) return 'reactions-list'
     if (key.includes('words')) return 'words-list'
     return 'unknown'
+  }
+
+  // Integration bypass
+  if (key.startsWith('integration_bypass.')) {
+    return 'integration-bypass'
   }
 
   // Check for single channel reference
@@ -110,6 +116,12 @@ const valueType = computed(() => {
     <WordsListValue
         v-else-if="valueType === 'words-list'"
         :words="value"
+    />
+
+    <!-- Integration bypass -->
+    <IntegrationBypassValue
+        v-else-if="valueType === 'integration-bypass'"
+        :value="value"
     />
 
     <!-- Unknown type fallback -->

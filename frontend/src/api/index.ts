@@ -188,6 +188,14 @@ class ApiClient {
         });
     }
 
+    public async updateIntegrationBypass(bypass: Types.Bypass) {
+        await this.axiosInstance.post('/settings/integrationbypass', bypass);
+    }
+
+    public async deleteIntegrationBypass(integrationId: string) {
+        await this.axiosInstance.delete(`/settings/integrationbypass/${integrationId}`);
+    }
+
     // Reputation Settings
     public async updateReputation(data: Types.ReputationPOJO) {
         await this.axiosInstance.post('/settings/reputation', data);

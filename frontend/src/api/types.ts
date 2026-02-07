@@ -121,6 +121,7 @@ export interface GuildPOJO {
     roles: RolePOJO[];
     channels: ChannelViewPOJO;
     reactions: ReactionPOJO[];
+    integrations: MemberPOJO[];
 }
 
 export enum CooldownDirection {
@@ -140,6 +141,20 @@ export interface AbuseProtectionPOJO {
     maxReceived: number;
     maxReceivedHours: number;
     maxMessageReputation: number;
+}
+
+export interface Bypass {
+    integrationId: string;
+    allowReactions: boolean;
+    allowAnswer: boolean;
+    allowMention: boolean;
+    allowFuzzy: boolean;
+    ignoreCooldown: boolean;
+    ignoreLimit: boolean;
+}
+
+export interface IntegrationBypassPOJO {
+    bypasses: Record<string, Bypass>;
 }
 
 export interface AnnouncementsPOJO {
@@ -256,6 +271,7 @@ export interface ThankingPOJO {
 
 export interface SettingsPOJO {
     abuseProtection: AbuseProtectionPOJO;
+    integrationBypass: IntegrationBypassPOJO;
     announcements: AnnouncementsPOJO;
     autopost: AutopostPOJO;
     general: GeneralPOJO;

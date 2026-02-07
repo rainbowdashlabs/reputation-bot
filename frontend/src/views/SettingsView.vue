@@ -22,6 +22,7 @@ const settingsSections = [
   {key: 'announcements', path: '/settings/announcements'},
   {key: 'autopost', path: '/settings/autopost'},
   {key: 'logChannel', path: '/settings/log-channel'},
+  {key: 'integrationBypass', path: '/settings/integration-bypass'},
   {key: 'auditLog', path: '/settings/audit-log'}
 ]
 </script>

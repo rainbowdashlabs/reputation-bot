@@ -27,6 +27,9 @@ const formattedDate = computed(() => {
 
 // Get a human-readable setting name
 const settingName = computed(() => {
+  if (props.log.settingsKey.startsWith('integration_bypass.')) {
+    return t('settings.integrationBypass.title')
+  }
   // Try to get translation, fallback to the key itself
   const key = `auditLog.settings.${props.log.settingsKey.toLowerCase().replace(/\./g, '_')}`
   const translated = t(key)
@@ -35,6 +38,9 @@ const settingName = computed(() => {
 
 // Check if this is a simple value change (not a list)
 const isSimpleValue = computed(() => {
+  if (props.log.settingsKey.startsWith('integration_bypass.')) {
+    return true
+  }
   return !Array.isArray(props.log.oldValue) && !Array.isArray(props.log.newValue)
 })
 
