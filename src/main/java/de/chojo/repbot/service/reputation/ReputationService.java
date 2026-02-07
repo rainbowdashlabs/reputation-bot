@@ -245,13 +245,14 @@ public class ReputationService {
     }
 
     private MessageContext getContext(
-            Member donor, @Nullable Member receiver, ReputationContext context, ThankType type, Settings settings) {
+            Member donor, @NotNull Member receiver, ReputationContext context, ThankType type, Settings settings) {
         MessageContext messageContext;
         if (type == ThankType.REACTION) {
             // Check if user was recently seen in this channel.
             messageContext = contextResolver.getCombinedContext(donor, context.asMessage(), settings);
         } else {
-            messageContext = context.getLastMessage()
+            context.getLastValidMessage()
+            messageContext = context.getLastValidMessage()
                     .map(message -> contextResolver.getCombinedContext(message, settings))
                     .orElseGet(() -> contextResolver.getCombinedContext(receiver));
         }

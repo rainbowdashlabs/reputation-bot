@@ -77,7 +77,6 @@ public class ContextResolver {
     public MessageContext getVoiceContext(Member target, Message message, @Nullable Settings settings) {
         try {
             return voiceContextCache.get(message.getIdLong(), () -> retrieveVoiceContext(target, message, settings)
-                    .resolve()
                     .resolve());
         } catch (ExecutionException e) {
             log.error("Could not compute voice cache", e);
@@ -89,7 +88,7 @@ public class ContextResolver {
         return getCombinedContext(message.getMember(), message, settings);
     }
 
-    public MessageContext getCombinedContext(Member target, Message message, @Nullable Settings settings) {
+    public MessageContext getCombinedContext(@Nullable Member target, Message message, @Nullable Settings settings) {
         if (message == null) return MessageContext.byMessageAndMember(null, target);
         return getChannelContext(target, message, settings).combine(getVoiceContext(target, message, settings));
     }

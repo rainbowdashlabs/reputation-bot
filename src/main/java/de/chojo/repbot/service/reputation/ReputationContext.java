@@ -8,6 +8,7 @@ package de.chojo.repbot.service.reputation;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.Message;
+import net.dv8tion.jda.api.entities.MessageType;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.events.interaction.GenericInteractionCreateEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -47,8 +48,12 @@ public record ReputationContext(GuildMessageChannel guildChannel, ISnowflake sno
         return (Message) snowflake;
     }
 
-    public Optional<Message> getLastMessage() {
+    public Optional<Message> getLastValidMessage() {
         if (isMessage()) return Optional.of(asMessage());
-        return getChannel().getHistory().retrievePast(1).complete().stream().findFirst();
+        return getChannel().getHistory().retrievePast(100).complete().stream()
+                .filter(message -> message.getMember() != null
+                        && message.getType() == MessageType.DEFAULT
+                        && !message.getAuthor().isBot())
+                .findFirst();
     }
 }
