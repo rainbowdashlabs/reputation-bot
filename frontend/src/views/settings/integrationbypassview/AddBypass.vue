@@ -29,8 +29,10 @@ const addBypass = async (integrationId: string) => {
     allowAnswer: false,
     allowMention: false,
     allowFuzzy: false,
+    allowDirect: false,
     ignoreCooldown: false,
-    ignoreLimit: false
+    ignoreLimit: false,
+    ignoreContext: false
   }
   try {
     await api.updateIntegrationBypass(newBypass)

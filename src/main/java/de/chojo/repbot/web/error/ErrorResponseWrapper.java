@@ -8,18 +8,18 @@ package de.chojo.repbot.web.error;
 /**
  * Generic error response structure for API errors.
  */
-public class ErrorResponse {
+public class ErrorResponseWrapper {
     private final String error;
     private final String message;
     private final Object details;
 
-    public ErrorResponse(String error, String message, Object details) {
+    public ErrorResponseWrapper(String error, String message, Object details) {
         this.error = error;
         this.message = message;
         this.details = details;
     }
 
-    public ErrorResponse(String error, String message) {
+    public ErrorResponseWrapper(String error, String message) {
         this(error, message, null);
     }
 

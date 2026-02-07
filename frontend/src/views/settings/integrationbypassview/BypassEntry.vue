@@ -8,7 +8,7 @@ import {useI18n} from 'vue-i18n'
 import {useSession} from '@/composables/useSession'
 import {api} from '@/api'
 import Toggle from '@/components/Toggle.vue'
-import MemberDisplay from '../auditlogview/MemberDisplay.vue'
+import MemberDisplay from '@/components/display/MemberDisplay.vue'
 import type {Bypass} from '@/api/types'
 
 interface Props {
@@ -53,8 +53,10 @@ const bypassFields = [
   {key: 'allowAnswer', label: 'allowAnswer', description: 'allowAnswerDescription'},
   {key: 'allowMention', label: 'allowMention', description: 'allowMentionDescription'},
   {key: 'allowFuzzy', label: 'allowFuzzy', description: 'allowFuzzyDescription'},
+  {key: 'allowDirect', label: 'allowDirect', description: 'allowDirectDescription'},
   {key: 'ignoreCooldown', label: 'ignoreCooldown', description: 'ignoreCooldownDescription'},
-  {key: 'ignoreLimit', label: 'ignoreLimit', description: 'ignoreLimitDescription'}
+  {key: 'ignoreLimit', label: 'ignoreLimit', description: 'ignoreLimitDescription'},
+  {key: 'ignoreContext', label: 'ignoreContext', description: 'ignoreContextDescription'}
 ] as const
 </script>
 

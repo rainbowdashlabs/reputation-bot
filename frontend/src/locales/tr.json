@@ -56,7 +56,8 @@
     "autopost": "Otomatik yayınlama",
     "logChannel": "Günlük Kanalı",
     "reactions": "Tepkiler",
-    "auditLog": "Denetim Günlüğü"
+    "auditLog": "Denetim Günlüğü",
+    "integrationBypass": "Entegrasyon Atlama"
   },
   "locale": {
     "selectLanguage": "Dili Seç"
@@ -79,7 +80,9 @@
   "premiumFeature": {
     "title": "Destekçi Özelliği",
     "requiredTier": "Gerekli Destekçi Seviyesi:",
-    "message": "{name} destekçilere ayrılmıştır. Kullanmak için destekçi olun."
+    "message": "{name} destekçilere ayrılmıştır. Kullanmak için destekçi olun.",
+    "requiredTierSingular": "Gerekli Destekçi Seviyesi:",
+    "requiredTierPlural": "Aşağıdaki destekçi seviyelerinden biri gereklidir:"
   },
   "profile": {
     "description": "Botun sunucunuzda nasıl görüneceğini ve davranacağını özelleştirin.",
@@ -515,7 +518,9 @@
       "hourly": "Saatlik",
       "daily": "Günlük",
       "weekly": "Haftalık",
-      "monthly": "Aylık"
+      "monthly": "Aylık",
+      "noChanges": "Değişiklik yok",
+      "unknownIntegration": "Bilinmeyen Entegrasyon"
     },
     "settings": {
       "abuseprotection_cooldown": "Kötüye Kullanım Koruması - Bekleme Süresi",
@@ -577,5 +582,24 @@
     "current": "Mevcut Sunucu",
     "none": "Başka sunucu bulunamadı",
     "add": "Sunucudan ayarları açarak başka bir sunucu ekleyin."
+  },
+  "integrationBypass": {
+    "description": "Entegrasyonlar için, normal gereksinimleri karşılamasalar bile itibar verebilmeleri için baypasları yapılandırın.",
+    "allowReactions": "Tepkiler İzin Ver",
+    "allowAnswer": "Cevap Ver",
+    "allowMention": "Bahsetmeye izin ver",
+    "allowFuzzy": "Bulanıklaştırmaya izin ver",
+    "ignoreCooldown": "Bekleme Süresini Yoksay",
+    "ignoreLimit": "Sınırı Yoksay",
+    "allowReactionsDescription": "Reaksiyonlar aracılığıyla itibar verilmesine izin ver",
+    "allowAnswerDescription": "Mesaja cevap vererek itibar kazandırmaya izin ver",
+    "allowMentionDescription": "Bir kullanıcıyı etiketleyerek itibar kazandırmaya izin ver",
+    "allowFuzzyDescription": "Bulanık eşleştirme yoluyla itibar verilmesine izin ver",
+    "ignoreCooldownDescription": "Kullanıcılar arasındaki bekleme süresini yok say",
+    "ignoreLimitDescription": "Saatlik sınırları dikkate almayın",
+    "add": "Entegrasyon Atlamayı Ekle",
+    "selectIntegration": "Bir entegrasyon seçin",
+    "noIntegrations": "Eklenebilecek başka entegrasyon kalmadı.",
+    "deleteConfirm": "Bu entegrasyon baypasını kaldırmak istediğinizden emin misiniz?"
   }
 }

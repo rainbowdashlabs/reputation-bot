@@ -11,7 +11,7 @@ import de.chojo.repbot.dao.access.guildsession.GuildSession;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
 import de.chojo.repbot.web.error.ApiException;
-import de.chojo.repbot.web.error.ErrorResponse;
+import de.chojo.repbot.web.error.ErrorResponseWrapper;
 import de.chojo.repbot.web.pojo.settings.sub.ProfilePOJO;
 import de.chojo.repbot.web.routes.RoutesBuilder;
 import de.chojo.repbot.web.validation.PremiumValidator;
@@ -49,7 +49,7 @@ public class ProfileRoute implements RoutesBuilder {
                 @OpenApiResponse(status = "200"),
                 @OpenApiResponse(
                         status = "403",
-                        content = @OpenApiContent(from = ErrorResponse.class),
+                        content = @OpenApiContent(from = ErrorResponseWrapper.class),
                         description = "Premium feature required or limit exceeded")
             })
     public void updateProfileSettings(Context ctx) {
@@ -84,7 +84,7 @@ public class ProfileRoute implements RoutesBuilder {
                 @OpenApiResponse(status = "200"),
                 @OpenApiResponse(
                         status = "403",
-                        content = @OpenApiContent(from = ErrorResponse.class),
+                        content = @OpenApiContent(from = ErrorResponseWrapper.class),
                         description = "Premium feature required or limit exceeded")
             })
     public void updateNickname(Context ctx) {
@@ -128,7 +128,7 @@ public class ProfileRoute implements RoutesBuilder {
                         content = @OpenApiContent(from = String.class, type = "string", format = "url")),
                 @OpenApiResponse(
                         status = "403",
-                        content = @OpenApiContent(from = ErrorResponse.class),
+                        content = @OpenApiContent(from = ErrorResponseWrapper.class),
                         description = "Premium feature required or limit exceeded")
             })
     public void updateProfilePicture(Context ctx) {
@@ -191,7 +191,7 @@ public class ProfileRoute implements RoutesBuilder {
                 @OpenApiResponse(status = "200"),
                 @OpenApiResponse(
                         status = "403",
-                        content = @OpenApiContent(from = ErrorResponse.class),
+                        content = @OpenApiContent(from = ErrorResponseWrapper.class),
                         description = "Premium feature required or limit exceeded")
             })
     public void updateReputationName(Context ctx) {
@@ -237,7 +237,7 @@ public class ProfileRoute implements RoutesBuilder {
                 @OpenApiResponse(status = "200"),
                 @OpenApiResponse(
                         status = "403",
-                        content = @OpenApiContent(from = ErrorResponse.class),
+                        content = @OpenApiContent(from = ErrorResponseWrapper.class),
                         description = "Premium feature required or limit exceeded")
             })
     public void deleteProfilePicture(Context ctx) {

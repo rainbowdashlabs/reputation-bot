@@ -8,7 +8,7 @@ package de.chojo.repbot.web.routes.v1.settings.sub.thanking;
 import de.chojo.repbot.dao.access.guildsession.GuildSession;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
-import de.chojo.repbot.web.error.ErrorResponse;
+import de.chojo.repbot.web.error.ErrorResponseWrapper;
 import de.chojo.repbot.web.pojo.settings.sub.thanking.ChannelsPOJO;
 import de.chojo.repbot.web.routes.RoutesBuilder;
 import de.chojo.repbot.web.validation.PremiumValidator;
@@ -36,7 +36,7 @@ public class ChannelsRoute implements RoutesBuilder {
                 @OpenApiResponse(status = "200"),
                 @OpenApiResponse(
                         status = "403",
-                        content = @OpenApiContent(from = ErrorResponse.class),
+                        content = @OpenApiContent(from = ErrorResponseWrapper.class),
                         description = "Premium feature required or limit exceeded")
             })
     public void updateChannelsSettings(Context ctx) {
@@ -77,7 +77,7 @@ public class ChannelsRoute implements RoutesBuilder {
                 @OpenApiResponse(status = "200"),
                 @OpenApiResponse(
                         status = "403",
-                        content = @OpenApiContent(from = ErrorResponse.class),
+                        content = @OpenApiContent(from = ErrorResponseWrapper.class),
                         description = "Premium feature required or limit exceeded")
             })
     public void updateWhitelist(Context ctx) {
@@ -106,7 +106,7 @@ public class ChannelsRoute implements RoutesBuilder {
                 @OpenApiResponse(status = "200"),
                 @OpenApiResponse(
                         status = "403",
-                        content = @OpenApiContent(from = ErrorResponse.class),
+                        content = @OpenApiContent(from = ErrorResponseWrapper.class),
                         description = "Premium feature required or limit exceeded")
             })
     public void updateChannels(Context ctx) {
@@ -145,7 +145,7 @@ public class ChannelsRoute implements RoutesBuilder {
                 @OpenApiResponse(status = "200"),
                 @OpenApiResponse(
                         status = "403",
-                        content = @OpenApiContent(from = ErrorResponse.class),
+                        content = @OpenApiContent(from = ErrorResponseWrapper.class),
                         description = "Premium feature required or limit exceeded")
             })
     public void updateCategories(Context ctx) {

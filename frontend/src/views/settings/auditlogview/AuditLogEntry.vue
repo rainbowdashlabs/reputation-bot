@@ -33,7 +33,7 @@ const settingName = computed(() => {
 // Check if this is a simple value change (not a list)
 const isSimpleValue = computed(() => {
   if (props.log.settingsKey.startsWith('integration_bypass.')) {
-    return true
+    return false
   }
   return !Array.isArray(props.log.oldValue) && !Array.isArray(props.log.newValue)
 })

@@ -5,7 +5,7 @@
  */
 <script lang="ts" setup>
 import {computed} from 'vue'
-import type {MemberPOJO} from '@/api/types'
+import type {MemberPOJO} from '@/api/types.ts'
 
 interface Props {
   member: MemberPOJO

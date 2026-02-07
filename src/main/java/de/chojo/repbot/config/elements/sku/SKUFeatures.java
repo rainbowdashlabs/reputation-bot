@@ -11,6 +11,7 @@ import de.chojo.repbot.config.elements.sku.feature.AnalyzerLog;
 import de.chojo.repbot.config.elements.sku.feature.Autopost;
 import de.chojo.repbot.config.elements.sku.feature.ChannelBlacklist;
 import de.chojo.repbot.config.elements.sku.feature.DetailedProfile;
+import de.chojo.repbot.config.elements.sku.feature.IntegrationBypass;
 import de.chojo.repbot.config.elements.sku.feature.LocaleOverrides;
 import de.chojo.repbot.config.elements.sku.feature.LogChannel;
 import de.chojo.repbot.config.elements.sku.feature.Profile;
@@ -31,6 +32,7 @@ public class SKUFeatures {
     LogChannel logChannel = new LogChannel();
     AdditionalEmojis additionalEmojis = new AdditionalEmojis();
     Profile profile = new Profile();
+    IntegrationBypass integrationBypass = new IntegrationBypass();
 
     public ReputationLog reputationLog() {
         return reputationLog;
@@ -78,5 +80,9 @@ public class SKUFeatures {
 
     public Profile profile() {
         return profile;
+    }
+
+    public IntegrationBypass integrationBypass() {
+        return integrationBypass;
     }
 }

@@ -5,6 +5,7 @@
  */
 package de.chojo.repbot.dao.access.guild.settings.sub.integrationbypass;
 
+import de.chojo.repbot.analyzer.results.match.ThankType;
 import de.chojo.sadu.mapper.wrapper.Row;
 
 import java.sql.SQLException;
@@ -15,8 +16,10 @@ public class Bypass {
     boolean allowAnswer;
     boolean allowMention;
     boolean allowFuzzy;
+    boolean allowDirect;
     boolean ignoreCooldown;
     boolean ignoreLimit;
+    boolean ignoreContext;
 
     public Bypass() {
     }
@@ -27,12 +30,15 @@ public class Bypass {
         allowAnswer = row.getBoolean("allow_answer");
         allowMention = row.getBoolean("allow_mention");
         allowFuzzy = row.getBoolean("allow_fuzzy");
+        allowDirect = row.getBoolean("allow_direct");
         ignoreCooldown = row.getBoolean("ignore_cooldown");
         ignoreLimit = row.getBoolean("ignore_limit");
+        ignoreContext = row.getBoolean("ignore_context");
     }
 
     /**
      * Get the integration id
+     *
      * @return long
      */
     public long integrationId() {
@@ -50,6 +56,7 @@ public class Bypass {
 
     /**
      * Allow giving a reputation via answering a message
+     *
      * @return boolean
      */
     public boolean allowAnswer() {
@@ -58,6 +65,7 @@ public class Bypass {
 
     /**
      * Allow giving a reputation via mentioning a user
+     *
      * @return boolean
      */
     public boolean allowMention() {
@@ -66,6 +74,7 @@ public class Bypass {
 
     /**
      * Allow giving a reputation via fuzzy matching
+     *
      * @return boolean
      */
     public boolean allowFuzzy() {
@@ -74,6 +83,7 @@ public class Bypass {
 
     /**
      * Ignore cooldown between users
+     *
      * @return boolean
      */
     public boolean ignoreCooldown() {
@@ -82,9 +92,39 @@ public class Bypass {
 
     /**
      * Ignore any hourly limit set
+     *
      * @return boolean
      */
     public boolean ignoreLimit() {
         return ignoreLimit;
+    }
+
+    /**
+     * Allow giving Reputation via a direct embed. No embed will ever be sent to a bot.
+     *
+     * @return boolean
+     */
+    public boolean allowDirect() {
+        return allowDirect;
+    }
+
+    /**
+     * Allows bypassing context checks
+     *
+     * @return boolean
+     */
+    public boolean ignoreContext() {
+        return ignoreContext;
+    }
+
+    public boolean isEnabled(ThankType bypassed) {
+        return switch (bypassed) {
+            case FUZZY -> allowFuzzy();
+            case MENTION -> allowMention();
+            case ANSWER -> allowAnswer();
+            case DIRECT -> allowDirect();
+            case REACTION -> allowReactions();
+            case EMBED, COMMAND -> false;
+        };
     }
 }

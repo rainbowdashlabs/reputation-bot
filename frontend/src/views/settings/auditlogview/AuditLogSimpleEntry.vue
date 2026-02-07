@@ -27,26 +27,12 @@ const settingName = computed(() => {
   const translated = t(key)
   return translated !== key ? translated : props.settingsKey
 })
-
-// Check if this is a boolean value
-const isBooleanValue = computed(() => {
-  return typeof props.newValue === 'boolean'
-})
 </script>
 
 <template>
   <div class="text-sm">
     <span class="font-semibold text-gray-700 dark:text-gray-300">{{ settingName }}</span>
     <span class="text-gray-700 dark:text-gray-300">: </span>
-    <!-- For booleans, show only new value -->
-    <template v-if="isBooleanValue">
-      <AuditLogValue :settings-key="settingsKey" :value="newValue" />
-    </template>
-    <!-- For other simple values, show old → new -->
-    <template v-else>
-      <AuditLogValue :settings-key="settingsKey" :value="oldValue" :is-old-value="true" />
-      <span class="text-gray-400 dark:text-gray-500"> → </span>
-      <AuditLogValue :settings-key="settingsKey" :value="newValue" />
-    </template>
+    <AuditLogValue :settings-key="settingsKey" :old-value="oldValue" :new-value="newValue" />
   </div>
 </template>

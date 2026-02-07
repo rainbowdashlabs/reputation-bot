@@ -56,7 +56,8 @@
     "autopost": "Publicación automática",
     "logChannel": "Canal de registro",
     "reactions": "Reacciones",
-    "auditLog": "Registro de auditoría"
+    "auditLog": "Registro de auditoría",
+    "integrationBypass": "Omisión de integración"
   },
   "locale": {
     "selectLanguage": "Selecciona el idioma"
@@ -79,7 +80,9 @@
   "premiumFeature": {
     "title": "Característica de los seguidores",
     "requiredTier": "Nivel de patrocinador requerido:",
-    "message": "{name} está reservado para los seguidores. Hazte seguidor para poder utilizarlo."
+    "message": "{name} está reservado para los seguidores. Hazte seguidor para poder utilizarlo.",
+    "requiredTierSingular": "Nivel de patrocinador requerido:",
+    "requiredTierPlural": "Se requiere uno de los siguientes niveles de patrocinador:"
   },
   "profile": {
     "description": "Personaliza cómo aparece y se comporta el bot en tu servidor.",
@@ -515,7 +518,9 @@
       "hourly": "Por hora",
       "daily": "Diario",
       "weekly": "Semanal",
-      "monthly": "Mensual"
+      "monthly": "Mensual",
+      "noChanges": "Sin cambios",
+      "unknownIntegration": "Integración desconocida"
     },
     "settings": {
       "abuseprotection_cooldown": "Protección contra abusos - Tiempo de espera",
@@ -577,5 +582,24 @@
     "current": "Servidor actual",
     "none": "No se han encontrado otros servidores.",
     "add": "Añade otro servidor abriendo la configuración desde el servidor."
+  },
+  "integrationBypass": {
+    "description": "Configura excepciones para las integraciones a fin de que puedan otorgar reputación aunque no cumplan los requisitos habituales.",
+    "allowReactions": "Permitir reacciones",
+    "allowAnswer": "Permitir respuesta",
+    "allowMention": "Permitir mención",
+    "allowFuzzy": "Permitir aproximaciones",
+    "ignoreCooldown": "Ignorar tiempo de recarga",
+    "ignoreLimit": "Ignorar límite",
+    "allowReactionsDescription": "Permitir dar reputación a través de reacciones",
+    "allowAnswerDescription": "Permitir dar reputación respondiendo a un mensaje",
+    "allowMentionDescription": "Permitir dar reputación mencionando a un usuario",
+    "allowFuzzyDescription": "Permitir dar reputación mediante coincidencia aproximada",
+    "ignoreCooldownDescription": "Ignorar el tiempo de espera entre usuarios",
+    "ignoreLimitDescription": "Ignora cualquier límite horario establecido.",
+    "add": "Añadir omisión de integración",
+    "selectIntegration": "Selecciona una integración",
+    "noIntegrations": "No hay más integraciones disponibles para añadir derivaciones.",
+    "deleteConfirm": "¿Estás seguro de que deseas eliminar esta omisión de integración?"
   }
 }

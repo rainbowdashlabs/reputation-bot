@@ -11,6 +11,7 @@ import de.chojo.repbot.dao.access.guildsession.GuildSession;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
 import de.chojo.repbot.web.routes.RoutesBuilder;
+import de.chojo.repbot.web.validation.PremiumValidator;
 import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
@@ -37,7 +38,10 @@ public class IntegrationBypassRoute implements RoutesBuilder {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         Bypass bypass = ctx.bodyAsClass(Bypass.class);
         IntegrationBypass integrationBypass = session.repGuild().settings().integrationBypass();
-        
+
+        PremiumValidator validator = session.premiumValidator();
+        validator.requireFeature(validator.features().integrationBypass(), "Integration Bypass");
+
         Bypass oldValue = integrationBypass.getBypass(bypass.integrationId()).orElse(null);
         integrationBypass.apply(bypass);
         session.recordChange("integration_bypass." + bypass.integrationId(), oldValue, bypass);
@@ -49,13 +53,21 @@ public class IntegrationBypassRoute implements RoutesBuilder {
             path = "v1/settings/integrationbypass/{integrationId}",
             methods = HttpMethod.DELETE,
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
-            pathParams = {@OpenApiParam(name = "integrationId", required = true, description = "The integration id", type = Long.class)},
+            pathParams = {
+                @OpenApiParam(
+                        name = "integrationId",
+                        required = true,
+                        description = "The integration id",
+                        type = Long.class)
+            },
             tags = {"Settings"},
             responses = {@OpenApiResponse(status = "200")})
     public void deleteBypass(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         long integrationId = ctx.pathParamAsClass("integrationId", Long.class).get();
         IntegrationBypass integrationBypass = session.repGuild().settings().integrationBypass();
+        PremiumValidator validator = session.premiumValidator();
+        validator.requireFeature(validator.features().integrationBypass(), "Integration Bypass");
 
         Bypass oldValue = integrationBypass.getBypass(integrationId).orElse(null);
         integrationBypass.remove(integrationId);

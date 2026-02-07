@@ -56,7 +56,8 @@
     "autopost": "自動投稿",
     "logChannel": "ログチャネル",
     "reactions": "反応",
-    "auditLog": "監査ログ"
+    "auditLog": "監査ログ",
+    "integrationBypass": "統合バイパス"
   },
   "locale": {
     "selectLanguage": "言語を選択"
@@ -79,7 +80,9 @@
   "premiumFeature": {
     "title": "サポーター特集",
     "requiredTier": "必要なサポーターのレベル：",
-    "message": "{name} サポーター専用だ。利用するにはサポーターになれ。"
+    "message": "{name} サポーター専用だ。利用するにはサポーターになれ。",
+    "requiredTierSingular": "必要なサポーターのレベル：",
+    "requiredTierPlural": "以下のサポーター層のいずれかが必要だ："
   },
   "profile": {
     "description": "サーバー内でボットの外観や動作をカスタマイズする。",
@@ -515,7 +518,9 @@
       "hourly": "時間単位",
       "daily": "毎日",
       "weekly": "週刊",
-      "monthly": "月次"
+      "monthly": "月次",
+      "noChanges": "変更なし",
+      "unknownIntegration": "不明な統合"
     },
     "settings": {
       "abuseprotection_cooldown": "悪用防止 - クールダウン",
@@ -577,5 +582,24 @@
     "current": "現在のサーバー",
     "none": "他のサーバーは見つからなかった",
     "add": "サーバーから設定を開いて、別のサーバーを追加する。"
+  },
+  "integrationBypass": {
+    "description": "統合機能に対してバイパスを設定し、通常の要件を満たさない場合でも評価を付与できるようにする。",
+    "allowReactions": "リアクションを許可する",
+    "allowAnswer": "許可する",
+    "allowMention": "言及を許可する",
+    "allowFuzzy": "あいまいさを許容する",
+    "ignoreCooldown": "クールダウンを無視する",
+    "ignoreLimit": "制限を無視する",
+    "allowReactionsDescription": "リアクションで評価を付けることを許可する",
+    "allowAnswerDescription": "メッセージへの回答を通じて評価を与えることを許可する",
+    "allowMentionDescription": "ユーザーをメンションすることで評価を付与できるようにする",
+    "allowFuzzyDescription": "あいまい一致による評価の付与を許可する",
+    "ignoreCooldownDescription": "ユーザー間のクールダウンを無視する",
+    "ignoreLimitDescription": "設定された時間制限は無視せよ",
+    "add": "統合バイパスを追加する",
+    "selectIntegration": "統合を選択する",
+    "noIntegrations": "追加できるバイパス用の統合はこれ以上ない。",
+    "deleteConfirm": "この統合バイパスを本当に削除するのか？"
   }
 }

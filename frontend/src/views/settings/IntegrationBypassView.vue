@@ -4,13 +4,24 @@
  *     Copyright (C) RainbowDashLabs and Contributor
  */
 <script lang="ts" setup>
-import {ref} from 'vue'
+import {computed, ref} from 'vue'
 import {useI18n} from 'vue-i18n'
+import {useSession} from '@/composables/useSession'
 import SettingsContainer from './components/SettingsContainer.vue'
+import PremiumFeatureWarning from '@/components/PremiumFeatureWarning.vue'
 import AddBypass from './integrationbypassview/AddBypass.vue'
 import BypassList from './integrationbypassview/BypassList.vue'
 
 const {t} = useI18n()
+const {session} = useSession()
+
+const isIntegrationBypassUnlocked = computed(() => {
+  return session.value?.premiumFeatures?.integrationBypass?.unlocked ?? false
+})
+
+const integrationBypassRequiredSkus = computed(() => {
+  return session.value?.premiumFeatures?.integrationBypass?.requiredSkus ?? []
+})
 
 const expandedBypasses = ref<Set<string>>(new Set())
 
@@ -29,7 +40,14 @@ const onBypassAdded = (integrationId: string) => {
 
 <template>
   <SettingsContainer :description="t('integrationBypass.description')" :title="t('settings.integrationBypass')">
-    <div class="space-y-4">
+    <PremiumFeatureWarning
+        v-if="!isIntegrationBypassUnlocked"
+        :feature-name="t('integrationBypass.premiumRequired')"
+        :required-skus="integrationBypassRequiredSkus"
+        variant="large"
+    />
+
+    <div v-else class="space-y-4">
       <AddBypass @added="onBypassAdded" />
       <BypassList :expanded-bypasses="expandedBypasses" @toggle="toggleExpand" />
     </div>

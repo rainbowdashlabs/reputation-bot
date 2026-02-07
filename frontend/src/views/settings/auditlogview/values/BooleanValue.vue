@@ -17,10 +17,14 @@ const {t} = useI18n()
 const displayValue = computed(() => {
   return props.value ? t('auditLog.values.enabled') : t('auditLog.values.disabled')
 })
+
+const colorClass = computed(() => {
+  return props.value ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'
+})
 </script>
 
 <template>
-  <span class="text-sm text-gray-900 dark:text-gray-100">
+  <span class="text-sm" :class="colorClass">
     {{ displayValue }}
   </span>
 </template>

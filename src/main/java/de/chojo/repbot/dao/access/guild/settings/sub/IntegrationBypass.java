@@ -12,9 +12,7 @@ import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.web.pojo.settings.sub.IntegrationBypassPOJO;
 import net.dv8tion.jda.api.entities.Guild;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
@@ -50,13 +48,13 @@ public class IntegrationBypass extends IntegrationBypassPOJO implements GuildHol
                     ignore_limit = excluded.ignore_limit
                 """)
                 .single(call().bind(guildId())
-                              .bind(integrationId)
-                              .bind(bypass.allowReactions())
-                              .bind(bypass.allowAnswer())
-                              .bind(bypass.allowMention())
-                              .bind(bypass.allowFuzzy())
-                              .bind(bypass.ignoreCooldown())
-                              .bind(bypass.ignoreLimit()))
+                        .bind(integrationId)
+                        .bind(bypass.allowReactions())
+                        .bind(bypass.allowAnswer())
+                        .bind(bypass.allowMention())
+                        .bind(bypass.allowFuzzy())
+                        .bind(bypass.ignoreCooldown())
+                        .bind(bypass.ignoreLimit()))
                 .insert();
         bypasses.put(bypass.integrationId(), bypass);
     }

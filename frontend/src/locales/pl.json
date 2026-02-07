@@ -56,7 +56,8 @@
     "autopost": "Autopost",
     "logChannel": "Kanał dziennika",
     "reactions": "Reakcje",
-    "auditLog": "Dziennik audytu"
+    "auditLog": "Dziennik audytu",
+    "integrationBypass": "Omijanie integracji"
   },
   "locale": {
     "selectLanguage": "Wybierz język"
@@ -79,7 +80,9 @@
   "premiumFeature": {
     "title": "Funkcja kibica",
     "requiredTier": "Wymagany poziom wsparcia:",
-    "message": "{name} jest zarezerwowana dla kibiców. Zostań kibicem, aby z niej korzystać."
+    "message": "{name} jest zarezerwowana dla kibiców. Zostań kibicem, aby z niej korzystać.",
+    "requiredTierSingular": "Wymagany poziom wsparcia:",
+    "requiredTierPlural": "Wymagany jest jeden z poniższych poziomów wsparcia:"
   },
   "profile": {
     "description": "Dostosuj wygląd i zachowanie bota na twoim serwerze.",
@@ -515,7 +518,9 @@
       "hourly": "Godzinowo",
       "daily": "Codziennie",
       "weekly": "Cotygodniowy",
-      "monthly": "Miesięcznie"
+      "monthly": "Miesięcznie",
+      "noChanges": "Brak zmian",
+      "unknownIntegration": "Nieznana integracja"
     },
     "settings": {
       "abuseprotection_cooldown": "Ochrona przed nadużyciami – czas odnowienia",
@@ -577,5 +582,24 @@
     "current": "Aktualny serwer",
     "none": "Nie znaleziono żadnych innych serwerów",
     "add": "Dodaj kolejny serwer, otwierając ustawienia serwera."
+  },
+  "integrationBypass": {
+    "description": "Skonfiguruj obejścia dla integracji, aby umożliwić im przyznawanie reputacji, nawet jeśli nie spełniają one standardowych wymagań.",
+    "allowReactions": "Zezwól na reakcje",
+    "allowAnswer": "Zezwól na odpowiedź",
+    "allowMention": "Zezwól na wzmiankę",
+    "allowFuzzy": "Zezwól na przybliżone dopasowanie",
+    "ignoreCooldown": "Ignoruj czas odnowienia",
+    "ignoreLimit": "Ignoruj limit",
+    "allowReactionsDescription": "Zezwólcie na przyznawanie reputacji poprzez reakcje",
+    "allowAnswerDescription": "Zezwól na przyznawanie reputacji poprzez odpowiadanie na wiadomości",
+    "allowMentionDescription": "Zezwól na przyznawanie reputacji poprzez wzmiankę o użytkowniku",
+    "allowFuzzyDescription": "Zezwól na przyznawanie reputacji poprzez dopasowanie przybliżone",
+    "ignoreCooldownDescription": "Ignoruj czas oczekiwania między użytkownikami",
+    "ignoreLimitDescription": "Ignoruj wszelkie limity godzinowe",
+    "add": "Dodaj obejście integracji",
+    "selectIntegration": "Wybierz integrację",
+    "noIntegrations": "Nie ma już dostępnych integracji, do których można dodać obejścia.",
+    "deleteConfirm": "Czy na pewno chcesz usunąć to obejście integracji?"
   }
 }

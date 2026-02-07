@@ -149,8 +149,10 @@ export interface Bypass {
     allowAnswer: boolean;
     allowMention: boolean;
     allowFuzzy: boolean;
+    allowDirect: boolean;
     ignoreCooldown: boolean;
     ignoreLimit: boolean;
+    ignoreContext: boolean;
 }
 
 export interface IntegrationBypassPOJO {
@@ -310,6 +312,7 @@ export interface PremiumFeaturesPOJO {
     logChannel: SimpleFeature;
     additionalEmojis: SimpleFeature;
     profile: SimpleFeature;
+    integrationBypass: SimpleFeature;
     reputationChannel: FeatureLimit;
     reputationCategories: FeatureLimit;
 }

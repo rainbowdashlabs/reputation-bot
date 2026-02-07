@@ -56,7 +56,8 @@
     "autopost": "자동 게시",
     "logChannel": "로그 채널",
     "reactions": "반응들",
-    "auditLog": "감사 로그"
+    "auditLog": "감사 로그",
+    "integrationBypass": "통합 우회"
   },
   "locale": {
     "selectLanguage": "언어 선택"
@@ -79,7 +80,9 @@
   "premiumFeature": {
     "title": "서포터 기능",
     "requiredTier": "필수 후원 등급:",
-    "message": "{name} 이 기능은 후원자 전용입니다. 사용하려면 후원자가 되어 주세요."
+    "message": "{name} 이 기능은 후원자 전용입니다. 사용하려면 후원자가 되어 주세요.",
+    "requiredTierSingular": "필수 후원 등급:",
+    "requiredTierPlural": "다음 후원 등급 중 하나가 필요합니다:"
   },
   "profile": {
     "description": "서버에서 봇의 외관과 동작 방식을 사용자 지정하세요.",
@@ -515,7 +518,9 @@
       "hourly": "시간당",
       "daily": "매일",
       "weekly": "주간",
-      "monthly": "월간"
+      "monthly": "월간",
+      "noChanges": "변경 사항 없음",
+      "unknownIntegration": "알 수 없는 통합"
     },
     "settings": {
       "abuseprotection_cooldown": "학대 방지 - 재사용 대기시간",
@@ -577,5 +582,24 @@
     "current": "현재 서버",
     "none": "다른 서버를 찾을 수 없습니다",
     "add": "서버에서 설정을 열어 다른 서버를 추가하세요."
+  },
+  "integrationBypass": {
+    "description": "통합 기능에 대한 우회 경로를 구성하여 일반 요구 사항을 충족하지 않더라도 평판을 부여할 수 있도록 합니다.",
+    "allowReactions": "반응 허용",
+    "allowAnswer": "답변 허용",
+    "allowMention": "언급 허용",
+    "allowFuzzy": "퍼지 허용",
+    "ignoreCooldown": "쿨다운 무시",
+    "ignoreLimit": "제한 무시",
+    "allowReactionsDescription": "반응을 통해 평판을 부여할 수 있도록 허용",
+    "allowAnswerDescription": "메시지 답변을 통해 평판을 부여할 수 있도록 허용",
+    "allowMentionDescription": "사용자를 멘션하여 평판을 부여할 수 있도록 허용",
+    "allowFuzzyDescription": "퍼지 매칭을 통한 평판 부여 허용",
+    "ignoreCooldownDescription": "사용자 간 쿨다운 무시",
+    "ignoreLimitDescription": "설정된 시간 제한을 무시하십시오",
+    "add": "통합 우회 추가",
+    "selectIntegration": "통합 선택",
+    "noIntegrations": "추가할 우회 경로가 더 이상 없습니다.",
+    "deleteConfirm": "이 통합 우회 기능을 정말 제거하시겠습니까?"
   }
 }

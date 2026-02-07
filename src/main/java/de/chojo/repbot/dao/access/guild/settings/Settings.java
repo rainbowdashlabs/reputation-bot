@@ -54,14 +54,13 @@ public class Settings implements GuildHolder {
                     allow_answer,
                     allow_mention,
                     allow_fuzzy,
+                    allow_direct,
                     ignore_cooldown,
-                    ignore_limit
+                    ignore_limit,
+                    ignore_context
                 FROM
                     integration_bypass
-                WHERE guild_id = ?""")
-                .single(call().bind(guildId()))
-                .map(Bypass::new)
-                .all();
+                WHERE guild_id = ?""").single(call().bind(guildId())).map(Bypass::new).all();
         bypass = new IntegrationBypass(this, list);
         return bypass;
     }

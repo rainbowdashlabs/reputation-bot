@@ -56,7 +56,8 @@
     "autopost": "Publication automatique",
     "logChannel": "Canal de journalisation",
     "reactions": "Réactions",
-    "auditLog": "Journal d'audit"
+    "auditLog": "Journal d'audit",
+    "integrationBypass": "Contournement de l'intégration"
   },
   "locale": {
     "selectLanguage": "Choisis ta langue"
@@ -79,7 +80,9 @@
   "premiumFeature": {
     "title": "Présentation d'un supporter",
     "requiredTier": "Niveau de soutien requis :",
-    "message": "{name} est réservé aux supporters. Deviens supporter pour pouvoir l'utiliser."
+    "message": "{name} est réservé aux supporters. Deviens supporter pour pouvoir l'utiliser.",
+    "requiredTierSingular": "Niveau de soutien requis :",
+    "requiredTierPlural": "Il faut choisir un des niveaux de soutien suivants :"
   },
   "profile": {
     "description": "Personnalise l'apparence et le comportement du bot sur ton serveur.",
@@ -515,7 +518,9 @@
       "hourly": "À l'heure",
       "daily": "Tous les jours",
       "weekly": "Chaque semaine",
-      "monthly": "Mensuel"
+      "monthly": "Mensuel",
+      "noChanges": "Pas de changements",
+      "unknownIntegration": "Intégration inconnue"
     },
     "settings": {
       "abuseprotection_cooldown": "Protection contre les abus - Temps de recharge",
@@ -577,5 +582,24 @@
     "current": "Serveur actuel",
     "none": "Aucun autre serveur trouvé",
     "add": "Ajoute un autre serveur en ouvrant les paramètres depuis le serveur."
+  },
+  "integrationBypass": {
+    "description": "Configurez des dérogations pour les intégrations afin qu'elles puissent attribuer une réputation même si elles ne répondent pas aux exigences habituelles.",
+    "allowReactions": "Autoriser les réactions",
+    "allowAnswer": "Autoriser la réponse",
+    "allowMention": "Autoriser la mention",
+    "allowFuzzy": "Autoriser le flou",
+    "ignoreCooldown": "Ignorer le temps de recharge",
+    "ignoreLimit": "Ignorer la limite",
+    "allowReactionsDescription": "Permettre de donner une réputation via des réactions",
+    "allowAnswerDescription": "Permettre de donner une réputation en répondant à un message",
+    "allowMentionDescription": "Permettre de donner une réputation en mentionnant un utilisateur",
+    "allowFuzzyDescription": "Permettre de donner une réputation via la correspondance approximative",
+    "ignoreCooldownDescription": "Oublier le temps d'attente entre les utilisateurs",
+    "ignoreLimitDescription": "Oublie les limites horaires",
+    "add": "Ajouter un contournement d'intégration",
+    "selectIntegration": "Choisis une intégration",
+    "noIntegrations": "Plus d'intégrations disponibles pour ajouter des contournements.",
+    "deleteConfirm": "T'es sûr de vouloir supprimer ce contournement d'intégration ?"
   }
 }

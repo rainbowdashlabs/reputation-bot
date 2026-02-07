@@ -7,7 +7,7 @@
 import {computed} from 'vue'
 import {useI18n} from 'vue-i18n'
 import type {MemberPOJO} from '@/api/types'
-import MemberDisplay from './MemberDisplay.vue'
+import MemberDisplay from '@/components/display/MemberDisplay.vue'
 
 interface Props {
   member: MemberPOJO | undefined

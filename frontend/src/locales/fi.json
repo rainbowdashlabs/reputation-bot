@@ -56,7 +56,8 @@
     "autopost": "Automaattinen julkaisu",
     "logChannel": "Lokikanava",
     "reactions": "Reaktiot",
-    "auditLog": "Tarkastusloki"
+    "auditLog": "Tarkastusloki",
+    "integrationBypass": "Integraation ohitus"
   },
   "locale": {
     "selectLanguage": "Valitse kieli"
@@ -79,7 +80,9 @@
   "premiumFeature": {
     "title": "Kannattaja-ominaisuus",
     "requiredTier": "Vaadittu tukijataso:",
-    "message": "{name} on varattu tukijoille. Ryhdy tukijaksi, jotta voit käyttää sitä."
+    "message": "{name} on varattu tukijoille. Ryhdy tukijaksi, jotta voit käyttää sitä.",
+    "requiredTierSingular": "Vaadittu tukijataso:",
+    "requiredTierPlural": "Jokin seuraavista tukijatasoista vaaditaan:"
   },
   "profile": {
     "description": "Mukauta botin ulkonäkö ja käyttäytyminen palvelimellasi.",
@@ -515,7 +518,9 @@
       "hourly": "Tuntikohtainen",
       "daily": "Päivittäin",
       "weekly": "Viikoittain",
-      "monthly": "Kuukausittain"
+      "monthly": "Kuukausittain",
+      "noChanges": "Ei muutoksia",
+      "unknownIntegration": "Tuntematon integraatio"
     },
     "settings": {
       "abuseprotection_cooldown": "Väärinkäytön suojaus - Jäähdytysaika",
@@ -577,5 +582,24 @@
     "current": "Nykyinen palvelin",
     "none": "Muita palvelimia ei löytynyt",
     "add": "Lisää toinen palvelin avaamalla palvelimen asetukset."
+  },
+  "integrationBypass": {
+    "description": "Määritä integraatioiden ohitukset, jotta ne voivat antaa maineen, vaikka ne eivät täytä tavanomaisia vaatimuksia.",
+    "allowReactions": "Salli reaktiot",
+    "allowAnswer": "Salli vastaus",
+    "allowMention": "Salli maininta",
+    "allowFuzzy": "Salli epätarkkuus",
+    "ignoreCooldown": "Ohita jäähdytysaika",
+    "ignoreLimit": "Ohita raja",
+    "allowReactionsDescription": "Salli maineen antaminen reaktioiden kautta",
+    "allowAnswerDescription": "Salli maineen antaminen vastaamalla viestiin",
+    "allowMentionDescription": "Salli maineen antaminen mainitsemalla käyttäjä",
+    "allowFuzzyDescription": "Sallitaan maineen antaminen epätarkan hakutoiminnon avulla",
+    "ignoreCooldownDescription": "Ohita käyttäjien välinen viive",
+    "ignoreLimitDescription": "Ohita kaikki asetetut tuntirajoitukset",
+    "add": "Lisää integraation ohitus",
+    "selectIntegration": "Valitse integraatio",
+    "noIntegrations": "Ei enää integrointeja, joihin voi lisätä ohituksia.",
+    "deleteConfirm": "Haluatko varmasti poistaa tämän integraation ohituksen?"
   }
 }

@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.chojo.jdautil.botlist.BotlistService;
 import de.chojo.jdautil.interactions.dispatching.InteractionHub;
+import de.chojo.logutil.marker.LogNotify;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.service.AutopostService;
 import de.chojo.repbot.web.Api;
@@ -21,6 +22,8 @@ import de.chojo.repbot.web.cache.MemberCache;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
 import de.chojo.repbot.web.error.ApiException;
+import de.chojo.repbot.web.error.ErrorResponseWrapper;
+import de.chojo.repbot.web.error.PremiumFeatureException;
 import de.chojo.repbot.web.sessions.SessionService;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
@@ -176,17 +179,19 @@ public class Web {
                 })
                 .start(api.host(), api.port());
         // Handle specific PremiumFeatureException with detailed JSON
-        javalin.exception(de.chojo.repbot.web.error.PremiumFeatureException.class, (err, ctx) -> {
-            var response =
-                    new de.chojo.repbot.web.error.ErrorResponse("Supporter Required", err.getMessage(), err.details());
+        javalin.exception(PremiumFeatureException.class, (err, ctx) -> {
+            var response = new ErrorResponseWrapper("Supporter Required", err.getMessage(), err.details());
             ctx.json(response).status(err.status());
         });
 
         // Handle generic ApiException with simple JSON
         javalin.exception(ApiException.class, (err, ctx) -> {
-            var response =
-                    new de.chojo.repbot.web.error.ErrorResponse(err.getClass().getSimpleName(), err.getMessage());
+            var response = new ErrorResponseWrapper(err.getClass().getSimpleName(), err.getMessage());
             ctx.json(response).status(err.status());
+        });
+
+        javalin.exception(Exception.class, (err, ctx) -> {
+            log.error(LogNotify.NOTIFY_ADMIN, "Unhandled exception on route {}", ctx.path(), err);
         });
     }
 
