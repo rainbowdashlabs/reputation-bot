@@ -5,6 +5,8 @@
  */
 package de.chojo.repbot.util;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import de.chojo.jdautil.localization.LocalizationContext;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.RepGuild;
@@ -13,6 +15,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
@@ -20,12 +23,16 @@ import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 import static de.chojo.jdautil.localization.util.Format.BOLD;
 import static de.chojo.jdautil.localization.util.Replacement.create;
@@ -35,6 +42,8 @@ public final class PermissionErrorHandler {
     private static final Logger log = LoggerFactory.getLogger(PermissionErrorHandler.class);
     private static final List<Permission> NON_ACCESS_PERMISSIONS =
             List.of(Permission.MESSAGE_SEND, Permission.MESSAGE_SEND_IN_THREADS, Permission.VIEW_CHANNEL);
+    private static final Cache<ErrorKey, Instant> lastSent =
+            CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.MINUTES).build();
 
     private PermissionErrorHandler() {
         throw new UnsupportedOperationException("This is a utility class.");
@@ -55,19 +64,30 @@ public final class PermissionErrorHandler {
             errorMessages.add(
                     localizer.localize("error.missingPermission", create("PERM", permission.getName(), BOLD)));
         }
+
+        ErrorKey key;
         if (guild.getSelfMember().hasPermission(permissions)) {
+            key = new ErrorKey(guild, channel, List.of(permissions));
             errorMessages.add(localizer.localize("error.missingPermissionChannel", createMention("CHANNEL", channel)));
         } else {
+            key = new ErrorKey(guild, null, List.of(permissions));
             errorMessages.add(localizer.localize("error.missingPermissionGuild"));
         }
+
+        if (lastSent.getIfPresent(key) != null) return false;
+        lastSent.put(key, Instant.now());
 
         // First try the system channel
         TextChannel systemChannel =
                 guild.getTextChannelById(repGuild.settings().general().systemChannel());
 
         if (systemChannel != null) {
-            systemChannel.sendMessage(String.join("\n", errorMessages)).complete();
-            return true;
+            try {
+                systemChannel.sendMessage(String.join("\n", errorMessages)).complete();
+                return true;
+            } catch (Exception e) {
+                repGuild.settings().general().systemChannel(0);
+            }
         }
 
         errorMessages.add(localizer.localize("error.nosystemchannel"));
@@ -173,5 +193,22 @@ public final class PermissionErrorHandler {
         List<Permission> missing = assertGuildChannelPermissions(channel, permissions);
         if (missing.isEmpty()) return false;
         return handle(repGuild, localizer, channel, configuration, missing.toArray(Permission[]::new));
+    }
+
+    private record ErrorKey(Guild guild, @Nullable Channel channel, List<Permission> permissions) {
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ErrorKey errorKey = (ErrorKey) o;
+            return guild.getIdLong() == errorKey.guild.getIdLong()
+                    && Objects.equals(channel, errorKey.channel)
+                    && permissions.equals(errorKey.permissions);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(guild, channel, permissions);
+        }
     }
 }
