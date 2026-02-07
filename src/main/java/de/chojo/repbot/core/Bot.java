@@ -71,6 +71,7 @@ import de.chojo.repbot.web.sessions.SessionService;
 import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.guild.GenericGuildEvent;
+import net.dv8tion.jda.api.events.message.GenericMessageEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.interactions.InteractionHook;
@@ -199,10 +200,28 @@ public class Bot {
     }
 
     private void handleListenerException(GenericEvent event, Throwable throwable) {
+        if (event instanceof GenericMessageEvent guildEvent && guildEvent.isFromGuild()) {
+            RepGuild repGuild = data.guildRepository().guild(guildEvent.getGuild());
+            if (throwable instanceof InsufficientPermissionException perm) {
+                PermissionErrorHandler.handle(
+                        repGuild,
+                        localization.localizer().context(LocaleProvider.guild(guildEvent.getGuild())),
+                        perm.getChannel(guildEvent.getGuild().getJDA()),
+                        configuration,
+                        perm.getPermission());
+                return;
+            }
+        }
+
         if (!(event instanceof GenericGuildEvent guildEvent)) {
-            log.error(LogNotify.NOTIFY_ADMIN, "Unhandled Exception in listener: ", throwable);
+            log.error(
+                    LogNotify.NOTIFY_ADMIN,
+                    "Unhandled non Guild Event {} Exception in Listener: ",
+                    event.getClass().getSimpleName(),
+                    throwable);
             return;
         }
+
         RepGuild repGuild = data.guildRepository().guild(guildEvent.getGuild());
         if (throwable instanceof InsufficientPermissionException perm) {
             PermissionErrorHandler.handle(
@@ -213,7 +232,12 @@ public class Bot {
                     perm.getPermission());
             return;
         }
-        log.error(LogNotify.NOTIFY_ADMIN, "Unhandled Exception in listener: ", throwable);
+
+        log.error(
+                LogNotify.NOTIFY_ADMIN,
+                "Unhandled Exception for Event {} in Listener: ",
+                event.getClass().getSimpleName(),
+                throwable);
     }
 
     private void configureRestActions() {
