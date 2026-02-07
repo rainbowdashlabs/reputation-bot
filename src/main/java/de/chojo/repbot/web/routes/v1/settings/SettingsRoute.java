@@ -16,6 +16,7 @@ import de.chojo.repbot.web.routes.v1.settings.sub.AnnouncementsRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.AuditLogRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.AutopostRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.GeneralRoute;
+import de.chojo.repbot.web.routes.v1.settings.sub.IntegrationBypassRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.LogChannelRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.MessagesRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.ProfileRoute;
@@ -28,6 +29,7 @@ import static io.javalin.apibuilder.ApiBuilder.path;
 
 public class SettingsRoute implements RoutesBuilder {
     private final AbuseProtectionRoute abuseProtectionRoute = new AbuseProtectionRoute();
+    private final IntegrationBypassRoute integrationBypassRoute = new IntegrationBypassRoute();
     private final GeneralRoute generalRoute = new GeneralRoute();
     private final ReputationRoute reputationRoute;
     private final AnnouncementsRoute announcementsRoute = new AnnouncementsRoute();
@@ -56,6 +58,7 @@ public class SettingsRoute implements RoutesBuilder {
     public void buildRoutes() {
         path("/settings", () -> {
             abuseProtectionRoute.buildRoutes();
+            integrationBypassRoute.buildRoutes();
             generalRoute.buildRoutes();
             reputationRoute.buildRoutes();
             announcementsRoute.buildRoutes();

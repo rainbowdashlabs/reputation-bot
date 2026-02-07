@@ -56,7 +56,8 @@
     "autopost": "Automatisch posten",
     "logChannel": "Logkanaal",
     "reactions": "Reacties",
-    "auditLog": "Auditlogboek"
+    "auditLog": "Auditlogboek",
+    "integrationBypass": "Integratie omzeilen"
   },
   "locale": {
     "selectLanguage": "Kies je taal"
@@ -79,7 +80,9 @@
   "premiumFeature": {
     "title": "Supporter-functie",
     "requiredTier": "Vereist ondersteuningsniveau:",
-    "message": "{name} is alleen voor supporters. Word supporter om het te kunnen gebruiken."
+    "message": "{name} is alleen voor supporters. Word supporter om het te kunnen gebruiken.",
+    "requiredTierSingular": "Vereist ondersteuningsniveau:",
+    "requiredTierPlural": "Je moet een van de volgende supporterniveaus kiezen:"
   },
   "profile": {
     "description": "Pas aan hoe de bot eruitziet en zich gedraagt op je server.",
@@ -515,7 +518,9 @@
       "hourly": "Per uur",
       "daily": "Dagelijks",
       "weekly": "Wekelijks",
-      "monthly": "Maandelijks"
+      "monthly": "Maandelijks",
+      "noChanges": "Geen veranderingen",
+      "unknownIntegration": "Onbekende integratie"
     },
     "settings": {
       "abuseprotection_cooldown": "Misbruikbescherming - Afkoelperiode",
@@ -577,5 +582,24 @@
     "current": "Huidige server",
     "none": "Geen andere servers gevonden",
     "add": "Voeg nog een server toe door de instellingen van de server te openen."
+  },
+  "integrationBypass": {
+    "description": "Zet bypasses op voor integraties zodat ze reputatie kunnen geven, zelfs als ze niet aan de normale eisen voldoen.",
+    "allowReactions": "Reacties toestaan",
+    "allowAnswer": "Antwoord toestaan",
+    "allowMention": "Vermelding toestaan",
+    "allowFuzzy": "Fuzzy toestaan",
+    "ignoreCooldown": "Negeer afkoelperiode",
+    "ignoreLimit": "Limiet negeren",
+    "allowReactionsDescription": "Maak het mogelijk om een reputatie te geven via reacties",
+    "allowAnswerDescription": "Het toestaan van het geven van een reputatie door het beantwoorden van een bericht",
+    "allowMentionDescription": "Maak het mogelijk om een reputatie te geven door een gebruiker te noemen",
+    "allowFuzzyDescription": "Maak het mogelijk om een reputatie te geven via fuzzy matching",
+    "ignoreCooldownDescription": "Negeer de wachttijd tussen gebruikers",
+    "ignoreLimitDescription": "Negeer eventuele uurlimieten",
+    "add": "Integratie omzeilen toevoegen",
+    "selectIntegration": "Kies een integratie",
+    "noIntegrations": "Er zijn geen integraties meer om bypasses aan toe te voegen.",
+    "deleteConfirm": "Weet je zeker dat je deze integratie-bypass wilt verwijderen?"
   }
 }

@@ -103,7 +103,7 @@ public class MessageListener extends ListenerAdapter {
     }
 
     public void handleOnMessageReceived(@NotNull MessageReceivedEvent event) {
-        if (event.getAuthor().isBot() || event.isWebhookMessage() || !event.isFromGuild()) return;
+        if (event.isWebhookMessage() || !event.isFromGuild()) return;
         var guild = event.getGuild();
         var repGuild = guildRepository.guild(guild);
         var settings = repGuild.settings();
@@ -245,7 +245,8 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        if (settings.reputation().isEmbedActive()) {
+        if (settings.reputation().isEmbedActive()
+                && !context.asMessage().getMember().getUser().isBot()) {
             settings.repGuild().reputation().analyzer().log(context, SubmitResult.of(SubmitResultType.EMBED_SEND));
             reputationVoteListener.registerVote(context.asMessage(), members, settings);
         }

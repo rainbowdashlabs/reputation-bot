@@ -56,7 +56,8 @@
     "autopost": "Automatické zveřejnění",
     "logChannel": "Kanál protokolu",
     "reactions": "Reakce",
-    "auditLog": "Auditní protokol"
+    "auditLog": "Auditní protokol",
+    "integrationBypass": "Obcházení integrace"
   },
   "locale": {
     "selectLanguage": "Vyberte jazyk"
@@ -79,7 +80,9 @@
   "premiumFeature": {
     "title": "Funkce pro příznivce",
     "requiredTier": "Požadovaná úroveň podpory:",
-    "message": "{name} je vyhrazeno pro příznivce. Staňte se příznivcem a můžete jej používat."
+    "message": "{name} je vyhrazeno pro příznivce. Staňte se příznivcem a můžete jej používat.",
+    "requiredTierSingular": "Požadovaná úroveň podpory:",
+    "requiredTierPlural": "Je vyžadována jedna z následujících úrovní podpory:"
   },
   "profile": {
     "description": "Přizpůsobte vzhled a chování bota na vašem serveru.",
@@ -515,7 +518,9 @@
       "hourly": "Hodinově",
       "daily": "Denně",
       "weekly": "Týdenní",
-      "monthly": "Měsíční"
+      "monthly": "Měsíční",
+      "noChanges": "Žádné změny",
+      "unknownIntegration": "Neznámá integrace"
     },
     "settings": {
       "abuseprotection_cooldown": "Ochrana před zneužíváním – ochlazovací doba",
@@ -577,5 +582,24 @@
     "current": "Aktuální server",
     "none": "Nebyly nalezeny žádné další servery",
     "add": "Přidejte další server otevřením nastavení ze serveru."
+  },
+  "integrationBypass": {
+    "description": "Nakonfigurujte obcházení pro integrace, aby mohly udělovat reputaci, i když nesplňují běžné požadavky.",
+    "allowReactions": "Povolit reakce",
+    "allowAnswer": "Povolit odpověď",
+    "allowMention": "Povolit zmínku",
+    "allowFuzzy": "Povolit fuzzy",
+    "ignoreCooldown": "Ignorovat cooldown",
+    "ignoreLimit": "Ignorovat limit",
+    "allowReactionsDescription": "Umožnit udělování reputace prostřednictvím reakcí",
+    "allowAnswerDescription": "Umožnit udělit reputaci prostřednictvím odpovědi na zprávu",
+    "allowMentionDescription": "Umožnit udělit reputaci zmínkou uživatele",
+    "allowFuzzyDescription": "Povolit udělování reputace pomocí fuzzy shody",
+    "ignoreCooldownDescription": "Ignorovat čekací dobu mezi uživateli",
+    "ignoreLimitDescription": "Ignorovat jakýkoli nastavený hodinový limit",
+    "add": "Přidat integrační obcházení",
+    "selectIntegration": "Vyberte integraci",
+    "noIntegrations": "K dispozici nejsou žádné další integrace, ke kterým by bylo možné přidat obcházení.",
+    "deleteConfirm": "Opravdu chcete odstranit tento integrační bypass?"
   }
 }

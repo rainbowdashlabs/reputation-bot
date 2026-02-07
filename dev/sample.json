@@ -1,23 +1,23 @@
 {
   "settings": {
     "abuseProtection": {
-      "cooldown": 30,
+      "cooldown": 29,
       "cooldownDirection": "BIDIRECTIONAL",
-      "maxMessageAge": 0,
-      "minMessages": 0,
+      "maxMessageAge": 1,
+      "minMessages": 1,
       "donorContext": false,
       "receiverContext": false,
-      "maxGiven": 0,
-      "maxGivenHours": 1,
-      "maxReceived": 0,
-      "maxReceivedHours": 1,
-      "maxMessageReputation": 3
+      "maxGiven": 2,
+      "maxGivenHours": 2,
+      "maxReceived": 2,
+      "maxReceivedHours": 2,
+      "maxMessageReputation": 4
     },
-    "announcements": {"active": true, "sameChannel": true, "channelId": "853259349380300800"},
+    "announcements": {"active": false, "sameChannel": true, "channelId": "0"},
     "autopost": {
       "active": true,
-      "channelId": "853259349380300800",
-      "messageId": "0",
+      "channelId": "1468571290184192084",
+      "messageId": "1468612893413998706",
       "refreshType": "UPDATE",
       "refreshInterval": "DAILY"
     },
@@ -26,19 +26,19 @@
       "language": "GERMAN",
       "reputationMode": "TOTAL",
       "resetDate": null,
-      "systemChannel": "853259269688262700"
+      "systemChannel": "1468571290184192084"
     },
-    "logChannel": {"channelId": "853259349380300800", "active": true},
-    "messages": {"reactionConfirmation": true, "commandReputationEphemeral": false},
+    "logChannel": {"channelId": "1468571290184192084", "active": true},
+    "messages": {"reactionConfirmation": false, "commandReputationEphemeral": true},
     "profile": {
       "nickname": null,
-      "profilePictureUrl": "https://cdn.discordapp.com/avatars/853255944079540254/6c07f24efff960e4d086df92f2703f94.png",
+      "profilePictureUrl": "https://cdn.discordapp.com/guilds/853250161915985958/users/853255944079540254/avatars/588418e47b5d8cc596aa3f8fe3e07f1d.png",
       "reputationName": null
     },
     "ranks": {
       "ranks": [
-        {"roleId": "976465888939212800", "reputation": 40}, {"roleId": "855424789387804700", "reputation": 10},
-        {"roleId": "855424753983946800", "reputation": 1}
+        {"roleId": "976465888939212841", "reputation": 50}, {"roleId": "855424789387804684", "reputation": 15},
+        {"roleId": "855424753983946773", "reputation": 1}
       ]
     },
     "reputation": {
@@ -47,14 +47,22 @@
       "mentionActive": true,
       "fuzzyActive": true,
       "embedActive": true,
-      "directActive": false,
+      "directActive": true,
       "commandActive": true
     },
     "thanking": {
-      "channels": {"channels": ["853259349380300800", "1468571290184192084"], "categories": [], "whitelist": true},
-      "donorRoles": {"roleIds": ["853250412730777600", "853250942900502500"]},
+      "channels": {
+        "channels": [
+          "1022427137891893300", "853259349380300860", "853250162352455710", "853259320485609502", "1468571290184192084"
+        ],
+        "categories": ["853252115312803842", "853252619094982656"],
+        "whitelist": true
+      },
+      "donorRoles": {"roleIds": []},
       "receiverRoles": {"roleIds": []},
-      "reactions": {"reactions": ["878760197059911800", "853912045749665900"], "mainReaction": "853912045061275600"},
+      "denyDonorRoles": {"roleIds": []},
+      "denyReceiverRoles": {"roleIds": []},
+      "reactions": {"reactions": ["878760197059911762", "853912045061275669"], "mainReaction": "853912045552795659"},
       "thankwords": {"thankwords": ["test", "thx", "ty", "tysm", "thank[sx]?", "tyvm"]}
     }
   }, "guild": {
@@ -74,18 +82,13 @@
     {"name": "Pro", "id": "853641281191936041", "position": 14, "color": "#e91e63"},
     {"name": "Beginner", "id": "853641156948000769", "position": 13, "color": "#3498db"},
     {"name": "--- Bots ---", "id": "853258164228456498", "position": 12, "color": "#ffffff"},
-    {"name": "Zira", "id": "853255875320610857", "position": 11, "color": "#ffffff"},
-    {"name": "Reputation Bot", "id": "905100207702810625", "position": 10, "color": "#ffffff"},
     {"name": "--- Language ---", "id": "853258215697416192", "position": 9, "color": "#ffffff"},
     {"name": "german", "id": "853258006681354280", "position": 8, "color": "#ffffff"},
     {"name": "english", "id": "853258053007441920", "position": 7, "color": "#ffffff"},
     {"name": "Bot Updates", "id": "853259659716591646", "position": 6, "color": "#ffffff"},
     {"name": "Level 1 Beta", "id": "855424753983946773", "position": 5, "color": "#ffffff"},
     {"name": "Level 2 Beta", "id": "855424789387804684", "position": 4, "color": "#ffffff"},
-    {"name": "Level 3 Beta", "id": "976465888939212841", "position": 3, "color": "#ffffff"},
-    {"name": "Krile", "id": "1127234173728469176", "position": 2, "color": "#ffffff"},
-    {"name": "Reputation Bot Testing", "id": "1400900032865112167", "position": 1, "color": "#ffffff"},
-    {"name": "RepBot-Beta", "id": "1459280128977928256", "position": 0, "color": "#ffffff"}
+    {"name": "Level 3 Beta", "id": "976465888939212841", "position": 3, "color": "#ffffff"}
   ],
   "channels": {
     "channels": [], "categories": [
@@ -136,48 +139,94 @@
     {"name": "diamond", "id": "853912045749665872", "url": "https://cdn.discordapp.com/emojis/853912045749665872.png"},
     {"name": "rep_pat", "id": "878760197059911762", "url": "https://cdn.discordapp.com/emojis/878760197059911762.gif"},
     {"name": "blank", "id": "972278990209450014", "url": "https://cdn.discordapp.com/emojis/972278990209450014.png"}
+  ],
+  "integrations": [
+    {
+      "color": "#62e001",
+      "displayName": "Zira",
+      "id": "275813801792634880",
+      "profilePictureUrl": "https://cdn.discordapp.com/avatars/275813801792634880/a337a7f40dc70a1b04f35a5514cfc9a8.png"
+    }, {
+      "color": "#62e001",
+      "displayName": "Reputation Bot",
+      "id": "871322553698906142",
+      "profilePictureUrl": "https://cdn.discordapp.com/avatars/871322553698906142/a9a97dcbb5d3ab162888531926df582a.png"
+    }, {
+      "color": "#62e001",
+      "displayName": "Krile",
+      "id": "1126568385732419615",
+      "profilePictureUrl": "https://cdn.discordapp.com/avatars/1126568385732419615/18ecf50700ba85dcd4f23ae7e49d1a7d.png"
+    }, {
+      "color": "#ffffff",
+      "displayName": "Reputation Bot Testing",
+      "id": "1400875279852896407",
+      "profilePictureUrl": "https://cdn.discordapp.com/avatars/1400875279852896407/8d21f6a88da09f353a75c8024772ad93.png"
+    }, {
+      "color": "#eb7605",
+      "displayName": "Reputation Bot Beta",
+      "id": "853255944079540254",
+      "profilePictureUrl": "https://cdn.discordapp.com/avatars/853255944079540254/6c07f24efff960e4d086df92f2703f94.png"
+    }
   ]
 }, "premiumFeatures": {
   "reputationLog": {
     "unlocked": true,
-    "requiredSkus": [{"id": "1380621847191883786", "name": "Tier 1"}, {"id": "1360377703743623261", "name": "Tier 2"}]
+    "requiredSkus": [
+      {"id": "1380621847191883786", "name": "Supporter Starter"}, {"id": "1360377703743623261", "name": "Supporter Pro"}
+    ]
   },
   "analyzerLog": {
     "unlocked": true,
-    "requiredSkus": [{"id": "1380621847191883786", "name": "Tier 1"}, {"id": "1360377703743623261", "name": "Tier 2"}]
+    "requiredSkus": [
+      {"id": "1380621847191883786", "name": "Supporter Starter"}, {"id": "1360377703743623261", "name": "Supporter Pro"}
+    ]
   },
   "channelBlacklist": {
     "unlocked": true,
-    "requiredSkus": [{"id": "1380621847191883786", "name": "Tier 1"}, {"id": "1360377703743623261", "name": "Tier 2"}]
+    "requiredSkus": [
+      {"id": "1380621847191883786", "name": "Supporter Starter"}, {"id": "1360377703743623261", "name": "Supporter Pro"}
+    ]
   },
-  "localeOverrides": {"unlocked": true, "requiredSkus": [{"id": "1360377703743623261", "name": "Tier 2"}]},
+  "localeOverrides": {"unlocked": true, "requiredSkus": [{"id": "1360377703743623261", "name": "Supporter Pro"}]},
   "autopost": {
     "unlocked": true,
-    "requiredSkus": [{"id": "1380621847191883786", "name": "Tier 1"}, {"id": "1360377703743623261", "name": "Tier 2"}]
+    "requiredSkus": [
+      {"id": "1380621847191883786", "name": "Supporter Starter"}, {"id": "1360377703743623261", "name": "Supporter Pro"}
+    ]
   },
   "advancedRankings": {
     "unlocked": true,
-    "requiredSkus": [{"id": "1380621847191883786", "name": "Tier 1"}, {"id": "1360377703743623261", "name": "Tier 2"}]
+    "requiredSkus": [
+      {"id": "1380621847191883786", "name": "Supporter Starter"}, {"id": "1360377703743623261", "name": "Supporter Pro"}
+    ]
   },
   "detailedProfile": {
     "unlocked": true,
-    "requiredSkus": [{"id": "1380621847191883786", "name": "Tier 1"}, {"id": "1360377703743623261", "name": "Tier 2"}]
+    "requiredSkus": [
+      {"id": "1380621847191883786", "name": "Supporter Starter"}, {"id": "1360377703743623261", "name": "Supporter Pro"}
+    ]
   },
   "logChannel": {
     "unlocked": true,
-    "requiredSkus": [{"id": "1380621847191883786", "name": "Tier 1"}, {"id": "1360377703743623261", "name": "Tier 2"}]
+    "requiredSkus": [
+      {"id": "1380621847191883786", "name": "Supporter Starter"}, {"id": "1360377703743623261", "name": "Supporter Pro"}
+    ]
   },
-  "additionalEmojis": {"unlocked": true, "requiredSkus": [{"id": "1360377703743623261", "name": "Tier 2"}]},
-  "profile": {"unlocked": true, "requiredSkus": [{"id": "1360377703743623261", "name": "Tier 2"}]},
+  "additionalEmojis": {"unlocked": true, "requiredSkus": [{"id": "1360377703743623261", "name": "Supporter Pro"}]},
+  "profile": {"unlocked": true, "requiredSkus": [{"id": "1360377703743623261", "name": "Supporter Pro"}]},
   "reputationChannel": {
     "max": 2147483647,
     "unlocked": true,
-    "requiredSkus": [{"id": "1380621847191883786", "name": "Tier 1"}, {"id": "1360377703743623261", "name": "Tier 2"}]
+    "requiredSkus": [
+      {"id": "1380621847191883786", "name": "Supporter Starter"}, {"id": "1360377703743623261", "name": "Supporter Pro"}
+    ]
   },
   "reputationCategories": {
     "max": 2147483647,
     "unlocked": true,
-    "requiredSkus": [{"id": "1380621847191883786", "name": "Tier 1"}, {"id": "1360377703743623261", "name": "Tier 2"}]
+    "requiredSkus": [
+      {"id": "1380621847191883786", "name": "Supporter Starter"}, {"id": "1360377703743623261", "name": "Supporter Pro"}
+    ]
   }
 }
 }

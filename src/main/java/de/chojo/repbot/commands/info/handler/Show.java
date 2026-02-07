@@ -92,11 +92,14 @@ public class Show implements SlashHandler {
                 .build();
 
         List<Contributor> contributors;
+        String body = null;
         try {
-            var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            contributors = mapper.readerForListOf(Contributor.class).readValue(response.body());
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            body = response.body();
+            contributors = mapper.readerForListOf(Contributor.class).readValue(body);
         } catch (IOException | InterruptedException e) {
             log.error("Could not read response", e);
+            log.error("Body: {}", body);
             contributors = Collections.emptyList();
         }
 

@@ -56,7 +56,8 @@
     "autopost": "Autopost",
     "logChannel": "Log Channel",
     "reactions": "Reactions",
-    "auditLog": "Audit Log"
+    "auditLog": "Audit Log",
+    "integrationBypass": "Integration Bypass"
   },
   "locale": {
     "selectLanguage": "Select Language"
@@ -84,8 +85,33 @@
   },
   "premiumFeature": {
     "title": "Supporter Feature",
-    "requiredTier": "Required Supporter Tier:",
+    "requiredTierSingular": "Required Supporter Tier:",
+    "requiredTierPlural": "One of the following supporter tiers is required:",
     "message": "{name} is reserved for supporters. Become a supporter to use it."
+  },
+  "integrationBypass": {
+    "premiumRequired": "Integration bypass",
+    "description": "Configure bypasses for integrations to allow them to give reputation even if they don't meet the regular requirements.",
+    "allowReactions": "Allow Reactions",
+    "allowAnswer": "Allow Answer",
+    "allowMention": "Allow Mention",
+    "allowFuzzy": "Allow Fuzzy",
+    "allowDirect": "Allow Direct",
+    "ignoreCooldown": "Ignore Cooldown",
+    "ignoreLimit": "Ignore Limit",
+    "ignoreContext": "Ignore Context",
+    "allowReactionsDescription": "Allow giving a reputation via reactions",
+    "allowAnswerDescription": "Allow giving a reputation via answering a message",
+    "allowMentionDescription": "Allow giving a reputation via mentioning a user",
+    "allowFuzzyDescription": "Allow giving a reputation via fuzzy matching",
+    "allowDirectDescription": "Allow giving a reputation when an embed would be skipped because only one receiver could be determined. No embed will ever be sent for a bot.",
+    "ignoreCooldownDescription": "Ignore cooldown between users",
+    "ignoreLimitDescription": "Ignore any hourly limit set",
+    "ignoreContextDescription": "Ignore context checks",
+    "add": "Add Integration Bypass",
+    "selectIntegration": "Select an integration",
+    "noIntegrations": "No more integrations available to add bypasses for.",
+    "deleteConfirm": "Are you sure you want to remove this integration bypass?"
   },
   "profile": {
     "description": "Customize how the bot appears and behaves in your server.",
@@ -525,7 +551,9 @@
       "hourly": "Hourly",
       "daily": "Daily",
       "weekly": "Weekly",
-      "monthly": "Monthly"
+      "monthly": "Monthly",
+      "noChanges": "No changes",
+      "unknownIntegration": "Unknown Integration"
     },
     "settings": {
       "abuseprotection_cooldown": "Abuse Protection - Cooldown",

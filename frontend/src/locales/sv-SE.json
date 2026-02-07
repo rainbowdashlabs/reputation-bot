@@ -56,7 +56,8 @@
     "autopost": "Autopost",
     "logChannel": "Loggkanal",
     "reactions": "Reaktioner",
-    "auditLog": "Revisionslogg"
+    "auditLog": "Revisionslogg",
+    "integrationBypass": "Integrationsförbikoppling"
   },
   "locale": {
     "selectLanguage": "Välj språk"
@@ -79,7 +80,9 @@
   "premiumFeature": {
     "title": "Supporterfunktion",
     "requiredTier": "Krävd supporternivå:",
-    "message": "{name} är reserverad för supportrar. Bli supporter för att kunna använda den."
+    "message": "{name} är reserverad för supportrar. Bli supporter för att kunna använda den.",
+    "requiredTierSingular": "Krävd supporternivå:",
+    "requiredTierPlural": "En av följande supporternivåer krävs:"
   },
   "profile": {
     "description": "Anpassa hur boten visas och beter sig på din server.",
@@ -515,7 +518,9 @@
       "hourly": "Per timme",
       "daily": "Dagligen",
       "weekly": "Veckovis",
-      "monthly": "Månadsvis"
+      "monthly": "Månadsvis",
+      "noChanges": "Inga ändringar",
+      "unknownIntegration": "Okänd integration"
     },
     "settings": {
       "abuseprotection_cooldown": "Skydd mot missbruk – Avkylningsperiod",
@@ -577,5 +582,24 @@
     "current": "Aktuell server",
     "none": "Inga andra servrar hittades",
     "add": "Lägg till en annan server genom att öppna inställningarna från servern."
+  },
+  "integrationBypass": {
+    "description": "Konfigurera bypassar för integrationer så att de kan ge rykte även om de inte uppfyller de vanliga kraven.",
+    "allowReactions": "Tillåt reaktioner",
+    "allowAnswer": "Tillåt svar",
+    "allowMention": "Tillåt omnämnande",
+    "allowFuzzy": "Tillåt Fuzzy",
+    "ignoreCooldown": "Ignorera nedkylningstid",
+    "ignoreLimit": "Ignorera gräns",
+    "allowReactionsDescription": "Tillåt att ge ett omdöme via reaktioner",
+    "allowAnswerDescription": "Tillåt att ge ett omdöme genom att svara på ett meddelande",
+    "allowMentionDescription": "Tillåt att ge ett omdöme genom att nämna en användare",
+    "allowFuzzyDescription": "Tillåt att ge ett omdöme via fuzzy matching",
+    "ignoreCooldownDescription": "Ignorera nedkylningstid mellan användare",
+    "ignoreLimitDescription": "Ignorera eventuella tidsbegränsningar",
+    "add": "Lägg till integrationsförbikoppling",
+    "selectIntegration": "Välj en integration",
+    "noIntegrations": "Det finns inga fler integrationer tillgängliga för att lägga till förbikopplingar för.",
+    "deleteConfirm": "Är du säker på att du vill ta bort denna integrationsförbikoppling?"
   }
 }

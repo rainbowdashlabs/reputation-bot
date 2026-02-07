@@ -13,7 +13,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "2.2.0"
+version = "2.3.0"
 
 repositories {
     mavenLocal()
@@ -65,7 +65,7 @@ spotless {
 
 dependencies {
     // discord
-    implementation("de.chojo", "cjda-util", "2.13.0+jda-6.3.0") {
+    implementation("de.chojo", "cjda-util", "2.13.1+jda-6.3.0") {
         exclude(group = "club.minnced", module = "opus-java")
     }
 
@@ -125,7 +125,7 @@ idea {
                 }
                 register<org.jetbrains.gradle.ext.Application>("App-Testing - All SKUs") {
                     mainClass = "de.chojo.repbot.ReputationBot"
-                    jvmArgs = (shared + "-Dbot.grantallsku=true").joinToString(" ")
+                    jvmArgs = (shared + "-Dbot.grantallsku=true" + "-Dcjda.premium.skipEntitledCheck=true").joinToString(" ")
                     moduleName = "rep-bot.main"
                 }
             }

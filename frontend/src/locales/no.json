@@ -56,7 +56,8 @@
     "autopost": "Autopost",
     "logChannel": "Loggkanal",
     "reactions": "Reaksjoner",
-    "auditLog": "Revisjonslogg"
+    "auditLog": "Revisjonslogg",
+    "integrationBypass": "Integrering Bypass"
   },
   "locale": {
     "selectLanguage": "Velg språk"
@@ -79,7 +80,9 @@
   "premiumFeature": {
     "title": "Supporterfunksjon",
     "requiredTier": "Nødvendig støttespiller-nivå:",
-    "message": "{name} er forbeholdt støttespillere. Bli støttespiller for å kunne bruke den."
+    "message": "{name} er forbeholdt støttespillere. Bli støttespiller for å kunne bruke den.",
+    "requiredTierSingular": "Nødvendig støttenivå:",
+    "requiredTierPlural": "En av følgende støttenivåer er påkrevd:"
   },
   "profile": {
     "description": "Tilpass hvordan boten vises og oppfører seg på serveren din.",
@@ -515,7 +518,9 @@
       "hourly": "Per time",
       "daily": "Daglig",
       "weekly": "Ukentlig",
-      "monthly": "Månedlig"
+      "monthly": "Månedlig",
+      "noChanges": "Ingen endringer",
+      "unknownIntegration": "Ukjent integrasjon"
     },
     "settings": {
       "abuseprotection_cooldown": "Misbruksbeskyttelse - Avkjølingstid",
@@ -577,5 +582,24 @@
     "current": "Nåværende server",
     "none": "Ingen andre servere funnet",
     "add": "Legg til en ny server ved å åpne innstillingene fra serveren."
+  },
+  "integrationBypass": {
+    "description": "Konfigurer omgåelser for integrasjoner slik at de kan gi omdømme selv om de ikke oppfyller de vanlige kravene.",
+    "allowReactions": "Tillat reaksjoner",
+    "allowAnswer": "Tillat svar",
+    "allowMention": "Tillat omtale",
+    "allowFuzzy": "Tillat Fuzzy",
+    "ignoreCooldown": "Ignorer nedkjølingstid",
+    "ignoreLimit": "Ignorer grense",
+    "allowReactionsDescription": "Tillat å gi omdømme via reaksjoner",
+    "allowAnswerDescription": "Tillat å gi omdømme ved å svare på en melding",
+    "allowMentionDescription": "Tillat å gi omdømme ved å nevne en bruker",
+    "allowFuzzyDescription": "Tillat å gi omdømme via fuzzy matching",
+    "ignoreCooldownDescription": "Ignorer nedkjølingstid mellom brukere",
+    "ignoreLimitDescription": "Ignorer eventuelle tidsbegrensninger",
+    "add": "Legg til integrasjonsomgåelse",
+    "selectIntegration": "Velg en integrasjon",
+    "noIntegrations": "Det er ikke flere integrasjoner tilgjengelig for å legge til omgåelser for.",
+    "deleteConfirm": "Er du sikker på at du vil fjerne denne integrasjonsomgåelsen?"
   }
 }

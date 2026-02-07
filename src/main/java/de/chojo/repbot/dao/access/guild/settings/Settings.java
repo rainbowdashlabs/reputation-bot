@@ -9,6 +9,7 @@ import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.access.guild.settings.sub.AbuseProtection;
 import de.chojo.repbot.dao.access.guild.settings.sub.Announcements;
 import de.chojo.repbot.dao.access.guild.settings.sub.General;
+import de.chojo.repbot.dao.access.guild.settings.sub.IntegrationBypass;
 import de.chojo.repbot.dao.access.guild.settings.sub.LogChannel;
 import de.chojo.repbot.dao.access.guild.settings.sub.Messages;
 import de.chojo.repbot.dao.access.guild.settings.sub.Profile;
@@ -16,6 +17,7 @@ import de.chojo.repbot.dao.access.guild.settings.sub.Ranks;
 import de.chojo.repbot.dao.access.guild.settings.sub.Reputation;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.access.guild.settings.sub.autopost.Autopost;
+import de.chojo.repbot.dao.access.guild.settings.sub.integrationbypass.Bypass;
 import de.chojo.repbot.dao.components.GuildHolder;
 import net.dv8tion.jda.api.entities.Guild;
 
@@ -26,6 +28,7 @@ public class Settings implements GuildHolder {
     private final RepGuild repGuild;
     private AbuseProtection abuseProtection;
     private General general;
+    private IntegrationBypass bypass;
     private Reputation reputation;
     private Ranks ranks;
     private Thanking thanking;
@@ -37,6 +40,29 @@ public class Settings implements GuildHolder {
 
     public Settings(RepGuild repGuild) {
         this.repGuild = repGuild;
+    }
+
+    public IntegrationBypass integrationBypass() {
+        if (bypass != null) {
+            return bypass;
+        }
+        var list = query("""
+                SELECT
+                    guild_id,
+                    integration_id,
+                    allow_reactions,
+                    allow_answer,
+                    allow_mention,
+                    allow_fuzzy,
+                    allow_direct,
+                    ignore_cooldown,
+                    ignore_limit,
+                    ignore_context
+                FROM
+                    integration_bypass
+                WHERE guild_id = ?""").single(call().bind(guildId())).map(Bypass::new).all();
+        bypass = new IntegrationBypass(this, list);
+        return bypass;
     }
 
     public AbuseProtection abuseProtection() {

@@ -1,7 +1,7 @@
 ### GET
 
 GET localhost:8888/v1/session
-Authorization: 853250161915985958
+Authorization: test_mode853250161915985958testmode
 ### GET
 
 GET localhost:8888/v1/data/links

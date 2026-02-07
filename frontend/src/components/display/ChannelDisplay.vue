@@ -5,7 +5,7 @@
  */
 <script lang="ts" setup>
 import {computed} from 'vue'
-import {useSession} from '@/composables/useSession'
+import {useSession} from '@/composables/useSession.ts'
 
 interface Props {
   channelId: string

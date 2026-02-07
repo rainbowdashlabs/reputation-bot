@@ -9,7 +9,7 @@ import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.access.guildsession.GuildSession;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
-import de.chojo.repbot.web.error.ErrorResponse;
+import de.chojo.repbot.web.error.ErrorResponseWrapper;
 import de.chojo.repbot.web.pojo.settings.sub.ThankingPOJO;
 import de.chojo.repbot.web.pojo.settings.sub.thanking.ChannelsPOJO;
 import de.chojo.repbot.web.pojo.settings.sub.thanking.ReactionsPOJO;
@@ -56,7 +56,7 @@ public class ThankingRoute implements RoutesBuilder {
                 @OpenApiResponse(status = "200"),
                 @OpenApiResponse(
                         status = "403",
-                        content = @OpenApiContent(from = ErrorResponse.class),
+                        content = @OpenApiContent(from = ErrorResponseWrapper.class),
                         description = "Premium feature required or limit exceeded")
             })
     public void updateThankingSettings(Context ctx) {

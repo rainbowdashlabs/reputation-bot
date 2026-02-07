@@ -49,7 +49,9 @@ const displayMessage = computed(() => {
         <h3 class="text-lg font-semibold text-yellow-800 mb-2">{{ t('premiumFeature.title') }}</h3>
         <p class="text-yellow-700 mb-2">{{ displayMessage }}</p>
         <div v-if="requiredSkus.length > 0" class="mt-2">
-          <p class="text-sm font-medium text-yellow-800 mb-1">{{ t('premiumFeature.requiredTier') }}</p>
+          <p class="text-sm font-medium text-yellow-800 mb-1">
+            {{ requiredSkus.length > 1 ? t('premiumFeature.requiredTierPlural') : t('premiumFeature.requiredTierSingular') }}
+          </p>
           <ul class="list-disc list-inside text-sm text-yellow-700">
             <li v-for="sku in requiredSkus" :key="sku.id">{{ sku.name }}</li>
           </ul>
@@ -64,7 +66,10 @@ const displayMessage = computed(() => {
   >
     <p class="text-yellow-800 font-medium mb-1">{{ t('premiumFeature.title') }}</p>
     <p class="text-yellow-700">{{ displayMessage }}</p>
-    <ul v-if="requiredSkus.length > 0" class="list-disc list-inside text-yellow-700 mt-1 ml-2">
+    <p v-if="requiredSkus.length > 0" class="text-yellow-800 font-medium mt-2 mb-1">
+      {{ requiredSkus.length > 1 ? t('premiumFeature.requiredTierPlural') : t('premiumFeature.requiredTierSingular') }}
+    </p>
+    <ul v-if="requiredSkus.length > 0" class="list-disc list-inside text-yellow-700 ml-2">
       <li v-for="sku in requiredSkus" :key="sku.id">{{ sku.name }}</li>
     </ul>
   </div>

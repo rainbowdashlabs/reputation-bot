@@ -13,6 +13,7 @@ import de.chojo.repbot.web.pojo.settings.sub.AbuseProtectionPOJO;
 import de.chojo.repbot.web.pojo.settings.sub.AnnouncementsPOJO;
 import de.chojo.repbot.web.pojo.settings.sub.AutopostPOJO;
 import de.chojo.repbot.web.pojo.settings.sub.GeneralPOJO;
+import de.chojo.repbot.web.pojo.settings.sub.IntegrationBypassPOJO;
 import de.chojo.repbot.web.pojo.settings.sub.LogChannelPOJO;
 import de.chojo.repbot.web.pojo.settings.sub.MessagesPOJO;
 import de.chojo.repbot.web.pojo.settings.sub.ProfilePOJO;
@@ -23,6 +24,7 @@ import net.dv8tion.jda.api.entities.Guild;
 
 public class SettingsPOJO {
     AbuseProtectionPOJO abuseProtection;
+    IntegrationBypassPOJO integrationBypass;
     AnnouncementsPOJO announcements;
     AutopostPOJO autopost;
     GeneralPOJO general;
@@ -35,6 +37,7 @@ public class SettingsPOJO {
 
     public SettingsPOJO(
             AbuseProtectionPOJO abuseProtection,
+            IntegrationBypassPOJO integrationBypass,
             AnnouncementsPOJO announcements,
             AutopostPOJO autopost,
             GeneralPOJO general,
@@ -45,6 +48,7 @@ public class SettingsPOJO {
             ReputationPOJO reputation,
             ThankingPOJO thanking) {
         this.abuseProtection = abuseProtection;
+        this.integrationBypass = integrationBypass;
         this.announcements = announcements;
         this.autopost = autopost;
         this.general = general;
@@ -70,6 +74,7 @@ public class SettingsPOJO {
                 thanking.thankwords());
         return new SettingsPOJO(
                 settings.abuseProtection(),
+                settings.integrationBypass(),
                 settings.announcements(),
                 settings.autopost(),
                 settings.general(),

@@ -56,7 +56,8 @@
     "autopost": "Pubblicazione automatica",
     "logChannel": "Canale di registrazione",
     "reactions": "Reazioni",
-    "auditLog": "Registro di controllo"
+    "auditLog": "Registro di controllo",
+    "integrationBypass": "Bypass dell'integrazione"
   },
   "locale": {
     "selectLanguage": "Scegli la lingua"
@@ -79,7 +80,9 @@
   "premiumFeature": {
     "title": "Caratteristiche dei sostenitori",
     "requiredTier": "Livello di sostegno richiesto:",
-    "message": "{name} è solo per chi ci supporta. Diventa un sostenitore per usarlo."
+    "message": "{name} è solo per chi ci supporta. Diventa un sostenitore per usarlo.",
+    "requiredTierSingular": "Livello di sostegno richiesto:",
+    "requiredTierPlural": "Devi scegliere uno di questi livelli di sostegno:"
   },
   "profile": {
     "description": "Personalizza come il bot appare e si comporta sul tuo server.",
@@ -515,7 +518,9 @@
       "hourly": "Ogni ora",
       "daily": "Ogni giorno",
       "weekly": "Settimanale",
-      "monthly": "Mensile"
+      "monthly": "Mensile",
+      "noChanges": "Nessuna modifica",
+      "unknownIntegration": "Integrazione sconosciuta"
     },
     "settings": {
       "abuseprotection_cooldown": "Protezione dagli abusi - Tempo di ricarica",
@@ -577,5 +582,24 @@
     "current": "Server attuale",
     "none": "Nessun altro server trovato",
     "add": "Aggiungi un altro server aprendo le impostazioni dal server."
+  },
+  "integrationBypass": {
+    "description": "Configura delle eccezioni per le integrazioni, così possono dare reputazione anche se non soddisfano i requisiti normali.",
+    "allowReactions": "Consenti reazioni",
+    "allowAnswer": "Consenti risposta",
+    "allowMention": "Consenti menzione",
+    "allowFuzzy": "Consenti approssimativo",
+    "ignoreCooldown": "Ignora il tempo di ricarica",
+    "ignoreLimit": "Ignora limite",
+    "allowReactionsDescription": "Permetti di dare una reputazione tramite le reazioni",
+    "allowAnswerDescription": "Permetti di dare una reputazione rispondendo a un messaggio",
+    "allowMentionDescription": "Permetti di dare una reputazione menzionando un utente",
+    "allowFuzzyDescription": "Consenti di dare una reputazione tramite corrispondenza approssimativa",
+    "ignoreCooldownDescription": "Ignora il tempo di attesa tra gli utenti",
+    "ignoreLimitDescription": "Ignora qualsiasi limite orario impostato",
+    "add": "Aggiungi bypass integrazione",
+    "selectIntegration": "Scegli un'integrazione",
+    "noIntegrations": "Non ci sono più integrazioni a cui aggiungere bypass.",
+    "deleteConfirm": "Sei sicuro di voler togliere questo bypass di integrazione?"
   }
 }

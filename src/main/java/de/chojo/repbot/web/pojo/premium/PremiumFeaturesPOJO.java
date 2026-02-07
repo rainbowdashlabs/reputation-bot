@@ -40,6 +40,7 @@ public class PremiumFeaturesPOJO {
     private final SimpleFeature logChannel;
     private final SimpleFeature additionalEmojis;
     private final SimpleFeature profile;
+    private final SimpleFeature integrationBypass;
 
     // Complex features with limits
     private final FeatureLimit reputationChannel;
@@ -56,6 +57,7 @@ public class PremiumFeaturesPOJO {
             SimpleFeature logChannel,
             SimpleFeature additionalEmojis,
             SimpleFeature profile,
+            SimpleFeature integrationBypass,
             FeatureLimit reputationChannel,
             FeatureLimit reputationCategories) {
         this.reputationLog = reputationLog;
@@ -68,6 +70,7 @@ public class PremiumFeaturesPOJO {
         this.logChannel = logChannel;
         this.additionalEmojis = additionalEmojis;
         this.profile = profile;
+        this.integrationBypass = integrationBypass;
         this.reputationChannel = reputationChannel;
         this.reputationCategories = reputationCategories;
     }
@@ -102,6 +105,9 @@ public class PremiumFeaturesPOJO {
         SimpleFeature profile =
                 createSimpleFeature(subscriptions, features.profile().allow(), skuMap);
 
+        SimpleFeature integrationBypass =
+                createSimpleFeature(subscriptions, features.integrationBypass().allow(), skuMap);
+
         // Check complex features with limits
         int defaultChannels = features.reputationChannel().defaultChannel();
         boolean moreChannelsUnlocked =
@@ -130,6 +136,7 @@ public class PremiumFeaturesPOJO {
                 logChannel,
                 additionalEmojis,
                 profile,
+                integrationBypass,
                 reputationChannel,
                 reputationCategories);
     }
@@ -215,5 +222,9 @@ public class PremiumFeaturesPOJO {
 
     public FeatureLimit reputationCategories() {
         return reputationCategories;
+    }
+
+    public SimpleFeature integrationBypass() {
+        return integrationBypass;
     }
 }

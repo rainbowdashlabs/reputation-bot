@@ -56,7 +56,8 @@
     "autopost": "Autopost",
     "logChannel": "Protokollkanal",
     "reactions": "Reaktionen",
-    "auditLog": "Änderrungsprotokoll"
+    "auditLog": "Änderrungsprotokoll",
+    "integrationBypass": "Integration umgehen"
   },
   "locale": {
     "selectLanguage": "Sprache auswählen"
@@ -79,7 +80,9 @@
   "premiumFeature": {
     "title": "Unterstützer-Feature",
     "requiredTier": "Erforderliche Unterstützerstufe:",
-    "message": "{name} ist für Unterstützer reserviert. Werde Unterstützer, um es zu nutzen."
+    "message": "{name} ist für Unterstützer reserviert. Werde Unterstützer, um es zu nutzen.",
+    "requiredTierSingular": "Erforderliche Unterstützerstufe:",
+    "requiredTierPlural": "Eine der folgenden Unterstützerstufen ist erforderlich:"
   },
   "profile": {
     "description": "Passe das Aussehen und Verhalten des Bots auf deinem Server an.",
@@ -515,7 +518,9 @@
       "hourly": "Stündlich",
       "daily": "Täglich",
       "weekly": "Wöchentlich",
-      "monthly": "Monatlich"
+      "monthly": "Monatlich",
+      "noChanges": "Keine Änderungen",
+      "unknownIntegration": "Unbekannte Integration"
     },
     "settings": {
       "abuseprotection_cooldown": "Missbrauchsschutz – Abklingzeit",
@@ -577,5 +582,24 @@
     "current": "Aktueller Server",
     "none": "Keine anderen Server gefunden",
     "add": "Füge einen weiteren Server hinzu, indem du die Einstellungen vom Server aus öffnest."
+  },
+  "integrationBypass": {
+    "description": "Richte Umgehungen für Integrationen ein, damit sie auch dann eine Bewertung vergeben können, wenn sie die normalen Anforderungen nicht erfüllen.",
+    "allowReactions": "Reaktionen zulassen",
+    "allowAnswer": "Antworten erlauben",
+    "allowMention": "Erwähnung erlauben",
+    "allowFuzzy": "Unschärfe zulassen",
+    "ignoreCooldown": "Abklingzeit ignorieren",
+    "ignoreLimit": "Limit ignorieren",
+    "allowReactionsDescription": "Erlaube das Vergeben von Reputation durch Reaktionen",
+    "allowAnswerDescription": "Erlaube das Vergeben von Reputation durch das Beantworten einer Nachricht",
+    "allowMentionDescription": "Erlaube das Vergeben von Reputation durch Erwähnung eines Nutzers",
+    "allowFuzzyDescription": "Erlaube das Vergeben von Reputation über Fuzzy-Matching",
+    "ignoreCooldownDescription": "Ignoriere die Wartezeit zwischen Benutzern",
+    "ignoreLimitDescription": "Ignoriere alle festgelegten Stundenlimits",
+    "add": "Integration umgehen",
+    "selectIntegration": "Wähle eine Integration aus",
+    "noIntegrations": "Es gibt keine weiteren Integrationen, für die Umgehungen hinzugefügt werden können.",
+    "deleteConfirm": "Bist du sicher, dass du diese Integrationsumgehung entfernen willst?"
   }
 }

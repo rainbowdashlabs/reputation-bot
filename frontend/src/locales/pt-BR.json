@@ -56,7 +56,8 @@
     "autopost": "Postagem automática",
     "logChannel": "Canal de registro",
     "reactions": "Reações",
-    "auditLog": "Registro de auditoria"
+    "auditLog": "Registro de auditoria",
+    "integrationBypass": "Ignorar integração"
   },
   "locale": {
     "selectLanguage": "Escolha o idioma"
@@ -79,7 +80,9 @@
   "premiumFeature": {
     "title": "Recurso de Apoiador",
     "requiredTier": "Nível de Apoiador necessário:",
-    "message": "{name} é só para quem é apoiador. Torne-se um apoiador para usar."
+    "message": "{name} é só para quem é apoiador. Torne-se um apoiador para usar.",
+    "requiredTierSingular": "Nível de Apoiador necessário:",
+    "requiredTierPlural": "É preciso escolher um dos níveis de apoio a seguir:"
   },
   "profile": {
     "description": "Personalize como o bot aparece e se comporta no seu servidor.",
@@ -515,7 +518,9 @@
       "hourly": "Por hora",
       "daily": "Diariamente",
       "weekly": "Semanalmente",
-      "monthly": "Mensal"
+      "monthly": "Mensal",
+      "noChanges": "Sem alterações",
+      "unknownIntegration": "Integração desconhecida"
     },
     "settings": {
       "abuseprotection_cooldown": "Proteção contra abuso - Tempo de espera",
@@ -577,5 +582,24 @@
     "current": "Servidor atual",
     "none": "Não foram encontrados outros servidores",
     "add": "Adicione outro servidor abrindo as configurações do servidor."
+  },
+  "integrationBypass": {
+    "description": "Configure desvios para integrações para permitir que elas concedam reputação mesmo que não atendam aos requisitos regulares.",
+    "allowReactions": "Permitir reações",
+    "allowAnswer": "Permitir resposta",
+    "allowMention": "Permitir menção",
+    "allowFuzzy": "Permitir aproximado",
+    "ignoreCooldown": "Ignorar tempo de recarga",
+    "ignoreLimit": "Ignorar limite",
+    "allowReactionsDescription": "Permitir dar reputação por meio de reações",
+    "allowAnswerDescription": "Permitir dar reputação respondendo a uma mensagem",
+    "allowMentionDescription": "Permitir dar reputação mencionando um usuário",
+    "allowFuzzyDescription": "Permitir dar reputação por meio de correspondência aproximada",
+    "ignoreCooldownDescription": "Ignorar o tempo de espera entre usuários",
+    "ignoreLimitDescription": "Ignore qualquer limite de horas definido",
+    "add": "Adicionar integração de bypass",
+    "selectIntegration": "Escolha uma integração",
+    "noIntegrations": "Não tem mais integrações disponíveis pra adicionar bypasses.",
+    "deleteConfirm": "Tem certeza que quer tirar esse desvio de integração?"
   }
 }

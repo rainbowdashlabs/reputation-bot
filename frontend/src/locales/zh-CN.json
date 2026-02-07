@@ -56,7 +56,8 @@
     "autopost": "自动发布",
     "logChannel": "日志通道",
     "reactions": "反应",
-    "auditLog": "审计日志"
+    "auditLog": "审计日志",
+    "integrationBypass": "集成旁路"
   },
   "locale": {
     "selectLanguage": "选择语言"
@@ -79,7 +80,9 @@
   "premiumFeature": {
     "title": "支持者专访",
     "requiredTier": "所需支持者等级：",
-    "message": "{name} 该功能仅限支持者使用。请成为支持者以启用此功能。"
+    "message": "{name} 该功能仅限支持者使用。请成为支持者以启用此功能。",
+    "requiredTierSingular": "所需支持者等级：",
+    "requiredTierPlural": "需选择以下其中一个支持者等级："
   },
   "profile": {
     "description": "自定义机器人在服务器中的外观和行为。",
@@ -515,7 +518,9 @@
       "hourly": "按小时计费",
       "daily": "每日",
       "weekly": "每周",
-      "monthly": "每月"
+      "monthly": "每月",
+      "noChanges": "无变更",
+      "unknownIntegration": "未知集成"
     },
     "settings": {
       "abuseprotection_cooldown": "滥用保护 - 冷却时间",
@@ -577,5 +582,24 @@
     "current": "当前服务器",
     "none": "未找到其他服务器",
     "add": "通过在服务器中打开设置来添加另一台服务器。"
+  },
+  "integrationBypass": {
+    "description": "配置集成绕过规则，使其即使不符合常规要求也能授予信誉。",
+    "allowReactions": "允许点赞",
+    "allowAnswer": "允许回答",
+    "allowMention": "允许提及",
+    "allowFuzzy": "允许模糊",
+    "ignoreCooldown": "忽略冷却时间",
+    "ignoreLimit": "忽略限制",
+    "allowReactionsDescription": "允许通过点赞功能给予声望",
+    "allowAnswerDescription": "允许通过回复消息给予声望",
+    "allowMentionDescription": "允许通过提及用户来给予声望",
+    "allowFuzzyDescription": "允许通过模糊匹配给予声誉",
+    "ignoreCooldownDescription": "忽略用户间的冷却时间",
+    "ignoreLimitDescription": "忽略任何设置的小时限制",
+    "add": "添加集成旁路",
+    "selectIntegration": "选择集成",
+    "noIntegrations": "没有可添加旁路的集成项了。",
+    "deleteConfirm": "您确定要移除此集成旁路吗？"
   }
 }

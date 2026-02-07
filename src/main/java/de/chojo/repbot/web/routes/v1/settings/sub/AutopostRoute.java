@@ -12,7 +12,7 @@ import de.chojo.repbot.dao.access.guildsession.GuildSession;
 import de.chojo.repbot.service.AutopostService;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
-import de.chojo.repbot.web.error.ErrorResponse;
+import de.chojo.repbot.web.error.ErrorResponseWrapper;
 import de.chojo.repbot.web.pojo.settings.sub.AutopostPOJO;
 import de.chojo.repbot.web.routes.RoutesBuilder;
 import de.chojo.repbot.web.validation.PremiumValidator;
@@ -46,7 +46,7 @@ public class AutopostRoute implements RoutesBuilder {
                 @OpenApiResponse(status = "200"),
                 @OpenApiResponse(
                         status = "403",
-                        content = @OpenApiContent(from = ErrorResponse.class),
+                        content = @OpenApiContent(from = ErrorResponseWrapper.class),
                         description = "Premium feature required or limit exceeded")
             })
     public void updateAutopostSettings(Context ctx) {
@@ -81,7 +81,7 @@ public class AutopostRoute implements RoutesBuilder {
                 @OpenApiResponse(status = "200"),
                 @OpenApiResponse(
                         status = "403",
-                        content = @OpenApiContent(from = ErrorResponse.class),
+                        content = @OpenApiContent(from = ErrorResponseWrapper.class),
                         description = "Premium feature required or limit exceeded")
             })
     public void updateActive(Context ctx) {
