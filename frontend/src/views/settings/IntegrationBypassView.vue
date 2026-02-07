@@ -28,7 +28,7 @@ const onBypassAdded = (integrationId: string) => {
 </script>
 
 <template>
-  <SettingsContainer :description="t('settings.integrationBypass.description')" :title="t('settings.integrationBypass.title')">
+  <SettingsContainer :description="t('integrationBypass.description')" :title="t('settings.integrationBypass')">
     <div class="space-y-4">
       <AddBypass @added="onBypassAdded" />
       <BypassList :expanded-bypasses="expandedBypasses" @toggle="toggleExpand" />

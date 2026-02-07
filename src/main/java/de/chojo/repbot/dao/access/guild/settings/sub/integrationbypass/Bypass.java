@@ -18,6 +18,9 @@ public class Bypass {
     boolean ignoreCooldown;
     boolean ignoreLimit;
 
+    public Bypass() {
+    }
+
     public Bypass(Row row) throws SQLException {
         integrationId = row.getLong("integration_id");
         allowReactions = row.getBoolean("allow_reactions");

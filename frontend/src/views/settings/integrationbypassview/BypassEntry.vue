@@ -39,7 +39,7 @@ const updateBypassValue = async (key: keyof Bypass, value: boolean) => {
 }
 
 const deleteBypass = async () => {
-  if (!confirm(t('settings.integrationBypass.deleteConfirm'))) return
+  if (!confirm(t('integrationBypass.deleteConfirm'))) return
   try {
     await api.deleteIntegrationBypass(props.bypass.integrationId)
     removeIntegrationBypass(props.bypass.integrationId)
@@ -86,12 +86,12 @@ const bypassFields = [
     <div v-if="expanded" class="p-4 bg-gray-50 dark:bg-gray-900/30 border-t border-gray-200 dark:border-gray-700 space-y-6">
       <div v-for="field in bypassFields" :key="field.key" class="flex flex-col gap-1">
         <Toggle
-            :label="t(`settings.integrationBypass.${field.label}`)"
+            :label="t(`integrationBypass.${field.label}`)"
             :model-value="bypass[field.key]"
             @update:model-value="(val) => updateBypassValue(field.key, val)"
         />
         <p class="text-xs text-gray-500 dark:text-gray-400 ml-15">
-          {{ t(`settings.integrationBypass.${field.description}`) }}
+          {{ t(`integrationBypass.${field.description}`) }}
         </p>
       </div>
     </div>

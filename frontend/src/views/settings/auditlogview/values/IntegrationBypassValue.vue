@@ -26,12 +26,12 @@ const integration = computed(() => {
 const items = computed(() => {
   if (!props.value) return []
   return [
-    {label: t('settings.integrationBypass.allowReactions'), value: props.value.allowReactions},
-    {label: t('settings.integrationBypass.allowAnswer'), value: props.value.allowAnswer},
-    {label: t('settings.integrationBypass.allowMention'), value: props.value.allowMention},
-    {label: t('settings.integrationBypass.allowFuzzy'), value: props.value.allowFuzzy},
-    {label: t('settings.integrationBypass.ignoreCooldown'), value: props.value.ignoreCooldown},
-    {label: t('settings.integrationBypass.ignoreLimit'), value: props.value.ignoreLimit},
+    {label: t('integrationBypass.allowReactions'), value: props.value.allowReactions},
+    {label: t('integrationBypass.allowAnswer'), value: props.value.allowAnswer},
+    {label: t('integrationBypass.allowMention'), value: props.value.allowMention},
+    {label: t('integrationBypass.allowFuzzy'), value: props.value.allowFuzzy},
+    {label: t('integrationBypass.ignoreCooldown'), value: props.value.ignoreCooldown},
+    {label: t('integrationBypass.ignoreLimit'), value: props.value.ignoreLimit},
   ]
 })
 </script>

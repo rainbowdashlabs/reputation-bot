@@ -51,13 +51,13 @@ const emit = defineEmits<{
     <div v-if="availableIntegrations.length > 0" class="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-900/50 rounded-lg border border-gray-200 dark:border-gray-700">
       <div class="flex-1">
         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-          {{ t('settings.integrationBypass.add') }}
+          {{ t('integrationBypass.add') }}
         </label>
         <select
             class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors"
             @change="(e) => addBypass((e.target as HTMLSelectElement).value)"
         >
-          <option disabled selected value="">{{ t('settings.integrationBypass.selectIntegration') }}</option>
+          <option disabled selected value="">{{ t('integrationBypass.selectIntegration') }}</option>
           <option v-for="integration in availableIntegrations" :key="integration.id" :value="integration.id">
             {{ integration.displayName }}
           </option>
@@ -65,7 +65,7 @@ const emit = defineEmits<{
       </div>
     </div>
     <p v-else class="text-sm text-gray-500 italic">
-      {{ t('settings.integrationBypass.noIntegrations') }}
+      {{ t('integrationBypass.noIntegrations') }}
     </p>
   </div>
 </template>
