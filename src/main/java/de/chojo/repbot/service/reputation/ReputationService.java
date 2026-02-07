@@ -251,7 +251,6 @@ public class ReputationService {
             // Check if user was recently seen in this channel.
             messageContext = contextResolver.getCombinedContext(donor, context.asMessage(), settings);
         } else {
-            context.getLastValidMessage()
             messageContext = context.getLastValidMessage()
                     .map(message -> contextResolver.getCombinedContext(message, settings))
                     .orElseGet(() -> contextResolver.getCombinedContext(receiver));
