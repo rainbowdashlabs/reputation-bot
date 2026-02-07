@@ -112,7 +112,7 @@ public class ReputationService {
             if (!optBypass.get().isEnabled(type)) return SubmitResult.of(SubmitResultType.BLOCK_BOTS);
         }
 
-        if(receiver.getUser().isBot()) {
+        if (receiver.getUser().isBot()) {
             return SubmitResult.of(SubmitResultType.BLOCK_BOTS);
         }
 

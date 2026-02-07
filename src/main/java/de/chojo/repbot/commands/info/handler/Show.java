@@ -85,11 +85,11 @@ public class Show implements SlashHandler {
 
     private void refreshData() {
         var request = HttpRequest.newBuilder()
-                                 .GET()
-                                 .uri(URI.create("https://api.github.com/repos/rainbowdashlabs/reputation-bot/contributors?anon=1"))
-                                 .header("accept", "application/vnd.github.v3+json")
-                                 .header("User-Agent", "reputation-bot")
-                                 .build();
+                .GET()
+                .uri(URI.create("https://api.github.com/repos/rainbowdashlabs/reputation-bot/contributors?anon=1"))
+                .header("accept", "application/vnd.github.v3+json")
+                .header("User-Agent", "reputation-bot")
+                .build();
 
         List<Contributor> contributors;
         String body = null;
@@ -108,11 +108,11 @@ public class Show implements SlashHandler {
             if (ContributorType.BOT == contributor.type) continue;
 
             var profile = HttpRequest.newBuilder()
-                                     .GET()
-                                     .uri(URI.create(contributor.url))
-                                     .header("accept", "application/vnd.github.v3+json")
-                                     .header("User-Agent", "reputation-bot")
-                                     .build();
+                    .GET()
+                    .uri(URI.create(contributor.url))
+                    .header("accept", "application/vnd.github.v3+json")
+                    .header("User-Agent", "reputation-bot")
+                    .build();
 
             try {
                 var response = client.send(profile, HttpResponse.BodyHandlers.ofString());
