@@ -139,7 +139,7 @@ public class MessageListener extends ListenerAdapter {
 
         if (result.isEmpty()
                 && (result.asEmpty().reason() == EmptyResultReason.NO_MATCH
-                || result.asEmpty().reason() == EmptyResultReason.NO_PATTERN)) return;
+                        || result.asEmpty().reason() == EmptyResultReason.NO_PATTERN)) return;
 
         if (PermissionErrorHandler.assertAndHandle(
                 guildRepository.guild(event.getGuild()),
@@ -163,7 +163,7 @@ public class MessageListener extends ListenerAdapter {
 
         if (result.isEmpty()
                 && (settings.reputation().isEmbedActive()
-                || settings.reputation().isDirectActive())) {
+                        || settings.reputation().isDirectActive())) {
             resolveNoTarget(context, settings);
             return;
         }
@@ -214,18 +214,18 @@ public class MessageListener extends ListenerAdapter {
         }
 
         var members = recentMembers.stream()
-                                   .filter(receiver -> reputationService
-                                           .checkCooldown(
-                                                   context,
-                                                   context.asMessage().getMember(),
-                                                   receiver,
-                                                   context.getGuild(),
-                                                   settings)
-                                           .type()
-                                           == SubmitResultType.SUCCESS)
-                                   .filter(receiver -> !settings.abuseProtection().isReceiverLimit(receiver))
-                                   .limit(10)
-                                   .collect(Collectors.toList());
+                .filter(receiver -> reputationService
+                                .checkCooldown(
+                                        context,
+                                        context.asMessage().getMember(),
+                                        receiver,
+                                        context.getGuild(),
+                                        settings)
+                                .type()
+                        == SubmitResultType.SUCCESS)
+                .filter(receiver -> !settings.abuseProtection().isReceiverLimit(receiver))
+                .limit(10)
+                .collect(Collectors.toList());
 
         if (members.isEmpty()) {
             settings.repGuild().reputation().analyzer().log(context, SubmitResult.of(SubmitResultType.ALL_COOLDOWN));
@@ -245,7 +245,8 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        if (settings.reputation().isEmbedActive() && !context.asMessage().getMember().getUser().isBot()) {
+        if (settings.reputation().isEmbedActive()
+                && !context.asMessage().getMember().getUser().isBot()) {
             settings.repGuild().reputation().analyzer().log(context, SubmitResult.of(SubmitResultType.EMBED_SEND));
             reputationVoteListener.registerVote(context.asMessage(), members, settings);
         }

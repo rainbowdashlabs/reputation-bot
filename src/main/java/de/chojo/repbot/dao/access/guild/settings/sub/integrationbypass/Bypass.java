@@ -21,8 +21,7 @@ public class Bypass {
     boolean ignoreLimit;
     boolean ignoreContext;
 
-    public Bypass() {
-    }
+    public Bypass() {}
 
     public Bypass(Row row) throws SQLException {
         integrationId = row.getLong("integration_id");

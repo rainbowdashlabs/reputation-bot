@@ -96,12 +96,13 @@ public class ReputationService {
         log.trace("Submitting reputation for message {} of type {}", context.getIdLong(), type);
         if (receiver == null) return SubmitResult.of(SubmitResultType.NO_RECEIVER);
 
-
         Optional<Bypass> optBypass = Optional.empty();
 
         // block bots
         if (receiver.getUser().isBot()) {
-            boolean notEntitled = Premium.isNotEntitled(repGuild.subscriptions(), configuration.skus().features().integrationBypass().allow());
+            boolean notEntitled = Premium.isNotEntitled(
+                    repGuild.subscriptions(),
+                    configuration.skus().features().integrationBypass().allow());
             if (notEntitled) {
                 log.trace("Author of {} is bot.", context.getIdLong());
                 return SubmitResult.of(SubmitResultType.BLOCK_BOTS);
@@ -154,9 +155,9 @@ public class ReputationService {
     public void deleteBulk(List<Long> messages, GuildMessageChannelUnion channel, Guild guild) {
         var reputationLog = guildRepository.guild(guild).reputation().log();
         List<ReputationLogEntry> entries = messages.stream()
-                                                   .map(reputationLog::getLogEntries)
-                                                   .flatMap(Collection::stream)
-                                                   .toList();
+                .map(reputationLog::getLogEntries)
+                .flatMap(Collection::stream)
+                .toList();
         delete(entries, channel, guild);
     }
 
@@ -171,8 +172,8 @@ public class ReputationService {
         entries.forEach(ReputationLogEntry::deleteAll);
         LocalizationContext context = localizer.context(LocaleProvider.guild(guild));
         String deleted = entries.stream()
-                                .map(e -> LogFormatter.formatMessageLogEntrySimple(context, e))
-                                .collect(Collectors.joining("\n"));
+                .map(e -> LogFormatter.formatMessageLogEntrySimple(context, e))
+                .collect(Collectors.joining("\n"));
         if (entries.size() > 1) {
             String title = localizer.localize(
                     "listener.reputation.log.bulkdelete", guild, Replacement.create("CHANNEL", channel.getAsMention()));
@@ -251,8 +252,8 @@ public class ReputationService {
             messageContext = contextResolver.getCombinedContext(donor, context.asMessage(), settings);
         } else {
             messageContext = context.getLastMessage()
-                                    .map(message -> contextResolver.getCombinedContext(message, settings))
-                                    .orElseGet(() -> contextResolver.getCombinedContext(receiver));
+                    .map(message -> contextResolver.getCombinedContext(message, settings))
+                    .orElseGet(() -> contextResolver.getCombinedContext(receiver));
         }
         return messageContext;
     }
@@ -264,7 +265,8 @@ public class ReputationService {
             Member receiver,
             ReputationContext context,
             @Nullable Message refMessage,
-            MessageContext messageContext, Optional<Bypass> optBypass) {
+            MessageContext messageContext,
+            Optional<Bypass> optBypass) {
         var contextId = context.getIdLong();
         var repGuild = guildRepository.guild(guild);
         var analyzer = repGuild.reputation().analyzer();
@@ -272,7 +274,9 @@ public class ReputationService {
         var abuseSettings = settings.abuseProtection();
 
         // Abuse Protection: target context
-        if (!messageContext.members().contains(receiver) && abuseSettings.isReceiverContext() && !optBypass.map(Bypass::ignoreContext).orElse(false)) {
+        if (!messageContext.members().contains(receiver)
+                && abuseSettings.isReceiverContext()
+                && !optBypass.map(Bypass::ignoreContext).orElse(false)) {
             log.trace("Receiver is not in context of {}", contextId);
             return analyzer.log(
                     context,
@@ -280,7 +284,9 @@ public class ReputationService {
         }
 
         // Abuse Protection: donor context
-        if (!messageContext.members().contains(donor) && abuseSettings.isDonorContext()&& !optBypass.map(Bypass::ignoreContext).orElse(false)) {
+        if (!messageContext.members().contains(donor)
+                && abuseSettings.isDonorContext()
+                && !optBypass.map(Bypass::ignoreContext).orElse(false)) {
             log.trace("Donor is not in context of {}", contextId);
             return analyzer.log(
                     context, SubmitResult.of(SubmitResultType.DONOR_NOT_IN_CONTEXT, Replacement.createMention(donor)));
@@ -288,7 +294,8 @@ public class ReputationService {
 
         // Abuse protection: Cooldown
         var canGiveReputation = checkCooldown(context, donor, receiver, guild, settings);
-        if (canGiveReputation.type() != SubmitResultType.SUCCESS&& !optBypass.map(Bypass::ignoreCooldown).orElse(false)) {
+        if (canGiveReputation.type() != SubmitResultType.SUCCESS
+                && !optBypass.map(Bypass::ignoreCooldown).orElse(false)) {
             log.trace("Cooldown active on {}", contextId);
             return canGiveReputation;
         }
@@ -298,8 +305,8 @@ public class ReputationService {
         if (refMessage != null) {
             if (abuseSettings.isOldMessage(refMessage)
                     && !messageContext
-                    .latestMessages(abuseSettings.minMessages())
-                    .contains(refMessage)) {
+                            .latestMessages(abuseSettings.minMessages())
+                            .contains(refMessage)) {
                 log.trace("Reference message of {} is outdated", contextId);
                 return analyzer.log(context, SubmitResult.of(SubmitResultType.OUTDATED_REFERENCE_MESSAGE));
             }
@@ -317,7 +324,8 @@ public class ReputationService {
             return analyzer.log(context, SubmitResult.of(SubmitResultType.RECEIVER_LIMIT));
         }
 
-        if (abuseSettings.isDonorLimit(donor)&& !optBypass.map(Bypass::ignoreLimit).orElse(false)) {
+        if (abuseSettings.isDonorLimit(donor)
+                && !optBypass.map(Bypass::ignoreLimit).orElse(false)) {
             log.trace("Donor limit is reached on {}", contextId);
             return analyzer.log(context, SubmitResult.of(SubmitResultType.DONOR_LIMIT));
         }
@@ -335,19 +343,19 @@ public class ReputationService {
                 lastEasterEggSent = Instant.now();
                 // TODO: Escape unknown channel 5
                 context.asMessage()
-                       .replyEmbeds(new EmbedBuilder()
-                               .setImage(magicImage.magicImageLink())
-                               .setColor(Color.RED)
-                               .build())
-                       .queue(msg -> msg.delete()
-                                        .queueAfter(
-                                                magicImage.magicImageDeleteSchedule(),
-                                                TimeUnit.SECONDS,
-                                                RestAction.getDefaultSuccess(),
-                                                ErrorResponseException.ignore(
-                                                        ErrorResponse.UNKNOWN_MESSAGE,
-                                                        ErrorResponse.UNKNOWN_CHANNEL,
-                                                        ErrorResponse.ILLEGAL_OPERATION_ARCHIVED_THREAD)));
+                        .replyEmbeds(new EmbedBuilder()
+                                .setImage(magicImage.magicImageLink())
+                                .setColor(Color.RED)
+                                .build())
+                        .queue(msg -> msg.delete()
+                                .queueAfter(
+                                        magicImage.magicImageDeleteSchedule(),
+                                        TimeUnit.SECONDS,
+                                        RestAction.getDefaultSuccess(),
+                                        ErrorResponseException.ignore(
+                                                ErrorResponse.UNKNOWN_MESSAGE,
+                                                ErrorResponse.UNKNOWN_CHANNEL,
+                                                ErrorResponse.ILLEGAL_OPERATION_ARCHIVED_THREAD)));
             }
             return true;
         }
@@ -365,12 +373,12 @@ public class ReputationService {
         var repGuild = guildRepository.guild(guild);
         // try to log a reputation
         if (!repGuild.reputation()
-                     .user(receiver)
-                     .addReputation(
-                             donor,
-                             context,
-                             refMessage,
-                             type)) { // submit to database failed. Maybe this message was already voted by the user.
+                .user(receiver)
+                .addReputation(
+                        donor,
+                        context,
+                        refMessage,
+                        type)) { // submit to database failed. Maybe this message was already voted by the user.
             log.trace(
                     "Could not log reputation for message {}. An equal entry was already present.",
                     context.getIdLong());
@@ -407,12 +415,12 @@ public class ReputationService {
             }
             if (channel == null || rank.getRole(guild).isEmpty()) return;
             channel.sendMessage(localizer.localize(
-                           "message.levelAnnouncement",
-                           guild,
-                           Replacement.createMention(receiver),
-                           Replacement.createMention(rank.role().get())))
-                   .setAllowedMentions(Collections.emptyList())
-                   .complete();
+                            "message.levelAnnouncement",
+                            guild,
+                            Replacement.createMention(receiver),
+                            Replacement.createMention(rank.role().get())))
+                    .setAllowedMentions(Collections.emptyList())
+                    .complete();
         });
         return SubmitResult.of(SubmitResultType.SUCCESS);
     }
@@ -431,7 +439,7 @@ public class ReputationService {
                 configuration.skus().features().logChannel().logChannel())) return;
 
         TextChannel textChannelById = settings.guild()
-                                              .getTextChannelById(settings.repGuild().settings().logChannel().channelId());
+                .getTextChannelById(settings.repGuild().settings().logChannel().channelId());
         if (textChannelById == null) return;
 
         textChannelById
