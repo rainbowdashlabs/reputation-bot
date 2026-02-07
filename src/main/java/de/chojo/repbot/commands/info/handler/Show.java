@@ -85,18 +85,21 @@ public class Show implements SlashHandler {
 
     private void refreshData() {
         var request = HttpRequest.newBuilder()
-                .GET()
-                .uri(URI.create("https://api.github.com/repos/rainbowdashlabs/reputation-bot/contributors?anon=1"))
-                .header("accept", "application/vnd.github.v3+json")
-                .header("User-Agent", "reputation-bot")
-                .build();
+                                 .GET()
+                                 .uri(URI.create("https://api.github.com/repos/rainbowdashlabs/reputation-bot/contributors?anon=1"))
+                                 .header("accept", "application/vnd.github.v3+json")
+                                 .header("User-Agent", "reputation-bot")
+                                 .build();
 
         List<Contributor> contributors;
+        String body = null;
         try {
-            var response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            contributors = mapper.readerForListOf(Contributor.class).readValue(response.body());
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            body = response.body();
+            contributors = mapper.readerForListOf(Contributor.class).readValue(body);
         } catch (IOException | InterruptedException e) {
             log.error("Could not read response", e);
+            log.error("Body: {}", body);
             contributors = Collections.emptyList();
         }
 
@@ -105,11 +108,11 @@ public class Show implements SlashHandler {
             if (ContributorType.BOT == contributor.type) continue;
 
             var profile = HttpRequest.newBuilder()
-                    .GET()
-                    .uri(URI.create(contributor.url))
-                    .header("accept", "application/vnd.github.v3+json")
-                    .header("User-Agent", "reputation-bot")
-                    .build();
+                                     .GET()
+                                     .uri(URI.create(contributor.url))
+                                     .header("accept", "application/vnd.github.v3+json")
+                                     .header("User-Agent", "reputation-bot")
+                                     .build();
 
             try {
                 var response = client.send(profile, HttpResponse.BodyHandlers.ofString());

@@ -99,7 +99,7 @@ public class ReputationService {
         Optional<Bypass> optBypass = Optional.empty();
 
         // block bots
-        if (receiver.getUser().isBot()) {
+        if (donor.getUser().isBot()) {
             boolean notEntitled = Premium.isNotEntitled(
                     repGuild.subscriptions(),
                     configuration.skus().features().integrationBypass().allow());
@@ -110,6 +110,10 @@ public class ReputationService {
             optBypass = repGuild.settings().integrationBypass().getBypass(donor.getIdLong());
             if (optBypass.isEmpty()) return SubmitResult.of(SubmitResultType.BLOCK_BOTS);
             if (!optBypass.get().isEnabled(type)) return SubmitResult.of(SubmitResultType.BLOCK_BOTS);
+        }
+
+        if(receiver.getUser().isBot()) {
+            return SubmitResult.of(SubmitResultType.BLOCK_BOTS);
         }
 
         var settings = repGuild.settings();
