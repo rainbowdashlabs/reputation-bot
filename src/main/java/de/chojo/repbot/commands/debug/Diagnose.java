@@ -15,7 +15,7 @@ import net.dv8tion.jda.api.components.buttons.Button;
 public class Diagnose extends SlashCommand {
 
     public Diagnose(SessionService sessionService) {
-        super(Slash.of("debug", "command.diagnose.description")
+        super(Slash.of("diagnose", "command.diagnose.description")
                 .guildOnly()
                 .adminCommand()
                 .command((event, ctx) -> {
