@@ -6,7 +6,6 @@
 package de.chojo.repbot.web.pojo.guild;
 
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Role;
 
 import java.util.List;
 
@@ -40,13 +39,10 @@ public class GuildPOJO {
         List<ReactionPOJO> reactions = guild.retrieveEmojis().complete().stream()
                 .map(ReactionPOJO::generate)
                 .toList();
-        List<MemberPOJO> integrations = guild.getRoles().stream()
-                .filter(Role::isManaged)
-                .map(e -> guild.findMembersWithRoles(e).get())
-                .flatMap(List::stream)
-                .distinct()
-                .map(MemberPOJO::generate)
-                .toList();
+        List<MemberPOJO> integrations = guild.getMemberCache()
+                .applyStream(stream -> stream.filter(member -> member.getUser().isBot())
+                        .map(MemberPOJO::generate)
+                        .toList());
         return new GuildPOJO(meta, roles, ChannelViewPOJO.generate(guild), reactions, integrations);
     }
 }
