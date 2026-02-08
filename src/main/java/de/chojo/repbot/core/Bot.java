@@ -138,7 +138,13 @@ public class Bot {
         initServices();
         initInteractions();
         initListener();
-        initBotUserCache();
+        threading.repBotWorker().execute(() -> {
+            try {
+                initBotUserCache();
+            } catch (Exception e) {
+                log.error(LogNotify.NOTIFY_ADMIN, "Error while initializing bot user cache", e);
+            }
+        });
     }
 
     public ShardManager shardManager() {
