@@ -7,7 +7,10 @@
     "change": "Change",
     "clear": "Clear",
     "confirm": "Confirm",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "error": {
+      "outOfBounds": "Value must be between {min} and {max}. Corrected to nearest valid value."
+    }
   },
   "navigation": {
     "settings": "Settings",
@@ -605,5 +608,12 @@
       "autopost_refreshinterval": "Autopost - Refresh Interval",
       "ranks": "Ranks - Roles"
     }
+  },
+  "timePresets": {
+    "hour": "1 Hour",
+    "day": "1 Day",
+    "week": "1 Week",
+    "fourWeeks": "4 Weeks",
+    "year": "1 Year"
   }
 }

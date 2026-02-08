@@ -7,7 +7,9 @@
 import {computed} from 'vue'
 import {useI18n} from 'vue-i18n'
 import {useSession} from '@/composables/useSession'
+import TimeQuickPresets from '@/components/TimeQuickPresets.vue'
 import {api} from '@/api'
+import NumberInput from '@/components/NumberInput.vue'
 
 const {t} = useI18n()
 const {session, updateAbuseProtectionSettings} = useSession()
@@ -28,13 +30,13 @@ const maxMessageAge = computed({
 
 <template>
   <div class="flex flex-col gap-2">
-    <label class="label">{{ t('abuseProtection.maxMessageAge.label') }}</label>
-    <input
-        v-model.number="maxMessageAge"
-        class="input"
-        min="0"
-        type="number"
+    <NumberInput
+        v-model="maxMessageAge"
+        :label="t('abuseProtection.maxMessageAge.label')"
+        :min="0"
+        :max="86400"
     />
+    <TimeQuickPresets v-model="maxMessageAge"/>
     <p class="description">{{ t('abuseProtection.maxMessageAge.description') }}</p>
   </div>
 </template>

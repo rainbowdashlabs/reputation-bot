@@ -8,7 +8,9 @@ import {computed} from 'vue'
 import {useI18n} from 'vue-i18n'
 import {useSession} from '@/composables/useSession'
 import {api} from '@/api'
+import TimeQuickPresets from '@/components/TimeQuickPresets.vue'
 import Toggle from '@/components/Toggle.vue'
+import NumberInput from '@/components/NumberInput.vue'
 
 const {t} = useI18n()
 const {session, updateAbuseProtectionSettings} = useSession()
@@ -63,23 +65,20 @@ const maxGivenHours = computed({
     />
 
     <div v-if="isEnabled" class="grid grid-cols-1 md:grid-cols-2 gap-4 ml-6">
+      <NumberInput
+          v-model="maxGiven"
+          :label="t('abuseProtection.givenLimit.maxGiven.label')"
+          :min="1"
+          :max="1000"
+      />
       <div class="flex flex-col gap-2">
-        <label class="label">{{ t('abuseProtection.givenLimit.maxGiven.label') }}</label>
-        <input
-            v-model.number="maxGiven"
-            class="input"
-            min="1"
-            type="number"
+        <NumberInput
+            v-model="maxGivenHours"
+            :label="t('abuseProtection.givenLimit.maxGivenHours.label')"
+            :min="1"
+            :max="8760"
         />
-      </div>
-      <div class="flex flex-col gap-2">
-        <label class="label">{{ t('abuseProtection.givenLimit.maxGivenHours.label') }}</label>
-        <input
-            v-model.number="maxGivenHours"
-            class="input"
-            min="1"
-            type="number"
-        />
+        <TimeQuickPresets v-model="maxGivenHours" use-hours/>
       </div>
     </div>
     <p class="description">{{ t('abuseProtection.givenLimit.description') }}</p>

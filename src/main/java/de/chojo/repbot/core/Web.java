@@ -7,6 +7,8 @@ package de.chojo.repbot.core;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.core.exc.InputCoercionException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -27,6 +29,7 @@ import de.chojo.repbot.web.error.PremiumFeatureException;
 import de.chojo.repbot.web.sessions.SessionService;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
+import io.javalin.http.HttpStatus;
 import io.javalin.http.UnauthorizedResponse;
 import io.javalin.json.JavalinJackson;
 import io.javalin.openapi.OpenApiLicense;
@@ -182,6 +185,27 @@ public class Web {
         javalin.exception(PremiumFeatureException.class, (err, ctx) -> {
             var response = new ErrorResponseWrapper("Supporter Required", err.getMessage(), err.details());
             ctx.json(response).status(err.status());
+        });
+
+        javalin.exception(JsonMappingException.class, (err, ctx) -> {
+            log.error(LogNotify.NOTIFY_ADMIN, "Invalid JSON on route {}", ctx.path(), err);
+            if (err.getCause() instanceof InputCoercionException input) {
+                ctx.json(new ErrorResponseWrapper(
+                                "Invalid Input",
+                                input.getMessage().lines().findFirst().get()))
+                        .status(HttpStatus.BAD_REQUEST);
+                return;
+            }
+            ctx.json(new ErrorResponseWrapper(
+                            "Invalid Input",
+                            err.getMessage().lines().findFirst().get()))
+                    .status(HttpStatus.BAD_REQUEST);
+        });
+
+        javalin.exception(InputCoercionException.class, (err, ctx) -> {
+            ctx.json(new ErrorResponseWrapper(
+                            "Invalid Input: %s (%s)".formatted(err.getInputType(), err.getMessage()), err.getMessage()))
+                    .status(HttpStatus.BAD_REQUEST);
         });
 
         // Handle generic ApiException with simple JSON

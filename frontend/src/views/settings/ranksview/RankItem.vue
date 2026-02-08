@@ -9,6 +9,7 @@ import {useI18n} from 'vue-i18n'
 import {useSession} from '@/composables/useSession'
 import BaseButton from '@/components/BaseButton.vue'
 import type {RankEntry} from '@/api/types'
+import NumberInput from '@/components/NumberInput.vue'
 
 const props = defineProps<{
   rank: RankEntry
@@ -96,11 +97,10 @@ const saveEdit = () => {
       </div>
       <div class="flex gap-2 items-start">
         <div class="flex flex-col gap-2">
-          <input
-              v-model.number="editReputation"
-              class="input"
-              min="0"
-              type="number"
+          <NumberInput
+              v-model="editReputation"
+              :min="0"
+              :max="100000"
               @keyup.enter="saveEdit"
           />
         </div>

@@ -7,7 +7,10 @@
     "change": "Değişiklik",
     "clear": "Temizle",
     "confirm": "Onayla",
-    "loading": "Yükleniyor..."
+    "loading": "Yükleniyor...",
+    "error": {
+      "outOfBounds": "Değer, {min} ile {max} arasında olmalıdır. En yakın geçerli değere düzeltildi."
+    }
   },
   "navigation": {
     "settings": "Ayarlar",
@@ -600,6 +603,18 @@
     "add": "Entegrasyon Atlamayı Ekle",
     "selectIntegration": "Bir entegrasyon seçin",
     "noIntegrations": "Eklenebilecek başka entegrasyon kalmadı.",
-    "deleteConfirm": "Bu entegrasyon baypasını kaldırmak istediğinizden emin misiniz?"
+    "deleteConfirm": "Bu entegrasyon baypasını kaldırmak istediğinizden emin misiniz?",
+    "premiumRequired": "Entegrasyon baypası",
+    "allowDirect": "Doğrudan İzin Ver",
+    "ignoreContext": "Bağlamı Yoksay",
+    "allowDirectDescription": "Yalnızca bir alıcı belirlenebildiği için gömme atlanacaksa itibar verilmesine izin verin. Botlar için hiçbir zaman gömme gönderilmez.",
+    "ignoreContextDescription": "Bağlam kontrollerini yok say"
+  },
+  "timePresets": {
+    "hour": "1 Saat",
+    "day": "1 Gün",
+    "week": "1 Hafta",
+    "fourWeeks": "4 Hafta",
+    "year": "1 Yıl"
   }
 }

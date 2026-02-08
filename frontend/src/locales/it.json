@@ -7,7 +7,10 @@
     "change": "Cambia",
     "clear": "Chiaro",
     "confirm": "Conferma",
-    "loading": "Caricamento in corso..."
+    "loading": "Caricamento in corso...",
+    "error": {
+      "outOfBounds": "Il valore deve essere compreso tra {min} e {max}. Corretto al valore valido più vicino."
+    }
   },
   "navigation": {
     "settings": "Impostazioni",
@@ -600,6 +603,18 @@
     "add": "Aggiungi bypass integrazione",
     "selectIntegration": "Scegli un'integrazione",
     "noIntegrations": "Non ci sono più integrazioni a cui aggiungere bypass.",
-    "deleteConfirm": "Sei sicuro di voler togliere questo bypass di integrazione?"
+    "deleteConfirm": "Sei sicuro di voler togliere questo bypass di integrazione?",
+    "premiumRequired": "Bypass dell'integrazione",
+    "allowDirect": "Consenti diretto",
+    "ignoreContext": "Ignora il contesto",
+    "allowDirectDescription": "Consenti di dare una reputazione quando un embed viene saltato perché è possibile determinare un solo destinatario. Nessun embed verrà mai inviato per un bot.",
+    "ignoreContextDescription": "Ignora i controlli del contesto"
+  },
+  "timePresets": {
+    "hour": "1 ora",
+    "day": "1 giorno",
+    "week": "1 settimana",
+    "fourWeeks": "4 settimane",
+    "year": "1 anno"
   }
 }

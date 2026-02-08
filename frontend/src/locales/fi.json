@@ -7,7 +7,10 @@
     "change": "Muutos",
     "clear": "Selkeä",
     "confirm": "Vahvista",
-    "loading": "Latautuu..."
+    "loading": "Latautuu...",
+    "error": {
+      "outOfBounds": "Arvon on oltava välillä {min} ja {max}. Korjattu lähimpään kelvolliseen arvoon."
+    }
   },
   "navigation": {
     "settings": "Asetukset",
@@ -600,6 +603,18 @@
     "add": "Lisää integraation ohitus",
     "selectIntegration": "Valitse integraatio",
     "noIntegrations": "Ei enää integrointeja, joihin voi lisätä ohituksia.",
-    "deleteConfirm": "Haluatko varmasti poistaa tämän integraation ohituksen?"
+    "deleteConfirm": "Haluatko varmasti poistaa tämän integraation ohituksen?",
+    "premiumRequired": "Integraation ohitus",
+    "allowDirect": "Salli suora",
+    "ignoreContext": "Ohita konteksti",
+    "allowDirectDescription": "Salli maineen antaminen, kun upotus ohitetaan, koska vain yksi vastaanottaja voidaan määrittää. Botille ei lähetetä koskaan upotusta.",
+    "ignoreContextDescription": "Ohita kontekstintarkistukset"
+  },
+  "timePresets": {
+    "hour": "1 tunti",
+    "day": "1 päivä",
+    "week": "1 viikko",
+    "fourWeeks": "4 viikkoa",
+    "year": "1 vuosi"
   }
 }

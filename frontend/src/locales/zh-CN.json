@@ -7,7 +7,10 @@
     "change": "改变",
     "clear": "清除",
     "confirm": "确认",
-    "loading": "正在加载..."
+    "loading": "正在加载...",
+    "error": {
+      "outOfBounds": "值必须介于{min}与{max}之间。已修正为最近的有效值。"
+    }
   },
   "navigation": {
     "settings": "设置",
@@ -600,6 +603,18 @@
     "add": "添加集成旁路",
     "selectIntegration": "选择集成",
     "noIntegrations": "没有可添加旁路的集成项了。",
-    "deleteConfirm": "您确定要移除此集成旁路吗？"
+    "deleteConfirm": "您确定要移除此集成旁路吗？",
+    "premiumRequired": "集成旁路",
+    "allowDirect": "允许直接",
+    "ignoreContext": "忽略上下文",
+    "allowDirectDescription": "当仅能确定一个接收方时，允许在跳过嵌入操作时给予声望值。机器人永远不会发送嵌入内容。",
+    "ignoreContextDescription": "忽略上下文检查"
+  },
+  "timePresets": {
+    "hour": "1小时",
+    "day": "1天",
+    "week": "1周",
+    "fourWeeks": "4周",
+    "year": "1年"
   }
 }

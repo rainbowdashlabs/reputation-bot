@@ -7,7 +7,10 @@
     "change": "Zmiana",
     "clear": "Wyraźne",
     "confirm": "Potwierdź",
-    "loading": "Ładowanie..."
+    "loading": "Ładowanie...",
+    "error": {
+      "outOfBounds": "Wartość musi mieścić się w przedziale od {min} do {max}. Poprawiono do najbliższej prawidłowej wartości."
+    }
   },
   "navigation": {
     "settings": "Ustawienia",
@@ -600,6 +603,18 @@
     "add": "Dodaj obejście integracji",
     "selectIntegration": "Wybierz integrację",
     "noIntegrations": "Nie ma już dostępnych integracji, do których można dodać obejścia.",
-    "deleteConfirm": "Czy na pewno chcesz usunąć to obejście integracji?"
+    "deleteConfirm": "Czy na pewno chcesz usunąć to obejście integracji?",
+    "premiumRequired": "Omijanie integracji",
+    "allowDirect": "Zezwól na bezpośrednie",
+    "ignoreContext": "Ignoruj kontekst",
+    "allowDirectDescription": "Zezwól na przyznanie reputacji, gdy osadzenie zostanie pominięte, ponieważ można określić tylko jednego odbiorcę. Osadzenie nigdy nie zostanie wysłane do bota.",
+    "ignoreContextDescription": "Ignoruj sprawdzanie kontekstu"
+  },
+  "timePresets": {
+    "hour": "1 godzina",
+    "day": "1 dzień",
+    "week": "1 tydzień",
+    "fourWeeks": "4 tygodnie",
+    "year": "1 rok"
   }
 }

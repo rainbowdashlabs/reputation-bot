@@ -7,7 +7,10 @@
     "change": "Förändring",
     "clear": "Tydligt",
     "confirm": "Bekräfta",
-    "loading": "Laddar..."
+    "loading": "Laddar...",
+    "error": {
+      "outOfBounds": "Värdet måste ligga mellan {min} och {max}. Korrigeras till närmaste giltiga värde."
+    }
   },
   "navigation": {
     "settings": "Inställningar",
@@ -600,6 +603,18 @@
     "add": "Lägg till integrationsförbikoppling",
     "selectIntegration": "Välj en integration",
     "noIntegrations": "Det finns inga fler integrationer tillgängliga för att lägga till förbikopplingar för.",
-    "deleteConfirm": "Är du säker på att du vill ta bort denna integrationsförbikoppling?"
+    "deleteConfirm": "Är du säker på att du vill ta bort denna integrationsförbikoppling?",
+    "premiumRequired": "Integrationsförbikoppling",
+    "allowDirect": "Tillåt direkt",
+    "ignoreContext": "Ignorera sammanhang",
+    "allowDirectDescription": "Tillåt att ge ett omdöme när en inbäddning skulle hoppas över eftersom endast en mottagare kunde fastställas. Ingen inbäddning kommer någonsin att skickas för en bot.",
+    "ignoreContextDescription": "Ignorera kontextkontroller"
+  },
+  "timePresets": {
+    "hour": "1 timme",
+    "day": "1 dag",
+    "week": "1 vecka",
+    "fourWeeks": "4 veckor",
+    "year": "1 år"
   }
 }
