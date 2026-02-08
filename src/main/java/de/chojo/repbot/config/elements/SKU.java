@@ -41,7 +41,7 @@ public class SKU {
         return subscriptions;
     }
 
-    public boolean isLifetime(Entitlement entitlement){
+    public boolean isLifetime(Entitlement entitlement) {
         return subscriptions.stream().anyMatch(sub -> sub.lifetimeSku() == entitlement.getSkuIdLong());
     }
 }

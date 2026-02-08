@@ -331,7 +331,8 @@ public class PremiumService extends ListenerAdapter {
 
     private void updateEntitlement(Entitlement entitlement) {
         EntitlementType type = entitlement.getType();
-        Subscription sub = Subscription.fromEntitlement(entitlement, configuration.skus().isLifetime(entitlement));
+        Subscription sub =
+                Subscription.fromEntitlement(entitlement, configuration.skus().isLifetime(entitlement));
         switch (type) {
             case APPLICATION_SUBSCRIPTION, DEVELOPER_GIFT, PURCHASE, FREE_PURCHASE ->
                 guildRepository.byId(sub.id()).subscriptions().addSubscription(sub);
