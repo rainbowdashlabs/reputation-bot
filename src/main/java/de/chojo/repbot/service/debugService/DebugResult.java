@@ -57,8 +57,10 @@ public class DebugResult {
     }
 
     public void addMissingPermissions(MissingPermissions missingPermissions) {
-        Optional<MissingPermissions> first = this.missingPermissions.stream().filter(e -> e.equals(missingPermissions)).findFirst();
-        if(first.isPresent()){
+        Optional<MissingPermissions> first = this.missingPermissions.stream()
+                .filter(e -> e.equals(missingPermissions))
+                .findFirst();
+        if (first.isPresent()) {
             first.get().getPermissions().addAll(missingPermissions.getPermissions());
             return;
         }

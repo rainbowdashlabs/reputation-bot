@@ -95,6 +95,7 @@ public class GuildSession {
     public String setupUrl() {
         return pathUrl("setup");
     }
+
     public String debugUrl() {
         return pathUrl("settings/problems");
     }

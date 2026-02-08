@@ -41,9 +41,11 @@ public class ChannelViewPOJO {
                     categories
                             .computeIfAbsent(
                                     category.getIdLong(), k -> new CategoryPOJO(category.getName(), category.getId()))
-                            .addChannel(new ChannelPOJO(channel.getName(), channel.getId(), channel.getType(), self.hasAccess(channel)));
+                            .addChannel(new ChannelPOJO(
+                                    channel.getName(), channel.getId(), channel.getType(), self.hasAccess(channel)));
                 } else {
-                    channels.add(new ChannelPOJO(channel.getName(), channel.getId(), channel.getType(), self.hasAccess(channel)));
+                    channels.add(new ChannelPOJO(
+                            channel.getName(), channel.getId(), channel.getType(), self.hasAccess(channel)));
                 }
             }
         });

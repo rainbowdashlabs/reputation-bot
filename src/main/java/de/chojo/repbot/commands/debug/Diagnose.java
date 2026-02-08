@@ -18,13 +18,13 @@ public class Diagnose extends SlashCommand {
         super(Slash.of("debug", "command.diagnose.description")
                 .guildOnly()
                 .adminCommand()
-                .command((event, ctx) ->{
+                .command((event, ctx) -> {
                     GuildSession guildSession = sessionService.getGuildSession(event.getGuild(), event.getMember());
                     event.reply(ctx.localize("command.diagnose.start"))
-                         .addComponents(ActionRow.of(
-                                 Button.link(guildSession.debugUrl(), ctx.localize("words.dashboard"))))
-                         .setEphemeral(true)
-                         .complete();
+                            .addComponents(
+                                    ActionRow.of(Button.link(guildSession.debugUrl(), ctx.localize("words.dashboard"))))
+                            .setEphemeral(true)
+                            .complete();
                 }));
     }
 }
