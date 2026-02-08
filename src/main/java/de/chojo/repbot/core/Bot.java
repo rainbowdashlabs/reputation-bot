@@ -22,7 +22,7 @@ import de.chojo.repbot.commands.abuseprotection.AbuseProtection;
 import de.chojo.repbot.commands.bot.BotAdmin;
 import de.chojo.repbot.commands.channel.Channel;
 import de.chojo.repbot.commands.dashboard.Dashboard;
-import de.chojo.repbot.commands.debug.Debug;
+import de.chojo.repbot.commands.debug.Diagnose;
 import de.chojo.repbot.commands.gdpr.Gdpr;
 import de.chojo.repbot.commands.info.Info;
 import de.chojo.repbot.commands.invite.Invite;
@@ -343,7 +343,7 @@ public class Bot {
                         new Reactions(guilds, configuration),
                         new Dashboard(guilds),
                         new AbuseProtection(guilds),
-                        new Debug(sessionService()),
+                        new Diagnose(sessionService()),
                         new RepAdmin(guilds, configuration, roleAssigner, premiumService),
                         new Messages(guilds),
                         botAdmin,
