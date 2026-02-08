@@ -7,7 +7,10 @@
     "change": "Endring",
     "clear": "Tydelig",
     "confirm": "Bekreft",
-    "loading": "Laster..."
+    "loading": "Laster...",
+    "error": {
+      "outOfBounds": "Verdien må være mellom {min} og {max}. Korrigert til nærmeste gyldige verdi."
+    }
   },
   "navigation": {
     "settings": "Innstillinger",
@@ -600,6 +603,18 @@
     "add": "Legg til integrasjonsomgåelse",
     "selectIntegration": "Velg en integrasjon",
     "noIntegrations": "Det er ikke flere integrasjoner tilgjengelig for å legge til omgåelser for.",
-    "deleteConfirm": "Er du sikker på at du vil fjerne denne integrasjonsomgåelsen?"
+    "deleteConfirm": "Er du sikker på at du vil fjerne denne integrasjonsomgåelsen?",
+    "premiumRequired": "Integrering bypass",
+    "allowDirect": "Tillat direkte",
+    "ignoreContext": "Ignorer kontekst",
+    "allowDirectDescription": "Tillat å gi omdømme når en innbygging hoppes over fordi bare én mottaker kunne bestemmes. Ingen innbygging vil noensinne sendes til en bot.",
+    "ignoreContextDescription": "Ignorer kontekstkontroller"
+  },
+  "timePresets": {
+    "hour": "1 time",
+    "day": "1 dag",
+    "week": "1 uke",
+    "fourWeeks": "4 uker",
+    "year": "1 år"
   }
 }

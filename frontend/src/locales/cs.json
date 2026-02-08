@@ -7,7 +7,10 @@
     "change": "Změna",
     "clear": "Jasné",
     "confirm": "Potvrdit",
-    "loading": "Načítání..."
+    "loading": "Načítání...",
+    "error": {
+      "outOfBounds": "Hodnota musí být v rozmezí {min} a {max}. Opraveno na nejbližší platnou hodnotu."
+    }
   },
   "navigation": {
     "settings": "Nastavení",
@@ -600,6 +603,18 @@
     "add": "Přidat integrační obcházení",
     "selectIntegration": "Vyberte integraci",
     "noIntegrations": "K dispozici nejsou žádné další integrace, ke kterým by bylo možné přidat obcházení.",
-    "deleteConfirm": "Opravdu chcete odstranit tento integrační bypass?"
+    "deleteConfirm": "Opravdu chcete odstranit tento integrační bypass?",
+    "premiumRequired": "Obcházení integrace",
+    "allowDirect": "Povolit přímý přístup",
+    "ignoreContext": "Ignorovat kontext",
+    "allowDirectDescription": "Umožnit udělení reputace, když by bylo vložení přeskočeno, protože bylo možné určit pouze jednoho příjemce. Pro bota nebude nikdy odesláno žádné vložení.",
+    "ignoreContextDescription": "Ignorovat kontroly kontextu"
+  },
+  "timePresets": {
+    "hour": "1 hodina",
+    "day": "1 den",
+    "week": "1 týden",
+    "fourWeeks": "4 týdny",
+    "year": "1 rok"
   }
 }

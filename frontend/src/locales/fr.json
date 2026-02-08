@@ -7,7 +7,10 @@
     "change": "Changer",
     "clear": "Effacer",
     "confirm": "Confirmer",
-    "loading": "Charge..."
+    "loading": "Charge...",
+    "error": {
+      "outOfBounds": "La valeur doit être comprise entre {min} et {max}. Corrigée à la valeur valide la plus proche."
+    }
   },
   "navigation": {
     "settings": "Paramètres",
@@ -600,6 +603,18 @@
     "add": "Ajouter un contournement d'intégration",
     "selectIntegration": "Choisis une intégration",
     "noIntegrations": "Plus d'intégrations disponibles pour ajouter des contournements.",
-    "deleteConfirm": "T'es sûr de vouloir supprimer ce contournement d'intégration ?"
+    "deleteConfirm": "T'es sûr de vouloir supprimer ce contournement d'intégration ?",
+    "premiumRequired": "Contournement de l'intégration",
+    "allowDirect": "Autoriser Direct",
+    "ignoreContext": "Ignorer le contexte",
+    "allowDirectDescription": "Permettre d'attribuer une réputation lorsqu'un intégrement serait ignoré parce qu'un seul destinataire pourrait être déterminé. Aucun intégrement ne sera jamais envoyé pour un bot.",
+    "ignoreContextDescription": "Ignorer les vérifications de contexte"
+  },
+  "timePresets": {
+    "hour": "1 heure",
+    "day": "1 jour",
+    "week": "1 semaine",
+    "fourWeeks": "4 semaines",
+    "year": "1 an"
   }
 }

@@ -8,6 +8,7 @@ import {computed} from 'vue'
 import {useI18n} from 'vue-i18n'
 import {useSession} from '@/composables/useSession'
 import {api} from '@/api'
+import NumberInput from '@/components/NumberInput.vue'
 
 const {t} = useI18n()
 const {session, updateAbuseProtectionSettings} = useSession()
@@ -28,12 +29,11 @@ const minMessages = computed({
 
 <template>
   <div class="flex flex-col gap-2">
-    <label class="label">{{ t('abuseProtection.minMessages.label') }}</label>
-    <input
-        v-model.number="minMessages"
-        class="input"
-        min="0"
-        type="number"
+    <NumberInput
+        v-model="minMessages"
+        :label="t('abuseProtection.minMessages.label')"
+        :min="0"
+        :max="100"
     />
     <p class="description">{{ t('abuseProtection.minMessages.description') }}</p>
   </div>

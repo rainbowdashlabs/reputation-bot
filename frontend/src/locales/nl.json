@@ -7,7 +7,10 @@
     "change": "Verandering",
     "clear": "Duidelijk",
     "confirm": "Bevestig",
-    "loading": "Bezig met laden..."
+    "loading": "Bezig met laden...",
+    "error": {
+      "outOfBounds": "De waarde moet tussen {min} en {max} liggen. Aangepast naar de dichtstbijzijnde geldige waarde."
+    }
   },
   "navigation": {
     "settings": "Instellingen",
@@ -600,6 +603,18 @@
     "add": "Integratie omzeilen toevoegen",
     "selectIntegration": "Kies een integratie",
     "noIntegrations": "Er zijn geen integraties meer om bypasses aan toe te voegen.",
-    "deleteConfirm": "Weet je zeker dat je deze integratie-bypass wilt verwijderen?"
+    "deleteConfirm": "Weet je zeker dat je deze integratie-bypass wilt verwijderen?",
+    "premiumRequired": "Integratie omzeilen",
+    "allowDirect": "Direct toestaan",
+    "ignoreContext": "Context negeren",
+    "allowDirectDescription": "Het is oké om een reputatie te geven als een embed wordt overgeslagen omdat er maar één ontvanger kan worden bepaald. Er wordt nooit een embed gestuurd voor een bot.",
+    "ignoreContextDescription": "Contextcontroles negeren"
+  },
+  "timePresets": {
+    "hour": "1 uur",
+    "day": "1 dag",
+    "week": "1 week",
+    "fourWeeks": "4 weken",
+    "year": "1 jaar"
   }
 }

@@ -7,7 +7,10 @@
     "change": "Cambiar",
     "clear": "Claro",
     "confirm": "Confirmar",
-    "loading": "Cargando..."
+    "loading": "Cargando...",
+    "error": {
+      "outOfBounds": "El valor debe estar entre {min} y {max}. Corregido al valor válido más cercano."
+    }
   },
   "navigation": {
     "settings": "Configuración",
@@ -600,6 +603,18 @@
     "add": "Añadir omisión de integración",
     "selectIntegration": "Selecciona una integración",
     "noIntegrations": "No hay más integraciones disponibles para añadir derivaciones.",
-    "deleteConfirm": "¿Estás seguro de que deseas eliminar esta omisión de integración?"
+    "deleteConfirm": "¿Estás seguro de que deseas eliminar esta omisión de integración?",
+    "premiumRequired": "Omisión de integración",
+    "allowDirect": "Permitir directo",
+    "ignoreContext": "Ignorar contexto",
+    "allowDirectDescription": "Permitir dar reputación cuando se omite una incrustación porque solo se ha podido determinar un destinatario. Nunca se enviará una incrustación para un bot.",
+    "ignoreContextDescription": "Ignorar comprobaciones de contexto"
+  },
+  "timePresets": {
+    "hour": "1 hora",
+    "day": "1 día",
+    "week": "1 semana",
+    "fourWeeks": "4 semanas",
+    "year": "1 año"
   }
 }

@@ -7,21 +7,17 @@
 import {computed, ref, watch} from 'vue'
 import {useI18n} from 'vue-i18n'
 import {useSession} from '@/composables/useSession'
+import {api} from '@/api'
 import RoleSelect from '@/components/RoleSelect.vue'
 import BaseButton from '@/components/BaseButton.vue'
 import Header2 from "@/components/heading/Header2.vue"
 import type {RankEntry} from '@/api/types'
-
-const props = defineProps<{
-  existingRanks: RankEntry[]
-}>()
-
-const emit = defineEmits<{
-  (e: 'add', rank: RankEntry): void
-}>()
+import NumberInput from "@/components/NumberInput.vue";
 
 const {t} = useI18n()
-const {session} = useSession()
+const {session, updateRanksSettings} = useSession()
+
+const ranks = computed<RankEntry[]>(() => (session.value?.settings?.ranks?.ranks ?? []) as RankEntry[])
 
 const newRoleId = ref<string | null>(null)
 const newReputation = ref<number | null>(null)
@@ -33,14 +29,14 @@ const highestBotRolePosition = computed(() => {
 
 const validate = () => {
   if (newRoleId.value !== null) {
-    if (props.existingRanks.some(r => r.roleId === newRoleId.value)) {
+    if (ranks.value.some(r => r.roleId === newRoleId.value)) {
       errorMessage.value = t('general.ranks.roleAlreadyAdded')
       return
     }
   }
 
   if (newReputation.value !== null && !isNaN(newReputation.value)) {
-    if (props.existingRanks.some(r => r.reputation === newReputation.value)) {
+    if (ranks.value.some(r => r.reputation === newReputation.value)) {
       errorMessage.value = t('general.ranks.reputationAlreadyUsed')
       return
     }
@@ -51,16 +47,22 @@ const validate = () => {
 
 watch([newRoleId, newReputation], validate)
 
-const addRank = () => {
+const addRank = async () => {
   if (newRoleId.value === null || newReputation.value === null || isNaN(newReputation.value) || newReputation.value < 0 || !!errorMessage.value) return
 
-  emit('add', {
-    roleId: newRoleId.value,
-    reputation: newReputation.value
-  })
+  try {
+    const nextRanks = [...ranks.value, {
+      roleId: newRoleId.value,
+      reputation: newReputation.value
+    }]
+    await api.updateRanks({ranks: nextRanks})
+    updateRanksSettings({ranks: nextRanks})
 
-  newRoleId.value = null
-  newReputation.value = null
+    newRoleId.value = null
+    newReputation.value = null
+  } catch (e) {
+    // Error is already handled by ApiClient interceptor and shown via errorStore
+  }
 }
 </script>
 
@@ -80,12 +82,11 @@ const addRank = () => {
         />
         <div class="flex flex-col gap-1.5">
           <label class="label mb-1.5">{{ t('general.ranks.reputationRequired') }}</label>
-          <input
-              v-model.number="newReputation"
+          <NumberInput
+              v-model="newReputation"
               :placeholder="t('general.ranks.reputationPlaceholder')"
-              class="input"
-              min="0"
-              type="number"
+              :min="0"
+              :max="100000"
               @keyup.enter="addRank"
           />
         </div>

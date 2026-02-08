@@ -4,47 +4,16 @@
  *     Copyright (C) RainbowDashLabs and Contributor
  */
 <script lang="ts" setup>
-import {computed, ref} from 'vue'
+import {ref} from 'vue'
 import {useI18n} from 'vue-i18n'
-import {useSession} from '@/composables/useSession'
 import {api} from '@/api'
-import type {RankEntry} from '@/api/types'
 import AddRankForm from './AddRankForm.vue'
 import RankList from './RankList.vue'
 
 const {t} = useI18n()
-const {session, updateRanksSettings} = useSession()
 
 const isRefreshing = ref(false)
 const refreshMessage = ref('')
-
-// Always read ranks directly from the session so the list reflects persisted changes
-const ranks = computed<RankEntry[]>(() => (session.value?.settings?.ranks?.ranks ?? []) as RankEntry[])
-
-const saveRanks = async () => {
-  try {
-    await api.updateRanks({ranks: ranks.value})
-  } catch (error) {
-    console.error('Failed to update ranks:', error)
-  }
-}
-
-const onAddRank = async (newRank: RankEntry) => {
-  const next = [...ranks.value, newRank]
-  updateRanksSettings({ranks: next})
-  await saveRanks()
-}
-
-const onUpdateRanks = async (updatedRanks: RankEntry[]) => {
-  updateRanksSettings({ranks: updatedRanks})
-  await saveRanks()
-}
-
-const onDeleteRank = async (roleId: string) => {
-  const next = ranks.value.filter(r => String(r.roleId) !== String(roleId))
-  updateRanksSettings({ranks: next})
-  await saveRanks()
-}
 
 const refreshRanks = async () => {
   if (isRefreshing.value) return
@@ -76,10 +45,10 @@ const refreshRanks = async () => {
   <div class="space-y-6">
     <div class="items-center justify-between">
       <div class="flex-1">
-        <AddRankForm :existing-ranks="ranks" @add="onAddRank"/>
+        <AddRankForm/>
       </div>
     </div>
-    <RankList :ranks="ranks" @delete="onDeleteRank" @update="onUpdateRanks"/>
+    <RankList/>
     <div class="mt-4 flex flex-col items-end">
       <button
           :disabled="isRefreshing"

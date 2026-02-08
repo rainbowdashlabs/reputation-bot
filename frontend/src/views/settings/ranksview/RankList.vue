@@ -6,40 +6,47 @@
 <script lang="ts" setup>
 import {computed} from 'vue'
 import {useI18n} from 'vue-i18n'
+import {useSession} from '@/composables/useSession'
+import {api} from '@/api'
 import Header2 from "@/components/heading/Header2.vue"
 import RankItem from './RankItem.vue'
 import type {RankEntry} from '@/api/types'
 
-const props = defineProps<{
-  ranks: RankEntry[]
-}>()
-
-const emit = defineEmits<{
-  (e: 'update', ranks: RankEntry[]): void
-  (e: 'delete', roleId: string): void
-}>()
-
 const {t} = useI18n()
+const {session, updateRanksSettings} = useSession()
+
+const ranks = computed<RankEntry[]>(() => (session.value?.settings?.ranks?.ranks ?? []) as RankEntry[])
 
 const sortedRanks = computed(() => {
-  return [...props.ranks].sort((a, b) => b.reputation - a.reputation)
+  return [...ranks.value].sort((a, b) => b.reputation - a.reputation)
 })
 
-const onUpdateRank = (updatedRank: RankEntry, index: number) => {
+const saveRanks = async (nextRanks: RankEntry[]) => {
+  try {
+    await api.updateRanks({ranks: nextRanks})
+    updateRanksSettings({ranks: nextRanks})
+  } catch (error) {
+    console.error('Failed to update ranks:', error)
+    throw error
+  }
+}
+
+const onUpdateRank = async (updatedRank: RankEntry, index: number) => {
   const originalRank = sortedRanks.value[index]
   if (!originalRank) return
 
-  const updatedRanks = [...props.ranks]
+  const updatedRanks = [...ranks.value]
   const originalIndex = updatedRanks.findIndex(r => r.roleId.toString() === originalRank.roleId.toString())
 
   if (originalIndex !== -1) {
     updatedRanks[originalIndex] = updatedRank
-    emit('update', updatedRanks)
+    await saveRanks(updatedRanks)
   }
 }
 
-const onDeleteRank = (roleId: string) => {
-  emit('delete', roleId)
+const onDeleteRank = async (roleId: string) => {
+  const next = ranks.value.filter(r => String(r.roleId) !== String(roleId))
+  await saveRanks(next)
 }
 </script>
 

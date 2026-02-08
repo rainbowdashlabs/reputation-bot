@@ -16,6 +16,7 @@ const modes = Object.values(ReputationMode)
 
 const updateMode = async (mode: ReputationMode) => {
   if (!session.value?.settings?.general) return
+  if (session.value.settings.general.reputationMode === mode) return
 
   try {
     await api.updateGeneralReputationMode(mode);

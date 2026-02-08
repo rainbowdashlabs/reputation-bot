@@ -7,7 +7,10 @@
     "change": "변화",
     "clear": "맑음",
     "confirm": "확인",
-    "loading": "로딩 중..."
+    "loading": "로딩 중...",
+    "error": {
+      "outOfBounds": "값은 {min}과 {max} 사이여야 합니다. 가장 가까운 유효한 값으로 수정되었습니다."
+    }
   },
   "navigation": {
     "settings": "설정",
@@ -600,6 +603,18 @@
     "add": "통합 우회 추가",
     "selectIntegration": "통합 선택",
     "noIntegrations": "추가할 우회 경로가 더 이상 없습니다.",
-    "deleteConfirm": "이 통합 우회 기능을 정말 제거하시겠습니까?"
+    "deleteConfirm": "이 통합 우회 기능을 정말 제거하시겠습니까?",
+    "premiumRequired": "통합 우회",
+    "allowDirect": "직접 허용",
+    "ignoreContext": "문맥 무시",
+    "allowDirectDescription": "수신자를 단 한 명만 확인할 수 있어 임베드가 생략될 경우 평판 부여를 허용합니다. 봇에 대해서는 임베드가 절대 전송되지 않습니다.",
+    "ignoreContextDescription": "컨텍스트 검사를 무시하십시오"
+  },
+  "timePresets": {
+    "hour": "1시간",
+    "day": "1일",
+    "week": "1주",
+    "fourWeeks": "4주",
+    "year": "1년"
   }
 }

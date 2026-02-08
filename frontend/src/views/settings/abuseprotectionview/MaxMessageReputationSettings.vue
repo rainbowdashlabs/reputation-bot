@@ -8,6 +8,7 @@ import {computed} from 'vue'
 import {useI18n} from 'vue-i18n'
 import {useSession} from '@/composables/useSession'
 import {api} from '@/api'
+import NumberInput from '@/components/NumberInput.vue'
 
 const {t} = useI18n()
 const {session, updateAbuseProtectionSettings} = useSession()
@@ -28,12 +29,11 @@ const maxMessageReputation = computed({
 
 <template>
   <div class="flex flex-col gap-2">
-    <label class="label">{{ t('abuseProtection.maxMessageReputation.label') }}</label>
-    <input
-        v-model.number="maxMessageReputation"
-        class="input"
-        min="0"
-        type="number"
+    <NumberInput
+        v-model="maxMessageReputation"
+        :label="t('abuseProtection.maxMessageReputation.label')"
+        :min="0"
+        :max="50"
     />
     <p class="description">{{ t('abuseProtection.maxMessageReputation.description') }}</p>
   </div>

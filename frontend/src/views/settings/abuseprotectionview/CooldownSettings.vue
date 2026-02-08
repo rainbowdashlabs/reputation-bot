@@ -10,6 +10,8 @@ import {useSession} from '@/composables/useSession'
 import {api} from '@/api'
 import {CooldownDirection} from '@/api/types'
 import Toggle from '@/components/Toggle.vue'
+import TimeQuickPresets from '@/components/TimeQuickPresets.vue'
+import NumberInput from '@/components/NumberInput.vue'
 
 const {t} = useI18n()
 const {session, updateAbuseProtectionSettings} = useSession()
@@ -76,13 +78,13 @@ const isCooldownOnce = computed({
 
     <template v-else>
       <div class="flex flex-col gap-2">
-        <label class="label">{{ t('abuseProtection.cooldown.label') }}</label>
-        <input
-            v-model.number="cooldown"
-            class="input"
-            min="0"
-            type="number"
+        <NumberInput
+            v-model="cooldown"
+            :label="t('abuseProtection.cooldown.label')"
+            :min="0"
+            :max="525600"
         />
+        <TimeQuickPresets v-model="cooldown"/>
         <p class="description">{{ t('abuseProtection.cooldown.description') }}</p>
       </div>
 

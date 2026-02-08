@@ -7,7 +7,10 @@
     "change": "Mudança",
     "clear": "Limpar",
     "confirm": "Confirmar",
-    "loading": "Carregando..."
+    "loading": "Carregando...",
+    "error": {
+      "outOfBounds": "O valor precisa estar entre {min} e {max}. Corrigido para o valor válido mais próximo."
+    }
   },
   "navigation": {
     "settings": "Configurações",
@@ -600,6 +603,18 @@
     "add": "Adicionar integração de bypass",
     "selectIntegration": "Escolha uma integração",
     "noIntegrations": "Não tem mais integrações disponíveis pra adicionar bypasses.",
-    "deleteConfirm": "Tem certeza que quer tirar esse desvio de integração?"
+    "deleteConfirm": "Tem certeza que quer tirar esse desvio de integração?",
+    "premiumRequired": "Ignorar integração",
+    "allowDirect": "Permitir direto",
+    "ignoreContext": "Ignorar contexto",
+    "allowDirectDescription": "Permitir dar uma reputação quando uma incorporação seria ignorada porque só um destinatário poderia ser determinado. Nenhuma incorporação será enviada para um bot.",
+    "ignoreContextDescription": "Ignorar verificações de contexto"
+  },
+  "timePresets": {
+    "hour": "1 hora",
+    "day": "1 dia",
+    "week": "1 semana",
+    "fourWeeks": "4 semanas",
+    "year": "1 ano"
   }
 }

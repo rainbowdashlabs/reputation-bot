@@ -35,20 +35,24 @@ watch(session, (newSession) => {
 }, {immediate: true})
 
 const updateSystemChannel = async () => {
+  const previous = session.value?.settings?.general?.systemChannel || null
   try {
     await api.updateGeneralSystemChannel(systemChannel.value ? systemChannel.value.toString() : '0')
     updateGeneralSettings({systemChannel: systemChannel.value || "0"})
   } catch (error) {
     console.error('Failed to update system channel:', error)
+    systemChannel.value = previous
   }
 }
 
 const updateLanguage = async () => {
+  const previous = session.value?.settings?.general?.language || ''
   try {
     await api.updateGeneralLanguage(language.value)
     updateGeneralSettings({language: language.value})
   } catch (error) {
     console.error('Failed to update language:', error)
+    language.value = previous
   }
 }
 </script>

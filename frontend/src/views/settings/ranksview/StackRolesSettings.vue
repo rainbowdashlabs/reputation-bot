@@ -22,11 +22,13 @@ watch(session, (newSession) => {
 }, {immediate: true})
 
 const updateStackRoles = async () => {
+  const previous = session.value?.settings?.general?.stackRoles ?? false
   try {
     await api.updateGeneralStackRoles(stackRoles.value)
     updateGeneralSettings({stackRoles: stackRoles.value})
   } catch (error) {
     console.error('Failed to update stack roles:', error)
+    stackRoles.value = previous
   }
 }
 </script>
