@@ -38,3 +38,8 @@ BEGIN
 END;
 $$;
 
+ALTER TABLE repbot_schema.settings_audit_log
+    ADD changed_count INTEGER DEFAULT 0 NOT NULL;
+
+ALTER TABLE repbot_schema.settings_audit_log
+    ADD created TIMESTAMP DEFAULT now() NOT NULL;
