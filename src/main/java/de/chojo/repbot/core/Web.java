@@ -190,14 +190,22 @@ public class Web {
         javalin.exception(JsonMappingException.class, (err, ctx) -> {
             log.error(LogNotify.NOTIFY_ADMIN, "Invalid JSON on route {}", ctx.path(), err);
             if (err.getCause() instanceof InputCoercionException input) {
-                ctx.json(new ErrorResponseWrapper("Invalid Input", input.getMessage().lines().findFirst().get())).status(HttpStatus.BAD_REQUEST);
+                ctx.json(new ErrorResponseWrapper(
+                                "Invalid Input",
+                                input.getMessage().lines().findFirst().get()))
+                        .status(HttpStatus.BAD_REQUEST);
                 return;
             }
-            ctx.json(new ErrorResponseWrapper("Invalid Input", err.getMessage().lines().findFirst().get())).status(HttpStatus.BAD_REQUEST);
+            ctx.json(new ErrorResponseWrapper(
+                            "Invalid Input",
+                            err.getMessage().lines().findFirst().get()))
+                    .status(HttpStatus.BAD_REQUEST);
         });
 
         javalin.exception(InputCoercionException.class, (err, ctx) -> {
-            ctx.json(new ErrorResponseWrapper("Invalid Input: %s (%s)".formatted(err.getInputType(), err.getMessage()), err.getMessage())).status(HttpStatus.BAD_REQUEST);
+            ctx.json(new ErrorResponseWrapper(
+                            "Invalid Input: %s (%s)".formatted(err.getInputType(), err.getMessage()), err.getMessage()))
+                    .status(HttpStatus.BAD_REQUEST);
         });
 
         // Handle generic ApiException with simple JSON

@@ -37,7 +37,7 @@ const validateAndCorrect = () => {
   }
 
   let val = typeof internalValue.value === 'string' ? parseFloat(internalValue.value) : internalValue.value;
-  
+
   if (isNaN(val)) {
     val = props.min !== -Infinity ? props.min : 0;
   }
