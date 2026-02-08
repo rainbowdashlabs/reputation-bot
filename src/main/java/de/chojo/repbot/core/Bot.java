@@ -11,6 +11,7 @@ import de.chojo.jdautil.interactions.message.Message;
 import de.chojo.jdautil.interactions.slash.Slash;
 import de.chojo.jdautil.interactions.user.User;
 import de.chojo.jdautil.localization.util.LocaleProvider;
+import de.chojo.jdautil.util.Premium;
 import de.chojo.jdautil.util.SysVar;
 import de.chojo.repbot.actions.messages.log.MessageLog;
 import de.chojo.repbot.actions.user.donated.received.UserDonated;
@@ -137,6 +138,7 @@ public class Bot {
         initServices();
         initInteractions();
         initListener();
+        initBotUserCache();
     }
 
     public ShardManager shardManager() {
@@ -457,5 +459,20 @@ public class Bot {
                 premiumService,
                 chatSupportService,
                 new MonitorService(data));
+    }
+
+    private void initBotUserCache() {
+        shardManager.getGuilds().forEach(guild -> {
+            RepGuild repGuild = data.guildRepository().guild(guild);
+            if (!Premium.isNotEntitled(
+                    repGuild.subscriptions(),
+                    configuration.skus().features().integrationBypass().allow())) {
+                guild.loadMembers(member -> {
+                    if (!member.getUser().isBot()) {
+                        guild.unloadMember(member.getIdLong());
+                    }
+                });
+            }
+        });
     }
 }

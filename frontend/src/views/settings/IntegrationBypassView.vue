@@ -42,7 +42,7 @@ const onBypassAdded = (integrationId: string) => {
   <SettingsContainer :description="t('integrationBypass.description')" :title="t('settings.integrationBypass')">
     <PremiumFeatureWarning
         v-if="!isIntegrationBypassUnlocked"
-        :feature-name="t('integrationBypass.premiumRequired')"
+        :feature-name="t('settings.integrationBypass')"
         :required-skus="integrationBypassRequiredSkus"
         variant="large"
     />
