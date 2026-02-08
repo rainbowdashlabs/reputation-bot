@@ -8,6 +8,7 @@ package de.chojo.repbot.config.elements;
 import de.chojo.jdautil.interactions.premium.SKUConfiguration;
 import de.chojo.repbot.config.elements.sku.SKUFeatures;
 import de.chojo.repbot.config.elements.sku.Subscription;
+import net.dv8tion.jda.api.entities.Entitlement;
 
 import java.util.List;
 
@@ -38,5 +39,9 @@ public class SKU {
 
     public List<Subscription> subscriptions() {
         return subscriptions;
+    }
+
+    public boolean isLifetime(Entitlement entitlement){
+        return subscriptions.stream().anyMatch(sub -> sub.lifetimeSku() == entitlement.getSkuIdLong());
     }
 }

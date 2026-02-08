@@ -48,6 +48,10 @@ public class Subscription extends SKU {
     }
 
     public static Subscription fromEntitlement(Entitlement entitlement) {
+        return fromEntitlement(entitlement, false);
+    }
+
+    public static Subscription fromEntitlement(Entitlement entitlement, boolean persistent) {
         SkuTarget targetType = SkuTarget.fromEntitlement(entitlement);
         long target = entitlement.getGuildId() == null ? entitlement.getUserIdLong() : entitlement.getGuildIdLong();
 
@@ -59,7 +63,7 @@ public class Subscription extends SKU {
                 Optional.ofNullable(entitlement.getTimeEnding())
                         .map(OffsetDateTime::toInstant)
                         .orElse(null),
-                false);
+                persistent);
     }
 
     public long id() {

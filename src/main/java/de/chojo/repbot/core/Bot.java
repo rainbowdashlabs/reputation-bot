@@ -464,9 +464,11 @@ public class Bot {
     private void initBotUserCache() {
         shardManager.getGuilds().forEach(guild -> {
             RepGuild repGuild = data.guildRepository().guild(guild);
+            premiumService.refresh(guild);
             if (!Premium.isNotEntitled(
                     repGuild.subscriptions(),
                     configuration.skus().features().integrationBypass().allow())) {
+                log.debug("Retrieving integrations for {}", guild);
                 guild.loadMembers(member -> {
                     if (!member.getUser().isBot()) {
                         guild.unloadMember(member.getIdLong());
