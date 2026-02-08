@@ -43,6 +43,11 @@ public class RepBotCachePolicy implements MemberCachePolicy, Runnable {
             return true;
         }
 
+        // Hold integration users
+        if (member.getUser().isBot()) {
+            return true;
+        }
+
         // Hold members during running scan
         if (scan.isRunning(member.getGuild())) {
             return true;
