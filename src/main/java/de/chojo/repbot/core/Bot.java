@@ -343,7 +343,7 @@ public class Bot {
                         new Reactions(guilds, configuration),
                         new Dashboard(guilds),
                         new AbuseProtection(guilds),
-                        new Debug(guilds),
+                        new Debug(sessionService()),
                         new RepAdmin(guilds, configuration, roleAssigner, premiumService),
                         new Messages(guilds),
                         botAdmin,

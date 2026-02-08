@@ -54,7 +54,7 @@ onMounted(async () => {
           {{ t('navigation.presets') }}
         </router-link>
         <router-link
-            to="/settings/edit/audit-log"
+            to="/settings/audit-log"
             class="px-6 py-3 text-sm font-medium transition-colors border-b-2"
             :class="[
               $route.path.endsWith('/audit-log')
@@ -65,7 +65,7 @@ onMounted(async () => {
           {{ t('settings.auditLog') }}
         </router-link>
         <router-link
-            to="/settings/edit/problems"
+            to="/settings/problems"
             class="px-6 py-3 text-sm font-medium transition-colors border-b-2 flex items-center gap-2"
             :class="[
               $route.path.endsWith('/problems')

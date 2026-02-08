@@ -85,18 +85,18 @@ const routes: RouteRecordRaw[] = [
                         path: 'integration-bypass',
                         name: 'SettingsIntegrationBypass',
                         component: () => import('@/views/settings/IntegrationBypassView.vue')
-                    },
-                    {
-                        path: 'audit-log',
-                        name: 'SettingsAuditLog',
-                        component: () => import('@/views/settings/AuditLogView.vue')
-                    },
-                    {
-                        path: 'problems',
-                        name: 'SettingsProblems',
-                        component: () => import('@/views/settings/ProblemsView.vue')
                     }
                 ]
+            },
+            {
+                path: 'audit-log',
+                name: 'SettingsAuditLog',
+                component: () => import('@/views/settings/AuditLogView.vue')
+            },
+            {
+                path: 'problems',
+                name: 'SettingsProblems',
+                component: () => import('@/views/settings/ProblemsView.vue')
             },
             {
                 path: 'preset',

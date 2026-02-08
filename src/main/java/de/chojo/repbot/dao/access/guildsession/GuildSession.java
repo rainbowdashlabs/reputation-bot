@@ -95,6 +95,9 @@ public class GuildSession {
     public String setupUrl() {
         return pathUrl("setup");
     }
+    public String debugUrl() {
+        return pathUrl("settings/debug");
+    }
 
     public GuildSessionMeta meta() {
         return meta;
