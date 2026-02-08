@@ -20,7 +20,7 @@ const closeHelp = () => {
 </script>
 
 <template>
-  <div class="fixed top-24 right-4 z-40">
+  <div class="fixed top-32 right-4 z-40">
     <!-- Help Button -->
     <button
         class="flex items-center justify-center w-10 h-10 rounded-full bg-indigo-600 text-white shadow-lg hover:bg-indigo-700 transition-colors focus:outline-none"

@@ -6,6 +6,7 @@
 package de.chojo.repbot.web.routes.v1.settings;
 
 import de.chojo.jdautil.interactions.dispatching.InteractionHub;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.provider.SettingsAuditLogRepository;
 import de.chojo.repbot.service.AutopostService;
 import de.chojo.repbot.service.RoleAssigner;
@@ -15,6 +16,7 @@ import de.chojo.repbot.web.routes.v1.settings.sub.AbuseProtectionRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.AnnouncementsRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.AuditLogRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.AutopostRoute;
+import de.chojo.repbot.web.routes.v1.settings.sub.DebugRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.GeneralRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.IntegrationBypassRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.LogChannelRoute;
@@ -40,6 +42,7 @@ public class SettingsRoute implements RoutesBuilder {
     private final RanksRoute ranksRoute;
     private final AuditLogRoute auditLogRoute;
     private final ThankingRoute thankingRoute = new ThankingRoute();
+    private final DebugRoute debugRoute;
 
     public SettingsRoute(
             InteractionHub<?, ?, ?> hub,
@@ -47,9 +50,11 @@ public class SettingsRoute implements RoutesBuilder {
             RoleAssigner roleAssigner,
             ShardManager shardManager,
             SettingsAuditLogRepository settingsAuditLogRepository,
-            MemberCache memberCache) {
+            MemberCache memberCache,
+            GuildRepository guildRepository) {
         reputationRoute = new ReputationRoute(hub);
         autopostRoute = new AutopostRoute(autopostService);
+        debugRoute = new DebugRoute(guildRepository);
         auditLogRoute = new AuditLogRoute(memberCache, settingsAuditLogRepository);
         ranksRoute = new RanksRoute(roleAssigner, shardManager);
     }
@@ -69,6 +74,7 @@ public class SettingsRoute implements RoutesBuilder {
             ranksRoute.buildRoutes();
             thankingRoute.buildRoutes();
             auditLogRoute.buildRoutes();
+            debugRoute.buildRoutes();
         });
     }
 }

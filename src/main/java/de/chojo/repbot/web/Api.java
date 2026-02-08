@@ -9,6 +9,7 @@ import de.chojo.jdautil.interactions.dispatching.InteractionHub;
 import de.chojo.repbot.commands.thankwords.Thankwords;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.core.Localization;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.dao.provider.SettingsAuditLogRepository;
 import de.chojo.repbot.serialization.ThankwordsContainer;
@@ -51,12 +52,19 @@ public class Api {
             ShardManager shardManager,
             Configuration configuration,
             SettingsAuditLogRepository settingsAuditLogRepository,
-            MemberCache memberCache) {
+            MemberCache memberCache,
+            GuildRepository guildRepostory) {
         this.sessionService = sessionService;
         metricsRoute = new MetricsRoute(metrics);
         sessionRoute = new SessionRoute(sessionService);
         settingsRoute = new SettingsRoute(
-                hub, autopostService, roleAssigner, shardManager, settingsAuditLogRepository, memberCache);
+                hub,
+                autopostService,
+                roleAssigner,
+                shardManager,
+                settingsAuditLogRepository,
+                memberCache,
+                guildRepostory);
 
         // Load thankwords container
         ThankwordsContainer thankwordsContainer;

@@ -96,6 +96,10 @@ public class GuildSession {
         return pathUrl("setup");
     }
 
+    public String debugUrl() {
+        return pathUrl("settings/problems");
+    }
+
     public GuildSessionMeta meta() {
         return meta;
     }

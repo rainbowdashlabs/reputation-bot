@@ -103,6 +103,7 @@ export interface ChannelPOJO {
     name: string;
     id: string;
     type: string;
+    visible: boolean;
 }
 
 export interface CategoryPOJO {
@@ -353,4 +354,165 @@ export interface LanguageInfo {
     name: string;
     nativeName: string;
     internalName: string;
+}
+
+export enum Permission {
+    CREATE_INSTANT_INVITE = 'CREATE_INSTANT_INVITE',
+    KICK_MEMBERS = 'KICK_MEMBERS',
+    BAN_MEMBERS = 'BAN_MEMBERS',
+    ADMINISTRATOR = 'ADMINISTRATOR',
+    MANAGE_CHANNEL = 'MANAGE_CHANNEL',
+    MANAGE_SERVER = 'MANAGE_SERVER',
+    MESSAGE_ADD_REACTION = 'MESSAGE_ADD_REACTION',
+    VIEW_AUDIT_LOG = 'VIEW_AUDIT_LOG',
+    PRIORITY_SPEAKER = 'PRIORITY_SPEAKER',
+    VIEW_CHANNEL = 'VIEW_CHANNEL',
+    MESSAGE_SEND = 'MESSAGE_SEND',
+    MESSAGE_TTS = 'MESSAGE_TTS',
+    MESSAGE_MANAGE = 'MESSAGE_MANAGE',
+    MESSAGE_EMBED_LINKS = 'MESSAGE_EMBED_LINKS',
+    MESSAGE_ATTACH_FILES = 'MESSAGE_ATTACH_FILES',
+    MESSAGE_HISTORY = 'MESSAGE_HISTORY',
+    MESSAGE_MENTION_EVERYONE = 'MESSAGE_MENTION_EVERYONE',
+    MESSAGE_EXT_EMOJI = 'MESSAGE_EXT_EMOJI',
+    VIEW_GUILD_INSIGHTS = 'VIEW_GUILD_INSIGHTS',
+    VOICE_CONNECT = 'VOICE_CONNECT',
+    VOICE_SPEAK = 'VOICE_SPEAK',
+    VOICE_MUTE_MEMBERS = 'VOICE_MUTE_MEMBERS',
+    VOICE_DEAFEN_MEMBERS = 'VOICE_DEAFEN_MEMBERS',
+    VOICE_MOVE_MEMBERS = 'VOICE_MOVE_MEMBERS',
+    VOICE_USE_VAD = 'VOICE_USE_VAD',
+    NICKNAME_CHANGE = 'NICKNAME_CHANGE',
+    NICKNAME_MANAGE = 'NICKNAME_MANAGE',
+    MANAGE_ROLES = 'MANAGE_ROLES',
+    MANAGE_PERMISSIONS = 'MANAGE_PERMISSIONS',
+    MANAGE_WEBHOOKS = 'MANAGE_WEBHOOKS',
+    MANAGE_GUILD_EXPRESSIONS = 'MANAGE_GUILD_EXPRESSIONS',
+    USE_APPLICATION_COMMANDS = 'USE_APPLICATION_COMMANDS',
+    MESSAGE_SEND_IN_THREADS = 'MESSAGE_SEND_IN_THREADS',
+    CREATE_PUBLIC_THREADS = 'CREATE_PUBLIC_THREADS',
+    CREATE_PRIVATE_THREADS = 'CREATE_PRIVATE_THREADS',
+    MESSAGE_EXT_STICKER = 'MESSAGE_EXT_STICKER',
+    MESSAGE_MANAGE_THREADS = 'MESSAGE_MANAGE_THREADS',
+    USE_EMBEDDED_ACTIVITIES = 'USE_EMBEDDED_ACTIVITIES',
+    MODERATE_MEMBERS = 'MODERATE_MEMBERS',
+    VIEW_CREATOR_MONETIZATION_ANALYTICS = 'VIEW_CREATOR_MONETIZATION_ANALYTICS',
+    USE_SOUNDBOARD = 'USE_SOUNDBOARD',
+    USE_EXTERNAL_SOUNDS = 'USE_EXTERNAL_SOUNDS',
+    MESSAGE_SEND_VOICE_MESSAGES = 'MESSAGE_SEND_VOICE_MESSAGES',
+    USE_CLYDE_AI = 'USE_CLYDE_AI',
+    SET_VOICE_CHANNEL_STATUS = 'SET_VOICE_CHANNEL_STATUS',
+    SEND_POLLS = 'SEND_POLLS',
+    USE_EXTERNAL_APPS = 'USE_EXTERNAL_APPS',
+    BYPASS_SLOWMODE = 'BYPASS_SLOWMODE',
+}
+
+export const PermissionNames: Record<Permission, string> = {
+    [Permission.CREATE_INSTANT_INVITE]: 'Create Instant Invite',
+    [Permission.KICK_MEMBERS]: 'Kick Members',
+    [Permission.BAN_MEMBERS]: 'Ban Members',
+    [Permission.ADMINISTRATOR]: 'Administrator',
+    [Permission.MANAGE_CHANNEL]: 'Manage Channel',
+    [Permission.MANAGE_SERVER]: 'Manage Server',
+    [Permission.MESSAGE_ADD_REACTION]: 'Add Reactions',
+    [Permission.VIEW_AUDIT_LOG]: 'View Audit Log',
+    [Permission.PRIORITY_SPEAKER]: 'Priority Speaker',
+    [Permission.VIEW_CHANNEL]: 'View Channel',
+    [Permission.MESSAGE_SEND]: 'Send Messages',
+    [Permission.MESSAGE_TTS]: 'Send TTS Messages',
+    [Permission.MESSAGE_MANAGE]: 'Manage Messages',
+    [Permission.MESSAGE_EMBED_LINKS]: 'Embed Links',
+    [Permission.MESSAGE_ATTACH_FILES]: 'Attach Files',
+    [Permission.MESSAGE_HISTORY]: 'Read Message History',
+    [Permission.MESSAGE_MENTION_EVERYONE]: 'Mention Everyone',
+    [Permission.MESSAGE_EXT_EMOJI]: 'Use External Emojis',
+    [Permission.VIEW_GUILD_INSIGHTS]: 'View Guild Insights',
+    [Permission.VOICE_CONNECT]: 'Connect',
+    [Permission.VOICE_SPEAK]: 'Speak',
+    [Permission.VOICE_MUTE_MEMBERS]: 'Mute Members',
+    [Permission.VOICE_DEAFEN_MEMBERS]: 'Deafen Members',
+    [Permission.VOICE_MOVE_MEMBERS]: 'Move Members',
+    [Permission.VOICE_USE_VAD]: 'Use Voice Activity',
+    [Permission.NICKNAME_CHANGE]: 'Change Nickname',
+    [Permission.NICKNAME_MANAGE]: 'Manage Nicknames',
+    [Permission.MANAGE_ROLES]: 'Manage Roles',
+    [Permission.MANAGE_PERMISSIONS]: 'Manage Permissions',
+    [Permission.MANAGE_WEBHOOKS]: 'Manage Webhooks',
+    [Permission.MANAGE_GUILD_EXPRESSIONS]: 'Manage Guild Expressions',
+    [Permission.USE_APPLICATION_COMMANDS]: 'Use Application Commands',
+    [Permission.MESSAGE_SEND_IN_THREADS]: 'Send Messages in Threads',
+    [Permission.CREATE_PUBLIC_THREADS]: 'Create Public Threads',
+    [Permission.CREATE_PRIVATE_THREADS]: 'Create Private Threads',
+    [Permission.MESSAGE_EXT_STICKER]: 'Use External Stickers',
+    [Permission.MESSAGE_MANAGE_THREADS]: 'Manage Threads',
+    [Permission.USE_EMBEDDED_ACTIVITIES]: 'Use Embedded Activities',
+    [Permission.MODERATE_MEMBERS]: 'Moderate Members',
+    [Permission.VIEW_CREATOR_MONETIZATION_ANALYTICS]: 'View Creator Monetization Analytics',
+    [Permission.USE_SOUNDBOARD]: 'Use Soundboard',
+    [Permission.USE_EXTERNAL_SOUNDS]: 'Use External Sounds',
+    [Permission.MESSAGE_SEND_VOICE_MESSAGES]: 'Send Voice Messages',
+    [Permission.USE_CLYDE_AI]: 'Use Clyde AI',
+    [Permission.SET_VOICE_CHANNEL_STATUS]: 'Set Voice Channel Status',
+    [Permission.SEND_POLLS]: 'Send Polls',
+    [Permission.USE_EXTERNAL_APPS]: 'Use External Apps',
+    [Permission.BYPASS_SLOWMODE]: 'Bypass Slowmode',
+};
+
+export enum PermissionScope {
+    GUILD = 'GUILD',
+    CHANNEL = 'CHANNEL',
+    CATEGORY = 'CATEGORY',
+}
+
+export interface MissingPermissions {
+    scope: PermissionScope;
+    id: string;
+    permissions: Permission[];
+}
+
+export enum RanksProblemType {
+    CANT_ASSIGN_ROLE = 'CANT_ASSIGN_ROLE',
+    MISSING_ROLE = 'MISSING_ROLE',
+}
+
+export interface RankProblem {
+    id: string;
+    types: RanksProblemType[];
+}
+
+export enum ReputationChannelProblemType {
+    MISSING_CHANNEL = 'MISSING_CHANNEL',
+    MISSING_CATEGORY = 'MISSING_CATEGORY',
+    NOT_TEXT_TYPE = 'NOT_TEXT_TYPE',
+}
+
+export interface ReputationChannelProblem {
+    id: string;
+    type: ReputationChannelProblemType;
+}
+
+export enum SimpleProblems {
+    SYSTEM_CHANNEL_NOT_DEFINED = 'SYSTEM_CHANNEL_NOT_DEFINED',
+    SYSTEM_CHANNEL_NOT_FOUND = 'SYSTEM_CHANNEL_NOT_FOUND',
+    NO_ANNOUNCEMENT_CHANNEL_DEFINED = 'NO_ANNOUNCEMENT_CHANNEL_DEFINED',
+    ANNOUNCEMENT_CHANNEL_NOT_FOUND = 'ANNOUNCEMENT_CHANNEL_NOT_FOUND',
+    NO_AUTOPOST_CHANNEL_DEFINED = 'NO_AUTOPOST_CHANNEL_DEFINED',
+    AUTOPOST_CANNEL_NOT_FOUND = 'AUTOPOST_CANNEL_NOT_FOUND',
+    NO_LOG_CHANNEL_DEFINED = 'NO_LOG_CHANNEL_DEFINED',
+    LOG_CHANNEL_NOT_FOUND = 'LOG_CHANNEL_NOT_FOUND',
+    NO_THANKWORDS_DEFINED = 'NO_THANKWORDS_DEFINED',
+    NO_REPUTATION_CHANNEL_DEFINED = 'NO_REPUTATION_CHANNEL_DEFINED',
+}
+
+export enum SimpleWarning {
+    MAX_MESSAGE_AGE_LOW = 'MAX_MESSAGE_AGE_LOW',
+}
+
+export interface DebugResultPOJO {
+    missingGlobalPermissions: Permission[];
+    simpleProblems: SimpleProblems[];
+    missingPermissions: MissingPermissions[];
+    rankProblems: RankProblem[];
+    reputationChannelProblems: ReputationChannelProblem[];
+    simpleWarnings: SimpleWarning[];
 }

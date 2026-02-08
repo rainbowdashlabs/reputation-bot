@@ -60,7 +60,60 @@
     "logChannel": "Log Channel",
     "reactions": "Reactions",
     "auditLog": "Audit Log",
-    "integrationBypass": "Integration Bypass"
+    "integrationBypass": "Integration Bypass",
+    "problems": "Problems",
+    "debug": {
+      "permissions": {
+        "title": "Missing Global Permissions",
+        "description": "These permissions are missing for the bot globally. This might limit some features.",
+        "MANAGE_ROLES": "Reputation roles can't be given.",
+        "NICKNAME_CHANGE": "Nickname can't be changed in the dashboard.",
+        "MANAGE_GUILD_EXPRESSIONS": "Custom reactions can't be suggested in the dashboard.",
+        "VIEW_CHANNEL": "Reputation channels can't be seen. Reputation can't be given via any text based method.",
+        "MESSAGE_HISTORY": "Reputation confirmation via embeds is not working. Most abuse protection checks will fail.",
+        "MESSAGE_ADD_REACTION": "Reputation confirmation via reactions is not working.",
+        "MESSAGE_SEND": "Any confirmation message won't work. For example reaction confirmation or reputation confirmation via embed.",
+        "MESSAGE_SEND_IN_THREADS": "Any confirmation message won't work in threads. For example reaction confirmation or reputation confirmation via embed",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "Any confirmation message won't work in threads. For example reaction confirmation or reputation confirmation via embed.",
+        "MESSAGE_EXT_EMOJI": "Reputation confirmation via emojis is not working.",
+        "BYPASS_SLOWMODE": "Any confirmation message won't work from time to time. For example reaction confirmation or reputation confirmation via embed."
+      },
+      "simpleProblems": {
+        "title": "General Problems",
+        "SYSTEM_CHANNEL_NOT_DEFINED": "System channel is not defined.",
+        "SYSTEM_CHANNEL_NOT_FOUND": "System channel was not found.",
+        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "Announcement channel is not defined.",
+        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "Announcement channel was not found.",
+        "NO_AUTOPOST_CHANNEL_DEFINED": "Autopost channel is not defined.",
+        "AUTOPOST_CANNEL_NOT_FOUND": "Autopost channel was not found.",
+        "NO_LOG_CHANNEL_DEFINED": "Log channel is not defined.",
+        "LOG_CHANNEL_NOT_FOUND": "Log channel was not found.",
+        "NO_THANKWORDS_DEFINED": "No thankwords are defined.",
+        "NO_REPUTATION_CHANNEL_DEFINED": "No reputation channels or categories are defined."
+      },
+      "missingPermissions": {
+        "title": "Missing Scoped Permissions",
+        "GUILD": "Guild",
+        "CHANNEL": "Channel",
+        "CATEGORY": "Category"
+      },
+      "rankProblems": {
+        "title": "Rank Problems",
+        "CANT_ASSIGN_ROLE": "The bot cannot assign this role because it is above the bot's highest role.",
+        "MISSING_ROLE": "The role for this rank is missing."
+      },
+      "reputationChannelProblems": {
+        "title": "Reputation Channel Problems",
+        "MISSING_CHANNEL": "The channel is missing.",
+        "MISSING_CATEGORY": "The category is missing.",
+        "NOT_TEXT_TYPE": "The channel is not a text channel."
+      },
+      "simpleWarnings": {
+        "title": "Warnings",
+        "MAX_MESSAGE_AGE_LOW": "The maximum message age is set very low. This might prevent users from thanking each other for older messages."
+      },
+      "goToSettings": "Go to settings"
+    }
   },
   "locale": {
     "selectLanguage": "Select Language"

@@ -60,7 +60,60 @@
     "logChannel": "Loggkanal",
     "reactions": "Reaktioner",
     "auditLog": "Revisionslogg",
-    "integrationBypass": "Integrationsförbikoppling"
+    "integrationBypass": "Integrationsförbikoppling",
+    "problems": "Problem",
+    "debug": {
+      "permissions": {
+        "title": "Saknade globala behörigheter",
+        "description": "Dessa behörigheter saknas för boten globalt. Detta kan begränsa vissa funktioner.",
+        "MANAGE_ROLES": "Reputationsroller kan inte tilldelas.",
+        "NICKNAME_CHANGE": "Smeknamnet kan inte ändras i instrumentpanelen.",
+        "MANAGE_GUILD_EXPRESSIONS": "Anpassade reaktioner kan inte föreslås i instrumentpanelen.",
+        "VIEW_CHANNEL": "Reputationskanaler kan inte ses. Reputation kan inte ges via någon textbaserad metod.",
+        "MESSAGE_HISTORY": "Bekräftelse av rykte via inbäddningar fungerar inte. De flesta kontroller för skydd mot missbruk kommer att misslyckas.",
+        "MESSAGE_ADD_REACTION": "Bekräftelse av rykte via reaktioner fungerar inte.",
+        "MESSAGE_SEND": "Inget bekräftelsemeddelande fungerar. Till exempel reaktionsbekräftelse eller ryktebekräftelse via inbäddning.",
+        "MESSAGE_SEND_IN_THREADS": "Bekräftelsemeddelanden fungerar inte i trådar. Till exempel reaktionsbekräftelse eller ryktebekräftelse via inbäddning.",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "Bekräftelsemeddelanden fungerar inte i trådar. Till exempel reaktionsbekräftelse eller ryktebekräftelse via inbäddning.",
+        "MESSAGE_EXT_EMOJI": "Bekräftelse av rykte via emojis fungerar inte.",
+        "BYPASS_SLOWMODE": "Ibland fungerar inte bekräftelsemeddelanden. Till exempel reaktionsbekräftelse eller ryktebekräftelse via inbäddning."
+      },
+      "simpleProblems": {
+        "title": "Allmänna problem",
+        "SYSTEM_CHANNEL_NOT_DEFINED": "Systemkanalen är inte definierad.",
+        "SYSTEM_CHANNEL_NOT_FOUND": "Systemkanalen hittades inte.",
+        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "Meddelandekanalen är inte definierad.",
+        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "Meddelandekanalen hittades inte.",
+        "NO_AUTOPOST_CHANNEL_DEFINED": "Autopost-kanalen är inte definierad.",
+        "AUTOPOST_CANNEL_NOT_FOUND": "Autopost-kanalen hittades inte.",
+        "NO_LOG_CHANNEL_DEFINED": "Loggkanalen är inte definierad.",
+        "LOG_CHANNEL_NOT_FOUND": "Loggkanalen hittades inte.",
+        "NO_THANKWORDS_DEFINED": "Inga tackord är definierade.",
+        "NO_REPUTATION_CHANNEL_DEFINED": "Inga ryktekanaler eller kategorier är definierade."
+      },
+      "missingPermissions": {
+        "title": "Saknade behörigheter inom ramen för tillämpningsområdet",
+        "GUILD": "Gille",
+        "CHANNEL": "Kanal",
+        "CATEGORY": "Kategori"
+      },
+      "rankProblems": {
+        "title": "Rankningsproblem",
+        "CANT_ASSIGN_ROLE": "Boten kan inte tilldela denna roll eftersom den ligger över botens högsta roll.",
+        "MISSING_ROLE": "Rollen för denna rang saknas."
+      },
+      "reputationChannelProblems": {
+        "title": "Problem med rykteskanalen",
+        "MISSING_CHANNEL": "Kanalen saknas.",
+        "MISSING_CATEGORY": "Kategorin saknas.",
+        "NOT_TEXT_TYPE": "Kanalen är inte en textkanal."
+      },
+      "simpleWarnings": {
+        "title": "Varningar",
+        "MAX_MESSAGE_AGE_LOW": "Den maximala åldern för meddelanden är inställd på en mycket låg nivå. Detta kan hindra användare från att tacka varandra för äldre meddelanden."
+      },
+      "goToSettings": "Gå till inställningar"
+    }
   },
   "locale": {
     "selectLanguage": "Välj språk"

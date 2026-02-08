@@ -9,29 +9,37 @@ import {useI18n} from 'vue-i18n'
 import {useSession} from '@/composables/useSession'
 import {api} from '@/api'
 import PremiumFeatureWarning from '@/components/PremiumFeatureWarning.vue'
+import ChannelSelectionItem from './ChannelSelectionItem.vue'
+import CategorySelectionItem from './CategorySelectionItem.vue'
 
 const {t} = useI18n()
 const {session, updateThankingChannelsSettings} = useSession()
 
-// Helper function to get icon for channel type
-const getChannelIcon = (type: string) => {
-  switch (type) {
-    case 'TEXT':
-      return 'hashtag'
-    case 'VOICE':
-      return 'volume-high'
-    case 'NEWS':
-      return 'bullhorn'
-    case 'FORUM':
-      return 'comments'
-    default:
-      return 'hashtag'
-  }
-}
-
 const channelsSettings = computed(() => session.value?.settings?.thanking?.channels)
 const guildChannels = computed(() => session.value?.guild?.channels)
 const premiumFeatures = computed(() => session.value?.premiumFeatures)
+
+const visibleGuildChannels = computed(() => {
+  if (!guildChannels.value) return null
+
+  const categories = guildChannels.value.categories
+    .map(category => {
+      const visibleChannels = category.channels.filter(c => c.visible)
+      return {
+        ...category,
+        channels: visibleChannels,
+        originallyEmpty: category.channels.length === 0
+      }
+    })
+    .filter(category => category.channels.length > 0 || category.originallyEmpty)
+
+  const uncategorized = guildChannels.value.channels.filter(c => c.visible)
+
+  return {
+    categories,
+    channels: uncategorized
+  }
+})
 
 const toggleChannel = async (channelId: string) => {
   if (!channelsSettings.value) return
@@ -81,14 +89,14 @@ const toggleCategory = async (categoryId: string) => {
   }
 }
 
-const isCategorySelected = (categoryId: string) => {
+const isCategorySelected = (categoryId: string): boolean => {
   const id = String(categoryId)
-  return channelsSettings.value?.categories.some(c => c === id)
+  return !!channelsSettings.value?.categories.some(c => c === id)
 }
 
-const isChannelSelected = (channelId: string) => {
+const isChannelSelected = (channelId: string): boolean => {
   const id = String(channelId)
-  return channelsSettings.value?.channels.some(c => c === id)
+  return !!channelsSettings.value?.channels.some(c => c === id)
 }
 
 const isChannelLimitReached = computed(() => {
@@ -138,74 +146,32 @@ const isCategoryLimitReached = computed(() => {
       <div
           class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden divide-y divide-gray-200 dark:divide-gray-700">
         <!-- Categories -->
-        <div v-for="category in guildChannels?.categories" :key="category.id" class="bg-white dark:bg-gray-900">
-          <div
-              class="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors"
-              @click="toggleCategory(category.id)"
-          >
-            <div class="flex items-center gap-3">
-              <input
-                  :checked="isCategorySelected(category.id)"
-                  :disabled="!isCategorySelected(category.id) && isCategoryLimitReached"
-                  class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 disabled:opacity-50"
-                  type="checkbox"
-                  @click.stop="toggleCategory(category.id)"
-              />
-              <span class="font-medium text-gray-900 dark:text-gray-100 uppercase text-xs tracking-wider">{{
-                  category.name
-                }}</span>
-            </div>
-            <span class="text-xs text-gray-500 uppercase">{{ t('general.channels.list.categories') }}</span>
-          </div>
-
-          <!-- Channels in Category -->
-          <div class="divide-y divide-gray-100 dark:divide-gray-800 bg-gray-50/50 dark:bg-gray-800/50">
-            <div
-                v-for="channel in category.channels"
-                :key="channel.id"
-                :class="{ 'opacity-50 pointer-events-none': isCategorySelected(category.id) }"
-                class="flex items-center justify-between p-3 pl-10 hover:bg-gray-100 dark:hover:bg-gray-700 cursor-pointer transition-colors"
-                @click="toggleChannel(channel.id)"
-            >
-              <div class="flex items-center gap-3">
-                <input
-                    :checked="isChannelSelected(channel.id) || isCategorySelected(category.id)"
-                    :disabled="isCategorySelected(category.id) || (!isChannelSelected(channel.id) && isChannelLimitReached)"
-                    class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 disabled:opacity-50"
-                    type="checkbox"
-                    @click.stop="toggleChannel(channel.id)"
-                />
-                <span class="text-gray-700 dark:text-gray-300 flex items-center gap-2">
-                  <font-awesome-icon :icon="getChannelIcon(channel.type)" class="text-gray-400 dark:text-gray-500"/>
-                  {{ channel.name }}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
+        <CategorySelectionItem
+          v-for="category in visibleGuildChannels?.categories"
+          :key="category.id"
+          :category="category"
+          :selected="isCategorySelected(category.id)"
+          :disabled="isCategoryLimitReached"
+          :is-channel-selected="isChannelSelected"
+          :is-channel-limit-reached="isChannelLimitReached"
+          @toggle-category="toggleCategory"
+          @toggle-channel="toggleChannel"
+        />
 
         <!-- Uncategorized Channels -->
-        <div
-            v-for="channel in guildChannels?.channels"
-            :key="channel.id"
-            class="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-800 cursor-pointer transition-colors bg-white dark:bg-gray-900"
-            @click="toggleChannel(channel.id)"
+        <ChannelSelectionItem
+          v-for="channel in visibleGuildChannels?.channels"
+          :key="channel.id"
+          :channel="channel"
+          :selected="isChannelSelected(channel.id)"
+          :disabled="!isChannelSelected(channel.id) && isChannelLimitReached"
+          class="bg-white dark:bg-gray-900"
+          @toggle="toggleChannel"
         >
-          <div class="flex items-center gap-3">
-            <input
-                :checked="isChannelSelected(channel.id)"
-                :disabled="!isChannelSelected(channel.id) && isChannelLimitReached"
-                class="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 disabled:opacity-50"
-                type="checkbox"
-                @click.stop="toggleChannel(channel.id)"
-            />
-            <span class="text-gray-700 dark:text-gray-300 flex items-center gap-2">
-              <font-awesome-icon :icon="getChannelIcon(channel.type)" class="text-gray-400 dark:text-gray-500"/>
-              {{ channel.name }}
-            </span>
-          </div>
-          <span class="text-xs text-gray-500 uppercase">{{ t('general.channels.list.channels') }}</span>
-        </div>
+          <template #right>
+            <span class="text-xs text-gray-500 uppercase">{{ t('general.channels.list.channels') }}</span>
+          </template>
+        </ChannelSelectionItem>
       </div>
     </div>
   </div>

@@ -60,7 +60,60 @@
     "logChannel": "日志通道",
     "reactions": "反应",
     "auditLog": "审计日志",
-    "integrationBypass": "集成旁路"
+    "integrationBypass": "集成旁路",
+    "problems": "问题",
+    "debug": {
+      "permissions": {
+        "title": "缺少全局权限",
+        "description": "该机器人全局缺少这些权限。这可能会限制某些功能。",
+        "MANAGE_ROLES": "声望角色无法授予。",
+        "NICKNAME_CHANGE": "昵称无法在控制面板中更改。",
+        "MANAGE_GUILD_EXPRESSIONS": "自定义反应无法在仪表板中建议。",
+        "VIEW_CHANNEL": "声望渠道不可见。声望无法通过任何基于文本的方式授予。",
+        "MESSAGE_HISTORY": "通过嵌入内容进行的声誉验证功能失效。多数滥用防护检查将无法通过。",
+        "MESSAGE_ADD_REACTION": "通过点赞确认声誉的功能无法正常使用。",
+        "MESSAGE_SEND": "任何确认消息都无效。例如通过嵌入式操作进行的反应确认或声望确认。",
+        "MESSAGE_SEND_IN_THREADS": "任何确认消息在嵌入式讨论中均无效。例如通过嵌入式方式进行的点赞确认或声望确认。",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "任何确认消息在讨论串中都无法生效。例如通过嵌入式操作进行的反应确认或声望确认。",
+        "MESSAGE_EXT_EMOJI": "通过表情符号确认声誉的功能无法正常使用。",
+        "BYPASS_SLOWMODE": "任何确认消息都可能时不时失效。例如通过嵌入式方式进行的反应确认或声望确认。"
+      },
+      "simpleProblems": {
+        "title": "一般性问题",
+        "SYSTEM_CHANNEL_NOT_DEFINED": "系统通道未定义。",
+        "SYSTEM_CHANNEL_NOT_FOUND": "未找到系统频道。",
+        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "公告频道未定义。",
+        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "未找到公告频道。",
+        "NO_AUTOPOST_CHANNEL_DEFINED": "自动发布频道未定义。",
+        "AUTOPOST_CANNEL_NOT_FOUND": "未找到自动发布频道。",
+        "NO_LOG_CHANNEL_DEFINED": "日志通道未定义。",
+        "LOG_CHANNEL_NOT_FOUND": "日志通道未找到。",
+        "NO_THANKWORDS_DEFINED": "未定义任何感谢词。",
+        "NO_REPUTATION_CHANNEL_DEFINED": "未定义任何声誉渠道或类别。"
+      },
+      "missingPermissions": {
+        "title": "缺少作用域权限",
+        "GUILD": "公会",
+        "CHANNEL": "频道",
+        "CATEGORY": "类别"
+      },
+      "rankProblems": {
+        "title": "等级问题",
+        "CANT_ASSIGN_ROLE": "该机器人无法分配此角色，因为该角色高于机器人的最高权限。",
+        "MISSING_ROLE": "此等级的角色缺失。"
+      },
+      "reputationChannelProblems": {
+        "title": "声誉通道问题",
+        "MISSING_CHANNEL": "该频道不存在。",
+        "MISSING_CATEGORY": "该类别缺失。",
+        "NOT_TEXT_TYPE": "该频道并非文字频道。"
+      },
+      "simpleWarnings": {
+        "title": "警告",
+        "MAX_MESSAGE_AGE_LOW": "消息的最大保存期限设置得过短。这可能会导致用户无法对较早的消息互相致谢。"
+      },
+      "goToSettings": "前往设置"
+    }
   },
   "locale": {
     "selectLanguage": "选择语言"

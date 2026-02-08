@@ -60,7 +60,60 @@
     "logChannel": "Kanál protokolu",
     "reactions": "Reakce",
     "auditLog": "Auditní protokol",
-    "integrationBypass": "Obcházení integrace"
+    "integrationBypass": "Obcházení integrace",
+    "problems": "Problémy",
+    "debug": {
+      "permissions": {
+        "title": "Chybějící globální oprávnění",
+        "description": "Tyto oprávnění chybí botovi globálně. To může omezit některé funkce.",
+        "MANAGE_ROLES": "Role reputace nelze udělit.",
+        "NICKNAME_CHANGE": "Přezdívku nelze změnit v ovládacím panelu.",
+        "MANAGE_GUILD_EXPRESSIONS": "V ovládacím panelu nelze navrhovat vlastní reakce.",
+        "VIEW_CHANNEL": "Kanály reputace nejsou viditelné. Reputaci nelze udělit žádnou textovou metodou.",
+        "MESSAGE_HISTORY": "Potvrzení reputace prostřednictvím vložených prvků nefunguje. Většina kontrol ochrany proti zneužívání selže.",
+        "MESSAGE_ADD_REACTION": "Potvrzení reputace prostřednictvím reakcí nefunguje.",
+        "MESSAGE_SEND": "Žádná potvrzovací zpráva nebude fungovat. Například potvrzení reakce nebo potvrzení reputace prostřednictvím vložení.",
+        "MESSAGE_SEND_IN_THREADS": "Žádná potvrzovací zpráva nebude fungovat ve vláknech. Například potvrzení reakce nebo potvrzení reputace prostřednictvím vložení.",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "Žádná potvrzovací zpráva nebude fungovat ve vláknech. Například potvrzení reakce nebo potvrzení reputace prostřednictvím vložení.",
+        "MESSAGE_EXT_EMOJI": "Potvrzení reputace pomocí emodži nefunguje.",
+        "BYPASS_SLOWMODE": "Občas nebudou fungovat žádné potvrzovací zprávy. Například potvrzení reakce nebo potvrzení reputace prostřednictvím vložení."
+      },
+      "simpleProblems": {
+        "title": "Obecné problémy",
+        "SYSTEM_CHANNEL_NOT_DEFINED": "Systémový kanál není definován.",
+        "SYSTEM_CHANNEL_NOT_FOUND": "Systémový kanál nebyl nalezen.",
+        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "Kanál oznámení není definován.",
+        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "Kanál oznámení nebyl nalezen.",
+        "NO_AUTOPOST_CHANNEL_DEFINED": "Kanál automatického odesílání není definován.",
+        "AUTOPOST_CANNEL_NOT_FOUND": "Kanál Autopost nebyl nalezen.",
+        "NO_LOG_CHANNEL_DEFINED": "Kanál protokolu není definován.",
+        "LOG_CHANNEL_NOT_FOUND": "Kanál protokolu nebyl nalezen.",
+        "NO_THANKWORDS_DEFINED": "Nejsou definována žádná slova poděkování.",
+        "NO_REPUTATION_CHANNEL_DEFINED": "Nejsou definovány žádné kanály ani kategorie reputace."
+      },
+      "missingPermissions": {
+        "title": "Chybějící oprávnění s rozsahem",
+        "GUILD": "Cech",
+        "CHANNEL": "Kanál",
+        "CATEGORY": "Kategorie"
+      },
+      "rankProblems": {
+        "title": "Problémy s hodností",
+        "CANT_ASSIGN_ROLE": "Bot nemůže tuto roli přiřadit, protože je nad nejvyšší rolí bota.",
+        "MISSING_ROLE": "Role pro tuto hodnost chybí."
+      },
+      "reputationChannelProblems": {
+        "title": "Problémy s reputací kanálu",
+        "MISSING_CHANNEL": "Kanál chybí.",
+        "MISSING_CATEGORY": "Chybí kategorie.",
+        "NOT_TEXT_TYPE": "Kanál není textový kanál."
+      },
+      "simpleWarnings": {
+        "title": "Varování",
+        "MAX_MESSAGE_AGE_LOW": "Maximální stáří zprávy je nastaveno na velmi nízkou hodnotu. To může uživatelům bránit v tom, aby si navzájem děkovali za starší zprávy."
+      },
+      "goToSettings": "Přejít do nastavení"
+    }
   },
   "locale": {
     "selectLanguage": "Vyberte jazyk"

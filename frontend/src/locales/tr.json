@@ -60,7 +60,60 @@
     "logChannel": "Günlük Kanalı",
     "reactions": "Tepkiler",
     "auditLog": "Denetim Günlüğü",
-    "integrationBypass": "Entegrasyon Atlama"
+    "integrationBypass": "Entegrasyon Atlama",
+    "problems": "Sorunlar",
+    "debug": {
+      "permissions": {
+        "title": "Eksik Global İzinler",
+        "description": "Bu izinler bot için genel olarak eksik. Bu, bazı özelliklerin sınırlanmasına neden olabilir.",
+        "MANAGE_ROLES": "İtibar rolleri verilemez.",
+        "NICKNAME_CHANGE": "Takma ad, kontrol panelinden değiştirilemez.",
+        "MANAGE_GUILD_EXPRESSIONS": "Özel tepkiler kontrol panelinde önerilemez.",
+        "VIEW_CHANNEL": "İtibar kanalları görülemez. İtibar, metin tabanlı hiçbir yöntemle verilemez.",
+        "MESSAGE_HISTORY": "Gömme yoluyla itibar onayı çalışmıyor. Çoğu kötüye kullanım koruması kontrolü başarısız olacak.",
+        "MESSAGE_ADD_REACTION": "Tepkiler yoluyla itibar onayı çalışmıyor.",
+        "MESSAGE_SEND": "Herhangi bir onay mesajı işe yaramayacaktır. Örneğin, gömülü tepki onayı veya itibar onayı.",
+        "MESSAGE_SEND_IN_THREADS": "Onay mesajları, konu başlıklarında çalışmaz. Örneğin, gömülü tepki onayı veya itibar onayı.",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "Onay mesajları, ileti dizilerinde çalışmaz. Örneğin, gömülü tepki onayı veya itibar onayı.",
+        "MESSAGE_EXT_EMOJI": "Emojilerle itibar onayı çalışmıyor.",
+        "BYPASS_SLOWMODE": "Zaman zaman herhangi bir onay mesajı çalışmayabilir. Örneğin, gömülü olarak tepki onayı veya itibar onayı."
+      },
+      "simpleProblems": {
+        "title": "Genel Sorunlar",
+        "SYSTEM_CHANNEL_NOT_DEFINED": "Sistem kanalı tanımlanmamıştır.",
+        "SYSTEM_CHANNEL_NOT_FOUND": "Sistem kanalı bulunamadı.",
+        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "Duyuru kanalı tanımlanmamıştır.",
+        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "Duyuru kanalı bulunamadı.",
+        "NO_AUTOPOST_CHANNEL_DEFINED": "Otomatik yayın kanalı tanımlanmamıştır.",
+        "AUTOPOST_CANNEL_NOT_FOUND": "Otomatik yayın kanalı bulunamadı.",
+        "NO_LOG_CHANNEL_DEFINED": "Günlük kanalı tanımlanmamıştır.",
+        "LOG_CHANNEL_NOT_FOUND": "Günlük kanalı bulunamadı.",
+        "NO_THANKWORDS_DEFINED": "Teşekkür sözcüğü tanımlanmamıştır.",
+        "NO_REPUTATION_CHANNEL_DEFINED": "İtibar kanalları veya kategorileri tanımlanmamıştır."
+      },
+      "missingPermissions": {
+        "title": "Eksik Kapsamlı İzinler",
+        "GUILD": "Lonca",
+        "CHANNEL": "Kanal",
+        "CATEGORY": "Kategori"
+      },
+      "rankProblems": {
+        "title": "Sıralama Sorunları",
+        "CANT_ASSIGN_ROLE": "Bot, bu rolü atayamaz çünkü bu rol, botun en yüksek rolünün üzerindedir.",
+        "MISSING_ROLE": "Bu rütbenin rolü eksik."
+      },
+      "reputationChannelProblems": {
+        "title": "İtibar Kanalı Sorunları",
+        "MISSING_CHANNEL": "Kanal eksik.",
+        "MISSING_CATEGORY": "Kategori eksik.",
+        "NOT_TEXT_TYPE": "Kanal bir metin kanalı değildir."
+      },
+      "simpleWarnings": {
+        "title": "Uyarılar",
+        "MAX_MESSAGE_AGE_LOW": "Maksimum mesaj süresi çok düşük ayarlanmıştır. Bu, kullanıcıların eski mesajlar için birbirlerine teşekkür etmelerini engelleyebilir."
+      },
+      "goToSettings": "Ayarlar'a git"
+    }
   },
   "locale": {
     "selectLanguage": "Dili Seç"

@@ -48,11 +48,19 @@ const searchQuery = ref('')
 const containerRef = ref<HTMLElement | null>(null)
 
 const categories = computed(() => {
-  return session.value?.guild?.channels?.categories || []
+  const cats = session.value?.guild?.channels?.categories || []
+  // Filter out channels that are not visible and drop empty categories
+  return cats
+    .map(cat => ({
+      ...cat,
+      channels: cat.channels.filter(c => c.visible),
+    }))
+    .filter(cat => cat.channels.length > 0)
 })
 
 const uncategorizedChannels = computed(() => {
-  return session.value?.guild?.channels?.channels || []
+  const chans = session.value?.guild?.channels?.channels || []
+  return chans.filter(c => c.visible)
 })
 
 const selectedChannel = computed(() => {

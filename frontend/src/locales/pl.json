@@ -60,7 +60,60 @@
     "logChannel": "Kanał dziennika",
     "reactions": "Reakcje",
     "auditLog": "Dziennik audytu",
-    "integrationBypass": "Omijanie integracji"
+    "integrationBypass": "Omijanie integracji",
+    "problems": "Problemy",
+    "debug": {
+      "permissions": {
+        "title": "Brakujące uprawnienia globalne",
+        "description": "Te uprawnienia są globalnie niedostępne dla bota. Może to ograniczać niektóre funkcje.",
+        "MANAGE_ROLES": "Nie można przyznawać ról związanych z reputacją.",
+        "NICKNAME_CHANGE": "Nie można zmienić pseudonimu w panelu administracyjnym.",
+        "MANAGE_GUILD_EXPRESSIONS": "W panelu administracyjnym nie można sugerować niestandardowych reakcji.",
+        "VIEW_CHANNEL": "Kanały reputacji nie są widoczne. Reputacji nie można przyznawać za pomocą żadnych metod tekstowych.",
+        "MESSAGE_HISTORY": "Potwierdzanie reputacji poprzez osadzanie nie działa. Większość kontroli ochrony przed nadużyciami zakończy się niepowodzeniem.",
+        "MESSAGE_ADD_REACTION": "Potwierdzanie reputacji poprzez reakcje nie działa.",
+        "MESSAGE_SEND": "Żadne potwierdzenie nie będzie działać. Na przykład potwierdzenie reakcji lub potwierdzenie reputacji poprzez osadzenie.",
+        "MESSAGE_SEND_IN_THREADS": "W wątkach nie będą działać żadne komunikaty potwierdzające. Na przykład potwierdzenie reakcji lub potwierdzenie reputacji poprzez osadzenie.",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "Żadne potwierdzenia nie będą działać w wątkach. Na przykład potwierdzenia reakcji lub potwierdzenia reputacji poprzez osadzenie.",
+        "MESSAGE_EXT_EMOJI": "Potwierdzanie reputacji za pomocą emotikonów nie działa.",
+        "BYPASS_SLOWMODE": "Od czasu do czasu komunikaty potwierdzające mogą nie działać. Na przykład potwierdzenie reakcji lub potwierdzenie reputacji poprzez osadzenie."
+      },
+      "simpleProblems": {
+        "title": "Problemy ogólne",
+        "SYSTEM_CHANNEL_NOT_DEFINED": "Kanał systemowy nie jest zdefiniowany.",
+        "SYSTEM_CHANNEL_NOT_FOUND": "Nie znaleziono kanału systemowego.",
+        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "Kanał ogłoszeń nie jest zdefiniowany.",
+        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "Nie znaleziono kanału ogłoszeń.",
+        "NO_AUTOPOST_CHANNEL_DEFINED": "Kanał autopost nie jest zdefiniowany.",
+        "AUTOPOST_CANNEL_NOT_FOUND": "Nie znaleziono kanału Autopost.",
+        "NO_LOG_CHANNEL_DEFINED": "Kanał dziennika nie został zdefiniowany.",
+        "LOG_CHANNEL_NOT_FOUND": "Nie znaleziono kanału dziennika.",
+        "NO_THANKWORDS_DEFINED": "Nie zdefiniowano żadnych słów podziękowania.",
+        "NO_REPUTATION_CHANNEL_DEFINED": "Nie zdefiniowano żadnych kanałów ani kategorii reputacji."
+      },
+      "missingPermissions": {
+        "title": "Brakujące uprawnienia zakresu",
+        "GUILD": "Gildia",
+        "CHANNEL": "Kanał",
+        "CATEGORY": "Kategoria"
+      },
+      "rankProblems": {
+        "title": "Problemy z rankingiem",
+        "CANT_ASSIGN_ROLE": "Bot nie może przypisać tej roli, ponieważ jest ona wyższa od najwyższej roli bota.",
+        "MISSING_ROLE": "Brakuje roli dla tej rangi."
+      },
+      "reputationChannelProblems": {
+        "title": "Problemy z kanałem reputacji",
+        "MISSING_CHANNEL": "Brak kanału.",
+        "MISSING_CATEGORY": "Brakuje kategorii.",
+        "NOT_TEXT_TYPE": "Kanał nie jest kanałem tekstowym."
+      },
+      "simpleWarnings": {
+        "title": "Ostrzeżenia",
+        "MAX_MESSAGE_AGE_LOW": "Maksymalny wiek wiadomości jest ustawiony na bardzo niski poziom. Może to uniemożliwić użytkownikom dziękowanie sobie nawzajem za starsze wiadomości."
+      },
+      "goToSettings": "Przejdź do ustawień"
+    }
   },
   "locale": {
     "selectLanguage": "Wybierz język"

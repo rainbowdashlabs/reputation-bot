@@ -60,7 +60,60 @@
     "logChannel": "Loggkanal",
     "reactions": "Reaksjoner",
     "auditLog": "Revisjonslogg",
-    "integrationBypass": "Integrering Bypass"
+    "integrationBypass": "Integrering Bypass",
+    "problems": "Problemer",
+    "debug": {
+      "permissions": {
+        "title": "Manglende globale tillatelser",
+        "description": "Disse tillatelsene mangler for boten globalt. Dette kan begrense noen funksjoner.",
+        "MANAGE_ROLES": "Omdømme-roller kan ikke tildeles.",
+        "NICKNAME_CHANGE": "Kallenavnet kan ikke endres i dashbordet.",
+        "MANAGE_GUILD_EXPRESSIONS": "Tilpassede reaksjoner kan ikke foreslås i dashbordet.",
+        "VIEW_CHANNEL": "Omdømmekanaler kan ikke sees. Omdømme kan ikke gis via noen tekstbasert metode.",
+        "MESSAGE_HISTORY": "Bekreftelse av omdømme via innebygde elementer fungerer ikke. De fleste kontroller for beskyttelse mot misbruk vil mislykkes.",
+        "MESSAGE_ADD_REACTION": "Bekreftelse av omdømme via reaksjoner fungerer ikke.",
+        "MESSAGE_SEND": "Bekreftelsesmeldinger fungerer ikke. For eksempel reaksjonsbekreftelse eller omdømmebekreftelse via innebygging.",
+        "MESSAGE_SEND_IN_THREADS": "Bekreftelsesmeldinger fungerer ikke i tråder. For eksempel reaksjonsbekreftelse eller omdømmebekreftelse via innebygging.",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "Bekreftelsesmeldinger fungerer ikke i tråder. For eksempel reaksjonsbekreftelse eller omdømmebekreftelse via innebygging.",
+        "MESSAGE_EXT_EMOJI": "Bekreftelse av omdømme via emojier fungerer ikke.",
+        "BYPASS_SLOWMODE": "Noen bekreftelsesmeldinger vil ikke fungere fra tid til annen. For eksempel reaksjonsbekreftelse eller omdømmebekreftelse via innebygging."
+      },
+      "simpleProblems": {
+        "title": "Generelle problemer",
+        "SYSTEM_CHANNEL_NOT_DEFINED": "Systemkanalen er ikke definert.",
+        "SYSTEM_CHANNEL_NOT_FOUND": "Systemkanalen ble ikke funnet.",
+        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "Kunngjøringskanalen er ikke definert.",
+        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "Kunngjøringskanalen ble ikke funnet.",
+        "NO_AUTOPOST_CHANNEL_DEFINED": "Autopost-kanalen er ikke definert.",
+        "AUTOPOST_CANNEL_NOT_FOUND": "Autopost-kanalen ble ikke funnet.",
+        "NO_LOG_CHANNEL_DEFINED": "Loggkanalen er ikke definert.",
+        "LOG_CHANNEL_NOT_FOUND": "Loggkanalen ble ikke funnet.",
+        "NO_THANKWORDS_DEFINED": "Det er ikke definert noen takkeord.",
+        "NO_REPUTATION_CHANNEL_DEFINED": "Det er ikke definert noen omdømme-kanaler eller -kategorier."
+      },
+      "missingPermissions": {
+        "title": "Manglende tillatelser med omfang",
+        "GUILD": "Guild",
+        "CHANNEL": "Kanal",
+        "CATEGORY": "Kategori"
+      },
+      "rankProblems": {
+        "title": "Rangeringsproblemer",
+        "CANT_ASSIGN_ROLE": "Boten kan ikke tildele denne rollen fordi den ligger over botens høyeste rolle.",
+        "MISSING_ROLE": "Rollen for denne rangen mangler."
+      },
+      "reputationChannelProblems": {
+        "title": "Problemer med omdømmekanalen",
+        "MISSING_CHANNEL": "Kanalen mangler.",
+        "MISSING_CATEGORY": "Kategorien mangler.",
+        "NOT_TEXT_TYPE": "Kanalen er ikke en tekstkanal."
+      },
+      "simpleWarnings": {
+        "title": "Advarsler",
+        "MAX_MESSAGE_AGE_LOW": "Maksimal meldingsalder er satt veldig lavt. Dette kan hindre brukere i å takke hverandre for eldre meldinger."
+      },
+      "goToSettings": "Gå til innstillinger"
+    }
   },
   "locale": {
     "selectLanguage": "Velg språk"

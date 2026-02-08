@@ -131,7 +131,7 @@ const finishSetup = () => {
     console.error('Failed to clear saved setup step:', error)
   }
   // Navigate to settings after setup is complete
-  router.push('/settings')
+  router.push('/settings/edit')
 }
 
 const progressPercentage = computed(() => {
@@ -140,9 +140,9 @@ const progressPercentage = computed(() => {
 </script>
 
 <template>
-  <div class="bg-gray-50 dark:bg-gray-900">
+  <div>
     <!-- Navigation Bar -->
-    <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-20 z-10">
+    <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-[73px] z-10">
       <div class="container mx-auto px-4 py-4">
         <div class="flex items-center justify-between mb-4">
           <div class="flex-1">

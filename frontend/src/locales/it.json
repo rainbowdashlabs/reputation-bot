@@ -60,7 +60,60 @@
     "logChannel": "Canale di registrazione",
     "reactions": "Reazioni",
     "auditLog": "Registro di controllo",
-    "integrationBypass": "Bypass dell'integrazione"
+    "integrationBypass": "Bypass dell'integrazione",
+    "problems": "Problemi",
+    "debug": {
+      "permissions": {
+        "title": "Permessi globali mancanti",
+        "description": "Queste autorizzazioni non ci sono per il bot a livello globale. Questo potrebbe limitare alcune funzioni.",
+        "MANAGE_ROLES": "I ruoli di reputazione non possono essere assegnati.",
+        "NICKNAME_CHANGE": "Il nickname non si può cambiare nella dashboard.",
+        "MANAGE_GUILD_EXPRESSIONS": "Le reazioni personalizzate non possono essere suggerite nella dashboard.",
+        "VIEW_CHANNEL": "I canali di reputazione non si vedono. La reputazione non si può dare con nessun metodo basato sul testo.",
+        "MESSAGE_HISTORY": "La conferma della reputazione tramite incorporamenti non funziona. La maggior parte dei controlli di protezione dagli abusi non andrà a buon fine.",
+        "MESSAGE_ADD_REACTION": "La conferma della reputazione tramite le reazioni non funziona.",
+        "MESSAGE_SEND": "Qualsiasi messaggio di conferma non funzionerà. Per esempio, la conferma della reazione o della reputazione tramite incorporamento.",
+        "MESSAGE_SEND_IN_THREADS": "I messaggi di conferma non funzionano nei thread. Per esempio, la conferma delle reazioni o della reputazione tramite incorporamento.",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "I messaggi di conferma non funzionano nei thread. Per esempio, la conferma delle reazioni o della reputazione tramite incorporamento.",
+        "MESSAGE_EXT_EMOJI": "La conferma della reputazione tramite emoji non funziona.",
+        "BYPASS_SLOWMODE": "A volte i messaggi di conferma non funzionano. Tipo, la conferma delle reazioni o della reputazione tramite embed."
+      },
+      "simpleProblems": {
+        "title": "Problemi generali",
+        "SYSTEM_CHANNEL_NOT_DEFINED": "Il canale di sistema non è impostato.",
+        "SYSTEM_CHANNEL_NOT_FOUND": "Non si trova il canale di sistema.",
+        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "Il canale di annuncio non è impostato.",
+        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "Non si trova il canale degli annunci.",
+        "NO_AUTOPOST_CHANNEL_DEFINED": "Il canale Autopost non è impostato.",
+        "AUTOPOST_CANNEL_NOT_FOUND": "Il canale Autopost non è stato trovato.",
+        "NO_LOG_CHANNEL_DEFINED": "Il canale di registro non è impostato.",
+        "LOG_CHANNEL_NOT_FOUND": "Il canale di registro non è stato trovato.",
+        "NO_THANKWORDS_DEFINED": "Non ci sono parole di ringraziamento.",
+        "NO_REPUTATION_CHANNEL_DEFINED": "Non ci sono canali o categorie di reputazione definiti."
+      },
+      "missingPermissions": {
+        "title": "Permessi con ambito mancanti",
+        "GUILD": "Gilda",
+        "CHANNEL": "Canale",
+        "CATEGORY": "Categoria"
+      },
+      "rankProblems": {
+        "title": "Problemi di classificazione",
+        "CANT_ASSIGN_ROLE": "Il bot non può dare questo ruolo perché è più alto del ruolo più alto che il bot può avere.",
+        "MISSING_ROLE": "Il ruolo per questo grado non c'è."
+      },
+      "reputationChannelProblems": {
+        "title": "Problemi con il canale della reputazione",
+        "MISSING_CHANNEL": "Il canale non c'è.",
+        "MISSING_CATEGORY": "La categoria non c'è.",
+        "NOT_TEXT_TYPE": "Il canale non è un canale di testo."
+      },
+      "simpleWarnings": {
+        "title": "Avvertenze",
+        "MAX_MESSAGE_AGE_LOW": "L'età massima dei messaggi è impostata su un valore molto basso. Questo potrebbe impedire agli utenti di ringraziarsi a vicenda per i messaggi più vecchi."
+      },
+      "goToSettings": "Vai alle impostazioni"
+    }
   },
   "locale": {
     "selectLanguage": "Scegli la lingua"

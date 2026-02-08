@@ -3,6 +3,9 @@
 GET localhost:8888/v1/session
 Authorization: test_mode853250161915985958testmode
 ### GET
+GET localhost:8888/v1/settings/debug
+Authorization: test_mode853250161915985958testmode
+### GET
 
 GET localhost:8888/v1/data/links
 Authorization: 853250161915985958

@@ -14,8 +14,7 @@ const {t} = useI18n()
 </script>
 
 <template>
-  <div class="container mx-auto px-4">
-    <h1 class="text-3xl font-bold mb-6 text-gray-900 dark:text-white">{{ t('presets.title') }}</h1>
+  <div class="mx-auto px-4" style="max-width: 1200px;">
     <p class="text-gray-600 dark:text-gray-400 mb-6">{{ t('presets.description') }}</p>
     <div class="space-y-6">
       <DefaultPreset/>
