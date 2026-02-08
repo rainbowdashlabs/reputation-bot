@@ -23,7 +23,7 @@ public class Debug extends SlashCommand {
                     GuildSession guildSession = sessionService.getGuildSession(event.getGuild(), event.getMember());
                     event.reply(ctx.localize("command.debug.start"))
                          .addComponents(ActionRow.of(
-                                 Button.link(guildSession.sessionUrl(), ctx.localize("words.dashboard"))))
+                                 Button.link(guildSession.debugUrl(), ctx.localize("words.dashboard"))))
                          .setEphemeral(true)
                          .complete();
                 }));
