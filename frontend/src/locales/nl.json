@@ -60,7 +60,60 @@
     "logChannel": "Logkanaal",
     "reactions": "Reacties",
     "auditLog": "Auditlogboek",
-    "integrationBypass": "Integratie omzeilen"
+    "integrationBypass": "Integratie omzeilen",
+    "problems": "Problemen",
+    "debug": {
+      "permissions": {
+        "title": "Ontbrekende algemene machtigingen",
+        "description": "Deze rechten ontbreken voor de bot in het algemeen. Dit kan sommige functies beperken.",
+        "MANAGE_ROLES": "Reputatietitels kunnen niet worden toegekend.",
+        "NICKNAME_CHANGE": "Je kunt je bijnaam niet veranderen in het dashboard.",
+        "MANAGE_GUILD_EXPRESSIONS": "Aangepaste reacties kunnen niet worden voorgesteld in het dashboard.",
+        "VIEW_CHANNEL": "Reputatiekanalen zijn niet zichtbaar. Reputatie kan niet via tekst worden gegeven.",
+        "MESSAGE_HISTORY": "Het bevestigen van je reputatie via embeds werkt niet. De meeste controles om misbruik te voorkomen zullen mislukken.",
+        "MESSAGE_ADD_REACTION": "Het bevestigen van je reputatie via reacties werkt niet.",
+        "MESSAGE_SEND": "Bevestigingsberichten werken niet. Denk bijvoorbeeld aan reactiebescherming of reputatiebevestiging via embed.",
+        "MESSAGE_SEND_IN_THREADS": "Bevestigingsberichten werken niet in threads. Bijvoorbeeld reactiebescherming of reputatiebevestiging via embed.",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "Bevestigingsberichten werken niet in threads. Denk bijvoorbeeld aan reactiebescherming of reputatiebevestiging via embed.",
+        "MESSAGE_EXT_EMOJI": "Het bevestigen van je reputatie met emoji's werkt niet.",
+        "BYPASS_SLOWMODE": "Soms werkt een bevestigingsbericht niet. Denk bijvoorbeeld aan een reactiebevestiging of reputatiebevestiging via embed."
+      },
+      "simpleProblems": {
+        "title": "Algemene problemen",
+        "SYSTEM_CHANNEL_NOT_DEFINED": "Het systeemkanaal is niet gedefinieerd.",
+        "SYSTEM_CHANNEL_NOT_FOUND": "Het systeemkanaal is niet gevonden.",
+        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "Het aankondigingskanaal is niet gedefinieerd.",
+        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "Het aankondigingskanaal is niet gevonden.",
+        "NO_AUTOPOST_CHANNEL_DEFINED": "Het kanaal voor automatisch posten is niet ingesteld.",
+        "AUTOPOST_CANNEL_NOT_FOUND": "Het kanaal voor automatisch posten is niet gevonden.",
+        "NO_LOG_CHANNEL_DEFINED": "Logkanaal is niet gedefinieerd.",
+        "LOG_CHANNEL_NOT_FOUND": "Logkanaal niet gevonden.",
+        "NO_THANKWORDS_DEFINED": "Er zijn geen bedankwoorden gedefinieerd.",
+        "NO_REPUTATION_CHANNEL_DEFINED": "Er zijn geen reputatiekanalen of categorieën gedefinieerd."
+      },
+      "missingPermissions": {
+        "title": "Ontbrekende beperkte machtigingen",
+        "GUILD": "Gilde",
+        "CHANNEL": "Kanaal",
+        "CATEGORY": "Categorie"
+      },
+      "rankProblems": {
+        "title": "Rangproblemen",
+        "CANT_ASSIGN_ROLE": "De bot kan deze rol niet toewijzen omdat deze hoger is dan de hoogste rol van de bot.",
+        "MISSING_ROLE": "De rol voor deze rang ontbreekt."
+      },
+      "reputationChannelProblems": {
+        "title": "Problemen met het reputatiekanaal",
+        "MISSING_CHANNEL": "Het kanaal is weg.",
+        "MISSING_CATEGORY": "De categorie ontbreekt.",
+        "NOT_TEXT_TYPE": "Het kanaal is geen tekstkanaal."
+      },
+      "simpleWarnings": {
+        "title": "Waarschuwingen",
+        "MAX_MESSAGE_AGE_LOW": "De maximale leeftijd van berichten is best laag ingesteld. Hierdoor kunnen mensen elkaar misschien niet meer bedanken voor oudere berichten."
+      },
+      "goToSettings": "Ga naar instellingen"
+    }
   },
   "locale": {
     "selectLanguage": "Kies je taal"

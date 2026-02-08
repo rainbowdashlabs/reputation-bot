@@ -8,6 +8,7 @@ package de.chojo.repbot.web.pojo.guild;
 import de.chojo.repbot.web.pojo.guild.channel.CategoryPOJO;
 import de.chojo.repbot.web.pojo.guild.channel.ChannelPOJO;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.SelfMember;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.attribute.ICategorizableChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
@@ -29,7 +30,8 @@ public class ChannelViewPOJO {
     public static ChannelViewPOJO generate(Guild guild) {
         Map<Long, CategoryPOJO> categories = new LinkedHashMap<>();
         var channels = new LinkedList<ChannelPOJO>();
-        guild.getChannels(false).forEach(channel -> {
+        SelfMember self = guild.getSelfMember();
+        guild.getChannels(true).forEach(channel -> {
             if (channel.getType() == ChannelType.CATEGORY) {
                 categories.computeIfAbsent(
                         channel.getIdLong(), k -> new CategoryPOJO(channel.getName(), channel.getId()));
@@ -39,9 +41,9 @@ public class ChannelViewPOJO {
                     categories
                             .computeIfAbsent(
                                     category.getIdLong(), k -> new CategoryPOJO(category.getName(), category.getId()))
-                            .addChannel(new ChannelPOJO(channel.getName(), channel.getId(), channel.getType()));
+                            .addChannel(new ChannelPOJO(channel.getName(), channel.getId(), channel.getType(), self.hasAccess(channel)));
                 } else {
-                    channels.add(new ChannelPOJO(channel.getName(), channel.getId(), channel.getType()));
+                    channels.add(new ChannelPOJO(channel.getName(), channel.getId(), channel.getType(), self.hasAccess(channel)));
                 }
             }
         });

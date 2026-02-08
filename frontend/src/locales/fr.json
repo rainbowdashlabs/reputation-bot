@@ -60,7 +60,60 @@
     "logChannel": "Canal de journalisation",
     "reactions": "Réactions",
     "auditLog": "Journal d'audit",
-    "integrationBypass": "Contournement de l'intégration"
+    "integrationBypass": "Contournement de l'intégration",
+    "problems": "Problèmes",
+    "debug": {
+      "permissions": {
+        "title": "Autorisations globales manquantes",
+        "description": "Ces autorisations manquent pour le bot en général. Ça pourrait limiter certaines fonctionnalités.",
+        "MANAGE_ROLES": "On ne peut pas donner de rôles de réputation.",
+        "NICKNAME_CHANGE": "Tu ne peux pas changer ton pseudo dans le tableau de bord.",
+        "MANAGE_GUILD_EXPRESSIONS": "Les réactions personnalisées ne peuvent pas être proposées dans le tableau de bord.",
+        "VIEW_CHANNEL": "Les canaux de réputation ne sont pas visibles. La réputation ne peut pas être donnée par écrit.",
+        "MESSAGE_HISTORY": "La confirmation de réputation via les intégrations ne marche pas. La plupart des vérifications de protection contre les abus vont échouer.",
+        "MESSAGE_ADD_REACTION": "La confirmation de la réputation par les réactions ne marche pas.",
+        "MESSAGE_SEND": "Les messages de confirmation, ça ne marche pas. Par exemple, la confirmation de réaction ou la confirmation de réputation via embed.",
+        "MESSAGE_SEND_IN_THREADS": "Les messages de confirmation ne marchent pas dans les fils de discussion. Par exemple, la confirmation des réactions ou la confirmation de la réputation via l'intégration.",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "Les messages de confirmation ne marchent pas dans les fils de discussion. Par exemple, la confirmation de réaction ou la confirmation de réputation via l'intégration.",
+        "MESSAGE_EXT_EMOJI": "La confirmation de réputation via les emojis ne marche pas.",
+        "BYPASS_SLOWMODE": "Parfois, les messages de confirmation ne marchent pas. Par exemple, la confirmation de réaction ou la confirmation de réputation via l'intégration."
+      },
+      "simpleProblems": {
+        "title": "Problèmes généraux",
+        "SYSTEM_CHANNEL_NOT_DEFINED": "Le canal système n'est pas défini.",
+        "SYSTEM_CHANNEL_NOT_FOUND": "On n'a pas trouvé le canal système.",
+        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "Le canal d'annonce n'est pas défini.",
+        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "On n'a pas trouvé le canal d'annonce.",
+        "NO_AUTOPOST_CHANNEL_DEFINED": "La chaîne Autopost n'est pas définie.",
+        "AUTOPOST_CANNEL_NOT_FOUND": "La chaîne Autopost n'a pas été trouvée.",
+        "NO_LOG_CHANNEL_DEFINED": "Le canal de journalisation n'est pas défini.",
+        "LOG_CHANNEL_NOT_FOUND": "Le canal de journalisation n'a pas été trouvé.",
+        "NO_THANKWORDS_DEFINED": "Aucun mot de remerciement n'est défini.",
+        "NO_REPUTATION_CHANNEL_DEFINED": "Aucun canal ou catégorie de réputation n'est défini."
+      },
+      "missingPermissions": {
+        "title": "Autorisations manquantes",
+        "GUILD": "Guilde",
+        "CHANNEL": "Chaîne",
+        "CATEGORY": "Catégorie"
+      },
+      "rankProblems": {
+        "title": "Problèmes de classement",
+        "CANT_ASSIGN_ROLE": "Le bot ne peut pas donner ce rôle parce qu'il est plus haut que le rôle le plus élevé du bot.",
+        "MISSING_ROLE": "Le rôle de ce grade n'est pas défini."
+      },
+      "reputationChannelProblems": {
+        "title": "Problèmes liés à la réputation",
+        "MISSING_CHANNEL": "Le canal n'est pas là.",
+        "MISSING_CATEGORY": "La catégorie n'est pas là.",
+        "NOT_TEXT_TYPE": "Ce canal n'est pas un canal de texte."
+      },
+      "simpleWarnings": {
+        "title": "Avertissements",
+        "MAX_MESSAGE_AGE_LOW": "L'âge max des messages est réglé super bas. Ça pourrait empêcher les utilisateurs de se remercier pour des messages plus vieux."
+      },
+      "goToSettings": "Va dans les paramètres"
+    }
   },
   "locale": {
     "selectLanguage": "Choisis ta langue"

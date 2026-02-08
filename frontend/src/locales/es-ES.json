@@ -60,7 +60,60 @@
     "logChannel": "Canal de registro",
     "reactions": "Reacciones",
     "auditLog": "Registro de auditoría",
-    "integrationBypass": "Omisión de integración"
+    "integrationBypass": "Omisión de integración",
+    "problems": "Problemas",
+    "debug": {
+      "permissions": {
+        "title": "Permisos globales faltantes",
+        "description": "Estos permisos faltan para el bot a nivel global. Esto podría limitar algunas funciones.",
+        "MANAGE_ROLES": "No se pueden otorgar roles de reputación.",
+        "NICKNAME_CHANGE": "El apodo no se puede cambiar en el panel de control.",
+        "MANAGE_GUILD_EXPRESSIONS": "No se pueden sugerir reacciones personalizadas en el panel de control.",
+        "VIEW_CHANNEL": "Los canales de reputación no se pueden ver. La reputación no se puede otorgar mediante ningún método basado en texto.",
+        "MESSAGE_HISTORY": "La confirmación de la reputación mediante incrustaciones no funciona. La mayoría de las comprobaciones de protección contra abusos fallarán.",
+        "MESSAGE_ADD_REACTION": "La confirmación de la reputación a través de las reacciones no funciona.",
+        "MESSAGE_SEND": "Ningún mensaje de confirmación funcionará. Por ejemplo, la confirmación de reacción o la confirmación de reputación a través de incrustación.",
+        "MESSAGE_SEND_IN_THREADS": "Los mensajes de confirmación no funcionarán en los hilos. Por ejemplo, la confirmación de reacciones o la confirmación de reputación a través de incrustaciones.",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "Los mensajes de confirmación no funcionarán en los hilos. Por ejemplo, la confirmación de reacciones o la confirmación de reputación a través de incrustaciones.",
+        "MESSAGE_EXT_EMOJI": "La confirmación de la reputación mediante emojis no funciona.",
+        "BYPASS_SLOWMODE": "De vez en cuando, los mensajes de confirmación no funcionan. Por ejemplo, la confirmación de reacción o la confirmación de reputación a través de embed."
+      },
+      "simpleProblems": {
+        "title": "Problemas generales",
+        "SYSTEM_CHANNEL_NOT_DEFINED": "El canal del sistema no está definido.",
+        "SYSTEM_CHANNEL_NOT_FOUND": "No se ha encontrado el canal del sistema.",
+        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "El canal de anuncios no está definido.",
+        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "No se ha encontrado el canal de anuncios.",
+        "NO_AUTOPOST_CHANNEL_DEFINED": "El canal de publicación automática no está definido.",
+        "AUTOPOST_CANNEL_NOT_FOUND": "No se ha encontrado el canal Autopost.",
+        "NO_LOG_CHANNEL_DEFINED": "El canal de registro no está definido.",
+        "LOG_CHANNEL_NOT_FOUND": "No se encontró el canal de registro.",
+        "NO_THANKWORDS_DEFINED": "No se han definido palabras de agradecimiento.",
+        "NO_REPUTATION_CHANNEL_DEFINED": "No se han definido canales ni categorías de reputación."
+      },
+      "missingPermissions": {
+        "title": "Permisos de ámbito que faltan",
+        "GUILD": "Gremio",
+        "CHANNEL": "Canal",
+        "CATEGORY": "Categoría"
+      },
+      "rankProblems": {
+        "title": "Problemas de rango",
+        "CANT_ASSIGN_ROLE": "El bot no puede asignar esta función porque está por encima de la función más alta del bot.",
+        "MISSING_ROLE": "Falta la función de este rango."
+      },
+      "reputationChannelProblems": {
+        "title": "Problemas con el canal de reputación",
+        "MISSING_CHANNEL": "Falta el canal.",
+        "MISSING_CATEGORY": "Falta la categoría.",
+        "NOT_TEXT_TYPE": "El canal no es un canal de texto."
+      },
+      "simpleWarnings": {
+        "title": "Advertencias",
+        "MAX_MESSAGE_AGE_LOW": "La antigüedad máxima de los mensajes está configurada en un valor muy bajo. Esto podría impedir que los usuarios se agradezcan mutuamente los mensajes más antiguos."
+      },
+      "goToSettings": "Ir a la configuración"
+    }
   },
   "locale": {
     "selectLanguage": "Selecciona el idioma"

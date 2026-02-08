@@ -7,6 +7,7 @@
 import {computed, onMounted} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import AppHeader from './components/AppHeader.vue'
+import SettingsHeader from './components/SettingsHeader.vue'
 import AppFooter from './components/AppFooter.vue'
 import HelpIcon from './components/HelpIcon.vue'
 import ErrorNotification from './components/ErrorNotification.vue'
@@ -20,7 +21,8 @@ const route = useRoute()
 const {setSession, clearSession, setExpired} = useSession()
 useDarkMode()
 
-const isSettingsPage = computed(() => route.path.startsWith('/settings'))
+const isSettingsPage = computed(() => route.path.startsWith('/settings/edit'))
+const showSettingsHeader = computed(() => route.path.startsWith('/settings'))
 
 onMounted(async () => {
   const urlParams = new URLSearchParams(window.location.search);
@@ -75,9 +77,11 @@ onMounted(async () => {
 
 <template>
   <AppHeader/>
-  <div class="h-20"></div>
+  <div class="h-[73px]"></div>
 
-  <div>
+  <SettingsHeader v-if="showSettingsHeader"/>
+
+  <div :class="{'pt-8': showSettingsHeader}">
     <router-view/>
   </div>
 

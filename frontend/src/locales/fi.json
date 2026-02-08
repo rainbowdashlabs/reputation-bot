@@ -60,7 +60,60 @@
     "logChannel": "Lokikanava",
     "reactions": "Reaktiot",
     "auditLog": "Tarkastusloki",
-    "integrationBypass": "Integraation ohitus"
+    "integrationBypass": "Integraation ohitus",
+    "problems": "Ongelmat",
+    "debug": {
+      "permissions": {
+        "title": "Puuttuvat globaalit käyttöoikeudet",
+        "description": "Nämä käyttöoikeudet puuttuvat botilta kokonaan. Tämä saattaa rajoittaa joidenkin ominaisuuksien käyttöä.",
+        "MANAGE_ROLES": "Maine-rooleja ei voi antaa.",
+        "NICKNAME_CHANGE": "Käyttäjänimeä ei voi muuttaa hallintapaneelissa.",
+        "MANAGE_GUILD_EXPRESSIONS": "Mukautettuja reaktioita ei voi ehdottaa hallintapaneelissa.",
+        "VIEW_CHANNEL": "Mainekanavia ei voi nähdä. Mainetta ei voi antaa tekstipohjaisella menetelmällä.",
+        "MESSAGE_HISTORY": "Maineen vahvistaminen upotusten kautta ei toimi. Suurin osa väärinkäytön estotarkistuksista epäonnistuu.",
+        "MESSAGE_ADD_REACTION": "Maineen vahvistaminen reaktioiden avulla ei toimi.",
+        "MESSAGE_SEND": "Vahvistusviestit eivät toimi. Esimerkiksi reaktioiden vahvistaminen tai maineen vahvistaminen upotuksen kautta.",
+        "MESSAGE_SEND_IN_THREADS": "Vahvistusviestit eivät toimi ketjuissa. Esimerkiksi reaktioiden vahvistaminen tai maineen vahvistaminen upotuksen kautta.",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "Vahvistusviestit eivät toimi ketjuissa. Esimerkiksi reaktioiden vahvistaminen tai maineen vahvistaminen upotuksen kautta.",
+        "MESSAGE_EXT_EMOJI": "Maineen vahvistaminen emojien avulla ei toimi.",
+        "BYPASS_SLOWMODE": "Vahvistusviestit eivät toimi aina. Esimerkiksi reaktion vahvistus tai maineen vahvistus upotuksen kautta."
+      },
+      "simpleProblems": {
+        "title": "Yleiset ongelmat",
+        "SYSTEM_CHANNEL_NOT_DEFINED": "Järjestelmäkanavaa ei ole määritelty.",
+        "SYSTEM_CHANNEL_NOT_FOUND": "Järjestelmäkanavaa ei löytynyt.",
+        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "Ilmoituskanavaa ei ole määritelty.",
+        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "Ilmoituskanavaa ei löytynyt.",
+        "NO_AUTOPOST_CHANNEL_DEFINED": "Autopost-kanavaa ei ole määritelty.",
+        "AUTOPOST_CANNEL_NOT_FOUND": "Autopost-kanavaa ei löytynyt.",
+        "NO_LOG_CHANNEL_DEFINED": "Lokikanavaa ei ole määritelty.",
+        "LOG_CHANNEL_NOT_FOUND": "Lokikanavaa ei löytynyt.",
+        "NO_THANKWORDS_DEFINED": "Kiitossanoja ei ole määritelty.",
+        "NO_REPUTATION_CHANNEL_DEFINED": "Mainekanavia tai -luokkia ei ole määritelty."
+      },
+      "missingPermissions": {
+        "title": "Puuttuvat käyttöoikeudet",
+        "GUILD": "Kilta",
+        "CHANNEL": "Kanava",
+        "CATEGORY": "Luokka"
+      },
+      "rankProblems": {
+        "title": "Sijoitusongelmat",
+        "CANT_ASSIGN_ROLE": "Bot ei voi määrittää tätä roolia, koska se on botin korkeimman roolin yläpuolella.",
+        "MISSING_ROLE": "Tämän arvon rooli puuttuu."
+      },
+      "reputationChannelProblems": {
+        "title": "Mainekanavan ongelmat",
+        "MISSING_CHANNEL": "Kanava puuttuu.",
+        "MISSING_CATEGORY": "Luokka puuttuu.",
+        "NOT_TEXT_TYPE": "Kanava ei ole tekstikanava."
+      },
+      "simpleWarnings": {
+        "title": "Varoitukset",
+        "MAX_MESSAGE_AGE_LOW": "Viestien enimmäisikä on asetettu hyvin matalaksi. Tämä saattaa estää käyttäjiä kiittämästä toisiaan vanhemmista viesteistä."
+      },
+      "goToSettings": "Siirry asetuksiin"
+    }
   },
   "locale": {
     "selectLanguage": "Valitse kieli"

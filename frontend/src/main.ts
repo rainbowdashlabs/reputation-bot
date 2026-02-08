@@ -25,6 +25,11 @@ import {
     faVolumeHigh,
     faXmark,
     faTriangleExclamation,
+    faCircleExclamation,
+    faCheckCircle,
+    faExclamationTriangle,
+    faExclamationCircle,
+    faSpinner,
     faPlus,
     faMinus,
     faTrash,
@@ -33,7 +38,7 @@ import {
 import {faGithub} from '@fortawesome/free-brands-svg-icons'
 
 // Add icons to library
-library.add(faHashtag, faVolumeHigh, faBullhorn, faComments, faCheck, faXmark, faGlobe, faQuestionCircle, faLifeRing, faFileContract, faGithub, faChevronDown, faChevronUp, faTriangleExclamation, faPlus, faMinus, faTrash, faPen)
+library.add(faHashtag, faVolumeHigh, faBullhorn, faComments, faCheck, faXmark, faGlobe, faQuestionCircle, faLifeRing, faFileContract, faGithub, faChevronDown, faChevronUp, faTriangleExclamation, faCircleExclamation, faCheckCircle, faExclamationTriangle, faExclamationCircle, faSpinner, faPlus, faMinus, faTrash, faPen)
 
 // Create Pinia instance
 const pinia = createPinia()

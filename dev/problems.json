@@ -1,0 +1,22 @@
+{
+  "missingGlobalPermissions": ["BYPASS_SLOWMODE"],
+  "simpleProblems": [],
+  "missingPermissions": [
+    {
+      "scope": "CHANNEL",
+      "id": "1468571290184192084",
+      "permissions": ["VIEW_CHANNEL", "MESSAGE_SEND", "MESSAGE_EMBED_LINKS"]
+    }, {
+      "scope": "CHANNEL",
+      "id": "1468571290184192084",
+      "permissions": ["VIEW_CHANNEL", "MESSAGE_SEND", "MESSAGE_EMBED_LINKS"]
+    }, {
+      "scope": "CHANNEL",
+      "id": "1468571290184192084",
+      "permissions": ["VIEW_CHANNEL", "MESSAGE_SEND", "MESSAGE_EMBED_LINKS"]
+    }
+  ],
+  "rankProblems": [],
+  "reputationChannelProblems": [],
+  "simpleWarnings": ["MAX_MESSAGE_AGE_LOW"]
+}

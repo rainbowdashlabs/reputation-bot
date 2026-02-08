@@ -5,10 +5,10 @@
  */
 <script lang="ts" setup>
 import {useI18n} from 'vue-i18n'
-import LocaleSwitcher from '@/components/appheader/LocaleSwitcher.vue'
-import LightModeSwitch from "@/components/appheader/LightModeSwitch.vue";
+import {useRoute} from 'vue-router'
 
 const {t} = useI18n()
+const route = useRoute()
 </script>
 
 <template>
@@ -21,33 +21,17 @@ const {t} = useI18n()
         </a>
       </div>
 
-      <nav class="flex items-center gap-8">
+      <nav v-if="!route.path.startsWith('/setup')" class="flex items-center gap-8">
         <router-link
             active-class="text-indigo-600 dark:text-indigo-400"
             class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors"
-            to="/settings"
+            to="/settings/edit"
         >
           {{ t('navigation.settings') }}
-        </router-link>
-        <router-link
-            active-class="text-indigo-600 dark:text-indigo-400"
-            class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors"
-            to="/presets"
-        >
-          {{ t('navigation.presets') }}
-        </router-link>
-        <router-link
-            active-class="text-indigo-600 dark:text-indigo-400"
-            class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors"
-            to="/setup"
-        >
-          {{ t('navigation.setup') }}
         </router-link>
       </nav>
 
       <div class="flex items-center gap-4">
-        <LightModeSwitch/>
-        <LocaleSwitcher/>
       </div>
     </div>
   </header>

@@ -1,17 +1,43 @@
 {
   "settings": {
     "abuseProtection": {
-      "cooldown": 29,
+      "cooldown": 525600,
       "cooldownDirection": "BIDIRECTIONAL",
-      "maxMessageAge": 1,
+      "maxMessageAge": 10,
       "minMessages": 1,
       "donorContext": false,
       "receiverContext": false,
       "maxGiven": 2,
-      "maxGivenHours": 2,
+      "maxGivenHours": 8760,
       "maxReceived": 2,
       "maxReceivedHours": 2,
-      "maxMessageReputation": 4
+      "maxMessageReputation": 3
+    },
+    "integrationBypass": {
+      "bypasses": {
+        "275813801792634880": {
+          "integrationId": "275813801792634880",
+          "allowReactions": false,
+          "allowAnswer": false,
+          "allowMention": true,
+          "allowFuzzy": true,
+          "allowDirect": false,
+          "ignoreCooldown": false,
+          "ignoreLimit": false,
+          "ignoreContext": false
+        },
+        "871322553698906142": {
+          "integrationId": "871322553698906142",
+          "allowReactions": true,
+          "allowAnswer": false,
+          "allowMention": false,
+          "allowFuzzy": false,
+          "allowDirect": false,
+          "ignoreCooldown": false,
+          "ignoreLimit": false,
+          "ignoreContext": false
+        }
+      }
     },
     "announcements": {"active": false, "sameChannel": true, "channelId": "0"},
     "autopost": {
@@ -36,10 +62,7 @@
       "reputationName": null
     },
     "ranks": {
-      "ranks": [
-        {"roleId": "976465888939212841", "reputation": 50}, {"roleId": "855424789387804684", "reputation": 15},
-        {"roleId": "855424753983946773", "reputation": 1}
-      ]
+      "ranks": [{"roleId": "855424789387804684", "reputation": 10}, {"roleId": "855424753983946773", "reputation": 1}]
     },
     "reputation": {
       "reactionActive": true,
@@ -52,17 +75,18 @@
     },
     "thanking": {
       "channels": {
-        "channels": [
-          "1022427137891893300", "853259349380300860", "853250162352455710", "853259320485609502", "1468571290184192084"
-        ],
-        "categories": ["853252115312803842", "853252619094982656"],
+        "channels": ["1022427137891893300", "853259349380300860", "853259320485609502", "1468571290184192084"],
+        "categories": [],
         "whitelist": true
       },
       "donorRoles": {"roleIds": []},
       "receiverRoles": {"roleIds": []},
       "denyDonorRoles": {"roleIds": []},
       "denyReceiverRoles": {"roleIds": []},
-      "reactions": {"reactions": ["878760197059911762", "853912045061275669"], "mainReaction": "853912045552795659"},
+      "reactions": {
+        "reactions": ["878760197059911762", "☑️", "853912045061275669"],
+        "mainReaction": "853912045552795659"
+      },
       "thankwords": {"thankwords": ["test", "thx", "ty", "tysm", "thank[sx]?", "tyvm"]}
     }
   }, "guild": {
@@ -91,42 +115,64 @@
     {"name": "Level 3 Beta", "id": "976465888939212841", "position": 3, "color": "#ffffff"}
   ],
   "channels": {
-    "channels": [], "categories": [
+    "channels": [{"name": "bot-drama", "id": "853262390110978118", "type": "TEXT", "visible": false}], "categories": [
       {
         "channels": [
-          {"name": "updates", "id": "853255173787091014", "type": "NEWS"},
-          {"name": "rules", "id": "853252663776116777", "type": "TEXT"},
-          {"name": "git", "id": "853686272995491841", "type": "TEXT"}
+          {"name": "updates", "id": "853255173787091014", "type": "NEWS", "visible": true},
+          {"name": "rules", "id": "853252663776116777", "type": "TEXT", "visible": true},
+          {"name": "git", "id": "853686272995491841", "type": "TEXT", "visible": true}
         ],
         "name": "Informations",
         "id": "853252619094982656"
       }, {
         "channels": [
-          {"name": "talk", "id": "853250162352455710", "type": "TEXT"},
-          {"name": "talk-de", "id": "853263713070088254", "type": "TEXT"},
-          {"name": "feedback", "id": "853252156617130004", "type": "TEXT"},
-          {"name": "support-en", "id": "853252202524442685", "type": "TEXT"},
-          {"name": "support-de", "id": "853255388798517278", "type": "TEXT"}
+          {"name": "talk", "id": "853250162352455710", "type": "TEXT", "visible": true},
+          {"name": "talk-de", "id": "853263713070088254", "type": "TEXT", "visible": true},
+          {"name": "feedback", "id": "853252156617130004", "type": "TEXT", "visible": true},
+          {"name": "support-en", "id": "853252202524442685", "type": "TEXT", "visible": true},
+          {"name": "support-de", "id": "853255388798517278", "type": "TEXT", "visible": true}
         ],
         "name": "Conversations",
         "id": "853250161915985959"
       }, {
+        "channels": [{"name": "support-threads", "id": "1380572576203673600", "type": "TEXT", "visible": false}],
+        "name": "Support",
+        "id": "1380572504518823946"
+      }, {
         "channels": [
-          {"name": "test-talk", "id": "853259269688262656", "type": "TEXT"},
-          {"name": "testing", "id": "853259222624239677", "type": "TEXT"}
+          {"name": "test-talk", "id": "853259269688262656", "type": "TEXT", "visible": true},
+          {"name": "testing", "id": "853259222624239677", "type": "TEXT", "visible": true}
         ],
         "name": "Testing",
         "id": "853252115312803842"
       }, {
         "channels": [
-          {"name": "beta-forum", "id": "1022427137891893300", "type": "FORUM"},
-          {"name": "beta-talk", "id": "853259320485609502", "type": "TEXT"},
-          {"name": "beta-testing", "id": "853259349380300860", "type": "TEXT"},
-          {"name": "private-testing", "id": "1468571290184192084", "type": "TEXT"},
-          {"name": "test voice", "id": "1026433719319404554", "type": "VOICE"}
+          {"name": "beta-forum", "id": "1022427137891893300", "type": "FORUM", "visible": true},
+          {"name": "beta-talk", "id": "853259320485609502", "type": "TEXT", "visible": true},
+          {"name": "beta-testing", "id": "853259349380300860", "type": "TEXT", "visible": true},
+          {"name": "private-testing", "id": "1468571290184192084", "type": "TEXT", "visible": false},
+          {"name": "test voice", "id": "1026433719319404554", "type": "VOICE", "visible": true}
         ],
         "name": "Beta Testing",
         "id": "853254997487255573"
+      }, {
+        "channels": [
+          {"name": "dev-updates", "id": "853252820713996309", "type": "TEXT", "visible": false},
+          {"name": "team-talk", "id": "853262454971433001", "type": "TEXT", "visible": false},
+          {"name": "upload", "id": "853435218006376448", "type": "TEXT", "visible": false},
+          {"name": "review", "id": "1468740799834489087", "type": "TEXT", "visible": false},
+          {"name": "Talk", "id": "865544727772004403", "type": "VOICE", "visible": false}
+        ],
+        "name": "Team",
+        "id": "853262187190288404"
+      }, {
+        "channels": [
+          {"name": "verbose", "id": "853262512668278814", "type": "TEXT", "visible": false},
+          {"name": "status", "id": "853262523380924487", "type": "TEXT", "visible": false},
+          {"name": "error", "id": "853262532261576724", "type": "TEXT", "visible": false}
+        ],
+        "name": "Logging",
+        "id": "853262227850264596"
       }
     ]
   },
@@ -214,6 +260,12 @@
   },
   "additionalEmojis": {"unlocked": true, "requiredSkus": [{"id": "1360377703743623261", "name": "Supporter Pro"}]},
   "profile": {"unlocked": true, "requiredSkus": [{"id": "1360377703743623261", "name": "Supporter Pro"}]},
+  "integrationBypass": {
+    "unlocked": true,
+    "requiredSkus": [
+      {"id": "1380621847191883786", "name": "Supporter Starter"}, {"id": "1360377703743623261", "name": "Supporter Pro"}
+    ]
+  },
   "reputationChannel": {
     "max": 2147483647,
     "unlocked": true,

@@ -11,10 +11,12 @@ public class ChannelPOJO {
     String name;
     String id;
     ChannelType type;
+    boolean visible;
 
-    public ChannelPOJO(String name, String id, ChannelType type) {
+    public ChannelPOJO(String name, String id, ChannelType type, boolean visible) {
         this.name = name;
         this.id = id;
         this.type = type;
+        this.visible = visible;
     }
 }

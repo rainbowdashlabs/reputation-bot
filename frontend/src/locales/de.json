@@ -60,7 +60,60 @@
     "logChannel": "Protokollkanal",
     "reactions": "Reaktionen",
     "auditLog": "Änderrungsprotokoll",
-    "integrationBypass": "Integration umgehen"
+    "integrationBypass": "Integrations Ausnahmen",
+    "problems": "Probleme",
+    "debug": {
+      "permissions": {
+        "title": "Fehlende globale Berechtigungen",
+        "description": "Diese Berechtigungen fehlen dem Bot komplett. Das könnte einige Funktionen einschränken.",
+        "MANAGE_ROLES": "Reputationsrollen können nicht vergeben werden.",
+        "NICKNAME_CHANGE": "Der Nickname kann im Dashboard nicht geändert werden.",
+        "MANAGE_GUILD_EXPRESSIONS": "Benutzerdefinierte Reaktionen können im Dashboard nicht vorgeschlagen werden.",
+        "VIEW_CHANNEL": "Reputationskanäle werden nicht gesehen. Reputation kann nicht über Textmethoden vergeben werden.",
+        "MESSAGE_HISTORY": "Die Bestätigung der Reputation über Einbettungen funktioniert nicht. Die meisten Checks zum Schutz vor Missbrauch werden fehlschlagen.",
+        "MESSAGE_ADD_REACTION": "Die Bestätigung der Reputation durch eine Reaktionen klappt nicht.",
+        "MESSAGE_SEND": "Keine Bestätigungsnachricht wird funktionieren. Zum Beispiel Reaktionsbestätigung oder Reputationsbestätigung über Embeds.",
+        "MESSAGE_SEND_IN_THREADS": "Bestätigungsnachrichten funktionieren nicht in Threads. Zum Beispiel Reaktionsbestätigungen oder Reputationsbestätigungen über Embeds.",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "Bestätigungsnachrichten funktionieren nicht in Sprachkanälen. Zum Beispiel Reaktionsbestätigungen oder Reputationsbestätigungen über Embeds.",
+        "MESSAGE_EXT_EMOJI": "Einige Inhalte werden vermutlich nicht richtig oder gar nicht dargestellt.",
+        "BYPASS_SLOWMODE": "Manchmal klappt es einfach mit Bestätigungsmeldungen wenn ein Cooldown aktiv ist. Zum Beispiel bei Reaktionsbestätigungen oder Reputationsbestätigungen über Einbettungen."
+      },
+      "simpleProblems": {
+        "title": "Allgemeine Probleme",
+        "SYSTEM_CHANNEL_NOT_DEFINED": "Der Systemkanal ist nicht festgelegt.",
+        "SYSTEM_CHANNEL_NOT_FOUND": "Der Systemkanal wurde nicht gefunden.",
+        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "Der Aufsteigsnachrichtenkanal ist nicht festgelegt.",
+        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "Der Aufsteigsnachrichtenkanal wurde nicht gefunden.",
+        "NO_AUTOPOST_CHANNEL_DEFINED": "Der Autopost-Kanal ist nicht eingerichtet.",
+        "AUTOPOST_CANNEL_NOT_FOUND": "Der Autopost-Kanal wurde nicht gefunden.",
+        "NO_LOG_CHANNEL_DEFINED": "Der Protokollkanal ist nicht festgelegt.",
+        "LOG_CHANNEL_NOT_FOUND": "Der Protokollkanal wurde nicht gefunden.",
+        "NO_THANKWORDS_DEFINED": "Es sind keine Dankesmuster definiert.",
+        "NO_REPUTATION_CHANNEL_DEFINED": "Es sind keine Reputationskanäle oder -kategorien festgelegt."
+      },
+      "missingPermissions": {
+        "title": "Fehlende bereichsbezogene Berechtigungen",
+        "GUILD": "Gilde",
+        "CHANNEL": "Kanal",
+        "CATEGORY": "Kategorie"
+      },
+      "rankProblems": {
+        "title": "Rangprobleme",
+        "CANT_ASSIGN_ROLE": "Der Bot kann diese Rolle nicht vergeben, weil sie über der höchsten Rolle des Bots liegt.",
+        "MISSING_ROLE": "Die Rolle für diesen Rang fehlt."
+      },
+      "reputationChannelProblems": {
+        "title": "Probleme mit dem Reputationskanal",
+        "MISSING_CHANNEL": "Der Kanal fehlt.",
+        "MISSING_CATEGORY": "Die Kategorie fehlt.",
+        "NOT_TEXT_TYPE": "Der Kanal ist kein Textkanal."
+      },
+      "simpleWarnings": {
+        "title": "Warnungen",
+        "MAX_MESSAGE_AGE_LOW": "Das maximale Alter von Nachrichten ist niedrig eingestellt. Das könnte dazu führen, dass Leute sich nicht mehr für ältere Nachrichten bedanken können."
+      },
+      "goToSettings": "Geh zu den Einstellungen"
+    }
   },
   "locale": {
     "selectLanguage": "Sprache auswählen"
@@ -504,7 +557,7 @@
     "values": {
       "null": "Nicht festgelegt",
       "enabled": "Aktiviert",
-      "disabled": "Behindert",
+      "disabled": "Deaktiviert",
       "once": "Einmal",
       "none": "Keiner",
       "unknownChannel": "Unbekannter Kanal",
@@ -587,7 +640,7 @@
     "add": "Füge einen weiteren Server hinzu, indem du die Einstellungen vom Server aus öffnest."
   },
   "integrationBypass": {
-    "description": "Richte Umgehungen für Integrationen ein, damit sie auch dann eine Bewertung vergeben können, wenn sie die normalen Anforderungen nicht erfüllen.",
+    "description": "Richte Ausnahmen für Integrationen ein, damit sie auch dann eine Bewertung vergeben können, wenn sie die normalen Anforderungen nicht erfüllen.",
     "allowReactions": "Reaktionen zulassen",
     "allowAnswer": "Antworten erlauben",
     "allowMention": "Erwähnung erlauben",
@@ -600,14 +653,14 @@
     "allowFuzzyDescription": "Erlaube das Vergeben von Reputation über Fuzzy-Matching",
     "ignoreCooldownDescription": "Ignoriere die Wartezeit zwischen Benutzern",
     "ignoreLimitDescription": "Ignoriere alle festgelegten Stundenlimits",
-    "add": "Integration umgehen",
+    "add": "Integration hinzufügen",
     "selectIntegration": "Wähle eine Integration aus",
     "noIntegrations": "Es gibt keine weiteren Integrationen, für die Umgehungen hinzugefügt werden können.",
     "deleteConfirm": "Bist du sicher, dass du diese Integrationsumgehung entfernen willst?",
-    "premiumRequired": "Integrationsumgehung",
+    "premiumRequired": "Integrationsausnahmen",
     "allowDirect": "Direkt zulassen",
     "ignoreContext": "Kontext ignorieren",
-    "allowDirectDescription": "Erlaube die Vergabe einer Reputation, wenn eine Einbettung übersprungen wird, weil nur ein Empfänger ermittelt werden konnte. Für einen Bot wird niemals eine Einbettung gesendet.",
+    "allowDirectDescription": "Erlaube die Vergabe einer Reputation, wenn ein Embed übersprungen wird, weil nur ein Empfänger ermittelt werden konnte. Für einen Bot wird niemals ein Embed gesendet.",
     "ignoreContextDescription": "Kontextprüfungen ignorieren"
   },
   "timePresets": {

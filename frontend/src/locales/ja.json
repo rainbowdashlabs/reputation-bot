@@ -60,7 +60,60 @@
     "logChannel": "ログチャネル",
     "reactions": "反応",
     "auditLog": "監査ログ",
-    "integrationBypass": "統合バイパス"
+    "integrationBypass": "統合バイパス",
+    "problems": "問題",
+    "debug": {
+      "permissions": {
+        "title": "グローバル権限が不足している",
+        "description": "このボットにはグローバルにこれらの権限が不足している。これにより一部の機能が制限される可能性がある。",
+        "MANAGE_ROLES": "評判の役割は与えられない。",
+        "NICKNAME_CHANGE": "ダッシュボードではニックネームを変更できない。",
+        "MANAGE_GUILD_EXPRESSIONS": "カスタムリアクションはダッシュボードでは提案できない。",
+        "VIEW_CHANNEL": "評判のチャンネルは表示されない。評判はテキストベースの方法では与えられない。",
+        "MESSAGE_HISTORY": "埋め込みによる評判確認が機能していない。ほとんどの不正防止チェックが失敗する。",
+        "MESSAGE_ADD_REACTION": "リアクションによる評価の確認が機能していない。",
+        "MESSAGE_SEND": "確認メッセージは一切機能しない。例えば、埋め込みによるリアクション確認や評価確認も同様だ。",
+        "MESSAGE_SEND_IN_THREADS": "スレッド内では確認メッセージは機能しない。例えば埋め込み経由のリアクション確認や評価確認などがそうだ。",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "スレッド内では、いかなる確認メッセージも機能しない。例えば、埋め込み経由でのリアクション確認や評価確認などがそうだ。",
+        "MESSAGE_EXT_EMOJI": "絵文字による評価確認が機能していない。",
+        "BYPASS_SLOWMODE": "確認メッセージは時々機能しないことがある。例えば、埋め込み経由のリアクション確認や評価確認などがそうだ。"
+      },
+      "simpleProblems": {
+        "title": "一般的な問題",
+        "SYSTEM_CHANNEL_NOT_DEFINED": "システムチャネルは定義されていない。",
+        "SYSTEM_CHANNEL_NOT_FOUND": "システムチャンネルが見つかりませんでした。",
+        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "アナウンスチャンネルは定義されていない。",
+        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "アナウンスチャンネルが見つからなかった。",
+        "NO_AUTOPOST_CHANNEL_DEFINED": "自動投稿チャンネルは定義されていない。",
+        "AUTOPOST_CANNEL_NOT_FOUND": "自動投稿チャンネルが見つかりませんでした。",
+        "NO_LOG_CHANNEL_DEFINED": "ログチャネルは定義されていない。",
+        "LOG_CHANNEL_NOT_FOUND": "ログチャネルが見つからなかった。",
+        "NO_THANKWORDS_DEFINED": "感謝の言葉は定義されていない。",
+        "NO_REPUTATION_CHANNEL_DEFINED": "評判に関するチャンネルやカテゴリは定義されていない。"
+      },
+      "missingPermissions": {
+        "title": "スコープ付き権限が不足している",
+        "GUILD": "ギルド",
+        "CHANNEL": "チャンネル",
+        "CATEGORY": "カテゴリー"
+      },
+      "rankProblems": {
+        "title": "ランクの問題",
+        "CANT_ASSIGN_ROLE": "このボットはこの役割を割り当てられない。なぜなら、それはボットの最高権限を超えるからだ。",
+        "MISSING_ROLE": "このランクの役割が欠けている。"
+      },
+      "reputationChannelProblems": {
+        "title": "評判チャネルの問題",
+        "MISSING_CHANNEL": "チャンネルがない。",
+        "MISSING_CATEGORY": "カテゴリが欠けている。",
+        "NOT_TEXT_TYPE": "そのチャンネルはテキストチャンネルではない。"
+      },
+      "simpleWarnings": {
+        "title": "警告",
+        "MAX_MESSAGE_AGE_LOW": "メッセージの最大保存期間は非常に短く設定されている。これにより、古いメッセージに対してユーザー同士がお互いに感謝し合うことが妨げられる可能性がある。"
+      },
+      "goToSettings": "設定に行く"
+    }
   },
   "locale": {
     "selectLanguage": "言語を選択"

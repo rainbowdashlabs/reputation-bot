@@ -60,7 +60,60 @@
     "logChannel": "Canal de registro",
     "reactions": "Reações",
     "auditLog": "Registro de auditoria",
-    "integrationBypass": "Ignorar integração"
+    "integrationBypass": "Ignorar integração",
+    "problems": "Problemas",
+    "debug": {
+      "permissions": {
+        "title": "Permissões globais ausentes",
+        "description": "Essas permissões estão faltando para o bot globalmente. Isso pode limitar alguns recursos.",
+        "MANAGE_ROLES": "Não dá pra passar funções de reputação.",
+        "NICKNAME_CHANGE": "Não dá pra mudar o apelido no painel.",
+        "MANAGE_GUILD_EXPRESSIONS": "Não dá pra sugerir reações personalizadas no painel.",
+        "VIEW_CHANNEL": "Os canais de reputação não podem ser vistos. A reputação não pode ser dada por nenhum método baseado em texto.",
+        "MESSAGE_HISTORY": "A confirmação da reputação por meio de incorporações não está funcionando. A maioria das verificações de proteção contra abusos falhará.",
+        "MESSAGE_ADD_REACTION": "A confirmação da reputação por meio de reações não está funcionando.",
+        "MESSAGE_SEND": "Nenhuma mensagem de confirmação vai funcionar. Tipo, confirmação de reação ou confirmação de reputação por meio de incorporação.",
+        "MESSAGE_SEND_IN_THREADS": "Nenhuma mensagem de confirmação vai funcionar em threads. Tipo, confirmação de reação ou confirmação de reputação por meio de incorporação.",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "Nenhuma mensagem de confirmação vai funcionar nos tópicos. Tipo, confirmação de reação ou confirmação de reputação por meio de incorporação.",
+        "MESSAGE_EXT_EMOJI": "A confirmação da reputação por meio de emojis não está funcionando.",
+        "BYPASS_SLOWMODE": "Às vezes, as mensagens de confirmação não funcionam. Tipo, a confirmação de reação ou a confirmação de reputação por meio de incorporação."
+      },
+      "simpleProblems": {
+        "title": "Problemas gerais",
+        "SYSTEM_CHANNEL_NOT_DEFINED": "O canal do sistema não está definido.",
+        "SYSTEM_CHANNEL_NOT_FOUND": "Não foi encontrado nenhum canal do sistema.",
+        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "O canal de anúncios não está definido.",
+        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "Não foi encontrado nenhum canal de anúncios.",
+        "NO_AUTOPOST_CHANNEL_DEFINED": "O canal de postagem automática não está definido.",
+        "AUTOPOST_CANNEL_NOT_FOUND": "Não foi encontrado nenhum canal de autopostagem.",
+        "NO_LOG_CHANNEL_DEFINED": "O canal de registro não está definido.",
+        "LOG_CHANNEL_NOT_FOUND": "Não foi encontrado nenhum canal de registro.",
+        "NO_THANKWORDS_DEFINED": "Não há palavras de agradecimento definidas.",
+        "NO_REPUTATION_CHANNEL_DEFINED": "Não tem canais ou categorias de reputação definidos."
+      },
+      "missingPermissions": {
+        "title": "Permissões de escopo ausentes",
+        "GUILD": "Guilda",
+        "CHANNEL": "Canal",
+        "CATEGORY": "Categoria"
+      },
+      "rankProblems": {
+        "title": "Problemas de classificação",
+        "CANT_ASSIGN_ROLE": "O bot não pode atribuir essa função porque ela está acima da função mais alta do bot.",
+        "MISSING_ROLE": "O papel para essa classificação está faltando."
+      },
+      "reputationChannelProblems": {
+        "title": "Problemas com o canal de reputação",
+        "MISSING_CHANNEL": "O canal está faltando.",
+        "MISSING_CATEGORY": "A categoria está faltando.",
+        "NOT_TEXT_TYPE": "O canal não é um canal de texto."
+      },
+      "simpleWarnings": {
+        "title": "Avisos",
+        "MAX_MESSAGE_AGE_LOW": "A idade máxima das mensagens está muito baixa. Isso pode impedir que os usuários agradeçam uns aos outros por mensagens mais antigas."
+      },
+      "goToSettings": "Vá para as configurações"
+    }
   },
   "locale": {
     "selectLanguage": "Escolha o idioma"

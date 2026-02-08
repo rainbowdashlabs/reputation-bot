@@ -481,6 +481,12 @@ class ApiClient {
         });
         return response.data;
     }
+
+    // Debug
+    public async getDebug(): Promise<Types.DebugResultPOJO> {
+        const response = await this.axiosInstance.get<Types.DebugResultPOJO>('/settings/debug');
+        return response.data;
+    }
 }
 
 export const api = new ApiClient();

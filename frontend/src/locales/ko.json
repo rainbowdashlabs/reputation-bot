@@ -60,7 +60,60 @@
     "logChannel": "로그 채널",
     "reactions": "반응들",
     "auditLog": "감사 로그",
-    "integrationBypass": "통합 우회"
+    "integrationBypass": "통합 우회",
+    "problems": "문제점",
+    "debug": {
+      "permissions": {
+        "title": "누락된 글로벌 권한",
+        "description": "봇에 대해 전역적으로 이러한 권한이 누락되었습니다. 이로 인해 일부 기능이 제한될 수 있습니다.",
+        "MANAGE_ROLES": "평판 역할은 부여할 수 없습니다.",
+        "NICKNAME_CHANGE": "대시보드에서는 별명을 변경할 수 없습니다.",
+        "MANAGE_GUILD_EXPRESSIONS": "대시보드에서는 사용자 지정 반응을 제안할 수 없습니다.",
+        "VIEW_CHANNEL": "평판 채널은 볼 수 없습니다. 평판은 어떤 텍스트 기반 방법으로도 줄 수 없습니다.",
+        "MESSAGE_HISTORY": "임베드를 통한 평판 확인이 작동하지 않습니다. 대부분의 악용 방지 검사가 실패할 것입니다.",
+        "MESSAGE_ADD_REACTION": "반응을 통한 평판 확인이 작동하지 않습니다.",
+        "MESSAGE_SEND": "어떤 확인 메시지도 작동하지 않습니다. 예를 들어 반응 확인이나 임베드를 통한 평판 확인 등이 해당됩니다.",
+        "MESSAGE_SEND_IN_THREADS": "스레드에서는 어떤 확인 메시지도 작동하지 않습니다. 예를 들어 반응 확인이나 임베드를 통한 평판 확인 등이 해당됩니다.",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "스레드에서는 어떤 확인 메시지도 작동하지 않습니다. 예를 들어 반응 확인이나 임베드를 통한 평판 확인 등이 해당됩니다.",
+        "MESSAGE_EXT_EMOJI": "이모지를 통한 평판 확인이 작동하지 않습니다.",
+        "BYPASS_SLOWMODE": "확인 메시지는 가끔 작동하지 않을 수 있습니다. 예를 들어 반응 확인이나 임베드를 통한 평판 확인 등이 해당됩니다."
+      },
+      "simpleProblems": {
+        "title": "일반적인 문제점",
+        "SYSTEM_CHANNEL_NOT_DEFINED": "시스템 채널이 정의되지 않았습니다.",
+        "SYSTEM_CHANNEL_NOT_FOUND": "시스템 채널을 찾을 수 없습니다.",
+        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "공지 채널이 정의되지 않았습니다.",
+        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "공지 채널을 찾을 수 없습니다.",
+        "NO_AUTOPOST_CHANNEL_DEFINED": "자동 게시 채널이 정의되지 않았습니다.",
+        "AUTOPOST_CANNEL_NOT_FOUND": "자동 게시 채널을 찾을 수 없습니다.",
+        "NO_LOG_CHANNEL_DEFINED": "로그 채널이 정의되지 않았습니다.",
+        "LOG_CHANNEL_NOT_FOUND": "로그 채널을 찾을 수 없습니다.",
+        "NO_THANKWORDS_DEFINED": "감사 단어가 정의되지 않았습니다.",
+        "NO_REPUTATION_CHANNEL_DEFINED": "평판 채널이나 범주가 정의되어 있지 않습니다."
+      },
+      "missingPermissions": {
+        "title": "누락된 범위 지정 권한",
+        "GUILD": "길드",
+        "CHANNEL": "채널",
+        "CATEGORY": "카테고리"
+      },
+      "rankProblems": {
+        "title": "순위 문제",
+        "CANT_ASSIGN_ROLE": "이 봇은 이 역할을 할당할 수 없습니다. 해당 역할이 봇의 최고 역할보다 높기 때문입니다.",
+        "MISSING_ROLE": "이 계급의 역할이 누락되었습니다."
+      },
+      "reputationChannelProblems": {
+        "title": "평판 채널 문제",
+        "MISSING_CHANNEL": "채널이 없습니다.",
+        "MISSING_CATEGORY": "카테고리가 누락되었습니다.",
+        "NOT_TEXT_TYPE": "해당 채널은 텍스트 채널이 아닙니다."
+      },
+      "simpleWarnings": {
+        "title": "경고",
+        "MAX_MESSAGE_AGE_LOW": "최대 메시지 보관 기간이 매우 짧게 설정되어 있습니다. 이로 인해 사용자들이 오래된 메시지에 대해 서로 감사 인사를 나누지 못할 수 있습니다."
+      },
+      "goToSettings": "설정으로 이동"
+    }
   },
   "locale": {
     "selectLanguage": "언어 선택"

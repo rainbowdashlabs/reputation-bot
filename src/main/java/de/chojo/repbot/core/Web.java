@@ -163,7 +163,8 @@ public class Web {
                                     bot.shardManager(),
                                     configuration,
                                     data.settingsAuditLogRepository(),
-                                    memberCache)
+                                    memberCache,
+                                    data.guildRepository())
                             .init());
                     config.router.mount(router -> {
                         router.beforeMatched(this::handleAccess);
