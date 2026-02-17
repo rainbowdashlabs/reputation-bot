@@ -74,9 +74,9 @@
         "MESSAGE_ADD_REACTION": "La confirmation de la réputation par les réactions ne marche pas.",
         "MESSAGE_SEND": "Les messages de confirmation, ça ne marche pas. Par exemple, la confirmation de réaction ou la confirmation de réputation via embed.",
         "MESSAGE_SEND_IN_THREADS": "Les messages de confirmation ne marchent pas dans les fils de discussion. Par exemple, la confirmation des réactions ou la confirmation de la réputation via l'intégration.",
-        "MESSAGE_ATTACH_VOICE_MESSAGE": "Les messages de confirmation ne marchent pas dans les fils de discussion. Par exemple, la confirmation de réaction ou la confirmation de réputation via l'intégration.",
         "MESSAGE_EXT_EMOJI": "La confirmation de réputation via les emojis ne marche pas.",
-        "BYPASS_SLOWMODE": "Parfois, les messages de confirmation ne marchent pas. Par exemple, la confirmation de réaction ou la confirmation de réputation via l'intégration."
+        "BYPASS_SLOWMODE": "Parfois, les messages de confirmation ne marchent pas. Par exemple, la confirmation de réaction ou la confirmation de réputation via l'intégration.",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "Les messages de confirmation ne marchent pas dans les canaux vocaux. Par exemple, la confirmation de réaction ou la confirmation de réputation via embed."
       },
       "simpleProblems": {
         "title": "Problèmes généraux",

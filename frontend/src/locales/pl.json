@@ -74,9 +74,9 @@
         "MESSAGE_ADD_REACTION": "Potwierdzanie reputacji poprzez reakcje nie działa.",
         "MESSAGE_SEND": "Żadne potwierdzenie nie będzie działać. Na przykład potwierdzenie reakcji lub potwierdzenie reputacji poprzez osadzenie.",
         "MESSAGE_SEND_IN_THREADS": "W wątkach nie będą działać żadne komunikaty potwierdzające. Na przykład potwierdzenie reakcji lub potwierdzenie reputacji poprzez osadzenie.",
-        "MESSAGE_ATTACH_VOICE_MESSAGE": "Żadne potwierdzenia nie będą działać w wątkach. Na przykład potwierdzenia reakcji lub potwierdzenia reputacji poprzez osadzenie.",
         "MESSAGE_EXT_EMOJI": "Potwierdzanie reputacji za pomocą emotikonów nie działa.",
-        "BYPASS_SLOWMODE": "Od czasu do czasu komunikaty potwierdzające mogą nie działać. Na przykład potwierdzenie reakcji lub potwierdzenie reputacji poprzez osadzenie."
+        "BYPASS_SLOWMODE": "Od czasu do czasu komunikaty potwierdzające mogą nie działać. Na przykład potwierdzenie reakcji lub potwierdzenie reputacji poprzez osadzenie.",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "Żadne komunikaty potwierdzające nie będą działać w kanałach głosowych. Na przykład potwierdzenie reakcji lub potwierdzenie reputacji poprzez osadzenie."
       },
       "simpleProblems": {
         "title": "Problemy ogólne",

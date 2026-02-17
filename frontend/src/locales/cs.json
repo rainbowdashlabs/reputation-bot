@@ -74,9 +74,9 @@
         "MESSAGE_ADD_REACTION": "Potvrzení reputace prostřednictvím reakcí nefunguje.",
         "MESSAGE_SEND": "Žádná potvrzovací zpráva nebude fungovat. Například potvrzení reakce nebo potvrzení reputace prostřednictvím vložení.",
         "MESSAGE_SEND_IN_THREADS": "Žádná potvrzovací zpráva nebude fungovat ve vláknech. Například potvrzení reakce nebo potvrzení reputace prostřednictvím vložení.",
-        "MESSAGE_ATTACH_VOICE_MESSAGE": "Žádná potvrzovací zpráva nebude fungovat ve vláknech. Například potvrzení reakce nebo potvrzení reputace prostřednictvím vložení.",
         "MESSAGE_EXT_EMOJI": "Potvrzení reputace pomocí emodži nefunguje.",
-        "BYPASS_SLOWMODE": "Občas nebudou fungovat žádné potvrzovací zprávy. Například potvrzení reakce nebo potvrzení reputace prostřednictvím vložení."
+        "BYPASS_SLOWMODE": "Občas nebudou fungovat žádné potvrzovací zprávy. Například potvrzení reakce nebo potvrzení reputace prostřednictvím vložení.",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "Žádná potvrzovací zpráva nebude fungovat v hlasových kanálech. Například potvrzení reakce nebo potvrzení reputace prostřednictvím vložení."
       },
       "simpleProblems": {
         "title": "Obecné problémy",

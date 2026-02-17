@@ -74,9 +74,9 @@
         "MESSAGE_ADD_REACTION": "Het bevestigen van je reputatie via reacties werkt niet.",
         "MESSAGE_SEND": "Bevestigingsberichten werken niet. Denk bijvoorbeeld aan reactiebescherming of reputatiebevestiging via embed.",
         "MESSAGE_SEND_IN_THREADS": "Bevestigingsberichten werken niet in threads. Bijvoorbeeld reactiebescherming of reputatiebevestiging via embed.",
-        "MESSAGE_ATTACH_VOICE_MESSAGE": "Bevestigingsberichten werken niet in threads. Denk bijvoorbeeld aan reactiebescherming of reputatiebevestiging via embed.",
         "MESSAGE_EXT_EMOJI": "Het bevestigen van je reputatie met emoji's werkt niet.",
-        "BYPASS_SLOWMODE": "Soms werkt een bevestigingsbericht niet. Denk bijvoorbeeld aan een reactiebevestiging of reputatiebevestiging via embed."
+        "BYPASS_SLOWMODE": "Soms werkt een bevestigingsbericht niet. Denk bijvoorbeeld aan een reactiebevestiging of reputatiebevestiging via embed.",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "Bevestigingsberichten werken niet in spraakkanalen. Denk bijvoorbeeld aan reactiebevestigingen of reputatiebevestigingen via embed."
       },
       "simpleProblems": {
         "title": "Algemene problemen",

@@ -74,9 +74,9 @@
         "MESSAGE_ADD_REACTION": "La conferma della reputazione tramite le reazioni non funziona.",
         "MESSAGE_SEND": "Qualsiasi messaggio di conferma non funzionerà. Per esempio, la conferma della reazione o della reputazione tramite incorporamento.",
         "MESSAGE_SEND_IN_THREADS": "I messaggi di conferma non funzionano nei thread. Per esempio, la conferma delle reazioni o della reputazione tramite incorporamento.",
-        "MESSAGE_ATTACH_VOICE_MESSAGE": "I messaggi di conferma non funzionano nei thread. Per esempio, la conferma delle reazioni o della reputazione tramite incorporamento.",
         "MESSAGE_EXT_EMOJI": "La conferma della reputazione tramite emoji non funziona.",
-        "BYPASS_SLOWMODE": "A volte i messaggi di conferma non funzionano. Tipo, la conferma delle reazioni o della reputazione tramite embed."
+        "BYPASS_SLOWMODE": "A volte i messaggi di conferma non funzionano. Tipo, la conferma delle reazioni o della reputazione tramite embed.",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "I messaggi di conferma non funzionano nei canali vocali. Per esempio, la conferma delle reazioni o della reputazione tramite embed."
       },
       "simpleProblems": {
         "title": "Problemi generali",

@@ -74,7 +74,7 @@
         "MESSAGE_ADD_REACTION": "Reputation confirmation via reactions is not working.",
         "MESSAGE_SEND": "Any confirmation message won't work. For example reaction confirmation or reputation confirmation via embed.",
         "MESSAGE_SEND_IN_THREADS": "Any confirmation message won't work in threads. For example reaction confirmation or reputation confirmation via embed",
-        "MESSAGE_ATTACH_VOICE_MESSAGE": "Any confirmation message won't work in threads. For example reaction confirmation or reputation confirmation via embed.",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "Any confirmation message won't work in voice channels. For example reaction confirmation or reputation confirmation via embed.",
         "MESSAGE_EXT_EMOJI": "Reputation confirmation via emojis is not working.",
         "BYPASS_SLOWMODE": "Any confirmation message won't work from time to time. For example reaction confirmation or reputation confirmation via embed."
       },

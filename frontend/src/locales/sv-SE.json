@@ -74,9 +74,9 @@
         "MESSAGE_ADD_REACTION": "Bekräftelse av rykte via reaktioner fungerar inte.",
         "MESSAGE_SEND": "Inget bekräftelsemeddelande fungerar. Till exempel reaktionsbekräftelse eller ryktebekräftelse via inbäddning.",
         "MESSAGE_SEND_IN_THREADS": "Bekräftelsemeddelanden fungerar inte i trådar. Till exempel reaktionsbekräftelse eller ryktebekräftelse via inbäddning.",
-        "MESSAGE_ATTACH_VOICE_MESSAGE": "Bekräftelsemeddelanden fungerar inte i trådar. Till exempel reaktionsbekräftelse eller ryktebekräftelse via inbäddning.",
         "MESSAGE_EXT_EMOJI": "Bekräftelse av rykte via emojis fungerar inte.",
-        "BYPASS_SLOWMODE": "Ibland fungerar inte bekräftelsemeddelanden. Till exempel reaktionsbekräftelse eller ryktebekräftelse via inbäddning."
+        "BYPASS_SLOWMODE": "Ibland fungerar inte bekräftelsemeddelanden. Till exempel reaktionsbekräftelse eller ryktebekräftelse via inbäddning.",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "Bekräftelsemeddelanden fungerar inte i röstkanaler. Till exempel reaktionsbekräftelse eller ryktebekräftelse via inbäddning."
       },
       "simpleProblems": {
         "title": "Allmänna problem",

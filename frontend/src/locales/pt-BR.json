@@ -74,9 +74,9 @@
         "MESSAGE_ADD_REACTION": "A confirmação da reputação por meio de reações não está funcionando.",
         "MESSAGE_SEND": "Nenhuma mensagem de confirmação vai funcionar. Tipo, confirmação de reação ou confirmação de reputação por meio de incorporação.",
         "MESSAGE_SEND_IN_THREADS": "Nenhuma mensagem de confirmação vai funcionar em threads. Tipo, confirmação de reação ou confirmação de reputação por meio de incorporação.",
-        "MESSAGE_ATTACH_VOICE_MESSAGE": "Nenhuma mensagem de confirmação vai funcionar nos tópicos. Tipo, confirmação de reação ou confirmação de reputação por meio de incorporação.",
         "MESSAGE_EXT_EMOJI": "A confirmação da reputação por meio de emojis não está funcionando.",
-        "BYPASS_SLOWMODE": "Às vezes, as mensagens de confirmação não funcionam. Tipo, a confirmação de reação ou a confirmação de reputação por meio de incorporação."
+        "BYPASS_SLOWMODE": "Às vezes, as mensagens de confirmação não funcionam. Tipo, a confirmação de reação ou a confirmação de reputação por meio de incorporação.",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "Nenhuma mensagem de confirmação vai funcionar nos canais de voz. Tipo, confirmação de reação ou confirmação de reputação por meio de incorporação."
       },
       "simpleProblems": {
         "title": "Problemas gerais",

@@ -74,9 +74,9 @@
         "MESSAGE_ADD_REACTION": "Tepkiler yoluyla itibar onayı çalışmıyor.",
         "MESSAGE_SEND": "Herhangi bir onay mesajı işe yaramayacaktır. Örneğin, gömülü tepki onayı veya itibar onayı.",
         "MESSAGE_SEND_IN_THREADS": "Onay mesajları, konu başlıklarında çalışmaz. Örneğin, gömülü tepki onayı veya itibar onayı.",
-        "MESSAGE_ATTACH_VOICE_MESSAGE": "Onay mesajları, ileti dizilerinde çalışmaz. Örneğin, gömülü tepki onayı veya itibar onayı.",
         "MESSAGE_EXT_EMOJI": "Emojilerle itibar onayı çalışmıyor.",
-        "BYPASS_SLOWMODE": "Zaman zaman herhangi bir onay mesajı çalışmayabilir. Örneğin, gömülü olarak tepki onayı veya itibar onayı."
+        "BYPASS_SLOWMODE": "Zaman zaman herhangi bir onay mesajı çalışmayabilir. Örneğin, gömülü olarak tepki onayı veya itibar onayı.",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "Sesli kanallarda hiçbir onay mesajı çalışmaz. Örneğin, gömülü tepki onayı veya itibar onayı."
       },
       "simpleProblems": {
         "title": "Genel Sorunlar",

@@ -74,9 +74,9 @@
         "MESSAGE_ADD_REACTION": "Bekreftelse av omdømme via reaksjoner fungerer ikke.",
         "MESSAGE_SEND": "Bekreftelsesmeldinger fungerer ikke. For eksempel reaksjonsbekreftelse eller omdømmebekreftelse via innebygging.",
         "MESSAGE_SEND_IN_THREADS": "Bekreftelsesmeldinger fungerer ikke i tråder. For eksempel reaksjonsbekreftelse eller omdømmebekreftelse via innebygging.",
-        "MESSAGE_ATTACH_VOICE_MESSAGE": "Bekreftelsesmeldinger fungerer ikke i tråder. For eksempel reaksjonsbekreftelse eller omdømmebekreftelse via innebygging.",
         "MESSAGE_EXT_EMOJI": "Bekreftelse av omdømme via emojier fungerer ikke.",
-        "BYPASS_SLOWMODE": "Noen bekreftelsesmeldinger vil ikke fungere fra tid til annen. For eksempel reaksjonsbekreftelse eller omdømmebekreftelse via innebygging."
+        "BYPASS_SLOWMODE": "Noen bekreftelsesmeldinger vil ikke fungere fra tid til annen. For eksempel reaksjonsbekreftelse eller omdømmebekreftelse via innebygging.",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "Bekreftelsesmeldinger fungerer ikke i talekanaler. For eksempel reaksjonsbekreftelse eller omdømmebekreftelse via innebygging."
       },
       "simpleProblems": {
         "title": "Generelle problemer",

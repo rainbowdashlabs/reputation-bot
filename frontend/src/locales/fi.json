@@ -74,9 +74,9 @@
         "MESSAGE_ADD_REACTION": "Maineen vahvistaminen reaktioiden avulla ei toimi.",
         "MESSAGE_SEND": "Vahvistusviestit eivät toimi. Esimerkiksi reaktioiden vahvistaminen tai maineen vahvistaminen upotuksen kautta.",
         "MESSAGE_SEND_IN_THREADS": "Vahvistusviestit eivät toimi ketjuissa. Esimerkiksi reaktioiden vahvistaminen tai maineen vahvistaminen upotuksen kautta.",
-        "MESSAGE_ATTACH_VOICE_MESSAGE": "Vahvistusviestit eivät toimi ketjuissa. Esimerkiksi reaktioiden vahvistaminen tai maineen vahvistaminen upotuksen kautta.",
         "MESSAGE_EXT_EMOJI": "Maineen vahvistaminen emojien avulla ei toimi.",
-        "BYPASS_SLOWMODE": "Vahvistusviestit eivät toimi aina. Esimerkiksi reaktion vahvistus tai maineen vahvistus upotuksen kautta."
+        "BYPASS_SLOWMODE": "Vahvistusviestit eivät toimi aina. Esimerkiksi reaktion vahvistus tai maineen vahvistus upotuksen kautta.",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "Vahvistusviestit eivät toimi äänikanavissa. Esimerkiksi reaktioiden vahvistaminen tai maineen vahvistaminen upotuksen kautta."
       },
       "simpleProblems": {
         "title": "Yleiset ongelmat",

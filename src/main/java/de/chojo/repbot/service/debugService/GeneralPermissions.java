@@ -34,10 +34,6 @@ public enum GeneralPermissions {
             Permission.MESSAGE_SEND_IN_THREADS,
             "Send Messages in Threads",
             "Any confirmation message won't work in threads. For example reaction confirmation or reputation confirmation via embed"),
-    MESSAGE_ATTACH_VOICE_MESSAGE(
-            Permission.MESSAGE_ATTACH_VOICE_MESSAGE,
-            "Send Messages in Voice Channel",
-            "Any confirmation message won't work in threads. For example reaction confirmation or reputation confirmation via embed."),
     MESSAGE_EXT_EMOJI(
             Permission.MESSAGE_EXT_EMOJI, "Use External Emojis", "Reputation confirmation via emojis is not working."),
     BYPASS_SLOWMODE(

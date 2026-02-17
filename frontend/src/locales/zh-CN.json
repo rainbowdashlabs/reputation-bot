@@ -74,9 +74,9 @@
         "MESSAGE_ADD_REACTION": "通过点赞确认声誉的功能无法正常使用。",
         "MESSAGE_SEND": "任何确认消息都无效。例如通过嵌入式操作进行的反应确认或声望确认。",
         "MESSAGE_SEND_IN_THREADS": "任何确认消息在嵌入式讨论中均无效。例如通过嵌入式方式进行的点赞确认或声望确认。",
-        "MESSAGE_ATTACH_VOICE_MESSAGE": "任何确认消息在讨论串中都无法生效。例如通过嵌入式操作进行的反应确认或声望确认。",
         "MESSAGE_EXT_EMOJI": "通过表情符号确认声誉的功能无法正常使用。",
-        "BYPASS_SLOWMODE": "任何确认消息都可能时不时失效。例如通过嵌入式方式进行的反应确认或声望确认。"
+        "BYPASS_SLOWMODE": "任何确认消息都可能时不时失效。例如通过嵌入式方式进行的反应确认或声望确认。",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "任何确认消息在语音频道中均无效。例如通过嵌入式消息发送的反应确认或声望确认。"
       },
       "simpleProblems": {
         "title": "一般性问题",
