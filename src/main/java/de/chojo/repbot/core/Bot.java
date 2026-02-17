@@ -368,9 +368,15 @@ public class Bot {
                 .cleanGuildCommands("true".equals(System.getProperty("bot.cleancommands", "false")))
                 .withCommandErrorHandler((context, throwable) -> {
                     if (throwable instanceof InsufficientPermissionException perm) {
-                        var action = "Command: " + context.args().replaceAll("\\{.+?}", "").trim();
+                        var action = "Command: "
+                                + context.args().replaceAll("\\{.+?}", "").trim();
                         PermissionErrorHandler.handle(
-                                new PermissionErrorHandler.PermissionErrorContext(context.guild(), (TextChannel)context.channel(), context.user(), action, perm.getPermission()),
+                                new PermissionErrorHandler.PermissionErrorContext(
+                                        context.guild(),
+                                        (TextChannel) context.channel(),
+                                        context.user(),
+                                        action,
+                                        perm.getPermission()),
                                 data.guildRepository().guild(context.guild()),
                                 localizer.context(LocaleProvider.guild(context.guild())),
                                 configuration);
