@@ -245,7 +245,7 @@ public class Web {
     private void initBotList() {
         var botlist = configuration.botlist();
         if (!botlist.isSubmit()) return;
-        BotlistService.build(bot.shardManager())
+        BotlistService.build(bot.shardManager(), () -> bot.shardManager().getGuilds().size(), () ->  bot.shardManager().getUsers().size())
                 .forDiscordBotListCOM(botlist.discordBotlistCom())
                 .forDiscordBotsGG(botlist.discordBotsGg())
                 .forTopGG(botlist.topGg())
