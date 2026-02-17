@@ -69,7 +69,9 @@ import de.chojo.repbot.statistic.Statistic;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.repbot.util.PermissionErrorHandler;
 import de.chojo.repbot.web.sessions.SessionService;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.ISnowflake;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.guild.GenericGuildEvent;
 import net.dv8tion.jda.api.events.message.GenericMessageEvent;
@@ -138,6 +140,7 @@ public class Bot {
         initServices();
         initInteractions();
         initListener();
+
         threading.repBotWorker().execute(() -> {
             try {
                 initBotUserCache();
@@ -209,14 +212,15 @@ public class Bot {
 
     private void handleListenerException(GenericEvent event, Throwable throwable) {
         if (event instanceof GenericMessageEvent guildEvent && guildEvent.isFromGuild()) {
-            RepGuild repGuild = data.guildRepository().guild(guildEvent.getGuild());
+            Guild guild = guildEvent.getGuild();
+            RepGuild repGuild = data.guildRepository().guild(guild);
             if (throwable instanceof InsufficientPermissionException perm) {
                 PermissionErrorHandler.handle(
+                        new PermissionErrorHandler.PermissionErrorContext(
+                                guild, perm.getChannel(guild.getJDA()), null, "Service error", perm.getPermission()),
                         repGuild,
-                        localization.localizer().context(LocaleProvider.guild(guildEvent.getGuild())),
-                        perm.getChannel(guildEvent.getGuild().getJDA()),
-                        configuration,
-                        perm.getPermission());
+                        localization.localizer().context(LocaleProvider.guild(guild)),
+                        configuration);
                 return;
             }
         }
@@ -230,14 +234,15 @@ public class Bot {
             return;
         }
 
-        RepGuild repGuild = data.guildRepository().guild(guildEvent.getGuild());
+        Guild guild = guildEvent.getGuild();
+        RepGuild repGuild = data.guildRepository().guild(guild);
         if (throwable instanceof InsufficientPermissionException perm) {
             PermissionErrorHandler.handle(
+                    new PermissionErrorHandler.PermissionErrorContext(
+                            guild, perm.getChannel(guild.getJDA()), null, null, perm.getPermission()),
                     repGuild,
-                    localization.localizer().context(LocaleProvider.guild(guildEvent.getGuild())),
-                    perm.getChannel(guildEvent.getGuild().getJDA()),
-                    configuration,
-                    perm.getPermission());
+                    localization.localizer().context(LocaleProvider.guild(guild)),
+                    configuration);
             return;
         }
 
@@ -363,10 +368,10 @@ public class Bot {
                 .cleanGuildCommands("true".equals(System.getProperty("bot.cleancommands", "false")))
                 .withCommandErrorHandler((context, throwable) -> {
                     if (throwable instanceof InsufficientPermissionException perm) {
+                        var action = "Command: " + context.args().replaceAll("\\{.+?}", "").trim();
                         PermissionErrorHandler.handle(
-                                data.guildRepository(),
-                                perm,
-                                shardManager,
+                                new PermissionErrorHandler.PermissionErrorContext(context.guild(), (TextChannel)context.channel(), context.user(), action, perm.getPermission()),
+                                data.guildRepository().guild(context.guild()),
                                 localizer.context(LocaleProvider.guild(context.guild())),
                                 configuration);
                         return;

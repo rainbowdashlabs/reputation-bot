@@ -84,6 +84,7 @@ public class MessageListener extends ListenerAdapter {
 
     @Override
     public void onMessageDelete(@NotNull MessageDeleteEvent event) {
+        if (!event.isFromGuild()) return;
         reputationService.delete(event.getMessageIdLong(), event.getGuildChannel(), event.getGuild());
     }
 
@@ -95,10 +96,19 @@ public class MessageListener extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
+        if (!event.isFromGuild()) return;
         try {
             handleOnMessageReceived(event);
         } catch (InsufficientPermissionException e) {
-            // handle permissionsexceptions
+            PermissionErrorHandler.handle(
+                    new PermissionErrorHandler.PermissionErrorContext(
+                            event.getGuild(),
+                            event.getGuildChannel().asTextChannel(),
+                            event.getAuthor(),
+                            "Handle message"),
+                    guildRepository.guild(event.getGuild()),
+                    localizer.context(LocaleProvider.guild(event.getGuild())),
+                    configuration);
         }
     }
 
@@ -146,6 +156,8 @@ public class MessageListener extends ListenerAdapter {
                 event.getGuildChannel(),
                 localizer.context(LocaleProvider.guild(event.getGuild())),
                 configuration,
+                "Message Analyzer Service",
+                event.getAuthor(),
                 Permission.MESSAGE_SEND,
                 Permission.MESSAGE_ADD_REACTION,
                 Permission.MESSAGE_EMBED_LINKS)) {

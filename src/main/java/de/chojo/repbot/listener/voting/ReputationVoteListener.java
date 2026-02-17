@@ -69,6 +69,7 @@ public class ReputationVoteListener extends ListenerAdapter {
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
         if (!voteRequests.containsKey(event.getMessageIdLong())) return;
         if (event.getButton().getCustomId() == null) return;
+        if (!event.isFromGuild()) return;
 
         var matcher = VOTE.matcher(event.getButton().getCustomId());
         if (!matcher.find()) return;
@@ -149,6 +150,8 @@ public class ReputationVoteListener extends ListenerAdapter {
                 message.getGuildChannel(),
                 loc.context(LocaleProvider.guild(message.getGuild())),
                 configuration,
+                "Start Reputation Vote",
+                message.getAuthor(),
                 Permission.MESSAGE_SEND,
                 Permission.MESSAGE_EMBED_LINKS)) {
             return;

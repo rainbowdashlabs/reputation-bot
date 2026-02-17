@@ -73,6 +73,8 @@ public class Scanner {
                 channel,
                 context.guildLocalizer(),
                 configuration,
+                "Start Scan",
+                event.getUser(),
                 Permission.MESSAGE_SEND,
                 Permission.VIEW_CHANNEL,
                 Permission.VIEW_CHANNEL,
