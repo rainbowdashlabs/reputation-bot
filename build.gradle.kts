@@ -78,7 +78,7 @@ dependencies {
     implementation(libs.bundles.jackson)
 
     // database
-    implementation("org.postgresql", "postgresql", "42.7.9")
+    implementation("org.postgresql", "postgresql", "42.7.10")
     implementation(libs.bundles.sadu)
 
     // Logging
