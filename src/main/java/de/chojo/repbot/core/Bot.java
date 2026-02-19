@@ -6,7 +6,9 @@
 package de.chojo.repbot.core;
 
 import de.chojo.jdautil.eventmanager.InterceptingEventManager;
+import de.chojo.jdautil.interactions.dispatching.InteractionContext;
 import de.chojo.jdautil.interactions.dispatching.InteractionHub;
+import de.chojo.jdautil.interactions.dispatching.InteractionResult;
 import de.chojo.jdautil.interactions.message.Message;
 import de.chojo.jdautil.interactions.slash.Slash;
 import de.chojo.jdautil.interactions.user.User;
@@ -72,6 +74,7 @@ import de.chojo.repbot.web.sessions.SessionService;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildMessageChannel;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.events.guild.GenericGuildEvent;
 import net.dv8tion.jda.api.events.message.GenericMessageEvent;
@@ -365,36 +368,6 @@ public class Bot {
                 .withMessages(new MessageLog(guilds))
                 .withUsers(new UserReceived(guilds, configuration), new UserDonated(guilds, configuration))
                 .withLocalizer(localizer)
-                .cleanGuildCommands("true".equals(System.getProperty("bot.cleancommands", "false")))
-                .withCommandErrorHandler((context, throwable) -> {
-                    if (throwable instanceof InsufficientPermissionException perm) {
-                        var action = "Command: "
-                                + context.args().replaceAll("\\{.+?}", "").trim();
-                        PermissionErrorHandler.handle(
-                                new PermissionErrorHandler.PermissionErrorContext(
-                                        context.guild(),
-                                        (TextChannel) context.channel(),
-                                        context.user(),
-                                        action,
-                                        perm.getPermission()),
-                                data.guildRepository().guild(context.guild()),
-                                localizer.context(LocaleProvider.guild(context.guild())),
-                                configuration);
-                        return;
-                    }
-
-                    if (throwable instanceof MissingSupportTier ex) {
-                        premiumService.handleMissingSupportTier(context, ex);
-                        return;
-                    }
-
-                    log.error(
-                            LogNotify.NOTIFY_ADMIN,
-                            "Command execution of {} failed\n{}",
-                            context.interaction().meta().name(),
-                            context.args(),
-                            throwable);
-                })
                 .withGuildCommandMapper(cmd -> switch (cmd.name()) {
                     case "bot" ->
                         Collections.singletonList(configuration.baseSettings().botGuild());
@@ -402,9 +375,14 @@ public class Bot {
                     default -> Collections.emptyList();
                 })
                 .withDefaultMenuService()
-                .withPostCommandHook(result -> data.metrics()
-                        .commands()
-                        .logCommand(result.context().interaction().meta().name()))
+                .withPostCommandHook(result -> {
+                    data.metrics()
+                            .commands()
+                            .logCommand(result.context().interaction().meta().name());
+                    if (result.failed()) {
+                        handleCommandError(result);
+                    }
+                })
                 .withPagination(builder -> builder.withLocalizer(localizer)
                         .previousText("pages.previous")
                         .nextText("pages.next"))
@@ -440,6 +418,38 @@ public class Bot {
                     .get();
         }
         WEB_COMMAND_MENTION = "</settings:" + settingsCommandId + ">";
+    }
+
+    private void handleCommandError(InteractionResult result) {
+        Throwable throwable = result.exception();
+        InteractionContext context = result.context();
+        var localizer = localization.localizer();
+        if (throwable instanceof InsufficientPermissionException perm) {
+            var action = "Command: " + context.args().replaceAll("\\{.+?}", "").trim();
+            PermissionErrorHandler.handle(
+                    new PermissionErrorHandler.PermissionErrorContext(
+                            context.guild(),
+                            (StandardGuildMessageChannel) context.channel(),
+                            context.user(),
+                            action,
+                            perm.getPermission()),
+                    data.guildRepository().guild(context.guild()),
+                    localizer.context(LocaleProvider.guild(context.guild())),
+                    configuration);
+            return;
+        }
+
+        if (throwable instanceof MissingSupportTier ex) {
+            premiumService.handleMissingSupportTier(context, ex);
+            return;
+        }
+
+        log.error(
+                LogNotify.NOTIFY_ADMIN,
+                "Command execution of {} failed\n{}",
+                context.interaction().meta().name(),
+                context.args(),
+                throwable);
     }
 
     private void initListener() {
