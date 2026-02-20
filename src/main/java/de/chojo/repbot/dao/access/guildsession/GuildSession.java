@@ -8,49 +8,43 @@ package de.chojo.repbot.dao.access.guildsession;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.dao.provider.SettingsAuditLogRepository;
 import de.chojo.repbot.web.pojo.GuildSessionPOJO;
 import de.chojo.repbot.web.validation.GuildValidator;
 import de.chojo.repbot.web.validation.PremiumValidator;
-import io.javalin.http.UnauthorizedResponse;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static net.dv8tion.jda.api.Permission.ADMINISTRATOR;
-import static net.dv8tion.jda.api.Permission.BAN_MEMBERS;
-import static net.dv8tion.jda.api.Permission.KICK_MEMBERS;
-import static net.dv8tion.jda.api.Permission.MANAGE_CHANNEL;
-import static net.dv8tion.jda.api.Permission.MANAGE_ROLES;
-import static net.dv8tion.jda.api.Permission.MANAGE_SERVER;
-
 public class GuildSession {
-    private static final List<Permission> PRIVILEGED_PERMISSIONS =
-            List.of(ADMINISTRATOR, MANAGE_SERVER, MANAGE_ROLES, KICK_MEMBERS, BAN_MEMBERS, MANAGE_CHANNEL);
     private final Configuration configuration;
     private final ShardManager shardManager;
     private final GuildRepository guildRepository;
-    private final GuildSessionMeta meta;
+    private final SettingsAuditLogRepository settingsAuditLogRepository;
+    private final long guildId;
+    private final long userId;
     private PremiumValidator premiumValidator;
     private GuildValidator guildValidator;
+    private volatile boolean dirty = true;
+    private GuildSessionPOJO cachedSessionData;
 
     public GuildSession(
             Configuration configuration,
             ShardManager shardManager,
             GuildRepository guildRepository,
-            GuildSessionMeta meta) {
+            SettingsAuditLogRepository settingsAuditLogRepository,
+            long guildId,
+            long userId) {
         this.configuration = configuration;
         this.shardManager = shardManager;
         this.guildRepository = guildRepository;
-        this.meta = meta;
+        this.settingsAuditLogRepository = settingsAuditLogRepository;
+        this.guildId = guildId;
+        this.userId = userId;
     }
 
     public Guild guild() {
-        return shardManager.getGuildById(meta.guildId());
+        return shardManager.getGuildById(guildId);
     }
 
     public RepGuild repGuild() {
@@ -59,7 +53,15 @@ public class GuildSession {
 
     @NotNull
     public GuildSessionPOJO sessionData() {
-        return GuildSessionPOJO.generate(guild(), guildRepository, shardManager);
+        if (dirty || cachedSessionData == null) {
+            cachedSessionData = GuildSessionPOJO.generate(guild());
+            dirty = false;
+        }
+        return cachedSessionData;
+    }
+
+    public void markDirty() {
+        this.dirty = true;
     }
 
     public ShardManager shardManager() {
@@ -80,38 +82,12 @@ public class GuildSession {
         return guildValidator;
     }
 
+    public GuildRepository guildRepository() {
+        return guildRepository;
+    }
+
     public long guildId() {
-        return meta.guildId();
-    }
-
-    public long memberId() {
-        return meta.memberId();
-    }
-
-    public String sessionUrl() {
-        return pathUrl("");
-    }
-
-    public String setupUrl() {
-        return pathUrl("setup");
-    }
-
-    public String debugUrl() {
-        return pathUrl("settings/problems");
-    }
-
-    public GuildSessionMeta meta() {
-        return meta;
-    }
-
-    public String pathUrl(String path) {
-        String url = "%s/%s?token=%s".formatted(configuration.api().url(), path, meta.token());
-        return repGuild()
-                .settings()
-                .general()
-                .language()
-                .map(lang -> "%s&lang=%s".formatted(url, lang.getLocale()))
-                .orElse(url);
+        return guildId;
     }
 
     public Configuration configuration() {
@@ -126,23 +102,15 @@ public class GuildSession {
      * @param newValue    the new value of the setting after the change.
      */
     public void recordChange(String settingsKey, Object oldValue, Object newValue) {
-        meta.recordChange(settingsKey, oldValue, newValue);
+        settingsAuditLogRepository.recordChange(guildId, userId, settingsKey, oldValue, newValue);
     }
 
     /**
-     * Validates that the member owning this session is still a member of the guild.
+     * @deprecated Used to validate if the member is still in the guild and has permissions.
+     * This is now handled during session creation and request interception.
      */
+    @Deprecated
     public void validate() {
-        if (configuration.baseSettings().isOwner(memberId())) return;
-        try {
-            Member member = guild().retrieveMemberById(memberId()).complete();
-            if (PRIVILEGED_PERMISSIONS.stream().anyMatch(member::hasPermission)) return;
-            throw new UnauthorizedResponse("User does not have any of the required permissions: %s"
-                    .formatted(PRIVILEGED_PERMISSIONS.stream()
-                            .map(Permission::getName)
-                            .collect(Collectors.joining(", "))));
-        } catch (Exception e) {
-            throw new UnauthorizedResponse("User is not a member of this guild anymore.");
-        }
+        // No-op for now, as validation is moved to handleAccess
     }
 }

@@ -67,7 +67,7 @@ const closeDropdown = () => {
     >
       <div
           v-if="isOpen"
-          class="absolute right-0 z-50 w-56 mt-2 origin-top-right shadow-lg max-h-96 overflow-y-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
+          class="absolute left-0 z-50 w-56 mt-2 origin-top-left shadow-lg max-h-96 overflow-y-auto bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
       >
         <div class="py-1" role="menu">
           <BaseButton

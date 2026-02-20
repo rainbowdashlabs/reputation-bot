@@ -40,6 +40,7 @@ public class DataRoute implements RoutesBuilder {
             tags = {"Data"},
             responses = {@OpenApiResponse(status = "200", content = @OpenApiContent(from = ThankwordsContainer.class))})
     public void getThankwords(Context ctx) {
+        ctx.header("Cache-Control", "public, max-age=3600");
         ctx.json(thankwordsContainer);
     }
 
@@ -51,6 +52,7 @@ public class DataRoute implements RoutesBuilder {
             tags = {"Data"},
             responses = {@OpenApiResponse(status = "200", content = @OpenApiContent(from = LanguageInfo[].class))})
     public void getLanguages(Context ctx) {
+        ctx.header("Cache-Control", "public, max-age=86400");
         ctx.json(localization.languages());
     }
 
@@ -62,6 +64,7 @@ public class DataRoute implements RoutesBuilder {
             tags = {"Data"},
             responses = {@OpenApiResponse(status = "200", content = @OpenApiContent(from = Links.class))})
     public void getLinks(Context ctx) {
+        ctx.header("Cache-Control", "public, max-age=3600");
         ctx.json(configuration.links());
     }
 

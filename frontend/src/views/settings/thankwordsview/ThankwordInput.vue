@@ -23,7 +23,7 @@ const {session, updateThankingThankwordsSettings} = useSession()
 const newWord = ref('')
 const errorMessage = ref('')
 
-const currentWords = computed(() => session.value?.settings.thanking.thankwords.thankwords || [])
+const currentWords = computed(() => session.value?.settings?.thanking.thankwords.thankwords || [])
 const invalidCharacters = ["(", ")", "{", "}", "*", "\\s", " ", ".", "#", "<", ">"]
 
 const addWord = async () => {

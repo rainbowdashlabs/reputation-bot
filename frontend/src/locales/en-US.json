@@ -15,7 +15,8 @@
   "navigation": {
     "settings": "Settings",
     "presets": "Presets",
-    "setup": "Setup"
+    "setup": "Setup",
+    "logout": "Logout"
   },
   "presets": {
     "title": "Presets",

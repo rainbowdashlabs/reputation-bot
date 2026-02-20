@@ -118,7 +118,6 @@ export interface ChannelViewPOJO {
 }
 
 export interface GuildPOJO {
-    meta: GuildMetaPOJO;
     roles: RolePOJO[];
     channels: ChannelViewPOJO;
     reactions: ReactionPOJO[];
@@ -326,10 +325,27 @@ export interface Links {
     faq: string;
 }
 
+export interface GuildSessionData {
+    accessLevel: string;
+    id: string;
+    name: string;
+    icon: string;
+    permissions: string;
+    permissionsNew: string;
+    owner: boolean;
+}
+
+export interface UserSessionPOJO {
+    userId: string;
+    token: string;
+    guilds: Record<string, GuildSessionData>;
+    created: string;
+    member: MemberPOJO;
+    isBotOwner: boolean;
+}
+
 export interface GuildSessionPOJO {
-    settings: SettingsPOJO;
     guild: GuildPOJO;
-    premiumFeatures: PremiumFeaturesPOJO;
 }
 
 export interface PremiumFeatureErrorDetails {

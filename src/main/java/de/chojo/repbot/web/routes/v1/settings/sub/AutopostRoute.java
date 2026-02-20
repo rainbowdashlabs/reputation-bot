@@ -178,12 +178,12 @@ public class AutopostRoute implements RoutesBuilder {
     @Override
     public void buildRoutes() {
         path("autopost", () -> {
-            post("", this::updateAutopostSettings, Role.GUILD_USER);
-            post("active", this::updateActive, Role.GUILD_USER);
-            post("channel", this::updateChannel, Role.GUILD_USER);
-            post("refreshtype", this::updateRefreshType, Role.GUILD_USER);
-            post("refreshinterval", this::updateRefreshInterval, Role.GUILD_USER);
-            post("send", this::sendAutopost, Role.GUILD_USER);
+            post("", this::updateAutopostSettings, Role.GUILD_ADMIN);
+            post("active", this::updateActive, Role.GUILD_ADMIN);
+            post("channel", this::updateChannel, Role.GUILD_ADMIN);
+            post("refreshtype", this::updateRefreshType, Role.GUILD_ADMIN);
+            post("refreshinterval", this::updateRefreshInterval, Role.GUILD_ADMIN);
+            post("send", this::sendAutopost, Role.GUILD_ADMIN);
         });
     }
 }

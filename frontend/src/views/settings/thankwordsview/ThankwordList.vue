@@ -20,7 +20,7 @@ const emit = defineEmits<{
 const {t} = useI18n()
 const {session, updateThankingThankwordsSettings} = useSession()
 
-const words = computed(() => session.value?.settings.thanking.thankwords.thankwords || [])
+const words = computed(() => session.value?.settings?.thanking.thankwords.thankwords || [])
 
 const removeWord = async (word: string) => {
   const newList = words.value.filter(w => w !== word)

@@ -31,7 +31,7 @@ services:
       context: ..
       dockerfile: docker/Dockerfile
     ports:
-      - 8888:8888
+      - 8000:8000
     networks:
       - repbot
     profiles:
@@ -52,4 +52,3 @@ volumes:
 
 networks:
   repbot:
-

@@ -12,15 +12,18 @@ import de.chojo.repbot.core.Localization;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.dao.provider.SettingsAuditLogRepository;
+import de.chojo.repbot.dao.provider.UserRepository;
 import de.chojo.repbot.serialization.ThankwordsContainer;
 import de.chojo.repbot.service.AutopostService;
 import de.chojo.repbot.service.RoleAssigner;
 import de.chojo.repbot.web.cache.MemberCache;
+import de.chojo.repbot.web.routes.v1.auth.AuthRoute;
 import de.chojo.repbot.web.routes.v1.data.DataRoute;
 import de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute;
 import de.chojo.repbot.web.routes.v1.session.SessionRoute;
 import de.chojo.repbot.web.routes.v1.settings.SettingsRoute;
-import de.chojo.repbot.web.sessions.SessionService;
+import de.chojo.repbot.web.services.DiscordOAuthService;
+import de.chojo.repbot.web.services.SessionService;
 import io.javalin.http.ContentType;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.slf4j.Logger;
@@ -41,6 +44,7 @@ public class Api {
     private final SessionRoute sessionRoute;
     private final SettingsRoute settingsRoute;
     private final DataRoute dataRoute;
+    private final AuthRoute authRoute;
 
     public Api(
             SessionService sessionService,
@@ -53,7 +57,9 @@ public class Api {
             Configuration configuration,
             SettingsAuditLogRepository settingsAuditLogRepository,
             MemberCache memberCache,
-            GuildRepository guildRepostory) {
+            GuildRepository guildRepository,
+            UserRepository userRepository,
+            DiscordOAuthService discordOAuthService) {
         this.sessionService = sessionService;
         metricsRoute = new MetricsRoute(metrics);
         sessionRoute = new SessionRoute(sessionService);
@@ -64,7 +70,7 @@ public class Api {
                 shardManager,
                 settingsAuditLogRepository,
                 memberCache,
-                guildRepostory);
+                guildRepository);
 
         // Load thankwords container
         ThankwordsContainer thankwordsContainer;
@@ -75,6 +81,7 @@ public class Api {
             thankwordsContainer = null;
         }
         dataRoute = new DataRoute(thankwordsContainer, localization, configuration);
+        authRoute = new AuthRoute(discordOAuthService, userRepository, sessionService, configuration);
     }
 
     public void init() {
@@ -109,6 +116,7 @@ public class Api {
             sessionRoute.buildRoutes();
             settingsRoute.buildRoutes();
             dataRoute.buildRoutes();
+            authRoute.buildRoutes();
         });
     }
 }

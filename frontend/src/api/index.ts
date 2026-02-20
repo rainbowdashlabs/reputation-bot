@@ -10,6 +10,7 @@ import {useSession} from '../composables/useSession';
 
 class ApiClient {
     private axiosInstance: AxiosInstance;
+    private cache: Map<string, any> = new Map();
 
     constructor() {
         const backendHost = import.meta.env.VITE_BACKEND_HOST || '';
@@ -27,20 +28,35 @@ class ApiClient {
         });
 
         this.axiosInstance.interceptors.request.use((config) => {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('reputation_bot_token');
             if (token) {
                 config.headers['Authorization'] = token;
+            }
+            const guildId = localStorage.getItem('reputation_bot_guild_id');
+            if (guildId) {
+                config.headers['X-Guild-Id'] = guildId;
             }
             return config;
         });
 
         this.axiosInstance.interceptors.response.use(
             (response) => response,
-            (error: AxiosError<Types.ApiErrorResponse>) => {
-                // Handle 401 Unauthorized - show expired warning
+            async (error: AxiosError<Types.ApiErrorResponse>) => {
+                // Handle 401 Unauthorized - show expired warning or redirect to login
                 if (error.response?.status === 401) {
-                    const {setExpired} = useSession();
-                    setExpired(true);
+                    const {setExpired, login} = useSession();
+                    if (localStorage.getItem('reputation_bot_token')) {
+                        try {
+                            await this.validateToken();
+                            // If validation succeeds, it wasn't the token that was unauthorized
+                            return Promise.reject(error);
+                        } catch (e) {
+                            // Token is indeed invalid
+                            setExpired(true);
+                        }
+                    } else {
+                        login();
+                    }
                     return Promise.reject(error);
                 }
 
@@ -67,18 +83,39 @@ class ApiClient {
             }
         );
 
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('reputation_bot_token');
         if (token) {
             this.setToken(token);
         }
     }
 
     public setToken(token: string) {
-        localStorage.setItem('token', token);
+        localStorage.setItem('reputation_bot_token', token);
     }
 
-    public async getSession(): Promise<Types.GuildSessionPOJO> {
-        const response = await this.axiosInstance.get<Types.GuildSessionPOJO>('/session');
+    public async getSession(): Promise<Types.UserSessionPOJO> {
+        const response = await this.axiosInstance.get<Types.UserSessionPOJO>('/session/me');
+        return response.data;
+    }
+
+    public async getGuildSession(): Promise<Types.GuildSessionPOJO> {
+        const response = await this.axiosInstance.get<Types.GuildSessionPOJO>('/session/guild');
+        return response.data;
+    }
+
+    public async getGuildMeta(guildId?: string): Promise<Types.GuildMetaPOJO> {
+        const headers = guildId ? { 'X-Guild-Id': guildId } : {};
+        const response = await this.axiosInstance.get<Types.GuildMetaPOJO>('/session/guild/meta', { headers });
+        return response.data;
+    }
+
+    public async getGuildPremium(): Promise<Types.PremiumFeaturesPOJO> {
+        const response = await this.axiosInstance.get<Types.PremiumFeaturesPOJO>('/session/guild/premium');
+        return response.data;
+    }
+
+    public async getGuildSettings(): Promise<Types.SettingsPOJO> {
+        const response = await this.axiosInstance.get<Types.SettingsPOJO>('/session/guild/settings');
         return response.data;
     }
 
@@ -460,17 +497,29 @@ class ApiClient {
 
     // Public Data
     public async getThankwords(): Promise<Types.ThankwordsContainer> {
+        if (this.cache.has('thankwords')) {
+            return this.cache.get('thankwords');
+        }
         const response = await this.axiosInstance.get<Types.ThankwordsContainer>('/data/thankwords');
+        this.cache.set('thankwords', response.data);
         return response.data;
     }
 
     public async getLanguages(): Promise<Types.LanguageInfo[]> {
+        if (this.cache.has('languages')) {
+            return this.cache.get('languages');
+        }
         const response = await this.axiosInstance.get<Types.LanguageInfo[]>('/data/languages');
+        this.cache.set('languages', response.data);
         return response.data;
     }
 
     public async getLinks(): Promise<Types.Links> {
+        if (this.cache.has('links')) {
+            return this.cache.get('links');
+        }
         const response = await this.axiosInstance.get<Types.Links>('/data/links');
+        this.cache.set('links', response.data);
         return response.data;
     }
 
@@ -486,6 +535,14 @@ class ApiClient {
     public async getDebug(): Promise<Types.DebugResultPOJO> {
         const response = await this.axiosInstance.get<Types.DebugResultPOJO>('/settings/debug');
         return response.data;
+    }
+
+    public async validateToken(): Promise<void> {
+        await this.axiosInstance.get('/auth/validate');
+    }
+
+    public async logout(): Promise<void> {
+        await this.axiosInstance.post('/auth/logout');
     }
 }
 
