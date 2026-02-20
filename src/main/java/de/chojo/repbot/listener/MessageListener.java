@@ -103,7 +103,7 @@ public class MessageListener extends ListenerAdapter {
             PermissionErrorHandler.handle(
                     new PermissionErrorHandler.PermissionErrorContext(
                             event.getGuild(),
-                            event.getGuildChannel().asStandardGuildMessageChannel(),
+                            event.getChannel().asGuildMessageChannel(),
                             event.getAuthor(),
                             "Handle message"),
                     guildRepository.guild(event.getGuild()),

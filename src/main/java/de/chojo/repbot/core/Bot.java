@@ -71,12 +71,9 @@ import de.chojo.repbot.statistic.Statistic;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.repbot.util.PermissionErrorHandler;
 import de.chojo.repbot.web.sessions.SessionService;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildMessageChannel;
 import net.dv8tion.jda.api.events.GenericEvent;
-import net.dv8tion.jda.api.events.guild.GenericGuildEvent;
-import net.dv8tion.jda.api.events.message.GenericMessageEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.interactions.InteractionHook;
@@ -94,6 +91,9 @@ import java.util.Set;
 
 import javax.security.auth.login.LoginException;
 
+import static de.chojo.repbot.util.ReflectionEventExtractor.extractGuild;
+import static de.chojo.repbot.util.ReflectionEventExtractor.extractPermissionException;
+import static de.chojo.repbot.util.ReflectionEventExtractor.extractUser;
 import static de.chojo.repbot.util.States.TEST_MODE;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -213,13 +213,28 @@ public class Bot {
     }
 
     private void handleListenerException(GenericEvent event, Throwable throwable) {
-        if (event instanceof GenericMessageEvent guildEvent && guildEvent.isFromGuild()) {
-            Guild guild = guildEvent.getGuild();
+        InsufficientPermissionException permissionException = extractPermissionException(throwable);
+        var guild = extractGuild(event);
+        var user = extractUser(event);
+        if (guild != null) {
             RepGuild repGuild = data.guildRepository().guild(guild);
-            if (throwable instanceof InsufficientPermissionException perm) {
+            if (permissionException != null) {
                 PermissionErrorHandler.handle(
                         new PermissionErrorHandler.PermissionErrorContext(
-                                guild, perm.getChannel(guild.getJDA()), null, "Service error", perm.getPermission()),
+                                guild,
+                                permissionException.getChannel(guild.getJDA()),
+                                user,
+                                "Service error",
+                                permissionException.getPermission()),
+                        repGuild,
+                        localization.localizer().context(LocaleProvider.guild(guild)),
+                        configuration);
+                return;
+            }
+            if (throwable.getCause() instanceof InsufficientPermissionException perm) {
+                PermissionErrorHandler.handle(
+                        new PermissionErrorHandler.PermissionErrorContext(
+                                guild, perm.getChannel(guild.getJDA()), user, "Service error", perm.getPermission()),
                         repGuild,
                         localization.localizer().context(LocaleProvider.guild(guild)),
                         configuration);
@@ -227,7 +242,7 @@ public class Bot {
             }
         }
 
-        if (!(event instanceof GenericGuildEvent guildEvent)) {
+        if (guild == null) {
             log.error(
                     LogNotify.NOTIFY_ADMIN,
                     "Unhandled non Guild Event {} Exception in Listener: ",
@@ -236,22 +251,12 @@ public class Bot {
             return;
         }
 
-        Guild guild = guildEvent.getGuild();
-        RepGuild repGuild = data.guildRepository().guild(guild);
-        if (throwable instanceof InsufficientPermissionException perm) {
-            PermissionErrorHandler.handle(
-                    new PermissionErrorHandler.PermissionErrorContext(
-                            guild, perm.getChannel(guild.getJDA()), null, null, perm.getPermission()),
-                    repGuild,
-                    localization.localizer().context(LocaleProvider.guild(guild)),
-                    configuration);
-            return;
-        }
-
         log.error(
                 LogNotify.NOTIFY_ADMIN,
-                "Unhandled Exception for Event {} in Listener: ",
+                "Unhandled Exception for Event {} on  {} by {} in Listener: ",
                 event.getClass().getSimpleName(),
+                guild,
+                user,
                 throwable);
     }
 
