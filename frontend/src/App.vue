@@ -8,6 +8,7 @@ import {computed, onMounted, ref, watch} from 'vue'
 import {useRoute, useRouter} from 'vue-router'
 import AppHeader from './components/AppHeader.vue'
 import SettingsHeader from './components/SettingsHeader.vue'
+import LoginPanel from './views/settings/components/LoginPanel.vue'
 import AppFooter from './components/AppFooter.vue'
 import HelpIcon from './components/HelpIcon.vue'
 import ErrorNotification from './components/ErrorNotification.vue'
@@ -18,11 +19,12 @@ import {useDarkMode} from './composables/useDarkMode'
 
 const router = useRouter()
 const route = useRoute()
-const {setSession, setUserSession, setGuildMeta, clearSession, login, loadSettings, loadPremiumFeatures} = useSession()
+const {userSession, setSession, setUserSession, setGuildMeta, clearSession, loadSettings, loadPremiumFeatures} = useSession()
 useDarkMode()
 
 const isSettingsPage = computed(() => route.path.startsWith('/settings/edit'))
 const showSettingsHeader = computed(() => route.path.startsWith('/settings'))
+const isSetupPage = computed(() => route.path.startsWith('/setup'))
 const ready = ref(false)
 
 async function loadSession() {
@@ -35,14 +37,23 @@ async function loadSession() {
     urlParams.delete('token');
     const newRelativePathQuery = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
     window.history.replaceState(null, '', newRelativePathQuery);
+
+    // Redirect to originally requested page if available
+    const redirectPath = localStorage.getItem('reputation_bot_oauth_redirect');
+    if (redirectPath) {
+      localStorage.removeItem('reputation_bot_oauth_redirect');
+      if (redirectPath !== window.location.pathname + window.location.search) {
+        router.push(redirectPath);
+      }
+    }
   }
 
   // Check if token exists in localStorage
   let storedToken = localStorage.getItem('reputation_bot_token');
 
   // If we don't have a token, redirect to login unless on public page
-  if (!storedToken && router.currentRoute.value.path !== '/error/no-token' && router.currentRoute.value.path !== '/setup') {
-    login();
+  if (!storedToken && router.currentRoute.value.path !== '/error/no-token') {
+    ready.value = true;
     return;
   }
 
@@ -101,8 +112,8 @@ async function loadSession() {
       console.error('Failed to load session:', error);
       if (error.response?.status === 401) {
         clearSession();
-        login();
       }
+      ready.value = true
     }
   } else {
     ready.value = true
@@ -129,10 +140,13 @@ watch(isSettingsPage, async (isSettings) => {
   <div class="h-[73px]"></div>
 
   <template v-if="ready">
-    <SettingsHeader v-if="showSettingsHeader"/>
+    <SettingsHeader v-if="showSettingsHeader && userSession"/>
 
     <div :class="{'pt-8': showSettingsHeader}">
-      <router-view/>
+      <div v-if="(showSettingsHeader || isSetupPage) && !userSession" class="mx-auto px-4" style="max-width: 1200px;">
+        <LoginPanel class="mt-8"/>
+      </div>
+      <router-view v-else/>
     </div>
 
     <AppFooter/>

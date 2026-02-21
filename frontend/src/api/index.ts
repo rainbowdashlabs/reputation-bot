@@ -44,7 +44,7 @@ class ApiClient {
             async (error: AxiosError<Types.ApiErrorResponse>) => {
                 // Handle 401 Unauthorized - show expired warning or redirect to login
                 if (error.response?.status === 401) {
-                    const {setExpired, login} = useSession();
+                    const {setExpired} = useSession();
                     if (localStorage.getItem('reputation_bot_token')) {
                         try {
                             await this.validateToken();
@@ -54,8 +54,6 @@ class ApiClient {
                             // Token is indeed invalid
                             setExpired(true);
                         }
-                    } else {
-                        login();
                     }
                     return Promise.reject(error);
                 }

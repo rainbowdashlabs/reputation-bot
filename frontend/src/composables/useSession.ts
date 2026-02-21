@@ -66,7 +66,7 @@ export function useSession() {
         }
     }
 
-    const login = () => {
+    const login = (redirectPath?: string | any) => {
         const backendHost = import.meta.env.VITE_BACKEND_HOST || ''
         const backendPort = import.meta.env.VITE_BACKEND_PORT || ''
 
@@ -79,7 +79,12 @@ export function useSession() {
 
         const state = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
         localStorage.setItem('reputation_bot_oauth_state', state)
-        localStorage.setItem('reputation_bot_oauth_redirect', window.location.pathname + window.location.search)
+
+        const finalRedirectPath = (typeof redirectPath === 'string' && redirectPath)
+            ? redirectPath
+            : (window.location.pathname + window.location.search)
+
+        localStorage.setItem('reputation_bot_oauth_redirect', finalRedirectPath)
 
         window.location.href = `${baseURL}/auth/discord/login?state=${encodeURIComponent(state)}`
     }
