@@ -56,7 +56,7 @@ const emit = defineEmits<{
           {{ t('integrationBypass.add') }}
         </label>
         <select
-            class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors"
+            class="select"
             @change="(e) => addBypass((e.target as HTMLSelectElement).value)"
         >
           <option disabled selected value="">{{ t('integrationBypass.selectIntegration') }}</option>

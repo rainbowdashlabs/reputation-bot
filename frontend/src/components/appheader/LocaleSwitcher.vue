@@ -40,7 +40,6 @@ const closeDropdown = () => {
     <BaseButton
         :aria-label="t('locale.selectLanguage')"
         class="w-full justify-between"
-        color="indigo"
         style=""
         @click="toggleDropdown"
     >
