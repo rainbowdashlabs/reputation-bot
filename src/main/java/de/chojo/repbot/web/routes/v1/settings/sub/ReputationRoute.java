@@ -201,14 +201,14 @@ public class ReputationRoute implements RoutesBuilder {
     @Override
     public void buildRoutes() {
         path("reputation", () -> {
-            post("", this::updateReputationSettings, Role.GUILD_USER);
-            post("reactionactive", this::updateReactionActive, Role.GUILD_USER);
-            post("answeractive", this::updateAnswerActive, Role.GUILD_USER);
-            post("mentionactive", this::updateMentionActive, Role.GUILD_USER);
-            post("fuzzyactive", this::updateFuzzyActive, Role.GUILD_USER);
-            post("embedactive", this::updateEmbedActive, Role.GUILD_USER);
-            post("directactive", this::updateDirectActive, Role.GUILD_USER);
-            post("commandactive", this::updateCommandActive, Role.GUILD_USER);
+            post("", this::updateReputationSettings, Role.GUILD_ADMIN);
+            post("reactionactive", this::updateReactionActive, Role.GUILD_ADMIN);
+            post("answeractive", this::updateAnswerActive, Role.GUILD_ADMIN);
+            post("mentionactive", this::updateMentionActive, Role.GUILD_ADMIN);
+            post("fuzzyactive", this::updateFuzzyActive, Role.GUILD_ADMIN);
+            post("embedactive", this::updateEmbedActive, Role.GUILD_ADMIN);
+            post("directactive", this::updateDirectActive, Role.GUILD_ADMIN);
+            post("commandactive", this::updateCommandActive, Role.GUILD_ADMIN);
         });
     }
 

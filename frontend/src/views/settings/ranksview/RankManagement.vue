@@ -9,6 +9,7 @@ import {useI18n} from 'vue-i18n'
 import {api} from '@/api'
 import AddRankForm from './AddRankForm.vue'
 import RankList from './RankList.vue'
+import BaseButton from "@/components/BaseButton.vue";
 
 const {t} = useI18n()
 
@@ -50,13 +51,13 @@ const refreshRanks = async () => {
     </div>
     <RankList/>
     <div class="mt-4 flex flex-col items-end">
-      <button
+      <BaseButton
           :disabled="isRefreshing"
           class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
           @click="refreshRanks"
       >
         {{ isRefreshing ? t('general.ranks.refresh.refreshing') : t('general.ranks.refresh.button') }}
-      </button>
+      </BaseButton>
       <p v-if="refreshMessage" :class="refreshMessage.includes(t('general.ranks.refresh.failed')) ? 'text-red-600' : 'text-green-600'"
          class="mt-2 text-sm">
         {{ refreshMessage }}

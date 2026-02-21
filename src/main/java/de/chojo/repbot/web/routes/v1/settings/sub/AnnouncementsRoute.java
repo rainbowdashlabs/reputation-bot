@@ -105,10 +105,10 @@ public class AnnouncementsRoute implements RoutesBuilder {
     @Override
     public void buildRoutes() {
         path("announcements", () -> {
-            post("", this::updateAnnouncementsSettings, Role.GUILD_USER);
-            post("active", this::updateActive, Role.GUILD_USER);
-            post("samechannel", this::updateSameChannel, Role.GUILD_USER);
-            post("channel", this::updateChannel, Role.GUILD_USER);
+            post("", this::updateAnnouncementsSettings, Role.GUILD_ADMIN);
+            post("active", this::updateActive, Role.GUILD_ADMIN);
+            post("samechannel", this::updateSameChannel, Role.GUILD_ADMIN);
+            post("channel", this::updateChannel, Role.GUILD_ADMIN);
         });
     }
 }

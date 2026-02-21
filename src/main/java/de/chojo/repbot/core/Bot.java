@@ -70,7 +70,8 @@ import de.chojo.repbot.service.reputation.ReputationService;
 import de.chojo.repbot.statistic.Statistic;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.repbot.util.PermissionErrorHandler;
-import de.chojo.repbot.web.sessions.SessionService;
+import de.chojo.repbot.web.services.DiscordOAuthService;
+import de.chojo.repbot.web.services.SessionService;
 import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildMessageChannel;
 import net.dv8tion.jda.api.events.GenericEvent;
@@ -311,8 +312,14 @@ public class Bot {
         log.info("Setting up services");
         var guilds = data.guildRepository();
         var worker = threading.repBotWorker();
-        sessionService =
-                new SessionService(configuration, data.guildSessionRepository(), data.guildRepository(), shardManager);
+        sessionService = new SessionService(
+                configuration,
+                data.userSessionRepository(),
+                data.userRepository(),
+                new DiscordOAuthService(configuration),
+                shardManager,
+                data.guildRepository(),
+                data.settingsAuditLogRepository());
 
         statistic = Statistic.of(shardManager, data.metrics(), worker);
 
@@ -489,7 +496,8 @@ public class Bot {
                 roleUpdater,
                 premiumService,
                 chatSupportService,
-                new MonitorService(data));
+                new MonitorService(data),
+                new de.chojo.repbot.web.services.GuildModificationService(sessionService));
     }
 
     private void initBotUserCache() {

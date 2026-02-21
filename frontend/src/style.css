@@ -28,11 +28,28 @@
 
 @layer base {
     *, ::after, ::before, ::backdrop, ::file-selector-button {
-        border-color: var(--color-gray-200, currentColor);
     }
 
     .dark *, .dark ::after, .dark ::before, .dark ::backdrop, .dark ::file-selector-button {
-        border-color: var(--color-gray-700, currentColor);
+    }
+
+    button {
+        border: 8px solid transparent;
+        padding: 0.6em 1.2em;
+        font-size: 1em;
+        font-weight: 500;
+        font-family: inherit;
+        cursor: pointer;
+        transition: border-color 0.25s;
+        border-radius: 8px;
+    }
+
+    button:hover {
+    }
+
+    button:focus,
+    button:focus-visible {
+        outline: 4px auto -webkit-focus-ring-color;
     }
 }
 
@@ -73,10 +90,10 @@
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
     background-position: right 0.5rem center;
     background-size: 1.5em 1.5em;
-}
 
-.dark select {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    &:where(.dark, .dark *) {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    }
 }
 
 :root {
@@ -109,26 +126,6 @@ body {
 h1 {
     font-size: 3.2em;
     line-height: 1.1;
-}
-
-button {
-    border: 8px solid transparent;
-    padding: 0.6em 1.2em;
-    font-size: 1em;
-    font-weight: 500;
-    font-family: inherit;
-    cursor: pointer;
-    transition: border-color 0.25s;
-    border-radius: 8px;
-}
-
-button:hover {
-    border-color: #646cff;
-}
-
-button:focus,
-button:focus-visible {
-    outline: 4px auto -webkit-focus-ring-color;
 }
 
 .card {

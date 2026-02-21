@@ -12,9 +12,10 @@ import de.chojo.repbot.dao.access.Cleanup;
 import de.chojo.repbot.dao.access.Gdpr;
 import de.chojo.repbot.dao.access.gdpr.RemovalTask;
 import de.chojo.repbot.dao.provider.GuildRepository;
-import de.chojo.repbot.dao.provider.GuildSessionRepository;
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.dao.provider.SettingsAuditLogRepository;
+import de.chojo.repbot.dao.provider.UserRepository;
+import de.chojo.repbot.dao.provider.UserSessionRepository;
 import de.chojo.repbot.dao.provider.Voice;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.sadu.datasource.DataSourceCreator;
@@ -38,7 +39,8 @@ public class Data {
     private final Configuration configuration;
     private HikariDataSource dataSource;
     private GuildRepository guildRepository;
-    private GuildSessionRepository guildSessionRepository;
+    private UserSessionRepository userSessionRepository;
+    private UserRepository userRepository;
     private SettingsAuditLogRepository settingsAuditLogRepository;
     private Gdpr gdpr;
     private Cleanup cleanup;
@@ -105,8 +107,12 @@ public class Data {
         return analyzer;
     }
 
-    public GuildSessionRepository guildSessionRepository() {
-        return guildSessionRepository;
+    public UserSessionRepository userSessionRepository() {
+        return userSessionRepository;
+    }
+
+    public UserRepository userRepository() {
+        return userRepository;
     }
 
     public SettingsAuditLogRepository settingsAuditLogRepository() {
@@ -139,7 +145,8 @@ public class Data {
     private void initDao() {
         log.info("Creating DAOs");
         guildRepository = new GuildRepository(configuration);
-        guildSessionRepository = new GuildSessionRepository();
+        userSessionRepository = new UserSessionRepository();
+        userRepository = new UserRepository();
         settingsAuditLogRepository = new SettingsAuditLogRepository();
         gdpr = new Gdpr(configuration);
         cleanup = new Cleanup();

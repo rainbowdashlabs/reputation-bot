@@ -14,7 +14,7 @@ const {t} = useI18n()
 const {session, updateAbuseProtectionSettings} = useSession()
 
 const receiverContext = computed({
-  get: () => session.value?.settings.abuseProtection.receiverContext ?? false,
+  get: () => session.value?.settings?.abuseProtection.receiverContext ?? false,
   set: async (value) => {
     try {
       await api.updateAbuseProtectionReceiverContext(value)

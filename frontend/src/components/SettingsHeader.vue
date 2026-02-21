@@ -5,14 +5,20 @@
  */
 <script lang="ts" setup>
 import {useI18n} from 'vue-i18n'
-import {onMounted, ref} from 'vue'
+import {onMounted, ref, watch} from 'vue'
 import {api} from '@/api'
+import {useSession} from '@/composables/useSession'
 
 const {t} = useI18n()
+const {userSession} = useSession()
 
 const hasProblems = ref(false)
 
-onMounted(async () => {
+const checkProblems = async () => {
+  if (!userSession.value) {
+    hasProblems.value = false
+    return
+  }
   try {
     const result = await api.getDebug()
     hasProblems.value = result.missingGlobalPermissions.length > 0 ||
@@ -23,8 +29,12 @@ onMounted(async () => {
         result.simpleWarnings.length > 0
   } catch (e) {
     console.error('Failed to fetch debug info', e)
+    hasProblems.value = false
   }
-})
+}
+
+onMounted(checkProblems)
+watch(userSession, checkProblems)
 </script>
 
 <template>

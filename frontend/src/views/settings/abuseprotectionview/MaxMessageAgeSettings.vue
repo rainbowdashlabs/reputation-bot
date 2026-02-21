@@ -15,7 +15,7 @@ const {t} = useI18n()
 const {session, updateAbuseProtectionSettings} = useSession()
 
 const maxMessageAge = computed({
-  get: () => session.value?.settings.abuseProtection.maxMessageAge ?? 0,
+  get: () => session.value?.settings?.abuseProtection.maxMessageAge ?? 0,
   set: async (value) => {
     if (value < 0) return
     try {

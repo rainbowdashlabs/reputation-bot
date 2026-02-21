@@ -43,7 +43,7 @@ const addLanguageDefaults = async (lang: string) => {
   const defaults = defaultThankwords.value.defaults[lang]
   if (!defaults || defaults.length === 0) return
 
-  const currentWords = session.value?.settings.thanking.thankwords.thankwords || []
+  const currentWords = session.value?.settings?.thanking.thankwords.thankwords || []
   const newList = [...currentWords, ...defaults]
 
   emit('update:isUpdating', true)

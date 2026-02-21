@@ -32,7 +32,7 @@ public class DebugRoute implements RoutesBuilder {
     @Override
     public void buildRoutes() {
         path("debug", () -> {
-            get("", this::getDebug, Role.GUILD_USER);
+            get("", this::getDebug, Role.GUILD_ADMIN);
         });
     }
 

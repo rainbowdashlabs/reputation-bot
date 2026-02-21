@@ -17,7 +17,7 @@ const {t} = useI18n()
 const {session, updateAbuseProtectionSettings} = useSession()
 
 const cooldown = computed({
-  get: () => session.value?.settings.abuseProtection.cooldown ?? 0,
+  get: () => session.value?.settings?.abuseProtection.cooldown ?? 0,
   set: async (value) => {
     if (value < 0) return
     try {
@@ -30,7 +30,7 @@ const cooldown = computed({
 })
 
 const cooldownDirection = computed({
-  get: () => session.value?.settings.abuseProtection.cooldownDirection ?? CooldownDirection.UNIDIRECTIONAL,
+  get: () => session.value?.settings?.abuseProtection.cooldownDirection ?? CooldownDirection.UNIDIRECTIONAL,
   set: async (value) => {
     try {
       await api.updateAbuseProtectionCooldownDirection(value)

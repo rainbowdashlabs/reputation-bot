@@ -35,10 +35,10 @@ import {
     faTrash,
     faPen
 } from '@fortawesome/free-solid-svg-icons'
-import {faGithub} from '@fortawesome/free-brands-svg-icons'
+import {faGithub, faDiscord} from '@fortawesome/free-brands-svg-icons'
 
 // Add icons to library
-library.add(faHashtag, faVolumeHigh, faBullhorn, faComments, faCheck, faXmark, faGlobe, faQuestionCircle, faLifeRing, faFileContract, faGithub, faChevronDown, faChevronUp, faTriangleExclamation, faCircleExclamation, faCheckCircle, faExclamationTriangle, faExclamationCircle, faSpinner, faPlus, faMinus, faTrash, faPen)
+library.add(faHashtag, faVolumeHigh, faBullhorn, faComments, faCheck, faXmark, faGlobe, faQuestionCircle, faLifeRing, faFileContract, faGithub, faDiscord, faChevronDown, faChevronUp, faTriangleExclamation, faCircleExclamation, faCheckCircle, faExclamationTriangle, faExclamationCircle, faSpinner, faPlus, faMinus, faTrash, faPen)
 
 // Create Pinia instance
 const pinia = createPinia()
