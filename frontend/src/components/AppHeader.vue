@@ -7,11 +7,13 @@
 import {useI18n} from 'vue-i18n'
 import {useRoute} from 'vue-router'
 import {computed} from 'vue'
+import {useSession} from '@/composables/useSession'
 import UserDisplay from '@/components/UserDisplay.vue'
 
 const {t} = useI18n()
 const route = useRoute()
-const isLoggedIn = computed(() => !!localStorage.getItem('reputation_bot_token'))
+const {hasToken} = useSession()
+const isLoggedIn = computed(() => hasToken.value)
 </script>
 
 <template>

@@ -17,11 +17,11 @@ import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class Voice {
-    private static final Logger log = getLogger(Voice.class);
+public class VoiceRepository {
+    private static final Logger log = getLogger(VoiceRepository.class);
     private final Configuration configuration;
 
-    public Voice(Configuration configuration) {
+    public VoiceRepository(Configuration configuration) {
         this.configuration = configuration;
     }
 

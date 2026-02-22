@@ -80,7 +80,9 @@
             </div>
             <div>
               <span>© 2026 RainbowDashLabs and Contributor</span>
-              <span> • </span>
+            </div>
+            <div>
+              <span>Made with ❤️ and 🏳️‍🌈</span>
             </div>
             <div>
               <span>Licensed under AGPL-3.0</span>
@@ -98,6 +100,7 @@
 
 <script lang="ts" setup>
 import {onMounted, ref} from 'vue'
+import {useI18n} from 'vue-i18n'
 import {api} from '@/api'
 import type {Links} from '@/api/types'
 import GuildSwitcher from '@/components/GuildSwitcher.vue'

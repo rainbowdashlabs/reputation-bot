@@ -25,6 +25,7 @@ import de.chojo.repbot.config.elements.MagicImage;
 import de.chojo.repbot.config.elements.PresenceSettings;
 import de.chojo.repbot.config.elements.SKU;
 import de.chojo.repbot.config.elements.SelfCleanup;
+import de.chojo.repbot.config.elements.Voting;
 import de.chojo.repbot.config.exception.ConfigurationException;
 import de.chojo.repbot.config.jackson.BotModule;
 import org.slf4j.Logger;
@@ -123,6 +124,10 @@ public class Configuration {
 
     public SKU skus() {
         return configFile.skus();
+    }
+
+    public Voting voting() {
+        return configFile.voting();
     }
 
     private void save() throws IOException {

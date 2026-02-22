@@ -5,7 +5,7 @@
  */
 package de.chojo.repbot.listener;
 
-import de.chojo.repbot.dao.provider.Voice;
+import de.chojo.repbot.dao.provider.VoiceRepository;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -14,13 +14,13 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class VoiceStateListener extends ListenerAdapter implements Runnable {
-    private final Voice voice;
+    private final VoiceRepository voice;
 
-    public VoiceStateListener(Voice voice) {
+    public VoiceStateListener(VoiceRepository voice) {
         this.voice = voice;
     }
 
-    public static VoiceStateListener of(Voice voice, ScheduledExecutorService repBotWorker) {
+    public static VoiceStateListener of(VoiceRepository voice, ScheduledExecutorService repBotWorker) {
         var voiceStateListener = new VoiceStateListener(voice);
         repBotWorker.scheduleAtFixedRate(voiceStateListener, 2, 12, TimeUnit.HOURS);
         return voiceStateListener;

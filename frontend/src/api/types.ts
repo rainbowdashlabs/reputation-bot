@@ -532,3 +532,36 @@ export interface DebugResultPOJO {
     reputationChannelProblems: ReputationChannelProblem[];
     simpleWarnings: SimpleWarning[];
 }
+
+export interface UserTokensPOJO {
+    tokens: number;
+}
+
+export interface BotlistVotePOJO {
+    name: string;
+    voteUrl: string;
+    lastVote: string;
+    streak: number;
+}
+
+export enum VoteReason {
+    STANDARD = 'STANDARD',
+    STREAK = 'STREAK',
+    BONUS = 'BONUS',
+    TRANSFER = 'TRANSFER',
+    USE = 'USE',
+}
+
+export interface VoteLog {
+    userId: string;
+    guildId: string;
+    tokens: number;
+    reason: VoteReason;
+    created: string;
+}
+
+export interface VoteLogPagePOJO {
+    page: number;
+    maxPages: number;
+    content: VoteLog[];
+}

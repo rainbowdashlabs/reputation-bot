@@ -13,8 +13,10 @@ const GUILD_ID_KEY = 'reputation_bot_guild_id'
 
 const session = ref<(GuildSessionPOJO & { settings?: Types.SettingsPOJO, premiumFeatures?: Types.PremiumFeaturesPOJO }) | null>(null)
 const userSession = ref<UserSessionPOJO | null>(null)
+const hasToken = ref(!!localStorage.getItem(SESSION_TOKEN_KEY))
 const guildMeta = ref<Types.GuildMetaPOJO | null>(null)
 const premiumFeatures = ref<Types.PremiumFeaturesPOJO | null>(null)
+const userTokens = ref<number>(0)
 const isExpired = ref(false)
 
 export function useSession() {
@@ -34,7 +36,17 @@ export function useSession() {
     const setUserSession = (data: UserSessionPOJO) => {
         userSession.value = data
         localStorage.setItem(SESSION_TOKEN_KEY, data.token)
+        hasToken.value = true
         isExpired.value = false
+    }
+
+    const setToken = (token: string) => {
+        localStorage.setItem(SESSION_TOKEN_KEY, token)
+        hasToken.value = true
+    }
+
+    const setUserTokens = (tokens: number) => {
+        userTokens.value = tokens
     }
 
     const setExpired = (expired: boolean) => {
@@ -53,6 +65,7 @@ export function useSession() {
         premiumFeatures.value = null
         localStorage.removeItem(SESSION_TOKEN_KEY)
         localStorage.removeItem(GUILD_ID_KEY)
+        hasToken.value = false
     }
 
     const logout = async () => {
@@ -215,11 +228,15 @@ export function useSession() {
         userSession: readonly(userSession),
         guildMeta: readonly(guildMeta),
         premiumFeatures: readonly(premiumFeatures),
+        userTokens: readonly(userTokens),
         isExpired: readonly(isExpired),
+        hasToken: readonly(hasToken),
         setSession,
         setUserSession,
+        setToken,
         setGuildMeta,
         setPremiumFeatures,
+        setUserTokens,
         setExpired,
         switchSession,
         clearSession,

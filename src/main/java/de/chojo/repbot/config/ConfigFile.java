@@ -18,6 +18,7 @@ import de.chojo.repbot.config.elements.MagicImage;
 import de.chojo.repbot.config.elements.PresenceSettings;
 import de.chojo.repbot.config.elements.SKU;
 import de.chojo.repbot.config.elements.SelfCleanup;
+import de.chojo.repbot.config.elements.Voting;
 
 @SuppressWarnings({"FieldMayBeFinal", "CanBeFinal"})
 public class ConfigFile {
@@ -34,6 +35,7 @@ public class ConfigFile {
     private SelfCleanup selfcleanup = new SelfCleanup();
     private Cleanup cleanup = new Cleanup();
     private SKU skus = new SKU();
+    private Voting voting = new Voting();
 
     public BaseSettings baseSettings() {
         return baseSettings;
@@ -85,5 +87,9 @@ public class ConfigFile {
 
     public SKU skus() {
         return skus;
+    }
+
+    public Voting voting() {
+        return voting;
     }
 }

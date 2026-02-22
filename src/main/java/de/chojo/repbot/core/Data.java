@@ -16,7 +16,8 @@ import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.dao.provider.SettingsAuditLogRepository;
 import de.chojo.repbot.dao.provider.UserRepository;
 import de.chojo.repbot.dao.provider.UserSessionRepository;
-import de.chojo.repbot.dao.provider.Voice;
+import de.chojo.repbot.dao.provider.VoiceRepository;
+import de.chojo.repbot.dao.provider.VoteRepository;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.sadu.datasource.DataSourceCreator;
 import de.chojo.sadu.mapper.RowMapperRegistry;
@@ -42,10 +43,11 @@ public class Data {
     private UserSessionRepository userSessionRepository;
     private UserRepository userRepository;
     private SettingsAuditLogRepository settingsAuditLogRepository;
+    private VoteRepository voteRepository;
     private Gdpr gdpr;
     private Cleanup cleanup;
     private Metrics metrics;
-    private Voice voice;
+    private VoiceRepository voice;
     private Analyzer analyzer;
 
     private Data(Threading threading, Configuration configuration) {
@@ -95,7 +97,7 @@ public class Data {
         return metrics;
     }
 
-    public Voice voice() {
+    public VoiceRepository voice() {
         return voice;
     }
 
@@ -113,6 +115,10 @@ public class Data {
 
     public UserRepository userRepository() {
         return userRepository;
+    }
+
+    public VoteRepository voteRepository() {
+        return voteRepository;
     }
 
     public SettingsAuditLogRepository settingsAuditLogRepository() {
@@ -152,7 +158,8 @@ public class Data {
         cleanup = new Cleanup();
         metrics = new Metrics(dataSource);
         analyzer = new Analyzer(configuration);
-        voice = new Voice(configuration);
+        voice = new VoiceRepository(configuration);
+        voteRepository = new VoteRepository();
     }
 
     private HikariDataSource getConnectionPool() {

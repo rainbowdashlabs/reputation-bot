@@ -106,6 +106,17 @@ const routes: RouteRecordRaw[] = [
         ]
     },
     {
+        path: '/user',
+        name: 'User',
+        children: [
+            {
+                path: 'vote',
+                name: 'UserVote',
+                component: () => import('@/views/user/VotingView.vue')
+            }
+            ]
+    },
+    {
         path: '/presets',
         redirect: '/settings/preset'
     },

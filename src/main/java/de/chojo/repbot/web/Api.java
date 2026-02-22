@@ -13,6 +13,7 @@ import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.dao.provider.SettingsAuditLogRepository;
 import de.chojo.repbot.dao.provider.UserRepository;
+import de.chojo.repbot.dao.provider.VoteRepository;
 import de.chojo.repbot.serialization.ThankwordsContainer;
 import de.chojo.repbot.service.AutopostService;
 import de.chojo.repbot.service.RoleAssigner;
@@ -22,6 +23,7 @@ import de.chojo.repbot.web.routes.v1.data.DataRoute;
 import de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute;
 import de.chojo.repbot.web.routes.v1.session.SessionRoute;
 import de.chojo.repbot.web.routes.v1.settings.SettingsRoute;
+import de.chojo.repbot.web.routes.v1.user.UserRoute;
 import de.chojo.repbot.web.services.DiscordOAuthService;
 import de.chojo.repbot.web.services.SessionService;
 import io.javalin.http.ContentType;
@@ -45,6 +47,7 @@ public class Api {
     private final SettingsRoute settingsRoute;
     private final DataRoute dataRoute;
     private final AuthRoute authRoute;
+    private final UserRoute userRoute;
 
     public Api(
             SessionService sessionService,
@@ -59,7 +62,8 @@ public class Api {
             MemberCache memberCache,
             GuildRepository guildRepository,
             UserRepository userRepository,
-            DiscordOAuthService discordOAuthService) {
+            DiscordOAuthService discordOAuthService,
+            VoteRepository voteRepository) {
         this.sessionService = sessionService;
         metricsRoute = new MetricsRoute(metrics);
         sessionRoute = new SessionRoute(sessionService);
@@ -82,6 +86,7 @@ public class Api {
         }
         dataRoute = new DataRoute(thankwordsContainer, localization, configuration);
         authRoute = new AuthRoute(discordOAuthService, userRepository, sessionService, configuration);
+        userRoute = new UserRoute(voteRepository, configuration);
     }
 
     public void init() {
@@ -117,6 +122,7 @@ public class Api {
             settingsRoute.buildRoutes();
             dataRoute.buildRoutes();
             authRoute.buildRoutes();
+            userRoute.buildRoutes();
         });
     }
 }

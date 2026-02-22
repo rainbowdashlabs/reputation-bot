@@ -11,7 +11,7 @@ import de.chojo.jdautil.parsing.Verifier;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.access.guild.settings.sub.AbuseProtection;
-import de.chojo.repbot.dao.provider.Voice;
+import de.chojo.repbot.dao.provider.VoiceRepository;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageHistory;
@@ -35,7 +35,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class ContextResolver {
     private static final Logger log = getLogger(ContextResolver.class);
-    private final Voice voiceData;
+    private final VoiceRepository voiceData;
     private final Configuration configuration;
     private final Cache<Long, MessageContext> messageContextCache = CacheBuilder.newBuilder()
             .expireAfterAccess(5, TimeUnit.SECONDS)
@@ -48,7 +48,7 @@ public class ContextResolver {
             .expireAfterWrite(10, TimeUnit.SECONDS)
             .build();
 
-    public ContextResolver(Voice voiceData, Configuration configuration) {
+    public ContextResolver(VoiceRepository voiceData, Configuration configuration) {
         this.voiceData = voiceData;
         this.configuration = configuration;
     }

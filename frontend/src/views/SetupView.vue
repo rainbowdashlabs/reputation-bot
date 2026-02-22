@@ -8,6 +8,7 @@ import {computed, ref, watch} from 'vue'
 import {useI18n} from 'vue-i18n'
 import {useRoute, useRouter} from 'vue-router'
 import {useSession} from '@/composables/useSession'
+import ViewContainer from '@/components/ViewContainer.vue'
 
 // Import step components
 import SetupWelcomeStep from './setup/SetupWelcomeStep.vue'
@@ -143,7 +144,7 @@ const progressPercentage = computed(() => {
   <div>
     <!-- Navigation Bar -->
     <div class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-[73px] z-10">
-      <div class="container mx-auto px-4 py-4">
+      <ViewContainer class="py-4">
         <div class="flex items-center justify-between mb-4">
           <div class="flex-1">
             <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
@@ -189,11 +190,11 @@ const progressPercentage = computed(() => {
               class="bg-indigo-600 h-2 rounded-full transition-all duration-300"
           />
         </div>
-      </div>
+      </ViewContainer>
     </div>
 
     <!-- Step Content -->
-    <div class="container mx-auto px-4 py-8">
+    <ViewContainer class="py-8">
       <div class="max-w-4xl mx-auto">
         <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 md:p-8">
           <div class="mb-6">
@@ -212,7 +213,7 @@ const progressPercentage = computed(() => {
           />
         </div>
       </div>
-    </div>
+    </ViewContainer>
   </div>
 </template>
 

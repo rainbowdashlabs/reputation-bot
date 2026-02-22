@@ -10,7 +10,11 @@
     "loading": "Loading...",
     "error": {
       "outOfBounds": "Value must be between {min} and {max}. Corrected to nearest valid value."
-    }
+    },
+    "noData": "No entries found.",
+    "previous": "Previous",
+    "next": "Next",
+    "pageOf": "Page {current} of {total}"
   },
   "navigation": {
     "settings": "Settings",
@@ -22,6 +26,50 @@
     "title": "Login Required",
     "description": "Please login with Discord to access this panel.",
     "button": "Login with Discord"
+  },
+  "voting": {
+    "title": "Voting",
+    "description": "Information about your current vote tokens and botlist voting status.",
+    "tokens": {
+      "title": "Tokens",
+      "description": "Your current vote tokens. You can spend them on various rewards.",
+      "label": "Current Tokens"
+    },
+    "botlists": {
+      "title": "Botlists",
+      "description": "Vote for the bot on various botlists to earn tokens and maintain your streak.",
+      "name": "Botlist",
+      "streak": "Streak",
+      "lastVote": "Last Vote",
+      "action": "Action",
+      "vote": "Vote",
+      "never": "Never",
+      "days": "days"
+    },
+    "log": {
+      "title": "Vote Log",
+      "description": "A history of your vote token transactions.",
+      "date": "Date",
+      "guild": "Guild",
+      "tokens": "Tokens",
+      "reason": {
+        "label": "Reason",
+        "STANDARD": "Vote",
+        "STANDARD_DESCRIPTION": "You received a token for voting on a botlist.",
+        "STREAK": "Vote Streak",
+        "STREAK_DESCRIPTION": "You received an extra token because you have a streak.",
+        "BONUS": "Daily Bonus",
+        "BONUS_DESCRIPTION": "You received extra tokens for voting on all botlists within the last 6 hours.",
+        "TRANSFER": "Transfer to Guild",
+        "TRANSFER_DESCRIPTION": "You transferred tokens to a guild to support its reputation system.",
+        "USE": "Purchase",
+        "USE_DESCRIPTION": "You used tokens to purchase a reward or service.",
+        "unknown": "Unknown",
+        "unknown_DESCRIPTION": "The reason for this transaction is unknown."
+      },
+      "unknownGuild": "Unknown Guild",
+      "personal": "Personal"
+    }
   },
   "presets": {
     "title": "Presets",

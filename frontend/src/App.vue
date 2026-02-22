@@ -16,10 +16,11 @@ import ExpiredSessionWarning from './components/ExpiredSessionWarning.vue'
 import {api} from './api'
 import {useSession} from './composables/useSession'
 import {useDarkMode} from './composables/useDarkMode'
+import ViewContainer from './components/ViewContainer.vue'
 
 const router = useRouter()
 const route = useRoute()
-const {userSession, setSession, setUserSession, setGuildMeta, clearSession, loadSettings, loadPremiumFeatures} = useSession()
+const {userSession, setSession, setToken, setUserSession, setGuildMeta, setUserTokens, clearSession, loadSettings, loadPremiumFeatures} = useSession()
 useDarkMode()
 
 const isSettingsPage = computed(() => route.path.startsWith('/settings/edit'))
@@ -33,6 +34,7 @@ async function loadSession() {
 
   if (token) {
     api.setToken(token);
+    setToken(token);
     // Remove token from URL
     urlParams.delete('token');
     const newRelativePathQuery = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
@@ -60,8 +62,12 @@ async function loadSession() {
   // If token exists, try to load session data
   if (storedToken) {
     try {
-      const userSessionData = await api.getSession();
+      const [userSessionData, tokensData] = await Promise.all([
+        api.getSession(),
+        api.getUserTokens()
+      ]);
       setUserSession(userSessionData);
+      setUserTokens(tokensData.tokens);
       const isBotOwner = userSessionData.isBotOwner;
 
       // Select guild:
@@ -143,9 +149,9 @@ watch(isSettingsPage, async (isSettings) => {
     <SettingsHeader v-if="showSettingsHeader && userSession"/>
 
     <div :class="{'pt-8': showSettingsHeader}">
-      <div v-if="(showSettingsHeader || isSetupPage) && !userSession" class="mx-auto px-4" style="max-width: 1200px;">
-        <LoginPanel class="mt-8"/>
-      </div>
+      <ViewContainer v-if="(showSettingsHeader || isSetupPage) && !userSession" class="mt-8">
+        <LoginPanel/>
+      </ViewContainer>
       <router-view v-else/>
     </div>
 

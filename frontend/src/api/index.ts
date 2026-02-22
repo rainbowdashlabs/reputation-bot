@@ -529,6 +529,24 @@ class ApiClient {
         return response.data;
     }
 
+    // User Voting
+    public async getUserTokens(): Promise<Types.UserTokensPOJO> {
+        const response = await this.axiosInstance.get<Types.UserTokensPOJO>('/user/vote/tokens');
+        return response.data;
+    }
+
+    public async getVoteLists(): Promise<Types.BotlistVotePOJO[]> {
+        const response = await this.axiosInstance.get<Types.BotlistVotePOJO[]>('/user/vote/lists');
+        return response.data;
+    }
+
+    public async getVoteLog(page: number = 0, entries: number = 25): Promise<Types.VoteLogPagePOJO> {
+        const response = await this.axiosInstance.get<Types.VoteLogPagePOJO>('/user/vote/log', {
+            params: { page, entries }
+        });
+        return response.data;
+    }
+
     // Debug
     public async getDebug(): Promise<Types.DebugResultPOJO> {
         const response = await this.axiosInstance.get<Types.DebugResultPOJO>('/settings/debug');
