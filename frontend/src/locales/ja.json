@@ -20,7 +20,10 @@
     "settings": "設定",
     "presets": "プリセット",
     "setup": "設定",
-    "logout": "ログアウト"
+    "logout": "ログアウト",
+    "dashboard": "ダッシュボード",
+    "user_settings": "ユーザー設定",
+    "voting": "投票"
   },
   "presets": {
     "title": "プリセット",
@@ -721,6 +724,39 @@
       },
       "unknownGuild": "未知のギルド",
       "personal": "個人"
+    },
+    "noteDefaultGuild": "ヒント：トークンを自動的に受け取るためのデフォルトギルドを設定できる。",
+    "noteDefaultGuildLink": "ユーザー設定",
+    "transfer": {
+      "title": "ギルドにトークンを移す",
+      "description": "自分の個人残高から、自分のギルドのいずれかにトークンを移動する。",
+      "guild": "ギルド",
+      "selectGuild": "ギルドを選ぶ",
+      "amount": "金額",
+      "max": "Max: {max}",
+      "submit": "移籍"
     }
+  },
+  "user": {
+    "settings": {
+      "title": "ユーザー設定",
+      "description": "個人アカウントの設定と好みを設定する。",
+      "voteGuild": {
+        "label": "投票ギルド",
+        "description": "ボットに投票する際に、トークンを受け取るギルドを選択せよ。これは今後の投票にのみ影響する。",
+        "none": "特定のギルドに所属していない（個人）"
+      }
+    }
+  },
+  "dashboard": {
+    "title": "ダッシュボード",
+    "totalReputation": "総評価",
+    "weekReputation": "週間評価",
+    "todayReputation": "今日の評判",
+    "topChannel": "トップチャンネル",
+    "topUsers": "トップユーザー",
+    "rank": "ランク",
+    "user": "ユーザー",
+    "reputation": "評判"
   }
 }

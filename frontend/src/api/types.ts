@@ -92,13 +92,6 @@ export interface ReactionPOJO {
     url: string;
 }
 
-export interface GuildMetaPOJO {
-    highestBotRole: RolePOJO | null;
-    name: string;
-    id: string;
-    iconUrl: string | null;
-}
-
 export interface ChannelPOJO {
     name: string;
     id: string;
@@ -118,6 +111,10 @@ export interface ChannelViewPOJO {
 }
 
 export interface GuildPOJO {
+    highestBotRole: RolePOJO | null;
+    name: string;
+    id: string;
+    iconUrl: string | null;
     roles: RolePOJO[];
     channels: ChannelViewPOJO;
     reactions: ReactionPOJO[];
@@ -344,10 +341,6 @@ export interface UserSessionPOJO {
     isBotOwner: boolean;
 }
 
-export interface GuildSessionPOJO {
-    guild: GuildPOJO;
-}
-
 export interface PremiumFeatureErrorDetails {
     feature: string;
     requiredSkus: SkuInfo[];
@@ -564,4 +557,22 @@ export interface VoteLogPagePOJO {
     page: number;
     maxPages: number;
     content: VoteLog[];
+}
+
+export interface RankingEntryPOJO {
+  rank: number
+  member: MemberPOJO
+  value: number
+}
+
+export interface DashboardStatsPOJO {
+  totalReputation: number
+  weekReputation: number
+  todayReputation: number
+  topChannelId: string
+  topUsers: RankingEntryPOJO[]
+}
+
+export interface UserSettingsPOJO {
+    voteGuild: string;
 }

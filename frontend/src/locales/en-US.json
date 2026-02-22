@@ -17,10 +17,24 @@
     "pageOf": "Page {current} of {total}"
   },
   "navigation": {
+    "dashboard": "Dashboard",
     "settings": "Settings",
     "presets": "Presets",
     "setup": "Setup",
-    "logout": "Logout"
+    "logout": "Logout",
+    "user_settings": "User Settings",
+    "voting": "Voting"
+  },
+  "user": {
+    "settings": {
+      "title": "User Settings",
+      "description": "Configure your personal account settings and preferences.",
+      "voteGuild": {
+        "label": "Vote Guild",
+        "description": "Choose which guild should receive tokens when you vote for the bot. This will only affect future votes.",
+        "none": "No specific guild (Personal)"
+      }
+    }
   },
   "login": {
     "title": "Login Required",
@@ -30,6 +44,8 @@
   "voting": {
     "title": "Voting",
     "description": "Information about your current vote tokens and botlist voting status.",
+    "noteDefaultGuild": "Tip: You can set a default guild to receive tokens automatically in your",
+    "noteDefaultGuildLink": "User Settings",
     "tokens": {
       "title": "Tokens",
       "description": "Your current vote tokens. You can spend them on various rewards.",
@@ -69,7 +85,27 @@
       },
       "unknownGuild": "Unknown Guild",
       "personal": "Personal"
+    },
+    "transfer": {
+      "title": "Transfer Tokens to a Guild",
+      "description": "Move tokens from your personal balance to one of your guilds.",
+      "guild": "Guild",
+      "selectGuild": "Select a guild",
+      "amount": "Amount",
+      "max": "Max: {max}",
+      "submit": "Transfer"
     }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "totalReputation": "Total Reputation",
+    "weekReputation": "Weekly Reputation",
+    "todayReputation": "Today's Reputation",
+    "topChannel": "Top Channel",
+    "topUsers": "Top Users",
+    "rank": "Rank",
+    "user": "User",
+    "reputation": "Reputation"
   },
   "presets": {
     "title": "Presets",

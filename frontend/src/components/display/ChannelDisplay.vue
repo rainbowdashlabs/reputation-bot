@@ -15,7 +15,7 @@ const props = defineProps<Props>()
 const {session} = useSession()
 
 const channel = computed(() => {
-  const channels = session.value?.guild?.channels
+  const channels = session.value?.channels
   if (!channels) return undefined
 
   // Search in direct channels

@@ -9,6 +9,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.config.elements.DiscordOAuth;
 
@@ -21,6 +23,7 @@ import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class DiscordOAuthService {
     private static final String DISCORD_BASE = "https://discord.com";
@@ -30,24 +33,29 @@ public class DiscordOAuthService {
             new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     private final Configuration configuration;
 
+    private final Cache<String, Long> userIdCache =
+            CacheBuilder.newBuilder().expireAfterWrite(10, TimeUnit.MINUTES).build();
+    private final Cache<String, List<DiscordGuild>> userGuildsCache =
+            CacheBuilder.newBuilder().expireAfterWrite(10, TimeUnit.MINUTES).build();
+
     public DiscordOAuthService(Configuration configuration) {
         this.configuration = configuration;
     }
 
     public String buildAuthorizeUrl(String state) {
         String base = DISCORD_BASE + "/oauth2/authorize";
-        String params = "client_id=" + enc(cfg().clientId())
-                + "&redirect_uri=" + enc(cfg().redirectUri())
-                + "&response_type=code"
-                + "&prompt=none"
-                + "&scope=" + enc("identify guilds")
-                + (state != null ? "&state=" + enc(state) : "");
+        String params = "client_id=%s&redirect_uri=%s&response_type=code&prompt=none&scope=%s%s"
+                .formatted(
+                        enc(cfg().clientId()),
+                        enc(cfg().redirectUri()),
+                        enc("identify guilds"),
+                        state != null ? "&state=" + enc(state) : "");
         return base + "?" + params;
     }
 
     public TokenResponse exchangeCode(String code) throws IOException, InterruptedException {
         String form =
-                "grant_type=authorization_code" + "&code=" + enc(code) + "&redirect_uri=" + enc(cfg().redirectUri());
+                "grant_type=authorization_code&code=%s&redirect_uri=%s".formatted(enc(code), enc(cfg().redirectUri()));
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(DISCORD_API + "/oauth2/token"))
                 .header("Content-Type", "application/x-www-form-urlencoded")
@@ -62,6 +70,11 @@ public class DiscordOAuthService {
     }
 
     public long getCurrentUserId(String accessToken) throws IOException, InterruptedException {
+        Long cached = userIdCache.getIfPresent(accessToken);
+        if (cached != null) {
+            return cached;
+        }
+
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(DISCORD_API + "/users/@me"))
                 .header("Authorization", "Bearer " + accessToken)
@@ -71,7 +84,9 @@ public class DiscordOAuthService {
         if (response.statusCode() / 100 != 2) {
             throw new IOException("Discord /users/@me failed: " + response.statusCode() + " - " + response.body());
         }
-        return mapper.readValue(response.body(), DiscordUser.class).id();
+        long id = mapper.readValue(response.body(), DiscordUser.class).id();
+        userIdCache.put(accessToken, id);
+        return id;
     }
 
     public record DiscordGuild(
@@ -83,6 +98,11 @@ public class DiscordOAuthService {
             boolean owner) {}
 
     public List<DiscordGuild> getUserGuilds(String accessToken) throws IOException, InterruptedException {
+        List<DiscordGuild> cached = userGuildsCache.getIfPresent(accessToken);
+        if (cached != null) {
+            return cached;
+        }
+
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(DISCORD_API + "/users/@me/guilds"))
                 .header("Authorization", "Bearer " + accessToken)
@@ -93,7 +113,9 @@ public class DiscordOAuthService {
             throw new IOException(
                     "Discord /users/@me/guilds failed: " + response.statusCode() + " - " + response.body());
         }
-        return mapper.readValue(response.body(), new TypeReference<>() {});
+        List<DiscordGuild> guilds = mapper.readValue(response.body(), new TypeReference<>() {});
+        userGuildsCache.put(accessToken, guilds);
+        return guilds;
     }
 
     /**
@@ -101,6 +123,8 @@ public class DiscordOAuthService {
      * See https://discord.com/developers/docs/topics/oauth2#revoking-tokens
      */
     public void revokeToken(String token) throws IOException, InterruptedException {
+        userIdCache.invalidate(token);
+        userGuildsCache.invalidate(token);
         String form = "token=" + enc(token);
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(DISCORD_API + "/oauth2/token/revoke"))

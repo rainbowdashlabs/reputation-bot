@@ -96,14 +96,19 @@ class ApiClient {
         return response.data;
     }
 
-    public async getGuildSession(): Promise<Types.GuildSessionPOJO> {
-        const response = await this.axiosInstance.get<Types.GuildSessionPOJO>('/session/guild');
+    public async getGuildSession(): Promise<Types.GuildPOJO> {
+        const response = await this.axiosInstance.get<Types.GuildPOJO>('/guild/meta');
         return response.data;
     }
 
-    public async getGuildMeta(guildId?: string): Promise<Types.GuildMetaPOJO> {
+    public async getDashboardStats(): Promise<Types.DashboardStatsPOJO> {
+        const response = await this.axiosInstance.get<Types.DashboardStatsPOJO>('/guild/stats');
+        return response.data;
+    }
+
+    public async getGuildMeta(guildId?: string): Promise<Types.GuildPOJO> {
         const headers = guildId ? { 'X-Guild-Id': guildId } : {};
-        const response = await this.axiosInstance.get<Types.GuildMetaPOJO>('/session/guild/meta', { headers });
+        const response = await this.axiosInstance.get<Types.GuildPOJO>('/guild/meta', { headers });
         return response.data;
     }
 
@@ -547,7 +552,19 @@ class ApiClient {
         return response.data;
     }
 
-    // Debug
+    public async transferTokensToGuild(guildId: string, amount: number): Promise<void> {
+        await this.axiosInstance.post('/user/vote/transfer', { guildId, amount });
+    }
+
+    public async getUserSettings(): Promise<Types.UserSettingsPOJO> {
+        const response = await this.axiosInstance.get<Types.UserSettingsPOJO>('/user/settings');
+        return response.data;
+    }
+
+    public async updateUserSettings(settings: Types.UserSettingsPOJO): Promise<void> {
+        await this.axiosInstance.patch('/user/settings', settings);
+    }
+
     public async getDebug(): Promise<Types.DebugResultPOJO> {
         const response = await this.axiosInstance.get<Types.DebugResultPOJO>('/settings/debug');
         return response.data;

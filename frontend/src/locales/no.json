@@ -20,7 +20,10 @@
     "settings": "Innstillinger",
     "presets": "Forhåndsinnstillinger",
     "setup": "Oppsett",
-    "logout": "Logg ut"
+    "logout": "Logg ut",
+    "dashboard": "Dashbord",
+    "user_settings": "Brukerinnstillinger",
+    "voting": "Avstemning"
   },
   "presets": {
     "title": "Forhåndsinnstillinger",
@@ -721,6 +724,39 @@
       },
       "unknownGuild": "Ukjent laug",
       "personal": "Personlig"
+    },
+    "noteDefaultGuild": "Tips: Du kan angi en standardklan som automatisk skal motta tokens i din",
+    "noteDefaultGuildLink": "Brukerinnstillinger",
+    "transfer": {
+      "title": "Overfør tokens til et laug",
+      "description": "Flytt tokens fra din personlige saldo til en av dine guilder.",
+      "guild": "Guild",
+      "selectGuild": "Velg et laug",
+      "amount": "Beløp",
+      "max": "Max: {max}",
+      "submit": "Overføring"
     }
+  },
+  "user": {
+    "settings": {
+      "title": "Brukerinnstillinger",
+      "description": "Konfigurer dine personlige kontoinnstillinger og preferanser.",
+      "voteGuild": {
+        "label": "Stem på Guild",
+        "description": "Velg hvilket guild som skal motta tokens når du stemmer på boten. Dette vil kun påvirke fremtidige stemmer.",
+        "none": "Ingen spesifikk klan (Personlig)"
+      }
+    }
+  },
+  "dashboard": {
+    "title": "Dashbord",
+    "totalReputation": "Total omdømme",
+    "weekReputation": "Ukentlig omdømme",
+    "todayReputation": "Dagens omdømme",
+    "topChannel": "Toppkanal",
+    "topUsers": "Toppbrukere",
+    "rank": "Rangering",
+    "user": "Bruker",
+    "reputation": "Omdømme"
   }
 }

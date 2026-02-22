@@ -33,7 +33,7 @@ const isComparison = computed(() => {
 const integration = computed(() => {
   const val = effectiveValue.value
   if (!val?.integrationId) return undefined
-  return session.value?.guild?.integrations?.find(i => i.id === val?.integrationId)
+  return session.value?.integrations?.find(i => i.id === val?.integrationId)
 })
 
 const items = computed(() => {

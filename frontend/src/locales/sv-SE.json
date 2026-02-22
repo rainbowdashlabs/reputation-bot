@@ -20,7 +20,10 @@
     "settings": "Inställningar",
     "presets": "Förinställningar",
     "setup": "Inställningar",
-    "logout": "Logga ut"
+    "logout": "Logga ut",
+    "dashboard": "Instrumentpanel",
+    "user_settings": "Användarinställningar",
+    "voting": "Omröstning"
   },
   "presets": {
     "title": "Förinställningar",
@@ -721,6 +724,39 @@
       },
       "unknownGuild": "Okänd guild",
       "personal": "Personlig"
+    },
+    "noteDefaultGuild": "Tips: Du kan ställa in en standardklan som automatiskt får tokens i din",
+    "noteDefaultGuildLink": "Användarinställningar",
+    "transfer": {
+      "title": "Överför tokens till en guild",
+      "description": "Flytta tokens från ditt personliga saldo till en av dina guilder.",
+      "guild": "Gille",
+      "selectGuild": "Välj en guild",
+      "amount": "Belopp",
+      "max": "Max: {max}",
+      "submit": "Överföring"
     }
+  },
+  "user": {
+    "settings": {
+      "title": "Användarinställningar",
+      "description": "Konfigurera dina personliga kontoinställningar och preferenser.",
+      "voteGuild": {
+        "label": "Rösta på guilden",
+        "description": "Välj vilken guild som ska få tokens när du röstar på boten. Detta påverkar endast framtida röster.",
+        "none": "Ingen specifik guild (Personlig)"
+      }
+    }
+  },
+  "dashboard": {
+    "title": "Instrumentpanel",
+    "totalReputation": "Total anseende",
+    "weekReputation": "Veckans rykte",
+    "todayReputation": "Dagens rykte",
+    "topChannel": "Top Channel",
+    "topUsers": "Toppanvändare",
+    "rank": "Rank",
+    "user": "Användare",
+    "reputation": "Rykte"
   }
 }

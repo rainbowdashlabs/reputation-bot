@@ -20,7 +20,10 @@
     "settings": "Nastavení",
     "presets": "Předvolby",
     "setup": "Nastavení",
-    "logout": "Odhlásit se"
+    "logout": "Odhlásit se",
+    "dashboard": "Přístrojová deska",
+    "user_settings": "Nastavení uživatele",
+    "voting": "Hlasování"
   },
   "presets": {
     "title": "Předvolby",
@@ -721,6 +724,39 @@
       },
       "unknownGuild": "Neznámá gilda",
       "personal": "Osobní"
+    },
+    "noteDefaultGuild": "Tip: Můžete nastavit výchozí gildu, která bude automaticky dostávat tokeny ve vašem",
+    "noteDefaultGuildLink": "Nastavení uživatele",
+    "transfer": {
+      "title": "Převod tokenů do cechu",
+      "description": "Přesuňte žetony ze svého osobního zůstatku do jedné ze svých gild.",
+      "guild": "Cech",
+      "selectGuild": "Vyberte cech",
+      "amount": "Částka",
+      "max": "Max: {max}",
+      "submit": "Převod"
     }
+  },
+  "user": {
+    "settings": {
+      "title": "Nastavení uživatele",
+      "description": "Nakonfigurujte nastavení a předvolby svého osobního účtu.",
+      "voteGuild": {
+        "label": "Hlasujte pro cech",
+        "description": "Vyberte, která gilda by měla dostat žetony, když hlasujete pro bota. To bude mít vliv pouze na budoucí hlasování.",
+        "none": "Žádná konkrétní gilda (osobní)"
+      }
+    }
+  },
+  "dashboard": {
+    "title": "Přístrojová deska",
+    "totalReputation": "Celková reputace",
+    "weekReputation": "Týdenní reputace",
+    "todayReputation": "Dnešní reputace",
+    "topChannel": "Nejlepší kanál",
+    "topUsers": "Nejlepší uživatelé",
+    "rank": "Hodnost",
+    "user": "Uživatel",
+    "reputation": "Reputace"
   }
 }

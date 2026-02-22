@@ -45,11 +45,11 @@ const vClickOutside = {
     </router-link>
 
     <div class="relative" v-click-outside="close">
-      <button @click.stop="toggle" class="user-button flex items-center gap-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+      <div @click.stop="toggle" class="flex items-center gap-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer">
         <img :src="userAvatar" :alt="userName" class="w-7 h-7 rounded-full border border-gray-200 dark:border-gray-700"/>
         <span class="hidden sm:block text-sm font-medium text-gray-700 dark:text-gray-200">{{ userName }}</span>
         <font-awesome-icon :icon="['fas', open ? 'chevron-up' : 'chevron-down']" class="text-gray-400 w-3"/>
-      </button>
+      </div>
       <transition
           enter-active-class="transition ease-out duration-100"
           enter-from-class="transform opacity-0 scale-95"
@@ -59,10 +59,26 @@ const vClickOutside = {
           leave-to-class="transform opacity-0 scale-95"
       >
         <div v-if="open" class="absolute right-0 mt-2 w-48 rounded-lg shadow-xl bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 overflow-hidden z-50">
-          <button @click="logout" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 flex items-center gap-2">
+          <router-link
+              to="/user/settings"
+              class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 flex items-center gap-2"
+              @click="close"
+          >
+            <font-awesome-icon :icon="['fas', 'user-gear']" class="w-4"/>
+            {{ t('navigation.user_settings') }}
+          </router-link>
+          <router-link
+              to="/user/vote"
+              class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 flex items-center gap-2"
+              @click="close"
+          >
+            <font-awesome-icon :icon="['fas', 'check-to-slot']" class="w-4"/>
+            {{ t('navigation.voting') }}
+          </router-link>
+          <div @click="logout" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 flex items-center gap-2 cursor-pointer">
             <font-awesome-icon :icon="['fas', 'right-from-bracket']" class="w-4"/>
             {{ t('navigation.logout') }}
-          </button>
+          </div>
         </div>
       </transition>
     </div>
@@ -70,9 +86,4 @@ const vClickOutside = {
 </template>
 
 <style scoped>
-.user-button {
-  padding: 0 !important;
-  border: none !important;
-  min-height: 0 !important;
-}
 </style>

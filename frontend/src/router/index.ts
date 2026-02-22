@@ -9,7 +9,18 @@ import {createRouter, createWebHistory} from 'vue-router'
 const routes: RouteRecordRaw[] = [
     {
         path: '/',
-        redirect: '/settings'
+        redirect: '/guild/dashboard'
+    },
+    {
+        path: '/guild',
+        name: 'Guild',
+        children: [
+            {
+                path: 'dashboard',
+                name: 'GuildDashboard',
+                component: () => import('@/views/guild/DashboardView.vue')
+            }
+        ]
     },
     {
         path: '/settings',
@@ -113,6 +124,11 @@ const routes: RouteRecordRaw[] = [
                 path: 'vote',
                 name: 'UserVote',
                 component: () => import('@/views/user/VotingView.vue')
+            },
+            {
+                path: 'settings',
+                name: 'UserSettings',
+                component: () => import('@/views/user/UserSettingsView.vue')
             }
             ]
     },

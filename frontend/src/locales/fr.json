@@ -20,7 +20,10 @@
     "settings": "Paramètres",
     "presets": "Préréglages",
     "setup": "Configuration",
-    "logout": "Déconnexion"
+    "logout": "Déconnexion",
+    "dashboard": "Tableau de bord",
+    "user_settings": "Paramètres utilisateur",
+    "voting": "Vote"
   },
   "presets": {
     "title": "Préréglages",
@@ -721,6 +724,39 @@
       },
       "unknownGuild": "Guilde inconnue",
       "personal": "Personnel"
+    },
+    "noteDefaultGuild": "Astuce : tu peux choisir une guilde par défaut pour recevoir automatiquement des jetons dans ton",
+    "noteDefaultGuildLink": "Paramètres utilisateur",
+    "transfer": {
+      "title": "Transférer des jetons à une guilde",
+      "description": "Déplace les jetons de ton solde perso vers une de tes guildes.",
+      "guild": "Guilde",
+      "selectGuild": "Choisis une guilde",
+      "amount": "Montant",
+      "max": "Max : {max}",
+      "submit": "Transfert"
     }
+  },
+  "user": {
+    "settings": {
+      "title": "Paramètres utilisateur",
+      "description": "Configure tes paramètres et préférences personnels.",
+      "voteGuild": {
+        "label": "Votez pour la guilde",
+        "description": "Choisis la guilde qui devrait recevoir des jetons quand tu votes pour le bot. Ça ne changera rien que pour les votes à venir.",
+        "none": "Pas de guilde en particulier (Personnel)"
+      }
+    }
+  },
+  "dashboard": {
+    "title": "Tableau de bord",
+    "totalReputation": "Réputation totale",
+    "weekReputation": "Réputation hebdomadaire",
+    "todayReputation": "La réputation d'aujourd'hui",
+    "topChannel": "Chaîne principale",
+    "topUsers": "Les meilleurs utilisateurs",
+    "rank": "Rang",
+    "user": "Utilisateur",
+    "reputation": "Réputation"
   }
 }

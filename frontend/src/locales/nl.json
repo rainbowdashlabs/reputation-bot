@@ -20,7 +20,10 @@
     "settings": "Instellingen",
     "presets": "Voorinstellingen",
     "setup": "Instellingen",
-    "logout": "Uitloggen"
+    "logout": "Uitloggen",
+    "dashboard": "Dashboard",
+    "user_settings": "Gebruikersinstellingen",
+    "voting": "Stemmen"
   },
   "presets": {
     "title": "Voorinstellingen",
@@ -721,6 +724,39 @@
       },
       "unknownGuild": "Onbekende gilde",
       "personal": "Persoonlijk"
+    },
+    "noteDefaultGuild": "Tip: Je kunt een standaardgilde instellen om automatisch tokens te ontvangen in je",
+    "noteDefaultGuildLink": "Gebruikersinstellingen",
+    "transfer": {
+      "title": "Tokens naar een gilde overzetten",
+      "description": "Verplaats tokens van je persoonlijke saldo naar een van je gilden.",
+      "guild": "Gilde",
+      "selectGuild": "Kies een gilde",
+      "amount": "Bedrag",
+      "max": "Max: {max}",
+      "submit": "Overdracht"
     }
+  },
+  "user": {
+    "settings": {
+      "title": "Gebruikersinstellingen",
+      "description": "Stel je persoonlijke accountinstellingen en voorkeuren in.",
+      "voteGuild": {
+        "label": "Stem op het gilde",
+        "description": "Kies welke gilde tokens moet krijgen als je op de bot stemt. Dit geldt alleen voor toekomstige stemmen.",
+        "none": "Geen specifieke gilde (Persoonlijk)"
+      }
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "totalReputation": "Totale reputatie",
+    "weekReputation": "Wekelijkse reputatie",
+    "todayReputation": "De reputatie van vandaag",
+    "topChannel": "Topkanaal",
+    "topUsers": "Topgebruikers",
+    "rank": "Rang",
+    "user": "Gebruiker",
+    "reputation": "Reputatie"
   }
 }

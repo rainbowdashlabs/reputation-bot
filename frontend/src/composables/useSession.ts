@@ -4,29 +4,25 @@
  *     Copyright (C) RainbowDashLabs and Contributor
  */
 import {readonly, ref} from 'vue'
-import type {GuildSessionPOJO, UserSessionPOJO} from '@/api/types'
+import type {UserSessionPOJO} from '@/api/types'
 import * as Types from '@/api/types'
 import {api} from '@/api'
 
 const SESSION_TOKEN_KEY = 'reputation_bot_token'
 const GUILD_ID_KEY = 'reputation_bot_guild_id'
 
-const session = ref<(GuildSessionPOJO & { settings?: Types.SettingsPOJO, premiumFeatures?: Types.PremiumFeaturesPOJO }) | null>(null)
+const session = ref<(Types.GuildPOJO & { settings?: Types.SettingsPOJO, premiumFeatures?: Types.PremiumFeaturesPOJO }) | null>(null)
 const userSession = ref<UserSessionPOJO | null>(null)
 const hasToken = ref(!!localStorage.getItem(SESSION_TOKEN_KEY))
-const guildMeta = ref<Types.GuildMetaPOJO | null>(null)
 const premiumFeatures = ref<Types.PremiumFeaturesPOJO | null>(null)
 const userTokens = ref<number>(0)
 const isExpired = ref(false)
+const currentGuildId = ref<string | null>(localStorage.getItem(GUILD_ID_KEY))
 
 export function useSession() {
-    const setSession = (data: GuildSessionPOJO) => {
+    const setSession = (data: Types.GuildPOJO) => {
         session.value = data
         isExpired.value = false
-    }
-
-    const setGuildMeta = (data: Types.GuildMetaPOJO) => {
-        guildMeta.value = data
     }
 
     const setPremiumFeatures = (data: Types.PremiumFeaturesPOJO) => {
@@ -45,6 +41,15 @@ export function useSession() {
         hasToken.value = true
     }
 
+    const setGuildId = (guildId: string | null) => {
+        if (guildId) {
+            localStorage.setItem(GUILD_ID_KEY, guildId)
+        } else {
+            localStorage.removeItem(GUILD_ID_KEY)
+        }
+        currentGuildId.value = guildId
+    }
+
     const setUserTokens = (tokens: number) => {
         userTokens.value = tokens
     }
@@ -54,17 +59,16 @@ export function useSession() {
     }
 
     const switchSession = (guildId: string) => {
-        localStorage.setItem(GUILD_ID_KEY, guildId)
+        setGuildId(guildId)
         window.location.reload()
     }
 
     const clearSession = () => {
         session.value = null
         userSession.value = null
-        guildMeta.value = null
         premiumFeatures.value = null
         localStorage.removeItem(SESSION_TOKEN_KEY)
-        localStorage.removeItem(GUILD_ID_KEY)
+        setGuildId(null)
         hasToken.value = false
     }
 
@@ -226,15 +230,15 @@ export function useSession() {
     return {
         session: readonly(session),
         userSession: readonly(userSession),
-        guildMeta: readonly(guildMeta),
         premiumFeatures: readonly(premiumFeatures),
         userTokens: readonly(userTokens),
         isExpired: readonly(isExpired),
         hasToken: readonly(hasToken),
+        currentGuildId: readonly(currentGuildId),
         setSession,
         setUserSession,
         setToken,
-        setGuildMeta,
+        setGuildId,
         setPremiumFeatures,
         setUserTokens,
         setExpired,

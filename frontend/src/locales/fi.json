@@ -20,7 +20,10 @@
     "settings": "Asetukset",
     "presets": "Esiasetukset",
     "setup": "Asennus",
-    "logout": "Kirjaudu ulos"
+    "logout": "Kirjaudu ulos",
+    "dashboard": "Kojelauta",
+    "user_settings": "Käyttäjäasetukset",
+    "voting": "Äänestäminen"
   },
   "presets": {
     "title": "Esiasetukset",
@@ -721,6 +724,39 @@
       },
       "unknownGuild": "Tuntematon kilta",
       "personal": "Henkilökohtainen"
+    },
+    "noteDefaultGuild": "Vinkki: Voit asettaa oletusguildin, joka vastaanottaa tunnuksia automaattisesti",
+    "noteDefaultGuildLink": "Käyttäjäasetukset",
+    "transfer": {
+      "title": "Siirrä rahakkeet kiltaan",
+      "description": "Siirrä rahakkeet henkilökohtaisesta saldostasi johonkin kiltaasi.",
+      "guild": "Kilta",
+      "selectGuild": "Valitse kilta",
+      "amount": "Määrä",
+      "max": "Max: {max}",
+      "submit": "Siirto"
     }
+  },
+  "user": {
+    "settings": {
+      "title": "Käyttäjäasetukset",
+      "description": "Määritä henkilökohtaiset tilisi asetukset ja mieltymykset.",
+      "voteGuild": {
+        "label": "Äänestä kilta",
+        "description": "Valitse, mikä kilta saa rahakkeita, kun äänestät botille. Tämä vaikuttaa vain tuleviin äänestyksiin.",
+        "none": "Ei tiettyä kiltaa (Henkilökohtainen)"
+      }
+    }
+  },
+  "dashboard": {
+    "title": "Kojelauta",
+    "totalReputation": "Kokonaismaine",
+    "weekReputation": "Viikoittainen maine",
+    "todayReputation": "Tämän päivän maine",
+    "topChannel": "Suosituin kanava",
+    "topUsers": "Suosituimmat käyttäjät",
+    "rank": "Sijoitus",
+    "user": "Käyttäjä",
+    "reputation": "Maine"
   }
 }

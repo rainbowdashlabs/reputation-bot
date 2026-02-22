@@ -19,7 +19,7 @@ const bypasses = computed(() => {
 
 const availableIntegrations = computed(() => {
   const existingIds = new Set(bypasses.value.map(b => b.integrationId))
-  return session.value?.guild?.integrations?.filter(i => !existingIds.has(i.id)) || []
+  return session.value?.integrations?.filter(i => !existingIds.has(i.id)) || []
 })
 
 const addBypass = async (integrationId: string) => {

@@ -26,7 +26,7 @@ const isOpen = ref(false)
 const pickerRef = ref<HTMLElement | null>(null)
 
 // Guild emojis from session
-const guildEmojis = computed(() => session.value?.guild.reactions || [])
+const guildEmojis = computed(() => session.value?.reactions || [])
 
 const emojiIndex = computed(() => {
   const custom = guildEmojis.value.map(emoji => ({

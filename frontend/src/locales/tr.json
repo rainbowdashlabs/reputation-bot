@@ -20,7 +20,10 @@
     "settings": "Ayarlar",
     "presets": "Ön ayarlar",
     "setup": "Kurulum",
-    "logout": "Çıkış"
+    "logout": "Çıkış",
+    "dashboard": "Gösterge paneli",
+    "user_settings": "Kullanıcı Ayarları",
+    "voting": "Oylama"
   },
   "presets": {
     "title": "Ön ayarlar",
@@ -721,6 +724,39 @@
       },
       "unknownGuild": "Bilinmeyen Lonca",
       "personal": "Kişisel"
+    },
+    "noteDefaultGuild": "İpucu: Otomatik olarak jeton almak için varsayılan bir lonca ayarlayabilirsiniz.",
+    "noteDefaultGuildLink": "Kullanıcı Ayarları",
+    "transfer": {
+      "title": "Jetonları bir Loncaya Aktar",
+      "description": "Kişisel bakiyenizden jetonları loncalarınızdan birine aktarın.",
+      "guild": "Lonca",
+      "selectGuild": "Bir lonca seçin",
+      "amount": "Miktar",
+      "max": "Max: {max}",
+      "submit": "Transfer"
     }
+  },
+  "user": {
+    "settings": {
+      "title": "Kullanıcı Ayarları",
+      "description": "Kişisel hesap ayarlarınızı ve tercihlerinizi yapılandırın.",
+      "voteGuild": {
+        "label": "Oy Birliği",
+        "description": "Bot için oy verirken hangi guildin token alacağını seçin. Bu sadece gelecekteki oyları etkileyecektir.",
+        "none": "Belirli bir lonca yok (Kişisel)"
+      }
+    }
+  },
+  "dashboard": {
+    "title": "Gösterge paneli",
+    "totalReputation": "Toplam İtibar",
+    "weekReputation": "Haftalık İtibar",
+    "todayReputation": "Bugünün İtibarı",
+    "topChannel": "En Popüler Kanal",
+    "topUsers": "En Çok Kullanılanlar",
+    "rank": "Sıra",
+    "user": "Kullanıcı",
+    "reputation": "İtibar"
   }
 }

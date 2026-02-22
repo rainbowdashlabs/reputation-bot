@@ -20,7 +20,10 @@
     "settings": "Impostazioni",
     "presets": "Preimpostazioni",
     "setup": "Configurazione",
-    "logout": "Esci"
+    "logout": "Esci",
+    "dashboard": "Pannello di controllo",
+    "user_settings": "Impostazioni utente",
+    "voting": "Votazione"
   },
   "presets": {
     "title": "Preimpostazioni",
@@ -721,6 +724,39 @@
       },
       "unknownGuild": "Gilda sconosciuta",
       "personal": "Personale"
+    },
+    "noteDefaultGuild": "Suggerimento: puoi impostare una gilda predefinita per ricevere automaticamente i gettoni nel tuo",
+    "noteDefaultGuildLink": "Impostazioni utente",
+    "transfer": {
+      "title": "Trasferisci i gettoni a una gilda",
+      "description": "Sposta i gettoni dal tuo saldo personale a una delle tue gilde.",
+      "guild": "Gilda",
+      "selectGuild": "Scegli una gilda",
+      "amount": "Importo",
+      "max": "Max: {max}",
+      "submit": "Trasferimento"
     }
+  },
+  "user": {
+    "settings": {
+      "title": "Impostazioni utente",
+      "description": "Metti a posto le impostazioni e le preferenze del tuo account personale.",
+      "voteGuild": {
+        "label": "Vota Gilda",
+        "description": "Scegli quale gilda dovrebbe ricevere i gettoni quando voti per il bot. Questo cambierà solo i voti futuri.",
+        "none": "Nessuna gilda in particolare (Personale)"
+      }
+    }
+  },
+  "dashboard": {
+    "title": "Pannello di controllo",
+    "totalReputation": "Reputazione totale",
+    "weekReputation": "Reputazione settimanale",
+    "todayReputation": "La reputazione di oggi",
+    "topChannel": "Canale principale",
+    "topUsers": "Utenti più attivi",
+    "rank": "Classifica",
+    "user": "Utente",
+    "reputation": "Reputazione"
   }
 }

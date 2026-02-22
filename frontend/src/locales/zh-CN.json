@@ -20,7 +20,10 @@
     "settings": "设置",
     "presets": "预设",
     "setup": "设置",
-    "logout": "注销"
+    "logout": "注销",
+    "dashboard": "仪表板",
+    "user_settings": "用户设置",
+    "voting": "投票"
   },
   "presets": {
     "title": "预设",
@@ -721,6 +724,39 @@
       },
       "unknownGuild": "未知公会",
       "personal": "个人"
+    },
+    "noteDefaultGuild": "提示：您可以在游戏中设置默认公会，自动接收代币。",
+    "noteDefaultGuildLink": "用户设置",
+    "transfer": {
+      "title": "将代币转移至公会",
+      "description": "将代币从个人余额转移至您所属的公会之一。",
+      "guild": "公会",
+      "selectGuild": "选择一个公会",
+      "amount": "金额",
+      "max": "Max：{max}",
+      "submit": "转移"
     }
+  },
+  "user": {
+    "settings": {
+      "title": "用户设置",
+      "description": "配置您的个人账户设置和偏好。",
+      "voteGuild": {
+        "label": "投票公会",
+        "description": "投票给机器人时，请选择应获得代币的公会。此设置仅影响未来的投票。",
+        "none": "无特定公会（个人）"
+      }
+    }
+  },
+  "dashboard": {
+    "title": "仪表板",
+    "totalReputation": "总声誉",
+    "weekReputation": "每周声誉",
+    "todayReputation": "今日声誉",
+    "topChannel": "顶级频道",
+    "topUsers": "顶级用户",
+    "rank": "等级",
+    "user": "用户",
+    "reputation": "声誉"
   }
 }

@@ -6,16 +6,20 @@
 <script lang="ts" setup>
 import { onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
+import { useSession } from '@/composables/useSession'
 import { api } from '@/api'
 import type { BotlistVotePOJO, VoteLog } from '@/api/types.ts'
 import ViewContainer from '@/components/ViewContainer.vue'
 import SettingsContainer from '../settings/components/SettingsContainer.vue'
+import LoginPanel from '../settings/components/LoginPanel.vue'
 import TokenStats from './votingview/TokenStats.vue'
 import BotlistTable from './votingview/BotlistTable.vue'
 import VoteLogTable from './votingview/VoteLogTable.vue'
+import TransferToGuild from './votingview/TransferToGuild.vue'
 import BaseButton from '@/components/BaseButton.vue'
 
 const { t } = useI18n()
+const { userSession } = useSession()
 
 const tokens = ref<number | null>(null)
 const botlists = ref<BotlistVotePOJO[]>([])
@@ -62,13 +66,21 @@ watch(page, (newPage) => {
 
 <template>
   <ViewContainer class="pt-8">
-    <SettingsContainer :description="t('voting.description')" :title="t('voting.title')">
+    <div v-if="!userSession" class="max-w-4xl mx-auto px-4">
+      <LoginPanel />
+    </div>
+    <SettingsContainer v-else :description="t('voting.description')" :title="t('voting.title')">
+      <div class="mb-4 px-4 py-3 rounded-md bg-indigo-50 dark:bg-indigo-900/20 text-indigo-700 dark:text-indigo-300 text-sm">
+        {{ t('voting.noteDefaultGuild') }}
+        <router-link to="/user/settings" class="underline font-medium">{{ t('voting.noteDefaultGuildLink') }}</router-link>.
+      </div>
       <div v-if="loading" class="flex justify-center py-8">
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500"></div>
       </div>
 
       <div v-else class="space-y-8">
         <TokenStats :tokens="tokens" />
+        <TransferToGuild :max-tokens="tokens" @transferred="async () => { const t = await api.getUserTokens(); tokens = t.tokens; await fetchVoteLog(0); }" />
         <BotlistTable :botlists="botlists" />
         <div class="space-y-4">
           <VoteLogTable :vote-logs="voteLogs" :loading="logLoading" />

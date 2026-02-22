@@ -20,7 +20,10 @@
     "settings": "Configurações",
     "presets": "Predefinições",
     "setup": "Configuração",
-    "logout": "Sair"
+    "logout": "Sair",
+    "dashboard": "Painel",
+    "user_settings": "Configurações do usuário",
+    "voting": "Votação"
   },
   "presets": {
     "title": "Predefinições",
@@ -721,6 +724,39 @@
       },
       "unknownGuild": "Guilda desconhecida",
       "personal": "Pessoal"
+    },
+    "noteDefaultGuild": "Dica: você pode definir uma guilda padrão para receber tokens automaticamente em seu",
+    "noteDefaultGuildLink": "Configurações do usuário",
+    "transfer": {
+      "title": "Transferir fichas para uma guilda",
+      "description": "Mova fichas do seu saldo pessoal para uma das suas guildas.",
+      "guild": "Guilda",
+      "selectGuild": "Escolha uma guilda",
+      "amount": "Valor",
+      "max": "Max: {max}",
+      "submit": "Transferência"
     }
+  },
+  "user": {
+    "settings": {
+      "title": "Configurações do usuário",
+      "description": "Configure as suas configurações e preferências pessoais da conta.",
+      "voteGuild": {
+        "label": "Vote na Guilda",
+        "description": "Escolha qual guilda deve receber tokens quando você votar no bot. Isso só vai afetar os votos futuros.",
+        "none": "Sem guilda específica (Pessoal)"
+      }
+    }
+  },
+  "dashboard": {
+    "title": "Painel",
+    "totalReputation": "Reputação total",
+    "weekReputation": "Reputação semanal",
+    "todayReputation": "Reputação atual",
+    "topChannel": "Canal principal",
+    "topUsers": "Principais usuários",
+    "rank": "Classificação",
+    "user": "Usuário",
+    "reputation": "Reputação"
   }
 }

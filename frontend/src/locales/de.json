@@ -20,7 +20,10 @@
     "settings": "Einstellungen",
     "presets": "Voreinstellungen",
     "setup": "Einrichtung",
-    "logout": "Abmelden"
+    "logout": "Abmelden",
+    "dashboard": "Dashboard",
+    "user_settings": "Benutzereinstellungen",
+    "voting": "Voting"
   },
   "presets": {
     "title": "Voreinstellungen",
@@ -721,6 +724,39 @@
       },
       "unknownGuild": "Unbekannter Server",
       "personal": "Persönlich"
+    },
+    "noteDefaultGuild": "Tipp: Du kannst eine Standardserver festlegen, der automatisch deine Token token erhält in deinen",
+    "noteDefaultGuildLink": "Benutzereinstellungen",
+    "transfer": {
+      "title": "Tokens an eine Gilde übertragen",
+      "description": "Verschieb deine Token von deinem persönlichen Guthaben zu einem deiner Server.",
+      "guild": "Server",
+      "selectGuild": "Wähle einen Server aus",
+      "amount": "Betrag",
+      "max": "Max: {max}",
+      "submit": "Übertragen"
     }
+  },
+  "user": {
+    "settings": {
+      "title": "Benutzereinstellungen",
+      "description": "Richte deine persönlichen Kontoeinstellungen und Präferenzen ein.",
+      "voteGuild": {
+        "label": "Server wählen",
+        "description": "Entscheide dich, welcher Server Token bekommen soll, wenn du für den Bot stimmst. Das wirkt sich nur auf zukünftige Votes aus.",
+        "none": "Kein bestimmter Server (Persönlich)"
+      }
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "totalReputation": "Gesamt",
+    "weekReputation": "Diese Woche",
+    "todayReputation": "Heute",
+    "topChannel": "Top-Kanal",
+    "topUsers": "Top-Benutzer",
+    "rank": "Rang",
+    "user": "Benutzer",
+    "reputation": "Reputation"
   }
 }

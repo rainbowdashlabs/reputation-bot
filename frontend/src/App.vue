@@ -20,8 +20,24 @@ import ViewContainer from './components/ViewContainer.vue'
 
 const router = useRouter()
 const route = useRoute()
-const {userSession, setSession, setToken, setUserSession, setGuildMeta, setUserTokens, clearSession, loadSettings, loadPremiumFeatures} = useSession()
+const {
+  userSession,
+  currentGuildId,
+  setSession,
+  setToken,
+  setUserSession,
+  setUserTokens,
+  setGuildId,
+  clearSession,
+  loadSettings,
+  loadPremiumFeatures
+} = useSession()
 useDarkMode()
+
+const isGuildAdmin = computed(() => {
+  if (!currentGuildId.value || !userSession.value) return false
+  return userSession.value.guilds[currentGuildId.value]?.accessLevel === 'GUILD_ADMIN' || userSession.value.isBotOwner
+})
 
 const isSettingsPage = computed(() => route.path.startsWith('/settings/edit'))
 const showSettingsHeader = computed(() => route.path.startsWith('/settings'))
@@ -97,13 +113,9 @@ async function loadSession() {
       }
 
       if (guildId) {
-        localStorage.setItem('reputation_bot_guild_id', guildId);
-        const [sessionData, metaData] = await Promise.all([
-          api.getGuildSession(),
-          api.getGuildMeta()
-        ]);
+        setGuildId(guildId);
+        const sessionData = await api.getGuildSession()
         setSession(sessionData);
-        setGuildMeta(metaData);
 
         if (isSettingsPage.value) {
           await Promise.all([
@@ -142,15 +154,28 @@ watch(isSettingsPage, async (isSettings) => {
 </script>
 
 <template>
-  <AppHeader/>
-  <div class="h-[73px]"></div>
-
   <template v-if="ready">
+    <AppHeader/>
+    <div class="h-[73px]"></div>
+
     <SettingsHeader v-if="showSettingsHeader && userSession"/>
 
     <div :class="{'pt-8': showSettingsHeader}">
-      <ViewContainer v-if="(showSettingsHeader || isSetupPage) && !userSession" class="mt-8">
+      <ViewContainer v-if="!userSession && !isSetupPage && route.path !== '/error/no-token'" class="mt-8">
         <LoginPanel/>
+      </ViewContainer>
+      <ViewContainer v-else-if="showSettingsHeader && !isGuildAdmin" class="mt-8">
+        <div class="flex flex-col items-center justify-center p-12 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+          <div class="w-16 h-16 bg-red-100 dark:bg-red-900/50 rounded-full flex items-center justify-center mb-6">
+            <font-awesome-icon :icon="['fas', 'circle-exclamation']" class="text-3xl text-red-600 dark:text-red-400" />
+          </div>
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+            Access Denied
+          </h2>
+          <p class="text-gray-600 dark:text-gray-400 text-center mb-8 max-w-sm">
+            You must be a guild administrator to access this page.
+          </p>
+        </div>
       </ViewContainer>
       <router-view v-else/>
     </div>

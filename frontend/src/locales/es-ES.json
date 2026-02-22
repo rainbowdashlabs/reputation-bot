@@ -20,7 +20,10 @@
     "settings": "Configuración",
     "presets": "Ajustes preestablecidos",
     "setup": "Configuración",
-    "logout": "Cerrar sesión"
+    "logout": "Cerrar sesión",
+    "dashboard": "Panel de control",
+    "user_settings": "Configuración de usuario",
+    "voting": "Votación"
   },
   "presets": {
     "title": "Ajustes preestablecidos",
@@ -721,6 +724,39 @@
       },
       "unknownGuild": "Gremio desconocido",
       "personal": "Personal"
+    },
+    "noteDefaultGuild": "Consejo: Puedes establecer un gremio predeterminado para recibir tokens automáticamente en tu",
+    "noteDefaultGuildLink": "Configuración de usuario",
+    "transfer": {
+      "title": "Transferir fichas a un gremio",
+      "description": "Mueve fichas de tu saldo personal a uno de tus gremios.",
+      "guild": "Gremio",
+      "selectGuild": "Selecciona un gremio",
+      "amount": "Cantidad",
+      "max": "Max: {max}",
+      "submit": "Transferencia"
     }
+  },
+  "user": {
+    "settings": {
+      "title": "Configuración de usuario",
+      "description": "Configura los ajustes y preferencias de tu cuenta personal.",
+      "voteGuild": {
+        "label": "Votar por el gremio",
+        "description": "Elige qué gremio debe recibir fichas cuando votes por el bot. Esto solo afectará a los votos futuros.",
+        "none": "Sin gremio específico (Personal)"
+      }
+    }
+  },
+  "dashboard": {
+    "title": "Panel de control",
+    "totalReputation": "Reputación total",
+    "weekReputation": "Reputación semanal",
+    "todayReputation": "La reputación actual",
+    "topChannel": "Canal principal",
+    "topUsers": "Usuarios principales",
+    "rank": "Rango",
+    "user": "Usuario",
+    "reputation": "Reputación"
   }
 }

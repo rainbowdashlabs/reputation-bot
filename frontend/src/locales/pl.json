@@ -20,7 +20,10 @@
     "settings": "Ustawienia",
     "presets": "Ustawienia wstępne",
     "setup": "Konfiguracja",
-    "logout": "Wyloguj"
+    "logout": "Wyloguj",
+    "dashboard": "Pulpit nawigacyjny",
+    "user_settings": "Ustawienia użytkownika",
+    "voting": "Głosowanie"
   },
   "presets": {
     "title": "Ustawienia wstępne",
@@ -721,6 +724,39 @@
       },
       "unknownGuild": "Nieznana gildia",
       "personal": "Osobiste"
+    },
+    "noteDefaultGuild": "Wskazówka: Możesz ustawić domyślną gildię, która będzie automatycznie otrzymywać tokeny w twoim",
+    "noteDefaultGuildLink": "Ustawienia użytkownika",
+    "transfer": {
+      "title": "Przenieś tokeny do gildii",
+      "description": "Przenieś żetony ze swojego osobistego salda do jednej ze swoich gildii.",
+      "guild": "Gildia",
+      "selectGuild": "Wybierz gildię",
+      "amount": "Kwota",
+      "max": "Max: {max}",
+      "submit": "Transfer"
     }
+  },
+  "user": {
+    "settings": {
+      "title": "Ustawienia użytkownika",
+      "description": "Skonfiguruj ustawienia i preferencje swojego konta osobistego.",
+      "voteGuild": {
+        "label": "Głosuj na gildię",
+        "description": "Wybierz gildię, która powinna otrzymać tokeny, gdy głosujesz na bota. Będzie to miało wpływ tylko na przyszłe głosy.",
+        "none": "Brak konkretnej gildii (osobiste)"
+      }
+    }
+  },
+  "dashboard": {
+    "title": "Pulpit nawigacyjny",
+    "totalReputation": "Całkowita reputacja",
+    "weekReputation": "Tygodniowa reputacja",
+    "todayReputation": "Dzisiejsza reputacja",
+    "topChannel": "Najpopularniejszy kanał",
+    "topUsers": "Najlepsi użytkownicy",
+    "rank": "Ranga",
+    "user": "Użytkownik",
+    "reputation": "Reputacja"
   }
 }

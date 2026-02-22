@@ -20,6 +20,7 @@ import de.chojo.repbot.service.RoleAssigner;
 import de.chojo.repbot.web.cache.MemberCache;
 import de.chojo.repbot.web.routes.v1.auth.AuthRoute;
 import de.chojo.repbot.web.routes.v1.data.DataRoute;
+import de.chojo.repbot.web.routes.v1.guild.GuildRoute;
 import de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute;
 import de.chojo.repbot.web.routes.v1.session.SessionRoute;
 import de.chojo.repbot.web.routes.v1.settings.SettingsRoute;
@@ -46,6 +47,7 @@ public class Api {
     private final SessionRoute sessionRoute;
     private final SettingsRoute settingsRoute;
     private final DataRoute dataRoute;
+    private final GuildRoute guildRoute;
     private final AuthRoute authRoute;
     private final UserRoute userRoute;
 
@@ -86,7 +88,8 @@ public class Api {
         }
         dataRoute = new DataRoute(thankwordsContainer, localization, configuration);
         authRoute = new AuthRoute(discordOAuthService, userRepository, sessionService, configuration);
-        userRoute = new UserRoute(voteRepository, configuration);
+        userRoute = new UserRoute(voteRepository, userRepository, configuration);
+        guildRoute = new GuildRoute(memberCache);
     }
 
     public void init() {
@@ -123,6 +126,7 @@ public class Api {
             dataRoute.buildRoutes();
             authRoute.buildRoutes();
             userRoute.buildRoutes();
+            guildRoute.buildRoutes();
         });
     }
 }

@@ -9,7 +9,7 @@ import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.provider.SettingsAuditLogRepository;
-import de.chojo.repbot.web.pojo.GuildSessionPOJO;
+import de.chojo.repbot.web.pojo.guild.GuildPOJO;
 import de.chojo.repbot.web.validation.GuildValidator;
 import de.chojo.repbot.web.validation.PremiumValidator;
 import net.dv8tion.jda.api.entities.Guild;
@@ -26,7 +26,7 @@ public class GuildSession {
     private PremiumValidator premiumValidator;
     private GuildValidator guildValidator;
     private volatile boolean dirty = true;
-    private GuildSessionPOJO cachedSessionData;
+    private GuildPOJO cachedGuild;
 
     public GuildSession(
             Configuration configuration,
@@ -52,12 +52,12 @@ public class GuildSession {
     }
 
     @NotNull
-    public GuildSessionPOJO sessionData() {
-        if (dirty || cachedSessionData == null) {
-            cachedSessionData = GuildSessionPOJO.generate(guild());
+    public GuildPOJO guildPOJO() {
+        if (dirty || cachedGuild == null) {
+            cachedGuild = GuildPOJO.generate(guild());
             dirty = false;
         }
-        return cachedSessionData;
+        return cachedGuild;
     }
 
     public void markDirty() {

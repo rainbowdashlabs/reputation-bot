@@ -29,7 +29,7 @@ public class UserSettings {
 
     public void voteGuild(long voteGuild) {
         if (Query.query("""
-                         INSERT INTO user_settings(id, vote_guild) VALUES(?, ?) ON CONFLICT(id) DO UPDATE SET vote_guild = ?
+                         INSERT INTO user_settings(id, vote_guild) VALUES(?, ?) ON CONFLICT(id) DO UPDATE SET vote_guild = excluded.vote_guild
                          """)
                 .single(Call.call().bind(id).bind(voteGuild))
                 .insert()
