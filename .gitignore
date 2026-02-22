@@ -39,3 +39,4 @@ buildNumber.properties
 /.direnv
 .run
 .env
+__pycache__
