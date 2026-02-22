@@ -70,7 +70,9 @@ public class VoteRepository {
                     (?, ?, ?, ?)
                 ON CONFLICT(entity_id, entity_type) DO UPDATE SET
                     token = token + excluded.token, total_token = total_token + excluded.token;
-                """).single(call().bind(userId).bind(type).bind(amount).bind(amount)).insert();
+                """)
+                .single(call().bind(userId).bind(type).bind(amount).bind(amount))
+                .insert();
     }
 
     private void logToken(long userId, long guildId, VoteReason reason, int amount) {
