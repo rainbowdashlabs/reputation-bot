@@ -10,12 +10,17 @@
     "loading": "Načítání...",
     "error": {
       "outOfBounds": "Hodnota musí být v rozmezí {min} a {max}. Opraveno na nejbližší platnou hodnotu."
-    }
+    },
+    "noData": "Nebyly nalezeny žádné záznamy.",
+    "previous": "Předchozí",
+    "next": "Další",
+    "pageOf": "Stránka {current} z {total}"
   },
   "navigation": {
     "settings": "Nastavení",
     "presets": "Předvolby",
-    "setup": "Nastavení"
+    "setup": "Nastavení",
+    "logout": "Odhlásit se"
   },
   "presets": {
     "title": "Předvolby",
@@ -135,7 +140,6 @@
   },
   "premiumFeature": {
     "title": "Funkce pro příznivce",
-    "requiredTier": "Požadovaná úroveň podpory:",
     "message": "{name} je vyhrazeno pro příznivce. Staňte se příznivcem a můžete jej používat.",
     "requiredTierSingular": "Požadovaná úroveň podpory:",
     "requiredTierPlural": "Je vyžadována jedna z následujících úrovní podpory:"
@@ -669,5 +673,54 @@
     "week": "1 týden",
     "fourWeeks": "4 týdny",
     "year": "1 rok"
+  },
+  "login": {
+    "title": "Vyžaduje se přihlášení",
+    "description": "Přihlaste se prosím pomocí Discord, abyste získali přístup k tomuto panelu.",
+    "button": "Přihlásit se pomocí Discord"
+  },
+  "voting": {
+    "title": "Hlasování",
+    "description": "Informace o vašich aktuálních hlasovacích žetonech a stavu hlasování v seznamu botů.",
+    "tokens": {
+      "title": "Tokeny",
+      "description": "Vaše aktuální hlasovací žetony. Můžete je utratit za různé odměny.",
+      "label": "Aktuální tokeny"
+    },
+    "botlists": {
+      "title": "Seznamy botů",
+      "description": "Hlasujte pro bota na různých seznamech botů, abyste získali tokeny a udrželi si svou sérii.",
+      "name": "Seznam botů",
+      "streak": "Série",
+      "lastVote": "Poslední hlasování",
+      "action": "Akce",
+      "vote": "Hlasovat",
+      "never": "Nikdy",
+      "days": "dny"
+    },
+    "log": {
+      "title": "Záznam hlasování",
+      "description": "Historie transakcí s vašimi hlasovacími žetony.",
+      "date": "Datum",
+      "guild": "Cech",
+      "tokens": "Tokeny",
+      "reason": {
+        "label": "Důvod",
+        "STANDARD": "Hlasovat",
+        "STANDARD_DESCRIPTION": "Obdržel jste token pro hlasování na botlistu.",
+        "STREAK": "Hlasovací série",
+        "STREAK_DESCRIPTION": "Získali jste bonusový žeton, protože máte sérii.",
+        "BONUS": "Denní bonus",
+        "BONUS_DESCRIPTION": "Za hlasování ve všech botlistech během posledních 6 hodin jste obdrželi extra tokeny.",
+        "TRANSFER": "Převod do cechu",
+        "TRANSFER_DESCRIPTION": "Převedl jsi tokeny do cechu, abys podpořil jeho systém reputace.",
+        "USE": "Nákup",
+        "USE_DESCRIPTION": "Použil jste žetony k nákupu odměny nebo služby.",
+        "unknown": "Neznámý",
+        "unknown_DESCRIPTION": "Důvod této transakce není znám."
+      },
+      "unknownGuild": "Neznámá gilda",
+      "personal": "Osobní"
+    }
   }
 }

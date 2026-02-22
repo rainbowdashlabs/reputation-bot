@@ -10,12 +10,17 @@
     "loading": "Caricamento in corso...",
     "error": {
       "outOfBounds": "Il valore deve essere compreso tra {min} e {max}. Corretto al valore valido più vicino."
-    }
+    },
+    "noData": "Nessun risultato trovato.",
+    "previous": "Precedente",
+    "next": "Successivo",
+    "pageOf": "Pagina {current} di {total}"
   },
   "navigation": {
     "settings": "Impostazioni",
     "presets": "Preimpostazioni",
-    "setup": "Configurazione"
+    "setup": "Configurazione",
+    "logout": "Esci"
   },
   "presets": {
     "title": "Preimpostazioni",
@@ -135,7 +140,6 @@
   },
   "premiumFeature": {
     "title": "Caratteristiche dei sostenitori",
-    "requiredTier": "Livello di sostegno richiesto:",
     "message": "{name} è solo per chi ci supporta. Diventa un sostenitore per usarlo.",
     "requiredTierSingular": "Livello di sostegno richiesto:",
     "requiredTierPlural": "Devi scegliere uno di questi livelli di sostegno:"
@@ -669,5 +673,54 @@
     "week": "1 settimana",
     "fourWeeks": "4 settimane",
     "year": "1 anno"
+  },
+  "login": {
+    "title": "Accesso richiesto",
+    "description": "Accedi con Discord per vedere questo pannello.",
+    "button": "Accedi con Discord"
+  },
+  "voting": {
+    "title": "Votazione",
+    "description": "Informazioni sui tuoi gettoni di voto attuali e sullo stato delle votazioni nella lista dei bot.",
+    "tokens": {
+      "title": "Gettoni",
+      "description": "I tuoi gettoni voto attuali. Puoi usarli per vari premi.",
+      "label": "Gettoni attuali"
+    },
+    "botlists": {
+      "title": "Elenchi di bot",
+      "description": "Vota il bot su varie liste di bot per guadagnare gettoni e continuare la tua serie positiva.",
+      "name": "Elenco dei bot",
+      "streak": "Serie",
+      "lastVote": "Ultimo voto",
+      "action": "Azione",
+      "vote": "Vota",
+      "never": "Mai",
+      "days": "giorni"
+    },
+    "log": {
+      "title": "Registro dei voti",
+      "description": "Una cronologia delle tue transazioni con i gettoni voto.",
+      "date": "Data",
+      "guild": "Gilda",
+      "tokens": "Gettoni",
+      "reason": {
+        "label": "Motivo",
+        "STANDARD": "Vota",
+        "STANDARD_DESCRIPTION": "Hai ricevuto un gettone per votare su una lista di bot.",
+        "STREAK": "Serie di voti",
+        "STREAK_DESCRIPTION": "Hai ricevuto un gettone in più perché hai una serie positiva.",
+        "BONUS": "Bonus giornaliero",
+        "BONUS_DESCRIPTION": "Hai ricevuto dei gettoni extra per aver votato su tutte le botlist nelle ultime 6 ore.",
+        "TRANSFER": "Trasferimento alla Gilda",
+        "TRANSFER_DESCRIPTION": "Hai dato dei gettoni a una gilda per aiutare il suo sistema di reputazione.",
+        "USE": "Acquisto",
+        "USE_DESCRIPTION": "Hai usato i gettoni per comprare un premio o un servizio.",
+        "unknown": "Sconosciuto",
+        "unknown_DESCRIPTION": "Non si sa perché sia stata fatta questa transazione."
+      },
+      "unknownGuild": "Gilda sconosciuta",
+      "personal": "Personale"
+    }
   }
 }

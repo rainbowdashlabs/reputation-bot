@@ -10,12 +10,17 @@
     "loading": "Ładowanie...",
     "error": {
       "outOfBounds": "Wartość musi mieścić się w przedziale od {min} do {max}. Poprawiono do najbliższej prawidłowej wartości."
-    }
+    },
+    "noData": "Nie znaleziono wpisów.",
+    "previous": "Poprzedni",
+    "next": "Dalej",
+    "pageOf": "Strona {current} z {total}"
   },
   "navigation": {
     "settings": "Ustawienia",
     "presets": "Ustawienia wstępne",
-    "setup": "Konfiguracja"
+    "setup": "Konfiguracja",
+    "logout": "Wyloguj"
   },
   "presets": {
     "title": "Ustawienia wstępne",
@@ -135,7 +140,6 @@
   },
   "premiumFeature": {
     "title": "Funkcja kibica",
-    "requiredTier": "Wymagany poziom wsparcia:",
     "message": "{name} jest zarezerwowana dla kibiców. Zostań kibicem, aby z niej korzystać.",
     "requiredTierSingular": "Wymagany poziom wsparcia:",
     "requiredTierPlural": "Wymagany jest jeden z poniższych poziomów wsparcia:"
@@ -669,5 +673,54 @@
     "week": "1 tydzień",
     "fourWeeks": "4 tygodnie",
     "year": "1 rok"
+  },
+  "login": {
+    "title": "Wymagane logowanie",
+    "description": "Zaloguj się do Discord, aby uzyskać dostęp do tego panelu.",
+    "button": "Zaloguj się za pomocą Discord"
+  },
+  "voting": {
+    "title": "Głosowanie",
+    "description": "Informacje o twoich aktualnych tokenach głosowania i statusie głosowania botlisty.",
+    "tokens": {
+      "title": "Tokeny",
+      "description": "Twoje aktualne tokeny głosów. Możesz je wydać na różne nagrody.",
+      "label": "Aktualne tokeny"
+    },
+    "botlists": {
+      "title": "Listy botów",
+      "description": "Głosuj na bota na różnych listach botów, aby zdobywać tokeny i utrzymać swoją passę.",
+      "name": "Lista botów",
+      "streak": "Seria",
+      "lastVote": "Ostatnie głosowanie",
+      "action": "Działanie",
+      "vote": "Głosuj",
+      "never": "Nigdy",
+      "days": "dni"
+    },
+    "log": {
+      "title": "Rejestr głosów",
+      "description": "Historia transakcji związanych z twoimi tokenami głosowymi.",
+      "date": "Data",
+      "guild": "Gildia",
+      "tokens": "Tokeny",
+      "reason": {
+        "label": "Powód",
+        "STANDARD": "Głosuj",
+        "STANDARD_DESCRIPTION": "Otrzymałeś token do głosowania na listę botów.",
+        "STREAK": "Seria głosowań",
+        "STREAK_DESCRIPTION": "Otrzymałeś dodatkowy token, ponieważ masz passę.",
+        "BONUS": "Codzienny bonus",
+        "BONUS_DESCRIPTION": "Otrzymałeś dodatkowe tokeny za głosowanie na wszystkie listy botów w ciągu ostatnich 6 godzin.",
+        "TRANSFER": "Przeniesienie do gildii",
+        "TRANSFER_DESCRIPTION": "Przekazałeś tokeny gildii, aby wesprzeć jej system reputacji.",
+        "USE": "Zakup",
+        "USE_DESCRIPTION": "Wykorzystałeś tokeny do zakupu nagrody lub usługi.",
+        "unknown": "Nieznane",
+        "unknown_DESCRIPTION": "Przyczyna tej transakcji nie jest znana."
+      },
+      "unknownGuild": "Nieznana gildia",
+      "personal": "Osobiste"
+    }
   }
 }

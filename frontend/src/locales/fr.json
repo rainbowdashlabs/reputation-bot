@@ -10,12 +10,17 @@
     "loading": "Charge...",
     "error": {
       "outOfBounds": "La valeur doit être comprise entre {min} et {max}. Corrigée à la valeur valide la plus proche."
-    }
+    },
+    "noData": "Aucune entrée trouvée.",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "pageOf": "Page {current} de {total}"
   },
   "navigation": {
     "settings": "Paramètres",
     "presets": "Préréglages",
-    "setup": "Configuration"
+    "setup": "Configuration",
+    "logout": "Déconnexion"
   },
   "presets": {
     "title": "Préréglages",
@@ -135,7 +140,6 @@
   },
   "premiumFeature": {
     "title": "Présentation d'un supporter",
-    "requiredTier": "Niveau de soutien requis :",
     "message": "{name} est réservé aux supporters. Deviens supporter pour pouvoir l'utiliser.",
     "requiredTierSingular": "Niveau de soutien requis :",
     "requiredTierPlural": "Il faut choisir un des niveaux de soutien suivants :"
@@ -669,5 +673,54 @@
     "week": "1 semaine",
     "fourWeeks": "4 semaines",
     "year": "1 an"
+  },
+  "login": {
+    "title": "Connexion requise",
+    "description": "Connecte-toi avec Discord pour accéder à ce panneau.",
+    "button": "Connecte-toi avec Discord"
+  },
+  "voting": {
+    "title": "Vote",
+    "description": "Infos sur tes jetons de vote actuels et le statut de vote de ta liste de bots.",
+    "tokens": {
+      "title": "Jetons",
+      "description": "Tes jetons de vote actuels. Tu peux les utiliser pour obtenir plein de récompenses.",
+      "label": "Jetons actuels"
+    },
+    "botlists": {
+      "title": "Listes de bots",
+      "description": "Vote pour le bot sur différentes listes de bots pour gagner des jetons et continuer ta série.",
+      "name": "Liste des bots",
+      "streak": "Série",
+      "lastVote": "Dernier vote",
+      "action": "Action",
+      "vote": "Vote",
+      "never": "Jamais",
+      "days": "jours"
+    },
+    "log": {
+      "title": "Journal des votes",
+      "description": "L'historique de tes transactions avec des jetons de vote.",
+      "date": "Date",
+      "guild": "Guilde",
+      "tokens": "Jetons",
+      "reason": {
+        "label": "Raison",
+        "STANDARD": "Vote",
+        "STANDARD_DESCRIPTION": "Tu as reçu un jeton pour voter sur une liste de bots.",
+        "STREAK": "Série de votes",
+        "STREAK_DESCRIPTION": "T'as reçu un jeton en plus parce que t'as une série de victoires.",
+        "BONUS": "Bonus quotidien",
+        "BONUS_DESCRIPTION": "Tu as reçu des jetons en plus pour avoir voté sur toutes les listes de bots au cours des 6 dernières heures.",
+        "TRANSFER": "Transfert vers la guilde",
+        "TRANSFER_DESCRIPTION": "T'as transféré des jetons à une guilde pour soutenir son système de réputation.",
+        "USE": "Acheter",
+        "USE_DESCRIPTION": "T'as utilisé des jetons pour acheter une récompense ou un service.",
+        "unknown": "Inconnu",
+        "unknown_DESCRIPTION": "On ne sait pas trop pourquoi cette transaction a été faite."
+      },
+      "unknownGuild": "Guilde inconnue",
+      "personal": "Personnel"
+    }
   }
 }

@@ -10,12 +10,17 @@
     "loading": "読み込み中...",
     "error": {
       "outOfBounds": "値は{min}から{max}の間でなければならない。有効な値に最も近い値に修正された。"
-    }
+    },
+    "noData": "該当する項目は見つかりませんでした。",
+    "previous": "前回",
+    "next": "次",
+    "pageOf": "ページ {current} of {total}"
   },
   "navigation": {
     "settings": "設定",
     "presets": "プリセット",
-    "setup": "設定"
+    "setup": "設定",
+    "logout": "ログアウト"
   },
   "presets": {
     "title": "プリセット",
@@ -135,7 +140,6 @@
   },
   "premiumFeature": {
     "title": "サポーター特集",
-    "requiredTier": "必要なサポーターのレベル：",
     "message": "{name} サポーター専用だ。利用するにはサポーターになれ。",
     "requiredTierSingular": "必要なサポーターのレベル：",
     "requiredTierPlural": "以下のサポーター層のいずれかが必要だ："
@@ -669,5 +673,54 @@
     "week": "1週間",
     "fourWeeks": "4週間",
     "year": "1年"
+  },
+  "login": {
+    "title": "ログインが必要だ",
+    "description": "このパネルにアクセスするには、Discordでログインする必要がある。",
+    "button": "Discordでログインする"
+  },
+  "voting": {
+    "title": "投票",
+    "description": "現在の投票トークンとボットリストの投票状況に関する情報だ。",
+    "tokens": {
+      "title": "トークン",
+      "description": "現在の投票トークンだ。様々な報酬に使える。",
+      "label": "現在のトークン"
+    },
+    "botlists": {
+      "title": "ボットリスト",
+      "description": "様々なボットリストでボットに投票してトークンを獲得し、連続投票を維持しろ。",
+      "name": "ボットリスト",
+      "streak": "連勝",
+      "lastVote": "最後の投票",
+      "action": "行動",
+      "vote": "投票する",
+      "never": "決して",
+      "days": "日"
+    },
+    "log": {
+      "title": "投票記録",
+      "description": "投票トークンの取引履歴だ。",
+      "date": "日付",
+      "guild": "ギルド",
+      "tokens": "トークン",
+      "reason": {
+        "label": "理由",
+        "STANDARD": "投票する",
+        "STANDARD_DESCRIPTION": "ボットリストの投票用トークンを受け取った。",
+        "STREAK": "投票連続記録",
+        "STREAK_DESCRIPTION": "連続達成中だから、追加でトークンをもらったんだ。",
+        "BONUS": "デイリーボーナス",
+        "BONUS_DESCRIPTION": "過去6時間以内に全てのボットリストで投票したため、追加トークンを受け取った。",
+        "TRANSFER": "ギルドへ移籍する",
+        "TRANSFER_DESCRIPTION": "お前はギルドの評判システムを支援するためにトークンを移した。",
+        "USE": "購入",
+        "USE_DESCRIPTION": "トークンを使って報酬やサービスを購入した。",
+        "unknown": "不明",
+        "unknown_DESCRIPTION": "この取引の理由は不明である。"
+      },
+      "unknownGuild": "未知のギルド",
+      "personal": "個人"
+    }
   }
 }

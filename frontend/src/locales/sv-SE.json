@@ -10,12 +10,17 @@
     "loading": "Laddar...",
     "error": {
       "outOfBounds": "Värdet måste ligga mellan {min} och {max}. Korrigeras till närmaste giltiga värde."
-    }
+    },
+    "noData": "Inga poster hittades.",
+    "previous": "Föregående",
+    "next": "Nästa",
+    "pageOf": "Sida {current} av {total}"
   },
   "navigation": {
     "settings": "Inställningar",
     "presets": "Förinställningar",
-    "setup": "Inställningar"
+    "setup": "Inställningar",
+    "logout": "Logga ut"
   },
   "presets": {
     "title": "Förinställningar",
@@ -135,7 +140,6 @@
   },
   "premiumFeature": {
     "title": "Supporterfunktion",
-    "requiredTier": "Krävd supporternivå:",
     "message": "{name} är reserverad för supportrar. Bli supporter för att kunna använda den.",
     "requiredTierSingular": "Krävd supporternivå:",
     "requiredTierPlural": "En av följande supporternivåer krävs:"
@@ -669,5 +673,54 @@
     "week": "1 vecka",
     "fourWeeks": "4 veckor",
     "year": "1 år"
+  },
+  "login": {
+    "title": "Inloggning krävs",
+    "description": "Logga in med Discord för att komma åt detta panel.",
+    "button": "Logga in med Discord"
+  },
+  "voting": {
+    "title": "Omröstning",
+    "description": "Information om dina aktuella rösttokens och botlistans röstningsstatus.",
+    "tokens": {
+      "title": "Tokens",
+      "description": "Dina nuvarande röstmarker. Du kan använda dem för att få olika belöningar.",
+      "label": "Aktuella tokens"
+    },
+    "botlists": {
+      "title": "Botlistor",
+      "description": "Rösta på boten på olika botlistor för att tjäna tokens och behålla din rad.",
+      "name": "Botlista",
+      "streak": "Streak",
+      "lastVote": "Sista omröstningen",
+      "action": "Åtgärd",
+      "vote": "Rösta",
+      "never": "Aldrig",
+      "days": "dagar"
+    },
+    "log": {
+      "title": "Röstningslogg",
+      "description": "En historik över dina transaktioner med röstmarker.",
+      "date": "Datum",
+      "guild": "Gille",
+      "tokens": "Tokens",
+      "reason": {
+        "label": "Skälet",
+        "STANDARD": "Rösta",
+        "STANDARD_DESCRIPTION": "Du har fått en token för att rösta på en botlista.",
+        "STREAK": "Röstningsserie",
+        "STREAK_DESCRIPTION": "Du fick en extra token eftersom du har en rad.",
+        "BONUS": "Daglig bonus",
+        "BONUS_DESCRIPTION": "Du har fått extra tokens för att ha röstat på alla botlistor under de senaste 6 timmarna.",
+        "TRANSFER": "Överföring till Guild",
+        "TRANSFER_DESCRIPTION": "Du överförde tokens till en guild för att stödja dess reputationssystem.",
+        "USE": "Köp",
+        "USE_DESCRIPTION": "Du använde tokens för att köpa en belöning eller tjänst.",
+        "unknown": "Okänd",
+        "unknown_DESCRIPTION": "Anledningen till denna transaktion är okänd."
+      },
+      "unknownGuild": "Okänd guild",
+      "personal": "Personlig"
+    }
   }
 }

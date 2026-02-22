@@ -10,12 +10,17 @@
     "loading": "로딩 중...",
     "error": {
       "outOfBounds": "값은 {min}과 {max} 사이여야 합니다. 가장 가까운 유효한 값으로 수정되었습니다."
-    }
+    },
+    "noData": "찾을 항목이 없습니다.",
+    "previous": "이전",
+    "next": "다음",
+    "pageOf": "페이지 {current} of {total}"
   },
   "navigation": {
     "settings": "설정",
     "presets": "사전 설정",
-    "setup": "설정"
+    "setup": "설정",
+    "logout": "로그아웃"
   },
   "presets": {
     "title": "사전 설정",
@@ -135,7 +140,6 @@
   },
   "premiumFeature": {
     "title": "서포터 기능",
-    "requiredTier": "필수 후원 등급:",
     "message": "{name} 이 기능은 후원자 전용입니다. 사용하려면 후원자가 되어 주세요.",
     "requiredTierSingular": "필수 후원 등급:",
     "requiredTierPlural": "다음 후원 등급 중 하나가 필요합니다:"
@@ -669,5 +673,54 @@
     "week": "1주",
     "fourWeeks": "4주",
     "year": "1년"
+  },
+  "login": {
+    "title": "로그인 필요",
+    "description": "이 패널에 접근하려면 Discord로 로그인해 주세요.",
+    "button": "Discord로 로그인"
+  },
+  "voting": {
+    "title": "투표",
+    "description": "현재 투표 토큰 및 봇리스트 투표 상태에 관한 정보.",
+    "tokens": {
+      "title": "토큰",
+      "description": "현재 보유 중인 투표 토큰입니다. 다양한 보상에 사용할 수 있습니다.",
+      "label": "현재 토큰"
+    },
+    "botlists": {
+      "title": "봇 목록",
+      "description": "다양한 봇 목록에서 봇에 투표하여 토큰을 획득하고 연속 기록을 유지하세요.",
+      "name": "봇 목록",
+      "streak": "연승",
+      "lastVote": "마지막 투표",
+      "action": "액션",
+      "vote": "투표",
+      "never": "절대",
+      "days": "날들"
+    },
+    "log": {
+      "title": "투표 기록",
+      "description": "귀하의 투표 토큰 거래 내역.",
+      "date": "날짜",
+      "guild": "길드",
+      "tokens": "토큰",
+      "reason": {
+        "label": "이유",
+        "STANDARD": "투표",
+        "STANDARD_DESCRIPTION": "봇리스트 투표용 토큰을 받으셨습니다.",
+        "STREAK": "투표 연속 기록",
+        "STREAK_DESCRIPTION": "연속 기록이 있어서 추가 토큰을 받았습니다.",
+        "BONUS": "일일 보너스",
+        "BONUS_DESCRIPTION": "지난 6시간 동안 모든 봇리스트에 투표하여 추가 토큰을 획득했습니다.",
+        "TRANSFER": "길드로 이관",
+        "TRANSFER_DESCRIPTION": "귀하는 길드의 평판 시스템을 지원하기 위해 토큰을 길드에 이전했습니다.",
+        "USE": "구매",
+        "USE_DESCRIPTION": "토큰을 사용하여 보상이나 서비스를 구매했습니다.",
+        "unknown": "알 수 없음",
+        "unknown_DESCRIPTION": "이 거래의 이유는 알려지지 않았습니다."
+      },
+      "unknownGuild": "알 수 없는 길드",
+      "personal": "개인적인"
+    }
   }
 }

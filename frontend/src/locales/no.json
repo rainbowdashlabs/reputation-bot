@@ -10,12 +10,17 @@
     "loading": "Laster...",
     "error": {
       "outOfBounds": "Verdien må være mellom {min} og {max}. Korrigert til nærmeste gyldige verdi."
-    }
+    },
+    "noData": "Ingen oppføringer funnet.",
+    "previous": "Forrige",
+    "next": "Neste",
+    "pageOf": "Side {current} av {total}"
   },
   "navigation": {
     "settings": "Innstillinger",
     "presets": "Forhåndsinnstillinger",
-    "setup": "Oppsett"
+    "setup": "Oppsett",
+    "logout": "Logg ut"
   },
   "presets": {
     "title": "Forhåndsinnstillinger",
@@ -135,7 +140,6 @@
   },
   "premiumFeature": {
     "title": "Supporterfunksjon",
-    "requiredTier": "Nødvendig støttespiller-nivå:",
     "message": "{name} er forbeholdt støttespillere. Bli støttespiller for å kunne bruke den.",
     "requiredTierSingular": "Nødvendig støttenivå:",
     "requiredTierPlural": "En av følgende støttenivåer er påkrevd:"
@@ -669,5 +673,54 @@
     "week": "1 uke",
     "fourWeeks": "4 uker",
     "year": "1 år"
+  },
+  "login": {
+    "title": "Pålogging kreves",
+    "description": "Vennligst logg inn med Discord for å få tilgang til dette panelet.",
+    "button": "Logg inn med Discord"
+  },
+  "voting": {
+    "title": "Avstemning",
+    "description": "Informasjon om dine nåværende stemmetokener og botlistens stemmestatus.",
+    "tokens": {
+      "title": "Tokens",
+      "description": "Dine nåværende stemmetokener. Du kan bruke dem på ulike belønninger.",
+      "label": "Gjeldende tokens"
+    },
+    "botlists": {
+      "title": "Botlister",
+      "description": "Stem på boten på ulike botlister for å tjene tokens og opprettholde din rekke.",
+      "name": "Botliste",
+      "streak": "Streak",
+      "lastVote": "Siste avstemning",
+      "action": "Handling",
+      "vote": "Stem",
+      "never": "Aldri",
+      "days": "dager"
+    },
+    "log": {
+      "title": "Stemmeregister",
+      "description": "En oversikt over dine transaksjoner med stemmetokener.",
+      "date": "Dato",
+      "guild": "Guild",
+      "tokens": "Tokens",
+      "reason": {
+        "label": "Årsak",
+        "STANDARD": "Stem",
+        "STANDARD_DESCRIPTION": "Du har mottatt en token for å stemme på en botliste.",
+        "STREAK": "Stemme rekke",
+        "STREAK_DESCRIPTION": "Du har fått en ekstra token fordi du har en strek.",
+        "BONUS": "Daglig bonus",
+        "BONUS_DESCRIPTION": "Du har mottatt ekstra tokens for å ha stemt på alle botlister i løpet av de siste 6 timene.",
+        "TRANSFER": "Overføring til Guild",
+        "TRANSFER_DESCRIPTION": "Du overførte tokens til et laug for å støtte dets omdømmesystem.",
+        "USE": "Kjøp",
+        "USE_DESCRIPTION": "Du brukte tokens til å kjøpe en belønning eller tjeneste.",
+        "unknown": "Ukjent",
+        "unknown_DESCRIPTION": "Årsaken til denne transaksjonen er ukjent."
+      },
+      "unknownGuild": "Ukjent laug",
+      "personal": "Personlig"
+    }
   }
 }

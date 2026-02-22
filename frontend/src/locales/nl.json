@@ -10,12 +10,17 @@
     "loading": "Bezig met laden...",
     "error": {
       "outOfBounds": "De waarde moet tussen {min} en {max} liggen. Aangepast naar de dichtstbijzijnde geldige waarde."
-    }
+    },
+    "noData": "Geen resultaten gevonden.",
+    "previous": "Vorige",
+    "next": "Volgende",
+    "pageOf": "Pagina {current} van {total}"
   },
   "navigation": {
     "settings": "Instellingen",
     "presets": "Voorinstellingen",
-    "setup": "Instellingen"
+    "setup": "Instellingen",
+    "logout": "Uitloggen"
   },
   "presets": {
     "title": "Voorinstellingen",
@@ -135,7 +140,6 @@
   },
   "premiumFeature": {
     "title": "Supporter-functie",
-    "requiredTier": "Vereist ondersteuningsniveau:",
     "message": "{name} is alleen voor supporters. Word supporter om het te kunnen gebruiken.",
     "requiredTierSingular": "Vereist ondersteuningsniveau:",
     "requiredTierPlural": "Je moet een van de volgende supporterniveaus kiezen:"
@@ -669,5 +673,54 @@
     "week": "1 week",
     "fourWeeks": "4 weken",
     "year": "1 jaar"
+  },
+  "login": {
+    "title": "Inloggen nodig",
+    "description": "Log even in met Discord om dit paneel te openen.",
+    "button": "Log in met Discord"
+  },
+  "voting": {
+    "title": "Stemmen",
+    "description": "Info over je huidige stemtokens en hoe het zit met je botlijststemmen.",
+    "tokens": {
+      "title": "Tokens",
+      "description": "Je huidige stemtokens. Je kunt ze gebruiken voor allerlei beloningen.",
+      "label": "Huidige tokens"
+    },
+    "botlists": {
+      "title": "Botlijsten",
+      "description": "Stem op de bot op verschillende botlijsten om tokens te verdienen en je streak te behouden.",
+      "name": "Botlijst",
+      "streak": "Streak",
+      "lastVote": "Laatste stemming",
+      "action": "Actie",
+      "vote": "Stem",
+      "never": "Nooit",
+      "days": "dagen"
+    },
+    "log": {
+      "title": "Stemlogboek",
+      "description": "Een overzicht van je stemtoken-transacties.",
+      "date": "Datum",
+      "guild": "Gilde",
+      "tokens": "Tokens",
+      "reason": {
+        "label": "Reden",
+        "STANDARD": "Stem",
+        "STANDARD_DESCRIPTION": "Je hebt een token gekregen om te stemmen op een botlijst.",
+        "STREAK": "Stemreeks",
+        "STREAK_DESCRIPTION": "Je hebt een extra muntje gekregen omdat je een streak hebt.",
+        "BONUS": "Dagelijkse bonus",
+        "BONUS_DESCRIPTION": "Je hebt extra tokens gekregen omdat je in de afgelopen 6 uur op alle botlijsten hebt gestemd.",
+        "TRANSFER": "Overstappen naar Guild",
+        "TRANSFER_DESCRIPTION": "Je hebt tokens naar een gilde gestuurd om hun reputatiesysteem te steunen.",
+        "USE": "Aankoop",
+        "USE_DESCRIPTION": "Je hebt tokens gebruikt om een beloning of dienst te kopen.",
+        "unknown": "Onbekend",
+        "unknown_DESCRIPTION": "We weten niet waarom deze transactie is gedaan."
+      },
+      "unknownGuild": "Onbekende gilde",
+      "personal": "Persoonlijk"
+    }
   }
 }

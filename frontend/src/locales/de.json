@@ -10,12 +10,17 @@
     "loading": "Lade...",
     "error": {
       "outOfBounds": "Der Wert muss zwischen {min} und {max} liegen. Auf den nächsten gültigen Wert korrigiert."
-    }
+    },
+    "noData": "Keine Einträge gefunden.",
+    "previous": "Vorherige",
+    "next": "Nächste",
+    "pageOf": "Seite {current} von {total}"
   },
   "navigation": {
     "settings": "Einstellungen",
     "presets": "Voreinstellungen",
-    "setup": "Einrichtung"
+    "setup": "Einrichtung",
+    "logout": "Abmelden"
   },
   "presets": {
     "title": "Voreinstellungen",
@@ -135,7 +140,6 @@
   },
   "premiumFeature": {
     "title": "Unterstützer-Feature",
-    "requiredTier": "Erforderliche Unterstützerstufe:",
     "message": "{name} ist für Unterstützer reserviert. Werde Unterstützer, um es zu nutzen.",
     "requiredTierSingular": "Erforderliche Unterstützerstufe:",
     "requiredTierPlural": "Eine der folgenden Unterstützerstufen ist erforderlich:"
@@ -669,5 +673,54 @@
     "week": "1 Woche",
     "fourWeeks": "4 Wochen",
     "year": "1 Jahr"
+  },
+  "login": {
+    "title": "Anmeldung nötig",
+    "description": "Log dich bitte mit Discord ein, um auf dieses Panel zugreifen zu können.",
+    "button": "Mit Discord einloggen"
+  },
+  "voting": {
+    "title": "Voting",
+    "description": "Infos zu deinen aktuellen Vote-Token und dem Status deiner Botlist-Voting.",
+    "tokens": {
+      "title": "Token",
+      "description": "Deine aktuellen Token. Du kannst sie für verschiedene Belohnungen ausgeben.",
+      "label": "Aktuelle Token"
+    },
+    "botlists": {
+      "title": "Botlisten",
+      "description": "Stimm für den Bot auf verschiedenen Botlisten, um Token zu verdienen und deine Streak aufrechtzuerhalten.",
+      "name": "Botliste",
+      "streak": "Streak",
+      "lastVote": "Letzter Vote",
+      "action": "Aktion",
+      "vote": "Voten",
+      "never": "Niemals",
+      "days": "Tage"
+    },
+    "log": {
+      "title": "Votingprotokoll",
+      "description": "Eine Übersicht über deine Token-Transaktionen.",
+      "date": "Datum",
+      "guild": "Server",
+      "tokens": "Token",
+      "reason": {
+        "label": "Grund",
+        "STANDARD": "Vote",
+        "STANDARD_DESCRIPTION": "Du hast einen Token für das Voten auf einer Botliste bekommen.",
+        "STREAK": "Streak",
+        "STREAK_DESCRIPTION": "Du hast einen zusätzlichen Token bekommen, weil du eine Streak aufrecht hältst.",
+        "BONUS": "Täglicher Bonus",
+        "BONUS_DESCRIPTION": "Du hast zusätzliche Token dafür bekommen, dass du in den letzten 6 Stunden auf allen Botlisten abgestimmt hast.",
+        "TRANSFER": "Wechsel zur Gilde",
+        "TRANSFER_DESCRIPTION": "Du hast Token an einen Server geschickt, um ihr Reputationssystem zu unterstützen.",
+        "USE": "Kauf",
+        "USE_DESCRIPTION": "Du hast mit Tokens eine Belohnung oder Dienstleistung gekauft.",
+        "unknown": "Unbekannt",
+        "unknown_DESCRIPTION": "Der Grund für diese Transaktion ist unbekannt."
+      },
+      "unknownGuild": "Unbekannter Server",
+      "personal": "Persönlich"
+    }
   }
 }

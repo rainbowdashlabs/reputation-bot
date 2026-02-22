@@ -10,12 +10,17 @@
     "loading": "Yükleniyor...",
     "error": {
       "outOfBounds": "Değer, {min} ile {max} arasında olmalıdır. En yakın geçerli değere düzeltildi."
-    }
+    },
+    "noData": "Hiçbir giriş bulunamadı.",
+    "previous": "Önceki",
+    "next": "Sonraki",
+    "pageOf": "Sayfa {current}, {total}"
   },
   "navigation": {
     "settings": "Ayarlar",
     "presets": "Ön ayarlar",
-    "setup": "Kurulum"
+    "setup": "Kurulum",
+    "logout": "Çıkış"
   },
   "presets": {
     "title": "Ön ayarlar",
@@ -135,7 +140,6 @@
   },
   "premiumFeature": {
     "title": "Destekçi Özelliği",
-    "requiredTier": "Gerekli Destekçi Seviyesi:",
     "message": "{name} destekçilere ayrılmıştır. Kullanmak için destekçi olun.",
     "requiredTierSingular": "Gerekli Destekçi Seviyesi:",
     "requiredTierPlural": "Aşağıdaki destekçi seviyelerinden biri gereklidir:"
@@ -669,5 +673,54 @@
     "week": "1 Hafta",
     "fourWeeks": "4 Hafta",
     "year": "1 Yıl"
+  },
+  "login": {
+    "title": "Giriş Gerekli",
+    "description": "Bu panele erişmek için Discord ile giriş yapın.",
+    "button": "Discord ile giriş yap"
+  },
+  "voting": {
+    "title": "Oylama",
+    "description": "Mevcut oy jetonlarınız ve bot listesi oylama durumunuz hakkında bilgiler.",
+    "tokens": {
+      "title": "Jetonlar",
+      "description": "Mevcut oy jetonlarınız. Bunları çeşitli ödüller için kullanabilirsiniz.",
+      "label": "Mevcut Tokenlar"
+    },
+    "botlists": {
+      "title": "Bot listeleri",
+      "description": "Çeşitli bot listelerinde bot için oy vererek jeton kazan ve serini sürdür.",
+      "name": "Bot listesi",
+      "streak": "Seri",
+      "lastVote": "Son Oy",
+      "action": "Eylem",
+      "vote": "Oy ver",
+      "never": "Asla",
+      "days": "günler"
+    },
+    "log": {
+      "title": "Oy Kaydı",
+      "description": "Oy jetonu işlemlerinizin geçmişi.",
+      "date": "Tarih",
+      "guild": "Lonca",
+      "tokens": "Jetonlar",
+      "reason": {
+        "label": "Sebep",
+        "STANDARD": "Oy ver",
+        "STANDARD_DESCRIPTION": "Bot listesinde oy kullanmak için bir jeton aldınız.",
+        "STREAK": "Oy Serisi",
+        "STREAK_DESCRIPTION": "Seri yakaladığınız için ekstra jeton kazandınız.",
+        "BONUS": "Günlük Bonus",
+        "BONUS_DESCRIPTION": "Son 6 saat içinde tüm bot listelerine oy verdiğiniz için ekstra jetonlar aldınız.",
+        "TRANSFER": "Guild'e transfer",
+        "TRANSFER_DESCRIPTION": "Bir loncanın itibar sistemini desteklemek için ona jeton aktardınız.",
+        "USE": "Satın al",
+        "USE_DESCRIPTION": "Ödül veya hizmet satın almak için jeton kullandınız.",
+        "unknown": "Bilinmiyor",
+        "unknown_DESCRIPTION": "Bu işlemin nedeni bilinmiyor."
+      },
+      "unknownGuild": "Bilinmeyen Lonca",
+      "personal": "Kişisel"
+    }
   }
 }

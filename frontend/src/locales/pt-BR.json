@@ -10,12 +10,17 @@
     "loading": "Carregando...",
     "error": {
       "outOfBounds": "O valor precisa estar entre {min} e {max}. Corrigido para o valor válido mais próximo."
-    }
+    },
+    "noData": "Não encontrei nada.",
+    "previous": "Anterior",
+    "next": "Próximo",
+    "pageOf": "Página {current} de {total}"
   },
   "navigation": {
     "settings": "Configurações",
     "presets": "Predefinições",
-    "setup": "Configuração"
+    "setup": "Configuração",
+    "logout": "Sair"
   },
   "presets": {
     "title": "Predefinições",
@@ -135,7 +140,6 @@
   },
   "premiumFeature": {
     "title": "Recurso de Apoiador",
-    "requiredTier": "Nível de Apoiador necessário:",
     "message": "{name} é só para quem é apoiador. Torne-se um apoiador para usar.",
     "requiredTierSingular": "Nível de Apoiador necessário:",
     "requiredTierPlural": "É preciso escolher um dos níveis de apoio a seguir:"
@@ -669,5 +673,54 @@
     "week": "1 semana",
     "fourWeeks": "4 semanas",
     "year": "1 ano"
+  },
+  "login": {
+    "title": "É preciso fazer login",
+    "description": "Faça login com o Discord para acessar este painel.",
+    "button": "Faça login com o Discord"
+  },
+  "voting": {
+    "title": "Votação",
+    "description": "Informações sobre seus tokens de voto atuais e status de votação da lista de bots.",
+    "tokens": {
+      "title": "Fichas",
+      "description": "Seus tokens de voto atuais. Você pode gastá-los em várias recompensas.",
+      "label": "Fichas atuais"
+    },
+    "botlists": {
+      "title": "Listas de bots",
+      "description": "Vote no bot em várias listas de bots para ganhar tokens e manter sua sequência.",
+      "name": "Lista de bots",
+      "streak": "Sequência",
+      "lastVote": "Última votação",
+      "action": "Ação",
+      "vote": "Votar",
+      "never": "Nunca",
+      "days": "dias"
+    },
+    "log": {
+      "title": "Registro de votos",
+      "description": "Um histórico das suas transações com tokens de voto.",
+      "date": "Data",
+      "guild": "Guilda",
+      "tokens": "Fichas",
+      "reason": {
+        "label": "Motivo",
+        "STANDARD": "Votar",
+        "STANDARD_DESCRIPTION": "Você ganhou um token por votar em uma lista de bots.",
+        "STREAK": "Série de votos",
+        "STREAK_DESCRIPTION": "Você ganhou um token extra porque tá numa boa sequência.",
+        "BONUS": "Bônus diário",
+        "BONUS_DESCRIPTION": "Você ganhou fichas extras por votar em todas as listas de bots nas últimas 6 horas.",
+        "TRANSFER": "Transferência para a Guilda",
+        "TRANSFER_DESCRIPTION": "Você transferiu tokens para uma guilda para apoiar seu sistema de reputação.",
+        "USE": "Compra",
+        "USE_DESCRIPTION": "Você usou tokens para comprar uma recompensa ou serviço.",
+        "unknown": "Desconhecido",
+        "unknown_DESCRIPTION": "Não se sabe o motivo dessa transação."
+      },
+      "unknownGuild": "Guilda desconhecida",
+      "personal": "Pessoal"
+    }
   }
 }

@@ -10,12 +10,17 @@
     "loading": "Cargando...",
     "error": {
       "outOfBounds": "El valor debe estar entre {min} y {max}. Corregido al valor válido más cercano."
-    }
+    },
+    "noData": "No se han encontrado entradas.",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "pageOf": "Página {current} de {total}"
   },
   "navigation": {
     "settings": "Configuración",
     "presets": "Ajustes preestablecidos",
-    "setup": "Configuración"
+    "setup": "Configuración",
+    "logout": "Cerrar sesión"
   },
   "presets": {
     "title": "Ajustes preestablecidos",
@@ -135,7 +140,6 @@
   },
   "premiumFeature": {
     "title": "Característica de los seguidores",
-    "requiredTier": "Nivel de patrocinador requerido:",
     "message": "{name} está reservado para los seguidores. Hazte seguidor para poder utilizarlo.",
     "requiredTierSingular": "Nivel de patrocinador requerido:",
     "requiredTierPlural": "Se requiere uno de los siguientes niveles de patrocinador:"
@@ -669,5 +673,54 @@
     "week": "1 semana",
     "fourWeeks": "4 semanas",
     "year": "1 año"
+  },
+  "login": {
+    "title": "Es necesario iniciar sesión",
+    "description": "Inicia sesión con Discord para acceder a este panel.",
+    "button": "Iniciar sesión con Discord"
+  },
+  "voting": {
+    "title": "Votación",
+    "description": "Información sobre tus fichas de voto actuales y el estado de votación de la lista de bots.",
+    "tokens": {
+      "title": "Fichas",
+      "description": "Tus fichas de voto actuales. Puedes gastarlas en diversas recompensas.",
+      "label": "Fichas actuales"
+    },
+    "botlists": {
+      "title": "Listas de bots",
+      "description": "Vota por el bot en varias listas de bots para ganar tokens y mantener tu racha.",
+      "name": "Lista de bots",
+      "streak": "Racha",
+      "lastVote": "Última votación",
+      "action": "Acción",
+      "vote": "Votar",
+      "never": "Nunca",
+      "days": "días"
+    },
+    "log": {
+      "title": "Registro de votos",
+      "description": "Un historial de tus transacciones con tokens de voto.",
+      "date": "Fecha",
+      "guild": "Gremio",
+      "tokens": "Fichas",
+      "reason": {
+        "label": "Razón",
+        "STANDARD": "Vota",
+        "STANDARD_DESCRIPTION": "Has recibido un token por votar en una lista de bots.",
+        "STREAK": "Racha de votos",
+        "STREAK_DESCRIPTION": "Has recibido una ficha extra porque tienes una racha.",
+        "BONUS": "Bonificación diaria",
+        "BONUS_DESCRIPTION": "Has recibido fichas adicionales por votar en todas las listas de bots en las últimas 6 horas.",
+        "TRANSFER": "Traspaso al gremio",
+        "TRANSFER_DESCRIPTION": "Has transferido tokens a un gremio para apoyar su sistema de reputación.",
+        "USE": "Compra",
+        "USE_DESCRIPTION": "Has utilizado fichas para comprar una recompensa o un servicio.",
+        "unknown": "Desconocido",
+        "unknown_DESCRIPTION": "Se desconoce el motivo de esta transacción."
+      },
+      "unknownGuild": "Gremio desconocido",
+      "personal": "Personal"
+    }
   }
 }
