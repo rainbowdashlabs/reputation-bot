@@ -5,6 +5,8 @@
  */
 package de.chojo.repbot.web.pojo.premium;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import de.chojo.jdautil.interactions.base.SkuMeta;
 import de.chojo.jdautil.interactions.premium.SKU;
 import de.chojo.repbot.config.elements.sku.SKUEntry;
@@ -12,10 +14,12 @@ import de.chojo.repbot.dao.access.guild.RepGuild;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.slf4j.Logger;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static de.chojo.repbot.util.States.GRANT_ALL_SKU;
@@ -28,6 +32,9 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 public class PremiumFeaturesPOJO {
     private static final Logger log = getLogger(PremiumFeaturesPOJO.class);
+
+    private static final Cache<Long, SkuInfo> SKU_CACHE =
+            CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.DAYS).build();
 
     // Simple boolean features
     private final SimpleFeature reputationLog;
@@ -78,7 +85,6 @@ public class PremiumFeaturesPOJO {
     public static PremiumFeaturesPOJO generate(RepGuild guild, ShardManager shardManager) {
         var subscriptions = guild.subscriptions();
         var features = guild.configuration().skus().features();
-        var settings = guild.settings();
 
         // Resolve SKU information from Discord
         Map<Long, SkuInfo> skuMap = resolveSkus(shardManager);
@@ -142,14 +148,22 @@ public class PremiumFeaturesPOJO {
     }
 
     private static Map<Long, SkuInfo> resolveSkus(ShardManager shardManager) {
+        var cachedSkus = SKU_CACHE.asMap();
+        if (!cachedSkus.isEmpty()) {
+            return Collections.unmodifiableMap(cachedSkus);
+        }
+
         try {
             List<net.dv8tion.jda.api.entities.SKU> skus =
                     shardManager.getShards().getFirst().retrieveSKUList().complete();
 
-            return skus.stream()
+            Map<Long, SkuInfo> resolvedSkus = skus.stream()
                     .collect(Collectors.toMap(
                             net.dv8tion.jda.api.entities.SKU::getIdLong,
                             sku -> new SkuInfo(sku.getId(), sku.getName())));
+
+            SKU_CACHE.putAll(resolvedSkus);
+            return resolvedSkus;
         } catch (Exception e) {
             log.error("Failed to resolve SKU list from Discord", e);
             return new HashMap<>();

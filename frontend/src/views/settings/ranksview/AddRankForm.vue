@@ -15,7 +15,7 @@ import type {RankEntry} from '@/api/types'
 import NumberInput from "@/components/NumberInput.vue";
 
 const {t} = useI18n()
-const {session, updateRanksSettings} = useSession()
+const {session, guildMeta, updateRanksSettings} = useSession()
 
 const ranks = computed<RankEntry[]>(() => (session.value?.settings?.ranks?.ranks ?? []) as RankEntry[])
 
@@ -24,7 +24,7 @@ const newReputation = ref<number | null>(null)
 const errorMessage = ref('')
 
 const highestBotRolePosition = computed(() => {
-  return session.value?.guild?.meta?.highestBotRole?.position ?? null
+  return guildMeta.value?.highestBotRole?.position ?? null
 })
 
 const validate = () => {

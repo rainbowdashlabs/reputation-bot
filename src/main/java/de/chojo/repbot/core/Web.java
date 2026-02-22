@@ -26,7 +26,9 @@ import de.chojo.repbot.web.config.SessionAttribute;
 import de.chojo.repbot.web.error.ApiException;
 import de.chojo.repbot.web.error.ErrorResponseWrapper;
 import de.chojo.repbot.web.error.PremiumFeatureException;
-import de.chojo.repbot.web.sessions.SessionService;
+import de.chojo.repbot.web.services.DiscordOAuthService;
+import de.chojo.repbot.web.services.SessionService;
+import de.chojo.repbot.web.services.UserSession;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
@@ -115,18 +117,65 @@ public class Web {
     }
 
     public void handleAccess(Context ctx) {
-        Set<RouteRole> routeRoles = ctx.routeRoles();
-        if (routeRoles.contains(Role.ANYONE)) {
+        // Exempt auth and static/OpenAPI routes from authorization checks
+        String path = ctx.path();
+        if (path.startsWith("/v1/auth/")
+                || path.startsWith("/openapi")
+                || path.startsWith("/swagger")
+                || path.startsWith("/docs")
+                || path.startsWith("/json-docs")) {
             return;
         }
 
-        if (routeRoles.contains(Role.GUILD_USER)) {
-            var session = sessionService.getGuildSession(ctx).orElseThrow(() -> {
-                ctx.header("WWW-Authenticate", "Authorization");
-                return new UnauthorizedResponse("You need to be logged in to access this route.");
-            });
-            session.validate();
-            ctx.sessionAttribute(SessionAttribute.GUILD_SESSION, session);
+        Set<RouteRole> routeRoles = ctx.routeRoles();
+        if (routeRoles.contains(Role.ANYONE) || routeRoles.isEmpty()) {
+            return;
+        }
+
+        UserSession userSession = sessionService.getUserSession(ctx).orElseThrow(() -> {
+            ctx.header("WWW-Authenticate", "Authorization");
+            return new UnauthorizedResponse("You need to be logged in to access this route.");
+        });
+
+        ctx.sessionAttribute(SessionAttribute.USER_SESSION, userSession);
+
+        if (routeRoles.contains(Role.USER)) {
+            return;
+        }
+
+        String guildIdStr = ctx.header("X-Guild-Id");
+        if (guildIdStr != null) {
+            ctx.sessionAttribute(SessionAttribute.GUILD_ID, guildIdStr);
+            var guildData = userSession.guilds().get(guildIdStr);
+            boolean isBotOwner = configuration.baseSettings().isOwner(userSession.userId());
+
+            if (guildData != null || isBotOwner) {
+                Role accessLevel = guildData != null ? guildData.accessLevel() : Role.GUILD_ADMIN;
+
+                if (routeRoles.contains(Role.GUILD_ADMIN) && accessLevel != Role.GUILD_ADMIN) {
+                    throw new UnauthorizedResponse("You need to be a guild administrator to access this route.");
+                }
+                if (routeRoles.contains(Role.GUILD_USER)
+                        && (accessLevel != Role.GUILD_USER && accessLevel != Role.GUILD_ADMIN)) {
+                    throw new UnauthorizedResponse("You need to be a guild user to access this route.");
+                }
+                long guildId = Long.parseLong(guildIdStr);
+
+                if (isBotOwner && guildData == null) {
+                    // Ensure the guild actually exists and the bot is in it if the owner wants to access it
+                    if (bot.shardManager().getGuildById(guildId) == null) {
+                        throw new UnauthorizedResponse(
+                                "The requested guild does not exist or the bot is not a member.");
+                    }
+                }
+
+                ctx.sessionAttribute(
+                        SessionAttribute.GUILD_SESSION, sessionService.getGuildSession(userSession.userId(), guildId));
+            } else if (routeRoles.contains(Role.GUILD_ADMIN) || routeRoles.contains(Role.GUILD_USER)) {
+                throw new UnauthorizedResponse("You are not a member of the requested guild.");
+            }
+        } else if (routeRoles.contains(Role.GUILD_ADMIN) || routeRoles.contains(Role.GUILD_USER)) {
+            throw new UnauthorizedResponse("Guild context missing. Please provide X-Guild-Id header.");
         }
     }
 
@@ -164,7 +213,9 @@ public class Web {
                                     configuration,
                                     data.settingsAuditLogRepository(),
                                     memberCache,
-                                    data.guildRepository())
+                                    data.guildRepository(),
+                                    data.userRepository(),
+                                    new DiscordOAuthService(configuration))
                             .init());
                     config.router.mount(router -> {
                         router.beforeMatched(this::handleAccess);

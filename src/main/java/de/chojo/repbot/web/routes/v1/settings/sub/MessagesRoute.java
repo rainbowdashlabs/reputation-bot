@@ -81,9 +81,9 @@ public class MessagesRoute implements RoutesBuilder {
     @Override
     public void buildRoutes() {
         path("messages", () -> {
-            post("", this::updateMessagesSettings, Role.GUILD_USER);
-            post("reactionconfirmation", this::updateReactionConfirmation, Role.GUILD_USER);
-            post("commandreputationephemeral", this::updateCommandReputationEphemeral, Role.GUILD_USER);
+            post("", this::updateMessagesSettings, Role.GUILD_ADMIN);
+            post("reactionconfirmation", this::updateReactionConfirmation, Role.GUILD_ADMIN);
+            post("commandreputationephemeral", this::updateCommandReputationEphemeral, Role.GUILD_ADMIN);
         });
     }
 }

@@ -149,12 +149,12 @@ public class GeneralRoute implements RoutesBuilder {
     @Override
     public void buildRoutes() {
         path("general", () -> {
-            post("", this::updateGeneralSettings, Role.GUILD_USER);
-            post("language", this::updateLanguage, Role.GUILD_USER);
-            post("stackroles", this::updateStackRoles, Role.GUILD_USER);
-            post("reputationmode", this::updateReputationMode, Role.GUILD_USER);
-            post("systemchannel", this::updateSystemChannel, Role.GUILD_USER);
-            post("resetdate", this::updateResetDate, Role.GUILD_USER);
+            post("", this::updateGeneralSettings, Role.GUILD_ADMIN);
+            post("language", this::updateLanguage, Role.GUILD_ADMIN);
+            post("stackroles", this::updateStackRoles, Role.GUILD_ADMIN);
+            post("reputationmode", this::updateReputationMode, Role.GUILD_ADMIN);
+            post("systemchannel", this::updateSystemChannel, Role.GUILD_ADMIN);
+            post("resetdate", this::updateResetDate, Role.GUILD_ADMIN);
         });
     }
 }

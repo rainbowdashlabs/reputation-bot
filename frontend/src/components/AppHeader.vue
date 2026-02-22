@@ -6,9 +6,12 @@
 <script lang="ts" setup>
 import {useI18n} from 'vue-i18n'
 import {useRoute} from 'vue-router'
+import {computed} from 'vue'
+import UserDisplay from '@/components/UserDisplay.vue'
 
 const {t} = useI18n()
 const route = useRoute()
+const isLoggedIn = computed(() => !!localStorage.getItem('reputation_bot_token'))
 </script>
 
 <template>
@@ -32,6 +35,7 @@ const route = useRoute()
       </nav>
 
       <div class="flex items-center gap-4">
+        <UserDisplay v-if="isLoggedIn" />
       </div>
     </div>
   </header>

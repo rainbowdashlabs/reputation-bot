@@ -175,10 +175,10 @@ public class ChannelsRoute implements RoutesBuilder {
     @Override
     public void buildRoutes() {
         path("channels", () -> {
-            post("", this::updateChannelsSettings, Role.GUILD_USER);
-            post("whitelist", this::updateWhitelist, Role.GUILD_USER);
-            post("channels", this::updateChannels, Role.GUILD_USER);
-            post("categories", this::updateCategories, Role.GUILD_USER);
+            post("", this::updateChannelsSettings, Role.GUILD_ADMIN);
+            post("whitelist", this::updateWhitelist, Role.GUILD_ADMIN);
+            post("channels", this::updateChannels, Role.GUILD_ADMIN);
+            post("categories", this::updateCategories, Role.GUILD_ADMIN);
         });
     }
 }

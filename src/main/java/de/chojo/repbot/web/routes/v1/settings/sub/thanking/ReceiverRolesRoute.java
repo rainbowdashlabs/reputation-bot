@@ -49,7 +49,7 @@ public class ReceiverRolesRoute implements RoutesBuilder {
     @Override
     public void buildRoutes() {
         path("receiverroles", () -> {
-            post("", this::updateReceiverRoles, Role.GUILD_USER);
+            post("", this::updateReceiverRoles, Role.GUILD_ADMIN);
         });
     }
 }

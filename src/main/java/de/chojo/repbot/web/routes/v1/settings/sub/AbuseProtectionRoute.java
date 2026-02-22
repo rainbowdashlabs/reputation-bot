@@ -254,18 +254,18 @@ public class AbuseProtectionRoute implements RoutesBuilder {
     @Override
     public void buildRoutes() {
         path("abuseprotection", () -> {
-            post("", this::updateAbuseSettings, Role.GUILD_USER);
-            post("cooldown", this::updateCooldown, Role.GUILD_USER);
-            post("cooldowndirection", this::updateCooldownDirection, Role.GUILD_USER);
-            post("maxmessageage", this::updateMaxMessageAge, Role.GUILD_USER);
-            post("minmessages", this::updateMinMessages, Role.GUILD_USER);
-            post("donorcontext", this::updateDonorContext, Role.GUILD_USER);
-            post("receivercontext", this::updateReceiverContext, Role.GUILD_USER);
-            post("maxgiven", this::updateMaxGiven, Role.GUILD_USER);
-            post("maxgivenhours", this::updateMaxGivenHours, Role.GUILD_USER);
-            post("maxreceived", this::updateMaxReceived, Role.GUILD_USER);
-            post("maxreceivedhours", this::updateMaxReceivedHours, Role.GUILD_USER);
-            post("maxmessagereputation", this::updateMaxMessageReputation, Role.GUILD_USER);
+            post("", this::updateAbuseSettings, Role.GUILD_ADMIN);
+            post("cooldown", this::updateCooldown, Role.GUILD_ADMIN);
+            post("cooldowndirection", this::updateCooldownDirection, Role.GUILD_ADMIN);
+            post("maxmessageage", this::updateMaxMessageAge, Role.GUILD_ADMIN);
+            post("minmessages", this::updateMinMessages, Role.GUILD_ADMIN);
+            post("donorcontext", this::updateDonorContext, Role.GUILD_ADMIN);
+            post("receivercontext", this::updateReceiverContext, Role.GUILD_ADMIN);
+            post("maxgiven", this::updateMaxGiven, Role.GUILD_ADMIN);
+            post("maxgivenhours", this::updateMaxGivenHours, Role.GUILD_ADMIN);
+            post("maxreceived", this::updateMaxReceived, Role.GUILD_ADMIN);
+            post("maxreceivedhours", this::updateMaxReceivedHours, Role.GUILD_ADMIN);
+            post("maxmessagereputation", this::updateMaxMessageReputation, Role.GUILD_ADMIN);
         });
     }
 }

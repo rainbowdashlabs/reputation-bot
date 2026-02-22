@@ -15,7 +15,13 @@
   "navigation": {
     "settings": "Settings",
     "presets": "Presets",
-    "setup": "Setup"
+    "setup": "Setup",
+    "logout": "Logout"
+  },
+  "login": {
+    "title": "Login Required",
+    "description": "Please login with Discord to access this panel.",
+    "button": "Login with Discord"
   },
   "presets": {
     "title": "Presets",
@@ -133,7 +139,7 @@
     "expired": {
       "title": "Session Expired",
       "message": "Your session has expired or is invalid.",
-      "instruction": "Please open a new session from the Discord server to continue."
+      "instruction": "Please login again."
     },
     "notice": {
       "workingOnIt": "We got notified of the issue and are working on resolving it."

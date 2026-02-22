@@ -49,7 +49,7 @@ public class DenyReceiverRolesRoute implements RoutesBuilder {
     @Override
     public void buildRoutes() {
         path("denyreceiverroles", () -> {
-            post("", this::updateDenyReceiverRoles, Role.GUILD_USER);
+            post("", this::updateDenyReceiverRoles, Role.GUILD_ADMIN);
         });
     }
 }

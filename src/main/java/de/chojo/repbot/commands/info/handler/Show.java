@@ -27,10 +27,11 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -48,15 +49,36 @@ public class Show implements SlashHandler {
     private final ObjectMapper mapper = new ObjectMapper()
             .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    private static final Path CACHE_FILE = Path.of("config", "contributors.json");
     private final String version;
     private final Configuration configuration;
-    private String contributors;
+    private String contributors = "";
     private Instant lastFetch = Instant.MIN;
 
     public Show(String version, Configuration configuration) {
         this.version = version;
         this.configuration = configuration;
+        loadCache();
         refreshData();
+    }
+
+    private void loadCache() {
+        if (!Files.exists(CACHE_FILE)) return;
+        try {
+            contributors = mapper.readValue(Files.readString(CACHE_FILE), String.class);
+            lastFetch = Instant.now();
+        } catch (IOException e) {
+            log.error("Could not load contributors cache", e);
+        }
+    }
+
+    private void saveCache(String data) {
+        try {
+            Files.createDirectories(CACHE_FILE.getParent());
+            Files.writeString(CACHE_FILE, mapper.writeValueAsString(data));
+        } catch (IOException e) {
+            log.error("Could not save contributors cache", e);
+        }
     }
 
     @Override
@@ -91,23 +113,28 @@ public class Show implements SlashHandler {
                 .header("User-Agent", "reputation-bot")
                 .build();
 
-        List<Contributor> contributors;
+        List<Contributor> contributorsList;
         String body = null;
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() != 200) {
+                log.error("GitHub API returned status code {}. Body: {}", response.statusCode(), response.body());
+                return;
+            }
             body = response.body();
-            contributors = mapper.readerForListOf(Contributor.class).readValue(body);
+            contributorsList = mapper.readerForListOf(Contributor.class).readValue(body);
         } catch (IOException | InterruptedException e) {
             log.error("Could not read response", e);
             log.error("Body: {}", body);
-            contributors = Collections.emptyList();
+            return;
         }
 
         List<GithubProfile> profiles = new ArrayList<>();
-        for (var contributor : contributors) {
+        boolean success = true;
+        for (var contributor : contributorsList) {
             if (ContributorType.BOT == contributor.type) continue;
 
-            var profile = HttpRequest.newBuilder()
+            var profileRequest = HttpRequest.newBuilder()
                     .GET()
                     .uri(URI.create(contributor.url))
                     .header("accept", "application/vnd.github.v3+json")
@@ -115,14 +142,28 @@ public class Show implements SlashHandler {
                     .build();
 
             try {
-                var response = client.send(profile, HttpResponse.BodyHandlers.ofString());
+                var response = client.send(profileRequest, HttpResponse.BodyHandlers.ofString());
+                if (response.statusCode() != 200) {
+                    log.error(
+                            "GitHub API returned status code {} for profile {}",
+                            response.statusCode(),
+                            contributor.url);
+                    success = false;
+                    break;
+                }
                 profiles.add(mapper.readValue(response.body(), GithubProfile.class));
             } catch (IOException | InterruptedException e) {
-                log.error("Could not read response", e);
+                log.error("Could not read response for profile {}", contributor.url, e);
+                success = false;
+                break;
             }
         }
-        this.contributors = profiles.stream().map(GithubProfile::toString).collect(Collectors.joining(", "));
-        lastFetch = Instant.now();
+
+        if (success && !profiles.isEmpty()) {
+            this.contributors = profiles.stream().map(GithubProfile::toString).collect(Collectors.joining(", "));
+            lastFetch = Instant.now();
+            saveCache(this.contributors);
+        }
     }
 
     private String getLinks(EventContext context) {

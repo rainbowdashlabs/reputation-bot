@@ -10,19 +10,16 @@ import net.dv8tion.jda.api.entities.Guild;
 import java.util.List;
 
 public class GuildPOJO {
-    GuildMetaPOJO meta;
     List<RolePOJO> roles;
     ChannelViewPOJO channels;
     List<ReactionPOJO> reactions;
     List<MemberPOJO> integrations;
 
     public GuildPOJO(
-            GuildMetaPOJO meta,
             List<RolePOJO> roles,
             ChannelViewPOJO channels,
             List<ReactionPOJO> reactions,
             List<MemberPOJO> integrations) {
-        this.meta = meta;
         this.roles = roles;
         this.channels = channels;
         this.reactions = reactions;
@@ -30,7 +27,6 @@ public class GuildPOJO {
     }
 
     public static GuildPOJO generate(Guild guild) {
-        GuildMetaPOJO meta = GuildMetaPOJO.generate(guild);
         List<RolePOJO> roles = guild.getRoles().stream()
                 .filter(r -> !r.isPublicRole())
                 .filter(r -> !r.isManaged())
@@ -43,6 +39,6 @@ public class GuildPOJO {
                 .applyStream(stream -> stream.filter(member -> member.getUser().isBot())
                         .map(MemberPOJO::generate)
                         .toList());
-        return new GuildPOJO(meta, roles, ChannelViewPOJO.generate(guild), reactions, integrations);
+        return new GuildPOJO(roles, ChannelViewPOJO.generate(guild), reactions, integrations);
     }
 }

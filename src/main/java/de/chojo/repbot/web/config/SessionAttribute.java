@@ -7,4 +7,6 @@ package de.chojo.repbot.web.config;
 
 public class SessionAttribute {
     public static final String GUILD_SESSION = "guildSession";
+    public static final String USER_SESSION = "userSession";
+    public static final String GUILD_ID = "guildId";
 }

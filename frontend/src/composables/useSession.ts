@@ -4,67 +4,89 @@
  *     Copyright (C) RainbowDashLabs and Contributor
  */
 import {readonly, ref} from 'vue'
-import type {GuildSessionPOJO} from '@/api/types'
+import type {GuildSessionPOJO, UserSessionPOJO} from '@/api/types'
 import * as Types from '@/api/types'
+import {api} from '@/api'
 
-export interface GuildSessionInfo {
-    id: string
-    name: string
-    iconUrl: string | null
-    token: string
-}
+const SESSION_TOKEN_KEY = 'reputation_bot_token'
+const GUILD_ID_KEY = 'reputation_bot_guild_id'
 
-const SESSION_STORAGE_KEY = 'reputation_bot_sessions'
-
-const session = ref<GuildSessionPOJO | null>(null)
-const sessions = ref<GuildSessionInfo[]>(JSON.parse(localStorage.getItem(SESSION_STORAGE_KEY) || '[]'))
+const session = ref<(GuildSessionPOJO & { settings?: Types.SettingsPOJO, premiumFeatures?: Types.PremiumFeaturesPOJO }) | null>(null)
+const userSession = ref<UserSessionPOJO | null>(null)
+const guildMeta = ref<Types.GuildMetaPOJO | null>(null)
+const premiumFeatures = ref<Types.PremiumFeaturesPOJO | null>(null)
 const isExpired = ref(false)
 
 export function useSession() {
     const setSession = (data: GuildSessionPOJO) => {
         session.value = data
         isExpired.value = false
-        updateSessionsList(data)
+    }
+
+    const setGuildMeta = (data: Types.GuildMetaPOJO) => {
+        guildMeta.value = data
+    }
+
+    const setPremiumFeatures = (data: Types.PremiumFeaturesPOJO) => {
+        premiumFeatures.value = data
+    }
+
+    const setUserSession = (data: UserSessionPOJO) => {
+        userSession.value = data
+        localStorage.setItem(SESSION_TOKEN_KEY, data.token)
+        isExpired.value = false
     }
 
     const setExpired = (expired: boolean) => {
         isExpired.value = expired
     }
 
-    const updateSessionsList = (data: GuildSessionPOJO) => {
-        const token = localStorage.getItem('token')
-        if (!token) return
-
-        const index = sessions.value.findIndex(s => s.id === data.guild.meta.id)
-        const info: GuildSessionInfo = {
-            id: data.guild.meta.id,
-            name: data.guild.meta.name,
-            iconUrl: data.guild.meta.iconUrl,
-            token: token
-        }
-
-        if (index === -1) {
-            sessions.value.push(info)
-        } else {
-            sessions.value[index] = info
-        }
-        saveSessions()
-    }
-
-    const saveSessions = () => {
-        localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(sessions.value))
-    }
-
     const switchSession = (guildId: string) => {
-        const target = sessions.value.find(s => s.id === guildId)
-        if (target) {
-            localStorage.setItem('token', target.token)
-            window.location.reload()
-        }
+        localStorage.setItem(GUILD_ID_KEY, guildId)
+        window.location.reload()
     }
 
     const clearSession = () => {
         session.value = null
+        userSession.value = null
+        guildMeta.value = null
+        premiumFeatures.value = null
+        localStorage.removeItem(SESSION_TOKEN_KEY)
+        localStorage.removeItem(GUILD_ID_KEY)
+    }
+
+    const logout = async () => {
+        try {
+            await api.logout()
+        } catch (e) {
+            // ignore errors, still clear local state
+        } finally {
+            clearSession()
+            window.location.href = '/'
+        }
+    }
+
+    const login = (redirectPath?: string | any) => {
+        const backendHost = import.meta.env.VITE_BACKEND_HOST || ''
+        const backendPort = import.meta.env.VITE_BACKEND_PORT || ''
+
+        let baseURL = '/v1'
+        if (backendHost) {
+            const protocol = backendHost.startsWith('http') ? '' : 'http://'
+            const port = backendPort ? `:${backendPort}` : ''
+            baseURL = `${protocol}${backendHost}${port}/v1`
+        }
+
+        const state = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+        localStorage.setItem('reputation_bot_oauth_state', state)
+
+        const finalRedirectPath = (typeof redirectPath === 'string' && redirectPath)
+            ? redirectPath
+            : (window.location.pathname + window.location.search)
+
+        localStorage.setItem('reputation_bot_oauth_redirect', finalRedirectPath)
+
+        window.location.href = `${baseURL}/auth/discord/login?state=${encodeURIComponent(state)}`
     }
 
     const updateGeneralSettings = (updates: Partial<Types.GeneralPOJO>) => {
@@ -190,12 +212,19 @@ export function useSession() {
 
     return {
         session: readonly(session),
-        sessions: readonly(sessions),
+        userSession: readonly(userSession),
+        guildMeta: readonly(guildMeta),
+        premiumFeatures: readonly(premiumFeatures),
         isExpired: readonly(isExpired),
         setSession,
+        setUserSession,
+        setGuildMeta,
+        setPremiumFeatures,
         setExpired,
         switchSession,
         clearSession,
+        login,
+        logout,
         updateGeneralSettings,
         updateReputationSettings,
         updateProfileSettings,
@@ -213,6 +242,32 @@ export function useSession() {
         updateLogChannelSettings,
         updateRanksSettings,
         updateIntegrationBypass,
-        removeIntegrationBypass
+        removeIntegrationBypass,
+        loadSettings,
+        loadPremiumFeatures
+    }
+}
+
+async function loadSettings() {
+    if (!session.value) return
+    if (session.value.settings) return
+    try {
+        const settings = await api.getGuildSettings()
+        session.value.settings = settings
+    } catch (e) {
+        console.error('Failed to load settings:', e)
+    }
+}
+
+async function loadPremiumFeatures() {
+    if (premiumFeatures.value) return
+    try {
+        const premium = await api.getGuildPremium()
+        premiumFeatures.value = premium
+        if (session.value) {
+            session.value.premiumFeatures = premium
+        }
+    } catch (e) {
+        console.error('Failed to load premium features:', e)
     }
 }

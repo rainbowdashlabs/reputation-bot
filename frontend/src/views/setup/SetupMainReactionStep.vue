@@ -16,7 +16,7 @@ const emit = defineEmits<{
 const {t} = useI18n()
 const {session} = useSession()
 
-const mainReaction = computed(() => session.value?.settings.thanking.reactions.mainReaction || '🏅')
+const mainReaction = computed(() => session.value?.settings?.thanking.reactions.mainReaction || '🏅')
 
 // Always allow proceeding (main reaction is optional)
 watch(() => true, () => {

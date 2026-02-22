@@ -22,8 +22,8 @@ const reactions = ref([...props.initialReactions])
 const isUpdating = ref(false)
 const newEmoji = ref('')
 
-const isPremium = computed(() => session.value?.premiumFeatures.additionalEmojis.unlocked || false)
-const requiredSkus = computed(() => session.value?.premiumFeatures.additionalEmojis.requiredSkus || [])
+const isPremium = computed(() => session.value?.premiumFeatures?.additionalEmojis.unlocked || false)
+const requiredSkus = computed(() => session.value?.premiumFeatures?.additionalEmojis.requiredSkus || [])
 const guildEmojis = computed(() => session.value?.guild.reactions || [])
 
 watch(() => props.initialReactions, (newVal) => {

@@ -45,11 +45,10 @@ services:
       BOT_DB_USERNAME: "root"
       BOT_DB_PASSWORD: "changeme"
     volumes:
-      - ../config/config.json/:/app/config/config.json
+      - ../config/config.testing.json/:/app/config/config.json
 
 volumes:
   database:
 
 networks:
   repbot:
-

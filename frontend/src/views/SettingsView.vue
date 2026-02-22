@@ -5,8 +5,10 @@
  */
 <script lang="ts" setup>
 import {useI18n} from 'vue-i18n'
+import {useSession} from '@/composables/useSession'
 
 const {t} = useI18n()
+const {userSession} = useSession()
 
 const settingsSections = [
   {key: 'general', path: '/settings/edit/general'},
@@ -31,7 +33,7 @@ const settingsSections = [
     <div class="transition-colors">
       <div class="flex justify-center">
         <!-- Sidebar - Full height, stretches from top to bottom -->
-        <aside v-if="$route.path.startsWith('/settings/edit') && !$route.path.endsWith('/audit-log') && !$route.path.endsWith('/problems')" class="w-64 shrink-0">
+        <aside v-if="userSession && $route.path.startsWith('/settings/edit') && !$route.path.endsWith('/audit-log') && !$route.path.endsWith('/problems')" class="w-64 shrink-0">
           <nav class="bg-white dark:bg-gray-800 shadow rounded-lg p-4 top-24 ml-4 transition-colors">
             <ul class="space-y-1">
               <li v-for="section in settingsSections" :key="section.key">

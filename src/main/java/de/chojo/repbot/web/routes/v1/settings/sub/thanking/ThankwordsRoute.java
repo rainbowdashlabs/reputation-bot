@@ -64,8 +64,8 @@ public class ThankwordsRoute implements RoutesBuilder {
     @Override
     public void buildRoutes() {
         path("thankwords", () -> {
-            post("", this::updateThankwordsSettings, Role.GUILD_USER);
-            post("words", this::updateWords, Role.GUILD_USER);
+            post("", this::updateThankwordsSettings, Role.GUILD_ADMIN);
+            post("words", this::updateWords, Role.GUILD_ADMIN);
         });
     }
 }

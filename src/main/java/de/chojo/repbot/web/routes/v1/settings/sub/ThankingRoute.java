@@ -97,7 +97,7 @@ public class ThankingRoute implements RoutesBuilder {
     @Override
     public void buildRoutes() {
         path("thanking", () -> {
-            post("", this::updateThankingSettings, Role.GUILD_USER);
+            post("", this::updateThankingSettings, Role.GUILD_ADMIN);
             channelsRoute.buildRoutes();
             donorRolesRoute.buildRoutes();
             denyDonorRolesRoute.buildRoutes();

@@ -37,7 +37,7 @@ import de.chojo.repbot.commands.bot.handler.system.Upgrade;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.statistic.Statistic;
-import de.chojo.repbot.web.sessions.SessionService;
+import de.chojo.repbot.web.services.SessionService;
 
 import static de.chojo.jdautil.interactions.slash.Argument.text;
 import static de.chojo.jdautil.interactions.slash.Group.group;

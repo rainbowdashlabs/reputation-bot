@@ -77,8 +77,8 @@ public class IntegrationBypassRoute implements RoutesBuilder {
     @Override
     public void buildRoutes() {
         path("integrationbypass", () -> {
-            post("", this::updateBypass, Role.GUILD_USER);
-            delete("{integrationId}", this::deleteBypass, Role.GUILD_USER);
+            post("", this::updateBypass, Role.GUILD_ADMIN);
+            delete("{integrationId}", this::deleteBypass, Role.GUILD_ADMIN);
         });
     }
 }

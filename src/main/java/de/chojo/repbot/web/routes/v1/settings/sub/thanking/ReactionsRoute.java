@@ -81,9 +81,9 @@ public class ReactionsRoute implements RoutesBuilder {
     @Override
     public void buildRoutes() {
         path("reactions", () -> {
-            post("", this::updateReactionsSettings, Role.GUILD_USER);
-            post("mainreaction", this::updateMainReaction, Role.GUILD_USER);
-            post("reactions", this::updateAdditionalReactions, Role.GUILD_USER);
+            post("", this::updateReactionsSettings, Role.GUILD_ADMIN);
+            post("mainreaction", this::updateMainReaction, Role.GUILD_ADMIN);
+            post("reactions", this::updateAdditionalReactions, Role.GUILD_ADMIN);
         });
     }
 }
