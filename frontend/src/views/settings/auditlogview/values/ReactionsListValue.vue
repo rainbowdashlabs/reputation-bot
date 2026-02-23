@@ -25,7 +25,7 @@ const isUnicodeEmoji = (str: string): boolean => {
 }
 
 const findReaction = (reactionId: string) => {
-  return session.value?.guild?.reactions?.find(r => r.id === reactionId)
+  return session.value?.reactions?.find(r => r.id === reactionId)
 }
 
 const addedItems = computed(() => {

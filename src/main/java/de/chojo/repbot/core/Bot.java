@@ -45,6 +45,7 @@ import de.chojo.repbot.commands.setup.Setup;
 import de.chojo.repbot.commands.supporter.Supporter;
 import de.chojo.repbot.commands.thankwords.Thankwords;
 import de.chojo.repbot.commands.top.Top;
+import de.chojo.repbot.commands.vote.Vote;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.exceptions.MissingSupportTier;
@@ -66,6 +67,7 @@ import de.chojo.repbot.service.RepBotCachePolicy;
 import de.chojo.repbot.service.RoleAssigner;
 import de.chojo.repbot.service.RoleUpdater;
 import de.chojo.repbot.service.SelfCleanupService;
+import de.chojo.repbot.service.TokenPurchaseService;
 import de.chojo.repbot.service.reputation.ReputationService;
 import de.chojo.repbot.statistic.Statistic;
 import de.chojo.repbot.util.LogNotify;
@@ -120,6 +122,7 @@ public class Bot {
     private GdprService gdprService;
     private AutopostService autopostService;
     private PremiumService premiumService;
+    private TokenPurchaseService tokenPurchaseService;
     private InteractionHub<Slash, Message, User> hub;
     private SessionService sessionService;
 
@@ -171,6 +174,10 @@ public class Bot {
 
     public AutopostService autopostService() {
         return autopostService;
+    }
+
+    public TokenPurchaseService tokenPurchaseService() {
+        return tokenPurchaseService;
     }
 
     public RoleAssigner roleAssigner() {
@@ -340,6 +347,14 @@ public class Bot {
         autopostService =
                 AutopostService.create(shardManager, data.guildRepository(), threading, localization.localizer());
         premiumService = PremiumService.of(guilds, threading, configuration, localization.localizer(), shardManager);
+        tokenPurchaseService = TokenPurchaseService.create(
+                configuration,
+                data.voteRepository(),
+                data.guildRepository(),
+                shardManager,
+                data.tokenPurchaseRepository(),
+                threading,
+                localization);
     }
 
     private void initInteractions() {
@@ -368,6 +383,7 @@ public class Bot {
                         new Reactions(guilds, configuration),
                         new Dashboard(guilds),
                         new AbuseProtection(guilds),
+                        new Vote(configuration, data.voteRepository()),
                         new Diagnose(sessionService()),
                         new RepAdmin(guilds, configuration, roleAssigner, premiumService),
                         new Messages(guilds),
@@ -506,7 +522,7 @@ public class Bot {
             premiumService.refresh(guild);
             if (!Premium.isNotEntitled(
                     repGuild.subscriptions(),
-                    configuration.skus().features().integrationBypass().allow())) {
+                    configuration.skus().features().integrationBypass().fullSkuEntry())) {
                 log.debug("Retrieving integrations for {}", guild);
                 guild.loadMembers(member -> {
                     if (!member.getUser().isBot()) {

@@ -16,7 +16,7 @@ const {t} = useI18n()
 const {session, updateThankingChannelsSettings} = useSession()
 
 const channelsSettings = computed(() => session.value?.settings?.thanking?.channels)
-const guildChannels = computed(() => session.value?.guild?.channels)
+const guildChannels = computed(() => session.value?.channels)
 const premiumFeatures = computed(() => session.value?.premiumFeatures)
 
 const visibleGuildChannels = computed(() => {

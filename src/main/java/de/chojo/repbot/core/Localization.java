@@ -61,7 +61,7 @@ public class Localization {
                     if (!"words.reputation".equals(code)) return Optional.empty();
                     if (Premium.isNotEntitled(
                             data.guildRepository().guild(guild).subscriptions(),
-                            configuration.skus().features().localeOverrides().reputationNameOverride())) {
+                            configuration.skus().features().localeOverrides().fullSkuEntry())) {
                         return Optional.empty();
                     }
                     return data.guildRepository().guild(guild).localeOverrides().getOverride(code);

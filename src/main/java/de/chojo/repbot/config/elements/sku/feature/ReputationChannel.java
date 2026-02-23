@@ -5,14 +5,13 @@
  */
 package de.chojo.repbot.config.elements.sku.feature;
 
-import de.chojo.repbot.config.elements.sku.SKUEntry;
+import de.chojo.repbot.config.elements.sku.tokens.Feature;
 
-public class ReputationChannel {
-    private SKUEntry moreChannel = new SKUEntry();
+public class ReputationChannel extends Feature {
     private int defaultChannel = 2;
 
-    public SKUEntry moreChannel() {
-        return moreChannel;
+    public ReputationChannel() {
+        super(10, 175);
     }
 
     public int defaultChannel() {

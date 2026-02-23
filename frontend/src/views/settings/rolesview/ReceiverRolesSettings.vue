@@ -15,7 +15,7 @@ const {t} = useI18n()
 const {session, updateThankingReceiverRolesSettings} = useSession()
 
 const receiverRoles = computed(() => session.value?.settings?.thanking?.receiverRoles)
-const availableRoles = computed(() => session.value?.guild?.roles || [])
+const availableRoles = computed(() => session.value?.roles || [])
 
 const isEnabled = ref(false)
 

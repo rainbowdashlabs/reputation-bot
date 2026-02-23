@@ -10,12 +10,21 @@
     "loading": "正在加载...",
     "error": {
       "outOfBounds": "值必须介于{min}与{max}之间。已修正为最近的有效值。"
-    }
+    },
+    "noData": "未找到任何条目。",
+    "previous": "先前",
+    "next": "接下来",
+    "pageOf": "第{current}页，网址：{total}"
   },
   "navigation": {
     "settings": "设置",
     "presets": "预设",
-    "setup": "设置"
+    "setup": "设置",
+    "logout": "注销",
+    "dashboard": "仪表板",
+    "user_settings": "用户设置",
+    "voting": "投票",
+    "token_shop": "代币商店"
   },
   "presets": {
     "title": "预设",
@@ -135,10 +144,11 @@
   },
   "premiumFeature": {
     "title": "支持者专访",
-    "requiredTier": "所需支持者等级：",
     "message": "{name} 该功能仅限支持者使用。请成为支持者以启用此功能。",
     "requiredTierSingular": "所需支持者等级：",
-    "requiredTierPlural": "需选择以下其中一个支持者等级："
+    "requiredTierPlural": "需选择以下其中一个支持者等级：",
+    "tokenShopHint": "您也可以使用代币解锁此功能。",
+    "tokenShopLink": "代币商店"
   },
   "profile": {
     "description": "自定义机器人在服务器中的外观和行为。",
@@ -308,6 +318,10 @@
         "channelLimitWarning": "选择超过{limit}个频道的功能仅限赞助用户使用。请成为赞助用户以启用该功能。",
         "categoryLimitWarning": "选择超过{limit}个分类的功能仅限支持者使用。成为支持者即可使用该功能。"
       }
+    },
+    "everyoneTokenPurchase": {
+      "label": "全民代币购买",
+      "description": "允许所有用户使用代币购买高级功能。若禁用此功能，仅服务器管理员可购买功能。"
     }
   },
   "reactions": {
@@ -626,7 +640,8 @@
       "autopost_channel": "自动发布 - 频道",
       "autopost_refreshtype": "自动发布 - 刷新类型",
       "autopost_refreshinterval": "自动发布 - 刷新间隔",
-      "ranks": "军衔 - 职务"
+      "ranks": "军衔 - 职务",
+      "general_everyonetokenpurchase": "通用 - 所有人代币购买"
     }
   },
   "help": {
@@ -669,5 +684,165 @@
     "week": "1周",
     "fourWeeks": "4周",
     "year": "1年"
+  },
+  "login": {
+    "title": "需要登录",
+    "description": "请使用Discord登录以访问此面板。",
+    "button": "使用Discord登录"
+  },
+  "voting": {
+    "title": "投票",
+    "description": "关于您当前投票代币及机器人列表投票状态的信息。",
+    "tokens": {
+      "title": "代币",
+      "description": "您当前拥有的投票代币。您可以将它们用于兑换各类奖励。",
+      "label": "当前代币",
+      "shop": "访问代币商店"
+    },
+    "botlists": {
+      "title": "机器人列表",
+      "description": "在各类机器人列表中为该机器人投票，即可赚取代币并保持连胜记录。",
+      "name": "机器人列表",
+      "streak": "连胜",
+      "lastVote": "最后投票",
+      "action": "行动",
+      "vote": "投票",
+      "never": "永不",
+      "days": "日子"
+    },
+    "log": {
+      "title": "投票记录",
+      "description": "您的投票代币交易历史记录。",
+      "date": "日期",
+      "guild": "公会",
+      "tokens": "代币",
+      "reason": {
+        "label": "理由",
+        "STANDARD": "投票",
+        "STANDARD_DESCRIPTION": "您已获得一个用于在机器人列表上投票的代币。",
+        "STREAK": "投票连胜",
+        "STREAK_DESCRIPTION": "您因连续达成目标而获得额外代币。",
+        "BONUS": "每日奖励",
+        "BONUS_DESCRIPTION": "您在过去6小时内对所有机器人列表投票，因此获得了额外代币奖励。",
+        "TRANSFER": "转至公会",
+        "TRANSFER_DESCRIPTION": "你向公会转移了代币以支持其声望系统。",
+        "USE": "购买",
+        "USE_DESCRIPTION": "您使用代币购买了奖励或服务。",
+        "unknown": "未知",
+        "unknown_DESCRIPTION": "此交易的原因不明。"
+      },
+      "unknownGuild": "未知公会",
+      "personal": "个人"
+    },
+    "noteDefaultGuild": "提示：您可以在游戏中设置默认公会，自动接收代币。",
+    "noteDefaultGuildLink": "用户设置",
+    "transfer": {
+      "title": "将代币转移至公会",
+      "description": "将代币从个人余额转移至您所属的公会之一。",
+      "guild": "公会",
+      "selectGuild": "选择一个公会",
+      "amount": "金额",
+      "max": "Max：{max}",
+      "submit": "转移"
+    }
+  },
+  "user": {
+    "settings": {
+      "title": "用户设置",
+      "description": "配置您的个人账户设置和偏好。",
+      "voteGuild": {
+        "label": "投票公会",
+        "description": "投票给机器人时，请选择应获得代币的公会。此设置仅影响未来的投票。",
+        "none": "无特定公会（个人）"
+      }
+    }
+  },
+  "dashboard": {
+    "title": "仪表板",
+    "totalReputation": "总声誉",
+    "weekReputation": "每周声誉",
+    "todayReputation": "今日声誉",
+    "topChannel": "顶级频道",
+    "topUsers": "顶级用户",
+    "rank": "等级",
+    "user": "用户",
+    "reputation": "声誉"
+  },
+  "token_shop": {
+    "title": "代币商店",
+    "description": "使用投票代币为您的服务器解锁高级功能。只要启用自动续订，代币购买的功能将永久有效。若购买的功能已处于激活状态，则其到期日或续订日期将延长30天。",
+    "guildTokens": "使用公会代币",
+    "userTokens": "使用个人令牌",
+    "noFeatures": "目前没有可用功能。",
+    "active": "活动",
+    "expires": "到期时间：{date}",
+    "nextRenewal": "下次续订：{date}",
+    "autoRenewal": "自动续订",
+    "purchase": "购买",
+    "subscribe": "订阅",
+    "unsubscribe": "取消订阅",
+    "purchaseSuccess": "功能购买成功！",
+    "subscribeSuccess": "订阅已启用！",
+    "unsubscribeSuccess": "订阅已禁用！",
+    "enabledBySubscription": "订阅启用",
+    "subscriptionActiveNote": "此功能目前通过有效订阅启用。",
+    "confirmPurchase": "您确定要花费{amount}代币购买此功能吗？",
+    "insufficientTokens": "您没有足够的代币。",
+    "getMoreTokens": "获取更多代币",
+    "feature": {
+      "reputationlog": {
+        "name": "完整声誉记录",
+        "description": "查看服务器中声望日志的所有页面。"
+      },
+      "analyzerlog": {
+        "name": "扩展分析器日志",
+        "description": "分析器日志的保留期延长一倍。"
+      },
+      "reputationcategories": {
+        "name": "无限声望类别",
+        "description": "解锁无限声望类别。"
+      },
+      "reputationchannel": {
+        "name": "无限声望通道",
+        "description": "解锁无限声望渠道。"
+      },
+      "channelblacklist": {
+        "name": "频道拒绝列表",
+        "description": "禁止机器人在特定频道中活动，而非允许其在所有频道中运行。"
+      },
+      "localeoverrides": {
+        "name": "区域设置覆盖",
+        "description": "覆盖机器人消息和标签，使用您自己的翻译。目前仅允许为声望设置自定义名称。"
+      },
+      "autopost": {
+        "name": "自动发布",
+        "description": "定期自动将排行榜发布到频道。"
+      },
+      "advancedrankings": {
+        "name": "高级排名",
+        "description": "解锁更多排名选项。"
+      },
+      "detailedprofile": {
+        "name": "详细资料",
+        "description": "在用户声誉档案中显示更多信息。"
+      },
+      "logchannel": {
+        "name": "日志通道",
+        "description": "为所有信誉变更启用专用日志通道。"
+      },
+      "additionalemojis": {
+        "name": "更多表情符号",
+        "description": "使用多个表情符号通过反应来给予声望。"
+      },
+      "profile": {
+        "name": "机器人档案",
+        "description": "在您的服务器中自定义机器人的名称和个人资料图片。"
+      },
+      "integrationbypass": {
+        "name": "集成旁路",
+        "description": "允许其他机器人和集成程序授予声望值。"
+      }
+    },
+    "adminOnly": "服务器已配置为仅允许服务器管理员购买功能。"
   }
 }

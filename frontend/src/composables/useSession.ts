@@ -4,27 +4,26 @@
  *     Copyright (C) RainbowDashLabs and Contributor
  */
 import {readonly, ref} from 'vue'
-import type {GuildSessionPOJO, UserSessionPOJO} from '@/api/types'
+import type {UserSessionPOJO} from '@/api/types'
 import * as Types from '@/api/types'
 import {api} from '@/api'
 
 const SESSION_TOKEN_KEY = 'reputation_bot_token'
 const GUILD_ID_KEY = 'reputation_bot_guild_id'
 
-const session = ref<(GuildSessionPOJO & { settings?: Types.SettingsPOJO, premiumFeatures?: Types.PremiumFeaturesPOJO }) | null>(null)
+const session = ref<(Types.GuildPOJO & { settings?: Types.SettingsPOJO, premiumFeatures?: Types.PremiumFeaturesPOJO }) | null>(null)
 const userSession = ref<UserSessionPOJO | null>(null)
-const guildMeta = ref<Types.GuildMetaPOJO | null>(null)
+const hasToken = ref(!!localStorage.getItem(SESSION_TOKEN_KEY))
 const premiumFeatures = ref<Types.PremiumFeaturesPOJO | null>(null)
+const userTokens = ref<number>(0)
+const guildTokens = ref<number>(0)
 const isExpired = ref(false)
+const currentGuildId = ref<string | null>(localStorage.getItem(GUILD_ID_KEY))
 
 export function useSession() {
-    const setSession = (data: GuildSessionPOJO) => {
+    const setSession = (data: Types.GuildPOJO) => {
         session.value = data
         isExpired.value = false
-    }
-
-    const setGuildMeta = (data: Types.GuildMetaPOJO) => {
-        guildMeta.value = data
     }
 
     const setPremiumFeatures = (data: Types.PremiumFeaturesPOJO) => {
@@ -34,7 +33,48 @@ export function useSession() {
     const setUserSession = (data: UserSessionPOJO) => {
         userSession.value = data
         localStorage.setItem(SESSION_TOKEN_KEY, data.token)
+        hasToken.value = true
         isExpired.value = false
+    }
+
+    const setToken = (token: string) => {
+        localStorage.setItem(SESSION_TOKEN_KEY, token)
+        hasToken.value = true
+    }
+
+    const setGuildId = (guildId: string | null) => {
+        if (guildId) {
+            localStorage.setItem(GUILD_ID_KEY, guildId)
+        } else {
+            localStorage.removeItem(GUILD_ID_KEY)
+        }
+        currentGuildId.value = guildId
+    }
+
+    const setUserTokens = (tokens: number) => {
+        userTokens.value = tokens
+    }
+
+    const setGuildTokens = (tokens: number) => {
+        guildTokens.value = tokens
+    }
+
+    const refreshUserTokens = async () => {
+        try {
+            const response = await api.getUserTokens()
+            userTokens.value = response.tokens
+        } catch (e) {
+            console.error('Failed to refresh user tokens:', e)
+        }
+    }
+
+    const refreshGuildTokens = async () => {
+        try {
+            const response = await api.getGuildTokens()
+            guildTokens.value = response.tokens
+        } catch (e) {
+            console.error('Failed to refresh guild tokens:', e)
+        }
     }
 
     const setExpired = (expired: boolean) => {
@@ -42,17 +82,17 @@ export function useSession() {
     }
 
     const switchSession = (guildId: string) => {
-        localStorage.setItem(GUILD_ID_KEY, guildId)
+        setGuildId(guildId)
         window.location.reload()
     }
 
     const clearSession = () => {
         session.value = null
         userSession.value = null
-        guildMeta.value = null
         premiumFeatures.value = null
         localStorage.removeItem(SESSION_TOKEN_KEY)
-        localStorage.removeItem(GUILD_ID_KEY)
+        setGuildId(null)
+        hasToken.value = false
     }
 
     const logout = async () => {
@@ -213,13 +253,21 @@ export function useSession() {
     return {
         session: readonly(session),
         userSession: readonly(userSession),
-        guildMeta: readonly(guildMeta),
         premiumFeatures: readonly(premiumFeatures),
+        userTokens: readonly(userTokens),
+        guildTokens: readonly(guildTokens),
         isExpired: readonly(isExpired),
+        hasToken: readonly(hasToken),
+        currentGuildId: readonly(currentGuildId),
         setSession,
         setUserSession,
-        setGuildMeta,
+        setToken,
+        setGuildId,
         setPremiumFeatures,
+        setUserTokens,
+        setGuildTokens,
+        refreshUserTokens,
+        refreshGuildTokens,
         setExpired,
         switchSession,
         clearSession,

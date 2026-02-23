@@ -28,7 +28,7 @@ public class General extends GeneralPOJO implements GuildHolder {
     private final Settings settings;
 
     public General(Settings settings) {
-        this(settings, null, false, ReputationMode.TOTAL, null, 0);
+        this(settings, null, false, ReputationMode.TOTAL, null, 0, true);
     }
 
     public General(
@@ -37,8 +37,9 @@ public class General extends GeneralPOJO implements GuildHolder {
             boolean stackRoles,
             ReputationMode reputationMode,
             Instant resetDate,
-            long systemChannel) {
-        super(stackRoles, language, reputationMode, resetDate, systemChannel);
+            long systemChannel,
+            boolean everyoneTokenPurchase) {
+        super(stackRoles, language, reputationMode, resetDate, systemChannel, everyoneTokenPurchase);
         this.settings = settings;
     }
 
@@ -50,7 +51,8 @@ public class General extends GeneralPOJO implements GuildHolder {
                 rs.getBoolean("stack_roles"),
                 ReputationMode.valueOf(rs.getString("reputation_mode")),
                 rs.get("reset_date", INSTANT_TIMESTAMP),
-                rs.getLong("system_channel_id"));
+                rs.getLong("system_channel_id"),
+                rs.getBoolean("everyone_token_purchase"));
     }
 
     public boolean language(@Nullable DiscordLocale language) {
@@ -93,6 +95,14 @@ public class General extends GeneralPOJO implements GuildHolder {
         return result;
     }
 
+    public boolean everyoneTokenPurchase(boolean everyoneTokenPurchase) {
+        var result = set("everyone_token_purchase", stmt -> stmt.bind(everyoneTokenPurchase));
+        if (result) {
+            this.everyoneTokenPurchase = everyoneTokenPurchase;
+        }
+        return result;
+    }
+
     public boolean resetDateNow() {
         return resetDate(Instant.now());
     }
@@ -103,6 +113,8 @@ public class General extends GeneralPOJO implements GuildHolder {
         if (reputationMode != state.reputationMode()) reputationMode(state.reputationMode());
         if (systemChannel != state.systemChannel()) systemChannel(state.systemChannel());
         if (resetDate != state.resetDate()) resetDate(state.resetDate());
+        if (everyoneTokenPurchase != state.everyoneTokenPurchase())
+            everyoneTokenPurchase(state.everyoneTokenPurchase());
     }
 
     @Override
@@ -121,13 +133,15 @@ public class General extends GeneralPOJO implements GuildHolder {
                 Language: %s
                 Reputation Mode: %s
                 System Channel: %s
+                Everyone Token Purchase: %s
                 """.stripIndent().formatted(
                 stackRoles,
                 language != null
                         ? language.getLanguageName()
                         : guild().getLocale().getLanguageName(),
                 reputationMode.name(),
-                systemChannel);
+                systemChannel,
+                everyoneTokenPurchase);
     }
 
     private boolean set(String parameter, Function<Call, Call> builder) {

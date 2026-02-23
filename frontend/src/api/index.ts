@@ -96,14 +96,54 @@ class ApiClient {
         return response.data;
     }
 
-    public async getGuildSession(): Promise<Types.GuildSessionPOJO> {
-        const response = await this.axiosInstance.get<Types.GuildSessionPOJO>('/session/guild');
+    public async getGuildSession(): Promise<Types.GuildPOJO> {
+        const response = await this.axiosInstance.get<Types.GuildPOJO>('/guild/meta');
         return response.data;
     }
 
-    public async getGuildMeta(guildId?: string): Promise<Types.GuildMetaPOJO> {
+    public async getDashboardStats(): Promise<Types.DashboardStatsPOJO> {
+        const response = await this.axiosInstance.get<Types.DashboardStatsPOJO>('/guild/stats');
+        return response.data;
+    }
+
+    public async purchaseFeature(featureId: number, guildTokens: boolean): Promise<Types.FeaturePurchaseResultPOJO> {
+        const response = await this.axiosInstance.post<Types.FeaturePurchaseResultPOJO>('/guild/features/purchase', { featureId, guildTokens });
+        return response.data;
+    }
+
+    public async subscribeFeature(featureId: number): Promise<Types.FeaturePurchaseResultPOJO> {
+        const response = await this.axiosInstance.post<Types.FeaturePurchaseResultPOJO>('/guild/features/subscribe', { featureId });
+        return response.data;
+    }
+
+    public async unsubscribeFeature(featureId: number): Promise<Types.FeaturePurchaseResultPOJO> {
+        const response = await this.axiosInstance.post<Types.FeaturePurchaseResultPOJO>('/guild/features/unsubscribe', { featureId });
+        return response.data;
+    }
+
+    public async getGuildTokens(): Promise<Types.TokensPOJO> {
+        const response = await this.axiosInstance.get<Types.TokensPOJO>('/guild/token');
+        return response.data;
+    }
+
+    public async getActiveFeatures(): Promise<Types.ActiveFeaturePOJO[]> {
+        const response = await this.axiosInstance.get<Types.ActiveFeaturePOJO[]>('/guild/features/active');
+        return response.data;
+    }
+
+    public async getEveryoneTokenPurchase(): Promise<boolean> {
+        const response = await this.axiosInstance.get<boolean>('/guild/features/everyone-token-purchase');
+        return response.data;
+    }
+
+    public async withdrawGuildTokens(amount: number): Promise<Types.TokensPOJO> {
+        const response = await this.axiosInstance.post<Types.TokensPOJO>('/guild/token/withdraw', { amount });
+        return response.data;
+    }
+
+    public async getGuildMeta(guildId?: string): Promise<Types.GuildPOJO> {
         const headers = guildId ? { 'X-Guild-Id': guildId } : {};
-        const response = await this.axiosInstance.get<Types.GuildMetaPOJO>('/session/guild/meta', { headers });
+        const response = await this.axiosInstance.get<Types.GuildPOJO>('/guild/meta', { headers });
         return response.data;
     }
 
@@ -148,6 +188,12 @@ class ApiClient {
 
     public async updateGeneralResetDate(resetDate: string | null) {
         await this.axiosInstance.post('/settings/general/resetdate', resetDate ? JSON.stringify(resetDate) : null, {
+            headers: {'Content-Type': 'application/json'}
+        });
+    }
+
+    public async updateGeneralEveryoneTokenPurchase(active: boolean) {
+        await this.axiosInstance.post('/settings/general/everyonetokenpurchase', active, {
             headers: {'Content-Type': 'application/json'}
         });
     }
@@ -521,6 +567,15 @@ class ApiClient {
         return response.data;
     }
 
+    public async getTokenFeatures(): Promise<Map<Types.Feature, Types.Feature>> {
+        if (this.cache.has('token_features')) {
+            return this.cache.get('token_features');
+        }
+        const response = await this.axiosInstance.get<Map<Types.Feature, Types.Feature>>('/data/token_features');
+        this.cache.set('token_features', response.data);
+        return response.data;
+    }
+
     // Audit Log
     public async getAuditLog(page: number = 0, entries: number = 50): Promise<Types.AuditLogPagePOJO> {
         const response = await this.axiosInstance.get<Types.AuditLogPagePOJO>('/settings/auditlog', {
@@ -529,7 +584,37 @@ class ApiClient {
         return response.data;
     }
 
-    // Debug
+    // User Voting
+    public async getUserTokens(): Promise<Types.TokensPOJO> {
+        const response = await this.axiosInstance.get<Types.TokensPOJO>('/user/vote/tokens');
+        return response.data;
+    }
+
+    public async getVoteLists(): Promise<Types.BotlistVotePOJO[]> {
+        const response = await this.axiosInstance.get<Types.BotlistVotePOJO[]>('/user/vote/lists');
+        return response.data;
+    }
+
+    public async getVoteLog(page: number = 0, entries: number = 25): Promise<Types.VoteLogPagePOJO> {
+        const response = await this.axiosInstance.get<Types.VoteLogPagePOJO>('/user/vote/log', {
+            params: { page, entries }
+        });
+        return response.data;
+    }
+
+    public async transferTokensToGuild(guildId: string, amount: number): Promise<void> {
+        await this.axiosInstance.post('/user/vote/transfer', { guildId, amount });
+    }
+
+    public async getUserSettings(): Promise<Types.UserSettingsPOJO> {
+        const response = await this.axiosInstance.get<Types.UserSettingsPOJO>('/user/settings');
+        return response.data;
+    }
+
+    public async updateUserSettings(settings: Types.UserSettingsPOJO): Promise<void> {
+        await this.axiosInstance.patch('/user/settings', settings);
+    }
+
     public async getDebug(): Promise<Types.DebugResultPOJO> {
         const response = await this.axiosInstance.get<Types.DebugResultPOJO>('/settings/debug');
         return response.data;

@@ -5,12 +5,11 @@
  */
 package de.chojo.repbot.config.elements.sku.feature;
 
-import de.chojo.repbot.config.elements.sku.SKUEntry;
+import de.chojo.repbot.config.elements.sku.tokens.Feature;
 
-public class IntegrationBypass {
-    private SKUEntry allow = new SKUEntry();
+public class IntegrationBypass extends Feature {
 
-    public SKUEntry allow() {
-        return allow;
+    public IntegrationBypass() {
+        super(6, 350);
     }
 }

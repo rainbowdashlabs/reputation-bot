@@ -8,8 +8,7 @@ package de.chojo.repbot.web.routes.v1.session;
 import de.chojo.repbot.dao.access.guildsession.GuildSession;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
-import de.chojo.repbot.web.pojo.GuildSessionPOJO;
-import de.chojo.repbot.web.pojo.guild.GuildMetaPOJO;
+import de.chojo.repbot.web.pojo.guild.GuildPOJO;
 import de.chojo.repbot.web.pojo.premium.PremiumFeaturesPOJO;
 import de.chojo.repbot.web.pojo.session.UserSessionPOJO;
 import de.chojo.repbot.web.pojo.settings.SettingsPOJO;
@@ -52,28 +51,8 @@ public class SessionRoute implements RoutesBuilder {
     }
 
     @OpenApi(
-            summary = "Get the data for the current guild session.",
-            operationId = "getGuildSession",
-            path = "v1/session/guild",
-            methods = HttpMethod.GET,
-            headers = {
-                @OpenApiParam(name = "Authorization", required = true, description = "User Session Token"),
-                @OpenApiParam(name = "X-Guild-Id", required = true, description = "Guild ID")
-            },
-            tags = {"Session"},
-            responses = {
-                @OpenApiResponse(
-                        status = "200",
-                        content = {@OpenApiContent(from = GuildSessionPOJO.class, type = "application/json")})
-            })
-    private static void getGuildSession(@NotNull Context ctx) {
-        GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        ctx.json(session.sessionData());
-    }
-
-    @OpenApi(
             summary = "Get the meta data for the current guild.",
-            operationId = "getGuildMeta",
+            operationId = "getSessionGuildMeta",
             path = "v1/session/guild/meta",
             methods = HttpMethod.GET,
             headers = {
@@ -84,11 +63,11 @@ public class SessionRoute implements RoutesBuilder {
             responses = {
                 @OpenApiResponse(
                         status = "200",
-                        content = {@OpenApiContent(from = GuildMetaPOJO.class, type = "application/json")})
+                        content = {@OpenApiContent(from = GuildPOJO.class, type = "application/json")})
             })
     private static void getGuildMeta(@NotNull Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        ctx.json(GuildMetaPOJO.generate(session.guild()));
+        ctx.json(session.guildPOJO());
     }
 
     @OpenApi(
@@ -136,7 +115,6 @@ public class SessionRoute implements RoutesBuilder {
         path("session", () -> {
             get("me", SessionRoute::getUserSession, Role.USER);
             path("guild", () -> {
-                get(SessionRoute::getGuildSession, Role.GUILD_USER);
                 get("meta", SessionRoute::getGuildMeta, Role.GUILD_USER);
                 get("premium", SessionRoute::getGuildPremium, Role.GUILD_USER);
                 get("settings", SessionRoute::getGuildSettings, Role.GUILD_ADMIN);

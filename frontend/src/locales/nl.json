@@ -10,12 +10,21 @@
     "loading": "Bezig met laden...",
     "error": {
       "outOfBounds": "De waarde moet tussen {min} en {max} liggen. Aangepast naar de dichtstbijzijnde geldige waarde."
-    }
+    },
+    "noData": "Geen resultaten gevonden.",
+    "previous": "Vorige",
+    "next": "Volgende",
+    "pageOf": "Pagina {current} van {total}"
   },
   "navigation": {
     "settings": "Instellingen",
     "presets": "Voorinstellingen",
-    "setup": "Instellingen"
+    "setup": "Instellingen",
+    "logout": "Uitloggen",
+    "dashboard": "Dashboard",
+    "user_settings": "Gebruikersinstellingen",
+    "voting": "Stemmen",
+    "token_shop": "Tokenwinkel"
   },
   "presets": {
     "title": "Voorinstellingen",
@@ -135,10 +144,11 @@
   },
   "premiumFeature": {
     "title": "Supporter-functie",
-    "requiredTier": "Vereist ondersteuningsniveau:",
     "message": "{name} is alleen voor supporters. Word supporter om het te kunnen gebruiken.",
     "requiredTierSingular": "Vereist ondersteuningsniveau:",
-    "requiredTierPlural": "Je moet een van de volgende supporterniveaus kiezen:"
+    "requiredTierPlural": "Je moet een van de volgende supporterniveaus kiezen:",
+    "tokenShopHint": "Je kunt deze functie ook vrijspelen met tokens in de",
+    "tokenShopLink": "Tokenwinkel"
   },
   "profile": {
     "description": "Pas aan hoe de bot eruitziet en zich gedraagt op je server.",
@@ -308,6 +318,10 @@
         "channelLimitWarning": "Als je meer dan {limit} kanalen wilt kiezen, moet je supporter worden. Word supporter om deze functie te kunnen gebruiken.",
         "categoryLimitWarning": "Als je meer dan {limit} categorie wilt kiezen, moet je een supporter zijn. Word supporter om dit te kunnen doen."
       }
+    },
+    "everyoneTokenPurchase": {
+      "label": "Iedereen kan tokens kopen",
+      "description": "Laat alle gebruikers premiumfuncties kopen met hun tokens. Als je dit uitschakelt, kunnen alleen serverbeheerders functies kopen."
     }
   },
   "reactions": {
@@ -626,7 +640,8 @@
       "autopost_channel": "Autopost - Kanaal",
       "autopost_refreshtype": "Autopost - Vernieuwingstype",
       "autopost_refreshinterval": "Autopost - Vernieuwingsinterval",
-      "ranks": "Rangen - Functies"
+      "ranks": "Rangen - Functies",
+      "general_everyonetokenpurchase": "Algemeen - Iedereen kan tokens kopen"
     }
   },
   "help": {
@@ -669,5 +684,165 @@
     "week": "1 week",
     "fourWeeks": "4 weken",
     "year": "1 jaar"
+  },
+  "login": {
+    "title": "Inloggen nodig",
+    "description": "Log even in met Discord om dit paneel te openen.",
+    "button": "Log in met Discord"
+  },
+  "voting": {
+    "title": "Stemmen",
+    "description": "Info over je huidige stemtokens en hoe het zit met je botlijststemmen.",
+    "tokens": {
+      "title": "Tokens",
+      "description": "Je huidige stemtokens. Je kunt ze gebruiken voor allerlei beloningen.",
+      "label": "Huidige tokens",
+      "shop": "Bezoek de Token Shop"
+    },
+    "botlists": {
+      "title": "Botlijsten",
+      "description": "Stem op de bot op verschillende botlijsten om tokens te verdienen en je streak te behouden.",
+      "name": "Botlijst",
+      "streak": "Streak",
+      "lastVote": "Laatste stemming",
+      "action": "Actie",
+      "vote": "Stem",
+      "never": "Nooit",
+      "days": "dagen"
+    },
+    "log": {
+      "title": "Stemlogboek",
+      "description": "Een overzicht van je stemtoken-transacties.",
+      "date": "Datum",
+      "guild": "Gilde",
+      "tokens": "Tokens",
+      "reason": {
+        "label": "Reden",
+        "STANDARD": "Stem",
+        "STANDARD_DESCRIPTION": "Je hebt een token gekregen om te stemmen op een botlijst.",
+        "STREAK": "Stemreeks",
+        "STREAK_DESCRIPTION": "Je hebt een extra muntje gekregen omdat je een streak hebt.",
+        "BONUS": "Dagelijkse bonus",
+        "BONUS_DESCRIPTION": "Je hebt extra tokens gekregen omdat je in de afgelopen 6 uur op alle botlijsten hebt gestemd.",
+        "TRANSFER": "Overstappen naar Guild",
+        "TRANSFER_DESCRIPTION": "Je hebt tokens naar een gilde gestuurd om hun reputatiesysteem te steunen.",
+        "USE": "Aankoop",
+        "USE_DESCRIPTION": "Je hebt tokens gebruikt om een beloning of dienst te kopen.",
+        "unknown": "Onbekend",
+        "unknown_DESCRIPTION": "We weten niet waarom deze transactie is gedaan."
+      },
+      "unknownGuild": "Onbekende gilde",
+      "personal": "Persoonlijk"
+    },
+    "noteDefaultGuild": "Tip: Je kunt een standaardgilde instellen om automatisch tokens te ontvangen in je",
+    "noteDefaultGuildLink": "Gebruikersinstellingen",
+    "transfer": {
+      "title": "Tokens naar een gilde overzetten",
+      "description": "Verplaats tokens van je persoonlijke saldo naar een van je gilden.",
+      "guild": "Gilde",
+      "selectGuild": "Kies een gilde",
+      "amount": "Bedrag",
+      "max": "Max: {max}",
+      "submit": "Overdracht"
+    }
+  },
+  "user": {
+    "settings": {
+      "title": "Gebruikersinstellingen",
+      "description": "Stel je persoonlijke accountinstellingen en voorkeuren in.",
+      "voteGuild": {
+        "label": "Stem op het gilde",
+        "description": "Kies welke gilde tokens moet krijgen als je op de bot stemt. Dit geldt alleen voor toekomstige stemmen.",
+        "none": "Geen specifieke gilde (Persoonlijk)"
+      }
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "totalReputation": "Totale reputatie",
+    "weekReputation": "Wekelijkse reputatie",
+    "todayReputation": "De reputatie van vandaag",
+    "topChannel": "Topkanaal",
+    "topUsers": "Topgebruikers",
+    "rank": "Rang",
+    "user": "Gebruiker",
+    "reputation": "Reputatie"
+  },
+  "token_shop": {
+    "title": "Tokenwinkel",
+    "description": "Maak je server nog beter met premium functies door je stemtokens te gebruiken. Functies die je met tokens koopt, blijven gewoon werken zolang je ze automatisch verlengt. Als je een functie koopt die al actief is, krijg je 30 dagen extra tot de verval- of verlengdatum.",
+    "guildTokens": "Gebruik gilde-tokens",
+    "userTokens": "Gebruik persoonlijke tokens",
+    "noFeatures": "Op dit moment zijn er geen functies beschikbaar.",
+    "active": "Actief",
+    "expires": "Verloopt: {date}",
+    "nextRenewal": "Volgende verlenging: {date}",
+    "autoRenewal": "Automatische verlenging",
+    "purchase": "Aankoop",
+    "subscribe": "Abonneren",
+    "unsubscribe": "Afmelden",
+    "purchaseSuccess": "Functie succesvol gekocht!",
+    "subscribeSuccess": "Abonnement is nu actief!",
+    "unsubscribeSuccess": "Abonnement uitgeschakeld!",
+    "enabledBySubscription": "Beschikbaar via abonnement",
+    "subscriptionActiveNote": "Deze functie is nu beschikbaar als je een actief abonnement hebt.",
+    "confirmPurchase": "Weet je zeker dat je deze functie wilt kopen voor {amount} tokens?",
+    "insufficientTokens": "Je hebt niet genoeg tokens.",
+    "getMoreTokens": "Meer tokens krijgen",
+    "feature": {
+      "reputationlog": {
+        "name": "Volledig reputatielogboek",
+        "description": "Bekijk alle pagina's van het reputatielogboek op de server."
+      },
+      "analyzerlog": {
+        "name": "Uitgebreid analysatorlogboek",
+        "description": "De bewaartermijn voor het analysatorlogboek is verdubbeld."
+      },
+      "reputationcategories": {
+        "name": "Onbeperkte reputatiecategorieën",
+        "description": "Ontgrendel alle reputatiecategorieën."
+      },
+      "reputationchannel": {
+        "name": "Onbeperkt reputatiekanaal",
+        "description": "Ontgrendel zoveel reputatiekanalen als je wilt."
+      },
+      "channelblacklist": {
+        "name": "Kanaal weigerenlijst",
+        "description": "Zorg ervoor dat de bot niet overal actief is, maar alleen in bepaalde kanalen."
+      },
+      "localeoverrides": {
+        "name": "Lokale overschrijvingen",
+        "description": "Je kunt botberichten en labels vervangen door je eigen vertalingen. Op dit moment kun je alleen een eigen naam instellen voor reputatie."
+      },
+      "autopost": {
+        "name": "Automatisch posten",
+        "description": "Plaats het klassement automatisch op regelmatige tijdstippen op een kanaal."
+      },
+      "advancedrankings": {
+        "name": "Geavanceerde ranglijsten",
+        "description": "Ontgrendel meer rankingopties."
+      },
+      "detailedprofile": {
+        "name": "Gedetailleerd profiel",
+        "description": "Laat meer info zien over de reputatieprofielen van gebruikers."
+      },
+      "logchannel": {
+        "name": "Logkanaal",
+        "description": "Zet een speciaal logkanaal aan voor alle reputatiewijzigingen."
+      },
+      "additionalemojis": {
+        "name": "Extra emoji's",
+        "description": "Gebruik meer dan één emoji om je mening te geven via reacties."
+      },
+      "profile": {
+        "name": "Botprofiel",
+        "description": "Pas de naam en profielfoto van de bot aan op je server."
+      },
+      "integrationbypass": {
+        "name": "Integratie omzeilen",
+        "description": "Laat andere bots en integraties ook reputatie geven."
+      }
+    },
+    "adminOnly": "De server is zo ingesteld dat alleen serverbeheerders functies kunnen kopen."
   }
 }

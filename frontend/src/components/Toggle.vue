@@ -9,11 +9,19 @@ const modelValue = defineModel<boolean>({required: true});
 interface Props {
   label?: string;
   disabled?: boolean;
+  activeClass?: string;
+  inactiveClass?: string;
+  activeIcon?: string | string[];
+  inactiveIcon?: string | string[];
 }
 
 const props = withDefaults(defineProps<Props>(), {
   label: '',
   disabled: false,
+  activeClass: 'bg-green-500',
+  inactiveClass: 'bg-red-500',
+  activeIcon: () => ['fas', 'check'],
+  inactiveIcon: () => ['fas', 'xmark'],
 });
 
 const toggle = () => {
@@ -28,7 +36,7 @@ const toggle = () => {
 
     <div
         :class="[
-        modelValue ? 'bg-green-500' : 'bg-red-500',
+        modelValue ? activeClass : inactiveClass,
         disabled ? 'opacity-50 cursor-not-allowed' : ''
       ]"
         class="relative inline-flex h-6 w-12 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2"
@@ -37,13 +45,13 @@ const toggle = () => {
           :class="modelValue ? 'opacity-0' : 'opacity-100'"
           class="absolute inset-0 flex items-center justify-end pr-2 text-xs font-semibold text-white pointer-events-none"
       >
-        <font-awesome-icon :icon="['fas', 'xmark']"/>
+        <font-awesome-icon :icon="inactiveIcon"/>
       </span>
       <span
           :class="modelValue ? 'opacity-100' : 'opacity-0'"
           class="absolute inset-0 flex items-center justify-start pl-2 text-xs font-semibold text-white pointer-events-none"
       >
-        <font-awesome-icon :icon="['fas', 'check']"/>
+        <font-awesome-icon :icon="activeIcon"/>
       </span>
       <span
           :class="modelValue ? 'translate-x-6' : 'translate-x-0'"

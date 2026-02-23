@@ -16,11 +16,28 @@ import ExpiredSessionWarning from './components/ExpiredSessionWarning.vue'
 import {api} from './api'
 import {useSession} from './composables/useSession'
 import {useDarkMode} from './composables/useDarkMode'
+import ViewContainer from './components/ViewContainer.vue'
 
 const router = useRouter()
 const route = useRoute()
-const {userSession, setSession, setUserSession, setGuildMeta, clearSession, loadSettings, loadPremiumFeatures} = useSession()
+const {
+  userSession,
+  currentGuildId,
+  setSession,
+  setToken,
+  setUserSession,
+  setUserTokens,
+  setGuildId,
+  clearSession,
+  loadSettings,
+  loadPremiumFeatures
+} = useSession()
 useDarkMode()
+
+const isGuildAdmin = computed(() => {
+  if (!currentGuildId.value || !userSession.value) return false
+  return userSession.value.guilds[currentGuildId.value]?.accessLevel === 'GUILD_ADMIN' || userSession.value.isBotOwner
+})
 
 const isSettingsPage = computed(() => route.path.startsWith('/settings/edit'))
 const showSettingsHeader = computed(() => route.path.startsWith('/settings'))
@@ -33,6 +50,7 @@ async function loadSession() {
 
   if (token) {
     api.setToken(token);
+    setToken(token);
     // Remove token from URL
     urlParams.delete('token');
     const newRelativePathQuery = window.location.pathname + (urlParams.toString() ? '?' + urlParams.toString() : '');
@@ -60,8 +78,12 @@ async function loadSession() {
   // If token exists, try to load session data
   if (storedToken) {
     try {
-      const userSessionData = await api.getSession();
+      const [userSessionData, tokensData] = await Promise.all([
+        api.getSession(),
+        api.getUserTokens()
+      ]);
       setUserSession(userSessionData);
+      setUserTokens(tokensData.tokens);
       const isBotOwner = userSessionData.isBotOwner;
 
       // Select guild:
@@ -91,13 +113,9 @@ async function loadSession() {
       }
 
       if (guildId) {
-        localStorage.setItem('reputation_bot_guild_id', guildId);
-        const [sessionData, metaData] = await Promise.all([
-          api.getGuildSession(),
-          api.getGuildMeta()
-        ]);
+        setGuildId(guildId);
+        const sessionData = await api.getGuildSession()
         setSession(sessionData);
-        setGuildMeta(metaData);
 
         if (isSettingsPage.value) {
           await Promise.all([
@@ -136,16 +154,29 @@ watch(isSettingsPage, async (isSettings) => {
 </script>
 
 <template>
-  <AppHeader/>
-  <div class="h-[73px]"></div>
-
   <template v-if="ready">
+    <AppHeader/>
+    <div class="h-[73px]"></div>
+
     <SettingsHeader v-if="showSettingsHeader && userSession"/>
 
     <div :class="{'pt-8': showSettingsHeader}">
-      <div v-if="(showSettingsHeader || isSetupPage) && !userSession" class="mx-auto px-4" style="max-width: 1200px;">
-        <LoginPanel class="mt-8"/>
-      </div>
+      <ViewContainer v-if="!userSession && !isSetupPage && route.path !== '/error/no-token'" class="mt-8">
+        <LoginPanel/>
+      </ViewContainer>
+      <ViewContainer v-else-if="showSettingsHeader && !isGuildAdmin" class="mt-8">
+        <div class="flex flex-col items-center justify-center p-12 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+          <div class="w-16 h-16 bg-red-100 dark:bg-red-900/50 rounded-full flex items-center justify-center mb-6">
+            <font-awesome-icon :icon="['fas', 'circle-exclamation']" class="text-3xl text-red-600 dark:text-red-400" />
+          </div>
+          <h2 class="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+            Access Denied
+          </h2>
+          <p class="text-gray-600 dark:text-gray-400 text-center mb-8 max-w-sm">
+            You must be a guild administrator to access this page.
+          </p>
+        </div>
+      </ViewContainer>
       <router-view v-else/>
     </div>
 

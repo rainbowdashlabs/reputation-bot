@@ -53,6 +53,8 @@ public class PremiumFeaturesPOJO {
     private final FeatureLimit reputationChannel;
     private final FeatureLimit reputationCategories;
 
+    private final List<String> activeSkus;
+
     public PremiumFeaturesPOJO(
             SimpleFeature reputationLog,
             SimpleFeature analyzerLog,
@@ -66,7 +68,8 @@ public class PremiumFeaturesPOJO {
             SimpleFeature profile,
             SimpleFeature integrationBypass,
             FeatureLimit reputationChannel,
-            FeatureLimit reputationCategories) {
+            FeatureLimit reputationCategories,
+            List<String> activeSkus) {
         this.reputationLog = reputationLog;
         this.analyzerLog = analyzerLog;
         this.channelBlacklist = channelBlacklist;
@@ -80,6 +83,7 @@ public class PremiumFeaturesPOJO {
         this.integrationBypass = integrationBypass;
         this.reputationChannel = reputationChannel;
         this.reputationCategories = reputationCategories;
+        this.activeSkus = activeSkus;
     }
 
     public static PremiumFeaturesPOJO generate(RepGuild guild, ShardManager shardManager) {
@@ -91,45 +95,45 @@ public class PremiumFeaturesPOJO {
 
         // Check simple boolean features
         SimpleFeature reputationLog =
-                createSimpleFeature(subscriptions, features.reputationLog().extendedPages(), skuMap);
+                createSimpleFeature(subscriptions, features.reputationLog().fullSkuEntry(), skuMap);
         SimpleFeature analyzerLog =
-                createSimpleFeature(subscriptions, features.analyzerLog().longerLogTime(), skuMap);
+                createSimpleFeature(subscriptions, features.analyzerLog().fullSkuEntry(), skuMap);
         SimpleFeature channelBlacklist =
-                createSimpleFeature(subscriptions, features.channelBlacklist().allow(), skuMap);
+                createSimpleFeature(subscriptions, features.channelBlacklist().fullSkuEntry(), skuMap);
         SimpleFeature localeOverrides =
-                createSimpleFeature(subscriptions, features.localeOverrides().reputationNameOverride(), skuMap);
+                createSimpleFeature(subscriptions, features.localeOverrides().fullSkuEntry(), skuMap);
         SimpleFeature autopost =
-                createSimpleFeature(subscriptions, features.autopost().autopostChannel(), skuMap);
+                createSimpleFeature(subscriptions, features.autopost().fullSkuEntry(), skuMap);
         SimpleFeature advancedRankings =
-                createSimpleFeature(subscriptions, features.advancedRankings().advancedRankings(), skuMap);
+                createSimpleFeature(subscriptions, features.advancedRankings().fullSkuEntry(), skuMap);
         SimpleFeature detailedProfile =
-                createSimpleFeature(subscriptions, features.detailedProfile().detailedProfile(), skuMap);
+                createSimpleFeature(subscriptions, features.detailedProfile().fullSkuEntry(), skuMap);
         SimpleFeature logChannel =
-                createSimpleFeature(subscriptions, features.logChannel().logChannel(), skuMap);
+                createSimpleFeature(subscriptions, features.logChannel().fullSkuEntry(), skuMap);
         SimpleFeature additionalEmojis =
-                createSimpleFeature(subscriptions, features.additionalEmojis().additionalEmojis(), skuMap);
+                createSimpleFeature(subscriptions, features.additionalEmojis().fullSkuEntry(), skuMap);
         SimpleFeature profile =
-                createSimpleFeature(subscriptions, features.profile().allow(), skuMap);
+                createSimpleFeature(subscriptions, features.profile().fullSkuEntry(), skuMap);
 
         SimpleFeature integrationBypass =
-                createSimpleFeature(subscriptions, features.integrationBypass().allow(), skuMap);
+                createSimpleFeature(subscriptions, features.integrationBypass().fullSkuEntry(), skuMap);
 
         // Check complex features with limits
         int defaultChannels = features.reputationChannel().defaultChannel();
         boolean moreChannelsUnlocked =
-                isEntitled(subscriptions, features.reputationChannel().moreChannel());
+                isEntitled(subscriptions, features.reputationChannel().fullSkuEntry());
         FeatureLimit reputationChannel = new FeatureLimit(
                 moreChannelsUnlocked ? Integer.MAX_VALUE : defaultChannels,
                 moreChannelsUnlocked,
-                extractSkuInfos(features.reputationChannel().moreChannel(), skuMap));
+                extractSkuInfos(features.reputationChannel().fullSkuEntry(), skuMap));
 
         int defaultCategories = features.reputationCategories().defaultCategories();
         boolean moreCategoriesUnlocked =
-                isEntitled(subscriptions, features.reputationCategories().moreCategories());
+                isEntitled(subscriptions, features.reputationCategories().fullSkuEntry());
         FeatureLimit reputationCategories = new FeatureLimit(
                 moreCategoriesUnlocked ? Integer.MAX_VALUE : defaultCategories,
                 moreCategoriesUnlocked,
-                extractSkuInfos(features.reputationCategories().moreCategories(), skuMap));
+                extractSkuInfos(features.reputationCategories().fullSkuEntry(), skuMap));
 
         return new PremiumFeaturesPOJO(
                 reputationLog,
@@ -144,7 +148,8 @@ public class PremiumFeaturesPOJO {
                 profile,
                 integrationBypass,
                 reputationChannel,
-                reputationCategories);
+                reputationCategories,
+                subscriptions.sku().stream().map(s -> String.valueOf(s.skuId())).toList());
     }
 
     private static Map<Long, SkuInfo> resolveSkus(ShardManager shardManager) {
@@ -236,6 +241,10 @@ public class PremiumFeaturesPOJO {
 
     public FeatureLimit reputationCategories() {
         return reputationCategories;
+    }
+
+    public List<String> activeSkus() {
+        return activeSkus;
     }
 
     public SimpleFeature integrationBypass() {

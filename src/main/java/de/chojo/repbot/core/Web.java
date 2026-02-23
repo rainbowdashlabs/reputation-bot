@@ -19,6 +19,7 @@ import de.chojo.jdautil.interactions.dispatching.InteractionHub;
 import de.chojo.logutil.marker.LogNotify;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.service.AutopostService;
+import de.chojo.repbot.service.VoteService;
 import de.chojo.repbot.web.Api;
 import de.chojo.repbot.web.cache.MemberCache;
 import de.chojo.repbot.web.config.Role;
@@ -41,15 +42,13 @@ import io.javalin.openapi.plugin.swagger.SwaggerConfiguration;
 import io.javalin.openapi.plugin.swagger.SwaggerPlugin;
 import io.javalin.plugin.bundled.CorsPluginConfig;
 import io.javalin.security.RouteRole;
-import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.exceptions.ErrorResponseException;
-import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.slf4j.Logger;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -63,6 +62,7 @@ public class Web {
     private final InteractionHub<?, ?, ?> interactionHub;
     private final AutopostService autopostService;
     private final MemberCache memberCache = new MemberCache();
+    private final VoteService voteService;
     private Javalin javalin;
 
     private Web(
@@ -80,6 +80,8 @@ public class Web {
         this.sessionService = sessionService;
         this.interactionHub = interactionHub;
         this.autopostService = autopostService;
+        this.voteService =
+                new VoteService(configuration, data.voteRepository(), data.userRepository(), bot.shardManager());
     }
 
     public static Web create(
@@ -215,7 +217,9 @@ public class Web {
                                     memberCache,
                                     data.guildRepository(),
                                     data.userRepository(),
-                                    new DiscordOAuthService(configuration))
+                                    new DiscordOAuthService(configuration),
+                                    data.voteRepository(),
+                                    bot.tokenPurchaseService())
                             .init());
                     config.router.mount(router -> {
                         router.beforeMatched(this::handleAccess);
@@ -295,7 +299,6 @@ public class Web {
 
     private void initBotList() {
         var botlist = configuration.botlist();
-        if (!botlist.isSubmit()) return;
         BotlistService.build(
                         bot.shardManager(),
                         () -> bot.shardManager().getGuilds().size(),
@@ -305,16 +308,13 @@ public class Web {
                 .forTopGG(botlist.topGg())
                 .forBotlistMe(botlist.botListMe())
                 .withExecutorService(threading.repBotWorker())
-                .withVoteService(builder -> builder.withVoteWeebhooks(javalin)
-                        .onVote(voteData -> bot.shardManager()
-                                .retrieveUserById(voteData.userId())
-                                .flatMap(User::openPrivateChannel)
-                                .flatMap(channel -> channel.sendMessage("Thanks for voting <3"))
-                                .queue(
-                                        message -> log.debug("Vote received"),
-                                        err -> ErrorResponseException.ignore(
-                                                ErrorResponse.UNKNOWN_USER, ErrorResponse.CANNOT_SEND_TO_USER)))
-                        .build())
+                .withVoteService(builder ->
+                        builder.withVoteWeebhooks(javalin).onVote(voteService).build())
+                .withSubmitInterval(
+                        60,
+                        botlist.isSubmit()
+                                ? TimeUnit.MINUTES
+                                : TimeUnit.DAYS) // This essentially disables submission for dev purposes
                 .build();
     }
 }

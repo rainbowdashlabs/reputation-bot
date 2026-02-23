@@ -5,14 +5,13 @@
  */
 package de.chojo.repbot.config.elements.sku.feature;
 
-import de.chojo.repbot.config.elements.sku.SKUEntry;
+import de.chojo.repbot.config.elements.sku.tokens.Feature;
 
-public class AnalyzerLog {
-    private SKUEntry longerLogTime = new SKUEntry();
+public class AnalyzerLog extends Feature {
     private int extendedLogHours = 96;
 
-    public SKUEntry longerLogTime() {
-        return longerLogTime;
+    public AnalyzerLog() {
+        super(2, 350);
     }
 
     public int extendedLogHours() {

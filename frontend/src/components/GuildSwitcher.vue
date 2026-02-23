@@ -4,20 +4,20 @@
  *     Copyright (C) RainbowDashLabs and Contributor
  */
 <template>
-  <div v-if="guildMeta" class="relative inline-block text-left" v-click-outside="closeSwitcher">
+  <div v-if="session" class="relative inline-block text-left" v-click-outside="closeSwitcher">
     <button
         @click="toggleSwitcher"
         type="button"
         class="inline-flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all shadow-sm"
     >
       <div class="flex flex-col items-end">
-        <span class="leading-none mb-0.5">{{ guildMeta.name }}</span>
+        <span class="leading-none mb-0.5">{{ session.name }}</span>
         <span class="text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-wider font-bold">{{ $t('guildSwitcher.current') }}</span>
       </div>
       <img
-          v-if="guildMeta.iconUrl"
-          :src="guildMeta.iconUrl"
-          :alt="guildMeta.name"
+          v-if="session.iconUrl"
+          :src="session.iconUrl"
+          :alt="session.name"
           class="w-8 h-8 rounded-full border border-gray-200 dark:border-gray-700 shadow-sm"
       />
       <font-awesome-icon :icon="['fas', isSwitcherOpen ? 'chevron-up' : 'chevron-down']" class="text-gray-400 w-3"/>
@@ -61,7 +61,7 @@ import {computed, ref} from 'vue'
 import {useSession} from '@/composables/useSession'
 import GuildSwitcherItem from './GuildSwitcherItem.vue'
 
-const {userSession, guildMeta, switchSession} = useSession()
+const {userSession, session, switchSession} = useSession()
 
 const isSwitcherOpen = ref(false)
 const toggleSwitcher = () => isSwitcherOpen.value = !isSwitcherOpen.value
@@ -69,7 +69,7 @@ const closeSwitcher = () => isSwitcherOpen.value = false
 
 const otherSessions = computed(() => {
   if (!userSession.value) return []
-  const currentGuildId = guildMeta.value?.id
+  const currentGuildId = session.value?.id
   return Object.values(userSession.value.guilds)
       .filter((guild) => guild.id !== currentGuildId)
 })

@@ -5,12 +5,11 @@
  */
 package de.chojo.repbot.config.elements.sku.feature;
 
-import de.chojo.repbot.config.elements.sku.SKUEntry;
+import de.chojo.repbot.config.elements.sku.tokens.Feature;
 
-public class Autopost {
-    private SKUEntry autopostChannel = new SKUEntry();
+public class Autopost extends Feature {
 
-    public SKUEntry autopostChannel() {
-        return autopostChannel;
+    public Autopost() {
+        super(3, 350);
     }
 }

@@ -5,14 +5,13 @@
  */
 package de.chojo.repbot.config.elements.sku.feature;
 
-import de.chojo.repbot.config.elements.sku.SKUEntry;
+import de.chojo.repbot.config.elements.sku.tokens.Feature;
 
-public class ReputationCategories {
-    private SKUEntry moreCategories = new SKUEntry();
+public class ReputationCategories extends Feature {
     private int defaultCategories = 2;
 
-    public SKUEntry moreCategories() {
-        return moreCategories;
+    public ReputationCategories() {
+        super(10, 175);
     }
 
     public int defaultCategories() {

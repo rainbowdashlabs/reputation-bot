@@ -10,12 +10,21 @@
     "loading": "Latautuu...",
     "error": {
       "outOfBounds": "Arvon on oltava välillä {min} ja {max}. Korjattu lähimpään kelvolliseen arvoon."
-    }
+    },
+    "noData": "Ei tuloksia.",
+    "previous": "Edellinen",
+    "next": "Seuraava",
+    "pageOf": "Sivu {current} osoitteesta {total}"
   },
   "navigation": {
     "settings": "Asetukset",
     "presets": "Esiasetukset",
-    "setup": "Asennus"
+    "setup": "Asennus",
+    "logout": "Kirjaudu ulos",
+    "dashboard": "Kojelauta",
+    "user_settings": "Käyttäjäasetukset",
+    "voting": "Äänestäminen",
+    "token_shop": "Token-kauppa"
   },
   "presets": {
     "title": "Esiasetukset",
@@ -135,10 +144,11 @@
   },
   "premiumFeature": {
     "title": "Kannattaja-ominaisuus",
-    "requiredTier": "Vaadittu tukijataso:",
     "message": "{name} on varattu tukijoille. Ryhdy tukijaksi, jotta voit käyttää sitä.",
     "requiredTierSingular": "Vaadittu tukijataso:",
-    "requiredTierPlural": "Jokin seuraavista tukijatasoista vaaditaan:"
+    "requiredTierPlural": "Jokin seuraavista tukijatasoista vaaditaan:",
+    "tokenShopHint": "Voit myös avata tämän ominaisuuden rahakkeilla",
+    "tokenShopLink": "Token-kauppa"
   },
   "profile": {
     "description": "Mukauta botin ulkonäkö ja käyttäytyminen palvelimellasi.",
@@ -308,6 +318,10 @@
         "channelLimitWarning": "{limit}-kanavan valitseminen on varattu tukijoille. Ryhdy tukijaksi, jotta voit käyttää sitä.",
         "categoryLimitWarning": "{limit}-kategorioiden valinta on varattu tukijoille. Liity tukijaksi, jotta voit käyttää sitä."
       }
+    },
+    "everyoneTokenPurchase": {
+      "label": "Kaikkien tokenien ostaminen",
+      "description": "Salli kaikkien käyttäjien ostaa premium-ominaisuuksia käyttämällä omia polettejaan. Jos tämä on pois käytöstä, vain palvelimen järjestelmänvalvojat voivat ostaa ominaisuuksia."
     }
   },
   "reactions": {
@@ -626,7 +640,8 @@
       "autopost_channel": "Automaattinen julkaisu - Kanava",
       "autopost_refreshtype": "Automaattinen julkaisu - Päivitä tyyppi",
       "autopost_refreshinterval": "Automaattinen julkaisu - Päivitä väli",
-      "ranks": "Arvot - Roolit"
+      "ranks": "Arvot - Roolit",
+      "general_everyonetokenpurchase": "Yleistä - Kaikkien rahakkeiden ostaminen"
     }
   },
   "help": {
@@ -669,5 +684,165 @@
     "week": "1 viikko",
     "fourWeeks": "4 viikkoa",
     "year": "1 vuosi"
+  },
+  "login": {
+    "title": "Kirjautuminen vaaditaan",
+    "description": "Kirjaudu Discordiin päästäksesi tähän paneeliin.",
+    "button": "Kirjaudu sisään Discordilla"
+  },
+  "voting": {
+    "title": "Äänestäminen",
+    "description": "Tietoa nykyisistä äänestysmerkeistäsi ja botlist-äänestystilanteestasi.",
+    "tokens": {
+      "title": "Tunnukset",
+      "description": "Nykyiset äänet. Voit käyttää niitä erilaisiin palkintoihin.",
+      "label": "Nykyiset rahakkeet",
+      "shop": "Käy Token Shopissa"
+    },
+    "botlists": {
+      "title": "Botlistat",
+      "description": "Äänestä botia erilaisissa botilistoissa ansaitaksesi poletteja ja ylläpitääksesi putkesi.",
+      "name": "Botlist",
+      "streak": "Putki",
+      "lastVote": "Viimeinen ääni",
+      "action": "Toiminta",
+      "vote": "Äänestä",
+      "never": "Ei koskaan",
+      "days": "päivät"
+    },
+    "log": {
+      "title": "Äänestysloki",
+      "description": "Äänestystunnusten tapahtumien historia.",
+      "date": "Päivämäärä",
+      "guild": "Kilta",
+      "tokens": "Tunnukset",
+      "reason": {
+        "label": "Syy",
+        "STANDARD": "Äänestä",
+        "STANDARD_DESCRIPTION": "Sait tunnuksen äänestääksesi botlistalla.",
+        "STREAK": "Äänestysputki",
+        "STREAK_DESCRIPTION": "Sait ylimääräisen merkin, koska sinulla on putki.",
+        "BONUS": "Päivittäinen bonus",
+        "BONUS_DESCRIPTION": "Sait lisäpisteitä äänestämällä kaikista botilistoista viimeisen 6 tunnin aikana.",
+        "TRANSFER": "Siirrä kiltaan",
+        "TRANSFER_DESCRIPTION": "Siirsit poletteja kiltaan tukeaksesi sen mainejärjestelmää.",
+        "USE": "Osta",
+        "USE_DESCRIPTION": "Käytit poletteja palkkion tai palvelun ostamiseen.",
+        "unknown": "Tuntematon",
+        "unknown_DESCRIPTION": "Tämän kaupan syy on tuntematon."
+      },
+      "unknownGuild": "Tuntematon kilta",
+      "personal": "Henkilökohtainen"
+    },
+    "noteDefaultGuild": "Vinkki: Voit asettaa oletusguildin, joka vastaanottaa tunnuksia automaattisesti",
+    "noteDefaultGuildLink": "Käyttäjäasetukset",
+    "transfer": {
+      "title": "Siirrä rahakkeet kiltaan",
+      "description": "Siirrä rahakkeet henkilökohtaisesta saldostasi johonkin kiltaasi.",
+      "guild": "Kilta",
+      "selectGuild": "Valitse kilta",
+      "amount": "Määrä",
+      "max": "Max: {max}",
+      "submit": "Siirto"
+    }
+  },
+  "user": {
+    "settings": {
+      "title": "Käyttäjäasetukset",
+      "description": "Määritä henkilökohtaiset tilisi asetukset ja mieltymykset.",
+      "voteGuild": {
+        "label": "Äänestä kilta",
+        "description": "Valitse, mikä kilta saa rahakkeita, kun äänestät botille. Tämä vaikuttaa vain tuleviin äänestyksiin.",
+        "none": "Ei tiettyä kiltaa (Henkilökohtainen)"
+      }
+    }
+  },
+  "dashboard": {
+    "title": "Kojelauta",
+    "totalReputation": "Kokonaismaine",
+    "weekReputation": "Viikoittainen maine",
+    "todayReputation": "Tämän päivän maine",
+    "topChannel": "Suosituin kanava",
+    "topUsers": "Suosituimmat käyttäjät",
+    "rank": "Sijoitus",
+    "user": "Käyttäjä",
+    "reputation": "Maine"
+  },
+  "token_shop": {
+    "title": "Token-kauppa",
+    "description": "Paranna palvelintasi premium-ominaisuuksilla käyttämällä äänetokeneitasi. Tokeneilla ostetut ominaisuudet eivät vanhene, kunhan ne uusitaan automaattisesti. Jo aktivoidun ominaisuuden ostaminen pidentää sen voimassaoloaikaa tai uusimispäivää 30 päivällä.",
+    "guildTokens": "Käytä kilta-tunnuksia",
+    "userTokens": "Käytä henkilökohtaisia tunnuksia",
+    "noFeatures": "Tällä hetkellä ei ole käytettävissä olevia ominaisuuksia.",
+    "active": "Aktiivinen",
+    "expires": "Voimassaolo päättyy: {date}",
+    "nextRenewal": "Seuraava uusinta: {date}",
+    "autoRenewal": "Automaattinen uusiminen",
+    "purchase": "Osta",
+    "subscribe": "Tilaa",
+    "unsubscribe": "Peruuta tilaus",
+    "purchaseSuccess": "Ominaisuus ostettu onnistuneesti!",
+    "subscribeSuccess": "Tilaus on aktivoitu!",
+    "unsubscribeSuccess": "Tilaus poistettu käytöstä!",
+    "enabledBySubscription": "Käytössä tilauksen avulla",
+    "subscriptionActiveNote": "Tämä ominaisuus on tällä hetkellä käytössä aktiivisen tilauksen ansiosta.",
+    "confirmPurchase": "Haluatko varmasti ostaa tämän ominaisuuden hintaan {amount} poletteja?",
+    "insufficientTokens": "Sinulla ei ole tarpeeksi poletteja.",
+    "getMoreTokens": "Hanki lisää poletteja",
+    "feature": {
+      "reputationlog": {
+        "name": "Täydellinen mainehistoria",
+        "description": "Katso kaikki palvelimen maine-lokin sivut."
+      },
+      "analyzerlog": {
+        "name": "Laajennettu analysointiloki",
+        "description": "Analysoijan lokin säilytysaika on kaksinkertaistettu."
+      },
+      "reputationcategories": {
+        "name": "Rajoittamaton maine Luokat",
+        "description": "Avaa rajattomat mainekategoriat."
+      },
+      "reputationchannel": {
+        "name": "Rajoittamaton mainekanava",
+        "description": "Avaa rajattomat mainekanavat."
+      },
+      "channelblacklist": {
+        "name": "Kanavan estoluettelo",
+        "description": "Estä botin toiminta tietyissä kanavissa sen sijaan, että sallisit sen kaikkialla."
+      },
+      "localeoverrides": {
+        "name": "Paikalliset asetukset",
+        "description": "Korvaa botin viestit ja tunnisteet omilla käännöksilläsi. Tällä hetkellä tämä mahdollistaa vain maineen mukautetun nimen asettamisen."
+      },
+      "autopost": {
+        "name": "Automaattinen julkaisu",
+        "description": "Julkaise tulostaulukko automaattisesti kanavalle säännöllisin väliajoin."
+      },
+      "advancedrankings": {
+        "name": "Edistyneet sijoitukset",
+        "description": "Avaa lisää ranking-vaihtoehtoja."
+      },
+      "detailedprofile": {
+        "name": "Yksityiskohtainen profiili",
+        "description": "Näytä lisätietoja käyttäjien maineprofiileista."
+      },
+      "logchannel": {
+        "name": "Lokikanava",
+        "description": "Ota käyttöön erillinen lokikanava kaikille maineen muutoksille."
+      },
+      "additionalemojis": {
+        "name": "Lisäemojit",
+        "description": "Käytä useampaa kuin yhtä emojia maineen antamiseen reaktioiden kautta."
+      },
+      "profile": {
+        "name": "Bot-profiili",
+        "description": "Mukauta botin nimi ja profiilikuva palvelimellasi."
+      },
+      "integrationbypass": {
+        "name": "Integraation ohitus",
+        "description": "Salli muiden botien ja integraatioiden antaa mainepisteitä."
+      }
+    },
+    "adminOnly": "Palvelin on konfiguroitu siten, että vain palvelimen järjestelmänvalvojat voivat ostaa ominaisuuksia."
   }
 }

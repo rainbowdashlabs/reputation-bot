@@ -5,12 +5,10 @@
  */
 package de.chojo.repbot.config.elements.sku.feature;
 
-import de.chojo.repbot.config.elements.sku.SKUEntry;
+import de.chojo.repbot.config.elements.sku.tokens.Feature;
 
-public class AdditionalEmojis {
-    private SKUEntry additionalEmojis = new SKUEntry();
-
-    public SKUEntry additionalEmojis() {
-        return additionalEmojis;
+public class AdditionalEmojis extends Feature {
+    public AdditionalEmojis() {
+        super(0, 350);
     }
 }

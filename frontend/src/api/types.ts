@@ -92,13 +92,6 @@ export interface ReactionPOJO {
     url: string;
 }
 
-export interface GuildMetaPOJO {
-    highestBotRole: RolePOJO | null;
-    name: string;
-    id: string;
-    iconUrl: string | null;
-}
-
 export interface ChannelPOJO {
     name: string;
     id: string;
@@ -118,6 +111,10 @@ export interface ChannelViewPOJO {
 }
 
 export interface GuildPOJO {
+    highestBotRole: RolePOJO | null;
+    name: string;
+    id: string;
+    iconUrl: string | null;
     roles: RolePOJO[];
     channels: ChannelViewPOJO;
     reactions: ReactionPOJO[];
@@ -200,6 +197,7 @@ export interface GeneralPOJO {
     reputationMode: ReputationMode; // Implemented in reputation
     resetDate: string; // ISO string // Implemented in reputation
     systemChannel: string; // Channel ID as number
+    everyoneTokenPurchase: boolean;
 }
 
 export interface LogChannelPOJO {
@@ -315,6 +313,7 @@ export interface PremiumFeaturesPOJO {
     integrationBypass: SimpleFeature;
     reputationChannel: FeatureLimit;
     reputationCategories: FeatureLimit;
+    activeSkus: string[];
 }
 
 export interface Links {
@@ -342,10 +341,6 @@ export interface UserSessionPOJO {
     created: string;
     member: MemberPOJO;
     isBotOwner: boolean;
-}
-
-export interface GuildSessionPOJO {
-    guild: GuildPOJO;
 }
 
 export interface PremiumFeatureErrorDetails {
@@ -531,4 +526,103 @@ export interface DebugResultPOJO {
     rankProblems: RankProblem[];
     reputationChannelProblems: ReputationChannelProblem[];
     simpleWarnings: SimpleWarning[];
+}
+
+export interface TokensPOJO {
+    tokens: number;
+}
+
+export interface BotlistVotePOJO {
+    name: string;
+    voteUrl: string;
+    lastVote: string;
+    streak: number;
+}
+
+export enum VoteReason {
+    STANDARD = 'STANDARD',
+    STREAK = 'STREAK',
+    BONUS = 'BONUS',
+    TRANSFER = 'TRANSFER',
+    USE = 'USE',
+}
+
+export interface VoteLog {
+    userId: string;
+    guildId: string;
+    tokens: number;
+    reason: VoteReason;
+    created: string;
+}
+
+export interface VoteLogPagePOJO {
+    page: number;
+    maxPages: number;
+    content: VoteLog[];
+}
+
+export interface RankingEntryPOJO {
+  rank: number
+  member: MemberPOJO
+  value: number
+}
+
+export interface DashboardStatsPOJO {
+  totalReputation: number
+  weekReputation: number
+  todayReputation: number
+  topChannelId: string
+  topUsers: RankingEntryPOJO[]
+}
+
+export interface UserSettingsPOJO {
+    voteGuild: string;
+}
+
+export interface SKUId {
+    skuId: string;
+}
+
+export interface SKUEntry {
+    skus: SKUId[];
+}
+
+export interface Feature {
+    id: number;
+    tokens: number;
+    localeKey: string;
+    skuEntry: SKUEntry;
+}
+
+export interface WithdrawRequestPOJO {
+    amount: number;
+}
+
+export enum FailureReason {
+    UNKNOWN_FEATURE = 'UNKNOWN_FEATURE',
+    INSUFFICIENT_USER_TOKENS = 'INSUFFICIENT_USER_TOKENS',
+    INSUFFICIENT_GUILD_TOKENS = 'INSUFFICIENT_GUILD_TOKENS',
+    GUILD_HAS_SUBSCRIPTION = 'GUILD_HAS_SUBSCRIPTION',
+    GUILD_NOT_FOUND = 'GUILD_NOT_FOUND',
+    UNKNOWN = 'UNKNOWN',
+}
+
+export interface FeaturePurchaseResultPOJO {
+    success: boolean;
+    reason?: FailureReason;
+}
+
+export interface FeaturePurchaseRequestPOJO {
+    featureId: number;
+    guildTokens: boolean;
+}
+
+export interface FeatureSubscriptionRequestPOJO {
+    featureId: number;
+}
+
+export interface ActiveFeaturePOJO {
+    featureId: number;
+    expires: string;
+    autoRenewal: boolean;
 }

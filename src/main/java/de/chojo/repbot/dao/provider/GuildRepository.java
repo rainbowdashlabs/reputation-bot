@@ -69,7 +69,7 @@ public class GuildRepository {
     }
 
     public List<RepGuild> byAutopostRefreshInterval(RefreshInterval mode) {
-        List<Long> skus = configuration.skus().features().autopost().autopostChannel().sku().stream()
+        List<Long> skus = configuration.skus().features().autopost().fullSkuEntry().sku().stream()
                 .map(SKU::skuId)
                 .toList();
         return query("""

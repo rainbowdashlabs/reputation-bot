@@ -80,7 +80,9 @@
             </div>
             <div>
               <span>© 2026 RainbowDashLabs and Contributor</span>
-              <span> • </span>
+            </div>
+            <div>
+              <span>Made with ❤️ and 🏳️‍🌈</span>
             </div>
             <div>
               <span>Licensed under AGPL-3.0</span>

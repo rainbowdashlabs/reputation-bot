@@ -32,6 +32,11 @@ def main():
         help='Automatically fix issues (default: dry-run only)'
     )
     parser.add_argument(
+        '--fix-all',
+        action='store_true',
+        help='Automatically fix all issues (default: dry-run only)'
+    )
+    parser.add_argument(
         '--fix-unused',
         action='store_true',
         help='Fix unused keys (delete from all locale files)'
@@ -59,7 +64,7 @@ def main():
     fixer = LocaleFixer(args.project_root)
     
     # If no specific fix is requested, run all checks
-    if not (args.fix or args.fix_unused or args.fix_extra or args.fix_missing):
+    if not (args.fix or args.fix_unused or args.fix_extra or args.fix_missing or args.fix_all):
         all_valid = validator.run_all_checks()
         sys.exit(0 if all_valid else 1)
     
@@ -73,7 +78,7 @@ def main():
         print("=" * 80)
         print()
     
-    if args.fix_unused or args.fix:
+    if args.fix_unused or args.fix_all:
         print("Fix: Removing unused keys from all locale files")
         print("-" * 80)
         _, _, unused_keys = validator.check_no_unused_keys()
@@ -85,7 +90,7 @@ def main():
             print("  No unused keys to remove")
         print()
     
-    if args.fix_extra or args.fix:
+    if args.fix_extra or args.fix_all:
         print("Fix: Removing extra keys from non-en-US locales")
         print("-" * 80)
         _, _, extra_keys = validator.check_no_extra_keys_in_other_locales()
@@ -97,7 +102,7 @@ def main():
             print("  No extra keys to remove")
         print()
     
-    if args.fix_missing or args.fix:
+    if args.fix_missing or args.fix_all:
         print("Fix: Adding missing keys to en-US")
         print("-" * 80)
         actions = fixer.fix_missing_keys_in_reference(dry_run=dry_run)

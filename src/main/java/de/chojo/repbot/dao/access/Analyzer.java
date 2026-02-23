@@ -27,7 +27,7 @@ public class Analyzer {
 
     public void cleanup() {
         int extendedHours = configuration.skus().features().analyzerLog().extendedLogHours();
-        List<Long> skuEntry = configuration.skus().features().analyzerLog().longerLogTime().sku().stream()
+        List<Long> skuEntry = configuration.skus().features().analyzerLog().fullSkuEntry().sku().stream()
                 .map(SKU::skuId)
                 .toList();
 

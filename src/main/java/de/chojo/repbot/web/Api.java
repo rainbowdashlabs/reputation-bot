@@ -13,15 +13,19 @@ import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.dao.provider.SettingsAuditLogRepository;
 import de.chojo.repbot.dao.provider.UserRepository;
+import de.chojo.repbot.dao.provider.VoteRepository;
 import de.chojo.repbot.serialization.ThankwordsContainer;
 import de.chojo.repbot.service.AutopostService;
 import de.chojo.repbot.service.RoleAssigner;
+import de.chojo.repbot.service.TokenPurchaseService;
 import de.chojo.repbot.web.cache.MemberCache;
 import de.chojo.repbot.web.routes.v1.auth.AuthRoute;
 import de.chojo.repbot.web.routes.v1.data.DataRoute;
+import de.chojo.repbot.web.routes.v1.guild.GuildRoute;
 import de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute;
 import de.chojo.repbot.web.routes.v1.session.SessionRoute;
 import de.chojo.repbot.web.routes.v1.settings.SettingsRoute;
+import de.chojo.repbot.web.routes.v1.user.UserRoute;
 import de.chojo.repbot.web.services.DiscordOAuthService;
 import de.chojo.repbot.web.services.SessionService;
 import io.javalin.http.ContentType;
@@ -44,7 +48,9 @@ public class Api {
     private final SessionRoute sessionRoute;
     private final SettingsRoute settingsRoute;
     private final DataRoute dataRoute;
+    private final GuildRoute guildRoute;
     private final AuthRoute authRoute;
+    private final UserRoute userRoute;
 
     public Api(
             SessionService sessionService,
@@ -59,7 +65,9 @@ public class Api {
             MemberCache memberCache,
             GuildRepository guildRepository,
             UserRepository userRepository,
-            DiscordOAuthService discordOAuthService) {
+            DiscordOAuthService discordOAuthService,
+            VoteRepository voteRepository,
+            TokenPurchaseService tokenPurchaseService) {
         this.sessionService = sessionService;
         metricsRoute = new MetricsRoute(metrics);
         sessionRoute = new SessionRoute(sessionService);
@@ -82,6 +90,8 @@ public class Api {
         }
         dataRoute = new DataRoute(thankwordsContainer, localization, configuration);
         authRoute = new AuthRoute(discordOAuthService, userRepository, sessionService, configuration);
+        userRoute = new UserRoute(voteRepository, userRepository, configuration);
+        guildRoute = new GuildRoute(memberCache, voteRepository, tokenPurchaseService);
     }
 
     public void init() {
@@ -117,6 +127,8 @@ public class Api {
             settingsRoute.buildRoutes();
             dataRoute.buildRoutes();
             authRoute.buildRoutes();
+            userRoute.buildRoutes();
+            guildRoute.buildRoutes();
         });
     }
 }

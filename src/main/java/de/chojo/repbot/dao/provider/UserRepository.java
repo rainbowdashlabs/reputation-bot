@@ -5,6 +5,7 @@
  */
 package de.chojo.repbot.dao.provider;
 
+import de.chojo.repbot.dao.access.user.UserSettings;
 import de.chojo.repbot.dao.access.user.UserToken;
 
 import java.time.Instant;
@@ -34,5 +35,15 @@ public class UserRepository {
                 """)
                 .single(call().bind(userId).bind(accessToken).bind(refreshToken).bind(expiry, INSTANT_TIMESTAMP))
                 .insert();
+    }
+
+    public UserSettings getSettingsById(long userId) {
+        return query("""
+                SELECT * FROM user_settings WHERE id = ?
+                """)
+                .single(call().bind(userId))
+                .mapAs(UserSettings.class)
+                .first()
+                .orElseGet(() -> new UserSettings(userId, 0));
     }
 }

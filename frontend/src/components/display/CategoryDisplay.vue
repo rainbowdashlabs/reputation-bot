@@ -15,7 +15,7 @@ const props = defineProps<Props>()
 const {session} = useSession()
 
 const category = computed(() => {
-  return session.value?.guild?.channels?.categories?.find(c => c.id === props.categoryId)
+  return session.value?.channels?.categories?.find(c => c.id === props.categoryId)
 })
 </script>
 
