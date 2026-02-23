@@ -5,7 +5,6 @@
  */
 package de.chojo.repbot.web.routes.v1.kofi;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import de.chojo.repbot.service.KofiService;
 import de.chojo.repbot.service.kofi.KofiTransaction;
 import de.chojo.repbot.web.routes.RoutesBuilder;
@@ -30,7 +29,7 @@ public class KofiRoute implements RoutesBuilder {
 
     public void handleKofiPayment(Context ctx) {
         KofiTransaction data = ctx.jsonMapper().fromJsonString(ctx.queryParam("data"), KofiTransaction.class);
+
         kofiService.handle(data);
     }
-
 }

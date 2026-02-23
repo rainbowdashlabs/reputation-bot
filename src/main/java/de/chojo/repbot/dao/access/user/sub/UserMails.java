@@ -48,7 +48,7 @@ public class UserMails {
         return Optional.ofNullable(mails.get(hash));
     }
 
-    public void addMail(String mail, String source) {
+    public void addMail(String mail, MailSource source) {
         MailEntry mailEntry = MailEntry.of(user.id(), mail, source);
         mails.put(mailEntry.hash(), mailEntry);
     }

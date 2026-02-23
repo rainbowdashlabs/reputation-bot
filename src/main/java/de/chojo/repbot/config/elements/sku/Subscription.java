@@ -29,6 +29,14 @@ public class Subscription {
         return lifetimeSku;
     }
 
+    public String kofiSubscriptionId() {
+        return kofiSubscriptionId;
+    }
+
+    public String kofiLifetimeId() {
+        return kofiLifetimeId;
+    }
+
     public SkuMeta lifetimeSkuMeta() {
         return () -> List.of(new SKU(lifetimeSku));
     }

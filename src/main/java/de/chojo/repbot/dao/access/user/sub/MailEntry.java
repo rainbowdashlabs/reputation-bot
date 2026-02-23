@@ -22,8 +22,8 @@ import static de.chojo.sadu.queries.converter.StandardValueConverter.INSTANT_TIM
 
 public class MailEntry {
     private static final Pattern MAIL_SHORTER = Pattern.compile("(.{2}).+?@.+?(.{2}\\..+)");
-    private long userId;
-    private final String source;
+    private final long userId;
+    private final MailSource source;
     private final String hash;
     private final String mailShort;
     private boolean verified;
@@ -42,7 +42,7 @@ public class MailEntry {
     public MailEntry(Row row) throws SQLException {
         this(
                 row.getLong("user_id"),
-                row.getString("source"),
+                row.getEnum("source", MailSource.class),
                 row.getString("mail_hash"),
                 row.getString("mail_short"),
                 row.getBoolean("verified"),
@@ -52,7 +52,7 @@ public class MailEntry {
 
     public MailEntry(
             long userId,
-            String source,
+            MailSource source,
             String hash,
             String mailShort,
             boolean verified,
@@ -67,7 +67,7 @@ public class MailEntry {
         this.verificationCode = verificationCode;
     }
 
-    public static MailEntry of(long userId, String mail, String source) {
+    public static MailEntry of(long userId, String mail, MailSource source) {
         Matcher matcher = MAIL_SHORTER.matcher(mail);
 
         if (!matcher.matches()) {
@@ -103,7 +103,7 @@ public class MailEntry {
         return userId;
     }
 
-    public String source() {
+    public MailSource source() {
         return source;
     }
 

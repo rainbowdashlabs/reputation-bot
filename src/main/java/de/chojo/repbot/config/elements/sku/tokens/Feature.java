@@ -22,6 +22,7 @@ public abstract class Feature {
      * Amount of tokens this feature costs per month
      */
     private int tokens;
+
     private String localeKey;
     private SKUEntry skuEntry = new SKUEntry();
 

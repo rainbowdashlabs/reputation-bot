@@ -1,7 +1,11 @@
+/*
+ *     SPDX-License-Identifier: AGPL-3.0-only
+ *
+ *     Copyright (C) RainbowDashLabs and Contributor
+ */
 package de.chojo.repbot.service.kofi;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import de.chojo.repbot.web.routes.v1.kofi.KofiRoute;
 
 import java.time.Instant;
 import java.util.List;
@@ -24,5 +28,4 @@ public record KofiTransaction(
         @JsonProperty("shop_items") List<KofiShopItem> shopItems,
         @JsonProperty("tier_name") String tierName,
         @JsonProperty("discord_username") String discordUsername,
-        @JsonProperty("discord_userid") String discordUserId) {
-}
+        @JsonProperty("discord_userid") String discordUserId) {}

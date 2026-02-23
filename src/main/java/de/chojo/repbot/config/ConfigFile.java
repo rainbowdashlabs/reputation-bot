@@ -13,6 +13,7 @@ import de.chojo.repbot.config.elements.Botlist;
 import de.chojo.repbot.config.elements.Cleanup;
 import de.chojo.repbot.config.elements.Database;
 import de.chojo.repbot.config.elements.DiscordOAuth;
+import de.chojo.repbot.config.elements.Kofi;
 import de.chojo.repbot.config.elements.Links;
 import de.chojo.repbot.config.elements.MagicImage;
 import de.chojo.repbot.config.elements.PresenceSettings;
@@ -27,6 +28,7 @@ public class ConfigFile {
     private AnalyzerSettings analyzerSettings = new AnalyzerSettings();
     private Database database = new Database();
     private MagicImage magicImage = new MagicImage();
+    private Kofi kofi = new Kofi();
     private Badges badges = new Badges();
     private Links links = new Links();
     private Botlist botlist = new Botlist();
@@ -91,5 +93,9 @@ public class ConfigFile {
 
     public Voting voting() {
         return voting;
+    }
+
+    public Kofi kofi() {
+        return kofi;
     }
 }
