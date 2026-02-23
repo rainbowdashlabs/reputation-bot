@@ -45,6 +45,7 @@ import de.chojo.repbot.commands.setup.Setup;
 import de.chojo.repbot.commands.supporter.Supporter;
 import de.chojo.repbot.commands.thankwords.Thankwords;
 import de.chojo.repbot.commands.top.Top;
+import de.chojo.repbot.commands.vote.Vote;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.exceptions.MissingSupportTier;
@@ -382,6 +383,7 @@ public class Bot {
                         new Reactions(guilds, configuration),
                         new Dashboard(guilds),
                         new AbuseProtection(guilds),
+                        new Vote(configuration, data.voteRepository()),
                         new Diagnose(sessionService()),
                         new RepAdmin(guilds, configuration, roleAssigner, premiumService),
                         new Messages(guilds),

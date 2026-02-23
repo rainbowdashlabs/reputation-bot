@@ -55,23 +55,23 @@ public class VoteService implements Consumer<VoteData> {
         }
         List<String> messages = new LinkedList<>();
         messages.add("Thank you for voting on  %s.".formatted(voteData.listId()));
-        if (lastVote.streak() >= voting.minDaysStreak()) {
+        if (lastVote.streakDays() >= voting.minDaysStreak()) {
             voteRepository.addToken(userId, guildId, 2, VoteReason.STREAK);
             messages.add(
                     "You received two tokens. You have a streak of %d day/s. Since you have a streak of %d or higher, you receive one extra token."
-                            .formatted(lastVote.streak(), voting.minDaysStreak()));
+                            .formatted(lastVote.streakDays(), voting.minDaysStreak()));
         } else {
             voteRepository.addToken(userId, guildId, 1, VoteReason.STANDARD);
             messages.add(
                     "You received one token. You have a streak of %d day/s. When reaching a streak of %d or higher you receive one extra token."
-                            .formatted(lastVote.streak(), voting.minDaysStreak()));
+                            .formatted(lastVote.streakDays(), voting.minDaysStreak()));
         }
 
         int votesToday = voteRepository.getVoteCountToday(userId);
 
-        if (configuration.botlist().maxVotes() >= votesToday) {
+        if (configuration.botlist().maxVotes() == votesToday) {
             voteRepository.addToken(userId, guildId, configuration.botlist().maxVotes(), VoteReason.BONUS);
-            messages.add("Since you voted on all botlists in the last 6 hours, you receive %d extra token."
+            messages.add("Since you voted on all botlists in the last 12 hours, you receive %d extra token."
                     .formatted(configuration.botlist().maxVotes()));
         }
 

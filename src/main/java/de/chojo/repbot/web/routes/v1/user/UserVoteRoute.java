@@ -78,7 +78,7 @@ public class UserVoteRoute implements RoutesBuilder {
         for (BotListConfig botlist : configuration.botlist().botlists()) {
             if (botlist.voteUrl().isBlank()) continue;
             VoteStreak streak = voteRepository.getLastVote(session.userId(), botlist.name());
-            votes.add(new BotlistVotePOJO(botlist.name(), botlist.voteUrl(), streak.lastVote(), streak.streak()));
+            votes.add(new BotlistVotePOJO(botlist.name(), botlist.voteUrl(), streak.lastVote(), streak.streakDays()));
         }
         ctx.json(votes);
     }

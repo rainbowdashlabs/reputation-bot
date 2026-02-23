@@ -21,12 +21,16 @@ public class VoteStreak {
     private String botlist;
     private Instant lastVote;
     private int streak;
+    private Instant streakStart;
+    private int streakDays;
 
-    public VoteStreak(long userId, String botlist, Instant lastVote, int streak) {
+    public VoteStreak(long userId, String botlist, Instant lastVote, int streak, Instant streakStart, int streakDays) {
         this.userId = userId;
         this.botlist = botlist;
         this.lastVote = lastVote;
         this.streak = streak;
+        this.streakStart = streakStart;
+        this.streakDays = streakDays;
     }
 
     @MappingProvider({"user_id", "botlist", "last_vote", "streak"})
@@ -35,7 +39,9 @@ public class VoteStreak {
                 row.getLong("user_id"),
                 row.getString("botlist"),
                 row.get("last_vote", INSTANT_TIMESTAMP),
-                row.getInt("streak"));
+                row.getInt("streak"),
+                row.get("streak_start", INSTANT_TIMESTAMP),
+                row.getInt("streak_days"));
     }
 
     public long userId() {
@@ -54,28 +60,43 @@ public class VoteStreak {
         return streak;
     }
 
+    public Instant streakStart() {
+        return streakStart;
+    }
+
+    public int streakDays() {
+        return streakDays;
+    }
+
     public void incrementStreak() {
         Optional<VoteStreak> change = query("""
                 INSERT
                 INTO
-                    votes
+                    votes as v
                     (user_id, botlist, last_vote, streak)
                 VALUES
-                    (?, ?, now(), 1)
+                    (?, ?, now(), 0)
                 ON CONFLICT(user_id, botlist)
                     DO UPDATE
                     SET
                         last_vote = now(),
-                        streak    = streak + 1,
-                        votes     = votes + 1
-                RETURNING last_vote, streak
+                        streak    = v.streak + 1,
+                        votes     = v.votes + 1
+                RETURNING last_vote, streak, streak_start, streak_days;
                 """)
                 .single(call().bind(userId).bind(botlist))
-                .map(rs -> new VoteStreak(userId, botlist, rs.get("last_vote", INSTANT_TIMESTAMP), rs.getInt("streak")))
+                .map(rs -> new VoteStreak(
+                        userId,
+                        botlist,
+                        rs.get("last_vote", INSTANT_TIMESTAMP),
+                        rs.getInt("streak"),
+                        rs.get("streak_start", INSTANT_TIMESTAMP),
+                        rs.getInt("streak_days")))
                 .first();
         change.ifPresent(vote -> {
             lastVote = vote.lastVote();
             streak = vote.streak();
+            streakDays = vote.streakDays();
         });
     }
 
@@ -83,23 +104,32 @@ public class VoteStreak {
         Optional<VoteStreak> change = query("""
                 INSERT
                 INTO
-                    votes(user_id, botlist, last_vote, streak)
+                    votes as v(user_id, botlist, last_vote, streak)
                 VALUES
-                    (?, ?, ?, ?)
+                    (?, ?, now(), 0)
                 ON CONFLICT (user_id, botlist)
                     DO UPDATE
                     SET
                         streak    = 0,
                         last_vote = now(),
-                        votes     = votes + 1
-                RETURNING last_vote, streak;
+                        votes     = v.votes + 1,
+                        streak_start = now()
+                RETURNING last_vote, streak, streak_start, streak_days;
                 """)
                 .single(call().bind(userId()).bind(botlist))
-                .map(rs -> new VoteStreak(userId, botlist, rs.get("last_vote", INSTANT_TIMESTAMP), rs.getInt("streak")))
+                .map(rs -> new VoteStreak(
+                        userId,
+                        botlist,
+                        rs.get("last_vote", INSTANT_TIMESTAMP),
+                        rs.getInt("streak"),
+                        rs.get("streak_start", INSTANT_TIMESTAMP),
+                        rs.getInt("streak_days")))
                 .first();
         change.ifPresent(vote -> {
             lastVote = vote.lastVote();
             streak = vote.streak();
+            streakDays = vote.streakDays();
+            streakStart = vote.streakStart();
         });
     }
 }

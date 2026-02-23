@@ -19,7 +19,7 @@ import static de.chojo.sadu.queries.api.query.Query.query;
 public class VoteRepository {
 
     public List<VoteLog> getVoteLog(long userId, int page, int entries) {
-        return query("SELECT * FROM vote_log WHERE user_id = ? ORDER BY created DESC LIMIT ? OFFSET ?")
+        return query("SELECT user_id, guild_id, tokens, reason, created FROM vote_log WHERE user_id = ? ORDER BY created DESC LIMIT ? OFFSET ?")
                 .single(call().bind(userId).bind(entries).bind(page * entries))
                 .map(VoteLog::map)
                 .all();
@@ -36,12 +36,12 @@ public class VoteRepository {
 
     public VoteStreak getLastVote(long userId, String botlist) {
         return query("""
-                        SELECT * FROM votes WHERE user_id = ? AND botlist = ?;
+                        SELECT user_id, botlist, last_vote, streak, votes, streak_start, streak_days FROM votes WHERE user_id = ? AND botlist = ?;
                 """)
                 .single(call().bind(userId).bind(botlist))
                 .mapAs(VoteStreak.class)
                 .first()
-                .orElseGet(() -> new VoteStreak(userId, botlist, Instant.EPOCH, 0));
+                .orElseGet(() -> new VoteStreak(userId, botlist, Instant.EPOCH, 0, Instant.EPOCH, 0));
     }
 
     public void addToken(long userId, long guildId, int amount, VoteReason reason) {
@@ -54,7 +54,7 @@ public class VoteRepository {
 
     public int getVoteCountToday(long userId) {
         return query("""
-                SELECT count(*) FROM votes WHERE user_id = ? AND last_vote::DATE = now()::DATE;
+                SELECT count(1) FROM votes WHERE user_id = ? AND last_vote::DATE = now()::DATE;
                 """)
                 .single(call().bind(userId))
                 .mapAs(Integer.class)

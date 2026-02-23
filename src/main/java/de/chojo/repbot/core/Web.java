@@ -48,6 +48,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -298,7 +299,6 @@ public class Web {
 
     private void initBotList() {
         var botlist = configuration.botlist();
-        if (!botlist.isSubmit()) return;
         BotlistService.build(
                         bot.shardManager(),
                         () -> bot.shardManager().getGuilds().size(),
@@ -310,6 +310,7 @@ public class Web {
                 .withExecutorService(threading.repBotWorker())
                 .withVoteService(builder ->
                         builder.withVoteWeebhooks(javalin).onVote(voteService).build())
+                .withSubmitInterval(60, botlist.isSubmit() ? TimeUnit.MINUTES : TimeUnit.DAYS) // This essentially disables submission for dev purposes
                 .build();
     }
 }

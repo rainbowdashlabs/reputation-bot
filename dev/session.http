@@ -12,3 +12,29 @@ Authorization: 853250161915985958
 
 ###
 GET localhost:8888/v1/data/token_features
+
+### Test voting
+POST localhost:8888/voting/topgg
+Authorization: testmode
+Content-Type: application/json
+
+{
+  "user": "214347948316819456"
+}
+
+### Test voting
+POST localhost:8888/voting/botlistme
+Authorization: testmode
+Content-Type: application/json
+
+{
+  "user": "214347948316819456"
+}
+### Test voting
+POST localhost:8888/voting/discordbotlistcom
+Authorization: testmode
+Content-Type: application/json
+
+{
+  "id": "214347948316819456"
+}

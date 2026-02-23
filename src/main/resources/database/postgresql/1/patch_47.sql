@@ -1,9 +1,11 @@
 CREATE TABLE IF NOT EXISTS repbot_schema.votes (
-    user_id   BIGINT                  NOT NULL,
-    botlist   TEXT                    NOT NULL,
-    last_vote TIMESTAMP DEFAULT now() NOT NULL,
-    streak    INTEGER   DEFAULT 0     NOT NULL,
-    votes     INTEGER   DEFAULT 1     NOT NULL,
+    user_id      BIGINT                  NOT NULL,
+    botlist      TEXT                    NOT NULL,
+    last_vote    TIMESTAMP DEFAULT now() NOT NULL,
+    streak       INTEGER   DEFAULT 1     NOT NULL,
+    votes        INTEGER   DEFAULT 1,
+    streak_start TIMESTAMP DEFAULT now() NOT NULL,
+    streak_days  INTEGER GENERATED ALWAYS AS (extract(DAYS FROM ( last_vote - streak_start ))) STORED,
     CONSTRAINT votes_pk
         PRIMARY KEY (user_id, botlist)
 );
@@ -35,8 +37,8 @@ CREATE TABLE IF NOT EXISTS repbot_schema.vote_log (
 CREATE INDEX IF NOT EXISTS vote_log_user_id_index
     ON repbot_schema.vote_log (user_id DESC);
 
-create index vote_log_guild_id_index
-    on repbot_schema.vote_log (guild_id);
+CREATE INDEX vote_log_guild_id_index
+    ON repbot_schema.vote_log (guild_id);
 
 CREATE TABLE IF NOT EXISTS repbot_schema.token_purchases (
     guild_id     BIGINT                  NOT NULL
