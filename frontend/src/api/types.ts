@@ -312,6 +312,7 @@ export interface PremiumFeaturesPOJO {
     integrationBypass: SimpleFeature;
     reputationChannel: FeatureLimit;
     reputationCategories: FeatureLimit;
+    activeSkus: string[];
 }
 
 export interface Links {
@@ -526,7 +527,7 @@ export interface DebugResultPOJO {
     simpleWarnings: SimpleWarning[];
 }
 
-export interface UserTokensPOJO {
+export interface TokensPOJO {
     tokens: number;
 }
 
@@ -575,4 +576,52 @@ export interface DashboardStatsPOJO {
 
 export interface UserSettingsPOJO {
     voteGuild: string;
+}
+
+export interface SKUId {
+    skuId: string;
+}
+
+export interface SKUEntry {
+    skus: SKUId[];
+}
+
+export interface Feature {
+    id: number;
+    tokens: number;
+    localeKey: string;
+    skuEntry: SKUEntry;
+}
+
+export interface WithdrawRequestPOJO {
+    amount: number;
+}
+
+export enum FailureReason {
+    UNKNOWN_FEATURE = 'UNKNOWN_FEATURE',
+    INSUFFICIENT_USER_TOKENS = 'INSUFFICIENT_USER_TOKENS',
+    INSUFFICIENT_GUILD_TOKENS = 'INSUFFICIENT_GUILD_TOKENS',
+    GUILD_HAS_SUBSCRIPTION = 'GUILD_HAS_SUBSCRIPTION',
+    GUILD_NOT_FOUND = 'GUILD_NOT_FOUND',
+    UNKNOWN = 'UNKNOWN',
+}
+
+export interface FeaturePurchaseResultPOJO {
+    success: boolean;
+    reason?: FailureReason;
+}
+
+export interface FeaturePurchaseRequestPOJO {
+    featureId: number;
+    guildTokens: boolean;
+}
+
+export interface FeatureSubscriptionRequestPOJO {
+    featureId: number;
+}
+
+export interface ActiveFeaturePOJO {
+    featureId: number;
+    expires: string;
+    autoRenewal: boolean;
 }

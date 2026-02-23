@@ -5,12 +5,10 @@
  */
 package de.chojo.repbot.config.elements.sku.feature;
 
-import de.chojo.repbot.config.elements.sku.SKUEntry;
+import de.chojo.repbot.config.elements.sku.tokens.Feature;
 
-public class AdvancedRankings {
-    private SKUEntry advancedRankings = new SKUEntry();
-
-    public SKUEntry advancedRankings() {
-        return advancedRankings;
+public class AdvancedRankings extends Feature {
+    public AdvancedRankings() {
+        super(1, 350);
     }
 }

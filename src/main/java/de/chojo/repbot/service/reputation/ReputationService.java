@@ -102,7 +102,7 @@ public class ReputationService {
         if (donor.getUser().isBot()) {
             boolean notEntitled = Premium.isNotEntitled(
                     repGuild.subscriptions(),
-                    configuration.skus().features().integrationBypass().allow());
+                    configuration.skus().features().integrationBypass().fullSkuEntry());
             if (notEntitled) {
                 log.trace("Author of {} is bot.", context.getIdLong());
                 return SubmitResult.of(SubmitResultType.BLOCK_BOTS);
@@ -440,7 +440,7 @@ public class ReputationService {
 
         if (Premium.isNotEntitled(
                 settings.repGuild().subscriptions(),
-                configuration.skus().features().logChannel().logChannel())) return;
+                configuration.skus().features().logChannel().fullSkuEntry())) return;
 
         TextChannel textChannelById = settings.guild()
                 .getTextChannelById(settings.repGuild().settings().logChannel().channelId());

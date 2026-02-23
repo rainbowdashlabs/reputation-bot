@@ -23,7 +23,8 @@
     "logout": "로그아웃",
     "dashboard": "대시보드",
     "user_settings": "사용자 설정",
-    "voting": "투표"
+    "voting": "투표",
+    "token_shop": "토큰 상점"
   },
   "presets": {
     "title": "사전 설정",
@@ -145,7 +146,9 @@
     "title": "서포터 기능",
     "message": "{name} 이 기능은 후원자 전용입니다. 사용하려면 후원자가 되어 주세요.",
     "requiredTierSingular": "필수 후원 등급:",
-    "requiredTierPlural": "다음 후원 등급 중 하나가 필요합니다:"
+    "requiredTierPlural": "다음 후원 등급 중 하나가 필요합니다:",
+    "tokenShopHint": "이 기능은 토큰으로도 잠금을 해제할 수 있습니다.",
+    "tokenShopLink": "토큰 상점"
   },
   "profile": {
     "description": "서버에서 봇의 외관과 동작 방식을 사용자 지정하세요.",
@@ -688,7 +691,8 @@
     "tokens": {
       "title": "토큰",
       "description": "현재 보유 중인 투표 토큰입니다. 다양한 보상에 사용할 수 있습니다.",
-      "label": "현재 토큰"
+      "label": "현재 토큰",
+      "shop": "토큰 샵 방문하기"
     },
     "botlists": {
       "title": "봇 목록",
@@ -758,5 +762,81 @@
     "rank": "순위",
     "user": "사용자",
     "reputation": "평판"
+  },
+  "token_shop": {
+    "title": "토큰 상점",
+    "description": "투표 토큰을 사용해 프리미엄 기능으로 서버를 업그레이드하세요. 토큰으로 구매한 기능은 자동 갱신이 설정된 상태에서는 만료되지 않습니다. 이미 활성화된 기능을 추가로 구매하면 만료일 또는 갱신일에 30일이 추가됩니다.",
+    "guildTokens": "길드 토큰 사용",
+    "userTokens": "개인 토큰 사용",
+    "noFeatures": "현재 사용 가능한 기능이 없습니다.",
+    "active": "활성",
+    "expires": "만료일: {date}",
+    "nextRenewal": "다음 갱신: {date}",
+    "autoRenewal": "자동 갱신",
+    "purchase": "구매",
+    "subscribe": "구독하기",
+    "unsubscribe": "구독 취소",
+    "purchaseSuccess": "기능 구매 성공!",
+    "subscribeSuccess": "구독이 활성화되었습니다!",
+    "unsubscribeSuccess": "구독이 비활성화되었습니다!",
+    "enabledBySubscription": "구독으로 활성화됨",
+    "subscriptionActiveNote": "이 기능은 현재 활성 구독으로 활성화되어 있습니다.",
+    "confirmPurchase": "{amount} 토큰으로 이 기능을 구매하시겠습니까?",
+    "insufficientTokens": "토큰이 충분하지 않습니다.",
+    "getMoreTokens": "더 많은 토큰을 획득하세요",
+    "feature": {
+      "reputationlog": {
+        "name": "전체 평판 기록",
+        "description": "서버의 평판 로그 모든 페이지를 확인하세요."
+      },
+      "analyzerlog": {
+        "name": "확장 분석기 로그",
+        "description": "분석기 로그의 보존 기간이 두 배로 늘어납니다."
+      },
+      "reputationcategories": {
+        "name": "무제한 평판 카테고리",
+        "description": "무제한 평판 카테고리를 해제하세요."
+      },
+      "reputationchannel": {
+        "name": "무제한 평판 채널",
+        "description": "무제한 평판 채널을 해제하세요."
+      },
+      "channelblacklist": {
+        "name": "채널 차단 목록",
+        "description": "봇이 모든 채널에서 활동하도록 허용하는 대신 특정 채널에서 활동하지 못하도록 방지하십시오."
+      },
+      "localeoverrides": {
+        "name": "로케일 재정의",
+        "description": "봇 메시지와 레이블을 사용자 정의 번역으로 덮어쓸 수 있습니다. 현재는 평판에 대한 사용자 정의 이름 설정만 가능합니다."
+      },
+      "autopost": {
+        "name": "자동 게시",
+        "description": "정해진 간격으로 리더보드를 채널에 자동으로 게시합니다."
+      },
+      "advancedrankings": {
+        "name": "고급 순위",
+        "description": "더 많은 순위 옵션을 해제하세요."
+      },
+      "detailedprofile": {
+        "name": "상세 프로필",
+        "description": "사용자 평판 프로필에 대한 추가 정보를 표시합니다."
+      },
+      "logchannel": {
+        "name": "로그 채널",
+        "description": "모든 평판 변경 사항에 대해 전용 로그 채널을 활성화합니다."
+      },
+      "additionalemojis": {
+        "name": "추가 이모지",
+        "description": "반응을 통해 평판을 줄 때는 하나 이상의 이모지를 사용하세요."
+      },
+      "profile": {
+        "name": "봇 프로필",
+        "description": "서버에서 봇의 이름과 프로필 사진을 맞춤 설정하세요."
+      },
+      "integrationbypass": {
+        "name": "통합 우회",
+        "description": "다른 봇 및 통합 서비스가 평판을 부여할 수 있도록 허용합니다."
+      }
+    }
   }
 }

@@ -27,7 +27,7 @@ public class Set implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext eventContext) {
         if (Premium.checkAndReplyPremium(
-                eventContext, configuration.skus().features().localeOverrides().reputationNameOverride())) {
+                eventContext, configuration.skus().features().localeOverrides().fullSkuEntry())) {
             return;
         }
         String name = event.getOption("name", OptionMapping::getAsString);

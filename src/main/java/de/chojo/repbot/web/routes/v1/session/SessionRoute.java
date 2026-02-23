@@ -52,7 +52,7 @@ public class SessionRoute implements RoutesBuilder {
 
     @OpenApi(
             summary = "Get the meta data for the current guild.",
-            operationId = "getGuildMeta",
+            operationId = "getSessionGuildMeta",
             path = "v1/session/guild/meta",
             methods = HttpMethod.GET,
             headers = {

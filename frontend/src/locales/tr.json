@@ -23,7 +23,8 @@
     "logout": "Çıkış",
     "dashboard": "Gösterge paneli",
     "user_settings": "Kullanıcı Ayarları",
-    "voting": "Oylama"
+    "voting": "Oylama",
+    "token_shop": "Jeton Mağazası"
   },
   "presets": {
     "title": "Ön ayarlar",
@@ -145,7 +146,9 @@
     "title": "Destekçi Özelliği",
     "message": "{name} destekçilere ayrılmıştır. Kullanmak için destekçi olun.",
     "requiredTierSingular": "Gerekli Destekçi Seviyesi:",
-    "requiredTierPlural": "Aşağıdaki destekçi seviyelerinden biri gereklidir:"
+    "requiredTierPlural": "Aşağıdaki destekçi seviyelerinden biri gereklidir:",
+    "tokenShopHint": "Bu özelliği,",
+    "tokenShopLink": "Jeton Mağazası"
   },
   "profile": {
     "description": "Botun sunucunuzda nasıl görüneceğini ve davranacağını özelleştirin.",
@@ -688,7 +691,8 @@
     "tokens": {
       "title": "Jetonlar",
       "description": "Mevcut oy jetonlarınız. Bunları çeşitli ödüller için kullanabilirsiniz.",
-      "label": "Mevcut Tokenlar"
+      "label": "Mevcut Tokenlar",
+      "shop": "Token Mağazasını Ziyaret Edin"
     },
     "botlists": {
       "title": "Bot listeleri",
@@ -758,5 +762,81 @@
     "rank": "Sıra",
     "user": "Kullanıcı",
     "reputation": "İtibar"
+  },
+  "token_shop": {
+    "title": "Jeton Mağazası",
+    "description": "Oy jetonlarınızı harcayarak sunucunuzu premium özelliklerle geliştirin. Jetonlarla satın alınan özellikler, otomatik olarak yenilendiği sürece geçerlilik süresi dolmaz. Halihazırda aktif olan bir özelliği satın aldığınızda, geçerlilik veya yenileme tarihine 30 gün eklenir.",
+    "guildTokens": "Guild Jetonlarını Kullan",
+    "userTokens": "Kişisel Jetonları Kullanın",
+    "noFeatures": "Şu anda kullanılabilir özellik yok.",
+    "active": "Aktif",
+    "expires": "Son kullanma tarihi: {date}",
+    "nextRenewal": "Sonraki Yenileme: {date}",
+    "autoRenewal": "Otomatik Yenileme",
+    "purchase": "Satın al",
+    "subscribe": "Abone ol",
+    "unsubscribe": "Aboneliği iptal et",
+    "purchaseSuccess": "Özellik başarıyla satın alındı!",
+    "subscribeSuccess": "Abonelik etkinleştirildi!",
+    "unsubscribeSuccess": "Abonelik devre dışı bırakıldı!",
+    "enabledBySubscription": "Abonelik ile etkinleştirildi",
+    "subscriptionActiveNote": "Bu özellik şu anda aktif bir abonelikle etkinleştirilmiştir.",
+    "confirmPurchase": "{amount} jetonu karşılığında bu özelliği satın almak istediğinizden emin misiniz?",
+    "insufficientTokens": "Yeterli jetonunuz yok.",
+    "getMoreTokens": "Daha fazla jeton kazanın",
+    "feature": {
+      "reputationlog": {
+        "name": "Tam İtibar Günlüğü",
+        "description": "Sunucudaki itibar günlüğünün tüm sayfalarını görüntüleyin."
+      },
+      "analyzerlog": {
+        "name": "Genişletilmiş Analizci Günlüğü",
+        "description": "Analizör günlüğünün saklama süresi iki katına çıkarılmıştır."
+      },
+      "reputationcategories": {
+        "name": "Sınırsız İtibar Kategorileri",
+        "description": "Sınırsız itibar kategorilerinin kilidini açın."
+      },
+      "reputationchannel": {
+        "name": "Sınırsız İtibar Kanalı",
+        "description": "Sınırsız itibar kanallarının kilidini açın."
+      },
+      "channelblacklist": {
+        "name": "Kanal Engelleme Listesi",
+        "description": "Botun her yerde etkin olmasına izin vermek yerine, belirli kanallarda etkin olmasını engelleyin."
+      },
+      "localeoverrides": {
+        "name": "Yerel Ayarların Geçersiz Kılınması",
+        "description": "Bot mesajlarını ve etiketleri kendi çevirilerinizle geçersiz kılın. Şu anda bu, yalnızca itibar için özel bir ad belirlemenize izin vermektedir."
+      },
+      "autopost": {
+        "name": "Otomatik yayınlama",
+        "description": "Liderlik tablosunu düzenli aralıklarla bir kanala otomatik olarak yayınlayın."
+      },
+      "advancedrankings": {
+        "name": "Gelişmiş Sıralamalar",
+        "description": "Daha fazla sıralama seçeneğinin kilidini açın."
+      },
+      "detailedprofile": {
+        "name": "Ayrıntılı Profil",
+        "description": "Kullanıcı itibar profilleri hakkında daha fazla bilgi göster."
+      },
+      "logchannel": {
+        "name": "Günlük Kanalı",
+        "description": "Tüm itibar değişiklikleri için özel bir günlük kanalı etkinleştirin."
+      },
+      "additionalemojis": {
+        "name": "Ek Emojiler",
+        "description": "Reaksiyonlarla itibar vermek için birden fazla emoji kullanın."
+      },
+      "profile": {
+        "name": "Bot Profili",
+        "description": "Sunucunuzda botun adını ve profil resmini özelleştirin."
+      },
+      "integrationbypass": {
+        "name": "Entegrasyon Atlama",
+        "description": "Diğer botların ve entegrasyonların itibar vermelerine izin verin."
+      }
+    }
   }
 }

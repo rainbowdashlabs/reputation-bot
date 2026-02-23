@@ -37,7 +37,7 @@ public class LogEnable implements SlashHandler {
         }
 
         if (Premium.checkAndReplyPremium(
-                context, configuration.skus().features().logChannel().logChannel())) {
+                context, configuration.skus().features().logChannel().fullSkuEntry())) {
             return;
         }
 

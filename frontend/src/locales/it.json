@@ -23,7 +23,8 @@
     "logout": "Esci",
     "dashboard": "Pannello di controllo",
     "user_settings": "Impostazioni utente",
-    "voting": "Votazione"
+    "voting": "Votazione",
+    "token_shop": "Negozio di gettoni"
   },
   "presets": {
     "title": "Preimpostazioni",
@@ -145,7 +146,9 @@
     "title": "Caratteristiche dei sostenitori",
     "message": "{name} è solo per chi ci supporta. Diventa un sostenitore per usarlo.",
     "requiredTierSingular": "Livello di sostegno richiesto:",
-    "requiredTierPlural": "Devi scegliere uno di questi livelli di sostegno:"
+    "requiredTierPlural": "Devi scegliere uno di questi livelli di sostegno:",
+    "tokenShopHint": "Puoi anche sbloccare questa funzione con i gettoni nel",
+    "tokenShopLink": "Negozio di gettoni"
   },
   "profile": {
     "description": "Personalizza come il bot appare e si comporta sul tuo server.",
@@ -688,7 +691,8 @@
     "tokens": {
       "title": "Gettoni",
       "description": "I tuoi gettoni voto attuali. Puoi usarli per vari premi.",
-      "label": "Gettoni attuali"
+      "label": "Gettoni attuali",
+      "shop": "Dai un'occhiata al negozio di token"
     },
     "botlists": {
       "title": "Elenchi di bot",
@@ -758,5 +762,81 @@
     "rank": "Classifica",
     "user": "Utente",
     "reputation": "Reputazione"
+  },
+  "token_shop": {
+    "title": "Negozio di gettoni",
+    "description": "Migliora il tuo server con funzioni premium usando i tuoi gettoni voto. Le funzioni che compri con i gettoni non scadono se le rinnovi automaticamente. Se compri una funzione che è già attiva, la data di scadenza o di rinnovo si allunga di 30 giorni.",
+    "guildTokens": "Usa i gettoni della gilda",
+    "userTokens": "Usa i token personali",
+    "noFeatures": "Al momento non ci sono funzioni disponibili.",
+    "active": "Attivo",
+    "expires": "Scadenza: {date}",
+    "nextRenewal": "Prossimo rinnovo: {date}",
+    "autoRenewal": "Rinnovo automatico",
+    "purchase": "Acquisto",
+    "subscribe": "Iscriviti",
+    "unsubscribe": "Annulla iscrizione",
+    "purchaseSuccess": "Funzionalità comprata con successo!",
+    "subscribeSuccess": "Abbonamento attivato!",
+    "unsubscribeSuccess": "Abbonamento disattivato!",
+    "enabledBySubscription": "Attivato tramite abbonamento",
+    "subscriptionActiveNote": "Questa funzione è attualmente disponibile con un abbonamento attivo.",
+    "confirmPurchase": "Sei sicuro di voler comprare questa funzione per {amount} gettoni?",
+    "insufficientTokens": "Non hai abbastanza gettoni.",
+    "getMoreTokens": "Prendi più gettoni",
+    "feature": {
+      "reputationlog": {
+        "name": "Registro completo della reputazione",
+        "description": "Guarda tutte le pagine del registro della reputazione nel server."
+      },
+      "analyzerlog": {
+        "name": "Registro analizzatore esteso",
+        "description": "Il tempo in cui si tengono i log dell'analizzatore è raddoppiato."
+      },
+      "reputationcategories": {
+        "name": "Categorie di reputazione senza limiti",
+        "description": "Sblocca tutte le categorie di reputazione."
+      },
+      "reputationchannel": {
+        "name": "Canale di reputazione senza limiti",
+        "description": "Sblocca canali di reputazione senza limiti."
+      },
+      "channelblacklist": {
+        "name": "Lista dei canali bloccati",
+        "description": "Impedisci al bot di essere attivo in determinati canali invece di lasciarlo libero ovunque."
+      },
+      "localeoverrides": {
+        "name": "Sovrascritture locali",
+        "description": "Puoi cambiare i messaggi e le etichette del bot con le tue traduzioni. Per ora puoi solo dare un nome personalizzato alla reputazione."
+      },
+      "autopost": {
+        "name": "Pubblicazione automatica",
+        "description": "Pubblica automaticamente la classifica su un canale a intervalli regolari."
+      },
+      "advancedrankings": {
+        "name": "Classifiche avanzate",
+        "description": "Sblocca più opzioni di classificazione."
+      },
+      "detailedprofile": {
+        "name": "Profilo dettagliato",
+        "description": "Mostra più info sui profili di reputazione degli utenti."
+      },
+      "logchannel": {
+        "name": "Canale di registrazione",
+        "description": "Attiva un canale di log dedicato per tutte le modifiche alla reputazione."
+      },
+      "additionalemojis": {
+        "name": "Emoji extra",
+        "description": "Usa più di un'emoji per dare reputazione tramite le reazioni."
+      },
+      "profile": {
+        "name": "Profilo del bot",
+        "description": "Personalizza il nome e l'immagine del profilo del bot sul tuo server."
+      },
+      "integrationbypass": {
+        "name": "Bypass dell'integrazione",
+        "description": "Consenti ad altri bot e integrazioni di assegnare reputazione."
+      }
+    }
   }
 }

@@ -23,7 +23,8 @@
     "logout": "Wyloguj",
     "dashboard": "Pulpit nawigacyjny",
     "user_settings": "Ustawienia użytkownika",
-    "voting": "Głosowanie"
+    "voting": "Głosowanie",
+    "token_shop": "Sklep z tokenami"
   },
   "presets": {
     "title": "Ustawienia wstępne",
@@ -145,7 +146,9 @@
     "title": "Funkcja kibica",
     "message": "{name} jest zarezerwowana dla kibiców. Zostań kibicem, aby z niej korzystać.",
     "requiredTierSingular": "Wymagany poziom wsparcia:",
-    "requiredTierPlural": "Wymagany jest jeden z poniższych poziomów wsparcia:"
+    "requiredTierPlural": "Wymagany jest jeden z poniższych poziomów wsparcia:",
+    "tokenShopHint": "Możesz również odblokować tę funkcję za pomocą tokenów w",
+    "tokenShopLink": "Sklep z tokenami"
   },
   "profile": {
     "description": "Dostosuj wygląd i zachowanie bota na twoim serwerze.",
@@ -688,7 +691,8 @@
     "tokens": {
       "title": "Tokeny",
       "description": "Twoje aktualne tokeny głosów. Możesz je wydać na różne nagrody.",
-      "label": "Aktualne tokeny"
+      "label": "Aktualne tokeny",
+      "shop": "Odwiedź sklep z tokenami"
     },
     "botlists": {
       "title": "Listy botów",
@@ -758,5 +762,81 @@
     "rank": "Ranga",
     "user": "Użytkownik",
     "reputation": "Reputacja"
+  },
+  "token_shop": {
+    "title": "Sklep z tokenami",
+    "description": "Wzbogać swój serwer o funkcje premium, wydając tokeny głosowania. Funkcje zakupione za tokeny nie tracą ważności, o ile są automatycznie odnawiane. Zakup funkcji, która jest już aktywna, wydłuża termin ważności lub odnowienia o 30 dni.",
+    "guildTokens": "Użyj tokenów gildii",
+    "userTokens": "Użyj tokenów osobistych",
+    "noFeatures": "W tej chwili nie są dostępne żadne funkcje.",
+    "active": "Aktywny",
+    "expires": "Ważność: {date}",
+    "nextRenewal": "Następne odnowienie: {date}",
+    "autoRenewal": "Automatyczne odnawianie",
+    "purchase": "Zakup",
+    "subscribe": "Zapisz się",
+    "unsubscribe": "Zrezygnuj z subskrypcji",
+    "purchaseSuccess": "Funkcja została pomyślnie zakupiona!",
+    "subscribeSuccess": "Subskrypcja włączona!",
+    "unsubscribeSuccess": "Subskrypcja wyłączona!",
+    "enabledBySubscription": "Włączone przez subskrypcję",
+    "subscriptionActiveNote": "Ta funkcja jest obecnie dostępna dzięki aktywnej subskrypcji.",
+    "confirmPurchase": "Czy na pewno chcesz kupić tę funkcję za tokeny{amount}?",
+    "insufficientTokens": "Nie masz wystarczającej liczby tokenów.",
+    "getMoreTokens": "Zdobądź więcej tokenów",
+    "feature": {
+      "reputationlog": {
+        "name": "Pełny dziennik reputacji",
+        "description": "Zobacz wszystkie strony dziennika reputacji na serwerze."
+      },
+      "analyzerlog": {
+        "name": "Rozszerzony dziennik analizatora",
+        "description": "Okres przechowywania dziennika analizatora został podwojony."
+      },
+      "reputationcategories": {
+        "name": "Nieograniczone kategorie reputacji",
+        "description": "Odblokujcie nieograniczoną liczbę kategorii reputacji."
+      },
+      "reputationchannel": {
+        "name": "Nieograniczony kanał reputacji",
+        "description": "Odblokuj nieograniczoną liczbę kanałów reputacji."
+      },
+      "channelblacklist": {
+        "name": "Lista zablokowanych kanałów",
+        "description": "Zapobiegaj aktywności bota w określonych kanałach, zamiast zezwalać mu na działanie wszędzie."
+      },
+      "localeoverrides": {
+        "name": "Zastąpienia ustawień regionalnych",
+        "description": "Zastąp wiadomości i etykiety bota własnymi tłumaczeniami. Obecnie pozwala to jedynie na ustawienie niestandardowej nazwy reputacji."
+      },
+      "autopost": {
+        "name": "Autopost",
+        "description": "Automatycznie publikujcie tabelę wyników na kanale w regularnych odstępach czasu."
+      },
+      "advancedrankings": {
+        "name": "Zaawansowane rankingi",
+        "description": "Odblokuj więcej opcji rankingowych."
+      },
+      "detailedprofile": {
+        "name": "Szczegółowy profil",
+        "description": "Pokaż więcej informacji o profilach reputacji użytkowników."
+      },
+      "logchannel": {
+        "name": "Kanał dziennika",
+        "description": "Włącz dedykowany kanał dziennika dla wszystkich zmian reputacji."
+      },
+      "additionalemojis": {
+        "name": "Dodatkowe emoji",
+        "description": "Używaj więcej niż jednego emoji, aby wyrazić swoją opinię poprzez reakcje."
+      },
+      "profile": {
+        "name": "Profil bota",
+        "description": "Dostosuj nazwę bota i zdjęcie profilowe na swoim serwerze."
+      },
+      "integrationbypass": {
+        "name": "Omijanie integracji",
+        "description": "Pozwól innym botom i integracjom przyznawać reputację."
+      }
+    }
   }
 }

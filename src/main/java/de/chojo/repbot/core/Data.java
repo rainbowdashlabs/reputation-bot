@@ -14,6 +14,7 @@ import de.chojo.repbot.dao.access.gdpr.RemovalTask;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.dao.provider.SettingsAuditLogRepository;
+import de.chojo.repbot.dao.provider.TokenPurchaseRepository;
 import de.chojo.repbot.dao.provider.UserRepository;
 import de.chojo.repbot.dao.provider.UserSessionRepository;
 import de.chojo.repbot.dao.provider.VoiceRepository;
@@ -49,6 +50,7 @@ public class Data {
     private Metrics metrics;
     private VoiceRepository voice;
     private Analyzer analyzer;
+    private TokenPurchaseRepository tokenPurchaseRepository;
 
     private Data(Threading threading, Configuration configuration) {
         this.threading = threading;
@@ -109,6 +111,10 @@ public class Data {
         return analyzer;
     }
 
+    public TokenPurchaseRepository tokenPurchaseRepository() {
+        return tokenPurchaseRepository;
+    }
+
     public UserSessionRepository userSessionRepository() {
         return userSessionRepository;
     }
@@ -160,6 +166,7 @@ public class Data {
         analyzer = new Analyzer(configuration);
         voice = new VoiceRepository(configuration);
         voteRepository = new VoteRepository();
+        tokenPurchaseRepository = new TokenPurchaseRepository();
     }
 
     private HikariDataSource getConnectionPool() {

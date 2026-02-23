@@ -43,7 +43,7 @@ public class Profile implements SlashHandler {
 
         if (detailed) {
             if (Premium.checkAndReplyPremium(
-                    context, configuration.skus().features().detailedProfile().detailedProfile())) {
+                    context, configuration.skus().features().detailedProfile().fullSkuEntry())) {
                 return;
             }
         }

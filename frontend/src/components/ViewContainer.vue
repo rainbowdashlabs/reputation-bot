@@ -8,7 +8,7 @@
 </script>
 
 <template>
-  <div class="mx-auto px-4 w-full" style="max-width: 1200px;">
+  <div class="mx-auto px-4 py-8 w-full" style="max-width: 1200px;">
     <slot/>
   </div>
 </template>

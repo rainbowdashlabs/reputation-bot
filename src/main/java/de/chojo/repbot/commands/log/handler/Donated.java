@@ -44,7 +44,7 @@ public class Donated implements SlashHandler {
         var logAccess =
                 guildRepository.guild(event.getGuild()).reputation().log().userDonatedLog(user.getUser(), PAGE_SIZE);
         var noPremium = Premium.isNotEntitled(
-                context, configuration.skus().features().reputationLog().extendedPages());
+                context, configuration.skus().features().reputationLog().fullSkuEntry());
         context.registerPage(
                 new PrivatePageBag(logAccess.pages(), event.getUser().getIdLong()) {
                     @Override
@@ -94,7 +94,7 @@ public class Donated implements SlashHandler {
                                             .skus()
                                             .features()
                                             .reputationLog()
-                                            .extendedPages())
+                                            .fullSkuEntry())
                                     .stream()
                                     .map(p -> p.getButtons().stream()
                                             .map(PageButton::of)

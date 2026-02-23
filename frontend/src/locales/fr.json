@@ -23,7 +23,8 @@
     "logout": "Déconnexion",
     "dashboard": "Tableau de bord",
     "user_settings": "Paramètres utilisateur",
-    "voting": "Vote"
+    "voting": "Vote",
+    "token_shop": "Boutique de jetons"
   },
   "presets": {
     "title": "Préréglages",
@@ -145,7 +146,9 @@
     "title": "Présentation d'un supporter",
     "message": "{name} est réservé aux supporters. Deviens supporter pour pouvoir l'utiliser.",
     "requiredTierSingular": "Niveau de soutien requis :",
-    "requiredTierPlural": "Il faut choisir un des niveaux de soutien suivants :"
+    "requiredTierPlural": "Il faut choisir un des niveaux de soutien suivants :",
+    "tokenShopHint": "Tu peux aussi débloquer cette fonctionnalité avec des jetons dans le",
+    "tokenShopLink": "Boutique de jetons"
   },
   "profile": {
     "description": "Personnalise l'apparence et le comportement du bot sur ton serveur.",
@@ -688,7 +691,8 @@
     "tokens": {
       "title": "Jetons",
       "description": "Tes jetons de vote actuels. Tu peux les utiliser pour obtenir plein de récompenses.",
-      "label": "Jetons actuels"
+      "label": "Jetons actuels",
+      "shop": "Va voir la boutique de jetons"
     },
     "botlists": {
       "title": "Listes de bots",
@@ -758,5 +762,81 @@
     "rank": "Rang",
     "user": "Utilisateur",
     "reputation": "Réputation"
+  },
+  "token_shop": {
+    "title": "Boutique de jetons",
+    "description": "Booste ton serveur avec des fonctionnalités premium en utilisant tes jetons de vote. Les fonctionnalités achetées avec des jetons ne sont pas limitées dans le temps tant qu'elles sont renouvelées automatiquement. Si tu achètes une fonctionnalité déjà active, ça prolonge la date d'expiration ou de renouvellement de 30 jours.",
+    "guildTokens": "Utiliser les jetons de guilde",
+    "userTokens": "Utiliser des jetons personnels",
+    "noFeatures": "Aucune fonctionnalité pour le moment.",
+    "active": "Actif",
+    "expires": "Expire le : {date}",
+    "nextRenewal": "Prochain renouvellement : {date}",
+    "autoRenewal": "Renouvellement automatique",
+    "purchase": "Acheter",
+    "subscribe": "S'abonner",
+    "unsubscribe": "Se désabonner",
+    "purchaseSuccess": "Fonctionnalité achetée, c'est bon !",
+    "subscribeSuccess": "Abonnement activé !",
+    "unsubscribeSuccess": "Abonnement désactivé !",
+    "enabledBySubscription": "Activé par abonnement",
+    "subscriptionActiveNote": "Cette fonctionnalité est actuellement activée par un abonnement actif.",
+    "confirmPurchase": "T'es sûr de vouloir acheter cette fonctionnalité pour des jetons d'{amount} ?",
+    "insufficientTokens": "T'as pas assez de jetons.",
+    "getMoreTokens": "Obtenir plus de jetons",
+    "feature": {
+      "reputationlog": {
+        "name": "Journal complet de réputation",
+        "description": "Regarde toutes les pages du journal de réputation sur le serveur."
+      },
+      "analyzerlog": {
+        "name": "Journal d'analyse étendu",
+        "description": "La durée de conservation du journal de l'analyseur est doublée."
+      },
+      "reputationcategories": {
+        "name": "Catégories de réputation illimitées",
+        "description": "Débloquez toutes les catégories de réputation."
+      },
+      "reputationchannel": {
+        "name": "Chaîne de réputation illimitée",
+        "description": "Débloquez des canaux de réputation illimités."
+      },
+      "channelblacklist": {
+        "name": "Liste noire des chaînes",
+        "description": "Empêche le bot d'être actif dans certains canaux plutôt que de le laisser partout."
+      },
+      "localeoverrides": {
+        "name": "Remplacements locaux",
+        "description": "Remplace les messages et les étiquettes du bot par tes propres traductions. Pour l'instant, ça te permet juste de mettre un nom personnalisé pour la réputation."
+      },
+      "autopost": {
+        "name": "Publication automatique",
+        "description": "Publie automatiquement le classement sur une chaîne à intervalles réguliers."
+      },
+      "advancedrankings": {
+        "name": "Classements avancés",
+        "description": "Débloquez plus d'options de classement."
+      },
+      "detailedprofile": {
+        "name": "Profil détaillé",
+        "description": "Montrer plus d'infos sur les profils de réputation des utilisateurs."
+      },
+      "logchannel": {
+        "name": "Canal de journalisation",
+        "description": "Active un canal de journal dédié pour tous les changements de réputation."
+      },
+      "additionalemojis": {
+        "name": "Emojis supplémentaires",
+        "description": "Utilise plusieurs emojis pour montrer ce que tu penses avec des réactions."
+      },
+      "profile": {
+        "name": "Profil du bot",
+        "description": "Personnalise le nom et la photo de profil du bot sur ton serveur."
+      },
+      "integrationbypass": {
+        "name": "Contournement de l'intégration",
+        "description": "Laisse d'autres bots et intégrations donner de la réputation."
+      }
+    }
   }
 }

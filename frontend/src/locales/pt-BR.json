@@ -23,7 +23,8 @@
     "logout": "Sair",
     "dashboard": "Painel",
     "user_settings": "Configurações do usuário",
-    "voting": "Votação"
+    "voting": "Votação",
+    "token_shop": "Loja de fichas"
   },
   "presets": {
     "title": "Predefinições",
@@ -145,7 +146,9 @@
     "title": "Recurso de Apoiador",
     "message": "{name} é só para quem é apoiador. Torne-se um apoiador para usar.",
     "requiredTierSingular": "Nível de Apoiador necessário:",
-    "requiredTierPlural": "É preciso escolher um dos níveis de apoio a seguir:"
+    "requiredTierPlural": "É preciso escolher um dos níveis de apoio a seguir:",
+    "tokenShopHint": "Você também pode desbloquear esse recurso com tokens na",
+    "tokenShopLink": "Loja de fichas"
   },
   "profile": {
     "description": "Personalize como o bot aparece e se comporta no seu servidor.",
@@ -688,7 +691,8 @@
     "tokens": {
       "title": "Fichas",
       "description": "Seus tokens de voto atuais. Você pode gastá-los em várias recompensas.",
-      "label": "Fichas atuais"
+      "label": "Fichas atuais",
+      "shop": "Visite a Loja de Fichas"
     },
     "botlists": {
       "title": "Listas de bots",
@@ -758,5 +762,81 @@
     "rank": "Classificação",
     "user": "Usuário",
     "reputation": "Reputação"
+  },
+  "token_shop": {
+    "title": "Loja de fichas",
+    "description": "Melhore o seu servidor com recursos premium usando seus tokens de voto. Os recursos comprados com tokens não expiram, desde que sejam renovados automaticamente. Comprar um recurso que já está ativo adiciona 30 dias à data de expiração ou renovação.",
+    "guildTokens": "Use fichas da guilda",
+    "userTokens": "Use tokens pessoais",
+    "noFeatures": "Não tem recursos disponíveis no momento.",
+    "active": "Ativo",
+    "expires": "Vence em: {date}",
+    "nextRenewal": "Próxima renovação: {date}",
+    "autoRenewal": "Renovação automática",
+    "purchase": "Compra",
+    "subscribe": "Inscreva-se",
+    "unsubscribe": "Cancelar inscrição",
+    "purchaseSuccess": "Recurso comprado com sucesso!",
+    "subscribeSuccess": "Assinatura ativada!",
+    "unsubscribeSuccess": "Assinatura desativada!",
+    "enabledBySubscription": "Ativado por assinatura",
+    "subscriptionActiveNote": "Esse recurso está ativado agora por uma assinatura ativa.",
+    "confirmPurchase": "Tem certeza que quer comprar esse recurso por {amount} tokens?",
+    "insufficientTokens": "Você não tem fichas suficientes.",
+    "getMoreTokens": "Ganhe mais fichas",
+    "feature": {
+      "reputationlog": {
+        "name": "Registro completo de reputação",
+        "description": "Veja todas as páginas do registro de reputação no servidor."
+      },
+      "analyzerlog": {
+        "name": "Registro estendido do analisador",
+        "description": "O tempo que o log do analisador fica guardado é dobrado."
+      },
+      "reputationcategories": {
+        "name": "Categorias de reputação ilimitadas",
+        "description": "Desbloqueie categorias de reputação ilimitadas."
+      },
+      "reputationchannel": {
+        "name": "Canal de reputação sem limites",
+        "description": "Desbloqueie canais de reputação ilimitados."
+      },
+      "channelblacklist": {
+        "name": "Lista de canais bloqueados",
+        "description": "Evite que o bot fique ativo em canais específicos, em vez de permitir que ele esteja em todos os lugares."
+      },
+      "localeoverrides": {
+        "name": "Substituições de localidade",
+        "description": "Substitua as mensagens e etiquetas do bot pelas suas próprias traduções. No momento, isso só permite definir um nome personalizado para a reputação."
+      },
+      "autopost": {
+        "name": "Postagem automática",
+        "description": "Publique automaticamente o quadro de líderes em um canal em intervalos regulares."
+      },
+      "advancedrankings": {
+        "name": "Classificações avançadas",
+        "description": "Desbloqueie mais opções de classificação."
+      },
+      "detailedprofile": {
+        "name": "Perfil detalhado",
+        "description": "Mostrar mais informações sobre os perfis de reputação dos usuários."
+      },
+      "logchannel": {
+        "name": "Canal de registro",
+        "description": "Ative um canal de registro dedicado para todas as alterações de reputação."
+      },
+      "additionalemojis": {
+        "name": "Emojis adicionais",
+        "description": "Use mais de um emoji para dar reputação por meio de reações."
+      },
+      "profile": {
+        "name": "Perfil do Bot",
+        "description": "Personalize o nome e a foto do perfil do bot no seu servidor."
+      },
+      "integrationbypass": {
+        "name": "Ignorar integração",
+        "description": "Permitir que outros bots e integrações atribuam reputação."
+      }
+    }
   }
 }

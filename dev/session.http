@@ -9,3 +9,6 @@ Authorization: test_mode853250161915985958testmode
 
 GET localhost:8888/v1/data/links
 Authorization: 853250161915985958
+
+###
+GET localhost:8888/v1/data/token_features

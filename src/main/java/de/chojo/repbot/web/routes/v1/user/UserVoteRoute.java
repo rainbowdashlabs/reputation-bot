@@ -13,7 +13,7 @@ import de.chojo.repbot.dao.provider.VoteRepository;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
 import de.chojo.repbot.web.pojo.user.BotlistVotePOJO;
-import de.chojo.repbot.web.pojo.user.UserTokensPOJO;
+import de.chojo.repbot.web.pojo.user.TokensPOJO;
 import de.chojo.repbot.web.pojo.user.VoteLogPagePOJO;
 import de.chojo.repbot.web.pojo.user.VoteTransferRequestPOJO;
 import de.chojo.repbot.web.routes.RoutesBuilder;
@@ -52,12 +52,12 @@ public class UserVoteRoute implements RoutesBuilder {
             responses = {
                 @OpenApiResponse(
                         status = "200",
-                        content = {@OpenApiContent(from = UserTokensPOJO.class, type = "application/json")})
+                        content = {@OpenApiContent(from = TokensPOJO.class, type = "application/json")})
             })
     private void getUserTokens(@NotNull Context ctx) {
         UserSession session = ctx.sessionAttribute(SessionAttribute.USER_SESSION);
         int tokens = voteRepository.getUserToken(session.userId());
-        ctx.json(new UserTokensPOJO(tokens));
+        ctx.json(new TokensPOJO(tokens));
     }
 
     @OpenApi(

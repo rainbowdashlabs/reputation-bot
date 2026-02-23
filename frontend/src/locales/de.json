@@ -23,7 +23,8 @@
     "logout": "Abmelden",
     "dashboard": "Dashboard",
     "user_settings": "Benutzereinstellungen",
-    "voting": "Voting"
+    "voting": "Voting",
+    "token_shop": "Token-Shop"
   },
   "presets": {
     "title": "Voreinstellungen",
@@ -145,7 +146,9 @@
     "title": "Unterstützer-Feature",
     "message": "{name} ist für Unterstützer reserviert. Werde Unterstützer, um es zu nutzen.",
     "requiredTierSingular": "Erforderliche Unterstützerstufe:",
-    "requiredTierPlural": "Eine der folgenden Unterstützerstufen ist erforderlich:"
+    "requiredTierPlural": "Eine der folgenden Unterstützerstufen ist erforderlich:",
+    "tokenShopHint": "Du kannst diese Funktion auch mit Tokens freischalten im",
+    "tokenShopLink": "Token-Shop"
   },
   "profile": {
     "description": "Passe das Aussehen und Verhalten des Bots auf deinem Server an.",
@@ -688,7 +691,8 @@
     "tokens": {
       "title": "Token",
       "description": "Deine aktuellen Token. Du kannst sie für verschiedene Belohnungen ausgeben.",
-      "label": "Aktuelle Token"
+      "label": "Aktuelle Token",
+      "shop": "Schau mal im Token-Shop vorbei"
     },
     "botlists": {
       "title": "Botlisten",
@@ -758,5 +762,81 @@
     "rank": "Rang",
     "user": "Benutzer",
     "reputation": "Reputation"
+  },
+  "token_shop": {
+    "title": "Token-Shop",
+    "description": "Mach deinen Server mit Premium-Features noch besser, indem du deine Vote-Token einsetzt. Mit Token gekaufte Features laufen nicht ab, solange sie automatisch verlängert werden. Wenn du ein Feature kaufst, das schon aktiv ist, verlängert sich das Ablauf- oder Verlängerungsdatum um 30 Tage.",
+    "guildTokens": "Server-Token verwenden",
+    "userTokens": "Persönliche Token verwenden",
+    "noFeatures": "Im Moment gibt's keine Features.",
+    "active": "Aktiv",
+    "expires": "Läuft ab: {date}",
+    "nextRenewal": "Nächste Verlängerung: {date}",
+    "autoRenewal": "Automatische Verlängerung",
+    "purchase": "Kauf",
+    "subscribe": "Abonnieren",
+    "unsubscribe": "Deabonnieren",
+    "purchaseSuccess": "Funktion erfolgreich gekauft!",
+    "subscribeSuccess": "Abo aktiviert!",
+    "unsubscribeSuccess": "Abo deaktiviert!",
+    "enabledBySubscription": "Durch Abonnement aktiviert",
+    "subscriptionActiveNote": "Diese Funktion ist gerade durch ein aktives Abonnement aktiviert.",
+    "confirmPurchase": "Bist du sicher, dass du diese Funktion für {amount}-Token kaufen willst?",
+    "insufficientTokens": "Du hast nicht genug Token.",
+    "getMoreTokens": "Hol dir mehr Token",
+    "feature": {
+      "reputationlog": {
+        "name": "Vollständiges Reputationsprotokoll",
+        "description": "Schau dir alle Seiten des Reputationsprotokolls auf dem Server an."
+      },
+      "analyzerlog": {
+        "name": "Erweitertes Analyseprotokoll",
+        "description": "Die Aufbewahrungszeit für das Analysatorprotokoll wird erheblich verlängert."
+      },
+      "reputationcategories": {
+        "name": "Unbegrenzte Reputationskategorien",
+        "description": "Schalte unbegrenzt viele Reputationskategorien frei."
+      },
+      "reputationchannel": {
+        "name": "Unbegrenzte Reputationskanäle",
+        "description": "Schalte unbegrenzte Reputationskanäle frei."
+      },
+      "channelblacklist": {
+        "name": "Kanal-Sperrliste",
+        "description": "Verhindere, dass der Bot in bestimmten Kanälen aktiv ist, anstatt ihn überall zuzulassen."
+      },
+      "localeoverrides": {
+        "name": "Sprache Überschreibungen",
+        "description": "Überschreib Bot-Nachrichten und Labels mit deinen eigenen Übersetzungen. Im Moment kannst du damit nur einen eigenen Namen für die Reputation festlegen."
+      },
+      "autopost": {
+        "name": "Autopost",
+        "description": "Veröffentliche die Rangliste regelmäßig automatisch in einem Kanal."
+      },
+      "advancedrankings": {
+        "name": "Erweiterte Ranglisten",
+        "description": "Schalte mehr Ranking-Optionen frei."
+      },
+      "detailedprofile": {
+        "name": "Ausführliches Profil",
+        "description": "Zeig mehr Infos zu den Reputationsprofilen der Nutzer an."
+      },
+      "logchannel": {
+        "name": "Protokollkanal",
+        "description": "Aktiviere einen eigenen Protokollkanal für alle Reputationsänderungen."
+      },
+      "additionalemojis": {
+        "name": "Weitere Emojis",
+        "description": "Benutze mehr als ein Emoji, um durch Reaktionen Reputation zu geben."
+      },
+      "profile": {
+        "name": "Bot-Profil",
+        "description": "Passe den Namen und das Profilbild des Bots auf deinem Server an."
+      },
+      "integrationbypass": {
+        "name": "Integrations Ausnahmen",
+        "description": "Anderen Bots und Integrationen erlauben, Reputation zu vergeben."
+      }
+    }
   }
 }

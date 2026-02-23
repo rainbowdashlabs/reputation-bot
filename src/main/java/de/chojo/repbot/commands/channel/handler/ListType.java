@@ -44,9 +44,9 @@ public class ListType implements SlashHandler {
         if (!whitelist
                 && Premium.isNotEntitled(
                         context,
-                        configuration.skus().features().channelBlacklist().allow())) {
+                        configuration.skus().features().channelBlacklist().fullSkuEntry())) {
             Premium.replyPremium(
-                    context, configuration.skus().features().channelBlacklist().allow());
+                    context, configuration.skus().features().channelBlacklist().fullSkuEntry());
             return;
         }
 

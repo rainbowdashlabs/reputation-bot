@@ -217,7 +217,8 @@ public class Web {
                                     data.guildRepository(),
                                     data.userRepository(),
                                     new DiscordOAuthService(configuration),
-                                    data.voteRepository())
+                                    data.voteRepository(),
+                                    bot.tokenPurchaseService())
                             .init());
                     config.router.mount(router -> {
                         router.beforeMatched(this::handleAccess);

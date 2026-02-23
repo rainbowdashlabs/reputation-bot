@@ -23,7 +23,8 @@
     "logout": "Logga ut",
     "dashboard": "Instrumentpanel",
     "user_settings": "Användarinställningar",
-    "voting": "Omröstning"
+    "voting": "Omröstning",
+    "token_shop": "Tokenbutik"
   },
   "presets": {
     "title": "Förinställningar",
@@ -145,7 +146,9 @@
     "title": "Supporterfunktion",
     "message": "{name} är reserverad för supportrar. Bli supporter för att kunna använda den.",
     "requiredTierSingular": "Krävd supporternivå:",
-    "requiredTierPlural": "En av följande supporternivåer krävs:"
+    "requiredTierPlural": "En av följande supporternivåer krävs:",
+    "tokenShopHint": "Du kan också låsa upp den här funktionen med tokens i",
+    "tokenShopLink": "Tokenbutik"
   },
   "profile": {
     "description": "Anpassa hur boten visas och beter sig på din server.",
@@ -688,7 +691,8 @@
     "tokens": {
       "title": "Tokens",
       "description": "Dina nuvarande röstmarker. Du kan använda dem för att få olika belöningar.",
-      "label": "Aktuella tokens"
+      "label": "Aktuella tokens",
+      "shop": "Besök Token Shop"
     },
     "botlists": {
       "title": "Botlistor",
@@ -758,5 +762,81 @@
     "rank": "Rank",
     "user": "Användare",
     "reputation": "Rykte"
+  },
+  "token_shop": {
+    "title": "Tokenbutik",
+    "description": "Förbättra din server med premiumfunktioner genom att använda dina rösttokens. Funktioner som köpts med tokens upphör inte att gälla så länge de förnyas automatiskt. Om du köper en funktion som redan är aktiv förlängs giltighetstiden eller förnyelsedatumet med 30 dagar.",
+    "guildTokens": "Använd guildtokens",
+    "userTokens": "Använd personliga tokens",
+    "noFeatures": "Inga funktioner tillgängliga för tillfället.",
+    "active": "Aktiv",
+    "expires": "Går ut: {date}",
+    "nextRenewal": "Nästa förnyelse: {date}",
+    "autoRenewal": "Automatisk förnyelse",
+    "purchase": "Köp",
+    "subscribe": "Prenumerera",
+    "unsubscribe": "Avsluta prenumeration",
+    "purchaseSuccess": "Funktionen har köpts!",
+    "subscribeSuccess": "Prenumeration aktiverad!",
+    "unsubscribeSuccess": "Prenumerationen är inaktiverad!",
+    "enabledBySubscription": "Aktiverat genom prenumeration",
+    "subscriptionActiveNote": "Denna funktion är för närvarande aktiverad genom ett aktivt abonnemang.",
+    "confirmPurchase": "Är du säker på att du vill köpa den här funktionen för {amount} tokens?",
+    "insufficientTokens": "Du har inte tillräckligt med tokens.",
+    "getMoreTokens": "Få fler tokens",
+    "feature": {
+      "reputationlog": {
+        "name": "Fullständig reputationslogg",
+        "description": "Se alla sidor i ryktesloggen på servern."
+      },
+      "analyzerlog": {
+        "name": "Utökad analysatorlogg",
+        "description": "Lagringstiden för analysatorloggen fördubblas."
+      },
+      "reputationcategories": {
+        "name": "Obegränsat antal omdömeskategorier",
+        "description": "Lås upp obegränsade reputationskategorier."
+      },
+      "reputationchannel": {
+        "name": "Obegränsad reputationskanal",
+        "description": "Lås upp obegränsade ryktekanaler."
+      },
+      "channelblacklist": {
+        "name": "Kanalens svartlista",
+        "description": "Förhindra att boten är aktiv i specifika kanaler istället för att tillåta den överallt."
+      },
+      "localeoverrides": {
+        "name": "Lokala överskrivningar",
+        "description": "Åsidosätt botmeddelanden och etiketter med dina egna översättningar. För närvarande är det endast möjligt att ange ett eget namn för rykte."
+      },
+      "autopost": {
+        "name": "Autopost",
+        "description": "Publicera automatiskt resultattavlan på en kanal med jämna mellanrum."
+      },
+      "advancedrankings": {
+        "name": "Avancerade rankningar",
+        "description": "Lås upp fler rankningsalternativ."
+      },
+      "detailedprofile": {
+        "name": "Detaljerad profil",
+        "description": "Visa mer information om användarnas omdömesprofiler."
+      },
+      "logchannel": {
+        "name": "Loggkanal",
+        "description": "Aktivera en dedikerad loggkanal för alla ändringar av rykte."
+      },
+      "additionalemojis": {
+        "name": "Ytterligare emojis",
+        "description": "Använd mer än en emoji för att ge omdöme via reaktioner."
+      },
+      "profile": {
+        "name": "Botprofil",
+        "description": "Anpassa botens namn och profilbild på din server."
+      },
+      "integrationbypass": {
+        "name": "Integrationsförbikoppling",
+        "description": "Tillåt andra bots och integrationer att ge omdömen."
+      }
+    }
   }
 }

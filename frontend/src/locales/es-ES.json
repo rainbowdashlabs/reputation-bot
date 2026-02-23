@@ -23,7 +23,8 @@
     "logout": "Cerrar sesión",
     "dashboard": "Panel de control",
     "user_settings": "Configuración de usuario",
-    "voting": "Votación"
+    "voting": "Votación",
+    "token_shop": "Tienda de fichas"
   },
   "presets": {
     "title": "Ajustes preestablecidos",
@@ -145,7 +146,9 @@
     "title": "Característica de los seguidores",
     "message": "{name} está reservado para los seguidores. Hazte seguidor para poder utilizarlo.",
     "requiredTierSingular": "Nivel de patrocinador requerido:",
-    "requiredTierPlural": "Se requiere uno de los siguientes niveles de patrocinador:"
+    "requiredTierPlural": "Se requiere uno de los siguientes niveles de patrocinador:",
+    "tokenShopHint": "También puedes desbloquear esta función con tokens en el",
+    "tokenShopLink": "Tienda de fichas"
   },
   "profile": {
     "description": "Personaliza cómo aparece y se comporta el bot en tu servidor.",
@@ -688,7 +691,8 @@
     "tokens": {
       "title": "Fichas",
       "description": "Tus fichas de voto actuales. Puedes gastarlas en diversas recompensas.",
-      "label": "Fichas actuales"
+      "label": "Fichas actuales",
+      "shop": "Visita la tienda de tokens"
     },
     "botlists": {
       "title": "Listas de bots",
@@ -758,5 +762,81 @@
     "rank": "Rango",
     "user": "Usuario",
     "reputation": "Reputación"
+  },
+  "token_shop": {
+    "title": "Tienda de fichas",
+    "description": "Mejora tu servidor con funciones premium gastando tus fichas de voto. Las funciones compradas con fichas no caducan siempre que se renueven automáticamente. La compra de una función que ya está activa añade 30 días a la fecha de caducidad o renovación.",
+    "guildTokens": "Usar fichas de gremio",
+    "userTokens": "Usar tokens personales",
+    "noFeatures": "No hay funciones disponibles en este momento.",
+    "active": "Activo",
+    "expires": "Caduca: {date}",
+    "nextRenewal": "Próxima renovación: {date}",
+    "autoRenewal": "Renovación automática",
+    "purchase": "Compra",
+    "subscribe": "Suscríbete",
+    "unsubscribe": "Cancelar suscripción",
+    "purchaseSuccess": "¡Función comprada correctamente!",
+    "subscribeSuccess": "¡Suscripción habilitada!",
+    "unsubscribeSuccess": "¡Suscripción desactivada!",
+    "enabledBySubscription": "Habilitado por suscripción",
+    "subscriptionActiveNote": "Esta función está habilitada actualmente mediante una suscripción activa.",
+    "confirmPurchase": "¿Estás seguro de que deseas comprar esta función por {amount} tokens?",
+    "insufficientTokens": "No tienes suficientes fichas.",
+    "getMoreTokens": "Consigue más fichas",
+    "feature": {
+      "reputationlog": {
+        "name": "Registro completo de reputación",
+        "description": "Ver todas las páginas del registro de reputación en el servidor."
+      },
+      "analyzerlog": {
+        "name": "Registro ampliado del analizador",
+        "description": "El periodo de retención del registro del analizador se duplica."
+      },
+      "reputationcategories": {
+        "name": "Categorías de reputación ilimitadas",
+        "description": "Desbloquea categorías de reputación ilimitadas."
+      },
+      "reputationchannel": {
+        "name": "Canal de reputación ilimitado",
+        "description": "Desbloquea canales de reputación ilimitados."
+      },
+      "channelblacklist": {
+        "name": "Lista de canales denegados",
+        "description": "Evita que el bot esté activo en canales específicos en lugar de permitirlo en todas partes."
+      },
+      "localeoverrides": {
+        "name": "Anulaciones de configuración regional",
+        "description": "Anula los mensajes y etiquetas del bot con tus propias traducciones. Actualmente, esto solo permite establecer un nombre personalizado para la reputación."
+      },
+      "autopost": {
+        "name": "Publicación automática",
+        "description": "Publicar automáticamente la tabla de clasificación en un canal a intervalos regulares."
+      },
+      "advancedrankings": {
+        "name": "Clasificaciones avanzadas",
+        "description": "Desbloquea más opciones de clasificación."
+      },
+      "detailedprofile": {
+        "name": "Perfil detallado",
+        "description": "Mostrar más información sobre los perfiles de reputación de los usuarios."
+      },
+      "logchannel": {
+        "name": "Canal de registro",
+        "description": "Habilita un canal de registro dedicado para todos los cambios de reputación."
+      },
+      "additionalemojis": {
+        "name": "Emojis adicionales",
+        "description": "Utiliza más de un emoji para dar reputación a través de reacciones."
+      },
+      "profile": {
+        "name": "Perfil del bot",
+        "description": "Personaliza el nombre y la foto de perfil del bot en tu servidor."
+      },
+      "integrationbypass": {
+        "name": "Omisión de integración",
+        "description": "Permitir que otros bots e integraciones otorguen reputación."
+      }
+    }
   }
 }

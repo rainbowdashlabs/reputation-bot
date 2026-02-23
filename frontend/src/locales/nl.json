@@ -23,7 +23,8 @@
     "logout": "Uitloggen",
     "dashboard": "Dashboard",
     "user_settings": "Gebruikersinstellingen",
-    "voting": "Stemmen"
+    "voting": "Stemmen",
+    "token_shop": "Tokenwinkel"
   },
   "presets": {
     "title": "Voorinstellingen",
@@ -145,7 +146,9 @@
     "title": "Supporter-functie",
     "message": "{name} is alleen voor supporters. Word supporter om het te kunnen gebruiken.",
     "requiredTierSingular": "Vereist ondersteuningsniveau:",
-    "requiredTierPlural": "Je moet een van de volgende supporterniveaus kiezen:"
+    "requiredTierPlural": "Je moet een van de volgende supporterniveaus kiezen:",
+    "tokenShopHint": "Je kunt deze functie ook vrijspelen met tokens in de",
+    "tokenShopLink": "Tokenwinkel"
   },
   "profile": {
     "description": "Pas aan hoe de bot eruitziet en zich gedraagt op je server.",
@@ -688,7 +691,8 @@
     "tokens": {
       "title": "Tokens",
       "description": "Je huidige stemtokens. Je kunt ze gebruiken voor allerlei beloningen.",
-      "label": "Huidige tokens"
+      "label": "Huidige tokens",
+      "shop": "Bezoek de Token Shop"
     },
     "botlists": {
       "title": "Botlijsten",
@@ -758,5 +762,81 @@
     "rank": "Rang",
     "user": "Gebruiker",
     "reputation": "Reputatie"
+  },
+  "token_shop": {
+    "title": "Tokenwinkel",
+    "description": "Maak je server nog beter met premium functies door je stemtokens te gebruiken. Functies die je met tokens koopt, blijven gewoon werken zolang je ze automatisch verlengt. Als je een functie koopt die al actief is, krijg je 30 dagen extra tot de verval- of verlengdatum.",
+    "guildTokens": "Gebruik gilde-tokens",
+    "userTokens": "Gebruik persoonlijke tokens",
+    "noFeatures": "Op dit moment zijn er geen functies beschikbaar.",
+    "active": "Actief",
+    "expires": "Verloopt: {date}",
+    "nextRenewal": "Volgende verlenging: {date}",
+    "autoRenewal": "Automatische verlenging",
+    "purchase": "Aankoop",
+    "subscribe": "Abonneren",
+    "unsubscribe": "Afmelden",
+    "purchaseSuccess": "Functie succesvol gekocht!",
+    "subscribeSuccess": "Abonnement is nu actief!",
+    "unsubscribeSuccess": "Abonnement uitgeschakeld!",
+    "enabledBySubscription": "Beschikbaar via abonnement",
+    "subscriptionActiveNote": "Deze functie is nu beschikbaar als je een actief abonnement hebt.",
+    "confirmPurchase": "Weet je zeker dat je deze functie wilt kopen voor {amount} tokens?",
+    "insufficientTokens": "Je hebt niet genoeg tokens.",
+    "getMoreTokens": "Meer tokens krijgen",
+    "feature": {
+      "reputationlog": {
+        "name": "Volledig reputatielogboek",
+        "description": "Bekijk alle pagina's van het reputatielogboek op de server."
+      },
+      "analyzerlog": {
+        "name": "Uitgebreid analysatorlogboek",
+        "description": "De bewaartermijn voor het analysatorlogboek is verdubbeld."
+      },
+      "reputationcategories": {
+        "name": "Onbeperkte reputatiecategorieën",
+        "description": "Ontgrendel alle reputatiecategorieën."
+      },
+      "reputationchannel": {
+        "name": "Onbeperkt reputatiekanaal",
+        "description": "Ontgrendel zoveel reputatiekanalen als je wilt."
+      },
+      "channelblacklist": {
+        "name": "Kanaal weigerenlijst",
+        "description": "Zorg ervoor dat de bot niet overal actief is, maar alleen in bepaalde kanalen."
+      },
+      "localeoverrides": {
+        "name": "Lokale overschrijvingen",
+        "description": "Je kunt botberichten en labels vervangen door je eigen vertalingen. Op dit moment kun je alleen een eigen naam instellen voor reputatie."
+      },
+      "autopost": {
+        "name": "Automatisch posten",
+        "description": "Plaats het klassement automatisch op regelmatige tijdstippen op een kanaal."
+      },
+      "advancedrankings": {
+        "name": "Geavanceerde ranglijsten",
+        "description": "Ontgrendel meer rankingopties."
+      },
+      "detailedprofile": {
+        "name": "Gedetailleerd profiel",
+        "description": "Laat meer info zien over de reputatieprofielen van gebruikers."
+      },
+      "logchannel": {
+        "name": "Logkanaal",
+        "description": "Zet een speciaal logkanaal aan voor alle reputatiewijzigingen."
+      },
+      "additionalemojis": {
+        "name": "Extra emoji's",
+        "description": "Gebruik meer dan één emoji om je mening te geven via reacties."
+      },
+      "profile": {
+        "name": "Botprofiel",
+        "description": "Pas de naam en profielfoto van de bot aan op je server."
+      },
+      "integrationbypass": {
+        "name": "Integratie omzeilen",
+        "description": "Laat andere bots en integraties ook reputatie geven."
+      }
+    }
   }
 }

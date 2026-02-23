@@ -43,7 +43,7 @@ public class AutopostEnable implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         if (Premium.checkAndReplyPremium(
-                context, configuration.skus().features().autopost().autopostChannel())) {
+                context, configuration.skus().features().autopost().fullSkuEntry())) {
             return;
         }
 

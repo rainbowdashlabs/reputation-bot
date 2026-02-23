@@ -23,7 +23,8 @@
     "setup": "Setup",
     "logout": "Logout",
     "user_settings": "User Settings",
-    "voting": "Voting"
+    "voting": "Voting",
+    "token_shop": "Token Shop"
   },
   "user": {
     "settings": {
@@ -49,7 +50,8 @@
     "tokens": {
       "title": "Tokens",
       "description": "Your current vote tokens. You can spend them on various rewards.",
-      "label": "Current Tokens"
+      "label": "Current Tokens",
+      "shop": "Visit Token Shop"
     },
     "botlists": {
       "title": "Botlists",
@@ -233,7 +235,9 @@
     "title": "Supporter Feature",
     "requiredTierSingular": "Required Supporter Tier:",
     "requiredTierPlural": "One of the following supporter tiers is required:",
-    "message": "{name} is reserved for supporters. Become a supporter to use it."
+    "message": "{name} is reserved for supporters. Become a supporter to use it.",
+    "tokenShopHint": "You can also unlock this feature with tokens in the",
+    "tokenShopLink": "Token Shop"
   },
   "integrationBypass": {
     "premiumRequired": "Integration bypass",
@@ -750,6 +754,82 @@
       "autopost_refreshtype": "Autopost - Refresh Type",
       "autopost_refreshinterval": "Autopost - Refresh Interval",
       "ranks": "Ranks - Roles"
+    }
+  },
+  "token_shop": {
+    "title": "Token Shop",
+    "description": "Enhance your server with premium features by spending your vote tokens. Features purchased with tokens do not expire as long as they are auto-renewed. Purchasing a feature which is already active adds 30 days to the expiration or renewal date.",
+    "guildTokens": "Use Guild Tokens",
+    "userTokens": "Use Personal Tokens",
+    "noFeatures": "No features available at the moment.",
+    "active": "Active",
+    "expires": "Expires: {date}",
+    "nextRenewal": "Next Renewal: {date}",
+    "autoRenewal": "Auto Renewal",
+    "purchase": "Purchase",
+    "subscribe": "Subscribe",
+    "unsubscribe": "Unsubscribe",
+    "purchaseSuccess": "Feature purchased successfully!",
+    "subscribeSuccess": "Subscription enabled!",
+    "unsubscribeSuccess": "Subscription disabled!",
+    "enabledBySubscription": "Enabled by Subscription",
+    "subscriptionActiveNote": "This feature is currently enabled by an active subscription.",
+    "confirmPurchase": "Are you sure you want to purchase this feature for {amount} tokens?",
+    "insufficientTokens": "You don't have enough tokens.",
+    "getMoreTokens": "Get more tokens",
+    "feature": {
+      "reputationlog": {
+        "name": "Full Reputation Log",
+        "description": "See all pages of the reputation log in the server."
+      },
+      "analyzerlog": {
+        "name": "Extended Analyzer Log",
+        "description": "Retention period for the analyzer log is doubled."
+      },
+      "reputationcategories": {
+        "name": "Unlimited Reputation Categories",
+        "description": "Unlock unlimited reputation categories."
+      },
+      "reputationchannel": {
+        "name": "Unlimited Reputation Channel",
+        "description": "Unlock unlimited reputation channels."
+      },
+      "channelblacklist": {
+        "name": "Channel Denylist",
+        "description": "Prevent the bot from being active in specific channels instead of allowing it everywhere."
+      },
+      "localeoverrides": {
+        "name": "Locale Overrides",
+        "description": "Override bot messages and labels with your own translations. Currently this only allows setting a custom name for reputation."
+      },
+      "autopost": {
+        "name": "Autopost",
+        "description": "Automatically post the leaderboard to a channel at regular intervals."
+      },
+      "advancedrankings": {
+        "name": "Advanced Rankings",
+        "description": "Unlock more ranking options."
+      },
+      "detailedprofile": {
+        "name": "Detailed Profile",
+        "description": "Show more information on user reputation profiles."
+      },
+      "logchannel": {
+        "name": "Log Channel",
+        "description": "Enable a dedicated log channel for all reputation changes."
+      },
+      "additionalemojis": {
+        "name": "Additional Emojis",
+        "description": "Use more than one emoji for giving reputation via reactions."
+      },
+      "profile": {
+        "name": "Bot Profile",
+        "description": "Customize the bot's name and profile picture in your server."
+      },
+      "integrationbypass": {
+        "name": "Integration Bypass",
+        "description": "Allow other bots and integrations to give reputation."
+      }
     }
   },
   "timePresets": {

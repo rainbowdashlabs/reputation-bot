@@ -29,14 +29,14 @@ public class Add extends BaseChannelModifier {
             SlashCommandInteractionEvent event, EventContext context, Channels channels, StandardGuildChannel channel) {
         int maxChannel = Integer.MAX_VALUE;
         if (Premium.isNotEntitled(
-                context, configuration.skus().features().reputationChannel().moreChannel())) {
+                context, configuration.skus().features().reputationChannel().fullSkuEntry())) {
             maxChannel = configuration.skus().features().reputationChannel().defaultChannel();
         }
         int size = channels.channels().size();
 
         if (size > maxChannel) {
             Premium.replyPremium(
-                    context, configuration.skus().features().reputationChannel().moreChannel());
+                    context, configuration.skus().features().reputationChannel().fullSkuEntry());
             return;
         }
 
@@ -54,7 +54,7 @@ public class Add extends BaseChannelModifier {
             SlashCommandInteractionEvent event, EventContext context, Channels channels, Category category) {
         int maxCategories = Integer.MAX_VALUE;
         if (Premium.isNotEntitled(
-                context, configuration.skus().features().reputationCategories().moreCategories())) {
+                context, configuration.skus().features().reputationCategories().fullSkuEntry())) {
             maxCategories =
                     configuration.skus().features().reputationCategories().defaultCategories();
         }
@@ -63,7 +63,7 @@ public class Add extends BaseChannelModifier {
         if (size > maxCategories) {
             Premium.replyPremium(
                     context,
-                    configuration.skus().features().reputationCategories().moreCategories());
+                    configuration.skus().features().reputationCategories().fullSkuEntry());
             return;
         }
 

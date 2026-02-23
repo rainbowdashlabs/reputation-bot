@@ -5,16 +5,14 @@
  */
 package de.chojo.repbot.config.elements.sku.feature;
 
-import de.chojo.repbot.config.elements.sku.SKUEntry;
+import de.chojo.repbot.config.elements.sku.tokens.Feature;
 
 @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal", "CanBeFinal"})
-public class ReputationLog {
-
-    private SKUEntry extendedPages = new SKUEntry();
+public class ReputationLog extends Feature {
     private int defaultSize = 2;
 
-    public SKUEntry extendedPages() {
-        return extendedPages;
+    public ReputationLog() {
+        super(11, 350);
     }
 
     public int defaultSize() {

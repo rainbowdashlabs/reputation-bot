@@ -19,6 +19,11 @@ const routes: RouteRecordRaw[] = [
                 path: 'dashboard',
                 name: 'GuildDashboard',
                 component: () => import('@/views/guild/DashboardView.vue')
+            },
+            {
+                path: 'token-shop',
+                name: 'TokenShop',
+                component: () => import('@/views/guild/TokenShopView.vue')
             }
         ]
     },

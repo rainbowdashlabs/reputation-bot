@@ -23,7 +23,8 @@
     "logout": "ログアウト",
     "dashboard": "ダッシュボード",
     "user_settings": "ユーザー設定",
-    "voting": "投票"
+    "voting": "投票",
+    "token_shop": "トークンショップ"
   },
   "presets": {
     "title": "プリセット",
@@ -145,7 +146,9 @@
     "title": "サポーター特集",
     "message": "{name} サポーター専用だ。利用するにはサポーターになれ。",
     "requiredTierSingular": "必要なサポーターのレベル：",
-    "requiredTierPlural": "以下のサポーター層のいずれかが必要だ："
+    "requiredTierPlural": "以下のサポーター層のいずれかが必要だ：",
+    "tokenShopHint": "この機能はトークンを使って解除することもできる。",
+    "tokenShopLink": "トークンショップ"
   },
   "profile": {
     "description": "サーバー内でボットの外観や動作をカスタマイズする。",
@@ -688,7 +691,8 @@
     "tokens": {
       "title": "トークン",
       "description": "現在の投票トークンだ。様々な報酬に使える。",
-      "label": "現在のトークン"
+      "label": "現在のトークン",
+      "shop": "トークンショップを訪れよ"
     },
     "botlists": {
       "title": "ボットリスト",
@@ -758,5 +762,81 @@
     "rank": "ランク",
     "user": "ユーザー",
     "reputation": "評判"
+  },
+  "token_shop": {
+    "title": "トークンショップ",
+    "description": "投票トークンを使ってサーバーをプレミアム機能で強化できる。トークンで購入した機能は自動更新されている限り期限切れにならない。既に有効な機能を購入すると、有効期限または更新日が30日延長される。",
+    "guildTokens": "ギルドトークンを使う",
+    "userTokens": "個人トークンを使う",
+    "noFeatures": "現在利用可能な機能はない。",
+    "active": "アクティブ",
+    "expires": "有効期限: {date}",
+    "nextRenewal": "次回更新：{date}",
+    "autoRenewal": "自動更新",
+    "purchase": "購入",
+    "subscribe": "購読する",
+    "unsubscribe": "配信停止",
+    "purchaseSuccess": "機能の購入が成功した！",
+    "subscribeSuccess": "購読が有効になった！",
+    "unsubscribeSuccess": "購読が無効だ！",
+    "enabledBySubscription": "サブスクリプションによって有効化される",
+    "subscriptionActiveNote": "この機能は現在、有効なサブスクリプションによって利用可能になっている。",
+    "confirmPurchase": "この機能を{amount}トークンで購入することを本当に望むのか？",
+    "insufficientTokens": "トークンが足りない。",
+    "getMoreTokens": "トークンをもっと手に入れろ",
+    "feature": {
+      "reputationlog": {
+        "name": "完全な評判記録",
+        "description": "サーバー内の評判ログの全ページを見る。"
+      },
+      "analyzerlog": {
+        "name": "拡張アナライザログ",
+        "description": "アナライザーのログの保持期間は倍増する。"
+      },
+      "reputationcategories": {
+        "name": "無制限の評判カテゴリ",
+        "description": "無制限の評判カテゴリを解放する。"
+      },
+      "reputationchannel": {
+        "name": "無制限評判チャンネル",
+        "description": "無制限の評判チャネルを開放する。"
+      },
+      "channelblacklist": {
+        "name": "チャンネル拒否リスト",
+        "description": "特定のチャンネルではボットが活動できないようにする。どこでも許可するのではなく。"
+      },
+      "localeoverrides": {
+        "name": "ロケールの上書き",
+        "description": "ボットのメッセージとラベルを独自の翻訳で上書きできる。現在、設定できるのは評判のカスタム名のみだ。"
+      },
+      "autopost": {
+        "name": "自動投稿",
+        "description": "定期的にリーダーボードをチャンネルに自動投稿する。"
+      },
+      "advancedrankings": {
+        "name": "上級ランキング",
+        "description": "より多くのランキングオプションを解放する。"
+      },
+      "detailedprofile": {
+        "name": "詳細プロフィール",
+        "description": "ユーザーの評価プロファイルについて、より多くの情報を表示する。"
+      },
+      "logchannel": {
+        "name": "ログチャネル",
+        "description": "すべての評判変更に対して専用のログチャネルを有効にする。"
+      },
+      "additionalemojis": {
+        "name": "追加の絵文字",
+        "description": "リアクションで評価を与える時は、複数の絵文字を使うんだ。"
+      },
+      "profile": {
+        "name": "ボットプロフィール",
+        "description": "サーバー内でボットの名前とプロフィール画像をカスタマイズする。"
+      },
+      "integrationbypass": {
+        "name": "統合バイパス",
+        "description": "他のボットや連携サービスが評価を付与できるようにする。"
+      }
+    }
   }
 }

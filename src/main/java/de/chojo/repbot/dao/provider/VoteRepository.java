@@ -8,6 +8,7 @@ package de.chojo.repbot.dao.provider;
 import de.chojo.repbot.dao.access.vote.VoteLog;
 import de.chojo.repbot.dao.access.vote.VoteReason;
 import de.chojo.repbot.dao.access.vote.VoteStreak;
+import de.chojo.repbot.util.EntityType;
 
 import java.time.Instant;
 import java.util.List;
@@ -46,9 +47,9 @@ public class VoteRepository {
     public void addToken(long userId, long guildId, int amount, VoteReason reason) {
         logToken(userId, guildId, reason, amount);
         if (guildId == 0) {
-            addToken(userId, "USER", amount);
+            addToken(userId, EntityType.USER, amount);
         }
-        addToken(guildId, "GUILD", amount);
+        addToken(guildId, EntityType.GUILD, amount);
     }
 
     public int getVoteCountToday(long userId) {
@@ -61,15 +62,15 @@ public class VoteRepository {
                 .orElse(0);
     }
 
-    private void addToken(long userId, String type, int amount) {
+    private void addToken(long userId, EntityType type, int amount) {
         query("""
                 INSERT
                 INTO
-                    vote_token(entity_id, entity_type, token, total_token)
+                    vote_token as v(entity_id, entity_type, token, total_token)
                 VALUES
                     (?, ?, ?, ?)
                 ON CONFLICT(entity_id, entity_type) DO UPDATE SET
-                    token = token + excluded.token, total_token = total_token + excluded.token;
+                    token = v.token + excluded.token, total_token = v.total_token + excluded.token;
                 """)
                 .single(call().bind(userId).bind(type).bind(amount).bind(amount))
                 .insert();
@@ -83,36 +84,44 @@ public class VoteRepository {
     }
 
     public int getUserToken(long userId) {
-        return query("SELECT token FROM vote_token WHERE entity_id = ? AND entity_type = 'USER'")
-                .single(call().bind(userId))
+        return getToken(userId, EntityType.USER);
+    }
+
+    public int getGuildToken(long guildId) {
+        return getToken(guildId, EntityType.GUILD);
+    }
+
+    private int getToken(long id, EntityType entityType) {
+        return query("SELECT token FROM vote_token WHERE entity_id = ? AND entity_type = ?")
+                .single(call().bind(id).bind(entityType))
                 .mapAs(Integer.class)
                 .first()
                 .orElse(0);
     }
 
-    public long getGuildToken(long guildId) {
-        return query("SELECT token FROM vote_token WHERE entity_id = ? AND entity_type = 'GUILD'")
-                .single(call().bind(guildId))
-                .mapAs(Long.class)
-                .first()
-                .orElse(0L);
-    }
-
     public boolean withdrawUserTokens(long id, int amount) {
-        return withdrawTokens(id, "USER", amount);
+        return withdrawTokens(id, EntityType.USER, amount);
     }
 
     public boolean withdrawGuildTokens(long id, int amount) {
-        return withdrawTokens(id, "GUILD", amount);
+        return withdrawTokens(id, EntityType.GUILD, amount);
     }
 
     public boolean transferToGuild(long userId, long guildId, int amount) {
         boolean success = withdrawUserTokens(userId, amount);
-        if (success) logToken(userId, guildId, VoteReason.TRANSFER, amount);
+        if (success) {
+            logToken(userId, guildId, VoteReason.TRANSFER, amount);
+            addToken(guildId, EntityType.GUILD, amount);
+        }
         return success;
     }
 
-    private boolean withdrawTokens(long id, String entityType, int amount) {
+    public boolean withdrawTokens(long id, EntityType entityType, int amount) {
+        logToken(
+                entityType == EntityType.USER ? id : 0,
+                entityType == EntityType.GUILD ? id : 0,
+                VoteReason.USE,
+                amount);
         return query("""
                 UPDATE vote_token
                 SET

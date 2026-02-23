@@ -46,7 +46,7 @@ public class Info implements SlashHandler {
                 .addField("command.reactions.info.message.main", mainEmote.orElse("words.unknown"), true)
                 .addField("command.reactions.info.message.additional", emotes, true);
         if (Premium.isNotEntitled(
-                context, configuration.skus().features().additionalEmojis().additionalEmojis())) {
+                context, configuration.skus().features().additionalEmojis().fullSkuEntry())) {
             build.setFooter("command.reactions.info.message.nopremium");
         }
         return build.build();

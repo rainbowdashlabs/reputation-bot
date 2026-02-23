@@ -30,11 +30,11 @@ public enum SupporterFeature {
                                     .categories()
                                     .size())),
             (sku, repGuild) -> repGuild.subscriptions()
-                    .isEntitled(sku.features().reputationChannel().moreChannel()),
+                    .isEntitled(sku.features().reputationChannel().fullSkuEntry()),
             (sku, repGuild) ->
                     repGuild.settings().thanking().channels().categories().size()
                             > sku.features().reputationChannel().defaultChannel(),
-            sku -> sku.features().reputationChannel().moreChannel()),
+            sku -> sku.features().reputationChannel().fullSkuEntry()),
     CATEGORY_LIMIT_EXCEEDED(
             (sku, repGuild) -> List.of(
                     create("ALLOWED", sku.features().reputationCategories().defaultCategories()),
@@ -46,23 +46,23 @@ public enum SupporterFeature {
                                     .categories()
                                     .size())),
             (sku, repGuild) -> repGuild.subscriptions()
-                    .isEntitled(sku.features().reputationCategories().moreCategories()),
+                    .isEntitled(sku.features().reputationCategories().fullSkuEntry()),
             (sku, repGuild) ->
                     repGuild.settings().thanking().channels().categories().size()
                             > sku.features().reputationCategories().defaultCategories(),
-            sku -> sku.features().reputationCategories().moreCategories()),
+            sku -> sku.features().reputationCategories().fullSkuEntry()),
     BLACKLIST_USED(
             (sku, repGuild) -> List.of(),
             (sku, repGuild) -> repGuild.subscriptions()
-                    .isEntitled(sku.features().channelBlacklist().allow()),
+                    .isEntitled(sku.features().channelBlacklist().fullSkuEntry()),
             (sku, repGuild) -> !repGuild.settings().thanking().channels().isWhitelist(),
-            sku -> sku.features().channelBlacklist().allow()),
+            sku -> sku.features().channelBlacklist().fullSkuEntry()),
     BOT_NICKNAMED(
             (sku, repGuild) -> List.of(),
             (sku, repGuild) ->
-                    repGuild.subscriptions().isEntitled(sku.features().profile().allow()),
+                    repGuild.subscriptions().isEntitled(sku.features().profile().fullSkuEntry()),
             (sku, repGuild) -> repGuild.guild().getSelfMember().getNickname() != null,
-            sku -> sku.features().profile().allow());
+            sku -> sku.features().profile().fullSkuEntry());
 
     private final BiFunction<SKU, RepGuild, List<Replacement>> replacements;
     private final BiFunction<SKU, RepGuild, Boolean> isEntitled;

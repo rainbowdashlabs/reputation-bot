@@ -3,6 +3,6 @@
  *
  *     Copyright (C) RainbowDashLabs and Contributor
  */
-package de.chojo.repbot.web.pojo.user;
+package de.chojo.repbot.web.pojo.token;
 
-public record UserTokensPOJO(int tokens) {}
+public record WithdrawRequestPOJO(int amount) {}

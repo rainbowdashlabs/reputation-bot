@@ -23,7 +23,8 @@
     "logout": "Odhlásit se",
     "dashboard": "Přístrojová deska",
     "user_settings": "Nastavení uživatele",
-    "voting": "Hlasování"
+    "voting": "Hlasování",
+    "token_shop": "Obchod s tokeny"
   },
   "presets": {
     "title": "Předvolby",
@@ -145,7 +146,9 @@
     "title": "Funkce pro příznivce",
     "message": "{name} je vyhrazeno pro příznivce. Staňte se příznivcem a můžete jej používat.",
     "requiredTierSingular": "Požadovaná úroveň podpory:",
-    "requiredTierPlural": "Je vyžadována jedna z následujících úrovní podpory:"
+    "requiredTierPlural": "Je vyžadována jedna z následujících úrovní podpory:",
+    "tokenShopHint": "Tuto funkci můžete také odemknout pomocí žetonů v",
+    "tokenShopLink": "Obchod s tokeny"
   },
   "profile": {
     "description": "Přizpůsobte vzhled a chování bota na vašem serveru.",
@@ -688,7 +691,8 @@
     "tokens": {
       "title": "Tokeny",
       "description": "Vaše aktuální hlasovací žetony. Můžete je utratit za různé odměny.",
-      "label": "Aktuální tokeny"
+      "label": "Aktuální tokeny",
+      "shop": "Navštivte obchod s tokeny"
     },
     "botlists": {
       "title": "Seznamy botů",
@@ -758,5 +762,81 @@
     "rank": "Hodnost",
     "user": "Uživatel",
     "reputation": "Reputace"
+  },
+  "token_shop": {
+    "title": "Obchod s tokeny",
+    "description": "Vylepšete svůj server o prémiové funkce tím, že utratíte své hlasovací tokeny. Funkce zakoupené za tokeny nevyprší, pokud jsou automaticky obnovovány. Zakoupením funkce, která je již aktivní, se prodlouží platnost nebo datum obnovení o 30 dní.",
+    "guildTokens": "Použijte žetony cechu",
+    "userTokens": "Používání osobních tokenů",
+    "noFeatures": "V současné době nejsou k dispozici žádné funkce.",
+    "active": "Aktivní",
+    "expires": "Platnost: {date}",
+    "nextRenewal": "Další obnovení: {date}",
+    "autoRenewal": "Automatické obnovení",
+    "purchase": "Nákup",
+    "subscribe": "Přihlásit se k odběru",
+    "unsubscribe": "Odhlásit se",
+    "purchaseSuccess": "Funkce byla úspěšně zakoupena!",
+    "subscribeSuccess": "Předplatné aktivováno!",
+    "unsubscribeSuccess": "Předplatné zakázáno!",
+    "enabledBySubscription": "Povoleno předplatným",
+    "subscriptionActiveNote": "Tato funkce je v současné době aktivována aktivním předplatným.",
+    "confirmPurchase": "Opravdu chcete zakoupit tuto funkci za {amount} tokenů?",
+    "insufficientTokens": "Nemáte dostatek žetonů.",
+    "getMoreTokens": "Získejte více žetonů",
+    "feature": {
+      "reputationlog": {
+        "name": "Kompletní protokol reputace",
+        "description": "Zobrazit všechny stránky protokolu reputace na serveru."
+      },
+      "analyzerlog": {
+        "name": "Rozšířený protokol analyzátoru",
+        "description": "Doba uchovávání protokolu analyzátoru se zdvojnásobí."
+      },
+      "reputationcategories": {
+        "name": "Neomezené kategorie reputace",
+        "description": "Odemkněte neomezené kategorie reputace."
+      },
+      "reputationchannel": {
+        "name": "Neomezený kanál reputace",
+        "description": "Odemkněte neomezené kanály reputace."
+      },
+      "channelblacklist": {
+        "name": "Seznam zakázaných kanálů",
+        "description": "Zabraňte botovi v aktivitě v konkrétních kanálech, místo aby byl povolen všude."
+      },
+      "localeoverrides": {
+        "name": "Přepsání lokálních nastavení",
+        "description": "Přepište zprávy a štítky botů svými vlastními překlady. V současné době je možné nastavit pouze vlastní název pro reputaci."
+      },
+      "autopost": {
+        "name": "Automatické zveřejnění",
+        "description": "Automaticky zveřejňujte žebříček v pravidelných intervalech na kanálu."
+      },
+      "advancedrankings": {
+        "name": "Pokročilé hodnocení",
+        "description": "Odemkněte další možnosti hodnocení."
+      },
+      "detailedprofile": {
+        "name": "Podrobný profil",
+        "description": "Zobrazit více informací o profilech reputace uživatelů."
+      },
+      "logchannel": {
+        "name": "Kanál protokolu",
+        "description": "Povolit vyhrazený kanál protokolu pro všechny změny reputace."
+      },
+      "additionalemojis": {
+        "name": "Další emodži",
+        "description": "Použijte více než jedno emoji pro vyjádření hodnocení prostřednictvím reakcí."
+      },
+      "profile": {
+        "name": "Profil bota",
+        "description": "Přizpůsobte si jméno a profilový obrázek bota na svém serveru."
+      },
+      "integrationbypass": {
+        "name": "Obcházení integrace",
+        "description": "Umožnit ostatním botům a integracím udělovat reputaci."
+      }
+    }
   }
 }

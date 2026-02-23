@@ -7,9 +7,11 @@ package de.chojo.repbot.dao.access.guild;
 
 import de.chojo.jdautil.interactions.base.SkuMeta;
 import de.chojo.jdautil.interactions.premium.SKU;
+import de.chojo.repbot.config.elements.sku.tokens.Feature;
 import de.chojo.repbot.dao.access.guild.subscriptions.SkuTarget;
 import de.chojo.repbot.dao.access.guild.subscriptions.Subscription;
 import de.chojo.repbot.dao.access.guild.subscriptions.SubscriptionError;
+import de.chojo.repbot.dao.access.guild.subscriptions.TokenPurchase;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.util.SupporterFeature;
 import de.chojo.sadu.queries.api.results.writing.insertion.InsertionResult;
@@ -21,8 +23,10 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -34,6 +38,7 @@ public class Subscriptions implements GuildHolder, SkuMeta {
     private final RepGuild repGuild;
     private List<Subscription> subscriptions;
     private Map<SupporterFeature, SubscriptionError> errorMessages = null;
+    private Map<Integer, TokenPurchase> purchases = null;
 
     public Subscriptions(RepGuild repGuild) {
         this.repGuild = repGuild;
@@ -132,6 +137,41 @@ public class Subscriptions implements GuildHolder, SkuMeta {
         return subscriptions;
     }
 
+    public void purchaseTokenFeature(Feature feature) {
+        query("""
+                INSERT
+                INTO
+                    token_purchases as tp(guild_id, feature_id)
+                VALUES
+                    (?, ?)
+                ON CONFLICT(guild_id, feature_id) DO UPDATE SET
+                    expires = tp.expires + INTERVAL '30 days'
+                RETURNING guild_id, feature_id, expires, auto_renewal;
+                """)
+                .single(call().bind(guildId()).bind(feature.id()))
+                .mapAs(TokenPurchase.class)
+                .first()
+                .ifPresent(e -> purchases.put(feature.id(), e));
+    }
+
+    public Collection<TokenPurchase> tokenPurchases() {
+        return List.copyOf(purchases().values());
+    }
+
+    private Map<Integer, TokenPurchase> purchases() {
+        if (purchases == null) {
+            purchases = new HashMap<>();
+            query("""
+                            SELECT * FROM token_purchases WHERE guild_id = ?;
+                    """)
+                    .single(call().bind(guildId()))
+                    .mapAs(TokenPurchase.class)
+                    .all()
+                    .forEach(p -> purchases.put(p.featureId(), p));
+        }
+        return purchases;
+    }
+
     public boolean addSubscription(Subscription subscription) {
         InsertionResult result = query("""
                 INSERT
@@ -167,6 +207,10 @@ public class Subscriptions implements GuildHolder, SkuMeta {
                 DELETE FROM subscriptions WHERE id = ? AND type = ? AND NOT persistent;
                 """).single(call().bind(repGuild.guildId()).bind(SkuTarget.GUILD)).update();
         invalidate();
+    }
+
+    public Optional<TokenPurchase> getTokenPurchase(int id) {
+        return Optional.ofNullable(purchases().get(id));
     }
 
     private synchronized Map<SupporterFeature, SubscriptionError> errorMessages() {

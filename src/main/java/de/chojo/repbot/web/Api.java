@@ -17,6 +17,7 @@ import de.chojo.repbot.dao.provider.VoteRepository;
 import de.chojo.repbot.serialization.ThankwordsContainer;
 import de.chojo.repbot.service.AutopostService;
 import de.chojo.repbot.service.RoleAssigner;
+import de.chojo.repbot.service.TokenPurchaseService;
 import de.chojo.repbot.web.cache.MemberCache;
 import de.chojo.repbot.web.routes.v1.auth.AuthRoute;
 import de.chojo.repbot.web.routes.v1.data.DataRoute;
@@ -65,7 +66,8 @@ public class Api {
             GuildRepository guildRepository,
             UserRepository userRepository,
             DiscordOAuthService discordOAuthService,
-            VoteRepository voteRepository) {
+            VoteRepository voteRepository,
+            TokenPurchaseService tokenPurchaseService) {
         this.sessionService = sessionService;
         metricsRoute = new MetricsRoute(metrics);
         sessionRoute = new SessionRoute(sessionService);
@@ -89,7 +91,7 @@ public class Api {
         dataRoute = new DataRoute(thankwordsContainer, localization, configuration);
         authRoute = new AuthRoute(discordOAuthService, userRepository, sessionService, configuration);
         userRoute = new UserRoute(voteRepository, userRepository, configuration);
-        guildRoute = new GuildRoute(memberCache);
+        guildRoute = new GuildRoute(memberCache, voteRepository, tokenPurchaseService);
     }
 
     public void init() {

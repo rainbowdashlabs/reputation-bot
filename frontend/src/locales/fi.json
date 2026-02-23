@@ -23,7 +23,8 @@
     "logout": "Kirjaudu ulos",
     "dashboard": "Kojelauta",
     "user_settings": "Käyttäjäasetukset",
-    "voting": "Äänestäminen"
+    "voting": "Äänestäminen",
+    "token_shop": "Token-kauppa"
   },
   "presets": {
     "title": "Esiasetukset",
@@ -145,7 +146,9 @@
     "title": "Kannattaja-ominaisuus",
     "message": "{name} on varattu tukijoille. Ryhdy tukijaksi, jotta voit käyttää sitä.",
     "requiredTierSingular": "Vaadittu tukijataso:",
-    "requiredTierPlural": "Jokin seuraavista tukijatasoista vaaditaan:"
+    "requiredTierPlural": "Jokin seuraavista tukijatasoista vaaditaan:",
+    "tokenShopHint": "Voit myös avata tämän ominaisuuden rahakkeilla",
+    "tokenShopLink": "Token-kauppa"
   },
   "profile": {
     "description": "Mukauta botin ulkonäkö ja käyttäytyminen palvelimellasi.",
@@ -688,7 +691,8 @@
     "tokens": {
       "title": "Tunnukset",
       "description": "Nykyiset äänet. Voit käyttää niitä erilaisiin palkintoihin.",
-      "label": "Nykyiset rahakkeet"
+      "label": "Nykyiset rahakkeet",
+      "shop": "Käy Token Shopissa"
     },
     "botlists": {
       "title": "Botlistat",
@@ -758,5 +762,81 @@
     "rank": "Sijoitus",
     "user": "Käyttäjä",
     "reputation": "Maine"
+  },
+  "token_shop": {
+    "title": "Token-kauppa",
+    "description": "Paranna palvelintasi premium-ominaisuuksilla käyttämällä äänetokeneitasi. Tokeneilla ostetut ominaisuudet eivät vanhene, kunhan ne uusitaan automaattisesti. Jo aktivoidun ominaisuuden ostaminen pidentää sen voimassaoloaikaa tai uusimispäivää 30 päivällä.",
+    "guildTokens": "Käytä kilta-tunnuksia",
+    "userTokens": "Käytä henkilökohtaisia tunnuksia",
+    "noFeatures": "Tällä hetkellä ei ole käytettävissä olevia ominaisuuksia.",
+    "active": "Aktiivinen",
+    "expires": "Voimassaolo päättyy: {date}",
+    "nextRenewal": "Seuraava uusinta: {date}",
+    "autoRenewal": "Automaattinen uusiminen",
+    "purchase": "Osta",
+    "subscribe": "Tilaa",
+    "unsubscribe": "Peruuta tilaus",
+    "purchaseSuccess": "Ominaisuus ostettu onnistuneesti!",
+    "subscribeSuccess": "Tilaus on aktivoitu!",
+    "unsubscribeSuccess": "Tilaus poistettu käytöstä!",
+    "enabledBySubscription": "Käytössä tilauksen avulla",
+    "subscriptionActiveNote": "Tämä ominaisuus on tällä hetkellä käytössä aktiivisen tilauksen ansiosta.",
+    "confirmPurchase": "Haluatko varmasti ostaa tämän ominaisuuden hintaan {amount} poletteja?",
+    "insufficientTokens": "Sinulla ei ole tarpeeksi poletteja.",
+    "getMoreTokens": "Hanki lisää poletteja",
+    "feature": {
+      "reputationlog": {
+        "name": "Täydellinen mainehistoria",
+        "description": "Katso kaikki palvelimen maine-lokin sivut."
+      },
+      "analyzerlog": {
+        "name": "Laajennettu analysointiloki",
+        "description": "Analysoijan lokin säilytysaika on kaksinkertaistettu."
+      },
+      "reputationcategories": {
+        "name": "Rajoittamaton maine Luokat",
+        "description": "Avaa rajattomat mainekategoriat."
+      },
+      "reputationchannel": {
+        "name": "Rajoittamaton mainekanava",
+        "description": "Avaa rajattomat mainekanavat."
+      },
+      "channelblacklist": {
+        "name": "Kanavan estoluettelo",
+        "description": "Estä botin toiminta tietyissä kanavissa sen sijaan, että sallisit sen kaikkialla."
+      },
+      "localeoverrides": {
+        "name": "Paikalliset asetukset",
+        "description": "Korvaa botin viestit ja tunnisteet omilla käännöksilläsi. Tällä hetkellä tämä mahdollistaa vain maineen mukautetun nimen asettamisen."
+      },
+      "autopost": {
+        "name": "Automaattinen julkaisu",
+        "description": "Julkaise tulostaulukko automaattisesti kanavalle säännöllisin väliajoin."
+      },
+      "advancedrankings": {
+        "name": "Edistyneet sijoitukset",
+        "description": "Avaa lisää ranking-vaihtoehtoja."
+      },
+      "detailedprofile": {
+        "name": "Yksityiskohtainen profiili",
+        "description": "Näytä lisätietoja käyttäjien maineprofiileista."
+      },
+      "logchannel": {
+        "name": "Lokikanava",
+        "description": "Ota käyttöön erillinen lokikanava kaikille maineen muutoksille."
+      },
+      "additionalemojis": {
+        "name": "Lisäemojit",
+        "description": "Käytä useampaa kuin yhtä emojia maineen antamiseen reaktioiden kautta."
+      },
+      "profile": {
+        "name": "Bot-profiili",
+        "description": "Mukauta botin nimi ja profiilikuva palvelimellasi."
+      },
+      "integrationbypass": {
+        "name": "Integraation ohitus",
+        "description": "Salli muiden botien ja integraatioiden antaa mainepisteitä."
+      }
+    }
   }
 }

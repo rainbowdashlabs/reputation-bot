@@ -5,12 +5,11 @@
  */
 package de.chojo.repbot.config.elements.sku.feature;
 
-import de.chojo.repbot.config.elements.sku.SKUEntry;
+import de.chojo.repbot.config.elements.sku.tokens.Feature;
 
-public class DetailedProfile {
-    private SKUEntry detailedProfile = new SKUEntry();
+public class DetailedProfile extends Feature {
 
-    public SKUEntry detailedProfile() {
-        return detailedProfile;
+    public DetailedProfile() {
+        super(5, 350);
     }
 }

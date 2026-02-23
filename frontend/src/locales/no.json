@@ -23,7 +23,8 @@
     "logout": "Logg ut",
     "dashboard": "Dashbord",
     "user_settings": "Brukerinnstillinger",
-    "voting": "Avstemning"
+    "voting": "Avstemning",
+    "token_shop": "Tokenbutikk"
   },
   "presets": {
     "title": "Forhåndsinnstillinger",
@@ -145,7 +146,9 @@
     "title": "Supporterfunksjon",
     "message": "{name} er forbeholdt støttespillere. Bli støttespiller for å kunne bruke den.",
     "requiredTierSingular": "Nødvendig støttenivå:",
-    "requiredTierPlural": "En av følgende støttenivåer er påkrevd:"
+    "requiredTierPlural": "En av følgende støttenivåer er påkrevd:",
+    "tokenShopHint": "Du kan også låse opp denne funksjonen med tokens i",
+    "tokenShopLink": "Tokenbutikk"
   },
   "profile": {
     "description": "Tilpass hvordan boten vises og oppfører seg på serveren din.",
@@ -688,7 +691,8 @@
     "tokens": {
       "title": "Tokens",
       "description": "Dine nåværende stemmetokener. Du kan bruke dem på ulike belønninger.",
-      "label": "Gjeldende tokens"
+      "label": "Gjeldende tokens",
+      "shop": "Besøk Token Shop"
     },
     "botlists": {
       "title": "Botlister",
@@ -758,5 +762,81 @@
     "rank": "Rangering",
     "user": "Bruker",
     "reputation": "Omdømme"
+  },
+  "token_shop": {
+    "title": "Tokenbutikk",
+    "description": "Forbedre serveren din med premiumfunksjoner ved å bruke stemmetokenene dine. Funksjoner kjøpt med tokener utløper ikke så lenge de fornyes automatisk. Hvis du kjøper en funksjon som allerede er aktiv, forlenges utløps- eller fornyelsesdatoen med 30 dager.",
+    "guildTokens": "Bruk guild-tokens",
+    "userTokens": "Bruk personlige tokens",
+    "noFeatures": "Ingen funksjoner tilgjengelig for øyeblikket.",
+    "active": "Aktiv",
+    "expires": "Utløper: {date}",
+    "nextRenewal": "Neste fornyelse: {date}",
+    "autoRenewal": "Automatisk fornyelse",
+    "purchase": "Kjøp",
+    "subscribe": "Abonner",
+    "unsubscribe": "Avmeld",
+    "purchaseSuccess": "Funksjonen er kjøpt!",
+    "subscribeSuccess": "Abonnement aktivert!",
+    "unsubscribeSuccess": "Abonnement deaktivert!",
+    "enabledBySubscription": "Aktivert ved abonnement",
+    "subscriptionActiveNote": "Denne funksjonen er for øyeblikket aktivert av et aktivt abonnement.",
+    "confirmPurchase": "Er du sikker på at du vil kjøpe denne funksjonen for {amount} tokens?",
+    "insufficientTokens": "Du har ikke nok tokens.",
+    "getMoreTokens": "Få flere tokens",
+    "feature": {
+      "reputationlog": {
+        "name": "Fullstendig omdømmelogg",
+        "description": "Se alle sider i omdømmeloggen på serveren."
+      },
+      "analyzerlog": {
+        "name": "Utvidet analysatorlogg",
+        "description": "Oppbevaringsperioden for analysatorloggen er doblet."
+      },
+      "reputationcategories": {
+        "name": "Ubegrensede omdømme-kategorier",
+        "description": "Lås opp ubegrensede omdømme-kategorier."
+      },
+      "reputationchannel": {
+        "name": "Ubegrenset omdømme-kanal",
+        "description": "Lås opp ubegrensede omdømmekanaler."
+      },
+      "channelblacklist": {
+        "name": "Kanalens sperreliste",
+        "description": "Hindre at boten er aktiv i bestemte kanaler, i stedet for å tillate den overalt."
+      },
+      "localeoverrides": {
+        "name": "Lokale overstyringer",
+        "description": "Overstyr botmeldinger og etiketter med dine egne oversettelser. For øyeblikket tillater dette bare å angi et tilpasset navn for omdømme."
+      },
+      "autopost": {
+        "name": "Autopost",
+        "description": "Legg automatisk ut leaderboardet på en kanal med jevne mellomrom."
+      },
+      "advancedrankings": {
+        "name": "Avanserte rangeringer",
+        "description": "Lås opp flere rangeringalternativer."
+      },
+      "detailedprofile": {
+        "name": "Detaljert profil",
+        "description": "Vis mer informasjon om brukerens omdømmeprofiler."
+      },
+      "logchannel": {
+        "name": "Loggkanal",
+        "description": "Aktiver en dedikert loggkanal for alle endringer i omdømme."
+      },
+      "additionalemojis": {
+        "name": "Ekstra emojier",
+        "description": "Bruk mer enn én emoji for å gi omdømme via reaksjoner."
+      },
+      "profile": {
+        "name": "Bot-profil",
+        "description": "Tilpass botens navn og profilbilde på serveren din."
+      },
+      "integrationbypass": {
+        "name": "Integrering Bypass",
+        "description": "Tillat andre bots og integrasjoner å gi omdømme."
+      }
+    }
   }
 }

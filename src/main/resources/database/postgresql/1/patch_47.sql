@@ -34,3 +34,17 @@ CREATE TABLE IF NOT EXISTS repbot_schema.vote_log (
 
 CREATE INDEX IF NOT EXISTS vote_log_user_id_index
     ON repbot_schema.vote_log (user_id DESC);
+
+create index vote_log_guild_id_index
+    on repbot_schema.vote_log (guild_id);
+
+CREATE TABLE IF NOT EXISTS repbot_schema.token_purchases (
+    guild_id     BIGINT                  NOT NULL
+        CONSTRAINT token_purchases_guilds_guild_id_fk
+            REFERENCES repbot_schema.guilds,
+    feature_id   INTEGER                 NOT NULL,
+    expires      TIMESTAMP DEFAULT now() + INTERVAL '30 days',
+    auto_renewal BOOL      DEFAULT FALSE NOT NULL,
+    CONSTRAINT token_purchases_pk
+        PRIMARY KEY (guild_id, feature_id)
+);

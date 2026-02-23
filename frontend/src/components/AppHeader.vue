@@ -39,6 +39,14 @@ const isGuildAdmin = computed(() => {
           {{ t('navigation.dashboard') }}
         </router-link>
         <router-link
+            v-if="isLoggedIn"
+            active-class="text-indigo-600 dark:text-indigo-400"
+            class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors"
+            to="/guild/token-shop"
+        >
+          {{ t('navigation.token_shop') }}
+        </router-link>
+        <router-link
             v-if="isGuildAdmin"
             active-class="text-indigo-600 dark:text-indigo-400"
             class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors"
