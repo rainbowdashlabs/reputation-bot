@@ -310,7 +310,11 @@ public class Web {
                 .withExecutorService(threading.repBotWorker())
                 .withVoteService(builder ->
                         builder.withVoteWeebhooks(javalin).onVote(voteService).build())
-                .withSubmitInterval(60, botlist.isSubmit() ? TimeUnit.MINUTES : TimeUnit.DAYS) // This essentially disables submission for dev purposes
+                .withSubmitInterval(
+                        60,
+                        botlist.isSubmit()
+                                ? TimeUnit.MINUTES
+                                : TimeUnit.DAYS) // This essentially disables submission for dev purposes
                 .build();
     }
 }

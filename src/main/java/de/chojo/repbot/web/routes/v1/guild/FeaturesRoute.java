@@ -106,7 +106,8 @@ public class FeaturesRoute implements RoutesBuilder {
             entityType = EntityType.USER;
         }
 
-        var result = tokenPurchaseService.purchaseFeature(request.featureId(), session.guildId(), entityId, entityType, guildSessionData.accessLevel());
+        var result = tokenPurchaseService.purchaseFeature(
+                request.featureId(), session.guildId(), entityId, entityType, guildSessionData.accessLevel());
         ctx.json(FeaturePurchaseResultPOJO.generate(result));
     }
 

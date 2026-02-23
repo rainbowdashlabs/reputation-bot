@@ -19,7 +19,8 @@ import static de.chojo.sadu.queries.api.query.Query.query;
 public class VoteRepository {
 
     public List<VoteLog> getVoteLog(long userId, int page, int entries) {
-        return query("SELECT user_id, guild_id, tokens, reason, created FROM vote_log WHERE user_id = ? ORDER BY created DESC LIMIT ? OFFSET ?")
+        return query(
+                        "SELECT user_id, guild_id, tokens, reason, created FROM vote_log WHERE user_id = ? ORDER BY created DESC LIMIT ? OFFSET ?")
                 .single(call().bind(userId).bind(entries).bind(page * entries))
                 .map(VoteLog::map)
                 .all();

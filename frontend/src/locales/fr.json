@@ -318,6 +318,10 @@
         "channelLimitWarning": "Choisir plus de {limit} canaux, c'est réservé aux supporters. Deviens supporter pour pouvoir l'utiliser.",
         "categoryLimitWarning": "Choisir plus d'une catégorie d'{limit}s, c'est réservé aux supporters. Deviens supporter pour pouvoir le faire."
       }
+    },
+    "everyoneTokenPurchase": {
+      "label": "Tout le monde peut acheter des jetons",
+      "description": "Permettez à tous les utilisateurs d'acheter des fonctionnalités premium avec leurs jetons. Si cette option est désactivée, seuls les administrateurs du serveur peuvent acheter des fonctionnalités."
     }
   },
   "reactions": {
@@ -636,7 +640,8 @@
       "autopost_channel": "Autopost - Chaîne",
       "autopost_refreshtype": "Publication automatique - Type d'actualisation",
       "autopost_refreshinterval": "Publication automatique - Intervalle d'actualisation",
-      "ranks": "Grades - Rôles"
+      "ranks": "Grades - Rôles",
+      "general_everyonetokenpurchase": "Général - Achat de jetons pour tout le monde"
     }
   },
   "help": {
@@ -837,6 +842,7 @@
         "name": "Contournement de l'intégration",
         "description": "Laisse d'autres bots et intégrations donner de la réputation."
       }
-    }
+    },
+    "adminOnly": "Le serveur est réglé pour que seuls les administrateurs du serveur puissent acheter des fonctionnalités."
   }
 }

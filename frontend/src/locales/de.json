@@ -318,6 +318,10 @@
         "channelLimitWarning": "Die Auswahl von mehr als {limit} Kanälen ist nur für Unterstützer möglich. Werde Unterstützer, um diese Funktion zu nutzen.",
         "categoryLimitWarning": "Die Auswahl von mehr als {limit} Kategorien ist nur für Unterstützer möglich. Werde Unterstützer, um diese Funktion zu nutzen."
       }
+    },
+    "everyoneTokenPurchase": {
+      "label": "Jeder kann Token mit kaufen",
+      "description": "Lass alle Nutzer Premium-Funktionen mit ihren Tokens kaufen. Wenn das deaktiviert ist, können nur Server-Admins Funktionen kaufen."
     }
   },
   "reactions": {
@@ -636,7 +640,8 @@
       "autopost_channel": "Autopost – Kanal",
       "autopost_refreshtype": "Autopost – Aktualisiergunsart",
       "autopost_refreshinterval": "Autopost – Aktualisierungsintervall",
-      "ranks": "Ränge – Rollen"
+      "ranks": "Ränge – Rollen",
+      "general_everyonetokenpurchase": "Allgemein – Kauf mit Token für alle"
     }
   },
   "help": {
@@ -766,8 +771,8 @@
   "token_shop": {
     "title": "Token-Shop",
     "description": "Mach deinen Server mit Premium-Features noch besser, indem du deine Vote-Token einsetzt. Mit Token gekaufte Features laufen nicht ab, solange sie automatisch verlängert werden. Wenn du ein Feature kaufst, das schon aktiv ist, verlängert sich das Ablauf- oder Verlängerungsdatum um 30 Tage.",
-    "guildTokens": "Server-Token verwenden",
-    "userTokens": "Persönliche Token verwenden",
+    "guildTokens": "Server-Token",
+    "userTokens": "Persönliche Token",
     "noFeatures": "Im Moment gibt's keine Features.",
     "active": "Aktiv",
     "expires": "Läuft ab: {date}",
@@ -837,6 +842,7 @@
         "name": "Integrations Ausnahmen",
         "description": "Anderen Bots und Integrationen erlauben, Reputation zu vergeben."
       }
-    }
+    },
+    "adminOnly": "Der Server ist so eingestellt, dass nur Server-Admins Funktionen kaufen können."
   }
 }

@@ -318,6 +318,10 @@
         "channelLimitWarning": "Výběr více než {limit} kanálů je vyhrazen pro podporovatele. Staňte se podporovatelem, abyste jej mohli používat.",
         "categoryLimitWarning": "Výběr více než {limit} kategorií je vyhrazen pro podporovatele. Staňte se podporovatelem, abyste tuto funkci mohli využívat."
       }
+    },
+    "everyoneTokenPurchase": {
+      "label": "Nákup tokenů pro všechny",
+      "description": "Umožněte všem uživatelům nakupovat prémiové funkce pomocí svých tokenů. Pokud je tato funkce deaktivována, mohou funkce nakupovat pouze správci serveru."
     }
   },
   "reactions": {
@@ -636,7 +640,8 @@
       "autopost_channel": "Automatické zveřejňování – kanál",
       "autopost_refreshtype": "Automatické zveřejnění – Typ aktualizace",
       "autopost_refreshinterval": "Automatické zveřejňování – interval aktualizace",
-      "ranks": "Hodnosti - Role"
+      "ranks": "Hodnosti - Role",
+      "general_everyonetokenpurchase": "Obecné - Nákup tokenů pro všechny"
     }
   },
   "help": {
@@ -837,6 +842,7 @@
         "name": "Obcházení integrace",
         "description": "Umožnit ostatním botům a integracím udělovat reputaci."
       }
-    }
+    },
+    "adminOnly": "Server je nakonfigurován tak, aby nákup funkcí mohli provádět pouze správci serveru."
   }
 }

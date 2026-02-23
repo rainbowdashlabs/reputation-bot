@@ -318,6 +318,10 @@
         "channelLimitWarning": "La possibilità di selezionare più di {limit} canali è riservata ai sostenitori. Diventa un sostenitore per poterla usare.",
         "categoryLimitWarning": "La possibilità di selezionare più di una categori{limit}e è riservata ai sostenitori. Diventa un sostenitore per poterla usare."
       }
+    },
+    "everyoneTokenPurchase": {
+      "label": "Acquisto di token per tutti",
+      "description": "Consenti a tutti gli utenti di comprare funzioni premium usando i loro token. Se disabilitato, solo gli amministratori del server possono comprare funzioni."
     }
   },
   "reactions": {
@@ -636,7 +640,8 @@
       "autopost_channel": "Autopost - Canale",
       "autopost_refreshtype": "Pubblicazione automatica - Tipo di aggiornamento",
       "autopost_refreshinterval": "Pubblicazione automatica - Intervallo di aggiornamento",
-      "ranks": "Gradi - Ruoli"
+      "ranks": "Gradi - Ruoli",
+      "general_everyonetokenpurchase": "Generale - Acquisto di token per tutti"
     }
   },
   "help": {
@@ -837,6 +842,7 @@
         "name": "Bypass dell'integrazione",
         "description": "Consenti ad altri bot e integrazioni di assegnare reputazione."
       }
-    }
+    },
+    "adminOnly": "Il server è impostato in modo che solo gli amministratori del server possano comprare le funzioni."
   }
 }

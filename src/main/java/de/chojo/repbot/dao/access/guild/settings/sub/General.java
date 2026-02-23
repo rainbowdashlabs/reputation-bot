@@ -94,6 +94,7 @@ public class General extends GeneralPOJO implements GuildHolder {
         }
         return result;
     }
+
     public boolean everyoneTokenPurchase(boolean everyoneTokenPurchase) {
         var result = set("everyone_token_purchase", stmt -> stmt.bind(everyoneTokenPurchase));
         if (result) {
@@ -101,6 +102,7 @@ public class General extends GeneralPOJO implements GuildHolder {
         }
         return result;
     }
+
     public boolean resetDateNow() {
         return resetDate(Instant.now());
     }
@@ -111,7 +113,8 @@ public class General extends GeneralPOJO implements GuildHolder {
         if (reputationMode != state.reputationMode()) reputationMode(state.reputationMode());
         if (systemChannel != state.systemChannel()) systemChannel(state.systemChannel());
         if (resetDate != state.resetDate()) resetDate(state.resetDate());
-        if (everyoneTokenPurchase != state.everyoneTokenPurchase()) everyoneTokenPurchase(state.everyoneTokenPurchase());
+        if (everyoneTokenPurchase != state.everyoneTokenPurchase())
+            everyoneTokenPurchase(state.everyoneTokenPurchase());
     }
 
     @Override

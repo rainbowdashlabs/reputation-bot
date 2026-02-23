@@ -318,6 +318,10 @@
         "channelLimitWarning": "{limit}개 이상의 채널 선택은 후원자 전용 기능입니다. 이 기능을 사용하려면 후원자가 되어 주세요.",
         "categoryLimitWarning": "{limit}개 이상의 카테고리 선택은 서포터 전용 기능입니다. 이 기능을 사용하려면 서포터가 되어 주세요."
       }
+    },
+    "everyoneTokenPurchase": {
+      "label": "모두 토큰 구매",
+      "description": "모든 사용자가 자신의 토큰으로 프리미엄 기능을 구매할 수 있도록 허용합니다. 비활성화된 경우 서버 관리자만 기능을 구매할 수 있습니다."
     }
   },
   "reactions": {
@@ -636,7 +640,8 @@
       "autopost_channel": "자동 게시 - 채널",
       "autopost_refreshtype": "자동 게시 - 새로 고침 유형",
       "autopost_refreshinterval": "자동 게시 - 새로 고침 간격",
-      "ranks": "계급 - 역할"
+      "ranks": "계급 - 역할",
+      "general_everyonetokenpurchase": "일반 - 모든 사람 토큰 구매"
     }
   },
   "help": {
@@ -837,6 +842,7 @@
         "name": "통합 우회",
         "description": "다른 봇 및 통합 서비스가 평판을 부여할 수 있도록 허용합니다."
       }
-    }
+    },
+    "adminOnly": "서버는 서버 관리자만 기능을 구매할 수 있도록 구성되어 있습니다."
   }
 }

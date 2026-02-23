@@ -318,6 +318,10 @@
         "channelLimitWarning": "Wybór więcej niż {limit} kanałów jest zarezerwowany dla sympatyków. Zostańcie sympatykiem, aby z tego skorzystać.",
         "categoryLimitWarning": "Wybór więcej niż jednej kategorii „{limit}” jest zarezerwowany dla sympatyków. Zostań sympatykiem, aby z niej skorzystać."
       }
+    },
+    "everyoneTokenPurchase": {
+      "label": "Zakup tokenów dla wszystkich",
+      "description": "Pozwól wszystkim użytkownikom na zakup funkcji premium za pomocą waszych tokenów. Jeśli opcja jest wyłączona, tylko administratorzy serwera mogą kupować funkcje."
     }
   },
   "reactions": {
@@ -636,7 +640,8 @@
       "autopost_channel": "Autopost – Kanał",
       "autopost_refreshtype": "Autopost – typ odświeżania",
       "autopost_refreshinterval": "Autopost – interwał odświeżania",
-      "ranks": "Rangi – role"
+      "ranks": "Rangi – role",
+      "general_everyonetokenpurchase": "Ogólne – zakup tokenów dla wszystkich"
     }
   },
   "help": {
@@ -837,6 +842,7 @@
         "name": "Omijanie integracji",
         "description": "Pozwól innym botom i integracjom przyznawać reputację."
       }
-    }
+    },
+    "adminOnly": "Serwer jest skonfigurowany tak, aby tylko administratorzy serwera mogli kupować funkcje."
   }
 }

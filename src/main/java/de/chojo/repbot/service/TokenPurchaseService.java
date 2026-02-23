@@ -116,7 +116,8 @@ public class TokenPurchaseService {
         Optional<TokenPurchase> optPurchase = repGuild.subscriptions().getTokenPurchase(feature.id());
         // If the server is not yet subscribed to that feature we try to purchase it first.
         if (optPurchase.isEmpty()) {
-            PurchaseResult purchaseResult = purchaseFeature(feature.id(), guildId, guildId, EntityType.GUILD, Role.GUILD_ADMIN);
+            PurchaseResult purchaseResult =
+                    purchaseFeature(feature.id(), guildId, guildId, EntityType.GUILD, Role.GUILD_ADMIN);
             if (!purchaseResult.success()) return purchaseResult;
         }
         optPurchase = repGuild.subscriptions().getTokenPurchase(feature.id());
@@ -171,8 +172,12 @@ public class TokenPurchaseService {
                                     true));
                     continue;
                 }
-                PurchaseResult purchaseResult =
-                        purchaseFeature(purchase.featureId(), purchase.guildId(), purchase.guildId(), EntityType.GUILD, Role.GUILD_ADMIN);
+                PurchaseResult purchaseResult = purchaseFeature(
+                        purchase.featureId(),
+                        purchase.guildId(),
+                        purchase.guildId(),
+                        EntityType.GUILD,
+                        Role.GUILD_ADMIN);
                 if (purchaseResult.success()) continue;
                 if (systemChannel != null) {
                     LocalizationContext context = localization.localizer().context(LocaleProvider.guild(guild));

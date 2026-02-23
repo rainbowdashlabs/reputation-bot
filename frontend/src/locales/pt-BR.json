@@ -318,6 +318,10 @@
         "channelLimitWarning": "A seleção de mais de {limit} canais é reservada para apoiadores. Torne-se um apoiador para usá-la.",
         "categoryLimitWarning": "A seleção de mais de uma categori{limit}e é reservada aos apoiadores. Torne-se um apoiador para usá-la."
       }
+    },
+    "everyoneTokenPurchase": {
+      "label": "Compra de tokens para todos",
+      "description": "Permita que todos os usuários comprem recursos premium usando seus tokens. Se desativado, só os administradores do servidor podem comprar recursos."
     }
   },
   "reactions": {
@@ -636,7 +640,8 @@
       "autopost_channel": "Postagem automática - Canal",
       "autopost_refreshtype": "Postagem automática - Tipo de atualização",
       "autopost_refreshinterval": "Postagem automática - Intervalo de atualização",
-      "ranks": "Classificações - Funções"
+      "ranks": "Classificações - Funções",
+      "general_everyonetokenpurchase": "Geral - Compra de tokens para todos"
     }
   },
   "help": {
@@ -837,6 +842,7 @@
         "name": "Ignorar integração",
         "description": "Permitir que outros bots e integrações atribuam reputação."
       }
-    }
+    },
+    "adminOnly": "O servidor está configurado para permitir que apenas os administradores do servidor adquiram recursos."
   }
 }

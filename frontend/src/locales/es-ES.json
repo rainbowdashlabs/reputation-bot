@@ -318,6 +318,10 @@
         "channelLimitWarning": "La selección de más de {limit} canales está reservada para los seguidores. Hazte seguidor para poder utilizarla.",
         "categoryLimitWarning": "La selección de más de una categorí{limit}e está reservada a los seguidores. Hazte seguidor para poder utilizarla."
       }
+    },
+    "everyoneTokenPurchase": {
+      "label": "Compra de tokens para todos",
+      "description": "Permitir a todos los usuarios comprar funciones premium utilizando sus tokens. Si se desactiva, solo los administradores del servidor podrán comprar funciones."
     }
   },
   "reactions": {
@@ -636,7 +640,8 @@
       "autopost_channel": "Autopost - Canal",
       "autopost_refreshtype": "Autopost - Tipo de actualización",
       "autopost_refreshinterval": "Publicación automática - Intervalo de actualización",
-      "ranks": "Rangos - Funciones"
+      "ranks": "Rangos - Funciones",
+      "general_everyonetokenpurchase": "General - Compra de tokens para todos"
     }
   },
   "help": {
@@ -837,6 +842,7 @@
         "name": "Omisión de integración",
         "description": "Permitir que otros bots e integraciones otorguen reputación."
       }
-    }
+    },
+    "adminOnly": "El servidor está configurado para permitir que solo los administradores del servidor compren funciones."
   }
 }

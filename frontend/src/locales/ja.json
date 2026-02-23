@@ -318,6 +318,10 @@
         "channelLimitWarning": "{limit}以上のチャンネルを選択するのはサポーター専用だ。それを使いたいならサポーターになれ。",
         "categoryLimitWarning": "{limit}以上のカテゴリを選択するのはサポーター専用だ。利用するにはサポーターになれ。"
       }
+    },
+    "everyoneTokenPurchase": {
+      "label": "全員トークン購入",
+      "description": "すべてのユーザーがトークンを使ってプレミアム機能を購入できるようにする。無効にした場合、サーバー管理者のみが機能を購入できる。"
     }
   },
   "reactions": {
@@ -636,7 +640,8 @@
       "autopost_channel": "自動投稿 - チャンネル",
       "autopost_refreshtype": "自動投稿 - 更新タイプ",
       "autopost_refreshinterval": "自動投稿 - 更新間隔",
-      "ranks": "階級 - 役割"
+      "ranks": "階級 - 役割",
+      "general_everyonetokenpurchase": "一般 - 全員向けトークン購入"
     }
   },
   "help": {
@@ -837,6 +842,7 @@
         "name": "統合バイパス",
         "description": "他のボットや連携サービスが評価を付与できるようにする。"
       }
-    }
+    },
+    "adminOnly": "サーバーは、サーバー管理者だけが機能を購入できるように設定されている。"
   }
 }

@@ -318,6 +318,10 @@
         "channelLimitWarning": "Att välja fler än {limit} kanaler är reserverat för supportrar. Bli supporter för att kunna använda det.",
         "categoryLimitWarning": "Att välja fler än {limit} kategorier är reserverat för supportrar. Bli supporter för att kunna använda det."
       }
+    },
+    "everyoneTokenPurchase": {
+      "label": "Alla Token-köp",
+      "description": "Tillåt alla användare att köpa premiumfunktioner med sina tokens. Om funktionen är inaktiverad kan endast serveradministratörer köpa funktioner."
     }
   },
   "reactions": {
@@ -636,7 +640,8 @@
       "autopost_channel": "Autopost - Kanal",
       "autopost_refreshtype": "Autopost - Uppdateringstyp",
       "autopost_refreshinterval": "Autopost - Uppdateringsintervall",
-      "ranks": "Rangordningar – Roller"
+      "ranks": "Rangordningar – Roller",
+      "general_everyonetokenpurchase": "Allmänt – Alla Token-köp"
     }
   },
   "help": {
@@ -837,6 +842,7 @@
         "name": "Integrationsförbikoppling",
         "description": "Tillåt andra bots och integrationer att ge omdömen."
       }
-    }
+    },
+    "adminOnly": "Servern är konfigurerad så att endast serveradministratörer kan köpa funktioner."
   }
 }

@@ -318,6 +318,10 @@
         "channelLimitWarning": "Als je meer dan {limit} kanalen wilt kiezen, moet je supporter worden. Word supporter om deze functie te kunnen gebruiken.",
         "categoryLimitWarning": "Als je meer dan {limit} categorie wilt kiezen, moet je een supporter zijn. Word supporter om dit te kunnen doen."
       }
+    },
+    "everyoneTokenPurchase": {
+      "label": "Iedereen kan tokens kopen",
+      "description": "Laat alle gebruikers premiumfuncties kopen met hun tokens. Als je dit uitschakelt, kunnen alleen serverbeheerders functies kopen."
     }
   },
   "reactions": {
@@ -636,7 +640,8 @@
       "autopost_channel": "Autopost - Kanaal",
       "autopost_refreshtype": "Autopost - Vernieuwingstype",
       "autopost_refreshinterval": "Autopost - Vernieuwingsinterval",
-      "ranks": "Rangen - Functies"
+      "ranks": "Rangen - Functies",
+      "general_everyonetokenpurchase": "Algemeen - Iedereen kan tokens kopen"
     }
   },
   "help": {
@@ -837,6 +842,7 @@
         "name": "Integratie omzeilen",
         "description": "Laat andere bots en integraties ook reputatie geven."
       }
-    }
+    },
+    "adminOnly": "De server is zo ingesteld dat alleen serverbeheerders functies kunnen kopen."
   }
 }

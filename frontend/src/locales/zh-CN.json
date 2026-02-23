@@ -318,6 +318,10 @@
         "channelLimitWarning": "选择超过{limit}个频道的功能仅限赞助用户使用。请成为赞助用户以启用该功能。",
         "categoryLimitWarning": "选择超过{limit}个分类的功能仅限支持者使用。成为支持者即可使用该功能。"
       }
+    },
+    "everyoneTokenPurchase": {
+      "label": "全民代币购买",
+      "description": "允许所有用户使用代币购买高级功能。若禁用此功能，仅服务器管理员可购买功能。"
     }
   },
   "reactions": {
@@ -636,7 +640,8 @@
       "autopost_channel": "自动发布 - 频道",
       "autopost_refreshtype": "自动发布 - 刷新类型",
       "autopost_refreshinterval": "自动发布 - 刷新间隔",
-      "ranks": "军衔 - 职务"
+      "ranks": "军衔 - 职务",
+      "general_everyonetokenpurchase": "通用 - 所有人代币购买"
     }
   },
   "help": {
@@ -837,6 +842,7 @@
         "name": "集成旁路",
         "description": "允许其他机器人和集成程序授予声望值。"
       }
-    }
+    },
+    "adminOnly": "服务器已配置为仅允许服务器管理员购买功能。"
   }
 }

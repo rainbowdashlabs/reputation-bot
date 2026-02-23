@@ -318,6 +318,10 @@
         "channelLimitWarning": "Valg av mer enn {limit} kanaler er forbeholdt støttespillere. Bli støttespiller for å kunne bruke det.",
         "categoryLimitWarning": "Valg av mer enn én kategori fr{limit}-kategoriene er forbeholdt støttespillere. Bli støttespiller for å kunne bruke denne funksjonen."
       }
+    },
+    "everyoneTokenPurchase": {
+      "label": "Alle kan kjøpe tokens",
+      "description": "Tillat alle brukere å kjøpe premiumfunksjoner ved hjelp av sine tokens. Hvis denne funksjonen er deaktivert, kan kun serveradministratorer kjøpe funksjoner."
     }
   },
   "reactions": {
@@ -636,7 +640,8 @@
       "autopost_channel": "Autopost - Kanal",
       "autopost_refreshtype": "Autopost - Oppdateringstype",
       "autopost_refreshinterval": "Autopost - Oppdateringsintervall",
-      "ranks": "Ranger - Roller"
+      "ranks": "Ranger - Roller",
+      "general_everyonetokenpurchase": "Generelt - Alle Token-kjøp"
     }
   },
   "help": {
@@ -837,6 +842,7 @@
         "name": "Integrering Bypass",
         "description": "Tillat andre bots og integrasjoner å gi omdømme."
       }
-    }
+    },
+    "adminOnly": "Serveren er konfigurert slik at kun serveradministratorer kan kjøpe funksjoner."
   }
 }

@@ -318,6 +318,10 @@
         "channelLimitWarning": "{limit}-kanavan valitseminen on varattu tukijoille. Ryhdy tukijaksi, jotta voit käyttää sitä.",
         "categoryLimitWarning": "{limit}-kategorioiden valinta on varattu tukijoille. Liity tukijaksi, jotta voit käyttää sitä."
       }
+    },
+    "everyoneTokenPurchase": {
+      "label": "Kaikkien tokenien ostaminen",
+      "description": "Salli kaikkien käyttäjien ostaa premium-ominaisuuksia käyttämällä omia polettejaan. Jos tämä on pois käytöstä, vain palvelimen järjestelmänvalvojat voivat ostaa ominaisuuksia."
     }
   },
   "reactions": {
@@ -636,7 +640,8 @@
       "autopost_channel": "Automaattinen julkaisu - Kanava",
       "autopost_refreshtype": "Automaattinen julkaisu - Päivitä tyyppi",
       "autopost_refreshinterval": "Automaattinen julkaisu - Päivitä väli",
-      "ranks": "Arvot - Roolit"
+      "ranks": "Arvot - Roolit",
+      "general_everyonetokenpurchase": "Yleistä - Kaikkien rahakkeiden ostaminen"
     }
   },
   "help": {
@@ -837,6 +842,7 @@
         "name": "Integraation ohitus",
         "description": "Salli muiden botien ja integraatioiden antaa mainepisteitä."
       }
-    }
+    },
+    "adminOnly": "Palvelin on konfiguroitu siten, että vain palvelimen järjestelmänvalvojat voivat ostaa ominaisuuksia."
   }
 }

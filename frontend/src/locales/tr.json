@@ -318,6 +318,10 @@
         "channelLimitWarning": "{limit}'dan fazla kanal seçmek destekçilere özeldir. Kullanmak için destekçi olun.",
         "categoryLimitWarning": "{limit}'dan fazla kategori seçmek destekçilere özeldir. Kullanmak için destekçi olun."
       }
+    },
+    "everyoneTokenPurchase": {
+      "label": "Herkes için Token Satın Alma",
+      "description": "Tüm kullanıcıların tokenlerini kullanarak premium özellikleri satın almasına izin verin. Devre dışı bırakıldığında, yalnızca sunucu yöneticileri özellikleri satın alabilir."
     }
   },
   "reactions": {
@@ -636,7 +640,8 @@
       "autopost_channel": "Otomatik Yayın - Kanal",
       "autopost_refreshtype": "Otomatik Gönderme - Yenileme Türü",
       "autopost_refreshinterval": "Otomatik Gönderme - Yenileme Aralığı",
-      "ranks": "Sıralamalar - Roller"
+      "ranks": "Sıralamalar - Roller",
+      "general_everyonetokenpurchase": "Genel - Herkes için Jeton Satın Alma"
     }
   },
   "help": {
@@ -837,6 +842,7 @@
         "name": "Entegrasyon Atlama",
         "description": "Diğer botların ve entegrasyonların itibar vermelerine izin verin."
       }
-    }
+    },
+    "adminOnly": "Sunucu, yalnızca Sunucu Yöneticilerinin özellikleri satın almasına izin verecek şekilde yapılandırılmıştır."
   }
 }
