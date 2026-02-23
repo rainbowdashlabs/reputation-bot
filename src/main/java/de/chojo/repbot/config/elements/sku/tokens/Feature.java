@@ -13,7 +13,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Feature {
+    /**
+     * General id of the feature.
+     * This is used for token purchases
+     */
     private int id;
+    /**
+     * Amount of tokens this feature costs per month
+     */
     private int tokens;
     private String localeKey;
     private SKUEntry skuEntry = new SKUEntry();

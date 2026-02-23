@@ -8,7 +8,7 @@ package de.chojo.repbot.service;
 import de.chojo.jdautil.botlist.modules.voting.post.VoteData;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.config.elements.Voting;
-import de.chojo.repbot.dao.access.user.UserSettings;
+import de.chojo.repbot.dao.access.user.sub.UserSettings;
 import de.chojo.repbot.dao.access.vote.VoteReason;
 import de.chojo.repbot.dao.access.vote.VoteStreak;
 import de.chojo.repbot.dao.provider.UserRepository;
@@ -45,7 +45,7 @@ public class VoteService implements Consumer<VoteData> {
         long userId = voteData.userId();
         VoteStreak lastVote = voteRepository.getLastVote(userId, voteData.listId());
         Voting voting = configuration.voting();
-        UserSettings settings = userRepository.getSettingsById(userId);
+        UserSettings settings = userRepository.byId(userId).settings();
         long guildId = settings.voteGuild();
 
         if (lastVote.lastVote().isAfter(Instant.now().minus(voting.hoursSteak(), ChronoUnit.HOURS))) {

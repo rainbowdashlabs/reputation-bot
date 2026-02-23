@@ -12,6 +12,8 @@ import java.util.List;
 
 public class Subscription {
     String name = "";
+    String kofiSubscriptionId = "";
+    String kofiLifetimeId = "";
     long subscriptionSku = 0;
     long lifetimeSku = 0;
 

@@ -118,7 +118,7 @@ public class AuthRoute implements RoutesBuilder {
 
             var token = discordOAuthService.exchangeCode(code);
             long userId = discordOAuthService.getCurrentUserId(token.accessToken());
-            userRepository.updateToken(userId, token.accessToken(), token.refreshToken(), token.expiry());
+            userRepository.byId(userId).updateToken(token.accessToken(), token.refreshToken(), token.expiry());
             var session = sessionService.createSession(userId);
 
             // Redirect back to frontend with session token
@@ -165,7 +165,7 @@ public class AuthRoute implements RoutesBuilder {
         try {
             // Try to revoke the Discord OAuth token of the logged-in user
             sessionService.getUserSession(ctx).ifPresent(userSession -> {
-                userRepository.token(userSession.userId()).ifPresent(storedToken -> {
+                userRepository.byId(userSession.userId()).token().ifPresent(storedToken -> {
                     try {
                         discordOAuthService.revokeToken(storedToken.accessToken());
                     } catch (Exception ignore) {

@@ -53,3 +53,21 @@ CREATE TABLE IF NOT EXISTS repbot_schema.token_purchases (
 
 ALTER TABLE repbot_schema.guild_settings
     ADD everyone_token_purchase BOOL DEFAULT TRUE NOT NULL;
+
+CREATE TABLE repbot_schema.user_mails (
+    user_id                     BIGINT    NOT NULL,
+    source                 TEXT      NOT NULL,
+    mail_hash              TEXT      NOT NULL
+        CONSTRAINT user_mails_pk
+            PRIMARY KEY,
+    mail_short             TEXT      NOT NULL,
+    verified               BOOL      NOT NULL,
+    verification_requested TIMESTAMP NOT NULL,
+    verification_code      TEXT      NOT NULL
+);
+
+CREATE INDEX user_mails_user_id_index
+    ON repbot_schema.user_mails (user_id);
+
+CREATE INDEX user_mails_verification_code_index
+    ON repbot_schema.user_mails (verification_code);

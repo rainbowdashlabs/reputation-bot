@@ -5,45 +5,22 @@
  */
 package de.chojo.repbot.dao.provider;
 
-import de.chojo.repbot.dao.access.user.UserSettings;
-import de.chojo.repbot.dao.access.user.UserToken;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import de.chojo.repbot.dao.access.user.RepUser;
 
-import java.time.Instant;
-import java.util.Optional;
-
-import static de.chojo.sadu.queries.api.call.Call.call;
-import static de.chojo.sadu.queries.api.query.Query.query;
-import static de.chojo.sadu.queries.converter.StandardValueConverter.INSTANT_TIMESTAMP;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 public class UserRepository {
+    private final Cache<Long, RepUser> users =
+            CacheBuilder.newBuilder().expireAfterAccess(15, TimeUnit.MINUTES).build();
 
-    public Optional<UserToken> token(long userId) {
-        return query("SELECT * FROM user_token WHERE user_id = ?")
-                .single(call().bind(userId))
-                .mapAs(UserToken.class)
-                .first();
-    }
-
-    public void updateToken(long userId, String accessToken, String refreshToken, Instant expiry) {
-        query("""
-                INSERT INTO user_token (user_id, access_token, refresh_token, expiry)
-                VALUES (?, ?, ?, ?)
-                ON CONFLICT (user_id) DO UPDATE SET
-                    access_token = excluded.access_token,
-                    refresh_token = excluded.refresh_token,
-                    expiry = excluded.expiry
-                """)
-                .single(call().bind(userId).bind(accessToken).bind(refreshToken).bind(expiry, INSTANT_TIMESTAMP))
-                .insert();
-    }
-
-    public UserSettings getSettingsById(long userId) {
-        return query("""
-                SELECT * FROM user_settings WHERE id = ?
-                """)
-                .single(call().bind(userId))
-                .mapAs(UserSettings.class)
-                .first()
-                .orElseGet(() -> new UserSettings(userId, 0));
+    public RepUser byId(long id) {
+        try {
+            return users.get(id, () -> new RepUser(id));
+        } catch (ExecutionException e) {
+            return new RepUser(id);
+        }
     }
 }

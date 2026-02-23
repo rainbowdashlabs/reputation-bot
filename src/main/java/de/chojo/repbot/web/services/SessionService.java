@@ -10,6 +10,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.hash.Hashing;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guildsession.GuildSession;
+import de.chojo.repbot.dao.access.user.RepUser;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.provider.SettingsAuditLogRepository;
 import de.chojo.repbot.dao.provider.UserRepository;
@@ -126,7 +127,8 @@ public class SessionService {
             memberPojo = MemberPOJO.generate(String.valueOf(userId));
         }
 
-        var userToken = userRepository.token(userId);
+        RepUser repUser = userRepository.byId(userId);
+        var userToken = repUser.token();
         boolean isBotOwner = configuration.baseSettings().isOwner(userId);
         if (userToken.isEmpty()) {
             log.warn("No discord token found for user {}", userId);

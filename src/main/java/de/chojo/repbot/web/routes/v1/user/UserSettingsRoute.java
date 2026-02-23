@@ -5,7 +5,7 @@
  */
 package de.chojo.repbot.web.routes.v1.user;
 
-import de.chojo.repbot.dao.access.user.UserSettings;
+import de.chojo.repbot.dao.access.user.sub.UserSettings;
 import de.chojo.repbot.dao.provider.UserRepository;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
@@ -45,7 +45,7 @@ public class UserSettingsRoute implements RoutesBuilder {
             })
     private void getUserSettings(@NotNull Context ctx) {
         UserSession session = ctx.sessionAttribute(SessionAttribute.USER_SESSION);
-        UserSettings settings = userRepository.getSettingsById(session.userId());
+        UserSettings settings = userRepository.byId(session.userId()).settings();
         ctx.json(new UserSettingsPOJO(settings.voteGuild()));
     }
 
@@ -67,7 +67,7 @@ public class UserSettingsRoute implements RoutesBuilder {
             return;
         }
 
-        UserSettings settings = userRepository.getSettingsById(session.userId());
+        UserSettings settings = userRepository.byId(session.userId()).settings();
         settings.voteGuild(body.voteGuild());
         ctx.status(204);
     }
