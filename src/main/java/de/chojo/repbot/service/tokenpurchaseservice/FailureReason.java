@@ -11,6 +11,7 @@ public enum FailureReason {
     INSUFFICIENT_GUILD_TOKENS,
     GUILD_HAS_SUBSCRIPTION,
     GUILD_NOT_FOUND,
+    ADMIN_ONLY,
     UNKNOWN;
 
     private final String localeKey;

@@ -50,3 +50,6 @@ CREATE TABLE IF NOT EXISTS repbot_schema.token_purchases (
     CONSTRAINT token_purchases_pk
         PRIMARY KEY (guild_id, feature_id)
 );
+
+ALTER TABLE repbot_schema.guild_settings
+    ADD everyone_token_purchase BOOL DEFAULT TRUE NOT NULL;

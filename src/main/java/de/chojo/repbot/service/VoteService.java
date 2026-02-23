@@ -71,7 +71,7 @@ public class VoteService implements Consumer<VoteData> {
 
         if (configuration.botlist().maxVotes() == votesToday) {
             voteRepository.addToken(userId, guildId, configuration.botlist().maxVotes(), VoteReason.BONUS);
-            messages.add("Since you voted on all botlists in the last 12 hours, you receive %d extra token."
+            messages.add("Since you voted on all botlists in the last 6 hours, you receive %d extra token."
                     .formatted(configuration.botlist().maxVotes()));
         }
 

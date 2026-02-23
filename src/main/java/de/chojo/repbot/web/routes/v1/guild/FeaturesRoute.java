@@ -40,6 +40,7 @@ public class FeaturesRoute implements RoutesBuilder {
     public void buildRoutes() {
         path("/features", () -> {
             get("/active", this::getActiveFeatures, Role.GUILD_USER);
+            get("/everyone-token-purchase", this::getEveryoneTokenPurchase, Role.GUILD_USER);
             post("/purchase", this::purchaseFeature, Role.GUILD_USER);
             post("/subscribe", this::subscribeFeature, Role.GUILD_ADMIN);
             post("/unsubscribe", this::unsubscribeFeature, Role.GUILD_ADMIN);
@@ -62,6 +63,19 @@ public class FeaturesRoute implements RoutesBuilder {
     }
 
     @OpenApi(
+            summary = "Get everyone token purchase state",
+            operationId = "getEveryoneTokenPurchase",
+            path = "v1/guild/features/everyone-token-purchase",
+            methods = HttpMethod.GET,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
+            tags = {"Guild"},
+            responses = {@OpenApiResponse(status = "200", content = @OpenApiContent(from = Boolean.class))})
+    private void getEveryoneTokenPurchase(Context ctx) {
+        GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
+        ctx.json(session.repGuild().settings().general().everyoneTokenPurchase());
+    }
+
+    @OpenApi(
             summary = "Purchase token feature",
             operationId = "purchaseFeature",
             path = "v1/guild/features/purchase",
@@ -79,8 +93,8 @@ public class FeaturesRoute implements RoutesBuilder {
 
         long entityId;
         EntityType entityType;
+        GuildSessionData guildSessionData = userSession.guilds().get(String.valueOf(session.guildId()));
         if (request.guildTokens()) {
-            GuildSessionData guildSessionData = userSession.guilds().get(String.valueOf(session.guildId()));
             if (guildSessionData == null || guildSessionData.accessLevel() != Role.GUILD_ADMIN) {
                 ctx.status(403);
                 return;
@@ -92,7 +106,7 @@ public class FeaturesRoute implements RoutesBuilder {
             entityType = EntityType.USER;
         }
 
-        var result = tokenPurchaseService.purchaseFeature(request.featureId(), session.guildId(), entityId, entityType);
+        var result = tokenPurchaseService.purchaseFeature(request.featureId(), session.guildId(), entityId, entityType, guildSessionData.accessLevel());
         ctx.json(FeaturePurchaseResultPOJO.generate(result));
     }
 

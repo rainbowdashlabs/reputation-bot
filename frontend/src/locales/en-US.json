@@ -300,6 +300,10 @@
       "selectPlaceholder": "Select a channel",
       "note": "Note: This channel should be set and should be an internal channel. It will contain important messages concerning the bot's service and messages from the developers."
     },
+    "everyoneTokenPurchase": {
+      "label": "Everyone Token Purchase",
+      "description": "Allow all users to purchase premium features using their tokens. If disabled, only server administrators can purchase features."
+    },
     "roleSelect": {
       "searchPlaceholder": "Search roles...",
       "noRolesFound": "No roles found"
@@ -753,14 +757,15 @@
       "autopost_channel": "Autopost - Channel",
       "autopost_refreshtype": "Autopost - Refresh Type",
       "autopost_refreshinterval": "Autopost - Refresh Interval",
-      "ranks": "Ranks - Roles"
+      "ranks": "Ranks - Roles",
+      "general_everyonetokenpurchase": "General - Everyone Token Purchase"
     }
   },
   "token_shop": {
     "title": "Token Shop",
     "description": "Enhance your server with premium features by spending your vote tokens. Features purchased with tokens do not expire as long as they are auto-renewed. Purchasing a feature which is already active adds 30 days to the expiration or renewal date.",
-    "guildTokens": "Use Guild Tokens",
-    "userTokens": "Use Personal Tokens",
+    "guildTokens": "Guild Tokens",
+    "userTokens": "Personal Tokens",
     "noFeatures": "No features available at the moment.",
     "active": "Active",
     "expires": "Expires: {date}",
@@ -777,6 +782,7 @@
     "confirmPurchase": "Are you sure you want to purchase this feature for {amount} tokens?",
     "insufficientTokens": "You don't have enough tokens.",
     "getMoreTokens": "Get more tokens",
+    "adminOnly": "The Server is configured to allow only Server Admins to purchase features",
     "feature": {
       "reputationlog": {
         "name": "Full Reputation Log",

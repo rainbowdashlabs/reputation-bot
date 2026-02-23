@@ -197,6 +197,7 @@ export interface GeneralPOJO {
     reputationMode: ReputationMode; // Implemented in reputation
     resetDate: string; // ISO string // Implemented in reputation
     systemChannel: string; // Channel ID as number
+    everyoneTokenPurchase: boolean;
 }
 
 export interface LogChannelPOJO {

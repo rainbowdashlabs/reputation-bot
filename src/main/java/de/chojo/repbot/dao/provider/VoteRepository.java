@@ -54,7 +54,7 @@ public class VoteRepository {
 
     public int getVoteCountToday(long userId) {
         return query("""
-                SELECT count(1) FROM votes WHERE user_id = ? AND last_vote::DATE = now()::DATE;
+                SELECT count(1) FROM votes WHERE user_id = ? AND last_vote > now() - INTERVAL '6 hours';
                 """)
                 .single(call().bind(userId))
                 .mapAs(Integer.class)

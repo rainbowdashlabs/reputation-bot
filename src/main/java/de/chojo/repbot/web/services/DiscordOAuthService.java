@@ -69,7 +69,7 @@ public class DiscordOAuthService {
         return mapper.readValue(response.body(), DiscordTokenResponse.class).toTokenResponse();
     }
 
-    public long getCurrentUserId(String accessToken) throws IOException, InterruptedException {
+    public synchronized long getCurrentUserId(String accessToken) throws IOException, InterruptedException {
         Long cached = userIdCache.getIfPresent(accessToken);
         if (cached != null) {
             return cached;
@@ -97,7 +97,7 @@ public class DiscordOAuthService {
             @JsonProperty("permissions_new") String permissionsNew,
             boolean owner) {}
 
-    public List<DiscordGuild> getUserGuilds(String accessToken) throws IOException, InterruptedException {
+    public synchronized List<DiscordGuild> getUserGuilds(String accessToken) throws IOException, InterruptedException {
         List<DiscordGuild> cached = userGuildsCache.getIfPresent(accessToken);
         if (cached != null) {
             return cached;

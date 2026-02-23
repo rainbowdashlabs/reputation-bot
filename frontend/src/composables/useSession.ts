@@ -16,6 +16,7 @@ const userSession = ref<UserSessionPOJO | null>(null)
 const hasToken = ref(!!localStorage.getItem(SESSION_TOKEN_KEY))
 const premiumFeatures = ref<Types.PremiumFeaturesPOJO | null>(null)
 const userTokens = ref<number>(0)
+const guildTokens = ref<number>(0)
 const isExpired = ref(false)
 const currentGuildId = ref<string | null>(localStorage.getItem(GUILD_ID_KEY))
 
@@ -52,6 +53,28 @@ export function useSession() {
 
     const setUserTokens = (tokens: number) => {
         userTokens.value = tokens
+    }
+
+    const setGuildTokens = (tokens: number) => {
+        guildTokens.value = tokens
+    }
+
+    const refreshUserTokens = async () => {
+        try {
+            const response = await api.getUserTokens()
+            userTokens.value = response.tokens
+        } catch (e) {
+            console.error('Failed to refresh user tokens:', e)
+        }
+    }
+
+    const refreshGuildTokens = async () => {
+        try {
+            const response = await api.getGuildTokens()
+            guildTokens.value = response.tokens
+        } catch (e) {
+            console.error('Failed to refresh guild tokens:', e)
+        }
     }
 
     const setExpired = (expired: boolean) => {
@@ -232,6 +255,7 @@ export function useSession() {
         userSession: readonly(userSession),
         premiumFeatures: readonly(premiumFeatures),
         userTokens: readonly(userTokens),
+        guildTokens: readonly(guildTokens),
         isExpired: readonly(isExpired),
         hasToken: readonly(hasToken),
         currentGuildId: readonly(currentGuildId),
@@ -241,6 +265,9 @@ export function useSession() {
         setGuildId,
         setPremiumFeatures,
         setUserTokens,
+        setGuildTokens,
+        refreshUserTokens,
+        refreshGuildTokens,
         setExpired,
         switchSession,
         clearSession,

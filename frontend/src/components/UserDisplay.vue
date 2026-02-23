@@ -4,12 +4,17 @@
  *     Copyright (C) RainbowDashLabs and Contributor
  */
 <script lang="ts" setup>
-import {computed, ref} from 'vue'
+import {computed, onMounted, ref} from 'vue'
 import {useI18n} from 'vue-i18n'
 import {useSession} from '@/composables/useSession'
+import TokenValue from '@/components/TokenValue.vue'
 
 const {t} = useI18n()
-const {logout, userSession, userTokens} = useSession()
+const {logout, userSession, userTokens, refreshUserTokens} = useSession()
+
+onMounted(() => {
+  refreshUserTokens()
+})
 
 const open = ref(false)
 const toggle = () => open.value = !open.value
@@ -40,8 +45,7 @@ const vClickOutside = {
         to="/user/vote"
         class="flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-indigo-50 dark:hover:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 transition-colors"
     >
-      <font-awesome-icon :icon="['fas', 'coins']" class="w-4 h-4"/>
-      <span class="text-sm font-bold">{{ userTokens }}</span>
+      <TokenValue :tokens="userTokens" icon-class="text-indigo-600 dark:text-indigo-400" />
     </router-link>
 
     <div class="relative" v-click-outside="close">

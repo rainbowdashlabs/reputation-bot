@@ -131,6 +131,11 @@ class ApiClient {
         return response.data;
     }
 
+    public async getEveryoneTokenPurchase(): Promise<boolean> {
+        const response = await this.axiosInstance.get<boolean>('/guild/features/everyone-token-purchase');
+        return response.data;
+    }
+
     public async withdrawGuildTokens(amount: number): Promise<Types.TokensPOJO> {
         const response = await this.axiosInstance.post<Types.TokensPOJO>('/guild/token/withdraw', { amount });
         return response.data;
@@ -183,6 +188,12 @@ class ApiClient {
 
     public async updateGeneralResetDate(resetDate: string | null) {
         await this.axiosInstance.post('/settings/general/resetdate', resetDate ? JSON.stringify(resetDate) : null, {
+            headers: {'Content-Type': 'application/json'}
+        });
+    }
+
+    public async updateGeneralEveryoneTokenPurchase(active: boolean) {
+        await this.axiosInstance.post('/settings/general/everyonetokenpurchase', active, {
             headers: {'Content-Type': 'application/json'}
         });
     }

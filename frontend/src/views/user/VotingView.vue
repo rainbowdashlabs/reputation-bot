@@ -19,9 +19,8 @@ import TransferToGuild from './votingview/TransferToGuild.vue'
 import BaseButton from '@/components/BaseButton.vue'
 
 const { t } = useI18n()
-const { userSession } = useSession()
+const { userSession, userTokens, refreshUserTokens } = useSession()
 
-const tokens = ref<number | null>(null)
 const botlists = ref<BotlistVotePOJO[]>([])
 const voteLogs = ref<VoteLog[]>([])
 const loading = ref(true)
@@ -45,12 +44,11 @@ const fetchVoteLog = async (newPage: number) => {
 
 onMounted(async () => {
   try {
-    const [tokensResponse, botlistsResponse] = await Promise.all([
-      api.getUserTokens(),
+    const [botlistsResponse] = await Promise.all([
+      refreshUserTokens().then(() => null),
       api.getVoteLists()
     ])
-    tokens.value = tokensResponse.tokens
-    botlists.value = botlistsResponse
+    botlists.value = botlistsResponse || []
     await fetchVoteLog(0)
   } catch (error) {
     console.error('Failed to fetch voting data:', error)
@@ -79,8 +77,8 @@ watch(page, (newPage) => {
       </div>
 
       <div v-else class="space-y-8">
-        <TokenStats :tokens="tokens" />
-        <TransferToGuild :max-tokens="tokens" @transferred="async () => { const t = await api.getUserTokens(); tokens = t.tokens; await fetchVoteLog(0); }" />
+        <TokenStats :tokens="userTokens" />
+        <TransferToGuild :max-tokens="userTokens" @transferred="async () => { await refreshUserTokens(); await fetchVoteLog(0); }" />
         <BotlistTable :botlists="botlists" />
         <div class="space-y-4">
           <VoteLogTable :vote-logs="voteLogs" :loading="logLoading" />
