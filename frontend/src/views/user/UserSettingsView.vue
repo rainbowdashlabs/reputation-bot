@@ -11,6 +11,7 @@ import { api } from '@/api'
 import ViewContainer from '@/components/ViewContainer.vue'
 import SettingsContainer from '../settings/components/SettingsContainer.vue'
 import LoginPanel from '../settings/components/LoginPanel.vue'
+import UserMailsSection from './components/UserMailsSection.vue'
 
 const { t } = useI18n()
 const { userSession } = useSession()
@@ -52,7 +53,7 @@ const updateVoteGuild = async () => {
       <div v-if="loading" class="flex justify-center py-8">
         <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500"></div>
       </div>
-      <div v-else class="p-4 space-y-6">
+      <div v-else class="p-4 space-y-10">
         <div class="flex flex-col gap-1.5">
           <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">
             {{ t('user.settings.voteGuild.label') }}
@@ -71,6 +72,9 @@ const updateVoteGuild = async () => {
             {{ t('user.settings.voteGuild.description') }}
           </p>
         </div>
+
+        <!-- Mails Section extracted component -->
+        <UserMailsSection />
       </div>
     </SettingsContainer>
   </ViewContainer>

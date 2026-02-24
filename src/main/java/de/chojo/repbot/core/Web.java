@@ -19,6 +19,8 @@ import de.chojo.jdautil.interactions.dispatching.InteractionHub;
 import de.chojo.logutil.marker.LogNotify;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.service.AutopostService;
+import de.chojo.repbot.service.KofiService;
+import de.chojo.repbot.service.MailService;
 import de.chojo.repbot.service.VoteService;
 import de.chojo.repbot.web.Api;
 import de.chojo.repbot.web.cache.MemberCache;
@@ -63,6 +65,8 @@ public class Web {
     private final AutopostService autopostService;
     private final MemberCache memberCache = new MemberCache();
     private final VoteService voteService;
+    private final KofiService kofiService;
+    private final MailService mailService;
     private Javalin javalin;
 
     private Web(
@@ -82,6 +86,8 @@ public class Web {
         this.autopostService = autopostService;
         this.voteService =
                 new VoteService(configuration, data.voteRepository(), data.userRepository(), bot.shardManager());
+        this.mailService = new MailService(configuration, data.userRepository());
+        this.kofiService = new KofiService(data.userRepository(), bot.shardManager(), configuration, mailService);
     }
 
     public static Web create(
@@ -204,6 +210,7 @@ public class Web {
                     } else {
                         config.staticFiles.add("/static", io.javalin.http.staticfiles.Location.CLASSPATH);
                     }
+
                     config.router.apiBuilder(() -> new Api(
                                     sessionService,
                                     data.metrics(),
@@ -219,7 +226,9 @@ public class Web {
                                     data.userRepository(),
                                     new DiscordOAuthService(configuration),
                                     data.voteRepository(),
-                                    bot.tokenPurchaseService())
+                                    bot.tokenPurchaseService(),
+                                    kofiService,
+                                    mailService)
                             .init());
                     config.router.mount(router -> {
                         router.beforeMatched(this::handleAccess);

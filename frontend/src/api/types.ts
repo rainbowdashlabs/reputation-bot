@@ -626,3 +626,28 @@ export interface ActiveFeaturePOJO {
     expires: string;
     autoRenewal: boolean;
 }
+
+export enum MailSource {
+    USER = 'USER',
+    DISCORD = 'DISCORD',
+    KOFI = 'KOFI',
+}
+
+export interface MailEntryPOJO {
+    userId: number;
+    source: MailSource;
+    hash: string;
+    mailShort: string;
+    verified: boolean;
+    verificationRequested: string | null;
+    verificationCode: string | null;
+}
+
+export enum MailFailureReason {
+    ALREADY_REGISTERED = 'ALREADY_REGISTERED',
+    INVALID_FORMAT = 'INVALID_FORMAT',
+    WRONG_USER = 'WRONG_USER',
+    INVALID_CODE = 'INVALID_CODE',
+    CODE_EXPIRED = 'CODE_EXPIRED',
+    UNKNOWN_ADDRESS = 'UNKNOWN_ADDRESS',
+}

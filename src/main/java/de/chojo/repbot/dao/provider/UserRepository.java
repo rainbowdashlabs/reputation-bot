@@ -36,6 +36,12 @@ public class UserRepository {
         return byId(user.getIdLong());
     }
 
+    public Optional<RepUser> byMailHash(String hash) {
+        return query("""
+                SELECT user_id FROM user_mails um WHERE mail_hash = ?;
+                """).single(call().bind(hash)).mapAs(Long.class).first().map(this::byId);
+    }
+
     public void registerPurchase(KofiPurchase purchase) {
         if (purchase.type() == Type.SUBSCRIPTION) {
             // Renew subscription if one exists already with that mail hash
@@ -55,12 +61,12 @@ public class UserRepository {
                     DO NOTHING;
                 """)
                 .single(call().bind(purchase.mailHash())
-                        .bind(purchase.key())
-                        .bind(purchase.skuId())
-                        .bind(purchase.type())
-                        .bind(purchase.expiresAt(), StandardValueConverter.INSTANT_TIMESTAMP)
-                        .bind(purchase.transactionId())
-                        .bind(purchase.guildId()));
+                              .bind(purchase.key())
+                              .bind(purchase.skuId())
+                              .bind(purchase.type())
+                              .bind(purchase.expiresAt(), StandardValueConverter.INSTANT_TIMESTAMP)
+                              .bind(purchase.transactionId())
+                              .bind(purchase.guildId()));
     }
 
     public Optional<KofiPurchase> getMatchingPurchase(KofiPurchase purchase) {
@@ -70,5 +76,13 @@ public class UserRepository {
                 .single(call().bind(purchase.skuId()).bind(purchase.mailHash()).bind(purchase.type()))
                 .mapAs(KofiPurchase.class)
                 .first();
+    }
+
+    public void cleanupExpiredMails() {
+        query("""
+                DELETE FROM user_mails WHERE verification_requested < now() - INTERVAL '1 hour';
+                """)
+                .single()
+                .delete();
     }
 }

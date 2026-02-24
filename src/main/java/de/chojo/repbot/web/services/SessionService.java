@@ -18,6 +18,7 @@ import de.chojo.repbot.dao.provider.UserSessionRepository;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.pojo.guild.MemberPOJO;
 import de.chojo.repbot.web.pojo.session.GuildSessionData;
+import de.chojo.repbot.web.services.oauth.DiscordGuild;
 import io.javalin.http.Context;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
@@ -135,7 +136,7 @@ public class SessionService {
             return new UserSession(userId, token, guilds, memberPojo, created, isBotOwner);
         }
 
-        List<DiscordOAuthService.DiscordGuild> userGuilds;
+        List<DiscordGuild> userGuilds;
         try {
             userGuilds = discordOAuthService.getUserGuilds(userToken.get().accessToken());
         } catch (Exception e) {
@@ -143,7 +144,7 @@ public class SessionService {
             return new UserSession(userId, token, guilds, memberPojo, created, isBotOwner);
         }
 
-        for (DiscordOAuthService.DiscordGuild discordGuild : userGuilds) {
+        for (DiscordGuild discordGuild : userGuilds) {
             String guildId = discordGuild.id();
             Guild guild = shardManager.getGuildById(guildId);
             if (guild == null) continue;

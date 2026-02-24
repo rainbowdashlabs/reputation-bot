@@ -8,11 +8,15 @@ package de.chojo.repbot.dao.access.user.sub.purchases;
 import com.google.common.hash.Hashing;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.config.elements.sku.Subscription;
+import de.chojo.repbot.dao.access.user.sub.MailEntry;
 import de.chojo.repbot.service.kofi.KofiShopItem;
 import de.chojo.repbot.service.kofi.KofiTransaction;
 import de.chojo.repbot.service.kofi.Type;
+import de.chojo.sadu.mapper.annotation.MappingProvider;
+import de.chojo.sadu.mapper.wrapper.Row;
 
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -20,9 +24,14 @@ import java.util.List;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
+import static de.chojo.sadu.queries.converter.StandardValueConverter.INSTANT_TIMESTAMP;
 
+/**
+ * Represents a purchase made on kofi. This maybe be a subscription or a lifetime purchase.
+ * The Mail hash might have a matching {@link MailEntry}
+ */
 public class KofiPurchase {
-    long id;
+    private final long id;
     /**
      * A hash of the user mail.
      */
@@ -87,18 +96,51 @@ public class KofiPurchase {
         return guildId;
     }
 
+    public boolean assignPurchaseToGuild(long guildId) {
+        query("""
+                UPDATE kofi_purchase SET guild_id = ? WHERE id = ?;
+                """).single(call().bind(guildId).bind(id)).update();
+        return true;
+    }
+
+    public boolean unassignPurchaseFromGuild() {
+        query("""
+                UPDATE kofi_purchase SET guild_id = 0 WHERE id = ?;
+                """).single(call().bind(id)).update();
+        return true;
+    }
+
+    @MappingProvider({"id", "mail_hash", "key", "sku_id", "type", "expires_at", "transaction_id", "guild_id"})
+    public KofiPurchase(Row row) throws SQLException {
+        this(
+                row.getLong("id"),
+                row.getString("mail_hash"),
+                row.getString("transaction_id"),
+                row.getString("key"),
+                row.getEnum("type", Type.class),
+                row.getLong("sku_id"),
+                row.get("expires_at", INSTANT_TIMESTAMP),
+                row.getLong("guild_id"));
+    }
+
+    public KofiPurchase(String mailHash, String transactionId, String key, Type type, long skuId, Instant expiresAt) {
+        this(-1, mailHash, transactionId, key, type, skuId, expiresAt, 0);
+    }
+
     public KofiPurchase(
+            long id,
             String mailHash,
             String transactionId,
-            String platformKey,
+            String key,
             Type type,
             long skuId,
             Instant expiresAt,
             long guildId) {
+        this.id = id;
         this.mailHash = mailHash;
         this.transactionId = transactionId;
         this.guildId = guildId;
-        this.key = platformKey;
+        this.key = key;
         this.type = type;
         this.skuId = skuId;
         this.expiresAt = expiresAt;
@@ -121,8 +163,7 @@ public class KofiPurchase {
                     transaction.tierName(),
                     type,
                     subscription.subscriptionSku(),
-                    Instant.now().plus(32, ChronoUnit.DAYS),
-                    0));
+                    Instant.now().plus(32, ChronoUnit.DAYS)));
         } else if (type == Type.SHOP_ORDER) {
             int id = 0;
             for (KofiShopItem shopItem : transaction.shopItems()) {
@@ -137,8 +178,7 @@ public class KofiPurchase {
                             shopItem.directLinkCode(),
                             type,
                             subscription.lifetimeSku(),
-                            null,
-                            0));
+                            null));
                 }
             }
         }
@@ -150,7 +190,7 @@ public class KofiPurchase {
      */
     public void renew() {
         query("""
-            UPDATE kofi_purchase SET expires_at = NOW() + '32 days'::INTERVAL WHERE id = ?
-            """).single(call().bind(id)).update();
+                UPDATE kofi_purchase SET expires_at = now() + '32 days'::INTERVAL WHERE id = ?
+                """).single(call().bind(id)).update();
     }
 }

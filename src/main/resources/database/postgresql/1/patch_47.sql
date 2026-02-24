@@ -55,7 +55,7 @@ ALTER TABLE repbot_schema.guild_settings
     ADD everyone_token_purchase BOOL DEFAULT TRUE NOT NULL;
 
 CREATE TABLE repbot_schema.user_mails (
-    user_id                BIGINT    NOT NULL,
+    user_id                BIGINT NOT NULL,
     source                 TEXT      NOT NULL,
     mail_hash              TEXT      NOT NULL
         CONSTRAINT user_mails_pk

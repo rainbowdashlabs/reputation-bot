@@ -60,6 +60,10 @@ class ApiClient {
 
                 const errorStore = useErrorStore();
 
+                if ((error.config as any)?.skipErrorHandle) {
+                    return Promise.reject(error);
+                }
+
                 if (error.response?.data) {
                     // Backend returned an ApiErrorResponse
                     errorStore.addError(error.response.data);
@@ -613,6 +617,25 @@ class ApiClient {
 
     public async updateUserSettings(settings: Types.UserSettingsPOJO): Promise<void> {
         await this.axiosInstance.patch('/user/settings', settings);
+    }
+
+    // User Mails
+    public async getUserMails(): Promise<Types.MailEntryPOJO[]> {
+        const response = await this.axiosInstance.get<Types.MailEntryPOJO[]>('/user/settings/mail');
+        return response.data;
+    }
+
+    public async registerUserMail(mail: string): Promise<Types.MailEntryPOJO> {
+        const response = await this.axiosInstance.post<Types.MailEntryPOJO>('/user/settings/mail', { mail }, { skipErrorHandle: true } as any);
+        return response.data;
+    }
+
+    public async deleteUserMail(hash: string): Promise<void> {
+        await this.axiosInstance.delete(`/user/settings/mail/${encodeURIComponent(hash)}`);
+    }
+
+    public async verifyUserMail(hash: string, code: string): Promise<void> {
+        await this.axiosInstance.post(`/user/settings/mail/${encodeURIComponent(hash)}/verify`, { code }, { skipErrorHandle: true } as any);
     }
 
     public async getDebug(): Promise<Types.DebugResultPOJO> {

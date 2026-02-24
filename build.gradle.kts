@@ -89,6 +89,10 @@ dependencies {
 
     implementation("org.knowm.xchart", "xchart", "3.8.8")
 
+    // Mailing
+    implementation("commons-validator", "commons-validator", "1.10.1")
+    implementation("org.eclipse.angus", "angus-mail", "2.0.3")
+
     // unit testing
     testImplementation(testlibs.bundles.junit)
     testImplementation("org.junit.platform", "junit-platform-launcher")

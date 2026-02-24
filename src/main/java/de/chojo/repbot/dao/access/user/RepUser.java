@@ -5,6 +5,7 @@
  */
 package de.chojo.repbot.dao.access.user;
 
+import de.chojo.repbot.dao.access.user.sub.Purchases;
 import de.chojo.repbot.dao.access.user.sub.UserMails;
 import de.chojo.repbot.dao.access.user.sub.UserSettings;
 import de.chojo.repbot.dao.access.user.sub.UserToken;
@@ -20,6 +21,7 @@ public class RepUser {
     private final long id;
     private UserSettings settings;
     private UserMails mails;
+    private Purchases purchases;
 
     public RepUser(long id) {
         this.id = id;
@@ -63,6 +65,13 @@ public class RepUser {
             mails = new UserMails(this);
         }
         return mails;
+    }
+
+    public Purchases purchases() {
+        if (purchases == null) {
+            purchases = new Purchases(this);
+        }
+        return purchases;
     }
 
     public long id() {

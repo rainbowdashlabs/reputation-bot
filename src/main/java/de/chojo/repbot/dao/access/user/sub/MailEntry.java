@@ -5,24 +5,22 @@
  */
 package de.chojo.repbot.dao.access.user.sub;
 
-import com.google.common.hash.Hashing;
 import de.chojo.sadu.mapper.annotation.MappingProvider;
 import de.chojo.sadu.mapper.wrapper.Row;
 
-import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 import static de.chojo.sadu.queries.converter.StandardValueConverter.INSTANT_TIMESTAMP;
 
+/**
+ * Represents a mail entry tied to a user.
+ */
 public class MailEntry {
-    private static final Pattern MAIL_SHORTER = Pattern.compile("(.{2}).+?@.+?(.{2}\\..+)");
-    private final long userId;
+    private long userId;
     private final MailSource source;
     private final String hash;
     private final String mailShort;
@@ -67,27 +65,6 @@ public class MailEntry {
         this.verificationCode = verificationCode;
     }
 
-    public static MailEntry of(long userId, String mail, MailSource source) {
-        Matcher matcher = MAIL_SHORTER.matcher(mail);
-
-        if (!matcher.matches()) {
-            throw new IllegalArgumentException("Mail is not valid");
-        }
-
-        var mailShort = "%s***@***%s".formatted(matcher.group(1), matcher.group(2));
-        var mailHash =
-                Hashing.sha256().hashString(mail, Charset.defaultCharset()).toString();
-
-        return new MailEntry(
-                userId,
-                source,
-                mailHash,
-                mailShort,
-                false,
-                Instant.now(),
-                UUID.randomUUID().toString());
-    }
-
     public void verify() {
         query("""
                 UPDATE user_mails SET verified = TRUE WHERE mail_hash = ?
@@ -95,8 +72,19 @@ public class MailEntry {
     }
 
     public void regenerateVerificationCode() {
-        verificationCode = UUID.randomUUID().toString();
-        verificationRequested = Instant.now();
+        var newVerificationCode = UUID.randomUUID().toString();
+        var newVerificationRequested = Instant.now();
+        query("""
+                UPDATE user_mails SET verification_code = ?, verification_requested = ? WHERE mail_hash = ?
+                """)
+                .single(call().bind(newVerificationCode)
+                        .bind(newVerificationRequested, INSTANT_TIMESTAMP)
+                        .bind(hash))
+                .update()
+                .ifChanged(i -> {
+                    this.verificationCode = newVerificationCode;
+                    this.verificationRequested = newVerificationRequested;
+                });
     }
 
     public long userId() {
@@ -125,5 +113,19 @@ public class MailEntry {
 
     public String verificationCode() {
         return verificationCode;
+    }
+
+    /**
+     * Update the user tied to this mail entry.
+     * Regenerates the verification code.
+     * @param user user to update
+     */
+    public void updateUser(long user) {
+        query("""
+                UPDATE user_mails SET user_id = ? WHERE mail_hash = ?
+                """).single(call().bind(user).bind(hash)).update().ifChanged(i -> {
+            this.userId = user;
+            regenerateVerificationCode();
+        });
     }
 }

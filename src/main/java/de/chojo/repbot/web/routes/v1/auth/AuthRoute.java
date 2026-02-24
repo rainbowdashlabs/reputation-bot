@@ -6,13 +6,17 @@
 package de.chojo.repbot.web.routes.v1.auth;
 
 import de.chojo.repbot.config.Configuration;
+import de.chojo.repbot.dao.access.user.RepUser;
+import de.chojo.repbot.dao.access.user.sub.MailSource;
 import de.chojo.repbot.dao.provider.UserRepository;
+import de.chojo.repbot.service.MailService;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.error.ErrorResponseWrapper;
 import de.chojo.repbot.web.pojo.session.UserSessionPOJO;
 import de.chojo.repbot.web.routes.RoutesBuilder;
 import de.chojo.repbot.web.services.DiscordOAuthService;
 import de.chojo.repbot.web.services.SessionService;
+import de.chojo.repbot.web.services.oauth.DiscordUser;
 import io.javalin.http.Context;
 import io.javalin.http.Cookie;
 import io.javalin.http.HttpStatus;
@@ -36,16 +40,19 @@ public class AuthRoute implements RoutesBuilder {
     private final UserRepository userRepository;
     private final SessionService sessionService;
     private final Configuration configuration;
+    private final MailService mailService;
 
     public AuthRoute(
             DiscordOAuthService discordOAuthService,
             UserRepository userRepository,
             SessionService sessionService,
-            Configuration configuration) {
+            Configuration configuration,
+            MailService mailService) {
         this.discordOAuthService = discordOAuthService;
         this.userRepository = userRepository;
         this.sessionService = sessionService;
         this.configuration = configuration;
+        this.mailService = mailService;
     }
 
     @OpenApi(
@@ -117,9 +124,11 @@ public class AuthRoute implements RoutesBuilder {
             }
 
             var token = discordOAuthService.exchangeCode(code);
-            long userId = discordOAuthService.getCurrentUserId(token.accessToken());
-            userRepository.byId(userId).updateToken(token.accessToken(), token.refreshToken(), token.expiry());
-            var session = sessionService.createSession(userId);
+            DiscordUser user = discordOAuthService.getCurrentUser(token.accessToken());
+            RepUser repUser = userRepository.byId(user.id());
+            repUser.updateToken(token.accessToken(), token.refreshToken(), token.expiry());
+            mailService.registerVerifiedMail(user.id(), user.email(), MailSource.DISCORD);
+            var session = sessionService.createSession(user.id());
 
             // Redirect back to frontend with session token
             String base = configuration.api().url();

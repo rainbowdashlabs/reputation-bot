@@ -16,6 +16,7 @@ import de.chojo.repbot.config.elements.DiscordOAuth;
 import de.chojo.repbot.config.elements.Kofi;
 import de.chojo.repbot.config.elements.Links;
 import de.chojo.repbot.config.elements.MagicImage;
+import de.chojo.repbot.config.elements.Mailing;
 import de.chojo.repbot.config.elements.PresenceSettings;
 import de.chojo.repbot.config.elements.SKU;
 import de.chojo.repbot.config.elements.SelfCleanup;
@@ -38,6 +39,7 @@ public class ConfigFile {
     private Cleanup cleanup = new Cleanup();
     private SKU skus = new SKU();
     private Voting voting = new Voting();
+    private Mailing mailing = new Mailing();
 
     public BaseSettings baseSettings() {
         return baseSettings;
@@ -97,5 +99,9 @@ public class ConfigFile {
 
     public Kofi kofi() {
         return kofi;
+    }
+
+    public Mailing mailing() {
+        return mailing;
     }
 }

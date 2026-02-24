@@ -34,6 +34,35 @@
         "label": "Vote Guild",
         "description": "Choose which guild should receive tokens when you vote for the bot. This will only affect future votes.",
         "none": "No specific guild (Personal)"
+      },
+      "mails": {
+        "title": "Email Addresses",
+        "description": "Manage the email addresses linked to your account. You can add a new address and verify it via the link sent to your inbox.",
+        "verified": "Verified",
+        "pending": "Pending verification",
+        "noteDeletion": "Note: Email addresses from Discord or Ko-fi cannot be removed. Only addresses added by you can be deleted.",
+        "source": {
+          "user": "User",
+          "discord": "Discord",
+          "kofi": "Ko-fi"
+        },
+        "add": {
+          "placeholder": "Add a new email (name@example.com)",
+          "button": "Add"
+        },
+        "verify": {
+          "success": "Your email has been verified successfully.",
+          "error": "Email verification failed. Please try again or request a new verification link."
+        },
+        "errors": {
+          "ALREADY_REGISTERED": "This email address is already registered to another user.",
+          "INVALID_FORMAT": "The email address format is invalid. Please check and try again.",
+          "WRONG_USER": "This email address belongs to a different user.",
+          "INVALID_CODE": "The verification code is invalid.",
+          "CODE_EXPIRED": "The verification code has expired. Please request a new verification email.",
+          "UNKNOWN_ADDRESS": "We couldn't find this email address. It may have been removed.",
+          "UNKNOWN": "An unknown error occurred. Please try again later."
+        }
       }
     }
   },
