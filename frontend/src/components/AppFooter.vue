@@ -111,7 +111,8 @@ const links = ref<Links>({
   invite: '',
   support: '',
   website: '',
-  faq: ''
+  faq: '',
+  kofi: ''
 })
 
 onMounted(async () => {

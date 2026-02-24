@@ -86,8 +86,8 @@ public class Web {
         this.autopostService = autopostService;
         this.voteService =
                 new VoteService(configuration, data.voteRepository(), data.userRepository(), bot.shardManager());
-        this.mailService = new MailService(configuration, data.userRepository());
-        this.kofiService = new KofiService(data.userRepository(), bot.shardManager(), configuration, mailService);
+        this.mailService = new MailService(configuration, data.userRepository(), threading);
+        this.kofiService = new KofiService(data.userRepository(),data.guildRepository(), bot.shardManager(), configuration, mailService, threading);
     }
 
     public static Web create(

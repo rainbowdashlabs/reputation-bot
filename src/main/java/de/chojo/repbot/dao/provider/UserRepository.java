@@ -13,6 +13,7 @@ import de.chojo.repbot.service.kofi.Type;
 import de.chojo.sadu.queries.converter.StandardValueConverter;
 import net.dv8tion.jda.api.entities.User;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -84,5 +85,14 @@ public class UserRepository {
                 """)
                 .single()
                 .delete();
+    }
+
+    public List<KofiPurchase> getExpiredKofiPurchased() {
+        return query("""
+                SELECT id, mail_hash, key, sku_id, type, expires_at, transaction_id, guild_id FROM kofi_purchase WHERE expires_at < now() AND type = 'SUBSCRIPTION';
+                """)
+        .single()
+        .mapAs(KofiPurchase.class)
+        .all();
     }
 }

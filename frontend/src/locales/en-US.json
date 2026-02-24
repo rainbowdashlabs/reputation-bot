@@ -24,9 +24,40 @@
     "logout": "Logout",
     "user_settings": "User Settings",
     "voting": "Voting",
-    "token_shop": "Token Shop"
+    "token_shop": "Token Shop",
+    "supporter": "Supporter"
   },
   "user": {
+    "supporter": {
+      "title": "Supporter",
+      "description": "View your active Ko-fi purchases and assign them to a guild to enable supporter features.",
+      "kofiLink": "Buy on Ko-fi",
+      "sections": {
+        "subscriptions": "Active Subscriptions",
+        "subscriptions_desc": "Subscriptions renew automatically and can be assigned to a guild of your choice.",
+        "lifetime": "Lifetime Purchases",
+        "lifetime_desc": "Lifetime purchases can be assigned to a guild to permanently unlock features."
+      },
+      "item": {
+        "subscription": "Subscription",
+        "lifetime": "Lifetime",
+        "expires": "Expires: {date}",
+        "assignedTo": "Assigned to: {guild}",
+        "assign": "Assign",
+        "unassign": "Unassign"
+      },
+      "errors": {
+        "load": "Failed to load purchases. Please try again later.",
+        "assign": "Failed to assign the purchase.",
+        "unassign": "Failed to unassign the purchase."
+      },
+      "results": {
+        "ALREADY_SUBSCRIBED": "You already have an active subscription assigned to a guild.",
+        "SUBSCRIPTION_EXPIRED": "This subscription has expired and cannot be assigned.",
+        "UNKOWN": "An unknown subscription error occurred. Please try again later.",
+        "SUCCESS": "Success"
+      }
+    },
     "settings": {
       "title": "User Settings",
       "description": "Configure your personal account settings and preferences.",
@@ -266,7 +297,9 @@
     "requiredTierPlural": "One of the following supporter tiers is required:",
     "message": "{name} is reserved for supporters. Become a supporter to use it.",
     "tokenShopHint": "You can also unlock this feature with tokens in the",
-    "tokenShopLink": "Token Shop"
+    "tokenShopLink": "Token Shop",
+    "kofiHint": "or support us on",
+    "kofiLink": "Ko-fi"
   },
   "integrationBypass": {
     "premiumRequired": "Integration bypass",

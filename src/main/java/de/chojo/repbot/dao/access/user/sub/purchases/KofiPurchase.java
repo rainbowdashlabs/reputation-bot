@@ -193,4 +193,16 @@ public class KofiPurchase {
                 UPDATE kofi_purchase SET expires_at = now() + '32 days'::INTERVAL WHERE id = ?
                 """).single(call().bind(id)).update();
     }
+
+    public boolean isValid() {
+        return expiresAt.isAfter(Instant.now().minus(32, ChronoUnit.DAYS));
+    }
+
+    public void delete() {
+        query("""
+            DELETE FROM kofi_purchase WHERE id = ?;
+            """)
+                .single(call().bind(id))
+                .delete();
+    }
 }

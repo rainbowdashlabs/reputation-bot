@@ -17,6 +17,7 @@ import static de.chojo.sadu.queries.converter.StandardValueConverter.INSTANT_TIM
 
 public class Subscription extends SKU {
     private final long id;
+    private final SubscriptionSource source;
     private final SkuTarget skuTarget;
     private final Entitlement.EntitlementType purchaseType;
     private final Instant endsAt;
@@ -25,12 +26,14 @@ public class Subscription extends SKU {
     public Subscription(
             long skuId,
             long id,
+            SubscriptionSource source,
             SkuTarget skuTarget,
             Entitlement.EntitlementType purchaseType,
             Instant endsAt,
             boolean persistent) {
         super(skuId);
         this.id = id;
+        this.source = source;
         this.skuTarget = skuTarget;
         this.purchaseType = purchaseType;
         this.endsAt = endsAt;
@@ -41,6 +44,7 @@ public class Subscription extends SKU {
         return row -> new Subscription(
                 row.getLong("sku"),
                 row.getLong("id"),
+                row.getEnum("source", SubscriptionSource.class),
                 row.getEnum("type", SkuTarget.class),
                 row.getEnum("purchase_type", Entitlement.EntitlementType.class),
                 row.get("ends_at", INSTANT_TIMESTAMP),
@@ -58,6 +62,7 @@ public class Subscription extends SKU {
         return new Subscription(
                 entitlement.getSkuIdLong(),
                 target,
+                SubscriptionSource.DISCORD,
                 targetType,
                 entitlement.getType(),
                 Optional.ofNullable(entitlement.getTimeEnding())
@@ -84,6 +89,10 @@ public class Subscription extends SKU {
 
     public boolean isPersistent() {
         return persistent;
+    }
+
+    public SubscriptionSource source() {
+        return source;
     }
 
     @Override

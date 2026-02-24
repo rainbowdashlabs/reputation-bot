@@ -31,6 +31,7 @@ import de.chojo.repbot.web.routes.v1.user.UserRoute;
 import de.chojo.repbot.web.services.DiscordOAuthService;
 import de.chojo.repbot.web.services.SessionService;
 import io.javalin.http.ContentType;
+import io.javalin.http.HandlerType;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.slf4j.Logger;
 
@@ -92,7 +93,7 @@ public class Api {
             log.error("Could not load thankwords container", e);
             thankwordsContainer = null;
         }
-        dataRoute = new DataRoute(thankwordsContainer, localization, configuration);
+        dataRoute = new DataRoute(thankwordsContainer, localization, configuration, shardManager);
         authRoute = new AuthRoute(discordOAuthService, userRepository, sessionService, configuration, mailService);
         userRoute =
                 new UserRoute(voteRepository, userRepository, configuration, shardManager, kofiService, mailService);
@@ -101,31 +102,37 @@ public class Api {
 
     public void init() {
         path("v1", () -> {
-            before(ctx -> log.trace(
-                    "Received request on route: {} {}\nHeaders:\n{}\nBody:\n{}",
-                    ctx.method() + " " + ctx.url(),
-                    Objects.requireNonNullElse(ctx.queryString(), ""),
-                    ctx.headerMap().entrySet().stream()
-                            .map(h -> "   " + h.getKey() + ": " + h.getValue())
-                            .collect(Collectors.joining("\n")),
-                    ctx.body().substring(0, Math.min(ctx.body().length(), 180))));
-            after(ctx -> log.trace(
-                    "Answered request on route: {} {}\nStatus: {}\nHeaders:\n{}\nBody:\n{}",
-                    ctx.method() + " " + ctx.url(),
-                    Objects.requireNonNullElse(ctx.queryString(), ""),
-                    ctx.status(),
-                    ctx.res().getHeaderNames().stream()
-                            .map(h -> "   " + h + ": " + ctx.res().getHeader(h))
-                            .collect(Collectors.joining("\n")),
-                    ContentType.OCTET_STREAM.equals(ctx.contentType())
-                            ? "Bytes"
-                            : Objects.requireNonNullElse(ctx.result(), "")
-                                    .substring(
-                                            0,
-                                            Math.min(
-                                                    Objects.requireNonNullElse(ctx.result(), "")
-                                                            .length(),
-                                                    180))));
+            before(ctx -> {
+                if(ctx.method() == HandlerType.OPTIONS) return;
+                log.trace(
+                        "Received request on route: {} {}\nHeaders:\n{}\nBody:\n{}",
+                        ctx.method() + " " + ctx.url(),
+                        Objects.requireNonNullElse(ctx.queryString(), ""),
+                        ctx.headerMap().entrySet().stream()
+                           .map(h -> "   " + h.getKey() + ": " + h.getValue())
+                           .collect(Collectors.joining("\n")),
+                        ctx.body().substring(0, Math.min(ctx.body().length(), 180)));
+            });
+            after(ctx -> {
+                if(ctx.method() == HandlerType.OPTIONS) return;
+                log.trace(
+                        "Answered request on route: {} {}\nStatus: {}\nHeaders:\n{}\nBody:\n{}",
+                        ctx.method() + " " + ctx.url(),
+                        Objects.requireNonNullElse(ctx.queryString(), ""),
+                        ctx.status(),
+                        ctx.res().getHeaderNames().stream()
+                           .map(h -> "   " + h + ": " + ctx.res().getHeader(h))
+                           .collect(Collectors.joining("\n")),
+                        ContentType.OCTET_STREAM.equals(ctx.contentType())
+                                ? "Bytes"
+                                : Objects.requireNonNullElse(ctx.result(), "")
+                                         .substring(
+                                                 0,
+                                                 Math.min(
+                                                         Objects.requireNonNullElse(ctx.result(), "")
+                                                                .length(),
+                                                         180)));
+            });
 
             metricsRoute.buildRoutes();
             sessionRoute.buildRoutes();

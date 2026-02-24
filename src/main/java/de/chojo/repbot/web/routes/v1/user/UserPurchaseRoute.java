@@ -9,6 +9,7 @@ import de.chojo.repbot.dao.access.user.RepUser;
 import de.chojo.repbot.dao.access.user.sub.purchases.KofiPurchase;
 import de.chojo.repbot.dao.provider.UserRepository;
 import de.chojo.repbot.service.KofiService;
+import de.chojo.repbot.service.kofi.SubscriptionResult;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
 import de.chojo.repbot.web.routes.RoutesBuilder;
@@ -52,9 +53,9 @@ public class UserPurchaseRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "User Session Token")},
             tags = {"User"},
             responses = {
-                @OpenApiResponse(
-                        status = "200",
-                        content = {@OpenApiContent(from = KofiPurchase[].class, type = "application/json")})
+                    @OpenApiResponse(
+                            status = "200",
+                            content = {@OpenApiContent(from = KofiPurchase[].class, type = "application/json")})
             })
     private void getPurchases(@NotNull Context ctx) {
         UserSession session = ctx.sessionAttribute(SessionAttribute.USER_SESSION);
@@ -63,7 +64,8 @@ public class UserPurchaseRoute implements RoutesBuilder {
         ctx.json(purchases);
     }
 
-    public record AssignGuildPOJO(long guildId) {}
+    public record AssignGuildPOJO(long guildId) {
+    }
 
     @OpenApi(
             summary = "Assign a Ko-fi purchase to a guild.",
@@ -75,9 +77,9 @@ public class UserPurchaseRoute implements RoutesBuilder {
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = AssignGuildPOJO.class)),
             tags = {"User"},
             responses = {
-                @OpenApiResponse(status = "204"),
-                @OpenApiResponse(status = "400"),
-                @OpenApiResponse(status = "404")
+                    @OpenApiResponse(status = "204"),
+                    @OpenApiResponse(status = "400"),
+                    @OpenApiResponse(status = "404")
             })
     private void assignPurchaseGuild(@NotNull Context ctx) {
         UserSession session = ctx.sessionAttribute(SessionAttribute.USER_SESSION);
@@ -89,10 +91,10 @@ public class UserPurchaseRoute implements RoutesBuilder {
         Optional<KofiPurchase> kofiPurchases =
                 userRepository.byId(session.userId()).purchases().byId(purchaseId);
         if (kofiPurchases.isEmpty()) throw new NotFoundResponse("Purchase not found");
-        boolean updated =
+        SubscriptionResult result =
                 kofiService.enableSubscription(kofiPurchases.get(), shardManager.getGuildById(body.guildId()));
-        if (!updated) {
-            throw new NotFoundResponse("Purchase not found or not owned by user");
+        if (result != SubscriptionResult.SUCCESS) {
+            throw new BadRequestResponse(result.name());
         }
         ctx.status(204);
     }

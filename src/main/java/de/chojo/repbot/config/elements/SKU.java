@@ -11,6 +11,7 @@ import de.chojo.repbot.config.elements.sku.Subscription;
 import net.dv8tion.jda.api.entities.Entitlement;
 
 import java.util.List;
+import java.util.Optional;
 
 @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal", "CanBeFinal"})
 public class SKU {
@@ -43,5 +44,9 @@ public class SKU {
 
     public boolean isLifetime(Entitlement entitlement) {
         return subscriptions.stream().anyMatch(sub -> sub.lifetimeSku() == entitlement.getSkuIdLong());
+    }
+
+    public Optional<Subscription> getSubscriptionForLifetime(long lifetimeSkuId) {
+        return subscriptions.stream().filter(sub -> sub.lifetimeSku() == lifetimeSkuId).findAny();
     }
 }

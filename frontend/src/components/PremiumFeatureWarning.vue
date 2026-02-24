@@ -4,9 +4,10 @@
  *     Copyright (C) RainbowDashLabs and Contributor
  */
 <script lang="ts" setup>
-import {computed} from 'vue'
+import {computed, onMounted, ref} from 'vue'
 import {useI18n} from 'vue-i18n'
-import type {SkuInfo} from '@/api/types'
+import type {SkuInfo, Links} from '@/api/types'
+import {api} from '@/api'
 
 const {t} = useI18n()
 
@@ -20,6 +21,16 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   requiredSkus: () => [],
   variant: 'large'
+})
+
+const links = ref<Links | null>(null)
+
+onMounted(async () => {
+  try {
+    links.value = await api.getLinks()
+  } catch (error) {
+    console.error('Failed to fetch links:', error)
+  }
 })
 
 const displayMessage = computed(() => {
@@ -59,7 +70,12 @@ const displayMessage = computed(() => {
         <p class="mt-3 text-sm text-yellow-700">
           {{ t('premiumFeature.tokenShopHint') }}
           <router-link to="/guild/token-shop" class="font-semibold text-indigo-600 hover:text-indigo-500 underline transition-colors">
-            {{ t('premiumFeature.tokenShopLink') }}</router-link>.
+            {{ t('premiumFeature.tokenShopLink') }}</router-link>
+          <template v-if="links?.kofi">
+            {{ t('premiumFeature.kofiHint') }}
+            <a :href="links.kofi" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-600 hover:text-indigo-500 underline transition-colors">
+              {{ t('premiumFeature.kofiLink') }}</a>
+          </template>.
         </p>
       </div>
     </div>
@@ -80,7 +96,12 @@ const displayMessage = computed(() => {
     <p class="mt-2 text-xs text-yellow-700 italic">
       {{ t('premiumFeature.tokenShopHint') }}
       <router-link to="/guild/token-shop" class="font-semibold text-indigo-600 hover:text-indigo-500 underline transition-colors">
-        {{ t('premiumFeature.tokenShopLink') }}</router-link>.
+        {{ t('premiumFeature.tokenShopLink') }}</router-link>
+      <template v-if="links?.kofi">
+        {{ t('premiumFeature.kofiHint') }}
+        <a :href="links.kofi" target="_blank" rel="noopener noreferrer" class="font-semibold text-indigo-600 hover:text-indigo-500 underline transition-colors">
+          {{ t('premiumFeature.kofiLink') }}</a>
+      </template>.
     </p>
   </div>
 </template>

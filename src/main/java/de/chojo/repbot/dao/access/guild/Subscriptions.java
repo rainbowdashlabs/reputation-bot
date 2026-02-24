@@ -11,6 +11,7 @@ import de.chojo.repbot.config.elements.sku.tokens.Feature;
 import de.chojo.repbot.dao.access.guild.subscriptions.SkuTarget;
 import de.chojo.repbot.dao.access.guild.subscriptions.Subscription;
 import de.chojo.repbot.dao.access.guild.subscriptions.SubscriptionError;
+import de.chojo.repbot.dao.access.guild.subscriptions.SubscriptionSource;
 import de.chojo.repbot.dao.access.guild.subscriptions.TokenPurchase;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.util.SupporterFeature;
@@ -67,11 +68,10 @@ public class Subscriptions implements GuildHolder, SkuMeta {
     }
 
     public void deleteSubscription(Subscription subscription) {
-        if (subscription.isPersistent()) return;
         query("""
-                DELETE FROM subscriptions WHERE id = ? AND sku = ?;
+                DELETE FROM subscriptions WHERE id = ? AND sku = ? AND source = ?;
                 """)
-                .single(call().bind(subscription.id()).bind(subscription.skuId()))
+                .single(call().bind(subscription.id()).bind(subscription.skuId()).bind(subscription.source()))
                 .delete();
         subscriptions().remove(subscription);
     }
@@ -124,7 +124,8 @@ public class Subscriptions implements GuildHolder, SkuMeta {
                         type,
                         ends_at,
                         purchase_type,
-                        persistent
+                        persistent,
+                        source
                     FROM
                         subscriptions
                     WHERE id = ?
@@ -202,10 +203,10 @@ public class Subscriptions implements GuildHolder, SkuMeta {
         subscriptions = null;
     }
 
-    public void clear() {
+    public void clear(SubscriptionSource source) {
         query("""
-                DELETE FROM subscriptions WHERE id = ? AND type = ? AND NOT persistent;
-                """).single(call().bind(repGuild.guildId()).bind(SkuTarget.GUILD)).update();
+                DELETE FROM subscriptions WHERE id = ? AND type = ? AND  source = ? AND NOT persistent;
+                """).single(call().bind(repGuild.guildId()).bind(SkuTarget.GUILD).bind(source)).update();
         invalidate();
     }
 

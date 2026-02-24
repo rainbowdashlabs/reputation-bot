@@ -5,6 +5,7 @@
  */
 package de.chojo.repbot.service.kofi;
 
-public enum SubscriptionFailure {
-    ALREADY_SUBSCRIBED
+public enum SubscriptionResult {
+    ALREADY_SUBSCRIBED,
+    SUBSCRIPTION_EXPIRED, UNKOWN, SUCCESS
 }

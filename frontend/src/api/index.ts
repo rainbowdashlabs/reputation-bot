@@ -580,6 +580,15 @@ class ApiClient {
         return response.data;
     }
 
+    public async getAvailableSKUs(): Promise<Types.SKU[]> {
+        if (this.cache.has('available_skus')) {
+            return this.cache.get('available_skus');
+        }
+        const response = await this.axiosInstance.get<Types.SKU[]>('/data/skus');
+        this.cache.set('available_skus', response.data);
+        return response.data;
+    }
+
     // Audit Log
     public async getAuditLog(page: number = 0, entries: number = 50): Promise<Types.AuditLogPagePOJO> {
         const response = await this.axiosInstance.get<Types.AuditLogPagePOJO>('/settings/auditlog', {
@@ -617,6 +626,20 @@ class ApiClient {
 
     public async updateUserSettings(settings: Types.UserSettingsPOJO): Promise<void> {
         await this.axiosInstance.patch('/user/settings', settings);
+    }
+
+    // User Purchases (Ko-fi)
+    public async getUserPurchases(): Promise<Types.KofiPurchasePOJO[]> {
+        const response = await this.axiosInstance.get<Types.KofiPurchasePOJO[]>('/user/purchases');
+        return response.data;
+    }
+
+    public async assignPurchaseToGuild(purchaseId: number, guildId: string): Promise<void> {
+        await this.axiosInstance.post(`/user/purchases/${purchaseId}/guild`, { guildId }, { skipErrorHandle: true } as any);
+    }
+
+    public async unassignPurchaseFromGuild(purchaseId: number): Promise<void> {
+        await this.axiosInstance.delete(`/user/purchases/${purchaseId}/guild`, { skipErrorHandle: true } as any);
     }
 
     // User Mails
