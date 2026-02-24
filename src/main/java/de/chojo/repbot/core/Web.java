@@ -32,7 +32,6 @@ import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
 import io.javalin.http.UnauthorizedResponse;
 import io.javalin.json.JavalinJackson;
-import io.javalin.openapi.OpenApiLicense;
 import io.javalin.openapi.plugin.OpenApiPlugin;
 import io.javalin.openapi.plugin.OpenApiPluginConfiguration;
 import io.javalin.openapi.plugin.swagger.SwaggerConfiguration;
@@ -221,23 +220,22 @@ public class Web {
     }
 
     private void configureSwagger(SwaggerConfiguration swaggerConfiguration) {
-        swaggerConfiguration.setDocumentationPath("/docs");
-        swaggerConfiguration.setUiPath("/swagger-ui");
+        swaggerConfiguration.withDocumentationPath("/docs").withUiPath("/swagger-ui");
     }
 
     private void configureOpenApi(OpenApiPluginConfiguration config) {
         config.withDocumentationPath("/docs").withDefinitionConfiguration((version, definition) -> {
-            definition.withInfo(info -> {
-                info.setTitle("Reputation Bot API");
-                info.setVersion("1.0");
-                info.setDescription("Documentation for the Reputation Bot API");
-                info.setLicense(new OpenApiLicense()
-                        .name("GNU Affero General Public License v3.0")
-                        .url("https://github.com/RainbowDashLabs/reputation-bot/blob/master/LICENSE.md"));
+            definition.info(info -> {
+                info.title("Reputation Bot API");
+                info.version("1.0");
+                info.description("Documentation for the Reputation Bot API");
+                info.license(
+                        "GNU Affero General Public License v3.0",
+                        "https://github.com/RainbowDashLabs/reputation-bot/blob/master/LICENSE.md");
             });
-            definition.withServer(openApiServer -> {
-                openApiServer.setUrl("https://repbot.rainbowdashlabs.de");
-                openApiServer.setDescription("Main server");
+            definition.server(openApiServer -> {
+                openApiServer.url("https://repbot.rainbowdashlabs.de");
+                openApiServer.description("Main server");
             });
         });
     }
