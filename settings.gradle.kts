@@ -22,7 +22,7 @@ dependencyResolutionManagement {
             library("log4j-jsontemplate", "org.apache.logging.log4j", "log4j-layout-template-json").versionRef("log4j")
             bundle("log4j", listOf("slf4j-api", "log4j-core", "log4j-slf4j2", "log4j-jsontemplate"))
 
-            version("jackson", "2.21.0")
+            version("jackson", "2.21.1")
             library("jackson-jsr310", "com.fasterxml.jackson.datatype","jackson-datatype-jsr310").versionRef("jackson")
             bundle("jackson", listOf("jackson-jsr310"))
             // plugins
