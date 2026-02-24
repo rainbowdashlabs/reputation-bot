@@ -29,14 +29,14 @@ public class Gdpr {
 
     public List<RemovalTask> getRemovalTasks() {
         return Query.query("""
-                            SELECT
-                                task_id,
-                                user_id,
-                                guild_id
-                            FROM
-                                cleanup_schedule
-                            WHERE delete_after < now();
-                            """).single().map(RemovalTask::build).all();
+                SELECT
+                    task_id,
+                    user_id,
+                    guild_id
+                FROM
+                    cleanup_schedule
+                WHERE delete_after < now();
+                """).single().map(RemovalTask::build).all();
     }
 
     public void cleanupRequests() {
@@ -63,11 +63,11 @@ public class Gdpr {
      */
     public List<GdprUser> getReportRequests(ShardManager shardManager) {
         return Query.query("""
-                            SELECT user_id
-                            FROM gdpr_log
-                            WHERE received IS NULL
-                                AND last_attempt < now() - (least(48, attempts) || ' HOURS')::INTERVAL
-                        """).single().map(rs -> GdprUser.build(rs, shardManager)).all().stream()
+                                SELECT user_id
+                                FROM gdpr_log
+                                WHERE received IS NULL
+                                    AND last_attempt < now() - (least(48, attempts) || ' HOURS')::INTERVAL
+                            """).single().map(rs -> GdprUser.build(rs, shardManager)).all().stream()
                 .filter(Objects::nonNull)
                 .toList();
     }

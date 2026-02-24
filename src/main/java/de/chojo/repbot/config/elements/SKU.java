@@ -47,6 +47,8 @@ public class SKU {
     }
 
     public Optional<Subscription> getSubscriptionForLifetime(long lifetimeSkuId) {
-        return subscriptions.stream().filter(sub -> sub.lifetimeSku() == lifetimeSkuId).findAny();
+        return subscriptions.stream()
+                .filter(sub -> sub.lifetimeSku() == lifetimeSkuId)
+                .findAny();
     }
 }

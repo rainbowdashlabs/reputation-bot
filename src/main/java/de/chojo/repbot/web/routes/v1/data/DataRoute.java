@@ -33,7 +33,11 @@ public class DataRoute implements RoutesBuilder {
     private final ShardManager shardManager;
     private final List<SKU> skus;
 
-    public DataRoute(ThankwordsContainer thankwordsContainer, Localization localization, Configuration configuration, ShardManager shardManager) {
+    public DataRoute(
+            ThankwordsContainer thankwordsContainer,
+            Localization localization,
+            Configuration configuration,
+            ShardManager shardManager) {
         this.thankwordsContainer = thankwordsContainer;
         this.localization = localization;
         this.configuration = configuration;

@@ -1,3 +1,8 @@
+/*
+ *     SPDX-License-Identifier: AGPL-3.0-only
+ *
+ *     Copyright (C) RainbowDashLabs and Contributor
+ */
 <script lang="ts" setup>
 import { computed } from 'vue'
 import type { MailEntryPOJO } from '@/api/types'

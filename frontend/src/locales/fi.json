@@ -24,7 +24,8 @@
     "dashboard": "Kojelauta",
     "user_settings": "Käyttäjäasetukset",
     "voting": "Äänestäminen",
-    "token_shop": "Token-kauppa"
+    "token_shop": "Token-kauppa",
+    "supporter": "Kannattaja"
   },
   "presets": {
     "title": "Esiasetukset",
@@ -148,7 +149,9 @@
     "requiredTierSingular": "Vaadittu tukijataso:",
     "requiredTierPlural": "Jokin seuraavista tukijatasoista vaaditaan:",
     "tokenShopHint": "Voit myös avata tämän ominaisuuden rahakkeilla",
-    "tokenShopLink": "Token-kauppa"
+    "tokenShopLink": "Token-kauppa",
+    "kofiHint": "tai tue meitä osoitteessa",
+    "kofiLink": "Ko-fi"
   },
   "profile": {
     "description": "Mukauta botin ulkonäkö ja käyttäytyminen palvelimellasi.",
@@ -754,6 +757,65 @@
         "label": "Äänestä kilta",
         "description": "Valitse, mikä kilta saa rahakkeita, kun äänestät botille. Tämä vaikuttaa vain tuleviin äänestyksiin.",
         "none": "Ei tiettyä kiltaa (Henkilökohtainen)"
+      },
+      "mails": {
+        "title": "Sähköpostiosoitteet",
+        "description": "Hallitse tiliisi liitettyjä sähköpostiosoitteita. Voit lisätä uuden osoitteen ja vahvistaa sen sähköpostilaatikkoosi lähetetyn linkin kautta.",
+        "verified": "Vahvistettu",
+        "pending": "Odottaa vahvistusta",
+        "noteDeletion": "Huomaa: Discord- tai Ko-fi-palveluiden sähköpostiosoitteita ei voi poistaa. Vain itse lisäämäsi osoitteet voidaan poistaa.",
+        "source": {
+          "user": "Käyttäjä",
+          "discord": "Erimielisyys",
+          "kofi": "Ko-fi"
+        },
+        "add": {
+          "placeholder": "Lisää uusi sähköpostiosoite (name@example.com)",
+          "button": "Lisää"
+        },
+        "verify": {
+          "success": "Sähköpostiosoitteesi on vahvistettu onnistuneesti.",
+          "error": "Sähköpostin vahvistus epäonnistui. Yritä uudelleen tai pyydä uusi vahvistuslinkki."
+        },
+        "errors": {
+          "ALREADY_REGISTERED": "Tämä sähköpostiosoite on jo rekisteröity toiselle käyttäjälle.",
+          "INVALID_FORMAT": "Sähköpostiosoitteen muoto on virheellinen. Tarkista ja yritä uudelleen.",
+          "WRONG_USER": "Tämä sähköpostiosoite kuuluu toiselle käyttäjälle.",
+          "INVALID_CODE": "Vahvistuskoodi on virheellinen.",
+          "CODE_EXPIRED": "Vahvistuskoodi on vanhentunut. Pyydä uusi vahvistussähköposti.",
+          "UNKNOWN_ADDRESS": "Emme löytäneet tätä sähköpostiosoitetta. Se on mahdollisesti poistettu.",
+          "UNKNOWN": "Tuntematon virhe tapahtui. Yritä myöhemmin uudelleen."
+        }
+      }
+    },
+    "supporter": {
+      "title": "Kannattaja",
+      "description": "Tarkastele aktiivisia Ko-fi-ostoksiasi ja määritä ne kiltaan, jotta voit käyttää tukijatoimintoja.",
+      "kofiLink": "Osta Ko-fi:stä",
+      "sections": {
+        "subscriptions": "Aktiiviset tilaukset",
+        "subscriptions_desc": "Tilaukset uusitaan automaattisesti ja ne voidaan osoittaa valitsemallesi kilpalle.",
+        "lifetime": "Elinikäiset ostot",
+        "lifetime_desc": "Elinikäiset ostokset voidaan liittää kiltaan, jolloin ominaisuudet avautuvat pysyvästi."
+      },
+      "item": {
+        "subscription": "Tilaus",
+        "lifetime": "Elinaika",
+        "expires": "Voimassaolo päättyy: {date}",
+        "assignedTo": "Määritetty: {guild}",
+        "assign": "Määritä",
+        "unassign": "Poista määritys"
+      },
+      "errors": {
+        "load": "Ostosten lataaminen epäonnistui. Yritä myöhemmin uudelleen.",
+        "assign": "Ostoksen määrittäminen epäonnistui.",
+        "unassign": "Ostoksen poistaminen ei onnistunut."
+      },
+      "results": {
+        "ALREADY_SUBSCRIBED": "Sinulla on jo aktiivinen tilaus, joka on osoitettu kiltaan.",
+        "SUBSCRIPTION_EXPIRED": "Tämä tilaus on vanhentunut eikä sitä voi siirtää.",
+        "UNKOWN": "Tuntematon tilausvirhe. Yritä myöhemmin uudelleen.",
+        "SUCCESS": "Menestys"
       }
     }
   },

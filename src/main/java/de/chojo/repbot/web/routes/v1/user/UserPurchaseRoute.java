@@ -45,6 +45,17 @@ public class UserPurchaseRoute implements RoutesBuilder {
         this.shardManager = shardManager;
     }
 
+    @Override
+    public void buildRoutes() {
+        get(this::getPurchases, Role.USER);
+        path(
+                "{purchaseId}",
+                () -> path("guild", () -> {
+                    post(this::assignPurchaseGuild, Role.USER);
+                    delete(this::unassignPurchaseGuild, Role.USER);
+                }));
+    }
+
     @OpenApi(
             summary = "Get current Ko-fi purchases for the authenticated user.",
             operationId = "getUserPurchases",
@@ -53,18 +64,15 @@ public class UserPurchaseRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "User Session Token")},
             tags = {"User"},
             responses = {
-                    @OpenApiResponse(
-                            status = "200",
-                            content = {@OpenApiContent(from = KofiPurchase[].class, type = "application/json")})
+                @OpenApiResponse(
+                        status = "200",
+                        content = {@OpenApiContent(from = KofiPurchase[].class, type = "application/json")})
             })
     private void getPurchases(@NotNull Context ctx) {
         UserSession session = ctx.sessionAttribute(SessionAttribute.USER_SESSION);
         RepUser user = userRepository.byId(session.userId());
         List<KofiPurchase> purchases = user.purchases().all();
         ctx.json(purchases);
-    }
-
-    public record AssignGuildPOJO(long guildId) {
     }
 
     @OpenApi(
@@ -77,9 +85,9 @@ public class UserPurchaseRoute implements RoutesBuilder {
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = AssignGuildPOJO.class)),
             tags = {"User"},
             responses = {
-                    @OpenApiResponse(status = "204"),
-                    @OpenApiResponse(status = "400"),
-                    @OpenApiResponse(status = "404")
+                @OpenApiResponse(status = "204"),
+                @OpenApiResponse(status = "400"),
+                @OpenApiResponse(status = "404")
             })
     private void assignPurchaseGuild(@NotNull Context ctx) {
         UserSession session = ctx.sessionAttribute(SessionAttribute.USER_SESSION);
@@ -121,14 +129,5 @@ public class UserPurchaseRoute implements RoutesBuilder {
         ctx.status(204);
     }
 
-    @Override
-    public void buildRoutes() {
-        get(this::getPurchases, Role.USER);
-        path(
-                "{purchaseId}",
-                () -> path("guild", () -> {
-                    post(this::assignPurchaseGuild, Role.USER);
-                    delete(this::unassignPurchaseGuild, Role.USER);
-                }));
-    }
+    public record AssignGuildPOJO(long guildId) {}
 }

@@ -20,10 +20,10 @@ import static de.chojo.sadu.queries.converter.StandardValueConverter.INSTANT_TIM
  * Represents a mail entry tied to a user.
  */
 public class MailEntry {
-    private long userId;
     private final MailSource source;
     private final String hash;
     private final String mailShort;
+    private long userId;
     private boolean verified;
     private Instant verificationRequested;
     private String verificationCode;
@@ -118,6 +118,7 @@ public class MailEntry {
     /**
      * Update the user tied to this mail entry.
      * Regenerates the verification code.
+     *
      * @param user user to update
      */
     public void updateUser(long user) {

@@ -47,17 +47,18 @@ import java.util.regex.Pattern;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class MailService {
+    private static final Pattern MAIL_SHORTER = Pattern.compile("(.{2}).+?@.+?(.{2}\\..+)");
+    private static final Logger log = getLogger(MailService.class);
+    private final Threading threading;
+    Configuration configuration;
+    UserRepository userRepository;
+
     public MailService(Configuration configuration, UserRepository userRepository, Threading threading) {
         this.configuration = configuration;
         this.userRepository = userRepository;
+        this.threading = threading;
         threading.repBotWorker().scheduleAtFixedRate(this::cleanupExpiredMails, 30, 60, TimeUnit.MINUTES);
     }
-
-    private static final Pattern MAIL_SHORTER = Pattern.compile("(.{2}).+?@.+?(.{2}\\..+)");
-    private static final Logger log = getLogger(MailService.class);
-
-    Configuration configuration;
-    UserRepository userRepository;
 
     public Result<MailEntry, FailureReason> registerAndPromptVerify(long user, String mail, MailSource source) {
         String hash = mailHash(mail);
@@ -76,7 +77,10 @@ public class MailService {
             userRepository.byId(user).mails().addMail(mailEntry);
         }
 
-        sendMail(Mail.accountConfirmation(mail, configuration.api().url(), hash, mailEntry.verificationCode()));
+        threading.repBotWorker().execute(() -> {
+            // This takes a while
+            sendMail(Mail.accountConfirmation(mail, configuration.api().url(), hash, mailEntry.verificationCode()));
+        });
 
         return Result.success(mailEntry);
     }
@@ -107,10 +111,7 @@ public class MailService {
         if (optUser.isPresent()) {
             // This is still considered a succcess, because the mail adress is already registered and present in the
             // result.
-            MailEntry mailEntry = optUser.get()
-                                         .mails()
-                                         .getMail(configuration.mailing().mailHash(mail))
-                                         .get();
+            MailEntry mailEntry = optUser.get().mails().getMail(mailHash(mail)).get();
             mailEntry.updateUser(user);
             // If the mail entry is not verified, verify it.
             if (!mailEntry.verified()) {
@@ -155,43 +156,6 @@ public class MailService {
         return configuration.mailing().mailHash(mail);
     }
 
-    private Session createSession() {
-        log.debug("Creating new mail session");
-        Properties props = System.getProperties();
-        Mailing mailing = configuration.mailing();
-        props.putAll(mailing.properties());
-        return Session.getInstance(props, new Authenticator() {
-            @Override
-            protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(mailing.user(), mailing.password());
-            }
-        });
-    }
-
-    private IMAPStore createImapStore(Session session) {
-        log.debug("Creating imap store");
-        IMAPStore imapStore = null;
-        try {
-            imapStore = (IMAPStore) session.getStore("imap");
-            imapStore.connect();
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        }
-        return imapStore;
-    }
-
-    private MimeMessage buildMessage(Session session, Mail mail) throws MessagingException {
-        var message = new MimeMessage(session);
-        message.addFrom(
-                new Address[]{new InternetAddress(configuration.mailing().user())});
-        message.setRecipient(Message.RecipientType.TO, new InternetAddress(mail.address(), false));
-        message.setDataHandler(new DataHandler(mail.text(), "text/html; charset=UTF-8"));
-        message.setSubject(mail.subject());
-        message.setHeader("X-Mailer", "Reputation Bot");
-        message.setSentDate(new Date());
-        return message;
-    }
-
     public void sendMail(Mail mail) {
         Session session = createSession();
         MimeMessage mimeMessage;
@@ -228,13 +192,50 @@ public class MailService {
         }
     }
 
+    private Session createSession() {
+        log.debug("Creating new mail session");
+        Properties props = System.getProperties();
+        Mailing mailing = configuration.mailing();
+        props.putAll(mailing.properties());
+        return Session.getInstance(props, new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(mailing.user(), mailing.password());
+            }
+        });
+    }
+
+    private IMAPStore createImapStore(Session session) {
+        log.debug("Creating imap store");
+        IMAPStore imapStore = null;
+        try {
+            imapStore = (IMAPStore) session.getStore("imap");
+            imapStore.connect();
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+        return imapStore;
+    }
+
+    private MimeMessage buildMessage(Session session, Mail mail) throws MessagingException {
+        var message = new MimeMessage(session);
+        message.addFrom(
+                new Address[] {new InternetAddress(configuration.mailing().user())});
+        message.setRecipient(Message.RecipientType.TO, new InternetAddress(mail.address(), false));
+        message.setDataHandler(new DataHandler(mail.text(), "text/html; charset=UTF-8"));
+        message.setSubject(mail.subject());
+        message.setHeader("X-Mailer", "Reputation Bot");
+        message.setSentDate(new Date());
+        return message;
+    }
+
     private boolean storeMessage(IMAPStore store, MimeMessage message) throws MessagingException {
         store.getFolder("inbox");
         Folder sent = getInbox(store).getFolder("Sent");
         if (!sent.exists()) {
             sent.create(Folder.HOLDS_MESSAGES);
         }
-        sent.appendMessages(new Message[]{message});
+        sent.appendMessages(new Message[] {message});
         return true;
     }
 
@@ -244,18 +245,18 @@ public class MailService {
 
     private IMAPFolder getFolder(IMAPStore store, String name) {
         return Retry.retryAndReturn(
-                            3,
-                            () -> {
-                                log.debug("Connecting to folder {}", name);
-                                IMAPFolder folder = (IMAPFolder) store.getFolder(name);
-                                folder.open(Folder.READ_WRITE);
-                                return folder;
-                            },
-                            err -> {
-                                log.error(LogNotify.NOTIFY_ADMIN, "Could not connect to folder. Retrying.");
-                                getFolder(store, name);
-                            })
-                    .orElseThrow(() -> new RuntimeException("Reconnecting to folder failed."));
+                        3,
+                        () -> {
+                            log.debug("Connecting to folder {}", name);
+                            IMAPFolder folder = (IMAPFolder) store.getFolder(name);
+                            folder.open(Folder.READ_WRITE);
+                            return folder;
+                        },
+                        err -> {
+                            log.error(LogNotify.NOTIFY_ADMIN, "Could not connect to folder. Retrying.");
+                            getFolder(store, name);
+                        })
+                .orElseThrow(() -> new RuntimeException("Reconnecting to folder failed."));
     }
 
     private boolean sendMessage(MimeMessage message) throws MessagingException {

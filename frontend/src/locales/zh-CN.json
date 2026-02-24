@@ -24,7 +24,8 @@
     "dashboard": "仪表板",
     "user_settings": "用户设置",
     "voting": "投票",
-    "token_shop": "代币商店"
+    "token_shop": "代币商店",
+    "supporter": "支持者"
   },
   "presets": {
     "title": "预设",
@@ -148,7 +149,9 @@
     "requiredTierSingular": "所需支持者等级：",
     "requiredTierPlural": "需选择以下其中一个支持者等级：",
     "tokenShopHint": "您也可以使用代币解锁此功能。",
-    "tokenShopLink": "代币商店"
+    "tokenShopLink": "代币商店",
+    "kofiHint": "或支持我们",
+    "kofiLink": "柯菲"
   },
   "profile": {
     "description": "自定义机器人在服务器中的外观和行为。",
@@ -754,6 +757,65 @@
         "label": "投票公会",
         "description": "投票给机器人时，请选择应获得代币的公会。此设置仅影响未来的投票。",
         "none": "无特定公会（个人）"
+      },
+      "mails": {
+        "title": "电子邮件地址",
+        "description": "管理与您的账户关联的电子邮件地址。您可以添加新地址，并通过发送到您收件箱的链接进行验证。",
+        "verified": "已验证",
+        "pending": "待核实",
+        "noteDeletion": "注意：来自Discord或Ko-fi的电子邮件地址无法移除。仅您自行添加的地址可被删除。",
+        "source": {
+          "user": "用户",
+          "discord": "不和",
+          "kofi": "柯菲"
+        },
+        "add": {
+          "placeholder": "添加新邮箱（name@example.com）",
+          "button": "添加"
+        },
+        "verify": {
+          "success": "您的电子邮件已成功验证。",
+          "error": "电子邮件验证失败。请重试或申请新的验证链接。"
+        },
+        "errors": {
+          "ALREADY_REGISTERED": "该电子邮箱地址已注册给其他用户。",
+          "INVALID_FORMAT": "该电子邮件地址格式无效。请检查后重试。",
+          "WRONG_USER": "该电子邮件地址属于另一位用户。",
+          "INVALID_CODE": "验证码无效。",
+          "CODE_EXPIRED": "验证码已过期。请重新申请验证邮件。",
+          "UNKNOWN_ADDRESS": "我们找不到这个电子邮件地址。它可能已被删除。",
+          "UNKNOWN": "发生未知错误。请稍后重试。"
+        }
+      }
+    },
+    "supporter": {
+      "title": "支持者",
+      "description": "查看您当前的Ko-fi购买记录，并将它们分配给公会以启用支持者功能。",
+      "kofiLink": "在Ko-fi购买",
+      "sections": {
+        "subscriptions": "有效订阅",
+        "subscriptions_desc": "订阅将自动续订，并可分配至您选择的公会。",
+        "lifetime": "终身购买",
+        "lifetime_desc": "终身购买可分配给公会，永久解锁相关功能。"
+      },
+      "item": {
+        "subscription": "订阅",
+        "lifetime": "终身",
+        "expires": "到期时间：{date}",
+        "assignedTo": "分配至：{guild}",
+        "assign": "分配",
+        "unassign": "取消分配"
+      },
+      "errors": {
+        "load": "无法加载购买记录。请稍后重试。",
+        "assign": "未能分配采购。",
+        "unassign": "无法取消购买分配。"
+      },
+      "results": {
+        "ALREADY_SUBSCRIBED": "您已为公会分配了有效的订阅。",
+        "SUBSCRIPTION_EXPIRED": "此订阅已过期，无法分配。",
+        "UNKOWN": "发生未知订阅错误。请稍后重试。",
+        "SUCCESS": "成功"
       }
     }
   },

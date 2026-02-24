@@ -24,7 +24,10 @@ public record Mail(String address, String subject, String text) {
                 .replace("{{ host }}", host)
                 .replace("{{ mailhash }}", mailHash)
                 .replace("{{ code }}", code);
-        String html = loadTemplate("account_confirmation.html").replace("{{ url }}", url);
+
+        String html = loadTemplate("account_confirmation.html")
+                .replace("{{ url }}", url)
+                .replace("{{ mail }}", address);
         return new Mail(address, subject, html);
     }
 

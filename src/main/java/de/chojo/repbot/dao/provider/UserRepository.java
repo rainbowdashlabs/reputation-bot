@@ -62,12 +62,12 @@ public class UserRepository {
                     DO NOTHING;
                 """)
                 .single(call().bind(purchase.mailHash())
-                              .bind(purchase.key())
-                              .bind(purchase.skuId())
-                              .bind(purchase.type())
-                              .bind(purchase.expiresAt(), StandardValueConverter.INSTANT_TIMESTAMP)
-                              .bind(purchase.transactionId())
-                              .bind(purchase.guildId()));
+                        .bind(purchase.key())
+                        .bind(purchase.skuId())
+                        .bind(purchase.type())
+                        .bind(purchase.expiresAt(), StandardValueConverter.INSTANT_TIMESTAMP)
+                        .bind(purchase.transactionId())
+                        .bind(purchase.guildId()));
     }
 
     public Optional<KofiPurchase> getMatchingPurchase(KofiPurchase purchase) {
@@ -82,17 +82,12 @@ public class UserRepository {
     public void cleanupExpiredMails() {
         query("""
                 DELETE FROM user_mails WHERE verification_requested < now() - INTERVAL '1 hour';
-                """)
-                .single()
-                .delete();
+                """).single().delete();
     }
 
     public List<KofiPurchase> getExpiredKofiPurchased() {
         return query("""
                 SELECT id, mail_hash, key, sku_id, type, expires_at, transaction_id, guild_id FROM kofi_purchase WHERE expires_at < now() AND type = 'SUBSCRIPTION';
-                """)
-        .single()
-        .mapAs(KofiPurchase.class)
-        .all();
+                """).single().mapAs(KofiPurchase.class).all();
     }
 }

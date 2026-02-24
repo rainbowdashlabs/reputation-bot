@@ -7,5 +7,7 @@ package de.chojo.repbot.service.kofi;
 
 public enum SubscriptionResult {
     ALREADY_SUBSCRIBED,
-    SUBSCRIPTION_EXPIRED, UNKOWN, SUCCESS
+    SUBSCRIPTION_EXPIRED,
+    UNKOWN,
+    SUCCESS
 }

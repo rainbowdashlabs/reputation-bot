@@ -36,7 +36,7 @@ public class Purchases {
                     user_mails um
                         LEFT JOIN kofi_purchase kp
                         ON um.mail_hash = kp.mail_hash
-                WHERE user_id = ? and verified;""")
+                WHERE user_id = ? AND verified;""")
                 .single(call().bind(repUser.id()))
                 .mapAs(KofiPurchase.class)
                 .all();
@@ -57,7 +57,7 @@ public class Purchases {
                     user_mails um
                         LEFT JOIN kofi_purchase kp
                         ON um.mail_hash = kp.mail_hash
-                WHERE um.user_id = ? AND kp.id = ? and um.verified;""")
+                WHERE um.user_id = ? AND kp.id = ? AND um.verified;""")
                 .single(call().bind(repUser.id()).bind(id))
                 .mapAs(KofiPurchase.class)
                 .first();

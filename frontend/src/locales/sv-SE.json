@@ -24,7 +24,8 @@
     "dashboard": "Instrumentpanel",
     "user_settings": "Användarinställningar",
     "voting": "Omröstning",
-    "token_shop": "Tokenbutik"
+    "token_shop": "Tokenbutik",
+    "supporter": "Supporter"
   },
   "presets": {
     "title": "Förinställningar",
@@ -148,7 +149,9 @@
     "requiredTierSingular": "Krävd supporternivå:",
     "requiredTierPlural": "En av följande supporternivåer krävs:",
     "tokenShopHint": "Du kan också låsa upp den här funktionen med tokens i",
-    "tokenShopLink": "Tokenbutik"
+    "tokenShopLink": "Tokenbutik",
+    "kofiHint": "eller stöd oss på",
+    "kofiLink": "Ko-fi"
   },
   "profile": {
     "description": "Anpassa hur boten visas och beter sig på din server.",
@@ -754,6 +757,65 @@
         "label": "Rösta på guilden",
         "description": "Välj vilken guild som ska få tokens när du röstar på boten. Detta påverkar endast framtida röster.",
         "none": "Ingen specifik guild (Personlig)"
+      },
+      "mails": {
+        "title": "E-postadresser",
+        "description": "Hantera de e-postadresser som är kopplade till ditt konto. Du kan lägga till en ny adress och verifiera den via länken som skickas till din inkorg.",
+        "verified": "Verifierad",
+        "pending": "Väntar på verifiering",
+        "noteDeletion": "Observera: E-postadresser från Discord eller Ko-fi kan inte tas bort. Endast adresser som du själv har lagt till kan raderas.",
+        "source": {
+          "user": "Användare",
+          "discord": "Oenighet",
+          "kofi": "Ko-fi"
+        },
+        "add": {
+          "placeholder": "Lägg till en ny e-postadress (name@example.com)",
+          "button": "Lägg till"
+        },
+        "verify": {
+          "success": "Din e-postadress har verifierats.",
+          "error": "E-postverifieringen misslyckades. Försök igen eller begär en ny verifieringslänk."
+        },
+        "errors": {
+          "ALREADY_REGISTERED": "Denna e-postadress är redan registrerad för en annan användare.",
+          "INVALID_FORMAT": "E-postadressens format är ogiltigt. Kontrollera och försök igen.",
+          "WRONG_USER": "Denna e-postadress tillhör en annan användare.",
+          "INVALID_CODE": "Verifieringskoden är ogiltig.",
+          "CODE_EXPIRED": "Verifieringskoden har gått ut. Begär ett nytt verifieringsmeddelande via e-post.",
+          "UNKNOWN_ADDRESS": "Vi kunde inte hitta den här e-postadressen. Den kan ha tagits bort.",
+          "UNKNOWN": "Ett okänt fel uppstod. Försök igen senare."
+        }
+      }
+    },
+    "supporter": {
+      "title": "Supporter",
+      "description": "Visa dina aktiva Ko-fi-köp och tilldela dem till en guild för att aktivera supporterfunktioner.",
+      "kofiLink": "Köp på Ko-fi",
+      "sections": {
+        "subscriptions": "Aktiva prenumerationer",
+        "subscriptions_desc": "Prenumerationer förnyas automatiskt och kan tilldelas en guild efter eget val.",
+        "lifetime": "Livstidsinköp",
+        "lifetime_desc": "Livstidsinköp kan tilldelas en guild för att permanent låsa upp funktioner."
+      },
+      "item": {
+        "subscription": "Prenumeration",
+        "lifetime": "Livstid",
+        "expires": "Gäller till: {date}",
+        "assignedTo": "Tilldelad till: {guild}",
+        "assign": "Tilldela",
+        "unassign": "Avsluta tilldelning"
+      },
+      "errors": {
+        "load": "Det gick inte att ladda köp. Försök igen senare.",
+        "assign": "Det gick inte att tilldela köpet.",
+        "unassign": "Det gick inte att avmarkera köpet."
+      },
+      "results": {
+        "ALREADY_SUBSCRIBED": "Du har redan ett aktivt abonnemang tilldelat en guild.",
+        "SUBSCRIPTION_EXPIRED": "Denna prenumeration har löpt ut och kan inte tilldelas.",
+        "UNKOWN": "Ett okänt prenumerationsfel har uppstått. Försök igen senare.",
+        "SUCCESS": "Framgång"
       }
     }
   },

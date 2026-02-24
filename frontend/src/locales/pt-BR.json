@@ -24,7 +24,8 @@
     "dashboard": "Painel",
     "user_settings": "Configurações do usuário",
     "voting": "Votação",
-    "token_shop": "Loja de fichas"
+    "token_shop": "Loja de fichas",
+    "supporter": "Apoiador"
   },
   "presets": {
     "title": "Predefinições",
@@ -148,7 +149,9 @@
     "requiredTierSingular": "Nível de Apoiador necessário:",
     "requiredTierPlural": "É preciso escolher um dos níveis de apoio a seguir:",
     "tokenShopHint": "Você também pode desbloquear esse recurso com tokens na",
-    "tokenShopLink": "Loja de fichas"
+    "tokenShopLink": "Loja de fichas",
+    "kofiHint": "ou apoie-nos em",
+    "kofiLink": "Ko-fi"
   },
   "profile": {
     "description": "Personalize como o bot aparece e se comporta no seu servidor.",
@@ -754,6 +757,65 @@
         "label": "Vote na Guilda",
         "description": "Escolha qual guilda deve receber tokens quando você votar no bot. Isso só vai afetar os votos futuros.",
         "none": "Sem guilda específica (Pessoal)"
+      },
+      "mails": {
+        "title": "Endereços de e-mail",
+        "description": "Gerencie os endereços de e-mail vinculados à sua conta. Você pode adicionar um novo endereço e confirmá-lo através do link enviado para sua caixa de entrada.",
+        "verified": "Verificado",
+        "pending": "Aguardando verificação",
+        "noteDeletion": "Observação: os endereços de e-mail do Discord ou Ko-fi não podem ser removidos. Só dá pra apagar os endereços que você mesmo adicionou.",
+        "source": {
+          "user": "Usuário",
+          "discord": "Discord",
+          "kofi": "Ko-fi"
+        },
+        "add": {
+          "placeholder": "Adicionar um novo e-mail (name@example.com)",
+          "button": "Adicionar"
+        },
+        "verify": {
+          "success": "Seu e-mail foi verificado com sucesso.",
+          "error": "Falha na verificação do e-mail. Tenta de novo ou pede um novo link de verificação."
+        },
+        "errors": {
+          "ALREADY_REGISTERED": "Esse endereço de e-mail já tá cadastrado pra outra pessoa.",
+          "INVALID_FORMAT": "O formato do endereço de e-mail está errado. Dá uma olhada e tenta de novo.",
+          "WRONG_USER": "Esse endereço de e-mail é de outra pessoa.",
+          "INVALID_CODE": "O código de verificação está errado.",
+          "CODE_EXPIRED": "O código de verificação já não vale mais. Pede um novo e-mail de verificação.",
+          "UNKNOWN_ADDRESS": "Não conseguimos encontrar esse endereço de e-mail. Talvez ele tenha sido removido.",
+          "UNKNOWN": "Ocorreu um erro desconhecido. Por favor, tente novamente mais tarde."
+        }
+      }
+    },
+    "supporter": {
+      "title": "Apoiador",
+      "description": "Dá uma olhada nas suas compras ativas do Ko-fi e coloca elas numa guilda pra ativar os recursos de apoiador.",
+      "kofiLink": "Compre no Ko-fi",
+      "sections": {
+        "subscriptions": "Assinaturas ativas",
+        "subscriptions_desc": "As assinaturas são renovadas automaticamente e podem ser atribuídas a uma guilda à sua escolha.",
+        "lifetime": "Compras ao longo da vida",
+        "lifetime_desc": "As compras vitalícias podem ser atribuídas a uma guilda para desbloquear recursos permanentemente."
+      },
+      "item": {
+        "subscription": "Assinatura",
+        "lifetime": "Vida útil",
+        "expires": "Vence em: {date}",
+        "assignedTo": "Atribuído a: {guild}",
+        "assign": "Atribuir",
+        "unassign": "Desatribuir"
+      },
+      "errors": {
+        "load": "Não deu pra carregar as compras. Tenta de novo mais tarde, tá?",
+        "assign": "Não deu certo atribuir a compra.",
+        "unassign": "Não deu certo cancelar a atribuição da compra."
+      },
+      "results": {
+        "ALREADY_SUBSCRIBED": "Você já tem uma assinatura ativa atribuída a uma guilda.",
+        "SUBSCRIPTION_EXPIRED": "Essa assinatura já acabou e não dá pra usar.",
+        "UNKOWN": "Ocorreu um erro desconhecido na assinatura. Por favor, tente novamente mais tarde.",
+        "SUCCESS": "Sucesso"
       }
     }
   },

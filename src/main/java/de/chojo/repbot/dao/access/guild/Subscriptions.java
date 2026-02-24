@@ -71,7 +71,9 @@ public class Subscriptions implements GuildHolder, SkuMeta {
         query("""
                 DELETE FROM subscriptions WHERE id = ? AND sku = ? AND source = ?;
                 """)
-                .single(call().bind(subscription.id()).bind(subscription.skuId()).bind(subscription.source()))
+                .single(call().bind(subscription.id())
+                        .bind(subscription.skuId())
+                        .bind(subscription.source()))
                 .delete();
         subscriptions().remove(subscription);
     }
@@ -159,20 +161,6 @@ public class Subscriptions implements GuildHolder, SkuMeta {
         return List.copyOf(purchases().values());
     }
 
-    private Map<Integer, TokenPurchase> purchases() {
-        if (purchases == null) {
-            purchases = new HashMap<>();
-            query("""
-                            SELECT * FROM token_purchases WHERE guild_id = ?;
-                    """)
-                    .single(call().bind(guildId()))
-                    .mapAs(TokenPurchase.class)
-                    .all()
-                    .forEach(p -> purchases.put(p.featureId(), p));
-        }
-        return purchases;
-    }
-
     public boolean addSubscription(Subscription subscription) {
         InsertionResult result = query("""
                 INSERT
@@ -206,12 +194,28 @@ public class Subscriptions implements GuildHolder, SkuMeta {
     public void clear(SubscriptionSource source) {
         query("""
                 DELETE FROM subscriptions WHERE id = ? AND type = ? AND  source = ? AND NOT persistent;
-                """).single(call().bind(repGuild.guildId()).bind(SkuTarget.GUILD).bind(source)).update();
+                """)
+                .single(call().bind(repGuild.guildId()).bind(SkuTarget.GUILD).bind(source))
+                .update();
         invalidate();
     }
 
     public Optional<TokenPurchase> getTokenPurchase(int id) {
         return Optional.ofNullable(purchases().get(id));
+    }
+
+    private Map<Integer, TokenPurchase> purchases() {
+        if (purchases == null) {
+            purchases = new HashMap<>();
+            query("""
+                            SELECT * FROM token_purchases WHERE guild_id = ?;
+                    """)
+                    .single(call().bind(guildId()))
+                    .mapAs(TokenPurchase.class)
+                    .all()
+                    .forEach(p -> purchases.put(p.featureId(), p));
+        }
+        return purchases;
     }
 
     private synchronized Map<SupporterFeature, SubscriptionError> errorMessages() {

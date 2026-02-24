@@ -24,7 +24,8 @@
     "dashboard": "Pulpit nawigacyjny",
     "user_settings": "Ustawienia użytkownika",
     "voting": "Głosowanie",
-    "token_shop": "Sklep z tokenami"
+    "token_shop": "Sklep z tokenami",
+    "supporter": "Kibic"
   },
   "presets": {
     "title": "Ustawienia wstępne",
@@ -148,7 +149,9 @@
     "requiredTierSingular": "Wymagany poziom wsparcia:",
     "requiredTierPlural": "Wymagany jest jeden z poniższych poziomów wsparcia:",
     "tokenShopHint": "Możesz również odblokować tę funkcję za pomocą tokenów w",
-    "tokenShopLink": "Sklep z tokenami"
+    "tokenShopLink": "Sklep z tokenami",
+    "kofiHint": "lub wesprzyj nas na",
+    "kofiLink": "Ko-fi"
   },
   "profile": {
     "description": "Dostosuj wygląd i zachowanie bota na twoim serwerze.",
@@ -754,6 +757,65 @@
         "label": "Głosuj na gildię",
         "description": "Wybierz gildię, która powinna otrzymać tokeny, gdy głosujesz na bota. Będzie to miało wpływ tylko na przyszłe głosy.",
         "none": "Brak konkretnej gildii (osobiste)"
+      },
+      "mails": {
+        "title": "Adresy e-mail",
+        "description": "Zarządzaj adresami e-mail powiązanymi z twoim kontem. Możesz dodać nowy adres i zweryfikować go za pomocą linku wysłanego na twoją skrzynkę odbiorczą.",
+        "verified": "Zweryfikowane",
+        "pending": "Oczekuje na weryfikację",
+        "noteDeletion": "Uwaga: Adresy e-mail z serwisów Discord lub Ko-fi nie mogą zostać usunięte. Usunąć można wyłącznie adresy dodane samodzielnie.",
+        "source": {
+          "user": "Użytkownik",
+          "discord": "Niezgoda",
+          "kofi": "Ko-fi"
+        },
+        "add": {
+          "placeholder": "Dodaj nowy adres e-mail (name@example.com)",
+          "button": "Dodaj"
+        },
+        "verify": {
+          "success": "Twój adres e-mail został pomyślnie zweryfikowany.",
+          "error": "Weryfikacja adresu e-mail nie powiodła się. Spróbuj ponownie lub poproś o nowy link weryfikacyjny."
+        },
+        "errors": {
+          "ALREADY_REGISTERED": "Ten adres e-mail jest już zarejestrowany dla innego użytkownika.",
+          "INVALID_FORMAT": "Format adresu e-mail jest nieprawidłowy. Sprawdź go i spróbuj ponownie.",
+          "WRONG_USER": "Ten adres e-mail należy do innego użytkownika.",
+          "INVALID_CODE": "Kod weryfikacyjny jest nieprawidłowy.",
+          "CODE_EXPIRED": "Kod weryfikacyjny stracił ważność. Proszę poprosić o nowy e-mail weryfikacyjny.",
+          "UNKNOWN_ADDRESS": "Nie mogliśmy znaleźć tego adresu e-mail. Być może został usunięty.",
+          "UNKNOWN": "Wystąpił nieznany błąd. Spróbuj ponownie później."
+        }
+      }
+    },
+    "supporter": {
+      "title": "Kibic",
+      "description": "Wyświetl swoje aktywne zakupy Ko-fi i przypisz je do gildii, aby włączyć funkcje dla zwolenników.",
+      "kofiLink": "Kup na Ko-fi",
+      "sections": {
+        "subscriptions": "Aktywne subskrypcje",
+        "subscriptions_desc": "Subskrypcje odnawiają się automatycznie i można je przypisać do wybranej przez ciebie gildii.",
+        "lifetime": "Zakupy w ciągu całego życia",
+        "lifetime_desc": "Zakupy dożywotnie można przypisać do gildii, aby trwale odblokować funkcje."
+      },
+      "item": {
+        "subscription": "Subskrypcja",
+        "lifetime": "Czas trwania",
+        "expires": "Ważność: {date}",
+        "assignedTo": "Przypisane do: {guild}",
+        "assign": "Przypisz",
+        "unassign": "Cofnij przypisanie"
+      },
+      "errors": {
+        "load": "Nie udało się załadować zakupów. Spróbuj ponownie później.",
+        "assign": "Nie udało się przypisać zakupu.",
+        "unassign": "Nie udało się cofnąć przypisania zakupu."
+      },
+      "results": {
+        "ALREADY_SUBSCRIBED": "Masz już aktywną subskrypcję przypisaną do gildii.",
+        "SUBSCRIPTION_EXPIRED": "Ta subskrypcja wygasła i nie można jej przypisać.",
+        "UNKOWN": "Wystąpił nieznany błąd subskrypcji. Spróbuj ponownie później.",
+        "SUCCESS": "Sukces"
       }
     }
   },

@@ -55,6 +55,18 @@ public class AuthRoute implements RoutesBuilder {
         this.mailService = mailService;
     }
 
+    @Override
+    public void buildRoutes() {
+        path("auth", () -> {
+            get("validate", this::validateToken, Role.ANYONE);
+            path("discord", () -> {
+                get("login", this::startDiscordLogin, Role.ANYONE);
+                path("callback", () -> get(this::discordCallback, Role.ANYONE));
+            });
+            post("logout", this::logout, Role.ANYONE);
+        });
+    }
+
     @OpenApi(
             summary = "Start Discord OAuth login flow",
             operationId = "discordLogin",
@@ -207,17 +219,5 @@ public class AuthRoute implements RoutesBuilder {
         } else {
             throw new UnauthorizedResponse("Invalid session token");
         }
-    }
-
-    @Override
-    public void buildRoutes() {
-        path("auth", () -> {
-            get("validate", this::validateToken, Role.ANYONE);
-            path("discord", () -> {
-                get("login", this::startDiscordLogin, Role.ANYONE);
-                path("callback", () -> get(this::discordCallback, Role.ANYONE));
-            });
-            post("logout", this::logout, Role.ANYONE);
-        });
     }
 }

@@ -71,7 +71,7 @@
         "description": "Manage the email addresses linked to your account. You can add a new address and verify it via the link sent to your inbox.",
         "verified": "Verified",
         "pending": "Pending verification",
-        "noteDeletion": "Note: Email addresses from Discord or Ko-fi cannot be removed. Only addresses added by you can be deleted.",
+        "noteDeletion": "Note: Email addresses from Discord or Ko-fi cannot be removed. Only addresses added by yourself can be deleted.",
         "source": {
           "user": "User",
           "discord": "Discord",

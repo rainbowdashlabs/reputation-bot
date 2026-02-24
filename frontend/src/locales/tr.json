@@ -24,7 +24,8 @@
     "dashboard": "Gösterge paneli",
     "user_settings": "Kullanıcı Ayarları",
     "voting": "Oylama",
-    "token_shop": "Jeton Mağazası"
+    "token_shop": "Jeton Mağazası",
+    "supporter": "Destekçi"
   },
   "presets": {
     "title": "Ön ayarlar",
@@ -148,7 +149,9 @@
     "requiredTierSingular": "Gerekli Destekçi Seviyesi:",
     "requiredTierPlural": "Aşağıdaki destekçi seviyelerinden biri gereklidir:",
     "tokenShopHint": "Bu özelliği,",
-    "tokenShopLink": "Jeton Mağazası"
+    "tokenShopLink": "Jeton Mağazası",
+    "kofiHint": "veya bizi destekleyin",
+    "kofiLink": "Ko-fi"
   },
   "profile": {
     "description": "Botun sunucunuzda nasıl görüneceğini ve davranacağını özelleştirin.",
@@ -754,6 +757,65 @@
         "label": "Oy Birliği",
         "description": "Bot için oy verirken hangi guildin token alacağını seçin. Bu sadece gelecekteki oyları etkileyecektir.",
         "none": "Belirli bir lonca yok (Kişisel)"
+      },
+      "mails": {
+        "title": "E-posta Adresleri",
+        "description": "Hesabınıza bağlı e-posta adreslerini yönetin. Yeni bir adres ekleyebilir ve gelen kutunuza gönderilen bağlantı aracılığıyla doğrulayabilirsiniz.",
+        "verified": "Doğrulanmış",
+        "pending": "Doğrulama bekleniyor",
+        "noteDeletion": "Not: Discord veya Ko-fi'den gelen e-posta adresleri silinemez. Yalnızca sizin eklediğiniz adresler silinebilir.",
+        "source": {
+          "user": "Kullanıcı",
+          "discord": "Discord",
+          "kofi": "Ko-fi"
+        },
+        "add": {
+          "placeholder": "Yeni bir e-posta ekle (name@example.com)",
+          "button": "Ekle"
+        },
+        "verify": {
+          "success": "E-postanız başarıyla doğrulandı.",
+          "error": "E-posta doğrulama başarısız oldu. Lütfen tekrar deneyin veya yeni bir doğrulama bağlantısı isteyin."
+        },
+        "errors": {
+          "ALREADY_REGISTERED": "Bu e-posta adresi başka bir kullanıcı tarafından zaten kaydedilmiştir.",
+          "INVALID_FORMAT": "E-posta adresi biçimi geçersiz. Lütfen kontrol edip tekrar deneyin.",
+          "WRONG_USER": "Bu e-posta adresi başka bir kullanıcıya aittir.",
+          "INVALID_CODE": "Doğrulama kodu geçersiz.",
+          "CODE_EXPIRED": "Doğrulama kodu süresi doldu. Lütfen yeni bir doğrulama e-postası isteyin.",
+          "UNKNOWN_ADDRESS": "Bu e-posta adresini bulamadık. Silinmiş olabilir.",
+          "UNKNOWN": "Bilinmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin."
+        }
+      }
+    },
+    "supporter": {
+      "title": "Destekçi",
+      "description": "Aktif Ko-fi satın alımlarınızı görüntüleyin ve destekçi özelliklerini etkinleştirmek için bunları bir loncaya atayın.",
+      "kofiLink": "Ko-fi'den satın alın",
+      "sections": {
+        "subscriptions": "Aktif Abonelikler",
+        "subscriptions_desc": "Abonelikler otomatik olarak yenilenir ve istediğiniz bir loncaya atanabilir.",
+        "lifetime": "Ömür Boyu Satın Alımlar",
+        "lifetime_desc": "Ömür boyu satın alımlar, özellikleri kalıcı olarak açmak için bir loncaya atanabilir."
+      },
+      "item": {
+        "subscription": "Abonelik",
+        "lifetime": "Ömür boyu",
+        "expires": "Son kullanma tarihi: {date}",
+        "assignedTo": "Atanan kişi: {guild}",
+        "assign": "Atama",
+        "unassign": "Atamayı kaldır"
+      },
+      "errors": {
+        "load": "Satın alımlar yüklenemedi. Lütfen daha sonra tekrar deneyin.",
+        "assign": "Satın alma işlemi atanamadı.",
+        "unassign": "Satın alma işleminin ataması başarısız oldu."
+      },
+      "results": {
+        "ALREADY_SUBSCRIBED": "Bir loncaya atanmış aktif bir aboneliğiniz zaten var.",
+        "SUBSCRIPTION_EXPIRED": "Bu abonelik süresi dolmuştur ve atanamaz.",
+        "UNKOWN": "Bilinmeyen bir abonelik hatası oluştu. Lütfen daha sonra tekrar deneyin.",
+        "SUCCESS": "Başarı"
       }
     }
   },

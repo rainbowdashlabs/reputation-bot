@@ -48,7 +48,8 @@ public class KofiService {
     private final MailService mailService;
 
     public KofiService(
-            UserRepository userRepository, GuildRepository guildRepository,
+            UserRepository userRepository,
+            GuildRepository guildRepository,
             ShardManager shardManager,
             Configuration configuration,
             MailService mailService,
@@ -96,16 +97,6 @@ public class KofiService {
         }
     }
 
-    private Optional<User> resolveUser(KofiTransaction data) {
-        if (data.discordUserId() == null) return Optional.empty();
-        try {
-            return Optional.of(
-                    shardManager.retrieveUserById(data.discordUserId()).complete());
-        } catch (Exception e) {
-            return Optional.empty();
-        }
-    }
-
     public SubscriptionResult enableSubscription(KofiPurchase purchase, Guild guild) {
         RepGuild repGuild = guildRepository.guild(guild);
         Subscriptions subs = repGuild.subscriptions();
@@ -114,7 +105,8 @@ public class KofiService {
             if (!purchase.isValid()) return SubscriptionResult.SUBSCRIPTION_EXPIRED;
             if (subs.isEntitled(new SKU(purchase.skuId()))) return SubscriptionResult.ALREADY_SUBSCRIBED;
             if (purchase.guildId() != 0) disableSubscription(purchase);
-            subs.addSubscription(new Subscription(purchase.skuId(), guild.getIdLong(), KOFI, GUILD, APPLICATION_SUBSCRIPTION, null, true));
+            subs.addSubscription(new Subscription(
+                    purchase.skuId(), guild.getIdLong(), KOFI, GUILD, APPLICATION_SUBSCRIPTION, null, true));
             return SubscriptionResult.SUCCESS;
         } else if (purchase.type() == Type.SHOP_ORDER) {
             var sub = configuration.skus().getSubscriptionForLifetime(purchase.skuId());
@@ -124,12 +116,12 @@ public class KofiService {
             }
             if (subs.isEntitled(new SKU(sub.get().subscriptionSku()))) return SubscriptionResult.ALREADY_SUBSCRIBED;
             if (purchase.guildId() != 0) disableSubscription(purchase);
-            subs.addSubscription(new Subscription(sub.get().subscriptionSku(), guild.getIdLong(), KOFI, GUILD, APPLICATION_SUBSCRIPTION, null, true));
+            subs.addSubscription(new Subscription(
+                    sub.get().subscriptionSku(), guild.getIdLong(), KOFI, GUILD, APPLICATION_SUBSCRIPTION, null, true));
         } else {
             // This should never happen
             log.error(LogNotify.NOTIFY_ADMIN, "Unknown purchase type {}", purchase.type());
             return SubscriptionResult.UNKOWN;
-
         }
 
         if (purchase.assignPurchaseToGuild(guild.getIdLong())) {
@@ -143,7 +135,8 @@ public class KofiService {
         RepGuild repGuild = guildRepository.byId(purchase.guildId());
         Subscriptions subs = repGuild.subscriptions();
         if (purchase.type() == Type.SUBSCRIPTION) {
-            subs.deleteSubscription(new Subscription(purchase.skuId(), purchase.guildId(), KOFI, GUILD, APPLICATION_SUBSCRIPTION, null, true));
+            subs.deleteSubscription(new Subscription(
+                    purchase.skuId(), purchase.guildId(), KOFI, GUILD, APPLICATION_SUBSCRIPTION, null, true));
         }
         if (purchase.type() == Type.SHOP_ORDER) {
             var sub = configuration.skus().getSubscriptionForLifetime(purchase.skuId());
@@ -151,10 +144,27 @@ public class KofiService {
                 log.error(LogNotify.NOTIFY_ADMIN, "Could not find subscription for lifetime sku {}", purchase.skuId());
                 return false;
             }
-            subs.deleteSubscription(new Subscription(sub.get().subscriptionSku(), purchase.guildId(), KOFI, GUILD, APPLICATION_SUBSCRIPTION, null, true));
+            subs.deleteSubscription(new Subscription(
+                    sub.get().subscriptionSku(),
+                    purchase.guildId(),
+                    KOFI,
+                    GUILD,
+                    APPLICATION_SUBSCRIPTION,
+                    null,
+                    true));
         }
 
         return purchase.unassignPurchaseFromGuild();
+    }
+
+    private Optional<User> resolveUser(KofiTransaction data) {
+        if (data.discordUserId() == null) return Optional.empty();
+        try {
+            return Optional.of(
+                    shardManager.retrieveUserById(data.discordUserId()).complete());
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
     private void removeExpiredSubs() {

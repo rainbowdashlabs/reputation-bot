@@ -44,12 +44,12 @@ public class Show implements SlashHandler {
     private static final String SOURCE =
             "[rainbowdashlabs/reputation-bot](https://github.com/rainbowdashlabs/reputation-bot)";
     private static final Logger log = getLogger(Show.class);
+    private static final Path CACHE_FILE = Path.of("config", "contributors.json");
     private final HttpClient client =
             HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).build();
     private final ObjectMapper mapper = new ObjectMapper()
             .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY)
             .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    private static final Path CACHE_FILE = Path.of("config", "contributors.json");
     private final String version;
     private final Configuration configuration;
     private String contributors = "";
@@ -60,6 +60,11 @@ public class Show implements SlashHandler {
         this.configuration = configuration;
         loadCache();
         refreshData();
+    }
+
+    @Override
+    public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
+        event.replyEmbeds(getResponse(event, context)).complete();
     }
 
     private void loadCache() {
@@ -79,11 +84,6 @@ public class Show implements SlashHandler {
         } catch (IOException e) {
             log.error("Could not save contributors cache", e);
         }
-    }
-
-    @Override
-    public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        event.replyEmbeds(getResponse(event, context)).complete();
     }
 
     @NotNull

@@ -24,7 +24,8 @@
     "dashboard": "Dashboard",
     "user_settings": "Benutzereinstellungen",
     "voting": "Voting",
-    "token_shop": "Token-Shop"
+    "token_shop": "Token-Shop",
+    "supporter": "Unterstützer"
   },
   "presets": {
     "title": "Voreinstellungen",
@@ -148,7 +149,9 @@
     "requiredTierSingular": "Erforderliche Unterstützerstufe:",
     "requiredTierPlural": "Eine der folgenden Unterstützerstufen ist erforderlich:",
     "tokenShopHint": "Du kannst diese Funktion auch mit Tokens freischalten im",
-    "tokenShopLink": "Token-Shop"
+    "tokenShopLink": "Token-Shop",
+    "kofiHint": "oder unterstützt uns auf",
+    "kofiLink": "Ko-fi"
   },
   "profile": {
     "description": "Passe das Aussehen und Verhalten des Bots auf deinem Server an.",
@@ -754,6 +757,65 @@
         "label": "Server wählen",
         "description": "Entscheide dich, welcher Server Token bekommen soll, wenn du für den Bot stimmst. Das wirkt sich nur auf zukünftige Votes aus.",
         "none": "Kein bestimmter Server (Persönlich)"
+      },
+      "mails": {
+        "title": "E-Mail-Adressen",
+        "description": "Verwalte die E-Mail-Adressen, die mit deinem Konto verbunden sind. Du kannst eine neue Adresse hinzufügen und sie über den Link bestätigen, der dir per E-Mail zugeschickt wird.",
+        "verified": "Überprüft",
+        "pending": "Warte auf Bestätigung",
+        "noteDeletion": "Hey, nur zur Info: E-Mail-Adressen von Discord oder Ko-fi kann man nicht löschen. Nur die Adressen, die du selbst hinzugefügt hast, kannst du wegmachen.",
+        "source": {
+          "user": "Benutzer",
+          "discord": "Uneinigkeit",
+          "kofi": "Ko-fi"
+        },
+        "add": {
+          "placeholder": "Eine neue E-Mail-Adresse hinzufügen (name@example.com)",
+          "button": "Hinzufügen"
+        },
+        "verify": {
+          "success": "Deine E-Mail-Adresse wurde erfolgreich bestätigt.",
+          "error": "Die E-Mail-Bestätigung hat nicht geklappt. Versuch' es nochmal oder lass dir einen neuen Bestätigungslink schicken."
+        },
+        "errors": {
+          "ALREADY_REGISTERED": "Diese E-Mail-Adresse ist schon von jemand anderem benutzt.",
+          "INVALID_FORMAT": "Die E-Mail-Adresse ist nicht richtig. Bitte überprüfe sie nochmal und versuch's noch mal.",
+          "WRONG_USER": "Diese E-Mail-Adresse gehört jemand anderem.",
+          "INVALID_CODE": "Der Bestätigungscode ist nicht okay.",
+          "CODE_EXPIRED": "Der Bestätigungscode ist abgelaufen. Bitte schick mir eine neue Bestätigungs-E-Mail.",
+          "UNKNOWN_ADDRESS": "Wir konnten diese E-Mail-Adresse nicht finden. Sie wurde vielleicht gelöscht.",
+          "UNKNOWN": "Ein unbekannter Fehler ist aufgetreten. Versuch' es bitte später nochmal."
+        }
+      }
+    },
+    "supporter": {
+      "title": "Unterstützer",
+      "description": "Schau dir deine aktiven Ko-fi-Käufe an und ordne sie einer Gilde zu, um Unterstützerfunktionen freizuschalten.",
+      "kofiLink": "Auf Ko-fi kaufen",
+      "sections": {
+        "subscriptions": "Aktive Abonnements",
+        "subscriptions_desc": "Abonnements verlängern sich automatisch und können einer Gilde deiner Wahl zugewiesen werden.",
+        "lifetime": "Lebenslange Käufe",
+        "lifetime_desc": "Lebenslange Käufe kannst du einer Gilde zuweisen, um Funktionen dauerhaft freizuschalten."
+      },
+      "item": {
+        "subscription": "Abonnement",
+        "lifetime": "Lebensdauer",
+        "expires": "Läuft ab: {date}",
+        "assignedTo": "Zugewiesen an: {guild}",
+        "assign": "Zuweisen",
+        "unassign": "Zuweisung aufheben"
+      },
+      "errors": {
+        "load": "Die Käufe konnten nicht geladen werden. Versuch' es später nochmal.",
+        "assign": "Der Kauf konnte nicht zugewiesen werden.",
+        "unassign": "Die Kaufzuordnung konnte nicht aufgehoben werden."
+      },
+      "results": {
+        "ALREADY_SUBSCRIBED": "Du hast schon ein aktives Abonnement, das einer Gilde zugeordnet ist.",
+        "SUBSCRIPTION_EXPIRED": "Dieses Abonnement ist abgelaufen und kann nicht mehr zugewiesen werden.",
+        "UNKOWN": "Ein unbekannter Fehler beim Abonnieren ist passiert. Versuch' es bitte später nochmal.",
+        "SUCCESS": "Erfolg"
       }
     }
   },

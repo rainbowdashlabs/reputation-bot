@@ -38,10 +38,6 @@ public class GuildModificationService extends ListenerAdapter {
         this.sessionService = sessionService;
     }
 
-    private void mark(Guild guild) {
-        sessionService.markGuildDirty(guild.getIdLong());
-    }
-
     @Override
     public void onRoleCreate(@NotNull RoleCreateEvent event) {
         mark(event.getGuild());
@@ -129,5 +125,9 @@ public class GuildModificationService extends ListenerAdapter {
         if (event.getUser().isBot()) {
             mark(event.getGuild());
         }
+    }
+
+    private void mark(Guild guild) {
+        sessionService.markGuildDirty(guild.getIdLong());
     }
 }

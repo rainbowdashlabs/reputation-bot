@@ -70,8 +70,8 @@ public class UserMails {
     public boolean removeMail(String mailHash) {
         ManipulationResult update =
                 query("""
-                DELETE FROM user_mails WHERE user_id = ? AND mail_hash = ?;
-                """).single(call().bind(user.id()).bind(mailHash)).update();
+                        DELETE FROM user_mails WHERE user_id = ? AND mail_hash = ?;
+                        """).single(call().bind(user.id()).bind(mailHash)).update();
         update.ifChanged(i -> mails().remove(mailHash));
         return update.changed();
     }

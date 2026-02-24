@@ -5,15 +5,14 @@
  */
 package de.chojo.repbot.web.routes.v1.user;
 
+import de.chojo.repbot.dao.access.user.sub.MailEntry;
+import de.chojo.repbot.dao.access.user.sub.MailSource;
 import de.chojo.repbot.dao.access.user.sub.UserSettings;
 import de.chojo.repbot.dao.provider.UserRepository;
 import de.chojo.repbot.service.MailService;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
 import de.chojo.repbot.web.pojo.user.UserSettingsPOJO;
-import de.chojo.repbot.dao.access.user.sub.MailEntry;
-import de.chojo.repbot.dao.access.user.sub.MailSource;
-import java.util.Collection;
 import de.chojo.repbot.web.routes.RoutesBuilder;
 import de.chojo.repbot.web.services.UserSession;
 import io.javalin.http.Context;
@@ -25,6 +24,8 @@ import io.javalin.openapi.OpenApiRequestBody;
 import io.javalin.openapi.OpenApiResponse;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Collection;
 
 import static io.javalin.apibuilder.ApiBuilder.delete;
 import static io.javalin.apibuilder.ApiBuilder.get;
@@ -41,6 +42,20 @@ public class UserSettingsRoute implements RoutesBuilder {
         this.userRepository = userRepository;
         this.mailService = mailService;
         this.shardManager = shardManager;
+    }
+
+    @Override
+    public void buildRoutes() {
+        get(this::getUserSettings, Role.USER);
+        patch(this::updateUserSettings, Role.USER);
+        path("mail", () -> {
+            get(this::getUserMails, Role.USER);
+            post(this::registerMail, Role.USER);
+            path("{hash}", () -> {
+                delete(this::unregisterMail, Role.USER);
+                path("verify", () -> post(this::verifyMail, Role.USER));
+            });
+        });
     }
 
     @OpenApi(
@@ -84,10 +99,6 @@ public class UserSettingsRoute implements RoutesBuilder {
         ctx.status(204);
     }
 
-    public record RegisterMailPOJO(String mail) {}
-
-    public record VerifyMailPOJO(String code) {}
-
     @OpenApi(
             summary = "Register a new mail address for the user and send a verification mail.",
             operationId = "registerUserMail",
@@ -100,8 +111,7 @@ public class UserSettingsRoute implements RoutesBuilder {
     private void registerMail(@NotNull Context ctx) {
         UserSession session = ctx.sessionAttribute(SessionAttribute.USER_SESSION);
         RegisterMailPOJO body = ctx.bodyAsClass(RegisterMailPOJO.class);
-        var result = mailService.registerAndPromptVerify(
-                session.userId(), body.mail(), MailSource.USER);
+        var result = mailService.registerAndPromptVerify(session.userId(), body.mail(), MailSource.USER);
         if (result.isFailure()) {
             ctx.status(400).result(result.failureReason().name());
             return;
@@ -177,21 +187,12 @@ public class UserSettingsRoute implements RoutesBuilder {
             })
     private void getUserMails(@NotNull Context ctx) {
         UserSession session = ctx.sessionAttribute(SessionAttribute.USER_SESSION);
-        Collection<MailEntry> mails = userRepository.byId(session.userId()).mails().mails().values();
+        Collection<MailEntry> mails =
+                userRepository.byId(session.userId()).mails().mails().values();
         ctx.json(mails);
     }
 
-    @Override
-    public void buildRoutes() {
-        get(this::getUserSettings, Role.USER);
-        patch(this::updateUserSettings, Role.USER);
-        path("mail", () -> {
-            get(this::getUserMails, Role.USER);
-            post(this::registerMail, Role.USER);
-            path("{hash}", () -> {
-                delete(this::unregisterMail, Role.USER);
-                path("verify", () -> post(this::verifyMail, Role.USER));
-            });
-        });
-    }
+    public record RegisterMailPOJO(String mail) {}
+
+    public record VerifyMailPOJO(String code) {}
 }

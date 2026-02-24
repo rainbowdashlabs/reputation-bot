@@ -47,6 +47,7 @@ public class SessionService {
             Permission.KICK_MEMBERS,
             Permission.BAN_MEMBERS,
             Permission.MANAGE_CHANNEL);
+    private static final Logger log = LoggerFactory.getLogger(SessionService.class);
     private final Configuration configuration;
     private final UserSessionRepository userSessionRepository;
     private final UserRepository userRepository;
@@ -58,7 +59,6 @@ public class SessionService {
     private final SettingsAuditLogRepository settingsAuditLogRepository;
     // Cache of GuildSession per (userId,guildId)
     private final Cache<GuildSessionKey, GuildSession> guildSessions;
-    private static final Logger log = LoggerFactory.getLogger(SessionService.class);
 
     public SessionService(
             Configuration configuration,
@@ -94,6 +94,51 @@ public class SessionService {
         return tryReconstructSession(authorization);
     }
 
+    public UserSession createSession(long userId) {
+        String token = generateToken(userId);
+        userSessionRepository.createSession(token, userId);
+        UserSession session = createUserSessionFromToken(userId, token, Instant.now());
+        userSessions.put(token, session);
+        return session;
+    }
+
+    public String sessionUrl(long guildId) {
+        return pathUrl(guildId, "");
+    }
+
+    public String setupUrl(long guildId) {
+        return pathUrl(guildId, "setup");
+    }
+
+    public String debugUrl(long guildId) {
+        return pathUrl(guildId, "settings/problems");
+    }
+
+    public void logout(String token) {
+        if (token == null || token.isBlank()) return;
+        userSessions.invalidate(token);
+        userSessionRepository.deleteSession(token);
+    }
+
+    public GuildSession getGuildSession(long userId, long guildId) {
+        var key = new GuildSessionKey(userId, guildId);
+        GuildSession session = guildSessions.getIfPresent(key);
+        if (session == null) {
+            session = new GuildSession(
+                    configuration, shardManager, guildRepository, settingsAuditLogRepository, guildId, userId);
+            guildSessions.put(key, session);
+        }
+        return session;
+    }
+
+    public void markGuildDirty(long guildId) {
+        guildSessions.asMap().forEach((key, session) -> {
+            if (key.guildId == guildId) {
+                session.markDirty();
+            }
+        });
+    }
+
     private Optional<UserSession> tryReconstructSession(String token) {
         return userSessionRepository.byToken(token).map(meta -> {
             UserSession session = createUserSessionFromToken(meta.userId(), token, meta.created());
@@ -101,14 +146,6 @@ public class SessionService {
             userSessionRepository.updateLastUsed(token);
             return session;
         });
-    }
-
-    public UserSession createSession(long userId) {
-        String token = generateToken(userId);
-        userSessionRepository.createSession(token, userId);
-        UserSession session = createUserSessionFromToken(userId, token, Instant.now());
-        userSessions.put(token, session);
-        return session;
     }
 
     private UserSession createUserSessionFromToken(long userId, String token, Instant created) {
@@ -192,46 +229,9 @@ public class SessionService {
                 .toString();
     }
 
-    public String sessionUrl(long guildId) {
-        return pathUrl(guildId, "");
-    }
-
-    public String setupUrl(long guildId) {
-        return pathUrl(guildId, "setup");
-    }
-
-    public String debugUrl(long guildId) {
-        return pathUrl(guildId, "settings/problems");
-    }
-
     private String pathUrl(long guildId, String path) {
         String url = "%s/%s".formatted(configuration.api().url(), path);
         return "%s?guild=%s".formatted(url, guildId);
-    }
-
-    public void logout(String token) {
-        if (token == null || token.isBlank()) return;
-        userSessions.invalidate(token);
-        userSessionRepository.deleteSession(token);
-    }
-
-    public GuildSession getGuildSession(long userId, long guildId) {
-        var key = new GuildSessionKey(userId, guildId);
-        GuildSession session = guildSessions.getIfPresent(key);
-        if (session == null) {
-            session = new GuildSession(
-                    configuration, shardManager, guildRepository, settingsAuditLogRepository, guildId, userId);
-            guildSessions.put(key, session);
-        }
-        return session;
-    }
-
-    public void markGuildDirty(long guildId) {
-        guildSessions.asMap().forEach((key, session) -> {
-            if (key.guildId == guildId) {
-                session.markDirty();
-            }
-        });
     }
 
     private record GuildSessionKey(long userId, long guildId) {}

@@ -11,16 +11,16 @@ public class RankProblem {
     long id;
     List<RanksProblemType> types;
 
+    public RankProblem(long id, List<RanksProblemType> types) {
+        this.types = types;
+        this.id = id;
+    }
+
     public long getId() {
         return id;
     }
 
     public List<RanksProblemType> getTypes() {
         return types;
-    }
-
-    public RankProblem(long id, List<RanksProblemType> types) {
-        this.types = types;
-        this.id = id;
     }
 }

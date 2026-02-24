@@ -38,17 +38,17 @@ public final class RemovalTask {
         try (var conn = QueryConfiguration.getDefault().withSingleTransaction()) {
             if (userId() == 0) {
                 conn.query("""
-                            INSERT
-                            INTO
-                                guilds_archived(guild_id, date_joined, latest_activity, date_left)
-                            SELECT
-                                guild_id,
-                                date_joined,
-                                latest_activity,
-                                coalesce(date_left, now())
-                            FROM
-                                guilds
-                            WHERE guild_id = ?;""").single(call().bind(guildId)).insert();
+                        INSERT
+                        INTO
+                            guilds_archived(guild_id, date_joined, latest_activity, date_left)
+                        SELECT
+                            guild_id,
+                            date_joined,
+                            latest_activity,
+                            coalesce(date_left, now())
+                        FROM
+                            guilds
+                        WHERE guild_id = ?;""").single(call().bind(guildId)).insert();
                 conn.query("DELETE FROM guilds WHERE guild_id = ?;")
                         .single(call().bind(guildId))
                         .delete();

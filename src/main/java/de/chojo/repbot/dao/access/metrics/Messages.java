@@ -16,10 +16,10 @@ public class Messages {
 
     public void countMessage() {
         Query.query("""
-                     INSERT INTO metrics_message_analyzed(hour, count) VALUES (date_trunc('hour', now()), 1)
-                     ON CONFLICT(hour)
-                         DO UPDATE SET count = metrics_message_analyzed.count + 1
-                     """).single().insert();
+                INSERT INTO metrics_message_analyzed(hour, count) VALUES (date_trunc('hour', now()), 1)
+                ON CONFLICT(hour)
+                    DO UPDATE SET count = metrics_message_analyzed.count + 1
+                """).single().insert();
     }
 
     public CountsStatistic hour(int hour, int count) {

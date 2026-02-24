@@ -64,52 +64,6 @@ public class KofiPurchase {
      */
     private final long guildId;
 
-    public long id() {
-        return id;
-    }
-
-    public String mailHash() {
-        return mailHash;
-    }
-
-    public String transactionId() {
-        return transactionId;
-    }
-
-    public String key() {
-        return key;
-    }
-
-    public Type type() {
-        return type;
-    }
-
-    public long skuId() {
-        return skuId;
-    }
-
-    public Instant expiresAt() {
-        return expiresAt;
-    }
-
-    public long guildId() {
-        return guildId;
-    }
-
-    public boolean assignPurchaseToGuild(long guildId) {
-        query("""
-                UPDATE kofi_purchase SET guild_id = ? WHERE id = ?;
-                """).single(call().bind(guildId).bind(id)).update();
-        return true;
-    }
-
-    public boolean unassignPurchaseFromGuild() {
-        query("""
-                UPDATE kofi_purchase SET guild_id = 0 WHERE id = ?;
-                """).single(call().bind(id)).update();
-        return true;
-    }
-
     @MappingProvider({"id", "mail_hash", "key", "sku_id", "type", "expires_at", "transaction_id", "guild_id"})
     public KofiPurchase(Row row) throws SQLException {
         this(
@@ -185,6 +139,52 @@ public class KofiPurchase {
         return purchases;
     }
 
+    public long id() {
+        return id;
+    }
+
+    public String mailHash() {
+        return mailHash;
+    }
+
+    public String transactionId() {
+        return transactionId;
+    }
+
+    public String key() {
+        return key;
+    }
+
+    public Type type() {
+        return type;
+    }
+
+    public long skuId() {
+        return skuId;
+    }
+
+    public Instant expiresAt() {
+        return expiresAt;
+    }
+
+    public long guildId() {
+        return guildId;
+    }
+
+    public boolean assignPurchaseToGuild(long guildId) {
+        query("""
+                UPDATE kofi_purchase SET guild_id = ? WHERE id = ?;
+                """).single(call().bind(guildId).bind(id)).update();
+        return true;
+    }
+
+    public boolean unassignPurchaseFromGuild() {
+        query("""
+                UPDATE kofi_purchase SET guild_id = 0 WHERE id = ?;
+                """).single(call().bind(id)).update();
+        return true;
+    }
+
     /**
      * Renew the subscription.
      */
@@ -200,9 +200,7 @@ public class KofiPurchase {
 
     public void delete() {
         query("""
-            DELETE FROM kofi_purchase WHERE id = ?;
-            """)
-                .single(call().bind(id))
-                .delete();
+                DELETE FROM kofi_purchase WHERE id = ?;
+                """).single(call().bind(id)).delete();
     }
 }

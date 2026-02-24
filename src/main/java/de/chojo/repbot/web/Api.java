@@ -103,35 +103,35 @@ public class Api {
     public void init() {
         path("v1", () -> {
             before(ctx -> {
-                if(ctx.method() == HandlerType.OPTIONS) return;
+                if (ctx.method() == HandlerType.OPTIONS) return;
                 log.trace(
                         "Received request on route: {} {}\nHeaders:\n{}\nBody:\n{}",
                         ctx.method() + " " + ctx.url(),
                         Objects.requireNonNullElse(ctx.queryString(), ""),
                         ctx.headerMap().entrySet().stream()
-                           .map(h -> "   " + h.getKey() + ": " + h.getValue())
-                           .collect(Collectors.joining("\n")),
+                                .map(h -> "   " + h.getKey() + ": " + h.getValue())
+                                .collect(Collectors.joining("\n")),
                         ctx.body().substring(0, Math.min(ctx.body().length(), 180)));
             });
             after(ctx -> {
-                if(ctx.method() == HandlerType.OPTIONS) return;
+                if (ctx.method() == HandlerType.OPTIONS) return;
                 log.trace(
                         "Answered request on route: {} {}\nStatus: {}\nHeaders:\n{}\nBody:\n{}",
                         ctx.method() + " " + ctx.url(),
                         Objects.requireNonNullElse(ctx.queryString(), ""),
                         ctx.status(),
                         ctx.res().getHeaderNames().stream()
-                           .map(h -> "   " + h + ": " + ctx.res().getHeader(h))
-                           .collect(Collectors.joining("\n")),
+                                .map(h -> "   " + h + ": " + ctx.res().getHeader(h))
+                                .collect(Collectors.joining("\n")),
                         ContentType.OCTET_STREAM.equals(ctx.contentType())
                                 ? "Bytes"
                                 : Objects.requireNonNullElse(ctx.result(), "")
-                                         .substring(
-                                                 0,
-                                                 Math.min(
-                                                         Objects.requireNonNullElse(ctx.result(), "")
+                                        .substring(
+                                                0,
+                                                Math.min(
+                                                        Objects.requireNonNullElse(ctx.result(), "")
                                                                 .length(),
-                                                         180)));
+                                                        180)));
             });
 
             metricsRoute.buildRoutes();

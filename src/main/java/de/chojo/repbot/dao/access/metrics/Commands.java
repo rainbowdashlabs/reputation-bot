@@ -23,10 +23,10 @@ public class Commands {
 
     public void logCommand(String command) {
         Query.query("""
-                     INSERT INTO metrics_commands(day, command) VALUES (now()::DATE, ?)
-                     ON CONFLICT(day,command)
-                         DO UPDATE SET count = metrics_commands.count + 1
-                     """).single(call().bind(command)).insert();
+                INSERT INTO metrics_commands(day, command) VALUES (now()::DATE, ?)
+                ON CONFLICT(day,command)
+                    DO UPDATE SET count = metrics_commands.count + 1
+                """).single(call().bind(command)).insert();
     }
 
     public CommandsStatistic week(int week) {
@@ -62,12 +62,12 @@ public class Commands {
 
     private CommandsStatistic get(String table, String timeframe, int offset) {
         return Query.query("""
-                        SELECT %s,
-                            command,
-                            count
-                        FROM %s
-                        WHERE %s = date_trunc('%s', now())::DATE - ?::INTERVAL
-                        """, timeframe, table, timeframe, timeframe)
+                            SELECT %s,
+                                command,
+                                count
+                            FROM %s
+                            WHERE %s = date_trunc('%s', now())::DATE - ?::INTERVAL
+                            """, timeframe, table, timeframe, timeframe)
                 .single(call().bind(offset + " " + timeframe))
                 .map(rs -> CommandStatistic.build(rs, timeframe))
                 .allResults()

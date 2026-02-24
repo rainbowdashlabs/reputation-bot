@@ -44,6 +44,10 @@ public class DiscordOAuthService {
         this.configuration = configuration;
     }
 
+    private static String enc(String v) {
+        return URLEncoder.encode(v, StandardCharsets.UTF_8);
+    }
+
     public String buildAuthorizeUrl(String state) {
         String base = DISCORD_BASE + "/oauth2/authorize";
         String params = "client_id=%s&redirect_uri=%s&response_type=code&prompt=none&scope=%s%s"
@@ -139,10 +143,6 @@ public class DiscordOAuthService {
 
     private DiscordOAuth cfg() {
         return configuration.discordOAuth();
-    }
-
-    private static String enc(String v) {
-        return URLEncoder.encode(v, StandardCharsets.UTF_8);
     }
 
     public record TokenResponse(String accessToken, String refreshToken, Instant expiry) {}

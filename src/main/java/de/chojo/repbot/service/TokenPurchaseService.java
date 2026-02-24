@@ -15,7 +15,6 @@ import de.chojo.repbot.core.Threading;
 import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.access.guild.subscriptions.SkuTarget;
 import de.chojo.repbot.dao.access.guild.subscriptions.Subscription;
-import de.chojo.repbot.dao.access.guild.subscriptions.SubscriptionSource;
 import de.chojo.repbot.dao.access.guild.subscriptions.TokenPurchase;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.provider.TokenPurchaseRepository;
@@ -32,7 +31,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
-import static de.chojo.repbot.dao.access.guild.subscriptions.SkuTarget.GUILD;
 import static de.chojo.repbot.dao.access.guild.subscriptions.SubscriptionSource.TOKEN;
 import static de.chojo.repbot.service.tokenpurchaseservice.FailureReason.ADMIN_ONLY;
 import static de.chojo.repbot.service.tokenpurchaseservice.FailureReason.GUILD_HAS_SUBSCRIPTION;
@@ -41,7 +39,6 @@ import static de.chojo.repbot.service.tokenpurchaseservice.FailureReason.INSUFFI
 import static de.chojo.repbot.service.tokenpurchaseservice.FailureReason.INSUFFICIENT_USER_TOKENS;
 import static de.chojo.repbot.service.tokenpurchaseservice.FailureReason.UNKNOWN;
 import static de.chojo.repbot.service.tokenpurchaseservice.FailureReason.UNKNOWN_FEATURE;
-import static de.chojo.repbot.util.EntityType.GUILD;
 import static net.dv8tion.jda.api.entities.Entitlement.EntitlementType.APPLICATION_SUBSCRIPTION;
 
 public class TokenPurchaseService {
@@ -105,8 +102,8 @@ public class TokenPurchaseService {
         // Subscriptions by tokens are not managed by the premium service, therefore, they do not expire and are
         // persistent
         repGuild.subscriptions()
-                .addSubscription(
-                        new Subscription(feature.id(), guildId, TOKEN, SkuTarget.GUILD, APPLICATION_SUBSCRIPTION, null, true));
+                .addSubscription(new Subscription(
+                        feature.id(), guildId, TOKEN, SkuTarget.GUILD, APPLICATION_SUBSCRIPTION, null, true));
         return PurchaseResult.SUCCESS;
     }
 
