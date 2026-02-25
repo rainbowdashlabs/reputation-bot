@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
+import static de.chojo.repbot.dao.access.guild.subscriptions.SubscriptionSource.TOKEN;
 import static de.chojo.repbot.service.tokenpurchaseservice.FailureReason.ADMIN_ONLY;
 import static de.chojo.repbot.service.tokenpurchaseservice.FailureReason.GUILD_HAS_SUBSCRIPTION;
 import static de.chojo.repbot.service.tokenpurchaseservice.FailureReason.GUILD_NOT_FOUND;
@@ -101,8 +102,8 @@ public class TokenPurchaseService {
         // Subscriptions by tokens are not managed by the premium service, therefore, they do not expire and are
         // persistent
         repGuild.subscriptions()
-                .addSubscription(
-                        new Subscription(feature.id(), guildId, SkuTarget.GUILD, APPLICATION_SUBSCRIPTION, null, true));
+                .addSubscription(new Subscription(
+                        feature.id(), guildId, TOKEN, SkuTarget.GUILD, APPLICATION_SUBSCRIPTION, null, true));
         return PurchaseResult.SUCCESS;
     }
 
@@ -166,6 +167,7 @@ public class TokenPurchaseService {
                             .deleteSubscription(new Subscription(
                                     purchase.featureId(),
                                     purchase.guildId(),
+                                    TOKEN,
                                     SkuTarget.GUILD,
                                     APPLICATION_SUBSCRIPTION,
                                     null,
@@ -198,6 +200,7 @@ public class TokenPurchaseService {
                     .deleteSubscription(new Subscription(
                             purchase.featureId(),
                             purchase.guildId(),
+                            TOKEN,
                             SkuTarget.GUILD,
                             APPLICATION_SUBSCRIPTION,
                             null,

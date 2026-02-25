@@ -42,6 +42,16 @@ public class UserVoteRoute implements RoutesBuilder {
         this.configuration = configuration;
     }
 
+    @Override
+    public void buildRoutes() {
+        path("vote", () -> {
+            get("tokens", this::getUserTokens, Role.USER);
+            get("lists", this::getUserVoteLists, Role.USER);
+            get("log", this::getVoteLog, Role.USER);
+            post("transfer", this::postTransfer, Role.USER);
+        });
+    }
+
     @OpenApi(
             summary = "Get the current tokens of a user.",
             operationId = "getUserTokens",
@@ -148,15 +158,5 @@ public class UserVoteRoute implements RoutesBuilder {
             return;
         }
         ctx.status(204);
-    }
-
-    @Override
-    public void buildRoutes() {
-        path("vote", () -> {
-            get("tokens", this::getUserTokens, Role.USER);
-            get("lists", this::getUserVoteLists, Role.USER);
-            get("log", this::getVoteLog, Role.USER);
-            post("transfer", this::postTransfer, Role.USER);
-        });
     }
 }

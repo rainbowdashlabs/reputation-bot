@@ -24,7 +24,8 @@
     "dashboard": "Pannello di controllo",
     "user_settings": "Impostazioni utente",
     "voting": "Votazione",
-    "token_shop": "Negozio di gettoni"
+    "token_shop": "Negozio di gettoni",
+    "supporter": "Sostenitore"
   },
   "presets": {
     "title": "Preimpostazioni",
@@ -148,7 +149,9 @@
     "requiredTierSingular": "Livello di sostegno richiesto:",
     "requiredTierPlural": "Devi scegliere uno di questi livelli di sostegno:",
     "tokenShopHint": "Puoi anche sbloccare questa funzione con i gettoni nel",
-    "tokenShopLink": "Negozio di gettoni"
+    "tokenShopLink": "Negozio di gettoni",
+    "kofiHint": "oppure seguici su",
+    "kofiLink": "Ko-fi"
   },
   "profile": {
     "description": "Personalizza come il bot appare e si comporta sul tuo server.",
@@ -754,7 +757,68 @@
         "label": "Vota Gilda",
         "description": "Scegli quale gilda dovrebbe ricevere i gettoni quando voti per il bot. Questo cambierà solo i voti futuri.",
         "none": "Nessuna gilda in particolare (Personale)"
+      },
+      "mails": {
+        "title": "Indirizzi e-mail",
+        "description": "Gestisci gli indirizzi email collegati al tuo account. Puoi aggiungere un nuovo indirizzo e verificarlo tramite il link che ti arriva nella casella di posta.",
+        "verified": "Verificato",
+        "pending": "In attesa di verifica",
+        "noteDeletion": "Nota: gli indirizzi email di Discord o Ko-fi non si possono togliere. Si possono cancellare solo quelli che hai aggiunto tu.",
+        "source": {
+          "user": "Utente",
+          "discord": "Discord",
+          "kofi": "Ko-fi"
+        },
+        "add": {
+          "placeholder": "Aggiungi un nuovo indirizzo e-mail (name@example.com)",
+          "button": "Aggiungi"
+        },
+        "verify": {
+          "success": "La tua email è stata verificata senza problemi.",
+          "error": "La verifica dell'indirizzo e-mail non è andata a buon fine. Prova di nuovo o chiedi un nuovo link di verifica."
+        },
+        "errors": {
+          "ALREADY_REGISTERED": "Questo indirizzo email è già stato usato da qualcun altro.",
+          "INVALID_FORMAT": "L'indirizzo email non va bene. Dai un'occhiata e riprova.",
+          "WRONG_USER": "Questo indirizzo email è di un altro utente.",
+          "INVALID_CODE": "Il codice di verifica non va bene.",
+          "CODE_EXPIRED": "Il codice di verifica è scaduto. Prova a chiedere una nuova email di verifica.",
+          "UNKNOWN_ADDRESS": "Non siamo riusciti a trovare questo indirizzo email. Forse è stato cancellato.",
+          "UNKNOWN": "Si è verificato un errore strano. Prova più tardi."
+        }
       }
+    },
+    "supporter": {
+      "title": "Sostenitore",
+      "description": "Guarda i tuoi acquisti Ko-fi attivi e mettili in una gilda per attivare le funzioni di supporto.",
+      "kofiLink": "Compra su Ko-fi",
+      "sections": {
+        "subscriptions": "Abbonamenti attivi",
+        "subscriptions_desc": "Gli abbonamenti si rinnovano da soli e puoi darli a una gilda che ti piace.",
+        "lifetime": "Acquisti a vita",
+        "lifetime_desc": "Gli acquisti a vita possono essere assegnati a una gilda per sbloccare le funzioni in modo permanente."
+      },
+      "item": {
+        "subscription": "Abbonamento",
+        "lifetime": "A vita",
+        "expires": "Scadenza: {date}",
+        "assignedTo": "Assegnato a: {guild}",
+        "assign": "Assegnare",
+        "unassign": "Annulla assegnazione"
+      },
+      "errors": {
+        "load": "Non riesci a caricare gli acquisti. Prova più tardi.",
+        "assign": "Non sono riuscito ad assegnare l'acquisto.",
+        "unassign": "Non sono riuscito a rimuovere l'assegnazione dell'acquisto."
+      },
+      "results": {
+        "ALREADY_SUBSCRIBED": "Hai già un abbonamento attivo assegnato a una gilda.",
+        "SUBSCRIPTION_EXPIRED": "Questo abbonamento è scaduto e non può essere assegnato.",
+        "UNKOWN": "Si è verificato un problema con l'abbonamento. Prova più tardi.",
+        "SUCCESS": "Successo"
+      },
+      "missingPurchasesNotice": "Se i tuoi acquisti non si vedono qui, forse hai usato un indirizzo email diverso per Ko-fi rispetto a quello del tuo account Discord. Puoi collegare altri indirizzi email nelle tue impostazioni di {link}.",
+      "settingsLink": "Impostazioni utente"
     }
   },
   "dashboard": {

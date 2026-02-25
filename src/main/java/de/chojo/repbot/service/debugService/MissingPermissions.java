@@ -17,6 +17,12 @@ public class MissingPermissions {
     long id;
     Set<Permission> permissions;
 
+    public MissingPermissions(PermissionScope scope, long id, List<Permission> permissions) {
+        this.scope = scope;
+        this.id = id;
+        this.permissions = new LinkedHashSet<>(permissions);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -42,11 +48,5 @@ public class MissingPermissions {
 
     public Set<Permission> getPermissions() {
         return permissions;
-    }
-
-    public MissingPermissions(PermissionScope scope, long id, List<Permission> permissions) {
-        this.scope = scope;
-        this.id = id;
-        this.permissions = new LinkedHashSet<>(permissions);
     }
 }

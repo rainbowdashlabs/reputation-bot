@@ -29,15 +29,15 @@ public class Users {
      */
     public void saveUserCountWeek() {
         Query.query("""
-                     INSERT INTO metrics_users_week
-                     SELECT week, receiver_count, donor_count, total_count
-                     FROM metrics_unique_users_week
-                     WHERE week = date_trunc('week', now()  - INTERVAL '1 WEEK')
-                     ON CONFLICT(week)
-                         DO UPDATE SET receiver_count = excluded.receiver_count,
-                             donor_count = excluded.donor_count,
-                             total_count = excluded.donor_count
-                     """).single().insert();
+                INSERT INTO metrics_users_week
+                SELECT week, receiver_count, donor_count, total_count
+                FROM metrics_unique_users_week
+                WHERE week = date_trunc('week', now()  - INTERVAL '1 WEEK')
+                ON CONFLICT(week)
+                    DO UPDATE SET receiver_count = excluded.receiver_count,
+                        donor_count = excluded.donor_count,
+                        total_count = excluded.donor_count
+                """).single().insert();
     }
 
     /**
@@ -45,15 +45,15 @@ public class Users {
      */
     public void saveUserCountMonth() {
         Query.query("""
-                     INSERT INTO metrics_users_month
-                     SELECT month, receiver_count, donor_count, total_count
-                     FROM metrics_unique_users_month
-                     WHERE month = date_trunc('month', now()  - INTERVAL '1 MONTH')
-                     ON CONFLICT(month)
-                         DO UPDATE SET receiver_count = excluded.receiver_count,
-                             donor_count = excluded.donor_count,
-                             total_count = excluded.donor_count
-                     """).single().insert();
+                INSERT INTO metrics_users_month
+                SELECT month, receiver_count, donor_count, total_count
+                FROM metrics_unique_users_month
+                WHERE month = date_trunc('month', now()  - INTERVAL '1 MONTH')
+                ON CONFLICT(month)
+                    DO UPDATE SET receiver_count = excluded.receiver_count,
+                        donor_count = excluded.donor_count,
+                        total_count = excluded.donor_count
+                """).single().insert();
     }
 
     private UsersStatistic get(String table, String timeframe, int offset, int count) {

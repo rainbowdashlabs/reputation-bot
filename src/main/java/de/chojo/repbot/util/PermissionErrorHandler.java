@@ -113,6 +113,50 @@ public final class PermissionErrorHandler {
         return false;
     }
 
+    public static void handle(
+            GuildRepository guildRepository,
+            InsufficientPermissionException permissionException,
+            ShardManager shardManager,
+            LocalizationContext localizer,
+            Configuration configuration) {
+        var permission = permissionException.getPermission();
+        var guildById = shardManager.getGuildById(permissionException.getGuildId());
+        var channel = (TextChannel) permissionException.getChannel(guildById.getJDA());
+        if (channel == null) return;
+        handle(
+                new PermissionErrorContext(guildById, channel, null, null, permission),
+                guildRepository.guild(guildById),
+                localizer,
+                configuration);
+    }
+
+    /**
+     * Checks if the self user has the permissions in this channel and sends a permission error if one is missing.
+     *
+     * @param channel       channel to check
+     * @param localizer     localizer
+     * @param configuration configuration
+     * @param permissions   permissions to check
+     * @return true if a permission was missing and a message was sent
+     */
+    public static boolean assertAndHandle(
+            RepGuild repGuild,
+            GuildMessageChannel channel,
+            LocalizationContext localizer,
+            Configuration configuration,
+            String action,
+            User user,
+            Permission... permissions) {
+        List<Permission> missing = assertGuildChannelPermissions(channel, permissions);
+        if (missing.isEmpty()) return false;
+        return handle(
+                new PermissionErrorContext(
+                        channel.getGuild(), channel, user, action, missing.toArray(Permission[]::new)),
+                repGuild,
+                localizer,
+                configuration);
+    }
+
     private static boolean sendGuildOwner(Guild guild, String message) {
         try {
             return sendUser(guild.retrieveOwner().complete().getUser(), message);
@@ -144,23 +188,6 @@ public final class PermissionErrorHandler {
         return true;
     }
 
-    public static void handle(
-            GuildRepository guildRepository,
-            InsufficientPermissionException permissionException,
-            ShardManager shardManager,
-            LocalizationContext localizer,
-            Configuration configuration) {
-        var permission = permissionException.getPermission();
-        var guildById = shardManager.getGuildById(permissionException.getGuildId());
-        var channel = (TextChannel) permissionException.getChannel(guildById.getJDA());
-        if (channel == null) return;
-        handle(
-                new PermissionErrorContext(guildById, channel, null, null, permission),
-                guildRepository.guild(guildById),
-                localizer,
-                configuration);
-    }
-
     /**
      * Assert that the user has permissions.
      *
@@ -174,33 +201,6 @@ public final class PermissionErrorHandler {
         return Arrays.stream(permissions)
                 .filter(permission -> !self.hasPermission(channel, permission))
                 .toList();
-    }
-
-    /**
-     * Checks if the self user has the permissions in this channel and sends a permission error if one is missing.
-     *
-     * @param channel       channel to check
-     * @param localizer     localizer
-     * @param configuration configuration
-     * @param permissions   permissions to check
-     * @return true if a permission was missing and a message was sent
-     */
-    public static boolean assertAndHandle(
-            RepGuild repGuild,
-            GuildMessageChannel channel,
-            LocalizationContext localizer,
-            Configuration configuration,
-            String action,
-            User user,
-            Permission... permissions) {
-        List<Permission> missing = assertGuildChannelPermissions(channel, permissions);
-        if (missing.isEmpty()) return false;
-        return handle(
-                new PermissionErrorContext(
-                        channel.getGuild(), channel, user, action, missing.toArray(Permission[]::new)),
-                repGuild,
-                localizer,
-                configuration);
     }
 
     private record ErrorKey(Guild guild, @Nullable Channel channel, List<Permission> permissions) {

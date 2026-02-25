@@ -24,7 +24,8 @@
     "dashboard": "Tableau de bord",
     "user_settings": "Paramètres utilisateur",
     "voting": "Vote",
-    "token_shop": "Boutique de jetons"
+    "token_shop": "Boutique de jetons",
+    "supporter": "Supporter"
   },
   "presets": {
     "title": "Préréglages",
@@ -148,7 +149,9 @@
     "requiredTierSingular": "Niveau de soutien requis :",
     "requiredTierPlural": "Il faut choisir un des niveaux de soutien suivants :",
     "tokenShopHint": "Tu peux aussi débloquer cette fonctionnalité avec des jetons dans le",
-    "tokenShopLink": "Boutique de jetons"
+    "tokenShopLink": "Boutique de jetons",
+    "kofiHint": "ou soutenez-nous sur",
+    "kofiLink": "Ko-fi"
   },
   "profile": {
     "description": "Personnalise l'apparence et le comportement du bot sur ton serveur.",
@@ -754,7 +757,68 @@
         "label": "Votez pour la guilde",
         "description": "Choisis la guilde qui devrait recevoir des jetons quand tu votes pour le bot. Ça ne changera rien que pour les votes à venir.",
         "none": "Pas de guilde en particulier (Personnel)"
+      },
+      "mails": {
+        "title": "Adresses e-mail",
+        "description": "Gère les adresses e-mail liées à ton compte. Tu peux ajouter une nouvelle adresse et la vérifier via le lien envoyé dans ta boîte de réception.",
+        "verified": "Vérifié",
+        "pending": "En attente de vérification",
+        "noteDeletion": "Remarque : les adresses e-mail provenant de Discord ou Ko-fi ne peuvent pas être supprimées. Seules les adresses que tu as ajoutées toi-même peuvent être supprimées.",
+        "source": {
+          "user": "Utilisateur",
+          "discord": "Discord",
+          "kofi": "Ko-fi"
+        },
+        "add": {
+          "placeholder": "Ajoute un nouvel e-mail (name@example.com)",
+          "button": "Ajouter"
+        },
+        "verify": {
+          "success": "Ton e-mail a été validé avec succès.",
+          "error": "La vérification de l'adresse e-mail n'a pas marché. Essaie encore ou demande un nouveau lien de vérification."
+        },
+        "errors": {
+          "ALREADY_REGISTERED": "Cette adresse e-mail est déjà utilisée par quelqu'un d'autre.",
+          "INVALID_FORMAT": "L'adresse e-mail n'est pas valide. Vérifie-la et essaie encore.",
+          "WRONG_USER": "Cette adresse e-mail est celle d'un autre utilisateur.",
+          "INVALID_CODE": "Le code de vérification n'est pas valide.",
+          "CODE_EXPIRED": "Le code de vérification a expiré. Demande un nouvel e-mail de vérification.",
+          "UNKNOWN_ADDRESS": "On n'a pas trouvé cette adresse e-mail. Elle a peut-être été supprimée.",
+          "UNKNOWN": "Une erreur bizarre s'est produite. Essaie plus tard."
+        }
       }
+    },
+    "supporter": {
+      "title": "Supporter",
+      "description": "Regarde tes achats Ko-fi actifs et associe-les à une guilde pour activer les fonctionnalités de soutien.",
+      "kofiLink": "Acheter sur Ko-fi",
+      "sections": {
+        "subscriptions": "Abonnements actifs",
+        "subscriptions_desc": "Les abonnements se renouvellent automatiquement et peuvent être attribués à la guilde de ton choix.",
+        "lifetime": "Achats à vie",
+        "lifetime_desc": "Les achats à vie peuvent être attribués à une guilde pour débloquer des fonctionnalités pour de bon."
+      },
+      "item": {
+        "subscription": "Abonnement",
+        "lifetime": "À vie",
+        "expires": "Expire le : {date}",
+        "assignedTo": "Attribué à : {guild}",
+        "assign": "Attribuer",
+        "unassign": "Annuler l'attribution"
+      },
+      "errors": {
+        "load": "Impossible de charger les achats. Essaie plus tard.",
+        "assign": "Impossible d'attribuer l'achat.",
+        "unassign": "Impossible de désassocier l'achat."
+      },
+      "results": {
+        "ALREADY_SUBSCRIBED": "T'as déjà un abonnement actif pour une guilde.",
+        "SUBSCRIPTION_EXPIRED": "Cet abonnement a expiré et ne peut pas être attribué.",
+        "UNKOWN": "Une erreur d'abonnement bizarre s'est produite. Essaie à nouveau plus tard.",
+        "SUCCESS": "Succès"
+      },
+      "missingPurchasesNotice": "Si tes achats n'apparaissent pas ici, c'est peut-être parce que t'as utilisé une adresse e-mail différente pour Ko-fi et ton compte Discord. Tu peux ajouter d'autres adresses e-mail dans tes paramètres de compte Discord ({link}).",
+      "settingsLink": "Paramètres utilisateur"
     }
   },
   "dashboard": {

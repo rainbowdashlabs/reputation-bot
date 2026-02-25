@@ -18,6 +18,10 @@ import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
 import io.javalin.openapi.OpenApiContent;
 import io.javalin.openapi.OpenApiResponse;
+import net.dv8tion.jda.api.entities.SKU;
+import net.dv8tion.jda.api.sharding.ShardManager;
+
+import java.util.List;
 
 import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
@@ -26,11 +30,19 @@ public class DataRoute implements RoutesBuilder {
     private final ThankwordsContainer thankwordsContainer;
     private final Localization localization;
     private final Configuration configuration;
+    private final ShardManager shardManager;
+    private final List<SKU> skus;
 
-    public DataRoute(ThankwordsContainer thankwordsContainer, Localization localization, Configuration configuration) {
+    public DataRoute(
+            ThankwordsContainer thankwordsContainer,
+            Localization localization,
+            Configuration configuration,
+            ShardManager shardManager) {
         this.thankwordsContainer = thankwordsContainer;
         this.localization = localization;
         this.configuration = configuration;
+        this.shardManager = shardManager;
+        this.skus = shardManager.getShards().getFirst().retrieveSKUList().complete();
     }
 
     @OpenApi(
@@ -81,6 +93,11 @@ public class DataRoute implements RoutesBuilder {
         ctx.json(configuration.skus().features());
     }
 
+    public void getAvailableSKUs(Context ctx) {
+        ctx.header("Cache-Control", "public, max-age=3600");
+        ctx.json(skus);
+    }
+
     @Override
     public void buildRoutes() {
         path("data", () -> {
@@ -88,6 +105,7 @@ public class DataRoute implements RoutesBuilder {
             get("languages", this::getLanguages, Role.ANYONE);
             get("links", this::getLinks, Role.ANYONE);
             get("token_features", this::getTokenFeatures, Role.ANYONE);
+            get("skus", this::getAvailableSKUs, Role.ANYONE);
         });
     }
 }

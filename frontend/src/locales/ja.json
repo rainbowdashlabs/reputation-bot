@@ -24,7 +24,8 @@
     "dashboard": "ダッシュボード",
     "user_settings": "ユーザー設定",
     "voting": "投票",
-    "token_shop": "トークンショップ"
+    "token_shop": "トークンショップ",
+    "supporter": "サポーター"
   },
   "presets": {
     "title": "プリセット",
@@ -148,7 +149,9 @@
     "requiredTierSingular": "必要なサポーターのレベル：",
     "requiredTierPlural": "以下のサポーター層のいずれかが必要だ：",
     "tokenShopHint": "この機能はトークンを使って解除することもできる。",
-    "tokenShopLink": "トークンショップ"
+    "tokenShopLink": "トークンショップ",
+    "kofiHint": "または支援する",
+    "kofiLink": "Ko-fi"
   },
   "profile": {
     "description": "サーバー内でボットの外観や動作をカスタマイズする。",
@@ -754,7 +757,68 @@
         "label": "投票ギルド",
         "description": "ボットに投票する際に、トークンを受け取るギルドを選択せよ。これは今後の投票にのみ影響する。",
         "none": "特定のギルドに所属していない（個人）"
+      },
+      "mails": {
+        "title": "メールアドレス",
+        "description": "アカウントに関連付けられたメールアドレスを管理する。新しいアドレスを追加し、受信トレイに送信されたリンクから確認できる。",
+        "verified": "確認済み",
+        "pending": "確認待ち",
+        "noteDeletion": "注：DiscordやKo-fiからのメールアドレスは削除できない。自分で追加したアドレスのみ削除可能だ。",
+        "source": {
+          "user": "ユーザー",
+          "discord": "不和",
+          "kofi": "Ko-fi"
+        },
+        "add": {
+          "placeholder": "新しいメールアドレスを追加する（name@example.com）",
+          "button": "追加する"
+        },
+        "verify": {
+          "success": "メールアドレスの確認が完了した。",
+          "error": "メール認証に失敗した。もう一度試すか、新しい認証リンクをリクエストしてくれ。"
+        },
+        "errors": {
+          "ALREADY_REGISTERED": "このメールアドレスは既に別のユーザーに登録されている。",
+          "INVALID_FORMAT": "メールアドレスの形式が不正だ。確認してもう一度試してくれ。",
+          "WRONG_USER": "このメールアドレスは別のユーザーのものだ。",
+          "INVALID_CODE": "認証コードが無効だ。",
+          "CODE_EXPIRED": "確認コードは期限切れだ。新しい確認メールをリクエストしろ。",
+          "UNKNOWN_ADDRESS": "このメールアドレスは見つからなかった。削除された可能性がある。",
+          "UNKNOWN": "不明なエラーが発生した。後で再度試してほしい。"
+        }
       }
+    },
+    "supporter": {
+      "title": "サポーター",
+      "description": "有効なKo-fi購入を確認し、ギルドに割り当てて支援者機能を有効にせよ。",
+      "kofiLink": "Ko-fiで購入する",
+      "sections": {
+        "subscriptions": "有効なサブスクリプション",
+        "subscriptions_desc": "サブスクリプションは自動更新され、任意のギルドに割り当てることができる。",
+        "lifetime": "生涯購入",
+        "lifetime_desc": "生涯購入はギルドに割り当てることができ、機能を永久に解放できる。"
+      },
+      "item": {
+        "subscription": "定期購読",
+        "lifetime": "生涯",
+        "expires": "有効期限: {date}",
+        "assignedTo": "割り当て先: {guild}",
+        "assign": "割り当てる",
+        "unassign": "割り当て解除"
+      },
+      "errors": {
+        "load": "購入履歴を読み込めなかった。後で再度試してくれ。",
+        "assign": "購入の割り当てに失敗した。",
+        "unassign": "購入の割り当て解除に失敗した。"
+      },
+      "results": {
+        "ALREADY_SUBSCRIBED": "お前は既にギルドに割り当てられた有効なサブスクリプションを持っている。",
+        "SUBSCRIPTION_EXPIRED": "このサブスクリプションは期限切れのため、割り当てることができない。",
+        "UNKOWN": "不明なサブスクリプションエラーが発生した。後で再度試してほしい。",
+        "SUCCESS": "成功"
+      },
+      "missingPurchasesNotice": "購入履歴がここに表示されない場合、Ko-fiとDiscordアカウントで異なるメールアドレスを使用している可能性がある。追加のメールアドレスは{link}でリンクできる。",
+      "settingsLink": "ユーザー設定"
     }
   },
   "dashboard": {

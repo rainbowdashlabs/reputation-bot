@@ -16,12 +16,15 @@ import de.chojo.repbot.dao.provider.UserRepository;
 import de.chojo.repbot.dao.provider.VoteRepository;
 import de.chojo.repbot.serialization.ThankwordsContainer;
 import de.chojo.repbot.service.AutopostService;
+import de.chojo.repbot.service.KofiService;
+import de.chojo.repbot.service.MailService;
 import de.chojo.repbot.service.RoleAssigner;
 import de.chojo.repbot.service.TokenPurchaseService;
 import de.chojo.repbot.web.cache.MemberCache;
 import de.chojo.repbot.web.routes.v1.auth.AuthRoute;
 import de.chojo.repbot.web.routes.v1.data.DataRoute;
 import de.chojo.repbot.web.routes.v1.guild.GuildRoute;
+import de.chojo.repbot.web.routes.v1.kofi.KofiRoute;
 import de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute;
 import de.chojo.repbot.web.routes.v1.session.SessionRoute;
 import de.chojo.repbot.web.routes.v1.settings.SettingsRoute;
@@ -29,6 +32,7 @@ import de.chojo.repbot.web.routes.v1.user.UserRoute;
 import de.chojo.repbot.web.services.DiscordOAuthService;
 import de.chojo.repbot.web.services.SessionService;
 import io.javalin.http.ContentType;
+import io.javalin.http.HandlerType;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.slf4j.Logger;
 
@@ -51,6 +55,7 @@ public class Api {
     private final GuildRoute guildRoute;
     private final AuthRoute authRoute;
     private final UserRoute userRoute;
+    private final KofiRoute kofiRoute;
 
     public Api(
             SessionService sessionService,
@@ -67,7 +72,9 @@ public class Api {
             UserRepository userRepository,
             DiscordOAuthService discordOAuthService,
             VoteRepository voteRepository,
-            TokenPurchaseService tokenPurchaseService) {
+            TokenPurchaseService tokenPurchaseService,
+            KofiService kofiService,
+            MailService mailService) {
         this.sessionService = sessionService;
         metricsRoute = new MetricsRoute(metrics);
         sessionRoute = new SessionRoute(sessionService);
@@ -88,39 +95,47 @@ public class Api {
             log.error("Could not load thankwords container", e);
             thankwordsContainer = null;
         }
-        dataRoute = new DataRoute(thankwordsContainer, localization, configuration);
-        authRoute = new AuthRoute(discordOAuthService, userRepository, sessionService, configuration);
-        userRoute = new UserRoute(voteRepository, userRepository, configuration);
+        dataRoute = new DataRoute(thankwordsContainer, localization, configuration, shardManager);
+        authRoute = new AuthRoute(discordOAuthService, userRepository, sessionService, configuration, mailService);
+        userRoute =
+                new UserRoute(voteRepository, userRepository, configuration, shardManager, kofiService, mailService);
         guildRoute = new GuildRoute(memberCache, voteRepository, tokenPurchaseService);
+        kofiRoute = new KofiRoute(kofiService);
     }
 
     public void init() {
         path("v1", () -> {
-            before(ctx -> log.trace(
-                    "Received request on route: {} {}\nHeaders:\n{}\nBody:\n{}",
-                    ctx.method() + " " + ctx.url(),
-                    Objects.requireNonNullElse(ctx.queryString(), ""),
-                    ctx.headerMap().entrySet().stream()
-                            .map(h -> "   " + h.getKey() + ": " + h.getValue())
-                            .collect(Collectors.joining("\n")),
-                    ctx.body().substring(0, Math.min(ctx.body().length(), 180))));
-            after(ctx -> log.trace(
-                    "Answered request on route: {} {}\nStatus: {}\nHeaders:\n{}\nBody:\n{}",
-                    ctx.method() + " " + ctx.url(),
-                    Objects.requireNonNullElse(ctx.queryString(), ""),
-                    ctx.status(),
-                    ctx.res().getHeaderNames().stream()
-                            .map(h -> "   " + h + ": " + ctx.res().getHeader(h))
-                            .collect(Collectors.joining("\n")),
-                    ContentType.OCTET_STREAM.equals(ctx.contentType())
-                            ? "Bytes"
-                            : Objects.requireNonNullElse(ctx.result(), "")
-                                    .substring(
-                                            0,
-                                            Math.min(
-                                                    Objects.requireNonNullElse(ctx.result(), "")
-                                                            .length(),
-                                                    180))));
+            before(ctx -> {
+                if (ctx.method() == HandlerType.OPTIONS) return;
+                log.trace(
+                        "Received request on route: {} {}\nHeaders:\n{}\nBody:\n{}",
+                        ctx.method() + " " + ctx.url(),
+                        Objects.requireNonNullElse(ctx.queryString(), ""),
+                        ctx.headerMap().entrySet().stream()
+                                .map(h -> "   " + h.getKey() + ": " + h.getValue())
+                                .collect(Collectors.joining("\n")),
+                        ctx.body().substring(0, Math.min(ctx.body().length(), 180)));
+            });
+            after(ctx -> {
+                if (ctx.method() == HandlerType.OPTIONS) return;
+                log.trace(
+                        "Answered request on route: {} {}\nStatus: {}\nHeaders:\n{}\nBody:\n{}",
+                        ctx.method() + " " + ctx.url(),
+                        Objects.requireNonNullElse(ctx.queryString(), ""),
+                        ctx.status(),
+                        ctx.res().getHeaderNames().stream()
+                                .map(h -> "   " + h + ": " + ctx.res().getHeader(h))
+                                .collect(Collectors.joining("\n")),
+                        ContentType.OCTET_STREAM.equals(ctx.contentType())
+                                ? "Bytes"
+                                : Objects.requireNonNullElse(ctx.result(), "")
+                                        .substring(
+                                                0,
+                                                Math.min(
+                                                        Objects.requireNonNullElse(ctx.result(), "")
+                                                                .length(),
+                                                        180)));
+            });
 
             metricsRoute.buildRoutes();
             sessionRoute.buildRoutes();
@@ -129,6 +144,7 @@ public class Api {
             authRoute.buildRoutes();
             userRoute.buildRoutes();
             guildRoute.buildRoutes();
+            kofiRoute.buildRoutes();
         });
     }
 }

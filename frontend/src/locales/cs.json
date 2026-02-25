@@ -24,7 +24,8 @@
     "dashboard": "Přístrojová deska",
     "user_settings": "Nastavení uživatele",
     "voting": "Hlasování",
-    "token_shop": "Obchod s tokeny"
+    "token_shop": "Obchod s tokeny",
+    "supporter": "Podporovatel"
   },
   "presets": {
     "title": "Předvolby",
@@ -148,7 +149,9 @@
     "requiredTierSingular": "Požadovaná úroveň podpory:",
     "requiredTierPlural": "Je vyžadována jedna z následujících úrovní podpory:",
     "tokenShopHint": "Tuto funkci můžete také odemknout pomocí žetonů v",
-    "tokenShopLink": "Obchod s tokeny"
+    "tokenShopLink": "Obchod s tokeny",
+    "kofiHint": "nebo nás podpořte na",
+    "kofiLink": "Ko-fi"
   },
   "profile": {
     "description": "Přizpůsobte vzhled a chování bota na vašem serveru.",
@@ -754,7 +757,68 @@
         "label": "Hlasujte pro cech",
         "description": "Vyberte, která gilda by měla dostat žetony, když hlasujete pro bota. To bude mít vliv pouze na budoucí hlasování.",
         "none": "Žádná konkrétní gilda (osobní)"
+      },
+      "mails": {
+        "title": "E-mailové adresy",
+        "description": "Spravujte e-mailové adresy propojené s vaším účtem. Můžete přidat novou adresu a ověřit ji pomocí odkazu zaslaného do vaší doručené pošty.",
+        "verified": "Ověřeno",
+        "pending": "Čeká na ověření",
+        "noteDeletion": "Poznámka: E-mailové adresy z Discord nebo Ko-fi nelze odstranit. Odstranit lze pouze adresy, které jste přidali sami.",
+        "source": {
+          "user": "Uživatel",
+          "discord": "Neshoda",
+          "kofi": "Ko-fi"
+        },
+        "add": {
+          "placeholder": "Přidat nový e-mail (name@example.com)",
+          "button": "Přidat"
+        },
+        "verify": {
+          "success": "Váš e-mail byl úspěšně ověřen.",
+          "error": "Ověření e-mailu se nezdařilo. Zkuste to znovu nebo požádejte o nový ověřovací odkaz."
+        },
+        "errors": {
+          "ALREADY_REGISTERED": "Tato e-mailová adresa je již zaregistrována pro jiného uživatele.",
+          "INVALID_FORMAT": "Formát e-mailové adresy je neplatný. Zkontrolujte jej a zkuste to znovu.",
+          "WRONG_USER": "Tato e-mailová adresa patří jinému uživateli.",
+          "INVALID_CODE": "Ověřovací kód je neplatný.",
+          "CODE_EXPIRED": "Ověřovací kód vypršel. Požádejte o nový ověřovací e-mail.",
+          "UNKNOWN_ADDRESS": "Tuto e-mailovou adresu jsme nemohli najít. Možná byla odstraněna.",
+          "UNKNOWN": "Došlo k neznámé chybě. Zkuste to prosím znovu později."
+        }
       }
+    },
+    "supporter": {
+      "title": "Podporovatel",
+      "description": "Zobrazte své aktivní nákupy Ko-fi a přiřaďte je k cechu, abyste mohli využívat funkce pro podporovatele.",
+      "kofiLink": "Koupit na Ko-fi",
+      "sections": {
+        "subscriptions": "Aktivní předplatné",
+        "subscriptions_desc": "Předplatné se automaticky obnovuje a lze jej přiřadit k cechu podle vašeho výběru.",
+        "lifetime": "Celoživotní nákupy",
+        "lifetime_desc": "Celoživotní nákupy lze přiřadit k cechu, aby se trvale odemkly funkce."
+      },
+      "item": {
+        "subscription": "Předplatné",
+        "lifetime": "Životnost",
+        "expires": "Platnost: {date}",
+        "assignedTo": "Přiřazeno: {guild}",
+        "assign": "Přiřadit",
+        "unassign": "Zrušit přiřazení"
+      },
+      "errors": {
+        "load": "Nenačteny nákupy. Zkuste to prosím znovu později.",
+        "assign": "Přiřazení nákupu se nezdařilo.",
+        "unassign": "Nepodařilo se zrušit přiřazení nákupu."
+      },
+      "results": {
+        "ALREADY_SUBSCRIBED": "Již máte aktivní předplatné přiřazené k cechu.",
+        "SUBSCRIPTION_EXPIRED": "Toto předplatné vypršelo a nelze jej přiřadit.",
+        "UNKOWN": "Došlo k neznámé chybě při přihlášení. Zkuste to prosím znovu později.",
+        "SUCCESS": "Úspěch"
+      },
+      "missingPurchasesNotice": "Pokud zde nejsou vaše nákupy viditelné, možná jste pro Ko-fi použili jinou e-mailovou adresu než pro svůj účet Discord. Další e-mailové adresy můžete propojit ve svém profilu {link}.",
+      "settingsLink": "Nastavení uživatele"
     }
   },
   "dashboard": {

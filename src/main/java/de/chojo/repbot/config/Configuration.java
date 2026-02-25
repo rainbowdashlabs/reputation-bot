@@ -20,8 +20,10 @@ import de.chojo.repbot.config.elements.Botlist;
 import de.chojo.repbot.config.elements.Cleanup;
 import de.chojo.repbot.config.elements.Database;
 import de.chojo.repbot.config.elements.DiscordOAuth;
+import de.chojo.repbot.config.elements.Kofi;
 import de.chojo.repbot.config.elements.Links;
 import de.chojo.repbot.config.elements.MagicImage;
+import de.chojo.repbot.config.elements.Mailing;
 import de.chojo.repbot.config.elements.PresenceSettings;
 import de.chojo.repbot.config.elements.SKU;
 import de.chojo.repbot.config.elements.SelfCleanup;
@@ -128,6 +130,14 @@ public class Configuration {
 
     public Voting voting() {
         return configFile.voting();
+    }
+
+    public Kofi kofi() {
+        return configFile.kofi();
+    }
+
+    public Mailing mailing() {
+        return configFile.mailing();
     }
 
     private void save() throws IOException {

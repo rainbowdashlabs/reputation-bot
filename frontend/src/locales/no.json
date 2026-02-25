@@ -24,7 +24,8 @@
     "dashboard": "Dashbord",
     "user_settings": "Brukerinnstillinger",
     "voting": "Avstemning",
-    "token_shop": "Tokenbutikk"
+    "token_shop": "Tokenbutikk",
+    "supporter": "Supporter"
   },
   "presets": {
     "title": "Forhåndsinnstillinger",
@@ -148,7 +149,9 @@
     "requiredTierSingular": "Nødvendig støttenivå:",
     "requiredTierPlural": "En av følgende støttenivåer er påkrevd:",
     "tokenShopHint": "Du kan også låse opp denne funksjonen med tokens i",
-    "tokenShopLink": "Tokenbutikk"
+    "tokenShopLink": "Tokenbutikk",
+    "kofiHint": "eller støtt oss på",
+    "kofiLink": "Ko-fi"
   },
   "profile": {
     "description": "Tilpass hvordan boten vises og oppfører seg på serveren din.",
@@ -754,7 +757,68 @@
         "label": "Stem på Guild",
         "description": "Velg hvilket guild som skal motta tokens når du stemmer på boten. Dette vil kun påvirke fremtidige stemmer.",
         "none": "Ingen spesifikk klan (Personlig)"
+      },
+      "mails": {
+        "title": "E-postadresser",
+        "description": "Administrer e-postadressene som er knyttet til kontoen din. Du kan legge til en ny adresse og bekrefte den via lenken som sendes til innboksen din.",
+        "verified": "Verifisert",
+        "pending": "Venter på bekreftelse",
+        "noteDeletion": "Merk: E-postadresser fra Discord eller Ko-fi kan ikke fjernes. Bare adresser du selv har lagt til kan slettes.",
+        "source": {
+          "user": "Bruker",
+          "discord": "Uenighet",
+          "kofi": "Ko-fi"
+        },
+        "add": {
+          "placeholder": "Legg til en ny e-postadresse (name@example.com)",
+          "button": "Legg til"
+        },
+        "verify": {
+          "success": "E-postadressen din er bekreftet.",
+          "error": "E-postbekreftelsen mislyktes. Prøv igjen eller be om en ny bekreftelseskobling."
+        },
+        "errors": {
+          "ALREADY_REGISTERED": "Denne e-postadressen er allerede registrert for en annen bruker.",
+          "INVALID_FORMAT": "E-postadressen er ugyldig. Kontroller og prøv igjen.",
+          "WRONG_USER": "Denne e-postadressen tilhører en annen bruker.",
+          "INVALID_CODE": "Bekreftelseskoden er ugyldig.",
+          "CODE_EXPIRED": "Bekreftelseskoden har utløpt. Be om en ny bekreftelses-e-post.",
+          "UNKNOWN_ADDRESS": "Vi kunne ikke finne denne e-postadressen. Den kan ha blitt slettet.",
+          "UNKNOWN": "Det oppstod en ukjent feil. Prøv igjen senere."
+        }
       }
+    },
+    "supporter": {
+      "title": "Supporter",
+      "description": "Se dine aktive Ko-fi-kjøp og tilordne dem til et laug for å aktivere supporterfunksjoner.",
+      "kofiLink": "Kjøp på Ko-fi",
+      "sections": {
+        "subscriptions": "Aktive abonnementer",
+        "subscriptions_desc": "Abonnementene fornyes automatisk og kan tilordnes en klan etter eget valg.",
+        "lifetime": "Livstids kjøp",
+        "lifetime_desc": "Livstids kjøp kan tilordnes et laug for å låse opp funksjoner permanent."
+      },
+      "item": {
+        "subscription": "Abonnement",
+        "lifetime": "Levetid",
+        "expires": "Utløper: {date}",
+        "assignedTo": "Tildelt til: {guild}",
+        "assign": "Tildele",
+        "unassign": "Fjern tilordning"
+      },
+      "errors": {
+        "load": "Kunne ikke laste inn kjøp. Prøv igjen senere.",
+        "assign": "Kunne ikke tilordne kjøpet.",
+        "unassign": "Kunne ikke oppheve tilordningen av kjøpet."
+      },
+      "results": {
+        "ALREADY_SUBSCRIBED": "Du har allerede et aktivt abonnement tilordnet et laug.",
+        "SUBSCRIPTION_EXPIRED": "Dette abonnementet har utløpt og kan ikke tildeles.",
+        "UNKOWN": "Det oppstod en ukjent abonnementsfeil. Prøv igjen senere.",
+        "SUCCESS": "Suksess"
+      },
+      "missingPurchasesNotice": "Hvis kjøpene dine ikke vises her, kan det være at du har brukt en annen e-postadresse for Ko-fi enn Discord-kontoen din. Du kan koble til flere e-postadresser i {link}.",
+      "settingsLink": "Brukerinnstillinger"
     }
   },
   "dashboard": {

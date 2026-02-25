@@ -129,6 +129,10 @@ onUnmounted(() => {
     <label v-if="label" class="label mb-1.5">
       {{ label }}
     </label>
+    <p class="text-[10px] text-gray-400 dark:text-gray-500 flex items-center gap-1 -mt-1 mb-1.5">
+      <font-awesome-icon :icon="['fas', 'info-circle']" class="shrink-0" />
+      {{ t('general.channels.list.permissionsNote') }}
+    </p>
 
     <div class="relative">
       <!-- Select Mode -->

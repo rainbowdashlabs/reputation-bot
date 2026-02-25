@@ -76,6 +76,18 @@
                     TOS
                   </a>
                 </template>
+                <template v-if="links.kofi">
+                  <span> • </span>
+                  <a
+                      :href="links.kofi"
+                      class="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors inline-flex items-center gap-1"
+                      rel="noopener noreferrer"
+                      target="_blank"
+                  >
+                    <font-awesome-icon :icon="['fas', 'mug-hot']"/>
+                    Ko-fi
+                  </a>
+                </template>
               </template>
             </div>
             <div>
@@ -111,7 +123,8 @@ const links = ref<Links>({
   invite: '',
   support: '',
   website: '',
-  faq: ''
+  faq: '',
+  kofi: ''
 })
 
 onMounted(async () => {

@@ -5,7 +5,7 @@
  */
 package de.chojo.repbot.util;
 
-import java.awt.Color;
+import java.awt.*;
 
 /**
  * Contains static color objects for {@link Pastel} colors and {@link Strong} colors.
@@ -13,6 +13,10 @@ import java.awt.Color;
 public final class Colors {
     private Colors() {
         throw new UnsupportedOperationException("This is a utility class.");
+    }
+
+    public static String toHex(Color color) {
+        return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
     }
 
     /**
@@ -67,9 +71,5 @@ public final class Colors {
         private Strong() {
             throw new UnsupportedOperationException("This is a utility class.");
         }
-    }
-
-    public static String toHex(Color color) {
-        return String.format("#%02x%02x%02x", color.getRed(), color.getGreen(), color.getBlue());
     }
 }

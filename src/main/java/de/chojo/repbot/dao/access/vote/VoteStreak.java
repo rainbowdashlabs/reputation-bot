@@ -72,7 +72,7 @@ public class VoteStreak {
         Optional<VoteStreak> change = query("""
                 INSERT
                 INTO
-                    votes as v
+                    votes AS v
                     (user_id, botlist, last_vote, streak)
                 VALUES
                     (?, ?, now(), 0)
@@ -104,7 +104,7 @@ public class VoteStreak {
         Optional<VoteStreak> change = query("""
                 INSERT
                 INTO
-                    votes as v(user_id, botlist, last_vote, streak)
+                    votes AS v(user_id, botlist, last_vote, streak)
                 VALUES
                     (?, ?, now(), 0)
                 ON CONFLICT (user_id, botlist)

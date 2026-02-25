@@ -63,41 +63,12 @@ public class VoteRepository {
                 .orElse(0);
     }
 
-    private void addToken(long userId, EntityType type, int amount) {
-        query("""
-                INSERT
-                INTO
-                    vote_token as v(entity_id, entity_type, token, total_token)
-                VALUES
-                    (?, ?, ?, ?)
-                ON CONFLICT(entity_id, entity_type) DO UPDATE SET
-                    token = v.token + excluded.token, total_token = v.total_token + excluded.token;
-                """)
-                .single(call().bind(userId).bind(type).bind(amount).bind(amount))
-                .insert();
-    }
-
-    private void logToken(long userId, long guildId, VoteReason reason, int amount) {
-        query("""
-                INSERT INTO vote_log(user_id, guild_id, tokens, reason) VALUES (?,?,?,?);""")
-                .single(call().bind(userId).bind(guildId).bind(amount).bind(reason))
-                .insert();
-    }
-
     public int getUserToken(long userId) {
         return getToken(userId, EntityType.USER);
     }
 
     public int getGuildToken(long guildId) {
         return getToken(guildId, EntityType.GUILD);
-    }
-
-    private int getToken(long id, EntityType entityType) {
-        return query("SELECT token FROM vote_token WHERE entity_id = ? AND entity_type = ?")
-                .single(call().bind(id).bind(entityType))
-                .mapAs(Integer.class)
-                .first()
-                .orElse(0);
     }
 
     public boolean withdrawUserTokens(long id, int amount) {
@@ -135,5 +106,34 @@ public class VoteRepository {
                         .bind("id", id))
                 .update()
                 .changed();
+    }
+
+    private void addToken(long userId, EntityType type, int amount) {
+        query("""
+                INSERT
+                INTO
+                    vote_token AS v(entity_id, entity_type, token, total_token)
+                VALUES
+                    (?, ?, ?, ?)
+                ON CONFLICT(entity_id, entity_type) DO UPDATE SET
+                    token = v.token + excluded.token, total_token = v.total_token + excluded.token;
+                """)
+                .single(call().bind(userId).bind(type).bind(amount).bind(amount))
+                .insert();
+    }
+
+    private void logToken(long userId, long guildId, VoteReason reason, int amount) {
+        query("""
+                INSERT INTO vote_log(user_id, guild_id, tokens, reason) VALUES (?,?,?,?);""")
+                .single(call().bind(userId).bind(guildId).bind(amount).bind(reason))
+                .insert();
+    }
+
+    private int getToken(long id, EntityType entityType) {
+        return query("SELECT token FROM vote_token WHERE entity_id = ? AND entity_type = ?")
+                .single(call().bind(id).bind(entityType))
+                .mapAs(Integer.class)
+                .first()
+                .orElse(0);
     }
 }

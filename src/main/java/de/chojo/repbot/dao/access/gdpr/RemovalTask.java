@@ -38,22 +38,31 @@ public final class RemovalTask {
         try (var conn = QueryConfiguration.getDefault().withSingleTransaction()) {
             if (userId() == 0) {
                 conn.query("""
-                            INSERT
-                            INTO
-                                guilds_archived(guild_id, date_joined, latest_activity, date_left)
-                            SELECT
-                                guild_id,
-                                date_joined,
-                                latest_activity,
-                                coalesce(date_left, now())
-                            FROM
-                                guilds
-                            WHERE guild_id = ?;""").single(call().bind(guildId)).insert();
+                        INSERT
+                        INTO
+                            guilds_archived(guild_id, date_joined, latest_activity, date_left)
+                        SELECT
+                            guild_id,
+                            date_joined,
+                            latest_activity,
+                            coalesce(date_left, now())
+                        FROM
+                            guilds
+                        WHERE guild_id = ?;""").single(call().bind(guildId)).insert();
                 conn.query("DELETE FROM guilds WHERE guild_id = ?;")
                         .single(call().bind(guildId))
                         .delete();
                 log.trace("Removed guild settings for {}", guildId());
             } else if (guildId() == 0) {
+                Boolean subscription = conn.query(
+                                "SELECT exists(SELECT 1 FROM user_mails um LEFT JOIN kofi_purchase kp ON um.mail_hash = kp.mail_hash WHERE um.user_id = ? and kp.guild_id != 0);")
+                        .single(call().bind(userId()))
+                        .mapAs(Boolean.class)
+                        .first()
+                        .orElse(false);
+                // The user has still an active subscription. It has to be disabled first
+                if (subscription) return;
+
                 conn.query("DELETE FROM reputation_log WHERE receiver_id = ?;")
                         .single(call().bind(userId()))
                         .delete();
@@ -64,6 +73,28 @@ public final class RemovalTask {
                         .single(call().bind(userId()))
                         .delete();
                 conn.query("DELETE FROM support_threads WHERE user_id = ?;")
+                        .single(call().bind(userId()))
+                        .delete();
+                conn.query(
+                                "DELETE FROM kofi_purchase WHERE mail_hash IN (SELECT mail_hash FROM user_mails WHERE user_id = ?);")
+                        .single(call().bind(userId()))
+                        .delete();
+                conn.query("DELETE FROM user_mails WHERE user_id = ?;")
+                        .single(call().bind(userId()))
+                        .delete();
+                conn.query("DELETE FROM user_session WHERE user_id = ?;")
+                        .single(call().bind(userId()))
+                        .delete();
+                conn.query("DELETE FROM user_token WHERE user_id = ?;")
+                        .single(call().bind(userId()))
+                        .delete();
+                conn.query("DELETE FROM voice_activity WHERE user_id_1 = ? or user_id_2 = ?;")
+                        .single(call().bind(userId()).bind(userId()))
+                        .delete();
+                conn.query("DELETE FROM vote_log WHERE user_id = ?;")
+                        .single(call().bind(userId()))
+                        .delete();
+                conn.query("DELETE FROM votes WHERE user_id = ?;")
                         .single(call().bind(userId()))
                         .delete();
                 log.trace("Removed Data of user {}", userId());

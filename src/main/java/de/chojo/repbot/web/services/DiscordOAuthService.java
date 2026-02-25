@@ -13,6 +13,8 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.config.elements.DiscordOAuth;
+import de.chojo.repbot.web.services.oauth.DiscordGuild;
+import de.chojo.repbot.web.services.oauth.DiscordUser;
 
 import java.io.IOException;
 import java.net.URI;
@@ -33,7 +35,7 @@ public class DiscordOAuthService {
             new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     private final Configuration configuration;
 
-    private final Cache<String, Long> userIdCache =
+    private final Cache<String, DiscordUser> userCache =
             CacheBuilder.newBuilder().expireAfterWrite(10, TimeUnit.MINUTES).build();
     private final Cache<String, List<DiscordGuild>> userGuildsCache =
             CacheBuilder.newBuilder().expireAfterWrite(10, TimeUnit.MINUTES).build();
@@ -42,13 +44,17 @@ public class DiscordOAuthService {
         this.configuration = configuration;
     }
 
+    private static String enc(String v) {
+        return URLEncoder.encode(v, StandardCharsets.UTF_8);
+    }
+
     public String buildAuthorizeUrl(String state) {
         String base = DISCORD_BASE + "/oauth2/authorize";
         String params = "client_id=%s&redirect_uri=%s&response_type=code&prompt=none&scope=%s%s"
                 .formatted(
                         enc(cfg().clientId()),
                         enc(cfg().redirectUri()),
-                        enc("identify guilds"),
+                        enc("identify guilds email"),
                         state != null ? "&state=" + enc(state) : "");
         return base + "?" + params;
     }
@@ -69,8 +75,8 @@ public class DiscordOAuthService {
         return mapper.readValue(response.body(), DiscordTokenResponse.class).toTokenResponse();
     }
 
-    public synchronized long getCurrentUserId(String accessToken) throws IOException, InterruptedException {
-        Long cached = userIdCache.getIfPresent(accessToken);
+    public synchronized DiscordUser getCurrentUser(String accessToken) throws IOException, InterruptedException {
+        DiscordUser cached = userCache.getIfPresent(accessToken);
         if (cached != null) {
             return cached;
         }
@@ -84,18 +90,10 @@ public class DiscordOAuthService {
         if (response.statusCode() / 100 != 2) {
             throw new IOException("Discord /users/@me failed: " + response.statusCode() + " - " + response.body());
         }
-        long id = mapper.readValue(response.body(), DiscordUser.class).id();
-        userIdCache.put(accessToken, id);
-        return id;
+        DiscordUser user = mapper.readValue(response.body(), DiscordUser.class);
+        userCache.put(accessToken, user);
+        return user;
     }
-
-    public record DiscordGuild(
-            String id,
-            String name,
-            String icon,
-            String permissions,
-            @JsonProperty("permissions_new") String permissionsNew,
-            boolean owner) {}
 
     public synchronized List<DiscordGuild> getUserGuilds(String accessToken) throws IOException, InterruptedException {
         List<DiscordGuild> cached = userGuildsCache.getIfPresent(accessToken);
@@ -123,7 +121,7 @@ public class DiscordOAuthService {
      * See https://discord.com/developers/docs/topics/oauth2#revoking-tokens
      */
     public void revokeToken(String token) throws IOException, InterruptedException {
-        userIdCache.invalidate(token);
+        userCache.invalidate(token);
         userGuildsCache.invalidate(token);
         String form = "token=" + enc(token);
         HttpRequest request = HttpRequest.newBuilder()
@@ -147,10 +145,6 @@ public class DiscordOAuthService {
         return configuration.discordOAuth();
     }
 
-    private static String enc(String v) {
-        return URLEncoder.encode(v, StandardCharsets.UTF_8);
-    }
-
     public record TokenResponse(String accessToken, String refreshToken, Instant expiry) {}
 
     private record DiscordTokenResponse(
@@ -161,6 +155,4 @@ public class DiscordOAuthService {
             return new TokenResponse(accessToken, refreshToken, Instant.now().plusSeconds(expiresIn));
         }
     }
-
-    private record DiscordUser(long id) {}
 }

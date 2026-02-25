@@ -8,7 +8,7 @@ package de.chojo.repbot.web.pojo.guild;
 import de.chojo.repbot.util.Colors;
 import net.dv8tion.jda.api.entities.Role;
 
-import java.awt.Color;
+import java.awt.*;
 import java.util.Objects;
 
 public class RolePOJO {

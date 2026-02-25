@@ -322,6 +322,7 @@ export interface Links {
     support: string;
     website: string;
     faq: string;
+    kofi: string;
 }
 
 export interface GuildSessionData {
@@ -587,6 +588,12 @@ export interface SKUEntry {
     skus: SKUId[];
 }
 
+export interface SKU {
+    id: string;
+    type: string;
+    name: string;
+}
+
 export interface Feature {
     id: number;
     tokens: number;
@@ -625,4 +632,54 @@ export interface ActiveFeaturePOJO {
     featureId: number;
     expires: string;
     autoRenewal: boolean;
+}
+
+// User Purchases (Ko-fi)
+export enum KofiPurchaseType {
+    SUBSCRIPTION = 'Subscription',
+    SHOP_ORDER = 'Shop Order',
+}
+
+export enum SubscriptionResult {
+    ALREADY_SUBSCRIBED = 'ALREADY_SUBSCRIBED',
+    SUBSCRIPTION_EXPIRED = 'SUBSCRIPTION_EXPIRED',
+    UNKOWN = 'UNKOWN',
+    SUCCESS = 'SUCCESS',
+}
+
+export interface KofiPurchasePOJO {
+    id: number;
+    mailHash: string;
+    transactionId: string;
+    key: string;
+    type: KofiPurchaseType;
+    skuId: string;
+    expiresAt?: string | null;
+    guildId: string;
+}
+
+export enum MailSource {
+    USER = 'USER',
+    DISCORD = 'DISCORD',
+    KOFI = 'KOFI',
+}
+
+export interface MailEntryPOJO {
+    userId: number;
+    source: MailSource;
+    hash: string;
+    mailShort: string;
+    verified: boolean;
+    verificationRequested: string | null;
+    verificationCode: string | null;
+}
+
+export enum MailFailureReason {
+    ALREADY_REGISTERED = 'ALREADY_REGISTERED',
+    INVALID_FORMAT = 'INVALID_FORMAT',
+    WRONG_USER = 'WRONG_USER',
+    INVALID_CODE = 'INVALID_CODE',
+    CODE_EXPIRED = 'CODE_EXPIRED',
+    UNKNOWN_ADDRESS = 'UNKNOWN_ADDRESS',
+    RATE_LIMIT = 'RATE_LIMIT',
 }

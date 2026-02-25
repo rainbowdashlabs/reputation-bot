@@ -24,7 +24,8 @@
     "dashboard": "Dashboard",
     "user_settings": "Gebruikersinstellingen",
     "voting": "Stemmen",
-    "token_shop": "Tokenwinkel"
+    "token_shop": "Tokenwinkel",
+    "supporter": "Supporter"
   },
   "presets": {
     "title": "Voorinstellingen",
@@ -148,7 +149,9 @@
     "requiredTierSingular": "Vereist ondersteuningsniveau:",
     "requiredTierPlural": "Je moet een van de volgende supporterniveaus kiezen:",
     "tokenShopHint": "Je kunt deze functie ook vrijspelen met tokens in de",
-    "tokenShopLink": "Tokenwinkel"
+    "tokenShopLink": "Tokenwinkel",
+    "kofiHint": "of steun ons op",
+    "kofiLink": "Ko-fi"
   },
   "profile": {
     "description": "Pas aan hoe de bot eruitziet en zich gedraagt op je server.",
@@ -754,7 +757,68 @@
         "label": "Stem op het gilde",
         "description": "Kies welke gilde tokens moet krijgen als je op de bot stemt. Dit geldt alleen voor toekomstige stemmen.",
         "none": "Geen specifieke gilde (Persoonlijk)"
+      },
+      "mails": {
+        "title": "E-mailadressen",
+        "description": "Beheer de e-mailadressen die aan je account zijn gekoppeld. Je kunt een nieuw adres toevoegen en dit verifiëren via de link die naar je inbox is gestuurd.",
+        "verified": "Geverifieerd",
+        "pending": "In afwachting van verificatie",
+        "noteDeletion": "Let op: e-mailadressen van Discord of Ko-fi kun je niet verwijderen. Alleen adressen die je zelf hebt toegevoegd, kun je weggooien.",
+        "source": {
+          "user": "Gebruiker",
+          "discord": "Discord",
+          "kofi": "Ko-fi"
+        },
+        "add": {
+          "placeholder": "Voeg een nieuw e-mailadres toe (name@example.com)",
+          "button": "Toevoegen"
+        },
+        "verify": {
+          "success": "Je e-mailadres is nu goed geverifieerd.",
+          "error": "Het lukte niet om je e-mail te checken. Probeer het nog een keer of vraag een nieuwe verificatielink aan."
+        },
+        "errors": {
+          "ALREADY_REGISTERED": "Dit e-mailadres is al geregistreerd voor iemand anders.",
+          "INVALID_FORMAT": "Het e-mailadres klopt niet. Check het nog eens en probeer het opnieuw.",
+          "WRONG_USER": "Dit e-mailadres is van iemand anders.",
+          "INVALID_CODE": "De verificatiecode klopt niet.",
+          "CODE_EXPIRED": "De verificatiecode is verlopen. Vraag een nieuwe verificatie-e-mail aan.",
+          "UNKNOWN_ADDRESS": "We hebben dit e-mailadres niet kunnen vinden. Misschien is het verwijderd.",
+          "UNKNOWN": "Er is iets misgegaan. Probeer het later nog eens."
+        }
       }
+    },
+    "supporter": {
+      "title": "Supporter",
+      "description": "Bekijk je actieve Ko-fi-aankopen en koppel ze aan een gilde om supporterfuncties te activeren.",
+      "kofiLink": "Koop op Ko-fi",
+      "sections": {
+        "subscriptions": "Actieve abonnementen",
+        "subscriptions_desc": "Abonnementen worden automatisch verlengd en je kunt ze toewijzen aan een gilde dat je zelf kiest.",
+        "lifetime": "Aankopen voor het leven",
+        "lifetime_desc": "Aankopen voor het leven kunnen aan een gilde worden toegewezen om functies permanent te ontgrendelen."
+      },
+      "item": {
+        "subscription": "Abonnement",
+        "lifetime": "Levensduur",
+        "expires": "Verloopt: {date}",
+        "assignedTo": "Toegewezen aan: {guild}",
+        "assign": "Toewijzen",
+        "unassign": "Toewijzing ongedaan maken"
+      },
+      "errors": {
+        "load": "Het lukt niet om je aankopen te laden. Probeer het later nog eens.",
+        "assign": "Het lukte niet om de aankoop toe te wijzen.",
+        "unassign": "Het lukt niet om de aankoop los te koppelen."
+      },
+      "results": {
+        "ALREADY_SUBSCRIBED": "Je hebt al een actief abonnement dat aan een gilde is gekoppeld.",
+        "SUBSCRIPTION_EXPIRED": "Dit abonnement is verlopen en kan niet worden toegewezen.",
+        "UNKOWN": "Er is een onbekende fout opgetreden bij het abonneren. Probeer het later nog eens.",
+        "SUCCESS": "Succes"
+      },
+      "missingPurchasesNotice": "Als je aankopen hier niet te zien zijn, heb je misschien een ander e-mailadres gebruikt voor Ko-fi dan voor je Discord-account. Je kunt extra e-mailadressen koppelen in je {link}.",
+      "settingsLink": "Gebruikersinstellingen"
     }
   },
   "dashboard": {

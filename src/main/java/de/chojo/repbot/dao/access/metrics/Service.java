@@ -47,10 +47,10 @@ public class Service {
 
     private void logInteraction(String type) {
         Query.query("""
-                     INSERT INTO metrics_handled_interactions(hour, %s) VALUES (date_trunc('hour', now()), 1)
-                     ON CONFLICT(hour)
-                         DO UPDATE SET %s = metrics_handled_interactions.%s + 1
-                     """, type, type, type).single().insert();
+                INSERT INTO metrics_handled_interactions(hour, %s) VALUES (date_trunc('hour', now()), 1)
+                ON CONFLICT(hour)
+                    DO UPDATE SET %s = metrics_handled_interactions.%s + 1
+                """, type, type, type).single().insert();
     }
 
     private LabeledCountStatistic get(String table, String timeframe, int offset, int count) {

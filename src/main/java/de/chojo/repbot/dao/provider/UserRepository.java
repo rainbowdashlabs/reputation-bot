@@ -5,45 +5,89 @@
  */
 package de.chojo.repbot.dao.provider;
 
-import de.chojo.repbot.dao.access.user.UserSettings;
-import de.chojo.repbot.dao.access.user.UserToken;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import de.chojo.repbot.dao.access.user.RepUser;
+import de.chojo.repbot.dao.access.user.sub.purchases.KofiPurchase;
+import de.chojo.repbot.service.kofi.Type;
+import de.chojo.sadu.queries.converter.StandardValueConverter;
+import net.dv8tion.jda.api.entities.User;
 
-import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
-import static de.chojo.sadu.queries.converter.StandardValueConverter.INSTANT_TIMESTAMP;
 
 public class UserRepository {
+    private final Cache<Long, RepUser> users =
+            CacheBuilder.newBuilder().expireAfterAccess(15, TimeUnit.MINUTES).build();
 
-    public Optional<UserToken> token(long userId) {
-        return query("SELECT * FROM user_token WHERE user_id = ?")
-                .single(call().bind(userId))
-                .mapAs(UserToken.class)
+    public RepUser byId(long id) {
+        try {
+            return users.get(id, () -> new RepUser(id));
+        } catch (ExecutionException e) {
+            return new RepUser(id);
+        }
+    }
+
+    public RepUser byUser(User user) {
+        return byId(user.getIdLong());
+    }
+
+    public Optional<RepUser> byMailHash(String hash) {
+        return query("""
+                SELECT user_id FROM user_mails um WHERE mail_hash = ?;
+                """).single(call().bind(hash)).mapAs(Long.class).first().map(this::byId);
+    }
+
+    public void registerPurchase(KofiPurchase purchase) {
+        if (purchase.type() == Type.SUBSCRIPTION) {
+            // Renew subscription if one exists already with that mail hash
+            Optional<KofiPurchase> matchingPurchase = getMatchingPurchase(purchase);
+            if (matchingPurchase.isPresent()) {
+                matchingPurchase.get().renew();
+                return;
+            }
+        }
+        query("""
+                INSERT
+                INTO
+                    kofi_purchase(mail_hash, key, sku_id, type, expires_at, transaction_id, guild_id)
+                VALUES
+                    (?, ?, ?, ?, ?, ?, ?)
+                ON CONFLICT(transaction_id)
+                    DO NOTHING;
+                """)
+                .single(call().bind(purchase.mailHash())
+                        .bind(purchase.key())
+                        .bind(purchase.skuId())
+                        .bind(purchase.type())
+                        .bind(purchase.expiresAt(), StandardValueConverter.INSTANT_TIMESTAMP)
+                        .bind(purchase.transactionId())
+                        .bind(purchase.guildId()));
+    }
+
+    public Optional<KofiPurchase> getMatchingPurchase(KofiPurchase purchase) {
+        return query("""
+                SELECT * FROM kofi_purchase WHERE sku_id = ? AND mail_hash = ? AND type = ?;
+                """)
+                .single(call().bind(purchase.skuId()).bind(purchase.mailHash()).bind(purchase.type()))
+                .mapAs(KofiPurchase.class)
                 .first();
     }
 
-    public void updateToken(long userId, String accessToken, String refreshToken, Instant expiry) {
+    public void cleanupExpiredMails() {
         query("""
-                INSERT INTO user_token (user_id, access_token, refresh_token, expiry)
-                VALUES (?, ?, ?, ?)
-                ON CONFLICT (user_id) DO UPDATE SET
-                    access_token = excluded.access_token,
-                    refresh_token = excluded.refresh_token,
-                    expiry = excluded.expiry
-                """)
-                .single(call().bind(userId).bind(accessToken).bind(refreshToken).bind(expiry, INSTANT_TIMESTAMP))
-                .insert();
+                DELETE FROM user_mails WHERE verification_requested < now() - INTERVAL '1 hour';
+                """).single().delete();
     }
 
-    public UserSettings getSettingsById(long userId) {
+    public List<KofiPurchase> getExpiredKofiPurchased() {
         return query("""
-                SELECT * FROM user_settings WHERE id = ?
-                """)
-                .single(call().bind(userId))
-                .mapAs(UserSettings.class)
-                .first()
-                .orElseGet(() -> new UserSettings(userId, 0));
+                SELECT id, mail_hash, key, sku_id, type, expires_at, transaction_id, guild_id FROM kofi_purchase WHERE expires_at < now() AND type = 'SUBSCRIPTION';
+                """).single().mapAs(KofiPurchase.class).all();
     }
 }

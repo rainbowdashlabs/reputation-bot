@@ -12,6 +12,8 @@ import java.util.List;
 
 public class Subscription {
     String name = "";
+    String kofiSubscriptionId = "";
+    String kofiLifetimeId = "";
     long subscriptionSku = 0;
     long lifetimeSku = 0;
 
@@ -25,6 +27,14 @@ public class Subscription {
 
     public long lifetimeSku() {
         return lifetimeSku;
+    }
+
+    public String kofiSubscriptionId() {
+        return kofiSubscriptionId;
+    }
+
+    public String kofiLifetimeId() {
+        return kofiLifetimeId;
     }
 
     public SkuMeta lifetimeSkuMeta() {

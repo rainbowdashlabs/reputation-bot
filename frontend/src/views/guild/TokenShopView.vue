@@ -17,7 +17,7 @@ import BaseButton from '@/components/BaseButton.vue'
 import TokenValue from '@/components/TokenValue.vue'
 
 const {t} = useI18n()
-const {userSession, currentGuildId, userTokens, guildTokens, refreshUserTokens, refreshGuildTokens} = useSession()
+const {userSession, currentGuildId, userTokens, guildTokens, refreshUserTokens, refreshGuildTokens, refreshGuildPremium} = useSession()
 
 const features = ref<Feature[]>([])
 const activeFeatures = ref<ActiveFeaturePOJO[]>([])
@@ -40,7 +40,7 @@ const fetchData = async (silent = false) => {
     const [featuresRes, activeRes, premiumRes, everyoneTokenPurchaseRes] = await Promise.all([
       api.getTokenFeatures(),
       api.getActiveFeatures(),
-      api.getGuildPremium(),
+      refreshGuildPremium(),
       api.getEveryoneTokenPurchase(),
       refreshUserTokens(),
       refreshGuildTokens()
@@ -50,7 +50,7 @@ const fetchData = async (silent = false) => {
     // In our case, the response from backend is an array of features
     features.value = Object.values(featuresRes)
     activeFeatures.value = activeRes
-    premiumFeatures.value = premiumRes
+    premiumFeatures.value = premiumRes as any
     everyoneTokenPurchase.value = everyoneTokenPurchaseRes
   } catch (error) {
     console.error('Failed to fetch token shop data', error)

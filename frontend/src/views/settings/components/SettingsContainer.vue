@@ -14,8 +14,11 @@ defineProps<{
 </script>
 
 <template>
-  <div>
-    <Header2>{{ title }}</Header2>
+  <div class="mb-6">
+    <div class="flex items-center justify-between gap-4 mb-4">
+      <Header2 class="!mb-0">{{ title }}</Header2>
+      <slot name="header-actions"/>
+    </div>
     <p v-if="description" class="text-gray-600 dark:text-gray-400 mb-4 -mt-1">
       {{ description }}
     </p>

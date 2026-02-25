@@ -13,8 +13,10 @@ import de.chojo.repbot.config.elements.Botlist;
 import de.chojo.repbot.config.elements.Cleanup;
 import de.chojo.repbot.config.elements.Database;
 import de.chojo.repbot.config.elements.DiscordOAuth;
+import de.chojo.repbot.config.elements.Kofi;
 import de.chojo.repbot.config.elements.Links;
 import de.chojo.repbot.config.elements.MagicImage;
+import de.chojo.repbot.config.elements.Mailing;
 import de.chojo.repbot.config.elements.PresenceSettings;
 import de.chojo.repbot.config.elements.SKU;
 import de.chojo.repbot.config.elements.SelfCleanup;
@@ -27,6 +29,7 @@ public class ConfigFile {
     private AnalyzerSettings analyzerSettings = new AnalyzerSettings();
     private Database database = new Database();
     private MagicImage magicImage = new MagicImage();
+    private Kofi kofi = new Kofi();
     private Badges badges = new Badges();
     private Links links = new Links();
     private Botlist botlist = new Botlist();
@@ -36,6 +39,7 @@ public class ConfigFile {
     private Cleanup cleanup = new Cleanup();
     private SKU skus = new SKU();
     private Voting voting = new Voting();
+    private Mailing mailing = new Mailing();
 
     public BaseSettings baseSettings() {
         return baseSettings;
@@ -91,5 +95,13 @@ public class ConfigFile {
 
     public Voting voting() {
         return voting;
+    }
+
+    public Kofi kofi() {
+        return kofi;
+    }
+
+    public Mailing mailing() {
+        return mailing;
     }
 }

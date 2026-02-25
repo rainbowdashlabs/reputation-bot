@@ -24,7 +24,8 @@
     "dashboard": "Panel de control",
     "user_settings": "Configuración de usuario",
     "voting": "Votación",
-    "token_shop": "Tienda de fichas"
+    "token_shop": "Tienda de fichas",
+    "supporter": "Partidario"
   },
   "presets": {
     "title": "Ajustes preestablecidos",
@@ -148,7 +149,9 @@
     "requiredTierSingular": "Nivel de patrocinador requerido:",
     "requiredTierPlural": "Se requiere uno de los siguientes niveles de patrocinador:",
     "tokenShopHint": "También puedes desbloquear esta función con tokens en el",
-    "tokenShopLink": "Tienda de fichas"
+    "tokenShopLink": "Tienda de fichas",
+    "kofiHint": "o apóyanos en",
+    "kofiLink": "Ko-fi"
   },
   "profile": {
     "description": "Personaliza cómo aparece y se comporta el bot en tu servidor.",
@@ -754,7 +757,68 @@
         "label": "Votar por el gremio",
         "description": "Elige qué gremio debe recibir fichas cuando votes por el bot. Esto solo afectará a los votos futuros.",
         "none": "Sin gremio específico (Personal)"
+      },
+      "mails": {
+        "title": "Direcciones de correo electrónico",
+        "description": "Gestiona las direcciones de correo electrónico vinculadas a tu cuenta. Puedes añadir una nueva dirección y verificarla a través del enlace enviado a tu bandeja de entrada.",
+        "verified": "Verificado",
+        "pending": "Pendiente de verificación",
+        "noteDeletion": "Nota: Las direcciones de correo electrónico de Discord o Ko-fi no se pueden eliminar. Solo se pueden eliminar las direcciones añadidas por ti mismo.",
+        "source": {
+          "user": "Usuario",
+          "discord": "Discordia",
+          "kofi": "Ko-fi"
+        },
+        "add": {
+          "placeholder": "Añadir un nuevo correo electrónico (name@example.com)",
+          "button": "Añadir"
+        },
+        "verify": {
+          "success": "Tu correo electrónico ha sido verificado correctamente.",
+          "error": "La verificación del correo electrónico ha fallado. Inténtalo de nuevo o solicita un nuevo enlace de verificación."
+        },
+        "errors": {
+          "ALREADY_REGISTERED": "Esta dirección de correo electrónico ya está registrada con otro usuario.",
+          "INVALID_FORMAT": "El formato de la dirección de correo electrónico no es válido. Compruébalo y vuelve a intentarlo.",
+          "WRONG_USER": "Esta dirección de correo electrónico pertenece a otro usuario.",
+          "INVALID_CODE": "El código de verificación no es válido.",
+          "CODE_EXPIRED": "El código de verificación ha caducado. Solicita un nuevo correo electrónico de verificación.",
+          "UNKNOWN_ADDRESS": "No hemos podido encontrar esta dirección de correo electrónico. Es posible que haya sido eliminada.",
+          "UNKNOWN": "Se ha producido un error desconocido. Inténtalo de nuevo más tarde."
+        }
       }
+    },
+    "supporter": {
+      "title": "Partidario",
+      "description": "Consulta tus compras activas de Ko-fi y asígnalas a un gremio para habilitar las funciones de patrocinador.",
+      "kofiLink": "Comprar en Ko-fi",
+      "sections": {
+        "subscriptions": "Suscripciones activas",
+        "subscriptions_desc": "Las suscripciones se renuevan automáticamente y se pueden asignar al gremio que tú elijas.",
+        "lifetime": "Compras de por vida",
+        "lifetime_desc": "Las compras de por vida se pueden asignar a un gremio para desbloquear funciones de forma permanente."
+      },
+      "item": {
+        "subscription": "Suscripción",
+        "lifetime": "Vida útil",
+        "expires": "Caduca: {date}",
+        "assignedTo": "Asignado a: {guild}",
+        "assign": "Asignar",
+        "unassign": "Desasignar"
+      },
+      "errors": {
+        "load": "No se han podido cargar las compras. Inténtalo de nuevo más tarde.",
+        "assign": "No se ha podido asignar la compra.",
+        "unassign": "No se ha podido desasignar la compra."
+      },
+      "results": {
+        "ALREADY_SUBSCRIBED": "Ya tienes una suscripción activa asignada a un gremio.",
+        "SUBSCRIPTION_EXPIRED": "Esta suscripción ha caducado y no se puede asignar.",
+        "UNKOWN": "Se ha producido un error de suscripción desconocido. Inténtalo de nuevo más tarde.",
+        "SUCCESS": "Éxito"
+      },
+      "missingPurchasesNotice": "Si tus compras no aparecen aquí, es posible que hayas utilizado una dirección de correo electrónico diferente para Ko-fi y tu cuenta de Discord. Puedes vincular direcciones de correo electrónico adicionales en {link}.",
+      "settingsLink": "Configuración de usuario"
     }
   },
   "dashboard": {

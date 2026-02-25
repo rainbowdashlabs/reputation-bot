@@ -79,6 +79,14 @@ const vClickOutside = {
             <font-awesome-icon :icon="['fas', 'check-to-slot']" class="w-4"/>
             {{ t('navigation.voting') }}
           </router-link>
+          <router-link
+              to="/user/supporter"
+              class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 flex items-center gap-2"
+              @click="close"
+          >
+            <font-awesome-icon :icon="['fas', 'shopping-cart']" class="w-4"/>
+            {{ t('navigation.supporter') }}
+          </router-link>
           <div @click="logout" class="w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 flex items-center gap-2 cursor-pointer">
             <font-awesome-icon :icon="['fas', 'right-from-bracket']" class="w-4"/>
             {{ t('navigation.logout') }}

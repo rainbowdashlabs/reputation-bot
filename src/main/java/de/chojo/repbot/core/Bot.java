@@ -378,7 +378,7 @@ public class Bot {
                         Info.create(configuration),
                         new Log(guilds, configuration),
                         new Setup(sessionService()),
-                        new Gdpr(data.gdpr()),
+                        new Gdpr(data.gdpr(), data.userRepository()),
                         new Prune(gdprService),
                         new Reactions(guilds, configuration),
                         new Dashboard(guilds),

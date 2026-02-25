@@ -65,16 +65,16 @@ public class GdprUser {
     public boolean request() {
         try (var conn = QueryConfiguration.getDefault().withSingleTransaction()) {
             var res = conn.query("""
-                                  DELETE FROM gdpr_log
-                                  WHERE user_id = ?
-                                      AND received IS NOT NULL
-                                      AND received < now() - INTERVAL '30 days';
-                                  """).single(call().bind(userId())).delete();
+                    DELETE FROM gdpr_log
+                    WHERE user_id = ?
+                        AND received IS NOT NULL
+                        AND received < now() - INTERVAL '30 days';
+                    """).single(call().bind(userId())).delete();
             return conn.query("""
-                               INSERT INTO gdpr_log(user_id) VALUES(?)
-                                   ON CONFLICT(user_id)
-                                       DO NOTHING;
-                               """).single(call().bind(userId())).update().changed() && res.changed();
+                    INSERT INTO gdpr_log(user_id) VALUES(?)
+                        ON CONFLICT(user_id)
+                            DO NOTHING;
+                    """).single(call().bind(userId())).update().changed() && res.changed();
         }
     }
 

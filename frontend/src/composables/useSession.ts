@@ -292,7 +292,8 @@ export function useSession() {
         updateIntegrationBypass,
         removeIntegrationBypass,
         loadSettings,
-        loadPremiumFeatures
+        loadPremiumFeatures,
+        refreshGuildPremium: () => loadPremiumFeatures(true)
     }
 }
 
@@ -307,15 +308,15 @@ async function loadSettings() {
     }
 }
 
-async function loadPremiumFeatures() {
-    if (premiumFeatures.value) return
-    try {
-        const premium = await api.getGuildPremium()
-        premiumFeatures.value = premium
-        if (session.value) {
-            session.value.premiumFeatures = premium
+const loadPremiumFeatures = async (force = false) => {
+        if (premiumFeatures.value && !force) return
+        try {
+            const premium = await api.getGuildPremium()
+            premiumFeatures.value = premium
+            if (session.value) {
+                session.value.premiumFeatures = premium
+            }
+        } catch (e) {
+            console.error('Failed to load premium features:', e)
         }
-    } catch (e) {
-        console.error('Failed to load premium features:', e)
     }
-}

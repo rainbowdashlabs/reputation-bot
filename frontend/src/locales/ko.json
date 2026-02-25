@@ -24,7 +24,8 @@
     "dashboard": "대시보드",
     "user_settings": "사용자 설정",
     "voting": "투표",
-    "token_shop": "토큰 상점"
+    "token_shop": "토큰 상점",
+    "supporter": "후원자"
   },
   "presets": {
     "title": "사전 설정",
@@ -148,7 +149,9 @@
     "requiredTierSingular": "필수 후원 등급:",
     "requiredTierPlural": "다음 후원 등급 중 하나가 필요합니다:",
     "tokenShopHint": "이 기능은 토큰으로도 잠금을 해제할 수 있습니다.",
-    "tokenShopLink": "토큰 상점"
+    "tokenShopLink": "토큰 상점",
+    "kofiHint": "또는 저희를 후원해 주세요",
+    "kofiLink": "코피"
   },
   "profile": {
     "description": "서버에서 봇의 외관과 동작 방식을 사용자 지정하세요.",
@@ -754,7 +757,68 @@
         "label": "투표 길드",
         "description": "봇에 투표할 때 토큰을 받을 길드를 선택하세요. 이는 향후 투표에만 영향을 미칩니다.",
         "none": "특정 길드 없음 (개인)"
+      },
+      "mails": {
+        "title": "이메일 주소",
+        "description": "계정에 연결된 이메일 주소를 관리하세요. 새 주소를 추가하고 수신함으로 전송된 링크를 통해 확인할 수 있습니다.",
+        "verified": "검증됨",
+        "pending": "검증 대기 중",
+        "noteDeletion": "참고: Discord 또는 Ko-fi에서 제공된 이메일 주소는 삭제할 수 없습니다. 본인이 직접 추가한 주소만 삭제 가능합니다.",
+        "source": {
+          "user": "사용자",
+          "discord": "불화",
+          "kofi": "코피"
+        },
+        "add": {
+          "placeholder": "새 이메일 추가 (name@example.com)",
+          "button": "추가"
+        },
+        "verify": {
+          "success": "귀하의 이메일 주소가 성공적으로 확인되었습니다.",
+          "error": "이메일 확인에 실패했습니다. 다시 시도하거나 새로운 확인 링크를 요청하세요."
+        },
+        "errors": {
+          "ALREADY_REGISTERED": "이 이메일 주소는 이미 다른 사용자에게 등록되어 있습니다.",
+          "INVALID_FORMAT": "이메일 주소 형식이 잘못되었습니다. 확인 후 다시 시도해 주세요.",
+          "WRONG_USER": "이 이메일 주소는 다른 사용자에게 속합니다.",
+          "INVALID_CODE": "인증 코드가 잘못되었습니다.",
+          "CODE_EXPIRED": "인증 코드가 만료되었습니다. 새로운 인증 이메일을 요청해 주세요.",
+          "UNKNOWN_ADDRESS": "이 이메일 주소를 찾을 수 없습니다. 삭제되었을 수 있습니다.",
+          "UNKNOWN": "알 수 없는 오류가 발생했습니다. 나중에 다시 시도해 주세요."
+        }
       }
+    },
+    "supporter": {
+      "title": "후원자",
+      "description": "활성 Ko-fi 구매 내역을 확인하고 길드에 할당하여 후원자 기능을 활성화하세요.",
+      "kofiLink": "Ko-fi에서 구매하기",
+      "sections": {
+        "subscriptions": "활성 구독",
+        "subscriptions_desc": "구독은 자동으로 갱신되며 원하는 길드에 할당할 수 있습니다.",
+        "lifetime": "평생 구매",
+        "lifetime_desc": "평생 구매는 길드에 할당되어 기능을 영구적으로 해제할 수 있습니다."
+      },
+      "item": {
+        "subscription": "구독",
+        "lifetime": "평생",
+        "expires": "만료일: {date}",
+        "assignedTo": "할당 대상: {guild}",
+        "assign": "할당하다",
+        "unassign": "할당 해제"
+      },
+      "errors": {
+        "load": "구매 내역을 불러오는 데 실패했습니다. 나중에 다시 시도해 주세요.",
+        "assign": "구매 할당에 실패했습니다.",
+        "unassign": "구매 할당 해제에 실패했습니다."
+      },
+      "results": {
+        "ALREADY_SUBSCRIBED": "귀하께서는 이미 길드에 할당된 활성 구독을 보유하고 계십니다.",
+        "SUBSCRIPTION_EXPIRED": "이 구독은 만료되어 할당할 수 없습니다.",
+        "UNKOWN": "알 수 없는 구독 오류가 발생했습니다. 나중에 다시 시도해 주세요.",
+        "SUCCESS": "성공"
+      },
+      "missingPurchasesNotice": "구매 내역이 여기에 표시되지 않는다면, Ko-fi 계정에 Discord 계정과 다른 이메일 주소를 사용했을 수 있습니다. {link}에서 추가 이메일 주소를 연결할 수 있습니다.",
+      "settingsLink": "사용자 설정"
     }
   },
   "dashboard": {
