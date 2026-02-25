@@ -26,10 +26,21 @@ const verifyMessage = ref<string>('')
 const verifyError = ref<string>('')
 const registerError = ref<string>('')
 
-const getFailureMessage = (reasonRaw: unknown): string => {
+const getFailureMessage = (reasonRaw: unknown, headers?: any): string => {
   const reason = typeof reasonRaw === 'string' ? reasonRaw : ''
   if (reason && Object.values(MailFailureReason).includes(reason as MailFailureReason)) {
-    return t(`user.settings.mails.errors.${reason}`) as string
+    if (reason === MailFailureReason.RATE_LIMIT && headers?.['retry-after']) {
+      const retryAfter = parseInt(headers['retry-after'])
+      const minutes = Math.floor(retryAfter / 60)
+      const seconds = retryAfter % 60
+      let timeStr = ''
+      if (minutes > 0) {
+        timeStr += `${minutes}m `
+      }
+      timeStr += `${seconds}s`
+      return t(`user.settings.mails.errors.${reason}`, { time: timeStr.trim() }) as string
+    }
+    return t(`user.settings.mails.errors.${reason}`, { time: 'a bit' }) as string
   }
   return t('user.settings.mails.errors.UNKNOWN') as string
 }
@@ -58,7 +69,8 @@ onMounted(async () => {
     } catch (e) {
       console.error('Failed to verify mail:', e)
       const reasonRaw = (e instanceof AxiosError) ? e.response?.data : (e as any)?.response?.data
-      verifyError.value = getFailureMessage(reasonRaw)
+      const headers = (e instanceof AxiosError) ? e.response?.headers : undefined
+      verifyError.value = getFailureMessage(reasonRaw, headers)
     } finally {
       router.replace({ query: { ...route.query, hash: undefined, mailid: undefined, code: undefined } })
     }
@@ -74,7 +86,8 @@ const addMail = async (value: string) => {
   } catch (e) {
     console.error('Failed to register mail:', e)
     const reasonRaw = (e instanceof AxiosError) ? e.response?.data : (e as any)?.response?.data
-    registerError.value = getFailureMessage(reasonRaw)
+    const headers = (e instanceof AxiosError) ? e.response?.headers : undefined
+    registerError.value = getFailureMessage(reasonRaw, headers)
   }
 }
 

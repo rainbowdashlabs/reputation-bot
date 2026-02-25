@@ -64,6 +64,25 @@ class ApiClient {
                     return Promise.reject(error);
                 }
 
+                if (error.response?.status === 429) {
+                    const retryAfter = error.response.headers['retry-after'];
+                    let message = 'You are doing that too often. Please wait a bit.';
+                    if (retryAfter) {
+                        const secondsTotal = parseInt(retryAfter);
+                        const minutes = Math.floor(secondsTotal / 60);
+                        const seconds = secondsTotal % 60;
+                        let timeStr = '';
+                        if (minutes > 0) timeStr += `${minutes}m `;
+                        timeStr += `${seconds}s`;
+                        message = `You are doing that too often. Please wait ${timeStr.trim()}.`;
+                    }
+                    errorStore.addError({
+                        error: 'Too Many Requests',
+                        message: message,
+                    });
+                    return Promise.reject(error);
+                }
+
                 if (error.response?.data) {
                     // Backend returned an ApiErrorResponse
                     errorStore.addError(error.response.data);

@@ -29,5 +29,9 @@ public enum FailureReason {
     /**
      * The address that should be verified is unknown
      */
-    UNKNOWN_ADDRESS
+    UNKNOWN_ADDRESS,
+    /**
+     * Too many requests for registration.
+     */
+    RATE_LIMIT
 }

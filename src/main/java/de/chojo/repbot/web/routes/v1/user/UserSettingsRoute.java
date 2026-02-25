@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
+import static de.chojo.repbot.service.mailservice.FailureReason.*;
 import static io.javalin.apibuilder.ApiBuilder.delete;
 import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.patch;
@@ -107,9 +108,20 @@ public class UserSettingsRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "User Session Token")},
             requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = RegisterMailPOJO.class)),
             tags = {"User"},
-            responses = {@OpenApiResponse(status = "200"), @OpenApiResponse(status = "400")})
+            responses = {
+                @OpenApiResponse(status = "200"),
+                @OpenApiResponse(status = "400"),
+                @OpenApiResponse(status = "429")
+            })
     private void registerMail(@NotNull Context ctx) {
         UserSession session = ctx.sessionAttribute(SessionAttribute.USER_SESSION);
+
+        long retryAfter = mailService.getRetryAfterSeconds(session.userId());
+        if (retryAfter > 0) {
+            ctx.status(429).header("Retry-After", String.valueOf(retryAfter)).result(RATE_LIMIT.name());
+            return;
+        }
+
         RegisterMailPOJO body = ctx.bodyAsClass(RegisterMailPOJO.class);
         var result = mailService.registerAndPromptVerify(session.userId(), body.mail(), MailSource.USER);
         if (result.isFailure()) {

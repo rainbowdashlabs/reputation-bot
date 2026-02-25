@@ -24,6 +24,7 @@ import de.chojo.repbot.web.cache.MemberCache;
 import de.chojo.repbot.web.routes.v1.auth.AuthRoute;
 import de.chojo.repbot.web.routes.v1.data.DataRoute;
 import de.chojo.repbot.web.routes.v1.guild.GuildRoute;
+import de.chojo.repbot.web.routes.v1.kofi.KofiRoute;
 import de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute;
 import de.chojo.repbot.web.routes.v1.session.SessionRoute;
 import de.chojo.repbot.web.routes.v1.settings.SettingsRoute;
@@ -54,6 +55,7 @@ public class Api {
     private final GuildRoute guildRoute;
     private final AuthRoute authRoute;
     private final UserRoute userRoute;
+    private final KofiRoute kofiRoute;
 
     public Api(
             SessionService sessionService,
@@ -98,6 +100,7 @@ public class Api {
         userRoute =
                 new UserRoute(voteRepository, userRepository, configuration, shardManager, kofiService, mailService);
         guildRoute = new GuildRoute(memberCache, voteRepository, tokenPurchaseService);
+        kofiRoute = new KofiRoute(kofiService);
     }
 
     public void init() {
@@ -141,6 +144,7 @@ public class Api {
             authRoute.buildRoutes();
             userRoute.buildRoutes();
             guildRoute.buildRoutes();
+            kofiRoute.buildRoutes();
         });
     }
 }

@@ -152,6 +152,16 @@ public class MailService {
                 UUID.randomUUID().toString()));
     }
 
+    public long getRetryAfterSeconds(long user) {
+        RepUser repUserById = userRepository.byId(user);
+        return repUserById.mails().mails().values().stream()
+                .filter(m -> m.source() == MailSource.USER)
+                .map(m -> m.verificationRequested().plus(5, ChronoUnit.MINUTES).getEpochSecond()
+                        - Instant.now().getEpochSecond())
+                .max(Long::compareTo)
+                .orElse(0L);
+    }
+
     public String mailHash(String mail) {
         return configuration.mailing().mailHash(mail);
     }

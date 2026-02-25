@@ -94,6 +94,7 @@
           "INVALID_CODE": "The verification code is invalid.",
           "CODE_EXPIRED": "The verification code has expired. Please request a new verification email.",
           "UNKNOWN_ADDRESS": "We couldn't find this email address. It may have been removed.",
+          "RATE_LIMIT": "You are doing that too often. Please wait {time} before adding another email address.",
           "UNKNOWN": "An unknown error occurred. Please try again later."
         }
       }
