@@ -15,7 +15,6 @@ import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.pojo.general.LanguageInfo;
 import de.chojo.repbot.web.routes.RoutesBuilder;
 import io.javalin.http.Context;
-import io.javalin.http.HttpStatus;
 import io.javalin.http.NotFoundResponse;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;

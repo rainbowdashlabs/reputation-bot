@@ -35,11 +35,7 @@ public class MarkdownService {
 
     public MarkdownService(String botId) {
         this.botId = botId;
-        var extensions = List.of(
-                TablesExtension.create(),
-                HeadingAnchorExtension.create(),
-                AutolinkExtension.create()
-        );
+        var extensions = List.of(TablesExtension.create(), HeadingAnchorExtension.create(), AutolinkExtension.create());
         this.parser = Parser.builder().extensions(extensions).build();
         this.renderer = HtmlRenderer.builder().extensions(extensions).build();
         loadAssets();

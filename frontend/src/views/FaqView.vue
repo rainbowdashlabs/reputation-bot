@@ -32,28 +32,28 @@ onMounted(async () => {
 function parseFaq(html: string) {
   const container = document.createElement('div')
   container.innerHTML = html
-  
+
   // Find all h3 tags which are usually questions in the markdown
   const headers = container.querySelectorAll('h3')
   const items: FaqItem[] = []
-  
+
   headers.forEach((header) => {
     const question = header.textContent || ''
     let answer = ''
     let next = header.nextElementSibling
-    
+
     while (next && next.tagName !== 'H3') {
       answer += next.outerHTML
       next = next.nextElementSibling
     }
-    
+
     items.push({
       question,
       answer,
       open: false
     })
   })
-  
+
   faqs.value = items
 }
 
@@ -79,17 +79,17 @@ function toggleFaq(index: number) {
     </div>
     <div v-else class="space-y-4">
       <div v-for="(item, index) in faqs" :key="index" class="bg-white dark:bg-gray-800 rounded-lg shadow border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <button 
+        <button
           @click="toggleFaq(index)"
           class="w-full text-left px-6 py-4 flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors focus:outline-none"
         >
           <span class="text-lg font-semibold text-gray-900 dark:text-white">{{ item.question }}</span>
-          <font-awesome-icon 
-            :icon="['fas', item.open ? 'chevron-up' : 'chevron-down']" 
+          <font-awesome-icon
+            :icon="['fas', item.open ? 'chevron-up' : 'chevron-down']"
             class="text-gray-500"
           />
         </button>
-        <div 
+        <div
           v-show="item.open"
           class="px-6 py-4 border-t border-gray-100 dark:border-gray-700 markdown-content"
           v-html="item.answer"
