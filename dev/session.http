@@ -15,7 +15,7 @@ GET localhost:8888/v1/data/token_features
 
 ### Test voting
 POST localhost:8888/voting/topgg
-Authorization: testmode
+Authorization: topgg
 Content-Type: application/json
 
 {
@@ -24,7 +24,7 @@ Content-Type: application/json
 
 ### Test voting
 POST localhost:8888/voting/botlistme
-Authorization: testmode
+Authorization: botlistme
 Content-Type: application/json
 
 {
@@ -32,7 +32,7 @@ Content-Type: application/json
 }
 ### Test voting
 POST localhost:8888/voting/discordbotlistcom
-Authorization: testmode
+Authorization: discordbotlistcom
 Content-Type: application/json
 
 {

@@ -35,7 +35,7 @@ public class Botlist {
     }
 
     public BotListConfig botListMe() {
-        return discordBotlistCom;
+        return botListMe;
     }
 
     public boolean isBotlistGuild(long id) {
