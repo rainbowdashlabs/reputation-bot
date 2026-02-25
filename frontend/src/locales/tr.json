@@ -816,7 +816,9 @@
         "SUBSCRIPTION_EXPIRED": "Bu abonelik süresi dolmuştur ve atanamaz.",
         "UNKOWN": "Bilinmeyen bir abonelik hatası oluştu. Lütfen daha sonra tekrar deneyin.",
         "SUCCESS": "Başarı"
-      }
+      },
+      "missingPurchasesNotice": "Satın alımlarınız burada görünmüyorsa, Ko-fi için Discord hesabınızdan farklı bir e-posta adresi kullanmış olabilirsiniz. {link} adresinden ek e-posta adreslerini bağlayabilirsiniz.",
+      "settingsLink": "Kullanıcı Ayarları"
     }
   },
   "dashboard": {

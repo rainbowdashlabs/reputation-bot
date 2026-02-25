@@ -7,6 +7,7 @@ package de.chojo.repbot.config.elements;
 
 import com.google.common.hash.Hashing;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Properties;
@@ -14,7 +15,7 @@ import java.util.UUID;
 
 public class Mailing {
     private String mailSalt = Hashing.sha256()
-            .hashString(UUID.randomUUID().toString(), java.nio.charset.StandardCharsets.UTF_8)
+            .hashString(UUID.randomUUID().toString(), StandardCharsets.UTF_8)
             .toString();
     private MailSettings smtp = new MailSettings();
     private MailSettings imap = new MailSettings();
@@ -28,7 +29,7 @@ public class Mailing {
 
     public String mailHash(String mail) {
         return Hashing.sha256()
-                .hashString(mail + mailSalt, java.nio.charset.StandardCharsets.UTF_8)
+                .hashString(mail + mailSalt, StandardCharsets.UTF_8)
                 .toString();
     }
 

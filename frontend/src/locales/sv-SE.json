@@ -816,7 +816,9 @@
         "SUBSCRIPTION_EXPIRED": "Denna prenumeration har löpt ut och kan inte tilldelas.",
         "UNKOWN": "Ett okänt prenumerationsfel har uppstått. Försök igen senare.",
         "SUCCESS": "Framgång"
-      }
+      },
+      "missingPurchasesNotice": "Om dina köp inte syns här kan det bero på att du har använt en annan e-postadress för Ko-fi än för ditt Discord-konto. Du kan länka ytterligare e-postadresser i dina {link}.",
+      "settingsLink": "Användarinställningar"
     }
   },
   "dashboard": {

@@ -816,7 +816,9 @@
         "SUBSCRIPTION_EXPIRED": "このサブスクリプションは期限切れのため、割り当てることができない。",
         "UNKOWN": "不明なサブスクリプションエラーが発生した。後で再度試してほしい。",
         "SUCCESS": "成功"
-      }
+      },
+      "missingPurchasesNotice": "購入履歴がここに表示されない場合、Ko-fiとDiscordアカウントで異なるメールアドレスを使用している可能性がある。追加のメールアドレスは{link}でリンクできる。",
+      "settingsLink": "ユーザー設定"
     }
   },
   "dashboard": {

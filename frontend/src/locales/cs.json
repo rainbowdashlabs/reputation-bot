@@ -816,7 +816,9 @@
         "SUBSCRIPTION_EXPIRED": "Toto předplatné vypršelo a nelze jej přiřadit.",
         "UNKOWN": "Došlo k neznámé chybě při přihlášení. Zkuste to prosím znovu později.",
         "SUCCESS": "Úspěch"
-      }
+      },
+      "missingPurchasesNotice": "Pokud zde nejsou vaše nákupy viditelné, možná jste pro Ko-fi použili jinou e-mailovou adresu než pro svůj účet Discord. Další e-mailové adresy můžete propojit ve svém profilu {link}.",
+      "settingsLink": "Nastavení uživatele"
     }
   },
   "dashboard": {

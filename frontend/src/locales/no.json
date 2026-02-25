@@ -816,7 +816,9 @@
         "SUBSCRIPTION_EXPIRED": "Dette abonnementet har utløpt og kan ikke tildeles.",
         "UNKOWN": "Det oppstod en ukjent abonnementsfeil. Prøv igjen senere.",
         "SUCCESS": "Suksess"
-      }
+      },
+      "missingPurchasesNotice": "Hvis kjøpene dine ikke vises her, kan det være at du har brukt en annen e-postadresse for Ko-fi enn Discord-kontoen din. Du kan koble til flere e-postadresser i {link}.",
+      "settingsLink": "Brukerinnstillinger"
     }
   },
   "dashboard": {

@@ -816,7 +816,9 @@
         "SUBSCRIPTION_EXPIRED": "Dit abonnement is verlopen en kan niet worden toegewezen.",
         "UNKOWN": "Er is een onbekende fout opgetreden bij het abonneren. Probeer het later nog eens.",
         "SUCCESS": "Succes"
-      }
+      },
+      "missingPurchasesNotice": "Als je aankopen hier niet te zien zijn, heb je misschien een ander e-mailadres gebruikt voor Ko-fi dan voor je Discord-account. Je kunt extra e-mailadressen koppelen in je {link}.",
+      "settingsLink": "Gebruikersinstellingen"
     }
   },
   "dashboard": {

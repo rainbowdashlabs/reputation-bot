@@ -816,7 +816,9 @@
         "SUBSCRIPTION_EXPIRED": "Esta suscripción ha caducado y no se puede asignar.",
         "UNKOWN": "Se ha producido un error de suscripción desconocido. Inténtalo de nuevo más tarde.",
         "SUCCESS": "Éxito"
-      }
+      },
+      "missingPurchasesNotice": "Si tus compras no aparecen aquí, es posible que hayas utilizado una dirección de correo electrónico diferente para Ko-fi y tu cuenta de Discord. Puedes vincular direcciones de correo electrónico adicionales en {link}.",
+      "settingsLink": "Configuración de usuario"
     }
   },
   "dashboard": {

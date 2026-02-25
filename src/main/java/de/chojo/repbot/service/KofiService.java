@@ -107,7 +107,6 @@ public class KofiService {
             if (purchase.guildId() != 0) disableSubscription(purchase);
             subs.addSubscription(new Subscription(
                     purchase.skuId(), guild.getIdLong(), KOFI, GUILD, APPLICATION_SUBSCRIPTION, null, true));
-            return SubscriptionResult.SUCCESS;
         } else if (purchase.type() == Type.SHOP_ORDER) {
             var sub = configuration.skus().getSubscriptionForLifetime(purchase.skuId());
             if (sub.isEmpty()) {

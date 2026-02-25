@@ -15,7 +15,7 @@ import SettingsContainer from "@/views/settings/components/SettingsContainer.vue
 import SupporterPurchaseItem from "@/views/user/components/SupporterPurchaseItem.vue";
 
 const { t } = useI18n()
-const { userSession } = useSession()
+const { userSession, refreshGuildPremium } = useSession()
 
 const purchases = ref<KofiPurchasePOJO[]>([])
 const skus = ref<SKU[]>([])
@@ -77,6 +77,7 @@ async function assign(purchaseId: number, guildId: string) {
   try {
     await api.assignPurchaseToGuild(purchaseId, guildId)
     await loadPurchases()
+    await refreshGuildPremium()
   } catch (e: any) {
     console.error('Failed to assign purchase', e)
     error.value = mapSubscriptionError(e)
@@ -87,6 +88,7 @@ async function unassign(purchaseId: number) {
   try {
     await api.unassignPurchaseFromGuild(purchaseId)
     await loadPurchases()
+    await refreshGuildPremium()
   } catch (e: any) {
     console.error('Failed to unassign purchase', e)
     // Backend generally does not return SubscriptionResult on unassign, keep generic
@@ -153,6 +155,25 @@ onMounted(loadPurchases)
               @assign="assign"
               @unassign="unassign"
             />
+          </div>
+        </div>
+
+        <div v-if="purchases.length === 0" class="rounded-md bg-indigo-50 dark:bg-indigo-900/30 p-4 border border-indigo-100 dark:border-indigo-800">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <font-awesome-icon :icon="['fas', 'info-circle']" class="text-indigo-400" />
+            </div>
+            <div class="ml-3">
+              <p class="text-sm text-indigo-700 dark:text-indigo-300">
+                <i18n-t keypath="user.supporter.missingPurchasesNotice" scope="global">
+                  <template #link>
+                    <router-link to="/user/settings" class="font-medium underline hover:text-indigo-600 dark:hover:text-indigo-200">
+                      {{ t('user.supporter.settingsLink') }}
+                    </router-link>
+                  </template>
+                </i18n-t>
+              </p>
+            </div>
           </div>
         </div>
 

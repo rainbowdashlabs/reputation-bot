@@ -44,7 +44,8 @@ import {
     faBellSlash,
     faShoppingCart,
     faTimesCircle,
-    faMugHot
+    faMugHot,
+    faInfoCircle
 } from '@fortawesome/free-solid-svg-icons'
 import {faGithub, faDiscord} from '@fortawesome/free-brands-svg-icons'
 
@@ -84,7 +85,8 @@ library.add(
     faBellSlash,
     faShoppingCart,
     faTimesCircle,
-    faMugHot
+    faMugHot,
+    faInfoCircle
 )
 
 // Create Pinia instance

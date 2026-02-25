@@ -816,7 +816,9 @@
         "SUBSCRIPTION_EXPIRED": "Essa assinatura já acabou e não dá pra usar.",
         "UNKOWN": "Ocorreu um erro desconhecido na assinatura. Por favor, tente novamente mais tarde.",
         "SUCCESS": "Sucesso"
-      }
+      },
+      "missingPurchasesNotice": "Se suas compras não aparecerem aqui, talvez você tenha usado um endereço de e-mail diferente para o Ko-fi e para sua conta do Discord. Você pode vincular endereços de e-mail adicionais em {link}.",
+      "settingsLink": "Configurações do usuário"
     }
   },
   "dashboard": {

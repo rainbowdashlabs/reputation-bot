@@ -816,7 +816,9 @@
         "SUBSCRIPTION_EXPIRED": "Tämä tilaus on vanhentunut eikä sitä voi siirtää.",
         "UNKOWN": "Tuntematon tilausvirhe. Yritä myöhemmin uudelleen.",
         "SUCCESS": "Menestys"
-      }
+      },
+      "missingPurchasesNotice": "Jos ostoksesi eivät näy tässä, olet ehkä käyttänyt Ko-fissa eri sähköpostiosoitetta kuin Discord-tililläsi. Voit linkittää lisää sähköpostiosoitteita osoitteessa {link}.",
+      "settingsLink": "Käyttäjäasetukset"
     }
   },
   "dashboard": {

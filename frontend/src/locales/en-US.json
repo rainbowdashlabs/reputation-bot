@@ -51,6 +51,8 @@
         "assign": "Failed to assign the purchase.",
         "unassign": "Failed to unassign the purchase."
       },
+      "missingPurchasesNotice": "If your purchases are not visible here, you might have used a different email address for Ko-fi than your Discord account. You can link additional email addresses in your {link}.",
+      "settingsLink": "User Settings",
       "results": {
         "ALREADY_SUBSCRIBED": "You already have an active subscription assigned to a guild.",
         "SUBSCRIPTION_EXPIRED": "This subscription has expired and cannot be assigned.",
@@ -490,6 +492,7 @@
       "list": {
         "label": "Channels and Categories",
         "description": "Select channels and categories that should be part of the list.",
+        "permissionsNote": "Only channels where the bot has read and write permissions are listed.",
         "channels": "Channels",
         "categories": "Categories"
       },

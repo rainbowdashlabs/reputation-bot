@@ -816,7 +816,9 @@
         "SUBSCRIPTION_EXPIRED": "Cet abonnement a expiré et ne peut pas être attribué.",
         "UNKOWN": "Une erreur d'abonnement bizarre s'est produite. Essaie à nouveau plus tard.",
         "SUCCESS": "Succès"
-      }
+      },
+      "missingPurchasesNotice": "Si tes achats n'apparaissent pas ici, c'est peut-être parce que t'as utilisé une adresse e-mail différente pour Ko-fi et ton compte Discord. Tu peux ajouter d'autres adresses e-mail dans tes paramètres de compte Discord ({link}).",
+      "settingsLink": "Paramètres utilisateur"
     }
   },
   "dashboard": {

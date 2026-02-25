@@ -816,7 +816,9 @@
         "SUBSCRIPTION_EXPIRED": "此订阅已过期，无法分配。",
         "UNKOWN": "发生未知订阅错误。请稍后重试。",
         "SUCCESS": "成功"
-      }
+      },
+      "missingPurchasesNotice": "若您的购买记录未在此处显示，可能是您在Ko-fi使用的邮箱地址与Discord账户不一致。您可在{link}中关联其他邮箱地址。",
+      "settingsLink": "用户设置"
     }
   },
   "dashboard": {

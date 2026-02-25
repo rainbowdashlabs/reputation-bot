@@ -816,7 +816,9 @@
         "SUBSCRIPTION_EXPIRED": "Questo abbonamento è scaduto e non può essere assegnato.",
         "UNKOWN": "Si è verificato un problema con l'abbonamento. Prova più tardi.",
         "SUCCESS": "Successo"
-      }
+      },
+      "missingPurchasesNotice": "Se i tuoi acquisti non si vedono qui, forse hai usato un indirizzo email diverso per Ko-fi rispetto a quello del tuo account Discord. Puoi collegare altri indirizzi email nelle tue impostazioni di {link}.",
+      "settingsLink": "Impostazioni utente"
     }
   },
   "dashboard": {

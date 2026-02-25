@@ -816,7 +816,9 @@
         "SUBSCRIPTION_EXPIRED": "Dieses Abonnement ist abgelaufen und kann nicht mehr zugewiesen werden.",
         "UNKOWN": "Ein unbekannter Fehler beim Abonnieren ist passiert. Versuch' es bitte später nochmal.",
         "SUCCESS": "Erfolg"
-      }
+      },
+      "missingPurchasesNotice": "Wenn deine Käufe hier nicht angezeigt werden, hast du vielleicht bei Ko-fi eine andere E-Mail-Adresse als bei deinem Discord-Konto angegeben. Du kannst weitere E-Mail-Adressen in deinen Einstellungen unter „{link}” verknüpfen.",
+      "settingsLink": "Benutzereinstellungen"
     }
   },
   "dashboard": {

@@ -816,7 +816,9 @@
         "SUBSCRIPTION_EXPIRED": "Ta subskrypcja wygasła i nie można jej przypisać.",
         "UNKOWN": "Wystąpił nieznany błąd subskrypcji. Spróbuj ponownie później.",
         "SUCCESS": "Sukces"
-      }
+      },
+      "missingPurchasesNotice": "Jeśli twoje zakupy nie są tutaj widoczne, być może użyłeś innego adresu e-mail dla Ko-fi niż dla konta Discord. Dodatkowe adresy e-mail możesz połączyć w sekcji „{link}” (Ustawienia > Konto).",
+      "settingsLink": "Ustawienia użytkownika"
     }
   },
   "dashboard": {

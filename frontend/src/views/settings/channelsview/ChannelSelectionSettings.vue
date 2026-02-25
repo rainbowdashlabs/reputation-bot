@@ -141,6 +141,10 @@ const isCategoryLimitReached = computed(() => {
             t('general.channels.list.label')
           }}</label>
         <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ t('general.channels.list.description') }}</p>
+        <p class="text-xs text-gray-400 dark:text-gray-500 flex items-center gap-1.5 mt-1">
+          <font-awesome-icon :icon="['fas', 'info-circle']" class="shrink-0" />
+          {{ t('general.channels.list.permissionsNote') }}
+        </p>
       </div>
 
       <div
