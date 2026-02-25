@@ -44,7 +44,7 @@ const fetchVoteLog = async (newPage: number) => {
 
 onMounted(async () => {
   try {
-    const [botlistsResponse] = await Promise.all([
+    const [, botlistsResponse] = await Promise.all([
       refreshUserTokens().then(() => null),
       api.getVoteLists()
     ])
