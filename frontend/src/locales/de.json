@@ -25,7 +25,11 @@
     "user_settings": "Benutzereinstellungen",
     "voting": "Voting",
     "token_shop": "Token-Shop",
-    "supporter": "Unterstützer"
+    "supporter": "Unterstützer",
+    "tos": "Nutzungsbedingungen",
+    "privacy": "Datenschutz",
+    "faq": "Häufig gestellte Fragen",
+    "metrics": "Metriken"
   },
   "presets": {
     "title": "Voreinstellungen",
@@ -315,7 +319,8 @@
         "label": "Kanäle und Kategorien",
         "description": "Wähle die Kanäle und Kategorien aus, die in die Liste aufgenommen werden sollen.",
         "channels": "Kanäle",
-        "categories": "Kategorien"
+        "categories": "Kategorien",
+        "permissionsNote": "Es werden nur Kanäle angezeigt, für die der Bot Lese- und Schreibrechte hat."
       },
       "premium": {
         "channelLimitWarning": "Die Auswahl von mehr als {limit} Kanälen ist nur für Unterstützer möglich. Werde Unterstützer, um diese Funktion zu nutzen.",
@@ -784,7 +789,8 @@
           "INVALID_CODE": "Der Bestätigungscode ist nicht okay.",
           "CODE_EXPIRED": "Der Bestätigungscode ist abgelaufen. Bitte schick mir eine neue Bestätigungs-E-Mail.",
           "UNKNOWN_ADDRESS": "Wir konnten diese E-Mail-Adresse nicht finden. Sie wurde vielleicht gelöscht.",
-          "UNKNOWN": "Ein unbekannter Fehler ist aufgetreten. Versuch' es bitte später nochmal."
+          "UNKNOWN": "Ein unbekannter Fehler ist aufgetreten. Versuch' es bitte später nochmal.",
+          "RATE_LIMIT": "Du machst das zu oft. Bitte warte {time}, bevor du eine weitere E-Mail-Adresse hinzufügst."
         }
       }
     },
@@ -908,5 +914,40 @@
       }
     },
     "adminOnly": "Der Server ist so eingestellt, dass nur Server-Admins Funktionen kaufen können."
+  },
+  "metrics": {
+    "title": "Metriken",
+    "description": "Du bist neugierig auf den Traffic und die Nutzung des Bots? Wir auch! Deshalb haben wir auf dieser Seite ein paar coole Grafiken zusammengestellt. Diese zeigen nahezu Echtzeitdaten direkt vom Bot.",
+    "offset": "Offset",
+    "count": "Anzahl",
+    "units": {
+      "hour": "Stunde",
+      "week": "Woche",
+      "month": "Monat",
+      "year": "Jahr"
+    },
+    "sections": {
+      "reputation": "Reputation",
+      "commands": "Befehle",
+      "messages": "Nachrichten",
+      "users": "Nutzer",
+      "service": "Dienst"
+    },
+    "charts": {
+      "reputationCount": "Reputation",
+      "reputationTotal": "Gesamt-Reputation",
+      "reputationDow": "Reputation nach Wochentag",
+      "reputationTypeTotal": "Gesamte Reputation nach Typ",
+      "reputationTypeCount": "Reputation nach Typ",
+      "reputationChanges": "Änderungen der Reputation",
+      "commandsCount": "Befehle",
+      "commandsUsage": "Befehlsverwendung",
+      "messagesCount": "Anzahl der Nachrichten",
+      "messagesTotal": "Gesamtzahl der Nachrichten",
+      "usersActiveWeek": "Aktive Nutzer (wöchentlich)",
+      "usersActiveMonth": "Aktive Nutzer (monatlich)",
+      "serviceCountHour": "Nutzung des Dienstes (stündlich)",
+      "serviceCountWeek": "Nutzung der Dienste (wöchentlich)"
+    }
   }
 }

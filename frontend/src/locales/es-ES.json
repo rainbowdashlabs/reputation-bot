@@ -25,7 +25,11 @@
     "user_settings": "Configuración de usuario",
     "voting": "Votación",
     "token_shop": "Tienda de fichas",
-    "supporter": "Partidario"
+    "supporter": "Partidario",
+    "tos": "Condiciones del servicio",
+    "privacy": "Privacidad",
+    "faq": "Preguntas frecuentes",
+    "metrics": "Métricas"
   },
   "presets": {
     "title": "Ajustes preestablecidos",
@@ -315,7 +319,8 @@
         "label": "Canales y categorías",
         "description": "Selecciona los canales y categorías que deben formar parte de la lista.",
         "channels": "Canales",
-        "categories": "Categorías"
+        "categories": "Categorías",
+        "permissionsNote": "Solo se muestran los canales en los que el bot tiene permisos de lectura y escritura."
       },
       "premium": {
         "channelLimitWarning": "La selección de más de {limit} canales está reservada para los seguidores. Hazte seguidor para poder utilizarla.",
@@ -784,7 +789,8 @@
           "INVALID_CODE": "El código de verificación no es válido.",
           "CODE_EXPIRED": "El código de verificación ha caducado. Solicita un nuevo correo electrónico de verificación.",
           "UNKNOWN_ADDRESS": "No hemos podido encontrar esta dirección de correo electrónico. Es posible que haya sido eliminada.",
-          "UNKNOWN": "Se ha producido un error desconocido. Inténtalo de nuevo más tarde."
+          "UNKNOWN": "Se ha producido un error desconocido. Inténtalo de nuevo más tarde.",
+          "RATE_LIMIT": "Lo estás haciendo con demasiada frecuencia. Espera {time} antes de añadir otra dirección de correo electrónico."
         }
       }
     },
@@ -908,5 +914,40 @@
       }
     },
     "adminOnly": "El servidor está configurado para permitir que solo los administradores del servidor compren funciones."
+  },
+  "metrics": {
+    "title": "Métricas",
+    "description": "¿Tienes curiosidad por conocer el tráfico y el uso del bot? ¡Nosotros también! Por eso hemos recopilado algunos gráficos interesantes en esta página. Estos muestran datos casi en tiempo real directamente desde el bot.",
+    "offset": "Compensación",
+    "count": "Conte",
+    "units": {
+      "hour": "Hora",
+      "week": "Semana",
+      "month": "Mes",
+      "year": "Año"
+    },
+    "sections": {
+      "reputation": "Reputación",
+      "commands": "Comandos",
+      "messages": "Mensajes",
+      "users": "Usuarios",
+      "service": "Servicio"
+    },
+    "charts": {
+      "reputationCount": "Reputación",
+      "reputationTotal": "Reputación total",
+      "reputationDow": "Reputación por día de la semana",
+      "reputationTypeTotal": "Reputación total por tipo",
+      "reputationTypeCount": "Recuento de reputación por tipo",
+      "reputationChanges": "Cambios en la reputación",
+      "commandsCount": "Recuento de comandos",
+      "commandsUsage": "Uso del comando",
+      "messagesCount": "Recuento de mensajes",
+      "messagesTotal": "Mensajes totales",
+      "usersActiveWeek": "Usuarios activos (semanal)",
+      "usersActiveMonth": "Usuarios activos (mensuales)",
+      "serviceCountHour": "Uso del servicio (por hora)",
+      "serviceCountWeek": "Uso del servicio (semanal)"
+    }
   }
 }

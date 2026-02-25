@@ -25,7 +25,11 @@
     "user_settings": "Kullanıcı Ayarları",
     "voting": "Oylama",
     "token_shop": "Jeton Mağazası",
-    "supporter": "Destekçi"
+    "supporter": "Destekçi",
+    "tos": "Hizmet Şartları",
+    "privacy": "Gizlilik",
+    "faq": "Sıkça Sorulan Sorular",
+    "metrics": "Metrikler"
   },
   "presets": {
     "title": "Ön ayarlar",
@@ -315,7 +319,8 @@
         "label": "Kanallar ve Kategoriler",
         "description": "Listeye dahil edilmesi gereken kanalları ve kategorileri seçin.",
         "channels": "Kanallar",
-        "categories": "Kategoriler"
+        "categories": "Kategoriler",
+        "permissionsNote": "Botun okuma ve yazma izinlerine sahip olduğu kanallar listelenir."
       },
       "premium": {
         "channelLimitWarning": "{limit}'dan fazla kanal seçmek destekçilere özeldir. Kullanmak için destekçi olun.",
@@ -784,7 +789,8 @@
           "INVALID_CODE": "Doğrulama kodu geçersiz.",
           "CODE_EXPIRED": "Doğrulama kodu süresi doldu. Lütfen yeni bir doğrulama e-postası isteyin.",
           "UNKNOWN_ADDRESS": "Bu e-posta adresini bulamadık. Silinmiş olabilir.",
-          "UNKNOWN": "Bilinmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin."
+          "UNKNOWN": "Bilinmeyen bir hata oluştu. Lütfen daha sonra tekrar deneyin.",
+          "RATE_LIMIT": "Bunu çok sık yapıyorsunuz. Lütfen {time} bekleyin ve ardından başka bir e-posta adresi ekleyin."
         }
       }
     },
@@ -908,5 +914,40 @@
       }
     },
     "adminOnly": "Sunucu, yalnızca Sunucu Yöneticilerinin özellikleri satın almasına izin verecek şekilde yapılandırılmıştır."
+  },
+  "metrics": {
+    "title": "Metrikler",
+    "description": "Botun trafiği ve kullanımı hakkında merak mı ediyorsunuz? Biz de öyle! Bu yüzden bu sayfada bazı güzel grafikler derledik. Bunlar, botun doğrudan sağladığı neredeyse gerçek zamanlı verileri göstermektedir.",
+    "offset": "Ofset",
+    "count": "Say",
+    "units": {
+      "hour": "Saat",
+      "week": "Hafta",
+      "month": "Ay",
+      "year": "Yıl"
+    },
+    "sections": {
+      "reputation": "İtibar",
+      "commands": "Komutlar",
+      "messages": "Mesajlar",
+      "users": "Kullanıcılar",
+      "service": "Hizmet"
+    },
+    "charts": {
+      "reputationCount": "İtibar Sayısı",
+      "reputationTotal": "Toplam İtibar",
+      "reputationDow": "Haftanın Günlerine Göre İtibar",
+      "reputationTypeTotal": "Türüne Göre Toplam İtibar",
+      "reputationTypeCount": "Türüne Göre İtibar Sayısı",
+      "reputationChanges": "İtibar Değişiklikleri",
+      "commandsCount": "Komut Sayısı",
+      "commandsUsage": "Komut Kullanımı",
+      "messagesCount": "Mesaj Sayısı",
+      "messagesTotal": "Toplam Mesajlar",
+      "usersActiveWeek": "Aktif Kullanıcılar (Haftalık)",
+      "usersActiveMonth": "Aktif Kullanıcılar (Aylık)",
+      "serviceCountHour": "Hizmet Kullanımı (Saatlik)",
+      "serviceCountWeek": "Hizmet Kullanımı (Haftalık)"
+    }
   }
 }

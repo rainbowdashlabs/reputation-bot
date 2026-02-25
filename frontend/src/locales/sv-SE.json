@@ -25,7 +25,11 @@
     "user_settings": "Användarinställningar",
     "voting": "Omröstning",
     "token_shop": "Tokenbutik",
-    "supporter": "Supporter"
+    "supporter": "Supporter",
+    "tos": "Användarvillkor",
+    "privacy": "Sekretess",
+    "faq": "Vanliga frågor",
+    "metrics": "Mätvärden"
   },
   "presets": {
     "title": "Förinställningar",
@@ -315,7 +319,8 @@
         "label": "Kanaler och kategorier",
         "description": "Välj kanaler och kategorier som ska ingå i listan.",
         "channels": "Kanaler",
-        "categories": "Kategorier"
+        "categories": "Kategorier",
+        "permissionsNote": "Endast kanaler där boten har läs- och skrivbehörighet visas."
       },
       "premium": {
         "channelLimitWarning": "Att välja fler än {limit} kanaler är reserverat för supportrar. Bli supporter för att kunna använda det.",
@@ -784,7 +789,8 @@
           "INVALID_CODE": "Verifieringskoden är ogiltig.",
           "CODE_EXPIRED": "Verifieringskoden har gått ut. Begär ett nytt verifieringsmeddelande via e-post.",
           "UNKNOWN_ADDRESS": "Vi kunde inte hitta den här e-postadressen. Den kan ha tagits bort.",
-          "UNKNOWN": "Ett okänt fel uppstod. Försök igen senare."
+          "UNKNOWN": "Ett okänt fel uppstod. Försök igen senare.",
+          "RATE_LIMIT": "Du gör det för ofta. Vänta {time} innan du lägger till en ny e-postadress."
         }
       }
     },
@@ -908,5 +914,40 @@
       }
     },
     "adminOnly": "Servern är konfigurerad så att endast serveradministratörer kan köpa funktioner."
+  },
+  "metrics": {
+    "title": "Mätvärden",
+    "description": "Är du nyfiken på trafiken och användningen av boten? Det är vi också! Därför har vi sammanställt några fina grafer på denna sida. De visar data i nästan realtid direkt från boten.",
+    "offset": "Offset",
+    "count": "Räkna",
+    "units": {
+      "hour": "Timme",
+      "week": "Vecka",
+      "month": "Månad",
+      "year": "År"
+    },
+    "sections": {
+      "reputation": "Rykte",
+      "commands": "Kommandon",
+      "messages": "Meddelanden",
+      "users": "Användare",
+      "service": "Service"
+    },
+    "charts": {
+      "reputationCount": "Rykte räknas",
+      "reputationTotal": "Total anseende",
+      "reputationDow": "Rykte per veckodag",
+      "reputationTypeTotal": "Total omdöme efter typ",
+      "reputationTypeCount": "Reputationräkning efter typ",
+      "reputationChanges": "Ändringar i rykte",
+      "commandsCount": "Kommandon räknas",
+      "commandsUsage": "Kommandots användning",
+      "messagesCount": "Antal meddelanden",
+      "messagesTotal": "Totalt antal meddelanden",
+      "usersActiveWeek": "Aktiva användare (per vecka)",
+      "usersActiveMonth": "Aktiva användare (månadsvis)",
+      "serviceCountHour": "Tjänsteanvändning (per timme)",
+      "serviceCountWeek": "Tjänsteanvändning (veckovis)"
+    }
   }
 }

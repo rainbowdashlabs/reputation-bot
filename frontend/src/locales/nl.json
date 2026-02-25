@@ -25,7 +25,11 @@
     "user_settings": "Gebruikersinstellingen",
     "voting": "Stemmen",
     "token_shop": "Tokenwinkel",
-    "supporter": "Supporter"
+    "supporter": "Supporter",
+    "tos": "Servicevoorwaarden",
+    "privacy": "Privacy",
+    "faq": "Veelgestelde vragen",
+    "metrics": "Statistieken"
   },
   "presets": {
     "title": "Voorinstellingen",
@@ -315,7 +319,8 @@
         "label": "Kanalen en categorieën",
         "description": "Kies de kanalen en categorieën die in de lijst moeten staan.",
         "channels": "Kanalen",
-        "categories": "Categorieën"
+        "categories": "Categorieën",
+        "permissionsNote": "Alleen kanalen waar de bot lees- en schrijftoegang heeft, worden weergegeven."
       },
       "premium": {
         "channelLimitWarning": "Als je meer dan {limit} kanalen wilt kiezen, moet je supporter worden. Word supporter om deze functie te kunnen gebruiken.",
@@ -784,7 +789,8 @@
           "INVALID_CODE": "De verificatiecode klopt niet.",
           "CODE_EXPIRED": "De verificatiecode is verlopen. Vraag een nieuwe verificatie-e-mail aan.",
           "UNKNOWN_ADDRESS": "We hebben dit e-mailadres niet kunnen vinden. Misschien is het verwijderd.",
-          "UNKNOWN": "Er is iets misgegaan. Probeer het later nog eens."
+          "UNKNOWN": "Er is iets misgegaan. Probeer het later nog eens.",
+          "RATE_LIMIT": "Je doet dat te vaak. Wacht even {time} voordat je nog een e-mailadres toevoegt."
         }
       }
     },
@@ -908,5 +914,40 @@
       }
     },
     "adminOnly": "De server is zo ingesteld dat alleen serverbeheerders functies kunnen kopen."
+  },
+  "metrics": {
+    "title": "Statistieken",
+    "description": "Ben je nieuwsgierig naar het verkeer en het gebruik van de bot? Wij ook! Daarom hebben we op deze pagina een paar handige grafieken gemaakt. Deze laten bijna realtime gegevens zien, rechtstreeks van de bot.",
+    "offset": "Compensatie",
+    "count": "Graaf",
+    "units": {
+      "hour": "Uur",
+      "week": "Week",
+      "month": "Maand",
+      "year": "Jaar"
+    },
+    "sections": {
+      "reputation": "Reputatie",
+      "commands": "Commando's",
+      "messages": "Berichten",
+      "users": "Gebruikers",
+      "service": "Service"
+    },
+    "charts": {
+      "reputationCount": "Reputatie telt",
+      "reputationTotal": "Totale reputatie",
+      "reputationDow": "Reputatie per dag van de week",
+      "reputationTypeTotal": "Totale reputatie per type",
+      "reputationTypeCount": "Reputatie per type",
+      "reputationChanges": "Veranderingen in reputatie",
+      "commandsCount": "Aantal commando's",
+      "commandsUsage": "Gebruik van commando's",
+      "messagesCount": "Aantal berichten",
+      "messagesTotal": "Totaal aantal berichten",
+      "usersActiveWeek": "Actieve gebruikers (wekelijks)",
+      "usersActiveMonth": "Actieve gebruikers (maandelijks)",
+      "serviceCountHour": "Gebruik van de dienst (per uur)",
+      "serviceCountWeek": "Gebruik van de dienst (wekelijks)"
+    }
   }
 }

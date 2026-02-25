@@ -35,7 +35,7 @@ WORKDIR /app
 COPY --from=frontend /build/dist/ public
 COPY --from=build /home/gradle/build/libs/rep-bot-*-all.jar bot.jar
 
-RUN mkdir config
+RUN mkdir config assets
 RUN echo "{}" > config/config.json
 COPY docker/config/log4j2.xml config/
 

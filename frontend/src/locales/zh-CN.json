@@ -25,7 +25,11 @@
     "user_settings": "用户设置",
     "voting": "投票",
     "token_shop": "代币商店",
-    "supporter": "支持者"
+    "supporter": "支持者",
+    "tos": "服务条款",
+    "privacy": "隐私",
+    "faq": "常见问题解答",
+    "metrics": "指标"
   },
   "presets": {
     "title": "预设",
@@ -315,7 +319,8 @@
         "label": "频道与分类",
         "description": "选择应列入列表的频道和类别。",
         "channels": "频道",
-        "categories": "分类"
+        "categories": "分类",
+        "permissionsNote": "仅列出机器人具有读写权限的频道。"
       },
       "premium": {
         "channelLimitWarning": "选择超过{limit}个频道的功能仅限赞助用户使用。请成为赞助用户以启用该功能。",
@@ -784,7 +789,8 @@
           "INVALID_CODE": "验证码无效。",
           "CODE_EXPIRED": "验证码已过期。请重新申请验证邮件。",
           "UNKNOWN_ADDRESS": "我们找不到这个电子邮件地址。它可能已被删除。",
-          "UNKNOWN": "发生未知错误。请稍后重试。"
+          "UNKNOWN": "发生未知错误。请稍后重试。",
+          "RATE_LIMIT": "你这样操作的频率太高了。请等待{time}后再添加另一个电子邮箱地址。"
         }
       }
     },
@@ -908,5 +914,40 @@
       }
     },
     "adminOnly": "服务器已配置为仅允许服务器管理员购买功能。"
+  },
+  "metrics": {
+    "title": "指标",
+    "description": "您对机器人的流量和使用情况感到好奇？我们也是！因此我们在此页面整理了一些精美的图表。这些图表直接展示机器人近乎实时的数据。",
+    "offset": "偏移",
+    "count": "计数",
+    "units": {
+      "hour": "小时",
+      "week": "周",
+      "month": "月份",
+      "year": "年"
+    },
+    "sections": {
+      "reputation": "声誉",
+      "commands": "命令",
+      "messages": "消息",
+      "users": "用户",
+      "service": "服务"
+    },
+    "charts": {
+      "reputationCount": "声誉值",
+      "reputationTotal": "总声誉",
+      "reputationDow": "按星期几划分的声誉",
+      "reputationTypeTotal": "各类声誉总和",
+      "reputationTypeCount": "声誉计数（按类型）",
+      "reputationChanges": "声誉变化",
+      "commandsCount": "命令计数",
+      "commandsUsage": "命令用法",
+      "messagesCount": "消息计数",
+      "messagesTotal": "总消息数",
+      "usersActiveWeek": "活跃用户（每周）",
+      "usersActiveMonth": "活跃用户（月度）",
+      "serviceCountHour": "服务使用（按小时计费）",
+      "serviceCountWeek": "服务使用情况（每周）"
+    }
   }
 }

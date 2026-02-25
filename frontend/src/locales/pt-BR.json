@@ -25,7 +25,11 @@
     "user_settings": "Configurações do usuário",
     "voting": "Votação",
     "token_shop": "Loja de fichas",
-    "supporter": "Apoiador"
+    "supporter": "Apoiador",
+    "tos": "Termos de Serviço",
+    "privacy": "Privacidade",
+    "faq": "Perguntas frequentes",
+    "metrics": "Métricas"
   },
   "presets": {
     "title": "Predefinições",
@@ -315,7 +319,8 @@
         "label": "Canais e categorias",
         "description": "Escolha os canais e categorias que devem fazer parte da lista.",
         "channels": "Canais",
-        "categories": "Categorias"
+        "categories": "Categorias",
+        "permissionsNote": "Só aparecem os canais onde o bot tem permissão para ler e escrever."
       },
       "premium": {
         "channelLimitWarning": "A seleção de mais de {limit} canais é reservada para apoiadores. Torne-se um apoiador para usá-la.",
@@ -784,7 +789,8 @@
           "INVALID_CODE": "O código de verificação está errado.",
           "CODE_EXPIRED": "O código de verificação já não vale mais. Pede um novo e-mail de verificação.",
           "UNKNOWN_ADDRESS": "Não conseguimos encontrar esse endereço de e-mail. Talvez ele tenha sido removido.",
-          "UNKNOWN": "Ocorreu um erro desconhecido. Por favor, tente novamente mais tarde."
+          "UNKNOWN": "Ocorreu um erro desconhecido. Por favor, tente novamente mais tarde.",
+          "RATE_LIMIT": "Você está fazendo isso com muita frequência. Por favor, aguarde {time} antes de adicionar outro endereço de e-mail."
         }
       }
     },
@@ -908,5 +914,40 @@
       }
     },
     "adminOnly": "O servidor está configurado para permitir que apenas os administradores do servidor adquiram recursos."
+  },
+  "metrics": {
+    "title": "Métricas",
+    "description": "Tá curioso sobre o tráfego e o uso do bot? Nós também! Por isso, juntamos alguns gráficos legais nesta página. Eles mostram dados quase em tempo real direto do bot.",
+    "offset": "Compensação",
+    "count": "Conte",
+    "units": {
+      "hour": "Hora",
+      "week": "Semana",
+      "month": "Mês",
+      "year": "Ano"
+    },
+    "sections": {
+      "reputation": "Reputação",
+      "commands": "Comandos",
+      "messages": "Mensagens",
+      "users": "Usuários",
+      "service": "Serviço"
+    },
+    "charts": {
+      "reputationCount": "Contagem de reputação",
+      "reputationTotal": "Reputação total",
+      "reputationDow": "Reputação por dia da semana",
+      "reputationTypeTotal": "Reputação total por tipo",
+      "reputationTypeCount": "Contagem de reputação por tipo",
+      "reputationChanges": "Mudanças na reputação",
+      "commandsCount": "Contagem de comandos",
+      "commandsUsage": "Como usar o comando",
+      "messagesCount": "Contagem de mensagens",
+      "messagesTotal": "Total de mensagens",
+      "usersActiveWeek": "Usuários ativos (semanalmente)",
+      "usersActiveMonth": "Usuários ativos (mensal)",
+      "serviceCountHour": "Uso do serviço (por hora)",
+      "serviceCountWeek": "Uso do serviço (semanal)"
+    }
   }
 }

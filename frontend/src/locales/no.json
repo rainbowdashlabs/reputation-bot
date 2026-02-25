@@ -25,7 +25,11 @@
     "user_settings": "Brukerinnstillinger",
     "voting": "Avstemning",
     "token_shop": "Tokenbutikk",
-    "supporter": "Supporter"
+    "supporter": "Supporter",
+    "tos": "Vilkår for bruk",
+    "privacy": "Personvern",
+    "faq": "Ofte stilte spørsmål",
+    "metrics": "Metrikker"
   },
   "presets": {
     "title": "Forhåndsinnstillinger",
@@ -315,7 +319,8 @@
         "label": "Kanaler og kategorier",
         "description": "Velg kanaler og kategorier som skal være med på listen.",
         "channels": "Kanaler",
-        "categories": "Kategorier"
+        "categories": "Kategorier",
+        "permissionsNote": "Bare kanaler hvor boten har lese- og skrivetillatelser er oppført."
       },
       "premium": {
         "channelLimitWarning": "Valg av mer enn {limit} kanaler er forbeholdt støttespillere. Bli støttespiller for å kunne bruke det.",
@@ -784,7 +789,8 @@
           "INVALID_CODE": "Bekreftelseskoden er ugyldig.",
           "CODE_EXPIRED": "Bekreftelseskoden har utløpt. Be om en ny bekreftelses-e-post.",
           "UNKNOWN_ADDRESS": "Vi kunne ikke finne denne e-postadressen. Den kan ha blitt slettet.",
-          "UNKNOWN": "Det oppstod en ukjent feil. Prøv igjen senere."
+          "UNKNOWN": "Det oppstod en ukjent feil. Prøv igjen senere.",
+          "RATE_LIMIT": "Du gjør det for ofte. Vennligst vent {time} før du legger til en ny e-postadresse."
         }
       }
     },
@@ -908,5 +914,40 @@
       }
     },
     "adminOnly": "Serveren er konfigurert slik at kun serveradministratorer kan kjøpe funksjoner."
+  },
+  "metrics": {
+    "title": "Metrikker",
+    "description": "Er du nysgjerrig på trafikken og bruken av boten? Det er vi også! Derfor har vi samlet noen fine grafer på denne siden. Disse viser nesten sanntidsdata direkte fra boten.",
+    "offset": "Offset",
+    "count": "Telle",
+    "units": {
+      "hour": "Time",
+      "week": "Uke",
+      "month": "Måned",
+      "year": "År"
+    },
+    "sections": {
+      "reputation": "Omdømme",
+      "commands": "Kommandoer",
+      "messages": "Meldinger",
+      "users": "Brukere",
+      "service": "Tjeneste"
+    },
+    "charts": {
+      "reputationCount": "Omdømme teller",
+      "reputationTotal": "Total omdømme",
+      "reputationDow": "Omdømme etter ukedag",
+      "reputationTypeTotal": "Total omdømme etter type",
+      "reputationTypeCount": "Omdømme etter type",
+      "reputationChanges": "Endringer i omdømme",
+      "commandsCount": "Kommandoer teller",
+      "commandsUsage": "Kommandobruk",
+      "messagesCount": "Antall meldinger",
+      "messagesTotal": "Totalt antall meldinger",
+      "usersActiveWeek": "Aktive brukere (ukentlig)",
+      "usersActiveMonth": "Aktive brukere (månedlig)",
+      "serviceCountHour": "Tjenestebruk (per time)",
+      "serviceCountWeek": "Tjenestebruk (ukentlig)"
+    }
   }
 }

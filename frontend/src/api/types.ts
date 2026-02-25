@@ -674,6 +674,29 @@ export interface MailEntryPOJO {
     verificationCode: string | null;
 }
 
+export interface CountStatistics {
+    date: string; // ISO string
+    count: number;
+}
+
+export interface CountsStatistic {
+    stats: CountStatistics[];
+}
+
+export interface LabeledCountStatistic {
+    stats: Record<string, CountStatistics[]>;
+}
+
+export interface DowStatistics {
+    date: string; // ISO string
+    dow: number;
+    count: number;
+}
+
+export interface DowsStatistic {
+    stats: DowStatistics[];
+}
+
 export enum MailFailureReason {
     ALREADY_REGISTERED = 'ALREADY_REGISTERED',
     INVALID_FORMAT = 'INVALID_FORMAT',
