@@ -42,6 +42,8 @@ const isGuildAdmin = computed(() => {
 const isSettingsPage = computed(() => route.path.startsWith('/settings/edit'))
 const showSettingsHeader = computed(() => route.path.startsWith('/settings'))
 const isSetupPage = computed(() => route.path.startsWith('/setup'))
+const isPublicPage = computed(() => ['Tos', 'Privacy', 'Faq', 'Metrics'].includes(route.name as string))
+
 const ready = ref(false)
 
 async function loadSession() {
@@ -161,7 +163,7 @@ watch(isSettingsPage, async (isSettings) => {
     <SettingsHeader v-if="showSettingsHeader && userSession"/>
 
     <div :class="{'pt-8': showSettingsHeader}">
-      <ViewContainer v-if="!userSession && !isSetupPage && route.path !== '/error/no-token'" class="mt-8">
+      <ViewContainer v-if="!userSession && !isSetupPage && !isPublicPage && route.path !== '/error/no-token'" class="mt-8">
         <LoginPanel/>
       </ViewContainer>
       <ViewContainer v-else-if="showSettingsHeader && !isGuildAdmin" class="mt-8">

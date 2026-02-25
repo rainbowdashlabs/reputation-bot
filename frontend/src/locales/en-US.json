@@ -25,7 +25,46 @@
     "user_settings": "User Settings",
     "voting": "Voting",
     "token_shop": "Token Shop",
-    "supporter": "Supporter"
+    "supporter": "Supporter",
+    "tos": "Terms of Service",
+    "privacy": "Privacy",
+    "faq": "FAQ",
+    "metrics": "Metrics"
+  },
+  "metrics": {
+    "title": "Metrics",
+    "description": "You are curious about the traffic and usage of the bot? We are as well! That's why we compiled some nice graphs on this page. These are showing nearly realtime data directly from the bot.",
+    "offset": "Offset",
+    "count": "Count",
+    "units": {
+      "hour": "Hour",
+      "week": "Week",
+      "month": "Month",
+      "year": "Year"
+    },
+    "sections": {
+      "reputation": "Reputation",
+      "commands": "Commands",
+      "messages": "Messages",
+      "users": "Users",
+      "service": "Service"
+    },
+    "charts": {
+      "reputationCount": "Reputation Count",
+      "reputationTotal": "Total Reputation",
+      "reputationDow": "Reputation by Day of Week",
+      "reputationTypeTotal": "Total Reputation by Type",
+      "reputationTypeCount": "Reputation Count by Type",
+      "reputationChanges": "Reputation Changes",
+      "commandsCount": "Commands Count",
+      "commandsUsage": "Command Usage",
+      "messagesCount": "Messages Count",
+      "messagesTotal": "Total Messages",
+      "usersActiveWeek": "Active Users (Weekly)",
+      "usersActiveMonth": "Active Users (Monthly)",
+      "serviceCountHour": "Service Usage (Hourly)",
+      "serviceCountWeek": "Service Usage (Weekly)"
+    }
   },
   "user": {
     "supporter": {

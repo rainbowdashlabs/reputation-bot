@@ -25,6 +25,14 @@ dependencyResolutionManagement {
             version("jackson", "2.21.1")
             library("jackson-jsr310", "com.fasterxml.jackson.datatype","jackson-datatype-jsr310").versionRef("jackson")
             bundle("jackson", listOf("jackson-jsr310"))
+
+            version("commonmark","0.27.1")
+            library("commonmark", "org.commonmark", "commonmark").versionRef("commonmark")
+            library("commonmark-ext-gfm-tables", "org.commonmark", "commonmark-ext-gfm-tables").versionRef("commonmark")
+            library("commonmark-ext-heading-anchor", "org.commonmark", "commonmark-ext-heading-anchor").versionRef("commonmark")
+            library("commonmark-ext-autolink", "org.commonmark", "commonmark-ext-autolink").versionRef("commonmark")
+            bundle("commonmark", listOf("commonmark", "commonmark-ext-gfm-tables", "commonmark-ext-heading-anchor", "commonmark-ext-autolink"))
+
             // plugins
             plugin("spotless", "com.diffplug.spotless").version("8.2.1")
             plugin("shadow", "com.gradleup.shadow").version("9.3.1")

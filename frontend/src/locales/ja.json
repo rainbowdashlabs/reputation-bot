@@ -25,7 +25,11 @@
     "user_settings": "ユーザー設定",
     "voting": "投票",
     "token_shop": "トークンショップ",
-    "supporter": "サポーター"
+    "supporter": "サポーター",
+    "tos": "利用規約",
+    "privacy": "プライバシー",
+    "faq": "よくある質問",
+    "metrics": "指標"
   },
   "presets": {
     "title": "プリセット",
@@ -315,7 +319,8 @@
         "label": "チャンネルとカテゴリー",
         "description": "リストに含めるべきチャンネルとカテゴリを選択せよ。",
         "channels": "チャンネル",
-        "categories": "カテゴリ"
+        "categories": "カテゴリ",
+        "permissionsNote": "ボットが読み書き権限を持つチャンネルのみが表示される。"
       },
       "premium": {
         "channelLimitWarning": "{limit}以上のチャンネルを選択するのはサポーター専用だ。それを使いたいならサポーターになれ。",
@@ -784,7 +789,8 @@
           "INVALID_CODE": "認証コードが無効だ。",
           "CODE_EXPIRED": "確認コードは期限切れだ。新しい確認メールをリクエストしろ。",
           "UNKNOWN_ADDRESS": "このメールアドレスは見つからなかった。削除された可能性がある。",
-          "UNKNOWN": "不明なエラーが発生した。後で再度試してほしい。"
+          "UNKNOWN": "不明なエラーが発生した。後で再度試してほしい。",
+          "RATE_LIMIT": "その操作を頻繁に行いすぎている。次のメールアドレスを追加する前に、{time} 待ってくれ。"
         }
       }
     },
@@ -908,5 +914,40 @@
       }
     },
     "adminOnly": "サーバーは、サーバー管理者だけが機能を購入できるように設定されている。"
+  },
+  "metrics": {
+    "title": "指標",
+    "description": "ボットのトラフィックや利用状況が気になるか？我々も同じだ！だからこそ、このページにいくつかの見やすいグラフをまとめた。これらはボットから直接取得したほぼリアルタイムのデータを示している。",
+    "offset": "オフセット",
+    "count": "数える",
+    "units": {
+      "hour": "時間",
+      "week": "週",
+      "month": "月",
+      "year": "年"
+    },
+    "sections": {
+      "reputation": "評判",
+      "commands": "コマンド",
+      "messages": "メッセージ",
+      "users": "ユーザー",
+      "service": "サービス"
+    },
+    "charts": {
+      "reputationCount": "評判ポイント",
+      "reputationTotal": "総評価",
+      "reputationDow": "曜日別の評判",
+      "reputationTypeTotal": "タイプ別総評価",
+      "reputationTypeCount": "評判のタイプ別カウント",
+      "reputationChanges": "評判の変化",
+      "commandsCount": "コマンド数",
+      "commandsUsage": "コマンドの使用方法",
+      "messagesCount": "メッセージ数",
+      "messagesTotal": "総メッセージ数",
+      "usersActiveWeek": "アクティブユーザー（週間）",
+      "usersActiveMonth": "月間アクティブユーザー",
+      "serviceCountHour": "サービス利用（時間単位）",
+      "serviceCountWeek": "サービス利用状況（週間）"
+    }
   }
 }

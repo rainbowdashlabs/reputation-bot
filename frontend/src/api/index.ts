@@ -689,8 +689,98 @@ class ApiClient {
         await this.axiosInstance.get('/auth/validate');
     }
 
+    public async getAsset(path: string): Promise<string> {
+        const response = await this.axiosInstance.get<string>(`/data/assets/${path}`);
+        return response.data;
+    }
+
     public async logout(): Promise<void> {
         await this.axiosInstance.post('/auth/logout');
+    }
+
+    // Metrics
+    public async getMetricsReputationCount(unit: 'week' | 'month', offset: number, count: number): Promise<Types.CountsStatistic> {
+        const response = await this.axiosInstance.get<Types.CountsStatistic>(`/metrics/reputation/count/${unit}/${offset}/${count}`, {
+            headers: { 'Accept': 'application/json' }
+        });
+        return response.data;
+    }
+
+    public async getMetricsReputationTotal(unit: 'week' | 'month', offset: number, count: number): Promise<Types.CountsStatistic> {
+        const response = await this.axiosInstance.get<Types.CountsStatistic>(`/metrics/reputation/total/${unit}/${offset}/${count}`, {
+            headers: { 'Accept': 'application/json' }
+        });
+        return response.data;
+    }
+
+    public async getMetricsReputationTypeCount(unit: 'week' | 'month', offset: number, count: number): Promise<Types.LabeledCountStatistic> {
+        const response = await this.axiosInstance.get<Types.LabeledCountStatistic>(`/metrics/reputation/type/count/${unit}/${offset}/${count}`, {
+            headers: { 'Accept': 'application/json' }
+        });
+        return response.data;
+    }
+
+    public async getMetricsReputationTypeTotal(unit: 'week' | 'month', offset: number, count: number): Promise<Types.LabeledCountStatistic> {
+        const response = await this.axiosInstance.get<Types.LabeledCountStatistic>(`/metrics/reputation/type/total/${unit}/${offset}/${count}`, {
+            headers: { 'Accept': 'application/json' }
+        });
+        return response.data;
+    }
+
+    public async getMetricsReputationChanges(unit: 'week' | 'month', offset: number, count: number): Promise<Types.LabeledCountStatistic> {
+        const response = await this.axiosInstance.get<Types.LabeledCountStatistic>(`/metrics/reputation/changes/${unit}/${offset}/${count}`, {
+            headers: { 'Accept': 'application/json' }
+        });
+        return response.data;
+    }
+
+    public async getMetricsReputationDow(unit: 'week' | 'month' | 'year', offset: number): Promise<Types.DowsStatistic> {
+        const response = await this.axiosInstance.get<Types.DowsStatistic>(`/metrics/reputation/dow/${unit}/${offset}`, {
+            headers: { 'Accept': 'application/json' }
+        });
+        return response.data;
+    }
+
+    public async getMetricsCommandsCount(unit: 'week' | 'month', offset: number, count: number): Promise<Types.CountsStatistic> {
+        const response = await this.axiosInstance.get<Types.CountsStatistic>(`/metrics/commands/count/${unit}/${offset}/${count}`, {
+            headers: { 'Accept': 'application/json' }
+        });
+        return response.data;
+    }
+
+    public async getMetricsCommandsUsage(unit: 'week' | 'month', offset: number): Promise<Types.LabeledCountStatistic> {
+        const response = await this.axiosInstance.get<Types.LabeledCountStatistic>(`/metrics/commands/usage/${unit}/${offset}`, {
+            headers: { 'Accept': 'application/json' }
+        });
+        return response.data;
+    }
+
+    public async getMetricsMessagesCount(unit: 'week' | 'month', offset: number, count: number): Promise<Types.CountsStatistic> {
+        const response = await this.axiosInstance.get<Types.CountsStatistic>(`/metrics/messages/count/${unit}/${offset}/${count}`, {
+            headers: { 'Accept': 'application/json' }
+        });
+        return response.data;
+    }
+
+    public async getMetricsMessagesTotal(unit: 'week' | 'month', offset: number, count: number): Promise<Types.CountsStatistic> {
+        const response = await this.axiosInstance.get<Types.CountsStatistic>(`/metrics/messages/total/${unit}/${offset}/${count}`, {
+            headers: { 'Accept': 'application/json' }
+        });
+        return response.data;
+    }
+
+    public async getMetricsUsersActive(unit: 'week' | 'month', offset: number, count: number): Promise<Types.CountsStatistic> {
+        const response = await this.axiosInstance.get<Types.CountsStatistic>(`/metrics/users/active/${unit}/${offset}/${count}`, {
+            headers: { 'Accept': 'application/json' }
+        });
+        return response.data;
+    }
+
+    public async getMetricsServiceCount(unit: 'hour' | 'week', offset: number, count: number): Promise<Types.CountsStatistic> {
+        const response = await this.axiosInstance.get<Types.CountsStatistic>(`/metrics/service/count/${unit}/${offset}/${count}`, {
+            headers: { 'Accept': 'application/json' }
+        });
+        return response.data;
     }
 }
 

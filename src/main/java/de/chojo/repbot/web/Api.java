@@ -18,6 +18,7 @@ import de.chojo.repbot.serialization.ThankwordsContainer;
 import de.chojo.repbot.service.AutopostService;
 import de.chojo.repbot.service.KofiService;
 import de.chojo.repbot.service.MailService;
+import de.chojo.repbot.service.MarkdownService;
 import de.chojo.repbot.service.RoleAssigner;
 import de.chojo.repbot.service.TokenPurchaseService;
 import de.chojo.repbot.web.cache.MemberCache;
@@ -95,7 +96,11 @@ public class Api {
             log.error("Could not load thankwords container", e);
             thankwordsContainer = null;
         }
-        dataRoute = new DataRoute(thankwordsContainer, localization, configuration, shardManager);
+
+        String botId = shardManager.getShards().getFirst().getSelfUser().getId();
+
+        dataRoute = new DataRoute(
+                thankwordsContainer, localization, configuration, shardManager, new MarkdownService(botId));
         authRoute = new AuthRoute(discordOAuthService, userRepository, sessionService, configuration, mailService);
         userRoute =
                 new UserRoute(voteRepository, userRepository, configuration, shardManager, kofiService, mailService);

@@ -25,7 +25,11 @@
     "user_settings": "Käyttäjäasetukset",
     "voting": "Äänestäminen",
     "token_shop": "Token-kauppa",
-    "supporter": "Kannattaja"
+    "supporter": "Kannattaja",
+    "tos": "Käyttöehdot",
+    "privacy": "Tietosuoja",
+    "faq": "Usein kysytyt kysymykset",
+    "metrics": "Mittarit"
   },
   "presets": {
     "title": "Esiasetukset",
@@ -315,7 +319,8 @@
         "label": "Kanavat ja kategoriat",
         "description": "Valitse kanavat ja kategoriat, jotka tulisi sisällyttää luetteloon.",
         "channels": "Kanavat",
-        "categories": "Luokat"
+        "categories": "Luokat",
+        "permissionsNote": "Vain kanavat, joilla botilla on luku- ja kirjoitusoikeudet, on lueteltu."
       },
       "premium": {
         "channelLimitWarning": "{limit}-kanavan valitseminen on varattu tukijoille. Ryhdy tukijaksi, jotta voit käyttää sitä.",
@@ -784,7 +789,8 @@
           "INVALID_CODE": "Vahvistuskoodi on virheellinen.",
           "CODE_EXPIRED": "Vahvistuskoodi on vanhentunut. Pyydä uusi vahvistussähköposti.",
           "UNKNOWN_ADDRESS": "Emme löytäneet tätä sähköpostiosoitetta. Se on mahdollisesti poistettu.",
-          "UNKNOWN": "Tuntematon virhe tapahtui. Yritä myöhemmin uudelleen."
+          "UNKNOWN": "Tuntematon virhe tapahtui. Yritä myöhemmin uudelleen.",
+          "RATE_LIMIT": "Teet sitä liian usein. Odota {time} ennen kuin lisäät uuden sähköpostiosoitteen."
         }
       }
     },
@@ -908,5 +914,40 @@
       }
     },
     "adminOnly": "Palvelin on konfiguroitu siten, että vain palvelimen järjestelmänvalvojat voivat ostaa ominaisuuksia."
+  },
+  "metrics": {
+    "title": "Mittarit",
+    "description": "Oletko utelias botin liikenteestä ja käytöstä? Me myös! Siksi olemme koonneet tälle sivulle muutamia hienoja kaavioita. Ne esittävät lähes reaaliaikaista dataa suoraan botista.",
+    "offset": "Offset",
+    "count": "Laskekaa",
+    "units": {
+      "hour": "Tunti",
+      "week": "Viikko",
+      "month": "Kuukausi",
+      "year": "Vuosi"
+    },
+    "sections": {
+      "reputation": "Maine",
+      "commands": "Komennot",
+      "messages": "Viestit",
+      "users": "Käyttäjät",
+      "service": "Palvelu"
+    },
+    "charts": {
+      "reputationCount": "Mainepisteet",
+      "reputationTotal": "Kokonaismaine",
+      "reputationDow": "Maine viikonpäivän mukaan",
+      "reputationTypeTotal": "Kokonaismaine tyypeittäin",
+      "reputationTypeCount": "Maineiden määrä tyypin mukaan",
+      "reputationChanges": "Maineen muutokset",
+      "commandsCount": "Komentojen määrä",
+      "commandsUsage": "Komennon käyttö",
+      "messagesCount": "Viestien määrä",
+      "messagesTotal": "Viestien kokonaismäärä",
+      "usersActiveWeek": "Aktiiviset käyttäjät (viikoittain)",
+      "usersActiveMonth": "Aktiiviset käyttäjät (kuukausittain)",
+      "serviceCountHour": "Palvelun käyttö (tuntikohtainen)",
+      "serviceCountWeek": "Palvelun käyttö (viikoittain)"
+    }
   }
 }

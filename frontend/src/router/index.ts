@@ -155,6 +155,26 @@ const routes: RouteRecordRaw[] = [
         path: '/error/no-token',
         name: 'NoTokenError',
         component: () => import('@/views/NoTokenError.vue')
+    },
+    {
+        path: '/tos',
+        name: 'Tos',
+        component: () => import('@/views/TosView.vue')
+    },
+    {
+        path: '/privacy',
+        name: 'Privacy',
+        component: () => import('@/views/PrivacyView.vue')
+    },
+    {
+        path: '/faq',
+        name: 'Faq',
+        component: () => import('@/views/FaqView.vue')
+    },
+    {
+        path: '/metrics',
+        name: 'Metrics',
+        component: () => import('@/views/MetricsView.vue')
     }
 ]
 

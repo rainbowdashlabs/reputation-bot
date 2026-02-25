@@ -25,7 +25,11 @@
     "user_settings": "Nastavení uživatele",
     "voting": "Hlasování",
     "token_shop": "Obchod s tokeny",
-    "supporter": "Podporovatel"
+    "supporter": "Podporovatel",
+    "tos": "Podmínky služby",
+    "privacy": "Ochrana osobních údajů",
+    "faq": "Často kladené otázky",
+    "metrics": "Metriky"
   },
   "presets": {
     "title": "Předvolby",
@@ -315,7 +319,8 @@
         "label": "Kanály a kategorie",
         "description": "Vyberte kanály a kategorie, které by měly být součástí seznamu.",
         "channels": "Kanály",
-        "categories": "Kategorie"
+        "categories": "Kategorie",
+        "permissionsNote": "Jsou uvedeny pouze kanály, ke kterým má bot oprávnění pro čtení a zápis."
       },
       "premium": {
         "channelLimitWarning": "Výběr více než {limit} kanálů je vyhrazen pro podporovatele. Staňte se podporovatelem, abyste jej mohli používat.",
@@ -784,7 +789,8 @@
           "INVALID_CODE": "Ověřovací kód je neplatný.",
           "CODE_EXPIRED": "Ověřovací kód vypršel. Požádejte o nový ověřovací e-mail.",
           "UNKNOWN_ADDRESS": "Tuto e-mailovou adresu jsme nemohli najít. Možná byla odstraněna.",
-          "UNKNOWN": "Došlo k neznámé chybě. Zkuste to prosím znovu později."
+          "UNKNOWN": "Došlo k neznámé chybě. Zkuste to prosím znovu později.",
+          "RATE_LIMIT": "Děláte to příliš často. Před přidáním další e-mailové adresy prosím počkejte {time}."
         }
       }
     },
@@ -908,5 +914,40 @@
       }
     },
     "adminOnly": "Server je nakonfigurován tak, aby nákup funkcí mohli provádět pouze správci serveru."
+  },
+  "metrics": {
+    "title": "Metriky",
+    "description": "Zajímá vás provoz a využití bota? Nás také! Proto jsme na této stránce sestavili několik přehledných grafů. Ty zobrazují téměř v reálném čase data přímo z bota.",
+    "offset": "Odsazení",
+    "count": "Počítat",
+    "units": {
+      "hour": "Hodina",
+      "week": "Týden",
+      "month": "Měsíc",
+      "year": "Rok"
+    },
+    "sections": {
+      "reputation": "Reputace",
+      "commands": "Příkazy",
+      "messages": "Zprávy",
+      "users": "Uživatelé",
+      "service": "Služba"
+    },
+    "charts": {
+      "reputationCount": "Počet reputací",
+      "reputationTotal": "Celková reputace",
+      "reputationDow": "Reputace podle dne v týdnu",
+      "reputationTypeTotal": "Celková reputace podle typu",
+      "reputationTypeCount": "Počet reputací podle typu",
+      "reputationChanges": "Změny reputace",
+      "commandsCount": "Počet příkazů",
+      "commandsUsage": "Použití příkazu",
+      "messagesCount": "Počet zpráv",
+      "messagesTotal": "Celkový počet zpráv",
+      "usersActiveWeek": "Aktivní uživatelé (týdně)",
+      "usersActiveMonth": "Aktivní uživatelé (měsíčně)",
+      "serviceCountHour": "Využití služby (hodinově)",
+      "serviceCountWeek": "Využití služeb (týdně)"
+    }
   }
 }

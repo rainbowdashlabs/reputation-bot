@@ -93,6 +93,9 @@ dependencies {
     implementation("commons-validator", "commons-validator", "1.10.1")
     implementation("org.eclipse.angus", "angus-mail", "2.0.5")
 
+    // Markdown parsing
+    implementation(libs.bundles.commonmark)
+
     // unit testing
     testImplementation(testlibs.bundles.junit)
     testImplementation("org.junit.platform", "junit-platform-launcher")
