@@ -948,6 +948,17 @@
       "usersActiveMonth": "Aktivní uživatelé (měsíčně)",
       "serviceCountHour": "Využití služby (hodinově)",
       "serviceCountWeek": "Využití služeb (týdně)"
+    },
+    "users": {
+      "total": "Celkem",
+      "donors": "Dárci",
+      "receivers": "Příjemci"
+    },
+    "validation": {
+      "offsetMin": "Offset musí být alespoň 0",
+      "offsetMax": "Offset musí být maximálně{max}",
+      "countMin": "Počet musí být alespoň 2",
+      "countMax": "Počet musí být nejvýš{max}"
     }
   }
 }

@@ -948,6 +948,17 @@
       "usersActiveMonth": "활성 사용자 (월간)",
       "serviceCountHour": "서비스 사용량 (시간당)",
       "serviceCountWeek": "서비스 사용량 (주간)"
+    },
+    "users": {
+      "total": "총계",
+      "donors": "기부자들",
+      "receivers": "수신기"
+    },
+    "validation": {
+      "offsetMin": "오프셋은 최소 0이어야 합니다",
+      "offsetMax": "오프셋은 최대 {max}이어야 합니다.",
+      "countMin": "카운트는 최소 2개 이상이어야 합니다.",
+      "countMax": "카운트는 최대{max}이어야 합니다."
     }
   }
 }

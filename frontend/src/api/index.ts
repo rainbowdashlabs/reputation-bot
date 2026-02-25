@@ -748,8 +748,8 @@ class ApiClient {
         return response.data;
     }
 
-    public async getMetricsCommandsUsage(unit: 'week' | 'month', offset: number): Promise<Types.LabeledCountStatistic> {
-        const response = await this.axiosInstance.get<Types.LabeledCountStatistic>(`/metrics/commands/usage/${unit}/${offset}`, {
+    public async getMetricsCommandsUsage(unit: 'week' | 'month', offset: number): Promise<Types.CommandsStatistic> {
+        const response = await this.axiosInstance.get<Types.CommandsStatistic>(`/metrics/commands/usage/${unit}/${offset}`, {
             headers: { 'Accept': 'application/json' }
         });
         return response.data;
@@ -769,10 +769,15 @@ class ApiClient {
         return response.data;
     }
 
-    public async getMetricsUsersActive(unit: 'week' | 'month', offset: number, count: number): Promise<Types.CountsStatistic> {
-        const response = await this.axiosInstance.get<Types.CountsStatistic>(`/metrics/users/active/${unit}/${offset}/${count}`, {
+    public async getMetricsUsersActive(unit: 'week' | 'month', offset: number, count: number): Promise<Types.ActiveUsersStatistic> {
+        const response = await this.axiosInstance.get<Types.ActiveUsersStatistic>(`/metrics/users/active/${unit}/${offset}/${count}`, {
             headers: { 'Accept': 'application/json' }
         });
+        return response.data;
+    }
+
+    public async getMetricsLimits(): Promise<Types.MetricLimits> {
+        const response = await this.axiosInstance.get<Types.MetricLimits>('/metrics/limits');
         return response.data;
     }
 

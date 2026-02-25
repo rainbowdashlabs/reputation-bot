@@ -687,6 +687,15 @@ export interface LabeledCountStatistic {
     stats: Record<string, CountStatistics[]>;
 }
 
+export interface CommandStatistic {
+    date: string;
+    command: string;
+    count: number;
+}
+export interface CommandsStatistic {
+    date: string;
+    commands: CommandStatistic[];
+}
 export interface DowStatistics {
     date: string; // ISO string
     dow: number;
@@ -695,6 +704,26 @@ export interface DowStatistics {
 
 export interface DowsStatistic {
     stats: DowStatistics[];
+}
+export interface UserStatistic {
+    date: string; // ISO string
+    donors: number;
+    receivers: number;
+    total: number;
+}
+export interface ActiveUsersStatistic {
+    stats: UserStatistic[];
+}
+export interface MetricLimits {
+    maxHourOffset: number;
+    maxDayOffset: number;
+    maxWeekOffset: number;
+    maxMonthOffset: number;
+    maxYearOffset: number;
+    maxHours: number;
+    maxDays: number;
+    maxWeeks: number;
+    maxMonths: number;
 }
 
 export enum MailFailureReason {

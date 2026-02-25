@@ -948,6 +948,17 @@
       "usersActiveMonth": "Actieve gebruikers (maandelijks)",
       "serviceCountHour": "Gebruik van de dienst (per uur)",
       "serviceCountWeek": "Gebruik van de dienst (wekelijks)"
+    },
+    "users": {
+      "total": "Totaal",
+      "donors": "Donateurs",
+      "receivers": "Ontvangers"
+    },
+    "validation": {
+      "offsetMin": "De offset moet minimaal 0 zijn.",
+      "offsetMax": "De offset mag maximaal zijn{max}",
+      "countMin": "Het aantal moet minimaal 2 zijn.",
+      "countMax": "Het aantal moet maximaal zijn{max}"
     }
   }
 }

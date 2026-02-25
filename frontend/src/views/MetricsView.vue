@@ -29,6 +29,7 @@
                 :offset="1"
                 :count="24"
                 show-count
+                :limits="limits"
             />
             <MetricChart
                 :title="$t('metrics.charts.reputationTotal')"
@@ -39,6 +40,7 @@
                 :offset="0"
                 :count="24"
                 show-count
+                :limits="limits"
             />
             <MetricChart
                 :title="$t('metrics.charts.reputationDow')"
@@ -47,6 +49,7 @@
                 unit="month"
                 :available-units="['week', 'month', 'year']"
                 :offset="1"
+                :limits="limits"
             />
             <MetricChart
                 :title="$t('metrics.charts.reputationTypeTotal')"
@@ -57,6 +60,7 @@
                 :offset="0"
                 :count="48"
                 show-count
+                :limits="limits"
             />
             <MetricChart
                 :title="$t('metrics.charts.reputationTypeCount')"
@@ -67,6 +71,7 @@
                 :offset="0"
                 :count="48"
                 show-count
+                :limits="limits"
             />
             <MetricChart
                 :title="$t('metrics.charts.reputationChanges')"
@@ -77,6 +82,7 @@
                 :offset="0"
                 :count="52"
                 show-count
+                :limits="limits"
             />
           </div>
         </section>
@@ -96,6 +102,7 @@
                 :offset="1"
                 :count="52"
                 show-count
+                :limits="limits"
             />
             <MetricChart
                 :title="$t('metrics.charts.commandsUsage')"
@@ -104,6 +111,7 @@
                 unit="week"
                 :available-units="['week', 'month']"
                 :offset="1"
+                :limits="limits"
             />
           </div>
         </section>
@@ -123,6 +131,7 @@
                 :offset="1"
                 :count="52"
                 show-count
+                :limits="limits"
             />
             <MetricChart
                 :title="$t('metrics.charts.messagesTotal')"
@@ -133,6 +142,7 @@
                 :offset="0"
                 :count="52"
                 show-count
+                :limits="limits"
             />
           </div>
         </section>
@@ -152,6 +162,7 @@
                 :offset="1"
                 :count="52"
                 show-count
+                :limits="limits"
             />
             <MetricChart
                 :title="$t('metrics.charts.usersActiveMonth')"
@@ -162,6 +173,7 @@
                 :offset="1"
                 :count="24"
                 show-count
+                :limits="limits"
             />
           </div>
         </section>
@@ -181,6 +193,7 @@
                 :offset="0"
                 :count="120"
                 show-count
+                :limits="limits"
             />
             <MetricChart
                 :title="$t('metrics.charts.serviceCountWeek')"
@@ -191,6 +204,7 @@
                 :offset="0"
                 :count="104"
                 show-count
+                :limits="limits"
             />
           </div>
         </section>
@@ -200,9 +214,21 @@
 </template>
 
 <script lang="ts" setup>
+import {onMounted, ref} from 'vue'
 import {api} from '@/api'
 import ViewContainer from '@/components/ViewContainer.vue'
 import Header1 from '@/components/heading/Header1.vue'
 import Header2 from '@/components/heading/Header2.vue'
 import MetricChart from '@/components/MetricChart.vue'
+import type {MetricLimits} from '@/api/types'
+
+const limits = ref<MetricLimits | undefined>(undefined)
+
+onMounted(async () => {
+  try {
+    limits.value = await api.getMetricsLimits()
+  } catch (e) {
+    console.error('Failed to fetch metric limits', e)
+  }
+})
 </script>

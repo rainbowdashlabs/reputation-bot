@@ -948,6 +948,17 @@
       "usersActiveMonth": "活跃用户（月度）",
       "serviceCountHour": "服务使用（按小时计费）",
       "serviceCountWeek": "服务使用情况（每周）"
+    },
+    "users": {
+      "total": "总计",
+      "donors": "捐赠者",
+      "receivers": "接收器"
+    },
+    "validation": {
+      "offsetMin": "偏移量必须至少为0",
+      "offsetMax": "偏移量必须小于等于{max}",
+      "countMin": "计数必须至少为2",
+      "countMax": "计数必须小于等于{max}"
     }
   }
 }

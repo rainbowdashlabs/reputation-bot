@@ -948,6 +948,17 @@
       "usersActiveMonth": "Aktiva användare (månadsvis)",
       "serviceCountHour": "Tjänsteanvändning (per timme)",
       "serviceCountWeek": "Tjänsteanvändning (veckovis)"
+    },
+    "users": {
+      "total": "Totalt",
+      "donors": "Donatorer",
+      "receivers": "Mottagare"
+    },
+    "validation": {
+      "offsetMin": "Offset måste vara minst 0",
+      "offsetMax": "Offset får vara högst{max}",
+      "countMin": "Antalet måste vara minst 2",
+      "countMax": "Räkningen måste vara högst {max}"
     }
   }
 }

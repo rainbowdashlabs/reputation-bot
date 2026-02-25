@@ -948,6 +948,17 @@
       "usersActiveMonth": "Aktywni użytkownicy (miesięcznie)",
       "serviceCountHour": "Korzystanie z usługi (godzinowo)",
       "serviceCountWeek": "Korzystanie z usług (tygodniowo)"
+    },
+    "users": {
+      "total": "Razem",
+      "donors": "Darczyńcy",
+      "receivers": "Odbiorniki"
+    },
+    "validation": {
+      "offsetMin": "Przesunięcie musi wynosić co najmniej 0.",
+      "offsetMax": "Przesunięcie musi wynosić maksymalnie{max}",
+      "countMin": "Liczba musi wynosić co najmniej 2.",
+      "countMax": "Liczba musi wynosić maksymaln{max}"
     }
   }
 }

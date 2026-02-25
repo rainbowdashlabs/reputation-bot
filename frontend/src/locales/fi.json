@@ -948,6 +948,17 @@
       "usersActiveMonth": "Aktiiviset käyttäjät (kuukausittain)",
       "serviceCountHour": "Palvelun käyttö (tuntikohtainen)",
       "serviceCountWeek": "Palvelun käyttö (viikoittain)"
+    },
+    "users": {
+      "total": "Yhteensä",
+      "donors": "Lahjoittajat",
+      "receivers": "Vastaanottimet"
+    },
+    "validation": {
+      "offsetMin": "Offsetin on oltava vähintään 0.",
+      "offsetMax": "Offsetin on oltava enintään{max}",
+      "countMin": "Lukumäärän on oltava vähintään 2.",
+      "countMax": "Lukumäärän on oltava enintään{max}"
     }
   }
 }

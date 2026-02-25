@@ -7,6 +7,7 @@ package de.chojo.repbot.web.routes.v1.metrics.util;
 
 import de.chojo.repbot.web.routes.RoutesBuilder;
 import de.chojo.repbot.web.routes.v1.metrics.Commands;
+import de.chojo.repbot.web.routes.v1.metrics.Limits;
 import de.chojo.repbot.web.routes.v1.metrics.Messages;
 import de.chojo.repbot.web.routes.v1.metrics.Reputation;
 import de.chojo.repbot.web.routes.v1.metrics.Service;
@@ -32,6 +33,7 @@ public class MetricsRoute implements RoutesBuilder {
     private final Users users;
     private final MetricCache cache;
     private final Service service;
+    private final Limits limits;
 
     public MetricsRoute(de.chojo.repbot.dao.provider.Metrics metrics) {
         cache = new MetricCache();
@@ -40,6 +42,7 @@ public class MetricsRoute implements RoutesBuilder {
         messages = new Messages(metrics, cache);
         users = new Users(metrics, cache);
         service = new Service(metrics, cache);
+        limits = new Limits(metrics, cache);
     }
 
     @Override
@@ -51,6 +54,7 @@ public class MetricsRoute implements RoutesBuilder {
             messages.buildRoutes();
             users.buildRoutes();
             service.buildRoutes();
+            limits.buildRoutes();
         });
     }
 }

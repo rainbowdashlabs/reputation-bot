@@ -948,6 +948,17 @@
       "usersActiveMonth": "Aktif Kullanıcılar (Aylık)",
       "serviceCountHour": "Hizmet Kullanımı (Saatlik)",
       "serviceCountWeek": "Hizmet Kullanımı (Haftalık)"
+    },
+    "users": {
+      "total": "Toplam",
+      "donors": "Bağışçılar",
+      "receivers": "Alıcılar"
+    },
+    "validation": {
+      "offsetMin": "Ofset en az 0 olmalıdır",
+      "offsetMax": "Ofset en fazla {max} olmalıdır.",
+      "countMin": "Sayısı en az 2 olmalıdır",
+      "countMax": "Sayım en fazla {max} olmalıdır."
     }
   }
 }

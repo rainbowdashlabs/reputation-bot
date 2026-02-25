@@ -948,6 +948,17 @@
       "usersActiveMonth": "Usuarios activos (mensuales)",
       "serviceCountHour": "Uso del servicio (por hora)",
       "serviceCountWeek": "Uso del servicio (semanal)"
+    },
+    "users": {
+      "total": "Total",
+      "donors": "Donantes",
+      "receivers": "Receptores"
+    },
+    "validation": {
+      "offsetMin": "La compensación debe ser de al menos 0.",
+      "offsetMax": "El desplazamiento debe ser como má{max}",
+      "countMin": "El recuento debe ser de al menos 2.",
+      "countMax": "El recuento debe ser como máxim{max}"
     }
   }
 }

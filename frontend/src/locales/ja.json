@@ -948,6 +948,17 @@
       "usersActiveMonth": "月間アクティブユーザー",
       "serviceCountHour": "サービス利用（時間単位）",
       "serviceCountWeek": "サービス利用状況（週間）"
+    },
+    "users": {
+      "total": "合計",
+      "donors": "寄付者",
+      "receivers": "受信機"
+    },
+    "validation": {
+      "offsetMin": "オフセットは少なくとも0でなければならない",
+      "offsetMax": "オフセットは最大{max}でなければならない。",
+      "countMin": "数は少なくとも2でなければならない",
+      "countMax": "カウントは最大で{max}でなければならない。"
     }
   }
 }

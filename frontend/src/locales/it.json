@@ -948,6 +948,17 @@
       "usersActiveMonth": "Utenti attivi (mensili)",
       "serviceCountHour": "Uso del servizio (ogni ora)",
       "serviceCountWeek": "Uso del servizio (settimanale)"
+    },
+    "users": {
+      "total": "Totale",
+      "donors": "Donatori",
+      "receivers": "Ricevitori"
+    },
+    "validation": {
+      "offsetMin": "L'offset deve essere almeno 0.",
+      "offsetMax": "L'offset deve essere al massimo un{max}",
+      "countMin": "Il conteggio deve essere almeno 2",
+      "countMax": "Il conteggio deve essere al massimo di un{max}"
     }
   }
 }
