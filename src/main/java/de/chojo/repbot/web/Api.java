@@ -97,12 +97,7 @@ public class Api {
             thankwordsContainer = null;
         }
 
-        String botId = "UNKNOWN";
-        try {
-            botId = configuration.links().invite().split("client_id=")[1].split("&")[0];
-        } catch (Exception e) {
-            log.error("Could not extract bot id from invite link", e);
-        }
+        String botId = shardManager.getShards().getFirst().getSelfUser().getId();
 
         dataRoute = new DataRoute(
                 thankwordsContainer, localization, configuration, shardManager, new MarkdownService(botId));
