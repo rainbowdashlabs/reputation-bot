@@ -91,7 +91,7 @@ dependencies {
 
     // Mailing
     implementation("commons-validator", "commons-validator", "1.10.1")
-    implementation("org.eclipse.angus", "angus-mail", "2.0.3")
+    implementation("org.eclipse.angus", "angus-mail", "2.0.5")
 
     // unit testing
     testImplementation(testlibs.bundles.junit)
