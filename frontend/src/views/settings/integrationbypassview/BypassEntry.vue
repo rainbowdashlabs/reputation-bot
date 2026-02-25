@@ -25,7 +25,7 @@ const {t} = useI18n()
 const {session, updateIntegrationBypass, removeIntegrationBypass} = useSession()
 
 const getIntegration = (id: string) => {
-  return session.value?.guild?.integrations?.find(i => i.id === id)
+  return session.value?.integrations?.find(i => i.id === id)
 }
 
 const updateBypassValue = async (key: keyof Bypass, value: boolean) => {

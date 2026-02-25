@@ -8,7 +8,7 @@ package de.chojo.repbot.commands.setup;
 import de.chojo.jdautil.interactions.slash.Slash;
 import de.chojo.jdautil.interactions.slash.provider.SlashCommand;
 import de.chojo.repbot.commands.setup.handler.Start;
-import de.chojo.repbot.web.sessions.SessionService;
+import de.chojo.repbot.web.services.SessionService;
 
 public class Setup extends SlashCommand {
     public Setup(SessionService sessionService) {

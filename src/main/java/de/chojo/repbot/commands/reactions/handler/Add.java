@@ -31,7 +31,7 @@ public class Add implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         if (Premium.checkAndReplyPremium(
-                context, configuration.skus().features().additionalEmojis().additionalEmojis())) {
+                context, configuration.skus().features().additionalEmojis().fullSkuEntry())) {
             return;
         }
 

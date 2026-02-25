@@ -14,8 +14,8 @@ import AdditionalEmojiSettings from './reactionsview/AdditionalEmojiSettings.vue
 const {t} = useI18n()
 const {session} = useSession()
 
-const mainReaction = computed(() => session.value?.settings.thanking.reactions.mainReaction || '🏅')
-const additionalReactions = computed(() => [...(session.value?.settings.thanking.reactions.reactions || [])])
+const mainReaction = computed(() => session.value?.settings?.thanking.reactions.mainReaction || '🏅')
+const additionalReactions = computed(() => [...(session.value?.settings?.thanking.reactions.reactions || [])])
 </script>
 
 <template>

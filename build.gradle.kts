@@ -13,7 +13,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "2.4.1"
+version = "2.5.0"
 
 repositories {
     mavenLocal()
@@ -88,6 +88,10 @@ dependencies {
     }
 
     implementation("org.knowm.xchart", "xchart", "3.8.8")
+
+    // Mailing
+    implementation("commons-validator", "commons-validator", "1.10.1")
+    implementation("org.eclipse.angus", "angus-mail", "2.0.3")
 
     // unit testing
     testImplementation(testlibs.bundles.junit)

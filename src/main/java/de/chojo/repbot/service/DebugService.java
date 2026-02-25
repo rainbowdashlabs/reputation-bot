@@ -50,7 +50,6 @@ import static net.dv8tion.jda.api.Permission.MESSAGE_SEND_IN_THREADS;
 import static net.dv8tion.jda.api.Permission.VIEW_CHANNEL;
 
 public class DebugService {
-    private final GuildRepository guildRepository;
     private static final List<Permission> DEFAULT_REPUTATION_CHANNEL_PERMISSION = List.of(
             VIEW_CHANNEL,
             MESSAGE_SEND,
@@ -59,6 +58,7 @@ public class DebugService {
             MESSAGE_ADD_REACTION,
             MESSAGE_SEND_IN_THREADS,
             MESSAGE_EXT_EMOJI);
+    private final GuildRepository guildRepository;
 
     public DebugService(GuildRepository guildRepository) {
         this.guildRepository = guildRepository;

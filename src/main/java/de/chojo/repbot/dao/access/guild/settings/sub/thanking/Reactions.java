@@ -157,7 +157,7 @@ public class Reactions extends ReactionsPOJO implements GuildHolder {
                         .skus()
                         .features()
                         .additionalEmojis()
-                        .additionalEmojis())) {
+                        .fullSkuEntry())) {
             return false;
         }
         return reactions.contains(reaction);

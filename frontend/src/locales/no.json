@@ -10,12 +10,22 @@
     "loading": "Laster...",
     "error": {
       "outOfBounds": "Verdien må være mellom {min} og {max}. Korrigert til nærmeste gyldige verdi."
-    }
+    },
+    "noData": "Ingen oppføringer funnet.",
+    "previous": "Forrige",
+    "next": "Neste",
+    "pageOf": "Side {current} av {total}"
   },
   "navigation": {
     "settings": "Innstillinger",
     "presets": "Forhåndsinnstillinger",
-    "setup": "Oppsett"
+    "setup": "Oppsett",
+    "logout": "Logg ut",
+    "dashboard": "Dashbord",
+    "user_settings": "Brukerinnstillinger",
+    "voting": "Avstemning",
+    "token_shop": "Tokenbutikk",
+    "supporter": "Supporter"
   },
   "presets": {
     "title": "Forhåndsinnstillinger",
@@ -135,10 +145,13 @@
   },
   "premiumFeature": {
     "title": "Supporterfunksjon",
-    "requiredTier": "Nødvendig støttespiller-nivå:",
     "message": "{name} er forbeholdt støttespillere. Bli støttespiller for å kunne bruke den.",
     "requiredTierSingular": "Nødvendig støttenivå:",
-    "requiredTierPlural": "En av følgende støttenivåer er påkrevd:"
+    "requiredTierPlural": "En av følgende støttenivåer er påkrevd:",
+    "tokenShopHint": "Du kan også låse opp denne funksjonen med tokens i",
+    "tokenShopLink": "Tokenbutikk",
+    "kofiHint": "eller støtt oss på",
+    "kofiLink": "Ko-fi"
   },
   "profile": {
     "description": "Tilpass hvordan boten vises og oppfører seg på serveren din.",
@@ -308,6 +321,10 @@
         "channelLimitWarning": "Valg av mer enn {limit} kanaler er forbeholdt støttespillere. Bli støttespiller for å kunne bruke det.",
         "categoryLimitWarning": "Valg av mer enn én kategori fr{limit}-kategoriene er forbeholdt støttespillere. Bli støttespiller for å kunne bruke denne funksjonen."
       }
+    },
+    "everyoneTokenPurchase": {
+      "label": "Alle kan kjøpe tokens",
+      "description": "Tillat alle brukere å kjøpe premiumfunksjoner ved hjelp av sine tokens. Hvis denne funksjonen er deaktivert, kan kun serveradministratorer kjøpe funksjoner."
     }
   },
   "reactions": {
@@ -626,7 +643,8 @@
       "autopost_channel": "Autopost - Kanal",
       "autopost_refreshtype": "Autopost - Oppdateringstype",
       "autopost_refreshinterval": "Autopost - Oppdateringsintervall",
-      "ranks": "Ranger - Roller"
+      "ranks": "Ranger - Roller",
+      "general_everyonetokenpurchase": "Generelt - Alle Token-kjøp"
     }
   },
   "help": {
@@ -669,5 +687,226 @@
     "week": "1 uke",
     "fourWeeks": "4 uker",
     "year": "1 år"
+  },
+  "login": {
+    "title": "Pålogging kreves",
+    "description": "Vennligst logg inn med Discord for å få tilgang til dette panelet.",
+    "button": "Logg inn med Discord"
+  },
+  "voting": {
+    "title": "Avstemning",
+    "description": "Informasjon om dine nåværende stemmetokener og botlistens stemmestatus.",
+    "tokens": {
+      "title": "Tokens",
+      "description": "Dine nåværende stemmetokener. Du kan bruke dem på ulike belønninger.",
+      "label": "Gjeldende tokens",
+      "shop": "Besøk Token Shop"
+    },
+    "botlists": {
+      "title": "Botlister",
+      "description": "Stem på boten på ulike botlister for å tjene tokens og opprettholde din rekke.",
+      "name": "Botliste",
+      "streak": "Streak",
+      "lastVote": "Siste avstemning",
+      "action": "Handling",
+      "vote": "Stem",
+      "never": "Aldri",
+      "days": "dager"
+    },
+    "log": {
+      "title": "Stemmeregister",
+      "description": "En oversikt over dine transaksjoner med stemmetokener.",
+      "date": "Dato",
+      "guild": "Guild",
+      "tokens": "Tokens",
+      "reason": {
+        "label": "Årsak",
+        "STANDARD": "Stem",
+        "STANDARD_DESCRIPTION": "Du har mottatt en token for å stemme på en botliste.",
+        "STREAK": "Stemme rekke",
+        "STREAK_DESCRIPTION": "Du har fått en ekstra token fordi du har en strek.",
+        "BONUS": "Daglig bonus",
+        "BONUS_DESCRIPTION": "Du har mottatt ekstra tokens for å ha stemt på alle botlister i løpet av de siste 6 timene.",
+        "TRANSFER": "Overføring til Guild",
+        "TRANSFER_DESCRIPTION": "Du overførte tokens til et laug for å støtte dets omdømmesystem.",
+        "USE": "Kjøp",
+        "USE_DESCRIPTION": "Du brukte tokens til å kjøpe en belønning eller tjeneste.",
+        "unknown": "Ukjent",
+        "unknown_DESCRIPTION": "Årsaken til denne transaksjonen er ukjent."
+      },
+      "unknownGuild": "Ukjent laug",
+      "personal": "Personlig"
+    },
+    "noteDefaultGuild": "Tips: Du kan angi en standardklan som automatisk skal motta tokens i din",
+    "noteDefaultGuildLink": "Brukerinnstillinger",
+    "transfer": {
+      "title": "Overfør tokens til et laug",
+      "description": "Flytt tokens fra din personlige saldo til en av dine guilder.",
+      "guild": "Guild",
+      "selectGuild": "Velg et laug",
+      "amount": "Beløp",
+      "max": "Max: {max}",
+      "submit": "Overføring"
+    }
+  },
+  "user": {
+    "settings": {
+      "title": "Brukerinnstillinger",
+      "description": "Konfigurer dine personlige kontoinnstillinger og preferanser.",
+      "voteGuild": {
+        "label": "Stem på Guild",
+        "description": "Velg hvilket guild som skal motta tokens når du stemmer på boten. Dette vil kun påvirke fremtidige stemmer.",
+        "none": "Ingen spesifikk klan (Personlig)"
+      },
+      "mails": {
+        "title": "E-postadresser",
+        "description": "Administrer e-postadressene som er knyttet til kontoen din. Du kan legge til en ny adresse og bekrefte den via lenken som sendes til innboksen din.",
+        "verified": "Verifisert",
+        "pending": "Venter på bekreftelse",
+        "noteDeletion": "Merk: E-postadresser fra Discord eller Ko-fi kan ikke fjernes. Bare adresser du selv har lagt til kan slettes.",
+        "source": {
+          "user": "Bruker",
+          "discord": "Uenighet",
+          "kofi": "Ko-fi"
+        },
+        "add": {
+          "placeholder": "Legg til en ny e-postadresse (name@example.com)",
+          "button": "Legg til"
+        },
+        "verify": {
+          "success": "E-postadressen din er bekreftet.",
+          "error": "E-postbekreftelsen mislyktes. Prøv igjen eller be om en ny bekreftelseskobling."
+        },
+        "errors": {
+          "ALREADY_REGISTERED": "Denne e-postadressen er allerede registrert for en annen bruker.",
+          "INVALID_FORMAT": "E-postadressen er ugyldig. Kontroller og prøv igjen.",
+          "WRONG_USER": "Denne e-postadressen tilhører en annen bruker.",
+          "INVALID_CODE": "Bekreftelseskoden er ugyldig.",
+          "CODE_EXPIRED": "Bekreftelseskoden har utløpt. Be om en ny bekreftelses-e-post.",
+          "UNKNOWN_ADDRESS": "Vi kunne ikke finne denne e-postadressen. Den kan ha blitt slettet.",
+          "UNKNOWN": "Det oppstod en ukjent feil. Prøv igjen senere."
+        }
+      }
+    },
+    "supporter": {
+      "title": "Supporter",
+      "description": "Se dine aktive Ko-fi-kjøp og tilordne dem til et laug for å aktivere supporterfunksjoner.",
+      "kofiLink": "Kjøp på Ko-fi",
+      "sections": {
+        "subscriptions": "Aktive abonnementer",
+        "subscriptions_desc": "Abonnementene fornyes automatisk og kan tilordnes en klan etter eget valg.",
+        "lifetime": "Livstids kjøp",
+        "lifetime_desc": "Livstids kjøp kan tilordnes et laug for å låse opp funksjoner permanent."
+      },
+      "item": {
+        "subscription": "Abonnement",
+        "lifetime": "Levetid",
+        "expires": "Utløper: {date}",
+        "assignedTo": "Tildelt til: {guild}",
+        "assign": "Tildele",
+        "unassign": "Fjern tilordning"
+      },
+      "errors": {
+        "load": "Kunne ikke laste inn kjøp. Prøv igjen senere.",
+        "assign": "Kunne ikke tilordne kjøpet.",
+        "unassign": "Kunne ikke oppheve tilordningen av kjøpet."
+      },
+      "results": {
+        "ALREADY_SUBSCRIBED": "Du har allerede et aktivt abonnement tilordnet et laug.",
+        "SUBSCRIPTION_EXPIRED": "Dette abonnementet har utløpt og kan ikke tildeles.",
+        "UNKOWN": "Det oppstod en ukjent abonnementsfeil. Prøv igjen senere.",
+        "SUCCESS": "Suksess"
+      },
+      "missingPurchasesNotice": "Hvis kjøpene dine ikke vises her, kan det være at du har brukt en annen e-postadresse for Ko-fi enn Discord-kontoen din. Du kan koble til flere e-postadresser i {link}.",
+      "settingsLink": "Brukerinnstillinger"
+    }
+  },
+  "dashboard": {
+    "title": "Dashbord",
+    "totalReputation": "Total omdømme",
+    "weekReputation": "Ukentlig omdømme",
+    "todayReputation": "Dagens omdømme",
+    "topChannel": "Toppkanal",
+    "topUsers": "Toppbrukere",
+    "rank": "Rangering",
+    "user": "Bruker",
+    "reputation": "Omdømme"
+  },
+  "token_shop": {
+    "title": "Tokenbutikk",
+    "description": "Forbedre serveren din med premiumfunksjoner ved å bruke stemmetokenene dine. Funksjoner kjøpt med tokener utløper ikke så lenge de fornyes automatisk. Hvis du kjøper en funksjon som allerede er aktiv, forlenges utløps- eller fornyelsesdatoen med 30 dager.",
+    "guildTokens": "Bruk guild-tokens",
+    "userTokens": "Bruk personlige tokens",
+    "noFeatures": "Ingen funksjoner tilgjengelig for øyeblikket.",
+    "active": "Aktiv",
+    "expires": "Utløper: {date}",
+    "nextRenewal": "Neste fornyelse: {date}",
+    "autoRenewal": "Automatisk fornyelse",
+    "purchase": "Kjøp",
+    "subscribe": "Abonner",
+    "unsubscribe": "Avmeld",
+    "purchaseSuccess": "Funksjonen er kjøpt!",
+    "subscribeSuccess": "Abonnement aktivert!",
+    "unsubscribeSuccess": "Abonnement deaktivert!",
+    "enabledBySubscription": "Aktivert ved abonnement",
+    "subscriptionActiveNote": "Denne funksjonen er for øyeblikket aktivert av et aktivt abonnement.",
+    "confirmPurchase": "Er du sikker på at du vil kjøpe denne funksjonen for {amount} tokens?",
+    "insufficientTokens": "Du har ikke nok tokens.",
+    "getMoreTokens": "Få flere tokens",
+    "feature": {
+      "reputationlog": {
+        "name": "Fullstendig omdømmelogg",
+        "description": "Se alle sider i omdømmeloggen på serveren."
+      },
+      "analyzerlog": {
+        "name": "Utvidet analysatorlogg",
+        "description": "Oppbevaringsperioden for analysatorloggen er doblet."
+      },
+      "reputationcategories": {
+        "name": "Ubegrensede omdømme-kategorier",
+        "description": "Lås opp ubegrensede omdømme-kategorier."
+      },
+      "reputationchannel": {
+        "name": "Ubegrenset omdømme-kanal",
+        "description": "Lås opp ubegrensede omdømmekanaler."
+      },
+      "channelblacklist": {
+        "name": "Kanalens sperreliste",
+        "description": "Hindre at boten er aktiv i bestemte kanaler, i stedet for å tillate den overalt."
+      },
+      "localeoverrides": {
+        "name": "Lokale overstyringer",
+        "description": "Overstyr botmeldinger og etiketter med dine egne oversettelser. For øyeblikket tillater dette bare å angi et tilpasset navn for omdømme."
+      },
+      "autopost": {
+        "name": "Autopost",
+        "description": "Legg automatisk ut leaderboardet på en kanal med jevne mellomrom."
+      },
+      "advancedrankings": {
+        "name": "Avanserte rangeringer",
+        "description": "Lås opp flere rangeringalternativer."
+      },
+      "detailedprofile": {
+        "name": "Detaljert profil",
+        "description": "Vis mer informasjon om brukerens omdømmeprofiler."
+      },
+      "logchannel": {
+        "name": "Loggkanal",
+        "description": "Aktiver en dedikert loggkanal for alle endringer i omdømme."
+      },
+      "additionalemojis": {
+        "name": "Ekstra emojier",
+        "description": "Bruk mer enn én emoji for å gi omdømme via reaksjoner."
+      },
+      "profile": {
+        "name": "Bot-profil",
+        "description": "Tilpass botens navn og profilbilde på serveren din."
+      },
+      "integrationbypass": {
+        "name": "Integrering Bypass",
+        "description": "Tillat andre bots og integrasjoner å gi omdømme."
+      }
+    },
+    "adminOnly": "Serveren er konfigurert slik at kun serveradministratorer kan kjøpe funksjoner."
   }
 }

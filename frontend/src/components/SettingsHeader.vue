@@ -4,15 +4,28 @@
  *     Copyright (C) RainbowDashLabs and Contributor
  */
 <script lang="ts" setup>
+import {computed} from 'vue'
 import {useI18n} from 'vue-i18n'
-import {onMounted, ref} from 'vue'
+import {onMounted, ref, watch} from 'vue'
 import {api} from '@/api'
+import {useSession} from '@/composables/useSession'
 
 const {t} = useI18n()
+const {userSession} = useSession()
+
+const isGuildAdmin = computed(() => {
+  const guildId = localStorage.getItem('reputation_bot_guild_id')
+  if (!guildId || !userSession.value) return false
+  return userSession.value.guilds[guildId]?.accessLevel === 'GUILD_ADMIN' || userSession.value.isBotOwner
+})
 
 const hasProblems = ref(false)
 
-onMounted(async () => {
+const checkProblems = async () => {
+  if (!userSession.value) {
+    hasProblems.value = false
+    return
+  }
   try {
     const result = await api.getDebug()
     hasProblems.value = result.missingGlobalPermissions.length > 0 ||
@@ -23,12 +36,16 @@ onMounted(async () => {
         result.simpleWarnings.length > 0
   } catch (e) {
     console.error('Failed to fetch debug info', e)
+    hasProblems.value = false
   }
-})
+}
+
+onMounted(checkProblems)
+watch(userSession, checkProblems)
 </script>
 
 <template>
-  <div class="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 transition-colors">
+  <div v-if="isGuildAdmin" class="bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 transition-colors">
     <div class="mx-auto px-4" style="max-width: 1600px;">
       <nav class="flex">
         <router-link

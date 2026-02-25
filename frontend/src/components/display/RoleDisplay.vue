@@ -15,7 +15,7 @@ const props = defineProps<Props>()
 const {session} = useSession()
 
 const role = computed(() => {
-  return session.value?.guild?.roles?.find(r => r.id === props.roleId)
+  return session.value?.roles?.find(r => r.id === props.roleId)
 })
 
 const roleColor = computed(() => {

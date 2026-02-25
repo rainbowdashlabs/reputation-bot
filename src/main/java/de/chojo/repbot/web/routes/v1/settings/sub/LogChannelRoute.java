@@ -112,9 +112,9 @@ public class LogChannelRoute implements RoutesBuilder {
     @Override
     public void buildRoutes() {
         path("logchannel", () -> {
-            post("", this::updateLogChannelSettings, Role.GUILD_USER);
-            post("active", this::updateActive, Role.GUILD_USER);
-            post("channel", this::updateChannel, Role.GUILD_USER);
+            post("", this::updateLogChannelSettings, Role.GUILD_ADMIN);
+            post("active", this::updateActive, Role.GUILD_ADMIN);
+            post("channel", this::updateChannel, Role.GUILD_ADMIN);
         });
     }
 }

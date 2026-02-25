@@ -5,12 +5,11 @@
  */
 package de.chojo.repbot.config.elements.sku.feature;
 
-import de.chojo.repbot.config.elements.sku.SKUEntry;
+import de.chojo.repbot.config.elements.sku.tokens.Feature;
 
-public class LogChannel {
-    private SKUEntry logChannel = new SKUEntry();
+public class LogChannel extends Feature {
 
-    public SKUEntry logChannel() {
-        return logChannel;
+    public LogChannel() {
+        super(8, 350);
     }
 }

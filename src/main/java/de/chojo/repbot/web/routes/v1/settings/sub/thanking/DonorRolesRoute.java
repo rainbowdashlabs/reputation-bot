@@ -49,7 +49,7 @@ public class DonorRolesRoute implements RoutesBuilder {
     @Override
     public void buildRoutes() {
         path("donorroles", () -> {
-            post("", this::updateDonorRoles, Role.GUILD_USER);
+            post("", this::updateDonorRoles, Role.GUILD_ADMIN);
         });
     }
 }

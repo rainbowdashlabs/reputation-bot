@@ -10,12 +10,22 @@
     "loading": "Caricamento in corso...",
     "error": {
       "outOfBounds": "Il valore deve essere compreso tra {min} e {max}. Corretto al valore valido più vicino."
-    }
+    },
+    "noData": "Nessun risultato trovato.",
+    "previous": "Precedente",
+    "next": "Successivo",
+    "pageOf": "Pagina {current} di {total}"
   },
   "navigation": {
     "settings": "Impostazioni",
     "presets": "Preimpostazioni",
-    "setup": "Configurazione"
+    "setup": "Configurazione",
+    "logout": "Esci",
+    "dashboard": "Pannello di controllo",
+    "user_settings": "Impostazioni utente",
+    "voting": "Votazione",
+    "token_shop": "Negozio di gettoni",
+    "supporter": "Sostenitore"
   },
   "presets": {
     "title": "Preimpostazioni",
@@ -135,10 +145,13 @@
   },
   "premiumFeature": {
     "title": "Caratteristiche dei sostenitori",
-    "requiredTier": "Livello di sostegno richiesto:",
     "message": "{name} è solo per chi ci supporta. Diventa un sostenitore per usarlo.",
     "requiredTierSingular": "Livello di sostegno richiesto:",
-    "requiredTierPlural": "Devi scegliere uno di questi livelli di sostegno:"
+    "requiredTierPlural": "Devi scegliere uno di questi livelli di sostegno:",
+    "tokenShopHint": "Puoi anche sbloccare questa funzione con i gettoni nel",
+    "tokenShopLink": "Negozio di gettoni",
+    "kofiHint": "oppure seguici su",
+    "kofiLink": "Ko-fi"
   },
   "profile": {
     "description": "Personalizza come il bot appare e si comporta sul tuo server.",
@@ -308,6 +321,10 @@
         "channelLimitWarning": "La possibilità di selezionare più di {limit} canali è riservata ai sostenitori. Diventa un sostenitore per poterla usare.",
         "categoryLimitWarning": "La possibilità di selezionare più di una categori{limit}e è riservata ai sostenitori. Diventa un sostenitore per poterla usare."
       }
+    },
+    "everyoneTokenPurchase": {
+      "label": "Acquisto di token per tutti",
+      "description": "Consenti a tutti gli utenti di comprare funzioni premium usando i loro token. Se disabilitato, solo gli amministratori del server possono comprare funzioni."
     }
   },
   "reactions": {
@@ -626,7 +643,8 @@
       "autopost_channel": "Autopost - Canale",
       "autopost_refreshtype": "Pubblicazione automatica - Tipo di aggiornamento",
       "autopost_refreshinterval": "Pubblicazione automatica - Intervallo di aggiornamento",
-      "ranks": "Gradi - Ruoli"
+      "ranks": "Gradi - Ruoli",
+      "general_everyonetokenpurchase": "Generale - Acquisto di token per tutti"
     }
   },
   "help": {
@@ -669,5 +687,226 @@
     "week": "1 settimana",
     "fourWeeks": "4 settimane",
     "year": "1 anno"
+  },
+  "login": {
+    "title": "Accesso richiesto",
+    "description": "Accedi con Discord per vedere questo pannello.",
+    "button": "Accedi con Discord"
+  },
+  "voting": {
+    "title": "Votazione",
+    "description": "Informazioni sui tuoi gettoni di voto attuali e sullo stato delle votazioni nella lista dei bot.",
+    "tokens": {
+      "title": "Gettoni",
+      "description": "I tuoi gettoni voto attuali. Puoi usarli per vari premi.",
+      "label": "Gettoni attuali",
+      "shop": "Dai un'occhiata al negozio di token"
+    },
+    "botlists": {
+      "title": "Elenchi di bot",
+      "description": "Vota il bot su varie liste di bot per guadagnare gettoni e continuare la tua serie positiva.",
+      "name": "Elenco dei bot",
+      "streak": "Serie",
+      "lastVote": "Ultimo voto",
+      "action": "Azione",
+      "vote": "Vota",
+      "never": "Mai",
+      "days": "giorni"
+    },
+    "log": {
+      "title": "Registro dei voti",
+      "description": "Una cronologia delle tue transazioni con i gettoni voto.",
+      "date": "Data",
+      "guild": "Gilda",
+      "tokens": "Gettoni",
+      "reason": {
+        "label": "Motivo",
+        "STANDARD": "Vota",
+        "STANDARD_DESCRIPTION": "Hai ricevuto un gettone per votare su una lista di bot.",
+        "STREAK": "Serie di voti",
+        "STREAK_DESCRIPTION": "Hai ricevuto un gettone in più perché hai una serie positiva.",
+        "BONUS": "Bonus giornaliero",
+        "BONUS_DESCRIPTION": "Hai ricevuto dei gettoni extra per aver votato su tutte le botlist nelle ultime 6 ore.",
+        "TRANSFER": "Trasferimento alla Gilda",
+        "TRANSFER_DESCRIPTION": "Hai dato dei gettoni a una gilda per aiutare il suo sistema di reputazione.",
+        "USE": "Acquisto",
+        "USE_DESCRIPTION": "Hai usato i gettoni per comprare un premio o un servizio.",
+        "unknown": "Sconosciuto",
+        "unknown_DESCRIPTION": "Non si sa perché sia stata fatta questa transazione."
+      },
+      "unknownGuild": "Gilda sconosciuta",
+      "personal": "Personale"
+    },
+    "noteDefaultGuild": "Suggerimento: puoi impostare una gilda predefinita per ricevere automaticamente i gettoni nel tuo",
+    "noteDefaultGuildLink": "Impostazioni utente",
+    "transfer": {
+      "title": "Trasferisci i gettoni a una gilda",
+      "description": "Sposta i gettoni dal tuo saldo personale a una delle tue gilde.",
+      "guild": "Gilda",
+      "selectGuild": "Scegli una gilda",
+      "amount": "Importo",
+      "max": "Max: {max}",
+      "submit": "Trasferimento"
+    }
+  },
+  "user": {
+    "settings": {
+      "title": "Impostazioni utente",
+      "description": "Metti a posto le impostazioni e le preferenze del tuo account personale.",
+      "voteGuild": {
+        "label": "Vota Gilda",
+        "description": "Scegli quale gilda dovrebbe ricevere i gettoni quando voti per il bot. Questo cambierà solo i voti futuri.",
+        "none": "Nessuna gilda in particolare (Personale)"
+      },
+      "mails": {
+        "title": "Indirizzi e-mail",
+        "description": "Gestisci gli indirizzi email collegati al tuo account. Puoi aggiungere un nuovo indirizzo e verificarlo tramite il link che ti arriva nella casella di posta.",
+        "verified": "Verificato",
+        "pending": "In attesa di verifica",
+        "noteDeletion": "Nota: gli indirizzi email di Discord o Ko-fi non si possono togliere. Si possono cancellare solo quelli che hai aggiunto tu.",
+        "source": {
+          "user": "Utente",
+          "discord": "Discord",
+          "kofi": "Ko-fi"
+        },
+        "add": {
+          "placeholder": "Aggiungi un nuovo indirizzo e-mail (name@example.com)",
+          "button": "Aggiungi"
+        },
+        "verify": {
+          "success": "La tua email è stata verificata senza problemi.",
+          "error": "La verifica dell'indirizzo e-mail non è andata a buon fine. Prova di nuovo o chiedi un nuovo link di verifica."
+        },
+        "errors": {
+          "ALREADY_REGISTERED": "Questo indirizzo email è già stato usato da qualcun altro.",
+          "INVALID_FORMAT": "L'indirizzo email non va bene. Dai un'occhiata e riprova.",
+          "WRONG_USER": "Questo indirizzo email è di un altro utente.",
+          "INVALID_CODE": "Il codice di verifica non va bene.",
+          "CODE_EXPIRED": "Il codice di verifica è scaduto. Prova a chiedere una nuova email di verifica.",
+          "UNKNOWN_ADDRESS": "Non siamo riusciti a trovare questo indirizzo email. Forse è stato cancellato.",
+          "UNKNOWN": "Si è verificato un errore strano. Prova più tardi."
+        }
+      }
+    },
+    "supporter": {
+      "title": "Sostenitore",
+      "description": "Guarda i tuoi acquisti Ko-fi attivi e mettili in una gilda per attivare le funzioni di supporto.",
+      "kofiLink": "Compra su Ko-fi",
+      "sections": {
+        "subscriptions": "Abbonamenti attivi",
+        "subscriptions_desc": "Gli abbonamenti si rinnovano da soli e puoi darli a una gilda che ti piace.",
+        "lifetime": "Acquisti a vita",
+        "lifetime_desc": "Gli acquisti a vita possono essere assegnati a una gilda per sbloccare le funzioni in modo permanente."
+      },
+      "item": {
+        "subscription": "Abbonamento",
+        "lifetime": "A vita",
+        "expires": "Scadenza: {date}",
+        "assignedTo": "Assegnato a: {guild}",
+        "assign": "Assegnare",
+        "unassign": "Annulla assegnazione"
+      },
+      "errors": {
+        "load": "Non riesci a caricare gli acquisti. Prova più tardi.",
+        "assign": "Non sono riuscito ad assegnare l'acquisto.",
+        "unassign": "Non sono riuscito a rimuovere l'assegnazione dell'acquisto."
+      },
+      "results": {
+        "ALREADY_SUBSCRIBED": "Hai già un abbonamento attivo assegnato a una gilda.",
+        "SUBSCRIPTION_EXPIRED": "Questo abbonamento è scaduto e non può essere assegnato.",
+        "UNKOWN": "Si è verificato un problema con l'abbonamento. Prova più tardi.",
+        "SUCCESS": "Successo"
+      },
+      "missingPurchasesNotice": "Se i tuoi acquisti non si vedono qui, forse hai usato un indirizzo email diverso per Ko-fi rispetto a quello del tuo account Discord. Puoi collegare altri indirizzi email nelle tue impostazioni di {link}.",
+      "settingsLink": "Impostazioni utente"
+    }
+  },
+  "dashboard": {
+    "title": "Pannello di controllo",
+    "totalReputation": "Reputazione totale",
+    "weekReputation": "Reputazione settimanale",
+    "todayReputation": "La reputazione di oggi",
+    "topChannel": "Canale principale",
+    "topUsers": "Utenti più attivi",
+    "rank": "Classifica",
+    "user": "Utente",
+    "reputation": "Reputazione"
+  },
+  "token_shop": {
+    "title": "Negozio di gettoni",
+    "description": "Migliora il tuo server con funzioni premium usando i tuoi gettoni voto. Le funzioni che compri con i gettoni non scadono se le rinnovi automaticamente. Se compri una funzione che è già attiva, la data di scadenza o di rinnovo si allunga di 30 giorni.",
+    "guildTokens": "Usa i gettoni della gilda",
+    "userTokens": "Usa i token personali",
+    "noFeatures": "Al momento non ci sono funzioni disponibili.",
+    "active": "Attivo",
+    "expires": "Scadenza: {date}",
+    "nextRenewal": "Prossimo rinnovo: {date}",
+    "autoRenewal": "Rinnovo automatico",
+    "purchase": "Acquisto",
+    "subscribe": "Iscriviti",
+    "unsubscribe": "Annulla iscrizione",
+    "purchaseSuccess": "Funzionalità comprata con successo!",
+    "subscribeSuccess": "Abbonamento attivato!",
+    "unsubscribeSuccess": "Abbonamento disattivato!",
+    "enabledBySubscription": "Attivato tramite abbonamento",
+    "subscriptionActiveNote": "Questa funzione è attualmente disponibile con un abbonamento attivo.",
+    "confirmPurchase": "Sei sicuro di voler comprare questa funzione per {amount} gettoni?",
+    "insufficientTokens": "Non hai abbastanza gettoni.",
+    "getMoreTokens": "Prendi più gettoni",
+    "feature": {
+      "reputationlog": {
+        "name": "Registro completo della reputazione",
+        "description": "Guarda tutte le pagine del registro della reputazione nel server."
+      },
+      "analyzerlog": {
+        "name": "Registro analizzatore esteso",
+        "description": "Il tempo in cui si tengono i log dell'analizzatore è raddoppiato."
+      },
+      "reputationcategories": {
+        "name": "Categorie di reputazione senza limiti",
+        "description": "Sblocca tutte le categorie di reputazione."
+      },
+      "reputationchannel": {
+        "name": "Canale di reputazione senza limiti",
+        "description": "Sblocca canali di reputazione senza limiti."
+      },
+      "channelblacklist": {
+        "name": "Lista dei canali bloccati",
+        "description": "Impedisci al bot di essere attivo in determinati canali invece di lasciarlo libero ovunque."
+      },
+      "localeoverrides": {
+        "name": "Sovrascritture locali",
+        "description": "Puoi cambiare i messaggi e le etichette del bot con le tue traduzioni. Per ora puoi solo dare un nome personalizzato alla reputazione."
+      },
+      "autopost": {
+        "name": "Pubblicazione automatica",
+        "description": "Pubblica automaticamente la classifica su un canale a intervalli regolari."
+      },
+      "advancedrankings": {
+        "name": "Classifiche avanzate",
+        "description": "Sblocca più opzioni di classificazione."
+      },
+      "detailedprofile": {
+        "name": "Profilo dettagliato",
+        "description": "Mostra più info sui profili di reputazione degli utenti."
+      },
+      "logchannel": {
+        "name": "Canale di registrazione",
+        "description": "Attiva un canale di log dedicato per tutte le modifiche alla reputazione."
+      },
+      "additionalemojis": {
+        "name": "Emoji extra",
+        "description": "Usa più di un'emoji per dare reputazione tramite le reazioni."
+      },
+      "profile": {
+        "name": "Profilo del bot",
+        "description": "Personalizza il nome e l'immagine del profilo del bot sul tuo server."
+      },
+      "integrationbypass": {
+        "name": "Bypass dell'integrazione",
+        "description": "Consenti ad altri bot e integrazioni di assegnare reputazione."
+      }
+    },
+    "adminOnly": "Il server è impostato in modo che solo gli amministratori del server possano comprare le funzioni."
   }
 }

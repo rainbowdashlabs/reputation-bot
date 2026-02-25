@@ -5,12 +5,11 @@
  */
 package de.chojo.repbot.config.elements.sku.feature;
 
-import de.chojo.repbot.config.elements.sku.SKUEntry;
+import de.chojo.repbot.config.elements.sku.tokens.Feature;
 
-public class LocaleOverrides {
-    private SKUEntry reputationNameOverride = new SKUEntry();
+public class LocaleOverrides extends Feature {
 
-    public SKUEntry reputationNameOverride() {
-        return reputationNameOverride;
+    public LocaleOverrides() {
+        super(7, 350);
     }
 }

@@ -147,7 +147,8 @@ public class Settings implements GuildHolder {
                     stack_roles,
                     reputation_mode,
                     reset_date,
-                    system_channel_id
+                    system_channel_id,
+                    everyone_token_purchase
                 FROM
                     guild_settings
                 WHERE guild_id = ?;

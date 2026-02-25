@@ -74,12 +74,33 @@ function getInitialLocale(): SupportedLocale {
     return getBrowserLocale()
 }
 
+const datetimeFormats = {
+    short: {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+    },
+    long: {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric'
+    }
+} as const;
+
+const allDatetimeFormats = SUPPORTED_LOCALES.reduce((acc, locale) => {
+    acc[locale] = datetimeFormats;
+    return acc;
+}, {} as Record<string, typeof datetimeFormats>);
+
 // Create i18n instance
 export const i18n = createI18n({
     legacy: false,
     locale: getInitialLocale(),
     fallbackLocale: 'en-US',
-    messages: {}
+    messages: {},
+    datetimeFormats: allDatetimeFormats
 })
 
 // Load initial locale

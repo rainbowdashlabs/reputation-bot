@@ -5,12 +5,11 @@
  */
 package de.chojo.repbot.config.elements.sku.feature;
 
-import de.chojo.repbot.config.elements.sku.SKUEntry;
+import de.chojo.repbot.config.elements.sku.tokens.Feature;
 
-public class ChannelBlacklist {
-    private SKUEntry allow = new SKUEntry();
+public class ChannelBlacklist extends Feature {
 
-    public SKUEntry allow() {
-        return allow;
+    public ChannelBlacklist() {
+        super(0, 350);
     }
 }

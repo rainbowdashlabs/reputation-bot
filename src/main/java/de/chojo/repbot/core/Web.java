@@ -19,6 +19,9 @@ import de.chojo.jdautil.interactions.dispatching.InteractionHub;
 import de.chojo.logutil.marker.LogNotify;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.service.AutopostService;
+import de.chojo.repbot.service.KofiService;
+import de.chojo.repbot.service.MailService;
+import de.chojo.repbot.service.VoteService;
 import de.chojo.repbot.web.Api;
 import de.chojo.repbot.web.cache.MemberCache;
 import de.chojo.repbot.web.config.Role;
@@ -26,7 +29,9 @@ import de.chojo.repbot.web.config.SessionAttribute;
 import de.chojo.repbot.web.error.ApiException;
 import de.chojo.repbot.web.error.ErrorResponseWrapper;
 import de.chojo.repbot.web.error.PremiumFeatureException;
-import de.chojo.repbot.web.sessions.SessionService;
+import de.chojo.repbot.web.services.DiscordOAuthService;
+import de.chojo.repbot.web.services.SessionService;
+import de.chojo.repbot.web.services.UserSession;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
@@ -38,15 +43,13 @@ import io.javalin.openapi.plugin.swagger.SwaggerConfiguration;
 import io.javalin.openapi.plugin.swagger.SwaggerPlugin;
 import io.javalin.plugin.bundled.CorsPluginConfig;
 import io.javalin.security.RouteRole;
-import net.dv8tion.jda.api.entities.User;
-import net.dv8tion.jda.api.exceptions.ErrorResponseException;
-import net.dv8tion.jda.api.requests.ErrorResponse;
 import org.slf4j.Logger;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -60,6 +63,9 @@ public class Web {
     private final InteractionHub<?, ?, ?> interactionHub;
     private final AutopostService autopostService;
     private final MemberCache memberCache = new MemberCache();
+    private final VoteService voteService;
+    private final KofiService kofiService;
+    private final MailService mailService;
     private Javalin javalin;
 
     private Web(
@@ -77,6 +83,16 @@ public class Web {
         this.sessionService = sessionService;
         this.interactionHub = interactionHub;
         this.autopostService = autopostService;
+        this.voteService =
+                new VoteService(configuration, data.voteRepository(), data.userRepository(), bot.shardManager());
+        this.mailService = new MailService(configuration, data.userRepository(), threading);
+        this.kofiService = new KofiService(
+                data.userRepository(),
+                data.guildRepository(),
+                bot.shardManager(),
+                configuration,
+                mailService,
+                threading);
     }
 
     public static Web create(
@@ -114,18 +130,65 @@ public class Web {
     }
 
     public void handleAccess(Context ctx) {
-        Set<RouteRole> routeRoles = ctx.routeRoles();
-        if (routeRoles.contains(Role.ANYONE)) {
+        // Exempt auth and static/OpenAPI routes from authorization checks
+        String path = ctx.path();
+        if (path.startsWith("/v1/auth/")
+                || path.startsWith("/openapi")
+                || path.startsWith("/swagger")
+                || path.startsWith("/docs")
+                || path.startsWith("/json-docs")) {
             return;
         }
 
-        if (routeRoles.contains(Role.GUILD_USER)) {
-            var session = sessionService.getGuildSession(ctx).orElseThrow(() -> {
-                ctx.header("WWW-Authenticate", "Authorization");
-                return new UnauthorizedResponse("You need to be logged in to access this route.");
-            });
-            session.validate();
-            ctx.sessionAttribute(SessionAttribute.GUILD_SESSION, session);
+        Set<RouteRole> routeRoles = ctx.routeRoles();
+        if (routeRoles.contains(Role.ANYONE) || routeRoles.isEmpty()) {
+            return;
+        }
+
+        UserSession userSession = sessionService.getUserSession(ctx).orElseThrow(() -> {
+            ctx.header("WWW-Authenticate", "Authorization");
+            return new UnauthorizedResponse("You need to be logged in to access this route.");
+        });
+
+        ctx.sessionAttribute(SessionAttribute.USER_SESSION, userSession);
+
+        if (routeRoles.contains(Role.USER)) {
+            return;
+        }
+
+        String guildIdStr = ctx.header("X-Guild-Id");
+        if (guildIdStr != null) {
+            ctx.sessionAttribute(SessionAttribute.GUILD_ID, guildIdStr);
+            var guildData = userSession.guilds().get(guildIdStr);
+            boolean isBotOwner = configuration.baseSettings().isOwner(userSession.userId());
+
+            if (guildData != null || isBotOwner) {
+                Role accessLevel = guildData != null ? guildData.accessLevel() : Role.GUILD_ADMIN;
+
+                if (routeRoles.contains(Role.GUILD_ADMIN) && accessLevel != Role.GUILD_ADMIN) {
+                    throw new UnauthorizedResponse("You need to be a guild administrator to access this route.");
+                }
+                if (routeRoles.contains(Role.GUILD_USER)
+                        && (accessLevel != Role.GUILD_USER && accessLevel != Role.GUILD_ADMIN)) {
+                    throw new UnauthorizedResponse("You need to be a guild user to access this route.");
+                }
+                long guildId = Long.parseLong(guildIdStr);
+
+                if (isBotOwner && guildData == null) {
+                    // Ensure the guild actually exists and the bot is in it if the owner wants to access it
+                    if (bot.shardManager().getGuildById(guildId) == null) {
+                        throw new UnauthorizedResponse(
+                                "The requested guild does not exist or the bot is not a member.");
+                    }
+                }
+
+                ctx.sessionAttribute(
+                        SessionAttribute.GUILD_SESSION, sessionService.getGuildSession(userSession.userId(), guildId));
+            } else if (routeRoles.contains(Role.GUILD_ADMIN) || routeRoles.contains(Role.GUILD_USER)) {
+                throw new UnauthorizedResponse("You are not a member of the requested guild.");
+            }
+        } else if (routeRoles.contains(Role.GUILD_ADMIN) || routeRoles.contains(Role.GUILD_USER)) {
+            throw new UnauthorizedResponse("Guild context missing. Please provide X-Guild-Id header.");
         }
     }
 
@@ -152,6 +215,7 @@ public class Web {
                     } else {
                         config.staticFiles.add("/static", io.javalin.http.staticfiles.Location.CLASSPATH);
                     }
+
                     config.router.apiBuilder(() -> new Api(
                                     sessionService,
                                     data.metrics(),
@@ -163,7 +227,13 @@ public class Web {
                                     configuration,
                                     data.settingsAuditLogRepository(),
                                     memberCache,
-                                    data.guildRepository())
+                                    data.guildRepository(),
+                                    data.userRepository(),
+                                    new DiscordOAuthService(configuration),
+                                    data.voteRepository(),
+                                    bot.tokenPurchaseService(),
+                                    kofiService,
+                                    mailService)
                             .init());
                     config.router.mount(router -> {
                         router.beforeMatched(this::handleAccess);
@@ -242,7 +312,6 @@ public class Web {
 
     private void initBotList() {
         var botlist = configuration.botlist();
-        if (!botlist.isSubmit()) return;
         BotlistService.build(
                         bot.shardManager(),
                         () -> bot.shardManager().getGuilds().size(),
@@ -252,16 +321,13 @@ public class Web {
                 .forTopGG(botlist.topGg())
                 .forBotlistMe(botlist.botListMe())
                 .withExecutorService(threading.repBotWorker())
-                .withVoteService(builder -> builder.withVoteWeebhooks(javalin)
-                        .onVote(voteData -> bot.shardManager()
-                                .retrieveUserById(voteData.userId())
-                                .flatMap(User::openPrivateChannel)
-                                .flatMap(channel -> channel.sendMessage("Thanks for voting <3"))
-                                .queue(
-                                        message -> log.debug("Vote received"),
-                                        err -> ErrorResponseException.ignore(
-                                                ErrorResponse.UNKNOWN_USER, ErrorResponse.CANNOT_SEND_TO_USER)))
-                        .build())
+                .withVoteService(builder ->
+                        builder.withVoteWeebhooks(javalin).onVote(voteService).build())
+                .withSubmitInterval(
+                        60,
+                        botlist.isSubmit()
+                                ? TimeUnit.MINUTES
+                                : TimeUnit.DAYS) // This essentially disables submission for dev purposes
                 .build();
     }
 }

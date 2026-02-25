@@ -4,67 +4,129 @@
  *     Copyright (C) RainbowDashLabs and Contributor
  */
 import {readonly, ref} from 'vue'
-import type {GuildSessionPOJO} from '@/api/types'
+import type {UserSessionPOJO} from '@/api/types'
 import * as Types from '@/api/types'
+import {api} from '@/api'
 
-export interface GuildSessionInfo {
-    id: string
-    name: string
-    iconUrl: string | null
-    token: string
-}
+const SESSION_TOKEN_KEY = 'reputation_bot_token'
+const GUILD_ID_KEY = 'reputation_bot_guild_id'
 
-const SESSION_STORAGE_KEY = 'reputation_bot_sessions'
-
-const session = ref<GuildSessionPOJO | null>(null)
-const sessions = ref<GuildSessionInfo[]>(JSON.parse(localStorage.getItem(SESSION_STORAGE_KEY) || '[]'))
+const session = ref<(Types.GuildPOJO & { settings?: Types.SettingsPOJO, premiumFeatures?: Types.PremiumFeaturesPOJO }) | null>(null)
+const userSession = ref<UserSessionPOJO | null>(null)
+const hasToken = ref(!!localStorage.getItem(SESSION_TOKEN_KEY))
+const premiumFeatures = ref<Types.PremiumFeaturesPOJO | null>(null)
+const userTokens = ref<number>(0)
+const guildTokens = ref<number>(0)
 const isExpired = ref(false)
+const currentGuildId = ref<string | null>(localStorage.getItem(GUILD_ID_KEY))
 
 export function useSession() {
-    const setSession = (data: GuildSessionPOJO) => {
+    const setSession = (data: Types.GuildPOJO) => {
         session.value = data
         isExpired.value = false
-        updateSessionsList(data)
+    }
+
+    const setPremiumFeatures = (data: Types.PremiumFeaturesPOJO) => {
+        premiumFeatures.value = data
+    }
+
+    const setUserSession = (data: UserSessionPOJO) => {
+        userSession.value = data
+        localStorage.setItem(SESSION_TOKEN_KEY, data.token)
+        hasToken.value = true
+        isExpired.value = false
+    }
+
+    const setToken = (token: string) => {
+        localStorage.setItem(SESSION_TOKEN_KEY, token)
+        hasToken.value = true
+    }
+
+    const setGuildId = (guildId: string | null) => {
+        if (guildId) {
+            localStorage.setItem(GUILD_ID_KEY, guildId)
+        } else {
+            localStorage.removeItem(GUILD_ID_KEY)
+        }
+        currentGuildId.value = guildId
+    }
+
+    const setUserTokens = (tokens: number) => {
+        userTokens.value = tokens
+    }
+
+    const setGuildTokens = (tokens: number) => {
+        guildTokens.value = tokens
+    }
+
+    const refreshUserTokens = async () => {
+        try {
+            const response = await api.getUserTokens()
+            userTokens.value = response.tokens
+        } catch (e) {
+            console.error('Failed to refresh user tokens:', e)
+        }
+    }
+
+    const refreshGuildTokens = async () => {
+        try {
+            const response = await api.getGuildTokens()
+            guildTokens.value = response.tokens
+        } catch (e) {
+            console.error('Failed to refresh guild tokens:', e)
+        }
     }
 
     const setExpired = (expired: boolean) => {
         isExpired.value = expired
     }
 
-    const updateSessionsList = (data: GuildSessionPOJO) => {
-        const token = localStorage.getItem('token')
-        if (!token) return
-
-        const index = sessions.value.findIndex(s => s.id === data.guild.meta.id)
-        const info: GuildSessionInfo = {
-            id: data.guild.meta.id,
-            name: data.guild.meta.name,
-            iconUrl: data.guild.meta.iconUrl,
-            token: token
-        }
-
-        if (index === -1) {
-            sessions.value.push(info)
-        } else {
-            sessions.value[index] = info
-        }
-        saveSessions()
-    }
-
-    const saveSessions = () => {
-        localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(sessions.value))
-    }
-
     const switchSession = (guildId: string) => {
-        const target = sessions.value.find(s => s.id === guildId)
-        if (target) {
-            localStorage.setItem('token', target.token)
-            window.location.reload()
-        }
+        setGuildId(guildId)
+        window.location.reload()
     }
 
     const clearSession = () => {
         session.value = null
+        userSession.value = null
+        premiumFeatures.value = null
+        localStorage.removeItem(SESSION_TOKEN_KEY)
+        setGuildId(null)
+        hasToken.value = false
+    }
+
+    const logout = async () => {
+        try {
+            await api.logout()
+        } catch (e) {
+            // ignore errors, still clear local state
+        } finally {
+            clearSession()
+            window.location.href = '/'
+        }
+    }
+
+    const login = (redirectPath?: string | any) => {
+        const backendHost = import.meta.env.VITE_BACKEND_HOST || ''
+        const backendPort = import.meta.env.VITE_BACKEND_PORT || ''
+
+        let baseURL = '/v1'
+        if (backendHost) {
+            const protocol = backendHost.startsWith('http') ? '' : 'http://'
+            const port = backendPort ? `:${backendPort}` : ''
+            baseURL = `${protocol}${backendHost}${port}/v1`
+        }
+
+        const state = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+        localStorage.setItem('reputation_bot_oauth_state', state)
+
+        const finalRedirectPath = (typeof redirectPath === 'string' && redirectPath)
+            ? redirectPath
+            : (window.location.pathname + window.location.search)
+
+        localStorage.setItem('reputation_bot_oauth_redirect', finalRedirectPath)
+
+        window.location.href = `${baseURL}/auth/discord/login?state=${encodeURIComponent(state)}`
     }
 
     const updateGeneralSettings = (updates: Partial<Types.GeneralPOJO>) => {
@@ -190,12 +252,27 @@ export function useSession() {
 
     return {
         session: readonly(session),
-        sessions: readonly(sessions),
+        userSession: readonly(userSession),
+        premiumFeatures: readonly(premiumFeatures),
+        userTokens: readonly(userTokens),
+        guildTokens: readonly(guildTokens),
         isExpired: readonly(isExpired),
+        hasToken: readonly(hasToken),
+        currentGuildId: readonly(currentGuildId),
         setSession,
+        setUserSession,
+        setToken,
+        setGuildId,
+        setPremiumFeatures,
+        setUserTokens,
+        setGuildTokens,
+        refreshUserTokens,
+        refreshGuildTokens,
         setExpired,
         switchSession,
         clearSession,
+        login,
+        logout,
         updateGeneralSettings,
         updateReputationSettings,
         updateProfileSettings,
@@ -213,6 +290,33 @@ export function useSession() {
         updateLogChannelSettings,
         updateRanksSettings,
         updateIntegrationBypass,
-        removeIntegrationBypass
+        removeIntegrationBypass,
+        loadSettings,
+        loadPremiumFeatures,
+        refreshGuildPremium: () => loadPremiumFeatures(true)
     }
 }
+
+async function loadSettings() {
+    if (!session.value) return
+    if (session.value.settings) return
+    try {
+        const settings = await api.getGuildSettings()
+        session.value.settings = settings
+    } catch (e) {
+        console.error('Failed to load settings:', e)
+    }
+}
+
+const loadPremiumFeatures = async (force = false) => {
+        if (premiumFeatures.value && !force) return
+        try {
+            const premium = await api.getGuildPremium()
+            premiumFeatures.value = premium
+            if (session.value) {
+                session.value.premiumFeatures = premium
+            }
+        } catch (e) {
+            console.error('Failed to load premium features:', e)
+        }
+    }

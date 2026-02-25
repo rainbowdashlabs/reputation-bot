@@ -10,12 +10,22 @@
     "loading": "Laddar...",
     "error": {
       "outOfBounds": "Värdet måste ligga mellan {min} och {max}. Korrigeras till närmaste giltiga värde."
-    }
+    },
+    "noData": "Inga poster hittades.",
+    "previous": "Föregående",
+    "next": "Nästa",
+    "pageOf": "Sida {current} av {total}"
   },
   "navigation": {
     "settings": "Inställningar",
     "presets": "Förinställningar",
-    "setup": "Inställningar"
+    "setup": "Inställningar",
+    "logout": "Logga ut",
+    "dashboard": "Instrumentpanel",
+    "user_settings": "Användarinställningar",
+    "voting": "Omröstning",
+    "token_shop": "Tokenbutik",
+    "supporter": "Supporter"
   },
   "presets": {
     "title": "Förinställningar",
@@ -135,10 +145,13 @@
   },
   "premiumFeature": {
     "title": "Supporterfunktion",
-    "requiredTier": "Krävd supporternivå:",
     "message": "{name} är reserverad för supportrar. Bli supporter för att kunna använda den.",
     "requiredTierSingular": "Krävd supporternivå:",
-    "requiredTierPlural": "En av följande supporternivåer krävs:"
+    "requiredTierPlural": "En av följande supporternivåer krävs:",
+    "tokenShopHint": "Du kan också låsa upp den här funktionen med tokens i",
+    "tokenShopLink": "Tokenbutik",
+    "kofiHint": "eller stöd oss på",
+    "kofiLink": "Ko-fi"
   },
   "profile": {
     "description": "Anpassa hur boten visas och beter sig på din server.",
@@ -308,6 +321,10 @@
         "channelLimitWarning": "Att välja fler än {limit} kanaler är reserverat för supportrar. Bli supporter för att kunna använda det.",
         "categoryLimitWarning": "Att välja fler än {limit} kategorier är reserverat för supportrar. Bli supporter för att kunna använda det."
       }
+    },
+    "everyoneTokenPurchase": {
+      "label": "Alla Token-köp",
+      "description": "Tillåt alla användare att köpa premiumfunktioner med sina tokens. Om funktionen är inaktiverad kan endast serveradministratörer köpa funktioner."
     }
   },
   "reactions": {
@@ -626,7 +643,8 @@
       "autopost_channel": "Autopost - Kanal",
       "autopost_refreshtype": "Autopost - Uppdateringstyp",
       "autopost_refreshinterval": "Autopost - Uppdateringsintervall",
-      "ranks": "Rangordningar – Roller"
+      "ranks": "Rangordningar – Roller",
+      "general_everyonetokenpurchase": "Allmänt – Alla Token-köp"
     }
   },
   "help": {
@@ -669,5 +687,226 @@
     "week": "1 vecka",
     "fourWeeks": "4 veckor",
     "year": "1 år"
+  },
+  "login": {
+    "title": "Inloggning krävs",
+    "description": "Logga in med Discord för att komma åt detta panel.",
+    "button": "Logga in med Discord"
+  },
+  "voting": {
+    "title": "Omröstning",
+    "description": "Information om dina aktuella rösttokens och botlistans röstningsstatus.",
+    "tokens": {
+      "title": "Tokens",
+      "description": "Dina nuvarande röstmarker. Du kan använda dem för att få olika belöningar.",
+      "label": "Aktuella tokens",
+      "shop": "Besök Token Shop"
+    },
+    "botlists": {
+      "title": "Botlistor",
+      "description": "Rösta på boten på olika botlistor för att tjäna tokens och behålla din rad.",
+      "name": "Botlista",
+      "streak": "Streak",
+      "lastVote": "Sista omröstningen",
+      "action": "Åtgärd",
+      "vote": "Rösta",
+      "never": "Aldrig",
+      "days": "dagar"
+    },
+    "log": {
+      "title": "Röstningslogg",
+      "description": "En historik över dina transaktioner med röstmarker.",
+      "date": "Datum",
+      "guild": "Gille",
+      "tokens": "Tokens",
+      "reason": {
+        "label": "Skälet",
+        "STANDARD": "Rösta",
+        "STANDARD_DESCRIPTION": "Du har fått en token för att rösta på en botlista.",
+        "STREAK": "Röstningsserie",
+        "STREAK_DESCRIPTION": "Du fick en extra token eftersom du har en rad.",
+        "BONUS": "Daglig bonus",
+        "BONUS_DESCRIPTION": "Du har fått extra tokens för att ha röstat på alla botlistor under de senaste 6 timmarna.",
+        "TRANSFER": "Överföring till Guild",
+        "TRANSFER_DESCRIPTION": "Du överförde tokens till en guild för att stödja dess reputationssystem.",
+        "USE": "Köp",
+        "USE_DESCRIPTION": "Du använde tokens för att köpa en belöning eller tjänst.",
+        "unknown": "Okänd",
+        "unknown_DESCRIPTION": "Anledningen till denna transaktion är okänd."
+      },
+      "unknownGuild": "Okänd guild",
+      "personal": "Personlig"
+    },
+    "noteDefaultGuild": "Tips: Du kan ställa in en standardklan som automatiskt får tokens i din",
+    "noteDefaultGuildLink": "Användarinställningar",
+    "transfer": {
+      "title": "Överför tokens till en guild",
+      "description": "Flytta tokens från ditt personliga saldo till en av dina guilder.",
+      "guild": "Gille",
+      "selectGuild": "Välj en guild",
+      "amount": "Belopp",
+      "max": "Max: {max}",
+      "submit": "Överföring"
+    }
+  },
+  "user": {
+    "settings": {
+      "title": "Användarinställningar",
+      "description": "Konfigurera dina personliga kontoinställningar och preferenser.",
+      "voteGuild": {
+        "label": "Rösta på guilden",
+        "description": "Välj vilken guild som ska få tokens när du röstar på boten. Detta påverkar endast framtida röster.",
+        "none": "Ingen specifik guild (Personlig)"
+      },
+      "mails": {
+        "title": "E-postadresser",
+        "description": "Hantera de e-postadresser som är kopplade till ditt konto. Du kan lägga till en ny adress och verifiera den via länken som skickas till din inkorg.",
+        "verified": "Verifierad",
+        "pending": "Väntar på verifiering",
+        "noteDeletion": "Observera: E-postadresser från Discord eller Ko-fi kan inte tas bort. Endast adresser som du själv har lagt till kan raderas.",
+        "source": {
+          "user": "Användare",
+          "discord": "Oenighet",
+          "kofi": "Ko-fi"
+        },
+        "add": {
+          "placeholder": "Lägg till en ny e-postadress (name@example.com)",
+          "button": "Lägg till"
+        },
+        "verify": {
+          "success": "Din e-postadress har verifierats.",
+          "error": "E-postverifieringen misslyckades. Försök igen eller begär en ny verifieringslänk."
+        },
+        "errors": {
+          "ALREADY_REGISTERED": "Denna e-postadress är redan registrerad för en annan användare.",
+          "INVALID_FORMAT": "E-postadressens format är ogiltigt. Kontrollera och försök igen.",
+          "WRONG_USER": "Denna e-postadress tillhör en annan användare.",
+          "INVALID_CODE": "Verifieringskoden är ogiltig.",
+          "CODE_EXPIRED": "Verifieringskoden har gått ut. Begär ett nytt verifieringsmeddelande via e-post.",
+          "UNKNOWN_ADDRESS": "Vi kunde inte hitta den här e-postadressen. Den kan ha tagits bort.",
+          "UNKNOWN": "Ett okänt fel uppstod. Försök igen senare."
+        }
+      }
+    },
+    "supporter": {
+      "title": "Supporter",
+      "description": "Visa dina aktiva Ko-fi-köp och tilldela dem till en guild för att aktivera supporterfunktioner.",
+      "kofiLink": "Köp på Ko-fi",
+      "sections": {
+        "subscriptions": "Aktiva prenumerationer",
+        "subscriptions_desc": "Prenumerationer förnyas automatiskt och kan tilldelas en guild efter eget val.",
+        "lifetime": "Livstidsinköp",
+        "lifetime_desc": "Livstidsinköp kan tilldelas en guild för att permanent låsa upp funktioner."
+      },
+      "item": {
+        "subscription": "Prenumeration",
+        "lifetime": "Livstid",
+        "expires": "Gäller till: {date}",
+        "assignedTo": "Tilldelad till: {guild}",
+        "assign": "Tilldela",
+        "unassign": "Avsluta tilldelning"
+      },
+      "errors": {
+        "load": "Det gick inte att ladda köp. Försök igen senare.",
+        "assign": "Det gick inte att tilldela köpet.",
+        "unassign": "Det gick inte att avmarkera köpet."
+      },
+      "results": {
+        "ALREADY_SUBSCRIBED": "Du har redan ett aktivt abonnemang tilldelat en guild.",
+        "SUBSCRIPTION_EXPIRED": "Denna prenumeration har löpt ut och kan inte tilldelas.",
+        "UNKOWN": "Ett okänt prenumerationsfel har uppstått. Försök igen senare.",
+        "SUCCESS": "Framgång"
+      },
+      "missingPurchasesNotice": "Om dina köp inte syns här kan det bero på att du har använt en annan e-postadress för Ko-fi än för ditt Discord-konto. Du kan länka ytterligare e-postadresser i dina {link}.",
+      "settingsLink": "Användarinställningar"
+    }
+  },
+  "dashboard": {
+    "title": "Instrumentpanel",
+    "totalReputation": "Total anseende",
+    "weekReputation": "Veckans rykte",
+    "todayReputation": "Dagens rykte",
+    "topChannel": "Top Channel",
+    "topUsers": "Toppanvändare",
+    "rank": "Rank",
+    "user": "Användare",
+    "reputation": "Rykte"
+  },
+  "token_shop": {
+    "title": "Tokenbutik",
+    "description": "Förbättra din server med premiumfunktioner genom att använda dina rösttokens. Funktioner som köpts med tokens upphör inte att gälla så länge de förnyas automatiskt. Om du köper en funktion som redan är aktiv förlängs giltighetstiden eller förnyelsedatumet med 30 dagar.",
+    "guildTokens": "Använd guildtokens",
+    "userTokens": "Använd personliga tokens",
+    "noFeatures": "Inga funktioner tillgängliga för tillfället.",
+    "active": "Aktiv",
+    "expires": "Går ut: {date}",
+    "nextRenewal": "Nästa förnyelse: {date}",
+    "autoRenewal": "Automatisk förnyelse",
+    "purchase": "Köp",
+    "subscribe": "Prenumerera",
+    "unsubscribe": "Avsluta prenumeration",
+    "purchaseSuccess": "Funktionen har köpts!",
+    "subscribeSuccess": "Prenumeration aktiverad!",
+    "unsubscribeSuccess": "Prenumerationen är inaktiverad!",
+    "enabledBySubscription": "Aktiverat genom prenumeration",
+    "subscriptionActiveNote": "Denna funktion är för närvarande aktiverad genom ett aktivt abonnemang.",
+    "confirmPurchase": "Är du säker på att du vill köpa den här funktionen för {amount} tokens?",
+    "insufficientTokens": "Du har inte tillräckligt med tokens.",
+    "getMoreTokens": "Få fler tokens",
+    "feature": {
+      "reputationlog": {
+        "name": "Fullständig reputationslogg",
+        "description": "Se alla sidor i ryktesloggen på servern."
+      },
+      "analyzerlog": {
+        "name": "Utökad analysatorlogg",
+        "description": "Lagringstiden för analysatorloggen fördubblas."
+      },
+      "reputationcategories": {
+        "name": "Obegränsat antal omdömeskategorier",
+        "description": "Lås upp obegränsade reputationskategorier."
+      },
+      "reputationchannel": {
+        "name": "Obegränsad reputationskanal",
+        "description": "Lås upp obegränsade ryktekanaler."
+      },
+      "channelblacklist": {
+        "name": "Kanalens svartlista",
+        "description": "Förhindra att boten är aktiv i specifika kanaler istället för att tillåta den överallt."
+      },
+      "localeoverrides": {
+        "name": "Lokala överskrivningar",
+        "description": "Åsidosätt botmeddelanden och etiketter med dina egna översättningar. För närvarande är det endast möjligt att ange ett eget namn för rykte."
+      },
+      "autopost": {
+        "name": "Autopost",
+        "description": "Publicera automatiskt resultattavlan på en kanal med jämna mellanrum."
+      },
+      "advancedrankings": {
+        "name": "Avancerade rankningar",
+        "description": "Lås upp fler rankningsalternativ."
+      },
+      "detailedprofile": {
+        "name": "Detaljerad profil",
+        "description": "Visa mer information om användarnas omdömesprofiler."
+      },
+      "logchannel": {
+        "name": "Loggkanal",
+        "description": "Aktivera en dedikerad loggkanal för alla ändringar av rykte."
+      },
+      "additionalemojis": {
+        "name": "Ytterligare emojis",
+        "description": "Använd mer än en emoji för att ge omdöme via reaktioner."
+      },
+      "profile": {
+        "name": "Botprofil",
+        "description": "Anpassa botens namn och profilbild på din server."
+      },
+      "integrationbypass": {
+        "name": "Integrationsförbikoppling",
+        "description": "Tillåt andra bots och integrationer att ge omdömen."
+      }
+    },
+    "adminOnly": "Servern är konfigurerad så att endast serveradministratörer kan köpa funktioner."
   }
 }

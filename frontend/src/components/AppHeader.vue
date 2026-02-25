@@ -6,9 +6,18 @@
 <script lang="ts" setup>
 import {useI18n} from 'vue-i18n'
 import {useRoute} from 'vue-router'
+import {computed} from 'vue'
+import {useSession} from '@/composables/useSession'
+import UserDisplay from '@/components/UserDisplay.vue'
 
 const {t} = useI18n()
 const route = useRoute()
+const {hasToken, userSession, currentGuildId} = useSession()
+const isLoggedIn = computed(() => hasToken.value)
+const isGuildAdmin = computed(() => {
+  if (!currentGuildId.value || !userSession.value) return false
+  return userSession.value.guilds[currentGuildId.value]?.accessLevel === 'GUILD_ADMIN' || userSession.value.isBotOwner
+})
 </script>
 
 <template>
@@ -25,6 +34,22 @@ const route = useRoute()
         <router-link
             active-class="text-indigo-600 dark:text-indigo-400"
             class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors"
+            to="/guild/dashboard"
+        >
+          {{ t('navigation.dashboard') }}
+        </router-link>
+        <router-link
+            v-if="isLoggedIn"
+            active-class="text-indigo-600 dark:text-indigo-400"
+            class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors"
+            to="/guild/token-shop"
+        >
+          {{ t('navigation.token_shop') }}
+        </router-link>
+        <router-link
+            v-if="isGuildAdmin"
+            active-class="text-indigo-600 dark:text-indigo-400"
+            class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-colors"
             to="/settings/edit"
         >
           {{ t('navigation.settings') }}
@@ -32,6 +57,7 @@ const route = useRoute()
       </nav>
 
       <div class="flex items-center gap-4">
+        <UserDisplay v-if="isLoggedIn" />
       </div>
     </div>
   </header>

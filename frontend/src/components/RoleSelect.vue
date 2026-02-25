@@ -31,7 +31,7 @@ const isSelecting = ref(false)
 const containerRef = ref<HTMLElement | null>(null)
 
 const roles = computed(() => {
-  return session.value?.guild?.roles || []
+  return session.value?.roles || []
 })
 
 const selectedRole = computed(() => {

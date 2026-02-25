@@ -9,16 +9,16 @@ public class ReputationChannelProblem {
     long id;
     ReputationChannelProblemType type;
 
+    public ReputationChannelProblem(long id, ReputationChannelProblemType type) {
+        this.id = id;
+        this.type = type;
+    }
+
     public long getId() {
         return id;
     }
 
     public ReputationChannelProblemType getType() {
         return type;
-    }
-
-    public ReputationChannelProblem(long id, ReputationChannelProblemType type) {
-        this.id = id;
-        this.type = type;
     }
 }

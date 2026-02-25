@@ -48,7 +48,7 @@ const searchQuery = ref('')
 const containerRef = ref<HTMLElement | null>(null)
 
 const categories = computed(() => {
-  const cats = session.value?.guild?.channels?.categories || []
+  const cats = session.value?.channels?.categories || []
   // Filter out channels that are not visible and drop empty categories
   return cats
     .map(cat => ({
@@ -59,7 +59,7 @@ const categories = computed(() => {
 })
 
 const uncategorizedChannels = computed(() => {
-  const chans = session.value?.guild?.channels?.channels || []
+  const chans = session.value?.channels?.channels || []
   return chans.filter(c => c.visible)
 })
 
@@ -129,6 +129,10 @@ onUnmounted(() => {
     <label v-if="label" class="label mb-1.5">
       {{ label }}
     </label>
+    <p class="text-[10px] text-gray-400 dark:text-gray-500 flex items-center gap-1 -mt-1 mb-1.5">
+      <font-awesome-icon :icon="['fas', 'info-circle']" class="shrink-0" />
+      {{ t('general.channels.list.permissionsNote') }}
+    </p>
 
     <div class="relative">
       <!-- Select Mode -->

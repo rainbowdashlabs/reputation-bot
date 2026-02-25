@@ -106,9 +106,9 @@ public class RanksRoute implements RoutesBuilder {
     @Override
     public void buildRoutes() {
         path("ranks", () -> {
-            get("", this::getRanks, Role.GUILD_USER);
-            post("", this::updateRanks, Role.GUILD_USER);
-            post("refresh", this::refreshRanks, Role.GUILD_USER);
+            get("", this::getRanks, Role.GUILD_ADMIN);
+            post("", this::updateRanks, Role.GUILD_ADMIN);
+            post("refresh", this::refreshRanks, Role.GUILD_ADMIN);
         });
     }
 

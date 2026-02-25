@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link your Discord account</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background-color: #5865F2;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .content {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .button {
+            background-color: #5865F2;
+            color: white !important;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            display: inline-block;
+        }
+
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.8em;
+            color: #777;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <h1>Reputation Bot</h1>
+</div>
+<div class="content">
+    <p>Hello,</p>
+    <p>Thank you for your purchase on Ko-fi!</p>
+    <p>We've received your payment, but we couldn't find a Discord account linked to your Ko-fi email address (<strong> {{ mail }} </strong>).</p>
+    <p>To receive your benefits, please link your Ko-fi email address to your account in your settings.</p>
+    <div class="button-container">
+        <a href="{{ host/user/settings }}" class="button">Link Account</a>
+    </div>
+    <p>If the button doesn't work, you can also copy and paste this link into your browser:</p>
+    <p><a href="{{ host }}/user/settings">%s</a></p>
+</div>
+<div class="footer">
+    <p>This is an automated message. Please do not reply to this email.</p>
+</div>
+</body>
+</html>

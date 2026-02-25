@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MemberCache {
     private final Cache<Key, MemberPOJO> cache =
-            CacheBuilder.newBuilder().expireAfterAccess(10, TimeUnit.MINUTES).build();
+            CacheBuilder.newBuilder().expireAfterAccess(30, TimeUnit.MINUTES).build();
 
     @NotNull
     public MemberPOJO get(Guild guild, String userId) {

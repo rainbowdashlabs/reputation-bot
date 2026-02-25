@@ -10,12 +10,22 @@
     "loading": "Lade...",
     "error": {
       "outOfBounds": "Der Wert muss zwischen {min} und {max} liegen. Auf den nächsten gültigen Wert korrigiert."
-    }
+    },
+    "noData": "Keine Einträge gefunden.",
+    "previous": "Vorherige",
+    "next": "Nächste",
+    "pageOf": "Seite {current} von {total}"
   },
   "navigation": {
     "settings": "Einstellungen",
     "presets": "Voreinstellungen",
-    "setup": "Einrichtung"
+    "setup": "Einrichtung",
+    "logout": "Abmelden",
+    "dashboard": "Dashboard",
+    "user_settings": "Benutzereinstellungen",
+    "voting": "Voting",
+    "token_shop": "Token-Shop",
+    "supporter": "Unterstützer"
   },
   "presets": {
     "title": "Voreinstellungen",
@@ -135,10 +145,13 @@
   },
   "premiumFeature": {
     "title": "Unterstützer-Feature",
-    "requiredTier": "Erforderliche Unterstützerstufe:",
     "message": "{name} ist für Unterstützer reserviert. Werde Unterstützer, um es zu nutzen.",
     "requiredTierSingular": "Erforderliche Unterstützerstufe:",
-    "requiredTierPlural": "Eine der folgenden Unterstützerstufen ist erforderlich:"
+    "requiredTierPlural": "Eine der folgenden Unterstützerstufen ist erforderlich:",
+    "tokenShopHint": "Du kannst diese Funktion auch mit Tokens freischalten im",
+    "tokenShopLink": "Token-Shop",
+    "kofiHint": "oder unterstützt uns auf",
+    "kofiLink": "Ko-fi"
   },
   "profile": {
     "description": "Passe das Aussehen und Verhalten des Bots auf deinem Server an.",
@@ -308,6 +321,10 @@
         "channelLimitWarning": "Die Auswahl von mehr als {limit} Kanälen ist nur für Unterstützer möglich. Werde Unterstützer, um diese Funktion zu nutzen.",
         "categoryLimitWarning": "Die Auswahl von mehr als {limit} Kategorien ist nur für Unterstützer möglich. Werde Unterstützer, um diese Funktion zu nutzen."
       }
+    },
+    "everyoneTokenPurchase": {
+      "label": "Jeder kann Token mit kaufen",
+      "description": "Lass alle Nutzer Premium-Funktionen mit ihren Tokens kaufen. Wenn das deaktiviert ist, können nur Server-Admins Funktionen kaufen."
     }
   },
   "reactions": {
@@ -626,7 +643,8 @@
       "autopost_channel": "Autopost – Kanal",
       "autopost_refreshtype": "Autopost – Aktualisiergunsart",
       "autopost_refreshinterval": "Autopost – Aktualisierungsintervall",
-      "ranks": "Ränge – Rollen"
+      "ranks": "Ränge – Rollen",
+      "general_everyonetokenpurchase": "Allgemein – Kauf mit Token für alle"
     }
   },
   "help": {
@@ -669,5 +687,226 @@
     "week": "1 Woche",
     "fourWeeks": "4 Wochen",
     "year": "1 Jahr"
+  },
+  "login": {
+    "title": "Anmeldung nötig",
+    "description": "Log dich bitte mit Discord ein, um auf dieses Panel zugreifen zu können.",
+    "button": "Mit Discord einloggen"
+  },
+  "voting": {
+    "title": "Voting",
+    "description": "Infos zu deinen aktuellen Vote-Token und dem Status deiner Botlist-Voting.",
+    "tokens": {
+      "title": "Token",
+      "description": "Deine aktuellen Token. Du kannst sie für verschiedene Belohnungen ausgeben.",
+      "label": "Aktuelle Token",
+      "shop": "Schau mal im Token-Shop vorbei"
+    },
+    "botlists": {
+      "title": "Botlisten",
+      "description": "Stimm für den Bot auf verschiedenen Botlisten, um Token zu verdienen und deine Streak aufrechtzuerhalten.",
+      "name": "Botliste",
+      "streak": "Streak",
+      "lastVote": "Letzter Vote",
+      "action": "Aktion",
+      "vote": "Voten",
+      "never": "Niemals",
+      "days": "Tage"
+    },
+    "log": {
+      "title": "Votingprotokoll",
+      "description": "Eine Übersicht über deine Token-Transaktionen.",
+      "date": "Datum",
+      "guild": "Server",
+      "tokens": "Token",
+      "reason": {
+        "label": "Grund",
+        "STANDARD": "Vote",
+        "STANDARD_DESCRIPTION": "Du hast einen Token für das Voten auf einer Botliste bekommen.",
+        "STREAK": "Streak",
+        "STREAK_DESCRIPTION": "Du hast einen zusätzlichen Token bekommen, weil du eine Streak aufrecht hältst.",
+        "BONUS": "Täglicher Bonus",
+        "BONUS_DESCRIPTION": "Du hast zusätzliche Token dafür bekommen, dass du in den letzten 6 Stunden auf allen Botlisten abgestimmt hast.",
+        "TRANSFER": "Wechsel zur Gilde",
+        "TRANSFER_DESCRIPTION": "Du hast Token an einen Server geschickt, um ihr Reputationssystem zu unterstützen.",
+        "USE": "Kauf",
+        "USE_DESCRIPTION": "Du hast mit Tokens eine Belohnung oder Dienstleistung gekauft.",
+        "unknown": "Unbekannt",
+        "unknown_DESCRIPTION": "Der Grund für diese Transaktion ist unbekannt."
+      },
+      "unknownGuild": "Unbekannter Server",
+      "personal": "Persönlich"
+    },
+    "noteDefaultGuild": "Tipp: Du kannst eine Standardserver festlegen, der automatisch deine Token token erhält in deinen",
+    "noteDefaultGuildLink": "Benutzereinstellungen",
+    "transfer": {
+      "title": "Tokens an eine Gilde übertragen",
+      "description": "Verschieb deine Token von deinem persönlichen Guthaben zu einem deiner Server.",
+      "guild": "Server",
+      "selectGuild": "Wähle einen Server aus",
+      "amount": "Betrag",
+      "max": "Max: {max}",
+      "submit": "Übertragen"
+    }
+  },
+  "user": {
+    "settings": {
+      "title": "Benutzereinstellungen",
+      "description": "Richte deine persönlichen Kontoeinstellungen und Präferenzen ein.",
+      "voteGuild": {
+        "label": "Server wählen",
+        "description": "Entscheide dich, welcher Server Token bekommen soll, wenn du für den Bot stimmst. Das wirkt sich nur auf zukünftige Votes aus.",
+        "none": "Kein bestimmter Server (Persönlich)"
+      },
+      "mails": {
+        "title": "E-Mail-Adressen",
+        "description": "Verwalte die E-Mail-Adressen, die mit deinem Konto verbunden sind. Du kannst eine neue Adresse hinzufügen und sie über den Link bestätigen, der dir per E-Mail zugeschickt wird.",
+        "verified": "Überprüft",
+        "pending": "Warte auf Bestätigung",
+        "noteDeletion": "Hey, nur zur Info: E-Mail-Adressen von Discord oder Ko-fi kann man nicht löschen. Nur die Adressen, die du selbst hinzugefügt hast, kannst du wegmachen.",
+        "source": {
+          "user": "Benutzer",
+          "discord": "Uneinigkeit",
+          "kofi": "Ko-fi"
+        },
+        "add": {
+          "placeholder": "Eine neue E-Mail-Adresse hinzufügen (name@example.com)",
+          "button": "Hinzufügen"
+        },
+        "verify": {
+          "success": "Deine E-Mail-Adresse wurde erfolgreich bestätigt.",
+          "error": "Die E-Mail-Bestätigung hat nicht geklappt. Versuch' es nochmal oder lass dir einen neuen Bestätigungslink schicken."
+        },
+        "errors": {
+          "ALREADY_REGISTERED": "Diese E-Mail-Adresse ist schon von jemand anderem benutzt.",
+          "INVALID_FORMAT": "Die E-Mail-Adresse ist nicht richtig. Bitte überprüfe sie nochmal und versuch's noch mal.",
+          "WRONG_USER": "Diese E-Mail-Adresse gehört jemand anderem.",
+          "INVALID_CODE": "Der Bestätigungscode ist nicht okay.",
+          "CODE_EXPIRED": "Der Bestätigungscode ist abgelaufen. Bitte schick mir eine neue Bestätigungs-E-Mail.",
+          "UNKNOWN_ADDRESS": "Wir konnten diese E-Mail-Adresse nicht finden. Sie wurde vielleicht gelöscht.",
+          "UNKNOWN": "Ein unbekannter Fehler ist aufgetreten. Versuch' es bitte später nochmal."
+        }
+      }
+    },
+    "supporter": {
+      "title": "Unterstützer",
+      "description": "Schau dir deine aktiven Ko-fi-Käufe an und ordne sie einer Gilde zu, um Unterstützerfunktionen freizuschalten.",
+      "kofiLink": "Auf Ko-fi kaufen",
+      "sections": {
+        "subscriptions": "Aktive Abonnements",
+        "subscriptions_desc": "Abonnements verlängern sich automatisch und können einer Gilde deiner Wahl zugewiesen werden.",
+        "lifetime": "Lebenslange Käufe",
+        "lifetime_desc": "Lebenslange Käufe kannst du einer Gilde zuweisen, um Funktionen dauerhaft freizuschalten."
+      },
+      "item": {
+        "subscription": "Abonnement",
+        "lifetime": "Lebensdauer",
+        "expires": "Läuft ab: {date}",
+        "assignedTo": "Zugewiesen an: {guild}",
+        "assign": "Zuweisen",
+        "unassign": "Zuweisung aufheben"
+      },
+      "errors": {
+        "load": "Die Käufe konnten nicht geladen werden. Versuch' es später nochmal.",
+        "assign": "Der Kauf konnte nicht zugewiesen werden.",
+        "unassign": "Die Kaufzuordnung konnte nicht aufgehoben werden."
+      },
+      "results": {
+        "ALREADY_SUBSCRIBED": "Du hast schon ein aktives Abonnement, das einer Gilde zugeordnet ist.",
+        "SUBSCRIPTION_EXPIRED": "Dieses Abonnement ist abgelaufen und kann nicht mehr zugewiesen werden.",
+        "UNKOWN": "Ein unbekannter Fehler beim Abonnieren ist passiert. Versuch' es bitte später nochmal.",
+        "SUCCESS": "Erfolg"
+      },
+      "missingPurchasesNotice": "Wenn deine Käufe hier nicht angezeigt werden, hast du vielleicht bei Ko-fi eine andere E-Mail-Adresse als bei deinem Discord-Konto angegeben. Du kannst weitere E-Mail-Adressen in deinen Einstellungen unter „{link}” verknüpfen.",
+      "settingsLink": "Benutzereinstellungen"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "totalReputation": "Gesamt",
+    "weekReputation": "Diese Woche",
+    "todayReputation": "Heute",
+    "topChannel": "Top-Kanal",
+    "topUsers": "Top-Benutzer",
+    "rank": "Rang",
+    "user": "Benutzer",
+    "reputation": "Reputation"
+  },
+  "token_shop": {
+    "title": "Token-Shop",
+    "description": "Mach deinen Server mit Premium-Features noch besser, indem du deine Vote-Token einsetzt. Mit Token gekaufte Features laufen nicht ab, solange sie automatisch verlängert werden. Wenn du ein Feature kaufst, das schon aktiv ist, verlängert sich das Ablauf- oder Verlängerungsdatum um 30 Tage.",
+    "guildTokens": "Server-Token",
+    "userTokens": "Persönliche Token",
+    "noFeatures": "Im Moment gibt's keine Features.",
+    "active": "Aktiv",
+    "expires": "Läuft ab: {date}",
+    "nextRenewal": "Nächste Verlängerung: {date}",
+    "autoRenewal": "Automatische Verlängerung",
+    "purchase": "Kauf",
+    "subscribe": "Abonnieren",
+    "unsubscribe": "Deabonnieren",
+    "purchaseSuccess": "Funktion erfolgreich gekauft!",
+    "subscribeSuccess": "Abo aktiviert!",
+    "unsubscribeSuccess": "Abo deaktiviert!",
+    "enabledBySubscription": "Durch Abonnement aktiviert",
+    "subscriptionActiveNote": "Diese Funktion ist gerade durch ein aktives Abonnement aktiviert.",
+    "confirmPurchase": "Bist du sicher, dass du diese Funktion für {amount}-Token kaufen willst?",
+    "insufficientTokens": "Du hast nicht genug Token.",
+    "getMoreTokens": "Hol dir mehr Token",
+    "feature": {
+      "reputationlog": {
+        "name": "Vollständiges Reputationsprotokoll",
+        "description": "Schau dir alle Seiten des Reputationsprotokolls auf dem Server an."
+      },
+      "analyzerlog": {
+        "name": "Erweitertes Analyseprotokoll",
+        "description": "Die Aufbewahrungszeit für das Analysatorprotokoll wird erheblich verlängert."
+      },
+      "reputationcategories": {
+        "name": "Unbegrenzte Reputationskategorien",
+        "description": "Schalte unbegrenzt viele Reputationskategorien frei."
+      },
+      "reputationchannel": {
+        "name": "Unbegrenzte Reputationskanäle",
+        "description": "Schalte unbegrenzte Reputationskanäle frei."
+      },
+      "channelblacklist": {
+        "name": "Kanal-Sperrliste",
+        "description": "Verhindere, dass der Bot in bestimmten Kanälen aktiv ist, anstatt ihn überall zuzulassen."
+      },
+      "localeoverrides": {
+        "name": "Sprache Überschreibungen",
+        "description": "Überschreib Bot-Nachrichten und Labels mit deinen eigenen Übersetzungen. Im Moment kannst du damit nur einen eigenen Namen für die Reputation festlegen."
+      },
+      "autopost": {
+        "name": "Autopost",
+        "description": "Veröffentliche die Rangliste regelmäßig automatisch in einem Kanal."
+      },
+      "advancedrankings": {
+        "name": "Erweiterte Ranglisten",
+        "description": "Schalte mehr Ranking-Optionen frei."
+      },
+      "detailedprofile": {
+        "name": "Ausführliches Profil",
+        "description": "Zeig mehr Infos zu den Reputationsprofilen der Nutzer an."
+      },
+      "logchannel": {
+        "name": "Protokollkanal",
+        "description": "Aktiviere einen eigenen Protokollkanal für alle Reputationsänderungen."
+      },
+      "additionalemojis": {
+        "name": "Weitere Emojis",
+        "description": "Benutze mehr als ein Emoji, um durch Reaktionen Reputation zu geben."
+      },
+      "profile": {
+        "name": "Bot-Profil",
+        "description": "Passe den Namen und das Profilbild des Bots auf deinem Server an."
+      },
+      "integrationbypass": {
+        "name": "Integrations Ausnahmen",
+        "description": "Anderen Bots und Integrationen erlauben, Reputation zu vergeben."
+      }
+    },
+    "adminOnly": "Der Server ist so eingestellt, dass nur Server-Admins Funktionen kaufen können."
   }
 }

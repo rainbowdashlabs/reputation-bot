@@ -19,7 +19,7 @@ const bypasses = computed(() => {
 
 const availableIntegrations = computed(() => {
   const existingIds = new Set(bypasses.value.map(b => b.integrationId))
-  return session.value?.guild?.integrations?.filter(i => !existingIds.has(i.id)) || []
+  return session.value?.integrations?.filter(i => !existingIds.has(i.id)) || []
 })
 
 const addBypass = async (integrationId: string) => {
@@ -56,7 +56,7 @@ const emit = defineEmits<{
           {{ t('integrationBypass.add') }}
         </label>
         <select
-            class="w-full bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm transition-colors"
+            class="select"
             @change="(e) => addBypass((e.target as HTMLSelectElement).value)"
         >
           <option disabled selected value="">{{ t('integrationBypass.selectIntegration') }}</option>

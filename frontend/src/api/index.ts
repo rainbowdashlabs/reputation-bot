@@ -10,6 +10,7 @@ import {useSession} from '../composables/useSession';
 
 class ApiClient {
     private axiosInstance: AxiosInstance;
+    private cache: Map<string, any> = new Map();
 
     constructor() {
         const backendHost = import.meta.env.VITE_BACKEND_HOST || '';
@@ -27,24 +28,60 @@ class ApiClient {
         });
 
         this.axiosInstance.interceptors.request.use((config) => {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('reputation_bot_token');
             if (token) {
                 config.headers['Authorization'] = token;
+            }
+            const guildId = localStorage.getItem('reputation_bot_guild_id');
+            if (guildId) {
+                config.headers['X-Guild-Id'] = guildId;
             }
             return config;
         });
 
         this.axiosInstance.interceptors.response.use(
             (response) => response,
-            (error: AxiosError<Types.ApiErrorResponse>) => {
-                // Handle 401 Unauthorized - show expired warning
+            async (error: AxiosError<Types.ApiErrorResponse>) => {
+                // Handle 401 Unauthorized - show expired warning or redirect to login
                 if (error.response?.status === 401) {
                     const {setExpired} = useSession();
-                    setExpired(true);
+                    if (localStorage.getItem('reputation_bot_token')) {
+                        try {
+                            await this.validateToken();
+                            // If validation succeeds, it wasn't the token that was unauthorized
+                            return Promise.reject(error);
+                        } catch (e) {
+                            // Token is indeed invalid
+                            setExpired(true);
+                        }
+                    }
                     return Promise.reject(error);
                 }
 
                 const errorStore = useErrorStore();
+
+                if ((error.config as any)?.skipErrorHandle) {
+                    return Promise.reject(error);
+                }
+
+                if (error.response?.status === 429) {
+                    const retryAfter = error.response.headers['retry-after'];
+                    let message = 'You are doing that too often. Please wait a bit.';
+                    if (retryAfter) {
+                        const secondsTotal = parseInt(retryAfter);
+                        const minutes = Math.floor(secondsTotal / 60);
+                        const seconds = secondsTotal % 60;
+                        let timeStr = '';
+                        if (minutes > 0) timeStr += `${minutes}m `;
+                        timeStr += `${seconds}s`;
+                        message = `You are doing that too often. Please wait ${timeStr.trim()}.`;
+                    }
+                    errorStore.addError({
+                        error: 'Too Many Requests',
+                        message: message,
+                    });
+                    return Promise.reject(error);
+                }
 
                 if (error.response?.data) {
                     // Backend returned an ApiErrorResponse
@@ -67,18 +104,79 @@ class ApiClient {
             }
         );
 
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem('reputation_bot_token');
         if (token) {
             this.setToken(token);
         }
     }
 
     public setToken(token: string) {
-        localStorage.setItem('token', token);
+        localStorage.setItem('reputation_bot_token', token);
     }
 
-    public async getSession(): Promise<Types.GuildSessionPOJO> {
-        const response = await this.axiosInstance.get<Types.GuildSessionPOJO>('/session');
+    public async getSession(): Promise<Types.UserSessionPOJO> {
+        const response = await this.axiosInstance.get<Types.UserSessionPOJO>('/session/me');
+        return response.data;
+    }
+
+    public async getGuildSession(): Promise<Types.GuildPOJO> {
+        const response = await this.axiosInstance.get<Types.GuildPOJO>('/guild/meta');
+        return response.data;
+    }
+
+    public async getDashboardStats(): Promise<Types.DashboardStatsPOJO> {
+        const response = await this.axiosInstance.get<Types.DashboardStatsPOJO>('/guild/stats');
+        return response.data;
+    }
+
+    public async purchaseFeature(featureId: number, guildTokens: boolean): Promise<Types.FeaturePurchaseResultPOJO> {
+        const response = await this.axiosInstance.post<Types.FeaturePurchaseResultPOJO>('/guild/features/purchase', { featureId, guildTokens });
+        return response.data;
+    }
+
+    public async subscribeFeature(featureId: number): Promise<Types.FeaturePurchaseResultPOJO> {
+        const response = await this.axiosInstance.post<Types.FeaturePurchaseResultPOJO>('/guild/features/subscribe', { featureId });
+        return response.data;
+    }
+
+    public async unsubscribeFeature(featureId: number): Promise<Types.FeaturePurchaseResultPOJO> {
+        const response = await this.axiosInstance.post<Types.FeaturePurchaseResultPOJO>('/guild/features/unsubscribe', { featureId });
+        return response.data;
+    }
+
+    public async getGuildTokens(): Promise<Types.TokensPOJO> {
+        const response = await this.axiosInstance.get<Types.TokensPOJO>('/guild/token');
+        return response.data;
+    }
+
+    public async getActiveFeatures(): Promise<Types.ActiveFeaturePOJO[]> {
+        const response = await this.axiosInstance.get<Types.ActiveFeaturePOJO[]>('/guild/features/active');
+        return response.data;
+    }
+
+    public async getEveryoneTokenPurchase(): Promise<boolean> {
+        const response = await this.axiosInstance.get<boolean>('/guild/features/everyone-token-purchase');
+        return response.data;
+    }
+
+    public async withdrawGuildTokens(amount: number): Promise<Types.TokensPOJO> {
+        const response = await this.axiosInstance.post<Types.TokensPOJO>('/guild/token/withdraw', { amount });
+        return response.data;
+    }
+
+    public async getGuildMeta(guildId?: string): Promise<Types.GuildPOJO> {
+        const headers = guildId ? { 'X-Guild-Id': guildId } : {};
+        const response = await this.axiosInstance.get<Types.GuildPOJO>('/guild/meta', { headers });
+        return response.data;
+    }
+
+    public async getGuildPremium(): Promise<Types.PremiumFeaturesPOJO> {
+        const response = await this.axiosInstance.get<Types.PremiumFeaturesPOJO>('/session/guild/premium');
+        return response.data;
+    }
+
+    public async getGuildSettings(): Promise<Types.SettingsPOJO> {
+        const response = await this.axiosInstance.get<Types.SettingsPOJO>('/session/guild/settings');
         return response.data;
     }
 
@@ -113,6 +211,12 @@ class ApiClient {
 
     public async updateGeneralResetDate(resetDate: string | null) {
         await this.axiosInstance.post('/settings/general/resetdate', resetDate ? JSON.stringify(resetDate) : null, {
+            headers: {'Content-Type': 'application/json'}
+        });
+    }
+
+    public async updateGeneralEveryoneTokenPurchase(active: boolean) {
+        await this.axiosInstance.post('/settings/general/everyonetokenpurchase', active, {
             headers: {'Content-Type': 'application/json'}
         });
     }
@@ -460,17 +564,47 @@ class ApiClient {
 
     // Public Data
     public async getThankwords(): Promise<Types.ThankwordsContainer> {
+        if (this.cache.has('thankwords')) {
+            return this.cache.get('thankwords');
+        }
         const response = await this.axiosInstance.get<Types.ThankwordsContainer>('/data/thankwords');
+        this.cache.set('thankwords', response.data);
         return response.data;
     }
 
     public async getLanguages(): Promise<Types.LanguageInfo[]> {
+        if (this.cache.has('languages')) {
+            return this.cache.get('languages');
+        }
         const response = await this.axiosInstance.get<Types.LanguageInfo[]>('/data/languages');
+        this.cache.set('languages', response.data);
         return response.data;
     }
 
     public async getLinks(): Promise<Types.Links> {
+        if (this.cache.has('links')) {
+            return this.cache.get('links');
+        }
         const response = await this.axiosInstance.get<Types.Links>('/data/links');
+        this.cache.set('links', response.data);
+        return response.data;
+    }
+
+    public async getTokenFeatures(): Promise<Map<Types.Feature, Types.Feature>> {
+        if (this.cache.has('token_features')) {
+            return this.cache.get('token_features');
+        }
+        const response = await this.axiosInstance.get<Map<Types.Feature, Types.Feature>>('/data/token_features');
+        this.cache.set('token_features', response.data);
+        return response.data;
+    }
+
+    public async getAvailableSKUs(): Promise<Types.SKU[]> {
+        if (this.cache.has('available_skus')) {
+            return this.cache.get('available_skus');
+        }
+        const response = await this.axiosInstance.get<Types.SKU[]>('/data/skus');
+        this.cache.set('available_skus', response.data);
         return response.data;
     }
 
@@ -482,10 +616,81 @@ class ApiClient {
         return response.data;
     }
 
-    // Debug
+    // User Voting
+    public async getUserTokens(): Promise<Types.TokensPOJO> {
+        const response = await this.axiosInstance.get<Types.TokensPOJO>('/user/vote/tokens');
+        return response.data;
+    }
+
+    public async getVoteLists(): Promise<Types.BotlistVotePOJO[]> {
+        const response = await this.axiosInstance.get<Types.BotlistVotePOJO[]>('/user/vote/lists');
+        return response.data;
+    }
+
+    public async getVoteLog(page: number = 0, entries: number = 25): Promise<Types.VoteLogPagePOJO> {
+        const response = await this.axiosInstance.get<Types.VoteLogPagePOJO>('/user/vote/log', {
+            params: { page, entries }
+        });
+        return response.data;
+    }
+
+    public async transferTokensToGuild(guildId: string, amount: number): Promise<void> {
+        await this.axiosInstance.post('/user/vote/transfer', { guildId, amount });
+    }
+
+    public async getUserSettings(): Promise<Types.UserSettingsPOJO> {
+        const response = await this.axiosInstance.get<Types.UserSettingsPOJO>('/user/settings');
+        return response.data;
+    }
+
+    public async updateUserSettings(settings: Types.UserSettingsPOJO): Promise<void> {
+        await this.axiosInstance.patch('/user/settings', settings);
+    }
+
+    // User Purchases (Ko-fi)
+    public async getUserPurchases(): Promise<Types.KofiPurchasePOJO[]> {
+        const response = await this.axiosInstance.get<Types.KofiPurchasePOJO[]>('/user/purchases');
+        return response.data;
+    }
+
+    public async assignPurchaseToGuild(purchaseId: number, guildId: string): Promise<void> {
+        await this.axiosInstance.post(`/user/purchases/${purchaseId}/guild`, { guildId }, { skipErrorHandle: true } as any);
+    }
+
+    public async unassignPurchaseFromGuild(purchaseId: number): Promise<void> {
+        await this.axiosInstance.delete(`/user/purchases/${purchaseId}/guild`, { skipErrorHandle: true } as any);
+    }
+
+    // User Mails
+    public async getUserMails(): Promise<Types.MailEntryPOJO[]> {
+        const response = await this.axiosInstance.get<Types.MailEntryPOJO[]>('/user/settings/mail');
+        return response.data;
+    }
+
+    public async registerUserMail(mail: string): Promise<Types.MailEntryPOJO> {
+        const response = await this.axiosInstance.post<Types.MailEntryPOJO>('/user/settings/mail', { mail }, { skipErrorHandle: true } as any);
+        return response.data;
+    }
+
+    public async deleteUserMail(hash: string): Promise<void> {
+        await this.axiosInstance.delete(`/user/settings/mail/${encodeURIComponent(hash)}`);
+    }
+
+    public async verifyUserMail(hash: string, code: string): Promise<void> {
+        await this.axiosInstance.post(`/user/settings/mail/${encodeURIComponent(hash)}/verify`, { code }, { skipErrorHandle: true } as any);
+    }
+
     public async getDebug(): Promise<Types.DebugResultPOJO> {
         const response = await this.axiosInstance.get<Types.DebugResultPOJO>('/settings/debug');
         return response.data;
+    }
+
+    public async validateToken(): Promise<void> {
+        await this.axiosInstance.get('/auth/validate');
+    }
+
+    public async logout(): Promise<void> {
+        await this.axiosInstance.post('/auth/logout');
     }
 }
 

@@ -21,6 +21,7 @@ import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.access.guild.subscriptions.SkuTarget;
 import de.chojo.repbot.dao.access.guild.subscriptions.Subscription;
 import de.chojo.repbot.dao.access.guild.subscriptions.SubscriptionError;
+import de.chojo.repbot.dao.access.guild.subscriptions.SubscriptionSource;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.exceptions.MissingSupportTier;
 import de.chojo.repbot.util.SupporterFeature;
@@ -91,6 +92,7 @@ public class PremiumService extends ListenerAdapter {
         Subscription sub = new Subscription(
                 subscription.subscriptionSku(),
                 guild.getIdLong(),
+                SubscriptionSource.DISCORD,
                 SkuTarget.GUILD,
                 EntitlementType.PURCHASE,
                 null,
@@ -295,7 +297,7 @@ public class PremiumService extends ListenerAdapter {
                 FROM
                     subscriptions
                 WHERE ends_at < now()
-                RETURNING id, sku, type, ends_at, purchase_type, persistent
+                RETURNING id, sku, type, ends_at, source, purchase_type, persistent
                 """).single().map(Subscription.map()).all();
         for (Subscription subscription : all) {
             guildRepository.byId(subscription.id()).subscriptions().invalidate();
@@ -309,7 +311,7 @@ public class PremiumService extends ListenerAdapter {
                 .excludeEnded(true)
                 .complete();
         RepGuild repGuild = guildRepository.byId(guild.getIdLong());
-        repGuild.subscriptions().clear();
+        repGuild.subscriptions().clear(SubscriptionSource.DISCORD);
         for (Entitlement entitlement : entitlements) {
             updateEntitlement(entitlement);
         }

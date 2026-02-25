@@ -5,16 +5,15 @@
  */
 package de.chojo.repbot.config.elements.sku.feature;
 
-import de.chojo.repbot.config.elements.sku.SKUEntry;
+import de.chojo.repbot.config.elements.sku.tokens.Feature;
 
 /**
  * Allows having a custom bot profile.
  * Including a profile, profile picture and description.
  */
-public class Profile {
-    private SKUEntry allow = new SKUEntry();
+public class Profile extends Feature {
 
-    public SKUEntry allow() {
-        return allow;
+    public Profile() {
+        super(9, 350);
     }
 }

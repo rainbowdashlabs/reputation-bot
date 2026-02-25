@@ -24,7 +24,7 @@ const newReputation = ref<number | null>(null)
 const errorMessage = ref('')
 
 const highestBotRolePosition = computed(() => {
-  return session.value?.guild?.meta?.highestBotRole?.position ?? null
+  return session.value?.highestBotRole?.position ?? null
 })
 
 const validate = () => {

@@ -76,10 +76,10 @@ public class Thanking implements GuildHolder {
                 .all();
         var categories =
                 query("""
-                SELECT category_id
-                FROM active_categories
-                WHERE guild_id = ?
-                """).single(call().bind(guildId())).mapAs(Long.class).all();
+                        SELECT category_id
+                        FROM active_categories
+                        WHERE guild_id = ?
+                        """).single(call().bind(guildId())).mapAs(Long.class).all();
         this.channels = new Channels(this, channelWhitelist, new HashSet<>(channels), new HashSet<>(categories));
         return this.channels;
     }
@@ -146,10 +146,10 @@ public class Thanking implements GuildHolder {
         }
         var reactions =
                 query("""
-                SELECT reaction
-                FROM guild_reactions
-                WHERE guild_id = ?
-                """).single(call().bind(guildId())).mapAs(String.class).all();
+                        SELECT reaction
+                        FROM guild_reactions
+                        WHERE guild_id = ?
+                        """).single(call().bind(guildId())).mapAs(String.class).all();
         this.reactions = new Reactions(this, mainReaction, new HashSet<>(reactions));
         return this.reactions;
     }
@@ -160,10 +160,10 @@ public class Thanking implements GuildHolder {
         }
         var thankwords =
                 query("""
-                SELECT thankword
-                FROM thankwords
-                WHERE guild_id = ?
-                """).single(call().bind(guildId())).mapAs(String.class).all();
+                        SELECT thankword
+                        FROM thankwords
+                        WHERE guild_id = ?
+                        """).single(call().bind(guildId())).mapAs(String.class).all();
 
         this.thankwords = new Thankwords(this, new HashSet<>(thankwords));
         return this.thankwords;

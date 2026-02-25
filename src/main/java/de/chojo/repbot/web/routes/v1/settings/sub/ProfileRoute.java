@@ -273,13 +273,13 @@ public class ProfileRoute implements RoutesBuilder {
     @Override
     public void buildRoutes() {
         path("profile", () -> {
-            post("", this::updateProfileSettings, Role.GUILD_USER);
-            post("nickname", this::updateNickname, Role.GUILD_USER);
-            delete("nickname", this::deleteNickname, Role.GUILD_USER);
-            post("picture", this::updateProfilePicture, Role.GUILD_USER);
-            delete("picture", this::deleteProfilePicture, Role.GUILD_USER);
-            post("reputationname", this::updateReputationName, Role.GUILD_USER);
-            delete("reputationname", this::deleteReputationName, Role.GUILD_USER);
+            post("", this::updateProfileSettings, Role.GUILD_ADMIN);
+            post("nickname", this::updateNickname, Role.GUILD_ADMIN);
+            delete("nickname", this::deleteNickname, Role.GUILD_ADMIN);
+            post("picture", this::updateProfilePicture, Role.GUILD_ADMIN);
+            delete("picture", this::deleteProfilePicture, Role.GUILD_ADMIN);
+            post("reputationname", this::updateReputationName, Role.GUILD_ADMIN);
+            delete("reputationname", this::deleteReputationName, Role.GUILD_ADMIN);
         });
     }
 }

@@ -18,6 +18,7 @@ public class GeneralPOJO {
     protected DiscordLocale language;
     protected ReputationMode reputationMode;
     protected Instant resetDate;
+    protected boolean everyoneTokenPurchase;
 
     @JsonSerialize(using = ToStringSerializer.class)
     protected long systemChannel;
@@ -27,12 +28,14 @@ public class GeneralPOJO {
             DiscordLocale language,
             ReputationMode reputationMode,
             Instant resetDate,
-            long systemChannel) {
+            long systemChannel,
+            boolean everyoneTokenPurchase) {
         this.stackRoles = stackRoles;
         this.language = language;
         this.reputationMode = reputationMode;
         this.resetDate = resetDate;
         this.systemChannel = systemChannel;
+        this.everyoneTokenPurchase = everyoneTokenPurchase;
     }
 
     public Optional<DiscordLocale> language() {
@@ -53,5 +56,9 @@ public class GeneralPOJO {
 
     public ReputationMode reputationMode() {
         return reputationMode;
+    }
+
+    public boolean everyoneTokenPurchase() {
+        return everyoneTokenPurchase;
     }
 }

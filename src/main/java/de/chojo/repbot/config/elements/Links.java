@@ -13,6 +13,7 @@ public class Links {
     private String support = "";
     private String website = "https://rainbowdashlabs.github.io/reputation-bot/";
     private String faq = "https://rainbowdashlabs.github.io/reputation-bot/faq";
+    private String kofi = "https://ko-fi.com/reputationbot";
 
     public String tos() {
         return tos;
@@ -32,5 +33,9 @@ public class Links {
 
     public String faq() {
         return faq;
+    }
+
+    public String kofi() {
+        return kofi;
     }
 }

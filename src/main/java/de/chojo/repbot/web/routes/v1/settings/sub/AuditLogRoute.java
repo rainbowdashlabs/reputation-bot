@@ -68,7 +68,7 @@ public class AuditLogRoute implements RoutesBuilder {
     @Override
     public void buildRoutes() {
         path("auditlog", () -> {
-            get("", this::getAuditLog, Role.GUILD_USER);
+            get("", this::getAuditLog, Role.GUILD_ADMIN);
         });
     }
 }

@@ -11,12 +11,14 @@ import {api} from '@/api'
 import type {LanguageInfo} from '@/api/types'
 import ChannelSelect from '@/components/ChannelSelect.vue'
 import SettingsContainer from './components/SettingsContainer.vue'
+import Toggle from '@/components/Toggle.vue'
 
 const {t} = useI18n()
 const {session, updateGeneralSettings} = useSession()
 
 const systemChannel = ref<string | null>(null)
 const language = ref<string>('')
+const everyoneTokenPurchase = ref<boolean>(true)
 const languages = ref<LanguageInfo[]>([])
 
 onMounted(async () => {
@@ -31,6 +33,7 @@ watch(session, (newSession) => {
   if (newSession?.settings?.general) {
     systemChannel.value = newSession.settings.general.systemChannel || null
     language.value = newSession.settings.general.language || ''
+    everyoneTokenPurchase.value = newSession.settings.general.everyoneTokenPurchase
   }
 }, {immediate: true})
 
@@ -53,6 +56,17 @@ const updateLanguage = async () => {
   } catch (error) {
     console.error('Failed to update language:', error)
     language.value = previous
+  }
+}
+
+const updateEveryoneTokenPurchase = async () => {
+  const previous = session.value?.settings?.general?.everyoneTokenPurchase ?? true
+  try {
+    await api.updateGeneralEveryoneTokenPurchase(everyoneTokenPurchase.value)
+    updateGeneralSettings({everyoneTokenPurchase: everyoneTokenPurchase.value})
+  } catch (error) {
+    console.error('Failed to update everyone token purchase:', error)
+    everyoneTokenPurchase.value = previous
   }
 }
 </script>
@@ -82,6 +96,17 @@ const updateLanguage = async () => {
             @update:model-value="updateSystemChannel"
         />
         <p class="description">{{ t('general.systemChannel.note') }}</p>
+      </div>
+
+      <div class="flex flex-col gap-1.5">
+        <div class="flex gap-2">
+
+          <Toggle v-model="everyoneTokenPurchase" @update:model-value="updateEveryoneTokenPurchase" />
+        <label class="label">{{ t('general.everyoneTokenPurchase.label') }}</label>
+        </div>
+        <div class="flex items-center gap-2">
+        </div>
+        <p class="description">{{ t('general.everyoneTokenPurchase.description') }}</p>
       </div>
     </div>
   </SettingsContainer>

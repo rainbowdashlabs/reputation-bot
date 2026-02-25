@@ -14,7 +14,7 @@ const {t} = useI18n()
 const {session, updateAbuseProtectionSettings} = useSession()
 
 const maxMessageReputation = computed({
-  get: () => session.value?.settings.abuseProtection.maxMessageReputation ?? 0,
+  get: () => session.value?.settings?.abuseProtection.maxMessageReputation ?? 0,
   set: async (value) => {
     if (value < 0) return
     try {

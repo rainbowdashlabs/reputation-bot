@@ -12,10 +12,13 @@ import de.chojo.repbot.dao.access.Cleanup;
 import de.chojo.repbot.dao.access.Gdpr;
 import de.chojo.repbot.dao.access.gdpr.RemovalTask;
 import de.chojo.repbot.dao.provider.GuildRepository;
-import de.chojo.repbot.dao.provider.GuildSessionRepository;
 import de.chojo.repbot.dao.provider.Metrics;
 import de.chojo.repbot.dao.provider.SettingsAuditLogRepository;
-import de.chojo.repbot.dao.provider.Voice;
+import de.chojo.repbot.dao.provider.TokenPurchaseRepository;
+import de.chojo.repbot.dao.provider.UserRepository;
+import de.chojo.repbot.dao.provider.UserSessionRepository;
+import de.chojo.repbot.dao.provider.VoiceRepository;
+import de.chojo.repbot.dao.provider.VoteRepository;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.sadu.datasource.DataSourceCreator;
 import de.chojo.sadu.mapper.RowMapperRegistry;
@@ -38,13 +41,16 @@ public class Data {
     private final Configuration configuration;
     private HikariDataSource dataSource;
     private GuildRepository guildRepository;
-    private GuildSessionRepository guildSessionRepository;
+    private UserSessionRepository userSessionRepository;
+    private UserRepository userRepository;
     private SettingsAuditLogRepository settingsAuditLogRepository;
+    private VoteRepository voteRepository;
     private Gdpr gdpr;
     private Cleanup cleanup;
     private Metrics metrics;
-    private Voice voice;
+    private VoiceRepository voice;
     private Analyzer analyzer;
+    private TokenPurchaseRepository tokenPurchaseRepository;
 
     private Data(Threading threading, Configuration configuration) {
         this.threading = threading;
@@ -93,7 +99,7 @@ public class Data {
         return metrics;
     }
 
-    public Voice voice() {
+    public VoiceRepository voice() {
         return voice;
     }
 
@@ -105,8 +111,20 @@ public class Data {
         return analyzer;
     }
 
-    public GuildSessionRepository guildSessionRepository() {
-        return guildSessionRepository;
+    public TokenPurchaseRepository tokenPurchaseRepository() {
+        return tokenPurchaseRepository;
+    }
+
+    public UserSessionRepository userSessionRepository() {
+        return userSessionRepository;
+    }
+
+    public UserRepository userRepository() {
+        return userRepository;
+    }
+
+    public VoteRepository voteRepository() {
+        return voteRepository;
     }
 
     public SettingsAuditLogRepository settingsAuditLogRepository() {
@@ -139,13 +157,16 @@ public class Data {
     private void initDao() {
         log.info("Creating DAOs");
         guildRepository = new GuildRepository(configuration);
-        guildSessionRepository = new GuildSessionRepository();
+        userSessionRepository = new UserSessionRepository();
+        userRepository = new UserRepository();
         settingsAuditLogRepository = new SettingsAuditLogRepository();
         gdpr = new Gdpr(configuration);
         cleanup = new Cleanup();
         metrics = new Metrics(dataSource);
         analyzer = new Analyzer(configuration);
-        voice = new Voice(configuration);
+        voice = new VoiceRepository(configuration);
+        voteRepository = new VoteRepository();
+        tokenPurchaseRepository = new TokenPurchaseRepository();
     }
 
     private HikariDataSource getConnectionPool() {

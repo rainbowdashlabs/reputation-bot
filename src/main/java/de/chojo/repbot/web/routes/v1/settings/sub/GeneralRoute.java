@@ -44,7 +44,8 @@ public class GeneralRoute implements RoutesBuilder {
                 general.language().orElse(null),
                 general.reputationMode(),
                 general.resetDate(),
-                general.systemChannel());
+                general.systemChannel(),
+                general.everyoneTokenPurchase());
         GeneralPOJO generalPOJO = ctx.bodyAsClass(GeneralPOJO.class);
         general.apply(generalPOJO);
         session.recordChange("general", oldValue, generalPOJO);
@@ -146,15 +147,34 @@ public class GeneralRoute implements RoutesBuilder {
         session.recordChange("general.resetdate", oldValue, newValue);
     }
 
+    @OpenApi(
+            summary = "Update general everyone token purchase",
+            operationId = "updateGeneralEveryoneTokenPurchase",
+            path = "v1/settings/general/everyonetokenpurchase",
+            methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
+            tags = {"Settings"},
+            requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = Boolean.class)),
+            responses = {@OpenApiResponse(status = "200")})
+    public void updateEveryoneTokenPurchase(Context ctx) {
+        GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
+        General general = session.repGuild().settings().general();
+        boolean oldValue = general.everyoneTokenPurchase();
+        boolean newValue = ctx.bodyAsClass(Boolean.class);
+        general.everyoneTokenPurchase(newValue);
+        session.recordChange("general.everyonetokenpurchase", oldValue, newValue);
+    }
+
     @Override
     public void buildRoutes() {
         path("general", () -> {
-            post("", this::updateGeneralSettings, Role.GUILD_USER);
-            post("language", this::updateLanguage, Role.GUILD_USER);
-            post("stackroles", this::updateStackRoles, Role.GUILD_USER);
-            post("reputationmode", this::updateReputationMode, Role.GUILD_USER);
-            post("systemchannel", this::updateSystemChannel, Role.GUILD_USER);
-            post("resetdate", this::updateResetDate, Role.GUILD_USER);
+            post("", this::updateGeneralSettings, Role.GUILD_ADMIN);
+            post("language", this::updateLanguage, Role.GUILD_ADMIN);
+            post("stackroles", this::updateStackRoles, Role.GUILD_ADMIN);
+            post("reputationmode", this::updateReputationMode, Role.GUILD_ADMIN);
+            post("systemchannel", this::updateSystemChannel, Role.GUILD_ADMIN);
+            post("resetdate", this::updateResetDate, Role.GUILD_ADMIN);
+            post("everyonetokenpurchase", this::updateEveryoneTokenPurchase, Role.GUILD_ADMIN);
         });
     }
 }

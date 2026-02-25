@@ -16,7 +16,7 @@ const {t} = useI18n()
 const {session, updateAbuseProtectionSettings} = useSession()
 
 const isEnabled = computed({
-  get: () => (session.value?.settings.abuseProtection.maxReceived ?? 0) !== 0,
+  get: () => (session.value?.settings?.abuseProtection.maxReceived ?? 0) !== 0,
   set: async (value) => {
     const maxReceived = value ? 1 : 0
     const maxReceivedHours = value ? 1 : 0
@@ -31,7 +31,7 @@ const isEnabled = computed({
 })
 
 const maxReceived = computed({
-  get: () => session.value?.settings.abuseProtection.maxReceived ?? 1,
+  get: () => session.value?.settings?.abuseProtection.maxReceived ?? 1,
   set: async (value) => {
     if (value < 1) return
     try {
@@ -44,7 +44,7 @@ const maxReceived = computed({
 })
 
 const maxReceivedHours = computed({
-  get: () => session.value?.settings.abuseProtection.maxReceivedHours ?? 1,
+  get: () => session.value?.settings?.abuseProtection.maxReceivedHours ?? 1,
   set: async (value) => {
     if (value < 1) return
     try {

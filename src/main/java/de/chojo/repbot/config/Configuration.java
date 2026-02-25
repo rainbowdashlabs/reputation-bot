@@ -19,11 +19,15 @@ import de.chojo.repbot.config.elements.BaseSettings;
 import de.chojo.repbot.config.elements.Botlist;
 import de.chojo.repbot.config.elements.Cleanup;
 import de.chojo.repbot.config.elements.Database;
+import de.chojo.repbot.config.elements.DiscordOAuth;
+import de.chojo.repbot.config.elements.Kofi;
 import de.chojo.repbot.config.elements.Links;
 import de.chojo.repbot.config.elements.MagicImage;
+import de.chojo.repbot.config.elements.Mailing;
 import de.chojo.repbot.config.elements.PresenceSettings;
 import de.chojo.repbot.config.elements.SKU;
 import de.chojo.repbot.config.elements.SelfCleanup;
+import de.chojo.repbot.config.elements.Voting;
 import de.chojo.repbot.config.exception.ConfigurationException;
 import de.chojo.repbot.config.jackson.BotModule;
 import org.slf4j.Logger;
@@ -112,12 +116,28 @@ public class Configuration {
         return configFile.api();
     }
 
+    public DiscordOAuth discordOAuth() {
+        return configFile.discordOAuth();
+    }
+
     public Cleanup cleanup() {
         return configFile.cleanup();
     }
 
     public SKU skus() {
         return configFile.skus();
+    }
+
+    public Voting voting() {
+        return configFile.voting();
+    }
+
+    public Kofi kofi() {
+        return configFile.kofi();
+    }
+
+    public Mailing mailing() {
+        return configFile.mailing();
     }
 
     private void save() throws IOException {

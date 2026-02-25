@@ -18,6 +18,10 @@ import de.chojo.repbot.config.elements.sku.feature.Profile;
 import de.chojo.repbot.config.elements.sku.feature.ReputationCategories;
 import de.chojo.repbot.config.elements.sku.feature.ReputationChannel;
 import de.chojo.repbot.config.elements.sku.feature.ReputationLog;
+import de.chojo.repbot.config.elements.sku.tokens.Feature;
+
+import java.util.List;
+import java.util.Optional;
 
 public class SKUFeatures {
     ReputationLog reputationLog = new ReputationLog();
@@ -84,5 +88,26 @@ public class SKUFeatures {
 
     public IntegrationBypass integrationBypass() {
         return integrationBypass;
+    }
+
+    public List<Feature> features() {
+        return List.of(
+                reputationLog,
+                analyzerLog,
+                reputationCategories,
+                reputationChannel,
+                channelBlacklist,
+                localeOverrides,
+                autopost,
+                advancedRankings,
+                detailedProfile,
+                logChannel,
+                additionalEmojis,
+                profile,
+                integrationBypass);
+    }
+
+    public Optional<Feature> byId(int id) {
+        return features().stream().filter(f -> f.id() == id).findFirst();
     }
 }

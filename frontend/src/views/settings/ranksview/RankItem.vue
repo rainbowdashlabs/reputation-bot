@@ -29,7 +29,7 @@ const editReputation = ref<number | null>(null)
 const errorMessage = ref('')
 
 const getRole = (roleId: string) => {
-  return session.value?.guild?.roles.find(r => r.id === roleId)
+  return session.value?.roles.find(r => r.id === roleId)
 }
 
 const getRoleColor = (roleId: string) => {

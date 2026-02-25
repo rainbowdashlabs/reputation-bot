@@ -73,9 +73,9 @@ public abstract class BaseTop implements SlashHandler {
         if (premium
                 && Premium.isNotEntitled(
                         context,
-                        configuration.skus().features().advancedRankings().advancedRankings())) {
+                        configuration.skus().features().advancedRankings().fullSkuEntry())) {
             Premium.replyPremium(
-                    context, configuration.skus().features().advancedRankings().advancedRankings());
+                    context, configuration.skus().features().advancedRankings().fullSkuEntry());
             return;
         }
 
