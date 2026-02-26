@@ -8,12 +8,13 @@ package de.chojo.repbot.web.routes.v1.metrics.util;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import de.chojo.repbot.web.routes.RoutesBuilder;
+import io.javalin.http.ContentType;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
 import io.javalin.http.util.RateLimiter;
 import org.slf4j.Logger;
 
-import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -75,11 +76,10 @@ public class MetricCache implements RoutesBuilder {
             header = ctx.res().getHeaderNames().stream().collect(Collectors.toMap(e -> e, ctx.res()::getHeader));
             status = ctx.statusCode();
             contentType = ctx.res().getContentType();
-            try (var in = ctx.resultInputStream()) {
-                body = in.readAllBytes();
-                ctx.result(body);
-            } catch (IOException e) {
-                log.error("Could not cache result", e);
+            if (contentType.equals(ContentType.JSON)) {
+                body = ctx.body().getBytes(StandardCharsets.UTF_8);
+            } else {
+                body = ctx.bodyAsBytes();
             }
         }
 

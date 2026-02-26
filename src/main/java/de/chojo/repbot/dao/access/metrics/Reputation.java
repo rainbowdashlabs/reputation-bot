@@ -128,11 +128,10 @@ public class Reputation {
                      WHERE %s <= date_trunc(:timestamp, now())::DATE - :end::INTERVAL
                        AND %s >= date_trunc(:timestamp, now())::DATE - :start::INTERVAL
                      ORDER BY %s DESC
-                     LIMIT ?
                      """, timeframe, table, timeframe, timeframe, timeframe)
                 .single(call().bind("timestamp", timeframe)
-                        .bind("%d %s".formatted(offset, timeframe))
-                        .bind("%d %s".formatted(offset + count, timeframe)))
+                        .bind("end", "%d %s".formatted(offset, timeframe))
+                        .bind("start", "%d %s".formatted(offset + count, timeframe)))
                 .map(rs -> builder.add(rs.getString("cause"), CountStatistics.build(rs, timeframe)))
                 .all();
         return builder.build();
@@ -147,13 +146,12 @@ public class Reputation {
                          removed
                      FROM %s
                      WHERE %s <= date_trunc(:timestamp, now())::DATE - :end::INTERVAL
-                       AND %s >= date_trunc(:timestamp, now())::DATE - :dcl::INTERVAL
+                       AND %s >= date_trunc(:timestamp, now())::DATE - :start::INTERVAL
                      ORDER BY %s DESC
-                     LIMIT ?
                      """, timeframe, table, timeframe, timeframe, timeframe)
                 .single(call().bind("timestamp", timeframe)
                         .bind("end", offset + " " + timeframe)
-                        .bind("%d %s".formatted(offset + count, timeframe)))
+                        .bind("start", "%d %s".formatted(offset + count, timeframe)))
                 .map(rs -> builder.add("delta", CountStatistics.build(rs, "delta", timeframe))
                         .add("added", CountStatistics.build(rs, "added", timeframe))
                         .add("removed", CountStatistics.build(rs, "removed", timeframe)))
