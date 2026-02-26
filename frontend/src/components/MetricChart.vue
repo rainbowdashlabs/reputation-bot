@@ -143,6 +143,20 @@ const textColor = 'rgb(156, 163, 175)'
 const gridLineColor = 'rgba(156, 163, 175, 0.1)'
 const colors = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899']
 
+function hashName(name: string): number {
+  let hash = 0
+  for (let i = 0; i < name.length; i++) {
+    hash = (hash * 31 + name.charCodeAt(i)) >>> 0
+  }
+  return hash
+}
+
+function colorFromName(name: string): string {
+  const hash = hashName(name)
+  const h = hash % 360
+  return `hsl(${h}, 65%, 55%)`
+}
+
 function seriesColor(label: string, index: number): string {
   switch (label.toLowerCase()) {
     case 'failed':
@@ -169,10 +183,10 @@ const chartOption = computed(() => {
         type: 'pie',
         radius: ['30%', '60%'],
         center: ['50%', '50%'],
-        data: data.commands.map((c, i) => ({
+        data: data.commands.map((c) => ({
           name: c.command,
           value: c.count,
-          itemStyle: {color: colors[i % colors.length]}
+          itemStyle: {color: colorFromName(c.command)}
         })),
         label: {color: textColor, formatter: '{b}\n{d}%'},
         emphasis: {
