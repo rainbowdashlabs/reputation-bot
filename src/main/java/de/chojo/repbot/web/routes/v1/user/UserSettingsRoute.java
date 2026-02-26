@@ -198,8 +198,9 @@ public class UserSettingsRoute implements RoutesBuilder {
             })
     private void getUserMails(@NotNull Context ctx) {
         UserSession session = ctx.sessionAttribute(SessionAttribute.USER_SESSION);
-        var mails = userRepository.byId(session.userId()).mails().mails().values()
-                .stream().map(MailEntryPOJO::of).toList();
+        var mails = userRepository.byId(session.userId()).mails().mails().values().stream()
+                .map(MailEntryPOJO::of)
+                .toList();
         ctx.json(mails);
     }
 

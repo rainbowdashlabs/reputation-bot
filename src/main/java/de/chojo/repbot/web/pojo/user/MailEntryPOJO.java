@@ -8,13 +8,7 @@ package de.chojo.repbot.web.pojo.user;
 import de.chojo.repbot.dao.access.user.sub.MailEntry;
 
 public record MailEntryPOJO(
-        long userId,
-        String source,
-        String hash,
-        String mailShort,
-        boolean verified,
-        String verificationRequested
-) {
+        long userId, String source, String hash, String mailShort, boolean verified, String verificationRequested) {
     public static MailEntryPOJO of(MailEntry entry) {
         return new MailEntryPOJO(
                 entry.userId(),
@@ -22,7 +16,8 @@ public record MailEntryPOJO(
                 entry.hash(),
                 entry.mailShort(),
                 entry.verified(),
-                entry.verificationRequested() != null ? entry.verificationRequested().toString() : null
-        );
+                entry.verificationRequested() != null
+                        ? entry.verificationRequested().toString()
+                        : null);
     }
 }
