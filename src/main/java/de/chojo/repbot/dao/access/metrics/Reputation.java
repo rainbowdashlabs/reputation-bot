@@ -106,14 +106,14 @@ public class Reputation {
                             SELECT %s,
                                 count
                             FROM %s
-                            WHERE %s <= date_trunc(?, now())::DATE - ?::INTERVAL
+                            WHERE %s <= date_trunc(:timeframe, now())::DATE - :end::INTERVAL
+                              AND %s >= date_trunc(:timeframe, now())::DATE - :start::INTERVAL
                             ORDER BY %s DESC
-                            LIMIT ?
-                            """, timeframe, table, timeframe, timeframe)
-                .single(call().bind(timeframe).bind(offset + " " + timeframe).bind(count))
-                .map(rs -> CountStatistics.build(rs, timeframe))
-                .allResults()
-                .map(CountsStatistic::new);
+                            """, timeframe, table, timeframe, timeframe, timeframe)
+                    .single(call().bind("timeframe", timeframe).bind("end", offset + " " + timeframe).bind("start", (offset + count) + " " + timeframe))
+                    .map(rs -> CountStatistics.build(rs, timeframe))
+                    .allResults()
+                    .map(CountsStatistic::new);
     }
 
     private LabeledCountStatistic getType(String table, String timeframe, int offset, int count) {
@@ -123,13 +123,14 @@ public class Reputation {
                          cause,
                          count
                      FROM %s
-                     WHERE %s <= date_trunc(?, now())::DATE - ?::INTERVAL
+                     WHERE %s <= date_trunc(:timestamp, now())::DATE - :end::INTERVAL
+                       AND %s >= date_trunc(:timestamp, now())::DATE - :start::INTERVAL
                      ORDER BY %s DESC
                      LIMIT ?
                      """, timeframe, table, timeframe, timeframe)
-                .single(call().bind(timeframe).bind(offset + " " + timeframe).bind(count))
-                .map(rs -> builder.add(rs.getString("cause"), CountStatistics.build(rs, timeframe)))
-                .all();
+             .single(call().bind("timestamp", timeframe).bind("%d %s".formatted(offset, timeframe)).bind("%d %s".formatted(offset + count, timeframe)))
+             .map(rs -> builder.add(rs.getString("cause"), CountStatistics.build(rs, timeframe)))
+             .all();
         return builder.build();
     }
 
@@ -141,15 +142,16 @@ public class Reputation {
                          added,
                          removed
                      FROM %s
-                     WHERE %s <= date_trunc(?, now())::DATE - ?::INTERVAL
+                     WHERE %s <= date_trunc(:timestamp, now())::DATE - :end::INTERVAL
+                       AND %s >= date_trunc(:timestamp, now())::DATE - :start::INTERVAL
                      ORDER BY %s DESC
                      LIMIT ?
                      """, timeframe, table, timeframe, timeframe)
-                .single(call().bind(timeframe).bind(offset + " " + timeframe).bind(count))
-                .map(rs -> builder.add("delta", CountStatistics.build(rs, "delta", timeframe))
-                        .add("added", CountStatistics.build(rs, "added", timeframe))
-                        .add("removed", CountStatistics.build(rs, "removed", timeframe)))
-                .all();
+             .single(call().bind("timestamp",timeframe).bind("end",offset + " " + timeframe).bind("%d %s".formatted(offset + count, timeframe)))
+             .map(rs -> builder.add("delta", CountStatistics.build(rs, "delta", timeframe))
+                               .add("added", CountStatistics.build(rs, "added", timeframe))
+                               .add("removed", CountStatistics.build(rs, "removed", timeframe)))
+             .all();
         return builder.build();
     }
 
@@ -162,9 +164,9 @@ public class Reputation {
                             WHERE %s = date_trunc(?, now())::DATE - ?::INTERVAL
                             ORDER BY %s DESC
                             """, timeframe, table, timeframe, timeframe)
-                .single(call().bind(timeframe).bind(offset + " " + timeframe))
-                .map(rs -> DowStatistics.build(rs, timeframe))
-                .allResults()
-                .map(DowsStatistic::new);
+                    .single(call().bind(timeframe).bind(offset + " " + timeframe))
+                    .map(rs -> DowStatistics.build(rs, timeframe))
+                    .allResults()
+                    .map(DowsStatistic::new);
     }
 }
