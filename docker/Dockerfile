@@ -35,8 +35,9 @@ WORKDIR /app
 COPY --from=frontend /build/dist/ public
 COPY --from=build /home/gradle/build/libs/rep-bot-*-all.jar bot.jar
 
-RUN mkdir config assets
+RUN mkdir config
 RUN echo "{}" > config/config.json
 COPY docker/config/log4j2.xml config/
+COPY assets assets
 
 ENTRYPOINT ["java", "-Dbot.config=config/config.json", "-Dlog4j2.configurationFile=config/log4j2.xml", "-Dcjda.localisation.error.name=false", "-jar" , "bot.jar"]
