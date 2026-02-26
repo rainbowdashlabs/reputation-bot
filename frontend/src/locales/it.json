@@ -775,7 +775,7 @@
           "kofi": "Ko-fi"
         },
         "add": {
-          "placeholder": "Aggiungi un nuovo indirizzo e-mail (name@example.com)",
+          "placeholder": "Aggiungi un nuovo indirizzo e-mail (name{'@'}example.com)",
           "button": "Aggiungi"
         },
         "verify": {

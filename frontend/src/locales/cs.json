@@ -775,7 +775,7 @@
           "kofi": "Ko-fi"
         },
         "add": {
-          "placeholder": "Přidat nový e-mail (name@example.com)",
+          "placeholder": "Přidat nový e-mail (name{'@'}example.com)",
           "button": "Přidat"
         },
         "verify": {

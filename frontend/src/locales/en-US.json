@@ -130,7 +130,7 @@
           "kofi": "Ko-fi"
         },
         "add": {
-          "placeholder": "Add a new email (name@example.com)",
+          "placeholder": "Add a new email (name{'@'}example.com)",
           "button": "Add"
         },
         "verify": {

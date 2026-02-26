@@ -775,7 +775,7 @@
           "kofi": "Ko-fi"
         },
         "add": {
-          "placeholder": "Προσθήκη νέου email (name@example.com)",
+          "placeholder": "Προσθήκη νέου email (name{'@'}example.com)",
           "button": "Προσθήκη"
         },
         "verify": {

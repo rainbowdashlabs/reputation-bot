@@ -12,6 +12,7 @@ import de.chojo.repbot.dao.provider.UserRepository;
 import de.chojo.repbot.service.MailService;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
+import de.chojo.repbot.web.pojo.user.MailEntryPOJO;
 import de.chojo.repbot.web.pojo.user.UserSettingsPOJO;
 import de.chojo.repbot.web.routes.RoutesBuilder;
 import de.chojo.repbot.web.services.UserSession;
@@ -24,8 +25,6 @@ import io.javalin.openapi.OpenApiRequestBody;
 import io.javalin.openapi.OpenApiResponse;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Collection;
 
 import static de.chojo.repbot.service.mailservice.FailureReason.*;
 import static io.javalin.apibuilder.ApiBuilder.delete;
@@ -128,7 +127,7 @@ public class UserSettingsRoute implements RoutesBuilder {
             ctx.status(400).result(result.failureReason().name());
             return;
         }
-        ctx.json(result.result());
+        ctx.json(MailEntryPOJO.of(result.result()));
     }
 
     @OpenApi(
@@ -195,12 +194,12 @@ public class UserSettingsRoute implements RoutesBuilder {
             responses = {
                 @OpenApiResponse(
                         status = "200",
-                        content = {@OpenApiContent(from = MailEntry[].class, type = "application/json")})
+                        content = {@OpenApiContent(from = MailEntryPOJO[].class, type = "application/json")})
             })
     private void getUserMails(@NotNull Context ctx) {
         UserSession session = ctx.sessionAttribute(SessionAttribute.USER_SESSION);
-        Collection<MailEntry> mails =
-                userRepository.byId(session.userId()).mails().mails().values();
+        var mails = userRepository.byId(session.userId()).mails().mails().values()
+                .stream().map(MailEntryPOJO::of).toList();
         ctx.json(mails);
     }
 

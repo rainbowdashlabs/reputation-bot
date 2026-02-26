@@ -775,7 +775,7 @@
           "kofi": "柯菲"
         },
         "add": {
-          "placeholder": "添加新邮箱（name@example.com）",
+          "placeholder": "添加新邮箱（name{'@'}example.com）",
           "button": "添加"
         },
         "verify": {

@@ -775,7 +775,7 @@
           "kofi": "Ко-фи"
         },
         "add": {
-          "placeholder": "Добавь новый адрес электронной почты (name@example.com)",
+          "placeholder": "Добавь новый адрес электронной почты (name{'@'}example.com)",
           "button": "Добавить"
         },
         "verify": {

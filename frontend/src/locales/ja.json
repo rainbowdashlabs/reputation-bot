@@ -775,7 +775,7 @@
           "kofi": "Ko-fi"
         },
         "add": {
-          "placeholder": "新しいメールアドレスを追加する（name@example.com）",
+          "placeholder": "新しいメールアドレスを追加する（name{'@'}example.com）",
           "button": "追加する"
         },
         "verify": {

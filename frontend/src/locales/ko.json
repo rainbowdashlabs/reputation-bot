@@ -775,7 +775,7 @@
           "kofi": "코피"
         },
         "add": {
-          "placeholder": "새 이메일 추가 (name@example.com)",
+          "placeholder": "새 이메일 추가 (name{'@'}example.com)",
           "button": "추가"
         },
         "verify": {

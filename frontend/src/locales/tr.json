@@ -775,7 +775,7 @@
           "kofi": "Ko-fi"
         },
         "add": {
-          "placeholder": "Yeni bir e-posta ekle (name@example.com)",
+          "placeholder": "Yeni bir e-posta ekle (name{'@'}example.com)",
           "button": "Ekle"
         },
         "verify": {

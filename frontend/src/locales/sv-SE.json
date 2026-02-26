@@ -775,7 +775,7 @@
           "kofi": "Ko-fi"
         },
         "add": {
-          "placeholder": "Lägg till en ny e-postadress (name@example.com)",
+          "placeholder": "Lägg till en ny e-postadress (name{'@'}example.com)",
           "button": "Lägg till"
         },
         "verify": {
