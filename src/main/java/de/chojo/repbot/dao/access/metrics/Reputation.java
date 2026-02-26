@@ -129,7 +129,7 @@ public class Reputation {
                        AND %s >= date_trunc(:timestamp, now())::DATE - :start::INTERVAL
                      ORDER BY %s DESC
                      LIMIT ?
-                     """, timeframe, table, timeframe, timeframe)
+                     """, timeframe, table, timeframe, timeframe, timeframe)
                 .single(call().bind("timestamp", timeframe)
                         .bind("%d %s".formatted(offset, timeframe))
                         .bind("%d %s".formatted(offset + count, timeframe)))
@@ -147,10 +147,10 @@ public class Reputation {
                          removed
                      FROM %s
                      WHERE %s <= date_trunc(:timestamp, now())::DATE - :end::INTERVAL
-                       AND %s >= date_trunc(:timestamp, now())::DATE - :start::INTERVAL
+                       AND %s >= date_trunc(:timestamp, now())::DATE - :dcl::INTERVAL
                      ORDER BY %s DESC
                      LIMIT ?
-                     """, timeframe, table, timeframe, timeframe)
+                     """, timeframe, table, timeframe, timeframe, timeframe)
                 .single(call().bind("timestamp", timeframe)
                         .bind("end", offset + " " + timeframe)
                         .bind("%d %s".formatted(offset + count, timeframe)))
