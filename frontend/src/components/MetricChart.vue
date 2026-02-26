@@ -165,20 +165,16 @@ const chartOption = computed(() => {
     if (!data.commands || data.commands.length === 0) return null
     return {
       tooltip: {trigger: 'item', formatter: '{b}: {c} ({d}%)'},
-      legend: {
-        bottom: 0,
-        textStyle: {color: textColor}
-      },
       series: [{
         type: 'pie',
         radius: ['30%', '60%'],
-        center: ['50%', '45%'],
+        center: ['50%', '50%'],
         data: data.commands.map((c, i) => ({
           name: c.command,
           value: c.count,
           itemStyle: {color: colors[i % colors.length]}
         })),
-        label: {color: textColor},
+        label: {color: textColor, formatter: '{b}\n{d}%'},
         emphasis: {
           itemStyle: {
             shadowBlur: 10,
