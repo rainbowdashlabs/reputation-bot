@@ -125,6 +125,7 @@ public class MailService {
         MailEntry mailEntry = result.result();
         RepUser repUser = userRepository.byId(user);
         repUser.mails().addMail(mailEntry);
+        mailEntry.verify();
         return Result.success(mailEntry);
     }
 
