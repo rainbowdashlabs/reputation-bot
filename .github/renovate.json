@@ -22,6 +22,12 @@
       "schedule": ["before 3am on Friday"],
       "automerge": true,
       "automergeType": "pr"
+    },
+    {
+      "matchManagers": ["gradle", "maven"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "automerge": true,
+      "automergeType": "pr"
     }
   ]
 }
