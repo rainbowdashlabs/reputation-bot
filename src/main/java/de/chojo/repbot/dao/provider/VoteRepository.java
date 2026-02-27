@@ -49,8 +49,9 @@ public class VoteRepository {
         logToken(userId, guildId, reason, amount);
         if (guildId == 0) {
             addToken(userId, EntityType.USER, amount);
+        } else {
+            addToken(guildId, EntityType.GUILD, amount);
         }
-        addToken(guildId, EntityType.GUILD, amount);
     }
 
     public int getVoteCountToday(long userId) {
