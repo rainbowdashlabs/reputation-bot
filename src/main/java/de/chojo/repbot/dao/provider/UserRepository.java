@@ -39,7 +39,11 @@ public class UserRepository {
 
     public Optional<RepUser> byMailHash(String hash) {
         return query("""
-                SELECT user_id FROM user_mails um WHERE mail_hash = ?;
+                SELECT
+                    user_id
+                FROM
+                    user_mails um
+                WHERE mail_hash = ?;
                 """).single(call().bind(hash)).mapAs(Long.class).first().map(this::byId);
     }
 
@@ -72,7 +76,12 @@ public class UserRepository {
 
     public Optional<KofiPurchase> getMatchingPurchase(KofiPurchase purchase) {
         return query("""
-                SELECT * FROM kofi_purchase WHERE sku_id = ? AND mail_hash = ? AND type = ?;
+                SELECT *
+                FROM
+                    kofi_purchase
+                WHERE sku_id = ?
+                  AND mail_hash = ?
+                  AND type = ?;
                 """)
                 .single(call().bind(purchase.skuId()).bind(purchase.mailHash()).bind(purchase.type()))
                 .mapAs(KofiPurchase.class)
@@ -81,13 +90,29 @@ public class UserRepository {
 
     public void cleanupExpiredMails() {
         query("""
-                DELETE FROM user_mails WHERE verification_requested < now() - INTERVAL '1 hour' and not verified;
+                DELETE
+                FROM
+                    user_mails
+                WHERE verification_requested < now() - INTERVAL '1 hour'
+                  AND NOT verified;
                 """).single().delete();
     }
 
     public List<KofiPurchase> getExpiredKofiPurchased() {
         return query("""
-                SELECT id, mail_hash, key, sku_id, type, expires_at, transaction_id, guild_id FROM kofi_purchase WHERE expires_at < now() AND type = 'SUBSCRIPTION';
+                SELECT
+                    id,
+                    mail_hash,
+                    key,
+                    sku_id,
+                    type,
+                    expires_at,
+                    transaction_id,
+                    guild_id
+                FROM
+                    kofi_purchase
+                WHERE expires_at < now()
+                  AND type = 'SUBSCRIPTION';
                 """).single().mapAs(KofiPurchase.class).all();
     }
 }
