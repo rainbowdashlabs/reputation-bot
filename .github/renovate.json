@@ -15,19 +15,19 @@
       "matchManagers": ["npm"],
       "schedule": ["before 3am on Friday"],
       "automerge": true,
-      "automergeType": "pr"
+      "automergeType": "branch"
     },
     {
       "matchManagers": ["pipenv"],
       "schedule": ["before 3am on Friday"],
       "automerge": true,
-      "automergeType": "pr"
+      "automergeType": "branch"
     },
     {
       "matchManagers": ["gradle", "maven"],
       "matchUpdateTypes": ["minor", "patch"],
       "automerge": true,
-      "automergeType": "pr"
+      "automergeType": "branch"
     }
   ]
 }
