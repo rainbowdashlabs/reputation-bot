@@ -81,7 +81,7 @@ public class UserRepository {
 
     public void cleanupExpiredMails() {
         query("""
-                DELETE FROM user_mails WHERE verification_requested < now() - INTERVAL '1 hour';
+                DELETE FROM user_mails WHERE verification_requested < now() - INTERVAL '1 hour' and not verified;
                 """).single().delete();
     }
 
