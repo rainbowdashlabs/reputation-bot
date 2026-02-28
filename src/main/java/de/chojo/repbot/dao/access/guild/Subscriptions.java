@@ -100,14 +100,14 @@ public class Subscriptions implements GuildHolder, SkuMeta {
         query("""
                 INSERT
                 INTO
-                    subscription_error(guild_id, type, last_send, notified)
+                    subscription_error as e(guild_id, type, last_send, notified)
                 VALUES
                     (?, ?, now(), ?)
                 ON CONFLICT(guild_id, type)
                     DO UPDATE
                     SET
                         last_send = now(),
-                        count     = excluded.count + 1,
+                        count     = e.count + 1,
                         notified  = excluded.notified
                 RETURNING guild_id, type, last_send, count, date_inserted, notified
                 """)
