@@ -202,13 +202,13 @@ jobs:
 #          python3 -m frontend_locales 2>&1 | grep -A 20 "Check 2:" || true
       - name: Check variable consistency
         if: success() || failure()
-        working-directory: tooling
+        working-directory: dev/tooling
         run: |
           echo "=== Checking variable consistency ==="
           python3 -m frontend_locales 2>&1 | grep -A 20 "Check 3:" || true
       - name: Check for extra keys
         if: success() || failure()
-        working-directory: tooling
+        working-directory: dev/tooling
         run: |
           echo "=== Checking for extra keys ==="
           python3 -m frontend_locales 2>&1 | grep -A 20 "Check 4:" || true
@@ -217,9 +217,6 @@ jobs:
     environment: build
     runs-on: ubuntu-latest
     name: Verify Docker Build
-    defaults:
-      run:
-        working-directory: bot
 
     steps:
       - uses: actions/checkout@v6
@@ -232,11 +229,11 @@ jobs:
     name: Verify Docs Build
     defaults:
       run:
-        working-directory: bot
+        working-directory: docs
 
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-python@v6
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-      - run: pip install pipenv && pipenv install && pipenv run mkdocs build
+      - run: pip install pipenv && pipenv sync && pipenv run mkdocs build
