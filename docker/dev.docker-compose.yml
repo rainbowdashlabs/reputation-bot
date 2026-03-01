@@ -8,7 +8,7 @@ services:
     networks:
       - repbot
     volumes:
-      - database:/var/lib/postgresql/
+      - ./data:/var/lib/postgresql
     ports:
       - 5432:5432
     profiles:
