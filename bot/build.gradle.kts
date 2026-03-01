@@ -38,16 +38,16 @@ spotless {
 
     format("javascript") {
         licenseHeaderFile(rootProject.file("HEADER.txt"), "(import|const|let|var|export|//)")
-        target("frontend/src/**/*.js", "frontend/src/**/*.ts")
-        targetExclude("frontend/node_modules/**", "frontend/dist/**")
+        target("../frontend/src/**/*.js", "../frontend/src/**/*.ts")
+        targetExclude("../frontend/node_modules/**", "../frontend/dist/**")
         trimTrailingWhitespace()
         endWithNewline()
     }
 
     format("vue") {
         licenseHeaderFile(rootProject.file("HEADER.txt"), "(<template|<script|<style)")
-        target("frontend/src/**/*.vue")
-        targetExclude("frontend/node_modules/**", "frontend/dist/**")
+        target("../frontend/src/**/*.vue")
+        targetExclude("../frontend/node_modules/**", "../frontend/dist/**")
         trimTrailingWhitespace()
         endWithNewline()
     }
@@ -59,7 +59,7 @@ spotless {
 
     format("frontendLocales") {
         encoding("UTF-8")
-        target("frontend/src/locales/*.json")
+        target("../frontend/src/locales/*.json")
     }
 }
 

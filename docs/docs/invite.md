@@ -13,4 +13,4 @@ and save.
 
 Self-host the bot by yourself. In the end we are open source and everyone can use this bot.
 
-If you want to learn more about the ways to set up and configure the bot take a look at our [hosting page](./hosting.md)
+If you want to learn more about the ways to set up and configure the bot take a look at our [hosting page](hosting.md)

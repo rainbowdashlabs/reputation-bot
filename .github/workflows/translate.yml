@@ -45,19 +45,19 @@ jobs:
         python-version: 3.14
 
     - name: Install dependencies
-      run: pip install pipenv && pipenv install
+      run: pip install pipenv && pipenv sync
 
     - name: Translate Backend
       env:
         DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
       run: |
-        ./tooling/translation/translate-backend.sh
+        ./dev/tooling/translation/translate-backend.sh
 
     - name: Translate Frontend
       env:
         DEEPL_API_KEY: ${{ secrets.DEEPL_API_KEY }}
       run: |
-        ./tooling/translation/translate-frontend.sh
+        ./dev/tooling/translation/translate-frontend.sh
 
     - name: Check for changes
       id: check_changes

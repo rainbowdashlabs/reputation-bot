@@ -1,4 +1,4 @@
-rootProject.name = "rep-bot"
+rootProject.name = "bot"
 
 plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version ("1.0.0")

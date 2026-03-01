@@ -22,9 +22,8 @@ ARG GITHUB_SHA=$GITHUB_SHA
 
 WORKDIR /home/gradle
 
-COPY . .
+COPY src/* .
 
-RUN mkdir -p src/main/resources/static
 RUN gradle clean shadowJar --no-daemon -x test -x javadocJar -x sourcesJar
 
 FROM eclipse-temurin:25-alpine AS runtime
