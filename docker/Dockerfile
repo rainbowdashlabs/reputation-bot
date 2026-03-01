@@ -22,7 +22,7 @@ ARG GITHUB_SHA=$GITHUB_SHA
 
 WORKDIR /home/gradle
 
-COPY src/* .
+COPY bot/src .
 
 RUN gradle clean shadowJar --no-daemon -x test -x javadocJar -x sourcesJar
 
