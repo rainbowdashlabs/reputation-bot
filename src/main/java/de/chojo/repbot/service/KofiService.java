@@ -89,7 +89,7 @@ public class KofiService {
             }
         }
 
-        if (data.type() == Type.SHOP_ORDER) {
+        if (data.type() == Type.SHOP_ORDER || data.type() == Type.SUBSCRIPTION) {
             List<KofiPurchase> kofiPurchases = KofiPurchase.create(data, configuration);
             for (KofiPurchase kofiPurchase : kofiPurchases) {
                 userRepository.registerPurchase(kofiPurchase);
