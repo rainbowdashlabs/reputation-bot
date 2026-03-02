@@ -71,7 +71,8 @@ public class UserRepository {
                         .bind(purchase.type())
                         .bind(purchase.expiresAt(), StandardValueConverter.INSTANT_TIMESTAMP)
                         .bind(purchase.transactionId())
-                        .bind(purchase.guildId()));
+                        .bind(purchase.guildId()))
+                .insert();
     }
 
     public Optional<KofiPurchase> getMatchingPurchase(KofiPurchase purchase) {
