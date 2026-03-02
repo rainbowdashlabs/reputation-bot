@@ -286,6 +286,7 @@ public class Web {
 
         javalin.exception(Exception.class, (err, ctx) -> {
             log.error(LogNotify.NOTIFY_ADMIN, "Unhandled exception on route {}", ctx.path(), err);
+            ctx.status(HttpStatus.INTERNAL_SERVER_ERROR);
         });
     }
 
