@@ -103,6 +103,7 @@ dependencies {
     testImplementation(testlibs.sadu.testing)
     testImplementation(testlibs.bundles.database.postgres)
     testImplementation(testlibs.slf4j.simple)
+    testImplementation(testlibs.mockito)
 }
 
 java {

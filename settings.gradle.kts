@@ -44,6 +44,8 @@ dependencyResolutionManagement {
             library("junit-params", "org.junit.jupiter", "junit-jupiter-params").versionRef("junit")
             bundle("junit", listOf("junit-jupiter", "junit-params", "slf4j-simple"))
 
+            library("mockito", "org.mockito", "mockito-core").version("5.9.0")
+
             version("sadu", "2.3.7")
             library("sadu-testing", "de.chojo.sadu", "sadu-testing").versionRef("sadu")
 
