@@ -5,13 +5,13 @@
  */
 package de.chojo.repbot.service.kofi;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Objects;
 
+@JsonIgnoreProperties({"shipping"})
 public record KofiTransaction(
         @JsonProperty("verification_token") String verificationToken,
         @JsonProperty("message_id") String messageId,
@@ -28,7 +28,7 @@ public record KofiTransaction(
         @JsonProperty("is_first_subscription_payment") boolean isFirstSubscriptionPayment,
         @JsonProperty("kofi_transaction_id") String kofiTransactionId,
         @JsonProperty("shop_items") List<KofiShopItem> shopItems,
-        @JsonIgnore @JsonProperty("shipping") Object shipping,
+        @JsonProperty("shipping") Object shipping,
         @JsonProperty("tier_name") String tierName,
         @JsonProperty("discord_username") String discordUsername,
         @JsonProperty("discord_userid") String discordUserId) {}

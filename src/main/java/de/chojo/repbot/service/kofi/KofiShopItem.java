@@ -5,8 +5,10 @@
  */
 package de.chojo.repbot.service.kofi;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties({"variation_name"})
 public record KofiShopItem(
         @JsonProperty("direct_link_code") String directLinkCode,
         @JsonProperty("item_name") String itemName,
