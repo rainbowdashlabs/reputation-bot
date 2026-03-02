@@ -7,12 +7,15 @@ package de.chojo.repbot.web.routes.v1.kofi;
 
 import de.chojo.repbot.service.KofiService;
 import de.chojo.repbot.service.kofi.KofiTransaction;
+import de.chojo.repbot.util.Urls;
 import de.chojo.repbot.web.routes.RoutesBuilder;
 import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
 import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiResponse;
+
+import java.net.URI;
 
 import static io.javalin.apibuilder.ApiBuilder.path;
 import static io.javalin.apibuilder.ApiBuilder.post;
@@ -40,7 +43,9 @@ public class KofiRoute implements RoutesBuilder {
             queryParams = {@OpenApiParam(name = "data", required = true, description = "JSON encoded KofiTransaction")},
             responses = {@OpenApiResponse(status = "200", description = "OK")})
     public void handleKofiPayment(Context ctx) {
-        KofiTransaction data = ctx.jsonMapper().fromJsonString(ctx.queryParam("data"), KofiTransaction.class);
+        var results = Urls.splitQuery(ctx.body());
+        var json = results.get("data");
+        KofiTransaction data = ctx.jsonMapper().fromJsonString(json, KofiTransaction.class);
 
         kofiService.handle(data);
         ctx.status(200);
