@@ -15,8 +15,6 @@ import io.javalin.openapi.OpenApi;
 import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiResponse;
 
-import java.net.URI;
-
 import static io.javalin.apibuilder.ApiBuilder.path;
 import static io.javalin.apibuilder.ApiBuilder.post;
 
