@@ -38,3 +38,9 @@ Content-Type: application/json
 {
   "id": "214347948316819456"
 }
+
+### Kofi Subscription
+POST https://repbot.chojo.dev/v1/kofi
+Content-Type: application/x-www-form-urlencoded
+
+data={}
