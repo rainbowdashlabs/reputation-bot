@@ -9,7 +9,6 @@ env:
 
 jobs:
   build-backend:
-    environment: build
     runs-on: ubuntu-latest
     name: Verify Backend Build
 
@@ -27,7 +26,6 @@ jobs:
         run: ./gradlew test --info
 
   build-frontend:
-    environment: build
     runs-on: ubuntu-latest
     name: Verify Frontend Build
 
@@ -50,7 +48,6 @@ jobs:
         run: npm run build
 
   verify-license-backend:
-    environment: build
     runs-on: ubuntu-latest
     name: Verify Backend License Check
 
@@ -66,7 +63,6 @@ jobs:
         run: ./gradlew checkLicenseBackend
 
   verify-license-frontend:
-    environment: build
     runs-on: ubuntu-latest
     name: Verify Frontend License Check
 
@@ -82,7 +78,6 @@ jobs:
         run: ./gradlew checkLicenseFrontend
 
   verify-locales-backend:
-    environment: build
     runs-on: ubuntu-latest
     name: Verify Backend Locale Validation
 
@@ -100,7 +95,6 @@ jobs:
         run: ./gradlew spotlessBackendLocalesCheck
 
   verify-formatting-backend:
-    environment: build
     runs-on: ubuntu-latest
     name: Verify Backend Format Validation
 
@@ -116,7 +110,6 @@ jobs:
         run: ./gradlew spotlessJavaCheck
 
   verify-formatting-frontend:
-    environment: build
     runs-on: ubuntu-latest
     name: Verify Frontend Format Validation
 
@@ -132,7 +125,6 @@ jobs:
         run: ./gradlew spotlessJavascriptCheck spotlessVueCheck
 
   verify-database:
-    environment: build
     runs-on: ubuntu-latest
     name: Verify Backend Database Validation
 
@@ -149,7 +141,6 @@ jobs:
 
 
   verify-locales-frontend:
-    environment: build
     runs-on: ubuntu-latest
     name: Verify Frontend Locale Validation
 
@@ -190,7 +181,6 @@ jobs:
           python3 -m frontend_locales 2>&1 | grep -A 20 "Check 4:" || true
 
   build-docker:
-    environment: build
     runs-on: ubuntu-latest
     name: Verify Docker Build
 
