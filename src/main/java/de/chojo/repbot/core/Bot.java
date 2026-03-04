@@ -74,6 +74,7 @@ import de.chojo.repbot.statistic.Statistic;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.repbot.util.PermissionErrorHandler;
 import de.chojo.repbot.web.services.DiscordOAuthService;
+import de.chojo.repbot.web.services.GuildModificationService;
 import de.chojo.repbot.web.services.SessionService;
 import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildMessageChannel;
@@ -521,7 +522,7 @@ public class Bot {
                 premiumService,
                 chatSupportService,
                 new MonitorService(data),
-                new de.chojo.repbot.web.services.GuildModificationService(sessionService),
+                new GuildModificationService(sessionService),
                 botlistVoteService);
     }
 
