@@ -19,9 +19,9 @@ import de.chojo.jdautil.interactions.dispatching.InteractionHub;
 import de.chojo.logutil.marker.LogNotify;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.service.AutopostService;
+import de.chojo.repbot.service.BotlistVoteService;
 import de.chojo.repbot.service.KofiService;
 import de.chojo.repbot.service.MailService;
-import de.chojo.repbot.service.VoteService;
 import de.chojo.repbot.web.Api;
 import de.chojo.repbot.web.cache.MemberCache;
 import de.chojo.repbot.web.config.Role;
@@ -63,7 +63,7 @@ public class Web {
     private final InteractionHub<?, ?, ?> interactionHub;
     private final AutopostService autopostService;
     private final MemberCache memberCache = new MemberCache();
-    private final VoteService voteService;
+    private final BotlistVoteService botlistVoteService;
     private final KofiService kofiService;
     private final MailService mailService;
     private Javalin javalin;
@@ -83,8 +83,7 @@ public class Web {
         this.sessionService = sessionService;
         this.interactionHub = interactionHub;
         this.autopostService = autopostService;
-        this.voteService =
-                new VoteService(configuration, data.voteRepository(), data.userRepository(), bot.shardManager());
+        this.botlistVoteService = bot.voteService();
         this.mailService = new MailService(configuration, data.userRepository(), threading);
         this.kofiService = new KofiService(
                 data.userRepository(),
@@ -321,8 +320,9 @@ public class Web {
                 .forTopGG(botlist.topGg())
                 .forBotlistMe(botlist.botListMe())
                 .withExecutorService(threading.repBotWorker())
-                .withVoteService(builder ->
-                        builder.withVoteWeebhooks(javalin).onVote(voteService).build())
+                .withVoteService(builder -> builder.withVoteWeebhooks(javalin)
+                        .onVote(botlistVoteService)
+                        .build())
                 .withSubmitInterval(
                         60,
                         botlist.isSubmit()

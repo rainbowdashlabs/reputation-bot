@@ -57,6 +57,7 @@ import de.chojo.repbot.listener.VoiceStateListener;
 import de.chojo.repbot.listener.voting.ReputationVoteListener;
 import de.chojo.repbot.service.AnalyzerService;
 import de.chojo.repbot.service.AutopostService;
+import de.chojo.repbot.service.BotlistVoteService;
 import de.chojo.repbot.service.ChatSupportService;
 import de.chojo.repbot.service.GdprService;
 import de.chojo.repbot.service.MetricService;
@@ -73,6 +74,7 @@ import de.chojo.repbot.statistic.Statistic;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.repbot.util.PermissionErrorHandler;
 import de.chojo.repbot.web.services.DiscordOAuthService;
+import de.chojo.repbot.web.services.GuildModificationService;
 import de.chojo.repbot.web.services.SessionService;
 import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildMessageChannel;
@@ -125,6 +127,7 @@ public class Bot {
     private TokenPurchaseService tokenPurchaseService;
     private InteractionHub<Slash, Message, User> hub;
     private SessionService sessionService;
+    private BotlistVoteService botlistVoteService;
 
     private Bot(Data data, Threading threading, Configuration configuration, Localization localization) {
         this.data = data;
@@ -186,6 +189,10 @@ public class Bot {
 
     public SessionService sessionService() {
         return sessionService;
+    }
+
+    public BotlistVoteService voteService() {
+        return botlistVoteService;
     }
 
     private void initShardManager() throws LoginException {
@@ -501,6 +508,8 @@ public class Bot {
         var roleUpdater = RoleUpdater.create(guilds, roleAssigner, shardManager, threading.repBotWorker());
         ChatSupportService chatSupportService =
                 new ChatSupportService(configuration, shardManager, hub.pageServices(), guilds, hub.buttonService());
+        botlistVoteService = new BotlistVoteService(
+                configuration, data.voteRepository(), data.userRepository(), shardManager(), threading);
 
         shardManager.addEventListener(
                 reactionListener,
@@ -513,7 +522,8 @@ public class Bot {
                 premiumService,
                 chatSupportService,
                 new MonitorService(data),
-                new de.chojo.repbot.web.services.GuildModificationService(sessionService));
+                new GuildModificationService(sessionService),
+                botlistVoteService);
     }
 
     private void initBotUserCache() {

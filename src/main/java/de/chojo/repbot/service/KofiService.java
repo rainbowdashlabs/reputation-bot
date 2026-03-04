@@ -67,8 +67,10 @@ public class KofiService {
             throw new UnauthorizedResponse();
         }
 
+        String mailHash = mailService.mailHash(data.email());
+
         // Check whether we know the user already that purchased something.
-        Optional<RepUser> repUser = userRepository.byMailHash(mailService.mailHash(data.email()));
+        Optional<RepUser> repUser = userRepository.byMailHash(mailHash);
         if (repUser.isEmpty()) {
             Optional<User> user = resolveUser(data);
             if (user.isPresent()) {

@@ -8,6 +8,7 @@ package de.chojo.repbot.config.elements;
 import de.chojo.jdautil.botlist.BotListConfig;
 
 import java.util.Arrays;
+import java.util.Optional;
 
 @SuppressWarnings({"FieldMayBeFinal", "FieldCanBeLocal"})
 public class Botlist {
@@ -50,6 +51,10 @@ public class Botlist {
 
     public BotListConfig[] botlists() {
         return new BotListConfig[] {topGg, discordBotsGg, discordBotlistCom, botListMe};
+    }
+
+    public Optional<BotListConfig> byName(String name) {
+        return Arrays.stream(botlists()).filter(b -> b.name().equals(name)).findFirst();
     }
 
     public int maxVotes() {

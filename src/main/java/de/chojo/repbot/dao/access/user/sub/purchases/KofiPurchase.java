@@ -5,7 +5,6 @@
  */
 package de.chojo.repbot.dao.access.user.sub.purchases;
 
-import com.google.common.hash.Hashing;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.config.elements.sku.Subscription;
 import de.chojo.repbot.dao.access.user.sub.MailEntry;
@@ -15,7 +14,6 @@ import de.chojo.repbot.service.kofi.Type;
 import de.chojo.sadu.mapper.annotation.MappingProvider;
 import de.chojo.sadu.mapper.wrapper.Row;
 
-import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -102,9 +100,8 @@ public class KofiPurchase {
 
     public static List<KofiPurchase> create(KofiTransaction transaction, Configuration configuration) {
         List<KofiPurchase> purchases = new ArrayList<>();
-        String mailHash = Hashing.sha256()
-                .hashString(transaction.email(), StandardCharsets.UTF_8)
-                .toString();
+
+        String mailHash = configuration.mailing().mailHash(transaction.email());
         Type type = transaction.type();
         if (type == Type.SUBSCRIPTION) {
             Subscription subscription = configuration.skus().subscriptions().stream()

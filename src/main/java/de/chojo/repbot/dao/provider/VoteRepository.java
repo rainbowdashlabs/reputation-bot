@@ -10,6 +10,7 @@ import de.chojo.repbot.dao.access.vote.VoteReason;
 import de.chojo.repbot.dao.access.vote.VoteStreak;
 import de.chojo.repbot.util.EntityType;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 
@@ -37,12 +38,27 @@ public class VoteRepository {
 
     public VoteStreak getLastVote(long userId, String botlist) {
         return query("""
-                        SELECT user_id, botlist, last_vote, streak, votes, streak_start, streak_days FROM votes WHERE user_id = ? AND botlist = ?;
+                SELECT
+                    user_id,
+                    botlist,
+                    last_vote,
+                    streak,
+                    votes,
+                    streak_start,
+                    streak_days,
+                    reminder,
+                    reminder_timestamp,
+                    sent
+                FROM
+                    votes
+                WHERE user_id = ?
+                  AND botlist = ?;
                 """)
                 .single(call().bind(userId).bind(botlist))
                 .mapAs(VoteStreak.class)
                 .first()
-                .orElseGet(() -> new VoteStreak(userId, botlist, Instant.EPOCH, 0, Instant.EPOCH, 0));
+                .orElseGet(() -> new VoteStreak(
+                        userId, botlist, Instant.EPOCH, 0, Instant.EPOCH, 0, false, Instant.EPOCH, false));
     }
 
     public void addToken(long userId, long guildId, int amount, VoteReason reason) {
@@ -107,6 +123,30 @@ public class VoteRepository {
                         .bind("id", id))
                 .update()
                 .changed();
+    }
+
+    public List<VoteStreak> getUnsendReminder(Duration duration) {
+        return query("""
+                SELECT
+                    user_id,
+                    botlist,
+                    last_vote,
+                    streak,
+                    votes,
+                    streak_start,
+                    streak_days,
+                    reminder,
+                    reminder_timestamp,
+                    sent
+                FROM
+                    votes
+                WHERE reminder
+                  AND NOT sent
+                  AND reminder_timestamp < now() + ?::INTERVAL
+                """)
+                .single(call().bind("%d SECONDS".formatted(duration.getSeconds())))
+                .mapAs(VoteStreak.class)
+                .all();
     }
 
     private void addToken(long userId, EntityType type, int amount) {
