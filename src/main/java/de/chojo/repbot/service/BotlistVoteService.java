@@ -152,7 +152,7 @@ public class BotlistVoteService extends ListenerAdapter implements Consumer<Vote
     }
 
     private void scheduleReminder() {
-        List<VoteStreak> unsendReminder = voteRepository.getUnsendReminder(Duration.ofHours(1));
+        List<VoteStreak> unsendReminder = voteRepository.getUnsendReminder(Duration.ofMinutes(15));
         for (VoteStreak voteStreak : unsendReminder) {
             long until = Instant.now().until(voteStreak.reminderTimestamp(), ChronoUnit.MINUTES);
             until = Math.max(1, until);
