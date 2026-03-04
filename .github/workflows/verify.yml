@@ -190,7 +190,6 @@ jobs:
         run: docker build . -f docker/Dockerfile
 
   verify-docs:
-    environment: build
     runs-on: ubuntu-latest
     name: Verify Docs Build
 
