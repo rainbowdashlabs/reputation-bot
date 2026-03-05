@@ -13,7 +13,6 @@ import de.chojo.repbot.dao.provider.VoteRepository;
 
 public class Vote extends SlashCommand {
     public Vote(Configuration configuration, VoteRepository voteRepository) {
-        super(Slash.of("vote", "command.vote.description")
-                .command(new Show(configuration, voteRepository)));
+        super(Slash.of("vote", "command.vote.description").command(new Show(configuration, voteRepository)));
     }
 }

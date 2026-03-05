@@ -85,9 +85,9 @@ public class Show implements SlashHandler {
             event.replyEmbeds(embed).setComponents(ActionRow.of(overviewButton)).complete();
         } else {
             event.replyEmbeds(embed)
-                 .setEphemeral(true)
-                 .setComponents(ActionRow.of(botlistButtons), ActionRow.of(overviewButton))
-                 .complete();
+                    .setEphemeral(true)
+                    .setComponents(ActionRow.of(botlistButtons), ActionRow.of(overviewButton))
+                    .complete();
         }
     }
 }
