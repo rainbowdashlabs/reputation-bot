@@ -201,7 +201,7 @@ public class VoteStreak {
     public void snoozeReminder(Duration duration) {
         long seconds = duration.getSeconds();
         query("""
-                UPDATE votes SET reminder_timestamp = now() + ?::INTERVAL WHERE user_id = ? AND botlist = ?
+                UPDATE votes SET reminder_timestamp = now() + ?::INTERVAL, sent = FALSE WHERE user_id = ? AND botlist = ?
                 """)
                 .single(call().bind("%d SECONDS".formatted(seconds))
                         .bind(userId)
