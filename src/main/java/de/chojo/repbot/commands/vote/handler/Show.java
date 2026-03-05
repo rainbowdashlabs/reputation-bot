@@ -32,15 +32,23 @@ public class Show implements SlashHandler {
 
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
-        var guildId = event.getGuild().getId();
+        String guildId = null;
+        if (event.isFromGuild()) {
+            guildId = event.getGuild().getId();
+        }
         var baseUrl = configuration.api().url();
         if (!baseUrl.endsWith("/")) {
             baseUrl += "/";
         }
-        var tokenShopUrl = baseUrl + "guild/token-shop?guild=" + guildId;
-        var voteOverviewUrl = baseUrl + "user/vote?guild=" + guildId;
+        var tokenShopUrl = baseUrl + "guild/token-shop";
+        var voteOverviewUrl = baseUrl + "user/vote";
 
-        var lb = new LocalizedEmbedBuilder(context.guildLocalizer())
+        if (guildId != null) {
+            tokenShopUrl = tokenShopUrl + "guild=" + guildId;
+            voteOverviewUrl = voteOverviewUrl + "guild=" + guildId;
+        }
+
+        var lb = new LocalizedEmbedBuilder(context.userLocalizer())
                 .setDescription("command.vote.message.text", Replacement.create("URL", tokenShopUrl))
                 .setColor(Colors.Pastel.BLUE);
 
@@ -71,15 +79,15 @@ public class Show implements SlashHandler {
         }
 
         Button overviewButton =
-                Button.link(voteOverviewUrl, context.guildLocalizer().localize("command.vote.button.overview"));
+                Button.link(voteOverviewUrl, context.userLocalizer().localize("command.vote.button.overview"));
 
         if (botlistButtons.isEmpty()) {
             event.replyEmbeds(embed).setComponents(ActionRow.of(overviewButton)).complete();
         } else {
             event.replyEmbeds(embed)
-                    .setEphemeral(true)
-                    .setComponents(ActionRow.of(botlistButtons), ActionRow.of(overviewButton))
-                    .complete();
+                 .setEphemeral(true)
+                 .setComponents(ActionRow.of(botlistButtons), ActionRow.of(overviewButton))
+                 .complete();
         }
     }
 }

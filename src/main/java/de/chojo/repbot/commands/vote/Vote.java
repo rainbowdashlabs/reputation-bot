@@ -14,7 +14,6 @@ import de.chojo.repbot.dao.provider.VoteRepository;
 public class Vote extends SlashCommand {
     public Vote(Configuration configuration, VoteRepository voteRepository) {
         super(Slash.of("vote", "command.vote.description")
-                .guildOnly()
                 .command(new Show(configuration, voteRepository)));
     }
 }
