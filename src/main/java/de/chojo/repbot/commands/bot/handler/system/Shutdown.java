@@ -14,11 +14,11 @@ import org.slf4j.Logger;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class Shudown implements SlashHandler {
-    private static final Logger log = getLogger(Shudown.class);
+public class Shutdown implements SlashHandler {
+    private static final Logger log = getLogger(Shutdown.class);
     private final Configuration configuration;
 
-    public Shudown(Configuration configuration) {
+    public Shutdown(Configuration configuration) {
         this.configuration = configuration;
     }
 

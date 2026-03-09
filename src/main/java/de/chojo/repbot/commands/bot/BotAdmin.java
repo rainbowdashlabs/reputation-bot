@@ -16,7 +16,6 @@ import de.chojo.jdautil.util.SysVar;
 import de.chojo.repbot.commands.bot.handler.Debug;
 import de.chojo.repbot.commands.bot.handler.InvalidateCache;
 import de.chojo.repbot.commands.bot.handler.Leave;
-import de.chojo.repbot.commands.bot.handler.Redeploy;
 import de.chojo.repbot.commands.bot.handler.RemoveNickname;
 import de.chojo.repbot.commands.bot.handler.RemoveProfilePicture;
 import de.chojo.repbot.commands.bot.handler.Sample;
@@ -27,11 +26,13 @@ import de.chojo.repbot.commands.bot.handler.SharedGuilds;
 import de.chojo.repbot.commands.bot.handler.entitlement.Create;
 import de.chojo.repbot.commands.bot.handler.entitlement.Delete;
 import de.chojo.repbot.commands.bot.handler.entitlement.Show;
+import de.chojo.repbot.commands.bot.handler.interactions.Get;
+import de.chojo.repbot.commands.bot.handler.interactions.Redeploy;
 import de.chojo.repbot.commands.bot.handler.log.Analyzer;
 import de.chojo.repbot.commands.bot.handler.system.Metrics;
 import de.chojo.repbot.commands.bot.handler.system.Reload;
 import de.chojo.repbot.commands.bot.handler.system.Restart;
-import de.chojo.repbot.commands.bot.handler.system.Shudown;
+import de.chojo.repbot.commands.bot.handler.system.Shutdown;
 import de.chojo.repbot.commands.bot.handler.system.Status;
 import de.chojo.repbot.commands.bot.handler.system.Upgrade;
 import de.chojo.repbot.config.Configuration;
@@ -61,7 +62,7 @@ public class BotAdmin implements SlashProvider<Slash> {
             groupBuilder
                     .subCommand(SubCommand.of("restart", "Restart bot").handler(new Restart(configuration)))
                     .subCommand(SubCommand.of("upgrade", "Deploy an update").handler(new Upgrade(configuration)))
-                    .subCommand(SubCommand.of("shutdown", "Shutdown the bot.").handler(new Shudown(configuration)));
+                    .subCommand(SubCommand.of("shutdown", "Shutdown the bot.").handler(new Shutdown(configuration)));
         }
         groupBuilder
                 .subCommand(SubCommand.of("status", "System status").handler(new Status(statistics)))
@@ -83,9 +84,13 @@ public class BotAdmin implements SlashProvider<Slash> {
                         .argument(Argument.text("user_id", "user id"))
                         .argument(Argument.user("user", "user"))
                         .argument(Argument.bool("deep", "true to perform a deep search")))
-                .subCommand(SubCommand.of("redeploy", "Redeploy guild commands")
-                        .handler(new Redeploy())
-                        .argument(Argument.text("guild_id", "Guild id").asRequired()))
+                .group(group("interactions", "Manage interactions")
+                        .subCommand(SubCommand.of("redeploy", "Redeploy guild commands")
+                                .handler(new Redeploy())
+                                .argument(Argument.text("guild_id", "Guild id").asRequired()))
+                        .subCommand(SubCommand.of("get", "Get guild commands")
+                                .handler(new Get())
+                                .argument(Argument.text("guild_id", "Guild id").asRequired())))
                 .subCommand(SubCommand.of("search", "Search for guilds")
                         .handler(new Search())
                         .argument(Argument.text("term", "Search term").asRequired()))
