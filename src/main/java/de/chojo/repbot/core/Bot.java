@@ -333,7 +333,8 @@ public class Bot {
                 new DiscordOAuthService(configuration),
                 shardManager,
                 data.guildRepository(),
-                data.settingsAuditLogRepository());
+                data.settingsAuditLogRepository(),
+                worker);
 
         statistic = Statistic.of(shardManager, data.metrics(), worker);
 

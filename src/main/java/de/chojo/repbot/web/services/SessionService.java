@@ -11,6 +11,7 @@ import com.google.common.hash.Hashing;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guildsession.GuildSession;
 import de.chojo.repbot.dao.access.user.RepUser;
+import de.chojo.repbot.dao.access.user.sub.UserToken;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.provider.SettingsAuditLogRepository;
 import de.chojo.repbot.dao.provider.UserRepository;
@@ -67,7 +68,8 @@ public class SessionService {
             DiscordOAuthService discordOAuthService,
             ShardManager shardManager,
             GuildRepository guildRepository,
-            SettingsAuditLogRepository settingsAuditLogRepository) {
+            SettingsAuditLogRepository settingsAuditLogRepository,
+            java.util.concurrent.ScheduledExecutorService executor) {
         this.configuration = configuration;
         this.userSessionRepository = userSessionRepository;
         this.userRepository = userRepository;
@@ -81,6 +83,24 @@ public class SessionService {
         guildSessions = CacheBuilder.newBuilder()
                 .expireAfterAccess(15, TimeUnit.MINUTES)
                 .build();
+        executor.scheduleAtFixedRate(this::refreshExpiredTokens, 1, 15, TimeUnit.MINUTES);
+    }
+
+    private void refreshExpiredTokens() {
+        log.info("Refreshing expired discord tokens");
+        List<UserToken> expiringTokens =
+                userRepository.getExpiringTokens(Instant.now().plus(1, ChronoUnit.HOURS));
+        for (var token : expiringTokens) {
+            try {
+                DiscordOAuthService.TokenResponse response = discordOAuthService.refreshToken(token.refreshToken());
+                userRepository
+                        .byId(token.userId())
+                        .updateToken(response.accessToken(), response.refreshToken(), response.expiry());
+                log.info("Refreshed discord token for user {}", token.userId());
+            } catch (Exception e) {
+                log.error("Failed to refresh discord token for user {}", token.userId(), e);
+            }
+        }
     }
 
     public Optional<UserSession> getUserSession(Context ctx) {

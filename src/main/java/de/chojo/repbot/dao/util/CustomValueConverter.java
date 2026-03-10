@@ -9,6 +9,8 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import de.chojo.sadu.mapper.reader.ValueReader;
 import de.chojo.sadu.mapper.wrapper.Row;
 import de.chojo.sadu.queries.api.call.adapter.Adapter;
@@ -19,7 +21,9 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 public final class CustomValueConverter {
-    public static final ObjectMapper MAPPER = new ObjectMapper()
+    public static final ObjectMapper MAPPER = JsonMapper.builder()
+            .addModule(new JavaTimeModule())
+            .build()
             .setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.NONE)
             .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
 

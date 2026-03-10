@@ -33,11 +33,13 @@ public class Get implements SlashHandler {
         String globalString = global.stream().map(this::format).collect(Collectors.joining("\n"));
 
         StringBuilder builder = new StringBuilder();
+
         if (!globalString.isBlank()) {
             builder.append("Global\n```");
             builder.append(globalString);
             builder.append("\n```");
         }
+
         if (!localString.isBlank()) {
             builder.append("Local\n```");
             builder.append(localString);

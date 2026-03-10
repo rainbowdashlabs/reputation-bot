@@ -62,6 +62,15 @@ public class DiscordOAuthService {
     public TokenResponse exchangeCode(String code) throws IOException, InterruptedException {
         String form =
                 "grant_type=authorization_code&code=%s&redirect_uri=%s".formatted(enc(code), enc(cfg().redirectUri()));
+        return exchange(form);
+    }
+
+    public TokenResponse refreshToken(String refreshToken) throws IOException, InterruptedException {
+        String form = "grant_type=refresh_token&refresh_token=%s".formatted(enc(refreshToken));
+        return exchange(form);
+    }
+
+    private TokenResponse exchange(String form) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(DISCORD_API + "/oauth2/token"))
                 .header("Content-Type", "application/x-www-form-urlencoded")

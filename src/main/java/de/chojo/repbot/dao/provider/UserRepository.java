@@ -8,11 +8,13 @@ package de.chojo.repbot.dao.provider;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import de.chojo.repbot.dao.access.user.RepUser;
+import de.chojo.repbot.dao.access.user.sub.UserToken;
 import de.chojo.repbot.dao.access.user.sub.purchases.KofiPurchase;
 import de.chojo.repbot.service.kofi.Type;
 import de.chojo.sadu.queries.converter.StandardValueConverter;
 import net.dv8tion.jda.api.entities.User;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -115,5 +117,21 @@ public class UserRepository {
                 WHERE expires_at < now()
                   AND type = 'SUBSCRIPTION';
                 """).single().mapAs(KofiPurchase.class).all();
+    }
+
+    public List<UserToken> getExpiringTokens(Instant cutoff) {
+        return query("""
+                SELECT
+                    user_id,
+                    access_token,
+                    refresh_token,
+                    expiry
+                FROM
+                    user_token
+                WHERE expiry < ?;
+                """)
+                .single(call().bind(cutoff, StandardValueConverter.INSTANT_TIMESTAMP))
+                .mapAs(UserToken.class)
+                .all();
     }
 }
