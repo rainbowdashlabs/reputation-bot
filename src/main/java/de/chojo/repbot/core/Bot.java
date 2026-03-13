@@ -385,26 +385,26 @@ public class Bot {
                         new RepSettings(guilds, configuration),
                         new Top(guilds, configuration),
                         Thankwords.of(messageAnalyzer, guilds),
-                        new Scan(scanService),
+                        new Scan(scanService, configuration),
                         new Locale(guilds),
                         new Invite(configuration),
                         Info.create(configuration),
                         new Log(guilds, configuration),
-                        new Setup(sessionService()),
+                        new Setup(configuration),
                         new Gdpr(data.gdpr(), data.userRepository()),
                         new Prune(gdprService),
                         new Reactions(guilds, configuration),
                         new Dashboard(guilds),
                         new AbuseProtection(guilds),
                         new Vote(configuration, data.voteRepository()),
-                        new Diagnose(sessionService()),
+                        new Diagnose(configuration),
                         new RepAdmin(guilds, configuration, roleAssigner, premiumService),
                         new Messages(guilds),
                         botAdmin,
                         new Ranking(guilds, configuration),
                         new Reputation(guilds, reputationService) /*TODO: remove rep command*/,
                         new Supporter(premiumService, configuration, guilds),
-                        new Settings(sessionService()))
+                        new Settings(configuration))
                 .withMessages(new MessageLog(guilds))
                 .withUsers(new UserReceived(guilds, configuration), new UserDonated(guilds, configuration))
                 .withLocalizer(localizer)

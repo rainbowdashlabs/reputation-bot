@@ -113,7 +113,7 @@ public class BotAdmin implements SlashProvider<Slash> {
                                 .argument(
                                         text("entitlementid", "Entitlement id").asRequired())))
                 .subCommand(sub("session", "Open a web session for another guild")
-                        .handler(new Session(sessionService))
+                        .handler(new Session(configuration))
                         .argument(text("guild_id", "Guild id").asRequired()))
                 .subCommand(sub("sample", "Generate sample data").handler(new Sample(guildRepository)))
                 .subCommand(sub("remove_nickname", "Remove bot nickname from a guild")

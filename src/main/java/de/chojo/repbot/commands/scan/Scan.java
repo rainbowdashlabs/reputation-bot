@@ -6,7 +6,6 @@
 package de.chojo.repbot.commands.scan;
 
 import de.chojo.jdautil.interactions.slash.Slash;
-import de.chojo.jdautil.interactions.slash.SubCommand;
 import de.chojo.jdautil.interactions.slash.provider.SlashProvider;
 import de.chojo.repbot.commands.scan.handler.Start;
 import de.chojo.repbot.config.Configuration;
@@ -25,10 +24,9 @@ public class Scan implements SlashProvider<Slash> {
     @Override
     public Slash slash() {
         return Slash.of("scan", "command.scan.description")
-                .guildOnly()
-                .adminCommand()
-                .subCommand(SubCommand.of("start", "command.scan.start.description")
-                        .handler(new Start(service, configuration)))
-                .build();
+                    .guildOnly()
+                    .adminCommand()
+                    .command(new Start(service, configuration))
+                    .build();
     }
 }
