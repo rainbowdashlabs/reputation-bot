@@ -9,6 +9,8 @@ import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.wrapper.EventContext;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.service.ScanService;
+import net.dv8tion.jda.api.components.actionrow.ActionRow;
+import net.dv8tion.jda.api.components.buttons.Button;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 public class Start implements SlashHandler {
@@ -24,6 +26,7 @@ public class Start implements SlashHandler {
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         String url = configuration.api().pathUrl(event.getGuild().getIdLong(), "/settings/edit/scan");
         event.reply(context.localize("command.scan.start.message"))
+                .addComponents(ActionRow.of(Button.link(url, context.localize("command.scan.start.button"))))
                 .setEphemeral(true)
                 .complete();
         scanService.scan(event.getGuild());
