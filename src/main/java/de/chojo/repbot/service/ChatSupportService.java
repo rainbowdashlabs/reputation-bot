@@ -185,8 +185,15 @@ public class ChatSupportService extends ListenerAdapter {
                 .sendMessage("A new support chat was opened. Your request has been sent to the support team.")
                 .complete();
 
-        query(
-                        "INSERT INTO support_threads (user_id, thread_id) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET thread_id = excluded.thread_id;")
+        query("""
+                INSERT
+                INTO
+                    support_threads
+                    (user_id, thread_id)
+                VALUES
+                    (?, ?)
+                ON CONFLICT(user_id) DO UPDATE SET
+                    thread_id = excluded.thread_id;""")
                 .single(call().bind(user.getIdLong()).bind(thread.getIdLong()))
                 .insert();
     }

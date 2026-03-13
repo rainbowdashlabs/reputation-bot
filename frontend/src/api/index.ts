@@ -793,7 +793,9 @@ class ApiClient {
     }
 
     public async getScanStatus(): Promise<Types.ScanResult> {
-        const response = await this.axiosInstance.get<Types.ScanResult>('/guild/scan/status');
+        const response = await this.axiosInstance.get<Types.ScanResult>('/guild/scan/status', {
+            skipErrorHandle: true
+        } as any);
         return response.data;
     }
 }

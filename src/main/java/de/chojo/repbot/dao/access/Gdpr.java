@@ -8,7 +8,6 @@ package de.chojo.repbot.dao.access;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.gdpr.GdprUser;
 import de.chojo.repbot.dao.access.gdpr.RemovalTask;
-import de.chojo.sadu.queries.api.query.Query;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.slf4j.Logger;
@@ -17,6 +16,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
+import static de.chojo.sadu.queries.api.query.Query.query;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Gdpr {
@@ -28,7 +28,7 @@ public class Gdpr {
     }
 
     public List<RemovalTask> getRemovalTasks() {
-        return Query.query("""
+        return query("""
                 SELECT
                     task_id,
                     user_id,
@@ -40,7 +40,7 @@ public class Gdpr {
     }
 
     public void cleanupRequests() {
-        Query.query("""
+        query("""
                      DELETE FROM gdpr_log
                      WHERE received IS NOT NULL
                          AND received < now() - ?::INTERVAL;
@@ -62,7 +62,7 @@ public class Gdpr {
      * @return list of users
      */
     public List<GdprUser> getReportRequests(ShardManager shardManager) {
-        return Query.query("""
+        return query("""
                                 SELECT user_id
                                 FROM gdpr_log
                                 WHERE received IS NULL

@@ -7,9 +7,9 @@ package de.chojo.repbot.dao.access.metrics;
 
 import de.chojo.repbot.dao.snapshots.statistics.UserStatistic;
 import de.chojo.repbot.dao.snapshots.statistics.UsersStatistic;
-import de.chojo.sadu.queries.api.query.Query;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
+import static de.chojo.sadu.queries.api.query.Query.query;
 
 public class Users {
     public Users() {
@@ -28,7 +28,7 @@ public class Users {
      * Save the user count of the last week.
      */
     public void saveUserCountWeek() {
-        Query.query("""
+        query("""
                 INSERT INTO metrics_users_week
                 SELECT week, receiver_count, donor_count, total_count
                 FROM metrics_unique_users_week
@@ -44,7 +44,7 @@ public class Users {
      * Save the user count of the last month.
      */
     public void saveUserCountMonth() {
-        Query.query("""
+        query("""
                 INSERT INTO metrics_users_month
                 SELECT month, receiver_count, donor_count, total_count
                 FROM metrics_unique_users_month
@@ -57,7 +57,7 @@ public class Users {
     }
 
     private UsersStatistic get(String table, String timeframe, int offset, int count) {
-        return Query.query("""
+        return query("""
                             SELECT %s,
                                 donor_count,
                                 receiver_count,

@@ -11,9 +11,9 @@ import de.chojo.repbot.dao.snapshots.statistics.DowStatistics;
 import de.chojo.repbot.dao.snapshots.statistics.DowsStatistic;
 import de.chojo.repbot.dao.snapshots.statistics.LabeledCountStatistic;
 import de.chojo.repbot.dao.snapshots.statistics.builder.LabeledCountStatisticBuilder;
-import de.chojo.sadu.queries.api.query.Query;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
+import static de.chojo.sadu.queries.api.query.Query.query;
 
 public class Reputation {
     public Reputation() {
@@ -76,7 +76,7 @@ public class Reputation {
      * Save reputation counts of the previous day into metric tables.
      */
     public void saveRepCounts() {
-        Query.query("""
+        query("""
                 INSERT INTO metrics_reputation(day, cause, count)
                 SELECT received::DATE AS day,
                        cause,
@@ -89,7 +89,7 @@ public class Reputation {
                 DO UPDATE
                 SET count = excluded.count;
                 """).single().insert();
-        Query.query("""
+        query("""
                 INSERT INTO metrics_reputation_count(day, count)
                 SELECT now() - INTERVAL '1 DAY',
                 count(1)
@@ -102,7 +102,7 @@ public class Reputation {
     }
 
     private CountsStatistic get(String table, String timeframe, int offset, int count) {
-        return Query.query("""
+        return query("""
                             SELECT %s,
                                 count
                             FROM %s
@@ -120,7 +120,7 @@ public class Reputation {
 
     private LabeledCountStatistic getType(String table, String timeframe, int offset, int count) {
         var builder = new LabeledCountStatisticBuilder();
-        Query.query("""
+        query("""
                      SELECT %s,
                          cause,
                          count
@@ -139,7 +139,7 @@ public class Reputation {
 
     private LabeledCountStatistic getChanges(String table, String timeframe, int offset, int count) {
         var builder = new LabeledCountStatisticBuilder();
-        Query.query("""
+        query("""
                      SELECT %s,
                          added - removed AS delta,
                          added,
@@ -160,7 +160,7 @@ public class Reputation {
     }
 
     private DowsStatistic get(String table, String timeframe, int offset) {
-        return Query.query("""
+        return query("""
                             SELECT %s,
                                 dow,
                                 count

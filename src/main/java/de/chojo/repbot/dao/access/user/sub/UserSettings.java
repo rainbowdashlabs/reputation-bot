@@ -8,9 +8,10 @@ package de.chojo.repbot.dao.access.user.sub;
 import de.chojo.sadu.mapper.annotation.MappingProvider;
 import de.chojo.sadu.mapper.wrapper.Row;
 import de.chojo.sadu.queries.api.call.Call;
-import de.chojo.sadu.queries.api.query.Query;
 
 import java.sql.SQLException;
+
+import static de.chojo.sadu.queries.api.query.Query.query;
 
 public class UserSettings {
     private final long id;
@@ -28,14 +29,9 @@ public class UserSettings {
     }
 
     public void voteGuild(long voteGuild) {
-        if (Query.query("""
+        query("""
                          INSERT INTO user_settings(id, vote_guild) VALUES(?, ?) ON CONFLICT(id) DO UPDATE SET vote_guild = excluded.vote_guild
-                         """)
-                .single(Call.call().bind(id).bind(voteGuild))
-                .insert()
-                .changed()) {
-            this.voteGuild = voteGuild;
-        }
+                         """).single(Call.call().bind(id).bind(voteGuild)).insert().ifChanged(i -> this.voteGuild = voteGuild);
     }
 
     public boolean hasVoteGuild() {

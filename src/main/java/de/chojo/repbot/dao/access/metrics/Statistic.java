@@ -6,9 +6,10 @@
 package de.chojo.repbot.dao.access.metrics;
 
 import de.chojo.repbot.statistic.element.DataStatistic;
-import de.chojo.sadu.queries.api.query.Query;
 
 import java.util.Optional;
+
+import static de.chojo.sadu.queries.api.query.Query.query;
 
 public class Statistic {
     public Statistic() {
@@ -16,7 +17,7 @@ public class Statistic {
     }
 
     public Optional<DataStatistic> getStatistic() {
-        return Query.query("""
+        return query("""
                             SELECT
                             	guilds,
                             	active_guilds,
@@ -43,6 +44,6 @@ public class Statistic {
     }
 
     public void refreshStatistics() {
-        Query.query("REFRESH MATERIALIZED VIEW data_statistics").single().update();
+        query("REFRESH MATERIALIZED VIEW data_statistics").single().update();
     }
 }

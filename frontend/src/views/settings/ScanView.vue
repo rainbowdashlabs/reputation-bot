@@ -33,6 +33,7 @@ const fetchStatus = async () => {
   } catch (err: any) {
     if (err.response?.status === 404) {
       scanResult.value = null
+      error.value = null
     } else {
       console.error('Failed to fetch scan status:', err)
       error.value = t('scan.error.fetchStatus')

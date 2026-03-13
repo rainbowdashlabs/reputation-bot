@@ -7,15 +7,15 @@ package de.chojo.repbot.dao.access.metrics;
 
 import de.chojo.repbot.dao.snapshots.statistics.CountStatistics;
 import de.chojo.repbot.dao.snapshots.statistics.CountsStatistic;
-import de.chojo.sadu.queries.api.query.Query;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
+import static de.chojo.sadu.queries.api.query.Query.query;
 
 public class Messages {
     public Messages() {}
 
     public void countMessage() {
-        Query.query("""
+        query("""
                 INSERT INTO metrics_message_analyzed(hour, count) VALUES (date_trunc('hour', now()), 1)
                 ON CONFLICT(hour)
                     DO UPDATE SET count = metrics_message_analyzed.count + 1
@@ -51,7 +51,7 @@ public class Messages {
     }
 
     private CountsStatistic get(String table, String timeframe, int offset, int count) {
-        return Query.query("""
+        return query("""
                             SELECT %s,
                                 count
                             FROM %s

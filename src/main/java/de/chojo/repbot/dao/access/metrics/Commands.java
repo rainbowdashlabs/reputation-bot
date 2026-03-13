@@ -9,7 +9,6 @@ import de.chojo.repbot.dao.snapshots.statistics.CommandStatistic;
 import de.chojo.repbot.dao.snapshots.statistics.CommandsStatistic;
 import de.chojo.repbot.dao.snapshots.statistics.CountStatistics;
 import de.chojo.repbot.dao.snapshots.statistics.CountsStatistic;
-import de.chojo.sadu.queries.api.query.Query;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -17,12 +16,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
+import static de.chojo.sadu.queries.api.query.Query.query;
 
 public class Commands {
     public Commands() {}
 
     public void logCommand(String command) {
-        Query.query("""
+        query("""
                 INSERT INTO metrics_commands(day, command) VALUES (now()::DATE, ?)
                 ON CONFLICT(day,command)
                     DO UPDATE SET count = metrics_commands.count + 1
@@ -46,7 +46,7 @@ public class Commands {
     }
 
     private CountsStatistic get(String table, String timeframe, int offset, int count) {
-        return Query.query("""
+        return query("""
                             SELECT %s,
                                 count
                             FROM %s
@@ -61,7 +61,7 @@ public class Commands {
     }
 
     private CommandsStatistic get(String table, String timeframe, int offset) {
-        return Query.query("""
+        return query("""
                             SELECT %s,
                                 command,
                                 count

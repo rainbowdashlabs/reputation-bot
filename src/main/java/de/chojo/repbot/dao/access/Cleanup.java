@@ -5,13 +5,13 @@
  */
 package de.chojo.repbot.dao.access;
 
-import de.chojo.sadu.queries.api.query.Query;
-
 import java.util.List;
+
+import static de.chojo.sadu.queries.api.query.Query.query;
 
 public class Cleanup {
     public List<Long> getCleanupList() {
-        return Query.query("SELECT guild_id FROM self_cleanup;")
+        return query("SELECT guild_id FROM self_cleanup;")
                 .single()
                 .mapAs(Long.class)
                 .all();

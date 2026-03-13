@@ -15,7 +15,6 @@ import de.chojo.repbot.dao.access.guild.subscriptions.SubscriptionSource;
 import de.chojo.repbot.dao.access.guild.subscriptions.TokenPurchase;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.util.SupporterFeature;
-import de.chojo.sadu.queries.api.results.writing.insertion.InsertionResult;
 import de.chojo.sadu.queries.call.adapter.StandardAdapter;
 import org.jetbrains.annotations.NotNull;
 
@@ -94,7 +93,7 @@ public class Subscriptions implements GuildHolder, SkuMeta {
         query("""
                 INSERT
                 INTO
-                    subscription_error as e(guild_id, type, last_send, notified)
+                    subscription_error AS e(guild_id, type, last_send, notified)
                 VALUES
                     (?, ?, now(), ?)
                 ON CONFLICT(guild_id, type)
@@ -138,7 +137,7 @@ public class Subscriptions implements GuildHolder, SkuMeta {
         query("""
                 INSERT
                 INTO
-                    token_purchases as tp(guild_id, feature_id)
+                    token_purchases AS tp(guild_id, feature_id)
                 VALUES
                     (?, ?)
                 ON CONFLICT(guild_id, feature_id) DO UPDATE SET
@@ -156,7 +155,7 @@ public class Subscriptions implements GuildHolder, SkuMeta {
     }
 
     public boolean addSubscription(Subscription subscription) {
-        InsertionResult result = query("""
+        return query("""
                 INSERT
                 INTO
                     subscriptions(id, sku, type, ends_at, purchase_type, persistent, source)
@@ -174,13 +173,11 @@ public class Subscriptions implements GuildHolder, SkuMeta {
                         .bind(subscription.purchaseType())
                         .bind(subscription.isPersistent())
                         .bind(subscription.source()))
-                .insert();
-        if (result.changed()) {
-            subscriptions().remove(subscription);
-            subscriptions().add(subscription);
-            return true;
-        }
-        return false;
+                .insert()
+                .ifChanged(i -> {
+                    subscriptions().add(subscription);
+                    subscriptions().remove(subscription);
+                });
     }
 
     public void invalidate() {

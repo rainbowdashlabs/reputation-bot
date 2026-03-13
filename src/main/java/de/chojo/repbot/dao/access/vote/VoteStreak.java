@@ -11,7 +11,6 @@ import de.chojo.sadu.mapper.wrapper.Row;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.Optional;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
@@ -97,7 +96,7 @@ public class VoteStreak {
     }
 
     public void incrementStreak() {
-        Optional<VoteStreak> change = query("""
+        query("""
                 INSERT
                 INTO
                     votes AS v
@@ -125,16 +124,16 @@ public class VoteStreak {
                         row.getBoolean("reminder"),
                         row.get("reminder_timestamp", INSTANT_TIMESTAMP),
                         row.getBoolean("sent")))
-                .first();
-        change.ifPresent(vote -> {
-            lastVote = vote.lastVote();
-            streak = vote.streak();
-            streakDays = vote.streakDays();
-        });
+                .first()
+                .ifPresent(vote -> {
+                    lastVote = vote.lastVote();
+                    streak = vote.streak();
+                    streakDays = vote.streakDays();
+                });
     }
 
     public void resetStreak() {
-        Optional<VoteStreak> change = query("""
+        query("""
                 INSERT
                 INTO
                     votes AS v(user_id, botlist, last_vote, streak, reminder_timestamp)
@@ -162,13 +161,13 @@ public class VoteStreak {
                         row.getBoolean("reminder"),
                         row.get("reminder_timestamp", INSTANT_TIMESTAMP),
                         row.getBoolean("sent")))
-                .first();
-        change.ifPresent(vote -> {
-            lastVote = vote.lastVote();
-            streak = vote.streak();
-            streakDays = vote.streakDays();
-            streakStart = vote.streakStart();
-        });
+                .first()
+                .ifPresent(vote -> {
+                    lastVote = vote.lastVote();
+                    streak = vote.streak();
+                    streakDays = vote.streakDays();
+                    streakStart = vote.streakStart();
+                });
     }
 
     public boolean reminder() {

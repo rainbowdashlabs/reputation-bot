@@ -6,7 +6,6 @@
 package de.chojo.repbot.dao.access.user.sub;
 
 import de.chojo.repbot.dao.access.user.RepUser;
-import de.chojo.sadu.queries.api.results.writing.manipulation.ManipulationResult;
 import de.chojo.sadu.queries.converter.StandardValueConverter;
 
 import java.util.HashMap;
@@ -68,11 +67,9 @@ public class UserMails {
     }
 
     public boolean removeMail(String mailHash) {
-        ManipulationResult update =
-                query("""
+        return query("""
                         DELETE FROM user_mails WHERE user_id = ? AND mail_hash = ?;
-                        """).single(call().bind(user.id()).bind(mailHash)).update();
-        update.ifChanged(i -> mails().remove(mailHash));
-        return update.changed();
+                        """).single(call().bind(user.id()).bind(mailHash)).update().ifChanged(ii -> mails().remove(
+                        mailHash));
     }
 }

@@ -26,7 +26,7 @@ public class Gdpr implements GuildHolder {
     }
 
     public void queueDeletion() {
-        if (query("""
+        query("""
                 INSERT INTO
                     cleanup_schedule(guild_id, user_id, delete_after)
                     VALUES (?, 0, now() + ?::INTERVAL)
@@ -37,21 +37,22 @@ public class Gdpr implements GuildHolder {
                         .bind("%d DAYS"
                                 .formatted(repGuild.configuration().cleanup().cleanupScheduleDays())))
                 .update()
-                .changed()) {
-            query("UPDATE guilds SET date_left = now() WHERE guild_id = ?");
-            log.debug("Queuing guild {} for deletion.", guildId());
-        }
+                .ifChanged(i -> {
+                    query("UPDATE guilds SET date_left = now() WHERE guild_id = ?");
+
+                    log.debug("Queuing guild {} for deletion.", guildId());
+                });
     }
 
     public void dequeueDeletion() {
-        if (query("DELETE FROM cleanup_schedule WHERE guild_id = ? AND user_id = 0;")
+        query("DELETE FROM cleanup_schedule WHERE guild_id = ? AND user_id = 0;")
                 .single(call().bind(guildId()))
                 .update()
-                .changed()) {
-            query("UPDATE guilds SET date_left = NULL WHERE guild_id = ?")
-                    .single(call().bind(guildId()))
-                    .update();
-            log.debug("Deletion of guild {} canceled.", guildId());
-        }
+                .ifChanged(i -> {
+                    query("UPDATE guilds SET date_left = NULL WHERE guild_id = ?")
+                            .single(call().bind(guildId()))
+                            .update();
+                    log.debug("Deletion of guild {} canceled.", guildId());
+                });
     }
 }

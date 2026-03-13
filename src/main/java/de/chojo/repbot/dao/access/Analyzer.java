@@ -9,12 +9,12 @@ import de.chojo.jdautil.interactions.premium.SKU;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.util.LogNotify;
 import de.chojo.sadu.postgresql.types.PostgreSqlTypes;
-import de.chojo.sadu.queries.api.query.Query;
 import org.slf4j.Logger;
 
 import java.util.List;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
+import static de.chojo.sadu.queries.api.query.Query.query;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Analyzer {
@@ -31,7 +31,7 @@ public class Analyzer {
                 .map(SKU::skuId)
                 .toList();
 
-        var delete = Query.query("""
+        var delete = query("""
                                   WITH
                                       subs AS (
                                           SELECT
@@ -70,7 +70,7 @@ public class Analyzer {
         } else {
             delete.exceptions().forEach(e -> log.error(LogNotify.NOTIFY_ADMIN, "Could not cleanup analyzer log.", e));
         }
-        delete = Query.query("""
+        delete = query("""
                               WITH
                                   subs AS (
                                       SELECT

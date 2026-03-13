@@ -8,9 +8,9 @@ package de.chojo.repbot.dao.access.metrics;
 import de.chojo.repbot.dao.snapshots.statistics.CountStatistics;
 import de.chojo.repbot.dao.snapshots.statistics.LabeledCountStatistic;
 import de.chojo.repbot.dao.snapshots.statistics.builder.LabeledCountStatisticBuilder;
-import de.chojo.sadu.queries.api.query.Query;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
+import static de.chojo.sadu.queries.api.query.Query.query;
 
 public class Service {
     public Service() {
@@ -46,7 +46,7 @@ public class Service {
     }
 
     private void logInteraction(String type) {
-        Query.query("""
+        query("""
                 INSERT INTO metrics_handled_interactions(hour, %s) VALUES (date_trunc('hour', now()), 1)
                 ON CONFLICT(hour)
                     DO UPDATE SET %s = metrics_handled_interactions.%s + 1
@@ -55,7 +55,7 @@ public class Service {
 
     private LabeledCountStatistic get(String table, String timeframe, int offset, int count) {
         var builder = new LabeledCountStatisticBuilder();
-        return Query.query("""
+        return query("""
                             SELECT %s,
                                 count,
                                 failed,

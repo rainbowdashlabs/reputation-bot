@@ -62,7 +62,8 @@ public class ScanRoute implements RoutesBuilder {
             headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
             tags = {"Guild"},
             responses = {
-                @OpenApiResponse(status = "200", content = @io.javalin.openapi.OpenApiContent(from = ScanResult.class))
+                @OpenApiResponse(status = "200", content = @io.javalin.openapi.OpenApiContent(from = ScanResult.class)),
+                @OpenApiResponse(status = "404", description = "No scan result found")
             })
     public void getScanStatus(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);

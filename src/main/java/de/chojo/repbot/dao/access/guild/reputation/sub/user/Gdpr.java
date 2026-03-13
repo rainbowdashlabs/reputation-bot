@@ -50,14 +50,15 @@ public class Gdpr implements MemberHolder {
     }
 
     public void dequeueDeletion() {
-        if (query("""
+        query("""
                 DELETE FROM
                     cleanup_schedule
                 WHERE guild_id = ?
                     AND user_id = ?;
-                """).single(call().bind(guildId()).bind(userId())).update().changed()) {
-            log.debug("User {} deletion on guild {} canceled", userId(), guildId());
-        }
+                """)
+                .single(call().bind(guildId()).bind(userId()))
+                .update()
+                .ifChanged(i -> log.debug("User {} deletion on guild {} canceled", userId(), guildId()));
     }
 
     @Override
