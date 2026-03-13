@@ -8,6 +8,7 @@ package de.chojo.repbot.dao.access.guild.reputation.sub.user;
 import de.chojo.repbot.dao.access.guild.reputation.sub.RepUser;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.dao.components.MemberHolder;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import org.slf4j.Logger;
@@ -62,6 +63,16 @@ public class Gdpr implements MemberHolder {
     @Override
     public User user() {
         return repUser.user();
+    }
+
+    @Override
+    public long guildId() {
+        return guildHolder().guildId();
+    }
+
+    @Override
+    public Guild guild() {
+        return guildHolder().guild();
     }
 
     @Override
