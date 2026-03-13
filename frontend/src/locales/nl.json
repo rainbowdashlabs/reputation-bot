@@ -127,7 +127,8 @@
         "MAX_MESSAGE_AGE_LOW": "De maximale leeftijd van berichten is best laag ingesteld. Hierdoor kunnen mensen elkaar misschien niet meer bedanken voor oudere berichten."
       },
       "goToSettings": "Ga naar instellingen"
-    }
+    },
+    "scan": "Scannen"
   },
   "locale": {
     "selectLanguage": "Kies je taal"
@@ -545,6 +546,21 @@
       "finished": {
         "title": "Installatie klaar",
         "description": "Je bent nu klaar met de laatste stap van de installatie. We sturen je nu naar de pagina met algemene instellingen, waar je misschien nog meer instellingen vindt die je interessant vindt."
+      },
+      "scan": {
+        "title": "Serverscan",
+        "description": "Nu je je kanalen hebt geconfigureerd, raden we je aan een scan uit te voeren om de bestaande reputatie uit de geschiedenis van je server te indexeren.",
+        "prompt": {
+          "title": "Wil je een serverscan starten?",
+          "description": "Een scan doorzoekt de berichtengeschiedenis van je server in de geconfigureerde kanalen en zoekt naar bestaande reputaties. Dit kan even duren, afhankelijk van de grootte van je server."
+        },
+        "started": {
+          "title": "Het scannen is begonnen!",
+          "description": "De scan wordt nu op de achtergrond uitgevoerd. Je kunt de voortgang bekijken op de scanpagina zodra je de installatie hebt voltooid."
+        },
+        "start": "Scan starten",
+        "starting": "Het begint...",
+        "error": "Het is niet gelukt om de scan te starten. Probeer het later nog eens."
       }
     }
   },
@@ -959,6 +975,26 @@
       "offsetMax": "De offset mag maximaal zijn{max}",
       "countMin": "Het aantal moet minimaal 2 zijn.",
       "countMax": "Het aantal moet maximaal zijn{max}"
+    }
+  },
+  "scan": {
+    "description": "Scan je gilde op reputatiepunten die zijn toegekend voordat de bot werd toegevoegd of in kanalen die niet werden bijgehouden. Hiermee worden alle berichten in de geconfigureerde reputatiekanalen en -categorieën gescand.",
+    "start": "Scan starten",
+    "starting": "Het begint...",
+    "startedAt": "Begonnen bij",
+    "finishedAt": "Klaar om",
+    "messagesScanned": "Berichten gescand",
+    "reputationFound": "Reputatie gevonden",
+    "noScanYet": "Er is nog geen scan uitgevoerd.",
+    "status": {
+      "running": "Scan bezig",
+      "finished": "Scannen voltooid"
+    },
+    "progressDetails": "Details over de voortgang",
+    "error": {
+      "fetchStatus": "Het ophalen van de scanstatus is mislukt. Probeer het later nog eens.",
+      "startFailed": "Het scannen is mislukt. Probeer het later nog eens.",
+      "alreadyRunning": "Er loopt al een scan voor dit gilde."
     }
   }
 }

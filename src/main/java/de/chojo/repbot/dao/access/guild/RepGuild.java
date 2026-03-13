@@ -31,6 +31,7 @@ public class RepGuild implements GuildHolder {
     private final Settings settings;
     private final Configuration configuration;
     private final LocaleOverrides localeOverrides;
+    private final Scan scan;
     private Guild guild;
 
     public RepGuild(Guild guild, Configuration configuration) {
@@ -40,6 +41,7 @@ public class RepGuild implements GuildHolder {
         reputation = new Reputation(this);
         settings = new Settings(this);
         localeOverrides = new LocaleOverrides(this);
+        scan = new Scan(this);
         this.guild = guild;
     }
 
@@ -50,6 +52,11 @@ public class RepGuild implements GuildHolder {
     @Override
     public long guildId() {
         return guild.getIdLong();
+    }
+
+    @Override
+    public GuildHolder guildHolder() {
+        return this;
     }
 
     public Gdpr gdpr() {
@@ -140,5 +147,9 @@ public class RepGuild implements GuildHolder {
 
     public Configuration configuration() {
         return configuration;
+    }
+
+    public Scan scan() {
+        return scan;
     }
 }

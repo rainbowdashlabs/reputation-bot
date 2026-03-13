@@ -6,7 +6,6 @@
 package de.chojo.repbot.dao.access.guild;
 
 import de.chojo.repbot.dao.components.GuildHolder;
-import net.dv8tion.jda.api.entities.Guild;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -43,12 +42,7 @@ public class Cleanup implements GuildHolder {
     }
 
     @Override
-    public Guild guild() {
-        return repGuild.guild();
-    }
-
-    @Override
-    public long guildId() {
-        return repGuild.guildId();
+    public GuildHolder guildHolder() {
+        return repGuild;
     }
 }

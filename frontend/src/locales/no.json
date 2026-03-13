@@ -127,7 +127,8 @@
         "MAX_MESSAGE_AGE_LOW": "Maksimal meldingsalder er satt veldig lavt. Dette kan hindre brukere i å takke hverandre for eldre meldinger."
       },
       "goToSettings": "Gå til innstillinger"
-    }
+    },
+    "scan": "Skann"
   },
   "locale": {
     "selectLanguage": "Velg språk"
@@ -545,6 +546,21 @@
       "finished": {
         "title": "Oppsett fullført",
         "description": "Du har nå fullført det siste trinnet i oppsettet. Vi sender deg nå videre til siden for generelle innstillinger, hvor du kan finne flere innstillinger som kan være interessante for deg."
+      },
+      "scan": {
+        "title": "Serversøk",
+        "description": "Nå som du har konfigurert kanalene dine, anbefaler vi at du kjører en skanning for å indeksere eksisterende omdømme fra serverens historikk.",
+        "prompt": {
+          "title": "Vil du starte en serverskanning?",
+          "description": "En skanning vil gå gjennom meldingshistorikken på serveren din i de konfigurerte kanalene og finne eksisterende omdømme. Dette kan ta litt tid, avhengig av serverens størrelse."
+        },
+        "started": {
+          "title": "Skanningen har startet!",
+          "description": "Skanningen kjører nå i bakgrunnen. Du kan se fremdriften på skanningssiden når du er ferdig med oppsettet."
+        },
+        "start": "Start skanning",
+        "starting": "Vi starter...",
+        "error": "Det gikk ikke å starte skanningen. Prøv igjen senere."
       }
     }
   },
@@ -959,6 +975,26 @@
       "offsetMax": "Offset må være maksimalt{max}",
       "countMin": "Antallet må være minst 2",
       "countMax": "Antallet må være maksimalt{max}"
+    }
+  },
+  "scan": {
+    "description": "Søk i klanen din etter omdømme som ble gitt før boten ble lagt til, eller i kanaler som ikke ble overvåket. Dette vil søke gjennom alle meldinger i de konfigurerte omdømmekanalene og -kategoriene.",
+    "start": "Start skanning",
+    "starting": "Vi starter...",
+    "startedAt": "Startet kl.",
+    "finishedAt": "Avsluttet kl.",
+    "messagesScanned": "Meldinger skannet",
+    "reputationFound": "Omdømme funnet",
+    "noScanYet": "Det er ikke utført noen skanning ennå.",
+    "status": {
+      "running": "Skanning pågår",
+      "finished": "Skanningen er fullført"
+    },
+    "progressDetails": "Detaljer om fremdriften",
+    "error": {
+      "fetchStatus": "Det gikk ikke å hente skannestatus. Prøv igjen senere.",
+      "startFailed": "Det gikk ikke å starte skanningen. Prøv igjen senere.",
+      "alreadyRunning": "Det pågår allerede en skanning for dette klanet."
     }
   }
 }

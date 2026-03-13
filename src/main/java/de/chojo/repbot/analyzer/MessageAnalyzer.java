@@ -63,31 +63,27 @@ public class MessageAnalyzer {
     /**
      * Analyze a message.
      *
-     * @param pattern      regex pattern for targetwords
      * @param message      message to analyze
      * @param settings     settings of the guild
      * @param limitTargets true if targets should be limited to users which have written in the channel in the
      *                     maxHistoryAge
-     * @param limit        limit for returned matches in the analyzer result
      * @return analyzer results
      */
-    public AnalyzerResult processMessage(
-            Pattern pattern, @NotNull Message message, Settings settings, boolean limitTargets, int limit) {
+    public AnalyzerResult processMessage(@NotNull Message message, Settings settings, boolean limitTargets) {
         if (rejectionCache.getIfPresent(settings.guildId()) != null) {
             return AnalyzerResult.empty(EmptyResultReason.INTERNAL_ERROR);
         }
         var analyzer = guildRepository.guild(message.getGuild()).reputation().analyzer();
         try {
             return analyzer.log(
-                    message,
-                    resultCache.get(
-                            message.getIdLong(), () -> analyze(pattern, message, settings, limitTargets, limit)));
+                    message, resultCache.get(message.getIdLong(), () -> analyze(message, settings, limitTargets)));
         } catch (ExecutionException | UncheckedExecutionException e) {
+            var pattern = settings.thanking().thankwords().thankwordPattern();
             if (e.getCause() instanceof TimeoutException) {
                 log.warn(
                         LogNotify.NOTIFY_ADMIN,
                         "Timeout when analyzing message using pattern {} for guild {}",
-                        pattern.pattern(),
+                        pattern,
                         settings.guildId());
                 rejectionCache.put(settings.guildId(), PLACEHOLDER);
             } else if (e.getCause().getCause() instanceof TimeoutException) {
@@ -120,10 +116,11 @@ public class MessageAnalyzer {
                 .join();
     }
 
-    private AnalyzerResult analyze(
-            Pattern pattern, Message message, @Nullable Settings settings, boolean limitTargets, int limit) {
+    private AnalyzerResult analyze(Message message, @Nullable Settings settings, boolean limitTargets) {
         metrics.messages().countMessage();
+        var pattern = settings.thanking().thankwords().thankwordPattern();
         if (pattern.pattern().isBlank()) return AnalyzerResult.empty(EmptyResultReason.NO_PATTERN);
+        var limit = settings.abuseProtection().maxMessageReputation();
 
         var thankword = getThankword(message, pattern);
         if (thankword.isEmpty()) return AnalyzerResult.empty(EmptyResultReason.NO_MATCH);

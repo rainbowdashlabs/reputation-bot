@@ -6,7 +6,6 @@
 package de.chojo.repbot.dao.access.guild;
 
 import de.chojo.repbot.dao.components.GuildHolder;
-import net.dv8tion.jda.api.entities.Guild;
 import org.slf4j.Logger;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
@@ -22,13 +21,8 @@ public class Gdpr implements GuildHolder {
     }
 
     @Override
-    public Guild guild() {
-        return repGuild.guild();
-    }
-
-    @Override
-    public long guildId() {
-        return repGuild.guildId();
+    public GuildHolder guildHolder() {
+        return repGuild;
     }
 
     public void queueDeletion() {

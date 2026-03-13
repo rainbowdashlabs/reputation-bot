@@ -127,7 +127,8 @@
         "MAX_MESSAGE_AGE_LOW": "Maksymalny wiek wiadomości jest ustawiony na bardzo niski poziom. Może to uniemożliwić użytkownikom dziękowanie sobie nawzajem za starsze wiadomości."
       },
       "goToSettings": "Przejdź do ustawień"
-    }
+    },
+    "scan": "Skanuj"
   },
   "locale": {
     "selectLanguage": "Wybierz język"
@@ -545,6 +546,21 @@
       "finished": {
         "title": "Konfiguracja zakończona",
         "description": "Zakończyłeś ostatni etap konfiguracji. Przekierujemy cię teraz do strony ustawień ogólnych, gdzie możesz znaleźć więcej interesujących cię opcji."
+      },
+      "scan": {
+        "title": "Skanowanie serwera",
+        "description": "Skoro już skonfigurowałeś swoje kanały, zalecamy przeprowadzenie skanowania, aby zindeksować dotychczasową reputację z historii Twojego serwera.",
+        "prompt": {
+          "title": "Chcesz uruchomić skanowanie serwera?",
+          "description": "Skanowanie przejrzy historię wiadomości na Twoim serwerze w skonfigurowanych kanałach i sprawdzi aktualną reputację. Może to trochę potrwać, w zależności od wielkości serwera."
+        },
+        "started": {
+          "title": "Rozpoczęto skanowanie!",
+          "description": "Skanowanie przebiega teraz w tle. Po zakończeniu konfiguracji możesz sprawdzić postęp na stronie skanowania."
+        },
+        "start": "Rozpocznij skanowanie",
+        "starting": "Zaczynamy...",
+        "error": "Nie udało się uruchomić skanowania. Spróbuj ponownie później."
       }
     }
   },
@@ -959,6 +975,26 @@
       "offsetMax": "Przesunięcie musi wynosić maksymalnie{max}",
       "countMin": "Liczba musi wynosić co najmniej 2.",
       "countMax": "Liczba musi wynosić maksymaln{max}"
+    }
+  },
+  "scan": {
+    "description": "Przeszukaj swoją gildię pod kątem reputacji przyznanej przed dodaniem bota lub na kanałach, które nie były monitorowane. Spowoduje to przeszukanie wszystkich wiadomości na skonfigurowanych kanałach i w kategoriach reputacji.",
+    "start": "Rozpocznij skanowanie",
+    "starting": "Zaczynamy...",
+    "startedAt": "Zaczęło się",
+    "finishedAt": "Zakończono o",
+    "messagesScanned": "Przeskanowane wiadomości",
+    "reputationFound": "Znaleziono reputację",
+    "noScanYet": "Nie przeprowadzono jeszcze żadnego skanowania.",
+    "status": {
+      "running": "Trwa skanowanie",
+      "finished": "Skanowanie zakończone"
+    },
+    "progressDetails": "Szczegóły postępów",
+    "error": {
+      "fetchStatus": "Nie udało się pobrać statusu skanowania. Spróbuj ponownie później.",
+      "startFailed": "Nie udało się uruchomić skanowania. Spróbuj ponownie później.",
+      "alreadyRunning": "Właśnie trwa skanowanie tej gildii."
     }
   }
 }

@@ -122,8 +122,8 @@ public abstract class RolesHolder extends RolesHolderPOJO implements GuildHolder
     }
 
     @Override
-    public long guildId() {
-        return thanking.guildId();
+    public GuildHolder guildHolder() {
+        return thanking;
     }
 
     protected abstract String targetTable();

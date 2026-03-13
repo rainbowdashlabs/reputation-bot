@@ -122,18 +122,6 @@ public class SessionService {
         return session;
     }
 
-    public String sessionUrl(long guildId) {
-        return pathUrl(guildId, "");
-    }
-
-    public String setupUrl(long guildId) {
-        return pathUrl(guildId, "setup");
-    }
-
-    public String debugUrl(long guildId) {
-        return pathUrl(guildId, "settings/problems");
-    }
-
     public void logout(String token) {
         if (token == null || token.isBlank()) return;
         userSessions.invalidate(token);

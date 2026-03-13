@@ -67,6 +67,7 @@ import de.chojo.repbot.service.PresenceService;
 import de.chojo.repbot.service.RepBotCachePolicy;
 import de.chojo.repbot.service.RoleAssigner;
 import de.chojo.repbot.service.RoleUpdater;
+import de.chojo.repbot.service.ScanService;
 import de.chojo.repbot.service.SelfCleanupService;
 import de.chojo.repbot.service.TokenPurchaseService;
 import de.chojo.repbot.service.reputation.ReputationService;
@@ -113,7 +114,7 @@ public class Bot {
     private final Configuration configuration;
     private final Localization localization;
     private ShardManager shardManager;
-    private Scan scan;
+    private ScanService scanService;
     private Roles roles;
     private RoleAssigner roleAssigner;
     private RepBotCachePolicy repBotCachePolicy;
@@ -195,13 +196,17 @@ public class Bot {
         return botlistVoteService;
     }
 
+    public ScanService scanService() {
+        return scanService;
+    }
+
     private void initShardManager() throws LoginException {
         log.info("Initializing Shardmanager.");
         roleAssigner = new RoleAssigner(data.guildRepository(), localization.localizer());
-        scan = new Scan(data.guildRepository(), configuration);
+        scanService = new ScanService(data.guildRepository(), threading);
         roles = new Roles(data.guildRepository(), new RoleAssigner(data.guildRepository(), localization.localizer()));
 
-        repBotCachePolicy = new RepBotCachePolicy(scan, roles);
+        repBotCachePolicy = new RepBotCachePolicy(scanService, roles);
         shardManager = DefaultShardManagerBuilder.createDefault(SysVar.envOrProp(
                         "BOT_TOKEN", "bot.token", configuration.baseSettings().token()))
                 .setEventPassthrough(true)
@@ -340,9 +345,9 @@ public class Bot {
 
         contextResolver = new ContextResolver(data.voice(), configuration);
         messageAnalyzer = new MessageAnalyzer(contextResolver, configuration, data.metrics(), guilds);
+        scanService.addAnalyzer(messageAnalyzer);
 
         PresenceService.start(shardManager, configuration, statistic, worker);
-        scan.lateInit(messageAnalyzer);
 
         // init services
         reputationService =
@@ -380,7 +385,7 @@ public class Bot {
                         new RepSettings(guilds, configuration),
                         new Top(guilds, configuration),
                         Thankwords.of(messageAnalyzer, guilds),
-                        scan,
+                        new Scan(scanService),
                         new Locale(guilds),
                         new Invite(configuration),
                         Info.create(configuration),

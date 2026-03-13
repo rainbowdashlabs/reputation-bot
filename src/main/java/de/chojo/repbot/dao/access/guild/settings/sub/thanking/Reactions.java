@@ -11,7 +11,6 @@ import de.chojo.jdautil.util.Premium;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.web.pojo.settings.sub.thanking.ReactionsPOJO;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageReaction;
 import net.dv8tion.jda.api.entities.emoji.CustomEmoji;
 import net.dv8tion.jda.api.entities.emoji.UnicodeEmoji;
@@ -35,13 +34,8 @@ public class Reactions extends ReactionsPOJO implements GuildHolder {
     }
 
     @Override
-    public Guild guild() {
-        return thanking.guild();
-    }
-
-    @Override
-    public long guildId() {
-        return thanking.guildId();
+    public GuildHolder guildHolder() {
+        return thanking;
     }
 
     public boolean isReaction(MessageReaction reaction) {

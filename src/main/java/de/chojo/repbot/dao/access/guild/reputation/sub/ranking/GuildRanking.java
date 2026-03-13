@@ -10,7 +10,6 @@ import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.dao.pagination.Ranking;
 import de.chojo.repbot.dao.snapshots.RankingEntry;
-import net.dv8tion.jda.api.entities.Guild;
 
 import java.time.Instant;
 import java.util.List;
@@ -27,13 +26,8 @@ public abstract class GuildRanking implements GuildHolder {
     }
 
     @Override
-    public Guild guild() {
-        return rankings.guild();
-    }
-
-    @Override
-    public long guildId() {
-        return rankings.guildId();
+    public GuildHolder guildHolder() {
+        return rankings;
     }
 
     public Ranking defaultRanking(int pageSize) {

@@ -9,7 +9,6 @@ import de.chojo.repbot.dao.access.guild.reputation.sub.Rankings;
 import de.chojo.repbot.dao.access.guild.reputation.sub.ranking.user.UserGiven;
 import de.chojo.repbot.dao.access.guild.reputation.sub.ranking.user.UserReceived;
 import de.chojo.repbot.dao.components.GuildHolder;
-import net.dv8tion.jda.api.entities.Guild;
 
 public class UserRankings implements GuildHolder {
     private final Rankings rankings;
@@ -21,13 +20,8 @@ public class UserRankings implements GuildHolder {
     }
 
     @Override
-    public Guild guild() {
-        return rankings.guild();
-    }
-
-    @Override
-    public long guildId() {
-        return rankings.guildId();
+    public GuildHolder guildHolder() {
+        return rankings;
     }
 
     public Rankings ranking() {

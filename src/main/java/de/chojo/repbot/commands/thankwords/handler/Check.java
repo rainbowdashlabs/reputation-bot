@@ -52,12 +52,7 @@ public class Check implements SlashHandler {
             return;
         }
 
-        var result = messageAnalyzer.processMessage(
-                guildSettings.thankwordPattern(),
-                message,
-                settings,
-                true,
-                settings.abuseProtection().maxMessageReputation());
+        var result = messageAnalyzer.processMessage(message, settings, true);
         if (result.isEmpty()) {
             event.reply(WebPromo.promoString(context) + "\n"
                             + context.localize("command.thankwords.check.message.noMatch"))

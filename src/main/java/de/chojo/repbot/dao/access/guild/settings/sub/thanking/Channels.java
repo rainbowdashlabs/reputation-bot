@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonSerializeAs;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.web.pojo.settings.sub.thanking.ChannelsPOJO;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.attribute.ICategorizableChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
@@ -41,13 +40,8 @@ public class Channels extends ChannelsPOJO implements GuildHolder {
     }
 
     @Override
-    public Guild guild() {
-        return thanking.guild();
-    }
-
-    @Override
-    public long guildId() {
-        return thanking.guildId();
+    public GuildHolder guildHolder() {
+        return thanking;
     }
 
     public boolean isEnabled(GuildMessageChannel channel) {

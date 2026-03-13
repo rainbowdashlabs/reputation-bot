@@ -1,0 +1,33 @@
+{
+  "verification_token": "",
+  "message_id": "bec89460-beab-4089-8fb6-6fd6c72263f0",
+  "timestamp": "2026-03-02T09:43:23Z",
+  "type": "Shop Order",
+  "is_public": true,
+  "from_name": "Jo Example",
+  "message": null,
+  "amount": "27.95",
+  "url": "https://ko-fi.com/Home/CoffeeShop?txid=00000000-1111-2222-3333-444444444444",
+  "email": "jo.example@example.com",
+  "currency": "USD",
+  "is_subscription_payment": false,
+  "is_first_subscription_payment": false,
+  "kofi_transaction_id": "00000000-1111-2222-3333-444444444444",
+  "shop_items": [
+    {"direct_link_code": "1a2b3c4d5e", "variation_name": "Blue", "quantity": 1},
+    {"direct_link_code": "a1b2c3d4e5", "variation_name": "Large", "quantity": 5}
+  ],
+  "tier_name": null,
+  "shipping": {
+    "full_name": "Ko-fi Mail Room",
+    "street_address": "123 The Old Exchange, High Street",
+    "city": "Bigville",
+    "state_or_province": "Kansas",
+    "postal_code": "12345",
+    "country": "United States",
+    "country_code": "US",
+    "telephone": "+1-212-456-7890"
+  },
+  "discord_username": "chojo",
+  "discord_userid": "214347948316819456"
+}

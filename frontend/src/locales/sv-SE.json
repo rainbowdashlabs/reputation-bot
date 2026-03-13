@@ -127,7 +127,8 @@
         "MAX_MESSAGE_AGE_LOW": "Den maximala åldern för meddelanden är inställd på en mycket låg nivå. Detta kan hindra användare från att tacka varandra för äldre meddelanden."
       },
       "goToSettings": "Gå till inställningar"
-    }
+    },
+    "scan": "Skanna"
   },
   "locale": {
     "selectLanguage": "Välj språk"
@@ -545,6 +546,21 @@
       "finished": {
         "title": "Inställningen är klar",
         "description": "Du har nu slutfört det sista steget i installationen. Vi skickar dig nu till sidan med allmänna inställningar där du kan hitta fler inställningar som kan vara intressanta för dig."
+      },
+      "scan": {
+        "title": "Serversökning",
+        "description": "Nu när du har konfigurerat dina kanaler rekommenderar vi att du kör en genomsökning för att indexera befintliga omdömen från din servers historik.",
+        "prompt": {
+          "title": "Vill du starta en serversökning?",
+          "description": "En genomsökning går igenom meddelandehistoriken på din server i de konfigurerade kanalerna och hämtar befintliga omdömen. Detta kan ta en stund beroende på serverns storlek."
+        },
+        "started": {
+          "title": "Skanningen har startat!",
+          "description": "Skanningen körs nu i bakgrunden. Du kan se hur långt den har kommit på skanningssidan när du har slutfört installationen."
+        },
+        "start": "Starta skanning",
+        "starting": "På väg att börja...",
+        "error": "Det gick inte att starta skanningen. Försök igen senare."
       }
     }
   },
@@ -959,6 +975,26 @@
       "offsetMax": "Offset får vara högst{max}",
       "countMin": "Antalet måste vara minst 2",
       "countMax": "Räkningen måste vara högst {max}"
+    }
+  },
+  "scan": {
+    "description": "Sök igenom din klan efter anseende som tilldelats innan boten lades till eller i kanaler som inte övervakades. Detta kommer att söka igenom alla meddelanden i de konfigurerade anseendekanalerna och kategorierna.",
+    "start": "Starta skanning",
+    "starting": "På väg att börja...",
+    "startedAt": "Började vid",
+    "finishedAt": "Avslutad kl.",
+    "messagesScanned": "Meddelanden som har skannats",
+    "reputationFound": "Rykte funnet",
+    "noScanYet": "Ingen skanning har utförts ännu.",
+    "status": {
+      "running": "Skanning pågår",
+      "finished": "Skanningen är klar"
+    },
+    "progressDetails": "Detaljer om framsteg",
+    "error": {
+      "fetchStatus": "Det gick inte att hämta skanningsstatus. Försök igen senare.",
+      "startFailed": "Det gick inte att starta skanningen. Försök igen senare.",
+      "alreadyRunning": "En genomsökning pågår redan för denna klan."
     }
   }
 }

@@ -127,7 +127,8 @@
         "MAX_MESSAGE_AGE_LOW": "A idade máxima das mensagens está muito baixa. Isso pode impedir que os usuários agradeçam uns aos outros por mensagens mais antigas."
       },
       "goToSettings": "Vá para as configurações"
-    }
+    },
+    "scan": "Digitalizar"
   },
   "locale": {
     "selectLanguage": "Escolha o idioma"
@@ -545,6 +546,21 @@
       "finished": {
         "title": "Configuração concluída",
         "description": "Você acabou de concluir a última etapa da configuração. Agora vamos te levar para a página de configurações gerais, onde você pode encontrar mais configurações que podem ser do seu interesse."
+      },
+      "scan": {
+        "title": "Verificação do servidor",
+        "description": "Agora que você configurou seus canais, recomendamos que faça uma varredura para indexar a reputação existente a partir do histórico do seu servidor.",
+        "prompt": {
+          "title": "Iniciar uma verificação do servidor?",
+          "description": "Uma varredura analisará o histórico de mensagens do seu servidor nos canais configurados e identificará a reputação existente. Isso pode demorar um pouco, dependendo do tamanho do seu servidor."
+        },
+        "started": {
+          "title": "A digitalização começou!",
+          "description": "A verificação está sendo executada em segundo plano. Você poderá acompanhar o andamento na página de verificação assim que concluir a configuração."
+        },
+        "start": "Iniciar varredura",
+        "starting": "Começando...",
+        "error": "Não foi possível iniciar a verificação. Tenta novamente mais tarde."
       }
     }
   },
@@ -959,6 +975,26 @@
       "offsetMax": "O deslocamento deve ser no máximo de {max}",
       "countMin": "A contagem deve ser de pelo menos 2.",
       "countMax": "A contagem deve ser no máximo {max}"
+    }
+  },
+  "scan": {
+    "description": "Verifica se há pontos de reputação na tua guilda que foram concedidos antes da adição do bot ou em canais que não foram monitorados. Isso vai analisar todas as mensagens nos canais e categorias de reputação configurados.",
+    "start": "Iniciar varredura",
+    "starting": "Começando...",
+    "startedAt": "Começou em",
+    "finishedAt": "Concluído em",
+    "messagesScanned": "Mensagens verificadas",
+    "reputationFound": "Reputação encontrada",
+    "noScanYet": "Ainda não foi feita nenhuma digitalização.",
+    "status": {
+      "running": "Digitalização em andamento",
+      "finished": "Digitalização concluída"
+    },
+    "progressDetails": "Detalhes do progresso",
+    "error": {
+      "fetchStatus": "Não foi possível obter o status da digitalização. Tenta novamente mais tarde.",
+      "startFailed": "Não foi possível iniciar a verificação. Tenta novamente mais tarde.",
+      "alreadyRunning": "Já está rolando uma verificação para essa guilda."
     }
   }
 }

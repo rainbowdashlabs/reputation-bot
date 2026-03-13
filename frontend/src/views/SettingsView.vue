@@ -24,7 +24,8 @@ const settingsSections = [
   {key: 'announcements', path: '/settings/edit/announcements'},
   {key: 'autopost', path: '/settings/edit/autopost'},
   {key: 'logChannel', path: '/settings/edit/log-channel'},
-  {key: 'integrationBypass', path: '/settings/edit/integration-bypass'}
+  {key: 'integrationBypass', path: '/settings/edit/integration-bypass'},
+  {key: 'scan', path: '/settings/edit/scan'}
 ]
 
 const isGuildAdmin = computed(() => {

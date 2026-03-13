@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonSerializeAs;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.web.pojo.settings.sub.ProfilePOJO;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Icon;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 
@@ -103,12 +102,7 @@ public class Profile extends ProfilePOJO implements GuildHolder {
     }
 
     @Override
-    public Guild guild() {
-        return settings.guild();
-    }
-
-    @Override
-    public long guildId() {
-        return settings.guildId();
+    public GuildHolder guildHolder() {
+        return settings;
     }
 }

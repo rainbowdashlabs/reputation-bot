@@ -127,7 +127,8 @@
         "MAX_MESSAGE_AGE_LOW": "L'età massima dei messaggi è impostata su un valore molto basso. Questo potrebbe impedire agli utenti di ringraziarsi a vicenda per i messaggi più vecchi."
       },
       "goToSettings": "Vai alle impostazioni"
-    }
+    },
+    "scan": "Scansiona"
   },
   "locale": {
     "selectLanguage": "Scegli la lingua"
@@ -545,6 +546,21 @@
       "finished": {
         "title": "Configurazione fatta",
         "description": "Hai finito l'ultimo passaggio della configurazione. Ora ti mandiamo alla pagina delle impostazioni generali, dove potresti trovare altre opzioni che potrebbero interessarti."
+      },
+      "scan": {
+        "title": "Scansione del server",
+        "description": "Ora che hai configurato i tuoi canali, ti consigliamo di eseguire una scansione per indicizzare i dati di reputazione presenti nella cronologia del tuo server.",
+        "prompt": {
+          "title": "Vuoi avviare una scansione del server?",
+          "description": "Una scansione esaminerà la cronologia dei messaggi del tuo server nei canali configurati e individuerà i dati relativi alla reputazione già presenti. Questa operazione potrebbe richiedere un po' di tempo a seconda delle dimensioni del tuo server."
+        },
+        "started": {
+          "title": "La scansione è iniziata!",
+          "description": "La scansione è ora in esecuzione in background. Potrai vedere lo stato di avanzamento nella pagina della scansione una volta completata la configurazione."
+        },
+        "start": "Avvia scansione",
+        "starting": "Si parte...",
+        "error": "Impossibile avviare la scansione. Riprova più tardi."
       }
     }
   },
@@ -959,6 +975,26 @@
       "offsetMax": "L'offset deve essere al massimo un{max}",
       "countMin": "Il conteggio deve essere almeno 2",
       "countMax": "Il conteggio deve essere al massimo di un{max}"
+    }
+  },
+  "scan": {
+    "description": "Cerca nella tua gilda i punti reputazione assegnati prima dell'aggiunta del bot o nei canali che non venivano monitorati. In questo modo verranno analizzati tutti i messaggi presenti nei canali e nelle categorie di reputazione configurati.",
+    "start": "Avvia scansione",
+    "starting": "Si parte...",
+    "startedAt": "Iniziato alle",
+    "finishedAt": "Terminato alle",
+    "messagesScanned": "Messaggi analizzati",
+    "reputationFound": "Reputazione trovata",
+    "noScanYet": "Non è stata ancora eseguita alcuna scansione.",
+    "status": {
+      "running": "Scansione in corso",
+      "finished": "Scansione completata"
+    },
+    "progressDetails": "Dettagli sullo stato di avanzamento",
+    "error": {
+      "fetchStatus": "Impossibile recuperare lo stato della scansione. Riprova più tardi.",
+      "startFailed": "Impossibile avviare la scansione. Riprova più tardi.",
+      "alreadyRunning": "È già in corso una scansione per questa gilda."
     }
   }
 }

@@ -10,7 +10,6 @@ import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.dao.snapshots.ReputationRank;
 import de.chojo.repbot.web.pojo.settings.sub.thanking.RanksPOJO;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Role;
 
 import java.util.Comparator;
@@ -127,13 +126,8 @@ public class Ranks implements GuildHolder {
     }
 
     @Override
-    public Guild guild() {
-        return settings.guild();
-    }
-
-    @Override
-    public long guildId() {
-        return settings.guildId();
+    public GuildHolder guildHolder() {
+        return settings;
     }
 
     public Optional<ReputationRank> rank(Role role) {

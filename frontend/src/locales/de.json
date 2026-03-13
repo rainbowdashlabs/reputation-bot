@@ -127,7 +127,8 @@
         "MAX_MESSAGE_AGE_LOW": "Das maximale Alter von Nachrichten ist niedrig eingestellt. Das könnte dazu führen, dass Leute sich nicht mehr für ältere Nachrichten bedanken können."
       },
       "goToSettings": "Geh zu den Einstellungen"
-    }
+    },
+    "scan": "Scannen"
   },
   "locale": {
     "selectLanguage": "Sprache auswählen"
@@ -545,6 +546,21 @@
       "finished": {
         "title": "Einrichtung abgeschlossen",
         "description": "Du hast jetzt den letzten Einrichtungsschritt abgeschlossen. Wir leiten dich jetzt zur Seite mit den allgemeinen Einstellungen weiter, wo du vielleicht noch weitere Einstellungen findest, die für dich interessant sind."
+      },
+      "scan": {
+        "title": "Server-Scan",
+        "description": "Nachdem du deine Kanäle konfiguriert hast, empfehlen wir dir, einen Scan durchzuführen, um die vorhandenen Reputationsdaten aus dem Verlauf deines Servers zu indexieren.",
+        "prompt": {
+          "title": "Einen Server-Scan starten?",
+          "description": "Ein Scan durchsucht den Nachrichtenverlauf deines Servers in den konfigurierten Kanälen und ermittelt die aktuelle Reputation. Je nach Größe deines Servers kann dies einige Zeit in Anspruch nehmen."
+        },
+        "started": {
+          "title": "Scan gestartet!",
+          "description": "Der Scan läuft jetzt im Hintergrund. Du kannst den Fortschritt auf der Scan-Seite sehen, sobald du die Einrichtung abgeschlossen hast."
+        },
+        "start": "Scan starten",
+        "starting": "Es geht los...",
+        "error": "Der Scan konnte nicht gestartet werden. Bitte versuche es später erneut."
       }
     }
   },
@@ -959,6 +975,26 @@
       "offsetMax": "DAs Offset darf höchstens sein{max}",
       "countMin": "Die Anzahl muss mindestens 2 betragen.",
       "countMax": "Die Anzahl darf höchstens {max} betragen."
+    }
+  },
+  "scan": {
+    "description": "Durchsuche deine Gilde nach Reputationspunkten, die vor dem Hinzufügen des Bots vergeben wurden oder in Kanälen, die nicht erfasst wurden. Dabei werden alle Nachrichten in den konfigurierten Reputationskanälen und -kategorien durchsucht.",
+    "start": "Scan starten",
+    "starting": "Es geht los...",
+    "startedAt": "Begonnen am",
+    "finishedAt": "Fertig um",
+    "messagesScanned": "Nachrichten gescannt",
+    "reputationFound": "Reputation gefunden",
+    "noScanYet": "Es wurde noch kein Scan durchgeführt.",
+    "status": {
+      "running": "Scan läuft",
+      "finished": "Scan abgeschlossen"
+    },
+    "progressDetails": "Details zum Fortschritt",
+    "error": {
+      "fetchStatus": "Der Scan-Status konnte nicht abgerufen werden. Bitte versuche es später erneut.",
+      "startFailed": "Der Scan konnte nicht gestartet werden. Bitte versuche es später erneut.",
+      "alreadyRunning": "Für diese Gilde läuft bereits ein Scan."
     }
   }
 }

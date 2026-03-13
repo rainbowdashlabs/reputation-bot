@@ -22,7 +22,6 @@ import de.chojo.repbot.dao.snapshots.analyzer.ResultSnapshot;
 import de.chojo.repbot.service.reputation.ReputationContext;
 import de.chojo.repbot.service.reputation.SubmitResult;
 import de.chojo.sadu.queries.converter.StandardValueConverter;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -101,13 +100,8 @@ public class Analyzer implements GuildHolder {
     }
 
     @Override
-    public Guild guild() {
-        return reputation.guild();
-    }
-
-    @Override
-    public long guildId() {
-        return reputation.guildId();
+    public GuildHolder guildHolder() {
+        return reputation;
     }
 
     private Optional<ResultEntry> getResults(long messageId) {

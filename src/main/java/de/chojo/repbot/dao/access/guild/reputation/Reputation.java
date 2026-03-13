@@ -15,7 +15,6 @@ import de.chojo.repbot.dao.access.guild.reputation.sub.Rankings;
 import de.chojo.repbot.dao.access.guild.reputation.sub.RepUser;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.dao.snapshots.GuildReputationStats;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import org.jetbrains.annotations.NotNull;
@@ -54,13 +53,8 @@ public class Reputation implements GuildHolder {
     }
 
     @Override
-    public Guild guild() {
-        return repGuild.guild();
-    }
-
-    @Override
-    public long guildId() {
-        return repGuild().guildId();
+    public GuildHolder guildHolder() {
+        return repGuild;
     }
 
     public GuildReputationStats stats() {

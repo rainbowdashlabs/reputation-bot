@@ -30,4 +30,23 @@ public interface MemberHolder extends UserHolder, GuildHolder {
     default long guildId() {
         return guild().getIdLong();
     }
+
+    default GuildHolder guildHolder() {
+        return new GuildHolder() {
+            @Override
+            public Guild guild() {
+                return member().getGuild();
+            }
+
+            @Override
+            public long guildId() {
+                return member().getGuild().getIdLong();
+            }
+
+            @Override
+            public GuildHolder guildHolder() {
+                return this;
+            }
+        };
+    }
 }

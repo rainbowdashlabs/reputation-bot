@@ -11,7 +11,6 @@ import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.web.pojo.settings.sub.AutopostPOJO;
 import de.chojo.sadu.mapper.wrapper.Row;
 import de.chojo.sadu.queries.api.call.Call;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 
@@ -106,13 +105,8 @@ public class Autopost extends AutopostPOJO implements GuildHolder {
     }
 
     @Override
-    public Guild guild() {
-        return settings.guild();
-    }
-
-    @Override
-    public long guildId() {
-        return settings.guildId();
+    public GuildHolder guildHolder() {
+        return settings;
     }
 
     private boolean set(String parameter, Function<Call, Call> builder) {

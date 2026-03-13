@@ -10,7 +10,6 @@ import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.access.guild.settings.sub.integrationbypass.Bypass;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.web.pojo.settings.sub.IntegrationBypassPOJO;
-import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.List;
 import java.util.Optional;
@@ -71,7 +70,7 @@ public class IntegrationBypass extends IntegrationBypassPOJO implements GuildHol
     }
 
     @Override
-    public Guild guild() {
-        return settings.guild();
+    public GuildHolder guildHolder() {
+        return settings;
     }
 }

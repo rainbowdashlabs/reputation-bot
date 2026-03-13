@@ -29,4 +29,21 @@ public class Api {
     public int tokenValidHours() {
         return tokenValidHours;
     }
+
+    public String pathUrl(long guildId, String path) {
+        String url = "%s/%s".formatted(url(), path);
+        return "%s?guild=%s".formatted(url, guildId);
+    }
+
+    public String sessionUrl(long guildId) {
+        return pathUrl(guildId, "");
+    }
+
+    public String setupUrl(long guildId) {
+        return pathUrl(guildId, "setup");
+    }
+
+    public String debugUrl(long guildId) {
+        return pathUrl(guildId, "settings/problems");
+    }
 }

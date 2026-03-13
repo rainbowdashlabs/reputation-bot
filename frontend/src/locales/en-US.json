@@ -267,6 +267,7 @@
     "auditLog": "Audit Log",
     "integrationBypass": "Integration Bypass",
     "problems": "Problems",
+    "scan": "Scan",
     "debug": {
       "permissions": {
         "title": "Missing Global Permissions",
@@ -353,6 +354,26 @@
     "tokenShopLink": "Token Shop",
     "kofiHint": "or support us on",
     "kofiLink": "Ko-fi"
+  },
+  "scan": {
+    "description": "Scan your guild for reputation that was given before the bot was added or in channels that were not tracked. This will scan all messages in the configured reputation channels and categories.",
+    "start": "Start Scan",
+    "starting": "Starting...",
+    "startedAt": "Started at",
+    "finishedAt": "Finished at",
+    "messagesScanned": "Messages Scanned",
+    "reputationFound": "Reputation Found",
+    "noScanYet": "No scan has been performed yet.",
+    "status": {
+      "running": "Scan Running",
+      "finished": "Scan Finished"
+    },
+    "progressDetails": "Progress Details",
+    "error": {
+      "fetchStatus": "Failed to fetch scan status. Please try again later.",
+      "startFailed": "Failed to start scan. Please try again later.",
+      "alreadyRunning": "A scan is already running for this guild."
+    }
   },
   "integrationBypass": {
     "premiumRequired": "Integration bypass",
@@ -741,6 +762,21 @@
         "title": "Channels & Categories",
         "description": "Select which channels and categories should allow reputation giving. At least one channel or category must be selected.",
         "required": "You must select at least one channel or category to continue (unless using deny list mode)."
+      },
+      "scan": {
+        "title": "Server Scan",
+        "description": "Now that you have configured your channels, we recommend running a scan to index existing reputation from your server's history.",
+        "prompt": {
+          "title": "Start a Server Scan?",
+          "description": "A scan will go through your server's message history in the configured channels and find existing reputation. This might take some time depending on your server's size."
+        },
+        "started": {
+          "title": "Scan Started!",
+          "description": "The scan is now running in the background. You can see the progress on the scan page after you finish the setup."
+        },
+        "start": "Start Scan",
+        "starting": "Starting...",
+        "error": "Failed to start the scan. Please try again later."
       },
       "thankwords": {
         "title": "Thankwords",
