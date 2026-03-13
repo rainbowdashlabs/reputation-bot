@@ -23,7 +23,7 @@ public class Start implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         String url = configuration.api().pathUrl(event.getGuild().getIdLong(), "/settings/edit/scan");
-        event.reply(context.localize("command.start.message"))
+        event.reply(context.localize("command.scan.start.message"))
                 .setEphemeral(true)
                 .complete();
         scanService.scan(event.getGuild());
