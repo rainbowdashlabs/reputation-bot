@@ -9,7 +9,6 @@ import de.chojo.repbot.dao.access.guild.reputation.Reputation;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.dao.pagination.ReputationLogAccess;
 import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 
@@ -112,13 +111,8 @@ public class Log implements GuildHolder {
     }
 
     @Override
-    public Guild guild() {
-        return reputation.guild();
-    }
-
-    @Override
-    public long guildId() {
-        return reputation.guildId();
+    public GuildHolder guildHolder() {
+        return reputation;
     }
 
     /**

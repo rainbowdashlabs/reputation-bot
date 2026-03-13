@@ -101,6 +101,11 @@ const routes: RouteRecordRaw[] = [
                         path: 'integration-bypass',
                         name: 'SettingsIntegrationBypass',
                         component: () => import('@/views/settings/IntegrationBypassView.vue')
+                    },
+                    {
+                        path: 'scan',
+                        name: 'SettingsScan',
+                        component: () => import('@/views/settings/ScanView.vue')
                     }
                 ]
             },

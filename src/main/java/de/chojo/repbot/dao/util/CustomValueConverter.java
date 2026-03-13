@@ -48,4 +48,19 @@ public final class CustomValueConverter {
             throw new RuntimeException("Could not parse string", e);
         }
     }
+
+    private static <T> T mapStringToObject(String value, Class<T> clazz) {
+        try {
+            return MAPPER.readValue(value, clazz);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException("Could not parse string", e);
+        }
+    }
+
+    public static <T> ValueConverter<T, String> jsonAdapter(Class<T> clazz) {
+        Adapter<T> adapter = Adapter.create(clazz, CustomValueConverter::mapObjectToString, Types.VARCHAR);
+        ValueReader<T, String> reader =
+                ValueReader.create(s -> mapStringToObject(s, clazz), Row::getString, Row::getString);
+        return ValueConverter.create(adapter, reader);
+    }
 }

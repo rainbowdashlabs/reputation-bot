@@ -12,7 +12,6 @@ import de.chojo.repbot.service.reputation.ReputationContext;
 import de.chojo.repbot.web.pojo.settings.sub.AbuseProtectionPOJO;
 import de.chojo.sadu.mapper.wrapper.Row;
 import de.chojo.sadu.queries.api.call.Call;
-import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 
@@ -205,13 +204,8 @@ public class AbuseProtection extends AbuseProtectionPOJO implements GuildHolder 
     }
 
     @Override
-    public Guild guild() {
-        return settings.guild();
-    }
-
-    @Override
-    public long guildId() {
-        return settings.guildId();
+    public GuildHolder guildHolder() {
+        return settings;
     }
 
     public String prettyString() {

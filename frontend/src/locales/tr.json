@@ -127,7 +127,8 @@
         "MAX_MESSAGE_AGE_LOW": "Maksimum mesaj süresi çok düşük ayarlanmıştır. Bu, kullanıcıların eski mesajlar için birbirlerine teşekkür etmelerini engelleyebilir."
       },
       "goToSettings": "Ayarlar'a git"
-    }
+    },
+    "scan": "Tara"
   },
   "locale": {
     "selectLanguage": "Dili Seç"
@@ -545,6 +546,21 @@
       "finished": {
         "title": "Kurulum Tamamlandı",
         "description": "Son kurulum adımını tamamladınız. Şimdi sizi, ilginizi çekebilecek diğer ayarları bulabileceğiniz genel ayarlar sayfasına yönlendireceğiz."
+      },
+      "scan": {
+        "title": "Sunucu Taraması",
+        "description": "Kanallarınızı yapılandırdığınıza göre, sunucunuzun geçmişindeki mevcut itibar bilgilerini indekslemek için bir tarama yapmanızı öneririz.",
+        "prompt": {
+          "title": "Sunucu Taraması Başlatmak İster Misiniz?",
+          "description": "Tarama işlemi, sunucunuzun yapılandırılmış kanallarındaki mesaj geçmişini tarayarak mevcut itibar değerlerini belirleyecektir. Bu işlem, sunucunuzun büyüklüğüne bağlı olarak biraz zaman alabilir."
+        },
+        "started": {
+          "title": "Tarama başladı!",
+          "description": "Tarama şu anda arka planda çalışıyor. Kurulumu tamamladıktan sonra tarama sayfasında ilerleme durumunu görebilirsiniz."
+        },
+        "start": "Taramayı Başlat",
+        "starting": "Başlıyor...",
+        "error": "Tarama başlatılamadı. Lütfen daha sonra tekrar deneyin."
       }
     }
   },
@@ -959,6 +975,26 @@
       "offsetMax": "Ofset en fazla {max} olmalıdır.",
       "countMin": "Sayısı en az 2 olmalıdır",
       "countMax": "Sayım en fazla {max} olmalıdır."
+    }
+  },
+  "scan": {
+    "description": "Bot eklenmeden önce veya izlenmeyen kanallarda verilen itibar puanlarını guild'inizde tarayın. Bu işlem, yapılandırılmış itibar kanallarındaki ve kategorilerindeki tüm mesajları tarayacaktır.",
+    "start": "Taramayı Başlat",
+    "starting": "Başlıyor...",
+    "startedAt": "Başlangıç tarihi",
+    "finishedAt": "Saat",
+    "messagesScanned": "Taranan Mesajlar",
+    "reputationFound": "İtibar Bulundu",
+    "noScanYet": "Henüz herhangi bir tarama yapılmadı.",
+    "status": {
+      "running": "Tarama Devam Ediyor",
+      "finished": "Tarama Tamamlandı"
+    },
+    "progressDetails": "İlerleme Ayrıntıları",
+    "error": {
+      "fetchStatus": "Tarama durumu alınamadı. Lütfen daha sonra tekrar deneyin.",
+      "startFailed": "Tarama başlatılamadı. Lütfen daha sonra tekrar deneyin.",
+      "alreadyRunning": "Bu lonca için bir tarama halihazırda devam ediyor."
     }
   }
 }

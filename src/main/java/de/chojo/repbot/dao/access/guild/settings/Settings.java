@@ -19,7 +19,6 @@ import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.access.guild.settings.sub.autopost.Autopost;
 import de.chojo.repbot.dao.access.guild.settings.sub.integrationbypass.Bypass;
 import de.chojo.repbot.dao.components.GuildHolder;
-import net.dv8tion.jda.api.entities.Guild;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
@@ -211,13 +210,8 @@ public class Settings implements GuildHolder {
     }
 
     @Override
-    public Guild guild() {
-        return repGuild.guild();
-    }
-
-    @Override
-    public long guildId() {
-        return repGuild.guildId();
+    public GuildHolder guildHolder() {
+        return repGuild;
     }
 
     public Autopost autopost() {

@@ -1,0 +1,34 @@
+{
+  "id": 853250161915985958, "hits": 0, "childs": [
+  {
+    "id": 853254997487255573, "hits": 0, "childs": [
+    {
+      "id": 1022427137891893300,
+      "hits": 0,
+      "childs": [
+        {"id": 1022433091446382612, "hits": 0, "childs": [], "target": "THREAD", "scanned": 34, "maxMessages": 34},
+        {"id": 1022441716525039668, "hits": 0, "childs": [], "target": "THREAD", "scanned": 1, "maxMessages": 1}
+      ],
+      "target": "FORUM",
+      "scanned": 35,
+      "maxMessages": 35
+    }, {
+      "id": 853259320485609502,
+      "hits": 0,
+      "childs": [
+        {"id": 1022441121105854465, "hits": 0, "childs": [], "target": "THREAD", "scanned": 3, "maxMessages": 3},
+        {"id": 934156786225803334, "hits": 0, "childs": [], "target": "THREAD", "scanned": 1, "maxMessages": 1},
+        {"id": 926282667710906450, "hits": 0, "childs": [], "target": "THREAD", "scanned": 22, "maxMessages": 22},
+        {"id": 934171239986110474, "hits": 0, "childs": [], "target": "THREAD", "scanned": 1, "maxMessages": 1},
+        {"id": 934156322683895908, "hits": 0, "childs": [], "target": "THREAD", "scanned": 1, "maxMessages": 1}
+      ],
+      "target": "TEXT",
+      "scanned": 557,
+      "maxMessages": 557
+    }, {"id": 853259349380300860, "hits": 0, "childs": [], "target": "TEXT", "scanned": 1984, "maxMessages": 1984},
+    {"id": 1468571290184192084, "hits": 0, "childs": [], "target": "TEXT", "scanned": 29, "maxMessages": 29},
+    {"id": 1026433719319404554, "hits": 0, "childs": [], "target": "VOICE", "scanned": 5, "maxMessages": 5}
+  ], "target": "CATEGORY", "scanned": 2610, "maxMessages": 2610
+  }
+], "target": "GUILD", "scanned": 2610, "maxMessages": 2610
+}

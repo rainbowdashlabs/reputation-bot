@@ -22,6 +22,7 @@ import de.chojo.repbot.service.AutopostService;
 import de.chojo.repbot.service.BotlistVoteService;
 import de.chojo.repbot.service.KofiService;
 import de.chojo.repbot.service.MailService;
+import de.chojo.repbot.service.ScanService;
 import de.chojo.repbot.web.Api;
 import de.chojo.repbot.web.cache.MemberCache;
 import de.chojo.repbot.web.config.Role;
@@ -62,6 +63,7 @@ public class Web {
     private final SessionService sessionService;
     private final InteractionHub<?, ?, ?> interactionHub;
     private final AutopostService autopostService;
+    private final ScanService scanService;
     private final MemberCache memberCache = new MemberCache();
     private final BotlistVoteService botlistVoteService;
     private final KofiService kofiService;
@@ -75,7 +77,8 @@ public class Web {
             Configuration configuration,
             SessionService sessionService,
             InteractionHub<?, ?, ?> interactionHub,
-            AutopostService autopostService) {
+            AutopostService autopostService,
+            ScanService scanService) {
         this.bot = bot;
         this.data = data;
         this.threading = threading;
@@ -83,6 +86,7 @@ public class Web {
         this.sessionService = sessionService;
         this.interactionHub = interactionHub;
         this.autopostService = autopostService;
+        this.scanService = scanService;
         this.botlistVoteService = bot.voteService();
         this.mailService = new MailService(configuration, data.userRepository(), threading);
         this.kofiService = new KofiService(
@@ -101,8 +105,10 @@ public class Web {
             Configuration configuration,
             SessionService sessionService,
             InteractionHub<?, ?, ?> interactionHub,
-            AutopostService autopostService) {
-        var web = new Web(bot, data, threading, configuration, sessionService, interactionHub, autopostService);
+            AutopostService autopostService,
+            ScanService scanService) {
+        var web = new Web(
+                bot, data, threading, configuration, sessionService, interactionHub, autopostService, scanService);
         web.init();
         return web;
     }
@@ -231,7 +237,8 @@ public class Web {
                                     data.voteRepository(),
                                     bot.tokenPurchaseService(),
                                     kofiService,
-                                    mailService)
+                                    mailService,
+                                    scanService)
                             .init());
                     config.router.mount(router -> {
                         router.beforeMatched(this::handleAccess);

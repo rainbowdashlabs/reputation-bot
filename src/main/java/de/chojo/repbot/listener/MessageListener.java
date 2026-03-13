@@ -140,12 +140,7 @@ public class MessageListener extends ListenerAdapter {
             return;
         }
 
-        var result = messageAnalyzer.processMessage(
-                thank.thankwords().thankwordPattern(),
-                message,
-                settings,
-                true,
-                settings.abuseProtection().maxMessageReputation());
+        var result = messageAnalyzer.processMessage(message, settings, true);
 
         if (result.isEmpty()
                 && (result.asEmpty().reason() == EmptyResultReason.NO_MATCH

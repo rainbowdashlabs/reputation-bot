@@ -127,7 +127,8 @@
         "MAX_MESSAGE_AGE_LOW": "La antigüedad máxima de los mensajes está configurada en un valor muy bajo. Esto podría impedir que los usuarios se agradezcan mutuamente los mensajes más antiguos."
       },
       "goToSettings": "Ir a la configuración"
-    }
+    },
+    "scan": "Escanear"
   },
   "locale": {
     "selectLanguage": "Selecciona el idioma"
@@ -545,6 +546,21 @@
       "finished": {
         "title": "Configuración completada",
         "description": "Ya has completado el último paso de la configuración. Ahora te redirigiremos a la página de configuración general, donde podrás encontrar más ajustes que te pueden resultar interesantes."
+      },
+      "scan": {
+        "title": "Análisis del servidor",
+        "description": "Ahora que ya has configurado tus canales, te recomendamos que realices un análisis para indexar la reputación existente a partir del historial de tu servidor.",
+        "prompt": {
+          "title": "¿Quieres iniciar un análisis del servidor?",
+          "description": "El análisis revisará el historial de mensajes de tu servidor en los canales configurados y detectará la reputación existente. Esto puede tardar un rato, dependiendo del tamaño de tu servidor."
+        },
+        "started": {
+          "title": "¡Escaneo iniciado!",
+          "description": "El análisis se está ejecutando ahora en segundo plano. Podrás ver el progreso en la página de análisis una vez que hayas terminado la configuración."
+        },
+        "start": "Iniciar escaneo",
+        "starting": "Empezando...",
+        "error": "No se ha podido iniciar el análisis. Inténtalo de nuevo más tarde."
       }
     }
   },
@@ -959,6 +975,26 @@
       "offsetMax": "El desplazamiento debe ser como má{max}",
       "countMin": "El recuento debe ser de al menos 2.",
       "countMax": "El recuento debe ser como máxim{max}"
+    }
+  },
+  "scan": {
+    "description": "Busca en tu clan la reputación que se otorgó antes de añadir el bot o en canales que no se supervisaban. Esto analizará todos los mensajes de los canales y categorías de reputación configurados.",
+    "start": "Iniciar escaneo",
+    "starting": "Empezando...",
+    "startedAt": "Empezó en",
+    "finishedAt": "Terminado a las",
+    "messagesScanned": "Mensajes escaneados",
+    "reputationFound": "Reputación encontrada",
+    "noScanYet": "Aún no se ha realizado ningún escaneo.",
+    "status": {
+      "running": "Escaneo en curso",
+      "finished": "Escaneo finalizado"
+    },
+    "progressDetails": "Detalles del progreso",
+    "error": {
+      "fetchStatus": "No se ha podido recuperar el estado del escaneo. Inténtalo de nuevo más tarde.",
+      "startFailed": "No se ha podido iniciar el análisis. Inténtalo de nuevo más tarde.",
+      "alreadyRunning": "Ya se está realizando un análisis de este clan."
     }
   }
 }

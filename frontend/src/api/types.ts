@@ -735,3 +735,28 @@ export enum MailFailureReason {
     UNKNOWN_ADDRESS = 'UNKNOWN_ADDRESS',
     RATE_LIMIT = 'RATE_LIMIT',
 }
+
+export enum ScanTarget {
+    TEXT = 'TEXT',
+    GUILD = 'GUILD',
+    FORUM = 'FORUM',
+    VOICE = 'VOICE',
+    THREAD = 'THREAD',
+    CATEGORY = 'CATEGORY',
+}
+
+export interface ScanProgress {
+    target: ScanTarget;
+    id: string;
+    name?: string;
+    scanned: number;
+    maxMessages: number;
+    hits: number;
+    childs: ScanProgress[];
+}
+
+export interface ScanResult {
+    progress: ScanProgress;
+    start: string;
+    end: string | null;
+}

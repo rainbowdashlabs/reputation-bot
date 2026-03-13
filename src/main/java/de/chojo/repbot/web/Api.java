@@ -20,6 +20,7 @@ import de.chojo.repbot.service.KofiService;
 import de.chojo.repbot.service.MailService;
 import de.chojo.repbot.service.MarkdownService;
 import de.chojo.repbot.service.RoleAssigner;
+import de.chojo.repbot.service.ScanService;
 import de.chojo.repbot.service.TokenPurchaseService;
 import de.chojo.repbot.web.cache.MemberCache;
 import de.chojo.repbot.web.routes.v1.auth.AuthRoute;
@@ -75,7 +76,8 @@ public class Api {
             VoteRepository voteRepository,
             TokenPurchaseService tokenPurchaseService,
             KofiService kofiService,
-            MailService mailService) {
+            MailService mailService,
+            ScanService scanService) {
         this.sessionService = sessionService;
         metricsRoute = new MetricsRoute(metrics);
         sessionRoute = new SessionRoute(sessionService);
@@ -104,7 +106,7 @@ public class Api {
         authRoute = new AuthRoute(discordOAuthService, userRepository, sessionService, configuration, mailService);
         userRoute =
                 new UserRoute(voteRepository, userRepository, configuration, shardManager, kofiService, mailService);
-        guildRoute = new GuildRoute(memberCache, voteRepository, tokenPurchaseService);
+        guildRoute = new GuildRoute(memberCache, voteRepository, tokenPurchaseService, scanService);
         kofiRoute = new KofiRoute(kofiService);
     }
 

@@ -11,6 +11,7 @@ import de.chojo.repbot.dao.access.guild.reputation.Reputation;
 import de.chojo.repbot.dao.access.guild.reputation.sub.user.Gdpr;
 import de.chojo.repbot.dao.access.guild.settings.sub.AbuseProtection;
 import de.chojo.repbot.dao.access.guild.settings.sub.CooldownDirection;
+import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.dao.components.MemberHolder;
 import de.chojo.repbot.dao.snapshots.ChannelStats;
 import de.chojo.repbot.dao.snapshots.RepProfile;
@@ -361,7 +362,17 @@ public class RepUser implements MemberHolder {
 
     @Override
     public Guild guild() {
-        return reputation.guild();
+        return guildHolder().guild();
+    }
+
+    @Override
+    public long guildId() {
+        return guildHolder().guildId();
+    }
+
+    @Override
+    public GuildHolder guildHolder() {
+        return reputation;
     }
 
     public RepUser refresh(Member member) {

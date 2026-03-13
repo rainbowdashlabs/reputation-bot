@@ -17,7 +17,6 @@ import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.util.SupporterFeature;
 import de.chojo.sadu.queries.api.results.writing.insertion.InsertionResult;
 import de.chojo.sadu.queries.call.adapter.StandardAdapter;
-import net.dv8tion.jda.api.entities.Guild;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
@@ -46,13 +45,8 @@ public class Subscriptions implements GuildHolder, SkuMeta {
     }
 
     @Override
-    public Guild guild() {
-        return repGuild.guild();
-    }
-
-    @Override
-    public long guildId() {
-        return repGuild.guildId();
+    public GuildHolder guildHolder() {
+        return repGuild;
     }
 
     @Override

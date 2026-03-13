@@ -787,6 +787,15 @@ class ApiClient {
         });
         return response.data;
     }
+
+    public async startScan(): Promise<void> {
+        await this.axiosInstance.post('/guild/scan/start');
+    }
+
+    public async getScanStatus(): Promise<Types.ScanResult> {
+        const response = await this.axiosInstance.get<Types.ScanResult>('/guild/scan/status');
+        return response.data;
+    }
 }
 
 export const api = new ApiClient();

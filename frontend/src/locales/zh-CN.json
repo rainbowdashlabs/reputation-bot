@@ -127,7 +127,8 @@
         "MAX_MESSAGE_AGE_LOW": "消息的最大保存期限设置得过短。这可能会导致用户无法对较早的消息互相致谢。"
       },
       "goToSettings": "前往设置"
-    }
+    },
+    "scan": "扫描"
   },
   "locale": {
     "selectLanguage": "选择语言"
@@ -545,6 +546,21 @@
       "finished": {
         "title": "设置完成",
         "description": "您已完成最后一个设置步骤。我们将引导您进入常规设置页面，您可能会发现更多感兴趣的设置选项。"
+      },
+      "scan": {
+        "title": "服务器扫描",
+        "description": "既然您已经配置好了频道，我们建议您运行一次扫描，以便从服务器的历史记录中索引现有的声誉数据。",
+        "prompt": {
+          "title": "开始服务器扫描？",
+          "description": "扫描程序将遍历您服务器中已配置频道内的消息历史记录，并查找现有的声望值。根据您服务器的规模，此过程可能需要一些时间。"
+        },
+        "started": {
+          "title": "扫描开始！",
+          "description": "扫描目前正在后台运行。完成设置后，您可以在扫描页面查看进度。"
+        },
+        "start": "开始扫描",
+        "starting": "开始...",
+        "error": "扫描启动失败。请稍后再试。"
       }
     }
   },
@@ -959,6 +975,26 @@
       "offsetMax": "偏移量必须小于等于{max}",
       "countMin": "计数必须至少为2",
       "countMax": "计数必须小于等于{max}"
+    }
+  },
+  "scan": {
+    "description": "扫描公会中在添加机器人之前或在未被追踪的频道内获得的声望。这将扫描配置的声望频道和分类中的所有消息。",
+    "start": "开始扫描",
+    "starting": "开始...",
+    "startedAt": "始于",
+    "finishedAt": "完成于",
+    "messagesScanned": "已扫描的消息",
+    "reputationFound": "声誉已找到",
+    "noScanYet": "尚未进行扫描。",
+    "status": {
+      "running": "正在扫描",
+      "finished": "扫描完成"
+    },
+    "progressDetails": "进度详情",
+    "error": {
+      "fetchStatus": "无法获取扫描状态。请稍后再试。",
+      "startFailed": "扫描启动失败。请稍后再试。",
+      "alreadyRunning": "该公会正在进行扫描。"
     }
   }
 }

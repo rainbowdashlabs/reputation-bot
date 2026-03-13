@@ -127,7 +127,8 @@
         "MAX_MESSAGE_AGE_LOW": "Maximální stáří zprávy je nastaveno na velmi nízkou hodnotu. To může uživatelům bránit v tom, aby si navzájem děkovali za starší zprávy."
       },
       "goToSettings": "Přejít do nastavení"
-    }
+    },
+    "scan": "Naskenovat"
   },
   "locale": {
     "selectLanguage": "Vyberte jazyk"
@@ -545,6 +546,21 @@
       "finished": {
         "title": "Nastavení dokončeno",
         "description": "Právě jste dokončili poslední krok nastavení. Nyní vás přesměrujeme na stránku s obecnými nastaveními, kde můžete najít další nastavení, která by vás mohla zajímat."
+      },
+      "scan": {
+        "title": "Prohlídka serveru",
+        "description": "Nyní, když jste nakonfigurovali své kanály, doporučujeme spustit skenování, aby se z historie vašeho serveru načetla stávající reputace.",
+        "prompt": {
+          "title": "Spustit kontrolu serveru?",
+          "description": "Prohledávání projde historii zpráv na vašem serveru v nastavených kanálech a vyhledá existující hodnocení. V závislosti na velikosti vašeho serveru to může chvíli trvat."
+        },
+        "started": {
+          "title": "Skenování bylo zahájeno!",
+          "description": "Skenování nyní probíhá na pozadí. Po dokončení nastavení můžete sledovat jeho průběh na stránce skenování."
+        },
+        "start": "Spustit skenování",
+        "starting": "Začínáme...",
+        "error": "Spuštění skenování se nezdařilo. Zkuste to prosím později."
       }
     }
   },
@@ -959,6 +975,26 @@
       "offsetMax": "Offset musí být maximálně{max}",
       "countMin": "Počet musí být alespoň 2",
       "countMax": "Počet musí být nejvýš{max}"
+    }
+  },
+  "scan": {
+    "description": "Prohledejte svůj cech a vyhledejte hodnocení, která byla udělena před přidáním bota nebo v kanálech, které nebyly sledovány. Tímto se prohledají všechny zprávy v nastavených kanálech a kategoriích hodnocení.",
+    "start": "Spustit skenování",
+    "starting": "Začínáme...",
+    "startedAt": "Začalo v",
+    "finishedAt": "Dokončeno v",
+    "messagesScanned": "Zkontrolované zprávy",
+    "reputationFound": "Reputace nalezena",
+    "noScanYet": "Zatím nebyl proveden žádný sken.",
+    "status": {
+      "running": "Probíhá skenování",
+      "finished": "Skenování dokončeno"
+    },
+    "progressDetails": "Podrobnosti o postupu",
+    "error": {
+      "fetchStatus": "Načtení stavu skenování se nezdařilo. Zkuste to prosím později.",
+      "startFailed": "Spuštění skenování se nezdařilo. Zkuste to prosím později.",
+      "alreadyRunning": "Pro tento cech již probíhá kontrola."
     }
   }
 }

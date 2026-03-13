@@ -127,7 +127,8 @@
         "MAX_MESSAGE_AGE_LOW": "Viestien enimmäisikä on asetettu hyvin matalaksi. Tämä saattaa estää käyttäjiä kiittämästä toisiaan vanhemmista viesteistä."
       },
       "goToSettings": "Siirry asetuksiin"
-    }
+    },
+    "scan": "Skannaa"
   },
   "locale": {
     "selectLanguage": "Valitse kieli"
@@ -545,6 +546,21 @@
       "finished": {
         "title": "Asennus valmis",
         "description": "Olet nyt suorittanut viimeisen asennusvaiheen. Siirrämme sinut nyt yleisiin asetuksiin, josta saatat löytää lisää sinua kiinnostavia asetuksia."
+      },
+      "scan": {
+        "title": "Palvelimen tarkistus",
+        "description": "Nyt kun olet määrittänyt kanavasi, suosittelemme suorittamaan haun, jotta palvelimesi historiasta löytyvä olemassa oleva maine indeksoidaan.",
+        "prompt": {
+          "title": "Käynnistääkö palvelintarkistuksen?",
+          "description": "Skannaus käy läpi palvelimesi viestihistorian määritetyillä kanavilla ja etsii olemassa olevat mainepisteet. Tämä voi viedä jonkin verran aikaa palvelimesi koosta riippuen."
+        },
+        "started": {
+          "title": "Skannaus aloitettu!",
+          "description": "Skannaus on nyt käynnissä taustalla. Voit seurata skannauksen etenemistä skannaussivulla, kun olet saanut asennuksen valmiiksi."
+        },
+        "start": "Aloita skannaus",
+        "starting": "Aloitetaan...",
+        "error": "Skannausta ei voitu käynnistää. Yritä myöhemmin uudelleen."
       }
     }
   },
@@ -959,6 +975,26 @@
       "offsetMax": "Offsetin on oltava enintään{max}",
       "countMin": "Lukumäärän on oltava vähintään 2.",
       "countMax": "Lukumäärän on oltava enintään{max}"
+    }
+  },
+  "scan": {
+    "description": "Tarkista kiltaasi maine, joka on annettu ennen botin lisäämistä tai kanavilla, joita ei ole seurattu. Tämä tarkistaa kaikki viestit määritetyissä mainekanavissa ja -luokissa.",
+    "start": "Aloita skannaus",
+    "starting": "Aloitetaan...",
+    "startedAt": "Aloitettu",
+    "finishedAt": "Valmistui",
+    "messagesScanned": "Viestit skannattu",
+    "reputationFound": "Maine löytyi",
+    "noScanYet": "Skannausta ei ole vielä suoritettu.",
+    "status": {
+      "running": "Skannaus käynnissä",
+      "finished": "Skannaus valmis"
+    },
+    "progressDetails": "Edistymisen yksityiskohdat",
+    "error": {
+      "fetchStatus": "Skannausasetusten hakua ei onnistunut. Yritä myöhemmin uudelleen.",
+      "startFailed": "Skannausta ei voitu käynnistää. Yritä myöhemmin uudelleen.",
+      "alreadyRunning": "Tätä kiltaa varten on jo käynnissä tarkistus."
     }
   }
 }

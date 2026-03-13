@@ -127,7 +127,8 @@
         "MAX_MESSAGE_AGE_LOW": "L'âge max des messages est réglé super bas. Ça pourrait empêcher les utilisateurs de se remercier pour des messages plus vieux."
       },
       "goToSettings": "Va dans les paramètres"
-    }
+    },
+    "scan": "Scanner"
   },
   "locale": {
     "selectLanguage": "Choisis ta langue"
@@ -545,6 +546,21 @@
       "finished": {
         "title": "Installation terminée",
         "description": "Tu as maintenant fini la dernière étape de configuration. On va maintenant t'envoyer vers la page des paramètres généraux où tu trouveras peut-être d'autres paramètres qui pourraient t'intéresser."
+      },
+      "scan": {
+        "title": "Analyse du serveur",
+        "description": "Maintenant que tu as configuré tes canaux, on te conseille de lancer une analyse pour indexer les données de réputation existantes issues de l'historique de ton serveur.",
+        "prompt": {
+          "title": "Lancer une analyse du serveur ?",
+          "description": "Une analyse va parcourir l'historique des messages de ton serveur dans les canaux configurés et détecter les réputations existantes. Cela peut prendre un certain temps selon la taille de ton serveur."
+        },
+        "started": {
+          "title": "La numérisation a commencé !",
+          "description": "L'analyse s'exécute actuellement en arrière-plan. Tu pourras suivre sa progression sur la page d'analyse une fois la configuration terminée."
+        },
+        "start": "Lancer l'analyse",
+        "starting": "C'est parti...",
+        "error": "Échec du lancement de l'analyse. Réessaie plus tard."
       }
     }
   },
@@ -959,6 +975,26 @@
       "offsetMax": "Le décalage doit être au max d'{max}",
       "countMin": "Le nombre doit être au moins 2.",
       "countMax": "Le nombre doit être au max de {max}"
+    }
+  },
+  "scan": {
+    "description": "Recherche dans ta guilde les points de réputation attribués avant l'ajout du bot ou dans des canaux qui n'étaient pas suivis. Cela analysera tous les messages des canaux et catégories de réputation configurés.",
+    "start": "Lancer l'analyse",
+    "starting": "C'est parti...",
+    "startedAt": "A commencé à",
+    "finishedAt": "Terminé à",
+    "messagesScanned": "Messages analysés",
+    "reputationFound": "Réputation trouvée",
+    "noScanYet": "Aucun scan n'a encore été effectué.",
+    "status": {
+      "running": "Analyse en cours",
+      "finished": "La numérisation est terminée"
+    },
+    "progressDetails": "Détails de l'avancement",
+    "error": {
+      "fetchStatus": "Impossible de récupérer l'état de la numérisation. Réessaie plus tard.",
+      "startFailed": "Échec du démarrage de l'analyse. Réessaie plus tard.",
+      "alreadyRunning": "Une analyse est déjà en cours pour cette guilde."
     }
   }
 }

@@ -16,7 +16,6 @@ import de.chojo.repbot.dao.access.guild.settings.sub.thanking.Thankwords;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.web.pojo.settings.sub.ThankingPOJO;
 import de.chojo.sadu.mapper.wrapper.Row;
-import net.dv8tion.jda.api.entities.Guild;
 
 import java.sql.SQLException;
 import java.util.HashSet;
@@ -174,12 +173,7 @@ public class Thanking implements GuildHolder {
     }
 
     @Override
-    public Guild guild() {
-        return settings.guild();
-    }
-
-    @Override
-    public long guildId() {
-        return settings.guildId();
+    public GuildHolder guildHolder() {
+        return settings;
     }
 }

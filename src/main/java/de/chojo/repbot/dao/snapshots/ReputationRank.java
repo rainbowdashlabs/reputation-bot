@@ -73,13 +73,8 @@ public class ReputationRank implements GuildHolder, Comparable<ReputationRank> {
     }
 
     @Override
-    public Guild guild() {
-        return ranks.guild();
-    }
-
-    @Override
-    public long guildId() {
-        return ranks.guildId();
+    public GuildHolder guildHolder() {
+        return ranks;
     }
 
     @Override

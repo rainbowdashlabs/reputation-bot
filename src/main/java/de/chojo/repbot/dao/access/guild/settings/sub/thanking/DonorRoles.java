@@ -7,8 +7,8 @@ package de.chojo.repbot.dao.access.guild.settings.sub.thanking;
 
 import com.fasterxml.jackson.annotation.JsonSerializeAs;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
+import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.web.pojo.settings.sub.thanking.RolesHolderPOJO;
-import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.Set;
 
@@ -22,13 +22,8 @@ public class DonorRoles extends RolesHolder {
     }
 
     @Override
-    public Guild guild() {
-        return thanking.guild();
-    }
-
-    @Override
-    public long guildId() {
-        return thanking.guildId();
+    public GuildHolder guildHolder() {
+        return thanking;
     }
 
     @Override

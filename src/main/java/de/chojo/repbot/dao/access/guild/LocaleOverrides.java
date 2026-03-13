@@ -7,7 +7,6 @@ package de.chojo.repbot.dao.access.guild;
 
 import de.chojo.jdautil.container.Pair;
 import de.chojo.repbot.dao.components.GuildHolder;
-import net.dv8tion.jda.api.entities.Guild;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,16 +17,16 @@ import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 
 public class LocaleOverrides implements GuildHolder {
-    private final RepGuild guild;
+    private final RepGuild repGuild;
     private Map<String, String> overrides;
 
-    public LocaleOverrides(RepGuild guild) {
-        this.guild = guild;
+    public LocaleOverrides(RepGuild repGuild) {
+        this.repGuild = repGuild;
     }
 
     @Override
-    public Guild guild() {
-        return guild.guild();
+    public GuildHolder guildHolder() {
+        return repGuild;
     }
 
     public Optional<String> getOverride(String code) {

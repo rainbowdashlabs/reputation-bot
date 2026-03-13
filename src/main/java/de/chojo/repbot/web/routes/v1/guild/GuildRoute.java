@@ -7,6 +7,7 @@ package de.chojo.repbot.web.routes.v1.guild;
 
 import de.chojo.repbot.dao.access.guildsession.GuildSession;
 import de.chojo.repbot.dao.provider.VoteRepository;
+import de.chojo.repbot.service.ScanService;
 import de.chojo.repbot.service.TokenPurchaseService;
 import de.chojo.repbot.web.cache.MemberCache;
 import de.chojo.repbot.web.config.Role;
@@ -33,12 +34,17 @@ public class GuildRoute implements RoutesBuilder {
     private final MemberCache memberCache;
     private final VoteRepository voteRepository;
     private final FeaturesRoute featuresRoute;
+    private final ScanRoute scanRoute;
 
     public GuildRoute(
-            MemberCache memberCache, VoteRepository voteRepository, TokenPurchaseService tokenPurchaseService) {
+            MemberCache memberCache,
+            VoteRepository voteRepository,
+            TokenPurchaseService tokenPurchaseService,
+            ScanService scanService) {
         this.memberCache = memberCache;
         this.voteRepository = voteRepository;
         featuresRoute = new FeaturesRoute(tokenPurchaseService);
+        scanRoute = new ScanRoute(scanService);
     }
 
     @Override
@@ -51,6 +57,7 @@ public class GuildRoute implements RoutesBuilder {
                 post("/withdraw", this::withdraw, Role.GUILD_ADMIN);
             });
             featuresRoute.buildRoutes();
+            scanRoute.buildRoutes();
         });
     }
 

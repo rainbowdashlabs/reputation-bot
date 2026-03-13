@@ -4,7 +4,7 @@
  *     Copyright (C) RainbowDashLabs and Contributor
  */
 <script lang="ts" setup>
-import {computed, ref, watch} from 'vue'
+import {computed, onMounted, ref, watch} from 'vue'
 import {useI18n} from 'vue-i18n'
 import {useRoute, useRouter} from 'vue-router'
 import {useSession} from '@/composables/useSession'
@@ -23,15 +23,20 @@ import SetupAnnouncementsStep from './setup/SetupAnnouncementsStep.vue'
 import SetupCooldownStep from './setup/SetupCooldownStep.vue'
 import SetupMainReactionStep from './setup/SetupMainReactionStep.vue'
 import SetupRolesStep from './setup/SetupRolesStep.vue'
+import SetupScanStep from './setup/SetupScanStep.vue'
 import SetupFinishedStep from './setup/SetupFinishedStep.vue'
 
 const {t} = useI18n()
 const router = useRouter()
 const route = useRoute()
-const {session} = useSession()
+const {session, loadSettings} = useSession()
+
+onMounted(async () => {
+  await loadSettings()
+})
 
 const SETUP_STEP_KEY = 'reputation-bot-setup-current-step'
-const totalSteps = 13
+const totalSteps = 14
 
 // Initialize currentStep from URL query, then localStorage, or default to 1
 const getInitialStep = (): number => {
@@ -95,21 +100,27 @@ const steps = [
   {id: 4, component: SetupReputationTypesStep, titleKey: 'setup.steps.reputationTypes.title', required: false},
   {id: 5, component: SetupReputationModeStep, titleKey: 'setup.steps.reputationMode.title', required: false},
   {id: 6, component: SetupRanksStep, titleKey: 'setup.steps.ranks.title', required: true},
-  {id: 7, component: SetupChannelsStep, titleKey: 'setup.steps.channels.title', required: true},
-  {id: 8, component: SetupThankwordsStep, titleKey: 'setup.steps.thankwords.title', required: false},
-  {id: 9, component: SetupAnnouncementsStep, titleKey: 'setup.steps.announcements.title', required: false},
-  {id: 10, component: SetupCooldownStep, titleKey: 'setup.steps.cooldown.title', required: false},
-  {id: 11, component: SetupMainReactionStep, titleKey: 'setup.steps.mainReaction.title', required: false},
-  {id: 12, component: SetupRolesStep, titleKey: 'setup.steps.roles.title', required: false},
-  {id: 13, component: SetupFinishedStep, titleKey: 'setup.steps.finished.title', required: false}
+  {id: 7, component: SetupThankwordsStep, titleKey: 'setup.steps.thankwords.title', required: false},
+  {id: 8, component: SetupChannelsStep, titleKey: 'setup.steps.channels.title', required: true},
+  {id: 9, component: SetupScanStep, titleKey: 'setup.steps.scan.title', required: false},
+  {id: 10, component: SetupAnnouncementsStep, titleKey: 'setup.steps.announcements.title', required: false},
+  {id: 11, component: SetupCooldownStep, titleKey: 'setup.steps.cooldown.title', required: false},
+  {id: 12, component: SetupMainReactionStep, titleKey: 'setup.steps.mainReaction.title', required: false},
+  {id: 13, component: SetupRolesStep, titleKey: 'setup.steps.roles.title', required: false},
+  {id: 14, component: SetupFinishedStep, titleKey: 'setup.steps.finished.title', required: false}
 ]
 
 const currentStepData = computed(() => steps.find(s => s.id === currentStep.value))
 
 const canProceed = ref(true)
+const scanStarted = ref(false)
 
 const updateCanProceed = (value: boolean) => {
   canProceed.value = value
+}
+
+const onScanStarted = (value: boolean) => {
+  scanStarted.value = value
 }
 
 const goToPreviousStep = () => {
@@ -131,8 +142,13 @@ const finishSetup = () => {
   } catch (error) {
     console.error('Failed to clear saved setup step:', error)
   }
-  // Navigate to settings after setup is complete
-  router.push('/settings/edit')
+
+  if (scanStarted.value) {
+    router.push('/settings/edit/scan')
+  } else {
+    // Navigate to settings after setup is complete
+    router.push('/settings/edit')
+  }
 }
 
 const progressPercentage = computed(() => {
@@ -207,9 +223,10 @@ const progressPercentage = computed(() => {
           </div>
 
           <component
-              :is="currentStepData?.component"
-              v-if="currentStepData && session"
+              :is="currentStepData.component"
+              v-if="currentStepData && session && session.settings"
               @can-proceed="updateCanProceed"
+              @scan-started="onScanStarted"
           />
         </div>
       </div>
