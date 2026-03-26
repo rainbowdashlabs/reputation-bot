@@ -19,7 +19,7 @@ jobs:
         with:
           distribution: temurin
           java-version: ${{ env.JAVA_VERSION }}
-      - uses: gradle/actions/wrapper-validation@v5
+      - uses: gradle/actions/wrapper-validation@v6
       - name: Build with Gradle
         run: ./gradlew --build-cache build -x test -x spotlessCheck
       - name: Test with Gradle
@@ -58,7 +58,7 @@ jobs:
         with:
           distribution: temurin
           java-version: ${{ env.JAVA_VERSION }}
-      - uses: gradle/actions/wrapper-validation@v5
+      - uses: gradle/actions/wrapper-validation@v6
       - name: Check backend license headers
         run: ./gradlew checkLicenseBackend
 
@@ -73,7 +73,7 @@ jobs:
         with:
           distribution: temurin
           java-version: ${{ env.JAVA_VERSION }}
-      - uses: gradle/actions/wrapper-validation@v5
+      - uses: gradle/actions/wrapper-validation@v6
       - name: Check frontend license headers
         run: ./gradlew checkLicenseFrontend
 
@@ -88,7 +88,7 @@ jobs:
         with:
           distribution: temurin
           java-version: ${{ env.JAVA_VERSION }}
-      - uses: gradle/actions/wrapper-validation@v5
+      - uses: gradle/actions/wrapper-validation@v6
       - name: Run locale validation tests
         run: ./gradlew testLocale --info
       - name: Check UTF-8 for resource bundles
@@ -105,7 +105,7 @@ jobs:
         with:
           distribution: temurin
           java-version: ${{ env.JAVA_VERSION }}
-      - uses: gradle/actions/wrapper-validation@v5
+      - uses: gradle/actions/wrapper-validation@v6
       - name: Run formatting tests
         run: ./gradlew spotlessJavaCheck
 
@@ -120,7 +120,7 @@ jobs:
         with:
           distribution: temurin
           java-version: ${{ env.JAVA_VERSION }}
-      - uses: gradle/actions/wrapper-validation@v5
+      - uses: gradle/actions/wrapper-validation@v6
       - name: Run formatting tests
         run: ./gradlew spotlessJavascriptCheck spotlessVueCheck
 
@@ -135,7 +135,7 @@ jobs:
         with:
           distribution: temurin
           java-version: ${{ env.JAVA_VERSION }}
-      - uses: gradle/actions/wrapper-validation@v5
+      - uses: gradle/actions/wrapper-validation@v6
       - name: Run database validation tests
         run: ./gradlew testDatabase --info
 
@@ -155,7 +155,7 @@ jobs:
         with:
           distribution: temurin
           java-version: ${{ env.JAVA_VERSION }}
-      - uses: gradle/actions/wrapper-validation@v5
+      - uses: gradle/actions/wrapper-validation@v6
       - name: Check encoding
         run: ./gradlew spotlessFrontendLocalesCheck
 #      - name: Check all keys exist in all locales
