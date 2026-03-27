@@ -35,7 +35,7 @@ dependencyResolutionManagement {
 
             // plugins
             plugin("spotless", "com.diffplug.spotless").version("8.4.0")
-            plugin("shadow", "com.gradleup.shadow").version("9.4.0")
+            plugin("shadow", "com.gradleup.shadow").version("9.4.1")
         }
 
         create("testlibs") {
