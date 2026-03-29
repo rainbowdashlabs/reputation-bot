@@ -65,7 +65,7 @@ spotless {
 
 dependencies {
     // discord
-    implementation("de.chojo", "cjda-util", "2.14.5+jda-6.3.0") {
+    implementation("de.chojo:cjda-util:2.14.5+jda-6.3.0") {
         exclude(group = "club.minnced", module = "opus-java")
     }
 
@@ -78,28 +78,29 @@ dependencies {
     implementation(libs.bundles.jackson)
 
     // database
-    implementation("org.postgresql", "postgresql", "42.7.10")
+    implementation("org.postgresql:postgresql:42.7.10")
     implementation(libs.bundles.sadu)
 
     // Logging
     implementation(libs.bundles.log4j)
-    implementation("de.chojo", "log-util", "1.0.1") {
+    implementation("de.chojo:log-util:1.0.1") {
         exclude("org.apache.logging.log4j")
     }
 
-    implementation("org.knowm.xchart", "xchart", "3.8.8")
+    implementation("org.knowm.xchart:xchart:3.8.8")
 
     // Mailing
-    implementation("commons-validator", "commons-validator", "1.10.1")
-    implementation("org.eclipse.angus", "angus-mail", "2.0.5")
+    implementation("commons-validator:commons-validator:1.10.1")
+    implementation("org.eclipse.angus:angus-mail:2.0.5")
 
     // Markdown parsing
     implementation(libs.bundles.commonmark)
 
     // unit testing
     testImplementation(testlibs.bundles.junit)
-    testImplementation("org.junit.platform", "junit-platform-launcher")
-    testImplementation("org.knowm.xchart", "xchart", "3.8.8")
+    testImplementation(platform(testlibs.junit.bom))
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation("org.knowm.xchart:xchart:3.8.8")
     testImplementation(testlibs.sadu.testing)
     testImplementation(testlibs.bundles.database.postgres)
     testImplementation(testlibs.slf4j.simple)
@@ -140,11 +141,14 @@ idea {
     }
 }
 
+
+val projectVersion = project.version.toString();
 tasks {
     processResources {
+        inputs.property("projectVersion", projectVersion)
         from(sourceSets.main.get().resources.srcDirs) {
             filesMatching("version") {
-                var version = project.version.toString()
+                var version = projectVersion
                 var workflow = (System.getenv("GITHUB_ACTIONS") ?: "false") == "true"
                 if (workflow) {
                     val now = ZonedDateTime.now(ZoneOffset.UTC)

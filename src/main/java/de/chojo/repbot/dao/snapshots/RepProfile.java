@@ -135,7 +135,7 @@ public record RepProfile(
                         "element.profile.nextLevel",
                         "```ANSI%n%s/%s  %s```".formatted(currProgress, nextLevel, progressBar),
                         false)
-                .setColor(repUser.member().getColor());
+                .setColor(repUser.member().getColors().getPrimary());
         var badge = configuration.badges().badge((int) rank());
         badge.ifPresent(build::setThumbnail);
 
