@@ -25,6 +25,6 @@ public class RolePOJO {
     }
 
     public static RolePOJO generate(Role role) {
-        return new RolePOJO(role.getName(), role.getId(), role.getColor(), role.getPosition());
+        return new RolePOJO(role.getName(), role.getId(), role.getColors().getPrimary(), role.getPosition());
     }
 }
