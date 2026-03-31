@@ -19,6 +19,8 @@ const userTokens = ref<number>(0)
 const guildTokens = ref<number>(0)
 const isExpired = ref(false)
 const currentGuildId = ref<string | null>(localStorage.getItem(GUILD_ID_KEY))
+const settingsLoading = ref(false)
+const settingsError = ref<string | null>(null)
 
 export function useSession() {
     const setSession = (data: Types.GuildPOJO) => {
@@ -252,6 +254,8 @@ export function useSession() {
 
     return {
         session: readonly(session),
+        settingsLoading: readonly(settingsLoading),
+        settingsError: readonly(settingsError),
         userSession: readonly(userSession),
         premiumFeatures: readonly(premiumFeatures),
         userTokens: readonly(userTokens),
@@ -300,11 +304,21 @@ export function useSession() {
 async function loadSettings() {
     if (!session.value) return
     if (session.value.settings) return
+    settingsLoading.value = true
+    settingsError.value = null
     try {
         const settings = await api.getGuildSettings()
         session.value.settings = settings
-    } catch (e) {
+    } catch (e: any) {
         console.error('Failed to load settings:', e)
+        const status = e?.response?.status ?? e?.status
+        if (status === 403 || status === 401) {
+            settingsError.value = 'forbidden'
+        } else {
+            settingsError.value = 'unknown'
+        }
+    } finally {
+        settingsLoading.value = false
     }
 }
 

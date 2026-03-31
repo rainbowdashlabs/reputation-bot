@@ -119,7 +119,7 @@ async function loadSession() {
         const sessionData = await api.getGuildSession()
         setSession(sessionData);
 
-        if (isSettingsPage.value) {
+        if (isSettingsPage.value || isSetupPage.value) {
           await Promise.all([
             loadSettings(),
             loadPremiumFeatures()

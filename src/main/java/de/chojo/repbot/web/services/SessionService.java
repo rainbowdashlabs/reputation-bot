@@ -16,6 +16,7 @@ import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.provider.SettingsAuditLogRepository;
 import de.chojo.repbot.dao.provider.UserRepository;
 import de.chojo.repbot.dao.provider.UserSessionRepository;
+import de.chojo.repbot.util.LogNotify;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.pojo.guild.MemberPOJO;
 import de.chojo.repbot.web.pojo.session.GuildSessionData;
@@ -98,6 +99,7 @@ public class SessionService {
                         .updateToken(response.accessToken(), response.refreshToken(), response.expiry());
                 log.info("Refreshed discord token for user {}", token.userId());
             } catch (Exception e) {
+                token.delete();
                 log.error("Failed to refresh discord token for user {}", token.userId(), e);
             }
         }
@@ -185,7 +187,7 @@ public class SessionService {
         try {
             userGuilds = discordOAuthService.getUserGuilds(userToken.get().accessToken());
         } catch (Exception e) {
-            log.error("Failed to fetch user guilds for user {}", userId, e);
+            log.error(LogNotify.NOTIFY_ADMIN, "Failed to fetch user guilds for user {}", userId, e);
             return new UserSession(userId, token, guilds, memberPojo, created, isBotOwner);
         }
 
@@ -198,6 +200,7 @@ public class SessionService {
             try {
                 member = guild.retrieveMemberById(userId).complete();
             } catch (Exception e) {
+                log.error(LogNotify.NOTIFY_ADMIN, "Could not build user session for user {} on guild {}", userId, guild, e);
                 continue;
             }
 
