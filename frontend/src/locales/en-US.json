@@ -724,6 +724,20 @@
   },
   "setup": {
     "title": "Initial Setup",
+    "error": {
+      "noSession": {
+        "title": "Not Connected",
+        "description": "No server session is active. Please go back and select a server."
+      },
+      "forbidden": {
+        "title": "Access Denied",
+        "description": "You do not have permission to access the settings for this server. Please contact a server administrator."
+      },
+      "unknown": {
+        "title": "Failed to Load Settings",
+        "description": "An error occurred while loading the server settings. Please try again later."
+      }
+    },
     "stepProgress": "Step {current} of {total}",
     "requiredStep": "This step is required to continue",
     "navigation": {

@@ -1,399 +1,27 @@
 {
-  "common": {
-    "save": "Salvar",
-    "cancel": "Cancelar",
-    "delete": "Apagar",
-    "edit": "Editar",
-    "change": "Mudança",
-    "clear": "Limpar",
-    "confirm": "Confirmar",
-    "loading": "Carregando...",
-    "error": {
-      "outOfBounds": "O valor precisa estar entre {min} e {max}. Corrigido para o valor válido mais próximo."
-    },
-    "noData": "Não encontrei nada.",
-    "previous": "Anterior",
-    "next": "Próximo",
-    "pageOf": "Página {current} de {total}"
-  },
-  "navigation": {
-    "settings": "Configurações",
-    "presets": "Predefinições",
-    "setup": "Configuração",
-    "logout": "Sair",
-    "dashboard": "Painel",
-    "user_settings": "Configurações do usuário",
-    "voting": "Votação",
-    "token_shop": "Loja de fichas",
-    "supporter": "Apoiador",
-    "tos": "Termos de Serviço",
-    "privacy": "Privacidade",
-    "faq": "Perguntas frequentes",
-    "metrics": "Métricas"
-  },
-  "presets": {
-    "title": "Predefinições",
-    "description": "Predefinições de configuração rápida para você começar com configurações comuns.",
-    "apply": "Inscreva-se",
-    "applying": "Aplicando...",
-    "simpleReputation": {
-      "title": "Sistema de Reputação Simples",
-      "description": "Quero um sistema de reputação simples, onde os usuários só possam dar reputação por meio de comandos, sem precisar ficar de olho em um monte de detalhes.",
-      "settings": "Essa predefinição desativará todos os tipos de reputação, exceto comandos, e desativará o rastreamento de contexto do doador e do receptor."
-    },
-    "thankOnce": {
-      "title": "Agradeça só uma vez",
-      "description": "Quero que os usuários possam agradecer uns aos outros só uma vez, evitando que a mesma pessoa receba várias vezes reputação.",
-      "settings": "Essa predefinição vai definir o tempo de recarga só uma vez e mudar a direção do tempo de recarga para unidirecional."
-    },
-    "noAbuse": {
-      "title": "Sem proteção contra abuso",
-      "description": "Quero desativar a proteção contra abusos baseada no contexto e permitir que os usuários deem reputação mais livremente, sem rastrear seu histórico de interações.",
-      "settings": "Essa configuração vai desativar o rastreamento de contexto tanto do doador quanto do receptor."
-    },
-    "default": {
-      "title": "Configuração padrão",
-      "description": "Quero um sistema de reputação equilibrado, com padrões razoáveis que funcionem bem para a maioria dos servidores.",
-      "settings": "Essa configuração vai definir um tempo de espera bidirecional de 30 minutos, ativar todos os modos de reputação, exceto comandos, ativar a confirmação de reputação e ativar as verificações de contexto do doador e do receptor."
-    },
-    "applied": "Aplicado"
-  },
-  "settings": {
-    "title": "Configurações",
-    "general": "Geral",
-    "reputation": "Reputação",
-    "messages": "Mensagens",
-    "profile": "Perfil",
-    "ranks": "Classificações",
-    "channels": "Canais",
-    "roles": "Funções",
-    "thankwords": "Agradecimentos",
-    "abuseProtection": "Proteção contra abusos",
-    "announcements": "Anúncios",
-    "autopost": "Postagem automática",
-    "logChannel": "Canal de registro",
-    "reactions": "Reações",
-    "auditLog": "Registro de auditoria",
-    "integrationBypass": "Ignorar integração",
-    "problems": "Problemas",
-    "debug": {
-      "permissions": {
-        "title": "Permissões globais ausentes",
-        "description": "Essas permissões estão faltando para o bot globalmente. Isso pode limitar alguns recursos.",
-        "MANAGE_ROLES": "Não dá pra passar funções de reputação.",
-        "NICKNAME_CHANGE": "Não dá pra mudar o apelido no painel.",
-        "MANAGE_GUILD_EXPRESSIONS": "Não dá pra sugerir reações personalizadas no painel.",
-        "VIEW_CHANNEL": "Os canais de reputação não podem ser vistos. A reputação não pode ser dada por nenhum método baseado em texto.",
-        "MESSAGE_HISTORY": "A confirmação da reputação por meio de incorporações não está funcionando. A maioria das verificações de proteção contra abusos falhará.",
-        "MESSAGE_ADD_REACTION": "A confirmação da reputação por meio de reações não está funcionando.",
-        "MESSAGE_SEND": "Nenhuma mensagem de confirmação vai funcionar. Tipo, confirmação de reação ou confirmação de reputação por meio de incorporação.",
-        "MESSAGE_SEND_IN_THREADS": "Nenhuma mensagem de confirmação vai funcionar em threads. Tipo, confirmação de reação ou confirmação de reputação por meio de incorporação.",
-        "MESSAGE_EXT_EMOJI": "A confirmação da reputação por meio de emojis não está funcionando.",
-        "BYPASS_SLOWMODE": "Às vezes, as mensagens de confirmação não funcionam. Tipo, a confirmação de reação ou a confirmação de reputação por meio de incorporação.",
-        "MESSAGE_ATTACH_VOICE_MESSAGE": "Nenhuma mensagem de confirmação vai funcionar nos canais de voz. Tipo, confirmação de reação ou confirmação de reputação por meio de incorporação."
-      },
-      "simpleProblems": {
-        "title": "Problemas gerais",
-        "SYSTEM_CHANNEL_NOT_DEFINED": "O canal do sistema não está definido.",
-        "SYSTEM_CHANNEL_NOT_FOUND": "Não foi encontrado nenhum canal do sistema.",
-        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "O canal de anúncios não está definido.",
-        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "Não foi encontrado nenhum canal de anúncios.",
-        "NO_AUTOPOST_CHANNEL_DEFINED": "O canal de postagem automática não está definido.",
-        "AUTOPOST_CANNEL_NOT_FOUND": "Não foi encontrado nenhum canal de autopostagem.",
-        "NO_LOG_CHANNEL_DEFINED": "O canal de registro não está definido.",
-        "LOG_CHANNEL_NOT_FOUND": "Não foi encontrado nenhum canal de registro.",
-        "NO_THANKWORDS_DEFINED": "Não há palavras de agradecimento definidas.",
-        "NO_REPUTATION_CHANNEL_DEFINED": "Não tem canais ou categorias de reputação definidos."
-      },
-      "missingPermissions": {
-        "title": "Permissões de escopo ausentes",
-        "GUILD": "Guilda",
-        "CHANNEL": "Canal",
-        "CATEGORY": "Categoria"
-      },
-      "rankProblems": {
-        "title": "Problemas de classificação",
-        "CANT_ASSIGN_ROLE": "O bot não pode atribuir essa função porque ela está acima da função mais alta do bot.",
-        "MISSING_ROLE": "O papel para essa classificação está faltando."
-      },
-      "reputationChannelProblems": {
-        "title": "Problemas com o canal de reputação",
-        "MISSING_CHANNEL": "O canal está faltando.",
-        "MISSING_CATEGORY": "A categoria está faltando.",
-        "NOT_TEXT_TYPE": "O canal não é um canal de texto."
-      },
-      "simpleWarnings": {
-        "title": "Avisos",
-        "MAX_MESSAGE_AGE_LOW": "A idade máxima das mensagens está muito baixa. Isso pode impedir que os usuários agradeçam uns aos outros por mensagens mais antigas."
-      },
-      "goToSettings": "Vá para as configurações"
-    },
-    "scan": "Digitalizar"
-  },
-  "locale": {
-    "selectLanguage": "Escolha o idioma"
-  },
-  "error": {
-    "noToken": {
-      "title": "Nenhuma sessão encontrada",
-      "message": "Você não tem um token de sessão válido.",
-      "instruction": "Crie uma nova sessão para acessar este aplicativo."
-    },
-    "notice": {
-      "workingOnIt": "Fomos avisados sobre o problema e estamos trabalhando para resolver isso."
-    },
-    "expired": {
-      "title": "Sessão expirada",
-      "message": "Sua sessão expirou ou não está valida.",
-      "instruction": "Por favor, abra uma nova sessão no servidor Discord para continuar."
-    }
-  },
-  "premiumFeature": {
-    "title": "Recurso de Apoiador",
-    "message": "{name} é só para quem é apoiador. Torne-se um apoiador para usar.",
-    "requiredTierSingular": "Nível de Apoiador necessário:",
-    "requiredTierPlural": "É preciso escolher um dos níveis de apoio a seguir:",
-    "tokenShopHint": "Você também pode desbloquear esse recurso com tokens na",
-    "tokenShopLink": "Loja de fichas",
-    "kofiHint": "ou apoie-nos em",
-    "kofiLink": "Ko-fi"
-  },
-  "profile": {
-    "description": "Personalize como o bot aparece e se comporta no seu servidor.",
-    "reset": "Redefinir",
-    "premiumRequired": "Personalização do perfil",
-    "nickname": {
-      "label": "Apelido do bot",
-      "placeholder": "Digite o apelido do bot",
-      "description": "Defina um apelido personalizado para o bot neste servidor.",
-      "reset": "Redefinir apelido para o padrão"
-    },
-    "profilePicture": {
-      "label": "Foto do perfil",
-      "uploadButton": "Carregar imagem",
-      "uploading": "Carregando...",
-      "description": "Carregue uma foto de perfil personalizada para o bot (máximo de 2 MB, 512 x 512 pixels)",
-      "reset": "Redefinir foto do perfil para o padrão"
-    },
-    "reputationName": {
-      "label": "Nome da reputação",
-      "placeholder": "Digite um nome personalizado para a reputação (por exemplo, “Pontos”, “Karma”)",
-      "description": "Personalize o nome usado para reputação neste servidor.",
-      "reset": "Redefinir o nome da reputação para o padrão"
-    },
-    "tosNote": "Qualquer coisa que viole os Termos de Serviço do Discord ou a lei estadual não é permitida e pode resultar no bloqueio desse recurso para o servidor."
-  },
-  "general": {
-    "description": "Configure as configurações básicas do bot para este servidor.",
-    "language": {
-      "label": "Linguagem do bot",
-      "selectPlaceholder": "Escolha um idioma",
-      "description": "Escolha o idioma que o bot vai usar para mensagens e respostas neste servidor."
-    },
-    "systemChannel": {
-      "label": "Canal do sistema",
-      "selectPlaceholder": "Escolha um canal",
-      "note": "Observação: esse canal deve ser configurado e deve ser um canal interno. Ele vai ter mensagens importantes sobre o serviço do bot e mensagens dos desenvolvedores."
-    },
-    "roleSelect": {
-      "searchPlaceholder": "Pesquisar funções...",
-      "noRolesFound": "Não foram encontradas funções"
-    },
-    "ranks": {
-      "description": "Configure as classificações de reputação e suas funções associadas.",
-      "stackRoles": {
-        "label": "Funções da pilha",
-        "description": "Se estiver ativado, todas as classificações aplicáveis serão atribuídas, em vez de apenas a classificação mais alta."
-      },
-      "addRank": "Adicionar nova classificação",
-      "reputationRequired": "Reputação necessária",
-      "roleAlreadyAdded": "Essa função já tem uma classificação.",
-      "reputationAlreadyUsed": "Esse valor de reputação já é usado por outra classificação.",
-      "noRanks": "Ainda não tem nenhuma classificação definida.",
-      "reputationPlaceholder": "por exemplo, 100",
-      "refresh": {
-        "button": "Atualizar classificações",
-        "refreshing": "Refrescante...",
-        "alreadyRunning": "A atualização já tá rolando.",
-        "success": "A atualização da classificação começou com sucesso",
-        "failed": "Não deu pra começar a atualização da classificação"
-      },
-      "selectionNote": "Só dá pra escolher funções que não são gerenciadas por uma integração e que estão abaixo da função mais alta do bot."
-    },
-    "reputation": {
-      "description": "Configure como a reputação é calculada e quais recursos são ativados.",
-      "mode": {
-        "label": "Modo Reputação",
-        "description": "Escolha como a reputação é calculada e mostrada.",
-        "modes": {
-          "TOTAL": "Reputação total",
-          "ROLLING_WEEK": "Semana de rolagem",
-          "ROLLING_MONTH": "Mês contínuo",
-          "WEEK": "Esta semana",
-          "MONTH": "Este mês"
-        },
-        "descriptions": {
-          "TOTAL": "Use a reputação total que um usuário já recebeu.",
-          "ROLLING_WEEK": "Use a reputação recebida nos últimos 7 dias.",
-          "ROLLING_MONTH": "Use a reputação recebida nos últimos 30 dias.",
-          "WEEK": "Use a reputação recebida desde o início da semana atual.",
-          "MONTH": "Use a reputação recebida desde o início do mês atual."
-        }
-      },
-      "resetDate": {
-        "label": "Redefinir data",
-        "description": "A data em que a contagem da reputação será reiniciada. Defina uma data futura para agendar uma reinicialização.",
-        "clear": "Limpar Data de Reinicialização"
-      },
-      "types": {
-        "reaction": {
-          "label": "Reputação de reação",
-          "description": "Dê reputação quando uma reação específica for adicionada a uma mensagem.",
-          "confirmation": {
-            "label": "Confirmação da reação",
-            "description": "Manda uma mensagem de confirmação quando a reputação for dada por meio de reação."
-          }
-        },
-        "answer": {
-          "label": "Resposta Reputação",
-          "description": "Dê reputação quando a mensagem de um usuário for agradecida em uma resposta."
-        },
-        "mention": {
-          "label": "Reputação de menções",
-          "description": "Dê reputação quando um usuário for mencionado junto com uma palavra de agradecimento."
-        },
-        "fuzzy": {
-          "label": "Correspondência aproximada",
-          "description": "Dê reputação combinando palavras ao redor da palavra “obrigado” com nomes de usuários presentes no canal."
-        },
-        "embed": {
-          "label": "Incorporar reputação",
-          "description": "Manda uma lista com os usuários que estavam na última conversa se não der pra achar um alvo."
-        },
-        "direct": {
-          "label": "Reputação de incorporação direta",
-          "description": "Dá reputação automaticamente quando só um usuário estiver incluído na incorporação."
-        },
-        "command": {
-          "label": "Reputação de comando",
-          "description": "Dê reputação usando o comando /reputation.",
-          "ephemeral": {
-            "label": "Resposta efêmera",
-            "description": "Manda a resposta escondida para outros usuários quando der reputação por meio do comando."
-          }
-        }
-      }
-    },
-    "roles": {
-      "description": "Configure quais funções têm permissão para dar e receber reputação.",
-      "donor": {
-        "label": "Funções dos doadores",
-        "description": "Se estiver ativado, só os usuários com pelo menos uma dessas funções podem dar reputação."
-      },
-      "receiver": {
-        "label": "Funções do receptor",
-        "description": "Se estiver ativado, só os usuários com pelo menos uma dessas funções podem receber reputação."
-      },
-      "list": {
-        "label": "Funções selecionadas",
-        "description": "Escolha quais funções devem ser obrigatórias."
-      },
-      "denyDonor": {
-        "label": "Negar funções de doador",
-        "description": "Se estiver ativado, os usuários com qualquer uma dessas funções não podem dar reputação."
-      },
-      "denyReceiver": {
-        "label": "Negar funções de destinatário",
-        "description": "Se estiver ativado, os usuários com qualquer uma dessas funções não podem receber reputação."
-      }
-    },
-    "channels": {
-      "description": "Configure onde o bot deve ou não estar ativo.",
-      "listType": {
-        "label": "Tipo de lista",
-        "description": "Escolha se os canais e categorias selecionados são permitidos ou negados.",
-        "allow": "Lista de permissões",
-        "deny": "Lista de recusas",
-        "premiumRequired": "Lista de recusas"
-      },
-      "list": {
-        "label": "Canais e categorias",
-        "description": "Escolha os canais e categorias que devem fazer parte da lista.",
-        "channels": "Canais",
-        "categories": "Categorias",
-        "permissionsNote": "Só aparecem os canais onde o bot tem permissão para ler e escrever."
-      },
-      "premium": {
-        "channelLimitWarning": "A seleção de mais de {limit} canais é reservada para apoiadores. Torne-se um apoiador para usá-la.",
-        "categoryLimitWarning": "A seleção de mais de uma categori{limit}e é reservada aos apoiadores. Torne-se um apoiador para usá-la."
-      }
-    },
-    "everyoneTokenPurchase": {
-      "label": "Compra de tokens para todos",
-      "description": "Permita que todos os usuários comprem recursos premium usando seus tokens. Se desativado, só os administradores do servidor podem comprar recursos."
-    }
-  },
-  "reactions": {
-    "title": "Reações",
-    "description": "Configure os emojis usados para dar reputação.",
-    "main": {
-      "label": "Reação principal",
-      "description": "O emoji que vai ser usado como reação principal para dar reputação."
-    },
-    "additional": {
-      "label": "Reações adicionais",
-      "description": "Emojis extras que também podem ser usados pra dar reputação.",
-      "premiumRequired": "Reações adicionais",
-      "add": "Adicionar reação",
-      "none": "Nenhuma reação adicional configurada."
-    }
-  },
-  "thankwords": {
-    "description": "Essas palavras vão ser usadas pra detectar quando alguém está sendo agradecido. Elas são interpretadas como Expressões Regulares.",
-    "add": "Adicionar Thankword",
-    "placeholder": "Digite a palavra-chave (Regex)",
-    "none": "Nenhuma palavra de agradecimento configurada.",
-    "invalidCharacter": "A palavra de agradecimento tem um caractere inválido: {char}",
-    "alreadyExists": "Essa palavra de agradecimento já existe.",
-    "defaults": {
-      "title": "Agradecimentos padrão",
-      "description": "Adicione rapidinho palavras de agradecimento padrão em vários idiomas."
-    }
-  },
   "abuseProtection": {
-    "description": "Configure limites e proteções para evitar o abuso de reputação.",
     "cooldown": {
-      "label": "Tempo de espera (minutos)",
       "description": "O tempo em minutos que precisa passar antes que os mesmos usuários possam agradecer uns aos outros de novo. 0 significa sem tempo de espera, -1 significa para sempre.",
+      "label": "Tempo de espera (minutos)",
       "once": {
-        "label": "Recarga Uma vez",
+        "activeDescription": "O tempo de espera é ativado uma vez. Os usuários só podem agradecer uns aos outros uma vez. A direção é definida como unidirecional.",
         "description": "Se estiver ativado, os usuários só podem agradecer uns aos outros uma vez para sempre.",
-        "activeDescription": "O tempo de espera é ativado uma vez. Os usuários só podem agradecer uns aos outros uma vez. A direção é definida como unidirecional."
+        "label": "Recarga Uma vez"
       }
     },
     "cooldownDirection": {
-      "label": "Direção do resfriamento",
+      "bidirectional": "Bidirecional",
       "description": "Unidirecional quer dizer que o doador tem um tempo de espera antes de poder doar de novo para a mesma pessoa. Bidirecional quer dizer que o tempo de espera é entre o doador e o receptor, impedindo que eles troquem agradecimentos até que o tempo passe.",
-      "unidirectional": "Unidirecional",
-      "bidirectional": "Bidirecional"
+      "label": "Direção do resfriamento",
+      "unidirectional": "Unidirecional"
     },
-    "maxMessageAge": {
-      "label": "Idade máxima da mensagem (minutos)",
-      "description": "A idade máxima de uma mensagem (em minutos) para ser elegível para reputação quando respondida ou reagida."
-    },
-    "minMessages": {
-      "label": "Mensagens mínimas",
-      "description": "Autores com pelo menos esse número de mensagens no canal sempre podem receber reputação."
-    },
+    "description": "Configure limites e proteções para evitar o abuso de reputação.",
     "donorContext": {
-      "label": "O doador precisa estar presente.",
-      "description": "Se estiver ativado, o doador precisa ter mandado pelo menos uma das últimas mensagens no canal para dar reputação."
-    },
-    "receiverContext": {
-      "label": "O destinatário precisa estar presente.",
-      "description": "Se estiver ativado, o receptor precisa ter enviado pelo menos uma das últimas mensagens no canal para receber reputação."
+      "description": "Se estiver ativado, o doador precisa ter mandado pelo menos uma das últimas mensagens no canal para dar reputação.",
+      "label": "O doador precisa estar presente."
     },
     "givenLimit": {
+      "description": "Limite a quantidade de reputação que um usuário pode dar num determinado período de tempo.",
       "enabled": {
         "label": "Ativar limite definido"
       },
@@ -402,10 +30,22 @@
       },
       "maxGivenHours": {
         "label": "Horas extras"
-      },
-      "description": "Limite a quantidade de reputação que um usuário pode dar num determinado período de tempo."
+      }
+    },
+    "maxMessageAge": {
+      "description": "A idade máxima de uma mensagem (em minutos) para ser elegível para reputação quando respondida ou reagida.",
+      "label": "Idade máxima da mensagem (minutos)"
+    },
+    "maxMessageReputation": {
+      "description": "A quantidade máxima de reputação que pode ser dada em uma única mensagem por meio de menções e incorporações.",
+      "label": "Reputação máxima da mensagem"
+    },
+    "minMessages": {
+      "description": "Autores com pelo menos esse número de mensagens no canal sempre podem receber reputação.",
+      "label": "Mensagens mínimas"
     },
     "receivedLimit": {
+      "description": "Limite a quantidade de reputação que um usuário pode receber em um determinado período de tempo.",
       "enabled": {
         "label": "Ativar limite recebido"
       },
@@ -414,155 +54,540 @@
       },
       "maxReceivedHours": {
         "label": "Horas extras"
-      },
-      "description": "Limite a quantidade de reputação que um usuário pode receber em um determinado período de tempo."
+      }
     },
-    "maxMessageReputation": {
-      "label": "Reputação máxima da mensagem",
-      "description": "A quantidade máxima de reputação que pode ser dada em uma única mensagem por meio de menções e incorporações."
+    "receiverContext": {
+      "description": "Se estiver ativado, o receptor precisa ter enviado pelo menos uma das últimas mensagens no canal para receber reputação.",
+      "label": "O destinatário precisa estar presente."
     }
   },
   "announcements": {
-    "description": "Configure as mensagens enviadas quando os usuários alcançarem novas classificações.",
     "active": {
-      "label": "Ativar anúncios",
-      "description": "Se estiver ativado, o bot vai mandar uma mensagem quando um usuário chegar a uma nova classificação."
-    },
-    "sameChannel": {
-      "label": "Enviar no mesmo canal",
-      "description": "Se estiver ativado, o anúncio vai ser enviado no canal onde o nível foi subido. Caso contrário, ele vai ser enviado para o canal selecionado."
+      "description": "Se estiver ativado, o bot vai mandar uma mensagem quando um usuário chegar a uma nova classificação.",
+      "label": "Ativar anúncios"
     },
     "channel": {
-      "label": "Canal de anúncios",
-      "description": "Escolha o canal onde os avisos de subida de classificação devem ser enviados."
+      "description": "Escolha o canal onde os avisos de subida de classificação devem ser enviados.",
+      "label": "Canal de anúncios"
+    },
+    "description": "Configure as mensagens enviadas quando os usuários alcançarem novas classificações.",
+    "sameChannel": {
+      "description": "Se estiver ativado, o anúncio vai ser enviado no canal onde o nível foi subido. Caso contrário, ele vai ser enviado para o canal selecionado.",
+      "label": "Enviar no mesmo canal"
+    }
+  },
+  "auditLog": {
+    "added": "Adicionado",
+    "description": "Veja o histórico de todas as alterações de configuração feitas no seu servidor.",
+    "from": "De",
+    "loadError": "Não deu certo carregar o log de auditoria. Tenta de novo, por favor.",
+    "loading": "Carregando o registro de auditoria...",
+    "next": "Próximo",
+    "noEntries": "Não foram encontradas entradas no registro de auditoria.",
+    "pageInfo": "Página {current} de {total}",
+    "previous": "Anterior",
+    "removed": "Removido",
+    "retry": "Tente de novo",
+    "settings": {
+      "abuseprotection_cooldown": "Proteção contra abuso - Tempo de espera",
+      "abuseprotection_cooldowndirection": "Proteção contra abuso - Direção do tempo de espera",
+      "abuseprotection_donorcontext": "Proteção contra abuso - Contexto do doador",
+      "abuseprotection_maxgiven": "Proteção contra abuso - Máximo permitido",
+      "abuseprotection_maxgivenhours": "Proteção contra abuso - Horas máximas concedidas",
+      "abuseprotection_maxmessageage": "Proteção contra abuso - Idade máxima da mensagem",
+      "abuseprotection_maxmessagereputation": "Proteção contra abuso - Reputação máxima de mensagens",
+      "abuseprotection_maxreceived": "Proteção contra abuso - Máximo recebido",
+      "abuseprotection_maxreceivedhours": "Proteção contra abuso - Máximo de horas recebidas",
+      "abuseprotection_minmessages": "Proteção contra abuso - Mensagens mínimas",
+      "abuseprotection_receivercontext": "Proteção contra abuso - Contexto do receptor",
+      "announcements_active": "Anúncios - Ativo",
+      "announcements_channel": "Anúncios - Canal",
+      "announcements_samechannel": "Anúncios - Mesmo canal",
+      "autopost_active": "Postagem automática - Ativo",
+      "autopost_channel": "Postagem automática - Canal",
+      "autopost_refreshinterval": "Postagem automática - Intervalo de atualização",
+      "autopost_refreshtype": "Postagem automática - Tipo de atualização",
+      "general_everyonetokenpurchase": "Geral - Compra de tokens para todos",
+      "general_language": "Geral - Idioma",
+      "general_reputationmode": "Reputação - Modo Reputação",
+      "general_resetdate": "Reputação - Data de reinicialização",
+      "general_stackroles": "Classificações - Funções da pilha",
+      "general_systemchannel": "Geral - Canal do sistema",
+      "logchannel_active": "Canal de registro - Ativo",
+      "logchannel_channel": "Canal de registro - Canal",
+      "messages_commandreputationephemeral": "Reputação - Reputação de Comando Efêmera",
+      "messages_reactionconfirmation": "Reputação - Confirmação da reação",
+      "profile_nickname": "Perfil - Apelido",
+      "profile_profilepicture": "Perfil - Foto do perfil",
+      "profile_reputationname": "Perfil - Nome de reputação",
+      "ranks": "Classificações - Funções",
+      "reputation_answeractive": "Reputação - Responder ativo",
+      "reputation_commandactive": "Reputação - Comando Ativo",
+      "reputation_directactive": "Reputação - Direta Ativa",
+      "reputation_embedactive": "Reputação - Incorporar ativo",
+      "reputation_fuzzyactive": "Reputação - Fuzzy Ativo",
+      "reputation_mentionactive": "Reputação - Menção ativa",
+      "reputation_reactionactive": "Reputação - Reação Ativa",
+      "thanking_channels_categories": "Canais - Lista de categorias",
+      "thanking_channels_channels": "Canais - Lista de canais",
+      "thanking_channels_whitelist": "Canais - Modo Lista Branca",
+      "thanking_denydonorroles": "Funções - Recusar funções de doador",
+      "thanking_denyreceiverroles": "Funções - Recusar funções de receptor",
+      "thanking_donorroles": "Funções - Funções dos doadores",
+      "thanking_reactions_mainreaction": "Reações - Reação principal",
+      "thanking_reactions_reactions": "Reações - Reações adicionais",
+      "thanking_receiverroles": "Funções - Funções do receptor",
+      "thanking_thankwords_words": "Agradecimentos"
+    },
+    "to": "Para",
+    "unknownMember": "Membro desconhecido",
+    "values": {
+      "bidirectional": "Bidirecional",
+      "daily": "Diariamente",
+      "delete_and_repost": "Apagar e publicar de novo",
+      "disabled": "Deficiente",
+      "enabled": "Ativado",
+      "hourly": "Por hora",
+      "month": "Mês",
+      "monthly": "Mensal",
+      "noChanges": "Sem alterações",
+      "none": "Nenhum",
+      "null": "Não definido",
+      "once": "Uma vez",
+      "repost": "Repostar",
+      "rolling_month": "Mês contínuo",
+      "rolling_week": "Semana de rolagem",
+      "total": "Total",
+      "unidirectional": "Unidirecional",
+      "unknownChannel": "Canal desconhecido",
+      "unknownIntegration": "Integração desconhecida",
+      "update": "Atualização",
+      "week": "Semana",
+      "weekly": "Semanalmente"
     }
   },
   "autopost": {
+    "active": {
+      "description": "Ative ou desative a publicação automática do quadro de líderes.",
+      "label": "Ativar publicação automática"
+    },
+    "channel": {
+      "description": "O canal onde a tabela de classificação deve ser publicada.",
+      "label": "Canal de postagem automática"
+    },
     "description": "Configure a publicação automática do quadro de líderes em um canal.",
     "premiumRequired": "Postagem automática",
-    "active": {
-      "label": "Ativar publicação automática",
-      "description": "Ative ou desative a publicação automática do quadro de líderes."
-    },
-    "channel": {
-      "label": "Canal de postagem automática",
-      "description": "O canal onde a tabela de classificação deve ser publicada."
-    },
     "refreshInterval": {
-      "label": "Intervalo de atualização",
-      "description": "Com que frequência o quadro de líderes deve ser atualizado.",
-      "HOURLY": "Por hora",
       "DAILY": "Diariamente",
+      "HOURLY": "Por hora",
+      "MONTHLY": "Mensal",
       "WEEKLY": "Semanalmente",
-      "MONTHLY": "Mensal"
+      "description": "Com que frequência o quadro de líderes deve ser atualizado.",
+      "label": "Intervalo de atualização"
     },
     "refreshType": {
-      "label": "Tipo de atualização",
-      "description": "Como a publicação deve ser atualizada.",
       "DELETE_AND_REPOST": "Apagar e publicar de novo",
       "REPOST": "Repostar",
-      "UPDATE": "Atualização"
+      "UPDATE": "Atualização",
+      "description": "Como a publicação deve ser atualizada.",
+      "label": "Tipo de atualização"
     },
     "send": {
+      "description": "Envie ou atualize manualmente a publicação automática para o canal imediatamente.",
       "label": "Enviar autopost agora",
-      "sending": "Enviando...",
-      "description": "Envie ou atualize manualmente a publicação automática para o canal imediatamente."
+      "sending": "Enviando..."
     }
+  },
+  "common": {
+    "cancel": "Cancelar",
+    "change": "Mudança",
+    "clear": "Limpar",
+    "confirm": "Confirmar",
+    "delete": "Apagar",
+    "edit": "Editar",
+    "error": {
+      "outOfBounds": "O valor precisa estar entre {min} e {max}. Corrigido para o valor válido mais próximo."
+    },
+    "loading": "Carregando...",
+    "next": "Próximo",
+    "noData": "Não encontrei nada.",
+    "pageOf": "Página {current} de {total}",
+    "previous": "Anterior",
+    "save": "Salvar"
+  },
+  "dashboard": {
+    "rank": "Classificação",
+    "reputation": "Reputação",
+    "title": "Painel",
+    "todayReputation": "Reputação atual",
+    "topChannel": "Canal principal",
+    "topUsers": "Principais usuários",
+    "totalReputation": "Reputação total",
+    "user": "Usuário",
+    "weekReputation": "Reputação semanal"
+  },
+  "error": {
+    "expired": {
+      "instruction": "Por favor, abra uma nova sessão no servidor Discord para continuar.",
+      "message": "Sua sessão expirou ou não está valida.",
+      "title": "Sessão expirada"
+    },
+    "noToken": {
+      "instruction": "Crie uma nova sessão para acessar este aplicativo.",
+      "message": "Você não tem um token de sessão válido.",
+      "title": "Nenhuma sessão encontrada"
+    },
+    "notice": {
+      "workingOnIt": "Fomos avisados sobre o problema e estamos trabalhando para resolver isso."
+    }
+  },
+  "general": {
+    "channels": {
+      "description": "Configure onde o bot deve ou não estar ativo.",
+      "list": {
+        "categories": "Categorias",
+        "channels": "Canais",
+        "description": "Escolha os canais e categorias que devem fazer parte da lista.",
+        "label": "Canais e categorias",
+        "permissionsNote": "Só aparecem os canais onde o bot tem permissão para ler e escrever."
+      },
+      "listType": {
+        "allow": "Lista de permissões",
+        "deny": "Lista de recusas",
+        "description": "Escolha se os canais e categorias selecionados são permitidos ou negados.",
+        "label": "Tipo de lista",
+        "premiumRequired": "Lista de recusas"
+      },
+      "premium": {
+        "categoryLimitWarning": "A seleção de mais de uma categori{limit}e é reservada aos apoiadores. Torne-se um apoiador para usá-la.",
+        "channelLimitWarning": "A seleção de mais de {limit} canais é reservada para apoiadores. Torne-se um apoiador para usá-la."
+      }
+    },
+    "description": "Configure as configurações básicas do bot para este servidor.",
+    "everyoneTokenPurchase": {
+      "description": "Permita que todos os usuários comprem recursos premium usando seus tokens. Se desativado, só os administradores do servidor podem comprar recursos.",
+      "label": "Compra de tokens para todos"
+    },
+    "language": {
+      "description": "Escolha o idioma que o bot vai usar para mensagens e respostas neste servidor.",
+      "label": "Linguagem do bot",
+      "selectPlaceholder": "Escolha um idioma"
+    },
+    "ranks": {
+      "addRank": "Adicionar nova classificação",
+      "description": "Configure as classificações de reputação e suas funções associadas.",
+      "noRanks": "Ainda não tem nenhuma classificação definida.",
+      "refresh": {
+        "alreadyRunning": "A atualização já tá rolando.",
+        "button": "Atualizar classificações",
+        "failed": "Não deu pra começar a atualização da classificação",
+        "refreshing": "Refrescante...",
+        "success": "A atualização da classificação começou com sucesso"
+      },
+      "reputationAlreadyUsed": "Esse valor de reputação já é usado por outra classificação.",
+      "reputationPlaceholder": "por exemplo, 100",
+      "reputationRequired": "Reputação necessária",
+      "roleAlreadyAdded": "Essa função já tem uma classificação.",
+      "selectionNote": "Só dá pra escolher funções que não são gerenciadas por uma integração e que estão abaixo da função mais alta do bot.",
+      "stackRoles": {
+        "description": "Se estiver ativado, todas as classificações aplicáveis serão atribuídas, em vez de apenas a classificação mais alta.",
+        "label": "Funções da pilha"
+      }
+    },
+    "reputation": {
+      "description": "Configure como a reputação é calculada e quais recursos são ativados.",
+      "mode": {
+        "description": "Escolha como a reputação é calculada e mostrada.",
+        "descriptions": {
+          "MONTH": "Use a reputação recebida desde o início do mês atual.",
+          "ROLLING_MONTH": "Use a reputação recebida nos últimos 30 dias.",
+          "ROLLING_WEEK": "Use a reputação recebida nos últimos 7 dias.",
+          "TOTAL": "Use a reputação total que um usuário já recebeu.",
+          "WEEK": "Use a reputação recebida desde o início da semana atual."
+        },
+        "label": "Modo Reputação",
+        "modes": {
+          "MONTH": "Este mês",
+          "ROLLING_MONTH": "Mês contínuo",
+          "ROLLING_WEEK": "Semana de rolagem",
+          "TOTAL": "Reputação total",
+          "WEEK": "Esta semana"
+        }
+      },
+      "resetDate": {
+        "clear": "Limpar Data de Reinicialização",
+        "description": "A data em que a contagem da reputação será reiniciada. Defina uma data futura para agendar uma reinicialização.",
+        "label": "Redefinir data"
+      },
+      "types": {
+        "answer": {
+          "description": "Dê reputação quando a mensagem de um usuário for agradecida em uma resposta.",
+          "label": "Resposta Reputação"
+        },
+        "command": {
+          "description": "Dê reputação usando o comando /reputation.",
+          "ephemeral": {
+            "description": "Manda a resposta escondida para outros usuários quando der reputação por meio do comando.",
+            "label": "Resposta efêmera"
+          },
+          "label": "Reputação de comando"
+        },
+        "direct": {
+          "description": "Dá reputação automaticamente quando só um usuário estiver incluído na incorporação.",
+          "label": "Reputação de incorporação direta"
+        },
+        "embed": {
+          "description": "Manda uma lista com os usuários que estavam na última conversa se não der pra achar um alvo.",
+          "label": "Incorporar reputação"
+        },
+        "fuzzy": {
+          "description": "Dê reputação combinando palavras ao redor da palavra “obrigado” com nomes de usuários presentes no canal.",
+          "label": "Correspondência aproximada"
+        },
+        "mention": {
+          "description": "Dê reputação quando um usuário for mencionado junto com uma palavra de agradecimento.",
+          "label": "Reputação de menções"
+        },
+        "reaction": {
+          "confirmation": {
+            "description": "Manda uma mensagem de confirmação quando a reputação for dada por meio de reação.",
+            "label": "Confirmação da reação"
+          },
+          "description": "Dê reputação quando uma reação específica for adicionada a uma mensagem.",
+          "label": "Reputação de reação"
+        }
+      }
+    },
+    "roleSelect": {
+      "noRolesFound": "Não foram encontradas funções",
+      "searchPlaceholder": "Pesquisar funções..."
+    },
+    "roles": {
+      "denyDonor": {
+        "description": "Se estiver ativado, os usuários com qualquer uma dessas funções não podem dar reputação.",
+        "label": "Negar funções de doador"
+      },
+      "denyReceiver": {
+        "description": "Se estiver ativado, os usuários com qualquer uma dessas funções não podem receber reputação.",
+        "label": "Negar funções de destinatário"
+      },
+      "description": "Configure quais funções têm permissão para dar e receber reputação.",
+      "donor": {
+        "description": "Se estiver ativado, só os usuários com pelo menos uma dessas funções podem dar reputação.",
+        "label": "Funções dos doadores"
+      },
+      "list": {
+        "description": "Escolha quais funções devem ser obrigatórias.",
+        "label": "Funções selecionadas"
+      },
+      "receiver": {
+        "description": "Se estiver ativado, só os usuários com pelo menos uma dessas funções podem receber reputação.",
+        "label": "Funções do receptor"
+      }
+    },
+    "systemChannel": {
+      "label": "Canal do sistema",
+      "note": "Observação: esse canal deve ser configurado e deve ser um canal interno. Ele vai ter mensagens importantes sobre o serviço do bot e mensagens dos desenvolvedores.",
+      "selectPlaceholder": "Escolha um canal"
+    }
+  },
+  "guildSwitcher": {
+    "add": "Adicione outro servidor abrindo as configurações do servidor.",
+    "current": "Servidor atual",
+    "none": "Não foram encontrados outros servidores",
+    "title": "Trocar servidor"
+  },
+  "help": {
+    "message": "Precisa de ajuda? Está faltando algum recurso? Tem algum feedback? É só mandar uma mensagem privada pro bot. Também dá pra achar um link pro nosso suporte no Discord no final da página.",
+    "title": "Precisa de ajuda?"
+  },
+  "integrationBypass": {
+    "add": "Adicionar integração de bypass",
+    "allowAnswer": "Permitir resposta",
+    "allowAnswerDescription": "Permitir dar reputação respondendo a uma mensagem",
+    "allowDirect": "Permitir direto",
+    "allowDirectDescription": "Permitir dar uma reputação quando uma incorporação seria ignorada porque só um destinatário poderia ser determinado. Nenhuma incorporação será enviada para um bot.",
+    "allowFuzzy": "Permitir aproximado",
+    "allowFuzzyDescription": "Permitir dar reputação por meio de correspondência aproximada",
+    "allowMention": "Permitir menção",
+    "allowMentionDescription": "Permitir dar reputação mencionando um usuário",
+    "allowReactions": "Permitir reações",
+    "allowReactionsDescription": "Permitir dar reputação por meio de reações",
+    "deleteConfirm": "Tem certeza que quer tirar esse desvio de integração?",
+    "description": "Configure desvios para integrações para permitir que elas concedam reputação mesmo que não atendam aos requisitos regulares.",
+    "ignoreContext": "Ignorar contexto",
+    "ignoreContextDescription": "Ignorar verificações de contexto",
+    "ignoreCooldown": "Ignorar tempo de recarga",
+    "ignoreCooldownDescription": "Ignorar o tempo de espera entre usuários",
+    "ignoreLimit": "Ignorar limite",
+    "ignoreLimitDescription": "Ignore qualquer limite de horas definido",
+    "noIntegrations": "Não tem mais integrações disponíveis pra adicionar bypasses.",
+    "premiumRequired": "Ignorar integração",
+    "selectIntegration": "Escolha uma integração"
+  },
+  "links": {
+    "faq": "Perguntas mais frequentes",
+    "support": "Servidor de suporte",
+    "tos": "Termos de Serviço",
+    "website": "Site"
+  },
+  "locale": {
+    "selectLanguage": "Escolha o idioma"
   },
   "logChannel": {
-    "premiumRequired": "Canal de registro",
-    "description": "O canal de registro vai ter todas as reputações dadas e recebidas por um usuário.",
     "active": {
-      "label": "Ativar canal de registro",
-      "description": "Ative ou desative o registro das alterações de reputação."
+      "description": "Ative ou desative o registro das alterações de reputação.",
+      "label": "Ativar canal de registro"
     },
     "channel": {
-      "label": "Canal de registro",
-      "description": "O canal onde as mudanças de reputação devem ser registradas."
+      "description": "O canal onde as mudanças de reputação devem ser registradas.",
+      "label": "Canal de registro"
+    },
+    "description": "O canal de registro vai ter todas as reputações dadas e recebidas por um usuário.",
+    "premiumRequired": "Canal de registro"
+  },
+  "login": {
+    "button": "Faça login com o Discord",
+    "description": "Faça login com o Discord para acessar este painel.",
+    "title": "É preciso fazer login"
+  },
+  "metrics": {
+    "charts": {
+      "commandsCount": "Contagem de comandos",
+      "commandsUsage": "Como usar o comando",
+      "messagesCount": "Contagem de mensagens",
+      "messagesTotal": "Total de mensagens",
+      "reputationChanges": "Mudanças na reputação",
+      "reputationCount": "Contagem de reputação",
+      "reputationDow": "Reputação por dia da semana",
+      "reputationTotal": "Reputação total",
+      "reputationTypeCount": "Contagem de reputação por tipo",
+      "reputationTypeTotal": "Reputação total por tipo",
+      "serviceCountHour": "Uso do serviço (por hora)",
+      "serviceCountWeek": "Uso do serviço (semanal)",
+      "usersActiveMonth": "Usuários ativos (mensal)",
+      "usersActiveWeek": "Usuários ativos (semanalmente)"
+    },
+    "count": "Conte",
+    "description": "Tá curioso sobre o tráfego e o uso do bot? Nós também! Por isso, juntamos alguns gráficos legais nesta página. Eles mostram dados quase em tempo real direto do bot.",
+    "offset": "Compensação",
+    "sections": {
+      "commands": "Comandos",
+      "messages": "Mensagens",
+      "reputation": "Reputação",
+      "service": "Serviço",
+      "users": "Usuários"
+    },
+    "title": "Métricas",
+    "units": {
+      "hour": "Hora",
+      "month": "Mês",
+      "week": "Semana",
+      "year": "Ano"
+    },
+    "users": {
+      "donors": "Doadores",
+      "receivers": "Receptores",
+      "total": "Total"
+    },
+    "validation": {
+      "countMax": "A contagem deve ser no máximo {max}",
+      "countMin": "A contagem deve ser de pelo menos 2.",
+      "offsetMax": "O deslocamento deve ser no máximo de {max}",
+      "offsetMin": "O deslocamento deve ser pelo menos 0."
     }
   },
-  "setup": {
-    "title": "Configuração inicial",
-    "stepProgress": "Passo {current} de {total}",
-    "requiredStep": "Essa etapa é necessária para continuar.",
-    "navigation": {
-      "previous": "Anterior",
-      "next": "Próximo",
-      "finish": "Concluir configuração"
+  "navigation": {
+    "dashboard": "Painel",
+    "faq": "Perguntas frequentes",
+    "logout": "Sair",
+    "metrics": "Métricas",
+    "presets": "Predefinições",
+    "privacy": "Privacidade",
+    "settings": "Configurações",
+    "setup": "Configuração",
+    "supporter": "Apoiador",
+    "token_shop": "Loja de fichas",
+    "tos": "Termos de Serviço",
+    "user_settings": "Configurações do usuário",
+    "voting": "Votação"
+  },
+  "premiumFeature": {
+    "kofiHint": "ou apoie-nos em",
+    "kofiLink": "Ko-fi",
+    "message": "{name} é só para quem é apoiador. Torne-se um apoiador para usar.",
+    "requiredTierPlural": "É preciso escolher um dos níveis de apoio a seguir:",
+    "requiredTierSingular": "Nível de Apoiador necessário:",
+    "title": "Recurso de Apoiador",
+    "tokenShopHint": "Você também pode desbloquear esse recurso com tokens na",
+    "tokenShopLink": "Loja de fichas"
+  },
+  "presets": {
+    "applied": "Aplicado",
+    "apply": "Inscreva-se",
+    "applying": "Aplicando...",
+    "default": {
+      "description": "Quero um sistema de reputação equilibrado, com padrões razoáveis que funcionem bem para a maioria dos servidores.",
+      "settings": "Essa configuração vai definir um tempo de espera bidirecional de 30 minutos, ativar todos os modos de reputação, exceto comandos, ativar a confirmação de reputação e ativar as verificações de contexto do doador e do receptor.",
+      "title": "Configuração padrão"
     },
-    "steps": {
-      "language": {
-        "title": "Escolha o idioma",
-        "description": "Escolha o idioma que o bot vai usar para mensagens e respostas no seu servidor. O idioma da interface vai mudar de acordo com a sua escolha."
-      },
-      "systemChannel": {
-        "title": "Canal do sistema",
-        "description": "Escolha um canal onde o bot vai mandar mensagens e notificações importantes do sistema.",
-        "required": "Você precisa escolher um canal do sistema pra continuar com a configuração."
-      },
-      "reputationTypes": {
-        "title": "Tipos de reputação",
-        "description": "Escolha quais métodos os usuários podem usar para dar reputação. Você pode habilitar vários tipos para dar flexibilidade aos usuários."
-      },
-      "reputationMode": {
-        "title": "Modo Reputação",
-        "description": "Escolha como a reputação deve ser calculada e mostrada no seu servidor."
-      },
-      "ranks": {
-        "title": "Classificação de reputação",
-        "description": "Defina as funções que os usuários vão receber quando atingirem certos níveis de reputação. É preciso ter pelo menos uma classificação.",
-        "required": "Você precisa definir pelo menos uma classificação de reputação para continuar."
-      },
-      "channels": {
-        "title": "Canais e categorias",
-        "description": "Escolha quais canais e categorias devem permitir a atribuição de reputação. É preciso selecionar pelo menos um canal ou categoria.",
-        "required": "Você precisa escolher pelo menos um canal ou categoria para continuar (a menos que esteja usando o modo de lista de exclusão)."
-      },
-      "thankwords": {
-        "title": "Agradecimentos",
-        "description": "Adicione palavras ou frases que os usuários possam usar para dar reputação. Essas são as palavras-chave que o bot vai reconhecer.",
-        "recommendation": "A gente recomenda carregar as palavras padrão de agradecimento para o seu idioma pra começar rapidinho."
-      },
-      "announcements": {
-        "title": "Anúncios",
-        "description": "Configure se o bot deve anunciar quando os usuários alcançarem novos níveis de reputação."
-      },
-      "cooldown": {
-        "title": "Configurações de resfriamento",
-        "description": "Defina um tempo de espera pra evitar que os usuários deem reputação com muita frequência. Você também pode ativar a opção “tempo de espera único” pra permitir que os usuários agradeçam uns aos outros só uma vez."
-      },
-      "mainReaction": {
-        "title": "Reação principal",
-        "description": "Escolha o emoji que vai ser usado como reação principal para dar reputação."
-      },
-      "roles": {
-        "title": "Funções do doador e do receptor",
-        "description": "Opcionalmente, defina quais funções podem dar reputação (funções de doador) e quais funções podem receber reputação (funções de receptor)."
-      },
-      "welcome": {
-        "title": "Oi, seja bem-vindo!",
-        "description": "Oi, seja bem-vindo à página de configuração.\nEssa página vai te ajudar a configurar o bot pela primeira vez. Depois disso, você vai ter uma configuração básica personalizada do jeito que você quiser.\n\nSe precisar de ajuda, manda uma mensagem privada pro bot e a gente vai te ajudar assim que puder. Você também encontra um link pro nosso suporte no Discord no final da página."
-      },
-      "finished": {
-        "title": "Configuração concluída",
-        "description": "Você acabou de concluir a última etapa da configuração. Agora vamos te levar para a página de configurações gerais, onde você pode encontrar mais configurações que podem ser do seu interesse."
-      },
-      "scan": {
-        "title": "Verificação do servidor",
-        "description": "Agora que você configurou seus canais, recomendamos que faça uma varredura para indexar a reputação existente a partir do histórico do seu servidor.",
-        "prompt": {
-          "title": "Iniciar uma verificação do servidor?",
-          "description": "Uma varredura analisará o histórico de mensagens do seu servidor nos canais configurados e identificará a reputação existente. Isso pode demorar um pouco, dependendo do tamanho do seu servidor."
-        },
-        "started": {
-          "title": "A digitalização começou!",
-          "description": "A verificação está sendo executada em segundo plano. Você poderá acompanhar o andamento na página de verificação assim que concluir a configuração."
-        },
-        "start": "Iniciar varredura",
-        "starting": "Começando...",
-        "error": "Não foi possível iniciar a verificação. Tenta novamente mais tarde."
-      }
-    }
+    "description": "Predefinições de configuração rápida para você começar com configurações comuns.",
+    "noAbuse": {
+      "description": "Quero desativar a proteção contra abusos baseada no contexto e permitir que os usuários deem reputação mais livremente, sem rastrear seu histórico de interações.",
+      "settings": "Essa configuração vai desativar o rastreamento de contexto tanto do doador quanto do receptor.",
+      "title": "Sem proteção contra abuso"
+    },
+    "simpleReputation": {
+      "description": "Quero um sistema de reputação simples, onde os usuários só possam dar reputação por meio de comandos, sem precisar ficar de olho em um monte de detalhes.",
+      "settings": "Essa predefinição desativará todos os tipos de reputação, exceto comandos, e desativará o rastreamento de contexto do doador e do receptor.",
+      "title": "Sistema de Reputação Simples"
+    },
+    "thankOnce": {
+      "description": "Quero que os usuários possam agradecer uns aos outros só uma vez, evitando que a mesma pessoa receba várias vezes reputação.",
+      "settings": "Essa predefinição vai definir o tempo de recarga só uma vez e mudar a direção do tempo de recarga para unidirecional.",
+      "title": "Agradeça só uma vez"
+    },
+    "title": "Predefinições"
+  },
+  "profile": {
+    "description": "Personalize como o bot aparece e se comporta no seu servidor.",
+    "nickname": {
+      "description": "Defina um apelido personalizado para o bot neste servidor.",
+      "label": "Apelido do bot",
+      "placeholder": "Digite o apelido do bot",
+      "reset": "Redefinir apelido para o padrão"
+    },
+    "premiumRequired": "Personalização do perfil",
+    "profilePicture": {
+      "description": "Carregue uma foto de perfil personalizada para o bot (máximo de 2 MB, 512 x 512 pixels)",
+      "label": "Foto do perfil",
+      "reset": "Redefinir foto do perfil para o padrão",
+      "uploadButton": "Carregar imagem",
+      "uploading": "Carregando..."
+    },
+    "reputationName": {
+      "description": "Personalize o nome usado para reputação neste servidor.",
+      "label": "Nome da reputação",
+      "placeholder": "Digite um nome personalizado para a reputação (por exemplo, “Pontos”, “Karma”)",
+      "reset": "Redefinir o nome da reputação para o padrão"
+    },
+    "reset": "Redefinir",
+    "tosNote": "Qualquer coisa que viole os Termos de Serviço do Discord ou a lei estadual não é permitida e pode resultar no bloqueio desse recurso para o servidor."
+  },
+  "reactions": {
+    "additional": {
+      "add": "Adicionar reação",
+      "description": "Emojis extras que também podem ser usados pra dar reputação.",
+      "label": "Reações adicionais",
+      "none": "Nenhuma reação adicional configurada.",
+      "premiumRequired": "Reações adicionais"
+    },
+    "description": "Configure os emojis usados para dar reputação.",
+    "main": {
+      "description": "O emoji que vai ser usado como reação principal para dar reputação.",
+      "label": "Reação principal"
+    },
+    "title": "Reações"
   },
   "roles": {
     "donor": {
@@ -572,429 +597,418 @@
       "label": "Receptor"
     }
   },
-  "links": {
-    "support": "Servidor de suporte",
-    "website": "Site",
-    "faq": "Perguntas mais frequentes",
-    "tos": "Termos de Serviço"
-  },
-  "auditLog": {
-    "description": "Veja o histórico de todas as alterações de configuração feitas no seu servidor.",
-    "loading": "Carregando o registro de auditoria...",
-    "loadError": "Não deu certo carregar o log de auditoria. Tenta de novo, por favor.",
-    "retry": "Tente de novo",
-    "noEntries": "Não foram encontradas entradas no registro de auditoria.",
-    "unknownMember": "Membro desconhecido",
-    "previous": "Anterior",
-    "next": "Próximo",
-    "pageInfo": "Página {current} de {total}",
-    "from": "De",
-    "to": "Para",
-    "added": "Adicionado",
-    "removed": "Removido",
-    "values": {
-      "null": "Não definido",
-      "enabled": "Ativado",
-      "disabled": "Deficiente",
-      "once": "Uma vez",
-      "none": "Nenhum",
-      "unknownChannel": "Canal desconhecido",
-      "unidirectional": "Unidirecional",
-      "bidirectional": "Bidirecional",
-      "total": "Total",
-      "rolling_week": "Semana de rolagem",
-      "rolling_month": "Mês contínuo",
-      "week": "Semana",
-      "month": "Mês",
-      "delete_and_repost": "Apagar e publicar de novo",
-      "repost": "Repostar",
-      "update": "Atualização",
-      "hourly": "Por hora",
-      "daily": "Diariamente",
-      "weekly": "Semanalmente",
-      "monthly": "Mensal",
-      "noChanges": "Sem alterações",
-      "unknownIntegration": "Integração desconhecida"
+  "scan": {
+    "description": "Verifica se há pontos de reputação na tua guilda que foram concedidos antes da adição do bot ou em canais que não foram monitorados. Isso vai analisar todas as mensagens nos canais e categorias de reputação configurados.",
+    "error": {
+      "alreadyRunning": "Já está rolando uma verificação para essa guilda.",
+      "fetchStatus": "Não foi possível obter o status da digitalização. Tenta novamente mais tarde.",
+      "startFailed": "Não foi possível iniciar a verificação. Tenta novamente mais tarde."
     },
-    "settings": {
-      "abuseprotection_cooldown": "Proteção contra abuso - Tempo de espera",
-      "abuseprotection_cooldowndirection": "Proteção contra abuso - Direção do tempo de espera",
-      "abuseprotection_maxmessageage": "Proteção contra abuso - Idade máxima da mensagem",
-      "abuseprotection_minmessages": "Proteção contra abuso - Mensagens mínimas",
-      "abuseprotection_donorcontext": "Proteção contra abuso - Contexto do doador",
-      "abuseprotection_receivercontext": "Proteção contra abuso - Contexto do receptor",
-      "abuseprotection_maxgiven": "Proteção contra abuso - Máximo permitido",
-      "abuseprotection_maxgivenhours": "Proteção contra abuso - Horas máximas concedidas",
-      "abuseprotection_maxreceived": "Proteção contra abuso - Máximo recebido",
-      "abuseprotection_maxreceivedhours": "Proteção contra abuso - Máximo de horas recebidas",
-      "abuseprotection_maxmessagereputation": "Proteção contra abuso - Reputação máxima de mensagens",
-      "thanking_channels_whitelist": "Canais - Modo Lista Branca",
-      "thanking_channels_channels": "Canais - Lista de canais",
-      "thanking_channels_categories": "Canais - Lista de categorias",
-      "thanking_thankwords_words": "Agradecimentos",
-      "thanking_reactions_mainreaction": "Reações - Reação principal",
-      "thanking_reactions_reactions": "Reações - Reações adicionais",
-      "thanking_denydonorroles": "Funções - Recusar funções de doador",
-      "thanking_donorroles": "Funções - Funções dos doadores",
-      "thanking_denyreceiverroles": "Funções - Recusar funções de receptor",
-      "thanking_receiverroles": "Funções - Funções do receptor",
-      "messages_reactionconfirmation": "Reputação - Confirmação da reação",
-      "messages_commandreputationephemeral": "Reputação - Reputação de Comando Efêmera",
-      "profile_nickname": "Perfil - Apelido",
-      "profile_profilepicture": "Perfil - Foto do perfil",
-      "profile_reputationname": "Perfil - Nome de reputação",
-      "reputation_reactionactive": "Reputação - Reação Ativa",
-      "reputation_answeractive": "Reputação - Responder ativo",
-      "reputation_mentionactive": "Reputação - Menção ativa",
-      "reputation_fuzzyactive": "Reputação - Fuzzy Ativo",
-      "reputation_embedactive": "Reputação - Incorporar ativo",
-      "reputation_directactive": "Reputação - Direta Ativa",
-      "reputation_commandactive": "Reputação - Comando Ativo",
-      "logchannel_active": "Canal de registro - Ativo",
-      "logchannel_channel": "Canal de registro - Canal",
-      "general_language": "Geral - Idioma",
-      "general_stackroles": "Classificações - Funções da pilha",
-      "general_reputationmode": "Reputação - Modo Reputação",
-      "general_systemchannel": "Geral - Canal do sistema",
-      "general_resetdate": "Reputação - Data de reinicialização",
-      "announcements_active": "Anúncios - Ativo",
-      "announcements_samechannel": "Anúncios - Mesmo canal",
-      "announcements_channel": "Anúncios - Canal",
-      "autopost_active": "Postagem automática - Ativo",
-      "autopost_channel": "Postagem automática - Canal",
-      "autopost_refreshtype": "Postagem automática - Tipo de atualização",
-      "autopost_refreshinterval": "Postagem automática - Intervalo de atualização",
-      "ranks": "Classificações - Funções",
-      "general_everyonetokenpurchase": "Geral - Compra de tokens para todos"
+    "finishedAt": "Concluído em",
+    "messagesScanned": "Mensagens verificadas",
+    "noScanYet": "Ainda não foi feita nenhuma digitalização.",
+    "progressDetails": "Detalhes do progresso",
+    "reputationFound": "Reputação encontrada",
+    "start": "Iniciar varredura",
+    "startedAt": "Começou em",
+    "starting": "Começando...",
+    "status": {
+      "finished": "Digitalização concluída",
+      "running": "Digitalização em andamento"
     }
   },
-  "help": {
-    "title": "Precisa de ajuda?",
-    "message": "Precisa de ajuda? Está faltando algum recurso? Tem algum feedback? É só mandar uma mensagem privada pro bot. Também dá pra achar um link pro nosso suporte no Discord no final da página."
+  "settings": {
+    "abuseProtection": "Proteção contra abusos",
+    "announcements": "Anúncios",
+    "auditLog": "Registro de auditoria",
+    "autopost": "Postagem automática",
+    "channels": "Canais",
+    "debug": {
+      "goToSettings": "Vá para as configurações",
+      "missingPermissions": {
+        "CATEGORY": "Categoria",
+        "CHANNEL": "Canal",
+        "GUILD": "Guilda",
+        "title": "Permissões de escopo ausentes"
+      },
+      "permissions": {
+        "BYPASS_SLOWMODE": "Às vezes, as mensagens de confirmação não funcionam. Tipo, a confirmação de reação ou a confirmação de reputação por meio de incorporação.",
+        "MANAGE_GUILD_EXPRESSIONS": "Não dá pra sugerir reações personalizadas no painel.",
+        "MANAGE_ROLES": "Não dá pra passar funções de reputação.",
+        "MESSAGE_ADD_REACTION": "A confirmação da reputação por meio de reações não está funcionando.",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "Nenhuma mensagem de confirmação vai funcionar nos canais de voz. Tipo, confirmação de reação ou confirmação de reputação por meio de incorporação.",
+        "MESSAGE_EXT_EMOJI": "A confirmação da reputação por meio de emojis não está funcionando.",
+        "MESSAGE_HISTORY": "A confirmação da reputação por meio de incorporações não está funcionando. A maioria das verificações de proteção contra abusos falhará.",
+        "MESSAGE_SEND": "Nenhuma mensagem de confirmação vai funcionar. Tipo, confirmação de reação ou confirmação de reputação por meio de incorporação.",
+        "MESSAGE_SEND_IN_THREADS": "Nenhuma mensagem de confirmação vai funcionar em threads. Tipo, confirmação de reação ou confirmação de reputação por meio de incorporação.",
+        "NICKNAME_CHANGE": "Não dá pra mudar o apelido no painel.",
+        "VIEW_CHANNEL": "Os canais de reputação não podem ser vistos. A reputação não pode ser dada por nenhum método baseado em texto.",
+        "description": "Essas permissões estão faltando para o bot globalmente. Isso pode limitar alguns recursos.",
+        "title": "Permissões globais ausentes"
+      },
+      "rankProblems": {
+        "CANT_ASSIGN_ROLE": "O bot não pode atribuir essa função porque ela está acima da função mais alta do bot.",
+        "MISSING_ROLE": "O papel para essa classificação está faltando.",
+        "title": "Problemas de classificação"
+      },
+      "reputationChannelProblems": {
+        "MISSING_CATEGORY": "A categoria está faltando.",
+        "MISSING_CHANNEL": "O canal está faltando.",
+        "NOT_TEXT_TYPE": "O canal não é um canal de texto.",
+        "title": "Problemas com o canal de reputação"
+      },
+      "simpleProblems": {
+        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "Não foi encontrado nenhum canal de anúncios.",
+        "AUTOPOST_CANNEL_NOT_FOUND": "Não foi encontrado nenhum canal de autopostagem.",
+        "LOG_CHANNEL_NOT_FOUND": "Não foi encontrado nenhum canal de registro.",
+        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "O canal de anúncios não está definido.",
+        "NO_AUTOPOST_CHANNEL_DEFINED": "O canal de postagem automática não está definido.",
+        "NO_LOG_CHANNEL_DEFINED": "O canal de registro não está definido.",
+        "NO_REPUTATION_CHANNEL_DEFINED": "Não tem canais ou categorias de reputação definidos.",
+        "NO_THANKWORDS_DEFINED": "Não há palavras de agradecimento definidas.",
+        "SYSTEM_CHANNEL_NOT_DEFINED": "O canal do sistema não está definido.",
+        "SYSTEM_CHANNEL_NOT_FOUND": "Não foi encontrado nenhum canal do sistema.",
+        "title": "Problemas gerais"
+      },
+      "simpleWarnings": {
+        "MAX_MESSAGE_AGE_LOW": "A idade máxima das mensagens está muito baixa. Isso pode impedir que os usuários agradeçam uns aos outros por mensagens mais antigas.",
+        "title": "Avisos"
+      }
+    },
+    "general": "Geral",
+    "integrationBypass": "Ignorar integração",
+    "logChannel": "Canal de registro",
+    "messages": "Mensagens",
+    "problems": "Problemas",
+    "profile": "Perfil",
+    "ranks": "Classificações",
+    "reactions": "Reações",
+    "reputation": "Reputação",
+    "roles": "Funções",
+    "scan": "Digitalizar",
+    "thankwords": "Agradecimentos",
+    "title": "Configurações"
   },
-  "guildSwitcher": {
-    "title": "Trocar servidor",
-    "current": "Servidor atual",
-    "none": "Não foram encontrados outros servidores",
-    "add": "Adicione outro servidor abrindo as configurações do servidor."
+  "setup": {
+    "error": {
+      "forbidden": {
+        "description": "Você não tem permissão para acessar as configurações deste servidor. Entre em contato com um administrador do servidor.",
+        "title": "Acesso negado"
+      },
+      "noSession": {
+        "description": "Não há nenhuma sessão de servidor ativa. Volta e seleciona um servidor.",
+        "title": "Não conectado"
+      },
+      "unknown": {
+        "description": "Ocorreu um erro ao carregar as configurações do servidor. Tenta novamente mais tarde.",
+        "title": "Falha ao carregar as configurações"
+      }
+    },
+    "navigation": {
+      "finish": "Concluir configuração",
+      "next": "Próximo",
+      "previous": "Anterior"
+    },
+    "requiredStep": "Essa etapa é necessária para continuar.",
+    "stepProgress": "Passo {current} de {total}",
+    "steps": {
+      "announcements": {
+        "description": "Configure se o bot deve anunciar quando os usuários alcançarem novos níveis de reputação.",
+        "title": "Anúncios"
+      },
+      "channels": {
+        "description": "Escolha quais canais e categorias devem permitir a atribuição de reputação. É preciso selecionar pelo menos um canal ou categoria.",
+        "required": "Você precisa escolher pelo menos um canal ou categoria para continuar (a menos que esteja usando o modo de lista de exclusão).",
+        "title": "Canais e categorias"
+      },
+      "cooldown": {
+        "description": "Defina um tempo de espera pra evitar que os usuários deem reputação com muita frequência. Você também pode ativar a opção “tempo de espera único” pra permitir que os usuários agradeçam uns aos outros só uma vez.",
+        "title": "Configurações de resfriamento"
+      },
+      "finished": {
+        "description": "Você acabou de concluir a última etapa da configuração. Agora vamos te levar para a página de configurações gerais, onde você pode encontrar mais configurações que podem ser do seu interesse.",
+        "title": "Configuração concluída"
+      },
+      "language": {
+        "description": "Escolha o idioma que o bot vai usar para mensagens e respostas no seu servidor. O idioma da interface vai mudar de acordo com a sua escolha.",
+        "title": "Escolha o idioma"
+      },
+      "mainReaction": {
+        "description": "Escolha o emoji que vai ser usado como reação principal para dar reputação.",
+        "title": "Reação principal"
+      },
+      "ranks": {
+        "description": "Defina as funções que os usuários vão receber quando atingirem certos níveis de reputação. É preciso ter pelo menos uma classificação.",
+        "required": "Você precisa definir pelo menos uma classificação de reputação para continuar.",
+        "title": "Classificação de reputação"
+      },
+      "reputationMode": {
+        "description": "Escolha como a reputação deve ser calculada e mostrada no seu servidor.",
+        "title": "Modo Reputação"
+      },
+      "reputationTypes": {
+        "description": "Escolha quais métodos os usuários podem usar para dar reputação. Você pode habilitar vários tipos para dar flexibilidade aos usuários.",
+        "title": "Tipos de reputação"
+      },
+      "roles": {
+        "description": "Opcionalmente, defina quais funções podem dar reputação (funções de doador) e quais funções podem receber reputação (funções de receptor).",
+        "title": "Funções do doador e do receptor"
+      },
+      "scan": {
+        "description": "Agora que você configurou seus canais, recomendamos que faça uma varredura para indexar a reputação existente a partir do histórico do seu servidor.",
+        "error": "Não foi possível iniciar a verificação. Tenta novamente mais tarde.",
+        "prompt": {
+          "description": "Uma varredura analisará o histórico de mensagens do seu servidor nos canais configurados e identificará a reputação existente. Isso pode demorar um pouco, dependendo do tamanho do seu servidor.",
+          "title": "Iniciar uma verificação do servidor?"
+        },
+        "start": "Iniciar varredura",
+        "started": {
+          "description": "A verificação está sendo executada em segundo plano. Você poderá acompanhar o andamento na página de verificação assim que concluir a configuração.",
+          "title": "A digitalização começou!"
+        },
+        "starting": "Começando...",
+        "title": "Verificação do servidor"
+      },
+      "systemChannel": {
+        "description": "Escolha um canal onde o bot vai mandar mensagens e notificações importantes do sistema.",
+        "required": "Você precisa escolher um canal do sistema pra continuar com a configuração.",
+        "title": "Canal do sistema"
+      },
+      "thankwords": {
+        "description": "Adicione palavras ou frases que os usuários possam usar para dar reputação. Essas são as palavras-chave que o bot vai reconhecer.",
+        "recommendation": "A gente recomenda carregar as palavras padrão de agradecimento para o seu idioma pra começar rapidinho.",
+        "title": "Agradecimentos"
+      },
+      "welcome": {
+        "description": "Oi, seja bem-vindo à página de configuração.\nEssa página vai te ajudar a configurar o bot pela primeira vez. Depois disso, você vai ter uma configuração básica personalizada do jeito que você quiser.\n\nSe precisar de ajuda, manda uma mensagem privada pro bot e a gente vai te ajudar assim que puder. Você também encontra um link pro nosso suporte no Discord no final da página.",
+        "title": "Oi, seja bem-vindo!"
+      }
+    },
+    "title": "Configuração inicial"
   },
-  "integrationBypass": {
-    "description": "Configure desvios para integrações para permitir que elas concedam reputação mesmo que não atendam aos requisitos regulares.",
-    "allowReactions": "Permitir reações",
-    "allowAnswer": "Permitir resposta",
-    "allowMention": "Permitir menção",
-    "allowFuzzy": "Permitir aproximado",
-    "ignoreCooldown": "Ignorar tempo de recarga",
-    "ignoreLimit": "Ignorar limite",
-    "allowReactionsDescription": "Permitir dar reputação por meio de reações",
-    "allowAnswerDescription": "Permitir dar reputação respondendo a uma mensagem",
-    "allowMentionDescription": "Permitir dar reputação mencionando um usuário",
-    "allowFuzzyDescription": "Permitir dar reputação por meio de correspondência aproximada",
-    "ignoreCooldownDescription": "Ignorar o tempo de espera entre usuários",
-    "ignoreLimitDescription": "Ignore qualquer limite de horas definido",
-    "add": "Adicionar integração de bypass",
-    "selectIntegration": "Escolha uma integração",
-    "noIntegrations": "Não tem mais integrações disponíveis pra adicionar bypasses.",
-    "deleteConfirm": "Tem certeza que quer tirar esse desvio de integração?",
-    "premiumRequired": "Ignorar integração",
-    "allowDirect": "Permitir direto",
-    "ignoreContext": "Ignorar contexto",
-    "allowDirectDescription": "Permitir dar uma reputação quando uma incorporação seria ignorada porque só um destinatário poderia ser determinado. Nenhuma incorporação será enviada para um bot.",
-    "ignoreContextDescription": "Ignorar verificações de contexto"
+  "thankwords": {
+    "add": "Adicionar Thankword",
+    "alreadyExists": "Essa palavra de agradecimento já existe.",
+    "defaults": {
+      "description": "Adicione rapidinho palavras de agradecimento padrão em vários idiomas.",
+      "title": "Agradecimentos padrão"
+    },
+    "description": "Essas palavras vão ser usadas pra detectar quando alguém está sendo agradecido. Elas são interpretadas como Expressões Regulares.",
+    "invalidCharacter": "A palavra de agradecimento tem um caractere inválido: {char}",
+    "none": "Nenhuma palavra de agradecimento configurada.",
+    "placeholder": "Digite a palavra-chave (Regex)"
   },
   "timePresets": {
-    "hour": "1 hora",
     "day": "1 dia",
-    "week": "1 semana",
     "fourWeeks": "4 semanas",
+    "hour": "1 hora",
+    "week": "1 semana",
     "year": "1 ano"
   },
-  "login": {
-    "title": "É preciso fazer login",
-    "description": "Faça login com o Discord para acessar este painel.",
-    "button": "Faça login com o Discord"
+  "token_shop": {
+    "active": "Ativo",
+    "adminOnly": "O servidor está configurado para permitir que apenas os administradores do servidor adquiram recursos.",
+    "autoRenewal": "Renovação automática",
+    "confirmPurchase": "Tem certeza que quer comprar esse recurso por {amount} tokens?",
+    "description": "Melhore o seu servidor com recursos premium usando seus tokens de voto. Os recursos comprados com tokens não expiram, desde que sejam renovados automaticamente. Comprar um recurso que já está ativo adiciona 30 dias à data de expiração ou renovação.",
+    "enabledBySubscription": "Ativado por assinatura",
+    "expires": "Vence em: {date}",
+    "feature": {
+      "additionalemojis": {
+        "description": "Use mais de um emoji para dar reputação por meio de reações.",
+        "name": "Emojis adicionais"
+      },
+      "advancedrankings": {
+        "description": "Desbloqueie mais opções de classificação.",
+        "name": "Classificações avançadas"
+      },
+      "analyzerlog": {
+        "description": "O tempo que o log do analisador fica guardado é dobrado.",
+        "name": "Registro estendido do analisador"
+      },
+      "autopost": {
+        "description": "Publique automaticamente o quadro de líderes em um canal em intervalos regulares.",
+        "name": "Postagem automática"
+      },
+      "channelblacklist": {
+        "description": "Evite que o bot fique ativo em canais específicos, em vez de permitir que ele esteja em todos os lugares.",
+        "name": "Lista de canais bloqueados"
+      },
+      "detailedprofile": {
+        "description": "Mostrar mais informações sobre os perfis de reputação dos usuários.",
+        "name": "Perfil detalhado"
+      },
+      "integrationbypass": {
+        "description": "Permitir que outros bots e integrações atribuam reputação.",
+        "name": "Ignorar integração"
+      },
+      "localeoverrides": {
+        "description": "Substitua as mensagens e etiquetas do bot pelas suas próprias traduções. No momento, isso só permite definir um nome personalizado para a reputação.",
+        "name": "Substituições de localidade"
+      },
+      "logchannel": {
+        "description": "Ative um canal de registro dedicado para todas as alterações de reputação.",
+        "name": "Canal de registro"
+      },
+      "profile": {
+        "description": "Personalize o nome e a foto do perfil do bot no seu servidor.",
+        "name": "Perfil do Bot"
+      },
+      "reputationcategories": {
+        "description": "Desbloqueie categorias de reputação ilimitadas.",
+        "name": "Categorias de reputação ilimitadas"
+      },
+      "reputationchannel": {
+        "description": "Desbloqueie canais de reputação ilimitados.",
+        "name": "Canal de reputação sem limites"
+      },
+      "reputationlog": {
+        "description": "Veja todas as páginas do registro de reputação no servidor.",
+        "name": "Registro completo de reputação"
+      }
+    },
+    "getMoreTokens": "Ganhe mais fichas",
+    "guildTokens": "Use fichas da guilda",
+    "insufficientTokens": "Você não tem fichas suficientes.",
+    "nextRenewal": "Próxima renovação: {date}",
+    "noFeatures": "Não tem recursos disponíveis no momento.",
+    "purchase": "Compra",
+    "purchaseSuccess": "Recurso comprado com sucesso!",
+    "subscribe": "Inscreva-se",
+    "subscribeSuccess": "Assinatura ativada!",
+    "subscriptionActiveNote": "Esse recurso está ativado agora por uma assinatura ativa.",
+    "title": "Loja de fichas",
+    "unsubscribe": "Cancelar inscrição",
+    "unsubscribeSuccess": "Assinatura desativada!",
+    "userTokens": "Use tokens pessoais"
+  },
+  "user": {
+    "settings": {
+      "description": "Configure as suas configurações e preferências pessoais da conta.",
+      "mails": {
+        "add": {
+          "button": "Adicionar",
+          "placeholder": "Adicionar um novo e-mail (name{'@'}example.com)"
+        },
+        "description": "Gerencie os endereços de e-mail vinculados à sua conta. Você pode adicionar um novo endereço e confirmá-lo através do link enviado para sua caixa de entrada.",
+        "errors": {
+          "ALREADY_REGISTERED": "Esse endereço de e-mail já tá cadastrado pra outra pessoa.",
+          "CODE_EXPIRED": "O código de verificação já não vale mais. Pede um novo e-mail de verificação.",
+          "INVALID_CODE": "O código de verificação está errado.",
+          "INVALID_FORMAT": "O formato do endereço de e-mail está errado. Dá uma olhada e tenta de novo.",
+          "RATE_LIMIT": "Você está fazendo isso com muita frequência. Por favor, aguarde {time} antes de adicionar outro endereço de e-mail.",
+          "UNKNOWN": "Ocorreu um erro desconhecido. Por favor, tente novamente mais tarde.",
+          "UNKNOWN_ADDRESS": "Não conseguimos encontrar esse endereço de e-mail. Talvez ele tenha sido removido.",
+          "WRONG_USER": "Esse endereço de e-mail é de outra pessoa."
+        },
+        "noteDeletion": "Observação: os endereços de e-mail do Discord ou Ko-fi não podem ser removidos. Só dá pra apagar os endereços que você mesmo adicionou.",
+        "pending": "Aguardando verificação",
+        "source": {
+          "discord": "Discord",
+          "kofi": "Ko-fi",
+          "user": "Usuário"
+        },
+        "title": "Endereços de e-mail",
+        "verified": "Verificado",
+        "verify": {
+          "error": "Falha na verificação do e-mail. Tenta de novo ou pede um novo link de verificação.",
+          "success": "Seu e-mail foi verificado com sucesso."
+        }
+      },
+      "title": "Configurações do usuário",
+      "voteGuild": {
+        "description": "Escolha qual guilda deve receber tokens quando você votar no bot. Isso só vai afetar os votos futuros.",
+        "label": "Vote na Guilda",
+        "none": "Sem guilda específica (Pessoal)"
+      }
+    },
+    "supporter": {
+      "description": "Dá uma olhada nas suas compras ativas do Ko-fi e coloca elas numa guilda pra ativar os recursos de apoiador.",
+      "errors": {
+        "assign": "Não deu certo atribuir a compra.",
+        "load": "Não deu pra carregar as compras. Tenta de novo mais tarde, tá?",
+        "unassign": "Não deu certo cancelar a atribuição da compra."
+      },
+      "item": {
+        "assign": "Atribuir",
+        "assignedTo": "Atribuído a: {guild}",
+        "expires": "Vence em: {date}",
+        "lifetime": "Vida útil",
+        "subscription": "Assinatura",
+        "unassign": "Desatribuir"
+      },
+      "kofiLink": "Compre no Ko-fi",
+      "missingPurchasesNotice": "Se suas compras não aparecerem aqui, talvez você tenha usado um endereço de e-mail diferente para o Ko-fi e para sua conta do Discord. Você pode vincular endereços de e-mail adicionais em {link}.",
+      "results": {
+        "ALREADY_SUBSCRIBED": "Você já tem uma assinatura ativa atribuída a uma guilda.",
+        "SUBSCRIPTION_EXPIRED": "Essa assinatura já acabou e não dá pra usar.",
+        "SUCCESS": "Sucesso",
+        "UNKOWN": "Ocorreu um erro desconhecido na assinatura. Por favor, tente novamente mais tarde."
+      },
+      "sections": {
+        "lifetime": "Compras ao longo da vida",
+        "lifetime_desc": "As compras vitalícias podem ser atribuídas a uma guilda para desbloquear recursos permanentemente.",
+        "subscriptions": "Assinaturas ativas",
+        "subscriptions_desc": "As assinaturas são renovadas automaticamente e podem ser atribuídas a uma guilda à sua escolha."
+      },
+      "settingsLink": "Configurações do usuário",
+      "title": "Apoiador"
+    }
   },
   "voting": {
-    "title": "Votação",
-    "description": "Informações sobre seus tokens de voto atuais e status de votação da lista de bots.",
-    "tokens": {
-      "title": "Fichas",
-      "description": "Seus tokens de voto atuais. Você pode gastá-los em várias recompensas.",
-      "label": "Fichas atuais",
-      "shop": "Visite a Loja de Fichas"
-    },
     "botlists": {
-      "title": "Listas de bots",
-      "description": "Vote no bot em várias listas de bots para ganhar tokens e manter sua sequência.",
-      "name": "Lista de bots",
-      "streak": "Sequência",
-      "lastVote": "Última votação",
       "action": "Ação",
-      "vote": "Votar",
+      "days": "dias",
+      "description": "Vote no bot em várias listas de bots para ganhar tokens e manter sua sequência.",
+      "lastVote": "Última votação",
+      "name": "Lista de bots",
       "never": "Nunca",
-      "days": "dias"
+      "streak": "Sequência",
+      "title": "Listas de bots",
+      "vote": "Votar"
     },
+    "description": "Informações sobre seus tokens de voto atuais e status de votação da lista de bots.",
     "log": {
-      "title": "Registro de votos",
-      "description": "Um histórico das suas transações com tokens de voto.",
       "date": "Data",
+      "description": "Um histórico das suas transações com tokens de voto.",
       "guild": "Guilda",
-      "tokens": "Fichas",
+      "personal": "Pessoal",
       "reason": {
-        "label": "Motivo",
+        "BONUS": "Bônus diário",
+        "BONUS_DESCRIPTION": "Você ganhou fichas extras por votar em todas as listas de bots nas últimas 6 horas.",
         "STANDARD": "Votar",
         "STANDARD_DESCRIPTION": "Você ganhou um token por votar em uma lista de bots.",
         "STREAK": "Série de votos",
         "STREAK_DESCRIPTION": "Você ganhou um token extra porque tá numa boa sequência.",
-        "BONUS": "Bônus diário",
-        "BONUS_DESCRIPTION": "Você ganhou fichas extras por votar em todas as listas de bots nas últimas 6 horas.",
         "TRANSFER": "Transferência para a Guilda",
         "TRANSFER_DESCRIPTION": "Você transferiu tokens para uma guilda para apoiar seu sistema de reputação.",
         "USE": "Compra",
         "USE_DESCRIPTION": "Você usou tokens para comprar uma recompensa ou serviço.",
+        "label": "Motivo",
         "unknown": "Desconhecido",
         "unknown_DESCRIPTION": "Não se sabe o motivo dessa transação."
       },
-      "unknownGuild": "Guilda desconhecida",
-      "personal": "Pessoal"
+      "title": "Registro de votos",
+      "tokens": "Fichas",
+      "unknownGuild": "Guilda desconhecida"
     },
     "noteDefaultGuild": "Dica: você pode definir uma guilda padrão para receber tokens automaticamente em seu",
     "noteDefaultGuildLink": "Configurações do usuário",
+    "title": "Votação",
+    "tokens": {
+      "description": "Seus tokens de voto atuais. Você pode gastá-los em várias recompensas.",
+      "label": "Fichas atuais",
+      "shop": "Visite a Loja de Fichas",
+      "title": "Fichas"
+    },
     "transfer": {
-      "title": "Transferir fichas para uma guilda",
+      "amount": "Valor",
       "description": "Mova fichas do seu saldo pessoal para uma das suas guildas.",
       "guild": "Guilda",
-      "selectGuild": "Escolha uma guilda",
-      "amount": "Valor",
       "max": "Max: {max}",
-      "submit": "Transferência"
-    }
-  },
-  "user": {
-    "settings": {
-      "title": "Configurações do usuário",
-      "description": "Configure as suas configurações e preferências pessoais da conta.",
-      "voteGuild": {
-        "label": "Vote na Guilda",
-        "description": "Escolha qual guilda deve receber tokens quando você votar no bot. Isso só vai afetar os votos futuros.",
-        "none": "Sem guilda específica (Pessoal)"
-      },
-      "mails": {
-        "title": "Endereços de e-mail",
-        "description": "Gerencie os endereços de e-mail vinculados à sua conta. Você pode adicionar um novo endereço e confirmá-lo através do link enviado para sua caixa de entrada.",
-        "verified": "Verificado",
-        "pending": "Aguardando verificação",
-        "noteDeletion": "Observação: os endereços de e-mail do Discord ou Ko-fi não podem ser removidos. Só dá pra apagar os endereços que você mesmo adicionou.",
-        "source": {
-          "user": "Usuário",
-          "discord": "Discord",
-          "kofi": "Ko-fi"
-        },
-        "add": {
-          "placeholder": "Adicionar um novo e-mail (name{'@'}example.com)",
-          "button": "Adicionar"
-        },
-        "verify": {
-          "success": "Seu e-mail foi verificado com sucesso.",
-          "error": "Falha na verificação do e-mail. Tenta de novo ou pede um novo link de verificação."
-        },
-        "errors": {
-          "ALREADY_REGISTERED": "Esse endereço de e-mail já tá cadastrado pra outra pessoa.",
-          "INVALID_FORMAT": "O formato do endereço de e-mail está errado. Dá uma olhada e tenta de novo.",
-          "WRONG_USER": "Esse endereço de e-mail é de outra pessoa.",
-          "INVALID_CODE": "O código de verificação está errado.",
-          "CODE_EXPIRED": "O código de verificação já não vale mais. Pede um novo e-mail de verificação.",
-          "UNKNOWN_ADDRESS": "Não conseguimos encontrar esse endereço de e-mail. Talvez ele tenha sido removido.",
-          "UNKNOWN": "Ocorreu um erro desconhecido. Por favor, tente novamente mais tarde.",
-          "RATE_LIMIT": "Você está fazendo isso com muita frequência. Por favor, aguarde {time} antes de adicionar outro endereço de e-mail."
-        }
-      }
-    },
-    "supporter": {
-      "title": "Apoiador",
-      "description": "Dá uma olhada nas suas compras ativas do Ko-fi e coloca elas numa guilda pra ativar os recursos de apoiador.",
-      "kofiLink": "Compre no Ko-fi",
-      "sections": {
-        "subscriptions": "Assinaturas ativas",
-        "subscriptions_desc": "As assinaturas são renovadas automaticamente e podem ser atribuídas a uma guilda à sua escolha.",
-        "lifetime": "Compras ao longo da vida",
-        "lifetime_desc": "As compras vitalícias podem ser atribuídas a uma guilda para desbloquear recursos permanentemente."
-      },
-      "item": {
-        "subscription": "Assinatura",
-        "lifetime": "Vida útil",
-        "expires": "Vence em: {date}",
-        "assignedTo": "Atribuído a: {guild}",
-        "assign": "Atribuir",
-        "unassign": "Desatribuir"
-      },
-      "errors": {
-        "load": "Não deu pra carregar as compras. Tenta de novo mais tarde, tá?",
-        "assign": "Não deu certo atribuir a compra.",
-        "unassign": "Não deu certo cancelar a atribuição da compra."
-      },
-      "results": {
-        "ALREADY_SUBSCRIBED": "Você já tem uma assinatura ativa atribuída a uma guilda.",
-        "SUBSCRIPTION_EXPIRED": "Essa assinatura já acabou e não dá pra usar.",
-        "UNKOWN": "Ocorreu um erro desconhecido na assinatura. Por favor, tente novamente mais tarde.",
-        "SUCCESS": "Sucesso"
-      },
-      "missingPurchasesNotice": "Se suas compras não aparecerem aqui, talvez você tenha usado um endereço de e-mail diferente para o Ko-fi e para sua conta do Discord. Você pode vincular endereços de e-mail adicionais em {link}.",
-      "settingsLink": "Configurações do usuário"
-    }
-  },
-  "dashboard": {
-    "title": "Painel",
-    "totalReputation": "Reputação total",
-    "weekReputation": "Reputação semanal",
-    "todayReputation": "Reputação atual",
-    "topChannel": "Canal principal",
-    "topUsers": "Principais usuários",
-    "rank": "Classificação",
-    "user": "Usuário",
-    "reputation": "Reputação"
-  },
-  "token_shop": {
-    "title": "Loja de fichas",
-    "description": "Melhore o seu servidor com recursos premium usando seus tokens de voto. Os recursos comprados com tokens não expiram, desde que sejam renovados automaticamente. Comprar um recurso que já está ativo adiciona 30 dias à data de expiração ou renovação.",
-    "guildTokens": "Use fichas da guilda",
-    "userTokens": "Use tokens pessoais",
-    "noFeatures": "Não tem recursos disponíveis no momento.",
-    "active": "Ativo",
-    "expires": "Vence em: {date}",
-    "nextRenewal": "Próxima renovação: {date}",
-    "autoRenewal": "Renovação automática",
-    "purchase": "Compra",
-    "subscribe": "Inscreva-se",
-    "unsubscribe": "Cancelar inscrição",
-    "purchaseSuccess": "Recurso comprado com sucesso!",
-    "subscribeSuccess": "Assinatura ativada!",
-    "unsubscribeSuccess": "Assinatura desativada!",
-    "enabledBySubscription": "Ativado por assinatura",
-    "subscriptionActiveNote": "Esse recurso está ativado agora por uma assinatura ativa.",
-    "confirmPurchase": "Tem certeza que quer comprar esse recurso por {amount} tokens?",
-    "insufficientTokens": "Você não tem fichas suficientes.",
-    "getMoreTokens": "Ganhe mais fichas",
-    "feature": {
-      "reputationlog": {
-        "name": "Registro completo de reputação",
-        "description": "Veja todas as páginas do registro de reputação no servidor."
-      },
-      "analyzerlog": {
-        "name": "Registro estendido do analisador",
-        "description": "O tempo que o log do analisador fica guardado é dobrado."
-      },
-      "reputationcategories": {
-        "name": "Categorias de reputação ilimitadas",
-        "description": "Desbloqueie categorias de reputação ilimitadas."
-      },
-      "reputationchannel": {
-        "name": "Canal de reputação sem limites",
-        "description": "Desbloqueie canais de reputação ilimitados."
-      },
-      "channelblacklist": {
-        "name": "Lista de canais bloqueados",
-        "description": "Evite que o bot fique ativo em canais específicos, em vez de permitir que ele esteja em todos os lugares."
-      },
-      "localeoverrides": {
-        "name": "Substituições de localidade",
-        "description": "Substitua as mensagens e etiquetas do bot pelas suas próprias traduções. No momento, isso só permite definir um nome personalizado para a reputação."
-      },
-      "autopost": {
-        "name": "Postagem automática",
-        "description": "Publique automaticamente o quadro de líderes em um canal em intervalos regulares."
-      },
-      "advancedrankings": {
-        "name": "Classificações avançadas",
-        "description": "Desbloqueie mais opções de classificação."
-      },
-      "detailedprofile": {
-        "name": "Perfil detalhado",
-        "description": "Mostrar mais informações sobre os perfis de reputação dos usuários."
-      },
-      "logchannel": {
-        "name": "Canal de registro",
-        "description": "Ative um canal de registro dedicado para todas as alterações de reputação."
-      },
-      "additionalemojis": {
-        "name": "Emojis adicionais",
-        "description": "Use mais de um emoji para dar reputação por meio de reações."
-      },
-      "profile": {
-        "name": "Perfil do Bot",
-        "description": "Personalize o nome e a foto do perfil do bot no seu servidor."
-      },
-      "integrationbypass": {
-        "name": "Ignorar integração",
-        "description": "Permitir que outros bots e integrações atribuam reputação."
-      }
-    },
-    "adminOnly": "O servidor está configurado para permitir que apenas os administradores do servidor adquiram recursos."
-  },
-  "metrics": {
-    "title": "Métricas",
-    "description": "Tá curioso sobre o tráfego e o uso do bot? Nós também! Por isso, juntamos alguns gráficos legais nesta página. Eles mostram dados quase em tempo real direto do bot.",
-    "offset": "Compensação",
-    "count": "Conte",
-    "units": {
-      "hour": "Hora",
-      "week": "Semana",
-      "month": "Mês",
-      "year": "Ano"
-    },
-    "sections": {
-      "reputation": "Reputação",
-      "commands": "Comandos",
-      "messages": "Mensagens",
-      "users": "Usuários",
-      "service": "Serviço"
-    },
-    "charts": {
-      "reputationCount": "Contagem de reputação",
-      "reputationTotal": "Reputação total",
-      "reputationDow": "Reputação por dia da semana",
-      "reputationTypeTotal": "Reputação total por tipo",
-      "reputationTypeCount": "Contagem de reputação por tipo",
-      "reputationChanges": "Mudanças na reputação",
-      "commandsCount": "Contagem de comandos",
-      "commandsUsage": "Como usar o comando",
-      "messagesCount": "Contagem de mensagens",
-      "messagesTotal": "Total de mensagens",
-      "usersActiveWeek": "Usuários ativos (semanalmente)",
-      "usersActiveMonth": "Usuários ativos (mensal)",
-      "serviceCountHour": "Uso do serviço (por hora)",
-      "serviceCountWeek": "Uso do serviço (semanal)"
-    },
-    "users": {
-      "total": "Total",
-      "donors": "Doadores",
-      "receivers": "Receptores"
-    },
-    "validation": {
-      "offsetMin": "O deslocamento deve ser pelo menos 0.",
-      "offsetMax": "O deslocamento deve ser no máximo de {max}",
-      "countMin": "A contagem deve ser de pelo menos 2.",
-      "countMax": "A contagem deve ser no máximo {max}"
-    }
-  },
-  "scan": {
-    "description": "Verifica se há pontos de reputação na tua guilda que foram concedidos antes da adição do bot ou em canais que não foram monitorados. Isso vai analisar todas as mensagens nos canais e categorias de reputação configurados.",
-    "start": "Iniciar varredura",
-    "starting": "Começando...",
-    "startedAt": "Começou em",
-    "finishedAt": "Concluído em",
-    "messagesScanned": "Mensagens verificadas",
-    "reputationFound": "Reputação encontrada",
-    "noScanYet": "Ainda não foi feita nenhuma digitalização.",
-    "status": {
-      "running": "Digitalização em andamento",
-      "finished": "Digitalização concluída"
-    },
-    "progressDetails": "Detalhes do progresso",
-    "error": {
-      "fetchStatus": "Não foi possível obter o status da digitalização. Tenta novamente mais tarde.",
-      "startFailed": "Não foi possível iniciar a verificação. Tenta novamente mais tarde.",
-      "alreadyRunning": "Já está rolando uma verificação para essa guilda."
+      "selectGuild": "Escolha uma guilda",
+      "submit": "Transferência",
+      "title": "Transferir fichas para uma guilda"
     }
   }
 }

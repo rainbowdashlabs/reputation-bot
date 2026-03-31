@@ -4,7 +4,7 @@
  *     Copyright (C) RainbowDashLabs and Contributor
  */
 <script lang="ts" setup>
-import {computed, onMounted, ref, watch} from 'vue'
+import {computed, ref, watch} from 'vue'
 import {useI18n} from 'vue-i18n'
 import {useRoute, useRouter} from 'vue-router'
 import {useSession} from '@/composables/useSession'
@@ -29,11 +29,14 @@ import SetupFinishedStep from './setup/SetupFinishedStep.vue'
 const {t} = useI18n()
 const router = useRouter()
 const route = useRoute()
-const {session, loadSettings} = useSession()
+const {session, loadSettings, settingsLoading, settingsError} = useSession()
 
-onMounted(async () => {
-  await loadSettings()
-})
+// Watch session and load settings as soon as session becomes available
+watch(session, (newSession) => {
+  if (newSession) {
+    loadSettings()
+  }
+}, {immediate: true})
 
 const SETUP_STEP_KEY = 'reputation-bot-setup-current-step'
 const totalSteps = 14
@@ -94,20 +97,20 @@ watch(() => route.query.step, (newStepQuery) => {
 })
 
 const steps = [
-  {id: 1, component: SetupWelcomeStep, titleKey: 'setup.steps.welcome.title', required: false},
-  {id: 2, component: SetupLanguageStep, titleKey: 'setup.steps.language.title', required: false},
-  {id: 3, component: SetupSystemChannelStep, titleKey: 'setup.steps.systemChannel.title', required: true},
-  {id: 4, component: SetupReputationTypesStep, titleKey: 'setup.steps.reputationTypes.title', required: false},
-  {id: 5, component: SetupReputationModeStep, titleKey: 'setup.steps.reputationMode.title', required: false},
-  {id: 6, component: SetupRanksStep, titleKey: 'setup.steps.ranks.title', required: true},
-  {id: 7, component: SetupThankwordsStep, titleKey: 'setup.steps.thankwords.title', required: false},
-  {id: 8, component: SetupChannelsStep, titleKey: 'setup.steps.channels.title', required: true},
-  {id: 9, component: SetupScanStep, titleKey: 'setup.steps.scan.title', required: false},
-  {id: 10, component: SetupAnnouncementsStep, titleKey: 'setup.steps.announcements.title', required: false},
-  {id: 11, component: SetupCooldownStep, titleKey: 'setup.steps.cooldown.title', required: false},
-  {id: 12, component: SetupMainReactionStep, titleKey: 'setup.steps.mainReaction.title', required: false},
-  {id: 13, component: SetupRolesStep, titleKey: 'setup.steps.roles.title', required: false},
-  {id: 14, component: SetupFinishedStep, titleKey: 'setup.steps.finished.title', required: false}
+  {id: 1, component: SetupWelcomeStep, titleKey: 'setup.steps.welcome.title', required: false, requiresSettings: false},
+  {id: 2, component: SetupLanguageStep, titleKey: 'setup.steps.language.title', required: false, requiresSettings: true},
+  {id: 3, component: SetupSystemChannelStep, titleKey: 'setup.steps.systemChannel.title', required: true, requiresSettings: true},
+  {id: 4, component: SetupReputationTypesStep, titleKey: 'setup.steps.reputationTypes.title', required: false, requiresSettings: true},
+  {id: 5, component: SetupReputationModeStep, titleKey: 'setup.steps.reputationMode.title', required: false, requiresSettings: true},
+  {id: 6, component: SetupRanksStep, titleKey: 'setup.steps.ranks.title', required: true, requiresSettings: true},
+  {id: 7, component: SetupThankwordsStep, titleKey: 'setup.steps.thankwords.title', required: false, requiresSettings: true},
+  {id: 8, component: SetupChannelsStep, titleKey: 'setup.steps.channels.title', required: true, requiresSettings: true},
+  {id: 9, component: SetupScanStep, titleKey: 'setup.steps.scan.title', required: false, requiresSettings: false},
+  {id: 10, component: SetupAnnouncementsStep, titleKey: 'setup.steps.announcements.title', required: false, requiresSettings: true},
+  {id: 11, component: SetupCooldownStep, titleKey: 'setup.steps.cooldown.title', required: false, requiresSettings: true},
+  {id: 12, component: SetupMainReactionStep, titleKey: 'setup.steps.mainReaction.title', required: false, requiresSettings: true},
+  {id: 13, component: SetupRolesStep, titleKey: 'setup.steps.roles.title', required: false, requiresSettings: true},
+  {id: 14, component: SetupFinishedStep, titleKey: 'setup.steps.finished.title', required: false, requiresSettings: false}
 ]
 
 const currentStepData = computed(() => steps.find(s => s.id === currentStep.value))
@@ -222,9 +225,28 @@ const progressPercentage = computed(() => {
             </p>
           </div>
 
+          <div v-if="currentStepData?.requiresSettings && settingsLoading" class="flex items-center justify-center py-12">
+            <span class="text-gray-500 dark:text-gray-400">{{ t('common.loading') }}</span>
+          </div>
+
+          <div v-else-if="currentStepData?.requiresSettings && settingsError === 'forbidden'" class="rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-6">
+            <p class="text-red-700 dark:text-red-400 font-medium">{{ t('setup.error.forbidden.title') }}</p>
+            <p class="text-red-600 dark:text-red-300 text-sm mt-1">{{ t('setup.error.forbidden.description') }}</p>
+          </div>
+
+          <div v-else-if="currentStepData?.requiresSettings && settingsError" class="rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-6">
+            <p class="text-red-700 dark:text-red-400 font-medium">{{ t('setup.error.unknown.title') }}</p>
+            <p class="text-red-600 dark:text-red-300 text-sm mt-1">{{ t('setup.error.unknown.description') }}</p>
+          </div>
+
+          <div v-else-if="currentStepData?.requiresSettings && !session" class="rounded-lg bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 p-6">
+            <p class="text-yellow-700 dark:text-yellow-400 font-medium">{{ t('setup.error.noSession.title') }}</p>
+            <p class="text-yellow-600 dark:text-yellow-300 text-sm mt-1">{{ t('setup.error.noSession.description') }}</p>
+          </div>
+
           <component
+              v-else-if="currentStepData && (!currentStepData.requiresSettings || (session && session.settings))"
               :is="currentStepData.component"
-              v-if="currentStepData && session && session.settings"
               @can-proceed="updateCanProceed"
               @scan-started="onScanStarted"
           />

@@ -117,19 +117,19 @@ const isCategoryLimitReached = computed(() => {
     <!-- Premium Warnings -->
     <div class="space-y-4">
       <PremiumFeatureWarning
-          v-if="!premiumFeatures?.reputationChannel.unlocked"
+          v-if="premiumFeatures?.reputationChannel && !premiumFeatures.reputationChannel.unlocked"
           :message="t('general.channels.premium.channelLimitWarning', {
-          limit: premiumFeatures?.reputationChannel.max
+          limit: premiumFeatures.reputationChannel.max
         })"
-          :required-skus="premiumFeatures?.reputationChannel.requiredSkus"
+          :required-skus="premiumFeatures.reputationChannel.requiredSkus"
           variant="small"
       />
       <PremiumFeatureWarning
-          v-if="!premiumFeatures?.reputationCategories.unlocked"
+          v-if="premiumFeatures?.reputationCategories && !premiumFeatures.reputationCategories.unlocked"
           :message="t('general.channels.premium.categoryLimitWarning', {
-          limit: premiumFeatures?.reputationCategories.max
+          limit: premiumFeatures.reputationCategories.max
         })"
-          :required-skus="premiumFeatures?.reputationCategories.requiredSkus"
+          :required-skus="premiumFeatures.reputationCategories.requiredSkus"
           variant="small"
       />
     </div>

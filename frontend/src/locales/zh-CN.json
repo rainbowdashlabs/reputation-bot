@@ -1,399 +1,27 @@
 {
-  "common": {
-    "save": "保存",
-    "cancel": "取消",
-    "delete": "删除",
-    "edit": "编辑",
-    "change": "改变",
-    "clear": "清除",
-    "confirm": "确认",
-    "loading": "正在加载...",
-    "error": {
-      "outOfBounds": "值必须介于{min}与{max}之间。已修正为最近的有效值。"
-    },
-    "noData": "未找到任何条目。",
-    "previous": "先前",
-    "next": "接下来",
-    "pageOf": "第{current}页，网址：{total}"
-  },
-  "navigation": {
-    "settings": "设置",
-    "presets": "预设",
-    "setup": "设置",
-    "logout": "注销",
-    "dashboard": "仪表板",
-    "user_settings": "用户设置",
-    "voting": "投票",
-    "token_shop": "代币商店",
-    "supporter": "支持者",
-    "tos": "服务条款",
-    "privacy": "隐私",
-    "faq": "常见问题解答",
-    "metrics": "指标"
-  },
-  "presets": {
-    "title": "预设",
-    "description": "快速配置预设，助您轻松启动常用设置。",
-    "apply": "申请",
-    "applying": "正在申请...",
-    "simpleReputation": {
-      "title": "简单声誉系统",
-      "description": "我想要一个直截了当的声望系统，用户只能通过命令给予声望，无需任何复杂的上下文追踪。",
-      "settings": "此预设将禁用除命令外的所有声望类型，并关闭捐赠者和接收者的上下文追踪功能。"
-    },
-    "thankOnce": {
-      "title": "仅此一次",
-      "description": "我希望用户之间只能互相感谢一次，避免同一用户之间重复给予声望值。",
-      "settings": "此预设将仅设置一次冷却时间，并将冷却方向改为单向。"
-    },
-    "noAbuse": {
-      "title": "无滥用保护",
-      "description": "我想禁用基于上下文的滥用保护功能，允许用户更自由地给予声望值，同时不追踪他们的互动历史。",
-      "settings": "此预设将同时禁用捐赠方和接收方的上下文跟踪功能。"
-    },
-    "default": {
-      "title": "默认配置",
-      "description": "我想要一个平衡的声望系统，配备合理默认设置，能为大多数服务器提供良好支持。",
-      "settings": "此预设将设置30分钟双向冷却时间，启用除命令外的所有声望模式，启用声望确认功能，并启用捐赠方和接收方的上下文检查。"
-    },
-    "applied": "应用"
-  },
-  "settings": {
-    "title": "设置",
-    "general": "总则",
-    "reputation": "声誉",
-    "messages": "消息",
-    "profile": "个人资料",
-    "ranks": "军衔",
-    "channels": "频道",
-    "roles": "角色",
-    "thankwords": "谢辞",
-    "abuseProtection": "滥用保护",
-    "announcements": "公告",
-    "autopost": "自动发布",
-    "logChannel": "日志通道",
-    "reactions": "反应",
-    "auditLog": "审计日志",
-    "integrationBypass": "集成旁路",
-    "problems": "问题",
-    "debug": {
-      "permissions": {
-        "title": "缺少全局权限",
-        "description": "该机器人全局缺少这些权限。这可能会限制某些功能。",
-        "MANAGE_ROLES": "声望角色无法授予。",
-        "NICKNAME_CHANGE": "昵称无法在控制面板中更改。",
-        "MANAGE_GUILD_EXPRESSIONS": "自定义反应无法在仪表板中建议。",
-        "VIEW_CHANNEL": "声望渠道不可见。声望无法通过任何基于文本的方式授予。",
-        "MESSAGE_HISTORY": "通过嵌入内容进行的声誉验证功能失效。多数滥用防护检查将无法通过。",
-        "MESSAGE_ADD_REACTION": "通过点赞确认声誉的功能无法正常使用。",
-        "MESSAGE_SEND": "任何确认消息都无效。例如通过嵌入式操作进行的反应确认或声望确认。",
-        "MESSAGE_SEND_IN_THREADS": "任何确认消息在嵌入式讨论中均无效。例如通过嵌入式方式进行的点赞确认或声望确认。",
-        "MESSAGE_EXT_EMOJI": "通过表情符号确认声誉的功能无法正常使用。",
-        "BYPASS_SLOWMODE": "任何确认消息都可能时不时失效。例如通过嵌入式方式进行的反应确认或声望确认。",
-        "MESSAGE_ATTACH_VOICE_MESSAGE": "任何确认消息在语音频道中均无效。例如通过嵌入式消息发送的反应确认或声望确认。"
-      },
-      "simpleProblems": {
-        "title": "一般性问题",
-        "SYSTEM_CHANNEL_NOT_DEFINED": "系统通道未定义。",
-        "SYSTEM_CHANNEL_NOT_FOUND": "未找到系统频道。",
-        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "公告频道未定义。",
-        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "未找到公告频道。",
-        "NO_AUTOPOST_CHANNEL_DEFINED": "自动发布频道未定义。",
-        "AUTOPOST_CANNEL_NOT_FOUND": "未找到自动发布频道。",
-        "NO_LOG_CHANNEL_DEFINED": "日志通道未定义。",
-        "LOG_CHANNEL_NOT_FOUND": "日志通道未找到。",
-        "NO_THANKWORDS_DEFINED": "未定义任何感谢词。",
-        "NO_REPUTATION_CHANNEL_DEFINED": "未定义任何声誉渠道或类别。"
-      },
-      "missingPermissions": {
-        "title": "缺少作用域权限",
-        "GUILD": "公会",
-        "CHANNEL": "频道",
-        "CATEGORY": "类别"
-      },
-      "rankProblems": {
-        "title": "等级问题",
-        "CANT_ASSIGN_ROLE": "该机器人无法分配此角色，因为该角色高于机器人的最高权限。",
-        "MISSING_ROLE": "此等级的角色缺失。"
-      },
-      "reputationChannelProblems": {
-        "title": "声誉通道问题",
-        "MISSING_CHANNEL": "该频道不存在。",
-        "MISSING_CATEGORY": "该类别缺失。",
-        "NOT_TEXT_TYPE": "该频道并非文字频道。"
-      },
-      "simpleWarnings": {
-        "title": "警告",
-        "MAX_MESSAGE_AGE_LOW": "消息的最大保存期限设置得过短。这可能会导致用户无法对较早的消息互相致谢。"
-      },
-      "goToSettings": "前往设置"
-    },
-    "scan": "扫描"
-  },
-  "locale": {
-    "selectLanguage": "选择语言"
-  },
-  "error": {
-    "noToken": {
-      "title": "未找到会话",
-      "message": "您没有有效的会话令牌。",
-      "instruction": "请创建一个新会话以访问此应用程序。"
-    },
-    "notice": {
-      "workingOnIt": "我们已收到该问题的通知，并正在努力解决。"
-    },
-    "expired": {
-      "title": "会话已过期",
-      "message": "您的会话已过期或无效。",
-      "instruction": "请从Discord服务器开启新会话以继续。"
-    }
-  },
-  "premiumFeature": {
-    "title": "支持者专访",
-    "message": "{name} 该功能仅限支持者使用。请成为支持者以启用此功能。",
-    "requiredTierSingular": "所需支持者等级：",
-    "requiredTierPlural": "需选择以下其中一个支持者等级：",
-    "tokenShopHint": "您也可以使用代币解锁此功能。",
-    "tokenShopLink": "代币商店",
-    "kofiHint": "或支持我们",
-    "kofiLink": "柯菲"
-  },
-  "profile": {
-    "description": "自定义机器人在服务器中的外观和行为。",
-    "reset": "重置",
-    "premiumRequired": "个人资料定制",
-    "nickname": {
-      "label": "机器人昵称",
-      "placeholder": "输入机器人昵称",
-      "description": "为该服务器中的机器人设置自定义昵称。",
-      "reset": "将昵称重置为默认值"
-    },
-    "profilePicture": {
-      "label": "个人资料图片",
-      "uploadButton": "上传图片",
-      "uploading": "正在上传...",
-      "description": "为机器人上传自定义头像（最大2MB，512x512像素）",
-      "reset": "将个人资料图片重置为默认值"
-    },
-    "reputationName": {
-      "label": "声誉名称",
-      "placeholder": "输入自定义声望名称（例如“积分”、“善恶值”）",
-      "description": "自定义本服务器中声望所使用的名称。",
-      "reset": "将声誉名称重置为默认值"
-    },
-    "tosNote": "任何违反Discord服务条款或州法律的行为均不被允许，此类行为可能导致服务器被禁用该功能。"
-  },
-  "general": {
-    "description": "为该服务器配置机器人的基本设置。",
-    "language": {
-      "label": "机器人语言",
-      "selectPlaceholder": "选择语言",
-      "description": "选择机器人在本服务器中发送消息和回复时使用的语言。"
-    },
-    "systemChannel": {
-      "label": "系统频道",
-      "selectPlaceholder": "选择频道",
-      "note": "注意：此频道应设置为内部频道。该频道将包含有关机器人服务的重要通知及开发者发布的消息。"
-    },
-    "roleSelect": {
-      "searchPlaceholder": "搜索职位...",
-      "noRolesFound": "未找到角色"
-    },
-    "ranks": {
-      "description": "配置信誉等级及其关联角色。",
-      "stackRoles": {
-        "label": "堆栈角色",
-        "description": "若启用此功能，将分配所有适用的等级，而非仅分配最高等级。"
-      },
-      "addRank": "添加新等级",
-      "reputationRequired": "所需声望值",
-      "roleAlreadyAdded": "该角色已有等级。",
-      "reputationAlreadyUsed": "该声望值已被其他等级使用。",
-      "noRanks": "尚未配置任何等级。",
-      "reputationPlaceholder": "例如：100",
-      "refresh": {
-        "button": "刷新排名",
-        "refreshing": "清爽...",
-        "alreadyRunning": "刷新正在进行中",
-        "success": "排名刷新已成功启动",
-        "failed": "排名刷新启动失败"
-      },
-      "selectionNote": "仅当角色未被集成管理且低于机器人的最高角色时，才可被选中。"
-    },
-    "reputation": {
-      "description": "配置声誉的计算方式及启用哪些功能。",
-      "mode": {
-        "label": "声誉模式",
-        "description": "选择声誉的计算和显示方式。",
-        "modes": {
-          "TOTAL": "总声誉",
-          "ROLLING_WEEK": "滚动周",
-          "ROLLING_MONTH": "滚动月份",
-          "WEEK": "本周",
-          "MONTH": "本月"
-        },
-        "descriptions": {
-          "TOTAL": "使用用户迄今为止获得的总声望值。",
-          "ROLLING_WEEK": "使用过去7天内获得的声望值。",
-          "ROLLING_MONTH": "使用过去30天内获得的声望值。",
-          "WEEK": "使用本周开始以来获得的声望值。",
-          "MONTH": "使用本月开始以来获得的声望值。"
-        }
-      },
-      "resetDate": {
-        "label": "重置日期",
-        "description": "声望计数将重置的日期。请设定未来日期以安排重置。",
-        "clear": "清除重置日期"
-      },
-      "types": {
-        "reaction": {
-          "label": "反应声誉",
-          "description": "当消息被添加特定反应时给予声望值。",
-          "confirmation": {
-            "label": "反应确认",
-            "description": "当通过点赞授予声望时发送确认消息。"
-          }
-        },
-        "answer": {
-          "label": "回答声望",
-          "description": "当用户的留言在回答中被感谢时，给予声望值。"
-        },
-        "mention": {
-          "label": "提及声誉",
-          "description": "当用户被提及并附带感谢词时，给予声望值。"
-        },
-        "fuzzy": {
-          "label": "模糊匹配",
-          "description": "通过匹配\"感谢\"一词周围的词语与频道中现有的用户名，给予声望值。"
-        },
-        "embed": {
-          "label": "嵌入声誉",
-          "description": "若无法确定目标对象，则发送包含上次对话中所有参与用户的嵌入式列表。"
-        },
-        "direct": {
-          "label": "直接嵌入声誉",
-          "description": "当嵌入内容仅包含一名用户时，自动授予声望值。"
-        },
-        "command": {
-          "label": "命令声誉",
-          "description": "通过/reputation命令授予声望。",
-          "ephemeral": {
-            "label": "瞬息回应",
-            "description": "通过命令授予声望时，将响应隐藏对其他用户。"
-          }
-        }
-      }
-    },
-    "roles": {
-      "description": "配置哪些角色被允许给予和接收声望。",
-      "donor": {
-        "label": "捐赠者角色",
-        "description": "若启用此功能，仅拥有以下任一角色的用户可授予声望值。"
-      },
-      "receiver": {
-        "label": "接收器角色",
-        "description": "若启用此设置，仅拥有以下任一角色的用户可获得声望值。"
-      },
-      "list": {
-        "label": "精选角色",
-        "description": "选择哪些角色应为必选项。"
-      },
-      "denyDonor": {
-        "label": "拒绝捐赠者角色",
-        "description": "若启用此设置，具有以下任一角色的用户将无法给予声望。"
-      },
-      "denyReceiver": {
-        "label": "拒绝接收者角色",
-        "description": "若启用此设置，具有以下任一角色的用户将无法获得声望值。"
-      }
-    },
-    "channels": {
-      "description": "配置机器人应处于活动状态和非活动状态的位置。",
-      "listType": {
-        "label": "列表类型",
-        "description": "选择是否允许或拒绝所选频道和类别。",
-        "allow": "允许列表",
-        "deny": "拒绝列表",
-        "premiumRequired": "拒绝列表"
-      },
-      "list": {
-        "label": "频道与分类",
-        "description": "选择应列入列表的频道和类别。",
-        "channels": "频道",
-        "categories": "分类",
-        "permissionsNote": "仅列出机器人具有读写权限的频道。"
-      },
-      "premium": {
-        "channelLimitWarning": "选择超过{limit}个频道的功能仅限赞助用户使用。请成为赞助用户以启用该功能。",
-        "categoryLimitWarning": "选择超过{limit}个分类的功能仅限支持者使用。成为支持者即可使用该功能。"
-      }
-    },
-    "everyoneTokenPurchase": {
-      "label": "全民代币购买",
-      "description": "允许所有用户使用代币购买高级功能。若禁用此功能，仅服务器管理员可购买功能。"
-    }
-  },
-  "reactions": {
-    "title": "反应",
-    "description": "配置用于授予声望的表情符号。",
-    "main": {
-      "label": "主反应",
-      "description": "将作为给予声望的主要反应表情符号。"
-    },
-    "additional": {
-      "label": "附加反应",
-      "description": "其他可用于给予声望的额外表情符号。",
-      "premiumRequired": "附加反应",
-      "add": "添加反应",
-      "none": "未配置其他反应。"
-    }
-  },
-  "thankwords": {
-    "description": "这些词将用于检测何时有人被感谢。它们将被解释为正则表达式。",
-    "add": "添加感谢词",
-    "placeholder": "输入感谢词（正则表达式）",
-    "none": "未配置任何感谢词。",
-    "invalidCharacter": "该感谢词包含无效字符：{char}",
-    "alreadyExists": "这个感谢词已经存在。",
-    "defaults": {
-      "title": "默认致谢词",
-      "description": "快速添加多种语言的默认感谢词。"
-    }
-  },
   "abuseProtection": {
-    "description": "配置限制和保护措施，以防止声誉滥用。",
     "cooldown": {
-      "label": "冷却时间（分钟）",
       "description": "同一用户再次互相点赞所需等待的时间（单位：分钟）。0表示无冷却时间，-1表示永久禁止。",
+      "label": "冷却时间（分钟）",
       "once": {
-        "label": "冷却一次",
+        "activeDescription": "冷却时间启动后，用户仅能互相致谢一次。互动方向设定为单向。",
         "description": "若启用此功能，用户之间仅能永久互谢一次。",
-        "activeDescription": "冷却时间启动后，用户仅能互相致谢一次。互动方向设定为单向。"
+        "label": "冷却一次"
       }
     },
     "cooldownDirection": {
-      "label": "冷却方向",
+      "bidirectional": "双向",
       "description": "单向模式意味着捐赠者对同一对象的捐赠存在冷却时间。双向模式则表示冷却时间适用于捐赠者与接收者之间，防止双方在时间未到前反复互致感谢。",
-      "unidirectional": "单向",
-      "bidirectional": "双向"
+      "label": "冷却方向",
+      "unidirectional": "单向"
     },
-    "maxMessageAge": {
-      "label": "最大消息存留时间（分钟）",
-      "description": "消息在被回复或点赞时仍可获得声望的最大时效（以分钟计）。"
-    },
-    "minMessages": {
-      "label": "最小消息数",
-      "description": "频道中消息量达到或超过此数量的作者始终有资格获得声望值。"
-    },
+    "description": "配置限制和保护措施，以防止声誉滥用。",
     "donorContext": {
-      "label": "捐赠者必须到场",
-      "description": "若启用此功能，捐赠者必须在频道中发送过至少一条最近消息才能授予声誉。"
-    },
-    "receiverContext": {
-      "label": "接收方必须到场",
-      "description": "若启用此功能，接收方必须至少发送过该频道中的最后一条消息，才能获得声誉值。"
+      "description": "若启用此功能，捐赠者必须在频道中发送过至少一条最近消息才能授予声誉。",
+      "label": "捐赠者必须到场"
     },
     "givenLimit": {
+      "description": "限制用户在特定时间段内可给予的声望值上限。",
       "enabled": {
         "label": "启用指定限制"
       },
@@ -402,10 +30,22 @@
       },
       "maxGivenHours": {
         "label": "加班时间"
-      },
-      "description": "限制用户在特定时间段内可给予的声望值上限。"
+      }
+    },
+    "maxMessageAge": {
+      "description": "消息在被回复或点赞时仍可获得声望的最大时效（以分钟计）。",
+      "label": "最大消息存留时间（分钟）"
+    },
+    "maxMessageReputation": {
+      "description": "单条消息中通过提及和嵌入功能可授予的声望值上限。",
+      "label": "最大消息信誉值"
+    },
+    "minMessages": {
+      "description": "频道中消息量达到或超过此数量的作者始终有资格获得声望值。",
+      "label": "最小消息数"
     },
     "receivedLimit": {
+      "description": "限制用户在特定时间段内可获得的声望值上限。",
       "enabled": {
         "label": "启用接收限制"
       },
@@ -414,155 +54,540 @@
       },
       "maxReceivedHours": {
         "label": "加班时间"
-      },
-      "description": "限制用户在特定时间段内可获得的声望值上限。"
+      }
     },
-    "maxMessageReputation": {
-      "label": "最大消息信誉值",
-      "description": "单条消息中通过提及和嵌入功能可授予的声望值上限。"
+    "receiverContext": {
+      "description": "若启用此功能，接收方必须至少发送过该频道中的最后一条消息，才能获得声誉值。",
+      "label": "接收方必须到场"
     }
   },
   "announcements": {
-    "description": "配置用户达到新等级时发送的消息。",
     "active": {
-      "label": "启用公告",
-      "description": "若启用此功能，当用户达到新等级时，机器人将发送一条消息。"
-    },
-    "sameChannel": {
-      "label": "通过同一渠道发送",
-      "description": "若启用此功能，公告将发送至角色升级所在的频道。否则，公告将发送至选定的频道。"
+      "description": "若启用此功能，当用户达到新等级时，机器人将发送一条消息。",
+      "label": "启用公告"
     },
     "channel": {
-      "label": "公告频道",
-      "description": "选择用于发送升级公告的频道。"
+      "description": "选择用于发送升级公告的频道。",
+      "label": "公告频道"
+    },
+    "description": "配置用户达到新等级时发送的消息。",
+    "sameChannel": {
+      "description": "若启用此功能，公告将发送至角色升级所在的频道。否则，公告将发送至选定的频道。",
+      "label": "通过同一渠道发送"
+    }
+  },
+  "auditLog": {
+    "added": "已添加",
+    "description": "查看服务器中所有设置更改的历史记录。",
+    "from": "自",
+    "loadError": "加载审核日志失败。请重试。",
+    "loading": "正在加载审计日志...",
+    "next": "接下来",
+    "noEntries": "未找到任何审计日志条目。",
+    "pageInfo": "第{current}页，网址：{total}",
+    "previous": "先前",
+    "removed": "已删除",
+    "retry": "重试",
+    "settings": {
+      "abuseprotection_cooldown": "滥用保护 - 冷却时间",
+      "abuseprotection_cooldowndirection": "滥用保护 - 冷却时间方向",
+      "abuseprotection_donorcontext": "滥用保护 - 捐赠者背景",
+      "abuseprotection_maxgiven": "滥用保护 - 最大值给定",
+      "abuseprotection_maxgivenhours": "滥用保护 - 最大允许使用时长",
+      "abuseprotection_maxmessageage": "滥用防护 - 最大消息年龄",
+      "abuseprotection_maxmessagereputation": "滥用保护 - 最大消息信誉值",
+      "abuseprotection_maxreceived": "滥用保护 - 最大接收量",
+      "abuseprotection_maxreceivedhours": "滥用保护 - 最大接收时长",
+      "abuseprotection_minmessages": "滥用保护 - 最低消息数",
+      "abuseprotection_receivercontext": "滥用保护 - 接收方上下文",
+      "announcements_active": "公告 - 活跃",
+      "announcements_channel": "公告 - 频道",
+      "announcements_samechannel": "公告 - 同一频道",
+      "autopost_active": "自动发布 - 启用",
+      "autopost_channel": "自动发布 - 频道",
+      "autopost_refreshinterval": "自动发布 - 刷新间隔",
+      "autopost_refreshtype": "自动发布 - 刷新类型",
+      "general_everyonetokenpurchase": "通用 - 所有人代币购买",
+      "general_language": "通用 - 语言",
+      "general_reputationmode": "声誉 - 声誉模式",
+      "general_resetdate": "声誉 - 重置日期",
+      "general_stackroles": "等级 - 堆栈角色",
+      "general_systemchannel": "通用 - 系统频道",
+      "logchannel_active": "日志通道 - 活动",
+      "logchannel_channel": "日志通道 - 通道",
+      "messages_commandreputationephemeral": "声望 - 指挥声望 短暂",
+      "messages_reactionconfirmation": "声誉 - 反应确认",
+      "profile_nickname": "个人资料 - 昵称",
+      "profile_profilepicture": "个人资料 - 个人资料图片",
+      "profile_reputationname": "个人资料 - 声誉名称",
+      "ranks": "军衔 - 职务",
+      "reputation_answeractive": "声誉 - 回答活跃",
+      "reputation_commandactive": "声望 - 指令激活",
+      "reputation_directactive": "声誉 - 直接主动",
+      "reputation_embedactive": "声誉 - 嵌入活动",
+      "reputation_fuzzyactive": "声誉 - 模糊活跃",
+      "reputation_mentionactive": "声誉 - 提及活跃",
+      "reputation_reactionactive": "声誉 - 反应活跃",
+      "thanking_channels_categories": "频道 - 分类列表",
+      "thanking_channels_channels": "频道 - 频道列表",
+      "thanking_channels_whitelist": "频道 - 白名单模式",
+      "thanking_denydonorroles": "角色 - 拒绝捐赠者角色",
+      "thanking_denyreceiverroles": "角色 - 拒绝接收者角色",
+      "thanking_donorroles": "角色 - 捐赠者角色",
+      "thanking_reactions_mainreaction": "反应 - 主反应",
+      "thanking_reactions_reactions": "反应 - 附加反应",
+      "thanking_receiverroles": "角色 - 接收者角色",
+      "thanking_thankwords_words": "谢辞"
+    },
+    "to": "致",
+    "unknownMember": "未知成员",
+    "values": {
+      "bidirectional": "双向",
+      "daily": "每日",
+      "delete_and_repost": "删除并重新发布",
+      "disabled": "残障人士",
+      "enabled": "启用",
+      "hourly": "按小时计费",
+      "month": "月份",
+      "monthly": "每月",
+      "noChanges": "无变更",
+      "none": "无",
+      "null": "未设置",
+      "once": "曾经",
+      "repost": "转发",
+      "rolling_month": "滚动月份",
+      "rolling_week": "滚动周",
+      "total": "总计",
+      "unidirectional": "单向",
+      "unknownChannel": "未知频道",
+      "unknownIntegration": "未知集成",
+      "update": "更新",
+      "week": "周",
+      "weekly": "每周"
     }
   },
   "autopost": {
+    "active": {
+      "description": "启用或禁用自动排行榜发布功能。",
+      "label": "启用自动发布"
+    },
+    "channel": {
+      "description": "排行榜应发布的频道。",
+      "label": "自动发布频道"
+    },
     "description": "配置排行榜的自动发布功能至频道。",
     "premiumRequired": "自动发布",
-    "active": {
-      "label": "启用自动发布",
-      "description": "启用或禁用自动排行榜发布功能。"
-    },
-    "channel": {
-      "label": "自动发布频道",
-      "description": "排行榜应发布的频道。"
-    },
     "refreshInterval": {
-      "label": "刷新间隔",
-      "description": "排行榜应多久更新一次。",
-      "HOURLY": "按小时计费",
       "DAILY": "每日",
+      "HOURLY": "按小时计费",
+      "MONTHLY": "每月",
       "WEEKLY": "每周",
-      "MONTHLY": "每月"
+      "description": "排行榜应多久更新一次。",
+      "label": "刷新间隔"
     },
     "refreshType": {
-      "label": "刷新类型",
-      "description": "如何更新该帖子。",
       "DELETE_AND_REPOST": "删除并重新发布",
       "REPOST": "转发",
-      "UPDATE": "更新"
+      "UPDATE": "更新",
+      "description": "如何更新该帖子。",
+      "label": "刷新类型"
     },
     "send": {
+      "description": "立即手动向频道发送或更新自动发布内容。",
       "label": "立即发送自动发布",
-      "sending": "发送中...",
-      "description": "立即手动向频道发送或更新自动发布内容。"
+      "sending": "发送中..."
     }
+  },
+  "common": {
+    "cancel": "取消",
+    "change": "改变",
+    "clear": "清除",
+    "confirm": "确认",
+    "delete": "删除",
+    "edit": "编辑",
+    "error": {
+      "outOfBounds": "值必须介于{min}与{max}之间。已修正为最近的有效值。"
+    },
+    "loading": "正在加载...",
+    "next": "接下来",
+    "noData": "未找到任何条目。",
+    "pageOf": "第{current}页，网址：{total}",
+    "previous": "先前",
+    "save": "保存"
+  },
+  "dashboard": {
+    "rank": "等级",
+    "reputation": "声誉",
+    "title": "仪表板",
+    "todayReputation": "今日声誉",
+    "topChannel": "顶级频道",
+    "topUsers": "顶级用户",
+    "totalReputation": "总声誉",
+    "user": "用户",
+    "weekReputation": "每周声誉"
+  },
+  "error": {
+    "expired": {
+      "instruction": "请从Discord服务器开启新会话以继续。",
+      "message": "您的会话已过期或无效。",
+      "title": "会话已过期"
+    },
+    "noToken": {
+      "instruction": "请创建一个新会话以访问此应用程序。",
+      "message": "您没有有效的会话令牌。",
+      "title": "未找到会话"
+    },
+    "notice": {
+      "workingOnIt": "我们已收到该问题的通知，并正在努力解决。"
+    }
+  },
+  "general": {
+    "channels": {
+      "description": "配置机器人应处于活动状态和非活动状态的位置。",
+      "list": {
+        "categories": "分类",
+        "channels": "频道",
+        "description": "选择应列入列表的频道和类别。",
+        "label": "频道与分类",
+        "permissionsNote": "仅列出机器人具有读写权限的频道。"
+      },
+      "listType": {
+        "allow": "允许列表",
+        "deny": "拒绝列表",
+        "description": "选择是否允许或拒绝所选频道和类别。",
+        "label": "列表类型",
+        "premiumRequired": "拒绝列表"
+      },
+      "premium": {
+        "categoryLimitWarning": "选择超过{limit}个分类的功能仅限支持者使用。成为支持者即可使用该功能。",
+        "channelLimitWarning": "选择超过{limit}个频道的功能仅限赞助用户使用。请成为赞助用户以启用该功能。"
+      }
+    },
+    "description": "为该服务器配置机器人的基本设置。",
+    "everyoneTokenPurchase": {
+      "description": "允许所有用户使用代币购买高级功能。若禁用此功能，仅服务器管理员可购买功能。",
+      "label": "全民代币购买"
+    },
+    "language": {
+      "description": "选择机器人在本服务器中发送消息和回复时使用的语言。",
+      "label": "机器人语言",
+      "selectPlaceholder": "选择语言"
+    },
+    "ranks": {
+      "addRank": "添加新等级",
+      "description": "配置信誉等级及其关联角色。",
+      "noRanks": "尚未配置任何等级。",
+      "refresh": {
+        "alreadyRunning": "刷新正在进行中",
+        "button": "刷新排名",
+        "failed": "排名刷新启动失败",
+        "refreshing": "清爽...",
+        "success": "排名刷新已成功启动"
+      },
+      "reputationAlreadyUsed": "该声望值已被其他等级使用。",
+      "reputationPlaceholder": "例如：100",
+      "reputationRequired": "所需声望值",
+      "roleAlreadyAdded": "该角色已有等级。",
+      "selectionNote": "仅当角色未被集成管理且低于机器人的最高角色时，才可被选中。",
+      "stackRoles": {
+        "description": "若启用此功能，将分配所有适用的等级，而非仅分配最高等级。",
+        "label": "堆栈角色"
+      }
+    },
+    "reputation": {
+      "description": "配置声誉的计算方式及启用哪些功能。",
+      "mode": {
+        "description": "选择声誉的计算和显示方式。",
+        "descriptions": {
+          "MONTH": "使用本月开始以来获得的声望值。",
+          "ROLLING_MONTH": "使用过去30天内获得的声望值。",
+          "ROLLING_WEEK": "使用过去7天内获得的声望值。",
+          "TOTAL": "使用用户迄今为止获得的总声望值。",
+          "WEEK": "使用本周开始以来获得的声望值。"
+        },
+        "label": "声誉模式",
+        "modes": {
+          "MONTH": "本月",
+          "ROLLING_MONTH": "滚动月份",
+          "ROLLING_WEEK": "滚动周",
+          "TOTAL": "总声誉",
+          "WEEK": "本周"
+        }
+      },
+      "resetDate": {
+        "clear": "清除重置日期",
+        "description": "声望计数将重置的日期。请设定未来日期以安排重置。",
+        "label": "重置日期"
+      },
+      "types": {
+        "answer": {
+          "description": "当用户的留言在回答中被感谢时，给予声望值。",
+          "label": "回答声望"
+        },
+        "command": {
+          "description": "通过/reputation命令授予声望。",
+          "ephemeral": {
+            "description": "通过命令授予声望时，将响应隐藏对其他用户。",
+            "label": "瞬息回应"
+          },
+          "label": "命令声誉"
+        },
+        "direct": {
+          "description": "当嵌入内容仅包含一名用户时，自动授予声望值。",
+          "label": "直接嵌入声誉"
+        },
+        "embed": {
+          "description": "若无法确定目标对象，则发送包含上次对话中所有参与用户的嵌入式列表。",
+          "label": "嵌入声誉"
+        },
+        "fuzzy": {
+          "description": "通过匹配\"感谢\"一词周围的词语与频道中现有的用户名，给予声望值。",
+          "label": "模糊匹配"
+        },
+        "mention": {
+          "description": "当用户被提及并附带感谢词时，给予声望值。",
+          "label": "提及声誉"
+        },
+        "reaction": {
+          "confirmation": {
+            "description": "当通过点赞授予声望时发送确认消息。",
+            "label": "反应确认"
+          },
+          "description": "当消息被添加特定反应时给予声望值。",
+          "label": "反应声誉"
+        }
+      }
+    },
+    "roleSelect": {
+      "noRolesFound": "未找到角色",
+      "searchPlaceholder": "搜索职位..."
+    },
+    "roles": {
+      "denyDonor": {
+        "description": "若启用此设置，具有以下任一角色的用户将无法给予声望。",
+        "label": "拒绝捐赠者角色"
+      },
+      "denyReceiver": {
+        "description": "若启用此设置，具有以下任一角色的用户将无法获得声望值。",
+        "label": "拒绝接收者角色"
+      },
+      "description": "配置哪些角色被允许给予和接收声望。",
+      "donor": {
+        "description": "若启用此功能，仅拥有以下任一角色的用户可授予声望值。",
+        "label": "捐赠者角色"
+      },
+      "list": {
+        "description": "选择哪些角色应为必选项。",
+        "label": "精选角色"
+      },
+      "receiver": {
+        "description": "若启用此设置，仅拥有以下任一角色的用户可获得声望值。",
+        "label": "接收器角色"
+      }
+    },
+    "systemChannel": {
+      "label": "系统频道",
+      "note": "注意：此频道应设置为内部频道。该频道将包含有关机器人服务的重要通知及开发者发布的消息。",
+      "selectPlaceholder": "选择频道"
+    }
+  },
+  "guildSwitcher": {
+    "add": "通过在服务器中打开设置来添加另一台服务器。",
+    "current": "当前服务器",
+    "none": "未找到其他服务器",
+    "title": "切换服务器"
+  },
+  "help": {
+    "message": "需要帮助？功能缺失？有反馈意见？只需给机器人发送私信。您还可以在页面底部找到我们Discord支持频道的链接。",
+    "title": "需要帮助吗？"
+  },
+  "integrationBypass": {
+    "add": "添加集成旁路",
+    "allowAnswer": "允许回答",
+    "allowAnswerDescription": "允许通过回复消息给予声望",
+    "allowDirect": "允许直接",
+    "allowDirectDescription": "当仅能确定一个接收方时，允许在跳过嵌入操作时给予声望值。机器人永远不会发送嵌入内容。",
+    "allowFuzzy": "允许模糊",
+    "allowFuzzyDescription": "允许通过模糊匹配给予声誉",
+    "allowMention": "允许提及",
+    "allowMentionDescription": "允许通过提及用户来给予声望",
+    "allowReactions": "允许点赞",
+    "allowReactionsDescription": "允许通过点赞功能给予声望",
+    "deleteConfirm": "您确定要移除此集成旁路吗？",
+    "description": "配置集成绕过规则，使其即使不符合常规要求也能授予信誉。",
+    "ignoreContext": "忽略上下文",
+    "ignoreContextDescription": "忽略上下文检查",
+    "ignoreCooldown": "忽略冷却时间",
+    "ignoreCooldownDescription": "忽略用户间的冷却时间",
+    "ignoreLimit": "忽略限制",
+    "ignoreLimitDescription": "忽略任何设置的小时限制",
+    "noIntegrations": "没有可添加旁路的集成项了。",
+    "premiumRequired": "集成旁路",
+    "selectIntegration": "选择集成"
+  },
+  "links": {
+    "faq": "常见问题解答",
+    "support": "支持服务器",
+    "tos": "服务条款",
+    "website": "网站"
+  },
+  "locale": {
+    "selectLanguage": "选择语言"
   },
   "logChannel": {
-    "premiumRequired": "日志通道",
-    "description": "日志通道将包含用户给予和接收的所有信誉记录。",
     "active": {
-      "label": "启用日志通道",
-      "description": "启用或禁用声誉变化日志记录。"
+      "description": "启用或禁用声誉变化日志记录。",
+      "label": "启用日志通道"
     },
     "channel": {
-      "label": "日志通道",
-      "description": "应记录声誉变化的通道。"
+      "description": "应记录声誉变化的通道。",
+      "label": "日志通道"
+    },
+    "description": "日志通道将包含用户给予和接收的所有信誉记录。",
+    "premiumRequired": "日志通道"
+  },
+  "login": {
+    "button": "使用Discord登录",
+    "description": "请使用Discord登录以访问此面板。",
+    "title": "需要登录"
+  },
+  "metrics": {
+    "charts": {
+      "commandsCount": "命令计数",
+      "commandsUsage": "命令用法",
+      "messagesCount": "消息计数",
+      "messagesTotal": "总消息数",
+      "reputationChanges": "声誉变化",
+      "reputationCount": "声誉值",
+      "reputationDow": "按星期几划分的声誉",
+      "reputationTotal": "总声誉",
+      "reputationTypeCount": "声誉计数（按类型）",
+      "reputationTypeTotal": "各类声誉总和",
+      "serviceCountHour": "服务使用（按小时计费）",
+      "serviceCountWeek": "服务使用情况（每周）",
+      "usersActiveMonth": "活跃用户（月度）",
+      "usersActiveWeek": "活跃用户（每周）"
+    },
+    "count": "计数",
+    "description": "您对机器人的流量和使用情况感到好奇？我们也是！因此我们在此页面整理了一些精美的图表。这些图表直接展示机器人近乎实时的数据。",
+    "offset": "偏移",
+    "sections": {
+      "commands": "命令",
+      "messages": "消息",
+      "reputation": "声誉",
+      "service": "服务",
+      "users": "用户"
+    },
+    "title": "指标",
+    "units": {
+      "hour": "小时",
+      "month": "月份",
+      "week": "周",
+      "year": "年"
+    },
+    "users": {
+      "donors": "捐赠者",
+      "receivers": "接收器",
+      "total": "总计"
+    },
+    "validation": {
+      "countMax": "计数必须小于等于{max}",
+      "countMin": "计数必须至少为2",
+      "offsetMax": "偏移量必须小于等于{max}",
+      "offsetMin": "偏移量必须至少为0"
     }
   },
-  "setup": {
-    "title": "初始设置",
-    "stepProgress": "步骤 {current} of {total}",
-    "requiredStep": "此步骤是继续操作的必要条件",
-    "navigation": {
-      "previous": "先前",
-      "next": "接下来",
-      "finish": "完成设置"
+  "navigation": {
+    "dashboard": "仪表板",
+    "faq": "常见问题解答",
+    "logout": "注销",
+    "metrics": "指标",
+    "presets": "预设",
+    "privacy": "隐私",
+    "settings": "设置",
+    "setup": "设置",
+    "supporter": "支持者",
+    "token_shop": "代币商店",
+    "tos": "服务条款",
+    "user_settings": "用户设置",
+    "voting": "投票"
+  },
+  "premiumFeature": {
+    "kofiHint": "或支持我们",
+    "kofiLink": "柯菲",
+    "message": "{name} 该功能仅限支持者使用。请成为支持者以启用此功能。",
+    "requiredTierPlural": "需选择以下其中一个支持者等级：",
+    "requiredTierSingular": "所需支持者等级：",
+    "title": "支持者专访",
+    "tokenShopHint": "您也可以使用代币解锁此功能。",
+    "tokenShopLink": "代币商店"
+  },
+  "presets": {
+    "applied": "应用",
+    "apply": "申请",
+    "applying": "正在申请...",
+    "default": {
+      "description": "我想要一个平衡的声望系统，配备合理默认设置，能为大多数服务器提供良好支持。",
+      "settings": "此预设将设置30分钟双向冷却时间，启用除命令外的所有声望模式，启用声望确认功能，并启用捐赠方和接收方的上下文检查。",
+      "title": "默认配置"
     },
-    "steps": {
-      "language": {
-        "title": "选择语言",
-        "description": "选择机器人在服务器中发送消息和回复时使用的语言。前端语言将根据您的选择进行相应调整。"
-      },
-      "systemChannel": {
-        "title": "系统频道",
-        "description": "选择一个频道，机器人将在该频道发送重要的系统消息和通知。",
-        "required": "您必须选择一个系统频道才能继续设置。"
-      },
-      "reputationTypes": {
-        "title": "声誉类型",
-        "description": "选择用户可用于给予声望的方法。您可以启用多种类型，为用户提供灵活性。"
-      },
-      "reputationMode": {
-        "title": "声誉模式",
-        "description": "选择在服务器中如何计算和显示声望值。"
-      },
-      "ranks": {
-        "title": "声望等级",
-        "description": "定义用户在达到特定声望等级时将获得的角色。至少需要设置一个等级。",
-        "required": "您必须至少定义一个声望等级才能继续。"
-      },
-      "channels": {
-        "title": "频道与分类",
-        "description": "选择允许给予声誉的频道和类别。至少需选择一个频道或类别。",
-        "required": "您必须至少选择一个频道或类别才能继续（除非使用拒绝列表模式）。"
-      },
-      "thankwords": {
-        "title": "谢辞",
-        "description": "添加用户可用于给予声望的词语或短语。这些是机器人将识别的触发词。",
-        "recommendation": "我们建议您加载您语言的默认感谢词，以便快速入门。"
-      },
-      "announcements": {
-        "title": "公告",
-        "description": "配置机器人是否应在用户达到新的声望等级时进行公告。"
-      },
-      "cooldown": {
-        "title": "冷却时间设置",
-        "description": "设置冷却期以防止用户频繁给予声望。您还可以启用“单次冷却”功能，允许用户仅能互相致谢一次。"
-      },
-      "mainReaction": {
-        "title": "主反应",
-        "description": "选择将作为声望评分主要反应的表情符号。"
-      },
-      "roles": {
-        "title": "捐赠方与接收方角色",
-        "description": "可选地定义哪些角色可以给予声望（捐赠者角色）以及哪些角色可以接收声望（接收者角色）。"
-      },
-      "welcome": {
-        "title": "欢迎",
-        "description": "欢迎来到设置页面。\n本页面将引导您完成机器人的初始设置。完成后，您将获得根据个人偏好定制的基础配置。\n\n如需帮助，可向机器人发送私信，我们将尽快为您提供协助。页面底部还设有支持Discord频道的链接。"
-      },
-      "finished": {
-        "title": "设置完成",
-        "description": "您已完成最后一个设置步骤。我们将引导您进入常规设置页面，您可能会发现更多感兴趣的设置选项。"
-      },
-      "scan": {
-        "title": "服务器扫描",
-        "description": "既然您已经配置好了频道，我们建议您运行一次扫描，以便从服务器的历史记录中索引现有的声誉数据。",
-        "prompt": {
-          "title": "开始服务器扫描？",
-          "description": "扫描程序将遍历您服务器中已配置频道内的消息历史记录，并查找现有的声望值。根据您服务器的规模，此过程可能需要一些时间。"
-        },
-        "started": {
-          "title": "扫描开始！",
-          "description": "扫描目前正在后台运行。完成设置后，您可以在扫描页面查看进度。"
-        },
-        "start": "开始扫描",
-        "starting": "开始...",
-        "error": "扫描启动失败。请稍后再试。"
-      }
-    }
+    "description": "快速配置预设，助您轻松启动常用设置。",
+    "noAbuse": {
+      "description": "我想禁用基于上下文的滥用保护功能，允许用户更自由地给予声望值，同时不追踪他们的互动历史。",
+      "settings": "此预设将同时禁用捐赠方和接收方的上下文跟踪功能。",
+      "title": "无滥用保护"
+    },
+    "simpleReputation": {
+      "description": "我想要一个直截了当的声望系统，用户只能通过命令给予声望，无需任何复杂的上下文追踪。",
+      "settings": "此预设将禁用除命令外的所有声望类型，并关闭捐赠者和接收者的上下文追踪功能。",
+      "title": "简单声誉系统"
+    },
+    "thankOnce": {
+      "description": "我希望用户之间只能互相感谢一次，避免同一用户之间重复给予声望值。",
+      "settings": "此预设将仅设置一次冷却时间，并将冷却方向改为单向。",
+      "title": "仅此一次"
+    },
+    "title": "预设"
+  },
+  "profile": {
+    "description": "自定义机器人在服务器中的外观和行为。",
+    "nickname": {
+      "description": "为该服务器中的机器人设置自定义昵称。",
+      "label": "机器人昵称",
+      "placeholder": "输入机器人昵称",
+      "reset": "将昵称重置为默认值"
+    },
+    "premiumRequired": "个人资料定制",
+    "profilePicture": {
+      "description": "为机器人上传自定义头像（最大2MB，512x512像素）",
+      "label": "个人资料图片",
+      "reset": "将个人资料图片重置为默认值",
+      "uploadButton": "上传图片",
+      "uploading": "正在上传..."
+    },
+    "reputationName": {
+      "description": "自定义本服务器中声望所使用的名称。",
+      "label": "声誉名称",
+      "placeholder": "输入自定义声望名称（例如“积分”、“善恶值”）",
+      "reset": "将声誉名称重置为默认值"
+    },
+    "reset": "重置",
+    "tosNote": "任何违反Discord服务条款或州法律的行为均不被允许，此类行为可能导致服务器被禁用该功能。"
+  },
+  "reactions": {
+    "additional": {
+      "add": "添加反应",
+      "description": "其他可用于给予声望的额外表情符号。",
+      "label": "附加反应",
+      "none": "未配置其他反应。",
+      "premiumRequired": "附加反应"
+    },
+    "description": "配置用于授予声望的表情符号。",
+    "main": {
+      "description": "将作为给予声望的主要反应表情符号。",
+      "label": "主反应"
+    },
+    "title": "反应"
   },
   "roles": {
     "donor": {
@@ -572,429 +597,418 @@
       "label": "接收器"
     }
   },
-  "links": {
-    "support": "支持服务器",
-    "website": "网站",
-    "faq": "常见问题解答",
-    "tos": "服务条款"
-  },
-  "auditLog": {
-    "description": "查看服务器中所有设置更改的历史记录。",
-    "loading": "正在加载审计日志...",
-    "loadError": "加载审核日志失败。请重试。",
-    "retry": "重试",
-    "noEntries": "未找到任何审计日志条目。",
-    "unknownMember": "未知成员",
-    "previous": "先前",
-    "next": "接下来",
-    "pageInfo": "第{current}页，网址：{total}",
-    "from": "自",
-    "to": "致",
-    "added": "已添加",
-    "removed": "已删除",
-    "values": {
-      "null": "未设置",
-      "enabled": "启用",
-      "disabled": "残障人士",
-      "once": "曾经",
-      "none": "无",
-      "unknownChannel": "未知频道",
-      "unidirectional": "单向",
-      "bidirectional": "双向",
-      "total": "总计",
-      "rolling_week": "滚动周",
-      "rolling_month": "滚动月份",
-      "week": "周",
-      "month": "月份",
-      "delete_and_repost": "删除并重新发布",
-      "repost": "转发",
-      "update": "更新",
-      "hourly": "按小时计费",
-      "daily": "每日",
-      "weekly": "每周",
-      "monthly": "每月",
-      "noChanges": "无变更",
-      "unknownIntegration": "未知集成"
+  "scan": {
+    "description": "扫描公会中在添加机器人之前或在未被追踪的频道内获得的声望。这将扫描配置的声望频道和分类中的所有消息。",
+    "error": {
+      "alreadyRunning": "该公会正在进行扫描。",
+      "fetchStatus": "无法获取扫描状态。请稍后再试。",
+      "startFailed": "扫描启动失败。请稍后再试。"
     },
-    "settings": {
-      "abuseprotection_cooldown": "滥用保护 - 冷却时间",
-      "abuseprotection_cooldowndirection": "滥用保护 - 冷却时间方向",
-      "abuseprotection_maxmessageage": "滥用防护 - 最大消息年龄",
-      "abuseprotection_minmessages": "滥用保护 - 最低消息数",
-      "abuseprotection_donorcontext": "滥用保护 - 捐赠者背景",
-      "abuseprotection_receivercontext": "滥用保护 - 接收方上下文",
-      "abuseprotection_maxgiven": "滥用保护 - 最大值给定",
-      "abuseprotection_maxgivenhours": "滥用保护 - 最大允许使用时长",
-      "abuseprotection_maxreceived": "滥用保护 - 最大接收量",
-      "abuseprotection_maxreceivedhours": "滥用保护 - 最大接收时长",
-      "abuseprotection_maxmessagereputation": "滥用保护 - 最大消息信誉值",
-      "thanking_channels_whitelist": "频道 - 白名单模式",
-      "thanking_channels_channels": "频道 - 频道列表",
-      "thanking_channels_categories": "频道 - 分类列表",
-      "thanking_thankwords_words": "谢辞",
-      "thanking_reactions_mainreaction": "反应 - 主反应",
-      "thanking_reactions_reactions": "反应 - 附加反应",
-      "thanking_denydonorroles": "角色 - 拒绝捐赠者角色",
-      "thanking_donorroles": "角色 - 捐赠者角色",
-      "thanking_denyreceiverroles": "角色 - 拒绝接收者角色",
-      "thanking_receiverroles": "角色 - 接收者角色",
-      "messages_reactionconfirmation": "声誉 - 反应确认",
-      "messages_commandreputationephemeral": "声望 - 指挥声望 短暂",
-      "profile_nickname": "个人资料 - 昵称",
-      "profile_profilepicture": "个人资料 - 个人资料图片",
-      "profile_reputationname": "个人资料 - 声誉名称",
-      "reputation_reactionactive": "声誉 - 反应活跃",
-      "reputation_answeractive": "声誉 - 回答活跃",
-      "reputation_mentionactive": "声誉 - 提及活跃",
-      "reputation_fuzzyactive": "声誉 - 模糊活跃",
-      "reputation_embedactive": "声誉 - 嵌入活动",
-      "reputation_directactive": "声誉 - 直接主动",
-      "reputation_commandactive": "声望 - 指令激活",
-      "logchannel_active": "日志通道 - 活动",
-      "logchannel_channel": "日志通道 - 通道",
-      "general_language": "通用 - 语言",
-      "general_stackroles": "等级 - 堆栈角色",
-      "general_reputationmode": "声誉 - 声誉模式",
-      "general_systemchannel": "通用 - 系统频道",
-      "general_resetdate": "声誉 - 重置日期",
-      "announcements_active": "公告 - 活跃",
-      "announcements_samechannel": "公告 - 同一频道",
-      "announcements_channel": "公告 - 频道",
-      "autopost_active": "自动发布 - 启用",
-      "autopost_channel": "自动发布 - 频道",
-      "autopost_refreshtype": "自动发布 - 刷新类型",
-      "autopost_refreshinterval": "自动发布 - 刷新间隔",
-      "ranks": "军衔 - 职务",
-      "general_everyonetokenpurchase": "通用 - 所有人代币购买"
+    "finishedAt": "完成于",
+    "messagesScanned": "已扫描的消息",
+    "noScanYet": "尚未进行扫描。",
+    "progressDetails": "进度详情",
+    "reputationFound": "声誉已找到",
+    "start": "开始扫描",
+    "startedAt": "始于",
+    "starting": "开始...",
+    "status": {
+      "finished": "扫描完成",
+      "running": "正在扫描"
     }
   },
-  "help": {
-    "title": "需要帮助吗？",
-    "message": "需要帮助？功能缺失？有反馈意见？只需给机器人发送私信。您还可以在页面底部找到我们Discord支持频道的链接。"
+  "settings": {
+    "abuseProtection": "滥用保护",
+    "announcements": "公告",
+    "auditLog": "审计日志",
+    "autopost": "自动发布",
+    "channels": "频道",
+    "debug": {
+      "goToSettings": "前往设置",
+      "missingPermissions": {
+        "CATEGORY": "类别",
+        "CHANNEL": "频道",
+        "GUILD": "公会",
+        "title": "缺少作用域权限"
+      },
+      "permissions": {
+        "BYPASS_SLOWMODE": "任何确认消息都可能时不时失效。例如通过嵌入式方式进行的反应确认或声望确认。",
+        "MANAGE_GUILD_EXPRESSIONS": "自定义反应无法在仪表板中建议。",
+        "MANAGE_ROLES": "声望角色无法授予。",
+        "MESSAGE_ADD_REACTION": "通过点赞确认声誉的功能无法正常使用。",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "任何确认消息在语音频道中均无效。例如通过嵌入式消息发送的反应确认或声望确认。",
+        "MESSAGE_EXT_EMOJI": "通过表情符号确认声誉的功能无法正常使用。",
+        "MESSAGE_HISTORY": "通过嵌入内容进行的声誉验证功能失效。多数滥用防护检查将无法通过。",
+        "MESSAGE_SEND": "任何确认消息都无效。例如通过嵌入式操作进行的反应确认或声望确认。",
+        "MESSAGE_SEND_IN_THREADS": "任何确认消息在嵌入式讨论中均无效。例如通过嵌入式方式进行的点赞确认或声望确认。",
+        "NICKNAME_CHANGE": "昵称无法在控制面板中更改。",
+        "VIEW_CHANNEL": "声望渠道不可见。声望无法通过任何基于文本的方式授予。",
+        "description": "该机器人全局缺少这些权限。这可能会限制某些功能。",
+        "title": "缺少全局权限"
+      },
+      "rankProblems": {
+        "CANT_ASSIGN_ROLE": "该机器人无法分配此角色，因为该角色高于机器人的最高权限。",
+        "MISSING_ROLE": "此等级的角色缺失。",
+        "title": "等级问题"
+      },
+      "reputationChannelProblems": {
+        "MISSING_CATEGORY": "该类别缺失。",
+        "MISSING_CHANNEL": "该频道不存在。",
+        "NOT_TEXT_TYPE": "该频道并非文字频道。",
+        "title": "声誉通道问题"
+      },
+      "simpleProblems": {
+        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "未找到公告频道。",
+        "AUTOPOST_CANNEL_NOT_FOUND": "未找到自动发布频道。",
+        "LOG_CHANNEL_NOT_FOUND": "日志通道未找到。",
+        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "公告频道未定义。",
+        "NO_AUTOPOST_CHANNEL_DEFINED": "自动发布频道未定义。",
+        "NO_LOG_CHANNEL_DEFINED": "日志通道未定义。",
+        "NO_REPUTATION_CHANNEL_DEFINED": "未定义任何声誉渠道或类别。",
+        "NO_THANKWORDS_DEFINED": "未定义任何感谢词。",
+        "SYSTEM_CHANNEL_NOT_DEFINED": "系统通道未定义。",
+        "SYSTEM_CHANNEL_NOT_FOUND": "未找到系统频道。",
+        "title": "一般性问题"
+      },
+      "simpleWarnings": {
+        "MAX_MESSAGE_AGE_LOW": "消息的最大保存期限设置得过短。这可能会导致用户无法对较早的消息互相致谢。",
+        "title": "警告"
+      }
+    },
+    "general": "总则",
+    "integrationBypass": "集成旁路",
+    "logChannel": "日志通道",
+    "messages": "消息",
+    "problems": "问题",
+    "profile": "个人资料",
+    "ranks": "军衔",
+    "reactions": "反应",
+    "reputation": "声誉",
+    "roles": "角色",
+    "scan": "扫描",
+    "thankwords": "谢辞",
+    "title": "设置"
   },
-  "guildSwitcher": {
-    "title": "切换服务器",
-    "current": "当前服务器",
-    "none": "未找到其他服务器",
-    "add": "通过在服务器中打开设置来添加另一台服务器。"
+  "setup": {
+    "error": {
+      "forbidden": {
+        "description": "您无权访问此服务器的设置。请联系服务器管理员。",
+        "title": "访问被拒绝"
+      },
+      "noSession": {
+        "description": "当前没有活跃的服务器会话。请返回并选择一个服务器。",
+        "title": "未连接"
+      },
+      "unknown": {
+        "description": "加载服务器设置时发生错误。请稍后再试。",
+        "title": "无法加载设置"
+      }
+    },
+    "navigation": {
+      "finish": "完成设置",
+      "next": "接下来",
+      "previous": "先前"
+    },
+    "requiredStep": "此步骤是继续操作的必要条件",
+    "stepProgress": "步骤 {current} of {total}",
+    "steps": {
+      "announcements": {
+        "description": "配置机器人是否应在用户达到新的声望等级时进行公告。",
+        "title": "公告"
+      },
+      "channels": {
+        "description": "选择允许给予声誉的频道和类别。至少需选择一个频道或类别。",
+        "required": "您必须至少选择一个频道或类别才能继续（除非使用拒绝列表模式）。",
+        "title": "频道与分类"
+      },
+      "cooldown": {
+        "description": "设置冷却期以防止用户频繁给予声望。您还可以启用“单次冷却”功能，允许用户仅能互相致谢一次。",
+        "title": "冷却时间设置"
+      },
+      "finished": {
+        "description": "您已完成最后一个设置步骤。我们将引导您进入常规设置页面，您可能会发现更多感兴趣的设置选项。",
+        "title": "设置完成"
+      },
+      "language": {
+        "description": "选择机器人在服务器中发送消息和回复时使用的语言。前端语言将根据您的选择进行相应调整。",
+        "title": "选择语言"
+      },
+      "mainReaction": {
+        "description": "选择将作为声望评分主要反应的表情符号。",
+        "title": "主反应"
+      },
+      "ranks": {
+        "description": "定义用户在达到特定声望等级时将获得的角色。至少需要设置一个等级。",
+        "required": "您必须至少定义一个声望等级才能继续。",
+        "title": "声望等级"
+      },
+      "reputationMode": {
+        "description": "选择在服务器中如何计算和显示声望值。",
+        "title": "声誉模式"
+      },
+      "reputationTypes": {
+        "description": "选择用户可用于给予声望的方法。您可以启用多种类型，为用户提供灵活性。",
+        "title": "声誉类型"
+      },
+      "roles": {
+        "description": "可选地定义哪些角色可以给予声望（捐赠者角色）以及哪些角色可以接收声望（接收者角色）。",
+        "title": "捐赠方与接收方角色"
+      },
+      "scan": {
+        "description": "既然您已经配置好了频道，我们建议您运行一次扫描，以便从服务器的历史记录中索引现有的声誉数据。",
+        "error": "扫描启动失败。请稍后再试。",
+        "prompt": {
+          "description": "扫描程序将遍历您服务器中已配置频道内的消息历史记录，并查找现有的声望值。根据您服务器的规模，此过程可能需要一些时间。",
+          "title": "开始服务器扫描？"
+        },
+        "start": "开始扫描",
+        "started": {
+          "description": "扫描目前正在后台运行。完成设置后，您可以在扫描页面查看进度。",
+          "title": "扫描开始！"
+        },
+        "starting": "开始...",
+        "title": "服务器扫描"
+      },
+      "systemChannel": {
+        "description": "选择一个频道，机器人将在该频道发送重要的系统消息和通知。",
+        "required": "您必须选择一个系统频道才能继续设置。",
+        "title": "系统频道"
+      },
+      "thankwords": {
+        "description": "添加用户可用于给予声望的词语或短语。这些是机器人将识别的触发词。",
+        "recommendation": "我们建议您加载您语言的默认感谢词，以便快速入门。",
+        "title": "谢辞"
+      },
+      "welcome": {
+        "description": "欢迎来到设置页面。\n本页面将引导您完成机器人的初始设置。完成后，您将获得根据个人偏好定制的基础配置。\n\n如需帮助，可向机器人发送私信，我们将尽快为您提供协助。页面底部还设有支持Discord频道的链接。",
+        "title": "欢迎"
+      }
+    },
+    "title": "初始设置"
   },
-  "integrationBypass": {
-    "description": "配置集成绕过规则，使其即使不符合常规要求也能授予信誉。",
-    "allowReactions": "允许点赞",
-    "allowAnswer": "允许回答",
-    "allowMention": "允许提及",
-    "allowFuzzy": "允许模糊",
-    "ignoreCooldown": "忽略冷却时间",
-    "ignoreLimit": "忽略限制",
-    "allowReactionsDescription": "允许通过点赞功能给予声望",
-    "allowAnswerDescription": "允许通过回复消息给予声望",
-    "allowMentionDescription": "允许通过提及用户来给予声望",
-    "allowFuzzyDescription": "允许通过模糊匹配给予声誉",
-    "ignoreCooldownDescription": "忽略用户间的冷却时间",
-    "ignoreLimitDescription": "忽略任何设置的小时限制",
-    "add": "添加集成旁路",
-    "selectIntegration": "选择集成",
-    "noIntegrations": "没有可添加旁路的集成项了。",
-    "deleteConfirm": "您确定要移除此集成旁路吗？",
-    "premiumRequired": "集成旁路",
-    "allowDirect": "允许直接",
-    "ignoreContext": "忽略上下文",
-    "allowDirectDescription": "当仅能确定一个接收方时，允许在跳过嵌入操作时给予声望值。机器人永远不会发送嵌入内容。",
-    "ignoreContextDescription": "忽略上下文检查"
+  "thankwords": {
+    "add": "添加感谢词",
+    "alreadyExists": "这个感谢词已经存在。",
+    "defaults": {
+      "description": "快速添加多种语言的默认感谢词。",
+      "title": "默认致谢词"
+    },
+    "description": "这些词将用于检测何时有人被感谢。它们将被解释为正则表达式。",
+    "invalidCharacter": "该感谢词包含无效字符：{char}",
+    "none": "未配置任何感谢词。",
+    "placeholder": "输入感谢词（正则表达式）"
   },
   "timePresets": {
-    "hour": "1小时",
     "day": "1天",
-    "week": "1周",
     "fourWeeks": "4周",
+    "hour": "1小时",
+    "week": "1周",
     "year": "1年"
   },
-  "login": {
-    "title": "需要登录",
-    "description": "请使用Discord登录以访问此面板。",
-    "button": "使用Discord登录"
+  "token_shop": {
+    "active": "活动",
+    "adminOnly": "服务器已配置为仅允许服务器管理员购买功能。",
+    "autoRenewal": "自动续订",
+    "confirmPurchase": "您确定要花费{amount}代币购买此功能吗？",
+    "description": "使用投票代币为您的服务器解锁高级功能。只要启用自动续订，代币购买的功能将永久有效。若购买的功能已处于激活状态，则其到期日或续订日期将延长30天。",
+    "enabledBySubscription": "订阅启用",
+    "expires": "到期时间：{date}",
+    "feature": {
+      "additionalemojis": {
+        "description": "使用多个表情符号通过反应来给予声望。",
+        "name": "更多表情符号"
+      },
+      "advancedrankings": {
+        "description": "解锁更多排名选项。",
+        "name": "高级排名"
+      },
+      "analyzerlog": {
+        "description": "分析器日志的保留期延长一倍。",
+        "name": "扩展分析器日志"
+      },
+      "autopost": {
+        "description": "定期自动将排行榜发布到频道。",
+        "name": "自动发布"
+      },
+      "channelblacklist": {
+        "description": "禁止机器人在特定频道中活动，而非允许其在所有频道中运行。",
+        "name": "频道拒绝列表"
+      },
+      "detailedprofile": {
+        "description": "在用户声誉档案中显示更多信息。",
+        "name": "详细资料"
+      },
+      "integrationbypass": {
+        "description": "允许其他机器人和集成程序授予声望值。",
+        "name": "集成旁路"
+      },
+      "localeoverrides": {
+        "description": "覆盖机器人消息和标签，使用您自己的翻译。目前仅允许为声望设置自定义名称。",
+        "name": "区域设置覆盖"
+      },
+      "logchannel": {
+        "description": "为所有信誉变更启用专用日志通道。",
+        "name": "日志通道"
+      },
+      "profile": {
+        "description": "在您的服务器中自定义机器人的名称和个人资料图片。",
+        "name": "机器人档案"
+      },
+      "reputationcategories": {
+        "description": "解锁无限声望类别。",
+        "name": "无限声望类别"
+      },
+      "reputationchannel": {
+        "description": "解锁无限声望渠道。",
+        "name": "无限声望通道"
+      },
+      "reputationlog": {
+        "description": "查看服务器中声望日志的所有页面。",
+        "name": "完整声誉记录"
+      }
+    },
+    "getMoreTokens": "获取更多代币",
+    "guildTokens": "使用公会代币",
+    "insufficientTokens": "您没有足够的代币。",
+    "nextRenewal": "下次续订：{date}",
+    "noFeatures": "目前没有可用功能。",
+    "purchase": "购买",
+    "purchaseSuccess": "功能购买成功！",
+    "subscribe": "订阅",
+    "subscribeSuccess": "订阅已启用！",
+    "subscriptionActiveNote": "此功能目前通过有效订阅启用。",
+    "title": "代币商店",
+    "unsubscribe": "取消订阅",
+    "unsubscribeSuccess": "订阅已禁用！",
+    "userTokens": "使用个人令牌"
+  },
+  "user": {
+    "settings": {
+      "description": "配置您的个人账户设置和偏好。",
+      "mails": {
+        "add": {
+          "button": "添加",
+          "placeholder": "添加新邮箱（name{'@'}example.com）"
+        },
+        "description": "管理与您的账户关联的电子邮件地址。您可以添加新地址，并通过发送到您收件箱的链接进行验证。",
+        "errors": {
+          "ALREADY_REGISTERED": "该电子邮箱地址已注册给其他用户。",
+          "CODE_EXPIRED": "验证码已过期。请重新申请验证邮件。",
+          "INVALID_CODE": "验证码无效。",
+          "INVALID_FORMAT": "该电子邮件地址格式无效。请检查后重试。",
+          "RATE_LIMIT": "你这样操作的频率太高了。请等待{time}后再添加另一个电子邮箱地址。",
+          "UNKNOWN": "发生未知错误。请稍后重试。",
+          "UNKNOWN_ADDRESS": "我们找不到这个电子邮件地址。它可能已被删除。",
+          "WRONG_USER": "该电子邮件地址属于另一位用户。"
+        },
+        "noteDeletion": "注意：来自Discord或Ko-fi的电子邮件地址无法移除。仅您自行添加的地址可被删除。",
+        "pending": "待核实",
+        "source": {
+          "discord": "不和",
+          "kofi": "柯菲",
+          "user": "用户"
+        },
+        "title": "电子邮件地址",
+        "verified": "已验证",
+        "verify": {
+          "error": "电子邮件验证失败。请重试或申请新的验证链接。",
+          "success": "您的电子邮件已成功验证。"
+        }
+      },
+      "title": "用户设置",
+      "voteGuild": {
+        "description": "投票给机器人时，请选择应获得代币的公会。此设置仅影响未来的投票。",
+        "label": "投票公会",
+        "none": "无特定公会（个人）"
+      }
+    },
+    "supporter": {
+      "description": "查看您当前的Ko-fi购买记录，并将它们分配给公会以启用支持者功能。",
+      "errors": {
+        "assign": "未能分配采购。",
+        "load": "无法加载购买记录。请稍后重试。",
+        "unassign": "无法取消购买分配。"
+      },
+      "item": {
+        "assign": "分配",
+        "assignedTo": "分配至：{guild}",
+        "expires": "到期时间：{date}",
+        "lifetime": "终身",
+        "subscription": "订阅",
+        "unassign": "取消分配"
+      },
+      "kofiLink": "在Ko-fi购买",
+      "missingPurchasesNotice": "若您的购买记录未在此处显示，可能是您在Ko-fi使用的邮箱地址与Discord账户不一致。您可在{link}中关联其他邮箱地址。",
+      "results": {
+        "ALREADY_SUBSCRIBED": "您已为公会分配了有效的订阅。",
+        "SUBSCRIPTION_EXPIRED": "此订阅已过期，无法分配。",
+        "SUCCESS": "成功",
+        "UNKOWN": "发生未知订阅错误。请稍后重试。"
+      },
+      "sections": {
+        "lifetime": "终身购买",
+        "lifetime_desc": "终身购买可分配给公会，永久解锁相关功能。",
+        "subscriptions": "有效订阅",
+        "subscriptions_desc": "订阅将自动续订，并可分配至您选择的公会。"
+      },
+      "settingsLink": "用户设置",
+      "title": "支持者"
+    }
   },
   "voting": {
-    "title": "投票",
-    "description": "关于您当前投票代币及机器人列表投票状态的信息。",
-    "tokens": {
-      "title": "代币",
-      "description": "您当前拥有的投票代币。您可以将它们用于兑换各类奖励。",
-      "label": "当前代币",
-      "shop": "访问代币商店"
-    },
     "botlists": {
-      "title": "机器人列表",
-      "description": "在各类机器人列表中为该机器人投票，即可赚取代币并保持连胜记录。",
-      "name": "机器人列表",
-      "streak": "连胜",
-      "lastVote": "最后投票",
       "action": "行动",
-      "vote": "投票",
+      "days": "日子",
+      "description": "在各类机器人列表中为该机器人投票，即可赚取代币并保持连胜记录。",
+      "lastVote": "最后投票",
+      "name": "机器人列表",
       "never": "永不",
-      "days": "日子"
+      "streak": "连胜",
+      "title": "机器人列表",
+      "vote": "投票"
     },
+    "description": "关于您当前投票代币及机器人列表投票状态的信息。",
     "log": {
-      "title": "投票记录",
-      "description": "您的投票代币交易历史记录。",
       "date": "日期",
+      "description": "您的投票代币交易历史记录。",
       "guild": "公会",
-      "tokens": "代币",
+      "personal": "个人",
       "reason": {
-        "label": "理由",
+        "BONUS": "每日奖励",
+        "BONUS_DESCRIPTION": "您在过去6小时内对所有机器人列表投票，因此获得了额外代币奖励。",
         "STANDARD": "投票",
         "STANDARD_DESCRIPTION": "您已获得一个用于在机器人列表上投票的代币。",
         "STREAK": "投票连胜",
         "STREAK_DESCRIPTION": "您因连续达成目标而获得额外代币。",
-        "BONUS": "每日奖励",
-        "BONUS_DESCRIPTION": "您在过去6小时内对所有机器人列表投票，因此获得了额外代币奖励。",
         "TRANSFER": "转至公会",
         "TRANSFER_DESCRIPTION": "你向公会转移了代币以支持其声望系统。",
         "USE": "购买",
         "USE_DESCRIPTION": "您使用代币购买了奖励或服务。",
+        "label": "理由",
         "unknown": "未知",
         "unknown_DESCRIPTION": "此交易的原因不明。"
       },
-      "unknownGuild": "未知公会",
-      "personal": "个人"
+      "title": "投票记录",
+      "tokens": "代币",
+      "unknownGuild": "未知公会"
     },
     "noteDefaultGuild": "提示：您可以在游戏中设置默认公会，自动接收代币。",
     "noteDefaultGuildLink": "用户设置",
+    "title": "投票",
+    "tokens": {
+      "description": "您当前拥有的投票代币。您可以将它们用于兑换各类奖励。",
+      "label": "当前代币",
+      "shop": "访问代币商店",
+      "title": "代币"
+    },
     "transfer": {
-      "title": "将代币转移至公会",
+      "amount": "金额",
       "description": "将代币从个人余额转移至您所属的公会之一。",
       "guild": "公会",
-      "selectGuild": "选择一个公会",
-      "amount": "金额",
       "max": "Max：{max}",
-      "submit": "转移"
-    }
-  },
-  "user": {
-    "settings": {
-      "title": "用户设置",
-      "description": "配置您的个人账户设置和偏好。",
-      "voteGuild": {
-        "label": "投票公会",
-        "description": "投票给机器人时，请选择应获得代币的公会。此设置仅影响未来的投票。",
-        "none": "无特定公会（个人）"
-      },
-      "mails": {
-        "title": "电子邮件地址",
-        "description": "管理与您的账户关联的电子邮件地址。您可以添加新地址，并通过发送到您收件箱的链接进行验证。",
-        "verified": "已验证",
-        "pending": "待核实",
-        "noteDeletion": "注意：来自Discord或Ko-fi的电子邮件地址无法移除。仅您自行添加的地址可被删除。",
-        "source": {
-          "user": "用户",
-          "discord": "不和",
-          "kofi": "柯菲"
-        },
-        "add": {
-          "placeholder": "添加新邮箱（name{'@'}example.com）",
-          "button": "添加"
-        },
-        "verify": {
-          "success": "您的电子邮件已成功验证。",
-          "error": "电子邮件验证失败。请重试或申请新的验证链接。"
-        },
-        "errors": {
-          "ALREADY_REGISTERED": "该电子邮箱地址已注册给其他用户。",
-          "INVALID_FORMAT": "该电子邮件地址格式无效。请检查后重试。",
-          "WRONG_USER": "该电子邮件地址属于另一位用户。",
-          "INVALID_CODE": "验证码无效。",
-          "CODE_EXPIRED": "验证码已过期。请重新申请验证邮件。",
-          "UNKNOWN_ADDRESS": "我们找不到这个电子邮件地址。它可能已被删除。",
-          "UNKNOWN": "发生未知错误。请稍后重试。",
-          "RATE_LIMIT": "你这样操作的频率太高了。请等待{time}后再添加另一个电子邮箱地址。"
-        }
-      }
-    },
-    "supporter": {
-      "title": "支持者",
-      "description": "查看您当前的Ko-fi购买记录，并将它们分配给公会以启用支持者功能。",
-      "kofiLink": "在Ko-fi购买",
-      "sections": {
-        "subscriptions": "有效订阅",
-        "subscriptions_desc": "订阅将自动续订，并可分配至您选择的公会。",
-        "lifetime": "终身购买",
-        "lifetime_desc": "终身购买可分配给公会，永久解锁相关功能。"
-      },
-      "item": {
-        "subscription": "订阅",
-        "lifetime": "终身",
-        "expires": "到期时间：{date}",
-        "assignedTo": "分配至：{guild}",
-        "assign": "分配",
-        "unassign": "取消分配"
-      },
-      "errors": {
-        "load": "无法加载购买记录。请稍后重试。",
-        "assign": "未能分配采购。",
-        "unassign": "无法取消购买分配。"
-      },
-      "results": {
-        "ALREADY_SUBSCRIBED": "您已为公会分配了有效的订阅。",
-        "SUBSCRIPTION_EXPIRED": "此订阅已过期，无法分配。",
-        "UNKOWN": "发生未知订阅错误。请稍后重试。",
-        "SUCCESS": "成功"
-      },
-      "missingPurchasesNotice": "若您的购买记录未在此处显示，可能是您在Ko-fi使用的邮箱地址与Discord账户不一致。您可在{link}中关联其他邮箱地址。",
-      "settingsLink": "用户设置"
-    }
-  },
-  "dashboard": {
-    "title": "仪表板",
-    "totalReputation": "总声誉",
-    "weekReputation": "每周声誉",
-    "todayReputation": "今日声誉",
-    "topChannel": "顶级频道",
-    "topUsers": "顶级用户",
-    "rank": "等级",
-    "user": "用户",
-    "reputation": "声誉"
-  },
-  "token_shop": {
-    "title": "代币商店",
-    "description": "使用投票代币为您的服务器解锁高级功能。只要启用自动续订，代币购买的功能将永久有效。若购买的功能已处于激活状态，则其到期日或续订日期将延长30天。",
-    "guildTokens": "使用公会代币",
-    "userTokens": "使用个人令牌",
-    "noFeatures": "目前没有可用功能。",
-    "active": "活动",
-    "expires": "到期时间：{date}",
-    "nextRenewal": "下次续订：{date}",
-    "autoRenewal": "自动续订",
-    "purchase": "购买",
-    "subscribe": "订阅",
-    "unsubscribe": "取消订阅",
-    "purchaseSuccess": "功能购买成功！",
-    "subscribeSuccess": "订阅已启用！",
-    "unsubscribeSuccess": "订阅已禁用！",
-    "enabledBySubscription": "订阅启用",
-    "subscriptionActiveNote": "此功能目前通过有效订阅启用。",
-    "confirmPurchase": "您确定要花费{amount}代币购买此功能吗？",
-    "insufficientTokens": "您没有足够的代币。",
-    "getMoreTokens": "获取更多代币",
-    "feature": {
-      "reputationlog": {
-        "name": "完整声誉记录",
-        "description": "查看服务器中声望日志的所有页面。"
-      },
-      "analyzerlog": {
-        "name": "扩展分析器日志",
-        "description": "分析器日志的保留期延长一倍。"
-      },
-      "reputationcategories": {
-        "name": "无限声望类别",
-        "description": "解锁无限声望类别。"
-      },
-      "reputationchannel": {
-        "name": "无限声望通道",
-        "description": "解锁无限声望渠道。"
-      },
-      "channelblacklist": {
-        "name": "频道拒绝列表",
-        "description": "禁止机器人在特定频道中活动，而非允许其在所有频道中运行。"
-      },
-      "localeoverrides": {
-        "name": "区域设置覆盖",
-        "description": "覆盖机器人消息和标签，使用您自己的翻译。目前仅允许为声望设置自定义名称。"
-      },
-      "autopost": {
-        "name": "自动发布",
-        "description": "定期自动将排行榜发布到频道。"
-      },
-      "advancedrankings": {
-        "name": "高级排名",
-        "description": "解锁更多排名选项。"
-      },
-      "detailedprofile": {
-        "name": "详细资料",
-        "description": "在用户声誉档案中显示更多信息。"
-      },
-      "logchannel": {
-        "name": "日志通道",
-        "description": "为所有信誉变更启用专用日志通道。"
-      },
-      "additionalemojis": {
-        "name": "更多表情符号",
-        "description": "使用多个表情符号通过反应来给予声望。"
-      },
-      "profile": {
-        "name": "机器人档案",
-        "description": "在您的服务器中自定义机器人的名称和个人资料图片。"
-      },
-      "integrationbypass": {
-        "name": "集成旁路",
-        "description": "允许其他机器人和集成程序授予声望值。"
-      }
-    },
-    "adminOnly": "服务器已配置为仅允许服务器管理员购买功能。"
-  },
-  "metrics": {
-    "title": "指标",
-    "description": "您对机器人的流量和使用情况感到好奇？我们也是！因此我们在此页面整理了一些精美的图表。这些图表直接展示机器人近乎实时的数据。",
-    "offset": "偏移",
-    "count": "计数",
-    "units": {
-      "hour": "小时",
-      "week": "周",
-      "month": "月份",
-      "year": "年"
-    },
-    "sections": {
-      "reputation": "声誉",
-      "commands": "命令",
-      "messages": "消息",
-      "users": "用户",
-      "service": "服务"
-    },
-    "charts": {
-      "reputationCount": "声誉值",
-      "reputationTotal": "总声誉",
-      "reputationDow": "按星期几划分的声誉",
-      "reputationTypeTotal": "各类声誉总和",
-      "reputationTypeCount": "声誉计数（按类型）",
-      "reputationChanges": "声誉变化",
-      "commandsCount": "命令计数",
-      "commandsUsage": "命令用法",
-      "messagesCount": "消息计数",
-      "messagesTotal": "总消息数",
-      "usersActiveWeek": "活跃用户（每周）",
-      "usersActiveMonth": "活跃用户（月度）",
-      "serviceCountHour": "服务使用（按小时计费）",
-      "serviceCountWeek": "服务使用情况（每周）"
-    },
-    "users": {
-      "total": "总计",
-      "donors": "捐赠者",
-      "receivers": "接收器"
-    },
-    "validation": {
-      "offsetMin": "偏移量必须至少为0",
-      "offsetMax": "偏移量必须小于等于{max}",
-      "countMin": "计数必须至少为2",
-      "countMax": "计数必须小于等于{max}"
-    }
-  },
-  "scan": {
-    "description": "扫描公会中在添加机器人之前或在未被追踪的频道内获得的声望。这将扫描配置的声望频道和分类中的所有消息。",
-    "start": "开始扫描",
-    "starting": "开始...",
-    "startedAt": "始于",
-    "finishedAt": "完成于",
-    "messagesScanned": "已扫描的消息",
-    "reputationFound": "声誉已找到",
-    "noScanYet": "尚未进行扫描。",
-    "status": {
-      "running": "正在扫描",
-      "finished": "扫描完成"
-    },
-    "progressDetails": "进度详情",
-    "error": {
-      "fetchStatus": "无法获取扫描状态。请稍后再试。",
-      "startFailed": "扫描启动失败。请稍后再试。",
-      "alreadyRunning": "该公会正在进行扫描。"
+      "selectGuild": "选择一个公会",
+      "submit": "转移",
+      "title": "将代币转移至公会"
     }
   }
 }

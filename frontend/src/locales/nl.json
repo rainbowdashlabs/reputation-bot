@@ -1,399 +1,27 @@
 {
-  "common": {
-    "save": "Opslaan",
-    "cancel": "Annuleren",
-    "delete": "Verwijderen",
-    "edit": "Bewerken",
-    "change": "Verandering",
-    "clear": "Duidelijk",
-    "confirm": "Bevestig",
-    "loading": "Bezig met laden...",
-    "error": {
-      "outOfBounds": "De waarde moet tussen {min} en {max} liggen. Aangepast naar de dichtstbijzijnde geldige waarde."
-    },
-    "noData": "Geen resultaten gevonden.",
-    "previous": "Vorige",
-    "next": "Volgende",
-    "pageOf": "Pagina {current} van {total}"
-  },
-  "navigation": {
-    "settings": "Instellingen",
-    "presets": "Voorinstellingen",
-    "setup": "Instellingen",
-    "logout": "Uitloggen",
-    "dashboard": "Dashboard",
-    "user_settings": "Gebruikersinstellingen",
-    "voting": "Stemmen",
-    "token_shop": "Tokenwinkel",
-    "supporter": "Supporter",
-    "tos": "Servicevoorwaarden",
-    "privacy": "Privacy",
-    "faq": "Veelgestelde vragen",
-    "metrics": "Statistieken"
-  },
-  "presets": {
-    "title": "Voorinstellingen",
-    "description": "Snelle configuratie-instellingen om je op weg te helpen met veelgebruikte setups.",
-    "apply": "Solliciteren",
-    "applying": "Aan het aanvragen...",
-    "simpleReputation": {
-      "title": "Eenvoudig reputatiesysteem",
-      "description": "Ik wil een simpel reputatiesysteem waarbij gebruikers alleen via commando's reputatie kunnen geven, zonder ingewikkelde context bij te houden.",
-      "settings": "Deze preset schakelt alle reputatietypes uit, behalve commando's, en zet het bijhouden van de context van de gever en ontvanger uit."
-    },
-    "thankOnce": {
-      "title": "Slechts één keer bedanken",
-      "description": "Ik wil dat mensen elkaar maar één keer kunnen bedanken, zodat dezelfde mensen elkaar niet steeds opnieuw een reputatie geven.",
-      "settings": "Met deze preset stel je de cooldown maar één keer in en maak je de cooldown eenzijdig."
-    },
-    "noAbuse": {
-      "title": "Geen bescherming tegen misbruik",
-      "description": "Ik wil de bescherming tegen misbruik op basis van context uitschakelen en gebruikers de mogelijkheid geven om vrijer reputatie te geven zonder hun interactiegeschiedenis bij te houden.",
-      "settings": "Deze voorinstelling schakelt zowel het bijhouden van de context van de donor als van de ontvanger uit."
-    },
-    "default": {
-      "title": "Standaardconfiguratie",
-      "description": "Ik wil een evenwichtig reputatiesysteem met redelijke standaardinstellingen die voor de meeste servers goed werken.",
-      "settings": "Deze preset zorgt voor een bidirectionele afkoelperiode van 30 minuten, zet alle reputatiemodi aan behalve commando's, maakt reputatiebevestiging mogelijk en schakelt contextcontroles voor donateurs en ontvangers in."
-    },
-    "applied": "Toegepast"
-  },
-  "settings": {
-    "title": "Instellingen",
-    "general": "Algemeen",
-    "reputation": "Reputatie",
-    "messages": "Berichten",
-    "profile": "Profiel",
-    "ranks": "Rangen",
-    "channels": "Kanalen",
-    "roles": "Rollen",
-    "thankwords": "Bedankt!",
-    "abuseProtection": "Bescherming tegen misbruik",
-    "announcements": "Aankondigingen",
-    "autopost": "Automatisch posten",
-    "logChannel": "Logkanaal",
-    "reactions": "Reacties",
-    "auditLog": "Auditlogboek",
-    "integrationBypass": "Integratie omzeilen",
-    "problems": "Problemen",
-    "debug": {
-      "permissions": {
-        "title": "Ontbrekende algemene machtigingen",
-        "description": "Deze rechten ontbreken voor de bot in het algemeen. Dit kan sommige functies beperken.",
-        "MANAGE_ROLES": "Reputatietitels kunnen niet worden toegekend.",
-        "NICKNAME_CHANGE": "Je kunt je bijnaam niet veranderen in het dashboard.",
-        "MANAGE_GUILD_EXPRESSIONS": "Aangepaste reacties kunnen niet worden voorgesteld in het dashboard.",
-        "VIEW_CHANNEL": "Reputatiekanalen zijn niet zichtbaar. Reputatie kan niet via tekst worden gegeven.",
-        "MESSAGE_HISTORY": "Het bevestigen van je reputatie via embeds werkt niet. De meeste controles om misbruik te voorkomen zullen mislukken.",
-        "MESSAGE_ADD_REACTION": "Het bevestigen van je reputatie via reacties werkt niet.",
-        "MESSAGE_SEND": "Bevestigingsberichten werken niet. Denk bijvoorbeeld aan reactiebescherming of reputatiebevestiging via embed.",
-        "MESSAGE_SEND_IN_THREADS": "Bevestigingsberichten werken niet in threads. Bijvoorbeeld reactiebescherming of reputatiebevestiging via embed.",
-        "MESSAGE_EXT_EMOJI": "Het bevestigen van je reputatie met emoji's werkt niet.",
-        "BYPASS_SLOWMODE": "Soms werkt een bevestigingsbericht niet. Denk bijvoorbeeld aan een reactiebevestiging of reputatiebevestiging via embed.",
-        "MESSAGE_ATTACH_VOICE_MESSAGE": "Bevestigingsberichten werken niet in spraakkanalen. Denk bijvoorbeeld aan reactiebevestigingen of reputatiebevestigingen via embed."
-      },
-      "simpleProblems": {
-        "title": "Algemene problemen",
-        "SYSTEM_CHANNEL_NOT_DEFINED": "Het systeemkanaal is niet gedefinieerd.",
-        "SYSTEM_CHANNEL_NOT_FOUND": "Het systeemkanaal is niet gevonden.",
-        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "Het aankondigingskanaal is niet gedefinieerd.",
-        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "Het aankondigingskanaal is niet gevonden.",
-        "NO_AUTOPOST_CHANNEL_DEFINED": "Het kanaal voor automatisch posten is niet ingesteld.",
-        "AUTOPOST_CANNEL_NOT_FOUND": "Het kanaal voor automatisch posten is niet gevonden.",
-        "NO_LOG_CHANNEL_DEFINED": "Logkanaal is niet gedefinieerd.",
-        "LOG_CHANNEL_NOT_FOUND": "Logkanaal niet gevonden.",
-        "NO_THANKWORDS_DEFINED": "Er zijn geen bedankwoorden gedefinieerd.",
-        "NO_REPUTATION_CHANNEL_DEFINED": "Er zijn geen reputatiekanalen of categorieën gedefinieerd."
-      },
-      "missingPermissions": {
-        "title": "Ontbrekende beperkte machtigingen",
-        "GUILD": "Gilde",
-        "CHANNEL": "Kanaal",
-        "CATEGORY": "Categorie"
-      },
-      "rankProblems": {
-        "title": "Rangproblemen",
-        "CANT_ASSIGN_ROLE": "De bot kan deze rol niet toewijzen omdat deze hoger is dan de hoogste rol van de bot.",
-        "MISSING_ROLE": "De rol voor deze rang ontbreekt."
-      },
-      "reputationChannelProblems": {
-        "title": "Problemen met het reputatiekanaal",
-        "MISSING_CHANNEL": "Het kanaal is weg.",
-        "MISSING_CATEGORY": "De categorie ontbreekt.",
-        "NOT_TEXT_TYPE": "Het kanaal is geen tekstkanaal."
-      },
-      "simpleWarnings": {
-        "title": "Waarschuwingen",
-        "MAX_MESSAGE_AGE_LOW": "De maximale leeftijd van berichten is best laag ingesteld. Hierdoor kunnen mensen elkaar misschien niet meer bedanken voor oudere berichten."
-      },
-      "goToSettings": "Ga naar instellingen"
-    },
-    "scan": "Scannen"
-  },
-  "locale": {
-    "selectLanguage": "Kies je taal"
-  },
-  "error": {
-    "noToken": {
-      "title": "Geen sessie gevonden",
-      "message": "Je hebt geen geldige sessietoken.",
-      "instruction": "Maak even een nieuwe sessie aan om toegang te krijgen tot deze app."
-    },
-    "notice": {
-      "workingOnIt": "We hebben het probleem gemeld en zijn bezig om het op te lossen."
-    },
-    "expired": {
-      "title": "Sessie verlopen",
-      "message": "Je sessie is verlopen of niet meer geldig.",
-      "instruction": "Open een nieuwe sessie vanaf de Discord-server om verder te gaan."
-    }
-  },
-  "premiumFeature": {
-    "title": "Supporter-functie",
-    "message": "{name} is alleen voor supporters. Word supporter om het te kunnen gebruiken.",
-    "requiredTierSingular": "Vereist ondersteuningsniveau:",
-    "requiredTierPlural": "Je moet een van de volgende supporterniveaus kiezen:",
-    "tokenShopHint": "Je kunt deze functie ook vrijspelen met tokens in de",
-    "tokenShopLink": "Tokenwinkel",
-    "kofiHint": "of steun ons op",
-    "kofiLink": "Ko-fi"
-  },
-  "profile": {
-    "description": "Pas aan hoe de bot eruitziet en zich gedraagt op je server.",
-    "reset": "Reset",
-    "premiumRequired": "Profiel aanpassen",
-    "nickname": {
-      "label": "Bot-bijnaam",
-      "placeholder": "Voer de bijnaam van de bot in",
-      "description": "Geef de bot op deze server een eigen bijnaam.",
-      "reset": "Zet je bijnaam terug naar de standaardnaam"
-    },
-    "profilePicture": {
-      "label": "Profielfoto",
-      "uploadButton": "Afbeelding uploaden",
-      "uploading": "Bezig met uploaden...",
-      "description": "Upload een eigen profielfoto voor de bot (max. 2 MB, 512 x 512 pixels)",
-      "reset": "Stel je profielfoto weer op de standaard in"
-    },
-    "reputationName": {
-      "label": "Naam",
-      "placeholder": "Voer een eigen reputatienaam in (bijvoorbeeld 'Punten', 'Karma')",
-      "description": "Pas de naam aan die je op deze server gebruikt.",
-      "reset": "Stel de reputatienaam weer in op de standaardwaarde"
-    },
-    "tosNote": "Alles wat tegen de servicevoorwaarden van Discord of de wet gaat, is niet oké en kan ertoe leiden dat deze functie voor de server wordt geblokkeerd."
-  },
-  "general": {
-    "description": "Zet de basisinstellingen van de bot voor deze server goed.",
-    "language": {
-      "label": "Bottaal",
-      "selectPlaceholder": "Kies een taal",
-      "description": "Kies de taal die de bot gaat gebruiken voor berichten en reacties op deze server."
-    },
-    "systemChannel": {
-      "label": "Systeemkanaal",
-      "selectPlaceholder": "Kies een kanaal",
-      "note": "Let op: dit kanaal moet worden ingesteld en moet een intern kanaal zijn. Het bevat belangrijke berichten over de service van de bot en berichten van de ontwikkelaars."
-    },
-    "roleSelect": {
-      "searchPlaceholder": "Zoek functies...",
-      "noRolesFound": "Geen rollen gevonden"
-    },
-    "ranks": {
-      "description": "Stel de reputatieranglijsten en de bijbehorende rollen in.",
-      "stackRoles": {
-        "label": "Stapelrollen",
-        "description": "Als je dit aan zet, krijg je alle rangen die je kunt krijgen, in plaats van alleen de hoogste."
-      },
-      "addRank": "Nieuwe rang toevoegen",
-      "reputationRequired": "Vereiste reputatie",
-      "roleAlreadyAdded": "Deze functie heeft al een rang.",
-      "reputationAlreadyUsed": "Deze reputatiewaarde wordt al gebruikt door een andere rang.",
-      "noRanks": "Er zijn nog geen rangen ingesteld.",
-      "reputationPlaceholder": "bijvoorbeeld 100",
-      "refresh": {
-        "button": "Ranglijst vernieuwen",
-        "refreshing": "Verfrissend...",
-        "alreadyRunning": "Het vernieuwen is al bezig.",
-        "success": "Het vernieuwen van de ranglijst is gelukt.",
-        "failed": "Het lukte niet om de ranglijst te vernieuwen."
-      },
-      "selectionNote": "Je kunt alleen rollen kiezen die niet door een integratie worden beheerd en die lager zijn dan de hoogste rol van de bot."
-    },
-    "reputation": {
-      "description": "Zet even op hoe je reputatie wordt berekend en welke functies je wilt gebruiken.",
-      "mode": {
-        "label": "Reputatiemodus",
-        "description": "Kies hoe je reputatie wordt berekend en weergegeven.",
-        "modes": {
-          "TOTAL": "Totale reputatie",
-          "ROLLING_WEEK": "Rollende week",
-          "ROLLING_MONTH": "Rollende maand",
-          "WEEK": "Deze week",
-          "MONTH": "Deze maand"
-        },
-        "descriptions": {
-          "TOTAL": "Gebruik de totale reputatie die een gebruiker ooit heeft gekregen.",
-          "ROLLING_WEEK": "Gebruik de reputatie die je in de afgelopen 7 dagen hebt gekregen.",
-          "ROLLING_MONTH": "Gebruik de reputatie die je in de afgelopen 30 dagen hebt gekregen.",
-          "WEEK": "Gebruik de reputatie die je sinds het begin van deze week hebt gekregen.",
-          "MONTH": "Gebruik de reputatie die je sinds het begin van deze maand hebt gekregen."
-        }
-      },
-      "resetDate": {
-        "label": "Datum resetten",
-        "description": "De datum waarop je reputatie wordt gereset. Kies een datum in de toekomst om een reset in te plannen.",
-        "clear": "Datum wissen"
-      },
-      "types": {
-        "reaction": {
-          "label": "Reactie Reputatie",
-          "description": "Geef reputatie als er een specifieke reactie aan een bericht wordt toegevoegd.",
-          "confirmation": {
-            "label": "Bevestiging van reactie",
-            "description": "Stuur een berichtje als je een reactie hebt gegeven."
-          }
-        },
-        "answer": {
-          "label": "Antwoord Reputatie",
-          "description": "Geef reputatie als iemand bedankt wordt voor een bericht in een antwoord."
-        },
-        "mention": {
-          "label": "Reputatie noemen",
-          "description": "Geef reputatie als iemand wordt genoemd met een bedankje."
-        },
-        "fuzzy": {
-          "label": "Fuzzy Matching",
-          "description": "Geef reputatie door woorden rond het woord 'bedankt' te matchen met gebruikersnamen die in het kanaal zitten."
-        },
-        "embed": {
-          "label": "Reputatie integreren",
-          "description": "Stuur een embed-lijst met gebruikers die bij het laatste gesprek betrokken waren als je geen doelwit kunt vinden."
-        },
-        "direct": {
-          "label": "Directe integratie Reputatie",
-          "description": "Geef automatisch reputatie als er maar één gebruiker in de embed zit."
-        },
-        "command": {
-          "label": "Reputatie van het commando",
-          "description": "Geef reputatie via het commando /reputation.",
-          "ephemeral": {
-            "label": "Kortstondige reactie",
-            "description": "Verstuur het antwoord verborgen voor andere gebruikers wanneer je reputatie geeft via een commando."
-          }
-        }
-      }
-    },
-    "roles": {
-      "description": "Zet even op welke rollen wel en niet reputatie mogen geven en krijgen.",
-      "donor": {
-        "label": "Rollen van donateurs",
-        "description": "Als dit is ingeschakeld, kunnen alleen mensen met minstens één van deze rollen een reputatie geven."
-      },
-      "receiver": {
-        "label": "Rollen van de ontvanger",
-        "description": "Als dit is ingeschakeld, kunnen alleen mensen met minstens één van deze rollen een reputatie krijgen."
-      },
-      "list": {
-        "label": "Geselecteerde rollen",
-        "description": "Kies welke rollen nodig zijn."
-      },
-      "denyDonor": {
-        "label": "Donorrollen weigeren",
-        "description": "Als dit is ingeschakeld, kunnen gebruikers met een van deze rollen geen reputatie geven."
-      },
-      "denyReceiver": {
-        "label": "Ontvangstrollen weigeren",
-        "description": "Als dit is ingeschakeld, kunnen gebruikers met een van deze rollen geen reputatie krijgen."
-      }
-    },
-    "channels": {
-      "description": "Zeg maar waar de bot wel en niet actief moet zijn.",
-      "listType": {
-        "label": "Lijsttype",
-        "description": "Kies of de geselecteerde kanalen en categorieën toegestaan of geweigerd worden.",
-        "allow": "Toegestane lijst",
-        "deny": "Lijst met geweigerde personen",
-        "premiumRequired": "Lijst met geweigerde personen"
-      },
-      "list": {
-        "label": "Kanalen en categorieën",
-        "description": "Kies de kanalen en categorieën die in de lijst moeten staan.",
-        "channels": "Kanalen",
-        "categories": "Categorieën",
-        "permissionsNote": "Alleen kanalen waar de bot lees- en schrijftoegang heeft, worden weergegeven."
-      },
-      "premium": {
-        "channelLimitWarning": "Als je meer dan {limit} kanalen wilt kiezen, moet je supporter worden. Word supporter om deze functie te kunnen gebruiken.",
-        "categoryLimitWarning": "Als je meer dan {limit} categorie wilt kiezen, moet je een supporter zijn. Word supporter om dit te kunnen doen."
-      }
-    },
-    "everyoneTokenPurchase": {
-      "label": "Iedereen kan tokens kopen",
-      "description": "Laat alle gebruikers premiumfuncties kopen met hun tokens. Als je dit uitschakelt, kunnen alleen serverbeheerders functies kopen."
-    }
-  },
-  "reactions": {
-    "title": "Reacties",
-    "description": "Stel de emoji's in die je gebruikt om reputatie te geven.",
-    "main": {
-      "label": "Belangrijkste reactie",
-      "description": "De emoji die je vooral gebruikt om iemand een compliment te geven."
-    },
-    "additional": {
-      "label": "Extra reacties",
-      "description": "Extra emoji's die je ook kunt gebruiken om een beoordeling te geven.",
-      "premiumRequired": "Extra reacties",
-      "add": "Reactie toevoegen",
-      "none": "Geen extra reacties ingesteld."
-    }
-  },
-  "thankwords": {
-    "description": "Deze woorden worden gebruikt om te zien wanneer iemand bedankt wordt. Ze worden gezien als reguliere expressies.",
-    "add": "Bedankt toevoegen",
-    "placeholder": "Voer thankword in (Regex)",
-    "none": "Geen bedankjes ingesteld.",
-    "invalidCharacter": "Het bedankwoord heeft een raar teken: {char}",
-    "alreadyExists": "Dit bedankwoord bestaat al.",
-    "defaults": {
-      "title": "Standaard bedankjes",
-      "description": "Voeg snel standaard bedankjes toe voor verschillende talen."
-    }
-  },
   "abuseProtection": {
-    "description": "Zet limieten en beveiligingen op om te voorkomen dat je reputatie wordt misbruikt.",
     "cooldown": {
-      "label": "Afkoelperiode (minuten)",
       "description": "De tijd in minuten die moet verstrijken voordat dezelfde gebruikers elkaar weer kunnen bedanken. 0 betekent geen wachttijd, -1 betekent voor altijd.",
+      "label": "Afkoelperiode (minuten)",
       "once": {
-        "label": "Afkoelperiode Eenmaal",
+        "activeDescription": "De afkoelperiode is eenmaal actief. Mensen kunnen elkaar maar één keer bedanken. De richting is ingesteld op eenrichtingsverkeer.",
         "description": "Als deze optie aanstaat, kunnen gebruikers elkaar maar één keer bedanken.",
-        "activeDescription": "De afkoelperiode is eenmaal actief. Mensen kunnen elkaar maar één keer bedanken. De richting is ingesteld op eenrichtingsverkeer."
+        "label": "Afkoelperiode Eenmaal"
       }
     },
     "cooldownDirection": {
-      "label": "Afkoelingsrichting",
+      "bidirectional": "Tweerichtingsverkeer",
       "description": "Eénrichtingsverkeer betekent dat de gever even moet wachten voordat hij weer aan dezelfde persoon kan geven. Tweerichtingsverkeer betekent dat de wachttijd tussen de gever en de ontvanger geldt, zodat ze elkaar niet steeds kunnen bedanken totdat de tijd voorbij is.",
-      "unidirectional": "Eénrichtingsverkeer",
-      "bidirectional": "Tweerichtingsverkeer"
+      "label": "Afkoelingsrichting",
+      "unidirectional": "Eénrichtingsverkeer"
     },
-    "maxMessageAge": {
-      "label": "Maximale leeftijd van berichten (minuten)",
-      "description": "Hoe lang een bericht maximaal mag zijn (in minuten) om nog meetellen voor je reputatie als je erop reageert of antwoordt."
-    },
-    "minMessages": {
-      "label": "Minimum aantal berichten",
-      "description": "Als je minstens zoveel berichten in het kanaal hebt, kun je altijd een reputatie krijgen."
-    },
+    "description": "Zet limieten en beveiligingen op om te voorkomen dat je reputatie wordt misbruikt.",
     "donorContext": {
-      "label": "De donor moet erbij zijn.",
-      "description": "Als dit is ingeschakeld, moet de donor minstens één van de laatste berichten in het kanaal hebben gestuurd om reputatie te kunnen geven."
-    },
-    "receiverContext": {
-      "label": "De ontvanger moet erbij zijn.",
-      "description": "Als dit is ingeschakeld, moet de ontvanger minstens één van de laatste berichten in het kanaal hebben gestuurd om reputatie te krijgen."
+      "description": "Als dit is ingeschakeld, moet de donor minstens één van de laatste berichten in het kanaal hebben gestuurd om reputatie te kunnen geven.",
+      "label": "De donor moet erbij zijn."
     },
     "givenLimit": {
+      "description": "Beperk hoeveel reputatie iemand kan geven binnen een bepaalde tijd.",
       "enabled": {
         "label": "Geef limiet vrij"
       },
@@ -402,10 +30,22 @@
       },
       "maxGivenHours": {
         "label": "Overuren"
-      },
-      "description": "Beperk hoeveel reputatie iemand kan geven binnen een bepaalde tijd."
+      }
+    },
+    "maxMessageAge": {
+      "description": "Hoe lang een bericht maximaal mag zijn (in minuten) om nog meetellen voor je reputatie als je erop reageert of antwoordt.",
+      "label": "Maximale leeftijd van berichten (minuten)"
+    },
+    "maxMessageReputation": {
+      "description": "Het maximale aantal reputatiepunten dat je in één bericht kunt geven via vermeldingen en insluitingen.",
+      "label": "Max. aantal berichten Reputatie"
+    },
+    "minMessages": {
+      "description": "Als je minstens zoveel berichten in het kanaal hebt, kun je altijd een reputatie krijgen.",
+      "label": "Minimum aantal berichten"
     },
     "receivedLimit": {
+      "description": "Beperk hoeveel reputatie iemand kan krijgen binnen een bepaalde tijd.",
       "enabled": {
         "label": "Ontvangstlimiet inschakelen"
       },
@@ -414,155 +54,540 @@
       },
       "maxReceivedHours": {
         "label": "Overuren"
-      },
-      "description": "Beperk hoeveel reputatie iemand kan krijgen binnen een bepaalde tijd."
+      }
     },
-    "maxMessageReputation": {
-      "label": "Max. aantal berichten Reputatie",
-      "description": "Het maximale aantal reputatiepunten dat je in één bericht kunt geven via vermeldingen en insluitingen."
+    "receiverContext": {
+      "description": "Als dit is ingeschakeld, moet de ontvanger minstens één van de laatste berichten in het kanaal hebben gestuurd om reputatie te krijgen.",
+      "label": "De ontvanger moet erbij zijn."
     }
   },
   "announcements": {
-    "description": "Stel berichten in die worden verstuurd als mensen een nieuwe rang halen.",
     "active": {
-      "label": "Maak aankondigingen mogelijk",
-      "description": "Als je dit aan zet, stuurt de bot een berichtje als iemand een nieuwe rang haalt."
-    },
-    "sameChannel": {
-      "label": "Verstuur via hetzelfde kanaal",
-      "description": "Als je dit aan zet, wordt de melding verstuurd in het kanaal waar je een level omhoog bent gegaan. Anders wordt het naar het kanaal gestuurd dat je hebt gekozen."
+      "description": "Als je dit aan zet, stuurt de bot een berichtje als iemand een nieuwe rang haalt.",
+      "label": "Maak aankondigingen mogelijk"
     },
     "channel": {
-      "label": "Aankondigingskanaal",
-      "description": "Kies het kanaal waar je de aankondigingen over rangverhogingen naartoe wilt sturen."
+      "description": "Kies het kanaal waar je de aankondigingen over rangverhogingen naartoe wilt sturen.",
+      "label": "Aankondigingskanaal"
+    },
+    "description": "Stel berichten in die worden verstuurd als mensen een nieuwe rang halen.",
+    "sameChannel": {
+      "description": "Als je dit aan zet, wordt de melding verstuurd in het kanaal waar je een level omhoog bent gegaan. Anders wordt het naar het kanaal gestuurd dat je hebt gekozen.",
+      "label": "Verstuur via hetzelfde kanaal"
+    }
+  },
+  "auditLog": {
+    "added": "Toegevoegd",
+    "description": "Bekijk een overzicht van alle instellingen die je op je server hebt veranderd.",
+    "from": "Van",
+    "loadError": "Het lukte niet om het auditlogboek te laden. Probeer het nog een keer.",
+    "loading": "Auditlogboek wordt geladen...",
+    "next": "Volgende",
+    "noEntries": "Geen auditlogboekvermeldingen gevonden.",
+    "pageInfo": "Pagina {current} van {total}",
+    "previous": "Vorige",
+    "removed": "Verwijderd",
+    "retry": "Probeer het nog eens",
+    "settings": {
+      "abuseprotection_cooldown": "Misbruikbescherming - Afkoelperiode",
+      "abuseprotection_cooldowndirection": "Bescherming tegen misbruik - Afkoelperiode",
+      "abuseprotection_donorcontext": "Bescherming tegen misbruik - Context van donateurs",
+      "abuseprotection_maxgiven": "Bescherming tegen misbruik - Max Given",
+      "abuseprotection_maxgivenhours": "Bescherming tegen misbruik - Maximaal toegestane uren",
+      "abuseprotection_maxmessageage": "Bescherming tegen misbruik - Maximale leeftijd van berichten",
+      "abuseprotection_maxmessagereputation": "Bescherming tegen misbruik - Maximale reputatie van berichten",
+      "abuseprotection_maxreceived": "Bescherming tegen misbruik - Maximaal ontvangen",
+      "abuseprotection_maxreceivedhours": "Bescherming tegen misbruik - Maximaal aantal ontvangen uren",
+      "abuseprotection_minmessages": "Bescherming tegen misbruik - Minimaal aantal berichten",
+      "abuseprotection_receivercontext": "Bescherming tegen misbruik - Context van de ontvanger",
+      "announcements_active": "Aankondigingen - Actief",
+      "announcements_channel": "Aankondigingen - Kanaal",
+      "announcements_samechannel": "Aankondigingen - Hetzelfde kanaal",
+      "autopost_active": "Autopost - Aan",
+      "autopost_channel": "Autopost - Kanaal",
+      "autopost_refreshinterval": "Autopost - Vernieuwingsinterval",
+      "autopost_refreshtype": "Autopost - Vernieuwingstype",
+      "general_everyonetokenpurchase": "Algemeen - Iedereen kan tokens kopen",
+      "general_language": "Algemeen - Taal",
+      "general_reputationmode": "Reputatie - Reputatiemodus",
+      "general_resetdate": "Reputatie - Datum opnieuw instellen",
+      "general_stackroles": "Rangen - Stack-rollen",
+      "general_systemchannel": "Algemeen - Systeemkanaal",
+      "logchannel_active": "Logkanaal - Actief",
+      "logchannel_channel": "Logkanaal - Kanaal",
+      "messages_commandreputationephemeral": "Reputatie - Commando Reputatie Kortstondig",
+      "messages_reactionconfirmation": "Reputatie - Bevestiging van reacties",
+      "profile_nickname": "Profiel - Bijnaam",
+      "profile_profilepicture": "Profiel - Profielfoto",
+      "profile_reputationname": "Profiel - Naam",
+      "ranks": "Rangen - Functies",
+      "reputation_answeractive": "Reputatie - Beantwoord actief",
+      "reputation_commandactive": "Reputatie - Commando actief",
+      "reputation_directactive": "Reputatie - Direct actief",
+      "reputation_embedactive": "Reputatie - Actief insluiten",
+      "reputation_fuzzyactive": "Reputatie - Fuzzy Active",
+      "reputation_mentionactive": "Reputatie - Actief vermelden",
+      "reputation_reactionactive": "Reputatie - Actieve reactie",
+      "thanking_channels_categories": "Kanalen - Categorieënlijst",
+      "thanking_channels_channels": "Kanalen - Lijst met kanalen",
+      "thanking_channels_whitelist": "Kanalen - Witte lijst-modus",
+      "thanking_denydonorroles": "Rollen - Donorrollen weigeren",
+      "thanking_denyreceiverroles": "Rollen - Ontvangerrollen weigeren",
+      "thanking_donorroles": "Rollen - Donorrollen",
+      "thanking_reactions_mainreaction": "Reacties - Belangrijkste reactie",
+      "thanking_reactions_reactions": "Reacties - Extra reacties",
+      "thanking_receiverroles": "Rollen - Ontvangerrollen",
+      "thanking_thankwords_words": "Bedankt!"
+    },
+    "to": "Om",
+    "unknownMember": "Onbekend lid",
+    "values": {
+      "bidirectional": "Tweerichtingsverkeer",
+      "daily": "Dagelijks",
+      "delete_and_repost": "Verwijderen en opnieuw posten",
+      "disabled": "Gehandicapt",
+      "enabled": "Ingeschakeld",
+      "hourly": "Per uur",
+      "month": "Maand",
+      "monthly": "Maandelijks",
+      "noChanges": "Geen veranderingen",
+      "none": "Geen",
+      "null": "Niet ingesteld",
+      "once": "Eens",
+      "repost": "Opnieuw posten",
+      "rolling_month": "Rollende maand",
+      "rolling_week": "Rollende week",
+      "total": "Totaal",
+      "unidirectional": "Eénrichtingsverkeer",
+      "unknownChannel": "Onbekend kanaal",
+      "unknownIntegration": "Onbekende integratie",
+      "update": "Update",
+      "week": "Week",
+      "weekly": "Wekelijks"
     }
   },
   "autopost": {
+    "active": {
+      "description": "Zet het automatisch plaatsen op het scorebord aan of uit.",
+      "label": "Automatisch posten inschakelen"
+    },
+    "channel": {
+      "description": "Het kanaal waar het klassement moet worden geplaatst.",
+      "label": "Autopost-kanaal"
+    },
     "description": "Zet het automatisch posten van het klassement op een kanaal in.",
     "premiumRequired": "Automatisch posten",
-    "active": {
-      "label": "Automatisch posten inschakelen",
-      "description": "Zet het automatisch plaatsen op het scorebord aan of uit."
-    },
-    "channel": {
-      "label": "Autopost-kanaal",
-      "description": "Het kanaal waar het klassement moet worden geplaatst."
-    },
     "refreshInterval": {
-      "label": "Vernieuwingsinterval",
-      "description": "Hoe vaak moet het klassement worden bijgewerkt?",
-      "HOURLY": "Per uur",
       "DAILY": "Dagelijks",
+      "HOURLY": "Per uur",
+      "MONTHLY": "Maandelijks",
       "WEEKLY": "Wekelijks",
-      "MONTHLY": "Maandelijks"
+      "description": "Hoe vaak moet het klassement worden bijgewerkt?",
+      "label": "Vernieuwingsinterval"
     },
     "refreshType": {
-      "label": "Type vernieuwen",
-      "description": "Hoe moet het bericht worden bijgewerkt?",
       "DELETE_AND_REPOST": "Verwijderen en opnieuw posten",
       "REPOST": "Opnieuw posten",
-      "UPDATE": "Update"
+      "UPDATE": "Update",
+      "description": "Hoe moet het bericht worden bijgewerkt?",
+      "label": "Type vernieuwen"
     },
     "send": {
+      "description": "Stuur of werk de autopost meteen handmatig bij op het kanaal.",
       "label": "Stuur nu automatisch bericht",
-      "sending": "Bezig met verzenden...",
-      "description": "Stuur of werk de autopost meteen handmatig bij op het kanaal."
+      "sending": "Bezig met verzenden..."
     }
+  },
+  "common": {
+    "cancel": "Annuleren",
+    "change": "Verandering",
+    "clear": "Duidelijk",
+    "confirm": "Bevestig",
+    "delete": "Verwijderen",
+    "edit": "Bewerken",
+    "error": {
+      "outOfBounds": "De waarde moet tussen {min} en {max} liggen. Aangepast naar de dichtstbijzijnde geldige waarde."
+    },
+    "loading": "Bezig met laden...",
+    "next": "Volgende",
+    "noData": "Geen resultaten gevonden.",
+    "pageOf": "Pagina {current} van {total}",
+    "previous": "Vorige",
+    "save": "Opslaan"
+  },
+  "dashboard": {
+    "rank": "Rang",
+    "reputation": "Reputatie",
+    "title": "Dashboard",
+    "todayReputation": "De reputatie van vandaag",
+    "topChannel": "Topkanaal",
+    "topUsers": "Topgebruikers",
+    "totalReputation": "Totale reputatie",
+    "user": "Gebruiker",
+    "weekReputation": "Wekelijkse reputatie"
+  },
+  "error": {
+    "expired": {
+      "instruction": "Open een nieuwe sessie vanaf de Discord-server om verder te gaan.",
+      "message": "Je sessie is verlopen of niet meer geldig.",
+      "title": "Sessie verlopen"
+    },
+    "noToken": {
+      "instruction": "Maak even een nieuwe sessie aan om toegang te krijgen tot deze app.",
+      "message": "Je hebt geen geldige sessietoken.",
+      "title": "Geen sessie gevonden"
+    },
+    "notice": {
+      "workingOnIt": "We hebben het probleem gemeld en zijn bezig om het op te lossen."
+    }
+  },
+  "general": {
+    "channels": {
+      "description": "Zeg maar waar de bot wel en niet actief moet zijn.",
+      "list": {
+        "categories": "Categorieën",
+        "channels": "Kanalen",
+        "description": "Kies de kanalen en categorieën die in de lijst moeten staan.",
+        "label": "Kanalen en categorieën",
+        "permissionsNote": "Alleen kanalen waar de bot lees- en schrijftoegang heeft, worden weergegeven."
+      },
+      "listType": {
+        "allow": "Toegestane lijst",
+        "deny": "Lijst met geweigerde personen",
+        "description": "Kies of de geselecteerde kanalen en categorieën toegestaan of geweigerd worden.",
+        "label": "Lijsttype",
+        "premiumRequired": "Lijst met geweigerde personen"
+      },
+      "premium": {
+        "categoryLimitWarning": "Als je meer dan {limit} categorie wilt kiezen, moet je een supporter zijn. Word supporter om dit te kunnen doen.",
+        "channelLimitWarning": "Als je meer dan {limit} kanalen wilt kiezen, moet je supporter worden. Word supporter om deze functie te kunnen gebruiken."
+      }
+    },
+    "description": "Zet de basisinstellingen van de bot voor deze server goed.",
+    "everyoneTokenPurchase": {
+      "description": "Laat alle gebruikers premiumfuncties kopen met hun tokens. Als je dit uitschakelt, kunnen alleen serverbeheerders functies kopen.",
+      "label": "Iedereen kan tokens kopen"
+    },
+    "language": {
+      "description": "Kies de taal die de bot gaat gebruiken voor berichten en reacties op deze server.",
+      "label": "Bottaal",
+      "selectPlaceholder": "Kies een taal"
+    },
+    "ranks": {
+      "addRank": "Nieuwe rang toevoegen",
+      "description": "Stel de reputatieranglijsten en de bijbehorende rollen in.",
+      "noRanks": "Er zijn nog geen rangen ingesteld.",
+      "refresh": {
+        "alreadyRunning": "Het vernieuwen is al bezig.",
+        "button": "Ranglijst vernieuwen",
+        "failed": "Het lukte niet om de ranglijst te vernieuwen.",
+        "refreshing": "Verfrissend...",
+        "success": "Het vernieuwen van de ranglijst is gelukt."
+      },
+      "reputationAlreadyUsed": "Deze reputatiewaarde wordt al gebruikt door een andere rang.",
+      "reputationPlaceholder": "bijvoorbeeld 100",
+      "reputationRequired": "Vereiste reputatie",
+      "roleAlreadyAdded": "Deze functie heeft al een rang.",
+      "selectionNote": "Je kunt alleen rollen kiezen die niet door een integratie worden beheerd en die lager zijn dan de hoogste rol van de bot.",
+      "stackRoles": {
+        "description": "Als je dit aan zet, krijg je alle rangen die je kunt krijgen, in plaats van alleen de hoogste.",
+        "label": "Stapelrollen"
+      }
+    },
+    "reputation": {
+      "description": "Zet even op hoe je reputatie wordt berekend en welke functies je wilt gebruiken.",
+      "mode": {
+        "description": "Kies hoe je reputatie wordt berekend en weergegeven.",
+        "descriptions": {
+          "MONTH": "Gebruik de reputatie die je sinds het begin van deze maand hebt gekregen.",
+          "ROLLING_MONTH": "Gebruik de reputatie die je in de afgelopen 30 dagen hebt gekregen.",
+          "ROLLING_WEEK": "Gebruik de reputatie die je in de afgelopen 7 dagen hebt gekregen.",
+          "TOTAL": "Gebruik de totale reputatie die een gebruiker ooit heeft gekregen.",
+          "WEEK": "Gebruik de reputatie die je sinds het begin van deze week hebt gekregen."
+        },
+        "label": "Reputatiemodus",
+        "modes": {
+          "MONTH": "Deze maand",
+          "ROLLING_MONTH": "Rollende maand",
+          "ROLLING_WEEK": "Rollende week",
+          "TOTAL": "Totale reputatie",
+          "WEEK": "Deze week"
+        }
+      },
+      "resetDate": {
+        "clear": "Datum wissen",
+        "description": "De datum waarop je reputatie wordt gereset. Kies een datum in de toekomst om een reset in te plannen.",
+        "label": "Datum resetten"
+      },
+      "types": {
+        "answer": {
+          "description": "Geef reputatie als iemand bedankt wordt voor een bericht in een antwoord.",
+          "label": "Antwoord Reputatie"
+        },
+        "command": {
+          "description": "Geef reputatie via het commando /reputation.",
+          "ephemeral": {
+            "description": "Verstuur het antwoord verborgen voor andere gebruikers wanneer je reputatie geeft via een commando.",
+            "label": "Kortstondige reactie"
+          },
+          "label": "Reputatie van het commando"
+        },
+        "direct": {
+          "description": "Geef automatisch reputatie als er maar één gebruiker in de embed zit.",
+          "label": "Directe integratie Reputatie"
+        },
+        "embed": {
+          "description": "Stuur een embed-lijst met gebruikers die bij het laatste gesprek betrokken waren als je geen doelwit kunt vinden.",
+          "label": "Reputatie integreren"
+        },
+        "fuzzy": {
+          "description": "Geef reputatie door woorden rond het woord 'bedankt' te matchen met gebruikersnamen die in het kanaal zitten.",
+          "label": "Fuzzy Matching"
+        },
+        "mention": {
+          "description": "Geef reputatie als iemand wordt genoemd met een bedankje.",
+          "label": "Reputatie noemen"
+        },
+        "reaction": {
+          "confirmation": {
+            "description": "Stuur een berichtje als je een reactie hebt gegeven.",
+            "label": "Bevestiging van reactie"
+          },
+          "description": "Geef reputatie als er een specifieke reactie aan een bericht wordt toegevoegd.",
+          "label": "Reactie Reputatie"
+        }
+      }
+    },
+    "roleSelect": {
+      "noRolesFound": "Geen rollen gevonden",
+      "searchPlaceholder": "Zoek functies..."
+    },
+    "roles": {
+      "denyDonor": {
+        "description": "Als dit is ingeschakeld, kunnen gebruikers met een van deze rollen geen reputatie geven.",
+        "label": "Donorrollen weigeren"
+      },
+      "denyReceiver": {
+        "description": "Als dit is ingeschakeld, kunnen gebruikers met een van deze rollen geen reputatie krijgen.",
+        "label": "Ontvangstrollen weigeren"
+      },
+      "description": "Zet even op welke rollen wel en niet reputatie mogen geven en krijgen.",
+      "donor": {
+        "description": "Als dit is ingeschakeld, kunnen alleen mensen met minstens één van deze rollen een reputatie geven.",
+        "label": "Rollen van donateurs"
+      },
+      "list": {
+        "description": "Kies welke rollen nodig zijn.",
+        "label": "Geselecteerde rollen"
+      },
+      "receiver": {
+        "description": "Als dit is ingeschakeld, kunnen alleen mensen met minstens één van deze rollen een reputatie krijgen.",
+        "label": "Rollen van de ontvanger"
+      }
+    },
+    "systemChannel": {
+      "label": "Systeemkanaal",
+      "note": "Let op: dit kanaal moet worden ingesteld en moet een intern kanaal zijn. Het bevat belangrijke berichten over de service van de bot en berichten van de ontwikkelaars.",
+      "selectPlaceholder": "Kies een kanaal"
+    }
+  },
+  "guildSwitcher": {
+    "add": "Voeg nog een server toe door de instellingen van de server te openen.",
+    "current": "Huidige server",
+    "none": "Geen andere servers gevonden",
+    "title": "Server wisselen"
+  },
+  "help": {
+    "message": "Heb je hulp nodig? Mis je een functie? Heb je feedback? Stuur dan gewoon een privébericht naar de bot. Onderaan de pagina vind je ook een link naar onze supportdiscord.",
+    "title": "Hulp nodig?"
+  },
+  "integrationBypass": {
+    "add": "Integratie omzeilen toevoegen",
+    "allowAnswer": "Antwoord toestaan",
+    "allowAnswerDescription": "Het toestaan van het geven van een reputatie door het beantwoorden van een bericht",
+    "allowDirect": "Direct toestaan",
+    "allowDirectDescription": "Het is oké om een reputatie te geven als een embed wordt overgeslagen omdat er maar één ontvanger kan worden bepaald. Er wordt nooit een embed gestuurd voor een bot.",
+    "allowFuzzy": "Fuzzy toestaan",
+    "allowFuzzyDescription": "Maak het mogelijk om een reputatie te geven via fuzzy matching",
+    "allowMention": "Vermelding toestaan",
+    "allowMentionDescription": "Maak het mogelijk om een reputatie te geven door een gebruiker te noemen",
+    "allowReactions": "Reacties toestaan",
+    "allowReactionsDescription": "Maak het mogelijk om een reputatie te geven via reacties",
+    "deleteConfirm": "Weet je zeker dat je deze integratie-bypass wilt verwijderen?",
+    "description": "Zet bypasses op voor integraties zodat ze reputatie kunnen geven, zelfs als ze niet aan de normale eisen voldoen.",
+    "ignoreContext": "Context negeren",
+    "ignoreContextDescription": "Contextcontroles negeren",
+    "ignoreCooldown": "Negeer afkoelperiode",
+    "ignoreCooldownDescription": "Negeer de wachttijd tussen gebruikers",
+    "ignoreLimit": "Limiet negeren",
+    "ignoreLimitDescription": "Negeer eventuele uurlimieten",
+    "noIntegrations": "Er zijn geen integraties meer om bypasses aan toe te voegen.",
+    "premiumRequired": "Integratie omzeilen",
+    "selectIntegration": "Kies een integratie"
+  },
+  "links": {
+    "faq": "Veelgestelde vragen",
+    "support": "Ondersteuningsserver",
+    "tos": "Servicevoorwaarden",
+    "website": "Website"
+  },
+  "locale": {
+    "selectLanguage": "Kies je taal"
   },
   "logChannel": {
-    "premiumRequired": "Logkanaal",
-    "description": "Het logkanaal bevat alle reputaties die aan een gebruiker zijn gegeven en afgenomen.",
     "active": {
-      "label": "Logkanaal inschakelen",
-      "description": "Zet het loggen van reputatiewijzigingen aan of uit."
+      "description": "Zet het loggen van reputatiewijzigingen aan of uit.",
+      "label": "Logkanaal inschakelen"
     },
     "channel": {
-      "label": "Logkanaal",
-      "description": "Het kanaal waar veranderingen in reputatie moeten worden bijgehouden."
+      "description": "Het kanaal waar veranderingen in reputatie moeten worden bijgehouden.",
+      "label": "Logkanaal"
+    },
+    "description": "Het logkanaal bevat alle reputaties die aan een gebruiker zijn gegeven en afgenomen.",
+    "premiumRequired": "Logkanaal"
+  },
+  "login": {
+    "button": "Log in met Discord",
+    "description": "Log even in met Discord om dit paneel te openen.",
+    "title": "Inloggen nodig"
+  },
+  "metrics": {
+    "charts": {
+      "commandsCount": "Aantal commando's",
+      "commandsUsage": "Gebruik van commando's",
+      "messagesCount": "Aantal berichten",
+      "messagesTotal": "Totaal aantal berichten",
+      "reputationChanges": "Veranderingen in reputatie",
+      "reputationCount": "Reputatie telt",
+      "reputationDow": "Reputatie per dag van de week",
+      "reputationTotal": "Totale reputatie",
+      "reputationTypeCount": "Reputatie per type",
+      "reputationTypeTotal": "Totale reputatie per type",
+      "serviceCountHour": "Gebruik van de dienst (per uur)",
+      "serviceCountWeek": "Gebruik van de dienst (wekelijks)",
+      "usersActiveMonth": "Actieve gebruikers (maandelijks)",
+      "usersActiveWeek": "Actieve gebruikers (wekelijks)"
+    },
+    "count": "Graaf",
+    "description": "Ben je nieuwsgierig naar het verkeer en het gebruik van de bot? Wij ook! Daarom hebben we op deze pagina een paar handige grafieken gemaakt. Deze laten bijna realtime gegevens zien, rechtstreeks van de bot.",
+    "offset": "Compensatie",
+    "sections": {
+      "commands": "Commando's",
+      "messages": "Berichten",
+      "reputation": "Reputatie",
+      "service": "Service",
+      "users": "Gebruikers"
+    },
+    "title": "Statistieken",
+    "units": {
+      "hour": "Uur",
+      "month": "Maand",
+      "week": "Week",
+      "year": "Jaar"
+    },
+    "users": {
+      "donors": "Donateurs",
+      "receivers": "Ontvangers",
+      "total": "Totaal"
+    },
+    "validation": {
+      "countMax": "Het aantal moet maximaal zijn{max}",
+      "countMin": "Het aantal moet minimaal 2 zijn.",
+      "offsetMax": "De offset mag maximaal zijn{max}",
+      "offsetMin": "De offset moet minimaal 0 zijn."
     }
   },
-  "setup": {
-    "title": "Eerste installatie",
-    "stepProgress": "Stap {current} van {total}",
-    "requiredStep": "Deze stap is nodig om verder te gaan.",
-    "navigation": {
-      "previous": "Vorige",
-      "next": "Volgende",
-      "finish": "Setup afronden"
+  "navigation": {
+    "dashboard": "Dashboard",
+    "faq": "Veelgestelde vragen",
+    "logout": "Uitloggen",
+    "metrics": "Statistieken",
+    "presets": "Voorinstellingen",
+    "privacy": "Privacy",
+    "settings": "Instellingen",
+    "setup": "Instellingen",
+    "supporter": "Supporter",
+    "token_shop": "Tokenwinkel",
+    "tos": "Servicevoorwaarden",
+    "user_settings": "Gebruikersinstellingen",
+    "voting": "Stemmen"
+  },
+  "premiumFeature": {
+    "kofiHint": "of steun ons op",
+    "kofiLink": "Ko-fi",
+    "message": "{name} is alleen voor supporters. Word supporter om het te kunnen gebruiken.",
+    "requiredTierPlural": "Je moet een van de volgende supporterniveaus kiezen:",
+    "requiredTierSingular": "Vereist ondersteuningsniveau:",
+    "title": "Supporter-functie",
+    "tokenShopHint": "Je kunt deze functie ook vrijspelen met tokens in de",
+    "tokenShopLink": "Tokenwinkel"
+  },
+  "presets": {
+    "applied": "Toegepast",
+    "apply": "Solliciteren",
+    "applying": "Aan het aanvragen...",
+    "default": {
+      "description": "Ik wil een evenwichtig reputatiesysteem met redelijke standaardinstellingen die voor de meeste servers goed werken.",
+      "settings": "Deze preset zorgt voor een bidirectionele afkoelperiode van 30 minuten, zet alle reputatiemodi aan behalve commando's, maakt reputatiebevestiging mogelijk en schakelt contextcontroles voor donateurs en ontvangers in.",
+      "title": "Standaardconfiguratie"
     },
-    "steps": {
-      "language": {
-        "title": "Kies je taal",
-        "description": "Kies de taal die de bot gaat gebruiken voor berichten en reacties op je server. De taal van de frontend past zich aan je keuze aan."
-      },
-      "systemChannel": {
-        "title": "Systeemkanaal",
-        "description": "Kies een kanaal waar de bot belangrijke systeemberichten en meldingen naartoe stuurt.",
-        "required": "Je moet een systeemkanaal kiezen om verder te gaan met de installatie."
-      },
-      "reputationTypes": {
-        "title": "Soorten reputatie",
-        "description": "Kies welke manieren gebruikers kunnen gebruiken om een beoordeling te geven. Je kunt meerdere opties inschakelen om gebruikers wat flexibiliteit te geven."
-      },
-      "reputationMode": {
-        "title": "Reputatiemodus",
-        "description": "Kies hoe je reputatie op je server berekend en weergegeven moet worden."
-      },
-      "ranks": {
-        "title": "Reputatie-ranglijsten",
-        "description": "Bepaal welke rollen mensen krijgen als ze een bepaald reputatieniveau halen. Je moet minstens één rang kiezen.",
-        "required": "Je moet minstens één reputatierang definiëren om verder te gaan."
-      },
-      "channels": {
-        "title": "Kanalen en categorieën",
-        "description": "Kies welke kanalen en categorieën je wilt toestaan om reputaties te geven. Je moet minstens één kanaal of categorie kiezen.",
-        "required": "Je moet minstens één kanaal of categorie kiezen om verder te gaan (tenzij je de weigeringlijstmodus gebruikt)."
-      },
-      "thankwords": {
-        "title": "Bedankt!",
-        "description": "Voeg woorden of zinnen toe die mensen kunnen gebruiken om een beoordeling te geven. Dit zijn de woorden die de bot herkent.",
-        "recommendation": "We raden je aan om de standaard bedankwoorden voor jouw taal te laden, zodat je snel aan de slag kunt."
-      },
-      "announcements": {
-        "title": "Aankondigingen",
-        "description": "Zet in de bot of hij moet laten weten als mensen een nieuwe reputatierang halen."
-      },
-      "cooldown": {
-        "title": "Instellingen voor afkoelperiode",
-        "description": "Zet een wachttijd in om te voorkomen dat mensen te vaak reputatie geven. Je kunt ook 'eenmalige wachttijd' inschakelen, zodat mensen elkaar maar één keer kunnen bedanken."
-      },
-      "mainReaction": {
-        "title": "Belangrijkste reactie",
-        "description": "Kies de emoji die je wilt gebruiken als belangrijkste reactie voor het geven van reputatie."
-      },
-      "roles": {
-        "title": "Rollen van donor en ontvanger",
-        "description": "Je kunt kiezen welke rollen reputatie kunnen geven (donorrollen) en welke rollen reputatie kunnen krijgen (ontvangerrollen)."
-      },
-      "welcome": {
-        "title": "Welkom!",
-        "description": "Hey, welkom op de instellingenpagina.\nDeze pagina helpt je met de eerste stappen om de bot in te stellen. Daarna heb je een basisinstelling die helemaal naar jouw smaak is aangepast.\n\nAls je hulp nodig hebt, stuur de bot dan een privébericht en we helpen je zo snel mogelijk. Onderaan de pagina vind je ook een link naar onze supportdiscord."
-      },
-      "finished": {
-        "title": "Installatie klaar",
-        "description": "Je bent nu klaar met de laatste stap van de installatie. We sturen je nu naar de pagina met algemene instellingen, waar je misschien nog meer instellingen vindt die je interessant vindt."
-      },
-      "scan": {
-        "title": "Serverscan",
-        "description": "Nu je je kanalen hebt geconfigureerd, raden we je aan een scan uit te voeren om de bestaande reputatie uit de geschiedenis van je server te indexeren.",
-        "prompt": {
-          "title": "Wil je een serverscan starten?",
-          "description": "Een scan doorzoekt de berichtengeschiedenis van je server in de geconfigureerde kanalen en zoekt naar bestaande reputaties. Dit kan even duren, afhankelijk van de grootte van je server."
-        },
-        "started": {
-          "title": "Het scannen is begonnen!",
-          "description": "De scan wordt nu op de achtergrond uitgevoerd. Je kunt de voortgang bekijken op de scanpagina zodra je de installatie hebt voltooid."
-        },
-        "start": "Scan starten",
-        "starting": "Het begint...",
-        "error": "Het is niet gelukt om de scan te starten. Probeer het later nog eens."
-      }
-    }
+    "description": "Snelle configuratie-instellingen om je op weg te helpen met veelgebruikte setups.",
+    "noAbuse": {
+      "description": "Ik wil de bescherming tegen misbruik op basis van context uitschakelen en gebruikers de mogelijkheid geven om vrijer reputatie te geven zonder hun interactiegeschiedenis bij te houden.",
+      "settings": "Deze voorinstelling schakelt zowel het bijhouden van de context van de donor als van de ontvanger uit.",
+      "title": "Geen bescherming tegen misbruik"
+    },
+    "simpleReputation": {
+      "description": "Ik wil een simpel reputatiesysteem waarbij gebruikers alleen via commando's reputatie kunnen geven, zonder ingewikkelde context bij te houden.",
+      "settings": "Deze preset schakelt alle reputatietypes uit, behalve commando's, en zet het bijhouden van de context van de gever en ontvanger uit.",
+      "title": "Eenvoudig reputatiesysteem"
+    },
+    "thankOnce": {
+      "description": "Ik wil dat mensen elkaar maar één keer kunnen bedanken, zodat dezelfde mensen elkaar niet steeds opnieuw een reputatie geven.",
+      "settings": "Met deze preset stel je de cooldown maar één keer in en maak je de cooldown eenzijdig.",
+      "title": "Slechts één keer bedanken"
+    },
+    "title": "Voorinstellingen"
+  },
+  "profile": {
+    "description": "Pas aan hoe de bot eruitziet en zich gedraagt op je server.",
+    "nickname": {
+      "description": "Geef de bot op deze server een eigen bijnaam.",
+      "label": "Bot-bijnaam",
+      "placeholder": "Voer de bijnaam van de bot in",
+      "reset": "Zet je bijnaam terug naar de standaardnaam"
+    },
+    "premiumRequired": "Profiel aanpassen",
+    "profilePicture": {
+      "description": "Upload een eigen profielfoto voor de bot (max. 2 MB, 512 x 512 pixels)",
+      "label": "Profielfoto",
+      "reset": "Stel je profielfoto weer op de standaard in",
+      "uploadButton": "Afbeelding uploaden",
+      "uploading": "Bezig met uploaden..."
+    },
+    "reputationName": {
+      "description": "Pas de naam aan die je op deze server gebruikt.",
+      "label": "Naam",
+      "placeholder": "Voer een eigen reputatienaam in (bijvoorbeeld 'Punten', 'Karma')",
+      "reset": "Stel de reputatienaam weer in op de standaardwaarde"
+    },
+    "reset": "Reset",
+    "tosNote": "Alles wat tegen de servicevoorwaarden van Discord of de wet gaat, is niet oké en kan ertoe leiden dat deze functie voor de server wordt geblokkeerd."
+  },
+  "reactions": {
+    "additional": {
+      "add": "Reactie toevoegen",
+      "description": "Extra emoji's die je ook kunt gebruiken om een beoordeling te geven.",
+      "label": "Extra reacties",
+      "none": "Geen extra reacties ingesteld.",
+      "premiumRequired": "Extra reacties"
+    },
+    "description": "Stel de emoji's in die je gebruikt om reputatie te geven.",
+    "main": {
+      "description": "De emoji die je vooral gebruikt om iemand een compliment te geven.",
+      "label": "Belangrijkste reactie"
+    },
+    "title": "Reacties"
   },
   "roles": {
     "donor": {
@@ -572,429 +597,418 @@
       "label": "Ontvanger"
     }
   },
-  "links": {
-    "support": "Ondersteuningsserver",
-    "website": "Website",
-    "faq": "Veelgestelde vragen",
-    "tos": "Servicevoorwaarden"
-  },
-  "auditLog": {
-    "description": "Bekijk een overzicht van alle instellingen die je op je server hebt veranderd.",
-    "loading": "Auditlogboek wordt geladen...",
-    "loadError": "Het lukte niet om het auditlogboek te laden. Probeer het nog een keer.",
-    "retry": "Probeer het nog eens",
-    "noEntries": "Geen auditlogboekvermeldingen gevonden.",
-    "unknownMember": "Onbekend lid",
-    "previous": "Vorige",
-    "next": "Volgende",
-    "pageInfo": "Pagina {current} van {total}",
-    "from": "Van",
-    "to": "Om",
-    "added": "Toegevoegd",
-    "removed": "Verwijderd",
-    "values": {
-      "null": "Niet ingesteld",
-      "enabled": "Ingeschakeld",
-      "disabled": "Gehandicapt",
-      "once": "Eens",
-      "none": "Geen",
-      "unknownChannel": "Onbekend kanaal",
-      "unidirectional": "Eénrichtingsverkeer",
-      "bidirectional": "Tweerichtingsverkeer",
-      "total": "Totaal",
-      "rolling_week": "Rollende week",
-      "rolling_month": "Rollende maand",
-      "week": "Week",
-      "month": "Maand",
-      "delete_and_repost": "Verwijderen en opnieuw posten",
-      "repost": "Opnieuw posten",
-      "update": "Update",
-      "hourly": "Per uur",
-      "daily": "Dagelijks",
-      "weekly": "Wekelijks",
-      "monthly": "Maandelijks",
-      "noChanges": "Geen veranderingen",
-      "unknownIntegration": "Onbekende integratie"
+  "scan": {
+    "description": "Scan je gilde op reputatiepunten die zijn toegekend voordat de bot werd toegevoegd of in kanalen die niet werden bijgehouden. Hiermee worden alle berichten in de geconfigureerde reputatiekanalen en -categorieën gescand.",
+    "error": {
+      "alreadyRunning": "Er loopt al een scan voor dit gilde.",
+      "fetchStatus": "Het ophalen van de scanstatus is mislukt. Probeer het later nog eens.",
+      "startFailed": "Het scannen is mislukt. Probeer het later nog eens."
     },
-    "settings": {
-      "abuseprotection_cooldown": "Misbruikbescherming - Afkoelperiode",
-      "abuseprotection_cooldowndirection": "Bescherming tegen misbruik - Afkoelperiode",
-      "abuseprotection_maxmessageage": "Bescherming tegen misbruik - Maximale leeftijd van berichten",
-      "abuseprotection_minmessages": "Bescherming tegen misbruik - Minimaal aantal berichten",
-      "abuseprotection_donorcontext": "Bescherming tegen misbruik - Context van donateurs",
-      "abuseprotection_receivercontext": "Bescherming tegen misbruik - Context van de ontvanger",
-      "abuseprotection_maxgiven": "Bescherming tegen misbruik - Max Given",
-      "abuseprotection_maxgivenhours": "Bescherming tegen misbruik - Maximaal toegestane uren",
-      "abuseprotection_maxreceived": "Bescherming tegen misbruik - Maximaal ontvangen",
-      "abuseprotection_maxreceivedhours": "Bescherming tegen misbruik - Maximaal aantal ontvangen uren",
-      "abuseprotection_maxmessagereputation": "Bescherming tegen misbruik - Maximale reputatie van berichten",
-      "thanking_channels_whitelist": "Kanalen - Witte lijst-modus",
-      "thanking_channels_channels": "Kanalen - Lijst met kanalen",
-      "thanking_channels_categories": "Kanalen - Categorieënlijst",
-      "thanking_thankwords_words": "Bedankt!",
-      "thanking_reactions_mainreaction": "Reacties - Belangrijkste reactie",
-      "thanking_reactions_reactions": "Reacties - Extra reacties",
-      "thanking_denydonorroles": "Rollen - Donorrollen weigeren",
-      "thanking_donorroles": "Rollen - Donorrollen",
-      "thanking_denyreceiverroles": "Rollen - Ontvangerrollen weigeren",
-      "thanking_receiverroles": "Rollen - Ontvangerrollen",
-      "messages_reactionconfirmation": "Reputatie - Bevestiging van reacties",
-      "messages_commandreputationephemeral": "Reputatie - Commando Reputatie Kortstondig",
-      "profile_nickname": "Profiel - Bijnaam",
-      "profile_profilepicture": "Profiel - Profielfoto",
-      "profile_reputationname": "Profiel - Naam",
-      "reputation_reactionactive": "Reputatie - Actieve reactie",
-      "reputation_answeractive": "Reputatie - Beantwoord actief",
-      "reputation_mentionactive": "Reputatie - Actief vermelden",
-      "reputation_fuzzyactive": "Reputatie - Fuzzy Active",
-      "reputation_embedactive": "Reputatie - Actief insluiten",
-      "reputation_directactive": "Reputatie - Direct actief",
-      "reputation_commandactive": "Reputatie - Commando actief",
-      "logchannel_active": "Logkanaal - Actief",
-      "logchannel_channel": "Logkanaal - Kanaal",
-      "general_language": "Algemeen - Taal",
-      "general_stackroles": "Rangen - Stack-rollen",
-      "general_reputationmode": "Reputatie - Reputatiemodus",
-      "general_systemchannel": "Algemeen - Systeemkanaal",
-      "general_resetdate": "Reputatie - Datum opnieuw instellen",
-      "announcements_active": "Aankondigingen - Actief",
-      "announcements_samechannel": "Aankondigingen - Hetzelfde kanaal",
-      "announcements_channel": "Aankondigingen - Kanaal",
-      "autopost_active": "Autopost - Aan",
-      "autopost_channel": "Autopost - Kanaal",
-      "autopost_refreshtype": "Autopost - Vernieuwingstype",
-      "autopost_refreshinterval": "Autopost - Vernieuwingsinterval",
-      "ranks": "Rangen - Functies",
-      "general_everyonetokenpurchase": "Algemeen - Iedereen kan tokens kopen"
+    "finishedAt": "Klaar om",
+    "messagesScanned": "Berichten gescand",
+    "noScanYet": "Er is nog geen scan uitgevoerd.",
+    "progressDetails": "Details over de voortgang",
+    "reputationFound": "Reputatie gevonden",
+    "start": "Scan starten",
+    "startedAt": "Begonnen bij",
+    "starting": "Het begint...",
+    "status": {
+      "finished": "Scannen voltooid",
+      "running": "Scan bezig"
     }
   },
-  "help": {
-    "title": "Hulp nodig?",
-    "message": "Heb je hulp nodig? Mis je een functie? Heb je feedback? Stuur dan gewoon een privébericht naar de bot. Onderaan de pagina vind je ook een link naar onze supportdiscord."
+  "settings": {
+    "abuseProtection": "Bescherming tegen misbruik",
+    "announcements": "Aankondigingen",
+    "auditLog": "Auditlogboek",
+    "autopost": "Automatisch posten",
+    "channels": "Kanalen",
+    "debug": {
+      "goToSettings": "Ga naar instellingen",
+      "missingPermissions": {
+        "CATEGORY": "Categorie",
+        "CHANNEL": "Kanaal",
+        "GUILD": "Gilde",
+        "title": "Ontbrekende beperkte machtigingen"
+      },
+      "permissions": {
+        "BYPASS_SLOWMODE": "Soms werkt een bevestigingsbericht niet. Denk bijvoorbeeld aan een reactiebevestiging of reputatiebevestiging via embed.",
+        "MANAGE_GUILD_EXPRESSIONS": "Aangepaste reacties kunnen niet worden voorgesteld in het dashboard.",
+        "MANAGE_ROLES": "Reputatietitels kunnen niet worden toegekend.",
+        "MESSAGE_ADD_REACTION": "Het bevestigen van je reputatie via reacties werkt niet.",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "Bevestigingsberichten werken niet in spraakkanalen. Denk bijvoorbeeld aan reactiebevestigingen of reputatiebevestigingen via embed.",
+        "MESSAGE_EXT_EMOJI": "Het bevestigen van je reputatie met emoji's werkt niet.",
+        "MESSAGE_HISTORY": "Het bevestigen van je reputatie via embeds werkt niet. De meeste controles om misbruik te voorkomen zullen mislukken.",
+        "MESSAGE_SEND": "Bevestigingsberichten werken niet. Denk bijvoorbeeld aan reactiebescherming of reputatiebevestiging via embed.",
+        "MESSAGE_SEND_IN_THREADS": "Bevestigingsberichten werken niet in threads. Bijvoorbeeld reactiebescherming of reputatiebevestiging via embed.",
+        "NICKNAME_CHANGE": "Je kunt je bijnaam niet veranderen in het dashboard.",
+        "VIEW_CHANNEL": "Reputatiekanalen zijn niet zichtbaar. Reputatie kan niet via tekst worden gegeven.",
+        "description": "Deze rechten ontbreken voor de bot in het algemeen. Dit kan sommige functies beperken.",
+        "title": "Ontbrekende algemene machtigingen"
+      },
+      "rankProblems": {
+        "CANT_ASSIGN_ROLE": "De bot kan deze rol niet toewijzen omdat deze hoger is dan de hoogste rol van de bot.",
+        "MISSING_ROLE": "De rol voor deze rang ontbreekt.",
+        "title": "Rangproblemen"
+      },
+      "reputationChannelProblems": {
+        "MISSING_CATEGORY": "De categorie ontbreekt.",
+        "MISSING_CHANNEL": "Het kanaal is weg.",
+        "NOT_TEXT_TYPE": "Het kanaal is geen tekstkanaal.",
+        "title": "Problemen met het reputatiekanaal"
+      },
+      "simpleProblems": {
+        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "Het aankondigingskanaal is niet gevonden.",
+        "AUTOPOST_CANNEL_NOT_FOUND": "Het kanaal voor automatisch posten is niet gevonden.",
+        "LOG_CHANNEL_NOT_FOUND": "Logkanaal niet gevonden.",
+        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "Het aankondigingskanaal is niet gedefinieerd.",
+        "NO_AUTOPOST_CHANNEL_DEFINED": "Het kanaal voor automatisch posten is niet ingesteld.",
+        "NO_LOG_CHANNEL_DEFINED": "Logkanaal is niet gedefinieerd.",
+        "NO_REPUTATION_CHANNEL_DEFINED": "Er zijn geen reputatiekanalen of categorieën gedefinieerd.",
+        "NO_THANKWORDS_DEFINED": "Er zijn geen bedankwoorden gedefinieerd.",
+        "SYSTEM_CHANNEL_NOT_DEFINED": "Het systeemkanaal is niet gedefinieerd.",
+        "SYSTEM_CHANNEL_NOT_FOUND": "Het systeemkanaal is niet gevonden.",
+        "title": "Algemene problemen"
+      },
+      "simpleWarnings": {
+        "MAX_MESSAGE_AGE_LOW": "De maximale leeftijd van berichten is best laag ingesteld. Hierdoor kunnen mensen elkaar misschien niet meer bedanken voor oudere berichten.",
+        "title": "Waarschuwingen"
+      }
+    },
+    "general": "Algemeen",
+    "integrationBypass": "Integratie omzeilen",
+    "logChannel": "Logkanaal",
+    "messages": "Berichten",
+    "problems": "Problemen",
+    "profile": "Profiel",
+    "ranks": "Rangen",
+    "reactions": "Reacties",
+    "reputation": "Reputatie",
+    "roles": "Rollen",
+    "scan": "Scannen",
+    "thankwords": "Bedankt!",
+    "title": "Instellingen"
   },
-  "guildSwitcher": {
-    "title": "Server wisselen",
-    "current": "Huidige server",
-    "none": "Geen andere servers gevonden",
-    "add": "Voeg nog een server toe door de instellingen van de server te openen."
+  "setup": {
+    "error": {
+      "forbidden": {
+        "description": "Je hebt geen toestemming om de instellingen van deze server te bekijken. Neem contact op met een serverbeheerder.",
+        "title": "Toegang geweigerd"
+      },
+      "noSession": {
+        "description": "Er is geen actieve serversessie. Ga terug en kies een server.",
+        "title": "Geen verbinding"
+      },
+      "unknown": {
+        "description": "Er is een fout opgetreden bij het laden van de serverinstellingen. Probeer het later nog eens.",
+        "title": "Het laden van de instellingen is mislukt"
+      }
+    },
+    "navigation": {
+      "finish": "Setup afronden",
+      "next": "Volgende",
+      "previous": "Vorige"
+    },
+    "requiredStep": "Deze stap is nodig om verder te gaan.",
+    "stepProgress": "Stap {current} van {total}",
+    "steps": {
+      "announcements": {
+        "description": "Zet in de bot of hij moet laten weten als mensen een nieuwe reputatierang halen.",
+        "title": "Aankondigingen"
+      },
+      "channels": {
+        "description": "Kies welke kanalen en categorieën je wilt toestaan om reputaties te geven. Je moet minstens één kanaal of categorie kiezen.",
+        "required": "Je moet minstens één kanaal of categorie kiezen om verder te gaan (tenzij je de weigeringlijstmodus gebruikt).",
+        "title": "Kanalen en categorieën"
+      },
+      "cooldown": {
+        "description": "Zet een wachttijd in om te voorkomen dat mensen te vaak reputatie geven. Je kunt ook 'eenmalige wachttijd' inschakelen, zodat mensen elkaar maar één keer kunnen bedanken.",
+        "title": "Instellingen voor afkoelperiode"
+      },
+      "finished": {
+        "description": "Je bent nu klaar met de laatste stap van de installatie. We sturen je nu naar de pagina met algemene instellingen, waar je misschien nog meer instellingen vindt die je interessant vindt.",
+        "title": "Installatie klaar"
+      },
+      "language": {
+        "description": "Kies de taal die de bot gaat gebruiken voor berichten en reacties op je server. De taal van de frontend past zich aan je keuze aan.",
+        "title": "Kies je taal"
+      },
+      "mainReaction": {
+        "description": "Kies de emoji die je wilt gebruiken als belangrijkste reactie voor het geven van reputatie.",
+        "title": "Belangrijkste reactie"
+      },
+      "ranks": {
+        "description": "Bepaal welke rollen mensen krijgen als ze een bepaald reputatieniveau halen. Je moet minstens één rang kiezen.",
+        "required": "Je moet minstens één reputatierang definiëren om verder te gaan.",
+        "title": "Reputatie-ranglijsten"
+      },
+      "reputationMode": {
+        "description": "Kies hoe je reputatie op je server berekend en weergegeven moet worden.",
+        "title": "Reputatiemodus"
+      },
+      "reputationTypes": {
+        "description": "Kies welke manieren gebruikers kunnen gebruiken om een beoordeling te geven. Je kunt meerdere opties inschakelen om gebruikers wat flexibiliteit te geven.",
+        "title": "Soorten reputatie"
+      },
+      "roles": {
+        "description": "Je kunt kiezen welke rollen reputatie kunnen geven (donorrollen) en welke rollen reputatie kunnen krijgen (ontvangerrollen).",
+        "title": "Rollen van donor en ontvanger"
+      },
+      "scan": {
+        "description": "Nu je je kanalen hebt geconfigureerd, raden we je aan een scan uit te voeren om de bestaande reputatie uit de geschiedenis van je server te indexeren.",
+        "error": "Het is niet gelukt om de scan te starten. Probeer het later nog eens.",
+        "prompt": {
+          "description": "Een scan doorzoekt de berichtengeschiedenis van je server in de geconfigureerde kanalen en zoekt naar bestaande reputaties. Dit kan even duren, afhankelijk van de grootte van je server.",
+          "title": "Wil je een serverscan starten?"
+        },
+        "start": "Scan starten",
+        "started": {
+          "description": "De scan wordt nu op de achtergrond uitgevoerd. Je kunt de voortgang bekijken op de scanpagina zodra je de installatie hebt voltooid.",
+          "title": "Het scannen is begonnen!"
+        },
+        "starting": "Het begint...",
+        "title": "Serverscan"
+      },
+      "systemChannel": {
+        "description": "Kies een kanaal waar de bot belangrijke systeemberichten en meldingen naartoe stuurt.",
+        "required": "Je moet een systeemkanaal kiezen om verder te gaan met de installatie.",
+        "title": "Systeemkanaal"
+      },
+      "thankwords": {
+        "description": "Voeg woorden of zinnen toe die mensen kunnen gebruiken om een beoordeling te geven. Dit zijn de woorden die de bot herkent.",
+        "recommendation": "We raden je aan om de standaard bedankwoorden voor jouw taal te laden, zodat je snel aan de slag kunt.",
+        "title": "Bedankt!"
+      },
+      "welcome": {
+        "description": "Hey, welkom op de instellingenpagina.\nDeze pagina helpt je met de eerste stappen om de bot in te stellen. Daarna heb je een basisinstelling die helemaal naar jouw smaak is aangepast.\n\nAls je hulp nodig hebt, stuur de bot dan een privébericht en we helpen je zo snel mogelijk. Onderaan de pagina vind je ook een link naar onze supportdiscord.",
+        "title": "Welkom!"
+      }
+    },
+    "title": "Eerste installatie"
   },
-  "integrationBypass": {
-    "description": "Zet bypasses op voor integraties zodat ze reputatie kunnen geven, zelfs als ze niet aan de normale eisen voldoen.",
-    "allowReactions": "Reacties toestaan",
-    "allowAnswer": "Antwoord toestaan",
-    "allowMention": "Vermelding toestaan",
-    "allowFuzzy": "Fuzzy toestaan",
-    "ignoreCooldown": "Negeer afkoelperiode",
-    "ignoreLimit": "Limiet negeren",
-    "allowReactionsDescription": "Maak het mogelijk om een reputatie te geven via reacties",
-    "allowAnswerDescription": "Het toestaan van het geven van een reputatie door het beantwoorden van een bericht",
-    "allowMentionDescription": "Maak het mogelijk om een reputatie te geven door een gebruiker te noemen",
-    "allowFuzzyDescription": "Maak het mogelijk om een reputatie te geven via fuzzy matching",
-    "ignoreCooldownDescription": "Negeer de wachttijd tussen gebruikers",
-    "ignoreLimitDescription": "Negeer eventuele uurlimieten",
-    "add": "Integratie omzeilen toevoegen",
-    "selectIntegration": "Kies een integratie",
-    "noIntegrations": "Er zijn geen integraties meer om bypasses aan toe te voegen.",
-    "deleteConfirm": "Weet je zeker dat je deze integratie-bypass wilt verwijderen?",
-    "premiumRequired": "Integratie omzeilen",
-    "allowDirect": "Direct toestaan",
-    "ignoreContext": "Context negeren",
-    "allowDirectDescription": "Het is oké om een reputatie te geven als een embed wordt overgeslagen omdat er maar één ontvanger kan worden bepaald. Er wordt nooit een embed gestuurd voor een bot.",
-    "ignoreContextDescription": "Contextcontroles negeren"
+  "thankwords": {
+    "add": "Bedankt toevoegen",
+    "alreadyExists": "Dit bedankwoord bestaat al.",
+    "defaults": {
+      "description": "Voeg snel standaard bedankjes toe voor verschillende talen.",
+      "title": "Standaard bedankjes"
+    },
+    "description": "Deze woorden worden gebruikt om te zien wanneer iemand bedankt wordt. Ze worden gezien als reguliere expressies.",
+    "invalidCharacter": "Het bedankwoord heeft een raar teken: {char}",
+    "none": "Geen bedankjes ingesteld.",
+    "placeholder": "Voer thankword in (Regex)"
   },
   "timePresets": {
-    "hour": "1 uur",
     "day": "1 dag",
-    "week": "1 week",
     "fourWeeks": "4 weken",
+    "hour": "1 uur",
+    "week": "1 week",
     "year": "1 jaar"
   },
-  "login": {
-    "title": "Inloggen nodig",
-    "description": "Log even in met Discord om dit paneel te openen.",
-    "button": "Log in met Discord"
+  "token_shop": {
+    "active": "Actief",
+    "adminOnly": "De server is zo ingesteld dat alleen serverbeheerders functies kunnen kopen.",
+    "autoRenewal": "Automatische verlenging",
+    "confirmPurchase": "Weet je zeker dat je deze functie wilt kopen voor {amount} tokens?",
+    "description": "Maak je server nog beter met premium functies door je stemtokens te gebruiken. Functies die je met tokens koopt, blijven gewoon werken zolang je ze automatisch verlengt. Als je een functie koopt die al actief is, krijg je 30 dagen extra tot de verval- of verlengdatum.",
+    "enabledBySubscription": "Beschikbaar via abonnement",
+    "expires": "Verloopt: {date}",
+    "feature": {
+      "additionalemojis": {
+        "description": "Gebruik meer dan één emoji om je mening te geven via reacties.",
+        "name": "Extra emoji's"
+      },
+      "advancedrankings": {
+        "description": "Ontgrendel meer rankingopties.",
+        "name": "Geavanceerde ranglijsten"
+      },
+      "analyzerlog": {
+        "description": "De bewaartermijn voor het analysatorlogboek is verdubbeld.",
+        "name": "Uitgebreid analysatorlogboek"
+      },
+      "autopost": {
+        "description": "Plaats het klassement automatisch op regelmatige tijdstippen op een kanaal.",
+        "name": "Automatisch posten"
+      },
+      "channelblacklist": {
+        "description": "Zorg ervoor dat de bot niet overal actief is, maar alleen in bepaalde kanalen.",
+        "name": "Kanaal weigerenlijst"
+      },
+      "detailedprofile": {
+        "description": "Laat meer info zien over de reputatieprofielen van gebruikers.",
+        "name": "Gedetailleerd profiel"
+      },
+      "integrationbypass": {
+        "description": "Laat andere bots en integraties ook reputatie geven.",
+        "name": "Integratie omzeilen"
+      },
+      "localeoverrides": {
+        "description": "Je kunt botberichten en labels vervangen door je eigen vertalingen. Op dit moment kun je alleen een eigen naam instellen voor reputatie.",
+        "name": "Lokale overschrijvingen"
+      },
+      "logchannel": {
+        "description": "Zet een speciaal logkanaal aan voor alle reputatiewijzigingen.",
+        "name": "Logkanaal"
+      },
+      "profile": {
+        "description": "Pas de naam en profielfoto van de bot aan op je server.",
+        "name": "Botprofiel"
+      },
+      "reputationcategories": {
+        "description": "Ontgrendel alle reputatiecategorieën.",
+        "name": "Onbeperkte reputatiecategorieën"
+      },
+      "reputationchannel": {
+        "description": "Ontgrendel zoveel reputatiekanalen als je wilt.",
+        "name": "Onbeperkt reputatiekanaal"
+      },
+      "reputationlog": {
+        "description": "Bekijk alle pagina's van het reputatielogboek op de server.",
+        "name": "Volledig reputatielogboek"
+      }
+    },
+    "getMoreTokens": "Meer tokens krijgen",
+    "guildTokens": "Gebruik gilde-tokens",
+    "insufficientTokens": "Je hebt niet genoeg tokens.",
+    "nextRenewal": "Volgende verlenging: {date}",
+    "noFeatures": "Op dit moment zijn er geen functies beschikbaar.",
+    "purchase": "Aankoop",
+    "purchaseSuccess": "Functie succesvol gekocht!",
+    "subscribe": "Abonneren",
+    "subscribeSuccess": "Abonnement is nu actief!",
+    "subscriptionActiveNote": "Deze functie is nu beschikbaar als je een actief abonnement hebt.",
+    "title": "Tokenwinkel",
+    "unsubscribe": "Afmelden",
+    "unsubscribeSuccess": "Abonnement uitgeschakeld!",
+    "userTokens": "Gebruik persoonlijke tokens"
+  },
+  "user": {
+    "settings": {
+      "description": "Stel je persoonlijke accountinstellingen en voorkeuren in.",
+      "mails": {
+        "add": {
+          "button": "Toevoegen",
+          "placeholder": "Voeg een nieuw e-mailadres toe (name{'@'}example.com)"
+        },
+        "description": "Beheer de e-mailadressen die aan je account zijn gekoppeld. Je kunt een nieuw adres toevoegen en dit verifiëren via de link die naar je inbox is gestuurd.",
+        "errors": {
+          "ALREADY_REGISTERED": "Dit e-mailadres is al geregistreerd voor iemand anders.",
+          "CODE_EXPIRED": "De verificatiecode is verlopen. Vraag een nieuwe verificatie-e-mail aan.",
+          "INVALID_CODE": "De verificatiecode klopt niet.",
+          "INVALID_FORMAT": "Het e-mailadres klopt niet. Check het nog eens en probeer het opnieuw.",
+          "RATE_LIMIT": "Je doet dat te vaak. Wacht even {time} voordat je nog een e-mailadres toevoegt.",
+          "UNKNOWN": "Er is iets misgegaan. Probeer het later nog eens.",
+          "UNKNOWN_ADDRESS": "We hebben dit e-mailadres niet kunnen vinden. Misschien is het verwijderd.",
+          "WRONG_USER": "Dit e-mailadres is van iemand anders."
+        },
+        "noteDeletion": "Let op: e-mailadressen van Discord of Ko-fi kun je niet verwijderen. Alleen adressen die je zelf hebt toegevoegd, kun je weggooien.",
+        "pending": "In afwachting van verificatie",
+        "source": {
+          "discord": "Discord",
+          "kofi": "Ko-fi",
+          "user": "Gebruiker"
+        },
+        "title": "E-mailadressen",
+        "verified": "Geverifieerd",
+        "verify": {
+          "error": "Het lukte niet om je e-mail te checken. Probeer het nog een keer of vraag een nieuwe verificatielink aan.",
+          "success": "Je e-mailadres is nu goed geverifieerd."
+        }
+      },
+      "title": "Gebruikersinstellingen",
+      "voteGuild": {
+        "description": "Kies welke gilde tokens moet krijgen als je op de bot stemt. Dit geldt alleen voor toekomstige stemmen.",
+        "label": "Stem op het gilde",
+        "none": "Geen specifieke gilde (Persoonlijk)"
+      }
+    },
+    "supporter": {
+      "description": "Bekijk je actieve Ko-fi-aankopen en koppel ze aan een gilde om supporterfuncties te activeren.",
+      "errors": {
+        "assign": "Het lukte niet om de aankoop toe te wijzen.",
+        "load": "Het lukt niet om je aankopen te laden. Probeer het later nog eens.",
+        "unassign": "Het lukt niet om de aankoop los te koppelen."
+      },
+      "item": {
+        "assign": "Toewijzen",
+        "assignedTo": "Toegewezen aan: {guild}",
+        "expires": "Verloopt: {date}",
+        "lifetime": "Levensduur",
+        "subscription": "Abonnement",
+        "unassign": "Toewijzing ongedaan maken"
+      },
+      "kofiLink": "Koop op Ko-fi",
+      "missingPurchasesNotice": "Als je aankopen hier niet te zien zijn, heb je misschien een ander e-mailadres gebruikt voor Ko-fi dan voor je Discord-account. Je kunt extra e-mailadressen koppelen in je {link}.",
+      "results": {
+        "ALREADY_SUBSCRIBED": "Je hebt al een actief abonnement dat aan een gilde is gekoppeld.",
+        "SUBSCRIPTION_EXPIRED": "Dit abonnement is verlopen en kan niet worden toegewezen.",
+        "SUCCESS": "Succes",
+        "UNKOWN": "Er is een onbekende fout opgetreden bij het abonneren. Probeer het later nog eens."
+      },
+      "sections": {
+        "lifetime": "Aankopen voor het leven",
+        "lifetime_desc": "Aankopen voor het leven kunnen aan een gilde worden toegewezen om functies permanent te ontgrendelen.",
+        "subscriptions": "Actieve abonnementen",
+        "subscriptions_desc": "Abonnementen worden automatisch verlengd en je kunt ze toewijzen aan een gilde dat je zelf kiest."
+      },
+      "settingsLink": "Gebruikersinstellingen",
+      "title": "Supporter"
+    }
   },
   "voting": {
-    "title": "Stemmen",
-    "description": "Info over je huidige stemtokens en hoe het zit met je botlijststemmen.",
-    "tokens": {
-      "title": "Tokens",
-      "description": "Je huidige stemtokens. Je kunt ze gebruiken voor allerlei beloningen.",
-      "label": "Huidige tokens",
-      "shop": "Bezoek de Token Shop"
-    },
     "botlists": {
-      "title": "Botlijsten",
-      "description": "Stem op de bot op verschillende botlijsten om tokens te verdienen en je streak te behouden.",
-      "name": "Botlijst",
-      "streak": "Streak",
-      "lastVote": "Laatste stemming",
       "action": "Actie",
-      "vote": "Stem",
+      "days": "dagen",
+      "description": "Stem op de bot op verschillende botlijsten om tokens te verdienen en je streak te behouden.",
+      "lastVote": "Laatste stemming",
+      "name": "Botlijst",
       "never": "Nooit",
-      "days": "dagen"
+      "streak": "Streak",
+      "title": "Botlijsten",
+      "vote": "Stem"
     },
+    "description": "Info over je huidige stemtokens en hoe het zit met je botlijststemmen.",
     "log": {
-      "title": "Stemlogboek",
-      "description": "Een overzicht van je stemtoken-transacties.",
       "date": "Datum",
+      "description": "Een overzicht van je stemtoken-transacties.",
       "guild": "Gilde",
-      "tokens": "Tokens",
+      "personal": "Persoonlijk",
       "reason": {
-        "label": "Reden",
+        "BONUS": "Dagelijkse bonus",
+        "BONUS_DESCRIPTION": "Je hebt extra tokens gekregen omdat je in de afgelopen 6 uur op alle botlijsten hebt gestemd.",
         "STANDARD": "Stem",
         "STANDARD_DESCRIPTION": "Je hebt een token gekregen om te stemmen op een botlijst.",
         "STREAK": "Stemreeks",
         "STREAK_DESCRIPTION": "Je hebt een extra muntje gekregen omdat je een streak hebt.",
-        "BONUS": "Dagelijkse bonus",
-        "BONUS_DESCRIPTION": "Je hebt extra tokens gekregen omdat je in de afgelopen 6 uur op alle botlijsten hebt gestemd.",
         "TRANSFER": "Overstappen naar Guild",
         "TRANSFER_DESCRIPTION": "Je hebt tokens naar een gilde gestuurd om hun reputatiesysteem te steunen.",
         "USE": "Aankoop",
         "USE_DESCRIPTION": "Je hebt tokens gebruikt om een beloning of dienst te kopen.",
+        "label": "Reden",
         "unknown": "Onbekend",
         "unknown_DESCRIPTION": "We weten niet waarom deze transactie is gedaan."
       },
-      "unknownGuild": "Onbekende gilde",
-      "personal": "Persoonlijk"
+      "title": "Stemlogboek",
+      "tokens": "Tokens",
+      "unknownGuild": "Onbekende gilde"
     },
     "noteDefaultGuild": "Tip: Je kunt een standaardgilde instellen om automatisch tokens te ontvangen in je",
     "noteDefaultGuildLink": "Gebruikersinstellingen",
+    "title": "Stemmen",
+    "tokens": {
+      "description": "Je huidige stemtokens. Je kunt ze gebruiken voor allerlei beloningen.",
+      "label": "Huidige tokens",
+      "shop": "Bezoek de Token Shop",
+      "title": "Tokens"
+    },
     "transfer": {
-      "title": "Tokens naar een gilde overzetten",
+      "amount": "Bedrag",
       "description": "Verplaats tokens van je persoonlijke saldo naar een van je gilden.",
       "guild": "Gilde",
-      "selectGuild": "Kies een gilde",
-      "amount": "Bedrag",
       "max": "Max: {max}",
-      "submit": "Overdracht"
-    }
-  },
-  "user": {
-    "settings": {
-      "title": "Gebruikersinstellingen",
-      "description": "Stel je persoonlijke accountinstellingen en voorkeuren in.",
-      "voteGuild": {
-        "label": "Stem op het gilde",
-        "description": "Kies welke gilde tokens moet krijgen als je op de bot stemt. Dit geldt alleen voor toekomstige stemmen.",
-        "none": "Geen specifieke gilde (Persoonlijk)"
-      },
-      "mails": {
-        "title": "E-mailadressen",
-        "description": "Beheer de e-mailadressen die aan je account zijn gekoppeld. Je kunt een nieuw adres toevoegen en dit verifiëren via de link die naar je inbox is gestuurd.",
-        "verified": "Geverifieerd",
-        "pending": "In afwachting van verificatie",
-        "noteDeletion": "Let op: e-mailadressen van Discord of Ko-fi kun je niet verwijderen. Alleen adressen die je zelf hebt toegevoegd, kun je weggooien.",
-        "source": {
-          "user": "Gebruiker",
-          "discord": "Discord",
-          "kofi": "Ko-fi"
-        },
-        "add": {
-          "placeholder": "Voeg een nieuw e-mailadres toe (name{'@'}example.com)",
-          "button": "Toevoegen"
-        },
-        "verify": {
-          "success": "Je e-mailadres is nu goed geverifieerd.",
-          "error": "Het lukte niet om je e-mail te checken. Probeer het nog een keer of vraag een nieuwe verificatielink aan."
-        },
-        "errors": {
-          "ALREADY_REGISTERED": "Dit e-mailadres is al geregistreerd voor iemand anders.",
-          "INVALID_FORMAT": "Het e-mailadres klopt niet. Check het nog eens en probeer het opnieuw.",
-          "WRONG_USER": "Dit e-mailadres is van iemand anders.",
-          "INVALID_CODE": "De verificatiecode klopt niet.",
-          "CODE_EXPIRED": "De verificatiecode is verlopen. Vraag een nieuwe verificatie-e-mail aan.",
-          "UNKNOWN_ADDRESS": "We hebben dit e-mailadres niet kunnen vinden. Misschien is het verwijderd.",
-          "UNKNOWN": "Er is iets misgegaan. Probeer het later nog eens.",
-          "RATE_LIMIT": "Je doet dat te vaak. Wacht even {time} voordat je nog een e-mailadres toevoegt."
-        }
-      }
-    },
-    "supporter": {
-      "title": "Supporter",
-      "description": "Bekijk je actieve Ko-fi-aankopen en koppel ze aan een gilde om supporterfuncties te activeren.",
-      "kofiLink": "Koop op Ko-fi",
-      "sections": {
-        "subscriptions": "Actieve abonnementen",
-        "subscriptions_desc": "Abonnementen worden automatisch verlengd en je kunt ze toewijzen aan een gilde dat je zelf kiest.",
-        "lifetime": "Aankopen voor het leven",
-        "lifetime_desc": "Aankopen voor het leven kunnen aan een gilde worden toegewezen om functies permanent te ontgrendelen."
-      },
-      "item": {
-        "subscription": "Abonnement",
-        "lifetime": "Levensduur",
-        "expires": "Verloopt: {date}",
-        "assignedTo": "Toegewezen aan: {guild}",
-        "assign": "Toewijzen",
-        "unassign": "Toewijzing ongedaan maken"
-      },
-      "errors": {
-        "load": "Het lukt niet om je aankopen te laden. Probeer het later nog eens.",
-        "assign": "Het lukte niet om de aankoop toe te wijzen.",
-        "unassign": "Het lukt niet om de aankoop los te koppelen."
-      },
-      "results": {
-        "ALREADY_SUBSCRIBED": "Je hebt al een actief abonnement dat aan een gilde is gekoppeld.",
-        "SUBSCRIPTION_EXPIRED": "Dit abonnement is verlopen en kan niet worden toegewezen.",
-        "UNKOWN": "Er is een onbekende fout opgetreden bij het abonneren. Probeer het later nog eens.",
-        "SUCCESS": "Succes"
-      },
-      "missingPurchasesNotice": "Als je aankopen hier niet te zien zijn, heb je misschien een ander e-mailadres gebruikt voor Ko-fi dan voor je Discord-account. Je kunt extra e-mailadressen koppelen in je {link}.",
-      "settingsLink": "Gebruikersinstellingen"
-    }
-  },
-  "dashboard": {
-    "title": "Dashboard",
-    "totalReputation": "Totale reputatie",
-    "weekReputation": "Wekelijkse reputatie",
-    "todayReputation": "De reputatie van vandaag",
-    "topChannel": "Topkanaal",
-    "topUsers": "Topgebruikers",
-    "rank": "Rang",
-    "user": "Gebruiker",
-    "reputation": "Reputatie"
-  },
-  "token_shop": {
-    "title": "Tokenwinkel",
-    "description": "Maak je server nog beter met premium functies door je stemtokens te gebruiken. Functies die je met tokens koopt, blijven gewoon werken zolang je ze automatisch verlengt. Als je een functie koopt die al actief is, krijg je 30 dagen extra tot de verval- of verlengdatum.",
-    "guildTokens": "Gebruik gilde-tokens",
-    "userTokens": "Gebruik persoonlijke tokens",
-    "noFeatures": "Op dit moment zijn er geen functies beschikbaar.",
-    "active": "Actief",
-    "expires": "Verloopt: {date}",
-    "nextRenewal": "Volgende verlenging: {date}",
-    "autoRenewal": "Automatische verlenging",
-    "purchase": "Aankoop",
-    "subscribe": "Abonneren",
-    "unsubscribe": "Afmelden",
-    "purchaseSuccess": "Functie succesvol gekocht!",
-    "subscribeSuccess": "Abonnement is nu actief!",
-    "unsubscribeSuccess": "Abonnement uitgeschakeld!",
-    "enabledBySubscription": "Beschikbaar via abonnement",
-    "subscriptionActiveNote": "Deze functie is nu beschikbaar als je een actief abonnement hebt.",
-    "confirmPurchase": "Weet je zeker dat je deze functie wilt kopen voor {amount} tokens?",
-    "insufficientTokens": "Je hebt niet genoeg tokens.",
-    "getMoreTokens": "Meer tokens krijgen",
-    "feature": {
-      "reputationlog": {
-        "name": "Volledig reputatielogboek",
-        "description": "Bekijk alle pagina's van het reputatielogboek op de server."
-      },
-      "analyzerlog": {
-        "name": "Uitgebreid analysatorlogboek",
-        "description": "De bewaartermijn voor het analysatorlogboek is verdubbeld."
-      },
-      "reputationcategories": {
-        "name": "Onbeperkte reputatiecategorieën",
-        "description": "Ontgrendel alle reputatiecategorieën."
-      },
-      "reputationchannel": {
-        "name": "Onbeperkt reputatiekanaal",
-        "description": "Ontgrendel zoveel reputatiekanalen als je wilt."
-      },
-      "channelblacklist": {
-        "name": "Kanaal weigerenlijst",
-        "description": "Zorg ervoor dat de bot niet overal actief is, maar alleen in bepaalde kanalen."
-      },
-      "localeoverrides": {
-        "name": "Lokale overschrijvingen",
-        "description": "Je kunt botberichten en labels vervangen door je eigen vertalingen. Op dit moment kun je alleen een eigen naam instellen voor reputatie."
-      },
-      "autopost": {
-        "name": "Automatisch posten",
-        "description": "Plaats het klassement automatisch op regelmatige tijdstippen op een kanaal."
-      },
-      "advancedrankings": {
-        "name": "Geavanceerde ranglijsten",
-        "description": "Ontgrendel meer rankingopties."
-      },
-      "detailedprofile": {
-        "name": "Gedetailleerd profiel",
-        "description": "Laat meer info zien over de reputatieprofielen van gebruikers."
-      },
-      "logchannel": {
-        "name": "Logkanaal",
-        "description": "Zet een speciaal logkanaal aan voor alle reputatiewijzigingen."
-      },
-      "additionalemojis": {
-        "name": "Extra emoji's",
-        "description": "Gebruik meer dan één emoji om je mening te geven via reacties."
-      },
-      "profile": {
-        "name": "Botprofiel",
-        "description": "Pas de naam en profielfoto van de bot aan op je server."
-      },
-      "integrationbypass": {
-        "name": "Integratie omzeilen",
-        "description": "Laat andere bots en integraties ook reputatie geven."
-      }
-    },
-    "adminOnly": "De server is zo ingesteld dat alleen serverbeheerders functies kunnen kopen."
-  },
-  "metrics": {
-    "title": "Statistieken",
-    "description": "Ben je nieuwsgierig naar het verkeer en het gebruik van de bot? Wij ook! Daarom hebben we op deze pagina een paar handige grafieken gemaakt. Deze laten bijna realtime gegevens zien, rechtstreeks van de bot.",
-    "offset": "Compensatie",
-    "count": "Graaf",
-    "units": {
-      "hour": "Uur",
-      "week": "Week",
-      "month": "Maand",
-      "year": "Jaar"
-    },
-    "sections": {
-      "reputation": "Reputatie",
-      "commands": "Commando's",
-      "messages": "Berichten",
-      "users": "Gebruikers",
-      "service": "Service"
-    },
-    "charts": {
-      "reputationCount": "Reputatie telt",
-      "reputationTotal": "Totale reputatie",
-      "reputationDow": "Reputatie per dag van de week",
-      "reputationTypeTotal": "Totale reputatie per type",
-      "reputationTypeCount": "Reputatie per type",
-      "reputationChanges": "Veranderingen in reputatie",
-      "commandsCount": "Aantal commando's",
-      "commandsUsage": "Gebruik van commando's",
-      "messagesCount": "Aantal berichten",
-      "messagesTotal": "Totaal aantal berichten",
-      "usersActiveWeek": "Actieve gebruikers (wekelijks)",
-      "usersActiveMonth": "Actieve gebruikers (maandelijks)",
-      "serviceCountHour": "Gebruik van de dienst (per uur)",
-      "serviceCountWeek": "Gebruik van de dienst (wekelijks)"
-    },
-    "users": {
-      "total": "Totaal",
-      "donors": "Donateurs",
-      "receivers": "Ontvangers"
-    },
-    "validation": {
-      "offsetMin": "De offset moet minimaal 0 zijn.",
-      "offsetMax": "De offset mag maximaal zijn{max}",
-      "countMin": "Het aantal moet minimaal 2 zijn.",
-      "countMax": "Het aantal moet maximaal zijn{max}"
-    }
-  },
-  "scan": {
-    "description": "Scan je gilde op reputatiepunten die zijn toegekend voordat de bot werd toegevoegd of in kanalen die niet werden bijgehouden. Hiermee worden alle berichten in de geconfigureerde reputatiekanalen en -categorieën gescand.",
-    "start": "Scan starten",
-    "starting": "Het begint...",
-    "startedAt": "Begonnen bij",
-    "finishedAt": "Klaar om",
-    "messagesScanned": "Berichten gescand",
-    "reputationFound": "Reputatie gevonden",
-    "noScanYet": "Er is nog geen scan uitgevoerd.",
-    "status": {
-      "running": "Scan bezig",
-      "finished": "Scannen voltooid"
-    },
-    "progressDetails": "Details over de voortgang",
-    "error": {
-      "fetchStatus": "Het ophalen van de scanstatus is mislukt. Probeer het later nog eens.",
-      "startFailed": "Het scannen is mislukt. Probeer het later nog eens.",
-      "alreadyRunning": "Er loopt al een scan voor dit gilde."
+      "selectGuild": "Kies een gilde",
+      "submit": "Overdracht",
+      "title": "Tokens naar een gilde overzetten"
     }
   }
 }

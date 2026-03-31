@@ -16,12 +16,15 @@ import net.dv8tion.jda.api.events.emoji.EmojiRemovedEvent;
 import net.dv8tion.jda.api.events.emoji.update.EmojiUpdateNameEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleAddEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleRemoveEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateIconEvent;
 import net.dv8tion.jda.api.events.guild.update.GuildUpdateNameEvent;
 import net.dv8tion.jda.api.events.role.RoleCreateEvent;
 import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
 import net.dv8tion.jda.api.events.role.update.RoleUpdateColorsEvent;
 import net.dv8tion.jda.api.events.role.update.RoleUpdateNameEvent;
+import net.dv8tion.jda.api.events.role.update.RoleUpdatePermissionsEvent;
 import net.dv8tion.jda.api.events.role.update.RoleUpdatePositionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -60,6 +63,21 @@ public class GuildModificationService extends ListenerAdapter {
 
     @Override
     public void onRoleUpdatePosition(@NotNull RoleUpdatePositionEvent event) {
+        mark(event.getGuild());
+    }
+
+    @Override
+    public void onRoleUpdatePermissions(@NonNull RoleUpdatePermissionsEvent event) {
+        mark(event.getGuild());
+    }
+
+    @Override
+    public void onGuildMemberRoleAdd(@NonNull GuildMemberRoleAddEvent event) {
+        mark(event.getGuild());
+    }
+
+    @Override
+    public void onGuildMemberRoleRemove(@NonNull GuildMemberRoleRemoveEvent event) {
         mark(event.getGuild());
     }
 

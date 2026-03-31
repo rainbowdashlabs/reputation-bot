@@ -1,399 +1,27 @@
 {
-  "common": {
-    "save": "Spara",
-    "cancel": "Avbryt",
-    "delete": "Radera",
-    "edit": "Redigera",
-    "change": "Förändring",
-    "clear": "Tydligt",
-    "confirm": "Bekräfta",
-    "loading": "Laddar...",
-    "error": {
-      "outOfBounds": "Värdet måste ligga mellan {min} och {max}. Korrigeras till närmaste giltiga värde."
-    },
-    "noData": "Inga poster hittades.",
-    "previous": "Föregående",
-    "next": "Nästa",
-    "pageOf": "Sida {current} av {total}"
-  },
-  "navigation": {
-    "settings": "Inställningar",
-    "presets": "Förinställningar",
-    "setup": "Inställningar",
-    "logout": "Logga ut",
-    "dashboard": "Instrumentpanel",
-    "user_settings": "Användarinställningar",
-    "voting": "Omröstning",
-    "token_shop": "Tokenbutik",
-    "supporter": "Supporter",
-    "tos": "Användarvillkor",
-    "privacy": "Sekretess",
-    "faq": "Vanliga frågor",
-    "metrics": "Mätvärden"
-  },
-  "presets": {
-    "title": "Förinställningar",
-    "description": "Snabba konfigurationsinställningar som hjälper dig att komma igång med vanliga inställningar.",
-    "apply": "Ansök",
-    "applying": "Ansöker...",
-    "simpleReputation": {
-      "title": "Enkelt rykte-system",
-      "description": "Jag vill ha ett enkelt rykte-system där användare endast kan ge rykte genom kommandon, utan någon komplex kontextuppföljning.",
-      "settings": "Denna förinställning inaktiverar alla typer av rykte utom kommandon och stänger av spårning av givare och mottagare."
-    },
-    "thankOnce": {
-      "title": "Tack bara en gång",
-      "description": "Jag vill att användarna ska kunna tacka varandra endast en gång, för att förhindra upprepade omdömen mellan samma användare.",
-      "settings": "Denna förinställning ställer in nedkylningstiden endast en gång och ändrar nedkylningsriktningen till enkelriktad."
-    },
-    "noAbuse": {
-      "title": "Inget skydd mot missbruk",
-      "description": "Jag vill inaktivera kontextbaserat missbruksskydd och låta användare ge omdömen mer fritt utan att spåra deras interaktionshistorik.",
-      "settings": "Denna förinställning inaktiverar både givar- och mottagarkontextspårning."
-    },
-    "default": {
-      "title": "Standardkonfiguration",
-      "description": "Jag vill ha ett balanserat rykte-system med rimliga standardinställningar som fungerar bra för de flesta servrar.",
-      "settings": "Denna förinställning ställer in en 30-minuters dubbelriktad nedkylningsperiod, aktiverar alla rykte-lägen utom kommandon, aktiverar ryktebekräftelse och aktiverar kontextkontroller för givare och mottagare."
-    },
-    "applied": "Tillämpad"
-  },
-  "settings": {
-    "title": "Inställningar",
-    "general": "Allmänt",
-    "reputation": "Rykte",
-    "messages": "Meddelanden",
-    "profile": "Profil",
-    "ranks": "Rangordningar",
-    "channels": "Kanaler",
-    "roles": "Roller",
-    "thankwords": "Tackord",
-    "abuseProtection": "Skydd mot missbruk",
-    "announcements": "Meddelanden",
-    "autopost": "Autopost",
-    "logChannel": "Loggkanal",
-    "reactions": "Reaktioner",
-    "auditLog": "Revisionslogg",
-    "integrationBypass": "Integrationsförbikoppling",
-    "problems": "Problem",
-    "debug": {
-      "permissions": {
-        "title": "Saknade globala behörigheter",
-        "description": "Dessa behörigheter saknas för boten globalt. Detta kan begränsa vissa funktioner.",
-        "MANAGE_ROLES": "Reputationsroller kan inte tilldelas.",
-        "NICKNAME_CHANGE": "Smeknamnet kan inte ändras i instrumentpanelen.",
-        "MANAGE_GUILD_EXPRESSIONS": "Anpassade reaktioner kan inte föreslås i instrumentpanelen.",
-        "VIEW_CHANNEL": "Reputationskanaler kan inte ses. Reputation kan inte ges via någon textbaserad metod.",
-        "MESSAGE_HISTORY": "Bekräftelse av rykte via inbäddningar fungerar inte. De flesta kontroller för skydd mot missbruk kommer att misslyckas.",
-        "MESSAGE_ADD_REACTION": "Bekräftelse av rykte via reaktioner fungerar inte.",
-        "MESSAGE_SEND": "Inget bekräftelsemeddelande fungerar. Till exempel reaktionsbekräftelse eller ryktebekräftelse via inbäddning.",
-        "MESSAGE_SEND_IN_THREADS": "Bekräftelsemeddelanden fungerar inte i trådar. Till exempel reaktionsbekräftelse eller ryktebekräftelse via inbäddning.",
-        "MESSAGE_EXT_EMOJI": "Bekräftelse av rykte via emojis fungerar inte.",
-        "BYPASS_SLOWMODE": "Ibland fungerar inte bekräftelsemeddelanden. Till exempel reaktionsbekräftelse eller ryktebekräftelse via inbäddning.",
-        "MESSAGE_ATTACH_VOICE_MESSAGE": "Bekräftelsemeddelanden fungerar inte i röstkanaler. Till exempel reaktionsbekräftelse eller ryktebekräftelse via inbäddning."
-      },
-      "simpleProblems": {
-        "title": "Allmänna problem",
-        "SYSTEM_CHANNEL_NOT_DEFINED": "Systemkanalen är inte definierad.",
-        "SYSTEM_CHANNEL_NOT_FOUND": "Systemkanalen hittades inte.",
-        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "Meddelandekanalen är inte definierad.",
-        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "Meddelandekanalen hittades inte.",
-        "NO_AUTOPOST_CHANNEL_DEFINED": "Autopost-kanalen är inte definierad.",
-        "AUTOPOST_CANNEL_NOT_FOUND": "Autopost-kanalen hittades inte.",
-        "NO_LOG_CHANNEL_DEFINED": "Loggkanalen är inte definierad.",
-        "LOG_CHANNEL_NOT_FOUND": "Loggkanalen hittades inte.",
-        "NO_THANKWORDS_DEFINED": "Inga tackord är definierade.",
-        "NO_REPUTATION_CHANNEL_DEFINED": "Inga ryktekanaler eller kategorier är definierade."
-      },
-      "missingPermissions": {
-        "title": "Saknade behörigheter inom ramen för tillämpningsområdet",
-        "GUILD": "Gille",
-        "CHANNEL": "Kanal",
-        "CATEGORY": "Kategori"
-      },
-      "rankProblems": {
-        "title": "Rankningsproblem",
-        "CANT_ASSIGN_ROLE": "Boten kan inte tilldela denna roll eftersom den ligger över botens högsta roll.",
-        "MISSING_ROLE": "Rollen för denna rang saknas."
-      },
-      "reputationChannelProblems": {
-        "title": "Problem med rykteskanalen",
-        "MISSING_CHANNEL": "Kanalen saknas.",
-        "MISSING_CATEGORY": "Kategorin saknas.",
-        "NOT_TEXT_TYPE": "Kanalen är inte en textkanal."
-      },
-      "simpleWarnings": {
-        "title": "Varningar",
-        "MAX_MESSAGE_AGE_LOW": "Den maximala åldern för meddelanden är inställd på en mycket låg nivå. Detta kan hindra användare från att tacka varandra för äldre meddelanden."
-      },
-      "goToSettings": "Gå till inställningar"
-    },
-    "scan": "Skanna"
-  },
-  "locale": {
-    "selectLanguage": "Välj språk"
-  },
-  "error": {
-    "noToken": {
-      "title": "Ingen session hittades",
-      "message": "Du har inte ett giltigt sessionstoken.",
-      "instruction": "Skapa en ny session för att komma åt den här applikationen."
-    },
-    "notice": {
-      "workingOnIt": "Vi har fått kännedom om problemet och arbetar på att lösa det."
-    },
-    "expired": {
-      "title": "Sessionen har gått ut",
-      "message": "Din session har gått ut eller är ogiltig.",
-      "instruction": "Öppna en ny session från Discord-servern för att fortsätta."
-    }
-  },
-  "premiumFeature": {
-    "title": "Supporterfunktion",
-    "message": "{name} är reserverad för supportrar. Bli supporter för att kunna använda den.",
-    "requiredTierSingular": "Krävd supporternivå:",
-    "requiredTierPlural": "En av följande supporternivåer krävs:",
-    "tokenShopHint": "Du kan också låsa upp den här funktionen med tokens i",
-    "tokenShopLink": "Tokenbutik",
-    "kofiHint": "eller stöd oss på",
-    "kofiLink": "Ko-fi"
-  },
-  "profile": {
-    "description": "Anpassa hur boten visas och beter sig på din server.",
-    "reset": "Återställ",
-    "premiumRequired": "Profilanpassning",
-    "nickname": {
-      "label": "Bot-smeknamn",
-      "placeholder": "Ange botens smeknamn",
-      "description": "Ange ett eget smeknamn för boten på denna server.",
-      "reset": "Återställ smeknamn till standard"
-    },
-    "profilePicture": {
-      "label": "Profilbild",
-      "uploadButton": "Ladda upp bild",
-      "uploading": "Laddar upp...",
-      "description": "Ladda upp en anpassad profilbild för boten (max 2 MB, 512 x 512 pixlar)",
-      "reset": "Återställ profilbilden till standard"
-    },
-    "reputationName": {
-      "label": "Rykte Namn",
-      "placeholder": "Ange ett eget namn för rykte (t.ex. \"Poäng\", \"Karma\")",
-      "description": "Anpassa namnet som används för rykte på denna server.",
-      "reset": "Återställ rykte till standardnamn"
-    },
-    "tosNote": "Allt som bryter mot Discords användarvillkor eller statlig lag är förbjudet och kan leda till att denna funktion blockeras för servern."
-  },
-  "general": {
-    "description": "Konfigurera botens grundinställningar för denna server.",
-    "language": {
-      "label": "Bot-språk",
-      "selectPlaceholder": "Välj språk",
-      "description": "Välj vilket språk boten ska använda för meddelanden och svar på denna server."
-    },
-    "systemChannel": {
-      "label": "Systemkanal",
-      "selectPlaceholder": "Välj en kanal",
-      "note": "Obs: Denna kanal ska ställas in och ska vara en intern kanal. Den kommer att innehålla viktiga meddelanden om botens tjänst och meddelanden från utvecklarna."
-    },
-    "roleSelect": {
-      "searchPlaceholder": "Sök roller...",
-      "noRolesFound": "Inga roller hittades"
-    },
-    "ranks": {
-      "description": "Konfigurera reputationsrankningarna och deras tillhörande roller.",
-      "stackRoles": {
-        "label": "Stackroller",
-        "description": "Om denna funktion är aktiverad tilldelas alla tillämpliga rangordningar istället för endast den högsta rangordningen."
-      },
-      "addRank": "Lägg till ny rang",
-      "reputationRequired": "Krävd rykte",
-      "roleAlreadyAdded": "Denna roll har redan en rang.",
-      "reputationAlreadyUsed": "Detta ryktevärde används redan av en annan rang.",
-      "noRanks": "Inga rankningar har konfigurerats ännu.",
-      "reputationPlaceholder": "t.ex. 100",
-      "refresh": {
-        "button": "Uppdatera rankningar",
-        "refreshing": "Uppfriskande...",
-        "alreadyRunning": "Uppdateringen pågår redan",
-        "success": "Rankningsuppdateringen startade utan problem",
-        "failed": "Misslyckades med att starta rankningsuppdatering"
-      },
-      "selectionNote": "Endast roller som inte hanteras av en integration och som ligger under botens högsta roll kan väljas."
-    },
-    "reputation": {
-      "description": "Konfigurera hur omdömet beräknas och vilka funktioner som är aktiverade.",
-      "mode": {
-        "label": "Ryktesläge",
-        "description": "Välj hur omdömet ska beräknas och visas.",
-        "modes": {
-          "TOTAL": "Total anseende",
-          "ROLLING_WEEK": "Rullningsvecka",
-          "ROLLING_MONTH": "Rullande månad",
-          "WEEK": "Denna vecka",
-          "MONTH": "Denna månad"
-        },
-        "descriptions": {
-          "TOTAL": "Använd den totala reputationen som en användare någonsin har fått.",
-          "ROLLING_WEEK": "Använd ryktet som erhållits under de senaste 7 dagarna.",
-          "ROLLING_MONTH": "Använd ryktet som erhållits under de senaste 30 dagarna.",
-          "WEEK": "Använd det rykte som erhållits sedan början av den aktuella veckan.",
-          "MONTH": "Använd det rykte som erhållits sedan början av innevarande månad."
-        }
-      },
-      "resetDate": {
-        "label": "Återställ datum",
-        "description": "Datum då omdömen återställs. Ange ett datum i framtiden för att schemalägga en återställning.",
-        "clear": "Rensa återställningsdatum"
-      },
-      "types": {
-        "reaction": {
-          "label": "Reaktionsrykte",
-          "description": "Ge rykte när en specifik reaktion läggs till ett meddelande.",
-          "confirmation": {
-            "label": "Reaktionsbekräftelse",
-            "description": "Skicka ett bekräftelsemeddelande när omdöme ges via reaktion."
-          }
-        },
-        "answer": {
-          "label": "Svar Ryktbarhet",
-          "description": "Ge rykte när en användares meddelande tackas i ett svar."
-        },
-        "mention": {
-          "label": "Omnämnande Ryktbarhet",
-          "description": "Ge rykte när en användare nämns tillsammans med ett tackord."
-        },
-        "fuzzy": {
-          "label": "Fuzzy-matchning",
-          "description": "Ge rykte genom att matcha ord runt ordet \"tack\" med användarnamn som finns i kanalen."
-        },
-        "embed": {
-          "label": "Bädda in rykte",
-          "description": "Skicka en inbäddad lista över användare som var med i den senaste konversationen om inget mål kan fastställas."
-        },
-        "direct": {
-          "label": "Direkt inbäddning av rykte",
-          "description": "Ge automatiskt rykte när endast en användare skulle ingå i inbäddningen."
-        },
-        "command": {
-          "label": "Kommandots rykte",
-          "description": "Ge rykte via kommandot /reputation.",
-          "ephemeral": {
-            "label": "Flyktig respons",
-            "description": "Skicka svaret dolt till andra användare när du ger omdöme via kommando."
-          }
-        }
-      }
-    },
-    "roles": {
-      "description": "Konfigurera vilka roller som får ge och ta emot omdömen.",
-      "donor": {
-        "label": "Donatorernas roller",
-        "description": "Om denna funktion är aktiverad kan endast användare med minst en av dessa roller ge omdömen."
-      },
-      "receiver": {
-        "label": "Mottagarens roller",
-        "description": "Om denna funktion är aktiverad kan endast användare med minst en av dessa roller få rykte."
-      },
-      "list": {
-        "label": "Utvalda roller",
-        "description": "Välj vilka roller som ska krävas."
-      },
-      "denyDonor": {
-        "label": "Neka donatorroller",
-        "description": "Om denna funktion är aktiverad kan användare med någon av dessa roller inte ge omdömen."
-      },
-      "denyReceiver": {
-        "label": "Neka mottagarroller",
-        "description": "Om denna funktion är aktiverad kan användare med någon av dessa roller inte få rykte."
-      }
-    },
-    "channels": {
-      "description": "Konfigurera var boten ska vara aktiv och var den inte ska vara aktiv.",
-      "listType": {
-        "label": "Listtyp",
-        "description": "Välj om de valda kanalerna och kategorierna ska tillåtas eller nekas.",
-        "allow": "Tillåt lista",
-        "deny": "Spärrlista",
-        "premiumRequired": "Spärrlista"
-      },
-      "list": {
-        "label": "Kanaler och kategorier",
-        "description": "Välj kanaler och kategorier som ska ingå i listan.",
-        "channels": "Kanaler",
-        "categories": "Kategorier",
-        "permissionsNote": "Endast kanaler där boten har läs- och skrivbehörighet visas."
-      },
-      "premium": {
-        "channelLimitWarning": "Att välja fler än {limit} kanaler är reserverat för supportrar. Bli supporter för att kunna använda det.",
-        "categoryLimitWarning": "Att välja fler än {limit} kategorier är reserverat för supportrar. Bli supporter för att kunna använda det."
-      }
-    },
-    "everyoneTokenPurchase": {
-      "label": "Alla Token-köp",
-      "description": "Tillåt alla användare att köpa premiumfunktioner med sina tokens. Om funktionen är inaktiverad kan endast serveradministratörer köpa funktioner."
-    }
-  },
-  "reactions": {
-    "title": "Reaktioner",
-    "description": "Konfigurera de emojis som används för att ge omdömen.",
-    "main": {
-      "label": "Huvudreaktion",
-      "description": "Den emoji som kommer att användas som primär reaktion för att ge omdöme."
-    },
-    "additional": {
-      "label": "Ytterligare reaktioner",
-      "description": "Ytterligare emojis som också kan användas för att ge rykte.",
-      "premiumRequired": "Ytterligare reaktioner",
-      "add": "Lägg till reaktion",
-      "none": "Inga ytterligare reaktioner konfigurerade."
-    }
-  },
-  "thankwords": {
-    "description": "Dessa ord kommer att användas för att upptäcka när någon tackas. De tolkas som reguljära uttryck.",
-    "add": "Lägg till Thankword",
-    "placeholder": "Ange tackord (Regex)",
-    "none": "Inga tackord konfigurerade.",
-    "invalidCharacter": "Tackordet innehåller ett ogiltigt tecken: {char}",
-    "alreadyExists": "Detta tackord finns redan.",
-    "defaults": {
-      "title": "Standard tackord",
-      "description": "Lägg snabbt till standardtackord för olika språk."
-    }
-  },
   "abuseProtection": {
-    "description": "Konfigurera begränsningar och skydd för att förhindra missbruk av rykte.",
     "cooldown": {
-      "label": "Avkylning (minuter)",
       "description": "Den tid i minuter som måste gå innan samma användare kan tacka varandra igen. 0 betyder ingen nedkylning, -1 betyder för alltid.",
+      "label": "Avkylning (minuter)",
       "once": {
-        "label": "Avkylning En gång",
+        "activeDescription": "Cooldown är aktiv. Användare kan bara tacka varandra en gång. Riktningen är inställd på enkelriktad.",
         "description": "Om funktionen är aktiverad kan användarna bara tacka varandra en gång för alltid.",
-        "activeDescription": "Cooldown är aktiv. Användare kan bara tacka varandra en gång. Riktningen är inställd på enkelriktad."
+        "label": "Avkylning En gång"
       }
     },
     "cooldownDirection": {
-      "label": "Avkylningsriktning",
+      "bidirectional": "Dubbelriktad",
       "description": "Envägs innebär att givaren har en cooldown på att ge till samma person. Tvåvägs innebär att cooldown gäller mellan givaren och mottagaren, vilket förhindrar dem från att tacka varandra fram och tillbaka tills tiden har gått.",
-      "unidirectional": "Envägs",
-      "bidirectional": "Dubbelriktad"
+      "label": "Avkylningsriktning",
+      "unidirectional": "Envägs"
     },
-    "maxMessageAge": {
-      "label": "Maximal meddelandeålder (minuter)",
-      "description": "Den maximala åldern för ett meddelande (i minuter) för att vara berättigat till omdöme när det besvaras eller reageras på."
-    },
-    "minMessages": {
-      "label": "Min meddelanden",
-      "description": "Författare med minst detta antal meddelanden i kanalen är alltid berättigade att få rykte."
-    },
+    "description": "Konfigurera begränsningar och skydd för att förhindra missbruk av rykte.",
     "donorContext": {
-      "label": "Donatorn måste vara närvarande",
-      "description": "Om funktionen är aktiverad måste donatorn ha skickat minst ett av de senaste meddelandena i kanalen för att ge rykte."
-    },
-    "receiverContext": {
-      "label": "Mottagaren måste vara närvarande",
-      "description": "Om funktionen är aktiverad måste mottagaren ha skickat minst ett av de senaste meddelandena i kanalen för att få ett omdöme."
+      "description": "Om funktionen är aktiverad måste donatorn ha skickat minst ett av de senaste meddelandena i kanalen för att ge rykte.",
+      "label": "Donatorn måste vara närvarande"
     },
     "givenLimit": {
+      "description": "Begränsa hur mycket rykte en användare kan ge inom en viss tidsram.",
       "enabled": {
         "label": "Aktivera given gräns"
       },
@@ -402,10 +30,22 @@
       },
       "maxGivenHours": {
         "label": "Övertid"
-      },
-      "description": "Begränsa hur mycket rykte en användare kan ge inom en viss tidsram."
+      }
+    },
+    "maxMessageAge": {
+      "description": "Den maximala åldern för ett meddelande (i minuter) för att vara berättigat till omdöme när det besvaras eller reageras på.",
+      "label": "Maximal meddelandeålder (minuter)"
+    },
+    "maxMessageReputation": {
+      "description": "Det maximala antalet poäng som kan ges i ett enda meddelande via omnämnanden och inbäddningar.",
+      "label": "Maximal meddelandereputation"
+    },
+    "minMessages": {
+      "description": "Författare med minst detta antal meddelanden i kanalen är alltid berättigade att få rykte.",
+      "label": "Min meddelanden"
     },
     "receivedLimit": {
+      "description": "Begränsa hur mycket rykte en användare kan få inom en viss tidsram.",
       "enabled": {
         "label": "Aktivera mottagningsgräns"
       },
@@ -414,155 +54,540 @@
       },
       "maxReceivedHours": {
         "label": "Övertid"
-      },
-      "description": "Begränsa hur mycket rykte en användare kan få inom en viss tidsram."
+      }
     },
-    "maxMessageReputation": {
-      "label": "Maximal meddelandereputation",
-      "description": "Det maximala antalet poäng som kan ges i ett enda meddelande via omnämnanden och inbäddningar."
+    "receiverContext": {
+      "description": "Om funktionen är aktiverad måste mottagaren ha skickat minst ett av de senaste meddelandena i kanalen för att få ett omdöme.",
+      "label": "Mottagaren måste vara närvarande"
     }
   },
   "announcements": {
-    "description": "Konfigurera meddelanden som skickas när användare når nya rankningar.",
     "active": {
-      "label": "Aktivera meddelanden",
-      "description": "Om funktionen är aktiverad skickar boten ett meddelande när en användare når en ny rang."
-    },
-    "sameChannel": {
-      "label": "Skicka i samma kanal",
-      "description": "Om funktionen är aktiverad skickas meddelandet till den kanal där nivån höjdes. Annars skickas det till den valda kanalen."
+      "description": "Om funktionen är aktiverad skickar boten ett meddelande när en användare når en ny rang.",
+      "label": "Aktivera meddelanden"
     },
     "channel": {
-      "label": "Meddelandekanal",
-      "description": "Välj den kanal där meddelanden om rankningsuppgångar ska skickas."
+      "description": "Välj den kanal där meddelanden om rankningsuppgångar ska skickas.",
+      "label": "Meddelandekanal"
+    },
+    "description": "Konfigurera meddelanden som skickas när användare når nya rankningar.",
+    "sameChannel": {
+      "description": "Om funktionen är aktiverad skickas meddelandet till den kanal där nivån höjdes. Annars skickas det till den valda kanalen.",
+      "label": "Skicka i samma kanal"
+    }
+  },
+  "auditLog": {
+    "added": "Tillagd",
+    "description": "Visa en historik över alla inställningsändringar som gjorts på din server.",
+    "from": "Från",
+    "loadError": "Det gick inte att ladda granskningsloggen. Försök igen.",
+    "loading": "Laddar revisionslogg...",
+    "next": "Nästa",
+    "noEntries": "Inga revisionsloggposter hittades.",
+    "pageInfo": "Sida {current} av {total}",
+    "previous": "Föregående",
+    "removed": "Borttagen",
+    "retry": "Försök igen",
+    "settings": {
+      "abuseprotection_cooldown": "Skydd mot missbruk – Avkylningsperiod",
+      "abuseprotection_cooldowndirection": "Skydd mot missbruk – Cooldown-riktning",
+      "abuseprotection_donorcontext": "Skydd mot missbruk – Donatorens sammanhang",
+      "abuseprotection_maxgiven": "Skydd mot missbruk – Max Given",
+      "abuseprotection_maxgivenhours": "Skydd mot missbruk – maximalt antal timmar",
+      "abuseprotection_maxmessageage": "Skydd mot missbruk – Maximal meddelandeålder",
+      "abuseprotection_maxmessagereputation": "Skydd mot missbruk – Maximal meddelandereputation",
+      "abuseprotection_maxreceived": "Skydd mot missbruk – Max mottaget",
+      "abuseprotection_maxreceivedhours": "Skydd mot missbruk – maximalt antal mottagna timmar",
+      "abuseprotection_minmessages": "Skydd mot missbruk – Minsta antal meddelanden",
+      "abuseprotection_receivercontext": "Skydd mot missbruk – mottagarkontext",
+      "announcements_active": "Meddelanden - Aktiv",
+      "announcements_channel": "Meddelanden - Kanal",
+      "announcements_samechannel": "Meddelanden – Samma kanal",
+      "autopost_active": "Autopost - Aktiv",
+      "autopost_channel": "Autopost - Kanal",
+      "autopost_refreshinterval": "Autopost - Uppdateringsintervall",
+      "autopost_refreshtype": "Autopost - Uppdateringstyp",
+      "general_everyonetokenpurchase": "Allmänt – Alla Token-köp",
+      "general_language": "Allmänt - Språk",
+      "general_reputationmode": "Rykte - Ryktesläge",
+      "general_resetdate": "Rykte - Återställningsdatum",
+      "general_stackroles": "Rangordningar – Stackroller",
+      "general_systemchannel": "Allmänt - Systemkanal",
+      "logchannel_active": "Loggkanal - Aktiv",
+      "logchannel_channel": "Loggkanal - Kanal",
+      "messages_commandreputationephemeral": "Rykte - Kommandorykte Flyktigt",
+      "messages_reactionconfirmation": "Rykte – Bekräftelse av reaktion",
+      "profile_nickname": "Profil - Smeknamn",
+      "profile_profilepicture": "Profil - Profilbild",
+      "profile_reputationname": "Profil - Rykte Namn",
+      "ranks": "Rangordningar – Roller",
+      "reputation_answeractive": "Rykte – Svar Aktiv",
+      "reputation_commandactive": "Rykte - Kommando aktivt",
+      "reputation_directactive": "Rykte – Direkt aktivt",
+      "reputation_embedactive": "Rykte – Bädda in aktivt",
+      "reputation_fuzzyactive": "Rykte – Fuzzy Active",
+      "reputation_mentionactive": "Rykte – Omnämnande aktivt",
+      "reputation_reactionactive": "Rykte – Reaktion Aktiv",
+      "thanking_channels_categories": "Kanaler - Kategorilista",
+      "thanking_channels_channels": "Kanaler - Kanallista",
+      "thanking_channels_whitelist": "Kanaler – Vitlista-läge",
+      "thanking_denydonorroles": "Roller – Neka donatorroller",
+      "thanking_denyreceiverroles": "Roller – Förneka mottagarens roller",
+      "thanking_donorroles": "Roller – Donatorroller",
+      "thanking_reactions_mainreaction": "Reaktioner – Huvudreaktion",
+      "thanking_reactions_reactions": "Reaktioner – Ytterligare reaktioner",
+      "thanking_receiverroles": "Roller - Mottagarroller",
+      "thanking_thankwords_words": "Tackord"
+    },
+    "to": "Till",
+    "unknownMember": "Okänd medlem",
+    "values": {
+      "bidirectional": "Dubbelriktad",
+      "daily": "Dagligen",
+      "delete_and_repost": "Radera och lägg upp igen",
+      "disabled": "Funktionshindrad",
+      "enabled": "Aktiverad",
+      "hourly": "Per timme",
+      "month": "Månad",
+      "monthly": "Månadsvis",
+      "noChanges": "Inga ändringar",
+      "none": "Ingen",
+      "null": "Inte inställt",
+      "once": "En gång",
+      "repost": "Repost",
+      "rolling_month": "Rullande månad",
+      "rolling_week": "Rullningsvecka",
+      "total": "Totalt",
+      "unidirectional": "Envägs",
+      "unknownChannel": "Okänd kanal",
+      "unknownIntegration": "Okänd integration",
+      "update": "Uppdatering",
+      "week": "Vecka",
+      "weekly": "Veckovis"
     }
   },
   "autopost": {
+    "active": {
+      "description": "Aktivera eller inaktivera automatisk publicering på resultattavlan.",
+      "label": "Aktivera automatisk publicering"
+    },
+    "channel": {
+      "description": "Kanalen där topplistan ska publiceras.",
+      "label": "Autopost-kanal"
+    },
     "description": "Konfigurera automatisk publicering av leaderboarden till en kanal.",
     "premiumRequired": "Autopost",
-    "active": {
-      "label": "Aktivera automatisk publicering",
-      "description": "Aktivera eller inaktivera automatisk publicering på resultattavlan."
-    },
-    "channel": {
-      "label": "Autopost-kanal",
-      "description": "Kanalen där topplistan ska publiceras."
-    },
     "refreshInterval": {
-      "label": "Uppdateringsintervall",
-      "description": "Hur ofta leaderboarden ska uppdateras.",
-      "HOURLY": "Per timme",
       "DAILY": "Dagligen",
+      "HOURLY": "Per timme",
+      "MONTHLY": "Månadsvis",
       "WEEKLY": "Veckovis",
-      "MONTHLY": "Månadsvis"
+      "description": "Hur ofta leaderboarden ska uppdateras.",
+      "label": "Uppdateringsintervall"
     },
     "refreshType": {
-      "label": "Uppdateringstyp",
-      "description": "Hur inlägget ska uppdateras.",
       "DELETE_AND_REPOST": "Radera och lägg upp igen",
       "REPOST": "Repost",
-      "UPDATE": "Uppdatering"
+      "UPDATE": "Uppdatering",
+      "description": "Hur inlägget ska uppdateras.",
+      "label": "Uppdateringstyp"
     },
     "send": {
+      "description": "Skicka eller uppdatera autoposten manuellt till kanalen omedelbart.",
       "label": "Skicka autopost nu",
-      "sending": "Skickar...",
-      "description": "Skicka eller uppdatera autoposten manuellt till kanalen omedelbart."
+      "sending": "Skickar..."
     }
+  },
+  "common": {
+    "cancel": "Avbryt",
+    "change": "Förändring",
+    "clear": "Tydligt",
+    "confirm": "Bekräfta",
+    "delete": "Radera",
+    "edit": "Redigera",
+    "error": {
+      "outOfBounds": "Värdet måste ligga mellan {min} och {max}. Korrigeras till närmaste giltiga värde."
+    },
+    "loading": "Laddar...",
+    "next": "Nästa",
+    "noData": "Inga poster hittades.",
+    "pageOf": "Sida {current} av {total}",
+    "previous": "Föregående",
+    "save": "Spara"
+  },
+  "dashboard": {
+    "rank": "Rank",
+    "reputation": "Rykte",
+    "title": "Instrumentpanel",
+    "todayReputation": "Dagens rykte",
+    "topChannel": "Top Channel",
+    "topUsers": "Toppanvändare",
+    "totalReputation": "Total anseende",
+    "user": "Användare",
+    "weekReputation": "Veckans rykte"
+  },
+  "error": {
+    "expired": {
+      "instruction": "Öppna en ny session från Discord-servern för att fortsätta.",
+      "message": "Din session har gått ut eller är ogiltig.",
+      "title": "Sessionen har gått ut"
+    },
+    "noToken": {
+      "instruction": "Skapa en ny session för att komma åt den här applikationen.",
+      "message": "Du har inte ett giltigt sessionstoken.",
+      "title": "Ingen session hittades"
+    },
+    "notice": {
+      "workingOnIt": "Vi har fått kännedom om problemet och arbetar på att lösa det."
+    }
+  },
+  "general": {
+    "channels": {
+      "description": "Konfigurera var boten ska vara aktiv och var den inte ska vara aktiv.",
+      "list": {
+        "categories": "Kategorier",
+        "channels": "Kanaler",
+        "description": "Välj kanaler och kategorier som ska ingå i listan.",
+        "label": "Kanaler och kategorier",
+        "permissionsNote": "Endast kanaler där boten har läs- och skrivbehörighet visas."
+      },
+      "listType": {
+        "allow": "Tillåt lista",
+        "deny": "Spärrlista",
+        "description": "Välj om de valda kanalerna och kategorierna ska tillåtas eller nekas.",
+        "label": "Listtyp",
+        "premiumRequired": "Spärrlista"
+      },
+      "premium": {
+        "categoryLimitWarning": "Att välja fler än {limit} kategorier är reserverat för supportrar. Bli supporter för att kunna använda det.",
+        "channelLimitWarning": "Att välja fler än {limit} kanaler är reserverat för supportrar. Bli supporter för att kunna använda det."
+      }
+    },
+    "description": "Konfigurera botens grundinställningar för denna server.",
+    "everyoneTokenPurchase": {
+      "description": "Tillåt alla användare att köpa premiumfunktioner med sina tokens. Om funktionen är inaktiverad kan endast serveradministratörer köpa funktioner.",
+      "label": "Alla Token-köp"
+    },
+    "language": {
+      "description": "Välj vilket språk boten ska använda för meddelanden och svar på denna server.",
+      "label": "Bot-språk",
+      "selectPlaceholder": "Välj språk"
+    },
+    "ranks": {
+      "addRank": "Lägg till ny rang",
+      "description": "Konfigurera reputationsrankningarna och deras tillhörande roller.",
+      "noRanks": "Inga rankningar har konfigurerats ännu.",
+      "refresh": {
+        "alreadyRunning": "Uppdateringen pågår redan",
+        "button": "Uppdatera rankningar",
+        "failed": "Misslyckades med att starta rankningsuppdatering",
+        "refreshing": "Uppfriskande...",
+        "success": "Rankningsuppdateringen startade utan problem"
+      },
+      "reputationAlreadyUsed": "Detta ryktevärde används redan av en annan rang.",
+      "reputationPlaceholder": "t.ex. 100",
+      "reputationRequired": "Krävd rykte",
+      "roleAlreadyAdded": "Denna roll har redan en rang.",
+      "selectionNote": "Endast roller som inte hanteras av en integration och som ligger under botens högsta roll kan väljas.",
+      "stackRoles": {
+        "description": "Om denna funktion är aktiverad tilldelas alla tillämpliga rangordningar istället för endast den högsta rangordningen.",
+        "label": "Stackroller"
+      }
+    },
+    "reputation": {
+      "description": "Konfigurera hur omdömet beräknas och vilka funktioner som är aktiverade.",
+      "mode": {
+        "description": "Välj hur omdömet ska beräknas och visas.",
+        "descriptions": {
+          "MONTH": "Använd det rykte som erhållits sedan början av innevarande månad.",
+          "ROLLING_MONTH": "Använd ryktet som erhållits under de senaste 30 dagarna.",
+          "ROLLING_WEEK": "Använd ryktet som erhållits under de senaste 7 dagarna.",
+          "TOTAL": "Använd den totala reputationen som en användare någonsin har fått.",
+          "WEEK": "Använd det rykte som erhållits sedan början av den aktuella veckan."
+        },
+        "label": "Ryktesläge",
+        "modes": {
+          "MONTH": "Denna månad",
+          "ROLLING_MONTH": "Rullande månad",
+          "ROLLING_WEEK": "Rullningsvecka",
+          "TOTAL": "Total anseende",
+          "WEEK": "Denna vecka"
+        }
+      },
+      "resetDate": {
+        "clear": "Rensa återställningsdatum",
+        "description": "Datum då omdömen återställs. Ange ett datum i framtiden för att schemalägga en återställning.",
+        "label": "Återställ datum"
+      },
+      "types": {
+        "answer": {
+          "description": "Ge rykte när en användares meddelande tackas i ett svar.",
+          "label": "Svar Ryktbarhet"
+        },
+        "command": {
+          "description": "Ge rykte via kommandot /reputation.",
+          "ephemeral": {
+            "description": "Skicka svaret dolt till andra användare när du ger omdöme via kommando.",
+            "label": "Flyktig respons"
+          },
+          "label": "Kommandots rykte"
+        },
+        "direct": {
+          "description": "Ge automatiskt rykte när endast en användare skulle ingå i inbäddningen.",
+          "label": "Direkt inbäddning av rykte"
+        },
+        "embed": {
+          "description": "Skicka en inbäddad lista över användare som var med i den senaste konversationen om inget mål kan fastställas.",
+          "label": "Bädda in rykte"
+        },
+        "fuzzy": {
+          "description": "Ge rykte genom att matcha ord runt ordet \"tack\" med användarnamn som finns i kanalen.",
+          "label": "Fuzzy-matchning"
+        },
+        "mention": {
+          "description": "Ge rykte när en användare nämns tillsammans med ett tackord.",
+          "label": "Omnämnande Ryktbarhet"
+        },
+        "reaction": {
+          "confirmation": {
+            "description": "Skicka ett bekräftelsemeddelande när omdöme ges via reaktion.",
+            "label": "Reaktionsbekräftelse"
+          },
+          "description": "Ge rykte när en specifik reaktion läggs till ett meddelande.",
+          "label": "Reaktionsrykte"
+        }
+      }
+    },
+    "roleSelect": {
+      "noRolesFound": "Inga roller hittades",
+      "searchPlaceholder": "Sök roller..."
+    },
+    "roles": {
+      "denyDonor": {
+        "description": "Om denna funktion är aktiverad kan användare med någon av dessa roller inte ge omdömen.",
+        "label": "Neka donatorroller"
+      },
+      "denyReceiver": {
+        "description": "Om denna funktion är aktiverad kan användare med någon av dessa roller inte få rykte.",
+        "label": "Neka mottagarroller"
+      },
+      "description": "Konfigurera vilka roller som får ge och ta emot omdömen.",
+      "donor": {
+        "description": "Om denna funktion är aktiverad kan endast användare med minst en av dessa roller ge omdömen.",
+        "label": "Donatorernas roller"
+      },
+      "list": {
+        "description": "Välj vilka roller som ska krävas.",
+        "label": "Utvalda roller"
+      },
+      "receiver": {
+        "description": "Om denna funktion är aktiverad kan endast användare med minst en av dessa roller få rykte.",
+        "label": "Mottagarens roller"
+      }
+    },
+    "systemChannel": {
+      "label": "Systemkanal",
+      "note": "Obs: Denna kanal ska ställas in och ska vara en intern kanal. Den kommer att innehålla viktiga meddelanden om botens tjänst och meddelanden från utvecklarna.",
+      "selectPlaceholder": "Välj en kanal"
+    }
+  },
+  "guildSwitcher": {
+    "add": "Lägg till en annan server genom att öppna inställningarna från servern.",
+    "current": "Aktuell server",
+    "none": "Inga andra servrar hittades",
+    "title": "Byt server"
+  },
+  "help": {
+    "message": "Behöver du hjälp? Saknas någon funktion? Har du synpunkter? Skicka ett privat meddelande till boten. Du hittar också en länk till vår support på Discord längst ner på sidan.",
+    "title": "Behöver du hjälp?"
+  },
+  "integrationBypass": {
+    "add": "Lägg till integrationsförbikoppling",
+    "allowAnswer": "Tillåt svar",
+    "allowAnswerDescription": "Tillåt att ge ett omdöme genom att svara på ett meddelande",
+    "allowDirect": "Tillåt direkt",
+    "allowDirectDescription": "Tillåt att ge ett omdöme när en inbäddning skulle hoppas över eftersom endast en mottagare kunde fastställas. Ingen inbäddning kommer någonsin att skickas för en bot.",
+    "allowFuzzy": "Tillåt Fuzzy",
+    "allowFuzzyDescription": "Tillåt att ge ett omdöme via fuzzy matching",
+    "allowMention": "Tillåt omnämnande",
+    "allowMentionDescription": "Tillåt att ge ett omdöme genom att nämna en användare",
+    "allowReactions": "Tillåt reaktioner",
+    "allowReactionsDescription": "Tillåt att ge ett omdöme via reaktioner",
+    "deleteConfirm": "Är du säker på att du vill ta bort denna integrationsförbikoppling?",
+    "description": "Konfigurera bypassar för integrationer så att de kan ge rykte även om de inte uppfyller de vanliga kraven.",
+    "ignoreContext": "Ignorera sammanhang",
+    "ignoreContextDescription": "Ignorera kontextkontroller",
+    "ignoreCooldown": "Ignorera nedkylningstid",
+    "ignoreCooldownDescription": "Ignorera nedkylningstid mellan användare",
+    "ignoreLimit": "Ignorera gräns",
+    "ignoreLimitDescription": "Ignorera eventuella tidsbegränsningar",
+    "noIntegrations": "Det finns inga fler integrationer tillgängliga för att lägga till förbikopplingar för.",
+    "premiumRequired": "Integrationsförbikoppling",
+    "selectIntegration": "Välj en integration"
+  },
+  "links": {
+    "faq": "Vanliga frågor",
+    "support": "Supportserver",
+    "tos": "Användarvillkor",
+    "website": "Webbplats"
+  },
+  "locale": {
+    "selectLanguage": "Välj språk"
   },
   "logChannel": {
-    "premiumRequired": "Loggkanal",
-    "description": "Loggkanalen kommer att innehålla alla omdömen som ges och tas från en användare.",
     "active": {
-      "label": "Aktivera loggkanal",
-      "description": "Aktivera eller inaktivera loggning av förändringar i rykte."
+      "description": "Aktivera eller inaktivera loggning av förändringar i rykte.",
+      "label": "Aktivera loggkanal"
     },
     "channel": {
-      "label": "Loggkanal",
-      "description": "Kanalen där förändringar i rykte ska loggas."
+      "description": "Kanalen där förändringar i rykte ska loggas.",
+      "label": "Loggkanal"
+    },
+    "description": "Loggkanalen kommer att innehålla alla omdömen som ges och tas från en användare.",
+    "premiumRequired": "Loggkanal"
+  },
+  "login": {
+    "button": "Logga in med Discord",
+    "description": "Logga in med Discord för att komma åt detta panel.",
+    "title": "Inloggning krävs"
+  },
+  "metrics": {
+    "charts": {
+      "commandsCount": "Kommandon räknas",
+      "commandsUsage": "Kommandots användning",
+      "messagesCount": "Antal meddelanden",
+      "messagesTotal": "Totalt antal meddelanden",
+      "reputationChanges": "Ändringar i rykte",
+      "reputationCount": "Rykte räknas",
+      "reputationDow": "Rykte per veckodag",
+      "reputationTotal": "Total anseende",
+      "reputationTypeCount": "Reputationräkning efter typ",
+      "reputationTypeTotal": "Total omdöme efter typ",
+      "serviceCountHour": "Tjänsteanvändning (per timme)",
+      "serviceCountWeek": "Tjänsteanvändning (veckovis)",
+      "usersActiveMonth": "Aktiva användare (månadsvis)",
+      "usersActiveWeek": "Aktiva användare (per vecka)"
+    },
+    "count": "Räkna",
+    "description": "Är du nyfiken på trafiken och användningen av boten? Det är vi också! Därför har vi sammanställt några fina grafer på denna sida. De visar data i nästan realtid direkt från boten.",
+    "offset": "Offset",
+    "sections": {
+      "commands": "Kommandon",
+      "messages": "Meddelanden",
+      "reputation": "Rykte",
+      "service": "Service",
+      "users": "Användare"
+    },
+    "title": "Mätvärden",
+    "units": {
+      "hour": "Timme",
+      "month": "Månad",
+      "week": "Vecka",
+      "year": "År"
+    },
+    "users": {
+      "donors": "Donatorer",
+      "receivers": "Mottagare",
+      "total": "Totalt"
+    },
+    "validation": {
+      "countMax": "Räkningen måste vara högst {max}",
+      "countMin": "Antalet måste vara minst 2",
+      "offsetMax": "Offset får vara högst{max}",
+      "offsetMin": "Offset måste vara minst 0"
     }
   },
-  "setup": {
-    "title": "Initial installation",
-    "stepProgress": "Steg {current} av {total}",
-    "requiredStep": "Detta steg krävs för att fortsätta",
-    "navigation": {
-      "previous": "Föregående",
-      "next": "Nästa",
-      "finish": "Avsluta inställningen"
+  "navigation": {
+    "dashboard": "Instrumentpanel",
+    "faq": "Vanliga frågor",
+    "logout": "Logga ut",
+    "metrics": "Mätvärden",
+    "presets": "Förinställningar",
+    "privacy": "Sekretess",
+    "settings": "Inställningar",
+    "setup": "Inställningar",
+    "supporter": "Supporter",
+    "token_shop": "Tokenbutik",
+    "tos": "Användarvillkor",
+    "user_settings": "Användarinställningar",
+    "voting": "Omröstning"
+  },
+  "premiumFeature": {
+    "kofiHint": "eller stöd oss på",
+    "kofiLink": "Ko-fi",
+    "message": "{name} är reserverad för supportrar. Bli supporter för att kunna använda den.",
+    "requiredTierPlural": "En av följande supporternivåer krävs:",
+    "requiredTierSingular": "Krävd supporternivå:",
+    "title": "Supporterfunktion",
+    "tokenShopHint": "Du kan också låsa upp den här funktionen med tokens i",
+    "tokenShopLink": "Tokenbutik"
+  },
+  "presets": {
+    "applied": "Tillämpad",
+    "apply": "Ansök",
+    "applying": "Ansöker...",
+    "default": {
+      "description": "Jag vill ha ett balanserat rykte-system med rimliga standardinställningar som fungerar bra för de flesta servrar.",
+      "settings": "Denna förinställning ställer in en 30-minuters dubbelriktad nedkylningsperiod, aktiverar alla rykte-lägen utom kommandon, aktiverar ryktebekräftelse och aktiverar kontextkontroller för givare och mottagare.",
+      "title": "Standardkonfiguration"
     },
-    "steps": {
-      "language": {
-        "title": "Välj språk",
-        "description": "Välj vilket språk botten ska använda för meddelanden och svar på din server. Frontend-språket ändras så att det matchar ditt val."
-      },
-      "systemChannel": {
-        "title": "Systemkanal",
-        "description": "Välj en kanal där boten ska skicka viktiga systemmeddelanden och aviseringar.",
-        "required": "Du måste välja en systemkanal för att fortsätta med installationen."
-      },
-      "reputationTypes": {
-        "title": "Typer av rykte",
-        "description": "Välj vilka metoder användarna kan använda för att ge omdömen. Du kan aktivera flera typer för att ge användarna flexibilitet."
-      },
-      "reputationMode": {
-        "title": "Ryktesläge",
-        "description": "Välj hur rykte ska beräknas och visas på din server."
-      },
-      "ranks": {
-        "title": "Ryktesrankning",
-        "description": "Definiera roller som användarna får när de når vissa reputationsnivåer. Minst en rang krävs.",
-        "required": "Du måste definiera minst en rykteklass för att kunna fortsätta."
-      },
-      "channels": {
-        "title": "Kanaler och kategorier",
-        "description": "Välj vilka kanaler och kategorier som ska tillåta omdömen. Minst en kanal eller kategori måste väljas.",
-        "required": "Du måste välja minst en kanal eller kategori för att fortsätta (om du inte använder läget för avvisningslista)."
-      },
-      "thankwords": {
-        "title": "Tackord",
-        "description": "Lägg till ord eller fraser som användarna kan använda för att ge omdömen. Det här är de utlösande ord som boten kommer att känna igen.",
-        "recommendation": "Vi rekommenderar att du laddar standardtackorden för ditt språk för att komma igång snabbt."
-      },
-      "announcements": {
-        "title": "Meddelanden",
-        "description": "Konfigurera om botten ska meddela när användare når nya rykte-rankningar."
-      },
-      "cooldown": {
-        "title": "Inställningar för nedkylning",
-        "description": "Ställ in en avkylningsperiod för att förhindra att användare ger omdömen för ofta. Du kan också aktivera \"avkylning en gång\" för att tillåta användare att tacka varandra endast en gång."
-      },
-      "mainReaction": {
-        "title": "Huvudreaktion",
-        "description": "Välj den emoji som ska användas som huvudsaklig reaktion för att ge omdömen."
-      },
-      "roles": {
-        "title": "Donator- och mottagarens roller",
-        "description": "Du kan också definiera vilka roller som kan ge rykte (givarroller) och vilka roller som kan få rykte (mottagarroller)."
-      },
-      "welcome": {
-        "title": "Välkommen",
-        "description": "Välkommen till inställningssidan.\nDenna sida guidar dig genom den initiala inställningen av boten. Därefter har du en grundläggande inställning som är anpassad efter dina önskemål.\n\nOm du behöver hjälp kan du skicka ett privat meddelande till boten så hjälper vi dig så snart vi kan. Du hittar också en länk till vår support på Discord längst ner på sidan."
-      },
-      "finished": {
-        "title": "Inställningen är klar",
-        "description": "Du har nu slutfört det sista steget i installationen. Vi skickar dig nu till sidan med allmänna inställningar där du kan hitta fler inställningar som kan vara intressanta för dig."
-      },
-      "scan": {
-        "title": "Serversökning",
-        "description": "Nu när du har konfigurerat dina kanaler rekommenderar vi att du kör en genomsökning för att indexera befintliga omdömen från din servers historik.",
-        "prompt": {
-          "title": "Vill du starta en serversökning?",
-          "description": "En genomsökning går igenom meddelandehistoriken på din server i de konfigurerade kanalerna och hämtar befintliga omdömen. Detta kan ta en stund beroende på serverns storlek."
-        },
-        "started": {
-          "title": "Skanningen har startat!",
-          "description": "Skanningen körs nu i bakgrunden. Du kan se hur långt den har kommit på skanningssidan när du har slutfört installationen."
-        },
-        "start": "Starta skanning",
-        "starting": "På väg att börja...",
-        "error": "Det gick inte att starta skanningen. Försök igen senare."
-      }
-    }
+    "description": "Snabba konfigurationsinställningar som hjälper dig att komma igång med vanliga inställningar.",
+    "noAbuse": {
+      "description": "Jag vill inaktivera kontextbaserat missbruksskydd och låta användare ge omdömen mer fritt utan att spåra deras interaktionshistorik.",
+      "settings": "Denna förinställning inaktiverar både givar- och mottagarkontextspårning.",
+      "title": "Inget skydd mot missbruk"
+    },
+    "simpleReputation": {
+      "description": "Jag vill ha ett enkelt rykte-system där användare endast kan ge rykte genom kommandon, utan någon komplex kontextuppföljning.",
+      "settings": "Denna förinställning inaktiverar alla typer av rykte utom kommandon och stänger av spårning av givare och mottagare.",
+      "title": "Enkelt rykte-system"
+    },
+    "thankOnce": {
+      "description": "Jag vill att användarna ska kunna tacka varandra endast en gång, för att förhindra upprepade omdömen mellan samma användare.",
+      "settings": "Denna förinställning ställer in nedkylningstiden endast en gång och ändrar nedkylningsriktningen till enkelriktad.",
+      "title": "Tack bara en gång"
+    },
+    "title": "Förinställningar"
+  },
+  "profile": {
+    "description": "Anpassa hur boten visas och beter sig på din server.",
+    "nickname": {
+      "description": "Ange ett eget smeknamn för boten på denna server.",
+      "label": "Bot-smeknamn",
+      "placeholder": "Ange botens smeknamn",
+      "reset": "Återställ smeknamn till standard"
+    },
+    "premiumRequired": "Profilanpassning",
+    "profilePicture": {
+      "description": "Ladda upp en anpassad profilbild för boten (max 2 MB, 512 x 512 pixlar)",
+      "label": "Profilbild",
+      "reset": "Återställ profilbilden till standard",
+      "uploadButton": "Ladda upp bild",
+      "uploading": "Laddar upp..."
+    },
+    "reputationName": {
+      "description": "Anpassa namnet som används för rykte på denna server.",
+      "label": "Rykte Namn",
+      "placeholder": "Ange ett eget namn för rykte (t.ex. \"Poäng\", \"Karma\")",
+      "reset": "Återställ rykte till standardnamn"
+    },
+    "reset": "Återställ",
+    "tosNote": "Allt som bryter mot Discords användarvillkor eller statlig lag är förbjudet och kan leda till att denna funktion blockeras för servern."
+  },
+  "reactions": {
+    "additional": {
+      "add": "Lägg till reaktion",
+      "description": "Ytterligare emojis som också kan användas för att ge rykte.",
+      "label": "Ytterligare reaktioner",
+      "none": "Inga ytterligare reaktioner konfigurerade.",
+      "premiumRequired": "Ytterligare reaktioner"
+    },
+    "description": "Konfigurera de emojis som används för att ge omdömen.",
+    "main": {
+      "description": "Den emoji som kommer att användas som primär reaktion för att ge omdöme.",
+      "label": "Huvudreaktion"
+    },
+    "title": "Reaktioner"
   },
   "roles": {
     "donor": {
@@ -572,429 +597,418 @@
       "label": "Mottagare"
     }
   },
-  "links": {
-    "support": "Supportserver",
-    "website": "Webbplats",
-    "faq": "Vanliga frågor",
-    "tos": "Användarvillkor"
-  },
-  "auditLog": {
-    "description": "Visa en historik över alla inställningsändringar som gjorts på din server.",
-    "loading": "Laddar revisionslogg...",
-    "loadError": "Det gick inte att ladda granskningsloggen. Försök igen.",
-    "retry": "Försök igen",
-    "noEntries": "Inga revisionsloggposter hittades.",
-    "unknownMember": "Okänd medlem",
-    "previous": "Föregående",
-    "next": "Nästa",
-    "pageInfo": "Sida {current} av {total}",
-    "from": "Från",
-    "to": "Till",
-    "added": "Tillagd",
-    "removed": "Borttagen",
-    "values": {
-      "null": "Inte inställt",
-      "enabled": "Aktiverad",
-      "disabled": "Funktionshindrad",
-      "once": "En gång",
-      "none": "Ingen",
-      "unknownChannel": "Okänd kanal",
-      "unidirectional": "Envägs",
-      "bidirectional": "Dubbelriktad",
-      "total": "Totalt",
-      "rolling_week": "Rullningsvecka",
-      "rolling_month": "Rullande månad",
-      "week": "Vecka",
-      "month": "Månad",
-      "delete_and_repost": "Radera och lägg upp igen",
-      "repost": "Repost",
-      "update": "Uppdatering",
-      "hourly": "Per timme",
-      "daily": "Dagligen",
-      "weekly": "Veckovis",
-      "monthly": "Månadsvis",
-      "noChanges": "Inga ändringar",
-      "unknownIntegration": "Okänd integration"
+  "scan": {
+    "description": "Sök igenom din klan efter anseende som tilldelats innan boten lades till eller i kanaler som inte övervakades. Detta kommer att söka igenom alla meddelanden i de konfigurerade anseendekanalerna och kategorierna.",
+    "error": {
+      "alreadyRunning": "En genomsökning pågår redan för denna klan.",
+      "fetchStatus": "Det gick inte att hämta skanningsstatus. Försök igen senare.",
+      "startFailed": "Det gick inte att starta skanningen. Försök igen senare."
     },
-    "settings": {
-      "abuseprotection_cooldown": "Skydd mot missbruk – Avkylningsperiod",
-      "abuseprotection_cooldowndirection": "Skydd mot missbruk – Cooldown-riktning",
-      "abuseprotection_maxmessageage": "Skydd mot missbruk – Maximal meddelandeålder",
-      "abuseprotection_minmessages": "Skydd mot missbruk – Minsta antal meddelanden",
-      "abuseprotection_donorcontext": "Skydd mot missbruk – Donatorens sammanhang",
-      "abuseprotection_receivercontext": "Skydd mot missbruk – mottagarkontext",
-      "abuseprotection_maxgiven": "Skydd mot missbruk – Max Given",
-      "abuseprotection_maxgivenhours": "Skydd mot missbruk – maximalt antal timmar",
-      "abuseprotection_maxreceived": "Skydd mot missbruk – Max mottaget",
-      "abuseprotection_maxreceivedhours": "Skydd mot missbruk – maximalt antal mottagna timmar",
-      "abuseprotection_maxmessagereputation": "Skydd mot missbruk – Maximal meddelandereputation",
-      "thanking_channels_whitelist": "Kanaler – Vitlista-läge",
-      "thanking_channels_channels": "Kanaler - Kanallista",
-      "thanking_channels_categories": "Kanaler - Kategorilista",
-      "thanking_thankwords_words": "Tackord",
-      "thanking_reactions_mainreaction": "Reaktioner – Huvudreaktion",
-      "thanking_reactions_reactions": "Reaktioner – Ytterligare reaktioner",
-      "thanking_denydonorroles": "Roller – Neka donatorroller",
-      "thanking_donorroles": "Roller – Donatorroller",
-      "thanking_denyreceiverroles": "Roller – Förneka mottagarens roller",
-      "thanking_receiverroles": "Roller - Mottagarroller",
-      "messages_reactionconfirmation": "Rykte – Bekräftelse av reaktion",
-      "messages_commandreputationephemeral": "Rykte - Kommandorykte Flyktigt",
-      "profile_nickname": "Profil - Smeknamn",
-      "profile_profilepicture": "Profil - Profilbild",
-      "profile_reputationname": "Profil - Rykte Namn",
-      "reputation_reactionactive": "Rykte – Reaktion Aktiv",
-      "reputation_answeractive": "Rykte – Svar Aktiv",
-      "reputation_mentionactive": "Rykte – Omnämnande aktivt",
-      "reputation_fuzzyactive": "Rykte – Fuzzy Active",
-      "reputation_embedactive": "Rykte – Bädda in aktivt",
-      "reputation_directactive": "Rykte – Direkt aktivt",
-      "reputation_commandactive": "Rykte - Kommando aktivt",
-      "logchannel_active": "Loggkanal - Aktiv",
-      "logchannel_channel": "Loggkanal - Kanal",
-      "general_language": "Allmänt - Språk",
-      "general_stackroles": "Rangordningar – Stackroller",
-      "general_reputationmode": "Rykte - Ryktesläge",
-      "general_systemchannel": "Allmänt - Systemkanal",
-      "general_resetdate": "Rykte - Återställningsdatum",
-      "announcements_active": "Meddelanden - Aktiv",
-      "announcements_samechannel": "Meddelanden – Samma kanal",
-      "announcements_channel": "Meddelanden - Kanal",
-      "autopost_active": "Autopost - Aktiv",
-      "autopost_channel": "Autopost - Kanal",
-      "autopost_refreshtype": "Autopost - Uppdateringstyp",
-      "autopost_refreshinterval": "Autopost - Uppdateringsintervall",
-      "ranks": "Rangordningar – Roller",
-      "general_everyonetokenpurchase": "Allmänt – Alla Token-köp"
+    "finishedAt": "Avslutad kl.",
+    "messagesScanned": "Meddelanden som har skannats",
+    "noScanYet": "Ingen skanning har utförts ännu.",
+    "progressDetails": "Detaljer om framsteg",
+    "reputationFound": "Rykte funnet",
+    "start": "Starta skanning",
+    "startedAt": "Började vid",
+    "starting": "På väg att börja...",
+    "status": {
+      "finished": "Skanningen är klar",
+      "running": "Skanning pågår"
     }
   },
-  "help": {
-    "title": "Behöver du hjälp?",
-    "message": "Behöver du hjälp? Saknas någon funktion? Har du synpunkter? Skicka ett privat meddelande till boten. Du hittar också en länk till vår support på Discord längst ner på sidan."
+  "settings": {
+    "abuseProtection": "Skydd mot missbruk",
+    "announcements": "Meddelanden",
+    "auditLog": "Revisionslogg",
+    "autopost": "Autopost",
+    "channels": "Kanaler",
+    "debug": {
+      "goToSettings": "Gå till inställningar",
+      "missingPermissions": {
+        "CATEGORY": "Kategori",
+        "CHANNEL": "Kanal",
+        "GUILD": "Gille",
+        "title": "Saknade behörigheter inom ramen för tillämpningsområdet"
+      },
+      "permissions": {
+        "BYPASS_SLOWMODE": "Ibland fungerar inte bekräftelsemeddelanden. Till exempel reaktionsbekräftelse eller ryktebekräftelse via inbäddning.",
+        "MANAGE_GUILD_EXPRESSIONS": "Anpassade reaktioner kan inte föreslås i instrumentpanelen.",
+        "MANAGE_ROLES": "Reputationsroller kan inte tilldelas.",
+        "MESSAGE_ADD_REACTION": "Bekräftelse av rykte via reaktioner fungerar inte.",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "Bekräftelsemeddelanden fungerar inte i röstkanaler. Till exempel reaktionsbekräftelse eller ryktebekräftelse via inbäddning.",
+        "MESSAGE_EXT_EMOJI": "Bekräftelse av rykte via emojis fungerar inte.",
+        "MESSAGE_HISTORY": "Bekräftelse av rykte via inbäddningar fungerar inte. De flesta kontroller för skydd mot missbruk kommer att misslyckas.",
+        "MESSAGE_SEND": "Inget bekräftelsemeddelande fungerar. Till exempel reaktionsbekräftelse eller ryktebekräftelse via inbäddning.",
+        "MESSAGE_SEND_IN_THREADS": "Bekräftelsemeddelanden fungerar inte i trådar. Till exempel reaktionsbekräftelse eller ryktebekräftelse via inbäddning.",
+        "NICKNAME_CHANGE": "Smeknamnet kan inte ändras i instrumentpanelen.",
+        "VIEW_CHANNEL": "Reputationskanaler kan inte ses. Reputation kan inte ges via någon textbaserad metod.",
+        "description": "Dessa behörigheter saknas för boten globalt. Detta kan begränsa vissa funktioner.",
+        "title": "Saknade globala behörigheter"
+      },
+      "rankProblems": {
+        "CANT_ASSIGN_ROLE": "Boten kan inte tilldela denna roll eftersom den ligger över botens högsta roll.",
+        "MISSING_ROLE": "Rollen för denna rang saknas.",
+        "title": "Rankningsproblem"
+      },
+      "reputationChannelProblems": {
+        "MISSING_CATEGORY": "Kategorin saknas.",
+        "MISSING_CHANNEL": "Kanalen saknas.",
+        "NOT_TEXT_TYPE": "Kanalen är inte en textkanal.",
+        "title": "Problem med rykteskanalen"
+      },
+      "simpleProblems": {
+        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "Meddelandekanalen hittades inte.",
+        "AUTOPOST_CANNEL_NOT_FOUND": "Autopost-kanalen hittades inte.",
+        "LOG_CHANNEL_NOT_FOUND": "Loggkanalen hittades inte.",
+        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "Meddelandekanalen är inte definierad.",
+        "NO_AUTOPOST_CHANNEL_DEFINED": "Autopost-kanalen är inte definierad.",
+        "NO_LOG_CHANNEL_DEFINED": "Loggkanalen är inte definierad.",
+        "NO_REPUTATION_CHANNEL_DEFINED": "Inga ryktekanaler eller kategorier är definierade.",
+        "NO_THANKWORDS_DEFINED": "Inga tackord är definierade.",
+        "SYSTEM_CHANNEL_NOT_DEFINED": "Systemkanalen är inte definierad.",
+        "SYSTEM_CHANNEL_NOT_FOUND": "Systemkanalen hittades inte.",
+        "title": "Allmänna problem"
+      },
+      "simpleWarnings": {
+        "MAX_MESSAGE_AGE_LOW": "Den maximala åldern för meddelanden är inställd på en mycket låg nivå. Detta kan hindra användare från att tacka varandra för äldre meddelanden.",
+        "title": "Varningar"
+      }
+    },
+    "general": "Allmänt",
+    "integrationBypass": "Integrationsförbikoppling",
+    "logChannel": "Loggkanal",
+    "messages": "Meddelanden",
+    "problems": "Problem",
+    "profile": "Profil",
+    "ranks": "Rangordningar",
+    "reactions": "Reaktioner",
+    "reputation": "Rykte",
+    "roles": "Roller",
+    "scan": "Skanna",
+    "thankwords": "Tackord",
+    "title": "Inställningar"
   },
-  "guildSwitcher": {
-    "title": "Byt server",
-    "current": "Aktuell server",
-    "none": "Inga andra servrar hittades",
-    "add": "Lägg till en annan server genom att öppna inställningarna från servern."
+  "setup": {
+    "error": {
+      "forbidden": {
+        "description": "Du har inte behörighet att komma åt inställningarna för den här servern. Kontakta en serveradministratör.",
+        "title": "Åtkomst nekad"
+      },
+      "noSession": {
+        "description": "Det finns ingen aktiv serversession. Gå tillbaka och välj en server.",
+        "title": "Ingen anslutning"
+      },
+      "unknown": {
+        "description": "Ett fel uppstod vid inläsningen av serverinställningarna. Försök igen senare.",
+        "title": "Det gick inte att ladda inställningarna"
+      }
+    },
+    "navigation": {
+      "finish": "Avsluta inställningen",
+      "next": "Nästa",
+      "previous": "Föregående"
+    },
+    "requiredStep": "Detta steg krävs för att fortsätta",
+    "stepProgress": "Steg {current} av {total}",
+    "steps": {
+      "announcements": {
+        "description": "Konfigurera om botten ska meddela när användare når nya rykte-rankningar.",
+        "title": "Meddelanden"
+      },
+      "channels": {
+        "description": "Välj vilka kanaler och kategorier som ska tillåta omdömen. Minst en kanal eller kategori måste väljas.",
+        "required": "Du måste välja minst en kanal eller kategori för att fortsätta (om du inte använder läget för avvisningslista).",
+        "title": "Kanaler och kategorier"
+      },
+      "cooldown": {
+        "description": "Ställ in en avkylningsperiod för att förhindra att användare ger omdömen för ofta. Du kan också aktivera \"avkylning en gång\" för att tillåta användare att tacka varandra endast en gång.",
+        "title": "Inställningar för nedkylning"
+      },
+      "finished": {
+        "description": "Du har nu slutfört det sista steget i installationen. Vi skickar dig nu till sidan med allmänna inställningar där du kan hitta fler inställningar som kan vara intressanta för dig.",
+        "title": "Inställningen är klar"
+      },
+      "language": {
+        "description": "Välj vilket språk botten ska använda för meddelanden och svar på din server. Frontend-språket ändras så att det matchar ditt val.",
+        "title": "Välj språk"
+      },
+      "mainReaction": {
+        "description": "Välj den emoji som ska användas som huvudsaklig reaktion för att ge omdömen.",
+        "title": "Huvudreaktion"
+      },
+      "ranks": {
+        "description": "Definiera roller som användarna får när de når vissa reputationsnivåer. Minst en rang krävs.",
+        "required": "Du måste definiera minst en rykteklass för att kunna fortsätta.",
+        "title": "Ryktesrankning"
+      },
+      "reputationMode": {
+        "description": "Välj hur rykte ska beräknas och visas på din server.",
+        "title": "Ryktesläge"
+      },
+      "reputationTypes": {
+        "description": "Välj vilka metoder användarna kan använda för att ge omdömen. Du kan aktivera flera typer för att ge användarna flexibilitet.",
+        "title": "Typer av rykte"
+      },
+      "roles": {
+        "description": "Du kan också definiera vilka roller som kan ge rykte (givarroller) och vilka roller som kan få rykte (mottagarroller).",
+        "title": "Donator- och mottagarens roller"
+      },
+      "scan": {
+        "description": "Nu när du har konfigurerat dina kanaler rekommenderar vi att du kör en genomsökning för att indexera befintliga omdömen från din servers historik.",
+        "error": "Det gick inte att starta skanningen. Försök igen senare.",
+        "prompt": {
+          "description": "En genomsökning går igenom meddelandehistoriken på din server i de konfigurerade kanalerna och hämtar befintliga omdömen. Detta kan ta en stund beroende på serverns storlek.",
+          "title": "Vill du starta en serversökning?"
+        },
+        "start": "Starta skanning",
+        "started": {
+          "description": "Skanningen körs nu i bakgrunden. Du kan se hur långt den har kommit på skanningssidan när du har slutfört installationen.",
+          "title": "Skanningen har startat!"
+        },
+        "starting": "På väg att börja...",
+        "title": "Serversökning"
+      },
+      "systemChannel": {
+        "description": "Välj en kanal där boten ska skicka viktiga systemmeddelanden och aviseringar.",
+        "required": "Du måste välja en systemkanal för att fortsätta med installationen.",
+        "title": "Systemkanal"
+      },
+      "thankwords": {
+        "description": "Lägg till ord eller fraser som användarna kan använda för att ge omdömen. Det här är de utlösande ord som boten kommer att känna igen.",
+        "recommendation": "Vi rekommenderar att du laddar standardtackorden för ditt språk för att komma igång snabbt.",
+        "title": "Tackord"
+      },
+      "welcome": {
+        "description": "Välkommen till inställningssidan.\nDenna sida guidar dig genom den initiala inställningen av boten. Därefter har du en grundläggande inställning som är anpassad efter dina önskemål.\n\nOm du behöver hjälp kan du skicka ett privat meddelande till boten så hjälper vi dig så snart vi kan. Du hittar också en länk till vår support på Discord längst ner på sidan.",
+        "title": "Välkommen"
+      }
+    },
+    "title": "Initial installation"
   },
-  "integrationBypass": {
-    "description": "Konfigurera bypassar för integrationer så att de kan ge rykte även om de inte uppfyller de vanliga kraven.",
-    "allowReactions": "Tillåt reaktioner",
-    "allowAnswer": "Tillåt svar",
-    "allowMention": "Tillåt omnämnande",
-    "allowFuzzy": "Tillåt Fuzzy",
-    "ignoreCooldown": "Ignorera nedkylningstid",
-    "ignoreLimit": "Ignorera gräns",
-    "allowReactionsDescription": "Tillåt att ge ett omdöme via reaktioner",
-    "allowAnswerDescription": "Tillåt att ge ett omdöme genom att svara på ett meddelande",
-    "allowMentionDescription": "Tillåt att ge ett omdöme genom att nämna en användare",
-    "allowFuzzyDescription": "Tillåt att ge ett omdöme via fuzzy matching",
-    "ignoreCooldownDescription": "Ignorera nedkylningstid mellan användare",
-    "ignoreLimitDescription": "Ignorera eventuella tidsbegränsningar",
-    "add": "Lägg till integrationsförbikoppling",
-    "selectIntegration": "Välj en integration",
-    "noIntegrations": "Det finns inga fler integrationer tillgängliga för att lägga till förbikopplingar för.",
-    "deleteConfirm": "Är du säker på att du vill ta bort denna integrationsförbikoppling?",
-    "premiumRequired": "Integrationsförbikoppling",
-    "allowDirect": "Tillåt direkt",
-    "ignoreContext": "Ignorera sammanhang",
-    "allowDirectDescription": "Tillåt att ge ett omdöme när en inbäddning skulle hoppas över eftersom endast en mottagare kunde fastställas. Ingen inbäddning kommer någonsin att skickas för en bot.",
-    "ignoreContextDescription": "Ignorera kontextkontroller"
+  "thankwords": {
+    "add": "Lägg till Thankword",
+    "alreadyExists": "Detta tackord finns redan.",
+    "defaults": {
+      "description": "Lägg snabbt till standardtackord för olika språk.",
+      "title": "Standard tackord"
+    },
+    "description": "Dessa ord kommer att användas för att upptäcka när någon tackas. De tolkas som reguljära uttryck.",
+    "invalidCharacter": "Tackordet innehåller ett ogiltigt tecken: {char}",
+    "none": "Inga tackord konfigurerade.",
+    "placeholder": "Ange tackord (Regex)"
   },
   "timePresets": {
-    "hour": "1 timme",
     "day": "1 dag",
-    "week": "1 vecka",
     "fourWeeks": "4 veckor",
+    "hour": "1 timme",
+    "week": "1 vecka",
     "year": "1 år"
   },
-  "login": {
-    "title": "Inloggning krävs",
-    "description": "Logga in med Discord för att komma åt detta panel.",
-    "button": "Logga in med Discord"
+  "token_shop": {
+    "active": "Aktiv",
+    "adminOnly": "Servern är konfigurerad så att endast serveradministratörer kan köpa funktioner.",
+    "autoRenewal": "Automatisk förnyelse",
+    "confirmPurchase": "Är du säker på att du vill köpa den här funktionen för {amount} tokens?",
+    "description": "Förbättra din server med premiumfunktioner genom att använda dina rösttokens. Funktioner som köpts med tokens upphör inte att gälla så länge de förnyas automatiskt. Om du köper en funktion som redan är aktiv förlängs giltighetstiden eller förnyelsedatumet med 30 dagar.",
+    "enabledBySubscription": "Aktiverat genom prenumeration",
+    "expires": "Går ut: {date}",
+    "feature": {
+      "additionalemojis": {
+        "description": "Använd mer än en emoji för att ge omdöme via reaktioner.",
+        "name": "Ytterligare emojis"
+      },
+      "advancedrankings": {
+        "description": "Lås upp fler rankningsalternativ.",
+        "name": "Avancerade rankningar"
+      },
+      "analyzerlog": {
+        "description": "Lagringstiden för analysatorloggen fördubblas.",
+        "name": "Utökad analysatorlogg"
+      },
+      "autopost": {
+        "description": "Publicera automatiskt resultattavlan på en kanal med jämna mellanrum.",
+        "name": "Autopost"
+      },
+      "channelblacklist": {
+        "description": "Förhindra att boten är aktiv i specifika kanaler istället för att tillåta den överallt.",
+        "name": "Kanalens svartlista"
+      },
+      "detailedprofile": {
+        "description": "Visa mer information om användarnas omdömesprofiler.",
+        "name": "Detaljerad profil"
+      },
+      "integrationbypass": {
+        "description": "Tillåt andra bots och integrationer att ge omdömen.",
+        "name": "Integrationsförbikoppling"
+      },
+      "localeoverrides": {
+        "description": "Åsidosätt botmeddelanden och etiketter med dina egna översättningar. För närvarande är det endast möjligt att ange ett eget namn för rykte.",
+        "name": "Lokala överskrivningar"
+      },
+      "logchannel": {
+        "description": "Aktivera en dedikerad loggkanal för alla ändringar av rykte.",
+        "name": "Loggkanal"
+      },
+      "profile": {
+        "description": "Anpassa botens namn och profilbild på din server.",
+        "name": "Botprofil"
+      },
+      "reputationcategories": {
+        "description": "Lås upp obegränsade reputationskategorier.",
+        "name": "Obegränsat antal omdömeskategorier"
+      },
+      "reputationchannel": {
+        "description": "Lås upp obegränsade ryktekanaler.",
+        "name": "Obegränsad reputationskanal"
+      },
+      "reputationlog": {
+        "description": "Se alla sidor i ryktesloggen på servern.",
+        "name": "Fullständig reputationslogg"
+      }
+    },
+    "getMoreTokens": "Få fler tokens",
+    "guildTokens": "Använd guildtokens",
+    "insufficientTokens": "Du har inte tillräckligt med tokens.",
+    "nextRenewal": "Nästa förnyelse: {date}",
+    "noFeatures": "Inga funktioner tillgängliga för tillfället.",
+    "purchase": "Köp",
+    "purchaseSuccess": "Funktionen har köpts!",
+    "subscribe": "Prenumerera",
+    "subscribeSuccess": "Prenumeration aktiverad!",
+    "subscriptionActiveNote": "Denna funktion är för närvarande aktiverad genom ett aktivt abonnemang.",
+    "title": "Tokenbutik",
+    "unsubscribe": "Avsluta prenumeration",
+    "unsubscribeSuccess": "Prenumerationen är inaktiverad!",
+    "userTokens": "Använd personliga tokens"
+  },
+  "user": {
+    "settings": {
+      "description": "Konfigurera dina personliga kontoinställningar och preferenser.",
+      "mails": {
+        "add": {
+          "button": "Lägg till",
+          "placeholder": "Lägg till en ny e-postadress (name{'@'}example.com)"
+        },
+        "description": "Hantera de e-postadresser som är kopplade till ditt konto. Du kan lägga till en ny adress och verifiera den via länken som skickas till din inkorg.",
+        "errors": {
+          "ALREADY_REGISTERED": "Denna e-postadress är redan registrerad för en annan användare.",
+          "CODE_EXPIRED": "Verifieringskoden har gått ut. Begär ett nytt verifieringsmeddelande via e-post.",
+          "INVALID_CODE": "Verifieringskoden är ogiltig.",
+          "INVALID_FORMAT": "E-postadressens format är ogiltigt. Kontrollera och försök igen.",
+          "RATE_LIMIT": "Du gör det för ofta. Vänta {time} innan du lägger till en ny e-postadress.",
+          "UNKNOWN": "Ett okänt fel uppstod. Försök igen senare.",
+          "UNKNOWN_ADDRESS": "Vi kunde inte hitta den här e-postadressen. Den kan ha tagits bort.",
+          "WRONG_USER": "Denna e-postadress tillhör en annan användare."
+        },
+        "noteDeletion": "Observera: E-postadresser från Discord eller Ko-fi kan inte tas bort. Endast adresser som du själv har lagt till kan raderas.",
+        "pending": "Väntar på verifiering",
+        "source": {
+          "discord": "Oenighet",
+          "kofi": "Ko-fi",
+          "user": "Användare"
+        },
+        "title": "E-postadresser",
+        "verified": "Verifierad",
+        "verify": {
+          "error": "E-postverifieringen misslyckades. Försök igen eller begär en ny verifieringslänk.",
+          "success": "Din e-postadress har verifierats."
+        }
+      },
+      "title": "Användarinställningar",
+      "voteGuild": {
+        "description": "Välj vilken guild som ska få tokens när du röstar på boten. Detta påverkar endast framtida röster.",
+        "label": "Rösta på guilden",
+        "none": "Ingen specifik guild (Personlig)"
+      }
+    },
+    "supporter": {
+      "description": "Visa dina aktiva Ko-fi-köp och tilldela dem till en guild för att aktivera supporterfunktioner.",
+      "errors": {
+        "assign": "Det gick inte att tilldela köpet.",
+        "load": "Det gick inte att ladda köp. Försök igen senare.",
+        "unassign": "Det gick inte att avmarkera köpet."
+      },
+      "item": {
+        "assign": "Tilldela",
+        "assignedTo": "Tilldelad till: {guild}",
+        "expires": "Gäller till: {date}",
+        "lifetime": "Livstid",
+        "subscription": "Prenumeration",
+        "unassign": "Avsluta tilldelning"
+      },
+      "kofiLink": "Köp på Ko-fi",
+      "missingPurchasesNotice": "Om dina köp inte syns här kan det bero på att du har använt en annan e-postadress för Ko-fi än för ditt Discord-konto. Du kan länka ytterligare e-postadresser i dina {link}.",
+      "results": {
+        "ALREADY_SUBSCRIBED": "Du har redan ett aktivt abonnemang tilldelat en guild.",
+        "SUBSCRIPTION_EXPIRED": "Denna prenumeration har löpt ut och kan inte tilldelas.",
+        "SUCCESS": "Framgång",
+        "UNKOWN": "Ett okänt prenumerationsfel har uppstått. Försök igen senare."
+      },
+      "sections": {
+        "lifetime": "Livstidsinköp",
+        "lifetime_desc": "Livstidsinköp kan tilldelas en guild för att permanent låsa upp funktioner.",
+        "subscriptions": "Aktiva prenumerationer",
+        "subscriptions_desc": "Prenumerationer förnyas automatiskt och kan tilldelas en guild efter eget val."
+      },
+      "settingsLink": "Användarinställningar",
+      "title": "Supporter"
+    }
   },
   "voting": {
-    "title": "Omröstning",
-    "description": "Information om dina aktuella rösttokens och botlistans röstningsstatus.",
-    "tokens": {
-      "title": "Tokens",
-      "description": "Dina nuvarande röstmarker. Du kan använda dem för att få olika belöningar.",
-      "label": "Aktuella tokens",
-      "shop": "Besök Token Shop"
-    },
     "botlists": {
-      "title": "Botlistor",
-      "description": "Rösta på boten på olika botlistor för att tjäna tokens och behålla din rad.",
-      "name": "Botlista",
-      "streak": "Streak",
-      "lastVote": "Sista omröstningen",
       "action": "Åtgärd",
-      "vote": "Rösta",
+      "days": "dagar",
+      "description": "Rösta på boten på olika botlistor för att tjäna tokens och behålla din rad.",
+      "lastVote": "Sista omröstningen",
+      "name": "Botlista",
       "never": "Aldrig",
-      "days": "dagar"
+      "streak": "Streak",
+      "title": "Botlistor",
+      "vote": "Rösta"
     },
+    "description": "Information om dina aktuella rösttokens och botlistans röstningsstatus.",
     "log": {
-      "title": "Röstningslogg",
-      "description": "En historik över dina transaktioner med röstmarker.",
       "date": "Datum",
+      "description": "En historik över dina transaktioner med röstmarker.",
       "guild": "Gille",
-      "tokens": "Tokens",
+      "personal": "Personlig",
       "reason": {
-        "label": "Skälet",
+        "BONUS": "Daglig bonus",
+        "BONUS_DESCRIPTION": "Du har fått extra tokens för att ha röstat på alla botlistor under de senaste 6 timmarna.",
         "STANDARD": "Rösta",
         "STANDARD_DESCRIPTION": "Du har fått en token för att rösta på en botlista.",
         "STREAK": "Röstningsserie",
         "STREAK_DESCRIPTION": "Du fick en extra token eftersom du har en rad.",
-        "BONUS": "Daglig bonus",
-        "BONUS_DESCRIPTION": "Du har fått extra tokens för att ha röstat på alla botlistor under de senaste 6 timmarna.",
         "TRANSFER": "Överföring till Guild",
         "TRANSFER_DESCRIPTION": "Du överförde tokens till en guild för att stödja dess reputationssystem.",
         "USE": "Köp",
         "USE_DESCRIPTION": "Du använde tokens för att köpa en belöning eller tjänst.",
+        "label": "Skälet",
         "unknown": "Okänd",
         "unknown_DESCRIPTION": "Anledningen till denna transaktion är okänd."
       },
-      "unknownGuild": "Okänd guild",
-      "personal": "Personlig"
+      "title": "Röstningslogg",
+      "tokens": "Tokens",
+      "unknownGuild": "Okänd guild"
     },
     "noteDefaultGuild": "Tips: Du kan ställa in en standardklan som automatiskt får tokens i din",
     "noteDefaultGuildLink": "Användarinställningar",
+    "title": "Omröstning",
+    "tokens": {
+      "description": "Dina nuvarande röstmarker. Du kan använda dem för att få olika belöningar.",
+      "label": "Aktuella tokens",
+      "shop": "Besök Token Shop",
+      "title": "Tokens"
+    },
     "transfer": {
-      "title": "Överför tokens till en guild",
+      "amount": "Belopp",
       "description": "Flytta tokens från ditt personliga saldo till en av dina guilder.",
       "guild": "Gille",
-      "selectGuild": "Välj en guild",
-      "amount": "Belopp",
       "max": "Max: {max}",
-      "submit": "Överföring"
-    }
-  },
-  "user": {
-    "settings": {
-      "title": "Användarinställningar",
-      "description": "Konfigurera dina personliga kontoinställningar och preferenser.",
-      "voteGuild": {
-        "label": "Rösta på guilden",
-        "description": "Välj vilken guild som ska få tokens när du röstar på boten. Detta påverkar endast framtida röster.",
-        "none": "Ingen specifik guild (Personlig)"
-      },
-      "mails": {
-        "title": "E-postadresser",
-        "description": "Hantera de e-postadresser som är kopplade till ditt konto. Du kan lägga till en ny adress och verifiera den via länken som skickas till din inkorg.",
-        "verified": "Verifierad",
-        "pending": "Väntar på verifiering",
-        "noteDeletion": "Observera: E-postadresser från Discord eller Ko-fi kan inte tas bort. Endast adresser som du själv har lagt till kan raderas.",
-        "source": {
-          "user": "Användare",
-          "discord": "Oenighet",
-          "kofi": "Ko-fi"
-        },
-        "add": {
-          "placeholder": "Lägg till en ny e-postadress (name{'@'}example.com)",
-          "button": "Lägg till"
-        },
-        "verify": {
-          "success": "Din e-postadress har verifierats.",
-          "error": "E-postverifieringen misslyckades. Försök igen eller begär en ny verifieringslänk."
-        },
-        "errors": {
-          "ALREADY_REGISTERED": "Denna e-postadress är redan registrerad för en annan användare.",
-          "INVALID_FORMAT": "E-postadressens format är ogiltigt. Kontrollera och försök igen.",
-          "WRONG_USER": "Denna e-postadress tillhör en annan användare.",
-          "INVALID_CODE": "Verifieringskoden är ogiltig.",
-          "CODE_EXPIRED": "Verifieringskoden har gått ut. Begär ett nytt verifieringsmeddelande via e-post.",
-          "UNKNOWN_ADDRESS": "Vi kunde inte hitta den här e-postadressen. Den kan ha tagits bort.",
-          "UNKNOWN": "Ett okänt fel uppstod. Försök igen senare.",
-          "RATE_LIMIT": "Du gör det för ofta. Vänta {time} innan du lägger till en ny e-postadress."
-        }
-      }
-    },
-    "supporter": {
-      "title": "Supporter",
-      "description": "Visa dina aktiva Ko-fi-köp och tilldela dem till en guild för att aktivera supporterfunktioner.",
-      "kofiLink": "Köp på Ko-fi",
-      "sections": {
-        "subscriptions": "Aktiva prenumerationer",
-        "subscriptions_desc": "Prenumerationer förnyas automatiskt och kan tilldelas en guild efter eget val.",
-        "lifetime": "Livstidsinköp",
-        "lifetime_desc": "Livstidsinköp kan tilldelas en guild för att permanent låsa upp funktioner."
-      },
-      "item": {
-        "subscription": "Prenumeration",
-        "lifetime": "Livstid",
-        "expires": "Gäller till: {date}",
-        "assignedTo": "Tilldelad till: {guild}",
-        "assign": "Tilldela",
-        "unassign": "Avsluta tilldelning"
-      },
-      "errors": {
-        "load": "Det gick inte att ladda köp. Försök igen senare.",
-        "assign": "Det gick inte att tilldela köpet.",
-        "unassign": "Det gick inte att avmarkera köpet."
-      },
-      "results": {
-        "ALREADY_SUBSCRIBED": "Du har redan ett aktivt abonnemang tilldelat en guild.",
-        "SUBSCRIPTION_EXPIRED": "Denna prenumeration har löpt ut och kan inte tilldelas.",
-        "UNKOWN": "Ett okänt prenumerationsfel har uppstått. Försök igen senare.",
-        "SUCCESS": "Framgång"
-      },
-      "missingPurchasesNotice": "Om dina köp inte syns här kan det bero på att du har använt en annan e-postadress för Ko-fi än för ditt Discord-konto. Du kan länka ytterligare e-postadresser i dina {link}.",
-      "settingsLink": "Användarinställningar"
-    }
-  },
-  "dashboard": {
-    "title": "Instrumentpanel",
-    "totalReputation": "Total anseende",
-    "weekReputation": "Veckans rykte",
-    "todayReputation": "Dagens rykte",
-    "topChannel": "Top Channel",
-    "topUsers": "Toppanvändare",
-    "rank": "Rank",
-    "user": "Användare",
-    "reputation": "Rykte"
-  },
-  "token_shop": {
-    "title": "Tokenbutik",
-    "description": "Förbättra din server med premiumfunktioner genom att använda dina rösttokens. Funktioner som köpts med tokens upphör inte att gälla så länge de förnyas automatiskt. Om du köper en funktion som redan är aktiv förlängs giltighetstiden eller förnyelsedatumet med 30 dagar.",
-    "guildTokens": "Använd guildtokens",
-    "userTokens": "Använd personliga tokens",
-    "noFeatures": "Inga funktioner tillgängliga för tillfället.",
-    "active": "Aktiv",
-    "expires": "Går ut: {date}",
-    "nextRenewal": "Nästa förnyelse: {date}",
-    "autoRenewal": "Automatisk förnyelse",
-    "purchase": "Köp",
-    "subscribe": "Prenumerera",
-    "unsubscribe": "Avsluta prenumeration",
-    "purchaseSuccess": "Funktionen har köpts!",
-    "subscribeSuccess": "Prenumeration aktiverad!",
-    "unsubscribeSuccess": "Prenumerationen är inaktiverad!",
-    "enabledBySubscription": "Aktiverat genom prenumeration",
-    "subscriptionActiveNote": "Denna funktion är för närvarande aktiverad genom ett aktivt abonnemang.",
-    "confirmPurchase": "Är du säker på att du vill köpa den här funktionen för {amount} tokens?",
-    "insufficientTokens": "Du har inte tillräckligt med tokens.",
-    "getMoreTokens": "Få fler tokens",
-    "feature": {
-      "reputationlog": {
-        "name": "Fullständig reputationslogg",
-        "description": "Se alla sidor i ryktesloggen på servern."
-      },
-      "analyzerlog": {
-        "name": "Utökad analysatorlogg",
-        "description": "Lagringstiden för analysatorloggen fördubblas."
-      },
-      "reputationcategories": {
-        "name": "Obegränsat antal omdömeskategorier",
-        "description": "Lås upp obegränsade reputationskategorier."
-      },
-      "reputationchannel": {
-        "name": "Obegränsad reputationskanal",
-        "description": "Lås upp obegränsade ryktekanaler."
-      },
-      "channelblacklist": {
-        "name": "Kanalens svartlista",
-        "description": "Förhindra att boten är aktiv i specifika kanaler istället för att tillåta den överallt."
-      },
-      "localeoverrides": {
-        "name": "Lokala överskrivningar",
-        "description": "Åsidosätt botmeddelanden och etiketter med dina egna översättningar. För närvarande är det endast möjligt att ange ett eget namn för rykte."
-      },
-      "autopost": {
-        "name": "Autopost",
-        "description": "Publicera automatiskt resultattavlan på en kanal med jämna mellanrum."
-      },
-      "advancedrankings": {
-        "name": "Avancerade rankningar",
-        "description": "Lås upp fler rankningsalternativ."
-      },
-      "detailedprofile": {
-        "name": "Detaljerad profil",
-        "description": "Visa mer information om användarnas omdömesprofiler."
-      },
-      "logchannel": {
-        "name": "Loggkanal",
-        "description": "Aktivera en dedikerad loggkanal för alla ändringar av rykte."
-      },
-      "additionalemojis": {
-        "name": "Ytterligare emojis",
-        "description": "Använd mer än en emoji för att ge omdöme via reaktioner."
-      },
-      "profile": {
-        "name": "Botprofil",
-        "description": "Anpassa botens namn och profilbild på din server."
-      },
-      "integrationbypass": {
-        "name": "Integrationsförbikoppling",
-        "description": "Tillåt andra bots och integrationer att ge omdömen."
-      }
-    },
-    "adminOnly": "Servern är konfigurerad så att endast serveradministratörer kan köpa funktioner."
-  },
-  "metrics": {
-    "title": "Mätvärden",
-    "description": "Är du nyfiken på trafiken och användningen av boten? Det är vi också! Därför har vi sammanställt några fina grafer på denna sida. De visar data i nästan realtid direkt från boten.",
-    "offset": "Offset",
-    "count": "Räkna",
-    "units": {
-      "hour": "Timme",
-      "week": "Vecka",
-      "month": "Månad",
-      "year": "År"
-    },
-    "sections": {
-      "reputation": "Rykte",
-      "commands": "Kommandon",
-      "messages": "Meddelanden",
-      "users": "Användare",
-      "service": "Service"
-    },
-    "charts": {
-      "reputationCount": "Rykte räknas",
-      "reputationTotal": "Total anseende",
-      "reputationDow": "Rykte per veckodag",
-      "reputationTypeTotal": "Total omdöme efter typ",
-      "reputationTypeCount": "Reputationräkning efter typ",
-      "reputationChanges": "Ändringar i rykte",
-      "commandsCount": "Kommandon räknas",
-      "commandsUsage": "Kommandots användning",
-      "messagesCount": "Antal meddelanden",
-      "messagesTotal": "Totalt antal meddelanden",
-      "usersActiveWeek": "Aktiva användare (per vecka)",
-      "usersActiveMonth": "Aktiva användare (månadsvis)",
-      "serviceCountHour": "Tjänsteanvändning (per timme)",
-      "serviceCountWeek": "Tjänsteanvändning (veckovis)"
-    },
-    "users": {
-      "total": "Totalt",
-      "donors": "Donatorer",
-      "receivers": "Mottagare"
-    },
-    "validation": {
-      "offsetMin": "Offset måste vara minst 0",
-      "offsetMax": "Offset får vara högst{max}",
-      "countMin": "Antalet måste vara minst 2",
-      "countMax": "Räkningen måste vara högst {max}"
-    }
-  },
-  "scan": {
-    "description": "Sök igenom din klan efter anseende som tilldelats innan boten lades till eller i kanaler som inte övervakades. Detta kommer att söka igenom alla meddelanden i de konfigurerade anseendekanalerna och kategorierna.",
-    "start": "Starta skanning",
-    "starting": "På väg att börja...",
-    "startedAt": "Började vid",
-    "finishedAt": "Avslutad kl.",
-    "messagesScanned": "Meddelanden som har skannats",
-    "reputationFound": "Rykte funnet",
-    "noScanYet": "Ingen skanning har utförts ännu.",
-    "status": {
-      "running": "Skanning pågår",
-      "finished": "Skanningen är klar"
-    },
-    "progressDetails": "Detaljer om framsteg",
-    "error": {
-      "fetchStatus": "Det gick inte att hämta skanningsstatus. Försök igen senare.",
-      "startFailed": "Det gick inte att starta skanningen. Försök igen senare.",
-      "alreadyRunning": "En genomsökning pågår redan för denna klan."
+      "selectGuild": "Välj en guild",
+      "submit": "Överföring",
+      "title": "Överför tokens till en guild"
     }
   }
 }

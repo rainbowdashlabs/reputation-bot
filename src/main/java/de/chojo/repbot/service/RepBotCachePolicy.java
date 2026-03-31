@@ -12,13 +12,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class RepBotCachePolicy implements MemberCachePolicy, Runnable {
     public static final int CACHE_DURATION = 30;
-    private final HashMap<Long, Instant> seen = new HashMap<>();
+    private final Map<Long, Instant> seen = new ConcurrentHashMap<>();
     private final ScanService scan;
 
     private final Roles roles;
@@ -56,19 +57,19 @@ public class RepBotCachePolicy implements MemberCachePolicy, Runnable {
         if (roles.refreshActive(member.getGuild())) {
             return true;
         }
+        synchronized (seen) {
+            // We always want to keep members we see for the first time
+            if (!seen.containsKey(member.getIdLong())) {
+                seen.put(member.getIdLong(), Instant.now());
+                return true;
+            }
 
-        // We always want to keep members we see for the first time
-        if (!seen.containsKey(member.getIdLong())) {
-            seen.put(member.getIdLong(), Instant.now());
-            return true;
+            // Check if we have seen this member recently
+            if (seen.getOrDefault(member.getIdLong(), Instant.EPOCH).isAfter(oldest())) {
+                return true;
+            }
+            seen.remove(member.getIdLong());
         }
-
-        // Check if we have seen this member recently
-        if (seen.get(member.getIdLong()).isAfter(oldest())) {
-            return true;
-        }
-
-        seen.remove(member.getIdLong());
         return false;
     }
 

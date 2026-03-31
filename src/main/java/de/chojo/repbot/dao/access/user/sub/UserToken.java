@@ -11,6 +11,7 @@ import de.chojo.sadu.mapper.wrapper.Row;
 import java.sql.SQLException;
 import java.time.Instant;
 
+import static de.chojo.sadu.queries.api.query.Query.query;
 import static de.chojo.sadu.queries.converter.StandardValueConverter.INSTANT_TIMESTAMP;
 
 public record UserToken(long userId, String accessToken, String refreshToken, Instant expiry) {
@@ -21,5 +22,9 @@ public record UserToken(long userId, String accessToken, String refreshToken, In
                 row.getString("access_token"),
                 row.getString("refresh_token"),
                 row.get("expiry", INSTANT_TIMESTAMP));
+    }
+
+    public void delete() {
+        query("DELETE FROM user_token WHERE user_id = ?").single().delete();
     }
 }
