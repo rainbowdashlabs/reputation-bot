@@ -26,6 +26,8 @@ public record UserToken(long userId, String accessToken, String refreshToken, In
     }
 
     public void delete() {
-        query("DELETE FROM user_token WHERE user_id = ?").single(call().bind(userId)).delete();
+        query("DELETE FROM user_token WHERE user_id = ?")
+                .single(call().bind(userId))
+                .delete();
     }
 }
