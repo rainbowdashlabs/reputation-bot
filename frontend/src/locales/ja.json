@@ -1,399 +1,27 @@
 {
-  "common": {
-    "save": "保存",
-    "cancel": "キャンセル",
-    "delete": "削除",
-    "edit": "編集",
-    "change": "変更",
-    "clear": "クリア",
-    "confirm": "確認する",
-    "loading": "読み込み中...",
-    "error": {
-      "outOfBounds": "値は{min}から{max}の間でなければならない。有効な値に最も近い値に修正された。"
-    },
-    "noData": "該当する項目は見つかりませんでした。",
-    "previous": "前回",
-    "next": "次",
-    "pageOf": "ページ {current} of {total}"
-  },
-  "navigation": {
-    "settings": "設定",
-    "presets": "プリセット",
-    "setup": "設定",
-    "logout": "ログアウト",
-    "dashboard": "ダッシュボード",
-    "user_settings": "ユーザー設定",
-    "voting": "投票",
-    "token_shop": "トークンショップ",
-    "supporter": "サポーター",
-    "tos": "利用規約",
-    "privacy": "プライバシー",
-    "faq": "よくある質問",
-    "metrics": "指標"
-  },
-  "presets": {
-    "title": "プリセット",
-    "description": "一般的な設定を始めるためのクイック設定プリセットだ。",
-    "apply": "応募する",
-    "applying": "申請中だ。",
-    "simpleReputation": {
-      "title": "シンプルな評価システム",
-      "description": "ユーザーがコマンドを通じてのみ評価を与えられる、複雑な状況追跡を伴わないシンプルな評価システムが欲しい。",
-      "settings": "このプリセットは、コマンド以外のすべての評判タイプを無効化し、寄付者と受取人のコンテキスト追跡を停止する。"
-    },
-    "thankOnce": {
-      "title": "一度だけ感謝する",
-      "description": "ユーザー同士が互いに感謝できるのは一度だけとし、同じユーザー間で繰り返し評価を与えることを防ぎたい。",
-      "settings": "このプリセットはクールダウンを一度だけ設定し、クールダウンの方向を単方向に変更する。"
-    },
-    "noAbuse": {
-      "title": "虐待防止",
-      "description": "文脈に基づく不正利用防止機能を無効化し、ユーザーのインタラクション履歴を追跡せずに、より自由に評価を与えられるようにしたい。",
-      "settings": "このプリセットは、ドナーとレシーバーの両方のコンテキスト追跡を無効にする。"
-    },
-    "default": {
-      "title": "デフォルト設定",
-      "description": "バランスの取れた評判システムが欲しい。ほとんどのサーバーでうまく機能する、妥当なデフォルト設定を備えたものだ。",
-      "settings": "このプリセットは、30分の双方向クールダウンを設定し、コマンドを除く全ての評判モードを有効化し、評判確認を有効化し、寄付者と受取人のコンテキストチェックを有効化する。"
-    },
-    "applied": "応用された"
-  },
-  "settings": {
-    "title": "設定",
-    "general": "一般",
-    "reputation": "評判",
-    "messages": "メッセージ",
-    "profile": "プロフィール",
-    "ranks": "階級",
-    "channels": "チャンネル",
-    "roles": "役割",
-    "thankwords": "謝辞",
-    "abuseProtection": "虐待防止",
-    "announcements": "お知らせ",
-    "autopost": "自動投稿",
-    "logChannel": "ログチャネル",
-    "reactions": "反応",
-    "auditLog": "監査ログ",
-    "integrationBypass": "統合バイパス",
-    "problems": "問題",
-    "debug": {
-      "permissions": {
-        "title": "グローバル権限が不足している",
-        "description": "このボットにはグローバルにこれらの権限が不足している。これにより一部の機能が制限される可能性がある。",
-        "MANAGE_ROLES": "評判の役割は与えられない。",
-        "NICKNAME_CHANGE": "ダッシュボードではニックネームを変更できない。",
-        "MANAGE_GUILD_EXPRESSIONS": "カスタムリアクションはダッシュボードでは提案できない。",
-        "VIEW_CHANNEL": "評判のチャンネルは表示されない。評判はテキストベースの方法では与えられない。",
-        "MESSAGE_HISTORY": "埋め込みによる評判確認が機能していない。ほとんどの不正防止チェックが失敗する。",
-        "MESSAGE_ADD_REACTION": "リアクションによる評価の確認が機能していない。",
-        "MESSAGE_SEND": "確認メッセージは一切機能しない。例えば、埋め込みによるリアクション確認や評価確認も同様だ。",
-        "MESSAGE_SEND_IN_THREADS": "スレッド内では確認メッセージは機能しない。例えば埋め込み経由のリアクション確認や評価確認などがそうだ。",
-        "MESSAGE_EXT_EMOJI": "絵文字による評価確認が機能していない。",
-        "BYPASS_SLOWMODE": "確認メッセージは時々機能しないことがある。例えば、埋め込み経由のリアクション確認や評価確認などがそうだ。",
-        "MESSAGE_ATTACH_VOICE_MESSAGE": "音声チャンネルでは、確認メッセージは一切機能しない。例えば、リアクション確認やレピュテーション確認といった埋め込み機能による確認も同様だ。"
-      },
-      "simpleProblems": {
-        "title": "一般的な問題",
-        "SYSTEM_CHANNEL_NOT_DEFINED": "システムチャネルは定義されていない。",
-        "SYSTEM_CHANNEL_NOT_FOUND": "システムチャンネルが見つかりませんでした。",
-        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "アナウンスチャンネルは定義されていない。",
-        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "アナウンスチャンネルが見つからなかった。",
-        "NO_AUTOPOST_CHANNEL_DEFINED": "自動投稿チャンネルは定義されていない。",
-        "AUTOPOST_CANNEL_NOT_FOUND": "自動投稿チャンネルが見つかりませんでした。",
-        "NO_LOG_CHANNEL_DEFINED": "ログチャネルは定義されていない。",
-        "LOG_CHANNEL_NOT_FOUND": "ログチャネルが見つからなかった。",
-        "NO_THANKWORDS_DEFINED": "感謝の言葉は定義されていない。",
-        "NO_REPUTATION_CHANNEL_DEFINED": "評判に関するチャンネルやカテゴリは定義されていない。"
-      },
-      "missingPermissions": {
-        "title": "スコープ付き権限が不足している",
-        "GUILD": "ギルド",
-        "CHANNEL": "チャンネル",
-        "CATEGORY": "カテゴリー"
-      },
-      "rankProblems": {
-        "title": "ランクの問題",
-        "CANT_ASSIGN_ROLE": "このボットはこの役割を割り当てられない。なぜなら、それはボットの最高権限を超えるからだ。",
-        "MISSING_ROLE": "このランクの役割が欠けている。"
-      },
-      "reputationChannelProblems": {
-        "title": "評判チャネルの問題",
-        "MISSING_CHANNEL": "チャンネルがない。",
-        "MISSING_CATEGORY": "カテゴリが欠けている。",
-        "NOT_TEXT_TYPE": "そのチャンネルはテキストチャンネルではない。"
-      },
-      "simpleWarnings": {
-        "title": "警告",
-        "MAX_MESSAGE_AGE_LOW": "メッセージの最大保存期間は非常に短く設定されている。これにより、古いメッセージに対してユーザー同士がお互いに感謝し合うことが妨げられる可能性がある。"
-      },
-      "goToSettings": "設定に行く"
-    },
-    "scan": "スキャン"
-  },
-  "locale": {
-    "selectLanguage": "言語を選択"
-  },
-  "error": {
-    "noToken": {
-      "title": "セッションが見つかりませんでした",
-      "message": "有効なセッショントークンを持っていない。",
-      "instruction": "このアプリケーションにアクセスするには、新しいセッションを作成してください。"
-    },
-    "notice": {
-      "workingOnIt": "問題について通知を受け、現在解決に向けて取り組んでいる。"
-    },
-    "expired": {
-      "title": "セッションが期限切れになった",
-      "message": "セッションが期限切れか無効だ。",
-      "instruction": "Discordサーバーから新しいセッションを開いて続行してください。"
-    }
-  },
-  "premiumFeature": {
-    "title": "サポーター特集",
-    "message": "{name} サポーター専用だ。利用するにはサポーターになれ。",
-    "requiredTierSingular": "必要なサポーターのレベル：",
-    "requiredTierPlural": "以下のサポーター層のいずれかが必要だ：",
-    "tokenShopHint": "この機能はトークンを使って解除することもできる。",
-    "tokenShopLink": "トークンショップ",
-    "kofiHint": "または支援する",
-    "kofiLink": "Ko-fi"
-  },
-  "profile": {
-    "description": "サーバー内でボットの外観や動作をカスタマイズする。",
-    "reset": "リセット",
-    "premiumRequired": "プロフィールカスタマイズ",
-    "nickname": {
-      "label": "ボットのニックネーム",
-      "placeholder": "ボットのニックネームを入力せよ",
-      "description": "このサーバーでボットにカスタムニックネームを設定する。",
-      "reset": "ニックネームをデフォルトに戻す"
-    },
-    "profilePicture": {
-      "label": "プロフィール写真",
-      "uploadButton": "画像をアップロードする",
-      "uploading": "アップロード中だ。",
-      "description": "ボット用のカスタムプロフィール画像をアップロードする（最大2MB、512x512ピクセル）",
-      "reset": "プロフィール画像をデフォルトに戻す"
-    },
-    "reputationName": {
-      "label": "評判名",
-      "placeholder": "カスタムの評判名を入力せよ（例：『ポイント』、『カルマ』）",
-      "description": "このサーバーで評判に使用される名前をカスタマイズする。",
-      "reset": "評判名をデフォルトに戻す"
-    },
-    "tosNote": "Discordの利用規約や州法に違反する行為は一切認められず、サーバーでこの機能が利用できなくなる可能性がある。"
-  },
-  "general": {
-    "description": "このサーバー用のボットの基本設定を行う。",
-    "language": {
-      "label": "ボット言語",
-      "selectPlaceholder": "言語を選択せよ",
-      "description": "このサーバーでボットがメッセージや応答に使用する言語を選択せよ。"
-    },
-    "systemChannel": {
-      "label": "システムチャンネル",
-      "selectPlaceholder": "チャンネルを選択せよ",
-      "note": "注：このチャンネルは設定済みであるべきであり、内部チャンネルであるべきだ。ボットのサービスに関する重要なメッセージや開発者からのメッセージが含まれる。"
-    },
-    "roleSelect": {
-      "searchPlaceholder": "役職を検索する...",
-      "noRolesFound": "見つかりませんでした"
-    },
-    "ranks": {
-      "description": "評判ランクとその関連する役割を設定する。",
-      "stackRoles": {
-        "label": "スタックの役割",
-        "description": "有効にすると、適用可能な全てのランクが割り当てられる。最高ランクのみではなく。"
-      },
-      "addRank": "新しいランクを追加する",
-      "reputationRequired": "必要な評判",
-      "roleAlreadyAdded": "この役職には既に階級が付いている。",
-      "reputationAlreadyUsed": "この評価値は既に別のランクで使用されている。",
-      "noRanks": "まだランクは設定されていない。",
-      "reputationPlaceholder": "例：100",
-      "refresh": {
-        "button": "ランクを更新する",
-        "refreshing": "さわやかだ…",
-        "alreadyRunning": "更新はすでに進行中だ",
-        "success": "ランク更新が正常に開始された",
-        "failed": "ランク更新の開始に失敗した"
-      },
-      "selectionNote": "統合によって管理されていない役割で、かつボットの最高位以下の役割のみが選択可能である。"
-    },
-    "reputation": {
-      "description": "評判の計算方法と有効にする機能を設定する。",
-      "mode": {
-        "label": "評判モード",
-        "description": "評判の計算方法と表示方法を選択する。",
-        "modes": {
-          "TOTAL": "総評価",
-          "ROLLING_WEEK": "ローリング・ウィーク",
-          "ROLLING_MONTH": "ローリング・マンス",
-          "WEEK": "今週",
-          "MONTH": "今月"
-        },
-        "descriptions": {
-          "TOTAL": "ユーザーがこれまでに受けた総評価点を使用する。",
-          "ROLLING_WEEK": "過去7日間に受け取った評価を利用する。",
-          "ROLLING_MONTH": "過去30日間に受け取った評価を利用する。",
-          "WEEK": "今週の初めから受け取った評価点を使う。",
-          "MONTH": "今月の初めから受け取った評価を使う。"
-        }
-      },
-      "resetDate": {
-        "label": "日付をリセットする",
-        "description": "評判がカウントされる日付がリセットされる。将来の日付を設定してリセットをスケジュールする。",
-        "clear": "リセット日クリア"
-      },
-      "types": {
-        "reaction": {
-          "label": "反応評価",
-          "description": "特定のリアクションがメッセージに追加された時に評価を与える。",
-          "confirmation": {
-            "label": "反応確認",
-            "description": "リアクションで評価が与えられた際に確認メッセージを送る。"
-          }
-        },
-        "answer": {
-          "label": "回答評価",
-          "description": "ユーザーが回答で感謝された場合、そのユーザーに評価を与える。"
-        },
-        "mention": {
-          "label": "評判について言及する",
-          "description": "ユーザーが言及された際に、感謝の言葉と共に評価を与える。"
-        },
-        "fuzzy": {
-          "label": "ファジーマッチング",
-          "description": "チャンネル内のユーザー名に、感謝の言葉の周囲にある単語を一致させて評価を与える。"
-        },
-        "embed": {
-          "label": "評判を埋め込む",
-          "description": "対象を特定できない場合、直近の会話に参加していたユーザーの一覧を埋め込みで送信する。"
-        },
-        "direct": {
-          "label": "直接埋め込み評価",
-          "description": "埋め込みに1人のユーザーしか含まれない場合、自動的に評価を与える。"
-        },
-        "command": {
-          "label": "コマンド評価",
-          "description": "/reputation コマンドで評価を与える。",
-          "ephemeral": {
-            "label": "一時的な反応",
-            "description": "コマンドで評価を与える際、他のユーザーには見えないように応答を送る。"
-          }
-        }
-      }
-    },
-    "roles": {
-      "description": "どの役割が評価を与えたり受け取ったりできるかを設定する。",
-      "donor": {
-        "label": "寄付者の役割",
-        "description": "有効にすると、これらの役割のいずれか一つ以上を持つユーザーのみが評価を与えられる。"
-      },
-      "receiver": {
-        "label": "受信者の役割",
-        "description": "有効にすると、これらの役割のいずれか一つ以上を持つユーザーのみが評価を受け取れる。"
-      },
-      "list": {
-        "label": "選ばれた役割",
-        "description": "どの役割を必須とするかを選択せよ。"
-      },
-      "denyDonor": {
-        "label": "ドナーの役割を拒否する",
-        "description": "有効にすると、これらの役割のいずれかを持つユーザーは評価を与えることができない。"
-      },
-      "denyReceiver": {
-        "label": "受信者ロールを拒否する",
-        "description": "有効にすると、これらの役割のいずれかを持つユーザーは評価を受け取れない。"
-      }
-    },
-    "channels": {
-      "description": "ボットが活動すべき場所とすべきでない場所を設定する。",
-      "listType": {
-        "label": "リストの種類",
-        "description": "選択したチャンネルとカテゴリを許可するか拒否するかを選択する。",
-        "allow": "許可リスト",
-        "deny": "拒否リスト",
-        "premiumRequired": "拒否リスト"
-      },
-      "list": {
-        "label": "チャンネルとカテゴリー",
-        "description": "リストに含めるべきチャンネルとカテゴリを選択せよ。",
-        "channels": "チャンネル",
-        "categories": "カテゴリ",
-        "permissionsNote": "ボットが読み書き権限を持つチャンネルのみが表示される。"
-      },
-      "premium": {
-        "channelLimitWarning": "{limit}以上のチャンネルを選択するのはサポーター専用だ。それを使いたいならサポーターになれ。",
-        "categoryLimitWarning": "{limit}以上のカテゴリを選択するのはサポーター専用だ。利用するにはサポーターになれ。"
-      }
-    },
-    "everyoneTokenPurchase": {
-      "label": "全員トークン購入",
-      "description": "すべてのユーザーがトークンを使ってプレミアム機能を購入できるようにする。無効にした場合、サーバー管理者のみが機能を購入できる。"
-    }
-  },
-  "reactions": {
-    "title": "反応",
-    "description": "評価を与える際に使用する絵文字を設定する。",
-    "main": {
-      "label": "主反応",
-      "description": "評価を与える際の主な反応として使われる絵文字だ。"
-    },
-    "additional": {
-      "label": "追加の反応",
-      "description": "評価を与えるために使える追加の絵文字。",
-      "premiumRequired": "追加の反応",
-      "add": "リアクションを追加する",
-      "none": "追加の反応は設定されていない。"
-    }
-  },
-  "thankwords": {
-    "description": "これらの言葉は、誰かが感謝されている場合を検出するために使われる。これらは正規表現として解釈される。",
-    "add": "サンクワードを追加する",
-    "placeholder": "thankwordを入力せよ（正規表現）",
-    "none": "感謝の言葉は設定されていない。",
-    "invalidCharacter": "この感謝の言葉には無効な文字が含まれている：{char}",
-    "alreadyExists": "この感謝の言葉は既に存在する。",
-    "defaults": {
-      "title": "デフォルトの謝辞",
-      "description": "様々な言語のデフォルトの感謝の言葉を素早く追加する。"
-    }
-  },
   "abuseProtection": {
-    "description": "評判の悪用を防ぐために制限と保護を設定する。",
     "cooldown": {
-      "label": "クールダウン（分）",
       "description": "同じユーザー同士が再び感謝し合うまでに必要な時間（分単位）。0はクールダウンなし、-1は永久に制限されることを意味する。",
+      "label": "クールダウン（分）",
       "once": {
-        "label": "クールダウンは一度だけだ",
+        "activeDescription": "クールダウンが一度発動する。ユーザーは互いに一度だけ感謝できる。方向は一方向性に設定される。",
         "description": "有効にすると、ユーザーは互いに一度だけ感謝できる。",
-        "activeDescription": "クールダウンが一度発動する。ユーザーは互いに一度だけ感謝できる。方向は一方向性に設定される。"
+        "label": "クールダウンは一度だけだ"
       }
     },
     "cooldownDirection": {
-      "label": "クールダウンの方向",
+      "bidirectional": "双方向",
       "description": "一方向とは、寄付者が同じ人物に寄付する際にクールダウンが発生することを意味する。双方向とは、クールダウンが寄付者と受取人の間で発生し、時間が経過するまで互いに感謝し合うことを妨げることを意味する。",
-      "unidirectional": "一方向性",
-      "bidirectional": "双方向"
+      "label": "クールダウンの方向",
+      "unidirectional": "一方向性"
     },
-    "maxMessageAge": {
-      "label": "最大メッセージ保存期間（分）",
-      "description": "メッセージが回答またはリアクションを受けた際に評価の対象となる最大経過時間（分単位）。"
-    },
-    "minMessages": {
-      "label": "最小メッセージ数",
-      "description": "このチャンネルで少なくともこれだけのメッセージを投稿した作者は、常に評価を受け取る資格がある。"
-    },
+    "description": "評判の悪用を防ぐために制限と保護を設定する。",
     "donorContext": {
-      "label": "提供者は必ず立ち会う必要がある。",
-      "description": "有効化されている場合、レピュテーションを与えるには、ドナーがチャンネル内で直近のメッセージの少なくとも1つを送信している必要がある。"
-    },
-    "receiverContext": {
-      "label": "受信機は設置されていなければならない",
-      "description": "有効化されている場合、受信者は評判値を受け取るために、そのチャンネルで送信された直近のメッセージのうち少なくとも1通を送信している必要がある。"
+      "description": "有効化されている場合、レピュテーションを与えるには、ドナーがチャンネル内で直近のメッセージの少なくとも1つを送信している必要がある。",
+      "label": "提供者は必ず立ち会う必要がある。"
     },
     "givenLimit": {
+      "description": "ユーザーが一定期間内に与えられる評価の量を制限する。",
       "enabled": {
         "label": "指定された制限を有効にする"
       },
@@ -402,10 +30,22 @@
       },
       "maxGivenHours": {
         "label": "時間外"
-      },
-      "description": "ユーザーが一定期間内に与えられる評価の量を制限する。"
+      }
+    },
+    "maxMessageAge": {
+      "description": "メッセージが回答またはリアクションを受けた際に評価の対象となる最大経過時間（分単位）。",
+      "label": "最大メッセージ保存期間（分）"
+    },
+    "maxMessageReputation": {
+      "description": "メンションや埋め込みを通じて、1つのメッセージで付与できるレピュテーションの最大量。",
+      "label": "最大メッセージ評価"
+    },
+    "minMessages": {
+      "description": "このチャンネルで少なくともこれだけのメッセージを投稿した作者は、常に評価を受け取る資格がある。",
+      "label": "最小メッセージ数"
     },
     "receivedLimit": {
+      "description": "ユーザーが一定期間内に獲得できる評価ポイントの上限を設定する。",
       "enabled": {
         "label": "受信制限を有効にする"
       },
@@ -414,155 +54,540 @@
       },
       "maxReceivedHours": {
         "label": "時間外"
-      },
-      "description": "ユーザーが一定期間内に獲得できる評価ポイントの上限を設定する。"
+      }
     },
-    "maxMessageReputation": {
-      "label": "最大メッセージ評価",
-      "description": "メンションや埋め込みを通じて、1つのメッセージで付与できるレピュテーションの最大量。"
+    "receiverContext": {
+      "description": "有効化されている場合、受信者は評判値を受け取るために、そのチャンネルで送信された直近のメッセージのうち少なくとも1通を送信している必要がある。",
+      "label": "受信機は設置されていなければならない"
     }
   },
   "announcements": {
-    "description": "ユーザーが新しいランクに到達した際に送信されるメッセージを設定する。",
     "active": {
-      "label": "通知を有効にする",
-      "description": "有効にすると、ユーザーが新しいランクに到達した際にボットがメッセージを送信する。"
-    },
-    "sameChannel": {
-      "label": "同じチャンネルで送信する",
-      "description": "有効にすると、レベルアップが発生したチャンネルに通知が送信される。そうでない場合は、選択したチャンネルに送信される。"
+      "description": "有効にすると、ユーザーが新しいランクに到達した際にボットがメッセージを送信する。",
+      "label": "通知を有効にする"
     },
     "channel": {
-      "label": "告知チャンネル",
-      "description": "ランクアップの通知を送信するチャンネルを選択せよ。"
+      "description": "ランクアップの通知を送信するチャンネルを選択せよ。",
+      "label": "告知チャンネル"
+    },
+    "description": "ユーザーが新しいランクに到達した際に送信されるメッセージを設定する。",
+    "sameChannel": {
+      "description": "有効にすると、レベルアップが発生したチャンネルに通知が送信される。そうでない場合は、選択したチャンネルに送信される。",
+      "label": "同じチャンネルで送信する"
+    }
+  },
+  "auditLog": {
+    "added": "追加された",
+    "description": "サーバーで行われたすべての設定変更の履歴を表示する。",
+    "from": "From",
+    "loadError": "監査ログを読み込めなかった。もう一度試してくれ。",
+    "loading": "監査ログを読み込んでいる...",
+    "next": "次",
+    "noEntries": "監査ログのエントリは見つからなかった。",
+    "pageInfo": "ページ {current} of {total}",
+    "previous": "前回",
+    "removed": "削除された",
+    "retry": "再試行",
+    "settings": {
+      "abuseprotection_cooldown": "悪用防止 - クールダウン",
+      "abuseprotection_cooldowndirection": "不正利用防止 - クールダウン方向",
+      "abuseprotection_donorcontext": "不正利用防止 - 寄付者コンテキスト",
+      "abuseprotection_maxgiven": "悪用防止 - 最大許容値",
+      "abuseprotection_maxgivenhours": "不正利用防止 - 最大付与時間",
+      "abuseprotection_maxmessageage": "悪用防止 - 最大メッセージ保存期間",
+      "abuseprotection_maxmessagereputation": "悪用防止 - 最大メッセージ評価",
+      "abuseprotection_maxreceived": "虐待防止 - 最大受信量",
+      "abuseprotection_maxreceivedhours": "不正利用防止 - 最大受信時間",
+      "abuseprotection_minmessages": "虐待防止 - 最低メッセージ数",
+      "abuseprotection_receivercontext": "悪用防止 - 受信者コンテキスト",
+      "announcements_active": "お知らせ - アクティブ",
+      "announcements_channel": "お知らせ - チャンネル",
+      "announcements_samechannel": "お知らせ - 同じチャンネル",
+      "autopost_active": "自動投稿 - 有効",
+      "autopost_channel": "自動投稿 - チャンネル",
+      "autopost_refreshinterval": "自動投稿 - 更新間隔",
+      "autopost_refreshtype": "自動投稿 - 更新タイプ",
+      "general_everyonetokenpurchase": "一般 - 全員向けトークン購入",
+      "general_language": "一般 - 言語",
+      "general_reputationmode": "評判 - 評判モード",
+      "general_resetdate": "評判 - リセット日",
+      "general_stackroles": "ランク - スタックの役割",
+      "general_systemchannel": "一般 - システムチャンネル",
+      "logchannel_active": "ログチャネル - アクティブ",
+      "logchannel_channel": "ログチャネル - チャネル",
+      "messages_commandreputationephemeral": "評判 - 指揮官の評判 一時的",
+      "messages_reactionconfirmation": "評判 - 反応確認",
+      "profile_nickname": "プロフィール - ニックネーム",
+      "profile_profilepicture": "プロフィール - プロフィール写真",
+      "profile_reputationname": "プロフィール - 評判名",
+      "ranks": "階級 - 役割",
+      "reputation_answeractive": "評判 - 回答中",
+      "reputation_commandactive": "評判 - 命令有効",
+      "reputation_directactive": "評判 - 直接的",
+      "reputation_embedactive": "評判 - 埋め込みアクティブ",
+      "reputation_fuzzyactive": "評判 - ファジーアクティブ",
+      "reputation_mentionactive": "評判 - 言及中",
+      "reputation_reactionactive": "評判 - 反応が活発だ",
+      "thanking_channels_categories": "チャンネル - カテゴリ一覧",
+      "thanking_channels_channels": "チャンネル - チャンネル一覧",
+      "thanking_channels_whitelist": "チャンネル - ホワイトリストモード",
+      "thanking_denydonorroles": "役割 - 寄付者役割を拒否する",
+      "thanking_denyreceiverroles": "役割 - 受信者を拒否する役割",
+      "thanking_donorroles": "役割 - 寄付者の役割",
+      "thanking_reactions_mainreaction": "反応 - 主な反応",
+      "thanking_reactions_reactions": "反応 - 追加の反応",
+      "thanking_receiverroles": "役割 - 受信者役割",
+      "thanking_thankwords_words": "謝辞"
+    },
+    "to": "～へ",
+    "unknownMember": "不明なメンバー",
+    "values": {
+      "bidirectional": "双方向",
+      "daily": "毎日",
+      "delete_and_repost": "削除して再投稿する",
+      "disabled": "障害がある",
+      "enabled": "有効",
+      "hourly": "時間単位",
+      "month": "月",
+      "monthly": "月次",
+      "noChanges": "変更なし",
+      "none": "なし",
+      "null": "設定されていない",
+      "once": "一度",
+      "repost": "再投稿",
+      "rolling_month": "ローリング・マンス",
+      "rolling_week": "ローリング・ウィーク",
+      "total": "合計",
+      "unidirectional": "一方向性",
+      "unknownChannel": "不明なチャンネル",
+      "unknownIntegration": "不明な統合",
+      "update": "更新",
+      "week": "週",
+      "weekly": "週刊"
     }
   },
   "autopost": {
+    "active": {
+      "description": "自動リーダーボード投稿を有効または無効にする。",
+      "label": "自動投稿を有効にする"
+    },
+    "channel": {
+      "description": "リーダーボードを掲載すべきチャンネル。",
+      "label": "自動投稿チャンネル"
+    },
     "description": "リーダーボードをチャンネルに自動投稿するように設定する。",
     "premiumRequired": "自動投稿",
-    "active": {
-      "label": "自動投稿を有効にする",
-      "description": "自動リーダーボード投稿を有効または無効にする。"
-    },
-    "channel": {
-      "label": "自動投稿チャンネル",
-      "description": "リーダーボードを掲載すべきチャンネル。"
-    },
     "refreshInterval": {
-      "label": "更新間隔",
-      "description": "リーダーボードの更新頻度はどれくらいか。",
-      "HOURLY": "時間単位",
       "DAILY": "毎日",
+      "HOURLY": "時間単位",
+      "MONTHLY": "月次",
       "WEEKLY": "週刊",
-      "MONTHLY": "月次"
+      "description": "リーダーボードの更新頻度はどれくらいか。",
+      "label": "更新間隔"
     },
     "refreshType": {
-      "label": "更新タイプ",
-      "description": "投稿をどのように更新すべきか。",
       "DELETE_AND_REPOST": "削除して再投稿する",
       "REPOST": "再投稿",
-      "UPDATE": "更新"
+      "UPDATE": "更新",
+      "description": "投稿をどのように更新すべきか。",
+      "label": "更新タイプ"
     },
     "send": {
+      "description": "手動でチャンネルに自動投稿をすぐに送信または更新する。",
       "label": "今すぐ自動投稿する",
-      "sending": "送信中...",
-      "description": "手動でチャンネルに自動投稿をすぐに送信または更新する。"
+      "sending": "送信中..."
     }
+  },
+  "common": {
+    "cancel": "キャンセル",
+    "change": "変更",
+    "clear": "クリア",
+    "confirm": "確認する",
+    "delete": "削除",
+    "edit": "編集",
+    "error": {
+      "outOfBounds": "値は{min}から{max}の間でなければならない。有効な値に最も近い値に修正された。"
+    },
+    "loading": "読み込み中...",
+    "next": "次",
+    "noData": "該当する項目は見つかりませんでした。",
+    "pageOf": "ページ {current} of {total}",
+    "previous": "前回",
+    "save": "保存"
+  },
+  "dashboard": {
+    "rank": "ランク",
+    "reputation": "評判",
+    "title": "ダッシュボード",
+    "todayReputation": "今日の評判",
+    "topChannel": "トップチャンネル",
+    "topUsers": "トップユーザー",
+    "totalReputation": "総評価",
+    "user": "ユーザー",
+    "weekReputation": "週間評価"
+  },
+  "error": {
+    "expired": {
+      "instruction": "Discordサーバーから新しいセッションを開いて続行してください。",
+      "message": "セッションが期限切れか無効だ。",
+      "title": "セッションが期限切れになった"
+    },
+    "noToken": {
+      "instruction": "このアプリケーションにアクセスするには、新しいセッションを作成してください。",
+      "message": "有効なセッショントークンを持っていない。",
+      "title": "セッションが見つかりませんでした"
+    },
+    "notice": {
+      "workingOnIt": "問題について通知を受け、現在解決に向けて取り組んでいる。"
+    }
+  },
+  "general": {
+    "channels": {
+      "description": "ボットが活動すべき場所とすべきでない場所を設定する。",
+      "list": {
+        "categories": "カテゴリ",
+        "channels": "チャンネル",
+        "description": "リストに含めるべきチャンネルとカテゴリを選択せよ。",
+        "label": "チャンネルとカテゴリー",
+        "permissionsNote": "ボットが読み書き権限を持つチャンネルのみが表示される。"
+      },
+      "listType": {
+        "allow": "許可リスト",
+        "deny": "拒否リスト",
+        "description": "選択したチャンネルとカテゴリを許可するか拒否するかを選択する。",
+        "label": "リストの種類",
+        "premiumRequired": "拒否リスト"
+      },
+      "premium": {
+        "categoryLimitWarning": "{limit}以上のカテゴリを選択するのはサポーター専用だ。利用するにはサポーターになれ。",
+        "channelLimitWarning": "{limit}以上のチャンネルを選択するのはサポーター専用だ。それを使いたいならサポーターになれ。"
+      }
+    },
+    "description": "このサーバー用のボットの基本設定を行う。",
+    "everyoneTokenPurchase": {
+      "description": "すべてのユーザーがトークンを使ってプレミアム機能を購入できるようにする。無効にした場合、サーバー管理者のみが機能を購入できる。",
+      "label": "全員トークン購入"
+    },
+    "language": {
+      "description": "このサーバーでボットがメッセージや応答に使用する言語を選択せよ。",
+      "label": "ボット言語",
+      "selectPlaceholder": "言語を選択せよ"
+    },
+    "ranks": {
+      "addRank": "新しいランクを追加する",
+      "description": "評判ランクとその関連する役割を設定する。",
+      "noRanks": "まだランクは設定されていない。",
+      "refresh": {
+        "alreadyRunning": "更新はすでに進行中だ",
+        "button": "ランクを更新する",
+        "failed": "ランク更新の開始に失敗した",
+        "refreshing": "さわやかだ…",
+        "success": "ランク更新が正常に開始された"
+      },
+      "reputationAlreadyUsed": "この評価値は既に別のランクで使用されている。",
+      "reputationPlaceholder": "例：100",
+      "reputationRequired": "必要な評判",
+      "roleAlreadyAdded": "この役職には既に階級が付いている。",
+      "selectionNote": "統合によって管理されていない役割で、かつボットの最高位以下の役割のみが選択可能である。",
+      "stackRoles": {
+        "description": "有効にすると、適用可能な全てのランクが割り当てられる。最高ランクのみではなく。",
+        "label": "スタックの役割"
+      }
+    },
+    "reputation": {
+      "description": "評判の計算方法と有効にする機能を設定する。",
+      "mode": {
+        "description": "評判の計算方法と表示方法を選択する。",
+        "descriptions": {
+          "MONTH": "今月の初めから受け取った評価を使う。",
+          "ROLLING_MONTH": "過去30日間に受け取った評価を利用する。",
+          "ROLLING_WEEK": "過去7日間に受け取った評価を利用する。",
+          "TOTAL": "ユーザーがこれまでに受けた総評価点を使用する。",
+          "WEEK": "今週の初めから受け取った評価点を使う。"
+        },
+        "label": "評判モード",
+        "modes": {
+          "MONTH": "今月",
+          "ROLLING_MONTH": "ローリング・マンス",
+          "ROLLING_WEEK": "ローリング・ウィーク",
+          "TOTAL": "総評価",
+          "WEEK": "今週"
+        }
+      },
+      "resetDate": {
+        "clear": "リセット日クリア",
+        "description": "評判がカウントされる日付がリセットされる。将来の日付を設定してリセットをスケジュールする。",
+        "label": "日付をリセットする"
+      },
+      "types": {
+        "answer": {
+          "description": "ユーザーが回答で感謝された場合、そのユーザーに評価を与える。",
+          "label": "回答評価"
+        },
+        "command": {
+          "description": "/reputation コマンドで評価を与える。",
+          "ephemeral": {
+            "description": "コマンドで評価を与える際、他のユーザーには見えないように応答を送る。",
+            "label": "一時的な反応"
+          },
+          "label": "コマンド評価"
+        },
+        "direct": {
+          "description": "埋め込みに1人のユーザーしか含まれない場合、自動的に評価を与える。",
+          "label": "直接埋め込み評価"
+        },
+        "embed": {
+          "description": "対象を特定できない場合、直近の会話に参加していたユーザーの一覧を埋め込みで送信する。",
+          "label": "評判を埋め込む"
+        },
+        "fuzzy": {
+          "description": "チャンネル内のユーザー名に、感謝の言葉の周囲にある単語を一致させて評価を与える。",
+          "label": "ファジーマッチング"
+        },
+        "mention": {
+          "description": "ユーザーが言及された際に、感謝の言葉と共に評価を与える。",
+          "label": "評判について言及する"
+        },
+        "reaction": {
+          "confirmation": {
+            "description": "リアクションで評価が与えられた際に確認メッセージを送る。",
+            "label": "反応確認"
+          },
+          "description": "特定のリアクションがメッセージに追加された時に評価を与える。",
+          "label": "反応評価"
+        }
+      }
+    },
+    "roleSelect": {
+      "noRolesFound": "見つかりませんでした",
+      "searchPlaceholder": "役職を検索する..."
+    },
+    "roles": {
+      "denyDonor": {
+        "description": "有効にすると、これらの役割のいずれかを持つユーザーは評価を与えることができない。",
+        "label": "ドナーの役割を拒否する"
+      },
+      "denyReceiver": {
+        "description": "有効にすると、これらの役割のいずれかを持つユーザーは評価を受け取れない。",
+        "label": "受信者ロールを拒否する"
+      },
+      "description": "どの役割が評価を与えたり受け取ったりできるかを設定する。",
+      "donor": {
+        "description": "有効にすると、これらの役割のいずれか一つ以上を持つユーザーのみが評価を与えられる。",
+        "label": "寄付者の役割"
+      },
+      "list": {
+        "description": "どの役割を必須とするかを選択せよ。",
+        "label": "選ばれた役割"
+      },
+      "receiver": {
+        "description": "有効にすると、これらの役割のいずれか一つ以上を持つユーザーのみが評価を受け取れる。",
+        "label": "受信者の役割"
+      }
+    },
+    "systemChannel": {
+      "label": "システムチャンネル",
+      "note": "注：このチャンネルは設定済みであるべきであり、内部チャンネルであるべきだ。ボットのサービスに関する重要なメッセージや開発者からのメッセージが含まれる。",
+      "selectPlaceholder": "チャンネルを選択せよ"
+    }
+  },
+  "guildSwitcher": {
+    "add": "サーバーから設定を開いて、別のサーバーを追加する。",
+    "current": "現在のサーバー",
+    "none": "他のサーバーは見つからなかった",
+    "title": "サーバーを切り替える"
+  },
+  "help": {
+    "message": "困ったことがあるか？機能が足りないか？意見があるか？ボットにプライベートメッセージを送ればいい。ページの最下部にはサポートDiscordへのリンクもある。",
+    "title": "助けが必要か？"
+  },
+  "integrationBypass": {
+    "add": "統合バイパスを追加する",
+    "allowAnswer": "許可する",
+    "allowAnswerDescription": "メッセージへの回答を通じて評価を与えることを許可する",
+    "allowDirect": "直接許可する",
+    "allowDirectDescription": "受信者が1人しか特定できないため、埋め込みがスキップされる場合に評価を許可する。ボットに対しては埋め込みが送信されることはない。",
+    "allowFuzzy": "あいまいさを許容する",
+    "allowFuzzyDescription": "あいまい一致による評価の付与を許可する",
+    "allowMention": "言及を許可する",
+    "allowMentionDescription": "ユーザーをメンションすることで評価を付与できるようにする",
+    "allowReactions": "リアクションを許可する",
+    "allowReactionsDescription": "リアクションで評価を付けることを許可する",
+    "deleteConfirm": "この統合バイパスを本当に削除するのか？",
+    "description": "統合機能に対してバイパスを設定し、通常の要件を満たさない場合でも評価を付与できるようにする。",
+    "ignoreContext": "文脈を無視する",
+    "ignoreContextDescription": "文脈チェックを無視する",
+    "ignoreCooldown": "クールダウンを無視する",
+    "ignoreCooldownDescription": "ユーザー間のクールダウンを無視する",
+    "ignoreLimit": "制限を無視する",
+    "ignoreLimitDescription": "設定された時間制限は無視せよ",
+    "noIntegrations": "追加できるバイパス用の統合はこれ以上ない。",
+    "premiumRequired": "統合バイパス",
+    "selectIntegration": "統合を選択する"
+  },
+  "links": {
+    "faq": "よくある質問",
+    "support": "サポートサーバー",
+    "tos": "利用規約",
+    "website": "ウェブサイト"
+  },
+  "locale": {
+    "selectLanguage": "言語を選択"
   },
   "logChannel": {
-    "premiumRequired": "ログチャネル",
-    "description": "ログチャネルには、ユーザーに対して与えられた評価と受け取った評価の全てが含まれる。",
     "active": {
-      "label": "ログチャネルを有効にする",
-      "description": "評判の変化の記録を有効または無効にする。"
+      "description": "評判の変化の記録を有効または無効にする。",
+      "label": "ログチャネルを有効にする"
     },
     "channel": {
-      "label": "ログチャネル",
-      "description": "評判の変更を記録すべきチャネル。"
+      "description": "評判の変更を記録すべきチャネル。",
+      "label": "ログチャネル"
+    },
+    "description": "ログチャネルには、ユーザーに対して与えられた評価と受け取った評価の全てが含まれる。",
+    "premiumRequired": "ログチャネル"
+  },
+  "login": {
+    "button": "Discordでログインする",
+    "description": "このパネルにアクセスするには、Discordでログインする必要がある。",
+    "title": "ログインが必要だ"
+  },
+  "metrics": {
+    "charts": {
+      "commandsCount": "コマンド数",
+      "commandsUsage": "コマンドの使用方法",
+      "messagesCount": "メッセージ数",
+      "messagesTotal": "総メッセージ数",
+      "reputationChanges": "評判の変化",
+      "reputationCount": "評判ポイント",
+      "reputationDow": "曜日別の評判",
+      "reputationTotal": "総評価",
+      "reputationTypeCount": "評判のタイプ別カウント",
+      "reputationTypeTotal": "タイプ別総評価",
+      "serviceCountHour": "サービス利用（時間単位）",
+      "serviceCountWeek": "サービス利用状況（週間）",
+      "usersActiveMonth": "月間アクティブユーザー",
+      "usersActiveWeek": "アクティブユーザー（週間）"
+    },
+    "count": "数える",
+    "description": "ボットのトラフィックや利用状況が気になるか？我々も同じだ！だからこそ、このページにいくつかの見やすいグラフをまとめた。これらはボットから直接取得したほぼリアルタイムのデータを示している。",
+    "offset": "オフセット",
+    "sections": {
+      "commands": "コマンド",
+      "messages": "メッセージ",
+      "reputation": "評判",
+      "service": "サービス",
+      "users": "ユーザー"
+    },
+    "title": "指標",
+    "units": {
+      "hour": "時間",
+      "month": "月",
+      "week": "週",
+      "year": "年"
+    },
+    "users": {
+      "donors": "寄付者",
+      "receivers": "受信機",
+      "total": "合計"
+    },
+    "validation": {
+      "countMax": "カウントは最大で{max}でなければならない。",
+      "countMin": "数は少なくとも2でなければならない",
+      "offsetMax": "オフセットは最大{max}でなければならない。",
+      "offsetMin": "オフセットは少なくとも0でなければならない"
     }
   },
-  "setup": {
-    "title": "初期設定",
-    "stepProgress": "ステップ{current}/{total}",
-    "requiredStep": "この手順は続行するために必要だ",
-    "navigation": {
-      "previous": "前回",
-      "next": "次",
-      "finish": "設定を完了する"
+  "navigation": {
+    "dashboard": "ダッシュボード",
+    "faq": "よくある質問",
+    "logout": "ログアウト",
+    "metrics": "指標",
+    "presets": "プリセット",
+    "privacy": "プライバシー",
+    "settings": "設定",
+    "setup": "設定",
+    "supporter": "サポーター",
+    "token_shop": "トークンショップ",
+    "tos": "利用規約",
+    "user_settings": "ユーザー設定",
+    "voting": "投票"
+  },
+  "premiumFeature": {
+    "kofiHint": "または支援する",
+    "kofiLink": "Ko-fi",
+    "message": "{name} サポーター専用だ。利用するにはサポーターになれ。",
+    "requiredTierPlural": "以下のサポーター層のいずれかが必要だ：",
+    "requiredTierSingular": "必要なサポーターのレベル：",
+    "title": "サポーター特集",
+    "tokenShopHint": "この機能はトークンを使って解除することもできる。",
+    "tokenShopLink": "トークンショップ"
+  },
+  "presets": {
+    "applied": "応用された",
+    "apply": "応募する",
+    "applying": "申請中だ。",
+    "default": {
+      "description": "バランスの取れた評判システムが欲しい。ほとんどのサーバーでうまく機能する、妥当なデフォルト設定を備えたものだ。",
+      "settings": "このプリセットは、30分の双方向クールダウンを設定し、コマンドを除く全ての評判モードを有効化し、評判確認を有効化し、寄付者と受取人のコンテキストチェックを有効化する。",
+      "title": "デフォルト設定"
     },
-    "steps": {
-      "language": {
-        "title": "言語を選択",
-        "description": "サーバー内でボットがメッセージや応答に使用する言語を選択する。フロントエンドの言語は選択内容に合わせて変更される。"
-      },
-      "systemChannel": {
-        "title": "システムチャンネル",
-        "description": "ボットが重要なシステムメッセージや通知を送信するチャンネルを選択せよ。",
-        "required": "セットアップを続けるには、システムチャンネルを選択しなければならない。"
-      },
-      "reputationTypes": {
-        "title": "評判の種類",
-        "description": "ユーザーが評価を付ける方法を選択する。複数のタイプを有効にすることで、ユーザーに柔軟性を与えられる。"
-      },
-      "reputationMode": {
-        "title": "評判モード",
-        "description": "サーバー内で評判をどのように計算し表示するかを設定する。"
-      },
-      "ranks": {
-        "title": "評判ランク",
-        "description": "ユーザーが特定の評判レベルに達した際に付与される役割を定義する。少なくとも1つのランクが必要だ。",
-        "required": "少なくとも1つの評価ランクを定義しないと先に進めない。"
-      },
-      "channels": {
-        "title": "チャンネルとカテゴリー",
-        "description": "評判を付けられるチャンネルとカテゴリを選択せよ。少なくとも1つのチャンネルまたはカテゴリを選択しなければならない。",
-        "required": "少なくとも1つのチャンネルまたはカテゴリを選択しないと続行できない（拒否リストモードを使用している場合を除く）。"
-      },
-      "thankwords": {
-        "title": "謝辞",
-        "description": "ユーザーが評価を与える際に使用できる単語やフレーズを追加する。これらはボットが認識するトリガーワードとなる。",
-        "recommendation": "素早く始めるには、お使いの言語のデフォルトの感謝の言葉をロードすることをお勧めする。"
-      },
-      "announcements": {
-        "title": "お知らせ",
-        "description": "ユーザーが新しいレピュテーションランクに到達した際に、ボットが通知するかどうかを設定する。"
-      },
-      "cooldown": {
-        "title": "クールダウン設定",
-        "description": "ユーザーが頻繁に評価を与えないように、クールダウン期間を設定する。また「クールダウンを1回のみ有効化」を有効にすれば、ユーザー同士が互いに感謝を伝えられるのは1回だけになる。"
-      },
-      "mainReaction": {
-        "title": "主反応",
-        "description": "評価を与える際のメインのリアクションとして使う絵文字を選べ。"
-      },
-      "roles": {
-        "title": "提供者と受取人の役割",
-        "description": "任意で、どの役割が評価を与えられるか（ドナー役割）、どの役割が評価を受け取れるか（レシーバー役割）を定義する。"
-      },
-      "welcome": {
-        "title": "ようこそ",
-        "description": "セットアップページへようこそ。\nこのページではボットの初期設定を案内する。設定が完了すれば、好みに合わせてカスタマイズされた基本設定が使えるようになる。\n\nサポートが必要な場合は、ボットにプライベートメッセージを送ってくれ。可能な限り早く対応する。ページ下部にはサポート用ディスコードへのリンクも用意されている。"
-      },
-      "finished": {
-        "title": "設定完了",
-        "description": "これで最後の設定手順が完了した。次に一般設定ページへ移動する。そこにはさらに興味深い設定項目が見つかるかもしれない。"
-      },
-      "scan": {
-        "title": "サーバースキャン",
-        "description": "チャンネルの設定が完了したところで、サーバーの履歴から既存のレピュテーションをインデックス登録するために、スキャンを実行することを推奨する。",
-        "prompt": {
-          "title": "サーバーのスキャンを開始するか？",
-          "description": "スキャンは、設定されたチャンネル内のサーバーのメッセージ履歴を調査し、既存のレピュテーションを検出する。サーバーの規模によっては、これには多少時間がかかる場合がある。"
-        },
-        "started": {
-          "title": "スキャンを開始した！",
-          "description": "スキャンは現在バックグラウンドで実行中だ。設定が完了したら、スキャンページで進行状況を確認できる。"
-        },
-        "start": "スキャンを開始",
-        "starting": "開始……",
-        "error": "スキャンを開始できなかった。後ほど再度試してほしい。"
-      }
-    }
+    "description": "一般的な設定を始めるためのクイック設定プリセットだ。",
+    "noAbuse": {
+      "description": "文脈に基づく不正利用防止機能を無効化し、ユーザーのインタラクション履歴を追跡せずに、より自由に評価を与えられるようにしたい。",
+      "settings": "このプリセットは、ドナーとレシーバーの両方のコンテキスト追跡を無効にする。",
+      "title": "虐待防止"
+    },
+    "simpleReputation": {
+      "description": "ユーザーがコマンドを通じてのみ評価を与えられる、複雑な状況追跡を伴わないシンプルな評価システムが欲しい。",
+      "settings": "このプリセットは、コマンド以外のすべての評判タイプを無効化し、寄付者と受取人のコンテキスト追跡を停止する。",
+      "title": "シンプルな評価システム"
+    },
+    "thankOnce": {
+      "description": "ユーザー同士が互いに感謝できるのは一度だけとし、同じユーザー間で繰り返し評価を与えることを防ぎたい。",
+      "settings": "このプリセットはクールダウンを一度だけ設定し、クールダウンの方向を単方向に変更する。",
+      "title": "一度だけ感謝する"
+    },
+    "title": "プリセット"
+  },
+  "profile": {
+    "description": "サーバー内でボットの外観や動作をカスタマイズする。",
+    "nickname": {
+      "description": "このサーバーでボットにカスタムニックネームを設定する。",
+      "label": "ボットのニックネーム",
+      "placeholder": "ボットのニックネームを入力せよ",
+      "reset": "ニックネームをデフォルトに戻す"
+    },
+    "premiumRequired": "プロフィールカスタマイズ",
+    "profilePicture": {
+      "description": "ボット用のカスタムプロフィール画像をアップロードする（最大2MB、512x512ピクセル）",
+      "label": "プロフィール写真",
+      "reset": "プロフィール画像をデフォルトに戻す",
+      "uploadButton": "画像をアップロードする",
+      "uploading": "アップロード中だ。"
+    },
+    "reputationName": {
+      "description": "このサーバーで評判に使用される名前をカスタマイズする。",
+      "label": "評判名",
+      "placeholder": "カスタムの評判名を入力せよ（例：『ポイント』、『カルマ』）",
+      "reset": "評判名をデフォルトに戻す"
+    },
+    "reset": "リセット",
+    "tosNote": "Discordの利用規約や州法に違反する行為は一切認められず、サーバーでこの機能が利用できなくなる可能性がある。"
+  },
+  "reactions": {
+    "additional": {
+      "add": "リアクションを追加する",
+      "description": "評価を与えるために使える追加の絵文字。",
+      "label": "追加の反応",
+      "none": "追加の反応は設定されていない。",
+      "premiumRequired": "追加の反応"
+    },
+    "description": "評価を与える際に使用する絵文字を設定する。",
+    "main": {
+      "description": "評価を与える際の主な反応として使われる絵文字だ。",
+      "label": "主反応"
+    },
+    "title": "反応"
   },
   "roles": {
     "donor": {
@@ -572,429 +597,418 @@
       "label": "受信機"
     }
   },
-  "links": {
-    "support": "サポートサーバー",
-    "website": "ウェブサイト",
-    "faq": "よくある質問",
-    "tos": "利用規約"
-  },
-  "auditLog": {
-    "description": "サーバーで行われたすべての設定変更の履歴を表示する。",
-    "loading": "監査ログを読み込んでいる...",
-    "loadError": "監査ログを読み込めなかった。もう一度試してくれ。",
-    "retry": "再試行",
-    "noEntries": "監査ログのエントリは見つからなかった。",
-    "unknownMember": "不明なメンバー",
-    "previous": "前回",
-    "next": "次",
-    "pageInfo": "ページ {current} of {total}",
-    "from": "From",
-    "to": "～へ",
-    "added": "追加された",
-    "removed": "削除された",
-    "values": {
-      "null": "設定されていない",
-      "enabled": "有効",
-      "disabled": "障害がある",
-      "once": "一度",
-      "none": "なし",
-      "unknownChannel": "不明なチャンネル",
-      "unidirectional": "一方向性",
-      "bidirectional": "双方向",
-      "total": "合計",
-      "rolling_week": "ローリング・ウィーク",
-      "rolling_month": "ローリング・マンス",
-      "week": "週",
-      "month": "月",
-      "delete_and_repost": "削除して再投稿する",
-      "repost": "再投稿",
-      "update": "更新",
-      "hourly": "時間単位",
-      "daily": "毎日",
-      "weekly": "週刊",
-      "monthly": "月次",
-      "noChanges": "変更なし",
-      "unknownIntegration": "不明な統合"
+  "scan": {
+    "description": "ボットが追加される前、または追跡対象外のチャンネルで付与された評判をギルド内で検索する。これにより、設定された評判チャンネルおよびカテゴリ内のすべてのメッセージがスキャンされる。",
+    "error": {
+      "alreadyRunning": "このギルドのスキャンはすでに実行中だ。",
+      "fetchStatus": "スキャン状態の取得に失敗した。後ほど再度試してほしい。",
+      "startFailed": "スキャンを開始できなかった。後ほど再度試してほしい。"
     },
-    "settings": {
-      "abuseprotection_cooldown": "悪用防止 - クールダウン",
-      "abuseprotection_cooldowndirection": "不正利用防止 - クールダウン方向",
-      "abuseprotection_maxmessageage": "悪用防止 - 最大メッセージ保存期間",
-      "abuseprotection_minmessages": "虐待防止 - 最低メッセージ数",
-      "abuseprotection_donorcontext": "不正利用防止 - 寄付者コンテキスト",
-      "abuseprotection_receivercontext": "悪用防止 - 受信者コンテキスト",
-      "abuseprotection_maxgiven": "悪用防止 - 最大許容値",
-      "abuseprotection_maxgivenhours": "不正利用防止 - 最大付与時間",
-      "abuseprotection_maxreceived": "虐待防止 - 最大受信量",
-      "abuseprotection_maxreceivedhours": "不正利用防止 - 最大受信時間",
-      "abuseprotection_maxmessagereputation": "悪用防止 - 最大メッセージ評価",
-      "thanking_channels_whitelist": "チャンネル - ホワイトリストモード",
-      "thanking_channels_channels": "チャンネル - チャンネル一覧",
-      "thanking_channels_categories": "チャンネル - カテゴリ一覧",
-      "thanking_thankwords_words": "謝辞",
-      "thanking_reactions_mainreaction": "反応 - 主な反応",
-      "thanking_reactions_reactions": "反応 - 追加の反応",
-      "thanking_denydonorroles": "役割 - 寄付者役割を拒否する",
-      "thanking_donorroles": "役割 - 寄付者の役割",
-      "thanking_denyreceiverroles": "役割 - 受信者を拒否する役割",
-      "thanking_receiverroles": "役割 - 受信者役割",
-      "messages_reactionconfirmation": "評判 - 反応確認",
-      "messages_commandreputationephemeral": "評判 - 指揮官の評判 一時的",
-      "profile_nickname": "プロフィール - ニックネーム",
-      "profile_profilepicture": "プロフィール - プロフィール写真",
-      "profile_reputationname": "プロフィール - 評判名",
-      "reputation_reactionactive": "評判 - 反応が活発だ",
-      "reputation_answeractive": "評判 - 回答中",
-      "reputation_mentionactive": "評判 - 言及中",
-      "reputation_fuzzyactive": "評判 - ファジーアクティブ",
-      "reputation_embedactive": "評判 - 埋め込みアクティブ",
-      "reputation_directactive": "評判 - 直接的",
-      "reputation_commandactive": "評判 - 命令有効",
-      "logchannel_active": "ログチャネル - アクティブ",
-      "logchannel_channel": "ログチャネル - チャネル",
-      "general_language": "一般 - 言語",
-      "general_stackroles": "ランク - スタックの役割",
-      "general_reputationmode": "評判 - 評判モード",
-      "general_systemchannel": "一般 - システムチャンネル",
-      "general_resetdate": "評判 - リセット日",
-      "announcements_active": "お知らせ - アクティブ",
-      "announcements_samechannel": "お知らせ - 同じチャンネル",
-      "announcements_channel": "お知らせ - チャンネル",
-      "autopost_active": "自動投稿 - 有効",
-      "autopost_channel": "自動投稿 - チャンネル",
-      "autopost_refreshtype": "自動投稿 - 更新タイプ",
-      "autopost_refreshinterval": "自動投稿 - 更新間隔",
-      "ranks": "階級 - 役割",
-      "general_everyonetokenpurchase": "一般 - 全員向けトークン購入"
+    "finishedAt": "終了時刻",
+    "messagesScanned": "スキャンされたメッセージ",
+    "noScanYet": "まだスキャンは実行されていない。",
+    "progressDetails": "進捗状況",
+    "reputationFound": "評判が見つかった",
+    "start": "スキャンを開始",
+    "startedAt": "開始日：",
+    "starting": "開始する……",
+    "status": {
+      "finished": "スキャンが完了した",
+      "running": "スキャン実行中"
     }
   },
-  "help": {
-    "title": "助けが必要か？",
-    "message": "困ったことがあるか？機能が足りないか？意見があるか？ボットにプライベートメッセージを送ればいい。ページの最下部にはサポートDiscordへのリンクもある。"
+  "settings": {
+    "abuseProtection": "虐待防止",
+    "announcements": "お知らせ",
+    "auditLog": "監査ログ",
+    "autopost": "自動投稿",
+    "channels": "チャンネル",
+    "debug": {
+      "goToSettings": "設定に行く",
+      "missingPermissions": {
+        "CATEGORY": "カテゴリー",
+        "CHANNEL": "チャンネル",
+        "GUILD": "ギルド",
+        "title": "スコープ付き権限が不足している"
+      },
+      "permissions": {
+        "BYPASS_SLOWMODE": "確認メッセージは時々機能しないことがある。例えば、埋め込み経由のリアクション確認や評価確認などがそうだ。",
+        "MANAGE_GUILD_EXPRESSIONS": "カスタムリアクションはダッシュボードでは提案できない。",
+        "MANAGE_ROLES": "評判の役割は与えられない。",
+        "MESSAGE_ADD_REACTION": "リアクションによる評価の確認が機能していない。",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "音声チャンネルでは、確認メッセージは一切機能しない。例えば、リアクション確認やレピュテーション確認といった埋め込み機能による確認も同様だ。",
+        "MESSAGE_EXT_EMOJI": "絵文字による評価確認が機能していない。",
+        "MESSAGE_HISTORY": "埋め込みによる評判確認が機能していない。ほとんどの不正防止チェックが失敗する。",
+        "MESSAGE_SEND": "確認メッセージは一切機能しない。例えば、埋め込みによるリアクション確認や評価確認も同様だ。",
+        "MESSAGE_SEND_IN_THREADS": "スレッド内では確認メッセージは機能しない。例えば埋め込み経由のリアクション確認や評価確認などがそうだ。",
+        "NICKNAME_CHANGE": "ダッシュボードではニックネームを変更できない。",
+        "VIEW_CHANNEL": "評判のチャンネルは表示されない。評判はテキストベースの方法では与えられない。",
+        "description": "このボットにはグローバルにこれらの権限が不足している。これにより一部の機能が制限される可能性がある。",
+        "title": "グローバル権限が不足している"
+      },
+      "rankProblems": {
+        "CANT_ASSIGN_ROLE": "このボットはこの役割を割り当てられない。なぜなら、それはボットの最高権限を超えるからだ。",
+        "MISSING_ROLE": "このランクの役割が欠けている。",
+        "title": "ランクの問題"
+      },
+      "reputationChannelProblems": {
+        "MISSING_CATEGORY": "カテゴリが欠けている。",
+        "MISSING_CHANNEL": "チャンネルがない。",
+        "NOT_TEXT_TYPE": "そのチャンネルはテキストチャンネルではない。",
+        "title": "評判チャネルの問題"
+      },
+      "simpleProblems": {
+        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "アナウンスチャンネルが見つからなかった。",
+        "AUTOPOST_CANNEL_NOT_FOUND": "自動投稿チャンネルが見つかりませんでした。",
+        "LOG_CHANNEL_NOT_FOUND": "ログチャネルが見つからなかった。",
+        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "アナウンスチャンネルは定義されていない。",
+        "NO_AUTOPOST_CHANNEL_DEFINED": "自動投稿チャンネルは定義されていない。",
+        "NO_LOG_CHANNEL_DEFINED": "ログチャネルは定義されていない。",
+        "NO_REPUTATION_CHANNEL_DEFINED": "評判に関するチャンネルやカテゴリは定義されていない。",
+        "NO_THANKWORDS_DEFINED": "感謝の言葉は定義されていない。",
+        "SYSTEM_CHANNEL_NOT_DEFINED": "システムチャネルは定義されていない。",
+        "SYSTEM_CHANNEL_NOT_FOUND": "システムチャンネルが見つかりませんでした。",
+        "title": "一般的な問題"
+      },
+      "simpleWarnings": {
+        "MAX_MESSAGE_AGE_LOW": "メッセージの最大保存期間は非常に短く設定されている。これにより、古いメッセージに対してユーザー同士がお互いに感謝し合うことが妨げられる可能性がある。",
+        "title": "警告"
+      }
+    },
+    "general": "一般",
+    "integrationBypass": "統合バイパス",
+    "logChannel": "ログチャネル",
+    "messages": "メッセージ",
+    "problems": "問題",
+    "profile": "プロフィール",
+    "ranks": "階級",
+    "reactions": "反応",
+    "reputation": "評判",
+    "roles": "役割",
+    "scan": "スキャン",
+    "thankwords": "謝辞",
+    "title": "設定"
   },
-  "guildSwitcher": {
-    "title": "サーバーを切り替える",
-    "current": "現在のサーバー",
-    "none": "他のサーバーは見つからなかった",
-    "add": "サーバーから設定を開いて、別のサーバーを追加する。"
+  "setup": {
+    "error": {
+      "forbidden": {
+        "description": "このサーバーの設定にアクセスする権限がない。サーバー管理者に連絡してほしい。",
+        "title": "アクセス拒否"
+      },
+      "noSession": {
+        "description": "アクティブなサーバーセッションがない。戻ってサーバーを選択してほしい。",
+        "title": "接続されていない"
+      },
+      "unknown": {
+        "description": "サーバー設定の読み込み中にエラーが発生した。後ほど再度試してほしい。",
+        "title": "設定の読み込みに失敗した"
+      }
+    },
+    "navigation": {
+      "finish": "設定を完了する",
+      "next": "次",
+      "previous": "前回"
+    },
+    "requiredStep": "この手順は続行するために必要だ",
+    "stepProgress": "ステップ{current}/{total}",
+    "steps": {
+      "announcements": {
+        "description": "ユーザーが新しいレピュテーションランクに到達した際に、ボットが通知するかどうかを設定する。",
+        "title": "お知らせ"
+      },
+      "channels": {
+        "description": "評判を付けられるチャンネルとカテゴリを選択せよ。少なくとも1つのチャンネルまたはカテゴリを選択しなければならない。",
+        "required": "少なくとも1つのチャンネルまたはカテゴリを選択しないと続行できない（拒否リストモードを使用している場合を除く）。",
+        "title": "チャンネルとカテゴリー"
+      },
+      "cooldown": {
+        "description": "ユーザーが頻繁に評価を与えないように、クールダウン期間を設定する。また「クールダウンを1回のみ有効化」を有効にすれば、ユーザー同士が互いに感謝を伝えられるのは1回だけになる。",
+        "title": "クールダウン設定"
+      },
+      "finished": {
+        "description": "これで最後の設定手順が完了した。次に一般設定ページへ移動する。そこにはさらに興味深い設定項目が見つかるかもしれない。",
+        "title": "設定完了"
+      },
+      "language": {
+        "description": "サーバー内でボットがメッセージや応答に使用する言語を選択する。フロントエンドの言語は選択内容に合わせて変更される。",
+        "title": "言語を選択"
+      },
+      "mainReaction": {
+        "description": "評価を与える際のメインのリアクションとして使う絵文字を選べ。",
+        "title": "主反応"
+      },
+      "ranks": {
+        "description": "ユーザーが特定の評判レベルに達した際に付与される役割を定義する。少なくとも1つのランクが必要だ。",
+        "required": "少なくとも1つの評価ランクを定義しないと先に進めない。",
+        "title": "評判ランク"
+      },
+      "reputationMode": {
+        "description": "サーバー内で評判をどのように計算し表示するかを設定する。",
+        "title": "評判モード"
+      },
+      "reputationTypes": {
+        "description": "ユーザーが評価を付ける方法を選択する。複数のタイプを有効にすることで、ユーザーに柔軟性を与えられる。",
+        "title": "評判の種類"
+      },
+      "roles": {
+        "description": "任意で、どの役割が評価を与えられるか（ドナー役割）、どの役割が評価を受け取れるか（レシーバー役割）を定義する。",
+        "title": "提供者と受取人の役割"
+      },
+      "scan": {
+        "description": "チャンネルの設定が完了したところで、サーバーの履歴から既存のレピュテーションをインデックス登録するために、スキャンを実行することを推奨する。",
+        "error": "スキャンを開始できなかった。後ほど再度試してほしい。",
+        "prompt": {
+          "description": "スキャンは、設定されたチャンネル内のサーバーのメッセージ履歴を調査し、既存のレピュテーションを検出する。サーバーの規模によっては、これには多少時間がかかる場合がある。",
+          "title": "サーバーのスキャンを開始するか？"
+        },
+        "start": "スキャンを開始",
+        "started": {
+          "description": "スキャンは現在バックグラウンドで実行中だ。設定が完了したら、スキャンページで進行状況を確認できる。",
+          "title": "スキャンを開始した！"
+        },
+        "starting": "開始……",
+        "title": "サーバースキャン"
+      },
+      "systemChannel": {
+        "description": "ボットが重要なシステムメッセージや通知を送信するチャンネルを選択せよ。",
+        "required": "セットアップを続けるには、システムチャンネルを選択しなければならない。",
+        "title": "システムチャンネル"
+      },
+      "thankwords": {
+        "description": "ユーザーが評価を与える際に使用できる単語やフレーズを追加する。これらはボットが認識するトリガーワードとなる。",
+        "recommendation": "素早く始めるには、お使いの言語のデフォルトの感謝の言葉をロードすることをお勧めする。",
+        "title": "謝辞"
+      },
+      "welcome": {
+        "description": "セットアップページへようこそ。\nこのページではボットの初期設定を案内する。設定が完了すれば、好みに合わせてカスタマイズされた基本設定が使えるようになる。\n\nサポートが必要な場合は、ボットにプライベートメッセージを送ってくれ。可能な限り早く対応する。ページ下部にはサポート用ディスコードへのリンクも用意されている。",
+        "title": "ようこそ"
+      }
+    },
+    "title": "初期設定"
   },
-  "integrationBypass": {
-    "description": "統合機能に対してバイパスを設定し、通常の要件を満たさない場合でも評価を付与できるようにする。",
-    "allowReactions": "リアクションを許可する",
-    "allowAnswer": "許可する",
-    "allowMention": "言及を許可する",
-    "allowFuzzy": "あいまいさを許容する",
-    "ignoreCooldown": "クールダウンを無視する",
-    "ignoreLimit": "制限を無視する",
-    "allowReactionsDescription": "リアクションで評価を付けることを許可する",
-    "allowAnswerDescription": "メッセージへの回答を通じて評価を与えることを許可する",
-    "allowMentionDescription": "ユーザーをメンションすることで評価を付与できるようにする",
-    "allowFuzzyDescription": "あいまい一致による評価の付与を許可する",
-    "ignoreCooldownDescription": "ユーザー間のクールダウンを無視する",
-    "ignoreLimitDescription": "設定された時間制限は無視せよ",
-    "add": "統合バイパスを追加する",
-    "selectIntegration": "統合を選択する",
-    "noIntegrations": "追加できるバイパス用の統合はこれ以上ない。",
-    "deleteConfirm": "この統合バイパスを本当に削除するのか？",
-    "premiumRequired": "統合バイパス",
-    "allowDirect": "直接許可する",
-    "ignoreContext": "文脈を無視する",
-    "allowDirectDescription": "受信者が1人しか特定できないため、埋め込みがスキップされる場合に評価を許可する。ボットに対しては埋め込みが送信されることはない。",
-    "ignoreContextDescription": "文脈チェックを無視する"
+  "thankwords": {
+    "add": "サンクワードを追加する",
+    "alreadyExists": "この感謝の言葉は既に存在する。",
+    "defaults": {
+      "description": "様々な言語のデフォルトの感謝の言葉を素早く追加する。",
+      "title": "デフォルトの謝辞"
+    },
+    "description": "これらの言葉は、誰かが感謝されている場合を検出するために使われる。これらは正規表現として解釈される。",
+    "invalidCharacter": "この感謝の言葉には無効な文字が含まれている：{char}",
+    "none": "感謝の言葉は設定されていない。",
+    "placeholder": "thankwordを入力せよ（正規表現）"
   },
   "timePresets": {
-    "hour": "1時間",
     "day": "1日",
-    "week": "1週間",
     "fourWeeks": "4週間",
+    "hour": "1時間",
+    "week": "1週間",
     "year": "1年"
   },
-  "login": {
-    "title": "ログインが必要だ",
-    "description": "このパネルにアクセスするには、Discordでログインする必要がある。",
-    "button": "Discordでログインする"
+  "token_shop": {
+    "active": "アクティブ",
+    "adminOnly": "サーバーは、サーバー管理者だけが機能を購入できるように設定されている。",
+    "autoRenewal": "自動更新",
+    "confirmPurchase": "この機能を{amount}トークンで購入することを本当に望むのか？",
+    "description": "投票トークンを使ってサーバーをプレミアム機能で強化できる。トークンで購入した機能は自動更新されている限り期限切れにならない。既に有効な機能を購入すると、有効期限または更新日が30日延長される。",
+    "enabledBySubscription": "サブスクリプションによって有効化される",
+    "expires": "有効期限: {date}",
+    "feature": {
+      "additionalemojis": {
+        "description": "リアクションで評価を与える時は、複数の絵文字を使うんだ。",
+        "name": "追加の絵文字"
+      },
+      "advancedrankings": {
+        "description": "より多くのランキングオプションを解放する。",
+        "name": "上級ランキング"
+      },
+      "analyzerlog": {
+        "description": "アナライザーのログの保持期間は倍増する。",
+        "name": "拡張アナライザログ"
+      },
+      "autopost": {
+        "description": "定期的にリーダーボードをチャンネルに自動投稿する。",
+        "name": "自動投稿"
+      },
+      "channelblacklist": {
+        "description": "特定のチャンネルではボットが活動できないようにする。どこでも許可するのではなく。",
+        "name": "チャンネル拒否リスト"
+      },
+      "detailedprofile": {
+        "description": "ユーザーの評価プロファイルについて、より多くの情報を表示する。",
+        "name": "詳細プロフィール"
+      },
+      "integrationbypass": {
+        "description": "他のボットや連携サービスが評価を付与できるようにする。",
+        "name": "統合バイパス"
+      },
+      "localeoverrides": {
+        "description": "ボットのメッセージとラベルを独自の翻訳で上書きできる。現在、設定できるのは評判のカスタム名のみだ。",
+        "name": "ロケールの上書き"
+      },
+      "logchannel": {
+        "description": "すべての評判変更に対して専用のログチャネルを有効にする。",
+        "name": "ログチャネル"
+      },
+      "profile": {
+        "description": "サーバー内でボットの名前とプロフィール画像をカスタマイズする。",
+        "name": "ボットプロフィール"
+      },
+      "reputationcategories": {
+        "description": "無制限の評判カテゴリを解放する。",
+        "name": "無制限の評判カテゴリ"
+      },
+      "reputationchannel": {
+        "description": "無制限の評判チャネルを開放する。",
+        "name": "無制限評判チャンネル"
+      },
+      "reputationlog": {
+        "description": "サーバー内の評判ログの全ページを見る。",
+        "name": "完全な評判記録"
+      }
+    },
+    "getMoreTokens": "トークンをもっと手に入れろ",
+    "guildTokens": "ギルドトークンを使う",
+    "insufficientTokens": "トークンが足りない。",
+    "nextRenewal": "次回更新：{date}",
+    "noFeatures": "現在利用可能な機能はない。",
+    "purchase": "購入",
+    "purchaseSuccess": "機能の購入が成功した！",
+    "subscribe": "購読する",
+    "subscribeSuccess": "購読が有効になった！",
+    "subscriptionActiveNote": "この機能は現在、有効なサブスクリプションによって利用可能になっている。",
+    "title": "トークンショップ",
+    "unsubscribe": "配信停止",
+    "unsubscribeSuccess": "購読が無効だ！",
+    "userTokens": "個人トークンを使う"
+  },
+  "user": {
+    "settings": {
+      "description": "個人アカウントの設定と好みを設定する。",
+      "mails": {
+        "add": {
+          "button": "追加する",
+          "placeholder": "新しいメールアドレスを追加する（name{'@'}example.com）"
+        },
+        "description": "アカウントに関連付けられたメールアドレスを管理する。新しいアドレスを追加し、受信トレイに送信されたリンクから確認できる。",
+        "errors": {
+          "ALREADY_REGISTERED": "このメールアドレスは既に別のユーザーに登録されている。",
+          "CODE_EXPIRED": "確認コードは期限切れだ。新しい確認メールをリクエストしろ。",
+          "INVALID_CODE": "認証コードが無効だ。",
+          "INVALID_FORMAT": "メールアドレスの形式が不正だ。確認してもう一度試してくれ。",
+          "RATE_LIMIT": "その操作を頻繁に行いすぎている。次のメールアドレスを追加する前に、{time} 待ってくれ。",
+          "UNKNOWN": "不明なエラーが発生した。後で再度試してほしい。",
+          "UNKNOWN_ADDRESS": "このメールアドレスは見つからなかった。削除された可能性がある。",
+          "WRONG_USER": "このメールアドレスは別のユーザーのものだ。"
+        },
+        "noteDeletion": "注：DiscordやKo-fiからのメールアドレスは削除できない。自分で追加したアドレスのみ削除可能だ。",
+        "pending": "確認待ち",
+        "source": {
+          "discord": "不和",
+          "kofi": "Ko-fi",
+          "user": "ユーザー"
+        },
+        "title": "メールアドレス",
+        "verified": "確認済み",
+        "verify": {
+          "error": "メール認証に失敗した。もう一度試すか、新しい認証リンクをリクエストしてくれ。",
+          "success": "メールアドレスの確認が完了した。"
+        }
+      },
+      "title": "ユーザー設定",
+      "voteGuild": {
+        "description": "ボットに投票する際に、トークンを受け取るギルドを選択せよ。これは今後の投票にのみ影響する。",
+        "label": "投票ギルド",
+        "none": "特定のギルドに所属していない（個人）"
+      }
+    },
+    "supporter": {
+      "description": "有効なKo-fi購入を確認し、ギルドに割り当てて支援者機能を有効にせよ。",
+      "errors": {
+        "assign": "購入の割り当てに失敗した。",
+        "load": "購入履歴を読み込めなかった。後で再度試してくれ。",
+        "unassign": "購入の割り当て解除に失敗した。"
+      },
+      "item": {
+        "assign": "割り当てる",
+        "assignedTo": "割り当て先: {guild}",
+        "expires": "有効期限: {date}",
+        "lifetime": "生涯",
+        "subscription": "定期購読",
+        "unassign": "割り当て解除"
+      },
+      "kofiLink": "Ko-fiで購入する",
+      "missingPurchasesNotice": "購入履歴がここに表示されない場合、Ko-fiとDiscordアカウントで異なるメールアドレスを使用している可能性がある。追加のメールアドレスは{link}でリンクできる。",
+      "results": {
+        "ALREADY_SUBSCRIBED": "お前は既にギルドに割り当てられた有効なサブスクリプションを持っている。",
+        "SUBSCRIPTION_EXPIRED": "このサブスクリプションは期限切れのため、割り当てることができない。",
+        "SUCCESS": "成功",
+        "UNKOWN": "不明なサブスクリプションエラーが発生した。後で再度試してほしい。"
+      },
+      "sections": {
+        "lifetime": "生涯購入",
+        "lifetime_desc": "生涯購入はギルドに割り当てることができ、機能を永久に解放できる。",
+        "subscriptions": "有効なサブスクリプション",
+        "subscriptions_desc": "サブスクリプションは自動更新され、任意のギルドに割り当てることができる。"
+      },
+      "settingsLink": "ユーザー設定",
+      "title": "サポーター"
+    }
   },
   "voting": {
-    "title": "投票",
-    "description": "現在の投票トークンとボットリストの投票状況に関する情報だ。",
-    "tokens": {
-      "title": "トークン",
-      "description": "現在の投票トークンだ。様々な報酬に使える。",
-      "label": "現在のトークン",
-      "shop": "トークンショップを訪れよ"
-    },
     "botlists": {
-      "title": "ボットリスト",
-      "description": "様々なボットリストでボットに投票してトークンを獲得し、連続投票を維持しろ。",
-      "name": "ボットリスト",
-      "streak": "連勝",
-      "lastVote": "最後の投票",
       "action": "行動",
-      "vote": "投票する",
+      "days": "日",
+      "description": "様々なボットリストでボットに投票してトークンを獲得し、連続投票を維持しろ。",
+      "lastVote": "最後の投票",
+      "name": "ボットリスト",
       "never": "決して",
-      "days": "日"
+      "streak": "連勝",
+      "title": "ボットリスト",
+      "vote": "投票する"
     },
+    "description": "現在の投票トークンとボットリストの投票状況に関する情報だ。",
     "log": {
-      "title": "投票記録",
-      "description": "投票トークンの取引履歴だ。",
       "date": "日付",
+      "description": "投票トークンの取引履歴だ。",
       "guild": "ギルド",
-      "tokens": "トークン",
+      "personal": "個人",
       "reason": {
-        "label": "理由",
+        "BONUS": "デイリーボーナス",
+        "BONUS_DESCRIPTION": "過去6時間以内に全てのボットリストで投票したため、追加トークンを受け取った。",
         "STANDARD": "投票する",
         "STANDARD_DESCRIPTION": "ボットリストの投票用トークンを受け取った。",
         "STREAK": "投票連続記録",
         "STREAK_DESCRIPTION": "連続達成中だから、追加でトークンをもらったんだ。",
-        "BONUS": "デイリーボーナス",
-        "BONUS_DESCRIPTION": "過去6時間以内に全てのボットリストで投票したため、追加トークンを受け取った。",
         "TRANSFER": "ギルドへ移籍する",
         "TRANSFER_DESCRIPTION": "お前はギルドの評判システムを支援するためにトークンを移した。",
         "USE": "購入",
         "USE_DESCRIPTION": "トークンを使って報酬やサービスを購入した。",
+        "label": "理由",
         "unknown": "不明",
         "unknown_DESCRIPTION": "この取引の理由は不明である。"
       },
-      "unknownGuild": "未知のギルド",
-      "personal": "個人"
+      "title": "投票記録",
+      "tokens": "トークン",
+      "unknownGuild": "未知のギルド"
     },
     "noteDefaultGuild": "ヒント：トークンを自動的に受け取るためのデフォルトギルドを設定できる。",
     "noteDefaultGuildLink": "ユーザー設定",
+    "title": "投票",
+    "tokens": {
+      "description": "現在の投票トークンだ。様々な報酬に使える。",
+      "label": "現在のトークン",
+      "shop": "トークンショップを訪れよ",
+      "title": "トークン"
+    },
     "transfer": {
-      "title": "ギルドにトークンを移す",
+      "amount": "金額",
       "description": "自分の個人残高から、自分のギルドのいずれかにトークンを移動する。",
       "guild": "ギルド",
-      "selectGuild": "ギルドを選ぶ",
-      "amount": "金額",
       "max": "Max: {max}",
-      "submit": "移籍"
-    }
-  },
-  "user": {
-    "settings": {
-      "title": "ユーザー設定",
-      "description": "個人アカウントの設定と好みを設定する。",
-      "voteGuild": {
-        "label": "投票ギルド",
-        "description": "ボットに投票する際に、トークンを受け取るギルドを選択せよ。これは今後の投票にのみ影響する。",
-        "none": "特定のギルドに所属していない（個人）"
-      },
-      "mails": {
-        "title": "メールアドレス",
-        "description": "アカウントに関連付けられたメールアドレスを管理する。新しいアドレスを追加し、受信トレイに送信されたリンクから確認できる。",
-        "verified": "確認済み",
-        "pending": "確認待ち",
-        "noteDeletion": "注：DiscordやKo-fiからのメールアドレスは削除できない。自分で追加したアドレスのみ削除可能だ。",
-        "source": {
-          "user": "ユーザー",
-          "discord": "不和",
-          "kofi": "Ko-fi"
-        },
-        "add": {
-          "placeholder": "新しいメールアドレスを追加する（name{'@'}example.com）",
-          "button": "追加する"
-        },
-        "verify": {
-          "success": "メールアドレスの確認が完了した。",
-          "error": "メール認証に失敗した。もう一度試すか、新しい認証リンクをリクエストしてくれ。"
-        },
-        "errors": {
-          "ALREADY_REGISTERED": "このメールアドレスは既に別のユーザーに登録されている。",
-          "INVALID_FORMAT": "メールアドレスの形式が不正だ。確認してもう一度試してくれ。",
-          "WRONG_USER": "このメールアドレスは別のユーザーのものだ。",
-          "INVALID_CODE": "認証コードが無効だ。",
-          "CODE_EXPIRED": "確認コードは期限切れだ。新しい確認メールをリクエストしろ。",
-          "UNKNOWN_ADDRESS": "このメールアドレスは見つからなかった。削除された可能性がある。",
-          "UNKNOWN": "不明なエラーが発生した。後で再度試してほしい。",
-          "RATE_LIMIT": "その操作を頻繁に行いすぎている。次のメールアドレスを追加する前に、{time} 待ってくれ。"
-        }
-      }
-    },
-    "supporter": {
-      "title": "サポーター",
-      "description": "有効なKo-fi購入を確認し、ギルドに割り当てて支援者機能を有効にせよ。",
-      "kofiLink": "Ko-fiで購入する",
-      "sections": {
-        "subscriptions": "有効なサブスクリプション",
-        "subscriptions_desc": "サブスクリプションは自動更新され、任意のギルドに割り当てることができる。",
-        "lifetime": "生涯購入",
-        "lifetime_desc": "生涯購入はギルドに割り当てることができ、機能を永久に解放できる。"
-      },
-      "item": {
-        "subscription": "定期購読",
-        "lifetime": "生涯",
-        "expires": "有効期限: {date}",
-        "assignedTo": "割り当て先: {guild}",
-        "assign": "割り当てる",
-        "unassign": "割り当て解除"
-      },
-      "errors": {
-        "load": "購入履歴を読み込めなかった。後で再度試してくれ。",
-        "assign": "購入の割り当てに失敗した。",
-        "unassign": "購入の割り当て解除に失敗した。"
-      },
-      "results": {
-        "ALREADY_SUBSCRIBED": "お前は既にギルドに割り当てられた有効なサブスクリプションを持っている。",
-        "SUBSCRIPTION_EXPIRED": "このサブスクリプションは期限切れのため、割り当てることができない。",
-        "UNKOWN": "不明なサブスクリプションエラーが発生した。後で再度試してほしい。",
-        "SUCCESS": "成功"
-      },
-      "missingPurchasesNotice": "購入履歴がここに表示されない場合、Ko-fiとDiscordアカウントで異なるメールアドレスを使用している可能性がある。追加のメールアドレスは{link}でリンクできる。",
-      "settingsLink": "ユーザー設定"
-    }
-  },
-  "dashboard": {
-    "title": "ダッシュボード",
-    "totalReputation": "総評価",
-    "weekReputation": "週間評価",
-    "todayReputation": "今日の評判",
-    "topChannel": "トップチャンネル",
-    "topUsers": "トップユーザー",
-    "rank": "ランク",
-    "user": "ユーザー",
-    "reputation": "評判"
-  },
-  "token_shop": {
-    "title": "トークンショップ",
-    "description": "投票トークンを使ってサーバーをプレミアム機能で強化できる。トークンで購入した機能は自動更新されている限り期限切れにならない。既に有効な機能を購入すると、有効期限または更新日が30日延長される。",
-    "guildTokens": "ギルドトークンを使う",
-    "userTokens": "個人トークンを使う",
-    "noFeatures": "現在利用可能な機能はない。",
-    "active": "アクティブ",
-    "expires": "有効期限: {date}",
-    "nextRenewal": "次回更新：{date}",
-    "autoRenewal": "自動更新",
-    "purchase": "購入",
-    "subscribe": "購読する",
-    "unsubscribe": "配信停止",
-    "purchaseSuccess": "機能の購入が成功した！",
-    "subscribeSuccess": "購読が有効になった！",
-    "unsubscribeSuccess": "購読が無効だ！",
-    "enabledBySubscription": "サブスクリプションによって有効化される",
-    "subscriptionActiveNote": "この機能は現在、有効なサブスクリプションによって利用可能になっている。",
-    "confirmPurchase": "この機能を{amount}トークンで購入することを本当に望むのか？",
-    "insufficientTokens": "トークンが足りない。",
-    "getMoreTokens": "トークンをもっと手に入れろ",
-    "feature": {
-      "reputationlog": {
-        "name": "完全な評判記録",
-        "description": "サーバー内の評判ログの全ページを見る。"
-      },
-      "analyzerlog": {
-        "name": "拡張アナライザログ",
-        "description": "アナライザーのログの保持期間は倍増する。"
-      },
-      "reputationcategories": {
-        "name": "無制限の評判カテゴリ",
-        "description": "無制限の評判カテゴリを解放する。"
-      },
-      "reputationchannel": {
-        "name": "無制限評判チャンネル",
-        "description": "無制限の評判チャネルを開放する。"
-      },
-      "channelblacklist": {
-        "name": "チャンネル拒否リスト",
-        "description": "特定のチャンネルではボットが活動できないようにする。どこでも許可するのではなく。"
-      },
-      "localeoverrides": {
-        "name": "ロケールの上書き",
-        "description": "ボットのメッセージとラベルを独自の翻訳で上書きできる。現在、設定できるのは評判のカスタム名のみだ。"
-      },
-      "autopost": {
-        "name": "自動投稿",
-        "description": "定期的にリーダーボードをチャンネルに自動投稿する。"
-      },
-      "advancedrankings": {
-        "name": "上級ランキング",
-        "description": "より多くのランキングオプションを解放する。"
-      },
-      "detailedprofile": {
-        "name": "詳細プロフィール",
-        "description": "ユーザーの評価プロファイルについて、より多くの情報を表示する。"
-      },
-      "logchannel": {
-        "name": "ログチャネル",
-        "description": "すべての評判変更に対して専用のログチャネルを有効にする。"
-      },
-      "additionalemojis": {
-        "name": "追加の絵文字",
-        "description": "リアクションで評価を与える時は、複数の絵文字を使うんだ。"
-      },
-      "profile": {
-        "name": "ボットプロフィール",
-        "description": "サーバー内でボットの名前とプロフィール画像をカスタマイズする。"
-      },
-      "integrationbypass": {
-        "name": "統合バイパス",
-        "description": "他のボットや連携サービスが評価を付与できるようにする。"
-      }
-    },
-    "adminOnly": "サーバーは、サーバー管理者だけが機能を購入できるように設定されている。"
-  },
-  "metrics": {
-    "title": "指標",
-    "description": "ボットのトラフィックや利用状況が気になるか？我々も同じだ！だからこそ、このページにいくつかの見やすいグラフをまとめた。これらはボットから直接取得したほぼリアルタイムのデータを示している。",
-    "offset": "オフセット",
-    "count": "数える",
-    "units": {
-      "hour": "時間",
-      "week": "週",
-      "month": "月",
-      "year": "年"
-    },
-    "sections": {
-      "reputation": "評判",
-      "commands": "コマンド",
-      "messages": "メッセージ",
-      "users": "ユーザー",
-      "service": "サービス"
-    },
-    "charts": {
-      "reputationCount": "評判ポイント",
-      "reputationTotal": "総評価",
-      "reputationDow": "曜日別の評判",
-      "reputationTypeTotal": "タイプ別総評価",
-      "reputationTypeCount": "評判のタイプ別カウント",
-      "reputationChanges": "評判の変化",
-      "commandsCount": "コマンド数",
-      "commandsUsage": "コマンドの使用方法",
-      "messagesCount": "メッセージ数",
-      "messagesTotal": "総メッセージ数",
-      "usersActiveWeek": "アクティブユーザー（週間）",
-      "usersActiveMonth": "月間アクティブユーザー",
-      "serviceCountHour": "サービス利用（時間単位）",
-      "serviceCountWeek": "サービス利用状況（週間）"
-    },
-    "users": {
-      "total": "合計",
-      "donors": "寄付者",
-      "receivers": "受信機"
-    },
-    "validation": {
-      "offsetMin": "オフセットは少なくとも0でなければならない",
-      "offsetMax": "オフセットは最大{max}でなければならない。",
-      "countMin": "数は少なくとも2でなければならない",
-      "countMax": "カウントは最大で{max}でなければならない。"
-    }
-  },
-  "scan": {
-    "description": "ボットが追加される前、または追跡対象外のチャンネルで付与された評判をギルド内で検索する。これにより、設定された評判チャンネルおよびカテゴリ内のすべてのメッセージがスキャンされる。",
-    "start": "スキャンを開始",
-    "starting": "開始する……",
-    "startedAt": "開始日：",
-    "finishedAt": "終了時刻",
-    "messagesScanned": "スキャンされたメッセージ",
-    "reputationFound": "評判が見つかった",
-    "noScanYet": "まだスキャンは実行されていない。",
-    "status": {
-      "running": "スキャン実行中",
-      "finished": "スキャンが完了した"
-    },
-    "progressDetails": "進捗状況",
-    "error": {
-      "fetchStatus": "スキャン状態の取得に失敗した。後ほど再度試してほしい。",
-      "startFailed": "スキャンを開始できなかった。後ほど再度試してほしい。",
-      "alreadyRunning": "このギルドのスキャンはすでに実行中だ。"
+      "selectGuild": "ギルドを選ぶ",
+      "submit": "移籍",
+      "title": "ギルドにトークンを移す"
     }
   }
 }

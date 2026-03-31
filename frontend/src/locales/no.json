@@ -1,399 +1,27 @@
 {
-  "common": {
-    "save": "Lagre",
-    "cancel": "Avbryt",
-    "delete": "Slett",
-    "edit": "Rediger",
-    "change": "Endring",
-    "clear": "Tydelig",
-    "confirm": "Bekreft",
-    "loading": "Laster...",
-    "error": {
-      "outOfBounds": "Verdien må være mellom {min} og {max}. Korrigert til nærmeste gyldige verdi."
-    },
-    "noData": "Ingen oppføringer funnet.",
-    "previous": "Forrige",
-    "next": "Neste",
-    "pageOf": "Side {current} av {total}"
-  },
-  "navigation": {
-    "settings": "Innstillinger",
-    "presets": "Forhåndsinnstillinger",
-    "setup": "Oppsett",
-    "logout": "Logg ut",
-    "dashboard": "Dashbord",
-    "user_settings": "Brukerinnstillinger",
-    "voting": "Avstemning",
-    "token_shop": "Tokenbutikk",
-    "supporter": "Supporter",
-    "tos": "Vilkår for bruk",
-    "privacy": "Personvern",
-    "faq": "Ofte stilte spørsmål",
-    "metrics": "Metrikker"
-  },
-  "presets": {
-    "title": "Forhåndsinnstillinger",
-    "description": "Hurtigkonfigurasjonsinnstillinger for å komme i gang med vanlige oppsett.",
-    "apply": "Søk",
-    "applying": "Søker...",
-    "simpleReputation": {
-      "title": "Enkelt omdømmesystem",
-      "description": "Jeg ønsker et enkelt omdømmesystem hvor brukerne kun kan gi omdømme gjennom kommandoer, uten noen kompleks kontekstsporing.",
-      "settings": "Denne forhåndsinnstillingen deaktiverer alle omdømmetyper unntatt kommandoer, og slår av sporing av giver- og mottakerkontekst."
-    },
-    "thankOnce": {
-      "title": "Takk bare én gang",
-      "description": "Jeg vil at brukerne skal kunne takke hverandre bare én gang, slik at man unngår gjentatte omdømmevurderinger mellom de samme brukerne.",
-      "settings": "Denne forhåndsinnstillingen vil bare angi nedkjøling én gang og endre nedkjølingsretningen til ensrettet."
-    },
-    "noAbuse": {
-      "title": "Ingen beskyttelse mot misbruk",
-      "description": "Jeg vil deaktivere kontekstbasert misbruksbeskyttelse og la brukerne gi omdømme mer fritt uten å spore deres interaksjonshistorikk.",
-      "settings": "Denne forhåndsinnstillingen deaktiverer både donor- og mottakerkontekstsporing."
-    },
-    "default": {
-      "title": "Standardkonfigurasjon",
-      "description": "Jeg ønsker et balansert omdømmesystem med rimelige standardinnstillinger som fungerer godt for de fleste servere.",
-      "settings": "Denne forhåndsinnstillingen vil angi en 30-minutters toveis nedkjølingstid, aktivere alle omdømmemoduser unntatt kommandoer, aktivere omdømmebekreftelse og aktivere kontekstkontroller for giver og mottaker."
-    },
-    "applied": "Anvendt"
-  },
-  "settings": {
-    "title": "Innstillinger",
-    "general": "Generelt",
-    "reputation": "Omdømme",
-    "messages": "Meldinger",
-    "profile": "Profil",
-    "ranks": "Ranger",
-    "channels": "Kanaler",
-    "roles": "Roller",
-    "thankwords": "Takkord",
-    "abuseProtection": "Beskyttelse mot misbruk",
-    "announcements": "Kunngjøringer",
-    "autopost": "Autopost",
-    "logChannel": "Loggkanal",
-    "reactions": "Reaksjoner",
-    "auditLog": "Revisjonslogg",
-    "integrationBypass": "Integrering Bypass",
-    "problems": "Problemer",
-    "debug": {
-      "permissions": {
-        "title": "Manglende globale tillatelser",
-        "description": "Disse tillatelsene mangler for boten globalt. Dette kan begrense noen funksjoner.",
-        "MANAGE_ROLES": "Omdømme-roller kan ikke tildeles.",
-        "NICKNAME_CHANGE": "Kallenavnet kan ikke endres i dashbordet.",
-        "MANAGE_GUILD_EXPRESSIONS": "Tilpassede reaksjoner kan ikke foreslås i dashbordet.",
-        "VIEW_CHANNEL": "Omdømmekanaler kan ikke sees. Omdømme kan ikke gis via noen tekstbasert metode.",
-        "MESSAGE_HISTORY": "Bekreftelse av omdømme via innebygde elementer fungerer ikke. De fleste kontroller for beskyttelse mot misbruk vil mislykkes.",
-        "MESSAGE_ADD_REACTION": "Bekreftelse av omdømme via reaksjoner fungerer ikke.",
-        "MESSAGE_SEND": "Bekreftelsesmeldinger fungerer ikke. For eksempel reaksjonsbekreftelse eller omdømmebekreftelse via innebygging.",
-        "MESSAGE_SEND_IN_THREADS": "Bekreftelsesmeldinger fungerer ikke i tråder. For eksempel reaksjonsbekreftelse eller omdømmebekreftelse via innebygging.",
-        "MESSAGE_EXT_EMOJI": "Bekreftelse av omdømme via emojier fungerer ikke.",
-        "BYPASS_SLOWMODE": "Noen bekreftelsesmeldinger vil ikke fungere fra tid til annen. For eksempel reaksjonsbekreftelse eller omdømmebekreftelse via innebygging.",
-        "MESSAGE_ATTACH_VOICE_MESSAGE": "Bekreftelsesmeldinger fungerer ikke i talekanaler. For eksempel reaksjonsbekreftelse eller omdømmebekreftelse via innebygging."
-      },
-      "simpleProblems": {
-        "title": "Generelle problemer",
-        "SYSTEM_CHANNEL_NOT_DEFINED": "Systemkanalen er ikke definert.",
-        "SYSTEM_CHANNEL_NOT_FOUND": "Systemkanalen ble ikke funnet.",
-        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "Kunngjøringskanalen er ikke definert.",
-        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "Kunngjøringskanalen ble ikke funnet.",
-        "NO_AUTOPOST_CHANNEL_DEFINED": "Autopost-kanalen er ikke definert.",
-        "AUTOPOST_CANNEL_NOT_FOUND": "Autopost-kanalen ble ikke funnet.",
-        "NO_LOG_CHANNEL_DEFINED": "Loggkanalen er ikke definert.",
-        "LOG_CHANNEL_NOT_FOUND": "Loggkanalen ble ikke funnet.",
-        "NO_THANKWORDS_DEFINED": "Det er ikke definert noen takkeord.",
-        "NO_REPUTATION_CHANNEL_DEFINED": "Det er ikke definert noen omdømme-kanaler eller -kategorier."
-      },
-      "missingPermissions": {
-        "title": "Manglende tillatelser med omfang",
-        "GUILD": "Guild",
-        "CHANNEL": "Kanal",
-        "CATEGORY": "Kategori"
-      },
-      "rankProblems": {
-        "title": "Rangeringsproblemer",
-        "CANT_ASSIGN_ROLE": "Boten kan ikke tildele denne rollen fordi den ligger over botens høyeste rolle.",
-        "MISSING_ROLE": "Rollen for denne rangen mangler."
-      },
-      "reputationChannelProblems": {
-        "title": "Problemer med omdømmekanalen",
-        "MISSING_CHANNEL": "Kanalen mangler.",
-        "MISSING_CATEGORY": "Kategorien mangler.",
-        "NOT_TEXT_TYPE": "Kanalen er ikke en tekstkanal."
-      },
-      "simpleWarnings": {
-        "title": "Advarsler",
-        "MAX_MESSAGE_AGE_LOW": "Maksimal meldingsalder er satt veldig lavt. Dette kan hindre brukere i å takke hverandre for eldre meldinger."
-      },
-      "goToSettings": "Gå til innstillinger"
-    },
-    "scan": "Skann"
-  },
-  "locale": {
-    "selectLanguage": "Velg språk"
-  },
-  "error": {
-    "noToken": {
-      "title": "Ingen økt funnet",
-      "message": "Du har ikke et gyldig sesjonstoken.",
-      "instruction": "Opprett en ny økt for å få tilgang til denne applikasjonen."
-    },
-    "notice": {
-      "workingOnIt": "Vi har fått melding om problemet og jobber med å løse det."
-    },
-    "expired": {
-      "title": "Økten utløpt",
-      "message": "Din økt har utløpt eller er ugyldig.",
-      "instruction": "Åpne en ny økt fra Discord-serveren for å fortsette."
-    }
-  },
-  "premiumFeature": {
-    "title": "Supporterfunksjon",
-    "message": "{name} er forbeholdt støttespillere. Bli støttespiller for å kunne bruke den.",
-    "requiredTierSingular": "Nødvendig støttenivå:",
-    "requiredTierPlural": "En av følgende støttenivåer er påkrevd:",
-    "tokenShopHint": "Du kan også låse opp denne funksjonen med tokens i",
-    "tokenShopLink": "Tokenbutikk",
-    "kofiHint": "eller støtt oss på",
-    "kofiLink": "Ko-fi"
-  },
-  "profile": {
-    "description": "Tilpass hvordan boten vises og oppfører seg på serveren din.",
-    "reset": "Tilbakestill",
-    "premiumRequired": "Profil tilpasning",
-    "nickname": {
-      "label": "Bot-kallenavn",
-      "placeholder": "Skriv inn botens kallenavn",
-      "description": "Angi et tilpasset kallenavn for boten på denne serveren.",
-      "reset": "Tilbakestill kallenavn til standard"
-    },
-    "profilePicture": {
-      "label": "Profilbilde",
-      "uploadButton": "Last opp bilde",
-      "uploading": "Laster opp...",
-      "description": "Last opp et tilpasset profilbilde for boten (maks. 2 MB, 512 x 512 piksler)",
-      "reset": "Tilbakestill profilbilde til standard"
-    },
-    "reputationName": {
-      "label": "Omdømme Navn",
-      "placeholder": "Angi et tilpasset omdømmenavn (f.eks. «Poeng», «Karma»)",
-      "description": "Tilpass navnet som brukes for omdømme på denne serveren.",
-      "reset": "Tilbakestill omdømme til standard"
-    },
-    "tosNote": "Alt som bryter med Discords bruksvilkår eller statlig lovgivning er ikke tillatt og kan føre til at denne funksjonen blir blokkert for serveren."
-  },
-  "general": {
-    "description": "Konfigurer de grunnleggende innstillingene for boten for denne serveren.",
-    "language": {
-      "label": "Bot-språk",
-      "selectPlaceholder": "Velg språk",
-      "description": "Velg språket boten skal bruke for meldinger og svar på denne serveren."
-    },
-    "systemChannel": {
-      "label": "Systemkanal",
-      "selectPlaceholder": "Velg en kanal",
-      "note": "Merk: Denne kanalen bør opprettes og bør være en intern kanal. Den vil inneholde viktige meldinger om botens tjeneste og meldinger fra utviklerne."
-    },
-    "roleSelect": {
-      "searchPlaceholder": "Søk etter roller...",
-      "noRolesFound": "Ingen roller funnet"
-    },
-    "ranks": {
-      "description": "Konfigurer omdømmegradene og tilhørende roller.",
-      "stackRoles": {
-        "label": "Stabelroller",
-        "description": "Hvis denne funksjonen er aktivert, vil alle aktuelle rangeringer bli tildelt i stedet for bare den høyeste rangeringen."
-      },
-      "addRank": "Legg til ny rang",
-      "reputationRequired": "Nødvendig omdømme",
-      "roleAlreadyAdded": "Denne rollen har allerede en rang.",
-      "reputationAlreadyUsed": "Denne omdømmeverdien brukes allerede av en annen rangering.",
-      "noRanks": "Ingen rangeringer konfigurert ennå.",
-      "reputationPlaceholder": "f.eks. 100",
-      "refresh": {
-        "button": "Oppdater rangeringer",
-        "refreshing": "Forfriskende...",
-        "alreadyRunning": "Oppdateringen er allerede i gang",
-        "success": "Rangeringoppdatering startet vellykket",
-        "failed": "Kunne ikke starte oppdatering av rangering"
-      },
-      "selectionNote": "Bare roller som ikke administreres av en integrasjon og som ligger under den høyeste rollen til boten, kan velges."
-    },
-    "reputation": {
-      "description": "Konfigurer hvordan omdømme beregnes og hvilke funksjoner som er aktivert.",
-      "mode": {
-        "label": "Omdømmemodus",
-        "description": "Velg hvordan omdømme beregnes og vises.",
-        "modes": {
-          "TOTAL": "Total omdømme",
-          "ROLLING_WEEK": "Rullende uke",
-          "ROLLING_MONTH": "Rullende måned",
-          "WEEK": "Denne uken",
-          "MONTH": "Denne måneden"
-        },
-        "descriptions": {
-          "TOTAL": "Bruk den totale omdømmet en bruker noensinne har fått.",
-          "ROLLING_WEEK": "Bruk omdømme oppnådd de siste 7 dagene.",
-          "ROLLING_MONTH": "Bruk omdømme oppnådd de siste 30 dagene.",
-          "WEEK": "Bruk omdømme oppnådd siden starten av inneværende uke.",
-          "MONTH": "Bruk omdømme oppnådd siden starten av inneværende måned."
-        }
-      },
-      "resetDate": {
-        "label": "Tilbakestill dato",
-        "description": "Datoen da omdømmepoengene vil bli tilbakestilt. Angi en dato i fremtiden for å planlegge en tilbakestilling.",
-        "clear": "Tøm tilbakestillingsdato"
-      },
-      "types": {
-        "reaction": {
-          "label": "Reaksjon Omdømme",
-          "description": "Gi omdømme når en spesifikk reaksjon legges til en melding.",
-          "confirmation": {
-            "label": "Reaksjonsbekreftelse",
-            "description": "Send en bekreftelsesmelding når omdømme gis via reaksjon."
-          }
-        },
-        "answer": {
-          "label": "Svar Omdømme",
-          "description": "Gi omdømme når en brukers melding blir takket i et svar."
-        },
-        "mention": {
-          "label": "Omtale Omdømme",
-          "description": "Gi omdømme når en bruker blir nevnt sammen med et takkord."
-        },
-        "fuzzy": {
-          "label": "Uklart samsvar",
-          "description": "Gi omdømme ved å matche ord rundt takkeordet med brukernavnene som finnes i kanalen."
-        },
-        "embed": {
-          "label": "Innebygd omdømme",
-          "description": "Send en innebygd liste over brukere som var til stede i den siste samtalen hvis det ikke er mulig å fastslå et mål."
-        },
-        "direct": {
-          "label": "Direkte innebygd omdømme",
-          "description": "Gi omdømme automatisk når bare én bruker er inkludert i innlegget."
-        },
-        "command": {
-          "label": "Kommandoens omdømme",
-          "description": "Gi omdømme via kommandoen /reputation.",
-          "ephemeral": {
-            "label": "Flyktig respons",
-            "description": "Send svaret skjult for andre brukere når du gir omdømme via kommando."
-          }
-        }
-      }
-    },
-    "roles": {
-      "description": "Konfigurer hvilke roller som har lov til å gi og motta omdømme.",
-      "donor": {
-        "label": "Donorroller",
-        "description": "Hvis denne funksjonen er aktivert, kan bare brukere med minst én av disse rollene gi omdømme."
-      },
-      "receiver": {
-        "label": "Mottakerroller",
-        "description": "Hvis denne funksjonen er aktivert, kan bare brukere med minst én av disse rollene motta omdømme."
-      },
-      "list": {
-        "label": "Utvalgte roller",
-        "description": "Velg hvilke roller som skal være obligatoriske."
-      },
-      "denyDonor": {
-        "label": "Nekt donorroller",
-        "description": "Hvis denne funksjonen er aktivert, kan brukere med noen av disse rollene ikke gi omdømme."
-      },
-      "denyReceiver": {
-        "label": "Nekt mottakerroller",
-        "description": "Hvis denne funksjonen er aktivert, kan brukere med noen av disse rollene ikke motta omdømme."
-      }
-    },
-    "channels": {
-      "description": "Konfigurer hvor boten skal være aktiv og ikke aktiv.",
-      "listType": {
-        "label": "Listetype",
-        "description": "Velg om de valgte kanalene og kategoriene skal tillates eller nektes.",
-        "allow": "Tillatelsesliste",
-        "deny": "Nekteliste",
-        "premiumRequired": "Nekteliste"
-      },
-      "list": {
-        "label": "Kanaler og kategorier",
-        "description": "Velg kanaler og kategorier som skal være med på listen.",
-        "channels": "Kanaler",
-        "categories": "Kategorier",
-        "permissionsNote": "Bare kanaler hvor boten har lese- og skrivetillatelser er oppført."
-      },
-      "premium": {
-        "channelLimitWarning": "Valg av mer enn {limit} kanaler er forbeholdt støttespillere. Bli støttespiller for å kunne bruke det.",
-        "categoryLimitWarning": "Valg av mer enn én kategori fr{limit}-kategoriene er forbeholdt støttespillere. Bli støttespiller for å kunne bruke denne funksjonen."
-      }
-    },
-    "everyoneTokenPurchase": {
-      "label": "Alle kan kjøpe tokens",
-      "description": "Tillat alle brukere å kjøpe premiumfunksjoner ved hjelp av sine tokens. Hvis denne funksjonen er deaktivert, kan kun serveradministratorer kjøpe funksjoner."
-    }
-  },
-  "reactions": {
-    "title": "Reaksjoner",
-    "description": "Konfigurer emojiene som brukes til å gi omdømme.",
-    "main": {
-      "label": "Hovedreaksjon",
-      "description": "Emojien som vil bli brukt som primær reaksjon for å gi omdømme."
-    },
-    "additional": {
-      "label": "Ytterligere reaksjoner",
-      "description": "Ytterligere emojier som også kan brukes til å gi omdømme.",
-      "premiumRequired": "Ytterligere reaksjoner",
-      "add": "Legg til reaksjon",
-      "none": "Ingen tilleggsreaksjoner konfigurert."
-    }
-  },
-  "thankwords": {
-    "description": "Disse ordene vil bli brukt til å oppdage når noen blir takket. De tolkes som regulære uttrykk.",
-    "add": "Legg til takkeord",
-    "placeholder": "Skriv inn takkeord (Regex)",
-    "none": "Ingen takkeord konfigurert.",
-    "invalidCharacter": "Takkeordet inneholder et ugyldig tegn: {char}",
-    "alreadyExists": "Dette takkeordet finnes allerede.",
-    "defaults": {
-      "title": "Standard takkebrev",
-      "description": "Legg raskt til standard takkebrev for ulike språk."
-    }
-  },
   "abuseProtection": {
-    "description": "Konfigurer begrensninger og beskyttelse for å forhindre misbruk av omdømme.",
     "cooldown": {
-      "label": "Avkjølingstid (minutter)",
       "description": "Tiden i minutter som må gå før de samme brukerne kan takke hverandre igjen. 0 betyr ingen nedkjøling, -1 betyr for alltid.",
+      "label": "Avkjølingstid (minutter)",
       "once": {
-        "label": "Avkjøling én gang",
+        "activeDescription": "Avkjøling er aktiv. Brukere kan bare takke hverandre én gang. Retningen er satt til ensrettet.",
         "description": "Hvis denne funksjonen er aktivert, kan brukerne bare takke hverandre én gang for alltid.",
-        "activeDescription": "Avkjøling er aktiv. Brukere kan bare takke hverandre én gang. Retningen er satt til ensrettet."
+        "label": "Avkjøling én gang"
       }
     },
     "cooldownDirection": {
-      "label": "Avkjølingsretning",
+      "bidirectional": "Toveis",
       "description": "Enveis betyr at giveren har en avkjølingsperiode før han eller hun kan gi til samme person igjen. Toveis betyr at avkjølingsperioden gjelder mellom giveren og mottakeren, slik at de ikke kan takke hverandre frem og tilbake før tiden er gått.",
-      "unidirectional": "Enveis",
-      "bidirectional": "Toveis"
+      "label": "Avkjølingsretning",
+      "unidirectional": "Enveis"
     },
-    "maxMessageAge": {
-      "label": "Maksimal meldingsalder (minutter)",
-      "description": "Maksimal alder på en melding (i minutter) for å være kvalifisert for omdømme når den besvares eller reageres på."
-    },
-    "minMessages": {
-      "label": "Min meldinger",
-      "description": "Forfattere med minst dette antallet meldinger i kanalen er alltid kvalifisert til å motta omdømme."
-    },
+    "description": "Konfigurer begrensninger og beskyttelse for å forhindre misbruk av omdømme.",
     "donorContext": {
-      "label": "Donoren må være til stede",
-      "description": "Hvis denne funksjonen er aktivert, må giveren ha sendt minst én av de siste meldingene i kanalen for å gi omdømme."
-    },
-    "receiverContext": {
-      "label": "Mottakeren må være til stede",
-      "description": "Hvis denne funksjonen er aktivert, må mottakeren ha sendt minst én av de siste meldingene i kanalen for å motta omdømme."
+      "description": "Hvis denne funksjonen er aktivert, må giveren ha sendt minst én av de siste meldingene i kanalen for å gi omdømme.",
+      "label": "Donoren må være til stede"
     },
     "givenLimit": {
+      "description": "Begrens hvor mye omdømme en bruker kan gi innenfor en bestemt tidsramme.",
       "enabled": {
         "label": "Aktiver gitt grense"
       },
@@ -402,10 +30,22 @@
       },
       "maxGivenHours": {
         "label": "Over arbeidstid"
-      },
-      "description": "Begrens hvor mye omdømme en bruker kan gi innenfor en bestemt tidsramme."
+      }
+    },
+    "maxMessageAge": {
+      "description": "Maksimal alder på en melding (i minutter) for å være kvalifisert for omdømme når den besvares eller reageres på.",
+      "label": "Maksimal meldingsalder (minutter)"
+    },
+    "maxMessageReputation": {
+      "description": "Maksimalt antall omdømmepoeng som kan gis i en enkelt melding via omtaler og innlegg.",
+      "label": "Maksimal meldingsomdømme"
+    },
+    "minMessages": {
+      "description": "Forfattere med minst dette antallet meldinger i kanalen er alltid kvalifisert til å motta omdømme.",
+      "label": "Min meldinger"
     },
     "receivedLimit": {
+      "description": "Begrens hvor mye omdømme en bruker kan oppnå innenfor en viss tidsperiode.",
       "enabled": {
         "label": "Aktiver mottaksgrense"
       },
@@ -414,155 +54,540 @@
       },
       "maxReceivedHours": {
         "label": "Over arbeidstid"
-      },
-      "description": "Begrens hvor mye omdømme en bruker kan oppnå innenfor en viss tidsperiode."
+      }
     },
-    "maxMessageReputation": {
-      "label": "Maksimal meldingsomdømme",
-      "description": "Maksimalt antall omdømmepoeng som kan gis i en enkelt melding via omtaler og innlegg."
+    "receiverContext": {
+      "description": "Hvis denne funksjonen er aktivert, må mottakeren ha sendt minst én av de siste meldingene i kanalen for å motta omdømme.",
+      "label": "Mottakeren må være til stede"
     }
   },
   "announcements": {
-    "description": "Konfigurer meldinger som sendes når brukere når nye rangeringer.",
     "active": {
-      "label": "Aktiver kunngjøringer",
-      "description": "Hvis denne funksjonen er aktivert, vil boten sende en melding når en bruker når en ny rang."
-    },
-    "sameChannel": {
-      "label": "Send i samme kanal",
-      "description": "Hvis denne funksjonen er aktivert, vil meldingen sendes i kanalen der nivåoppgangen skjedde. Ellers vil den sendes til den valgte kanalen."
+      "description": "Hvis denne funksjonen er aktivert, vil boten sende en melding når en bruker når en ny rang.",
+      "label": "Aktiver kunngjøringer"
     },
     "channel": {
-      "label": "Kunngjøringskanal",
-      "description": "Velg kanalen der rangeringer skal sendes."
+      "description": "Velg kanalen der rangeringer skal sendes.",
+      "label": "Kunngjøringskanal"
+    },
+    "description": "Konfigurer meldinger som sendes når brukere når nye rangeringer.",
+    "sameChannel": {
+      "description": "Hvis denne funksjonen er aktivert, vil meldingen sendes i kanalen der nivåoppgangen skjedde. Ellers vil den sendes til den valgte kanalen.",
+      "label": "Send i samme kanal"
+    }
+  },
+  "auditLog": {
+    "added": "Lagt til",
+    "description": "Vis en historikk over alle endringer som er gjort i innstillingene på serveren din.",
+    "from": "Fra",
+    "loadError": "Kunne ikke laste inn revisjonsloggen. Prøv igjen.",
+    "loading": "Laster revisjonslogg...",
+    "next": "Neste",
+    "noEntries": "Ingen revisjonsloggoppføringer funnet.",
+    "pageInfo": "Side {current} av {total}",
+    "previous": "Forrige",
+    "removed": "Fjernet",
+    "retry": "Prøv på nytt",
+    "settings": {
+      "abuseprotection_cooldown": "Misbruksbeskyttelse - Avkjølingstid",
+      "abuseprotection_cooldowndirection": "Misbruksbeskyttelse – Cooldown-retning",
+      "abuseprotection_donorcontext": "Beskyttelse mot misbruk – Donorkontekst",
+      "abuseprotection_maxgiven": "Beskyttelse mot misbruk - Maksimalt gitt",
+      "abuseprotection_maxgivenhours": "Beskyttelse mot misbruk – Maks antall timer",
+      "abuseprotection_maxmessageage": "Misbruksbeskyttelse – Maksimal meldingsalder",
+      "abuseprotection_maxmessagereputation": "Misbruksbeskyttelse – Maksimal meldingsomdømme",
+      "abuseprotection_maxreceived": "Beskyttelse mot misbruk - Maks mottatt",
+      "abuseprotection_maxreceivedhours": "Beskyttelse mot misbruk – Maksimalt antall mottatte timer",
+      "abuseprotection_minmessages": "Beskyttelse mot misbruk - Minste antall meldinger",
+      "abuseprotection_receivercontext": "Misbruksbeskyttelse – mottakerkontekst",
+      "announcements_active": "Kunngjøringer - Aktiv",
+      "announcements_channel": "Kunngjøringer - Kanal",
+      "announcements_samechannel": "Kunngjøringer – Samme kanal",
+      "autopost_active": "Autopost - Aktiv",
+      "autopost_channel": "Autopost - Kanal",
+      "autopost_refreshinterval": "Autopost - Oppdateringsintervall",
+      "autopost_refreshtype": "Autopost - Oppdateringstype",
+      "general_everyonetokenpurchase": "Generelt - Alle Token-kjøp",
+      "general_language": "Generelt - Språk",
+      "general_reputationmode": "Omdømme - Omdømmemodus",
+      "general_resetdate": "Omdømme - Tilbakestillingsdato",
+      "general_stackroles": "Ranger - Stabelroller",
+      "general_systemchannel": "Generelt - Systemkanal",
+      "logchannel_active": "Loggkanal - Aktiv",
+      "logchannel_channel": "Loggkanal - Kanal",
+      "messages_commandreputationephemeral": "Omdømme - Kommando Omdømme Flyktig",
+      "messages_reactionconfirmation": "Omdømme – Bekreftelse av reaksjon",
+      "profile_nickname": "Profil - Kallenavn",
+      "profile_profilepicture": "Profil - Profilbilde",
+      "profile_reputationname": "Profil - Omdømme Navn",
+      "ranks": "Ranger - Roller",
+      "reputation_answeractive": "Omdømme - Svar aktivt",
+      "reputation_commandactive": "Omdømme - Kommando aktiv",
+      "reputation_directactive": "Omdømme – Direkte aktiv",
+      "reputation_embedactive": "Omdømme - Innbygget aktivt",
+      "reputation_fuzzyactive": "Omdømme - Fuzzy Active",
+      "reputation_mentionactive": "Omdømme – Nevn aktiv",
+      "reputation_reactionactive": "Omdømme – Reaksjon Aktiv",
+      "thanking_channels_categories": "Kanaler - Kategoriliste",
+      "thanking_channels_channels": "Kanaler - Kanalliste",
+      "thanking_channels_whitelist": "Kanaler - Hvitliste-modus",
+      "thanking_denydonorroles": "Roller - Avslå donorroller",
+      "thanking_denyreceiverroles": "Roller - Avslå mottakerroller",
+      "thanking_donorroles": "Roller - Donorroller",
+      "thanking_reactions_mainreaction": "Reaksjoner - Hovedreaksjon",
+      "thanking_reactions_reactions": "Reaksjoner - Ytterligere reaksjoner",
+      "thanking_receiverroles": "Roller - Mottakerroller",
+      "thanking_thankwords_words": "Takkord"
+    },
+    "to": "Til",
+    "unknownMember": "Ukjent medlem",
+    "values": {
+      "bidirectional": "Toveis",
+      "daily": "Daglig",
+      "delete_and_repost": "Slett og legg ut på nytt",
+      "disabled": "Funksjonshemmet",
+      "enabled": "Aktivert",
+      "hourly": "Per time",
+      "month": "Måned",
+      "monthly": "Månedlig",
+      "noChanges": "Ingen endringer",
+      "none": "Ingen",
+      "null": "Ikke angitt",
+      "once": "En gang",
+      "repost": "Repost",
+      "rolling_month": "Rullende måned",
+      "rolling_week": "Rullende uke",
+      "total": "Totalt",
+      "unidirectional": "Enveis",
+      "unknownChannel": "Ukjent kanal",
+      "unknownIntegration": "Ukjent integrasjon",
+      "update": "Oppdatering",
+      "week": "Uke",
+      "weekly": "Ukentlig"
     }
   },
   "autopost": {
+    "active": {
+      "description": "Aktiver eller deaktiver automatisk publisering på leaderboardet.",
+      "label": "Aktiver automatisk publisering"
+    },
+    "channel": {
+      "description": "Kanalen hvor rangeringen skal publiseres.",
+      "label": "Autopost-kanal"
+    },
     "description": "Konfigurer automatisk publisering av leaderboardet til en kanal.",
     "premiumRequired": "Autopost",
-    "active": {
-      "label": "Aktiver automatisk publisering",
-      "description": "Aktiver eller deaktiver automatisk publisering på leaderboardet."
-    },
-    "channel": {
-      "label": "Autopost-kanal",
-      "description": "Kanalen hvor rangeringen skal publiseres."
-    },
     "refreshInterval": {
-      "label": "Oppdateringsintervall",
-      "description": "Hvor ofte rangeringen bør oppdateres.",
-      "HOURLY": "Per time",
       "DAILY": "Daglig",
+      "HOURLY": "Per time",
+      "MONTHLY": "Månedlig",
       "WEEKLY": "Ukentlig",
-      "MONTHLY": "Månedlig"
+      "description": "Hvor ofte rangeringen bør oppdateres.",
+      "label": "Oppdateringsintervall"
     },
     "refreshType": {
-      "label": "Oppdateringstype",
-      "description": "Hvordan innlegget bør oppdateres.",
       "DELETE_AND_REPOST": "Slett og legg ut på nytt",
       "REPOST": "Repost",
-      "UPDATE": "Oppdatering"
+      "UPDATE": "Oppdatering",
+      "description": "Hvordan innlegget bør oppdateres.",
+      "label": "Oppdateringstype"
     },
     "send": {
+      "description": "Send eller oppdater autoposten manuelt til kanalen umiddelbart.",
       "label": "Send Autopost nå",
-      "sending": "Sender...",
-      "description": "Send eller oppdater autoposten manuelt til kanalen umiddelbart."
+      "sending": "Sender..."
     }
+  },
+  "common": {
+    "cancel": "Avbryt",
+    "change": "Endring",
+    "clear": "Tydelig",
+    "confirm": "Bekreft",
+    "delete": "Slett",
+    "edit": "Rediger",
+    "error": {
+      "outOfBounds": "Verdien må være mellom {min} og {max}. Korrigert til nærmeste gyldige verdi."
+    },
+    "loading": "Laster...",
+    "next": "Neste",
+    "noData": "Ingen oppføringer funnet.",
+    "pageOf": "Side {current} av {total}",
+    "previous": "Forrige",
+    "save": "Lagre"
+  },
+  "dashboard": {
+    "rank": "Rangering",
+    "reputation": "Omdømme",
+    "title": "Dashbord",
+    "todayReputation": "Dagens omdømme",
+    "topChannel": "Toppkanal",
+    "topUsers": "Toppbrukere",
+    "totalReputation": "Total omdømme",
+    "user": "Bruker",
+    "weekReputation": "Ukentlig omdømme"
+  },
+  "error": {
+    "expired": {
+      "instruction": "Åpne en ny økt fra Discord-serveren for å fortsette.",
+      "message": "Din økt har utløpt eller er ugyldig.",
+      "title": "Økten utløpt"
+    },
+    "noToken": {
+      "instruction": "Opprett en ny økt for å få tilgang til denne applikasjonen.",
+      "message": "Du har ikke et gyldig sesjonstoken.",
+      "title": "Ingen økt funnet"
+    },
+    "notice": {
+      "workingOnIt": "Vi har fått melding om problemet og jobber med å løse det."
+    }
+  },
+  "general": {
+    "channels": {
+      "description": "Konfigurer hvor boten skal være aktiv og ikke aktiv.",
+      "list": {
+        "categories": "Kategorier",
+        "channels": "Kanaler",
+        "description": "Velg kanaler og kategorier som skal være med på listen.",
+        "label": "Kanaler og kategorier",
+        "permissionsNote": "Bare kanaler hvor boten har lese- og skrivetillatelser er oppført."
+      },
+      "listType": {
+        "allow": "Tillatelsesliste",
+        "deny": "Nekteliste",
+        "description": "Velg om de valgte kanalene og kategoriene skal tillates eller nektes.",
+        "label": "Listetype",
+        "premiumRequired": "Nekteliste"
+      },
+      "premium": {
+        "categoryLimitWarning": "Valg av mer enn én kategori fr{limit}-kategoriene er forbeholdt støttespillere. Bli støttespiller for å kunne bruke denne funksjonen.",
+        "channelLimitWarning": "Valg av mer enn {limit} kanaler er forbeholdt støttespillere. Bli støttespiller for å kunne bruke det."
+      }
+    },
+    "description": "Konfigurer de grunnleggende innstillingene for boten for denne serveren.",
+    "everyoneTokenPurchase": {
+      "description": "Tillat alle brukere å kjøpe premiumfunksjoner ved hjelp av sine tokens. Hvis denne funksjonen er deaktivert, kan kun serveradministratorer kjøpe funksjoner.",
+      "label": "Alle kan kjøpe tokens"
+    },
+    "language": {
+      "description": "Velg språket boten skal bruke for meldinger og svar på denne serveren.",
+      "label": "Bot-språk",
+      "selectPlaceholder": "Velg språk"
+    },
+    "ranks": {
+      "addRank": "Legg til ny rang",
+      "description": "Konfigurer omdømmegradene og tilhørende roller.",
+      "noRanks": "Ingen rangeringer konfigurert ennå.",
+      "refresh": {
+        "alreadyRunning": "Oppdateringen er allerede i gang",
+        "button": "Oppdater rangeringer",
+        "failed": "Kunne ikke starte oppdatering av rangering",
+        "refreshing": "Forfriskende...",
+        "success": "Rangeringoppdatering startet vellykket"
+      },
+      "reputationAlreadyUsed": "Denne omdømmeverdien brukes allerede av en annen rangering.",
+      "reputationPlaceholder": "f.eks. 100",
+      "reputationRequired": "Nødvendig omdømme",
+      "roleAlreadyAdded": "Denne rollen har allerede en rang.",
+      "selectionNote": "Bare roller som ikke administreres av en integrasjon og som ligger under den høyeste rollen til boten, kan velges.",
+      "stackRoles": {
+        "description": "Hvis denne funksjonen er aktivert, vil alle aktuelle rangeringer bli tildelt i stedet for bare den høyeste rangeringen.",
+        "label": "Stabelroller"
+      }
+    },
+    "reputation": {
+      "description": "Konfigurer hvordan omdømme beregnes og hvilke funksjoner som er aktivert.",
+      "mode": {
+        "description": "Velg hvordan omdømme beregnes og vises.",
+        "descriptions": {
+          "MONTH": "Bruk omdømme oppnådd siden starten av inneværende måned.",
+          "ROLLING_MONTH": "Bruk omdømme oppnådd de siste 30 dagene.",
+          "ROLLING_WEEK": "Bruk omdømme oppnådd de siste 7 dagene.",
+          "TOTAL": "Bruk den totale omdømmet en bruker noensinne har fått.",
+          "WEEK": "Bruk omdømme oppnådd siden starten av inneværende uke."
+        },
+        "label": "Omdømmemodus",
+        "modes": {
+          "MONTH": "Denne måneden",
+          "ROLLING_MONTH": "Rullende måned",
+          "ROLLING_WEEK": "Rullende uke",
+          "TOTAL": "Total omdømme",
+          "WEEK": "Denne uken"
+        }
+      },
+      "resetDate": {
+        "clear": "Tøm tilbakestillingsdato",
+        "description": "Datoen da omdømmepoengene vil bli tilbakestilt. Angi en dato i fremtiden for å planlegge en tilbakestilling.",
+        "label": "Tilbakestill dato"
+      },
+      "types": {
+        "answer": {
+          "description": "Gi omdømme når en brukers melding blir takket i et svar.",
+          "label": "Svar Omdømme"
+        },
+        "command": {
+          "description": "Gi omdømme via kommandoen /reputation.",
+          "ephemeral": {
+            "description": "Send svaret skjult for andre brukere når du gir omdømme via kommando.",
+            "label": "Flyktig respons"
+          },
+          "label": "Kommandoens omdømme"
+        },
+        "direct": {
+          "description": "Gi omdømme automatisk når bare én bruker er inkludert i innlegget.",
+          "label": "Direkte innebygd omdømme"
+        },
+        "embed": {
+          "description": "Send en innebygd liste over brukere som var til stede i den siste samtalen hvis det ikke er mulig å fastslå et mål.",
+          "label": "Innebygd omdømme"
+        },
+        "fuzzy": {
+          "description": "Gi omdømme ved å matche ord rundt takkeordet med brukernavnene som finnes i kanalen.",
+          "label": "Uklart samsvar"
+        },
+        "mention": {
+          "description": "Gi omdømme når en bruker blir nevnt sammen med et takkord.",
+          "label": "Omtale Omdømme"
+        },
+        "reaction": {
+          "confirmation": {
+            "description": "Send en bekreftelsesmelding når omdømme gis via reaksjon.",
+            "label": "Reaksjonsbekreftelse"
+          },
+          "description": "Gi omdømme når en spesifikk reaksjon legges til en melding.",
+          "label": "Reaksjon Omdømme"
+        }
+      }
+    },
+    "roleSelect": {
+      "noRolesFound": "Ingen roller funnet",
+      "searchPlaceholder": "Søk etter roller..."
+    },
+    "roles": {
+      "denyDonor": {
+        "description": "Hvis denne funksjonen er aktivert, kan brukere med noen av disse rollene ikke gi omdømme.",
+        "label": "Nekt donorroller"
+      },
+      "denyReceiver": {
+        "description": "Hvis denne funksjonen er aktivert, kan brukere med noen av disse rollene ikke motta omdømme.",
+        "label": "Nekt mottakerroller"
+      },
+      "description": "Konfigurer hvilke roller som har lov til å gi og motta omdømme.",
+      "donor": {
+        "description": "Hvis denne funksjonen er aktivert, kan bare brukere med minst én av disse rollene gi omdømme.",
+        "label": "Donorroller"
+      },
+      "list": {
+        "description": "Velg hvilke roller som skal være obligatoriske.",
+        "label": "Utvalgte roller"
+      },
+      "receiver": {
+        "description": "Hvis denne funksjonen er aktivert, kan bare brukere med minst én av disse rollene motta omdømme.",
+        "label": "Mottakerroller"
+      }
+    },
+    "systemChannel": {
+      "label": "Systemkanal",
+      "note": "Merk: Denne kanalen bør opprettes og bør være en intern kanal. Den vil inneholde viktige meldinger om botens tjeneste og meldinger fra utviklerne.",
+      "selectPlaceholder": "Velg en kanal"
+    }
+  },
+  "guildSwitcher": {
+    "add": "Legg til en ny server ved å åpne innstillingene fra serveren.",
+    "current": "Nåværende server",
+    "none": "Ingen andre servere funnet",
+    "title": "Bytt server"
+  },
+  "help": {
+    "message": "Trenger du hjelp? Mangler en funksjon? Har du tilbakemeldinger? Bare skriv en privat melding til boten. Du finner også en lenke til vår support-discord nederst på siden.",
+    "title": "Trenger du hjelp?"
+  },
+  "integrationBypass": {
+    "add": "Legg til integrasjonsomgåelse",
+    "allowAnswer": "Tillat svar",
+    "allowAnswerDescription": "Tillat å gi omdømme ved å svare på en melding",
+    "allowDirect": "Tillat direkte",
+    "allowDirectDescription": "Tillat å gi omdømme når en innbygging hoppes over fordi bare én mottaker kunne bestemmes. Ingen innbygging vil noensinne sendes til en bot.",
+    "allowFuzzy": "Tillat Fuzzy",
+    "allowFuzzyDescription": "Tillat å gi omdømme via fuzzy matching",
+    "allowMention": "Tillat omtale",
+    "allowMentionDescription": "Tillat å gi omdømme ved å nevne en bruker",
+    "allowReactions": "Tillat reaksjoner",
+    "allowReactionsDescription": "Tillat å gi omdømme via reaksjoner",
+    "deleteConfirm": "Er du sikker på at du vil fjerne denne integrasjonsomgåelsen?",
+    "description": "Konfigurer omgåelser for integrasjoner slik at de kan gi omdømme selv om de ikke oppfyller de vanlige kravene.",
+    "ignoreContext": "Ignorer kontekst",
+    "ignoreContextDescription": "Ignorer kontekstkontroller",
+    "ignoreCooldown": "Ignorer nedkjølingstid",
+    "ignoreCooldownDescription": "Ignorer nedkjølingstid mellom brukere",
+    "ignoreLimit": "Ignorer grense",
+    "ignoreLimitDescription": "Ignorer eventuelle tidsbegrensninger",
+    "noIntegrations": "Det er ikke flere integrasjoner tilgjengelig for å legge til omgåelser for.",
+    "premiumRequired": "Integrering bypass",
+    "selectIntegration": "Velg en integrasjon"
+  },
+  "links": {
+    "faq": "Ofte stilte spørsmål",
+    "support": "Støtteserver",
+    "tos": "Vilkår for bruk",
+    "website": "Nettsted"
+  },
+  "locale": {
+    "selectLanguage": "Velg språk"
   },
   "logChannel": {
-    "premiumRequired": "Loggkanal",
-    "description": "Loggkanalen vil inneholde alle omdømmer som er gitt og tatt fra en bruker.",
     "active": {
-      "label": "Aktiver loggkanal",
-      "description": "Aktiver eller deaktiver logging av endringer i omdømme."
+      "description": "Aktiver eller deaktiver logging av endringer i omdømme.",
+      "label": "Aktiver loggkanal"
     },
     "channel": {
-      "label": "Loggkanal",
-      "description": "Kanalen hvor endringer i omdømme skal loggføres."
+      "description": "Kanalen hvor endringer i omdømme skal loggføres.",
+      "label": "Loggkanal"
+    },
+    "description": "Loggkanalen vil inneholde alle omdømmer som er gitt og tatt fra en bruker.",
+    "premiumRequired": "Loggkanal"
+  },
+  "login": {
+    "button": "Logg inn med Discord",
+    "description": "Vennligst logg inn med Discord for å få tilgang til dette panelet.",
+    "title": "Pålogging kreves"
+  },
+  "metrics": {
+    "charts": {
+      "commandsCount": "Kommandoer teller",
+      "commandsUsage": "Kommandobruk",
+      "messagesCount": "Antall meldinger",
+      "messagesTotal": "Totalt antall meldinger",
+      "reputationChanges": "Endringer i omdømme",
+      "reputationCount": "Omdømme teller",
+      "reputationDow": "Omdømme etter ukedag",
+      "reputationTotal": "Total omdømme",
+      "reputationTypeCount": "Omdømme etter type",
+      "reputationTypeTotal": "Total omdømme etter type",
+      "serviceCountHour": "Tjenestebruk (per time)",
+      "serviceCountWeek": "Tjenestebruk (ukentlig)",
+      "usersActiveMonth": "Aktive brukere (månedlig)",
+      "usersActiveWeek": "Aktive brukere (ukentlig)"
+    },
+    "count": "Telle",
+    "description": "Er du nysgjerrig på trafikken og bruken av boten? Det er vi også! Derfor har vi samlet noen fine grafer på denne siden. Disse viser nesten sanntidsdata direkte fra boten.",
+    "offset": "Offset",
+    "sections": {
+      "commands": "Kommandoer",
+      "messages": "Meldinger",
+      "reputation": "Omdømme",
+      "service": "Tjeneste",
+      "users": "Brukere"
+    },
+    "title": "Metrikker",
+    "units": {
+      "hour": "Time",
+      "month": "Måned",
+      "week": "Uke",
+      "year": "År"
+    },
+    "users": {
+      "donors": "Donorer",
+      "receivers": "Mottakere",
+      "total": "Totalt"
+    },
+    "validation": {
+      "countMax": "Antallet må være maksimalt{max}",
+      "countMin": "Antallet må være minst 2",
+      "offsetMax": "Offset må være maksimalt{max}",
+      "offsetMin": "Offset må være minst 0"
     }
   },
-  "setup": {
-    "title": "Første oppsett",
-    "stepProgress": "Trinn {current} av {total}",
-    "requiredStep": "Dette trinnet er nødvendig for å fortsette",
-    "navigation": {
-      "previous": "Forrige",
-      "next": "Neste",
-      "finish": "Fullfør oppsett"
+  "navigation": {
+    "dashboard": "Dashbord",
+    "faq": "Ofte stilte spørsmål",
+    "logout": "Logg ut",
+    "metrics": "Metrikker",
+    "presets": "Forhåndsinnstillinger",
+    "privacy": "Personvern",
+    "settings": "Innstillinger",
+    "setup": "Oppsett",
+    "supporter": "Supporter",
+    "token_shop": "Tokenbutikk",
+    "tos": "Vilkår for bruk",
+    "user_settings": "Brukerinnstillinger",
+    "voting": "Avstemning"
+  },
+  "premiumFeature": {
+    "kofiHint": "eller støtt oss på",
+    "kofiLink": "Ko-fi",
+    "message": "{name} er forbeholdt støttespillere. Bli støttespiller for å kunne bruke den.",
+    "requiredTierPlural": "En av følgende støttenivåer er påkrevd:",
+    "requiredTierSingular": "Nødvendig støttenivå:",
+    "title": "Supporterfunksjon",
+    "tokenShopHint": "Du kan også låse opp denne funksjonen med tokens i",
+    "tokenShopLink": "Tokenbutikk"
+  },
+  "presets": {
+    "applied": "Anvendt",
+    "apply": "Søk",
+    "applying": "Søker...",
+    "default": {
+      "description": "Jeg ønsker et balansert omdømmesystem med rimelige standardinnstillinger som fungerer godt for de fleste servere.",
+      "settings": "Denne forhåndsinnstillingen vil angi en 30-minutters toveis nedkjølingstid, aktivere alle omdømmemoduser unntatt kommandoer, aktivere omdømmebekreftelse og aktivere kontekstkontroller for giver og mottaker.",
+      "title": "Standardkonfigurasjon"
     },
-    "steps": {
-      "language": {
-        "title": "Velg språk",
-        "description": "Velg språket som boten skal bruke for meldinger og svar på serveren din. Frontend-språket endres i henhold til ditt valg."
-      },
-      "systemChannel": {
-        "title": "Systemkanal",
-        "description": "Velg en kanal hvor boten skal sende viktige systemmeldinger og varsler.",
-        "required": "Du må velge en systemkanal for å fortsette med oppsettet."
-      },
-      "reputationTypes": {
-        "title": "Omdømmetyper",
-        "description": "Velg hvilke metoder brukerne kan bruke for å gi omdømme. Du kan aktivere flere typer for å gi brukerne fleksibilitet."
-      },
-      "reputationMode": {
-        "title": "Omdømmemodus",
-        "description": "Velg hvordan omdømme skal beregnes og vises på serveren din."
-      },
-      "ranks": {
-        "title": "Omdømme-rangeringer",
-        "description": "Definer roller som brukerne vil få når de når bestemte omdømmnivåer. Minst én rang er påkrevd.",
-        "required": "Du må definere minst én omdømmeklassifisering for å fortsette."
-      },
-      "channels": {
-        "title": "Kanaler og kategorier",
-        "description": "Velg hvilke kanaler og kategorier som skal tillate omdømmevurdering. Minst én kanal eller kategori må velges.",
-        "required": "Du må velge minst én kanal eller kategori for å fortsette (med mindre du bruker nektelistemodus)."
-      },
-      "thankwords": {
-        "title": "Takkord",
-        "description": "Legg til ord eller uttrykk som brukerne kan bruke for å gi omdømme. Dette er utløserordene som boten vil gjenkjenne.",
-        "recommendation": "Vi anbefaler at du laster inn standard takkebrev for språket ditt for å komme raskt i gang."
-      },
-      "announcements": {
-        "title": "Kunngjøringer",
-        "description": "Konfigurer om boten skal gi beskjed når brukere når nye omdømmegrader."
-      },
-      "cooldown": {
-        "title": "Innstillinger for avkjøling",
-        "description": "Angi en avkjølingsperiode for å hindre at brukerne gir omdømme for ofte. Du kan også aktivere «avkjøling én gang» for å tillate brukerne å takke hverandre bare én gang."
-      },
-      "mainReaction": {
-        "title": "Hovedreaksjon",
-        "description": "Velg emoji som skal brukes som hovedreaksjon for omdømmevurdering."
-      },
-      "roles": {
-        "title": "Donor- og mottakerroller",
-        "description": "Du kan eventuelt definere hvilke roller som kan gi omdømme (giverroller) og hvilke roller som kan motta omdømme (mottakerroller)."
-      },
-      "welcome": {
-        "title": "Velkommen",
-        "description": "Velkommen til oppsettssiden.\nDenne siden vil veilede deg gjennom det innledende oppsettet av boten. Etter det vil du ha et grunnleggende oppsett som er tilpasset dine preferanser.\n\nHvis du trenger hjelp, kan du skrive en privat melding til boten, så hjelper vi deg så snart vi kan. Du finner også en lenke til vår support-discord nederst på siden."
-      },
-      "finished": {
-        "title": "Oppsett fullført",
-        "description": "Du har nå fullført det siste trinnet i oppsettet. Vi sender deg nå videre til siden for generelle innstillinger, hvor du kan finne flere innstillinger som kan være interessante for deg."
-      },
-      "scan": {
-        "title": "Serversøk",
-        "description": "Nå som du har konfigurert kanalene dine, anbefaler vi at du kjører en skanning for å indeksere eksisterende omdømme fra serverens historikk.",
-        "prompt": {
-          "title": "Vil du starte en serverskanning?",
-          "description": "En skanning vil gå gjennom meldingshistorikken på serveren din i de konfigurerte kanalene og finne eksisterende omdømme. Dette kan ta litt tid, avhengig av serverens størrelse."
-        },
-        "started": {
-          "title": "Skanningen har startet!",
-          "description": "Skanningen kjører nå i bakgrunnen. Du kan se fremdriften på skanningssiden når du er ferdig med oppsettet."
-        },
-        "start": "Start skanning",
-        "starting": "Vi starter...",
-        "error": "Det gikk ikke å starte skanningen. Prøv igjen senere."
-      }
-    }
+    "description": "Hurtigkonfigurasjonsinnstillinger for å komme i gang med vanlige oppsett.",
+    "noAbuse": {
+      "description": "Jeg vil deaktivere kontekstbasert misbruksbeskyttelse og la brukerne gi omdømme mer fritt uten å spore deres interaksjonshistorikk.",
+      "settings": "Denne forhåndsinnstillingen deaktiverer både donor- og mottakerkontekstsporing.",
+      "title": "Ingen beskyttelse mot misbruk"
+    },
+    "simpleReputation": {
+      "description": "Jeg ønsker et enkelt omdømmesystem hvor brukerne kun kan gi omdømme gjennom kommandoer, uten noen kompleks kontekstsporing.",
+      "settings": "Denne forhåndsinnstillingen deaktiverer alle omdømmetyper unntatt kommandoer, og slår av sporing av giver- og mottakerkontekst.",
+      "title": "Enkelt omdømmesystem"
+    },
+    "thankOnce": {
+      "description": "Jeg vil at brukerne skal kunne takke hverandre bare én gang, slik at man unngår gjentatte omdømmevurderinger mellom de samme brukerne.",
+      "settings": "Denne forhåndsinnstillingen vil bare angi nedkjøling én gang og endre nedkjølingsretningen til ensrettet.",
+      "title": "Takk bare én gang"
+    },
+    "title": "Forhåndsinnstillinger"
+  },
+  "profile": {
+    "description": "Tilpass hvordan boten vises og oppfører seg på serveren din.",
+    "nickname": {
+      "description": "Angi et tilpasset kallenavn for boten på denne serveren.",
+      "label": "Bot-kallenavn",
+      "placeholder": "Skriv inn botens kallenavn",
+      "reset": "Tilbakestill kallenavn til standard"
+    },
+    "premiumRequired": "Profil tilpasning",
+    "profilePicture": {
+      "description": "Last opp et tilpasset profilbilde for boten (maks. 2 MB, 512 x 512 piksler)",
+      "label": "Profilbilde",
+      "reset": "Tilbakestill profilbilde til standard",
+      "uploadButton": "Last opp bilde",
+      "uploading": "Laster opp..."
+    },
+    "reputationName": {
+      "description": "Tilpass navnet som brukes for omdømme på denne serveren.",
+      "label": "Omdømme Navn",
+      "placeholder": "Angi et tilpasset omdømmenavn (f.eks. «Poeng», «Karma»)",
+      "reset": "Tilbakestill omdømme til standard"
+    },
+    "reset": "Tilbakestill",
+    "tosNote": "Alt som bryter med Discords bruksvilkår eller statlig lovgivning er ikke tillatt og kan føre til at denne funksjonen blir blokkert for serveren."
+  },
+  "reactions": {
+    "additional": {
+      "add": "Legg til reaksjon",
+      "description": "Ytterligere emojier som også kan brukes til å gi omdømme.",
+      "label": "Ytterligere reaksjoner",
+      "none": "Ingen tilleggsreaksjoner konfigurert.",
+      "premiumRequired": "Ytterligere reaksjoner"
+    },
+    "description": "Konfigurer emojiene som brukes til å gi omdømme.",
+    "main": {
+      "description": "Emojien som vil bli brukt som primær reaksjon for å gi omdømme.",
+      "label": "Hovedreaksjon"
+    },
+    "title": "Reaksjoner"
   },
   "roles": {
     "donor": {
@@ -572,429 +597,418 @@
       "label": "Mottaker"
     }
   },
-  "links": {
-    "support": "Støtteserver",
-    "website": "Nettsted",
-    "faq": "Ofte stilte spørsmål",
-    "tos": "Vilkår for bruk"
-  },
-  "auditLog": {
-    "description": "Vis en historikk over alle endringer som er gjort i innstillingene på serveren din.",
-    "loading": "Laster revisjonslogg...",
-    "loadError": "Kunne ikke laste inn revisjonsloggen. Prøv igjen.",
-    "retry": "Prøv på nytt",
-    "noEntries": "Ingen revisjonsloggoppføringer funnet.",
-    "unknownMember": "Ukjent medlem",
-    "previous": "Forrige",
-    "next": "Neste",
-    "pageInfo": "Side {current} av {total}",
-    "from": "Fra",
-    "to": "Til",
-    "added": "Lagt til",
-    "removed": "Fjernet",
-    "values": {
-      "null": "Ikke angitt",
-      "enabled": "Aktivert",
-      "disabled": "Funksjonshemmet",
-      "once": "En gang",
-      "none": "Ingen",
-      "unknownChannel": "Ukjent kanal",
-      "unidirectional": "Enveis",
-      "bidirectional": "Toveis",
-      "total": "Totalt",
-      "rolling_week": "Rullende uke",
-      "rolling_month": "Rullende måned",
-      "week": "Uke",
-      "month": "Måned",
-      "delete_and_repost": "Slett og legg ut på nytt",
-      "repost": "Repost",
-      "update": "Oppdatering",
-      "hourly": "Per time",
-      "daily": "Daglig",
-      "weekly": "Ukentlig",
-      "monthly": "Månedlig",
-      "noChanges": "Ingen endringer",
-      "unknownIntegration": "Ukjent integrasjon"
+  "scan": {
+    "description": "Søk i klanen din etter omdømme som ble gitt før boten ble lagt til, eller i kanaler som ikke ble overvåket. Dette vil søke gjennom alle meldinger i de konfigurerte omdømmekanalene og -kategoriene.",
+    "error": {
+      "alreadyRunning": "Det pågår allerede en skanning for dette klanet.",
+      "fetchStatus": "Det gikk ikke å hente skannestatus. Prøv igjen senere.",
+      "startFailed": "Det gikk ikke å starte skanningen. Prøv igjen senere."
     },
-    "settings": {
-      "abuseprotection_cooldown": "Misbruksbeskyttelse - Avkjølingstid",
-      "abuseprotection_cooldowndirection": "Misbruksbeskyttelse – Cooldown-retning",
-      "abuseprotection_maxmessageage": "Misbruksbeskyttelse – Maksimal meldingsalder",
-      "abuseprotection_minmessages": "Beskyttelse mot misbruk - Minste antall meldinger",
-      "abuseprotection_donorcontext": "Beskyttelse mot misbruk – Donorkontekst",
-      "abuseprotection_receivercontext": "Misbruksbeskyttelse – mottakerkontekst",
-      "abuseprotection_maxgiven": "Beskyttelse mot misbruk - Maksimalt gitt",
-      "abuseprotection_maxgivenhours": "Beskyttelse mot misbruk – Maks antall timer",
-      "abuseprotection_maxreceived": "Beskyttelse mot misbruk - Maks mottatt",
-      "abuseprotection_maxreceivedhours": "Beskyttelse mot misbruk – Maksimalt antall mottatte timer",
-      "abuseprotection_maxmessagereputation": "Misbruksbeskyttelse – Maksimal meldingsomdømme",
-      "thanking_channels_whitelist": "Kanaler - Hvitliste-modus",
-      "thanking_channels_channels": "Kanaler - Kanalliste",
-      "thanking_channels_categories": "Kanaler - Kategoriliste",
-      "thanking_thankwords_words": "Takkord",
-      "thanking_reactions_mainreaction": "Reaksjoner - Hovedreaksjon",
-      "thanking_reactions_reactions": "Reaksjoner - Ytterligere reaksjoner",
-      "thanking_denydonorroles": "Roller - Avslå donorroller",
-      "thanking_donorroles": "Roller - Donorroller",
-      "thanking_denyreceiverroles": "Roller - Avslå mottakerroller",
-      "thanking_receiverroles": "Roller - Mottakerroller",
-      "messages_reactionconfirmation": "Omdømme – Bekreftelse av reaksjon",
-      "messages_commandreputationephemeral": "Omdømme - Kommando Omdømme Flyktig",
-      "profile_nickname": "Profil - Kallenavn",
-      "profile_profilepicture": "Profil - Profilbilde",
-      "profile_reputationname": "Profil - Omdømme Navn",
-      "reputation_reactionactive": "Omdømme – Reaksjon Aktiv",
-      "reputation_answeractive": "Omdømme - Svar aktivt",
-      "reputation_mentionactive": "Omdømme – Nevn aktiv",
-      "reputation_fuzzyactive": "Omdømme - Fuzzy Active",
-      "reputation_embedactive": "Omdømme - Innbygget aktivt",
-      "reputation_directactive": "Omdømme – Direkte aktiv",
-      "reputation_commandactive": "Omdømme - Kommando aktiv",
-      "logchannel_active": "Loggkanal - Aktiv",
-      "logchannel_channel": "Loggkanal - Kanal",
-      "general_language": "Generelt - Språk",
-      "general_stackroles": "Ranger - Stabelroller",
-      "general_reputationmode": "Omdømme - Omdømmemodus",
-      "general_systemchannel": "Generelt - Systemkanal",
-      "general_resetdate": "Omdømme - Tilbakestillingsdato",
-      "announcements_active": "Kunngjøringer - Aktiv",
-      "announcements_samechannel": "Kunngjøringer – Samme kanal",
-      "announcements_channel": "Kunngjøringer - Kanal",
-      "autopost_active": "Autopost - Aktiv",
-      "autopost_channel": "Autopost - Kanal",
-      "autopost_refreshtype": "Autopost - Oppdateringstype",
-      "autopost_refreshinterval": "Autopost - Oppdateringsintervall",
-      "ranks": "Ranger - Roller",
-      "general_everyonetokenpurchase": "Generelt - Alle Token-kjøp"
+    "finishedAt": "Avsluttet kl.",
+    "messagesScanned": "Meldinger skannet",
+    "noScanYet": "Det er ikke utført noen skanning ennå.",
+    "progressDetails": "Detaljer om fremdriften",
+    "reputationFound": "Omdømme funnet",
+    "start": "Start skanning",
+    "startedAt": "Startet kl.",
+    "starting": "Vi starter...",
+    "status": {
+      "finished": "Skanningen er fullført",
+      "running": "Skanning pågår"
     }
   },
-  "help": {
-    "title": "Trenger du hjelp?",
-    "message": "Trenger du hjelp? Mangler en funksjon? Har du tilbakemeldinger? Bare skriv en privat melding til boten. Du finner også en lenke til vår support-discord nederst på siden."
+  "settings": {
+    "abuseProtection": "Beskyttelse mot misbruk",
+    "announcements": "Kunngjøringer",
+    "auditLog": "Revisjonslogg",
+    "autopost": "Autopost",
+    "channels": "Kanaler",
+    "debug": {
+      "goToSettings": "Gå til innstillinger",
+      "missingPermissions": {
+        "CATEGORY": "Kategori",
+        "CHANNEL": "Kanal",
+        "GUILD": "Guild",
+        "title": "Manglende tillatelser med omfang"
+      },
+      "permissions": {
+        "BYPASS_SLOWMODE": "Noen bekreftelsesmeldinger vil ikke fungere fra tid til annen. For eksempel reaksjonsbekreftelse eller omdømmebekreftelse via innebygging.",
+        "MANAGE_GUILD_EXPRESSIONS": "Tilpassede reaksjoner kan ikke foreslås i dashbordet.",
+        "MANAGE_ROLES": "Omdømme-roller kan ikke tildeles.",
+        "MESSAGE_ADD_REACTION": "Bekreftelse av omdømme via reaksjoner fungerer ikke.",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "Bekreftelsesmeldinger fungerer ikke i talekanaler. For eksempel reaksjonsbekreftelse eller omdømmebekreftelse via innebygging.",
+        "MESSAGE_EXT_EMOJI": "Bekreftelse av omdømme via emojier fungerer ikke.",
+        "MESSAGE_HISTORY": "Bekreftelse av omdømme via innebygde elementer fungerer ikke. De fleste kontroller for beskyttelse mot misbruk vil mislykkes.",
+        "MESSAGE_SEND": "Bekreftelsesmeldinger fungerer ikke. For eksempel reaksjonsbekreftelse eller omdømmebekreftelse via innebygging.",
+        "MESSAGE_SEND_IN_THREADS": "Bekreftelsesmeldinger fungerer ikke i tråder. For eksempel reaksjonsbekreftelse eller omdømmebekreftelse via innebygging.",
+        "NICKNAME_CHANGE": "Kallenavnet kan ikke endres i dashbordet.",
+        "VIEW_CHANNEL": "Omdømmekanaler kan ikke sees. Omdømme kan ikke gis via noen tekstbasert metode.",
+        "description": "Disse tillatelsene mangler for boten globalt. Dette kan begrense noen funksjoner.",
+        "title": "Manglende globale tillatelser"
+      },
+      "rankProblems": {
+        "CANT_ASSIGN_ROLE": "Boten kan ikke tildele denne rollen fordi den ligger over botens høyeste rolle.",
+        "MISSING_ROLE": "Rollen for denne rangen mangler.",
+        "title": "Rangeringsproblemer"
+      },
+      "reputationChannelProblems": {
+        "MISSING_CATEGORY": "Kategorien mangler.",
+        "MISSING_CHANNEL": "Kanalen mangler.",
+        "NOT_TEXT_TYPE": "Kanalen er ikke en tekstkanal.",
+        "title": "Problemer med omdømmekanalen"
+      },
+      "simpleProblems": {
+        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "Kunngjøringskanalen ble ikke funnet.",
+        "AUTOPOST_CANNEL_NOT_FOUND": "Autopost-kanalen ble ikke funnet.",
+        "LOG_CHANNEL_NOT_FOUND": "Loggkanalen ble ikke funnet.",
+        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "Kunngjøringskanalen er ikke definert.",
+        "NO_AUTOPOST_CHANNEL_DEFINED": "Autopost-kanalen er ikke definert.",
+        "NO_LOG_CHANNEL_DEFINED": "Loggkanalen er ikke definert.",
+        "NO_REPUTATION_CHANNEL_DEFINED": "Det er ikke definert noen omdømme-kanaler eller -kategorier.",
+        "NO_THANKWORDS_DEFINED": "Det er ikke definert noen takkeord.",
+        "SYSTEM_CHANNEL_NOT_DEFINED": "Systemkanalen er ikke definert.",
+        "SYSTEM_CHANNEL_NOT_FOUND": "Systemkanalen ble ikke funnet.",
+        "title": "Generelle problemer"
+      },
+      "simpleWarnings": {
+        "MAX_MESSAGE_AGE_LOW": "Maksimal meldingsalder er satt veldig lavt. Dette kan hindre brukere i å takke hverandre for eldre meldinger.",
+        "title": "Advarsler"
+      }
+    },
+    "general": "Generelt",
+    "integrationBypass": "Integrering Bypass",
+    "logChannel": "Loggkanal",
+    "messages": "Meldinger",
+    "problems": "Problemer",
+    "profile": "Profil",
+    "ranks": "Ranger",
+    "reactions": "Reaksjoner",
+    "reputation": "Omdømme",
+    "roles": "Roller",
+    "scan": "Skann",
+    "thankwords": "Takkord",
+    "title": "Innstillinger"
   },
-  "guildSwitcher": {
-    "title": "Bytt server",
-    "current": "Nåværende server",
-    "none": "Ingen andre servere funnet",
-    "add": "Legg til en ny server ved å åpne innstillingene fra serveren."
+  "setup": {
+    "error": {
+      "forbidden": {
+        "description": "Du har ikke tilgang til innstillingene for denne serveren. Ta kontakt med en serveradministrator.",
+        "title": "Tilgang nektet"
+      },
+      "noSession": {
+        "description": "Det er ingen aktiv serversesjon. Gå tilbake og velg en server.",
+        "title": "Ikke tilkoblet"
+      },
+      "unknown": {
+        "description": "Det oppstod en feil under innlasting av serverinnstillingene. Prøv igjen senere.",
+        "title": "Det gikk ikke å laste inn innstillingene"
+      }
+    },
+    "navigation": {
+      "finish": "Fullfør oppsett",
+      "next": "Neste",
+      "previous": "Forrige"
+    },
+    "requiredStep": "Dette trinnet er nødvendig for å fortsette",
+    "stepProgress": "Trinn {current} av {total}",
+    "steps": {
+      "announcements": {
+        "description": "Konfigurer om boten skal gi beskjed når brukere når nye omdømmegrader.",
+        "title": "Kunngjøringer"
+      },
+      "channels": {
+        "description": "Velg hvilke kanaler og kategorier som skal tillate omdømmevurdering. Minst én kanal eller kategori må velges.",
+        "required": "Du må velge minst én kanal eller kategori for å fortsette (med mindre du bruker nektelistemodus).",
+        "title": "Kanaler og kategorier"
+      },
+      "cooldown": {
+        "description": "Angi en avkjølingsperiode for å hindre at brukerne gir omdømme for ofte. Du kan også aktivere «avkjøling én gang» for å tillate brukerne å takke hverandre bare én gang.",
+        "title": "Innstillinger for avkjøling"
+      },
+      "finished": {
+        "description": "Du har nå fullført det siste trinnet i oppsettet. Vi sender deg nå videre til siden for generelle innstillinger, hvor du kan finne flere innstillinger som kan være interessante for deg.",
+        "title": "Oppsett fullført"
+      },
+      "language": {
+        "description": "Velg språket som boten skal bruke for meldinger og svar på serveren din. Frontend-språket endres i henhold til ditt valg.",
+        "title": "Velg språk"
+      },
+      "mainReaction": {
+        "description": "Velg emoji som skal brukes som hovedreaksjon for omdømmevurdering.",
+        "title": "Hovedreaksjon"
+      },
+      "ranks": {
+        "description": "Definer roller som brukerne vil få når de når bestemte omdømmnivåer. Minst én rang er påkrevd.",
+        "required": "Du må definere minst én omdømmeklassifisering for å fortsette.",
+        "title": "Omdømme-rangeringer"
+      },
+      "reputationMode": {
+        "description": "Velg hvordan omdømme skal beregnes og vises på serveren din.",
+        "title": "Omdømmemodus"
+      },
+      "reputationTypes": {
+        "description": "Velg hvilke metoder brukerne kan bruke for å gi omdømme. Du kan aktivere flere typer for å gi brukerne fleksibilitet.",
+        "title": "Omdømmetyper"
+      },
+      "roles": {
+        "description": "Du kan eventuelt definere hvilke roller som kan gi omdømme (giverroller) og hvilke roller som kan motta omdømme (mottakerroller).",
+        "title": "Donor- og mottakerroller"
+      },
+      "scan": {
+        "description": "Nå som du har konfigurert kanalene dine, anbefaler vi at du kjører en skanning for å indeksere eksisterende omdømme fra serverens historikk.",
+        "error": "Det gikk ikke å starte skanningen. Prøv igjen senere.",
+        "prompt": {
+          "description": "En skanning vil gå gjennom meldingshistorikken på serveren din i de konfigurerte kanalene og finne eksisterende omdømme. Dette kan ta litt tid, avhengig av serverens størrelse.",
+          "title": "Vil du starte en serverskanning?"
+        },
+        "start": "Start skanning",
+        "started": {
+          "description": "Skanningen kjører nå i bakgrunnen. Du kan se fremdriften på skanningssiden når du er ferdig med oppsettet.",
+          "title": "Skanningen har startet!"
+        },
+        "starting": "Vi starter...",
+        "title": "Serversøk"
+      },
+      "systemChannel": {
+        "description": "Velg en kanal hvor boten skal sende viktige systemmeldinger og varsler.",
+        "required": "Du må velge en systemkanal for å fortsette med oppsettet.",
+        "title": "Systemkanal"
+      },
+      "thankwords": {
+        "description": "Legg til ord eller uttrykk som brukerne kan bruke for å gi omdømme. Dette er utløserordene som boten vil gjenkjenne.",
+        "recommendation": "Vi anbefaler at du laster inn standard takkebrev for språket ditt for å komme raskt i gang.",
+        "title": "Takkord"
+      },
+      "welcome": {
+        "description": "Velkommen til oppsettssiden.\nDenne siden vil veilede deg gjennom det innledende oppsettet av boten. Etter det vil du ha et grunnleggende oppsett som er tilpasset dine preferanser.\n\nHvis du trenger hjelp, kan du skrive en privat melding til boten, så hjelper vi deg så snart vi kan. Du finner også en lenke til vår support-discord nederst på siden.",
+        "title": "Velkommen"
+      }
+    },
+    "title": "Første oppsett"
   },
-  "integrationBypass": {
-    "description": "Konfigurer omgåelser for integrasjoner slik at de kan gi omdømme selv om de ikke oppfyller de vanlige kravene.",
-    "allowReactions": "Tillat reaksjoner",
-    "allowAnswer": "Tillat svar",
-    "allowMention": "Tillat omtale",
-    "allowFuzzy": "Tillat Fuzzy",
-    "ignoreCooldown": "Ignorer nedkjølingstid",
-    "ignoreLimit": "Ignorer grense",
-    "allowReactionsDescription": "Tillat å gi omdømme via reaksjoner",
-    "allowAnswerDescription": "Tillat å gi omdømme ved å svare på en melding",
-    "allowMentionDescription": "Tillat å gi omdømme ved å nevne en bruker",
-    "allowFuzzyDescription": "Tillat å gi omdømme via fuzzy matching",
-    "ignoreCooldownDescription": "Ignorer nedkjølingstid mellom brukere",
-    "ignoreLimitDescription": "Ignorer eventuelle tidsbegrensninger",
-    "add": "Legg til integrasjonsomgåelse",
-    "selectIntegration": "Velg en integrasjon",
-    "noIntegrations": "Det er ikke flere integrasjoner tilgjengelig for å legge til omgåelser for.",
-    "deleteConfirm": "Er du sikker på at du vil fjerne denne integrasjonsomgåelsen?",
-    "premiumRequired": "Integrering bypass",
-    "allowDirect": "Tillat direkte",
-    "ignoreContext": "Ignorer kontekst",
-    "allowDirectDescription": "Tillat å gi omdømme når en innbygging hoppes over fordi bare én mottaker kunne bestemmes. Ingen innbygging vil noensinne sendes til en bot.",
-    "ignoreContextDescription": "Ignorer kontekstkontroller"
+  "thankwords": {
+    "add": "Legg til takkeord",
+    "alreadyExists": "Dette takkeordet finnes allerede.",
+    "defaults": {
+      "description": "Legg raskt til standard takkebrev for ulike språk.",
+      "title": "Standard takkebrev"
+    },
+    "description": "Disse ordene vil bli brukt til å oppdage når noen blir takket. De tolkes som regulære uttrykk.",
+    "invalidCharacter": "Takkeordet inneholder et ugyldig tegn: {char}",
+    "none": "Ingen takkeord konfigurert.",
+    "placeholder": "Skriv inn takkeord (Regex)"
   },
   "timePresets": {
-    "hour": "1 time",
     "day": "1 dag",
-    "week": "1 uke",
     "fourWeeks": "4 uker",
+    "hour": "1 time",
+    "week": "1 uke",
     "year": "1 år"
   },
-  "login": {
-    "title": "Pålogging kreves",
-    "description": "Vennligst logg inn med Discord for å få tilgang til dette panelet.",
-    "button": "Logg inn med Discord"
+  "token_shop": {
+    "active": "Aktiv",
+    "adminOnly": "Serveren er konfigurert slik at kun serveradministratorer kan kjøpe funksjoner.",
+    "autoRenewal": "Automatisk fornyelse",
+    "confirmPurchase": "Er du sikker på at du vil kjøpe denne funksjonen for {amount} tokens?",
+    "description": "Forbedre serveren din med premiumfunksjoner ved å bruke stemmetokenene dine. Funksjoner kjøpt med tokener utløper ikke så lenge de fornyes automatisk. Hvis du kjøper en funksjon som allerede er aktiv, forlenges utløps- eller fornyelsesdatoen med 30 dager.",
+    "enabledBySubscription": "Aktivert ved abonnement",
+    "expires": "Utløper: {date}",
+    "feature": {
+      "additionalemojis": {
+        "description": "Bruk mer enn én emoji for å gi omdømme via reaksjoner.",
+        "name": "Ekstra emojier"
+      },
+      "advancedrankings": {
+        "description": "Lås opp flere rangeringalternativer.",
+        "name": "Avanserte rangeringer"
+      },
+      "analyzerlog": {
+        "description": "Oppbevaringsperioden for analysatorloggen er doblet.",
+        "name": "Utvidet analysatorlogg"
+      },
+      "autopost": {
+        "description": "Legg automatisk ut leaderboardet på en kanal med jevne mellomrom.",
+        "name": "Autopost"
+      },
+      "channelblacklist": {
+        "description": "Hindre at boten er aktiv i bestemte kanaler, i stedet for å tillate den overalt.",
+        "name": "Kanalens sperreliste"
+      },
+      "detailedprofile": {
+        "description": "Vis mer informasjon om brukerens omdømmeprofiler.",
+        "name": "Detaljert profil"
+      },
+      "integrationbypass": {
+        "description": "Tillat andre bots og integrasjoner å gi omdømme.",
+        "name": "Integrering Bypass"
+      },
+      "localeoverrides": {
+        "description": "Overstyr botmeldinger og etiketter med dine egne oversettelser. For øyeblikket tillater dette bare å angi et tilpasset navn for omdømme.",
+        "name": "Lokale overstyringer"
+      },
+      "logchannel": {
+        "description": "Aktiver en dedikert loggkanal for alle endringer i omdømme.",
+        "name": "Loggkanal"
+      },
+      "profile": {
+        "description": "Tilpass botens navn og profilbilde på serveren din.",
+        "name": "Bot-profil"
+      },
+      "reputationcategories": {
+        "description": "Lås opp ubegrensede omdømme-kategorier.",
+        "name": "Ubegrensede omdømme-kategorier"
+      },
+      "reputationchannel": {
+        "description": "Lås opp ubegrensede omdømmekanaler.",
+        "name": "Ubegrenset omdømme-kanal"
+      },
+      "reputationlog": {
+        "description": "Se alle sider i omdømmeloggen på serveren.",
+        "name": "Fullstendig omdømmelogg"
+      }
+    },
+    "getMoreTokens": "Få flere tokens",
+    "guildTokens": "Bruk guild-tokens",
+    "insufficientTokens": "Du har ikke nok tokens.",
+    "nextRenewal": "Neste fornyelse: {date}",
+    "noFeatures": "Ingen funksjoner tilgjengelig for øyeblikket.",
+    "purchase": "Kjøp",
+    "purchaseSuccess": "Funksjonen er kjøpt!",
+    "subscribe": "Abonner",
+    "subscribeSuccess": "Abonnement aktivert!",
+    "subscriptionActiveNote": "Denne funksjonen er for øyeblikket aktivert av et aktivt abonnement.",
+    "title": "Tokenbutikk",
+    "unsubscribe": "Avmeld",
+    "unsubscribeSuccess": "Abonnement deaktivert!",
+    "userTokens": "Bruk personlige tokens"
+  },
+  "user": {
+    "settings": {
+      "description": "Konfigurer dine personlige kontoinnstillinger og preferanser.",
+      "mails": {
+        "add": {
+          "button": "Legg til",
+          "placeholder": "Legg til en ny e-postadresse (name{'@'}example.com)"
+        },
+        "description": "Administrer e-postadressene som er knyttet til kontoen din. Du kan legge til en ny adresse og bekrefte den via lenken som sendes til innboksen din.",
+        "errors": {
+          "ALREADY_REGISTERED": "Denne e-postadressen er allerede registrert for en annen bruker.",
+          "CODE_EXPIRED": "Bekreftelseskoden har utløpt. Be om en ny bekreftelses-e-post.",
+          "INVALID_CODE": "Bekreftelseskoden er ugyldig.",
+          "INVALID_FORMAT": "E-postadressen er ugyldig. Kontroller og prøv igjen.",
+          "RATE_LIMIT": "Du gjør det for ofte. Vennligst vent {time} før du legger til en ny e-postadresse.",
+          "UNKNOWN": "Det oppstod en ukjent feil. Prøv igjen senere.",
+          "UNKNOWN_ADDRESS": "Vi kunne ikke finne denne e-postadressen. Den kan ha blitt slettet.",
+          "WRONG_USER": "Denne e-postadressen tilhører en annen bruker."
+        },
+        "noteDeletion": "Merk: E-postadresser fra Discord eller Ko-fi kan ikke fjernes. Bare adresser du selv har lagt til kan slettes.",
+        "pending": "Venter på bekreftelse",
+        "source": {
+          "discord": "Uenighet",
+          "kofi": "Ko-fi",
+          "user": "Bruker"
+        },
+        "title": "E-postadresser",
+        "verified": "Verifisert",
+        "verify": {
+          "error": "E-postbekreftelsen mislyktes. Prøv igjen eller be om en ny bekreftelseskobling.",
+          "success": "E-postadressen din er bekreftet."
+        }
+      },
+      "title": "Brukerinnstillinger",
+      "voteGuild": {
+        "description": "Velg hvilket guild som skal motta tokens når du stemmer på boten. Dette vil kun påvirke fremtidige stemmer.",
+        "label": "Stem på Guild",
+        "none": "Ingen spesifikk klan (Personlig)"
+      }
+    },
+    "supporter": {
+      "description": "Se dine aktive Ko-fi-kjøp og tilordne dem til et laug for å aktivere supporterfunksjoner.",
+      "errors": {
+        "assign": "Kunne ikke tilordne kjøpet.",
+        "load": "Kunne ikke laste inn kjøp. Prøv igjen senere.",
+        "unassign": "Kunne ikke oppheve tilordningen av kjøpet."
+      },
+      "item": {
+        "assign": "Tildele",
+        "assignedTo": "Tildelt til: {guild}",
+        "expires": "Utløper: {date}",
+        "lifetime": "Levetid",
+        "subscription": "Abonnement",
+        "unassign": "Fjern tilordning"
+      },
+      "kofiLink": "Kjøp på Ko-fi",
+      "missingPurchasesNotice": "Hvis kjøpene dine ikke vises her, kan det være at du har brukt en annen e-postadresse for Ko-fi enn Discord-kontoen din. Du kan koble til flere e-postadresser i {link}.",
+      "results": {
+        "ALREADY_SUBSCRIBED": "Du har allerede et aktivt abonnement tilordnet et laug.",
+        "SUBSCRIPTION_EXPIRED": "Dette abonnementet har utløpt og kan ikke tildeles.",
+        "SUCCESS": "Suksess",
+        "UNKOWN": "Det oppstod en ukjent abonnementsfeil. Prøv igjen senere."
+      },
+      "sections": {
+        "lifetime": "Livstids kjøp",
+        "lifetime_desc": "Livstids kjøp kan tilordnes et laug for å låse opp funksjoner permanent.",
+        "subscriptions": "Aktive abonnementer",
+        "subscriptions_desc": "Abonnementene fornyes automatisk og kan tilordnes en klan etter eget valg."
+      },
+      "settingsLink": "Brukerinnstillinger",
+      "title": "Supporter"
+    }
   },
   "voting": {
-    "title": "Avstemning",
-    "description": "Informasjon om dine nåværende stemmetokener og botlistens stemmestatus.",
-    "tokens": {
-      "title": "Tokens",
-      "description": "Dine nåværende stemmetokener. Du kan bruke dem på ulike belønninger.",
-      "label": "Gjeldende tokens",
-      "shop": "Besøk Token Shop"
-    },
     "botlists": {
-      "title": "Botlister",
-      "description": "Stem på boten på ulike botlister for å tjene tokens og opprettholde din rekke.",
-      "name": "Botliste",
-      "streak": "Streak",
-      "lastVote": "Siste avstemning",
       "action": "Handling",
-      "vote": "Stem",
+      "days": "dager",
+      "description": "Stem på boten på ulike botlister for å tjene tokens og opprettholde din rekke.",
+      "lastVote": "Siste avstemning",
+      "name": "Botliste",
       "never": "Aldri",
-      "days": "dager"
+      "streak": "Streak",
+      "title": "Botlister",
+      "vote": "Stem"
     },
+    "description": "Informasjon om dine nåværende stemmetokener og botlistens stemmestatus.",
     "log": {
-      "title": "Stemmeregister",
-      "description": "En oversikt over dine transaksjoner med stemmetokener.",
       "date": "Dato",
+      "description": "En oversikt over dine transaksjoner med stemmetokener.",
       "guild": "Guild",
-      "tokens": "Tokens",
+      "personal": "Personlig",
       "reason": {
-        "label": "Årsak",
+        "BONUS": "Daglig bonus",
+        "BONUS_DESCRIPTION": "Du har mottatt ekstra tokens for å ha stemt på alle botlister i løpet av de siste 6 timene.",
         "STANDARD": "Stem",
         "STANDARD_DESCRIPTION": "Du har mottatt en token for å stemme på en botliste.",
         "STREAK": "Stemme rekke",
         "STREAK_DESCRIPTION": "Du har fått en ekstra token fordi du har en strek.",
-        "BONUS": "Daglig bonus",
-        "BONUS_DESCRIPTION": "Du har mottatt ekstra tokens for å ha stemt på alle botlister i løpet av de siste 6 timene.",
         "TRANSFER": "Overføring til Guild",
         "TRANSFER_DESCRIPTION": "Du overførte tokens til et laug for å støtte dets omdømmesystem.",
         "USE": "Kjøp",
         "USE_DESCRIPTION": "Du brukte tokens til å kjøpe en belønning eller tjeneste.",
+        "label": "Årsak",
         "unknown": "Ukjent",
         "unknown_DESCRIPTION": "Årsaken til denne transaksjonen er ukjent."
       },
-      "unknownGuild": "Ukjent laug",
-      "personal": "Personlig"
+      "title": "Stemmeregister",
+      "tokens": "Tokens",
+      "unknownGuild": "Ukjent laug"
     },
     "noteDefaultGuild": "Tips: Du kan angi en standardklan som automatisk skal motta tokens i din",
     "noteDefaultGuildLink": "Brukerinnstillinger",
+    "title": "Avstemning",
+    "tokens": {
+      "description": "Dine nåværende stemmetokener. Du kan bruke dem på ulike belønninger.",
+      "label": "Gjeldende tokens",
+      "shop": "Besøk Token Shop",
+      "title": "Tokens"
+    },
     "transfer": {
-      "title": "Overfør tokens til et laug",
+      "amount": "Beløp",
       "description": "Flytt tokens fra din personlige saldo til en av dine guilder.",
       "guild": "Guild",
-      "selectGuild": "Velg et laug",
-      "amount": "Beløp",
       "max": "Max: {max}",
-      "submit": "Overføring"
-    }
-  },
-  "user": {
-    "settings": {
-      "title": "Brukerinnstillinger",
-      "description": "Konfigurer dine personlige kontoinnstillinger og preferanser.",
-      "voteGuild": {
-        "label": "Stem på Guild",
-        "description": "Velg hvilket guild som skal motta tokens når du stemmer på boten. Dette vil kun påvirke fremtidige stemmer.",
-        "none": "Ingen spesifikk klan (Personlig)"
-      },
-      "mails": {
-        "title": "E-postadresser",
-        "description": "Administrer e-postadressene som er knyttet til kontoen din. Du kan legge til en ny adresse og bekrefte den via lenken som sendes til innboksen din.",
-        "verified": "Verifisert",
-        "pending": "Venter på bekreftelse",
-        "noteDeletion": "Merk: E-postadresser fra Discord eller Ko-fi kan ikke fjernes. Bare adresser du selv har lagt til kan slettes.",
-        "source": {
-          "user": "Bruker",
-          "discord": "Uenighet",
-          "kofi": "Ko-fi"
-        },
-        "add": {
-          "placeholder": "Legg til en ny e-postadresse (name{'@'}example.com)",
-          "button": "Legg til"
-        },
-        "verify": {
-          "success": "E-postadressen din er bekreftet.",
-          "error": "E-postbekreftelsen mislyktes. Prøv igjen eller be om en ny bekreftelseskobling."
-        },
-        "errors": {
-          "ALREADY_REGISTERED": "Denne e-postadressen er allerede registrert for en annen bruker.",
-          "INVALID_FORMAT": "E-postadressen er ugyldig. Kontroller og prøv igjen.",
-          "WRONG_USER": "Denne e-postadressen tilhører en annen bruker.",
-          "INVALID_CODE": "Bekreftelseskoden er ugyldig.",
-          "CODE_EXPIRED": "Bekreftelseskoden har utløpt. Be om en ny bekreftelses-e-post.",
-          "UNKNOWN_ADDRESS": "Vi kunne ikke finne denne e-postadressen. Den kan ha blitt slettet.",
-          "UNKNOWN": "Det oppstod en ukjent feil. Prøv igjen senere.",
-          "RATE_LIMIT": "Du gjør det for ofte. Vennligst vent {time} før du legger til en ny e-postadresse."
-        }
-      }
-    },
-    "supporter": {
-      "title": "Supporter",
-      "description": "Se dine aktive Ko-fi-kjøp og tilordne dem til et laug for å aktivere supporterfunksjoner.",
-      "kofiLink": "Kjøp på Ko-fi",
-      "sections": {
-        "subscriptions": "Aktive abonnementer",
-        "subscriptions_desc": "Abonnementene fornyes automatisk og kan tilordnes en klan etter eget valg.",
-        "lifetime": "Livstids kjøp",
-        "lifetime_desc": "Livstids kjøp kan tilordnes et laug for å låse opp funksjoner permanent."
-      },
-      "item": {
-        "subscription": "Abonnement",
-        "lifetime": "Levetid",
-        "expires": "Utløper: {date}",
-        "assignedTo": "Tildelt til: {guild}",
-        "assign": "Tildele",
-        "unassign": "Fjern tilordning"
-      },
-      "errors": {
-        "load": "Kunne ikke laste inn kjøp. Prøv igjen senere.",
-        "assign": "Kunne ikke tilordne kjøpet.",
-        "unassign": "Kunne ikke oppheve tilordningen av kjøpet."
-      },
-      "results": {
-        "ALREADY_SUBSCRIBED": "Du har allerede et aktivt abonnement tilordnet et laug.",
-        "SUBSCRIPTION_EXPIRED": "Dette abonnementet har utløpt og kan ikke tildeles.",
-        "UNKOWN": "Det oppstod en ukjent abonnementsfeil. Prøv igjen senere.",
-        "SUCCESS": "Suksess"
-      },
-      "missingPurchasesNotice": "Hvis kjøpene dine ikke vises her, kan det være at du har brukt en annen e-postadresse for Ko-fi enn Discord-kontoen din. Du kan koble til flere e-postadresser i {link}.",
-      "settingsLink": "Brukerinnstillinger"
-    }
-  },
-  "dashboard": {
-    "title": "Dashbord",
-    "totalReputation": "Total omdømme",
-    "weekReputation": "Ukentlig omdømme",
-    "todayReputation": "Dagens omdømme",
-    "topChannel": "Toppkanal",
-    "topUsers": "Toppbrukere",
-    "rank": "Rangering",
-    "user": "Bruker",
-    "reputation": "Omdømme"
-  },
-  "token_shop": {
-    "title": "Tokenbutikk",
-    "description": "Forbedre serveren din med premiumfunksjoner ved å bruke stemmetokenene dine. Funksjoner kjøpt med tokener utløper ikke så lenge de fornyes automatisk. Hvis du kjøper en funksjon som allerede er aktiv, forlenges utløps- eller fornyelsesdatoen med 30 dager.",
-    "guildTokens": "Bruk guild-tokens",
-    "userTokens": "Bruk personlige tokens",
-    "noFeatures": "Ingen funksjoner tilgjengelig for øyeblikket.",
-    "active": "Aktiv",
-    "expires": "Utløper: {date}",
-    "nextRenewal": "Neste fornyelse: {date}",
-    "autoRenewal": "Automatisk fornyelse",
-    "purchase": "Kjøp",
-    "subscribe": "Abonner",
-    "unsubscribe": "Avmeld",
-    "purchaseSuccess": "Funksjonen er kjøpt!",
-    "subscribeSuccess": "Abonnement aktivert!",
-    "unsubscribeSuccess": "Abonnement deaktivert!",
-    "enabledBySubscription": "Aktivert ved abonnement",
-    "subscriptionActiveNote": "Denne funksjonen er for øyeblikket aktivert av et aktivt abonnement.",
-    "confirmPurchase": "Er du sikker på at du vil kjøpe denne funksjonen for {amount} tokens?",
-    "insufficientTokens": "Du har ikke nok tokens.",
-    "getMoreTokens": "Få flere tokens",
-    "feature": {
-      "reputationlog": {
-        "name": "Fullstendig omdømmelogg",
-        "description": "Se alle sider i omdømmeloggen på serveren."
-      },
-      "analyzerlog": {
-        "name": "Utvidet analysatorlogg",
-        "description": "Oppbevaringsperioden for analysatorloggen er doblet."
-      },
-      "reputationcategories": {
-        "name": "Ubegrensede omdømme-kategorier",
-        "description": "Lås opp ubegrensede omdømme-kategorier."
-      },
-      "reputationchannel": {
-        "name": "Ubegrenset omdømme-kanal",
-        "description": "Lås opp ubegrensede omdømmekanaler."
-      },
-      "channelblacklist": {
-        "name": "Kanalens sperreliste",
-        "description": "Hindre at boten er aktiv i bestemte kanaler, i stedet for å tillate den overalt."
-      },
-      "localeoverrides": {
-        "name": "Lokale overstyringer",
-        "description": "Overstyr botmeldinger og etiketter med dine egne oversettelser. For øyeblikket tillater dette bare å angi et tilpasset navn for omdømme."
-      },
-      "autopost": {
-        "name": "Autopost",
-        "description": "Legg automatisk ut leaderboardet på en kanal med jevne mellomrom."
-      },
-      "advancedrankings": {
-        "name": "Avanserte rangeringer",
-        "description": "Lås opp flere rangeringalternativer."
-      },
-      "detailedprofile": {
-        "name": "Detaljert profil",
-        "description": "Vis mer informasjon om brukerens omdømmeprofiler."
-      },
-      "logchannel": {
-        "name": "Loggkanal",
-        "description": "Aktiver en dedikert loggkanal for alle endringer i omdømme."
-      },
-      "additionalemojis": {
-        "name": "Ekstra emojier",
-        "description": "Bruk mer enn én emoji for å gi omdømme via reaksjoner."
-      },
-      "profile": {
-        "name": "Bot-profil",
-        "description": "Tilpass botens navn og profilbilde på serveren din."
-      },
-      "integrationbypass": {
-        "name": "Integrering Bypass",
-        "description": "Tillat andre bots og integrasjoner å gi omdømme."
-      }
-    },
-    "adminOnly": "Serveren er konfigurert slik at kun serveradministratorer kan kjøpe funksjoner."
-  },
-  "metrics": {
-    "title": "Metrikker",
-    "description": "Er du nysgjerrig på trafikken og bruken av boten? Det er vi også! Derfor har vi samlet noen fine grafer på denne siden. Disse viser nesten sanntidsdata direkte fra boten.",
-    "offset": "Offset",
-    "count": "Telle",
-    "units": {
-      "hour": "Time",
-      "week": "Uke",
-      "month": "Måned",
-      "year": "År"
-    },
-    "sections": {
-      "reputation": "Omdømme",
-      "commands": "Kommandoer",
-      "messages": "Meldinger",
-      "users": "Brukere",
-      "service": "Tjeneste"
-    },
-    "charts": {
-      "reputationCount": "Omdømme teller",
-      "reputationTotal": "Total omdømme",
-      "reputationDow": "Omdømme etter ukedag",
-      "reputationTypeTotal": "Total omdømme etter type",
-      "reputationTypeCount": "Omdømme etter type",
-      "reputationChanges": "Endringer i omdømme",
-      "commandsCount": "Kommandoer teller",
-      "commandsUsage": "Kommandobruk",
-      "messagesCount": "Antall meldinger",
-      "messagesTotal": "Totalt antall meldinger",
-      "usersActiveWeek": "Aktive brukere (ukentlig)",
-      "usersActiveMonth": "Aktive brukere (månedlig)",
-      "serviceCountHour": "Tjenestebruk (per time)",
-      "serviceCountWeek": "Tjenestebruk (ukentlig)"
-    },
-    "users": {
-      "total": "Totalt",
-      "donors": "Donorer",
-      "receivers": "Mottakere"
-    },
-    "validation": {
-      "offsetMin": "Offset må være minst 0",
-      "offsetMax": "Offset må være maksimalt{max}",
-      "countMin": "Antallet må være minst 2",
-      "countMax": "Antallet må være maksimalt{max}"
-    }
-  },
-  "scan": {
-    "description": "Søk i klanen din etter omdømme som ble gitt før boten ble lagt til, eller i kanaler som ikke ble overvåket. Dette vil søke gjennom alle meldinger i de konfigurerte omdømmekanalene og -kategoriene.",
-    "start": "Start skanning",
-    "starting": "Vi starter...",
-    "startedAt": "Startet kl.",
-    "finishedAt": "Avsluttet kl.",
-    "messagesScanned": "Meldinger skannet",
-    "reputationFound": "Omdømme funnet",
-    "noScanYet": "Det er ikke utført noen skanning ennå.",
-    "status": {
-      "running": "Skanning pågår",
-      "finished": "Skanningen er fullført"
-    },
-    "progressDetails": "Detaljer om fremdriften",
-    "error": {
-      "fetchStatus": "Det gikk ikke å hente skannestatus. Prøv igjen senere.",
-      "startFailed": "Det gikk ikke å starte skanningen. Prøv igjen senere.",
-      "alreadyRunning": "Det pågår allerede en skanning for dette klanet."
+      "selectGuild": "Velg et laug",
+      "submit": "Overføring",
+      "title": "Overfør tokens til et laug"
     }
   }
 }

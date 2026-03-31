@@ -1,399 +1,27 @@
 {
-  "common": {
-    "save": "저장",
-    "cancel": "취소",
-    "delete": "삭제",
-    "edit": "편집",
-    "change": "변화",
-    "clear": "맑음",
-    "confirm": "확인",
-    "loading": "로딩 중...",
-    "error": {
-      "outOfBounds": "값은 {min}과 {max} 사이여야 합니다. 가장 가까운 유효한 값으로 수정되었습니다."
-    },
-    "noData": "찾을 항목이 없습니다.",
-    "previous": "이전",
-    "next": "다음",
-    "pageOf": "페이지 {current} of {total}"
-  },
-  "navigation": {
-    "settings": "설정",
-    "presets": "사전 설정",
-    "setup": "설정",
-    "logout": "로그아웃",
-    "dashboard": "대시보드",
-    "user_settings": "사용자 설정",
-    "voting": "투표",
-    "token_shop": "토큰 상점",
-    "supporter": "후원자",
-    "tos": "이용 약관",
-    "privacy": "개인정보 보호",
-    "faq": "자주 묻는 질문",
-    "metrics": "지표"
-  },
-  "presets": {
-    "title": "사전 설정",
-    "description": "빠른 설정 프리셋으로 일반적인 설정을 시작하세요.",
-    "apply": "지원하다",
-    "applying": "신청 중...",
-    "simpleReputation": {
-      "title": "간단 평판 시스템",
-      "description": "사용자가 복잡한 컨텍스트 추적 없이 명령어를 통해서만 평판을 부여할 수 있는 직관적인 평판 시스템을 원합니다.",
-      "settings": "이 프리셋은 명령어를 제외한 모든 평판 유형을 비활성화하고, 기부자와 수신자의 컨텍스트 추적을 해제합니다."
-    },
-    "thankOnce": {
-      "title": "한 번만 감사드립니다",
-      "description": "사용자들이 서로에게 한 번만 감사를 표할 수 있도록 하여, 동일한 사용자들 사이에서 평판이 반복적으로 부여되는 것을 방지하고자 합니다.",
-      "settings": "이 프리셋은 쿨다운을 한 번만 설정하고 쿨다운 방향을 단방향으로 변경합니다."
-    },
-    "noAbuse": {
-      "title": "악용 방지",
-      "description": "문맥 기반 악용 방지 기능을 비활성화하고, 사용자의 상호작용 기록을 추적하지 않으면서 평판을 더 자유롭게 부여할 수 있도록 허용하고 싶습니다.",
-      "settings": "이 사전 설정은 기부자와 수령자 양측의 컨텍스트 추적을 모두 비활성화합니다."
-    },
-    "default": {
-      "title": "기본 구성",
-      "description": "대부분의 서버에서 잘 작동하는 합리적인 기본값을 가진 균형 잡힌 평판 시스템을 원합니다.",
-      "settings": "이 프리셋은 30분 양방향 재사용 대기시간을 설정하고, 명령어를 제외한 모든 평판 모드를 활성화하며, 평판 확인을 활성화하고, 기부자와 수령자 컨텍스트 검사를 활성화합니다."
-    },
-    "applied": "응용"
-  },
-  "settings": {
-    "title": "설정",
-    "general": "일반",
-    "reputation": "평판",
-    "messages": "메시지",
-    "profile": "프로필",
-    "ranks": "계급",
-    "channels": "채널",
-    "roles": "역할",
-    "thankwords": "감사의 말씀",
-    "abuseProtection": "학대 방지",
-    "announcements": "공지사항",
-    "autopost": "자동 게시",
-    "logChannel": "로그 채널",
-    "reactions": "반응들",
-    "auditLog": "감사 로그",
-    "integrationBypass": "통합 우회",
-    "problems": "문제점",
-    "debug": {
-      "permissions": {
-        "title": "누락된 글로벌 권한",
-        "description": "봇에 대해 전역적으로 이러한 권한이 누락되었습니다. 이로 인해 일부 기능이 제한될 수 있습니다.",
-        "MANAGE_ROLES": "평판 역할은 부여할 수 없습니다.",
-        "NICKNAME_CHANGE": "대시보드에서는 별명을 변경할 수 없습니다.",
-        "MANAGE_GUILD_EXPRESSIONS": "대시보드에서는 사용자 지정 반응을 제안할 수 없습니다.",
-        "VIEW_CHANNEL": "평판 채널은 볼 수 없습니다. 평판은 어떤 텍스트 기반 방법으로도 줄 수 없습니다.",
-        "MESSAGE_HISTORY": "임베드를 통한 평판 확인이 작동하지 않습니다. 대부분의 악용 방지 검사가 실패할 것입니다.",
-        "MESSAGE_ADD_REACTION": "반응을 통한 평판 확인이 작동하지 않습니다.",
-        "MESSAGE_SEND": "어떤 확인 메시지도 작동하지 않습니다. 예를 들어 반응 확인이나 임베드를 통한 평판 확인 등이 해당됩니다.",
-        "MESSAGE_SEND_IN_THREADS": "스레드에서는 어떤 확인 메시지도 작동하지 않습니다. 예를 들어 반응 확인이나 임베드를 통한 평판 확인 등이 해당됩니다.",
-        "MESSAGE_EXT_EMOJI": "이모지를 통한 평판 확인이 작동하지 않습니다.",
-        "BYPASS_SLOWMODE": "확인 메시지는 가끔 작동하지 않을 수 있습니다. 예를 들어 반응 확인이나 임베드를 통한 평판 확인 등이 해당됩니다.",
-        "MESSAGE_ATTACH_VOICE_MESSAGE": "음성 채널에서는 어떤 확인 메시지도 작동하지 않습니다. 예를 들어 반응 확인이나 임베드를 통한 평판 확인 등이 해당됩니다."
-      },
-      "simpleProblems": {
-        "title": "일반적인 문제점",
-        "SYSTEM_CHANNEL_NOT_DEFINED": "시스템 채널이 정의되지 않았습니다.",
-        "SYSTEM_CHANNEL_NOT_FOUND": "시스템 채널을 찾을 수 없습니다.",
-        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "공지 채널이 정의되지 않았습니다.",
-        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "공지 채널을 찾을 수 없습니다.",
-        "NO_AUTOPOST_CHANNEL_DEFINED": "자동 게시 채널이 정의되지 않았습니다.",
-        "AUTOPOST_CANNEL_NOT_FOUND": "자동 게시 채널을 찾을 수 없습니다.",
-        "NO_LOG_CHANNEL_DEFINED": "로그 채널이 정의되지 않았습니다.",
-        "LOG_CHANNEL_NOT_FOUND": "로그 채널을 찾을 수 없습니다.",
-        "NO_THANKWORDS_DEFINED": "감사 단어가 정의되지 않았습니다.",
-        "NO_REPUTATION_CHANNEL_DEFINED": "평판 채널이나 범주가 정의되어 있지 않습니다."
-      },
-      "missingPermissions": {
-        "title": "누락된 범위 지정 권한",
-        "GUILD": "길드",
-        "CHANNEL": "채널",
-        "CATEGORY": "카테고리"
-      },
-      "rankProblems": {
-        "title": "순위 문제",
-        "CANT_ASSIGN_ROLE": "이 봇은 이 역할을 할당할 수 없습니다. 해당 역할이 봇의 최고 역할보다 높기 때문입니다.",
-        "MISSING_ROLE": "이 계급의 역할이 누락되었습니다."
-      },
-      "reputationChannelProblems": {
-        "title": "평판 채널 문제",
-        "MISSING_CHANNEL": "채널이 없습니다.",
-        "MISSING_CATEGORY": "카테고리가 누락되었습니다.",
-        "NOT_TEXT_TYPE": "해당 채널은 텍스트 채널이 아닙니다."
-      },
-      "simpleWarnings": {
-        "title": "경고",
-        "MAX_MESSAGE_AGE_LOW": "최대 메시지 보관 기간이 매우 짧게 설정되어 있습니다. 이로 인해 사용자들이 오래된 메시지에 대해 서로 감사 인사를 나누지 못할 수 있습니다."
-      },
-      "goToSettings": "설정으로 이동"
-    },
-    "scan": "스캔"
-  },
-  "locale": {
-    "selectLanguage": "언어 선택"
-  },
-  "error": {
-    "noToken": {
-      "title": "세션이 없습니다",
-      "message": "유효한 세션 토큰이 없습니다.",
-      "instruction": "이 애플리케이션에 액세스하려면 새 세션을 생성해 주십시오."
-    },
-    "notice": {
-      "workingOnIt": "해당 문제에 대해 통보받았으며 해결 중입니다."
-    },
-    "expired": {
-      "title": "세션이 만료되었습니다",
-      "message": "귀하의 세션이 만료되었거나 유효하지 않습니다.",
-      "instruction": "디스코드 서버에서 새 세션을 열어 계속 진행해 주세요."
-    }
-  },
-  "premiumFeature": {
-    "title": "서포터 기능",
-    "message": "{name} 이 기능은 후원자 전용입니다. 사용하려면 후원자가 되어 주세요.",
-    "requiredTierSingular": "필수 후원 등급:",
-    "requiredTierPlural": "다음 후원 등급 중 하나가 필요합니다:",
-    "tokenShopHint": "이 기능은 토큰으로도 잠금을 해제할 수 있습니다.",
-    "tokenShopLink": "토큰 상점",
-    "kofiHint": "또는 저희를 후원해 주세요",
-    "kofiLink": "코피"
-  },
-  "profile": {
-    "description": "서버에서 봇의 외관과 동작 방식을 사용자 지정하세요.",
-    "reset": "재설정",
-    "premiumRequired": "프로필 맞춤 설정",
-    "nickname": {
-      "label": "봇 닉네임",
-      "placeholder": "봇 닉네임 입력",
-      "description": "이 서버에서 봇의 사용자 지정 별명을 설정하세요.",
-      "reset": "닉네임을 기본값으로 재설정"
-    },
-    "profilePicture": {
-      "label": "프로필 사진",
-      "uploadButton": "이미지 업로드",
-      "uploading": "업로드 중...",
-      "description": "봇용 맞춤 프로필 사진을 업로드하세요 (최대 2MB, 512x512 픽셀)",
-      "reset": "프로필 사진을 기본값으로 재설정"
-    },
-    "reputationName": {
-      "label": "평판 이름",
-      "placeholder": "사용자 정의 평판 이름 입력 (예: '포인트', '카르마')",
-      "description": "이 서버에서 평판에 사용되는 이름을 사용자 지정하세요.",
-      "reset": "평판 이름을 기본값으로 재설정"
-    },
-    "tosNote": "디스코드의 이용약관 또는 해당 주 법률을 위반하는 행위는 허용되지 않으며, 해당 서버에서 이 기능이 차단될 수 있습니다."
-  },
-  "general": {
-    "description": "이 서버에 대한 봇의 기본 설정을 구성하십시오.",
-    "language": {
-      "label": "봇 언어",
-      "selectPlaceholder": "언어를 선택하세요",
-      "description": "이 서버에서 봇이 메시지와 응답에 사용할 언어를 선택하세요."
-    },
-    "systemChannel": {
-      "label": "시스템 채널",
-      "selectPlaceholder": "채널을 선택하세요",
-      "note": "참고: 이 채널은 설정되어야 하며 내부 채널이어야 합니다. 봇 서비스와 관련된 중요한 메시지와 개발자들의 메시지가 포함될 것입니다."
-    },
-    "roleSelect": {
-      "searchPlaceholder": "역할 검색...",
-      "noRolesFound": "역할을 찾을 수 없습니다"
-    },
-    "ranks": {
-      "description": "평판 등급과 관련 역할들을 구성하십시오.",
-      "stackRoles": {
-        "label": "스택 역할",
-        "description": "이 기능이 활성화되면, 가장 높은 등급만 할당되는 대신 적용 가능한 모든 등급이 할당됩니다."
-      },
-      "addRank": "새 등급 추가",
-      "reputationRequired": "필요 평판",
-      "roleAlreadyAdded": "이 역할에는 이미 등급이 지정되어 있습니다.",
-      "reputationAlreadyUsed": "이 평판 값은 이미 다른 등급에서 사용 중입니다.",
-      "noRanks": "아직 설정된 등급이 없습니다.",
-      "reputationPlaceholder": "예를 들어 100",
-      "refresh": {
-        "button": "순위 새로 고침",
-        "refreshing": "상쾌한...",
-        "alreadyRunning": "새로 고침이 이미 진행 중입니다",
-        "success": "순위 새로고침이 성공적으로 시작되었습니다",
-        "failed": "순위 새로고침 시작 실패"
-      },
-      "selectionNote": "통합으로 관리되지 않으며 봇의 최상위 역할보다 낮은 역할만 선택할 수 있습니다."
-    },
-    "reputation": {
-      "description": "평판 계산 방식과 활성화할 기능을 구성합니다.",
-      "mode": {
-        "label": "평판 모드",
-        "description": "평판이 계산되고 표시되는 방식을 선택하세요.",
-        "modes": {
-          "TOTAL": "총 평판",
-          "ROLLING_WEEK": "롤링 위크",
-          "ROLLING_MONTH": "이동 월",
-          "WEEK": "이번 주",
-          "MONTH": "이번 달"
-        },
-        "descriptions": {
-          "TOTAL": "사용자가 지금까지 받은 총 평판을 사용하십시오.",
-          "ROLLING_WEEK": "지난 7일 동안 받은 평판을 사용하십시오.",
-          "ROLLING_MONTH": "지난 30일 동안 받은 평판을 사용하십시오.",
-          "WEEK": "현재 주 초부터 받은 평판을 사용하십시오.",
-          "MONTH": "현재 월 초부터 받은 평판을 사용하십시오."
-        }
-      },
-      "resetDate": {
-        "label": "날짜 재설정",
-        "description": "평판이 적용되는 날짜가 재설정될 예정입니다. 재설정을 예약하려면 미래의 날짜를 설정하세요.",
-        "clear": "날짜 초기화"
-      },
-      "types": {
-        "reaction": {
-          "label": "반응 평판",
-          "description": "메시지에 특정 반응이 추가될 때 평판을 부여합니다.",
-          "confirmation": {
-            "label": "반응 확인",
-            "description": "반응을 통해 평판이 부여될 때 확인 메시지를 전송합니다."
-          }
-        },
-        "answer": {
-          "label": "답변 평판",
-          "description": "사용자의 메시지가 답변에서 감사 표시를 받을 때 평판을 부여합니다."
-        },
-        "mention": {
-          "label": "명성 언급",
-          "description": "사용자가 언급될 때 감사의 말을 함께 전하면 평판을 부여합니다."
-        },
-        "fuzzy": {
-          "label": "퍼지 매칭",
-          "description": "채널에 존재하는 사용자 이름과 감사 단어 주변의 단어를 매칭하여 평판을 부여하세요."
-        },
-        "embed": {
-          "label": "임베드 평판",
-          "description": "대상자를 확인할 수 없는 경우, 마지막 대화에서 참여한 사용자를 포함하는 임베드 목록을 전송하십시오."
-        },
-        "direct": {
-          "label": "직접 임베드 평판",
-          "description": "임베드에 단 한 명의 사용자만 포함될 경우 자동으로 평판을 부여합니다."
-        },
-        "command": {
-          "label": "명령 평판",
-          "description": "/reputation 명령어를 통해 평판을 부여하세요.",
-          "ephemeral": {
-            "label": "일시적인 반응",
-            "description": "명령어를 통해 평판을 부여할 때 응답을 다른 사용자에게 숨겨서 전송합니다."
-          }
-        }
-      }
-    },
-    "roles": {
-      "description": "평판을 주고받을 수 있는 역할을 구성합니다.",
-      "donor": {
-        "label": "기부자 역할",
-        "description": "이 기능이 활성화된 경우, 다음 역할 중 하나 이상을 가진 사용자만 평판을 부여할 수 있습니다."
-      },
-      "receiver": {
-        "label": "수신자 역할",
-        "description": "이 기능이 활성화된 경우, 다음 역할 중 하나 이상을 가진 사용자만 평판을 받을 수 있습니다."
-      },
-      "list": {
-        "label": "선정된 역할",
-        "description": "필수 역할을 선택하십시오."
-      },
-      "denyDonor": {
-        "label": "기부자 역할 거부",
-        "description": "이 기능이 활성화된 경우, 해당 역할 중 하나를 가진 사용자는 평판을 부여할 수 없습니다."
-      },
-      "denyReceiver": {
-        "label": "수신자 역할 거부",
-        "description": "이 기능이 활성화된 경우, 해당 역할 중 하나라도 가진 사용자는 평판을 받을 수 없습니다."
-      }
-    },
-    "channels": {
-      "description": "봇이 활성화되어야 하는 위치와 활성화되어서는 안 되는 위치를 설정하세요.",
-      "listType": {
-        "label": "목록 유형",
-        "description": "선택한 채널 및 카테고리를 허용할지 차단할지 선택하십시오.",
-        "allow": "허용 목록",
-        "deny": "차단 목록",
-        "premiumRequired": "차단 목록"
-      },
-      "list": {
-        "label": "채널 및 카테고리",
-        "description": "목록에 포함되어야 할 채널과 카테고리를 선택하십시오.",
-        "channels": "채널",
-        "categories": "카테고리",
-        "permissionsNote": "봇이 읽기 및 쓰기 권한을 가진 채널만 나열됩니다."
-      },
-      "premium": {
-        "channelLimitWarning": "{limit}개 이상의 채널 선택은 후원자 전용 기능입니다. 이 기능을 사용하려면 후원자가 되어 주세요.",
-        "categoryLimitWarning": "{limit}개 이상의 카테고리 선택은 서포터 전용 기능입니다. 이 기능을 사용하려면 서포터가 되어 주세요."
-      }
-    },
-    "everyoneTokenPurchase": {
-      "label": "모두 토큰 구매",
-      "description": "모든 사용자가 자신의 토큰으로 프리미엄 기능을 구매할 수 있도록 허용합니다. 비활성화된 경우 서버 관리자만 기능을 구매할 수 있습니다."
-    }
-  },
-  "reactions": {
-    "title": "반응들",
-    "description": "평판 부여에 사용되는 이모지를 설정합니다.",
-    "main": {
-      "label": "주요 반응",
-      "description": "평판 부여 시 기본 반응으로 사용될 이모지."
-    },
-    "additional": {
-      "label": "추가 반응",
-      "description": "평판 부여에도 사용할 수 있는 추가 이모지.",
-      "premiumRequired": "추가 반응",
-      "add": "반응 추가",
-      "none": "추가 반응이 구성되지 않았습니다."
-    }
-  },
-  "thankwords": {
-    "description": "이 단어들은 누군가에게 감사를 표할 때를 감지하는 데 사용됩니다. 이들은 정규 표현식으로 해석됩니다.",
-    "add": "감사말씀 추가",
-    "placeholder": "감사 단어 입력 (정규 표현식)",
-    "none": "감사말씀이 설정되지 않았습니다.",
-    "invalidCharacter": "감사말씀에 잘못된 문자가 포함되어 있습니다: {char}",
-    "alreadyExists": "이 감사말씀은 이미 존재합니다.",
-    "defaults": {
-      "title": "기본 감사 인사말",
-      "description": "다양한 언어에 대한 기본 감사 문구를 빠르게 추가하세요."
-    }
-  },
   "abuseProtection": {
-    "description": "평판 악용을 방지하기 위해 제한 및 보호 기능을 구성하십시오.",
     "cooldown": {
-      "label": "쿨다운 (분)",
       "description": "동일한 사용자가 서로에게 다시 감사를 표하기까지 경과해야 하는 시간(분). 0은 쿨다운 없음, -1은 영구적 제한을 의미합니다.",
+      "label": "쿨다운 (분)",
       "once": {
-        "label": "쿨다운 한 번",
+        "activeDescription": "쿨다운이 한 번 활성화됩니다. 사용자들은 서로에게 한 번만 감사를 표할 수 있습니다. 방향은 단방향으로 설정됩니다.",
         "description": "이 기능이 활성화된 경우, 사용자들은 서로에게 평생 단 한 번만 감사를 표할 수 있습니다.",
-        "activeDescription": "쿨다운이 한 번 활성화됩니다. 사용자들은 서로에게 한 번만 감사를 표할 수 있습니다. 방향은 단방향으로 설정됩니다."
+        "label": "쿨다운 한 번"
       }
     },
     "cooldownDirection": {
-      "label": "쿨다운 방향",
+      "bidirectional": "양방향",
       "description": "일방향은 기부자가 동일 대상에게 기부할 때 재기부 대기 시간이 적용됨을 의미합니다. 양방향은 기부자와 수혜자 간에 대기 시간이 적용되어, 시간이 지나기 전까지 서로 감사 표현을 주고받는 것을 방지합니다.",
-      "unidirectional": "단방향",
-      "bidirectional": "양방향"
+      "label": "쿨다운 방향",
+      "unidirectional": "단방향"
     },
-    "maxMessageAge": {
-      "label": "최대 메시지 보관 기간 (분)",
-      "description": "답변이나 반응이 있을 때 평판 획득이 가능한 메시지의 최대 연령(분 단위)."
-    },
-    "minMessages": {
-      "label": "최소 메시지 수",
-      "description": "채널에 최소 이만큼의 메시지를 남긴 작성자는 항상 평판 획득 자격이 있습니다."
-    },
+    "description": "평판 악용을 방지하기 위해 제한 및 보호 기능을 구성하십시오.",
     "donorContext": {
-      "label": "기증자는 반드시 참석해야 합니다",
-      "description": "이 기능이 활성화된 경우, 평판을 부여하려면 기부자가 해당 채널에서 최근 메시지 중 최소 한 개를 전송해야 합니다."
-    },
-    "receiverContext": {
-      "label": "수신자가 반드시 참석해야 합니다",
-      "description": "이 기능이 활성화된 경우, 수신자는 평판 점수를 받기 위해 채널에서 전송된 최근 메시지 중 최소한 하나를 보낸 적이 있어야 합니다."
+      "description": "이 기능이 활성화된 경우, 평판을 부여하려면 기부자가 해당 채널에서 최근 메시지 중 최소 한 개를 전송해야 합니다.",
+      "label": "기증자는 반드시 참석해야 합니다"
     },
     "givenLimit": {
+      "description": "사용자가 특정 시간 내에 부여할 수 있는 평판의 양을 제한합니다.",
       "enabled": {
         "label": "지정된 한도 활성화"
       },
@@ -402,10 +30,22 @@
       },
       "maxGivenHours": {
         "label": "초과 근무"
-      },
-      "description": "사용자가 특정 시간 내에 부여할 수 있는 평판의 양을 제한합니다."
+      }
+    },
+    "maxMessageAge": {
+      "description": "답변이나 반응이 있을 때 평판 획득이 가능한 메시지의 최대 연령(분 단위).",
+      "label": "최대 메시지 보관 기간 (분)"
+    },
+    "maxMessageReputation": {
+      "description": "멘션 및 임베드를 통해 단일 메시지에서 부여할 수 있는 최대 평판량.",
+      "label": "최대 메시지 평판"
+    },
+    "minMessages": {
+      "description": "채널에 최소 이만큼의 메시지를 남긴 작성자는 항상 평판 획득 자격이 있습니다.",
+      "label": "최소 메시지 수"
     },
     "receivedLimit": {
+      "description": "사용자가 특정 기간 내에 획득할 수 있는 평판의 양을 제한합니다.",
       "enabled": {
         "label": "수신 제한 활성화"
       },
@@ -414,155 +54,540 @@
       },
       "maxReceivedHours": {
         "label": "초과 근무"
-      },
-      "description": "사용자가 특정 기간 내에 획득할 수 있는 평판의 양을 제한합니다."
+      }
     },
-    "maxMessageReputation": {
-      "label": "최대 메시지 평판",
-      "description": "멘션 및 임베드를 통해 단일 메시지에서 부여할 수 있는 최대 평판량."
+    "receiverContext": {
+      "description": "이 기능이 활성화된 경우, 수신자는 평판 점수를 받기 위해 채널에서 전송된 최근 메시지 중 최소한 하나를 보낸 적이 있어야 합니다.",
+      "label": "수신자가 반드시 참석해야 합니다"
     }
   },
   "announcements": {
-    "description": "사용자가 새로운 등급에 도달할 때 전송되는 메시지를 구성합니다.",
     "active": {
-      "label": "알림 활성화",
-      "description": "이 기능이 활성화되면, 사용자가 새로운 등급에 도달할 때 봇이 메시지를 보냅니다."
-    },
-    "sameChannel": {
-      "label": "동일 채널로 전송",
-      "description": "활성화된 경우, 레벨 업이 발생한 채널로 알림이 전송됩니다. 그렇지 않으면 선택한 채널로 전송됩니다."
+      "description": "이 기능이 활성화되면, 사용자가 새로운 등급에 도달할 때 봇이 메시지를 보냅니다.",
+      "label": "알림 활성화"
     },
     "channel": {
-      "label": "공지 채널",
-      "description": "순위 상승 알림을 보낼 채널을 선택하세요."
+      "description": "순위 상승 알림을 보낼 채널을 선택하세요.",
+      "label": "공지 채널"
+    },
+    "description": "사용자가 새로운 등급에 도달할 때 전송되는 메시지를 구성합니다.",
+    "sameChannel": {
+      "description": "활성화된 경우, 레벨 업이 발생한 채널로 알림이 전송됩니다. 그렇지 않으면 선택한 채널로 전송됩니다.",
+      "label": "동일 채널로 전송"
+    }
+  },
+  "auditLog": {
+    "added": "추가됨",
+    "description": "서버에서 수행된 모든 설정 변경 내역을 확인하세요.",
+    "from": "From",
+    "loadError": "감사 로그를 불러오는 데 실패했습니다. 다시 시도해 주세요.",
+    "loading": "감사 로그를 불러오는 중...",
+    "next": "다음",
+    "noEntries": "감사 로그 항목이 발견되지 않았습니다.",
+    "pageInfo": "페이지 {current} of {total}",
+    "previous": "이전",
+    "removed": "삭제됨",
+    "retry": "다시 시도",
+    "settings": {
+      "abuseprotection_cooldown": "학대 방지 - 재사용 대기시간",
+      "abuseprotection_cooldowndirection": "학대 방지 - 쿨다운 방향",
+      "abuseprotection_donorcontext": "학대 방지 - 기부자 컨텍스트",
+      "abuseprotection_maxgiven": "학대 방지 - 최대 허용량",
+      "abuseprotection_maxgivenhours": "학대 방지 - 최대 허용 시간",
+      "abuseprotection_maxmessageage": "악용 방지 - 최대 메시지 보관 기간",
+      "abuseprotection_maxmessagereputation": "악용 방지 - 최대 메시지 평판",
+      "abuseprotection_maxreceived": "학대 방지 - 최대 수신량",
+      "abuseprotection_maxreceivedhours": "학대 방지 - 최대 수신 시간",
+      "abuseprotection_minmessages": "악용 방지 - 최소 메시지 수",
+      "abuseprotection_receivercontext": "악용 방지 - 리시버 컨텍스트",
+      "announcements_active": "공지사항 - 활성",
+      "announcements_channel": "공지사항 - 채널",
+      "announcements_samechannel": "공지사항 - 동일 채널",
+      "autopost_active": "자동 게시 - 활성화됨",
+      "autopost_channel": "자동 게시 - 채널",
+      "autopost_refreshinterval": "자동 게시 - 새로 고침 간격",
+      "autopost_refreshtype": "자동 게시 - 새로 고침 유형",
+      "general_everyonetokenpurchase": "일반 - 모든 사람 토큰 구매",
+      "general_language": "일반 - 언어",
+      "general_reputationmode": "평판 - 평판 모드",
+      "general_resetdate": "평판 - 초기화 날짜",
+      "general_stackroles": "계급 - 스택 역할",
+      "general_systemchannel": "일반 - 시스템 채널",
+      "logchannel_active": "로그 채널 - 활성",
+      "logchannel_channel": "로그 채널 - 채널",
+      "messages_commandreputationephemeral": "명성 - 명령 명성 일시적",
+      "messages_reactionconfirmation": "평판 - 반응 확인",
+      "profile_nickname": "프로필 - 닉네임",
+      "profile_profilepicture": "프로필 - 프로필 사진",
+      "profile_reputationname": "프로필 - 평판 이름",
+      "ranks": "계급 - 역할",
+      "reputation_answeractive": "평판 - 답변 활성",
+      "reputation_commandactive": "평판 - 명령 활성화",
+      "reputation_directactive": "평판 - 직접적 활성",
+      "reputation_embedactive": "평판 - 활성 임베드",
+      "reputation_fuzzyactive": "평판 - 퍼지 액티브",
+      "reputation_mentionactive": "평판 - 언급 활성",
+      "reputation_reactionactive": "평판 - 반응 활성",
+      "thanking_channels_categories": "채널 - 카테고리 목록",
+      "thanking_channels_channels": "채널 - 채널 목록",
+      "thanking_channels_whitelist": "채널 - 화이트리스트 모드",
+      "thanking_denydonorroles": "역할 - 기부자 역할 거부",
+      "thanking_denyreceiverroles": "역할 - 수신자 역할 거부",
+      "thanking_donorroles": "역할 - 기부자 역할",
+      "thanking_reactions_mainreaction": "반응 - 주요 반응",
+      "thanking_reactions_reactions": "반응 - 추가 반응",
+      "thanking_receiverroles": "역할 - 리시버 역할",
+      "thanking_thankwords_words": "감사의 말씀"
+    },
+    "to": "~에게",
+    "unknownMember": "알 수 없는 회원",
+    "values": {
+      "bidirectional": "양방향",
+      "daily": "매일",
+      "delete_and_repost": "삭제 후 재게시",
+      "disabled": "장애",
+      "enabled": "활성화됨",
+      "hourly": "시간당",
+      "month": "월",
+      "monthly": "월간",
+      "noChanges": "변경 사항 없음",
+      "none": "없음",
+      "null": "설정되지 않음",
+      "once": "한 번",
+      "repost": "재게시",
+      "rolling_month": "이동 월",
+      "rolling_week": "롤링 위크",
+      "total": "총계",
+      "unidirectional": "단방향",
+      "unknownChannel": "알 수 없는 채널",
+      "unknownIntegration": "알 수 없는 통합",
+      "update": "업데이트",
+      "week": "주",
+      "weekly": "주간"
     }
   },
   "autopost": {
+    "active": {
+      "description": "자동 순위표 게시 기능을 활성화하거나 비활성화합니다.",
+      "label": "자동 게시 활성화"
+    },
+    "channel": {
+      "description": "순위표가 게시되어야 하는 채널.",
+      "label": "자동 게시 채널"
+    },
     "description": "리더보드를 채널에 자동 게시하도록 설정합니다.",
     "premiumRequired": "자동 게시",
-    "active": {
-      "label": "자동 게시 활성화",
-      "description": "자동 순위표 게시 기능을 활성화하거나 비활성화합니다."
-    },
-    "channel": {
-      "label": "자동 게시 채널",
-      "description": "순위표가 게시되어야 하는 채널."
-    },
     "refreshInterval": {
-      "label": "갱신 간격",
-      "description": "순위표는 얼마나 자주 업데이트되어야 합니까?",
-      "HOURLY": "시간당",
       "DAILY": "매일",
+      "HOURLY": "시간당",
+      "MONTHLY": "월간",
       "WEEKLY": "주간",
-      "MONTHLY": "월간"
+      "description": "순위표는 얼마나 자주 업데이트되어야 합니까?",
+      "label": "갱신 간격"
     },
     "refreshType": {
-      "label": "리프레시 유형",
-      "description": "게시물을 어떻게 업데이트해야 하는지.",
       "DELETE_AND_REPOST": "삭제 후 재게시",
       "REPOST": "재게시",
-      "UPDATE": "업데이트"
+      "UPDATE": "업데이트",
+      "description": "게시물을 어떻게 업데이트해야 하는지.",
+      "label": "리프레시 유형"
     },
     "send": {
+      "description": "채널에 자동 게시물을 즉시 수동으로 전송하거나 업데이트하십시오.",
       "label": "지금 자동 게시하기",
-      "sending": "보내기 중...",
-      "description": "채널에 자동 게시물을 즉시 수동으로 전송하거나 업데이트하십시오."
+      "sending": "보내기 중..."
     }
+  },
+  "common": {
+    "cancel": "취소",
+    "change": "변화",
+    "clear": "맑음",
+    "confirm": "확인",
+    "delete": "삭제",
+    "edit": "편집",
+    "error": {
+      "outOfBounds": "값은 {min}과 {max} 사이여야 합니다. 가장 가까운 유효한 값으로 수정되었습니다."
+    },
+    "loading": "로딩 중...",
+    "next": "다음",
+    "noData": "찾을 항목이 없습니다.",
+    "pageOf": "페이지 {current} of {total}",
+    "previous": "이전",
+    "save": "저장"
+  },
+  "dashboard": {
+    "rank": "순위",
+    "reputation": "평판",
+    "title": "대시보드",
+    "todayReputation": "오늘의 평판",
+    "topChannel": "최상위 채널",
+    "topUsers": "최상위 사용자",
+    "totalReputation": "총 평판",
+    "user": "사용자",
+    "weekReputation": "주간 평판"
+  },
+  "error": {
+    "expired": {
+      "instruction": "디스코드 서버에서 새 세션을 열어 계속 진행해 주세요.",
+      "message": "귀하의 세션이 만료되었거나 유효하지 않습니다.",
+      "title": "세션이 만료되었습니다"
+    },
+    "noToken": {
+      "instruction": "이 애플리케이션에 액세스하려면 새 세션을 생성해 주십시오.",
+      "message": "유효한 세션 토큰이 없습니다.",
+      "title": "세션이 없습니다"
+    },
+    "notice": {
+      "workingOnIt": "해당 문제에 대해 통보받았으며 해결 중입니다."
+    }
+  },
+  "general": {
+    "channels": {
+      "description": "봇이 활성화되어야 하는 위치와 활성화되어서는 안 되는 위치를 설정하세요.",
+      "list": {
+        "categories": "카테고리",
+        "channels": "채널",
+        "description": "목록에 포함되어야 할 채널과 카테고리를 선택하십시오.",
+        "label": "채널 및 카테고리",
+        "permissionsNote": "봇이 읽기 및 쓰기 권한을 가진 채널만 나열됩니다."
+      },
+      "listType": {
+        "allow": "허용 목록",
+        "deny": "차단 목록",
+        "description": "선택한 채널 및 카테고리를 허용할지 차단할지 선택하십시오.",
+        "label": "목록 유형",
+        "premiumRequired": "차단 목록"
+      },
+      "premium": {
+        "categoryLimitWarning": "{limit}개 이상의 카테고리 선택은 서포터 전용 기능입니다. 이 기능을 사용하려면 서포터가 되어 주세요.",
+        "channelLimitWarning": "{limit}개 이상의 채널 선택은 후원자 전용 기능입니다. 이 기능을 사용하려면 후원자가 되어 주세요."
+      }
+    },
+    "description": "이 서버에 대한 봇의 기본 설정을 구성하십시오.",
+    "everyoneTokenPurchase": {
+      "description": "모든 사용자가 자신의 토큰으로 프리미엄 기능을 구매할 수 있도록 허용합니다. 비활성화된 경우 서버 관리자만 기능을 구매할 수 있습니다.",
+      "label": "모두 토큰 구매"
+    },
+    "language": {
+      "description": "이 서버에서 봇이 메시지와 응답에 사용할 언어를 선택하세요.",
+      "label": "봇 언어",
+      "selectPlaceholder": "언어를 선택하세요"
+    },
+    "ranks": {
+      "addRank": "새 등급 추가",
+      "description": "평판 등급과 관련 역할들을 구성하십시오.",
+      "noRanks": "아직 설정된 등급이 없습니다.",
+      "refresh": {
+        "alreadyRunning": "새로 고침이 이미 진행 중입니다",
+        "button": "순위 새로 고침",
+        "failed": "순위 새로고침 시작 실패",
+        "refreshing": "상쾌한...",
+        "success": "순위 새로고침이 성공적으로 시작되었습니다"
+      },
+      "reputationAlreadyUsed": "이 평판 값은 이미 다른 등급에서 사용 중입니다.",
+      "reputationPlaceholder": "예를 들어 100",
+      "reputationRequired": "필요 평판",
+      "roleAlreadyAdded": "이 역할에는 이미 등급이 지정되어 있습니다.",
+      "selectionNote": "통합으로 관리되지 않으며 봇의 최상위 역할보다 낮은 역할만 선택할 수 있습니다.",
+      "stackRoles": {
+        "description": "이 기능이 활성화되면, 가장 높은 등급만 할당되는 대신 적용 가능한 모든 등급이 할당됩니다.",
+        "label": "스택 역할"
+      }
+    },
+    "reputation": {
+      "description": "평판 계산 방식과 활성화할 기능을 구성합니다.",
+      "mode": {
+        "description": "평판이 계산되고 표시되는 방식을 선택하세요.",
+        "descriptions": {
+          "MONTH": "현재 월 초부터 받은 평판을 사용하십시오.",
+          "ROLLING_MONTH": "지난 30일 동안 받은 평판을 사용하십시오.",
+          "ROLLING_WEEK": "지난 7일 동안 받은 평판을 사용하십시오.",
+          "TOTAL": "사용자가 지금까지 받은 총 평판을 사용하십시오.",
+          "WEEK": "현재 주 초부터 받은 평판을 사용하십시오."
+        },
+        "label": "평판 모드",
+        "modes": {
+          "MONTH": "이번 달",
+          "ROLLING_MONTH": "이동 월",
+          "ROLLING_WEEK": "롤링 위크",
+          "TOTAL": "총 평판",
+          "WEEK": "이번 주"
+        }
+      },
+      "resetDate": {
+        "clear": "날짜 초기화",
+        "description": "평판이 적용되는 날짜가 재설정될 예정입니다. 재설정을 예약하려면 미래의 날짜를 설정하세요.",
+        "label": "날짜 재설정"
+      },
+      "types": {
+        "answer": {
+          "description": "사용자의 메시지가 답변에서 감사 표시를 받을 때 평판을 부여합니다.",
+          "label": "답변 평판"
+        },
+        "command": {
+          "description": "/reputation 명령어를 통해 평판을 부여하세요.",
+          "ephemeral": {
+            "description": "명령어를 통해 평판을 부여할 때 응답을 다른 사용자에게 숨겨서 전송합니다.",
+            "label": "일시적인 반응"
+          },
+          "label": "명령 평판"
+        },
+        "direct": {
+          "description": "임베드에 단 한 명의 사용자만 포함될 경우 자동으로 평판을 부여합니다.",
+          "label": "직접 임베드 평판"
+        },
+        "embed": {
+          "description": "대상자를 확인할 수 없는 경우, 마지막 대화에서 참여한 사용자를 포함하는 임베드 목록을 전송하십시오.",
+          "label": "임베드 평판"
+        },
+        "fuzzy": {
+          "description": "채널에 존재하는 사용자 이름과 감사 단어 주변의 단어를 매칭하여 평판을 부여하세요.",
+          "label": "퍼지 매칭"
+        },
+        "mention": {
+          "description": "사용자가 언급될 때 감사의 말을 함께 전하면 평판을 부여합니다.",
+          "label": "명성 언급"
+        },
+        "reaction": {
+          "confirmation": {
+            "description": "반응을 통해 평판이 부여될 때 확인 메시지를 전송합니다.",
+            "label": "반응 확인"
+          },
+          "description": "메시지에 특정 반응이 추가될 때 평판을 부여합니다.",
+          "label": "반응 평판"
+        }
+      }
+    },
+    "roleSelect": {
+      "noRolesFound": "역할을 찾을 수 없습니다",
+      "searchPlaceholder": "역할 검색..."
+    },
+    "roles": {
+      "denyDonor": {
+        "description": "이 기능이 활성화된 경우, 해당 역할 중 하나를 가진 사용자는 평판을 부여할 수 없습니다.",
+        "label": "기부자 역할 거부"
+      },
+      "denyReceiver": {
+        "description": "이 기능이 활성화된 경우, 해당 역할 중 하나라도 가진 사용자는 평판을 받을 수 없습니다.",
+        "label": "수신자 역할 거부"
+      },
+      "description": "평판을 주고받을 수 있는 역할을 구성합니다.",
+      "donor": {
+        "description": "이 기능이 활성화된 경우, 다음 역할 중 하나 이상을 가진 사용자만 평판을 부여할 수 있습니다.",
+        "label": "기부자 역할"
+      },
+      "list": {
+        "description": "필수 역할을 선택하십시오.",
+        "label": "선정된 역할"
+      },
+      "receiver": {
+        "description": "이 기능이 활성화된 경우, 다음 역할 중 하나 이상을 가진 사용자만 평판을 받을 수 있습니다.",
+        "label": "수신자 역할"
+      }
+    },
+    "systemChannel": {
+      "label": "시스템 채널",
+      "note": "참고: 이 채널은 설정되어야 하며 내부 채널이어야 합니다. 봇 서비스와 관련된 중요한 메시지와 개발자들의 메시지가 포함될 것입니다.",
+      "selectPlaceholder": "채널을 선택하세요"
+    }
+  },
+  "guildSwitcher": {
+    "add": "서버에서 설정을 열어 다른 서버를 추가하세요.",
+    "current": "현재 서버",
+    "none": "다른 서버를 찾을 수 없습니다",
+    "title": "서버 전환"
+  },
+  "help": {
+    "message": "도움이 필요하신가요? 기능이 누락되었나요? 피드백이 있으신가요? 봇에게 비공개 메시지를 보내주세요. 페이지 하단에서 저희 지원 디스코드 링크도 확인하실 수 있습니다.",
+    "title": "도움이 필요하신가요?"
+  },
+  "integrationBypass": {
+    "add": "통합 우회 추가",
+    "allowAnswer": "답변 허용",
+    "allowAnswerDescription": "메시지 답변을 통해 평판을 부여할 수 있도록 허용",
+    "allowDirect": "직접 허용",
+    "allowDirectDescription": "수신자를 단 한 명만 확인할 수 있어 임베드가 생략될 경우 평판 부여를 허용합니다. 봇에 대해서는 임베드가 절대 전송되지 않습니다.",
+    "allowFuzzy": "퍼지 허용",
+    "allowFuzzyDescription": "퍼지 매칭을 통한 평판 부여 허용",
+    "allowMention": "언급 허용",
+    "allowMentionDescription": "사용자를 멘션하여 평판을 부여할 수 있도록 허용",
+    "allowReactions": "반응 허용",
+    "allowReactionsDescription": "반응을 통해 평판을 부여할 수 있도록 허용",
+    "deleteConfirm": "이 통합 우회 기능을 정말 제거하시겠습니까?",
+    "description": "통합 기능에 대한 우회 경로를 구성하여 일반 요구 사항을 충족하지 않더라도 평판을 부여할 수 있도록 합니다.",
+    "ignoreContext": "문맥 무시",
+    "ignoreContextDescription": "컨텍스트 검사를 무시하십시오",
+    "ignoreCooldown": "쿨다운 무시",
+    "ignoreCooldownDescription": "사용자 간 쿨다운 무시",
+    "ignoreLimit": "제한 무시",
+    "ignoreLimitDescription": "설정된 시간 제한을 무시하십시오",
+    "noIntegrations": "추가할 우회 경로가 더 이상 없습니다.",
+    "premiumRequired": "통합 우회",
+    "selectIntegration": "통합 선택"
+  },
+  "links": {
+    "faq": "자주 묻는 질문",
+    "support": "서버 지원",
+    "tos": "이용 약관",
+    "website": "웹사이트"
+  },
+  "locale": {
+    "selectLanguage": "언어 선택"
   },
   "logChannel": {
-    "premiumRequired": "로그 채널",
-    "description": "로그 채널에는 사용자에게 부여되거나 사용자에게서 수신된 모든 평판 정보가 포함됩니다.",
     "active": {
-      "label": "로그 채널 활성화",
-      "description": "평판 변경 사항의 기록을 활성화하거나 비활성화합니다."
+      "description": "평판 변경 사항의 기록을 활성화하거나 비활성화합니다.",
+      "label": "로그 채널 활성화"
     },
     "channel": {
-      "label": "로그 채널",
-      "description": "평판 변경 사항이 기록되어야 하는 채널."
+      "description": "평판 변경 사항이 기록되어야 하는 채널.",
+      "label": "로그 채널"
+    },
+    "description": "로그 채널에는 사용자에게 부여되거나 사용자에게서 수신된 모든 평판 정보가 포함됩니다.",
+    "premiumRequired": "로그 채널"
+  },
+  "login": {
+    "button": "Discord로 로그인",
+    "description": "이 패널에 접근하려면 Discord로 로그인해 주세요.",
+    "title": "로그인 필요"
+  },
+  "metrics": {
+    "charts": {
+      "commandsCount": "명령어 수",
+      "commandsUsage": "명령어 사용법",
+      "messagesCount": "메시지 수",
+      "messagesTotal": "총 메시지 수",
+      "reputationChanges": "평판 변경",
+      "reputationCount": "평판 점수",
+      "reputationDow": "요일별 평판",
+      "reputationTotal": "총 평판",
+      "reputationTypeCount": "유형별 평판 수",
+      "reputationTypeTotal": "유형별 총 평판",
+      "serviceCountHour": "서비스 사용량 (시간당)",
+      "serviceCountWeek": "서비스 사용량 (주간)",
+      "usersActiveMonth": "활성 사용자 (월간)",
+      "usersActiveWeek": "주간 활성 사용자"
+    },
+    "count": "카운트",
+    "description": "봇의 트래픽과 사용량이 궁금하신가요? 저희도 마찬가지입니다! 그래서 이 페이지에 멋진 그래프를 몇 가지 모아봤습니다. 이 그래프들은 봇에서 직접 가져온 거의 실시간 데이터를 보여줍니다.",
+    "offset": "오프셋",
+    "sections": {
+      "commands": "명령어",
+      "messages": "메시지",
+      "reputation": "평판",
+      "service": "서비스",
+      "users": "사용자들"
+    },
+    "title": "지표",
+    "units": {
+      "hour": "시간",
+      "month": "월",
+      "week": "주",
+      "year": "연도"
+    },
+    "users": {
+      "donors": "기부자들",
+      "receivers": "수신기",
+      "total": "총계"
+    },
+    "validation": {
+      "countMax": "카운트는 최대{max}이어야 합니다.",
+      "countMin": "카운트는 최소 2개 이상이어야 합니다.",
+      "offsetMax": "오프셋은 최대 {max}이어야 합니다.",
+      "offsetMin": "오프셋은 최소 0이어야 합니다"
     }
   },
-  "setup": {
-    "title": "초기 설정",
-    "stepProgress": "{total}의 {current} 단계",
-    "requiredStep": "이 단계는 계속 진행하기 위해 필요합니다",
-    "navigation": {
-      "previous": "이전",
-      "next": "다음",
-      "finish": "설정 완료"
+  "navigation": {
+    "dashboard": "대시보드",
+    "faq": "자주 묻는 질문",
+    "logout": "로그아웃",
+    "metrics": "지표",
+    "presets": "사전 설정",
+    "privacy": "개인정보 보호",
+    "settings": "설정",
+    "setup": "설정",
+    "supporter": "후원자",
+    "token_shop": "토큰 상점",
+    "tos": "이용 약관",
+    "user_settings": "사용자 설정",
+    "voting": "투표"
+  },
+  "premiumFeature": {
+    "kofiHint": "또는 저희를 후원해 주세요",
+    "kofiLink": "코피",
+    "message": "{name} 이 기능은 후원자 전용입니다. 사용하려면 후원자가 되어 주세요.",
+    "requiredTierPlural": "다음 후원 등급 중 하나가 필요합니다:",
+    "requiredTierSingular": "필수 후원 등급:",
+    "title": "서포터 기능",
+    "tokenShopHint": "이 기능은 토큰으로도 잠금을 해제할 수 있습니다.",
+    "tokenShopLink": "토큰 상점"
+  },
+  "presets": {
+    "applied": "응용",
+    "apply": "지원하다",
+    "applying": "신청 중...",
+    "default": {
+      "description": "대부분의 서버에서 잘 작동하는 합리적인 기본값을 가진 균형 잡힌 평판 시스템을 원합니다.",
+      "settings": "이 프리셋은 30분 양방향 재사용 대기시간을 설정하고, 명령어를 제외한 모든 평판 모드를 활성화하며, 평판 확인을 활성화하고, 기부자와 수령자 컨텍스트 검사를 활성화합니다.",
+      "title": "기본 구성"
     },
-    "steps": {
-      "language": {
-        "title": "언어 선택",
-        "description": "서버에서 봇이 메시지와 응답에 사용할 언어를 선택하세요. 선택한 언어로 프론트엔드 언어가 변경됩니다."
-      },
-      "systemChannel": {
-        "title": "시스템 채널",
-        "description": "봇이 중요한 시스템 메시지와 알림을 보낼 채널을 선택하세요.",
-        "required": "설정을 계속하려면 시스템 채널을 선택해야 합니다."
-      },
-      "reputationTypes": {
-        "title": "평판 유형",
-        "description": "사용자가 평판을 부여할 수 있는 방법을 선택하세요. 여러 유형을 활성화하여 사용자에게 유연성을 제공할 수 있습니다."
-      },
-      "reputationMode": {
-        "title": "평판 모드",
-        "description": "서버에서 평판이 어떻게 계산되고 표시될지 선택하십시오."
-      },
-      "ranks": {
-        "title": "평판 등급",
-        "description": "사용자가 특정 평판 수준에 도달했을 때 부여받을 역할을 정의하십시오. 최소한 하나의 등급이 필요합니다.",
-        "required": "계속하려면 최소한 하나의 평판 등급을 정의해야 합니다."
-      },
-      "channels": {
-        "title": "채널 및 카테고리",
-        "description": "평판 부여를 허용할 채널 및 카테고리를 선택하십시오. 최소한 하나의 채널 또는 카테고리를 선택해야 합니다.",
-        "required": "계속하려면 최소한 하나의 채널 또는 카테고리를 선택해야 합니다(차단 목록 모드를 사용하는 경우 제외)."
-      },
-      "thankwords": {
-        "title": "감사의 말씀",
-        "description": "사용자가 평판을 부여할 때 사용할 수 있는 단어나 구문을 추가하세요. 이것들은 봇이 인식할 트리거 단어입니다.",
-        "recommendation": "시작을 빠르게 하려면 해당 언어의 기본 감사 문구를 로드하는 것을 권장합니다."
-      },
-      "announcements": {
-        "title": "공지사항",
-        "description": "봇이 사용자가 새로운 평판 등급에 도달했을 때 알림을 표시할지 여부를 설정합니다."
-      },
-      "cooldown": {
-        "title": "쿨다운 설정",
-        "description": "사용자가 평판을 너무 자주 부여하지 못하도록 쿨다운 기간을 설정하세요. '쿨다운 한 번'을 활성화하여 사용자가 서로에게 감사를 한 번만 표현할 수 있도록 할 수도 있습니다."
-      },
-      "mainReaction": {
-        "title": "주요 반응",
-        "description": "평판 부여 시 주요 반응으로 사용될 이모지를 선택하세요."
-      },
-      "roles": {
-        "title": "기증자 및 수혜자 역할",
-        "description": "선택적으로 평판을 부여할 수 있는 역할(기부자 역할)과 평판을 받을 수 있는 역할(수령자 역할)을 정의할 수 있습니다."
-      },
-      "welcome": {
-        "title": "환영합니다",
-        "description": "설정 페이지에 오신 것을 환영합니다.\n이 페이지는 봇의 초기 설정을 안내해 드립니다. 이후에는 기본 설정이 완료되며, 원하는 대로 맞춤 설정할 수 있습니다.\n\n도움이 필요하시면 봇에게 비공개 메시지를 보내주시면 최대한 빨리 도와드리겠습니다. 페이지 하단에는 저희 지원 디스코드 링크도 확인하실 수 있습니다."
-      },
-      "finished": {
-        "title": "설정 완료",
-        "description": "이제 마지막 설정 단계를 완료하셨습니다. 이제 일반 설정 페이지로 이동해 드리겠습니다. 해당 페이지에서 관심 있을 만한 추가 설정 항목을 확인하실 수 있습니다."
-      },
-      "scan": {
-        "title": "서버 스캔",
-        "description": "채널 설정을 마쳤으니, 서버의 기록에 있는 기존 평판 데이터를 색인화하기 위해 스캔을 실행하는 것이 좋습니다.",
-        "prompt": {
-          "title": "서버 스캔을 시작하시겠습니까?",
-          "description": "스캔 기능은 설정된 채널 내 서버의 메시지 기록을 검토하여 기존 평판 점수를 확인합니다. 서버의 규모에 따라 이 작업에 다소 시간이 소요될 수 있습니다."
-        },
-        "started": {
-          "title": "스캔 시작!",
-          "description": "현재 스캔이 백그라운드에서 실행 중입니다. 설정을 완료하면 스캔 페이지에서 진행 상황을 확인할 수 있습니다."
-        },
-        "start": "스캔 시작",
-        "starting": "시작합니다...",
-        "error": "스캔을 시작할 수 없습니다. 잠시 후 다시 시도해 주십시오."
-      }
-    }
+    "description": "빠른 설정 프리셋으로 일반적인 설정을 시작하세요.",
+    "noAbuse": {
+      "description": "문맥 기반 악용 방지 기능을 비활성화하고, 사용자의 상호작용 기록을 추적하지 않으면서 평판을 더 자유롭게 부여할 수 있도록 허용하고 싶습니다.",
+      "settings": "이 사전 설정은 기부자와 수령자 양측의 컨텍스트 추적을 모두 비활성화합니다.",
+      "title": "악용 방지"
+    },
+    "simpleReputation": {
+      "description": "사용자가 복잡한 컨텍스트 추적 없이 명령어를 통해서만 평판을 부여할 수 있는 직관적인 평판 시스템을 원합니다.",
+      "settings": "이 프리셋은 명령어를 제외한 모든 평판 유형을 비활성화하고, 기부자와 수신자의 컨텍스트 추적을 해제합니다.",
+      "title": "간단 평판 시스템"
+    },
+    "thankOnce": {
+      "description": "사용자들이 서로에게 한 번만 감사를 표할 수 있도록 하여, 동일한 사용자들 사이에서 평판이 반복적으로 부여되는 것을 방지하고자 합니다.",
+      "settings": "이 프리셋은 쿨다운을 한 번만 설정하고 쿨다운 방향을 단방향으로 변경합니다.",
+      "title": "한 번만 감사드립니다"
+    },
+    "title": "사전 설정"
+  },
+  "profile": {
+    "description": "서버에서 봇의 외관과 동작 방식을 사용자 지정하세요.",
+    "nickname": {
+      "description": "이 서버에서 봇의 사용자 지정 별명을 설정하세요.",
+      "label": "봇 닉네임",
+      "placeholder": "봇 닉네임 입력",
+      "reset": "닉네임을 기본값으로 재설정"
+    },
+    "premiumRequired": "프로필 맞춤 설정",
+    "profilePicture": {
+      "description": "봇용 맞춤 프로필 사진을 업로드하세요 (최대 2MB, 512x512 픽셀)",
+      "label": "프로필 사진",
+      "reset": "프로필 사진을 기본값으로 재설정",
+      "uploadButton": "이미지 업로드",
+      "uploading": "업로드 중..."
+    },
+    "reputationName": {
+      "description": "이 서버에서 평판에 사용되는 이름을 사용자 지정하세요.",
+      "label": "평판 이름",
+      "placeholder": "사용자 정의 평판 이름 입력 (예: '포인트', '카르마')",
+      "reset": "평판 이름을 기본값으로 재설정"
+    },
+    "reset": "재설정",
+    "tosNote": "디스코드의 이용약관 또는 해당 주 법률을 위반하는 행위는 허용되지 않으며, 해당 서버에서 이 기능이 차단될 수 있습니다."
+  },
+  "reactions": {
+    "additional": {
+      "add": "반응 추가",
+      "description": "평판 부여에도 사용할 수 있는 추가 이모지.",
+      "label": "추가 반응",
+      "none": "추가 반응이 구성되지 않았습니다.",
+      "premiumRequired": "추가 반응"
+    },
+    "description": "평판 부여에 사용되는 이모지를 설정합니다.",
+    "main": {
+      "description": "평판 부여 시 기본 반응으로 사용될 이모지.",
+      "label": "주요 반응"
+    },
+    "title": "반응들"
   },
   "roles": {
     "donor": {
@@ -572,429 +597,418 @@
       "label": "수신기"
     }
   },
-  "links": {
-    "support": "서버 지원",
-    "website": "웹사이트",
-    "faq": "자주 묻는 질문",
-    "tos": "이용 약관"
-  },
-  "auditLog": {
-    "description": "서버에서 수행된 모든 설정 변경 내역을 확인하세요.",
-    "loading": "감사 로그를 불러오는 중...",
-    "loadError": "감사 로그를 불러오는 데 실패했습니다. 다시 시도해 주세요.",
-    "retry": "다시 시도",
-    "noEntries": "감사 로그 항목이 발견되지 않았습니다.",
-    "unknownMember": "알 수 없는 회원",
-    "previous": "이전",
-    "next": "다음",
-    "pageInfo": "페이지 {current} of {total}",
-    "from": "From",
-    "to": "~에게",
-    "added": "추가됨",
-    "removed": "삭제됨",
-    "values": {
-      "null": "설정되지 않음",
-      "enabled": "활성화됨",
-      "disabled": "장애",
-      "once": "한 번",
-      "none": "없음",
-      "unknownChannel": "알 수 없는 채널",
-      "unidirectional": "단방향",
-      "bidirectional": "양방향",
-      "total": "총계",
-      "rolling_week": "롤링 위크",
-      "rolling_month": "이동 월",
-      "week": "주",
-      "month": "월",
-      "delete_and_repost": "삭제 후 재게시",
-      "repost": "재게시",
-      "update": "업데이트",
-      "hourly": "시간당",
-      "daily": "매일",
-      "weekly": "주간",
-      "monthly": "월간",
-      "noChanges": "변경 사항 없음",
-      "unknownIntegration": "알 수 없는 통합"
+  "scan": {
+    "description": "봇이 추가되기 전이나 추적되지 않은 채널에서 부여된 평판을 길드 내에서 검색합니다. 이 기능은 설정된 평판 채널과 카테고리의 모든 메시지를 검색합니다.",
+    "error": {
+      "alreadyRunning": "이 길드에 대한 스캔이 이미 진행 중입니다.",
+      "fetchStatus": "스캔 상태 가져오기에 실패했습니다. 잠시 후 다시 시도해 주세요.",
+      "startFailed": "스캔을 시작할 수 없습니다. 잠시 후 다시 시도해 주십시오."
     },
-    "settings": {
-      "abuseprotection_cooldown": "학대 방지 - 재사용 대기시간",
-      "abuseprotection_cooldowndirection": "학대 방지 - 쿨다운 방향",
-      "abuseprotection_maxmessageage": "악용 방지 - 최대 메시지 보관 기간",
-      "abuseprotection_minmessages": "악용 방지 - 최소 메시지 수",
-      "abuseprotection_donorcontext": "학대 방지 - 기부자 컨텍스트",
-      "abuseprotection_receivercontext": "악용 방지 - 리시버 컨텍스트",
-      "abuseprotection_maxgiven": "학대 방지 - 최대 허용량",
-      "abuseprotection_maxgivenhours": "학대 방지 - 최대 허용 시간",
-      "abuseprotection_maxreceived": "학대 방지 - 최대 수신량",
-      "abuseprotection_maxreceivedhours": "학대 방지 - 최대 수신 시간",
-      "abuseprotection_maxmessagereputation": "악용 방지 - 최대 메시지 평판",
-      "thanking_channels_whitelist": "채널 - 화이트리스트 모드",
-      "thanking_channels_channels": "채널 - 채널 목록",
-      "thanking_channels_categories": "채널 - 카테고리 목록",
-      "thanking_thankwords_words": "감사의 말씀",
-      "thanking_reactions_mainreaction": "반응 - 주요 반응",
-      "thanking_reactions_reactions": "반응 - 추가 반응",
-      "thanking_denydonorroles": "역할 - 기부자 역할 거부",
-      "thanking_donorroles": "역할 - 기부자 역할",
-      "thanking_denyreceiverroles": "역할 - 수신자 역할 거부",
-      "thanking_receiverroles": "역할 - 리시버 역할",
-      "messages_reactionconfirmation": "평판 - 반응 확인",
-      "messages_commandreputationephemeral": "명성 - 명령 명성 일시적",
-      "profile_nickname": "프로필 - 닉네임",
-      "profile_profilepicture": "프로필 - 프로필 사진",
-      "profile_reputationname": "프로필 - 평판 이름",
-      "reputation_reactionactive": "평판 - 반응 활성",
-      "reputation_answeractive": "평판 - 답변 활성",
-      "reputation_mentionactive": "평판 - 언급 활성",
-      "reputation_fuzzyactive": "평판 - 퍼지 액티브",
-      "reputation_embedactive": "평판 - 활성 임베드",
-      "reputation_directactive": "평판 - 직접적 활성",
-      "reputation_commandactive": "평판 - 명령 활성화",
-      "logchannel_active": "로그 채널 - 활성",
-      "logchannel_channel": "로그 채널 - 채널",
-      "general_language": "일반 - 언어",
-      "general_stackroles": "계급 - 스택 역할",
-      "general_reputationmode": "평판 - 평판 모드",
-      "general_systemchannel": "일반 - 시스템 채널",
-      "general_resetdate": "평판 - 초기화 날짜",
-      "announcements_active": "공지사항 - 활성",
-      "announcements_samechannel": "공지사항 - 동일 채널",
-      "announcements_channel": "공지사항 - 채널",
-      "autopost_active": "자동 게시 - 활성화됨",
-      "autopost_channel": "자동 게시 - 채널",
-      "autopost_refreshtype": "자동 게시 - 새로 고침 유형",
-      "autopost_refreshinterval": "자동 게시 - 새로 고침 간격",
-      "ranks": "계급 - 역할",
-      "general_everyonetokenpurchase": "일반 - 모든 사람 토큰 구매"
+    "finishedAt": "완료 시간:",
+    "messagesScanned": "스캔된 메시지",
+    "noScanYet": "아직 스캔이 수행되지 않았습니다.",
+    "progressDetails": "진행 상황 상세 정보",
+    "reputationFound": "평판 확인됨",
+    "start": "스캔 시작",
+    "startedAt": "시작일:",
+    "starting": "시작합니다...",
+    "status": {
+      "finished": "스캔 완료",
+      "running": "스캔 실행 중"
     }
   },
-  "help": {
-    "title": "도움이 필요하신가요?",
-    "message": "도움이 필요하신가요? 기능이 누락되었나요? 피드백이 있으신가요? 봇에게 비공개 메시지를 보내주세요. 페이지 하단에서 저희 지원 디스코드 링크도 확인하실 수 있습니다."
+  "settings": {
+    "abuseProtection": "학대 방지",
+    "announcements": "공지사항",
+    "auditLog": "감사 로그",
+    "autopost": "자동 게시",
+    "channels": "채널",
+    "debug": {
+      "goToSettings": "설정으로 이동",
+      "missingPermissions": {
+        "CATEGORY": "카테고리",
+        "CHANNEL": "채널",
+        "GUILD": "길드",
+        "title": "누락된 범위 지정 권한"
+      },
+      "permissions": {
+        "BYPASS_SLOWMODE": "확인 메시지는 가끔 작동하지 않을 수 있습니다. 예를 들어 반응 확인이나 임베드를 통한 평판 확인 등이 해당됩니다.",
+        "MANAGE_GUILD_EXPRESSIONS": "대시보드에서는 사용자 지정 반응을 제안할 수 없습니다.",
+        "MANAGE_ROLES": "평판 역할은 부여할 수 없습니다.",
+        "MESSAGE_ADD_REACTION": "반응을 통한 평판 확인이 작동하지 않습니다.",
+        "MESSAGE_ATTACH_VOICE_MESSAGE": "음성 채널에서는 어떤 확인 메시지도 작동하지 않습니다. 예를 들어 반응 확인이나 임베드를 통한 평판 확인 등이 해당됩니다.",
+        "MESSAGE_EXT_EMOJI": "이모지를 통한 평판 확인이 작동하지 않습니다.",
+        "MESSAGE_HISTORY": "임베드를 통한 평판 확인이 작동하지 않습니다. 대부분의 악용 방지 검사가 실패할 것입니다.",
+        "MESSAGE_SEND": "어떤 확인 메시지도 작동하지 않습니다. 예를 들어 반응 확인이나 임베드를 통한 평판 확인 등이 해당됩니다.",
+        "MESSAGE_SEND_IN_THREADS": "스레드에서는 어떤 확인 메시지도 작동하지 않습니다. 예를 들어 반응 확인이나 임베드를 통한 평판 확인 등이 해당됩니다.",
+        "NICKNAME_CHANGE": "대시보드에서는 별명을 변경할 수 없습니다.",
+        "VIEW_CHANNEL": "평판 채널은 볼 수 없습니다. 평판은 어떤 텍스트 기반 방법으로도 줄 수 없습니다.",
+        "description": "봇에 대해 전역적으로 이러한 권한이 누락되었습니다. 이로 인해 일부 기능이 제한될 수 있습니다.",
+        "title": "누락된 글로벌 권한"
+      },
+      "rankProblems": {
+        "CANT_ASSIGN_ROLE": "이 봇은 이 역할을 할당할 수 없습니다. 해당 역할이 봇의 최고 역할보다 높기 때문입니다.",
+        "MISSING_ROLE": "이 계급의 역할이 누락되었습니다.",
+        "title": "순위 문제"
+      },
+      "reputationChannelProblems": {
+        "MISSING_CATEGORY": "카테고리가 누락되었습니다.",
+        "MISSING_CHANNEL": "채널이 없습니다.",
+        "NOT_TEXT_TYPE": "해당 채널은 텍스트 채널이 아닙니다.",
+        "title": "평판 채널 문제"
+      },
+      "simpleProblems": {
+        "ANNOUNCEMENT_CHANNEL_NOT_FOUND": "공지 채널을 찾을 수 없습니다.",
+        "AUTOPOST_CANNEL_NOT_FOUND": "자동 게시 채널을 찾을 수 없습니다.",
+        "LOG_CHANNEL_NOT_FOUND": "로그 채널을 찾을 수 없습니다.",
+        "NO_ANNOUNCEMENT_CHANNEL_DEFINED": "공지 채널이 정의되지 않았습니다.",
+        "NO_AUTOPOST_CHANNEL_DEFINED": "자동 게시 채널이 정의되지 않았습니다.",
+        "NO_LOG_CHANNEL_DEFINED": "로그 채널이 정의되지 않았습니다.",
+        "NO_REPUTATION_CHANNEL_DEFINED": "평판 채널이나 범주가 정의되어 있지 않습니다.",
+        "NO_THANKWORDS_DEFINED": "감사 단어가 정의되지 않았습니다.",
+        "SYSTEM_CHANNEL_NOT_DEFINED": "시스템 채널이 정의되지 않았습니다.",
+        "SYSTEM_CHANNEL_NOT_FOUND": "시스템 채널을 찾을 수 없습니다.",
+        "title": "일반적인 문제점"
+      },
+      "simpleWarnings": {
+        "MAX_MESSAGE_AGE_LOW": "최대 메시지 보관 기간이 매우 짧게 설정되어 있습니다. 이로 인해 사용자들이 오래된 메시지에 대해 서로 감사 인사를 나누지 못할 수 있습니다.",
+        "title": "경고"
+      }
+    },
+    "general": "일반",
+    "integrationBypass": "통합 우회",
+    "logChannel": "로그 채널",
+    "messages": "메시지",
+    "problems": "문제점",
+    "profile": "프로필",
+    "ranks": "계급",
+    "reactions": "반응들",
+    "reputation": "평판",
+    "roles": "역할",
+    "scan": "스캔",
+    "thankwords": "감사의 말씀",
+    "title": "설정"
   },
-  "guildSwitcher": {
-    "title": "서버 전환",
-    "current": "현재 서버",
-    "none": "다른 서버를 찾을 수 없습니다",
-    "add": "서버에서 설정을 열어 다른 서버를 추가하세요."
+  "setup": {
+    "error": {
+      "forbidden": {
+        "description": "이 서버의 설정에 액세스할 권한이 없습니다. 서버 관리자에게 문의해 주십시오.",
+        "title": "접근 거부"
+      },
+      "noSession": {
+        "description": "활성화된 서버 세션이 없습니다. 돌아가서 서버를 선택해 주세요.",
+        "title": "연결되지 않음"
+      },
+      "unknown": {
+        "description": "서버 설정을 불러오는 동안 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.",
+        "title": "설정을 불러오지 못했습니다"
+      }
+    },
+    "navigation": {
+      "finish": "설정 완료",
+      "next": "다음",
+      "previous": "이전"
+    },
+    "requiredStep": "이 단계는 계속 진행하기 위해 필요합니다",
+    "stepProgress": "{total}의 {current} 단계",
+    "steps": {
+      "announcements": {
+        "description": "봇이 사용자가 새로운 평판 등급에 도달했을 때 알림을 표시할지 여부를 설정합니다.",
+        "title": "공지사항"
+      },
+      "channels": {
+        "description": "평판 부여를 허용할 채널 및 카테고리를 선택하십시오. 최소한 하나의 채널 또는 카테고리를 선택해야 합니다.",
+        "required": "계속하려면 최소한 하나의 채널 또는 카테고리를 선택해야 합니다(차단 목록 모드를 사용하는 경우 제외).",
+        "title": "채널 및 카테고리"
+      },
+      "cooldown": {
+        "description": "사용자가 평판을 너무 자주 부여하지 못하도록 쿨다운 기간을 설정하세요. '쿨다운 한 번'을 활성화하여 사용자가 서로에게 감사를 한 번만 표현할 수 있도록 할 수도 있습니다.",
+        "title": "쿨다운 설정"
+      },
+      "finished": {
+        "description": "이제 마지막 설정 단계를 완료하셨습니다. 이제 일반 설정 페이지로 이동해 드리겠습니다. 해당 페이지에서 관심 있을 만한 추가 설정 항목을 확인하실 수 있습니다.",
+        "title": "설정 완료"
+      },
+      "language": {
+        "description": "서버에서 봇이 메시지와 응답에 사용할 언어를 선택하세요. 선택한 언어로 프론트엔드 언어가 변경됩니다.",
+        "title": "언어 선택"
+      },
+      "mainReaction": {
+        "description": "평판 부여 시 주요 반응으로 사용될 이모지를 선택하세요.",
+        "title": "주요 반응"
+      },
+      "ranks": {
+        "description": "사용자가 특정 평판 수준에 도달했을 때 부여받을 역할을 정의하십시오. 최소한 하나의 등급이 필요합니다.",
+        "required": "계속하려면 최소한 하나의 평판 등급을 정의해야 합니다.",
+        "title": "평판 등급"
+      },
+      "reputationMode": {
+        "description": "서버에서 평판이 어떻게 계산되고 표시될지 선택하십시오.",
+        "title": "평판 모드"
+      },
+      "reputationTypes": {
+        "description": "사용자가 평판을 부여할 수 있는 방법을 선택하세요. 여러 유형을 활성화하여 사용자에게 유연성을 제공할 수 있습니다.",
+        "title": "평판 유형"
+      },
+      "roles": {
+        "description": "선택적으로 평판을 부여할 수 있는 역할(기부자 역할)과 평판을 받을 수 있는 역할(수령자 역할)을 정의할 수 있습니다.",
+        "title": "기증자 및 수혜자 역할"
+      },
+      "scan": {
+        "description": "채널 설정을 마쳤으니, 서버의 기록에 있는 기존 평판 데이터를 색인화하기 위해 스캔을 실행하는 것이 좋습니다.",
+        "error": "스캔을 시작할 수 없습니다. 잠시 후 다시 시도해 주십시오.",
+        "prompt": {
+          "description": "스캔 기능은 설정된 채널 내 서버의 메시지 기록을 검토하여 기존 평판 점수를 확인합니다. 서버의 규모에 따라 이 작업에 다소 시간이 소요될 수 있습니다.",
+          "title": "서버 스캔을 시작하시겠습니까?"
+        },
+        "start": "스캔 시작",
+        "started": {
+          "description": "현재 스캔이 백그라운드에서 실행 중입니다. 설정을 완료하면 스캔 페이지에서 진행 상황을 확인할 수 있습니다.",
+          "title": "스캔 시작!"
+        },
+        "starting": "시작합니다...",
+        "title": "서버 스캔"
+      },
+      "systemChannel": {
+        "description": "봇이 중요한 시스템 메시지와 알림을 보낼 채널을 선택하세요.",
+        "required": "설정을 계속하려면 시스템 채널을 선택해야 합니다.",
+        "title": "시스템 채널"
+      },
+      "thankwords": {
+        "description": "사용자가 평판을 부여할 때 사용할 수 있는 단어나 구문을 추가하세요. 이것들은 봇이 인식할 트리거 단어입니다.",
+        "recommendation": "시작을 빠르게 하려면 해당 언어의 기본 감사 문구를 로드하는 것을 권장합니다.",
+        "title": "감사의 말씀"
+      },
+      "welcome": {
+        "description": "설정 페이지에 오신 것을 환영합니다.\n이 페이지는 봇의 초기 설정을 안내해 드립니다. 이후에는 기본 설정이 완료되며, 원하는 대로 맞춤 설정할 수 있습니다.\n\n도움이 필요하시면 봇에게 비공개 메시지를 보내주시면 최대한 빨리 도와드리겠습니다. 페이지 하단에는 저희 지원 디스코드 링크도 확인하실 수 있습니다.",
+        "title": "환영합니다"
+      }
+    },
+    "title": "초기 설정"
   },
-  "integrationBypass": {
-    "description": "통합 기능에 대한 우회 경로를 구성하여 일반 요구 사항을 충족하지 않더라도 평판을 부여할 수 있도록 합니다.",
-    "allowReactions": "반응 허용",
-    "allowAnswer": "답변 허용",
-    "allowMention": "언급 허용",
-    "allowFuzzy": "퍼지 허용",
-    "ignoreCooldown": "쿨다운 무시",
-    "ignoreLimit": "제한 무시",
-    "allowReactionsDescription": "반응을 통해 평판을 부여할 수 있도록 허용",
-    "allowAnswerDescription": "메시지 답변을 통해 평판을 부여할 수 있도록 허용",
-    "allowMentionDescription": "사용자를 멘션하여 평판을 부여할 수 있도록 허용",
-    "allowFuzzyDescription": "퍼지 매칭을 통한 평판 부여 허용",
-    "ignoreCooldownDescription": "사용자 간 쿨다운 무시",
-    "ignoreLimitDescription": "설정된 시간 제한을 무시하십시오",
-    "add": "통합 우회 추가",
-    "selectIntegration": "통합 선택",
-    "noIntegrations": "추가할 우회 경로가 더 이상 없습니다.",
-    "deleteConfirm": "이 통합 우회 기능을 정말 제거하시겠습니까?",
-    "premiumRequired": "통합 우회",
-    "allowDirect": "직접 허용",
-    "ignoreContext": "문맥 무시",
-    "allowDirectDescription": "수신자를 단 한 명만 확인할 수 있어 임베드가 생략될 경우 평판 부여를 허용합니다. 봇에 대해서는 임베드가 절대 전송되지 않습니다.",
-    "ignoreContextDescription": "컨텍스트 검사를 무시하십시오"
+  "thankwords": {
+    "add": "감사말씀 추가",
+    "alreadyExists": "이 감사말씀은 이미 존재합니다.",
+    "defaults": {
+      "description": "다양한 언어에 대한 기본 감사 문구를 빠르게 추가하세요.",
+      "title": "기본 감사 인사말"
+    },
+    "description": "이 단어들은 누군가에게 감사를 표할 때를 감지하는 데 사용됩니다. 이들은 정규 표현식으로 해석됩니다.",
+    "invalidCharacter": "감사말씀에 잘못된 문자가 포함되어 있습니다: {char}",
+    "none": "감사말씀이 설정되지 않았습니다.",
+    "placeholder": "감사 단어 입력 (정규 표현식)"
   },
   "timePresets": {
-    "hour": "1시간",
     "day": "1일",
-    "week": "1주",
     "fourWeeks": "4주",
+    "hour": "1시간",
+    "week": "1주",
     "year": "1년"
   },
-  "login": {
-    "title": "로그인 필요",
-    "description": "이 패널에 접근하려면 Discord로 로그인해 주세요.",
-    "button": "Discord로 로그인"
+  "token_shop": {
+    "active": "활성",
+    "adminOnly": "서버는 서버 관리자만 기능을 구매할 수 있도록 구성되어 있습니다.",
+    "autoRenewal": "자동 갱신",
+    "confirmPurchase": "{amount} 토큰으로 이 기능을 구매하시겠습니까?",
+    "description": "투표 토큰을 사용해 프리미엄 기능으로 서버를 업그레이드하세요. 토큰으로 구매한 기능은 자동 갱신이 설정된 상태에서는 만료되지 않습니다. 이미 활성화된 기능을 추가로 구매하면 만료일 또는 갱신일에 30일이 추가됩니다.",
+    "enabledBySubscription": "구독으로 활성화됨",
+    "expires": "만료일: {date}",
+    "feature": {
+      "additionalemojis": {
+        "description": "반응을 통해 평판을 줄 때는 하나 이상의 이모지를 사용하세요.",
+        "name": "추가 이모지"
+      },
+      "advancedrankings": {
+        "description": "더 많은 순위 옵션을 해제하세요.",
+        "name": "고급 순위"
+      },
+      "analyzerlog": {
+        "description": "분석기 로그의 보존 기간이 두 배로 늘어납니다.",
+        "name": "확장 분석기 로그"
+      },
+      "autopost": {
+        "description": "정해진 간격으로 리더보드를 채널에 자동으로 게시합니다.",
+        "name": "자동 게시"
+      },
+      "channelblacklist": {
+        "description": "봇이 모든 채널에서 활동하도록 허용하는 대신 특정 채널에서 활동하지 못하도록 방지하십시오.",
+        "name": "채널 차단 목록"
+      },
+      "detailedprofile": {
+        "description": "사용자 평판 프로필에 대한 추가 정보를 표시합니다.",
+        "name": "상세 프로필"
+      },
+      "integrationbypass": {
+        "description": "다른 봇 및 통합 서비스가 평판을 부여할 수 있도록 허용합니다.",
+        "name": "통합 우회"
+      },
+      "localeoverrides": {
+        "description": "봇 메시지와 레이블을 사용자 정의 번역으로 덮어쓸 수 있습니다. 현재는 평판에 대한 사용자 정의 이름 설정만 가능합니다.",
+        "name": "로케일 재정의"
+      },
+      "logchannel": {
+        "description": "모든 평판 변경 사항에 대해 전용 로그 채널을 활성화합니다.",
+        "name": "로그 채널"
+      },
+      "profile": {
+        "description": "서버에서 봇의 이름과 프로필 사진을 맞춤 설정하세요.",
+        "name": "봇 프로필"
+      },
+      "reputationcategories": {
+        "description": "무제한 평판 카테고리를 해제하세요.",
+        "name": "무제한 평판 카테고리"
+      },
+      "reputationchannel": {
+        "description": "무제한 평판 채널을 해제하세요.",
+        "name": "무제한 평판 채널"
+      },
+      "reputationlog": {
+        "description": "서버의 평판 로그 모든 페이지를 확인하세요.",
+        "name": "전체 평판 기록"
+      }
+    },
+    "getMoreTokens": "더 많은 토큰을 획득하세요",
+    "guildTokens": "길드 토큰 사용",
+    "insufficientTokens": "토큰이 충분하지 않습니다.",
+    "nextRenewal": "다음 갱신: {date}",
+    "noFeatures": "현재 사용 가능한 기능이 없습니다.",
+    "purchase": "구매",
+    "purchaseSuccess": "기능 구매 성공!",
+    "subscribe": "구독하기",
+    "subscribeSuccess": "구독이 활성화되었습니다!",
+    "subscriptionActiveNote": "이 기능은 현재 활성 구독으로 활성화되어 있습니다.",
+    "title": "토큰 상점",
+    "unsubscribe": "구독 취소",
+    "unsubscribeSuccess": "구독이 비활성화되었습니다!",
+    "userTokens": "개인 토큰 사용"
+  },
+  "user": {
+    "settings": {
+      "description": "개인 계정 설정 및 선호도를 구성하세요.",
+      "mails": {
+        "add": {
+          "button": "추가",
+          "placeholder": "새 이메일 추가 (name{'@'}example.com)"
+        },
+        "description": "계정에 연결된 이메일 주소를 관리하세요. 새 주소를 추가하고 수신함으로 전송된 링크를 통해 확인할 수 있습니다.",
+        "errors": {
+          "ALREADY_REGISTERED": "이 이메일 주소는 이미 다른 사용자에게 등록되어 있습니다.",
+          "CODE_EXPIRED": "인증 코드가 만료되었습니다. 새로운 인증 이메일을 요청해 주세요.",
+          "INVALID_CODE": "인증 코드가 잘못되었습니다.",
+          "INVALID_FORMAT": "이메일 주소 형식이 잘못되었습니다. 확인 후 다시 시도해 주세요.",
+          "RATE_LIMIT": "너무 자주 하고 계십니다. 다른 이메일 주소를 추가하기 전에 {time} 기다려 주십시오.",
+          "UNKNOWN": "알 수 없는 오류가 발생했습니다. 나중에 다시 시도해 주세요.",
+          "UNKNOWN_ADDRESS": "이 이메일 주소를 찾을 수 없습니다. 삭제되었을 수 있습니다.",
+          "WRONG_USER": "이 이메일 주소는 다른 사용자에게 속합니다."
+        },
+        "noteDeletion": "참고: Discord 또는 Ko-fi에서 제공된 이메일 주소는 삭제할 수 없습니다. 본인이 직접 추가한 주소만 삭제 가능합니다.",
+        "pending": "검증 대기 중",
+        "source": {
+          "discord": "불화",
+          "kofi": "코피",
+          "user": "사용자"
+        },
+        "title": "이메일 주소",
+        "verified": "검증됨",
+        "verify": {
+          "error": "이메일 확인에 실패했습니다. 다시 시도하거나 새로운 확인 링크를 요청하세요.",
+          "success": "귀하의 이메일 주소가 성공적으로 확인되었습니다."
+        }
+      },
+      "title": "사용자 설정",
+      "voteGuild": {
+        "description": "봇에 투표할 때 토큰을 받을 길드를 선택하세요. 이는 향후 투표에만 영향을 미칩니다.",
+        "label": "투표 길드",
+        "none": "특정 길드 없음 (개인)"
+      }
+    },
+    "supporter": {
+      "description": "활성 Ko-fi 구매 내역을 확인하고 길드에 할당하여 후원자 기능을 활성화하세요.",
+      "errors": {
+        "assign": "구매 할당에 실패했습니다.",
+        "load": "구매 내역을 불러오는 데 실패했습니다. 나중에 다시 시도해 주세요.",
+        "unassign": "구매 할당 해제에 실패했습니다."
+      },
+      "item": {
+        "assign": "할당하다",
+        "assignedTo": "할당 대상: {guild}",
+        "expires": "만료일: {date}",
+        "lifetime": "평생",
+        "subscription": "구독",
+        "unassign": "할당 해제"
+      },
+      "kofiLink": "Ko-fi에서 구매하기",
+      "missingPurchasesNotice": "구매 내역이 여기에 표시되지 않는다면, Ko-fi 계정에 Discord 계정과 다른 이메일 주소를 사용했을 수 있습니다. {link}에서 추가 이메일 주소를 연결할 수 있습니다.",
+      "results": {
+        "ALREADY_SUBSCRIBED": "귀하께서는 이미 길드에 할당된 활성 구독을 보유하고 계십니다.",
+        "SUBSCRIPTION_EXPIRED": "이 구독은 만료되어 할당할 수 없습니다.",
+        "SUCCESS": "성공",
+        "UNKOWN": "알 수 없는 구독 오류가 발생했습니다. 나중에 다시 시도해 주세요."
+      },
+      "sections": {
+        "lifetime": "평생 구매",
+        "lifetime_desc": "평생 구매는 길드에 할당되어 기능을 영구적으로 해제할 수 있습니다.",
+        "subscriptions": "활성 구독",
+        "subscriptions_desc": "구독은 자동으로 갱신되며 원하는 길드에 할당할 수 있습니다."
+      },
+      "settingsLink": "사용자 설정",
+      "title": "후원자"
+    }
   },
   "voting": {
-    "title": "투표",
-    "description": "현재 투표 토큰 및 봇리스트 투표 상태에 관한 정보.",
-    "tokens": {
-      "title": "토큰",
-      "description": "현재 보유 중인 투표 토큰입니다. 다양한 보상에 사용할 수 있습니다.",
-      "label": "현재 토큰",
-      "shop": "토큰 샵 방문하기"
-    },
     "botlists": {
-      "title": "봇 목록",
-      "description": "다양한 봇 목록에서 봇에 투표하여 토큰을 획득하고 연속 기록을 유지하세요.",
-      "name": "봇 목록",
-      "streak": "연승",
-      "lastVote": "마지막 투표",
       "action": "액션",
-      "vote": "투표",
+      "days": "날들",
+      "description": "다양한 봇 목록에서 봇에 투표하여 토큰을 획득하고 연속 기록을 유지하세요.",
+      "lastVote": "마지막 투표",
+      "name": "봇 목록",
       "never": "절대",
-      "days": "날들"
+      "streak": "연승",
+      "title": "봇 목록",
+      "vote": "투표"
     },
+    "description": "현재 투표 토큰 및 봇리스트 투표 상태에 관한 정보.",
     "log": {
-      "title": "투표 기록",
-      "description": "귀하의 투표 토큰 거래 내역.",
       "date": "날짜",
+      "description": "귀하의 투표 토큰 거래 내역.",
       "guild": "길드",
-      "tokens": "토큰",
+      "personal": "개인적인",
       "reason": {
-        "label": "이유",
+        "BONUS": "일일 보너스",
+        "BONUS_DESCRIPTION": "지난 6시간 동안 모든 봇리스트에 투표하여 추가 토큰을 획득했습니다.",
         "STANDARD": "투표",
         "STANDARD_DESCRIPTION": "봇리스트 투표용 토큰을 받으셨습니다.",
         "STREAK": "투표 연속 기록",
         "STREAK_DESCRIPTION": "연속 기록이 있어서 추가 토큰을 받았습니다.",
-        "BONUS": "일일 보너스",
-        "BONUS_DESCRIPTION": "지난 6시간 동안 모든 봇리스트에 투표하여 추가 토큰을 획득했습니다.",
         "TRANSFER": "길드로 이관",
         "TRANSFER_DESCRIPTION": "귀하는 길드의 평판 시스템을 지원하기 위해 토큰을 길드에 이전했습니다.",
         "USE": "구매",
         "USE_DESCRIPTION": "토큰을 사용하여 보상이나 서비스를 구매했습니다.",
+        "label": "이유",
         "unknown": "알 수 없음",
         "unknown_DESCRIPTION": "이 거래의 이유는 알려지지 않았습니다."
       },
-      "unknownGuild": "알 수 없는 길드",
-      "personal": "개인적인"
+      "title": "투표 기록",
+      "tokens": "토큰",
+      "unknownGuild": "알 수 없는 길드"
     },
     "noteDefaultGuild": "팁: 기본 길드를 설정하면 토큰을 자동으로 받을 수 있습니다.",
     "noteDefaultGuildLink": "사용자 설정",
+    "title": "투표",
+    "tokens": {
+      "description": "현재 보유 중인 투표 토큰입니다. 다양한 보상에 사용할 수 있습니다.",
+      "label": "현재 토큰",
+      "shop": "토큰 샵 방문하기",
+      "title": "토큰"
+    },
     "transfer": {
-      "title": "길드에 토큰 이전",
+      "amount": "금액",
       "description": "개인 잔고에서 길드 중 하나로 토큰을 이동하세요.",
       "guild": "길드",
-      "selectGuild": "길드를 선택하세요",
-      "amount": "금액",
       "max": "Max: {max}",
-      "submit": "이체"
-    }
-  },
-  "user": {
-    "settings": {
-      "title": "사용자 설정",
-      "description": "개인 계정 설정 및 선호도를 구성하세요.",
-      "voteGuild": {
-        "label": "투표 길드",
-        "description": "봇에 투표할 때 토큰을 받을 길드를 선택하세요. 이는 향후 투표에만 영향을 미칩니다.",
-        "none": "특정 길드 없음 (개인)"
-      },
-      "mails": {
-        "title": "이메일 주소",
-        "description": "계정에 연결된 이메일 주소를 관리하세요. 새 주소를 추가하고 수신함으로 전송된 링크를 통해 확인할 수 있습니다.",
-        "verified": "검증됨",
-        "pending": "검증 대기 중",
-        "noteDeletion": "참고: Discord 또는 Ko-fi에서 제공된 이메일 주소는 삭제할 수 없습니다. 본인이 직접 추가한 주소만 삭제 가능합니다.",
-        "source": {
-          "user": "사용자",
-          "discord": "불화",
-          "kofi": "코피"
-        },
-        "add": {
-          "placeholder": "새 이메일 추가 (name{'@'}example.com)",
-          "button": "추가"
-        },
-        "verify": {
-          "success": "귀하의 이메일 주소가 성공적으로 확인되었습니다.",
-          "error": "이메일 확인에 실패했습니다. 다시 시도하거나 새로운 확인 링크를 요청하세요."
-        },
-        "errors": {
-          "ALREADY_REGISTERED": "이 이메일 주소는 이미 다른 사용자에게 등록되어 있습니다.",
-          "INVALID_FORMAT": "이메일 주소 형식이 잘못되었습니다. 확인 후 다시 시도해 주세요.",
-          "WRONG_USER": "이 이메일 주소는 다른 사용자에게 속합니다.",
-          "INVALID_CODE": "인증 코드가 잘못되었습니다.",
-          "CODE_EXPIRED": "인증 코드가 만료되었습니다. 새로운 인증 이메일을 요청해 주세요.",
-          "UNKNOWN_ADDRESS": "이 이메일 주소를 찾을 수 없습니다. 삭제되었을 수 있습니다.",
-          "UNKNOWN": "알 수 없는 오류가 발생했습니다. 나중에 다시 시도해 주세요.",
-          "RATE_LIMIT": "너무 자주 하고 계십니다. 다른 이메일 주소를 추가하기 전에 {time} 기다려 주십시오."
-        }
-      }
-    },
-    "supporter": {
-      "title": "후원자",
-      "description": "활성 Ko-fi 구매 내역을 확인하고 길드에 할당하여 후원자 기능을 활성화하세요.",
-      "kofiLink": "Ko-fi에서 구매하기",
-      "sections": {
-        "subscriptions": "활성 구독",
-        "subscriptions_desc": "구독은 자동으로 갱신되며 원하는 길드에 할당할 수 있습니다.",
-        "lifetime": "평생 구매",
-        "lifetime_desc": "평생 구매는 길드에 할당되어 기능을 영구적으로 해제할 수 있습니다."
-      },
-      "item": {
-        "subscription": "구독",
-        "lifetime": "평생",
-        "expires": "만료일: {date}",
-        "assignedTo": "할당 대상: {guild}",
-        "assign": "할당하다",
-        "unassign": "할당 해제"
-      },
-      "errors": {
-        "load": "구매 내역을 불러오는 데 실패했습니다. 나중에 다시 시도해 주세요.",
-        "assign": "구매 할당에 실패했습니다.",
-        "unassign": "구매 할당 해제에 실패했습니다."
-      },
-      "results": {
-        "ALREADY_SUBSCRIBED": "귀하께서는 이미 길드에 할당된 활성 구독을 보유하고 계십니다.",
-        "SUBSCRIPTION_EXPIRED": "이 구독은 만료되어 할당할 수 없습니다.",
-        "UNKOWN": "알 수 없는 구독 오류가 발생했습니다. 나중에 다시 시도해 주세요.",
-        "SUCCESS": "성공"
-      },
-      "missingPurchasesNotice": "구매 내역이 여기에 표시되지 않는다면, Ko-fi 계정에 Discord 계정과 다른 이메일 주소를 사용했을 수 있습니다. {link}에서 추가 이메일 주소를 연결할 수 있습니다.",
-      "settingsLink": "사용자 설정"
-    }
-  },
-  "dashboard": {
-    "title": "대시보드",
-    "totalReputation": "총 평판",
-    "weekReputation": "주간 평판",
-    "todayReputation": "오늘의 평판",
-    "topChannel": "최상위 채널",
-    "topUsers": "최상위 사용자",
-    "rank": "순위",
-    "user": "사용자",
-    "reputation": "평판"
-  },
-  "token_shop": {
-    "title": "토큰 상점",
-    "description": "투표 토큰을 사용해 프리미엄 기능으로 서버를 업그레이드하세요. 토큰으로 구매한 기능은 자동 갱신이 설정된 상태에서는 만료되지 않습니다. 이미 활성화된 기능을 추가로 구매하면 만료일 또는 갱신일에 30일이 추가됩니다.",
-    "guildTokens": "길드 토큰 사용",
-    "userTokens": "개인 토큰 사용",
-    "noFeatures": "현재 사용 가능한 기능이 없습니다.",
-    "active": "활성",
-    "expires": "만료일: {date}",
-    "nextRenewal": "다음 갱신: {date}",
-    "autoRenewal": "자동 갱신",
-    "purchase": "구매",
-    "subscribe": "구독하기",
-    "unsubscribe": "구독 취소",
-    "purchaseSuccess": "기능 구매 성공!",
-    "subscribeSuccess": "구독이 활성화되었습니다!",
-    "unsubscribeSuccess": "구독이 비활성화되었습니다!",
-    "enabledBySubscription": "구독으로 활성화됨",
-    "subscriptionActiveNote": "이 기능은 현재 활성 구독으로 활성화되어 있습니다.",
-    "confirmPurchase": "{amount} 토큰으로 이 기능을 구매하시겠습니까?",
-    "insufficientTokens": "토큰이 충분하지 않습니다.",
-    "getMoreTokens": "더 많은 토큰을 획득하세요",
-    "feature": {
-      "reputationlog": {
-        "name": "전체 평판 기록",
-        "description": "서버의 평판 로그 모든 페이지를 확인하세요."
-      },
-      "analyzerlog": {
-        "name": "확장 분석기 로그",
-        "description": "분석기 로그의 보존 기간이 두 배로 늘어납니다."
-      },
-      "reputationcategories": {
-        "name": "무제한 평판 카테고리",
-        "description": "무제한 평판 카테고리를 해제하세요."
-      },
-      "reputationchannel": {
-        "name": "무제한 평판 채널",
-        "description": "무제한 평판 채널을 해제하세요."
-      },
-      "channelblacklist": {
-        "name": "채널 차단 목록",
-        "description": "봇이 모든 채널에서 활동하도록 허용하는 대신 특정 채널에서 활동하지 못하도록 방지하십시오."
-      },
-      "localeoverrides": {
-        "name": "로케일 재정의",
-        "description": "봇 메시지와 레이블을 사용자 정의 번역으로 덮어쓸 수 있습니다. 현재는 평판에 대한 사용자 정의 이름 설정만 가능합니다."
-      },
-      "autopost": {
-        "name": "자동 게시",
-        "description": "정해진 간격으로 리더보드를 채널에 자동으로 게시합니다."
-      },
-      "advancedrankings": {
-        "name": "고급 순위",
-        "description": "더 많은 순위 옵션을 해제하세요."
-      },
-      "detailedprofile": {
-        "name": "상세 프로필",
-        "description": "사용자 평판 프로필에 대한 추가 정보를 표시합니다."
-      },
-      "logchannel": {
-        "name": "로그 채널",
-        "description": "모든 평판 변경 사항에 대해 전용 로그 채널을 활성화합니다."
-      },
-      "additionalemojis": {
-        "name": "추가 이모지",
-        "description": "반응을 통해 평판을 줄 때는 하나 이상의 이모지를 사용하세요."
-      },
-      "profile": {
-        "name": "봇 프로필",
-        "description": "서버에서 봇의 이름과 프로필 사진을 맞춤 설정하세요."
-      },
-      "integrationbypass": {
-        "name": "통합 우회",
-        "description": "다른 봇 및 통합 서비스가 평판을 부여할 수 있도록 허용합니다."
-      }
-    },
-    "adminOnly": "서버는 서버 관리자만 기능을 구매할 수 있도록 구성되어 있습니다."
-  },
-  "metrics": {
-    "title": "지표",
-    "description": "봇의 트래픽과 사용량이 궁금하신가요? 저희도 마찬가지입니다! 그래서 이 페이지에 멋진 그래프를 몇 가지 모아봤습니다. 이 그래프들은 봇에서 직접 가져온 거의 실시간 데이터를 보여줍니다.",
-    "offset": "오프셋",
-    "count": "카운트",
-    "units": {
-      "hour": "시간",
-      "week": "주",
-      "month": "월",
-      "year": "연도"
-    },
-    "sections": {
-      "reputation": "평판",
-      "commands": "명령어",
-      "messages": "메시지",
-      "users": "사용자들",
-      "service": "서비스"
-    },
-    "charts": {
-      "reputationCount": "평판 점수",
-      "reputationTotal": "총 평판",
-      "reputationDow": "요일별 평판",
-      "reputationTypeTotal": "유형별 총 평판",
-      "reputationTypeCount": "유형별 평판 수",
-      "reputationChanges": "평판 변경",
-      "commandsCount": "명령어 수",
-      "commandsUsage": "명령어 사용법",
-      "messagesCount": "메시지 수",
-      "messagesTotal": "총 메시지 수",
-      "usersActiveWeek": "주간 활성 사용자",
-      "usersActiveMonth": "활성 사용자 (월간)",
-      "serviceCountHour": "서비스 사용량 (시간당)",
-      "serviceCountWeek": "서비스 사용량 (주간)"
-    },
-    "users": {
-      "total": "총계",
-      "donors": "기부자들",
-      "receivers": "수신기"
-    },
-    "validation": {
-      "offsetMin": "오프셋은 최소 0이어야 합니다",
-      "offsetMax": "오프셋은 최대 {max}이어야 합니다.",
-      "countMin": "카운트는 최소 2개 이상이어야 합니다.",
-      "countMax": "카운트는 최대{max}이어야 합니다."
-    }
-  },
-  "scan": {
-    "description": "봇이 추가되기 전이나 추적되지 않은 채널에서 부여된 평판을 길드 내에서 검색합니다. 이 기능은 설정된 평판 채널과 카테고리의 모든 메시지를 검색합니다.",
-    "start": "스캔 시작",
-    "starting": "시작합니다...",
-    "startedAt": "시작일:",
-    "finishedAt": "완료 시간:",
-    "messagesScanned": "스캔된 메시지",
-    "reputationFound": "평판 확인됨",
-    "noScanYet": "아직 스캔이 수행되지 않았습니다.",
-    "status": {
-      "running": "스캔 실행 중",
-      "finished": "스캔 완료"
-    },
-    "progressDetails": "진행 상황 상세 정보",
-    "error": {
-      "fetchStatus": "스캔 상태 가져오기에 실패했습니다. 잠시 후 다시 시도해 주세요.",
-      "startFailed": "스캔을 시작할 수 없습니다. 잠시 후 다시 시도해 주십시오.",
-      "alreadyRunning": "이 길드에 대한 스캔이 이미 진행 중입니다."
+      "selectGuild": "길드를 선택하세요",
+      "submit": "이체",
+      "title": "길드에 토큰 이전"
     }
   }
 }

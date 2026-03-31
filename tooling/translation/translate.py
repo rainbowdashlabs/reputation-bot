@@ -118,10 +118,15 @@ def write_properties(lang: Language):
             f.write(f"{key}={value}\n")
 
 
+def deep_sort_dict(data: dict) -> dict:
+    """Recursively sort dictionary keys."""
+    return {k: deep_sort_dict(v) if isinstance(v, dict) else v for k, v in sorted(data.items())}
+
+
 def write_json(lang: Language):
     """Write flattened entries back to JSON file with proper structure."""
     with lang.location.open("w", encoding='utf-8') as f:
-        unflattened = unflatten_json(lang.entries)
+        unflattened = deep_sort_dict(unflatten_json(lang.entries))
         json.dump(unflattened, f, ensure_ascii=False, indent=2)
         f.write('\n')  # Add trailing newline
 
