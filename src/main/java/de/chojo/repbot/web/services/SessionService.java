@@ -200,7 +200,12 @@ public class SessionService {
             try {
                 member = guild.retrieveMemberById(userId).complete();
             } catch (Exception e) {
-                log.error(LogNotify.NOTIFY_ADMIN, "Could not build user session for user {} on guild {}", userId, guild, e);
+                log.error(
+                        LogNotify.NOTIFY_ADMIN,
+                        "Could not build user session for user {} on guild {}",
+                        userId,
+                        guild,
+                        e);
                 continue;
             }
 
