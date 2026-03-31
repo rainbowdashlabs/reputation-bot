@@ -26,7 +26,7 @@ dependencyResolutionManagement {
             library("jackson-jsr310", "com.fasterxml.jackson.datatype","jackson-datatype-jsr310").versionRef("jackson")
             bundle("jackson", listOf("jackson-jsr310"))
 
-            version("commonmark","0.27.1")
+            version("commonmark","0.28.0")
             library("commonmark", "org.commonmark", "commonmark").versionRef("commonmark")
             library("commonmark-ext-gfm-tables", "org.commonmark", "commonmark-ext-gfm-tables").versionRef("commonmark")
             library("commonmark-ext-heading-anchor", "org.commonmark", "commonmark-ext-heading-anchor").versionRef("commonmark")
