@@ -23,7 +23,7 @@ const initialReputationName = ref<string>('')
 
 // Check if profile feature is unlocked
 const isProfileUnlocked = computed(() => {
-  return session.value?.premiumFeatures?.profile?.unlocked ?? false
+  return session.value?.premiumFeatures?.profile?.unlocked ?? true
 })
 
 const profileRequiredSkus = computed(() => {

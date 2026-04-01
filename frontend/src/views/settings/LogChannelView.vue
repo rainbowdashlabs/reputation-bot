@@ -16,7 +16,7 @@ const {t} = useI18n()
 const {session} = useSession()
 
 const isLogChannelUnlocked = computed(() => {
-  return session.value?.premiumFeatures?.logChannel?.unlocked ?? false
+  return session.value?.premiumFeatures?.logChannel?.unlocked ?? true
 })
 
 const logChannelRequiredSkus = computed(() => {

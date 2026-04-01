@@ -16,7 +16,7 @@ const {t} = useI18n()
 const {session} = useSession()
 
 const isIntegrationBypassUnlocked = computed(() => {
-  return session.value?.premiumFeatures?.integrationBypass?.unlocked ?? false
+  return session.value?.premiumFeatures?.integrationBypass?.unlocked ?? true
 })
 
 const integrationBypassRequiredSkus = computed(() => {

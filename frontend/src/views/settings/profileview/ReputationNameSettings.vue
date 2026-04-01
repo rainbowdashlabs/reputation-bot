@@ -23,7 +23,7 @@ watch(() => props.initialReputationName, (newVal) => {
 })
 
 const isLocaleOverridesUnlocked = computed(() => {
-  return session.value?.premiumFeatures?.localeOverrides?.unlocked ?? false
+  return session.value?.premiumFeatures?.localeOverrides?.unlocked ?? true
 })
 
 let reputationNameTimeout: ReturnType<typeof setTimeout> | null = null

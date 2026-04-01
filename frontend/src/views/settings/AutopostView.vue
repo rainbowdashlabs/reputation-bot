@@ -19,7 +19,7 @@ const {t} = useI18n()
 const {session} = useSession()
 
 const isAutopostUnlocked = computed(() => {
-  return session.value?.premiumFeatures?.autopost?.unlocked ?? false
+  return session.value?.premiumFeatures?.autopost?.unlocked ?? true
 })
 
 const autopostRequiredSkus = computed(() => {

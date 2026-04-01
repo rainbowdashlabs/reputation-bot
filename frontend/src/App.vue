@@ -119,12 +119,10 @@ async function loadSession() {
         const sessionData = await api.getGuildSession()
         setSession(sessionData);
 
-        if (isSettingsPage.value || isSetupPage.value) {
-          await Promise.all([
-            loadSettings(),
-            loadPremiumFeatures()
-          ]);
-        }
+        await Promise.all([
+          loadSettings(),
+          loadPremiumFeatures()
+        ]);
       }
       ready.value = true
     } catch (error: any) {
@@ -150,7 +148,10 @@ watch(() => route.query.guild, (newGuildId) => {
 
 watch(isSettingsPage, async (isSettings) => {
   if (isSettings) {
-    await loadSettings()
+    await Promise.all([
+      loadSettings(),
+      loadPremiumFeatures()
+    ])
   }
 })
 </script>
