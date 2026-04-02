@@ -425,6 +425,166 @@
     "premiumRequired": "Integrationsförbikoppling",
     "selectIntegration": "Välj en integration"
   },
+  "landing": {
+    "features": {
+      "audit_log": {
+        "description": "Har du tappat bort vad du ändrade? Revisionsloggen registrerar alla ändringar som gjorts i dina serverinställningar.",
+        "title": "Revisionslogg"
+      },
+      "channel_categories": {
+        "description": "Aktivera boten i enskilda kanaler eller i alla kanaler inom en kategori samtidigt.",
+        "title": "Kanaler och kategorier"
+      },
+      "channels": {
+        "description": "Dela ut rykte i textkanaler, röstchattar, trådar och forum – boten fungerar överallt där du vill.",
+        "title": "Fungerar överallt"
+      },
+      "customizable": {
+        "description": "Aktivera eller inaktivera alla funktioner och kombinera dem fritt för att skapa precis den upplevelse som din community önskar.",
+        "title": "Mycket anpassningsbar"
+      },
+      "dashboard": {
+        "description": "Alla inställningar är lättillgängliga och kan konfigureras direkt här i webbpanelen – inga kommandon behövs.",
+        "title": "Webbpanel"
+      },
+      "level_up": {
+        "description": "Skicka meddelanden om nivåuppgraderingar när användarna når milstolpar i sitt rykte för att hålla dem engagerade och motiverade.",
+        "title": "Meddelanden om nivåuppgradering"
+      },
+      "open_source": {
+        "description": "Vår bot är helt öppen källkod. Vem som helst kan kontrollera exakt hur den fungerar och vad den gör.",
+        "title": "Öppen källkod"
+      },
+      "privacy": {
+        "description": "Vi värnar om din integritet. Dina meddelanden sparas aldrig – endast de händelser som påverkar ditt anseende och som härrör från dem.",
+        "title": "Sekretess först"
+      },
+      "profiles": {
+        "description": "Varje användare får en egen omdömesprofil. De mest aktiva användarna får speciella märken för att visa upp sin status.",
+        "title": "Anseendeprofiler"
+      },
+      "protection": {
+        "description": "Inbyggda kontroller säkerställer att endast behöriga användare kan få rykte. Avkylningsperioder och begränsningar förhindrar ryktejakt.",
+        "title": "Skydd mot övergrepp"
+      },
+      "reputation": {
+        "description": "Spåra automatiskt tackmeddelanden och reaktioner för att belöna hjälpsamma communitymedlemmar.",
+        "title": "Övervakning av rykte"
+      },
+      "role_restrictions": {
+        "description": "Begränsa vilka roller som kan ge eller ta emot rykte, eller blockera vissa roller helt.",
+        "title": "Rollbegränsningar"
+      },
+      "roles": {
+        "description": "Tilldela roller automatiskt när användare når vissa nivåer i sitt anseende, vilket skapar ett meningsfullt nivåsystem.",
+        "title": "Roller inom omdömeshantering"
+      },
+      "scan": {
+        "description": "Har du redan en historik med meddelanden? Boten kan söka igenom dem efter ”thankwords” för att snabbt få igång ditt omdömesystem.",
+        "title": "Meddelandeskanner"
+      },
+      "subtitle": "Reputation Bot har skapats för gemenskaper där ömsesidig hjälp är viktigt. Belöna kunskap, inte bara aktivitet.",
+      "thankwords": {
+        "description": "Skapa dina egna tackfraser på vilket språk som helst. Boten känner automatiskt igen dem och aktiverar då ryktespoängen.",
+        "title": "Anpassningsbara tackord"
+      },
+      "title": "Allt som din kommun behöver"
+    },
+    "hero": {
+      "add_to_server": "Lägg till på servern",
+      "go_to_dashboard": "Gå till instrumentpanelen",
+      "login": "Logga in med Discord",
+      "subtitle": "Spåra och belöna communitymedlemmar för deras värdefulla bidrag på din Discord-server.",
+      "title": "Ryktesbot"
+    },
+    "reputation_methods": {
+      "answer": {
+        "description": "Svara direkt på ett meddelande med en tackfras för att ge avsändaren anseende.",
+        "tab": "Svar",
+        "thank_you": "Tack!"
+      },
+      "command": {
+        "bot_confirm_end": ".",
+        "bot_confirm_mid": " gav anseende till ",
+        "description": "Använd kommandot /reputation för att direkt tilldela en användare anseende.",
+        "system_message": "använd /rykte",
+        "system_user": "Anna",
+        "tab": "Kommando"
+      },
+      "common": {
+        "anna_question": "Hej, är det någon som vet hur man konfigurerar en omvänd proxy med nginx?",
+        "josy_answer": "Visst! Du måste lägga till ett serverblock där `proxy_pass` pekar mot din backend. Jag kan skicka ett komplett exempel om du vill."
+      },
+      "embed": {
+        "bot_message": "Vem vill du ge anseende?",
+        "description": "När boten upptäcker ett tack men inte kan identifiera mottagaren med full säkerhet skickar den en lista över lämpliga användare.",
+        "embed_description": "Välj en användare som du vill ge rykte till:",
+        "embed_title": "Ge ett omdöme",
+        "tab": "Bädda in",
+        "thank_you": "Tack!"
+      },
+      "fuzzy": {
+        "description": "Skriv användarnamnet utan att ange någon specifik person – boten använder ungefärlig matchning för att identifiera målet med rimlig säkerhet.",
+        "tab": "Suddig",
+        "thank_you": "Tack, Josy!"
+      },
+      "mention": {
+        "description": "Nämn den användare du vill tacka i ditt meddelande för att ge hen rykte.",
+        "tab": "Omnämnande",
+        "thank_you_prefix": "Tack"
+      },
+      "reaction": {
+        "bot_confirm": "🏅 Anna gav Josy ett gott rykte!",
+        "description": "Svara på ett meddelande med den inställda medaljemojin för att ge författaren ett omdöme.",
+        "tab": "Reaktion"
+      },
+      "subtitle": "Boten stöder flera olika naturliga sätt att tacka någon. Det krävs ingen extra ansträngning – säg bara tack precis som du brukar.",
+      "title": "Det finns många sätt att ge anseende"
+    },
+    "supporter_features": {
+      "additional_emojis": {
+        "description": "Ställ in flera emojis som kan användas för att ge omdömen via reaktioner, så att din community får fler sätt att visa sin uppskattning.",
+        "title": "Fler emojis"
+      },
+      "advanced_rankings": {
+        "description": "Se vem som har gett mest rykte på din server med detaljerade givarlistor vid sidan av den vanliga topplistan.",
+        "title": "Avancerade rankningar"
+      },
+      "autopost": {
+        "description": "Publicera automatiskt den aktuella rankningen av anseende i en kanal enligt ett schema för att hålla användarna motiverade.",
+        "title": "Rankning av automatiska inlägg"
+      },
+      "branding": {
+        "description": "Ge boten en personlig prägel med en egen profilbild, ett namn och en omdömesetikett som passar just din community.",
+        "title": "Anpassad varumärkesprofilering"
+      },
+      "detailed_profile": {
+        "description": "Berika användarprofilerna med ytterligare statistik och information för en mer givande upplevelse i communityn.",
+        "title": "Detaljerad profil"
+      },
+      "full_rep_log": {
+        "description": "Öppna alla sidor i rykte-loggen för att granska den fullständiga historiken över ryktehändelser på din server.",
+        "title": "Fullständig logg över omdömen"
+      },
+      "log_channel": {
+        "description": "Håll koll på allt som händer på större servrar med en särskild loggkanal för alla händelser som påverkar anseendet.",
+        "title": "Loggkanal"
+      },
+      "longer_analyzer_log": {
+        "description": "Vi sparar analysloggarna under en längre tid så att du kan gå tillbaka och se exakt vad som hände på din server.",
+        "title": "Längre analyslogg"
+      },
+      "per_server_note": "Supporterfunktioner låses upp per server. Köp dem på Ko-fi eller tjäna rösttokens genom att rösta på boten och använd dem i tokenbutiken.",
+      "subtitle": "Lås upp exklusiva funktioner för att ge din server en personlig prägel och hålla din community engagerad.",
+      "title": "Funktioner för supportrar",
+      "unlimited_channels": {
+        "description": "Ta bort begränsningen för ryktekanaler och kategorier – aktivera rykteövervakning på hela servern.",
+        "title": "Obegränsat antal kanaler och kategorier"
+      },
+      "unlock_kofi": "Lås upp på Ko-fi",
+      "unlock_vote": "Lås upp med rösttokens"
+    }
+  },
   "links": {
     "faq": "Vanliga frågor",
     "support": "Supportserver",

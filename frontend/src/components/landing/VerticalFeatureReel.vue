@@ -4,7 +4,7 @@
     Copyright (C) RainbowDashLabs and Contributor
 -->
 <script lang="ts" setup>
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import FeatureCard from '@/components/landing/FeatureCard.vue'
 
 const props = defineProps<{
@@ -61,18 +61,6 @@ onUnmounted(stopAuto)
 const peekAboveIndex = computed(() => (currentRow.value - 1 + totalRows.value) % totalRows.value)
 const peekBelowIndex = computed(() => (currentRow.value + 1) % totalRows.value)
 
-const visibleContainer = ref<HTMLElement | null>(null)
-const containerHeight = ref<string>('auto')
-
-function lockHeight() {
-  if (visibleContainer.value) {
-    containerHeight.value = visibleContainer.value.offsetHeight + 'px'
-  }
-}
-
-onMounted(() => {
-  nextTick(lockHeight)
-})
 </script>
 
 <template>
@@ -111,12 +99,22 @@ onMounted(() => {
       </div>
 
       <!-- Visible row with slide animation -->
-      <div class="relative overflow-hidden" ref="visibleContainer" :style="{ minHeight: containerHeight }">
+      <div class="relative overflow-hidden">
+        <!-- Invisible spacer to maintain container height -->
+        <div class="grid grid-cols-3 gap-4 invisible" aria-hidden="true">
+          <FeatureCard
+            v-for="(card, i) in rows[currentRow]"
+            :key="'spacer-' + currentRow + '-' + i"
+            :icon="card.icon"
+            :title="card.title"
+            :description="card.description"
+          />
+        </div>
+        <!-- Animated row on top -->
         <Transition :name="direction === 'down' ? 'slide-down' : 'slide-up'">
           <div
             :key="currentRow"
-            class="grid grid-cols-3 gap-4"
-            style="position: absolute; width: 100%;"
+            class="grid grid-cols-3 gap-4 absolute inset-0"
           >
             <FeatureCard
               v-for="(card, i) in rows[currentRow]"

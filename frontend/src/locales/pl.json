@@ -425,6 +425,166 @@
     "premiumRequired": "Omijanie integracji",
     "selectIntegration": "Wybierz integrację"
   },
+  "landing": {
+    "features": {
+      "audit_log": {
+        "description": "Nie pamiętasz, co zmieniłeś? Dziennik audytowy rejestruje wszystkie zmiany wprowadzone w ustawieniach serwera.",
+        "title": "Dziennik audytowy"
+      },
+      "channel_categories": {
+        "description": "Włącz bota w poszczególnych kanałach lub od razu we wszystkich kanałach z danej kategorii.",
+        "title": "Kanały i kategorie"
+      },
+      "channels": {
+        "description": "Przyznaj reputację na kanałach tekstowych, czatach głosowych, w wątkach i na forach – bot działa wszędzie tam, gdzie tego chcesz.",
+        "title": "Działa wszędzie"
+      },
+      "customizable": {
+        "description": "Włączaj i wyłączaj dowolne funkcje oraz łącz je ze sobą, aby stworzyć środowisko dokładnie takie, jakiego oczekuje Twoja społeczność.",
+        "title": "Możliwość szerokiej personalizacji"
+      },
+      "dashboard": {
+        "description": "Wszystkie ustawienia są łatwo dostępne i można je skonfigurować bezpośrednio w tym panelu internetowym — nie potrzebujesz żadnych poleceń.",
+        "title": "Panel internetowy"
+      },
+      "level_up": {
+        "description": "Wysyłaj powiadomienia o awansie na kolejny poziom, gdy użytkownicy osiągną kolejne etapy reputacji, aby utrzymać ich zaangażowanie i motywację.",
+        "title": "Komunikaty o awansie na wyższy poziom"
+      },
+      "open_source": {
+        "description": "Nasz bot jest w pełni oparty na otwartym kodzie źródłowym. Każdy może sprawdzić, jak dokładnie działa i czym się zajmuje.",
+        "title": "Oprogramowanie open source"
+      },
+      "privacy": {
+        "description": "Szanujemy Twoją prywatność. Twoje wiadomości nigdy nie są zapisywane – zapisujemy jedynie zdarzenia związane z reputacją, które z nich wynikają.",
+        "title": "Prywatność przede wszystkim"
+      },
+      "profiles": {
+        "description": "Każdy użytkownik ma swój własny profil reputacji. Najbardziej aktywni użytkownicy otrzymują specjalne odznaki, którymi mogą się pochwalić.",
+        "title": "Profile reputacji"
+      },
+      "protection": {
+        "description": "Wbudowane mechanizmy kontrolne gwarantują, że reputację mogą zdobywać tylko uprawnieni użytkownicy. Okresy karencji i limity zapobiegają nadużywaniu systemu.",
+        "title": "Ochrona przed nadużyciami"
+      },
+      "reputation": {
+        "description": "Automatycznie śledź podziękowania i reakcje, aby nagradzać pomocnych członków społeczności.",
+        "title": "Monitorowanie reputacji"
+      },
+      "role_restrictions": {
+        "description": "Ogranicz, które role mogą przyznawać lub otrzymywać reputację, albo całkowicie zablokuj określone role.",
+        "title": "Ograniczenia dotyczące ról"
+      },
+      "roles": {
+        "description": "Automatycznie przypisuj role, gdy użytkownicy osiągną określone poziomy reputacji, tworząc w ten sposób sensowny system poziomów.",
+        "title": "Role związane z reputacją"
+      },
+      "scan": {
+        "description": "Masz już historię wiadomości? Bot może je przeanalizować pod kątem słów wdzięczności, żeby szybko uruchomić system reputacji.",
+        "title": "Skaner wiadomości"
+      },
+      "subtitle": "Bot Reputation powstał z myślą o społecznościach, w których liczy się wzajemna pomoc. Nagradzaj wiedzę, a nie tylko aktywność.",
+      "thankwords": {
+        "description": "Zdefiniuj własne zwroty z podziękowaniami w dowolnym języku. Bot rozpoznaje je automatycznie, aby zwiększyć Twoją reputację.",
+        "title": "Słowa podziękowania, które możesz dostosować"
+      },
+      "title": "Wszystko, czego potrzebuje twoja społeczność"
+    },
+    "hero": {
+      "add_to_server": "Dodaj do serwera",
+      "go_to_dashboard": "Przejdź do pulpitu nawigacyjnego",
+      "login": "Zaloguj się przez Discord",
+      "subtitle": "Śledź i nagradzaj członków społeczności za ich pomocne wkłady na Twoim serwerze Discord.",
+      "title": "Bot ds. reputacji"
+    },
+    "reputation_methods": {
+      "answer": {
+        "description": "Odpowiedz bezpośrednio na wiadomość, dodając podziękowanie, aby przyznać autorowi punkty reputacji.",
+        "tab": "Odpowiedź",
+        "thank_you": "Dzięki!"
+      },
+      "command": {
+        "bot_confirm_end": ".",
+        "bot_confirm_mid": " przyznał reputację ",
+        "description": "Użyj polecenia /reputation, żeby bezpośrednio przyznać reputację innemu użytkownikowi.",
+        "system_message": "używane / reputacja",
+        "system_user": "Anna",
+        "tab": "Polecenie"
+      },
+      "common": {
+        "anna_question": "Hej, czy ktoś wie, jak skonfigurować odwrotny serwer proxy w Nginxie?",
+        "josy_answer": "Jasne! Musisz dodać blok serwera z ustawieniem `proxy_pass` kierującym do twojego serwera zaplecza. Jeśli chcesz, mogę podać pełny przykład."
+      },
+      "embed": {
+        "bot_message": "Komu chcesz przyznać reputację?",
+        "description": "Gdy bot wykryje podziękowanie, ale nie jest w stanie z całą pewnością zidentyfikować adresata, wysyła wiadomość zawierającą listę potencjalnych użytkowników.",
+        "embed_description": "Wybierz użytkownika, któremu chcesz przyznać reputację:",
+        "embed_title": "Przyznaj reputację",
+        "tab": "Osadź",
+        "thank_you": "Dzięki!"
+      },
+      "fuzzy": {
+        "description": "Wpisz nazwę użytkownika bez oznaczenia — bot wykorzystuje dopasowanie przybliżone, żeby z rozsądną pewnością zidentyfikować osobę, do której chcesz się zwrócić.",
+        "tab": "Niejasne",
+        "thank_you": "Dzięki, Josy!"
+      },
+      "mention": {
+        "description": "W swojej wiadomości podaj nazwę użytkownika, któremu chcesz podziękować, aby przyznać mu punkty reputacji.",
+        "tab": "Wzmianka",
+        "thank_you_prefix": "Dziękuję"
+      },
+      "reaction": {
+        "bot_confirm": "🏅 Anna przyznała Josy punkty reputacji!",
+        "description": "Odpowiedz na wiadomość, używając skonfigurowanego emoji w kształcie medalu, aby podnieść reputację jej autora.",
+        "tab": "Reakcja"
+      },
+      "subtitle": "Bot obsługuje wiele naturalnych sposobów na podziękowanie komuś. Nie musisz się specjalnie wysilać – po prostu podziękuj tak, jak zwykle.",
+      "title": "Wiele sposobów na zdobycie reputacji"
+    },
+    "supporter_features": {
+      "additional_emojis": {
+        "description": "Skonfiguruj kilka emotikonów, które będą przyznawać punkty reputacji poprzez reakcje, dając Twojej społeczności więcej sposobów na wyrażenie wdzięczności.",
+        "title": "Dodatkowe emoji"
+      },
+      "advanced_rankings": {
+        "description": "Zobacz, kto przyznał najwięcej punktów reputacji na twoim serwerze, dzięki szczegółowym rankingom darczyńców obok standardowej tabeli wyników.",
+        "title": "Zaawansowane rankingi"
+      },
+      "autopost": {
+        "description": "Automatycznie publikuj aktualny ranking reputacji na kanale zgodnie z harmonogramem, aby utrzymać motywację użytkowników.",
+        "title": "Rankingi Autopost"
+      },
+      "branding": {
+        "description": "Nadaj botowi indywidualny charakter, dodając własne zdjęcie profilowe, imię oraz etykietę reputacji dopasowaną do Twojej społeczności.",
+        "title": "Indywidualne oznakowanie"
+      },
+      "detailed_profile": {
+        "description": "Wzbogać profile użytkowników o dodatkowe statystyki i informacje, aby zapewnić społeczności lepsze wrażenia.",
+        "title": "Szczegółowy profil"
+      },
+      "full_rep_log": {
+        "description": "Przejdź do wszystkich stron dziennika reputacji, aby przejrzeć pełną historię zdarzeń związanych z reputacją na Twoim serwerze.",
+        "title": "Pełny dziennik reputacji"
+      },
+      "log_channel": {
+        "description": "Śledź wszystko, co dzieje się na większych serwerach, dzięki dedykowanemu kanałowi logów dla wszystkich zdarzeń związanych z reputacją.",
+        "title": "Kanał dziennika"
+      },
+      "longer_analyzer_log": {
+        "description": "Przechowujemy logi analizatora przez dłuższy czas, żebyś mógł do nich wrócić później i dokładnie sprawdzić, co działo się na Twoim serwerze.",
+        "title": "Dłuższy dziennik analizatora"
+      },
+      "per_server_note": "Funkcje dla wspierających są odblokowywane osobno dla każdego serwera. Możesz je kupić na Ko-fi albo zdobyć tokeny do głosowania, głosując na bota, a potem wykorzystać je w sklepie z tokenami.",
+      "subtitle": "Odblokuj ekskluzywne funkcje, aby nadać swojemu serwerowi osobisty charakter i utrzymać zaangażowanie społeczności.",
+      "title": "Funkcje dla kibiców",
+      "unlimited_channels": {
+        "description": "Zdejmij ograniczenia dotyczące kanałów i kategorii reputacji — włącz śledzenie reputacji na całym serwerze.",
+        "title": "Nieograniczona liczba kanałów i kategorii"
+      },
+      "unlock_kofi": "Odblokuj na Ko-fi",
+      "unlock_vote": "Odblokuj za pomocą tokenów głosowania"
+    }
+  },
   "links": {
     "faq": "Często zadawane pytania",
     "support": "Serwer wsparcia",

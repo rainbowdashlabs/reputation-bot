@@ -425,6 +425,166 @@
     "premiumRequired": "Entegrasyon baypası",
     "selectIntegration": "Bir entegrasyon seçin"
   },
+  "landing": {
+    "features": {
+      "audit_log": {
+        "description": "Neleri değiştirdiğinizi unuttunuz mu? Denetim günlüğü, sunucu ayarlarınızda yapılan tüm değişiklikleri kaydeder.",
+        "title": "Denetim Günlüğü"
+      },
+      "channel_categories": {
+        "description": "Botu tek tek kanallarda veya bir kategorideki tüm kanallarda aynı anda etkinleştirin.",
+        "title": "Kanallar ve Kategoriler"
+      },
+      "channels": {
+        "description": "Metin kanallarında, sesli sohbetlerde, konu başlıklarında ve forumlarda itibar puanı verin — bot, istediğiniz her yerde çalışır.",
+        "title": "Her Yerde Çalışır"
+      },
+      "customizable": {
+        "description": "Her bir özelliği açın veya kapatın ve bunları istediğiniz gibi birleştirerek topluluğunuzun tam olarak istediği deneyimi sunun.",
+        "title": "Son derece özelleştirilebilir"
+      },
+      "dashboard": {
+        "description": "Tüm ayarlara web kontrol panelinden kolayca erişilebilir ve buradan yapılandırılabilir — komut girmeye gerek yoktur.",
+        "title": "Web Kontrol Paneli"
+      },
+      "level_up": {
+        "description": "Kullanıcılar itibar konusunda belirli aşamalara ulaştıklarında seviye atlama mesajları göndererek onların ilgisini canlı tutun ve motivasyonlarını artırın.",
+        "title": "Seviye Atlama Mesajları"
+      },
+      "open_source": {
+        "description": "Botumuz tamamen açık kaynaklıdır. Herkes, botun tam olarak nasıl çalıştığını ve ne yaptığını doğrulayabilir.",
+        "title": "Açık Kaynak"
+      },
+      "privacy": {
+        "description": "Gizliliğinize önem veriyoruz. Mesajlarınız asla saklanmaz; yalnızca bu mesajlardan kaynaklanan itibar olayları kaydedilir.",
+        "title": "Gizlilik Önceliği"
+      },
+      "profiles": {
+        "description": "Her kullanıcıya kendine ait bir itibar profili verilir. En aktif katkıda bulunanlar, statülerini sergilemek için özel rozetler kazanır.",
+        "title": "İtibar Profilleri"
+      },
+      "protection": {
+        "description": "Yerleşik denetimler, yalnızca uygun kullanıcıların itibar kazanabilmesini sağlar. Bekleme süreleri ve sınırlamalar, itibar toplama faaliyetlerini engeller.",
+        "title": "İstismardan Korunma"
+      },
+      "reputation": {
+        "description": "Yardımcı olan topluluk üyelerini ödüllendirmek için teşekkür mesajlarını ve tepkileri otomatik olarak takip edin.",
+        "title": "İtibar Takibi"
+      },
+      "role_restrictions": {
+        "description": "Hangi rollerin itibar verebileceğini veya alabileceğini sınırlayın ya da belirli rolleri tamamen engelleyin.",
+        "title": "Rol Kısıtlamaları"
+      },
+      "roles": {
+        "description": "Kullanıcılar itibar aşamalarına ulaştıklarında rolleri otomatik olarak atayarak anlamlı bir seviye sistemi oluşturun.",
+        "title": "İtibar Rolleri"
+      },
+      "scan": {
+        "description": "Daha önce gönderilen mesajlarınız mı var? Bot, itibar sisteminizi hızlı bir şekilde başlatmak için bu mesajları tarayarak teşekkür kelimelerini tespit edebilir.",
+        "title": "Mesaj Tarayıcı"
+      },
+      "subtitle": "Reputation Bot, karşılıklı yardımlaşmanın önem taşıdığı topluluklar için geliştirildi. Sadece etkinliği değil, bilgiyi de ödüllendirin.",
+      "thankwords": {
+        "description": "İstediğiniz dilde kendi teşekkür mesajlarınızı oluşturun. Bot bunları otomatik olarak algılayarak itibar puanınızı artırır.",
+        "title": "Kişiselleştirilebilir Teşekkür Mesajları"
+      },
+      "title": "Topluluğunuzun ihtiyaç duyduğu her şey"
+    },
+    "hero": {
+      "add_to_server": "Sunucuya Ekle",
+      "go_to_dashboard": "Kontrol Paneline Git",
+      "login": "Discord ile giriş yap",
+      "subtitle": "Discord sunucunuzda topluluk üyelerinin yararlı katkılarını takip edin ve ödüllendirin.",
+      "title": "İtibar Botu"
+    },
+    "reputation_methods": {
+      "answer": {
+        "description": "Bir mesaja doğrudan teşekkür mesajı göndererek yazarına itibar kazandırın.",
+        "tab": "Cevap",
+        "thank_you": "Teşekkürler!"
+      },
+      "command": {
+        "bot_confirm_end": ".",
+        "bot_confirm_mid": " [Kişiye] İtibar kazandırdı ",
+        "description": "Bir kullanıcıya doğrudan itibar vermek için /reputation komutunu kullanın.",
+        "system_message": "kullanılmış /itibar",
+        "system_user": "Anna",
+        "tab": "Komut"
+      },
+      "common": {
+        "anna_question": "Merhaba, nginx ile ters proxy'yi nasıl yapılandırılacağını bilen var mı?",
+        "josy_answer": "Tabii! Arka uç sunucunuza yönlendiren `proxy_pass` komutunu içeren bir sunucu bloğu eklemeniz gerekiyor. İsterseniz tam bir örnek paylaşabilirim."
+      },
+      "embed": {
+        "bot_message": "Kime itibar vermek istiyorsun?",
+        "description": "Bot bir teşekkür mesajı algıladığında ancak hedefini tam olarak belirleyemediğinde, uygun kullanıcıları içeren bir liste gönderir.",
+        "embed_description": "İtibar vermek istediğiniz kullanıcıyı seçin:",
+        "embed_title": "İtibar Ver",
+        "tab": "Göm",
+        "thank_you": "Teşekkürler!"
+      },
+      "fuzzy": {
+        "description": "Kullanıcı adını @ işareti olmadan yazın — bot, hedefi makul bir güvenilirlikle tanımlamak için yaklaşık eşleştirme yöntemini kullanır.",
+        "tab": "Bulanık",
+        "thank_you": "Teşekkürler Josy!"
+      },
+      "mention": {
+        "description": "Teşekkür etmek istediğiniz kullanıcıyı mesajınızda belirtin, böylece ona itibar puanı kazandırın.",
+        "tab": "Bahsetmek",
+        "thank_you_prefix": "Teşekkür ederim"
+      },
+      "reaction": {
+        "bot_confirm": "🏅 Anna, Josy'ye itibar kazandırdı!",
+        "description": "Bir mesaja, ayarlanan madalya emojisiyle yanıt vererek yazarına itibar kazandırın.",
+        "tab": "Tepki"
+      },
+      "subtitle": "Bot, birine teşekkür etmenin birçok doğal yolunu destekliyor. Ekstra bir çaba gerekmiyor — sadece her zamanki gibi teşekkür et.",
+      "title": "İtibar kazanmanın birçok yolu"
+    },
+    "supporter_features": {
+      "additional_emojis": {
+        "description": "Tepkiler yoluyla itibar kazandırmak üzere birden fazla emoji ayarlayın ve topluluğunuza minnettarlığını ifade etmenin daha fazla yolunu sunun.",
+        "title": "Ek Emojiler"
+      },
+      "advanced_rankings": {
+        "description": "Standart liderlik tablosunun yanı sıra ayrıntılı bağışçı sıralamalarıyla sunucunuzda en fazla itibar puanı verenleri görün.",
+        "title": "Gelişmiş Sıralamalar"
+      },
+      "autopost": {
+        "description": "Kullanıcılarınızın motivasyonunu yüksek tutmak için mevcut itibar sıralamasını belirli bir programa göre bir kanala otomatik olarak yayınlayın.",
+        "title": "Otomatik Gönderim Sıralamaları"
+      },
+      "branding": {
+        "description": "Topluluğunuza özel bir profil resmi, isim ve itibar etiketi seçerek bota kendi tarzınızı katın.",
+        "title": "Özel Markalama"
+      },
+      "detailed_profile": {
+        "description": "Daha zengin bir topluluk deneyimi sunmak için kullanıcı profillerini ek istatistikler ve bilgilerle zenginleştirin.",
+        "title": "Ayrıntılı Profil"
+      },
+      "full_rep_log": {
+        "description": "Sunucunuzdaki itibar olaylarının tam geçmişini incelemek için itibar günlüğünün tüm sayfalarına erişin.",
+        "title": "Tam İtibar Günlüğü"
+      },
+      "log_channel": {
+        "description": "Tüm itibar olayları için ayrılmış bir günlük kanalıyla büyük sunucularda yaşanan her şeyi takip edin.",
+        "title": "Günlük Kanalı"
+      },
+      "longer_analyzer_log": {
+        "description": "Analizör günlüklerini daha uzun süre saklıyoruz; böylece daha sonra tekrar kontrol edip sunucunuzda tam olarak neler olduğunu anlayabilirsiniz.",
+        "title": "Daha Uzun Analizör Günlüğü"
+      },
+      "per_server_note": "Destekçi özellikleri sunucu bazında açılır. Bu özellikleri Ko-fi üzerinden satın alabilir veya bota oy vererek oy jetonları kazanıp bunları jeton mağazasında harcayabilirsiniz.",
+      "subtitle": "Özel özelliklerin kilidini açarak sunucunuza kişisel bir dokunuş katın ve topluluğunuzun ilgisini canlı tutun.",
+      "title": "Destekçi Özellikleri",
+      "unlimited_channels": {
+        "description": "İtibar kanalları ve kategorilerindeki sınırlamayı kaldırın — sunucunuzun tamamında itibar takibini etkinleştirin.",
+        "title": "Sınırsız Kanal ve Kategori"
+      },
+      "unlock_kofi": "Ko-fi'de kilidi aç",
+      "unlock_vote": "Oy Jetonlarıyla Kilidi Aç"
+    }
+  },
   "links": {
     "faq": "Sıkça Sorulan Sorular",
     "support": "Destek Sunucusu",

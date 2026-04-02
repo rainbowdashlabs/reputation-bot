@@ -425,6 +425,166 @@
     "premiumRequired": "Integrering bypass",
     "selectIntegration": "Velg en integrasjon"
   },
+  "landing": {
+    "features": {
+      "audit_log": {
+        "description": "Har du mistet oversikten over hva du har endret? Revisjonsloggen registrerer alle endringer som er gjort i serverinnstillingene dine.",
+        "title": "Revisjonslogg"
+      },
+      "channel_categories": {
+        "description": "Aktiver boten i enkeltkanaler eller i alle kanaler i en kategori samtidig.",
+        "title": "Kanaler og kategorier"
+      },
+      "channels": {
+        "description": "Del omdømme i tekstkanaler, stemmechatter, tråder og fora – boten fungerer overalt der du ønsker det.",
+        "title": "Fungerer overalt"
+      },
+      "customizable": {
+        "description": "Slå alle funksjonene på eller av, og kombiner dem fritt for å skape akkurat den opplevelsen fellesskapet ditt ønsker.",
+        "title": "Kan tilpasses i stor grad"
+      },
+      "dashboard": {
+        "description": "Alle innstillinger er lett tilgjengelige og kan konfigureres direkte her i nettpanelet – uten behov for kommandoer.",
+        "title": "Nettbasert kontrollpanel"
+      },
+      "level_up": {
+        "description": "Send meldinger om nivåoppgang når brukerne når milepæler i omdømmet, for å holde dem engasjerte og motiverte.",
+        "title": "Meldinger om nivåoppgang"
+      },
+      "open_source": {
+        "description": "Boten vår er helt åpen kildekode. Alle kan sjekke nøyaktig hvordan den fungerer og hva den gjør.",
+        "title": "Åpen kildekode"
+      },
+      "privacy": {
+        "description": "Vi legger stor vekt på personvernet ditt. Meldingene dine lagres aldri – kun omdømmehendelsene som følger av dem.",
+        "title": "Personvern først"
+      },
+      "profiles": {
+        "description": "Hver bruker får sin egen omdømmeprofil. De mest aktive bidragsyterne får spesielle merker som viser deres status.",
+        "title": "Omdømmeprofiler"
+      },
+      "protection": {
+        "description": "Innebygde kontroller sikrer at kun kvalifiserte brukere kan oppnå omdømme. Ventetider og begrensninger forhindrer misbruk.",
+        "title": "Beskyttelse mot misbruk"
+      },
+      "reputation": {
+        "description": "Spor takkemeldinger og reaksjoner automatisk for å belønne hjelpsomme medlemmer av fellesskapet.",
+        "title": "Overvåking av omdømme"
+      },
+      "role_restrictions": {
+        "description": "Begrens hvilke roller som kan gi eller motta omdømme, eller blokker bestemte roller helt.",
+        "title": "Rollebegrensninger"
+      },
+      "roles": {
+        "description": "Tildel roller automatisk når brukerne når bestemte omdømmemål, og skap dermed et meningsfullt nivåsystem.",
+        "title": "Roller knyttet til omdømme"
+      },
+      "scan": {
+        "description": "Har du allerede en historikk med meldinger? Boten kan søke gjennom dem etter takkeord for å få omdømmesystemet ditt raskt i gang.",
+        "title": "Meldingsskanner"
+      },
+      "subtitle": "Reputation Bot er utviklet for fellesskap der gjensidig hjelp er viktig. Belønn kunnskap, ikke bare aktivitet.",
+      "thankwords": {
+        "description": "Definer dine egne takkemeldinger på hvilket som helst språk. Boten gjenkjenner dem automatisk og utløser omdømme.",
+        "title": "Tilpassbare takkemeldinger"
+      },
+      "title": "Alt lokalsamfunnet ditt trenger"
+    },
+    "hero": {
+      "add_to_server": "Legg til på serveren",
+      "go_to_dashboard": "Gå til oversikten",
+      "login": "Logg inn med Discord",
+      "subtitle": "Følg med på og belønn medlemmer av fellesskapet for deres nyttige bidrag på Discord-serveren din.",
+      "title": "Omdømmebot"
+    },
+    "reputation_methods": {
+      "answer": {
+        "description": "Svar direkte på en melding med en takkemelding for å gi forfatteren omdømme.",
+        "tab": "Svar",
+        "thank_you": "Takk!"
+      },
+      "command": {
+        "bot_confirm_end": ".",
+        "bot_confirm_mid": " ga omdømme til ",
+        "description": "Bruk kommandoen /reputation for å gi en bruker omdømme direkte.",
+        "system_message": "brukt / omdømme",
+        "system_user": "Anna",
+        "tab": "Kommando"
+      },
+      "common": {
+        "anna_question": "Hei, er det noen som vet hvordan man konfigurerer en omvendt proxy med nginx?",
+        "josy_answer": "Selvfølgelig! Du må legge til en serverblokk der `proxy_pass` peker mot backenden din. Jeg kan dele et fullstendig eksempel hvis du ønsker det."
+      },
+      "embed": {
+        "bot_message": "Hvem vil du gi omdømme til?",
+        "description": "Når boten oppdager en takkemelding, men ikke kan identifisere mottakeren med full sikkerhet, sender den en liste over aktuelle brukere.",
+        "embed_description": "Velg en bruker du vil gi omdømme til:",
+        "embed_title": "Gi omdømme",
+        "tab": "Legg inn",
+        "thank_you": "Takk!"
+      },
+      "fuzzy": {
+        "description": "Skriv brukernavnet uten å nevne det – boten bruker tilnærmet samsvar for å identifisere målet med rimelig sikkerhet.",
+        "tab": "Uklart",
+        "thank_you": "Takk, Josy!"
+      },
+      "mention": {
+        "description": "Nevn brukeren du vil takke i meldingen din for å gi vedkommende omdømme.",
+        "tab": "Omtale",
+        "thank_you_prefix": "Takk"
+      },
+      "reaction": {
+        "bot_confirm": "🏅 Anna ga Josy omdømme!",
+        "description": "Svar på en melding med den valgte medalje-emojien for å gi forfatteren anerkjennelse.",
+        "tab": "Reaksjon"
+      },
+      "subtitle": "Boten støtter flere naturlige måter å takke noen på. Det krever ingen ekstra innsats – bare si takk slik du pleier.",
+      "title": "Mange måter å gi omdømme på"
+    },
+    "supporter_features": {
+      "additional_emojis": {
+        "description": "Konfigurer flere emojier som kan brukes til å gi anerkjennelse gjennom reaksjoner, slik at fellesskapet ditt får flere måter å uttrykke takknemlighet på.",
+        "title": "Flere emojier"
+      },
+      "advanced_rankings": {
+        "description": "Se hvem som har gitt mest omdømme på serveren din, med detaljerte rangeringer av giverne ved siden av den vanlige topplisten.",
+        "title": "Avanserte rangeringer"
+      },
+      "autopost": {
+        "description": "Legg automatisk ut den aktuelle omdømmerangeringen i en kanal etter en fast tidsplan for å holde brukerne motiverte.",
+        "title": "Rangeringer for automatisk publisering"
+      },
+      "branding": {
+        "description": "Gi boten ditt eget preg med et tilpasset profilbilde, navn og omdømmeetikett som passer til fellesskapet ditt.",
+        "title": "Tilpasset merkevareprofilering"
+      },
+      "detailed_profile": {
+        "description": "Berik brukerprofilene med ytterligere statistikk og informasjon for å gi et rikere fellesskap.",
+        "title": "Detaljert profil"
+      },
+      "full_rep_log": {
+        "description": "Få tilgang til alle sidene i omdømmeloggen for å se den fullstendige historikken over omdømmehendelser på serveren din.",
+        "title": "Fullstendig omdømmelogg"
+      },
+      "log_channel": {
+        "description": "Følg med på alt som skjer på større servere gjennom en egen loggkanal for alle omdømmehendelser.",
+        "title": "Loggkanal"
+      },
+      "longer_analyzer_log": {
+        "description": "Vi oppbevarer analyseloggene i lengre tid, slik at du kan gå tilbake til dem senere og få full oversikt over hva som skjedde på serveren din.",
+        "title": "Lengre analyselogg"
+      },
+      "per_server_note": "Supporter-funksjoner låses opp for hver enkelt server. Du kan kjøpe dem på Ko-fi eller tjene stemmetokener ved å stemme på boten, og bruke dem i tokenbutikken.",
+      "subtitle": "Få tilgang til eksklusive funksjoner som gir serveren din et personlig preg og holder fellesskapet engasjert.",
+      "title": "Funksjoner for støttespillere",
+      "unlimited_channels": {
+        "description": "Fjern begrensningen på omdømmekanaler og -kategorier – aktiver omdømmeovervåking på hele serveren.",
+        "title": "Ubegrenset antall kanaler og kategorier"
+      },
+      "unlock_kofi": "Få tilgang på Ko-fi",
+      "unlock_vote": "Lås opp med stemmetokener"
+    }
+  },
   "links": {
     "faq": "Ofte stilte spørsmål",
     "support": "Støtteserver",
