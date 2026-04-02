@@ -25,4 +25,10 @@ public class SKUEntry implements SkuMeta {
     public Collection<SKU> sku() {
         return skus;
     }
+
+    @Override
+    public String toString() {
+        return String.join(
+                ", ", skus.stream().map(SKU::skuId).map(String::valueOf).toList());
+    }
 }

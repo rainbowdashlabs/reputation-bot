@@ -6,8 +6,9 @@
 <script lang="ts" setup>
 import {computed} from 'vue'
 import {useI18n} from 'vue-i18n'
-import type {ActiveFeaturePOJO, Feature} from '@/api/types'
+import type {ActiveFeaturePOJO, Feature, SkuInfo} from '@/api/types'
 import ConfirmButton from '@/components/ConfirmButton.vue'
+import SkuTierBadge from '@/components/SkuTierBadge.vue'
 
 const {t, d} = useI18n()
 
@@ -15,6 +16,7 @@ interface Props {
   feature: Feature
   activeFeature?: ActiveFeaturePOJO
   activeSkus: string[]
+  requiredSkus: SkuInfo[]
   isGuildAdmin: boolean
   canAfford: boolean
   loading: boolean
@@ -52,8 +54,8 @@ const isActive = computed(() => !!props.activeFeature)
 const isAutoRenewal = computed(() => props.activeFeature?.autoRenewal ?? false)
 
 const isEnabledBySubscription = computed(() => {
-  if (!props.feature.skuEntry?.skus) return false
-  return props.feature.skuEntry.skus.some(sku => props.activeSkus.includes(sku.skuId))
+  if (!props.requiredSkus?.length) return false
+  return props.requiredSkus.some(sku => props.activeSkus.includes(sku.id))
 })
 </script>
 
@@ -71,6 +73,18 @@ const isEnabledBySubscription = computed(() => {
           <div v-else-if="isActive" class="px-2 py-1 bg-green-100 text-green-800 text-[10px] leading-tight font-bold rounded-full uppercase whitespace-nowrap">
             {{ t('token_shop.active') }}
           </div>
+        </div>
+      </div>
+
+      <div v-if="requiredSkus?.length" class="mb-4">
+        <p class="text-xs text-gray-500 dark:text-gray-400 mb-1">{{ t('token_shop.requiredTiers') }}</p>
+        <div class="flex flex-wrap gap-1">
+          <SkuTierBadge
+            v-for="sku in requiredSkus"
+            :key="sku.id"
+            :sku="sku"
+            :active="activeSkus.includes(sku.id)"
+          />
         </div>
       </div>
 

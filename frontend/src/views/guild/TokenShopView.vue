@@ -7,7 +7,7 @@
 import {computed, onMounted, ref} from 'vue'
 import {useI18n} from 'vue-i18n'
 import {api} from '@/api'
-import type {ActiveFeaturePOJO, Feature, PremiumFeaturesPOJO} from '@/api/types'
+import type {ActiveFeaturePOJO, Feature} from '@/api/types'
 import {useSession} from '@/composables/useSession'
 import TokenFeatureCard from '@/components/TokenFeatureCard.vue'
 import ViewContainer from '@/components/ViewContainer.vue'
@@ -17,14 +17,13 @@ import BaseButton from '@/components/BaseButton.vue'
 import TokenValue from '@/components/TokenValue.vue'
 
 const {t} = useI18n()
-const {userSession, currentGuildId, userTokens, guildTokens, refreshUserTokens, refreshGuildTokens, refreshGuildPremium} = useSession()
+const {userSession, currentGuildId, userTokens, guildTokens, refreshUserTokens, refreshGuildTokens, refreshGuildPremium, premiumFeatures: sessionPremiumFeatures} = useSession()
 
 const features = ref<Feature[]>([])
 const activeFeatures = ref<ActiveFeaturePOJO[]>([])
 const loading = ref(true)
 const actionLoading = ref(false)
 const useGuildTokens = ref(false)
-const premiumFeatures = ref<PremiumFeaturesPOJO | null>(null)
 const everyoneTokenPurchase = ref(true)
 const transferAmount = ref(1)
 const transferLoading = ref(false)
@@ -37,20 +36,17 @@ const isGuildAdmin = computed(() => {
 const fetchData = async (silent = false) => {
   if (!silent) loading.value = true
   try {
-    const [featuresRes, activeRes, premiumRes, everyoneTokenPurchaseRes] = await Promise.all([
+    const [featuresRes, activeRes, everyoneTokenPurchaseRes] = await Promise.all([
       api.getTokenFeatures(),
       api.getActiveFeatures(),
-      refreshGuildPremium(),
       api.getEveryoneTokenPurchase(),
+      refreshGuildPremium(),
       refreshUserTokens(),
       refreshGuildTokens()
     ])
 
-    // api.getTokenFeatures() returns a Map-like structure or Array depending on how it was implemented/cached
-    // In our case, the response from backend is an array of features
     features.value = Object.values(featuresRes)
     activeFeatures.value = activeRes
-    premiumFeatures.value = premiumRes as any
     everyoneTokenPurchase.value = everyoneTokenPurchaseRes
   } catch (error) {
     console.error('Failed to fetch token shop data', error)
@@ -119,6 +115,31 @@ onMounted(fetchData)
 
 const getActiveFeature = (featureId: number) => {
   return activeFeatures.value.find(f => f.featureId === featureId)
+}
+
+const getRequiredSkus = (localeKey: string) => {
+  if (!sessionPremiumFeatures.value) return []
+  // localeKey is like "sku.reputationlog" -> strip "sku." -> camelCase key in premiumFeatures
+  const key = localeKey.replace('sku.', '').toLowerCase()
+  const map: Record<string, string> = {
+    reputationlog: 'reputationLog',
+    analyzerlog: 'analyzerLog',
+    channelblacklist: 'channelBlacklist',
+    localeoverrides: 'localeOverrides',
+    autopost: 'autopost',
+    advancedrankings: 'advancedRankings',
+    detailedprofile: 'detailedProfile',
+    logchannel: 'logChannel',
+    additionalemojis: 'additionalEmojis',
+    profile: 'profile',
+    integrationbypass: 'integrationBypass',
+    reputationchannel: 'reputationChannel',
+    reputationcategories: 'reputationCategories',
+  }
+  const field = map[key]
+  if (!field) return []
+  const feature = (sessionPremiumFeatures.value as any)[field]
+  return feature?.requiredSkus ?? []
 }
 
 const canAfford = (tokens: number) => {
@@ -226,7 +247,8 @@ const canPurchase = computed(() => {
           :key="feature.id"
           :feature="feature"
           :active-feature="getActiveFeature(feature.id)"
-          :active-skus="premiumFeatures?.activeSkus ?? []"
+          :active-skus="[...(sessionPremiumFeatures?.activeSkus ?? [])]"
+          :required-skus="getRequiredSkus(feature.localeKey)"
           :is-guild-admin="isGuildAdmin"
           :can-afford="canAfford(feature.tokens) && (canPurchase || useGuildTokens)"
           :loading="actionLoading"
