@@ -9,7 +9,8 @@ import {createRouter, createWebHistory} from 'vue-router'
 const routes: RouteRecordRaw[] = [
     {
         path: '/',
-        redirect: '/guild/dashboard'
+        name: 'Landing',
+        component: () => import('@/views/LandingView.vue')
     },
     {
         path: '/guild',

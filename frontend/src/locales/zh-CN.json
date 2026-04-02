@@ -425,6 +425,166 @@
     "premiumRequired": "集成旁路",
     "selectIntegration": "选择集成"
   },
+  "landing": {
+    "features": {
+      "audit_log": {
+        "description": "忘了自己修改了什么？审计日志会记录对服务器设置所做的所有更改。",
+        "title": "审计日志"
+      },
+      "channel_categories": {
+        "description": "在单个频道中启用机器人，或一次性在某个类别下的所有频道中启用。",
+        "title": "频道与分类"
+      },
+      "channels": {
+        "description": "在文本频道、语音聊天、讨论串和论坛中授予声望——无论您希望在哪里使用，该机器人都能胜任。",
+        "title": "随处可用"
+      },
+      "customizable": {
+        "description": "您可以自由开启或关闭各项功能，并灵活组合，从而打造出完全符合您社区需求的体验。",
+        "title": "高度可定制"
+      },
+      "dashboard": {
+        "description": "所有设置都可以在此网页控制面板中轻松访问和配置——无需任何命令。",
+        "title": "Web 仪表盘"
+      },
+      "level_up": {
+        "description": "当用户达到声望里程碑时，发送等级提升通知，以保持他们的参与度和积极性。",
+        "title": "升级提示"
+      },
+      "open_source": {
+        "description": "我们的机器人完全开源。任何人都可以核实它的具体工作原理和功能。",
+        "title": "开源"
+      },
+      "privacy": {
+        "description": "我们重视您的隐私。您的消息绝不会被存储——仅会保留由此产生的声誉事件。",
+        "title": "隐私至上"
+      },
+      "profiles": {
+        "description": "每位用户都有自己的声誉档案。贡献突出的用户将获得特别徽章，以彰显其地位。",
+        "title": "声誉档案"
+      },
+      "protection": {
+        "description": "内置的验证机制确保只有符合条件的用户才能获得声望。冷却时间和限制机制可防止刷分行为。",
+        "title": "防止滥用"
+      },
+      "reputation": {
+        "description": "自动追踪感谢信息和点赞，以奖励乐于助人的社区成员。",
+        "title": "声誉监测"
+      },
+      "role_restrictions": {
+        "description": "限制哪些角色可以给予或接收声望，或完全屏蔽特定角色。",
+        "title": "角色限制"
+      },
+      "roles": {
+        "description": "当用户达到声望里程碑时，自动分配角色，从而建立一个有意义的等级体系。",
+        "title": "声望角色"
+      },
+      "scan": {
+        "description": "已有消息记录吗？该机器人可以扫描这些消息中的“感谢词”，帮助您快速启动声誉系统。",
+        "title": "消息扫描器"
+      },
+      "subtitle": "“声誉机器人”专为重视互助的社区而打造。奖励知识，而非仅仅奖励活跃度。",
+      "thankwords": {
+        "description": "您可以使用任何语言自定义感谢语。该机器人会自动识别这些感谢语并触发声望值。",
+        "title": "可自定义的感谢词"
+      },
+      "title": "满足社区的一切需求"
+    },
+    "hero": {
+      "add_to_server": "添加到服务器",
+      "go_to_dashboard": "前往仪表盘",
+      "login": "使用 Discord 登录",
+      "subtitle": "在您的 Discord 服务器上，对社区成员的有用贡献进行追踪并给予奖励。",
+      "title": "声誉机器人"
+    },
+    "reputation_methods": {
+      "answer": {
+        "description": "直接回复一条消息并附上感谢语，即可为其作者增加声望。",
+        "tab": "答案",
+        "thank_you": "谢谢！"
+      },
+      "command": {
+        "bot_confirm_end": ".",
+        "bot_confirm_mid": " 授予声望给 ",
+        "description": "使用 /reputation 命令直接向某位用户授予声望。",
+        "system_message": "已使用 /声誉",
+        "system_user": "安娜",
+        "tab": "命令"
+      },
+      "common": {
+        "anna_question": "嘿，有人知道怎么用 Nginx 配置反向代理吗？",
+        "josy_answer": "当然可以！你需要添加一个服务器块，并将 `proxy_pass` 指向你的后端服务器。如果你需要，我可以提供一个完整的示例。"
+      },
+      "embed": {
+        "bot_message": "你想给谁加声望？",
+        "description": "当机器人检测到感谢信息但无法完全确定受谢对象时，它会发送一条包含符合条件用户的嵌入列表。",
+        "embed_description": "选择要给予声望的用户：",
+        "embed_title": "给予声望",
+        "tab": "嵌入",
+        "thank_you": "谢谢！"
+      },
+      "fuzzy": {
+        "description": "输入用户名时无需@符号——机器人会通过模糊匹配以合理的准确度识别目标。",
+        "tab": "模糊",
+        "thank_you": "谢谢你，乔西！"
+      },
+      "mention": {
+        "description": "在消息中提及你想感谢的用户，即可为其增加声望。",
+        "tab": "提及",
+        "thank_you_prefix": "谢谢"
+      },
+      "reaction": {
+        "bot_confirm": "🏅 安娜给乔西加了声望！",
+        "description": "使用已配置的奖章表情符号回复消息，以此向发帖者授予声望。",
+        "tab": "反应"
+      },
+      "subtitle": "该机器人支持多种自然的感谢方式。无需额外操作——只需像平时那样说声谢谢即可。",
+      "title": "多种方式赠送声望"
+    },
+    "supporter_features": {
+      "additional_emojis": {
+        "description": "设置多种表情符号作为点赞选项，让社区成员拥有更多表达谢意的方式。",
+        "title": "更多表情符号"
+      },
+      "advanced_rankings": {
+        "description": "查看您所在服务器上声望贡献最多的玩家，除了标准排行榜外，还可查看详细的声望捐赠者排名。",
+        "title": "高级排名"
+      },
+      "autopost": {
+        "description": "按计划自动将当前声望排名发布到频道，以保持用户的积极性。",
+        "title": "自动发布排名"
+      },
+      "branding": {
+        "description": "通过设置专属的头像、名称和声誉标签，为机器人注入你的个人风格，使其更契合你的社区。",
+        "title": "定制品牌"
+      },
+      "detailed_profile": {
+        "description": "通过添加更多统计数据和信息来丰富用户资料，从而提升社区体验。",
+        "title": "详细资料"
+      },
+      "full_rep_log": {
+        "description": "访问声誉日志的所有页面，以查看服务器上声誉事件的完整历史记录。",
+        "title": "完整声望日志"
+      },
+      "log_channel": {
+        "description": "通过专用的声望事件日志频道，随时掌握大型服务器上的所有动态。",
+        "title": "日志通道"
+      },
+      "longer_analyzer_log": {
+        "description": "我们会将分析器的日志保存更长时间，以便您日后查阅，并准确了解服务器上发生了什么。",
+        "title": "更长的分析器日志"
+      },
+      "per_server_note": "支持者功能需按服务器逐一解锁。您可以在 Ko-fi 上购买这些功能，或通过为机器人投票赚取投票代币，并在代币商店中使用。",
+      "subtitle": "解锁独家功能，为您的服务器增添个性化元素，并保持社区活跃度。",
+      "title": "支持者专享功能",
+      "unlimited_channels": {
+        "description": "取消声望频道和分类的限制——在整个服务器范围内启用声望追踪。",
+        "title": "无限频道与分类"
+      },
+      "unlock_kofi": "在 Ko-fi 上解锁",
+      "unlock_vote": "使用投票代币解锁"
+    }
+  },
   "links": {
     "faq": "常见问题解答",
     "support": "支持服务器",

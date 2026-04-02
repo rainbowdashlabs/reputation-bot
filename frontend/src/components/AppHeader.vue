@@ -25,9 +25,9 @@ const isGuildAdmin = computed(() => {
       class="fixed top-0 left-0 z-50 w-screen border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
     <div class="mx-auto flex justify-between items-center p-4" style="max-width: 1600px;">
       <div class="flex items-center gap-4">
-        <a>
+        <router-link to="/">
           <img alt="Reputation Bot Logo" class="logo-small" src="/favicon.ico"/>
-        </a>
+        </router-link>
       </div>
 
       <nav v-if="!route.path.startsWith('/setup')" class="flex items-center gap-8">

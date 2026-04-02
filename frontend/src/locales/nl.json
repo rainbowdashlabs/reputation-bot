@@ -425,6 +425,166 @@
     "premiumRequired": "Integratie omzeilen",
     "selectIntegration": "Kies een integratie"
   },
+  "landing": {
+    "features": {
+      "audit_log": {
+        "description": "Weet je niet meer wat je hebt gewijzigd? In het auditlogboek worden alle wijzigingen in je serverinstellingen bijgehouden.",
+        "title": "Auditlogboek"
+      },
+      "channel_categories": {
+        "description": "Schakel de bot in voor afzonderlijke kanalen of voor alle kanalen van een categorie in één keer.",
+        "title": "Kanalen & categorieën"
+      },
+      "channels": {
+        "description": "Geef reputatiepunten in tekstkanalen, spraakchats, discussies en forums — de bot werkt overal waar je dat wilt.",
+        "title": "Werkt overal"
+      },
+      "customizable": {
+        "description": "Schakel elke functie in of uit en combineer ze naar believen om precies die ervaring te creëren die jouw community zoekt.",
+        "title": "Zeer aanpasbaar"
+      },
+      "dashboard": {
+        "description": "Alle instellingen zijn hier in het webdashboard makkelijk te vinden en aan te passen — je hebt geen commando’s nodig.",
+        "title": "Webdashboard"
+      },
+      "level_up": {
+        "description": "Stuur berichten wanneer gebruikers een nieuw reputatieniveau bereiken, zodat ze betrokken en gemotiveerd blijven.",
+        "title": "Berichten over het bereiken van een hoger niveau"
+      },
+      "open_source": {
+        "description": "Onze bot is volledig open source. Iedereen kan precies nagaan hoe hij werkt en wat hij doet.",
+        "title": "Open source"
+      },
+      "privacy": {
+        "description": "Wij hechten veel waarde aan je privacy. Je berichten worden nooit opgeslagen — alleen de reputatiegebeurtenissen die daaruit voortvloeien.",
+        "title": "Privacy voorop"
+      },
+      "profiles": {
+        "description": "Elke gebruiker krijgt zijn eigen reputatieprofiel. De meest actieve gebruikers verdienen speciale badges om te laten zien hoe belangrijk ze zijn.",
+        "title": "Reputatieprofielen"
+      },
+      "protection": {
+        "description": "Ingebouwde controles zorgen ervoor dat alleen gebruikers die daarvoor in aanmerking komen reputatie kunnen verdienen. Wachtperiodes en limieten voorkomen het misbruik van het systeem.",
+        "title": "Bescherming tegen misbruik"
+      },
+      "reputation": {
+        "description": "Houd automatisch bedankberichten en reacties bij om behulpzame communityleden te belonen.",
+        "title": "Reputatiemonitoring"
+      },
+      "role_restrictions": {
+        "description": "Bepaal welke rollen reputatie kunnen geven of ontvangen, of blokkeer bepaalde rollen helemaal.",
+        "title": "Beperkingen per rol"
+      },
+      "roles": {
+        "description": "Wijs automatisch rollen toe wanneer gebruikers reputatiemijlpalen bereiken, zodat er een zinvol niveausysteem ontstaat.",
+        "title": "Reputatie-rollen"
+      },
+      "scan": {
+        "description": "Heb je al een geschiedenis met berichten? De bot kan die doorzoeken op ‘thankwords’ om je reputatiesysteem snel op gang te brengen.",
+        "title": "Berichtenscanner"
+      },
+      "subtitle": "De Reputation Bot is gemaakt voor communities waar wederzijdse hulp belangrijk is. Beloon kennis, niet alleen activiteit.",
+      "thankwords": {
+        "description": "Stel je eigen bedankzinnen in elke gewenste taal in. De bot herkent ze automatisch en zorgt ervoor dat je reputatie stijgt.",
+        "title": "Aanpasbare bedankteksten"
+      },
+      "title": "Alles wat je gemeenschap nodig heeft"
+    },
+    "hero": {
+      "add_to_server": "Toevoegen aan server",
+      "go_to_dashboard": "Ga naar het dashboard",
+      "login": "Log in met Discord",
+      "subtitle": "Houd bij welke communityleden nuttige bijdragen leveren op je Discord-server en beloon ze daarvoor.",
+      "title": "Reputatiebot"
+    },
+    "reputation_methods": {
+      "answer": {
+        "description": "Reageer direct op een bericht met een bedankje om de schrijver een reputatiepunt te geven.",
+        "tab": "Antwoord",
+        "thank_you": "Bedankt!"
+      },
+      "command": {
+        "bot_confirm_end": ".",
+        "bot_confirm_mid": " gaf Reputation aan ",
+        "description": "Gebruik het commando /reputation om een gebruiker direct reputatiepunten te geven.",
+        "system_message": "gebruikt /reputatie",
+        "system_user": "Anna",
+        "tab": "Commando"
+      },
+      "common": {
+        "anna_question": "Hé, weet iemand hoe je een reverse proxy met nginx instelt?",
+        "josy_answer": "Tuurlijk! Je moet een serverblok toevoegen waarbij `proxy_pass` naar je backend verwijst. Ik kan je een volledig voorbeeld sturen als je dat wilt."
+      },
+      "embed": {
+        "bot_message": "Aan wie wil je reputatie geven?",
+        "description": "Als de bot een bedankje oppikt maar niet helemaal zeker weet aan wie het gericht is, stuurt hij een lijst met mogelijke gebruikers.",
+        "embed_description": "Kies een gebruiker om een reputatiepunt aan te geven:",
+        "embed_title": "Geef een beoordeling",
+        "tab": "Insluiten",
+        "thank_you": "Bedankt!"
+      },
+      "fuzzy": {
+        "description": "Typ de gebruikersnaam zonder @-teken — de bot gebruikt fuzzy matching om de persoon met redelijke zekerheid te herkennen.",
+        "tab": "Vag",
+        "thank_you": "Bedankt, Josy!"
+      },
+      "mention": {
+        "description": "Noem de gebruiker die je wilt bedanken in je bericht om hem of haar reputatiepunten te geven.",
+        "tab": "Vermeld",
+        "thank_you_prefix": "Bedankt"
+      },
+      "reaction": {
+        "bot_confirm": "🏅 Anna heeft Josy een reputatie gegeven!",
+        "description": "Reageer op een bericht met de ingestelde medaille-emoji om de auteur een reputatiepunt te geven.",
+        "tab": "Reactie"
+      },
+      "subtitle": "De bot ondersteunt verschillende natuurlijke manieren om iemand te bedanken. Je hoeft er niets extra’s voor te doen — zeg gewoon ‘bedankt’ zoals je dat normaal ook zou doen.",
+      "title": "Er zijn veel manieren om reputatie te geven"
+    },
+    "supporter_features": {
+      "additional_emojis": {
+        "description": "Stel meerdere emoji’s in waarmee je via reacties reputatie kunt toekennen, zodat je community meer manieren krijgt om hun dankbaarheid te tonen.",
+        "title": "Extra emoji’s"
+      },
+      "advanced_rankings": {
+        "description": "Bekijk wie de meeste reputatie heeft gegeven op je server, met gedetailleerde ranglijsten van donateurs naast het standaardklassement.",
+        "title": "Geavanceerde ranglijsten"
+      },
+      "autopost": {
+        "description": "Plaats de huidige reputatieranglijst automatisch volgens een schema in een kanaal om je gebruikers gemotiveerd te houden.",
+        "title": "Autopost-ranglijsten"
+      },
+      "branding": {
+        "description": "Geef de bot een persoonlijk tintje met een eigen profielfoto, naam en reputatielabel die helemaal bij jouw community passen.",
+        "title": "Merkopmaak op maat"
+      },
+      "detailed_profile": {
+        "description": "Vul gebruikersprofielen aan met extra statistieken en informatie voor een rijkere community-ervaring.",
+        "title": "Uitgebreid profiel"
+      },
+      "full_rep_log": {
+        "description": "Ga naar alle pagina’s van het reputatielogboek om de volledige geschiedenis van reputatiegebeurtenissen op je server te bekijken.",
+        "title": "Volledig reputatielogboek"
+      },
+      "log_channel": {
+        "description": "Volg alles wat er op grotere servers gebeurt via een speciaal logkanaal voor alle reputatiegebeurtenissen.",
+        "title": "Logboekkanaal"
+      },
+      "longer_analyzer_log": {
+        "description": "We bewaren de logbestanden van de analyzer langer, zodat je ze later kunt bekijken en precies kunt zien wat er op je server is gebeurd.",
+        "title": "Uitgebreider logboek van de Analyzer"
+      },
+      "per_server_note": "De functies voor supporters worden per server vrijgespeeld. Koop ze via Ko-fi of verdien stemtokens door op de bot te stemmen en besteed ze in de tokenwinkel.",
+      "subtitle": "Ontgrendel exclusieve functies om je server een persoonlijk tintje te geven en je community betrokken te houden.",
+      "title": "Functies voor supporters",
+      "unlimited_channels": {
+        "description": "Verwijder de beperking voor reputatiekanalen en -categorieën — maak reputatiebijhouding mogelijk op je hele server.",
+        "title": "Onbeperkt aantal zenders en categorieën"
+      },
+      "unlock_kofi": "Ontgrendel op Ko-fi",
+      "unlock_vote": "Ontgrendel met stemtokens"
+    }
+  },
   "links": {
     "faq": "Veelgestelde vragen",
     "support": "Ondersteuningsserver",

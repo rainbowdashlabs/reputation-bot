@@ -425,6 +425,166 @@
     "premiumRequired": "Obcházení integrace",
     "selectIntegration": "Vyberte integraci"
   },
+  "landing": {
+    "features": {
+      "audit_log": {
+        "description": "Ztratili jste přehled o tom, co jste změnili? Protokol auditů zaznamenává všechny změny provedené v nastavení serveru.",
+        "title": "Protokol auditu"
+      },
+      "channel_categories": {
+        "description": "Aktivujte bota v jednotlivých kanálech nebo najednou ve všech kanálech dané kategorie.",
+        "title": "Kanály a kategorie"
+      },
+      "channels": {
+        "description": "Udělujte reputaci v textových kanálech, hlasových chatech, vláknech a fórech – bot funguje všude, kde budete chtít.",
+        "title": "Funguje kdekoli"
+      },
+      "customizable": {
+        "description": "Zapněte nebo vypněte jednotlivé funkce a libovolně je kombinujte, abyste dosáhli přesně takového prostředí, jaké si vaše komunita přeje.",
+        "title": "Vysoce přizpůsobitelné"
+      },
+      "dashboard": {
+        "description": "Všechna nastavení jsou snadno dostupná a lze je konfigurovat přímo zde v webovém ovládacím panelu – bez nutnosti zadávat příkazy.",
+        "title": "Webový panel"
+      },
+      "level_up": {
+        "description": "Posílejte zprávy o postupu na vyšší úroveň, když uživatelé dosáhnou určitých milníků v reputaci, abyste udrželi jejich zájem a motivaci.",
+        "title": "Zprávy o postupu na vyšší úroveň"
+      },
+      "open_source": {
+        "description": "Náš bot je zcela open source. Kdokoli si může ověřit, jak přesně funguje a co dělá.",
+        "title": "Otevřený zdrojový kód"
+      },
+      "privacy": {
+        "description": "Vaše soukromí je pro nás důležité. Vaše zprávy se nikdy neukládají – ukládají se pouze události týkající se reputace, které z nich vyplývají.",
+        "title": "Ochrana soukromí na prvním místě"
+      },
+      "profiles": {
+        "description": "Každý uživatel má svůj vlastní profil reputace. Nejaktivnější uživatelé získávají speciální odznaky, kterými mohou dát najevo svůj status.",
+        "title": "Profily reputace"
+      },
+      "protection": {
+        "description": "Díky zabudovaným kontrolám mohou reputaci získávat pouze oprávnění uživatelé. Časové limity a omezení zabraňují hromadnému získávání reputace.",
+        "title": "Ochrana před zneužíváním"
+      },
+      "reputation": {
+        "description": "Automaticky sledujte děkovné zprávy a reakce, abyste odměnili členy komunity, kteří jsou nápomocní.",
+        "title": "Sledování reputace"
+      },
+      "role_restrictions": {
+        "description": "Omezte, které role mohou udělovat nebo přijímat reputaci, případně konkrétní role zcela zablokujte.",
+        "title": "Omezení rolí"
+      },
+      "roles": {
+        "description": "Automaticky přiřazujte role, jakmile uživatelé dosáhnou určitých úrovní reputace, a vytvořte tak smysluplný systém úrovní.",
+        "title": "Role v oblasti reputace"
+      },
+      "scan": {
+        "description": "Máte již historii zpráv? Bot je může prohledat a najít v nich slova vděčnosti, aby se váš systém reputace mohl rychle rozběhnout.",
+        "title": "Skenér zpráv"
+      },
+      "subtitle": "Reputation Bot byl vytvořen pro komunity, kde je vzájemná pomoc důležitá. Odměňujte znalosti, ne jen aktivitu.",
+      "thankwords": {
+        "description": "Vytvořte si vlastní poděkování v jakémkoli jazyce. Bot je automaticky rozpozná a přidělí vám body reputace.",
+        "title": "Přizpůsobitelné poděkování"
+      },
+      "title": "Vše, co vaše komunita potřebuje"
+    },
+    "hero": {
+      "add_to_server": "Přidat na server",
+      "go_to_dashboard": "Přejít na hlavní panel",
+      "login": "Přihlásit se přes Discord",
+      "subtitle": "Sledujte členy komunity na vašem serveru Discord a odměňujte je za jejich užitečné příspěvky.",
+      "title": "Bot pro správu reputace"
+    },
+    "reputation_methods": {
+      "answer": {
+        "description": "Odpovězte přímo na zprávu s poděkováním, abyste jejímu autorovi přidělili reputaci.",
+        "tab": "Odpověď",
+        "thank_you": "Děkuji!"
+      },
+      "command": {
+        "bot_confirm_end": ".",
+        "bot_confirm_mid": " udělil reputaci ",
+        "description": "Pomocí příkazu /reputation můžete uživateli přímo přidělit reputaci.",
+        "system_message": "použité /reputace",
+        "system_user": "Anna",
+        "tab": "Příkaz"
+      },
+      "common": {
+        "anna_question": "Ahoj, ví někdo, jak nakonfigurovat reverzní proxy v Nginxu?",
+        "josy_answer": "Jistě! Musíte přidat blok serveru s nastavením `proxy_pass` směřujícím na váš backend. Pokud chcete, mohu vám poskytnout kompletní příklad."
+      },
+      "embed": {
+        "bot_message": "Komu chcete přidělit reputaci?",
+        "description": "Pokud bot zaznamená poděkování, ale nedokáže s naprostou jistotou určit, komu je určeno, odešle seznam uživatelů, kteří by mohli být adresáty.",
+        "embed_description": "Vyberte uživatele, kterému chcete přidělit reputaci:",
+        "embed_title": "Přidat hodnocení",
+        "tab": "Vložit",
+        "thank_you": "Děkuji!"
+      },
+      "fuzzy": {
+        "description": "Zadejte uživatelské jméno bez označení — bot využívá aproximativní vyhledávání, aby s přiměřenou jistotou identifikoval daného uživatele.",
+        "tab": "Rozmazané",
+        "thank_you": "Děkuji, Josy!"
+      },
+      "mention": {
+        "description": "Ve své zprávě uveďte jméno uživatele, kterému chcete poděkovat, a tím mu přidělíte body reputace.",
+        "tab": "zmínka",
+        "thank_you_prefix": "Děkuji"
+      },
+      "reaction": {
+        "bot_confirm": "🏅 Anna přidělila Josy body reputace!",
+        "description": "Odpovězte na zprávu pomocí nastaveného emodži v podobě medaile a tím autorovi přidělte reputaci.",
+        "tab": "Reakce"
+      },
+      "subtitle": "Tento bot podporuje několik přirozených způsobů, jak někomu poděkovat. Není třeba se nijak zvlášť snažit – stačí poděkovat tak, jak to děláte obvykle.",
+      "title": "Existuje mnoho způsobů, jak udělit reputaci"
+    },
+    "supporter_features": {
+      "additional_emojis": {
+        "description": "Nastavte více emodži, které budou udělovat body reputace prostřednictvím reakcí, a poskytněte tak své komunitě více možností, jak vyjádřit vděčnost.",
+        "title": "Další emodži"
+      },
+      "advanced_rankings": {
+        "description": "Podívejte se, kdo na vašem serveru udělil nejvíce reputace, a to díky podrobnému žebříčku dárců vedle standardní tabulky nejlepších hráčů.",
+        "title": "Pokročilé žebříčky"
+      },
+      "autopost": {
+        "description": "Pravidelně automaticky zveřejňujte aktuální žebříček reputace v kanálu, abyste udrželi motivaci svých uživatelů.",
+        "title": "Žebříčky automatických příspěvků"
+      },
+      "branding": {
+        "description": "Vdechněte botovi svůj vlastní styl pomocí vlastního profilového obrázku, jména a označení reputace přizpůsobeného vaší komunitě.",
+        "title": "Vlastní branding"
+      },
+      "detailed_profile": {
+        "description": "Obohaťte uživatelské profily o další statistiky a informace, aby byla zkušenost s komunitou ještě bohatší.",
+        "title": "Podrobný profil"
+      },
+      "full_rep_log": {
+        "description": "Otevřete všechny stránky protokolu reputace a prohlédněte si kompletní historii událostí souvisejících s reputací na vašem serveru.",
+        "title": "Kompletní protokol reputace"
+      },
+      "log_channel": {
+        "description": "Sledujte vše, co se děje na větších serverech, díky speciálnímu kanálu pro všechny události týkající se reputace.",
+        "title": "Protokolový kanál"
+      },
+      "longer_analyzer_log": {
+        "description": "Protokoly analyzátoru uchováváme déle, abyste se k nim mohli později vrátit a přesně zjistit, co se na vašem serveru stalo.",
+        "title": "Rozšířený protokol analyzátoru"
+      },
+      "per_server_note": "Funkce pro podporovatele se odemykají pro jednotlivé servery. Můžete si je zakoupit na Ko-fi nebo získat hlasovací žetony tím, že budete hlasovat pro bota, a poté je utratit v obchodě s žetony.",
+      "subtitle": "Odemkněte exkluzivní funkce, díky kterým svému serveru dodáte osobní nádech a udržíte zájem své komunity.",
+      "title": "Funkce pro příznivce",
+      "unlimited_channels": {
+        "description": "Zrušte omezení týkající se kanálů a kategorií reputace – povolte sledování reputace na celém serveru.",
+        "title": "Neomezený počet kanálů a kategorií"
+      },
+      "unlock_kofi": "Odemknout na Ko-fi",
+      "unlock_vote": "Odemknout pomocí hlasovacích žetonů"
+    }
+  },
   "links": {
     "faq": "Často kladené otázky",
     "support": "Podpora serveru",

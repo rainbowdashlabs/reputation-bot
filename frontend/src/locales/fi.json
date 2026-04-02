@@ -425,6 +425,166 @@
     "premiumRequired": "Integraation ohitus",
     "selectIntegration": "Valitse integraatio"
   },
+  "landing": {
+    "features": {
+      "audit_log": {
+        "description": "Etkö enää muista, mitä muutoksia olet tehnyt? Tarkastusloki tallentaa kaikki palvelimen asetuksiin tehdyt muutokset.",
+        "title": "Tarkastusloki"
+      },
+      "channel_categories": {
+        "description": "Ota botti käyttöön yksittäisissä kanavissa tai kerralla tietyn luokan kaikissa kanavissa.",
+        "title": "Kanavat ja kategoriat"
+      },
+      "channels": {
+        "description": "Anna mainepisteitä tekstikanavissa, äänikeskusteluissa, keskusteluketjuissa ja foorumeilla – botti toimii kaikkialla, missä haluat.",
+        "title": "Toimii kaikkialla"
+      },
+      "customizable": {
+        "description": "Voit ottaa kaikki toiminnot käyttöön tai poistaa ne käytöstä ja yhdistellä niitä vapaasti, jotta saat aikaan juuri sen käyttökokemuksen, jota yhteisösi haluaa.",
+        "title": "Erittäin muokattavissa"
+      },
+      "dashboard": {
+        "description": "Kaikki asetukset ovat helposti saatavilla ja muokattavissa suoraan tässä verkkokonsolissa – komentokomentoja ei tarvita.",
+        "title": "Verkkopaneeli"
+      },
+      "level_up": {
+        "description": "Lähetä tasohyppäysviestejä, kun käyttäjät saavuttavat mainepisteiden virstanpylväitä, jotta he pysyvät sitoutuneina ja motivoituneina.",
+        "title": "Tasonnousuviestit"
+      },
+      "open_source": {
+        "description": "Botimme on täysin avoimen lähdekoodin ohjelmisto. Kuka tahansa voi tarkistaa, miten se tarkalleen ottaen toimii ja mitä se tekee.",
+        "title": "Avoin lähdekoodi"
+      },
+      "privacy": {
+        "description": "Arvostamme yksityisyyttäsi. Viestejäsi ei tallenneta koskaan – vain niistä johtuvat maineeseen vaikuttavat tapahtumat.",
+        "title": "Tietosuoja ensisijalla"
+      },
+      "profiles": {
+        "description": "Jokaiselle käyttäjälle luodaan oma maineprofiili. Aktiivisimmat käyttäjät ansaitsevat erityisiä merkkejä, joilla he voivat osoittaa asemansa.",
+        "title": "Maineen profiilit"
+      },
+      "protection": {
+        "description": "Sisäänrakennetut tarkistukset varmistavat, että vain oikeutetut käyttäjät voivat saada mainepisteitä. Viiveajat ja rajoitukset estävät pisteiden keräämisen.",
+        "title": "Suojaus väärinkäytöltä"
+      },
+      "reputation": {
+        "description": "Seuraa kiitosviestejä ja reaktioita automaattisesti palkitaksesi avuliaita yhteisön jäseniä.",
+        "title": "Maineen seuranta"
+      },
+      "role_restrictions": {
+        "description": "Rajoita, mitkä roolit voivat antaa tai vastaanottaa mainepisteitä, tai estä tiettyjen roolien toiminta kokonaan.",
+        "title": "Roolirajoitukset"
+      },
+      "roles": {
+        "description": "Määritä roolit automaattisesti, kun käyttäjät saavuttavat mainepisteiden virstanpylväitä, ja luo näin mielekäs tasojärjestelmä.",
+        "title": "Maineen roolit"
+      },
+      "scan": {
+        "description": "Onko sinulla jo viestihistoriaa? Botti voi etsiä niistä kiitossanoja, jotta mainejärjestelmäsi saadaan nopeasti käyntiin.",
+        "title": "Viestiskanneri"
+      },
+      "subtitle": "Reputation Bot on kehitetty yhteisöille, joissa keskinäinen avunanto on tärkeää. Palkitse tietoa, älä pelkästään aktiivisuutta.",
+      "thankwords": {
+        "description": "Määritä omat kiitossanasi millä tahansa kielellä. Botti tunnistaa ne automaattisesti ja lisää niiden perusteella mainepisteitä.",
+        "title": "Mukautettavat kiitossanat"
+      },
+      "title": "Kaikki, mitä yhteisösi tarvitsee"
+    },
+    "hero": {
+      "add_to_server": "Lisää palvelimeen",
+      "go_to_dashboard": "Siirry hallintapaneeliin",
+      "login": "Kirjaudu sisään Discordilla",
+      "subtitle": "Seuraa yhteisön jäsenten hyödyllisiä viestejä Discord-palvelimellasi ja palkitse heitä niistä.",
+      "title": "Maine-botti"
+    },
+    "reputation_methods": {
+      "answer": {
+        "description": "Vastaa viestiin suoraan kiitossanalla, jotta voit antaa lähettäjälle mainepisteitä.",
+        "tab": "Vastaus",
+        "thank_you": "Kiitos!"
+      },
+      "command": {
+        "bot_confirm_end": ".",
+        "bot_confirm_mid": " antoi mainetta ",
+        "description": "Käytä komentoa /reputation, jos haluat antaa mainepisteitä suoraan jollekin käyttäjälle.",
+        "system_message": "käytetty /maine",
+        "system_user": "Anna",
+        "tab": "Komento"
+      },
+      "common": {
+        "anna_question": "Hei, tietääkö kukaan, miten käänteinen välityspalvelin määritetään nginx:llä?",
+        "josy_answer": "Toki! Sinun on lisättävä palvelinlohko, jossa proxy_pass-asetus osoittaa taustapalvelimeesi. Voin lähettää sinulle täydellisen esimerkin, jos haluat."
+      },
+      "embed": {
+        "bot_message": "Kenelle haluat antaa mainepisteitä?",
+        "description": "Kun botti havaitsee kiitoksen, mutta ei pysty tunnistamaan sen kohdetta täysin varmasti, se lähettää listan mahdollisista vastaanottajista.",
+        "embed_description": "Valitse käyttäjä, jolle haluat antaa mainepisteitä:",
+        "embed_title": "Anna mainepisteitä",
+        "tab": "Upota",
+        "thank_you": "Kiitos!"
+      },
+      "fuzzy": {
+        "description": "Kirjoita käyttäjänimi ilman mainintaa – botti tunnistaa kohteen kohtuullisen luotettavasti epätarkan haun avulla.",
+        "tab": "Sumea",
+        "thank_you": "Kiitos, Josy!"
+      },
+      "mention": {
+        "description": "Mainitse viestissäsi käyttäjä, jota haluat kiittää, jotta hän saa mainepisteitä.",
+        "tab": "Maininta",
+        "thank_you_prefix": "Kiitos"
+      },
+      "reaction": {
+        "bot_confirm": "🏅 Anna antoi mainepisteitä Josylle!",
+        "description": "Vastaa viestiin määritetyllä mitali-emojilla antaaksesi lähettäjälle mainepisteitä.",
+        "tab": "Reaktio"
+      },
+      "subtitle": "Botti tukee useita luonnollisia tapoja kiittää jotakuta. Se ei vaadi ylimääräistä vaivaa – kiitä vain niin kuin tavallisesti.",
+      "title": "Monta tapaa antaa mainepisteitä"
+    },
+    "supporter_features": {
+      "additional_emojis": {
+        "description": "Määritä useita emojia, joilla voi antaa kiitosta reaktioiden avulla, jolloin yhteisöllesi tarjoutuu lisää tapoja ilmaista kiitollisuutta.",
+        "title": "Lisää emojia"
+      },
+      "advanced_rankings": {
+        "description": "Katso, kuka on antanut eniten mainepisteitä palvelimellasi, ja tutustu yksityiskohtaisiin lahjoittajien ranking-listoihin tavallisen tulostaulukon rinnalla.",
+        "title": "Edistyneet rankingit"
+      },
+      "autopost": {
+        "description": "Julkaise nykyinen mainepisteiden sijoitus automaattisesti kanavalla säännöllisin väliajoin, jotta käyttäjät pysyvät motivoituneina.",
+        "title": "Autopost-rankingit"
+      },
+      "branding": {
+        "description": "Anna botille oma leimasi valitsemalla yhteisöllesi sopiva profiilikuva, nimi ja maine-merkki.",
+        "title": "Räätälöity brändäys"
+      },
+      "detailed_profile": {
+        "description": "Täydennä käyttäjäprofiileja lisätietojen ja -tilastojen avulla, jotta yhteisökokemus olisi entistä monipuolisempi.",
+        "title": "Yksityiskohtainen profiili"
+      },
+      "full_rep_log": {
+        "description": "Voit tarkastella palvelimesi maineeseen liittyvien tapahtumien koko historiaa avaamalla mainelokin kaikki sivut.",
+        "title": "Täydellinen maineloki"
+      },
+      "log_channel": {
+        "description": "Seuraa kaikkea, mitä suuremmilla palvelimilla tapahtuu, kaikkia maineeseen liittyviä tapahtumia varten tarkoitetun lokikanavan avulla.",
+        "title": "Lokikanava"
+      },
+      "longer_analyzer_log": {
+        "description": "Säilytämme analysointilokit pidempään, jotta voit tarkistaa ne myöhemmin ja selvittää tarkalleen, mitä palvelimellasi on tapahtunut.",
+        "title": "Pidempi analysointiloki"
+      },
+      "per_server_note": "Tukijatoiminnot avataan palvelinkohtaisesti. Voit ostaa niitä Ko-fi-palvelusta tai ansaita äänestystokeneita äänestämällä botille ja käyttää niitä token-kaupassa.",
+      "subtitle": "Avaa eksklusiivisia ominaisuuksia, joilla voit tuoda palvelimeesi henkilökohtaisen leiman ja pitää yhteisösi aktiivisena.",
+      "title": "Kannattajien ominaisuudet",
+      "unlimited_channels": {
+        "description": "Poista maine-kanavien ja -luokkien rajoitukset – ota maineen seuranta käyttöön koko palvelimellasi.",
+        "title": "Rajoittamaton määrä kanavia ja luokkia"
+      },
+      "unlock_kofi": "Avaa Ko-fi-palvelussa",
+      "unlock_vote": "Avaa äänestystunnisteilla"
+    }
+  },
   "links": {
     "faq": "Usein kysytyt kysymykset",
     "support": "Tukipalvelin",
