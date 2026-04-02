@@ -10,6 +10,7 @@ import com.google.common.cache.CacheBuilder;
 import de.chojo.jdautil.interactions.base.SkuMeta;
 import de.chojo.jdautil.interactions.premium.SKU;
 import de.chojo.repbot.config.elements.sku.SKUEntry;
+import de.chojo.repbot.config.elements.sku.Subscription;
 import de.chojo.repbot.dao.access.guild.RepGuild;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.slf4j.Logger;
@@ -23,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static de.chojo.repbot.util.States.GRANT_ALL_SKU;
+import static de.chojo.repbot.util.States.TEST_MODE;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
@@ -135,6 +137,13 @@ public class PremiumFeaturesPOJO {
                 moreCategoriesUnlocked,
                 extractSkuInfos(features.reputationCategories().fullSkuEntry(), skuMap));
 
+        List<String> active;
+        if (TEST_MODE && GRANT_ALL_SKU) {
+            active = guild.configuration().skus().subscriptions().stream().map(Subscription::subscriptionSku).map(String::valueOf).toList();
+        } else {
+            active = subscriptions.sku().stream().map(s -> String.valueOf(s.skuId())).toList();
+        }
+
         return new PremiumFeaturesPOJO(
                 reputationLog,
                 analyzerLog,
@@ -149,7 +158,7 @@ public class PremiumFeaturesPOJO {
                 integrationBypass,
                 reputationChannel,
                 reputationCategories,
-                subscriptions.sku().stream().map(s -> String.valueOf(s.skuId())).toList());
+                active);
     }
 
     private static Map<Long, SkuInfo> resolveSkus(ShardManager shardManager) {
@@ -163,9 +172,9 @@ public class PremiumFeaturesPOJO {
                     shardManager.getShards().getFirst().retrieveSKUList().complete();
 
             Map<Long, SkuInfo> resolvedSkus = skus.stream()
-                    .collect(Collectors.toMap(
-                            net.dv8tion.jda.api.entities.SKU::getIdLong,
-                            sku -> new SkuInfo(sku.getId(), sku.getName())));
+                                                  .collect(Collectors.toMap(
+                                                          net.dv8tion.jda.api.entities.SKU::getIdLong,
+                                                          sku -> new SkuInfo(sku.getId(), sku.getName())));
 
             SKU_CACHE.putAll(resolvedSkus);
             return resolvedSkus;
@@ -184,10 +193,10 @@ public class PremiumFeaturesPOJO {
 
     private static List<SkuInfo> extractSkuInfos(SKUEntry entry, Map<Long, SkuInfo> skuMap) {
         return entry.sku().stream()
-                .map(SKU::skuId)
-                .map(skuMap::get)
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
+                    .map(SKU::skuId)
+                    .map(skuMap::get)
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.toList());
     }
 
     private static boolean isEntitled(SkuMeta subscriptions, SkuMeta required) {
