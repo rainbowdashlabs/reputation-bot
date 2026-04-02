@@ -1,0 +1,68 @@
+{
+  "reputationLog": {
+    "unlocked": true,
+    "requiredSkus": [
+      {"id": "1380621847191883786", "name": "Supporter Starter"}, {"id": "1360377703743623261", "name": "Supporter Pro"}
+    ]
+  },
+  "analyzerLog": {
+    "unlocked": true,
+    "requiredSkus": [
+      {"id": "1380621847191883786", "name": "Supporter Starter"}, {"id": "1360377703743623261", "name": "Supporter Pro"}
+    ]
+  },
+  "channelBlacklist": {
+    "unlocked": true,
+    "requiredSkus": [
+      {"id": "1380621847191883786", "name": "Supporter Starter"}, {"id": "1360377703743623261", "name": "Supporter Pro"}
+    ]
+  },
+  "localeOverrides": {"unlocked": true, "requiredSkus": [{"id": "1360377703743623261", "name": "Supporter Pro"}]},
+  "autopost": {
+    "unlocked": true,
+    "requiredSkus": [
+      {"id": "1380621847191883786", "name": "Supporter Starter"}, {"id": "1360377703743623261", "name": "Supporter Pro"}
+    ]
+  },
+  "advancedRankings": {
+    "unlocked": true,
+    "requiredSkus": [
+      {"id": "1380621847191883786", "name": "Supporter Starter"}, {"id": "1360377703743623261", "name": "Supporter Pro"}
+    ]
+  },
+  "detailedProfile": {
+    "unlocked": true,
+    "requiredSkus": [
+      {"id": "1380621847191883786", "name": "Supporter Starter"}, {"id": "1360377703743623261", "name": "Supporter Pro"}
+    ]
+  },
+  "logChannel": {
+    "unlocked": true,
+    "requiredSkus": [
+      {"id": "1380621847191883786", "name": "Supporter Starter"}, {"id": "1360377703743623261", "name": "Supporter Pro"}
+    ]
+  },
+  "additionalEmojis": {"unlocked": true, "requiredSkus": [{"id": "1360377703743623261", "name": "Supporter Pro"}]},
+  "profile": {"unlocked": true, "requiredSkus": [{"id": "1360377703743623261", "name": "Supporter Pro"}]},
+  "integrationBypass": {
+    "unlocked": true,
+    "requiredSkus": [
+      {"id": "1380621847191883786", "name": "Supporter Starter"}, {"id": "1360377703743623261", "name": "Supporter Pro"}
+    ]
+  },
+  "reputationChannel": {
+    "max": 2147483647,
+    "unlocked": true,
+    "requiredSkus": [
+      {"id": "1380621847191883786", "name": "Supporter Starter"}, {"id": "1360377703743623261", "name": "Supporter Pro"}
+    ]
+  },
+  "reputationCategories": {
+    "max": 2147483647,
+    "unlocked": true,
+    "requiredSkus": [
+      {"id": "1380621847191883786", "name": "Supporter Starter"}, {"id": "1360377703743623261", "name": "Supporter Pro"}
+    ]
+  },
+  "activeSkus": ["1380621847191883786", "1360377703743623261"]
+}

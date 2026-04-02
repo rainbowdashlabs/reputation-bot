@@ -139,9 +139,14 @@ public class PremiumFeaturesPOJO {
 
         List<String> active;
         if (TEST_MODE && GRANT_ALL_SKU) {
-            active = guild.configuration().skus().subscriptions().stream().map(Subscription::subscriptionSku).map(String::valueOf).toList();
+            active = guild.configuration().skus().subscriptions().stream()
+                    .map(Subscription::subscriptionSku)
+                    .map(String::valueOf)
+                    .toList();
         } else {
-            active = subscriptions.sku().stream().map(s -> String.valueOf(s.skuId())).toList();
+            active = subscriptions.sku().stream()
+                    .map(s -> String.valueOf(s.skuId()))
+                    .toList();
         }
 
         return new PremiumFeaturesPOJO(
@@ -172,9 +177,9 @@ public class PremiumFeaturesPOJO {
                     shardManager.getShards().getFirst().retrieveSKUList().complete();
 
             Map<Long, SkuInfo> resolvedSkus = skus.stream()
-                                                  .collect(Collectors.toMap(
-                                                          net.dv8tion.jda.api.entities.SKU::getIdLong,
-                                                          sku -> new SkuInfo(sku.getId(), sku.getName())));
+                    .collect(Collectors.toMap(
+                            net.dv8tion.jda.api.entities.SKU::getIdLong,
+                            sku -> new SkuInfo(sku.getId(), sku.getName())));
 
             SKU_CACHE.putAll(resolvedSkus);
             return resolvedSkus;
@@ -193,10 +198,10 @@ public class PremiumFeaturesPOJO {
 
     private static List<SkuInfo> extractSkuInfos(SKUEntry entry, Map<Long, SkuInfo> skuMap) {
         return entry.sku().stream()
-                    .map(SKU::skuId)
-                    .map(skuMap::get)
-                    .filter(Objects::nonNull)
-                    .collect(Collectors.toList());
+                .map(SKU::skuId)
+                .map(skuMap::get)
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
     private static boolean isEntitled(SkuMeta subscriptions, SkuMeta required) {

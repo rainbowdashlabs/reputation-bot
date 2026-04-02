@@ -28,6 +28,7 @@ public class SKUEntry implements SkuMeta {
 
     @Override
     public String toString() {
-        return String.join(", ", skus.stream().map(SKU::skuId).map(String::valueOf).toList());
+        return String.join(
+                ", ", skus.stream().map(SKU::skuId).map(String::valueOf).toList());
     }
 }

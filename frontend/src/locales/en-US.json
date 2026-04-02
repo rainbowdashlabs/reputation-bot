@@ -944,6 +944,7 @@
     "subscribeSuccess": "Subscription enabled!",
     "unsubscribeSuccess": "Subscription disabled!",
     "enabledBySubscription": "Enabled by Subscription",
+    "requiredTiers": "Supporter Tiers",
     "subscriptionActiveNote": "This feature is currently enabled by an active subscription.",
     "confirmPurchase": "Are you sure you want to purchase this feature for {amount} tokens?",
     "insufficientTokens": "You don't have enough tokens.",

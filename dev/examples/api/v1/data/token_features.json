@@ -1,0 +1,84 @@
+{
+  "reputationLog": {
+    "id": 11,
+    "tokens": 350,
+    "localeKey": "sku.reputationlog",
+    "skuEntry": {"skus": [{"skuId": "1380621847191883786"}, {"skuId": "1360377703743623261"}]},
+    "defaultSize": 2
+  },
+  "analyzerLog": {
+    "id": 2,
+    "tokens": 350,
+    "localeKey": "sku.analyzerlog",
+    "skuEntry": {"skus": [{"skuId": "1380621847191883786"}, {"skuId": "1360377703743623261"}]},
+    "extendedLogHours": 96
+  },
+  "reputationCategories": {
+    "id": 10,
+    "tokens": 175,
+    "localeKey": "sku.reputationcategories",
+    "skuEntry": {"skus": [{"skuId": "1380621847191883786"}, {"skuId": "1360377703743623261"}]},
+    "defaultCategories": 2
+  },
+  "reputationChannel": {
+    "id": 10,
+    "tokens": 175,
+    "localeKey": "sku.reputationchannel",
+    "skuEntry": {"skus": [{"skuId": "1380621847191883786"}, {"skuId": "1360377703743623261"}]},
+    "defaultChannel": 8
+  },
+  "channelBlacklist": {
+    "id": 0,
+    "tokens": 350,
+    "localeKey": "sku.channelblacklist",
+    "skuEntry": {"skus": [{"skuId": "1380621847191883786"}, {"skuId": "1360377703743623261"}]}
+  },
+  "localeOverrides": {
+    "id": 7,
+    "tokens": 350,
+    "localeKey": "sku.localeoverrides",
+    "skuEntry": {"skus": [{"skuId": "1360377703743623261"}]}
+  },
+  "autopost": {
+    "id": 3,
+    "tokens": 350,
+    "localeKey": "sku.autopost",
+    "skuEntry": {"skus": [{"skuId": "1380621847191883786"}, {"skuId": "1360377703743623261"}]}
+  },
+  "advancedRankings": {
+    "id": 1,
+    "tokens": 350,
+    "localeKey": "sku.advancedrankings",
+    "skuEntry": {"skus": [{"skuId": "1380621847191883786"}, {"skuId": "1360377703743623261"}]}
+  },
+  "detailedProfile": {
+    "id": 5,
+    "tokens": 350,
+    "localeKey": "sku.detailedprofile",
+    "skuEntry": {"skus": [{"skuId": "1380621847191883786"}, {"skuId": "1360377703743623261"}]}
+  },
+  "logChannel": {
+    "id": 8,
+    "tokens": 350,
+    "localeKey": "sku.logchannel",
+    "skuEntry": {"skus": [{"skuId": "1380621847191883786"}, {"skuId": "1360377703743623261"}]}
+  },
+  "additionalEmojis": {
+    "id": 0,
+    "tokens": 350,
+    "localeKey": "sku.additionalemojis",
+    "skuEntry": {"skus": [{"skuId": "1360377703743623261"}]}
+  },
+  "profile": {
+    "id": 9,
+    "tokens": 350,
+    "localeKey": "sku.profile",
+    "skuEntry": {"skus": [{"skuId": "1360377703743623261"}]}
+  },
+  "integrationBypass": {
+    "id": 6,
+    "tokens": 350,
+    "localeKey": "sku.integrationbypass",
+    "skuEntry": {"skus": [{"skuId": "1380621847191883786"}, {"skuId": "1360377703743623261"}]}
+  }
+}
