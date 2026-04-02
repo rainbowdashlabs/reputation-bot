@@ -5,7 +5,7 @@
  */
 <template>
   <footer
-      class="footer-with-fade w-full bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-6 mt-8">
+      class="footer-with-fade w-full bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 py-6">
     <div class="container mx-auto px-4">
       <div class="grid grid-cols-1 md:grid-cols-3 items-start gap-4 text-sm text-gray-600 dark:text-gray-400">
         <div class="flex order-3 md:order-1 flex-col gap-3 items-start">
@@ -40,31 +40,17 @@
 </template>
 
 <script lang="ts" setup>
-import {onMounted, ref} from 'vue'
-import {api} from '@/api'
-import type {Links} from '@/api/types'
+import {onMounted} from 'vue'
+import {useLinks} from '@/composables/useLinks'
 import GuildSwitcher from '@/components/GuildSwitcher.vue'
 import FooterLinks from '@/components/FooterLinks.vue'
 import LegalLinks from '@/components/LegalLinks.vue'
 import LocaleSwitcher from '@/components/appheader/LocaleSwitcher.vue'
 import LightModeSwitch from "@/components/appheader/LightModeSwitch.vue"
 
-const links = ref<Links>({
-  tos: '',
-  invite: '',
-  support: '',
-  website: '',
-  faq: '',
-  kofi: ''
-})
+const {links, loadLinks} = useLinks()
 
-onMounted(async () => {
-  try {
-    links.value = await api.getLinks()
-  } catch (error) {
-    console.error('Failed to fetch links:', error)
-  }
-})
+onMounted(loadLinks)
 </script>
 
 <style scoped>

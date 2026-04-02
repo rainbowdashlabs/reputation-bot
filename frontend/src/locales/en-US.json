@@ -1011,5 +1011,165 @@
     "week": "1 Week",
     "fourWeeks": "4 Weeks",
     "year": "1 Year"
+  },
+  "landing": {
+    "hero": {
+      "title": "Reputation Bot",
+      "subtitle": "Track and reward community members for their helpful contributions on your Discord server.",
+      "go_to_dashboard": "Go to Dashboard",
+      "login": "Login with Discord",
+      "add_to_server": "Add to Server"
+    },
+    "features": {
+      "title": "Everything your community needs",
+      "subtitle": "The Reputation Bot was built for communities where mutual help matters. Reward knowledge, not just activity.",
+      "reputation": {
+        "title": "Reputation Tracking",
+        "description": "Automatically track thank-you messages and reactions to reward helpful community members."
+      },
+      "protection": {
+        "title": "Abuse Protection",
+        "description": "Built-in checks ensure only eligible users can receive reputation. Cooldowns and limits prevent farming."
+      },
+      "profiles": {
+        "title": "Reputation Profiles",
+        "description": "Each user gets their own reputation profile. Top contributors earn special badges to show off their status."
+      },
+      "roles": {
+        "title": "Reputation Roles",
+        "description": "Automatically assign roles when users reach reputation milestones, creating a meaningful level system."
+      },
+      "thankwords": {
+        "title": "Customizable Thankwords",
+        "description": "Define your own thank phrases in any language. The bot detects them automatically to trigger reputation."
+      },
+      "channels": {
+        "title": "Works Everywhere",
+        "description": "Give reputation in text channels, voice chats, threads, and forums — the bot works everywhere you want it to."
+      },
+      "customizable": {
+        "title": "Highly Customizable",
+        "description": "Turn every feature on or off and combine them freely to get exactly the experience your community wants."
+      },
+      "channel_categories": {
+        "title": "Channels & Categories",
+        "description": "Enable the bot in individual channels or across all channels of a category at once."
+      },
+      "level_up": {
+        "title": "Level Up Messages",
+        "description": "Send level up messages when users hit reputation milestones to keep them engaged and motivated."
+      },
+      "role_restrictions": {
+        "title": "Role Restrictions",
+        "description": "Restrict which roles can give or receive reputation, or block specific roles entirely."
+      },
+      "scan": {
+        "title": "Message Scanner",
+        "description": "Already have a history of messages? The bot can scan them for thankwords to get your reputation system started quickly."
+      },
+      "dashboard": {
+        "title": "Web Dashboard",
+        "description": "All settings are easily accessible and configurable right here in the web dashboard — no commands needed."
+      },
+      "privacy": {
+        "title": "Privacy First",
+        "description": "We value your privacy. Your messages are never stored — only the reputation events that result from them."
+      },
+      "open_source": {
+        "title": "Open Source",
+        "description": "Our bot is fully open source. Anyone can verify exactly how it works and what it does."
+      },
+      "audit_log": {
+        "title": "Audit Log",
+        "description": "Lost track of what you changed? The audit log records all changes made to your server settings."
+      }
+    },
+    "reputation_methods": {
+      "title": "Many ways to give reputation",
+      "subtitle": "The bot supports multiple natural ways to thank someone. No extra effort required — just say thanks the way you normally would.",
+      "common": {
+        "anna_question": "Hey, does anyone know how to configure a reverse proxy with nginx?",
+        "josy_answer": "Sure! You need to add a server block with proxy_pass pointing to your backend. I can share a full example if you want."
+      },
+      "command": {
+        "tab": "Command",
+        "description": "Use the /reputation command to directly give reputation to a user.",
+        "system_user": "Anna",
+        "system_message": "used /reputation",
+        "bot_confirm_mid": " gave Reputation to ",
+        "bot_confirm_end": "."
+      },
+      "embed": {
+        "tab": "Embed",
+        "description": "When the bot detects a thank-you but cannot determine the target with full confidence, it sends an embed listing eligible users.",
+        "thank_you": "Thank you!",
+        "bot_message": "Who do you want to give reputation to?",
+        "embed_title": "Give Reputation",
+        "embed_description": "Select a user to give reputation to:"
+      },
+      "reaction": {
+        "tab": "Reaction",
+        "description": "React to a message with the configured medal emoji to give reputation to its author.",
+        "bot_confirm": "🏅 Anna gave reputation to Josy!"
+      },
+      "answer": {
+        "tab": "Answer",
+        "description": "Reply directly to a message with a thank phrase to give reputation to its author.",
+        "thank_you": "Thank you!"
+      },
+      "mention": {
+        "tab": "Mention",
+        "description": "Mention the user you want to thank in your message to give them reputation.",
+        "thank_you_prefix": "Thank you"
+      },
+      "fuzzy": {
+        "tab": "Fuzzy",
+        "description": "Write the username without a mention — the bot uses fuzzy matching to identify the target with reasonable confidence.",
+        "thank_you": "Thank you Josy!"
+      }
+    },
+    "supporter_features": {
+      "title": "Supporter Features",
+      "subtitle": "Unlock exclusive features to give your server a personal touch and keep your community engaged.",
+      "branding": {
+        "title": "Custom Branding",
+        "description": "Give the bot your own touch with a custom profile picture, name, and reputation label tailored to your community."
+      },
+      "log_channel": {
+        "title": "Log Channel",
+        "description": "Follow everything that happens on larger servers with a dedicated log channel for all reputation events."
+      },
+      "autopost": {
+        "title": "Autopost Rankings",
+        "description": "Automatically post the current reputation ranking to a channel on a schedule to keep your users motivated."
+      },
+      "unlimited_channels": {
+        "title": "Unlimited Channels & Categories",
+        "description": "Remove the limit on reputation channels and categories — enable reputation tracking across your entire server."
+      },
+      "advanced_rankings": {
+        "title": "Advanced Rankings",
+        "description": "See who gave the most reputation on your server with detailed donor rankings alongside the standard leaderboard."
+      },
+      "additional_emojis": {
+        "title": "Additional Emojis",
+        "description": "Configure multiple emojis to give reputation via reactions, giving your community more ways to express gratitude."
+      },
+      "detailed_profile": {
+        "title": "Detailed Profile",
+        "description": "Enrich user profiles with additional statistics and information for a richer community experience."
+      },
+      "full_rep_log": {
+        "title": "Full Reputation Log",
+        "description": "Access all pages of the reputation log to review the complete history of reputation events on your server."
+      },
+      "longer_analyzer_log": {
+        "title": "Longer Analyzer Log",
+        "description": "We keep analyzer logs longer so you can check back later and understand exactly what happened on your server."
+      },
+      "unlock_kofi": "Unlock on Ko-fi",
+      "unlock_vote": "Unlock with Vote Tokens",
+      "per_server_note": "Supporter features are unlocked on a per-server basis. Purchase them on Ko-fi or earn vote tokens by voting for the bot and spend them in the token shop."
+    }
   }
 }

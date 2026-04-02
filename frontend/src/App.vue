@@ -42,7 +42,7 @@ const isGuildAdmin = computed(() => {
 const isSettingsPage = computed(() => route.path.startsWith('/settings/edit'))
 const showSettingsHeader = computed(() => route.path.startsWith('/settings'))
 const isSetupPage = computed(() => route.path.startsWith('/setup'))
-const isPublicPage = computed(() => ['Tos', 'Privacy', 'Faq', 'Metrics'].includes(route.name as string))
+const isPublicPage = computed(() => ['Tos', 'Privacy', 'Faq', 'Metrics', 'Landing'].includes(route.name as string))
 
 const ready = ref(false)
 
@@ -163,7 +163,7 @@ watch(isSettingsPage, async (isSettings) => {
 
     <SettingsHeader v-if="showSettingsHeader && userSession"/>
 
-    <div :class="{'pt-8': showSettingsHeader}">
+    <div :class="{'pt-8': showSettingsHeader, 'mb-8': !isPublicPage}">
       <ViewContainer v-if="!userSession && !isSetupPage && !isPublicPage && route.path !== '/error/no-token'" class="mt-8">
         <LoginPanel/>
       </ViewContainer>

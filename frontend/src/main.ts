@@ -51,7 +51,26 @@ import {
     faMugHot,
     faInfoCircle,
     faShieldHalved,
-    faChartLine
+    faChartLine,
+    faRobot,
+    faTrophy,
+    faListOl,
+    faLayerGroup,
+    faPalette,
+    faScroll,
+    faChartBar,
+    faStar,
+    faFaceSmile,
+    faIdCard,
+    faBookOpen,
+    faClockRotateLeft,
+    faSliders,
+    faArrowUp,
+    faUserShield,
+    faMagnifyingGlass,
+    faGauge,
+    faLock,
+    faClipboardList
 } from '@fortawesome/free-solid-svg-icons'
 import {faGithub, faDiscord} from '@fortawesome/free-brands-svg-icons'
 
@@ -98,7 +117,26 @@ library.add(
     faMugHot,
     faInfoCircle,
     faShieldHalved,
-    faChartLine
+    faChartLine,
+    faRobot,
+    faTrophy,
+    faListOl,
+    faLayerGroup,
+    faPalette,
+    faScroll,
+    faChartBar,
+    faStar,
+    faFaceSmile,
+    faIdCard,
+    faBookOpen,
+    faClockRotateLeft,
+    faSliders,
+    faArrowUp,
+    faUserShield,
+    faMagnifyingGlass,
+    faGauge,
+    faLock,
+    faClipboardList
 )
 
 
