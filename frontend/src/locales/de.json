@@ -428,8 +428,8 @@
   "landing": {
     "features": {
       "audit_log": {
-        "description": "Hast du den Überblick verloren, was du geändert hast? Das Audit-Protokoll zeichnet alle Änderungen an deinen Server-Einstellungen auf.",
-        "title": "Prüfprotokoll"
+        "description": "Hast du den Überblick verloren, was du geändert hast? Das Änderungsprotokoll zeichnet alle Änderungen an deinen Server-Einstellungen auf.",
+        "title": "Änderungsprotokoll"
       },
       "channel_categories": {
         "description": "Aktiviere den Bot in einzelnen Kanälen oder gleich in allen Kanälen einer Kategorie.",
@@ -440,11 +440,11 @@
         "title": "Funktioniert überall"
       },
       "customizable": {
-        "description": "Schalte jede Funktion ein oder aus und kombiniere sie nach Belieben, um genau das Erlebnis zu schaffen, das sich deine Community braucht.",
+        "description": "Schalte jede Funktion ein oder aus und kombiniere sie nach Belieben, um genau das Erlebnis zu schaffen, das deine Community braucht.",
         "title": "Sehr flexibel anpassbar"
       },
       "dashboard": {
-        "description": "Alle Einstellungen sind direkt hier im Web-Dashboard leicht zugänglich und konfigurierbar – ganz ohne Befehle.",
+        "description": "Alle Einstellungen sind direkt hier im Web-Dashboard leicht zugänglich und konfigurierbar – ganz ohne viele Befehle.",
         "title": "Web-Dashboard"
       },
       "level_up": {
@@ -543,11 +543,11 @@
     },
     "supporter_features": {
       "additional_emojis": {
-        "description": "Richte mehrere Emojis ein, mit denen man über Reaktionen Anerkennung zeigen kann, damit deine Community mehr Möglichkeiten hat, Dankbarkeit auszudrücken.",
+        "description": "Richte mehrere Emojis ein, mit denen man über Reaktionen Reputation geben kann, damit deine Community mehr Möglichkeiten hat, Dankbarkeit auszudrücken.",
         "title": "Weitere Emojis"
       },
       "advanced_rankings": {
-        "description": "Sieh dir an, wer auf deinem Server die meisten Reputationspunkte gespendet hat – mit detaillierten Spender-Ranglisten neben der üblichen Bestenliste.",
+        "description": "Sieh dir an, wer auf deinem Server die meisten Reputationspunkte gespendet hat – mit detaillierten zusätzlichen Ranglisten neben der üblichen Bestenliste.",
         "title": "Erweiterte Ranglisten"
       },
       "autopost": {
@@ -555,7 +555,7 @@
         "title": "Autopost-Rangliste"
       },
       "branding": {
-        "description": "Verleihe dem Bot eine persönliche Note mit einem individuellen Profilbild, einem Namen und einem Reputationslabel, das auf deine Community zugeschnitten ist.",
+        "description": "Verleihe dem Bot eine persönliche Note mit einem individuellen Profilbild, einem Namen und einem Reputationsnamen, die auf deine Community zugeschnitten ist.",
         "title": "Individuelles Branding"
       },
       "detailed_profile": {
@@ -563,8 +563,8 @@
         "title": "Ausführliches Profil"
       },
       "full_rep_log": {
-        "description": "Rufe alle Seiten des Reputationsprotokolls auf, um den vollständigen Verlauf der Reputationsereignisse auf deinem Server einzusehen.",
-        "title": "Vollständiges Reputationsprotokoll"
+        "description": "Rufe alle Seiten des Reputationsrankings auf, um den vollständigen Ranking der Nutzer auf deinem Server einzusehen.",
+        "title": "Vollständiges Reputationsranking"
       },
       "log_channel": {
         "description": "Verfolge alles, was auf größeren Servern passiert, über einen eigenen Log-Kanal für alle Reputationsereignisse.",
