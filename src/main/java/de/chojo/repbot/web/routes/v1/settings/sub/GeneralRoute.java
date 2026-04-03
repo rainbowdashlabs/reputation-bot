@@ -142,7 +142,7 @@ public class GeneralRoute implements RoutesBuilder {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         General general = session.repGuild().settings().general();
         Instant oldValue = general.resetDate();
-        Instant newValue = ctx.bodyAsClass(Instant.class);
+        Instant newValue = ctx.body().equals("null") ? null : ctx.bodyAsClass(Instant.class);
         general.resetDate(newValue);
         session.recordChange("general.resetdate", oldValue, newValue);
     }
