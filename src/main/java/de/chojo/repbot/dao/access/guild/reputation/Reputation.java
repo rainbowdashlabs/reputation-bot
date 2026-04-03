@@ -12,7 +12,7 @@ import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.access.guild.reputation.sub.Analyzer;
 import de.chojo.repbot.dao.access.guild.reputation.sub.Log;
 import de.chojo.repbot.dao.access.guild.reputation.sub.Rankings;
-import de.chojo.repbot.dao.access.guild.reputation.sub.RepUser;
+import de.chojo.repbot.dao.access.guild.reputation.sub.RepMember;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.dao.snapshots.GuildReputationStats;
 import net.dv8tion.jda.api.entities.Member;
@@ -32,7 +32,7 @@ public class Reputation implements GuildHolder {
     private final RepGuild repGuild;
 
     private final Rankings rankings;
-    private final Cache<Long, RepUser> users =
+    private final Cache<Long, RepMember> users =
             CacheBuilder.newBuilder().expireAfterAccess(5, TimeUnit.MINUTES).build();
     private final Log logAccess;
     private final Analyzer analyzer;
@@ -69,9 +69,9 @@ public class Reputation implements GuildHolder {
                 .orElseGet(() -> new GuildReputationStats(0, 0, 0, 0));
     }
 
-    public RepUser user(@NotNull Member member) {
+    public RepMember user(@NotNull Member member) {
         try {
-            return users.get(member.getIdLong(), () -> new RepUser(this, member))
+            return users.get(member.getIdLong(), () -> new RepMember(this, member))
                     .refresh(member);
         } catch (ExecutionException e) {
             log.error("Could not create reputation user", e);
@@ -79,9 +79,9 @@ public class Reputation implements GuildHolder {
         }
     }
 
-    public RepUser user(User user) {
+    public RepMember user(User user) {
         try {
-            return users.get(user.getIdLong(), () -> new RepUser(this, user));
+            return users.get(user.getIdLong(), () -> new RepMember(this, user));
         } catch (ExecutionException e) {
             log.error("Could not create reputation user", e);
             throw new RuntimeException(e);

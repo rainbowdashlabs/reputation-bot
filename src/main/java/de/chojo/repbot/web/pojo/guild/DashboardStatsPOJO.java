@@ -6,6 +6,7 @@
 package de.chojo.repbot.web.pojo.guild;
 
 import de.chojo.repbot.dao.snapshots.GuildReputationStats;
+import de.chojo.repbot.web.pojo.ranking.RankingEntryPOJO;
 
 import java.util.List;
 

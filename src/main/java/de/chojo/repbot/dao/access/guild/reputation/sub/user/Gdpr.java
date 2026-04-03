@@ -5,7 +5,7 @@
  */
 package de.chojo.repbot.dao.access.guild.reputation.sub.user;
 
-import de.chojo.repbot.dao.access.guild.reputation.sub.RepUser;
+import de.chojo.repbot.dao.access.guild.reputation.sub.RepMember;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.dao.components.MemberHolder;
 import net.dv8tion.jda.api.entities.Guild;
@@ -19,15 +19,15 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class Gdpr implements MemberHolder {
     private static final Logger log = getLogger(Gdpr.class);
-    private final RepUser repUser;
+    private final RepMember repMember;
 
-    public Gdpr(RepUser repUser) {
-        this.repUser = repUser;
+    public Gdpr(RepMember repMember) {
+        this.repMember = repMember;
     }
 
     @Override
     public Member member() {
-        return repUser.member();
+        return repMember.member();
     }
 
     public void queueDeletion() {
@@ -41,11 +41,11 @@ public class Gdpr implements MemberHolder {
                        (?, ?, now() + ?::INTERVAL)
                    ON CONFLICT(guild_id, user_id)
                        DO NOTHING;
-                """, repUser.configuration().cleanup().cleanupScheduleDays())
+                """, repMember.configuration().cleanup().cleanupScheduleDays())
                 .single(call().bind(guildId())
                         .bind(userId())
                         .bind("%d DAYS"
-                                .formatted(repUser.configuration().cleanup().cleanupScheduleDays())))
+                                .formatted(repMember.configuration().cleanup().cleanupScheduleDays())))
                 .update();
     }
 
@@ -63,7 +63,7 @@ public class Gdpr implements MemberHolder {
 
     @Override
     public User user() {
-        return repUser.user();
+        return repMember.user();
     }
 
     @Override
@@ -78,6 +78,6 @@ public class Gdpr implements MemberHolder {
 
     @Override
     public GuildHolder guildHolder() {
-        return repUser;
+        return repMember;
     }
 }

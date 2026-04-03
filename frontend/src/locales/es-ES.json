@@ -216,8 +216,48 @@
     "save": "Guardar"
   },
   "dashboard": {
+    "profile": "Perfil",
+    "profileView": {
+      "detailedProfile": "Perfil detallado",
+      "error": "No se ha podido cargar el perfil.",
+      "given": "Dado que",
+      "maxLevel": "Se ha alcanzado el nivel máximo",
+      "mostGivenChannels": "Los canales más vistos",
+      "mostReceivedChannels": "Canales más vistos",
+      "progress": "Pasa al siguiente nivel",
+      "rank": "Clasificación: {rank}",
+      "rankGiven": "Rango (asignado)",
+      "rankReceived": "Puesto (Recibido)",
+      "rawReputation": "Reputación sin filtrar",
+      "received": "Recibido",
+      "repOffset": "Compensación de reputación",
+      "shareProfile": "Compartir",
+      "shareProfileCopied": "¡Enlace copiado en el portapapeles!",
+      "topDonors": "Principales donantes",
+      "topReceivers": "Los mejores receptores"
+    },
+    "publicProfileView": {
+      "error": "No se ha podido cargar el perfil.",
+      "guildFooter": "Perfil en {guild}",
+      "privateProfile": "Este perfil es privado.",
+      "rank": "Clasificación",
+      "reputation": "Reputación"
+    },
     "rank": "Rango",
+    "ranking": "Clasificación",
+    "rankingView": {
+      "advancedRankings": "Clasificaciones avanzadas",
+      "given": "Dado que",
+      "mode": "Modo",
+      "pageSize": "Tamaño de la página",
+      "received": "Recibido"
+    },
     "reputation": "Reputación",
+    "tabs": {
+      "overview": "Resumen",
+      "profile": "Perfil",
+      "ranking": "Clasificación"
+    },
     "title": "Panel de control",
     "todayReputation": "La reputación actual",
     "topChannel": "Canal principal",
@@ -676,6 +716,7 @@
     "kofiHint": "o apóyanos en",
     "kofiLink": "Ko-fi",
     "message": "{name} está reservado para los seguidores. Hazte seguidor para poder utilizarlo.",
+    "perServer": "Las funciones se activan por servidor.",
     "requiredTierPlural": "Se requiere uno de los siguientes niveles de patrocinador:",
     "requiredTierSingular": "Nivel de patrocinador requerido:",
     "title": "Característica de los seguidores",
@@ -1034,6 +1075,7 @@
     "noFeatures": "No hay funciones disponibles en este momento.",
     "purchase": "Compra",
     "purchaseSuccess": "¡Función comprada correctamente!",
+    "requiredTiers": "Niveles de patrocinadores",
     "subscribe": "Suscríbete",
     "subscribeSuccess": "¡Suscripción habilitada!",
     "subscriptionActiveNote": "Esta función está habilitada actualmente mediante una suscripción activa.",
@@ -1074,6 +1116,10 @@
           "error": "La verificación del correo electrónico ha fallado. Inténtalo de nuevo o solicita un nuevo enlace de verificación.",
           "success": "Tu correo electrónico ha sido verificado correctamente."
         }
+      },
+      "publicProfile": {
+        "description": "Permite que otros usuarios vean tu perfil de reputación, aunque no compartan servidor contigo.",
+        "label": "Perfil público"
       },
       "title": "Configuración de usuario",
       "voteGuild": {

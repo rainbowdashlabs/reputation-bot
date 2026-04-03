@@ -25,8 +25,18 @@ public class MemberCache {
         try {
             return cache.get(new Key(guild.getId(), userId), () -> generate(guild, userId));
         } catch (ExecutionException e) {
-            return MemberPOJO.generate(userId);
+            return dummy(userId);
         }
+    }
+
+    @NotNull
+    public MemberPOJO get(Member member) {
+        return get(member.getGuild(), member.getId());
+    }
+
+    @NotNull
+    public MemberPOJO get(Guild guild, long userId) {
+        return get(guild, String.valueOf(userId));
     }
 
     private MemberPOJO generate(Guild guild, String memberId) {
@@ -34,8 +44,12 @@ public class MemberCache {
             Member member = guild.retrieveMemberById(memberId).complete();
             return MemberPOJO.generate(member);
         } catch (ErrorResponseException e) {
-            return MemberPOJO.generate(memberId);
+            return dummy(memberId);
         }
+    }
+
+    private MemberPOJO dummy(String memberId) {
+        return MemberPOJO.generate(memberId);
     }
 
     record Key(String guildId, String userId) {}

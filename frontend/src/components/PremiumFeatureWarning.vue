@@ -67,6 +67,7 @@ const displayMessage = computed(() => {
             <li v-for="sku in requiredSkus" :key="sku.id">{{ sku.name }}</li>
           </ul>
         </div>
+        <p class="text-sm text-yellow-700 italic">{{ t('premiumFeature.perServer') }}</p>
         <p class="mt-3 text-sm text-yellow-700">
           {{ t('premiumFeature.tokenShopHint') }}
           <router-link to="/guild/token-shop" class="font-semibold text-indigo-600 hover:text-indigo-500 underline transition-colors">
@@ -93,6 +94,7 @@ const displayMessage = computed(() => {
     <ul v-if="requiredSkus.length > 0" class="list-disc list-inside text-yellow-700 ml-2">
       <li v-for="sku in requiredSkus" :key="sku.id">{{ sku.name }}</li>
     </ul>
+    <p class="text-xs text-yellow-700 italic">{{ t('premiumFeature.perServer') }}</p>
     <p class="mt-2 text-xs text-yellow-700 italic">
       {{ t('premiumFeature.tokenShopHint') }}
       <router-link to="/guild/token-shop" class="font-semibold text-indigo-600 hover:text-indigo-500 underline transition-colors">

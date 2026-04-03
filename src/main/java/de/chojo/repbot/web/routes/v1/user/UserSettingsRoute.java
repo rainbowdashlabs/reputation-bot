@@ -48,6 +48,8 @@ public class UserSettingsRoute implements RoutesBuilder {
     public void buildRoutes() {
         get(this::getUserSettings, Role.USER);
         patch(this::updateUserSettings, Role.USER);
+        path("voteguild", () -> patch(this::updateVoteGuild, Role.USER));
+        path("publicprofile", () -> patch(this::updatePublicProfile, Role.USER));
         path("mail", () -> {
             get(this::getUserMails, Role.USER);
             post(this::registerMail, Role.USER);
@@ -73,7 +75,7 @@ public class UserSettingsRoute implements RoutesBuilder {
     private void getUserSettings(@NotNull Context ctx) {
         UserSession session = ctx.sessionAttribute(SessionAttribute.USER_SESSION);
         UserSettings settings = userRepository.byId(session.userId()).settings();
-        ctx.json(new UserSettingsPOJO(settings.voteGuild()));
+        ctx.json(new UserSettingsPOJO(settings.voteGuild(), settings.isPublicProfile()));
     }
 
     @OpenApi(
@@ -96,6 +98,46 @@ public class UserSettingsRoute implements RoutesBuilder {
 
         UserSettings settings = userRepository.byId(session.userId()).settings();
         settings.voteGuild(body.voteGuild());
+        ctx.status(204);
+    }
+
+    @OpenApi(
+            summary = "Update the vote guild setting.",
+            operationId = "updateUserVoteGuild",
+            path = "v1/user/settings/voteguild",
+            methods = HttpMethod.PATCH,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "User Session Token")},
+            requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = UpdateVoteGuildPOJO.class)),
+            tags = {"User"},
+            responses = {@OpenApiResponse(status = "204"), @OpenApiResponse(status = "400")})
+    private void updateVoteGuild(@NotNull Context ctx) {
+        UserSession session = ctx.sessionAttribute(SessionAttribute.USER_SESSION);
+        UpdateVoteGuildPOJO body = ctx.bodyAsClass(UpdateVoteGuildPOJO.class);
+
+        if (body.voteGuild() != 0 && !session.guilds().containsKey(String.valueOf(body.voteGuild()))) {
+            ctx.status(400).result("Guild not in session");
+            return;
+        }
+
+        UserSettings settings = userRepository.byId(session.userId()).settings();
+        settings.voteGuild(body.voteGuild());
+        ctx.status(204);
+    }
+
+    @OpenApi(
+            summary = "Update the public profile setting.",
+            operationId = "updateUserPublicProfile",
+            path = "v1/user/settings/publicprofile",
+            methods = HttpMethod.PATCH,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "User Session Token")},
+            requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = UpdatePublicProfilePOJO.class)),
+            tags = {"User"},
+            responses = {@OpenApiResponse(status = "204")})
+    private void updatePublicProfile(@NotNull Context ctx) {
+        UserSession session = ctx.sessionAttribute(SessionAttribute.USER_SESSION);
+        UpdatePublicProfilePOJO body = ctx.bodyAsClass(UpdatePublicProfilePOJO.class);
+        UserSettings settings = userRepository.byId(session.userId()).settings();
+        settings.publicProfile(body.publicProfile());
         ctx.status(204);
     }
 
@@ -207,4 +249,8 @@ public class UserSettingsRoute implements RoutesBuilder {
     public record RegisterMailPOJO(String mail) {}
 
     public record VerifyMailPOJO(String code) {}
+
+    public record UpdateVoteGuildPOJO(long voteGuild) {}
+
+    public record UpdatePublicProfilePOJO(boolean publicProfile) {}
 }

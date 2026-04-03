@@ -19,7 +19,30 @@ const routes: RouteRecordRaw[] = [
             {
                 path: 'dashboard',
                 name: 'GuildDashboard',
-                component: () => import('@/views/guild/DashboardView.vue')
+                component: () => import('@/views/guild/DashboardView.vue'),
+                redirect: '/guild/dashboard/overview',
+                children: [
+                    {
+                        path: 'overview',
+                        name: 'GuildDashboardOverview',
+                        component: () => import('@/views/guild/OverviewView.vue')
+                    },
+                    {
+                        path: 'ranking',
+                        name: 'GuildDashboardRanking',
+                        component: () => import('@/views/guild/RankingView.vue')
+                    },
+                    {
+                        path: 'profile',
+                        name: 'GuildDashboardProfile',
+                        component: () => import('@/views/guild/ProfileView.vue')
+                    },
+                    {
+                        path: 'profile/:userId',
+                        name: 'GuildDashboardUserProfile',
+                        component: () => import('@/views/guild/ProfileView.vue')
+                    }
+                ]
             },
             {
                 path: 'token-shop',
@@ -27,6 +50,11 @@ const routes: RouteRecordRaw[] = [
                 component: () => import('@/views/guild/TokenShopView.vue')
             }
         ]
+    },
+    {
+        path: '/public/profile/:guildId/:userId',
+        name: 'PublicProfile',
+        component: () => import('@/views/public/PublicProfileView.vue')
     },
     {
         path: '/settings',

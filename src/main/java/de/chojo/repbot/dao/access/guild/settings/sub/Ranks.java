@@ -5,7 +5,7 @@
  */
 package de.chojo.repbot.dao.access.guild.settings.sub;
 
-import de.chojo.repbot.dao.access.guild.reputation.sub.RepUser;
+import de.chojo.repbot.dao.access.guild.reputation.sub.RepMember;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.dao.snapshots.ReputationRank;
@@ -98,7 +98,7 @@ public class Ranks implements GuildHolder {
      * @param user user to check
      * @return list of ranks
      */
-    public List<ReputationRank> currentRanks(RepUser user) {
+    public List<ReputationRank> currentRanks(RepMember user) {
         var profile = user.profile();
         return ranks().stream()
                 .filter(rank -> rank.reputation() <= profile.reputation())
@@ -107,7 +107,7 @@ public class Ranks implements GuildHolder {
                 .toList();
     }
 
-    public Optional<ReputationRank> currentRank(RepUser user) {
+    public Optional<ReputationRank> currentRank(RepMember user) {
         var profile = user.profile();
         return ranks().stream()
                 .filter(rank -> rank.reputation() <= profile.reputation())
@@ -116,7 +116,7 @@ public class Ranks implements GuildHolder {
                 .findFirst();
     }
 
-    public Optional<ReputationRank> nextRank(RepUser user) {
+    public Optional<ReputationRank> nextRank(RepMember user) {
         var profile = user.profile();
         return ranks().stream()
                 .filter(rank -> rank.reputation() > profile.reputation())

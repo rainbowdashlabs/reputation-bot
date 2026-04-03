@@ -7,7 +7,7 @@ package de.chojo.repbot.commands.repadmin.handler.reputation;
 
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.wrapper.EventContext;
-import de.chojo.repbot.dao.access.guild.reputation.sub.RepUser;
+import de.chojo.repbot.dao.access.guild.reputation.sub.RepMember;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.service.RoleAssigner;
 import net.dv8tion.jda.api.entities.User;
@@ -34,5 +34,5 @@ public abstract class BaseReputationModifier implements SlashHandler {
     }
 
     abstract void execute(
-            SlashCommandInteractionEvent event, EventContext context, User user, RepUser repUser, long rep);
+            SlashCommandInteractionEvent event, EventContext context, User user, RepMember repMember, long rep);
 }

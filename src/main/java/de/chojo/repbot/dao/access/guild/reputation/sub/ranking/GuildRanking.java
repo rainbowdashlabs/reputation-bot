@@ -36,6 +36,7 @@ public abstract class GuildRanking implements GuildHolder {
 
     public Ranking byMode(ReputationMode mode, int pageSize) {
         return new Ranking(
+                this,
                 title(mode),
                 create("GUILD", guild().getName()),
                 () -> pages(pageSize, mode),

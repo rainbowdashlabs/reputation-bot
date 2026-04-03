@@ -216,8 +216,48 @@
     "save": "Tallenna"
   },
   "dashboard": {
+    "profile": "Profiili",
+    "profileView": {
+      "detailedProfile": "Yksityiskohtainen profiili",
+      "error": "Profiilia ei voitu ladata.",
+      "given": "Ottaen huomioon",
+      "maxLevel": "Korkein taso saavutettu",
+      "mostGivenChannels": "Suosituimmat kanavat",
+      "mostReceivedChannels": "Katsotuimmat kanavat",
+      "progress": "Siirry seuraavalle tasolle",
+      "rank": "Sijoitus: {rank}",
+      "rankGiven": "Sijoitus (annettu)",
+      "rankReceived": "Sijoitus (saavutettu)",
+      "rawReputation": "Raw Reputation",
+      "received": "Vastaanotettu",
+      "repOffset": "Maineen kompensointi",
+      "shareProfile": "Jaa",
+      "shareProfileCopied": "Linkki on kopioitu leikepöydälle!",
+      "topDonors": "Suurimmat lahjoittajat",
+      "topReceivers": "Parhaat laitahyökkääjät"
+    },
+    "publicProfileView": {
+      "error": "Profiilia ei voitu ladata.",
+      "guildFooter": "{guild}in profiili",
+      "privateProfile": "Tämä profiili on yksityinen.",
+      "rank": "Sijoitus",
+      "reputation": "Maine"
+    },
     "rank": "Sijoitus",
+    "ranking": "Sijoitus",
+    "rankingView": {
+      "advancedRankings": "Edistyneet rankingit",
+      "given": "Ottaen huomioon",
+      "mode": "Tila",
+      "pageSize": "Sivun koko",
+      "received": "Vastaanotettu"
+    },
     "reputation": "Maine",
+    "tabs": {
+      "overview": "Yleiskatsaus",
+      "profile": "Profiili",
+      "ranking": "Sijoitus"
+    },
     "title": "Kojelauta",
     "todayReputation": "Tämän päivän maine",
     "topChannel": "Suosituin kanava",
@@ -676,6 +716,7 @@
     "kofiHint": "tai tue meitä osoitteessa",
     "kofiLink": "Ko-fi",
     "message": "{name} on varattu tukijoille. Ryhdy tukijaksi, jotta voit käyttää sitä.",
+    "perServer": "Ominaisuudet avataan palvelinkohtaisesti.",
     "requiredTierPlural": "Jokin seuraavista tukijatasoista vaaditaan:",
     "requiredTierSingular": "Vaadittu tukijataso:",
     "title": "Kannattaja-ominaisuus",
@@ -1034,6 +1075,7 @@
     "noFeatures": "Tällä hetkellä ei ole käytettävissä olevia ominaisuuksia.",
     "purchase": "Osta",
     "purchaseSuccess": "Ominaisuus ostettu onnistuneesti!",
+    "requiredTiers": "Tukijatasot",
     "subscribe": "Tilaa",
     "subscribeSuccess": "Tilaus on aktivoitu!",
     "subscriptionActiveNote": "Tämä ominaisuus on tällä hetkellä käytössä aktiivisen tilauksen ansiosta.",
@@ -1074,6 +1116,10 @@
           "error": "Sähköpostin vahvistus epäonnistui. Yritä uudelleen tai pyydä uusi vahvistuslinkki.",
           "success": "Sähköpostiosoitteesi on vahvistettu onnistuneesti."
         }
+      },
+      "publicProfile": {
+        "description": "Salli muiden käyttäjien tarkastella maineprofiiliasi, vaikka he eivät olisi samalla palvelimella kanssasi.",
+        "label": "Julkinen profiili"
       },
       "title": "Käyttäjäasetukset",
       "voteGuild": {

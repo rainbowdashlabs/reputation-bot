@@ -43,13 +43,20 @@ public abstract class BaseTop implements SlashHandler {
     }
 
     public static MessageEditData buildRanking(
-            List<RankingEntry> ranking, Ranking guildRanking, LocalizationContext context) {
+            List<RankingEntry> ranking,
+            Ranking guildRanking,
+            LocalizationContext context,
+            Configuration configuration) {
         if (ranking.isEmpty()) {
             return BaseTop.buildEmptyRanking(guildRanking, context);
         }
         var maxRank = ranking.get(ranking.size() - 1).rank();
         var rankString =
                 ranking.stream().map(rank -> rank.fancyString((int) maxRank)).collect(Collectors.joining("\n"));
+        rankString += "\n-# [%s](%s)"
+                .formatted(
+                        context.localize("ranking.footer"),
+                        configuration.api().pathUrl(guildRanking.guildId(), "guild/dashboard/ranking"));
 
         return MessageEditData.fromEmbeds(BaseTop.createBaseBuilder(guildRanking, context)
                 .setDescription(rankString)

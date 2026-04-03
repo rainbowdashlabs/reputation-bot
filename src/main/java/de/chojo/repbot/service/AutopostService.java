@@ -8,6 +8,7 @@ package de.chojo.repbot.service;
 import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.jdautil.localization.util.LocaleProvider;
 import de.chojo.repbot.commands.ranking.handler.BaseTop;
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.core.Threading;
 import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.access.guild.settings.sub.autopost.Autopost;
@@ -39,16 +40,26 @@ public class AutopostService {
     private final ShardManager shardManager;
     private final GuildRepository guildRepository;
     private final ILocalizer localizer;
+    private final Configuration configuration;
 
-    public AutopostService(ShardManager shardManager, GuildRepository guildRepository, ILocalizer localizer) {
+    public AutopostService(
+            ShardManager shardManager,
+            GuildRepository guildRepository,
+            ILocalizer localizer,
+            Configuration configuration) {
         this.shardManager = shardManager;
         this.guildRepository = guildRepository;
         this.localizer = localizer;
+        this.configuration = configuration;
     }
 
     public static AutopostService create(
-            ShardManager shardManager, GuildRepository guildRepository, Threading threading, ILocalizer localizer) {
-        var service = new AutopostService(shardManager, guildRepository, localizer);
+            ShardManager shardManager,
+            GuildRepository guildRepository,
+            Threading threading,
+            ILocalizer localizer,
+            Configuration configuration) {
+        var service = new AutopostService(shardManager, guildRepository, localizer, configuration);
         int delay = 61 - Instant.now().atZone(ZoneId.of("UTC")).getMinute();
         log.debug("Next autopost refresh will be in {} minutes.", delay);
         threading.repBotWorker().scheduleAtFixedRate(service::check, delay, 60, TimeUnit.MINUTES);
@@ -64,8 +75,8 @@ public class AutopostService {
         if (guild.isById()) return;
         Ranking guildRanking = guild.reputation().ranking().received().defaultRanking(20);
         List<RankingEntry> ranking = guildRanking.page(0);
-        MessageEditData messageEditData =
-                BaseTop.buildRanking(ranking, guildRanking, localizer.context(LocaleProvider.guild(guild.guild())));
+        MessageEditData messageEditData = BaseTop.buildRanking(
+                ranking, guildRanking, localizer.context(LocaleProvider.guild(guild.guild())), configuration);
         Autopost autopost = guild.settings().autopost();
         RefreshType refreshType = autopost.refreshType();
         TextChannel channel = guild.guild().getTextChannelById(autopost.channelId());

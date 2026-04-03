@@ -118,6 +118,10 @@
         "description": "Choose which guild should receive tokens when you vote for the bot. This will only affect future votes.",
         "none": "No specific guild (Personal)"
       },
+      "publicProfile": {
+        "label": "Public Profile",
+        "description": "Allow other users to view your reputation profile, when they do not share a server with you."
+      },
       "mails": {
         "title": "Email Addresses",
         "description": "Manage the email addresses linked to your account. You can add a new address and verify it via the link sent to your inbox.",
@@ -220,7 +224,47 @@
     "topUsers": "Top Users",
     "rank": "Rank",
     "user": "User",
-    "reputation": "Reputation"
+    "reputation": "Reputation",
+    "ranking": "Ranking",
+    "profile": "Profile",
+    "rankingView": {
+      "received": "Received",
+      "given": "Given",
+      "mode": "Mode",
+      "pageSize": "Page Size",
+      "advancedRankings": "Advanced Rankings"
+    },
+    "publicProfileView": {
+      "error": "Failed to load profile.",
+      "privateProfile": "This profile is private.",
+      "reputation": "Reputation",
+      "rank": "Rank",
+      "guildFooter": "Profile on {guild}"
+    },
+    "profileView": {
+      "error": "Failed to load profile.",
+      "rank": "Rank: {rank}",
+      "received": "Received",
+      "given": "Given",
+      "rankReceived": "Rank (Received)",
+      "rankGiven": "Rank (Given)",
+      "progress": "Progress to next level",
+      "maxLevel": "Max level reached",
+      "topDonors": "Top Donors",
+      "topReceivers": "Top Receivers",
+      "mostGivenChannels": "Most Given Channels",
+      "mostReceivedChannels": "Most Received Channels",
+      "rawReputation": "Raw Reputation",
+      "repOffset": "Reputation Offset",
+      "detailedProfile": "Detailed Profile",
+      "shareProfile": "Share",
+      "shareProfileCopied": "Link copied to clipboard!"
+    },
+    "tabs": {
+      "overview": "Overview",
+      "ranking": "Ranking",
+      "profile": "Profile"
+    }
   },
   "presets": {
     "title": "Presets",
@@ -353,7 +397,8 @@
     "tokenShopHint": "You can also unlock this feature with tokens in the",
     "tokenShopLink": "Token Shop",
     "kofiHint": "or support us on",
-    "kofiLink": "Ko-fi"
+    "kofiLink": "Ko-fi",
+    "perServer": "Features are unlocked on a per server basis."
   },
   "scan": {
     "description": "Scan your guild for reputation that was given before the bot was added or in channels that were not tracked. This will scan all messages in the configured reputation channels and categories.",

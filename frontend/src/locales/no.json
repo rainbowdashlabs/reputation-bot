@@ -216,8 +216,48 @@
     "save": "Lagre"
   },
   "dashboard": {
+    "profile": "Profil",
+    "profileView": {
+      "detailedProfile": "Detaljert profil",
+      "error": "Det gikk ikke å laste inn profilen.",
+      "given": "Gitt",
+      "maxLevel": "Maksimalt nivå nådd",
+      "mostGivenChannels": "De mest populære kanalene",
+      "mostReceivedChannels": "De mest mottatte kanalene",
+      "progress": "Gå videre til neste nivå",
+      "rank": "Rangering: {rank}",
+      "rankGiven": "Rang (tildelt)",
+      "rankReceived": "Rangering (mottatt)",
+      "rawReputation": "Raw Reputation",
+      "received": "Mottatt",
+      "repOffset": "Omdømmeutjevning",
+      "shareProfile": "Del",
+      "shareProfileCopied": "Koblingen er kopiert til utklippstavlen!",
+      "topDonors": "De største giverne",
+      "topReceivers": "De beste mottakerne"
+    },
+    "publicProfileView": {
+      "error": "Det gikk ikke å laste inn profilen.",
+      "guildFooter": "Profil på {guild}",
+      "privateProfile": "Denne profilen er privat.",
+      "rank": "Rangering",
+      "reputation": "Omdømme"
+    },
     "rank": "Rangering",
+    "ranking": "Rangering",
+    "rankingView": {
+      "advancedRankings": "Avanserte rangeringer",
+      "given": "Gitt",
+      "mode": "Modus",
+      "pageSize": "Sidestørrelse",
+      "received": "Mottatt"
+    },
     "reputation": "Omdømme",
+    "tabs": {
+      "overview": "Oversikt",
+      "profile": "Profil",
+      "ranking": "Rangering"
+    },
     "title": "Dashbord",
     "todayReputation": "Dagens omdømme",
     "topChannel": "Toppkanal",
@@ -676,6 +716,7 @@
     "kofiHint": "eller støtt oss på",
     "kofiLink": "Ko-fi",
     "message": "{name} er forbeholdt støttespillere. Bli støttespiller for å kunne bruke den.",
+    "perServer": "Funksjonene aktiveres på hver enkelt server.",
     "requiredTierPlural": "En av følgende støttenivåer er påkrevd:",
     "requiredTierSingular": "Nødvendig støttenivå:",
     "title": "Supporterfunksjon",
@@ -1034,6 +1075,7 @@
     "noFeatures": "Ingen funksjoner tilgjengelig for øyeblikket.",
     "purchase": "Kjøp",
     "purchaseSuccess": "Funksjonen er kjøpt!",
+    "requiredTiers": "Støttenivåer",
     "subscribe": "Abonner",
     "subscribeSuccess": "Abonnement aktivert!",
     "subscriptionActiveNote": "Denne funksjonen er for øyeblikket aktivert av et aktivt abonnement.",
@@ -1074,6 +1116,10 @@
           "error": "E-postbekreftelsen mislyktes. Prøv igjen eller be om en ny bekreftelseskobling.",
           "success": "E-postadressen din er bekreftet."
         }
+      },
+      "publicProfile": {
+        "description": "La andre brukere se omdømmeprofilen din, selv om de ikke deler server med deg.",
+        "label": "Offentlig profil"
       },
       "title": "Brukerinnstillinger",
       "voteGuild": {

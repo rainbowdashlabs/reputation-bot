@@ -216,8 +216,48 @@
     "save": "Opslaan"
   },
   "dashboard": {
+    "profile": "Profiel",
+    "profileView": {
+      "detailedProfile": "Uitgebreid profiel",
+      "error": "Het profiel kan niet worden geladen.",
+      "given": "Aangezien",
+      "maxLevel": "Maximale level bereikt",
+      "mostGivenChannels": "Meest gegeven kanalen",
+      "mostReceivedChannels": "Meest bekeken zenders",
+      "progress": "Ga naar het volgende niveau",
+      "rank": "Ranglijst: {rank}",
+      "rankGiven": "Rang (Toegekend)",
+      "rankReceived": "Rang (Ontvangen)",
+      "rawReputation": "Raw Reputation",
+      "received": "Ontvangen",
+      "repOffset": "Reputatiecorrectie",
+      "shareProfile": "Delen",
+      "shareProfileCopied": "De link is naar het klembord gekopieerd!",
+      "topDonors": "Grootste donateurs",
+      "topReceivers": "Topontvangers"
+    },
+    "publicProfileView": {
+      "error": "Het profiel kan niet worden geladen.",
+      "guildFooter": "Profiel op {guild}",
+      "privateProfile": "Dit profiel is privé.",
+      "rank": "Rang",
+      "reputation": "Reputatie"
+    },
     "rank": "Rang",
+    "ranking": "Ranglijst",
+    "rankingView": {
+      "advancedRankings": "Geavanceerde ranglijsten",
+      "given": "Aangezien",
+      "mode": "Modus",
+      "pageSize": "Paginagrootte",
+      "received": "Ontvangen"
+    },
     "reputation": "Reputatie",
+    "tabs": {
+      "overview": "Overzicht",
+      "profile": "Profiel",
+      "ranking": "Ranglijst"
+    },
     "title": "Dashboard",
     "todayReputation": "De reputatie van vandaag",
     "topChannel": "Topkanaal",
@@ -676,6 +716,7 @@
     "kofiHint": "of steun ons op",
     "kofiLink": "Ko-fi",
     "message": "{name} is alleen voor supporters. Word supporter om het te kunnen gebruiken.",
+    "perServer": "Functies worden per server vrijgegeven.",
     "requiredTierPlural": "Je moet een van de volgende supporterniveaus kiezen:",
     "requiredTierSingular": "Vereist ondersteuningsniveau:",
     "title": "Supporter-functie",
@@ -1034,6 +1075,7 @@
     "noFeatures": "Op dit moment zijn er geen functies beschikbaar.",
     "purchase": "Aankoop",
     "purchaseSuccess": "Functie succesvol gekocht!",
+    "requiredTiers": "Supportersniveaus",
     "subscribe": "Abonneren",
     "subscribeSuccess": "Abonnement is nu actief!",
     "subscriptionActiveNote": "Deze functie is nu beschikbaar als je een actief abonnement hebt.",
@@ -1074,6 +1116,10 @@
           "error": "Het lukte niet om je e-mail te checken. Probeer het nog een keer of vraag een nieuwe verificatielink aan.",
           "success": "Je e-mailadres is nu goed geverifieerd."
         }
+      },
+      "publicProfile": {
+        "description": "Laat andere gebruikers je reputatieprofiel bekijken, ook als ze niet op dezelfde server zitten als jij.",
+        "label": "Openbaar profiel"
       },
       "title": "Gebruikersinstellingen",
       "voteGuild": {

@@ -216,8 +216,48 @@
     "save": "Spara"
   },
   "dashboard": {
+    "profile": "Profil",
+    "profileView": {
+      "detailedProfile": "Detaljerad profil",
+      "error": "Det gick inte att ladda profilen.",
+      "given": "Med tanke på",
+      "maxLevel": "Högsta nivå uppnådd",
+      "mostGivenChannels": "De mest populära kanalerna",
+      "mostReceivedChannels": "De mest tittade kanalerna",
+      "progress": "Gå vidare till nästa nivå",
+      "rank": "Rankning: {rank}",
+      "rankGiven": "Rankning (angiven)",
+      "rankReceived": "Placering (mottagen)",
+      "rawReputation": "Raw Reputation",
+      "received": "Mottaget",
+      "repOffset": "Rykte-kompensation",
+      "shareProfile": "Dela",
+      "shareProfileCopied": "Länken har kopierats till urklipp!",
+      "topDonors": "De största donatorerna",
+      "topReceivers": "De bästa mottagarna"
+    },
+    "publicProfileView": {
+      "error": "Det gick inte att ladda profilen.",
+      "guildFooter": "Profil på {guild}",
+      "privateProfile": "Den här profilen är privat.",
+      "rank": "Rankning",
+      "reputation": "Anseende"
+    },
     "rank": "Rank",
+    "ranking": "Rankning",
+    "rankingView": {
+      "advancedRankings": "Avancerade rankningar",
+      "given": "Med tanke på",
+      "mode": "Läge",
+      "pageSize": "Sidstorlek",
+      "received": "Mottaget"
+    },
     "reputation": "Rykte",
+    "tabs": {
+      "overview": "Översikt",
+      "profile": "Profil",
+      "ranking": "Rankning"
+    },
     "title": "Instrumentpanel",
     "todayReputation": "Dagens rykte",
     "topChannel": "Top Channel",
@@ -676,6 +716,7 @@
     "kofiHint": "eller stöd oss på",
     "kofiLink": "Ko-fi",
     "message": "{name} är reserverad för supportrar. Bli supporter för att kunna använda den.",
+    "perServer": "Funktionerna aktiveras per server.",
     "requiredTierPlural": "En av följande supporternivåer krävs:",
     "requiredTierSingular": "Krävd supporternivå:",
     "title": "Supporterfunktion",
@@ -1034,6 +1075,7 @@
     "noFeatures": "Inga funktioner tillgängliga för tillfället.",
     "purchase": "Köp",
     "purchaseSuccess": "Funktionen har köpts!",
+    "requiredTiers": "Supporterkategorier",
     "subscribe": "Prenumerera",
     "subscribeSuccess": "Prenumeration aktiverad!",
     "subscriptionActiveNote": "Denna funktion är för närvarande aktiverad genom ett aktivt abonnemang.",
@@ -1074,6 +1116,10 @@
           "error": "E-postverifieringen misslyckades. Försök igen eller begär en ny verifieringslänk.",
           "success": "Din e-postadress har verifierats."
         }
+      },
+      "publicProfile": {
+        "description": "Låt andra användare se ditt omdömesprofil, även om de inte delar server med dig.",
+        "label": "Offentlig profil"
       },
       "title": "Användarinställningar",
       "voteGuild": {

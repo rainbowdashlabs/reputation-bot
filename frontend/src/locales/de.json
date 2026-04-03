@@ -216,8 +216,48 @@
     "save": "Speichern"
   },
   "dashboard": {
+    "profile": "Profil",
+    "profileView": {
+      "detailedProfile": "Ausführliches Profil",
+      "error": "Das Profil konnte nicht geladen werden.",
+      "given": "Angesichts",
+      "maxLevel": "Maximale Stufe erreicht",
+      "mostGivenChannels": "Die meistgesendeten Kanäle",
+      "mostReceivedChannels": "Die meistgesehenen Sender",
+      "progress": "Weiter zum nächsten Level",
+      "rank": "Rang: {rank}",
+      "rankGiven": "Rang (vorgegeben)",
+      "rankReceived": "Rang (erhalten)",
+      "rawReputation": "Raw Reputation",
+      "received": "Erhalten",
+      "repOffset": "Reputationsausgleich",
+      "shareProfile": "Teilen",
+      "shareProfileCopied": "Link in die Zwischenablage kopiert!",
+      "topDonors": "Die größten Spender",
+      "topReceivers": "Die besten Receiver"
+    },
+    "publicProfileView": {
+      "error": "Das Profil konnte nicht geladen werden.",
+      "guildFooter": "Profil auf {guild}",
+      "privateProfile": "Dieses Profil ist privat.",
+      "rank": "Rang",
+      "reputation": "Ruf"
+    },
     "rank": "Rang",
+    "ranking": "Rangliste",
+    "rankingView": {
+      "advancedRankings": "Erweiterte Ranglisten",
+      "given": "Angesichts",
+      "mode": "Modus",
+      "pageSize": "Seitengröße",
+      "received": "Erhalten"
+    },
     "reputation": "Reputation",
+    "tabs": {
+      "overview": "Übersicht",
+      "profile": "Profil",
+      "ranking": "Rangliste"
+    },
     "title": "Dashboard",
     "todayReputation": "Heute",
     "topChannel": "Top-Kanal",
@@ -676,6 +716,7 @@
     "kofiHint": "oder unterstützt uns auf",
     "kofiLink": "Ko-fi",
     "message": "{name} ist für Unterstützer reserviert. Werde Unterstützer, um es zu nutzen.",
+    "perServer": "Die Funktionen werden auf Server-Basis freigeschaltet.",
     "requiredTierPlural": "Eine der folgenden Unterstützerstufen ist erforderlich:",
     "requiredTierSingular": "Erforderliche Unterstützerstufe:",
     "title": "Unterstützer-Feature",
@@ -1034,6 +1075,7 @@
     "noFeatures": "Im Moment gibt's keine Features.",
     "purchase": "Kauf",
     "purchaseSuccess": "Funktion erfolgreich gekauft!",
+    "requiredTiers": "Unterstützerstufen",
     "subscribe": "Abonnieren",
     "subscribeSuccess": "Abo aktiviert!",
     "subscriptionActiveNote": "Diese Funktion ist gerade durch ein aktives Abonnement aktiviert.",
@@ -1074,6 +1116,10 @@
           "error": "Die E-Mail-Bestätigung hat nicht geklappt. Versuch' es nochmal oder lass dir einen neuen Bestätigungslink schicken.",
           "success": "Deine E-Mail-Adresse wurde erfolgreich bestätigt."
         }
+      },
+      "publicProfile": {
+        "description": "Erlaube anderen Nutzern, dein Reputationsprofil einzusehen, auch wenn sie nicht denselben Server wie du nutzen.",
+        "label": "Öffentliches Profil"
       },
       "title": "Benutzereinstellungen",
       "voteGuild": {

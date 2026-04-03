@@ -216,8 +216,48 @@
     "save": "Kaydet"
   },
   "dashboard": {
+    "profile": "Profil",
+    "profileView": {
+      "detailedProfile": "Ayrıntılı Profil",
+      "error": "Profil yüklenemedi.",
+      "given": "Verildi",
+      "maxLevel": "Maksimum seviyeye ulaşıldı",
+      "mostGivenChannels": "En Çok İzlenen Kanallar",
+      "mostReceivedChannels": "En Çok İzlenen Kanallar",
+      "progress": "Bir sonraki seviyeye geç",
+      "rank": "Sıralama: {rank}",
+      "rankGiven": "Sıra (Verilen)",
+      "rankReceived": "Sıra (Alınan)",
+      "rawReputation": "Ham İtibar",
+      "received": "Alındı",
+      "repOffset": "İtibar Dengeleme",
+      "shareProfile": "Paylaş",
+      "shareProfileCopied": "Bağlantı panoya kopyalandı!",
+      "topDonors": "En Büyük Bağışçılar",
+      "topReceivers": "En İyi Alıcılar"
+    },
+    "publicProfileView": {
+      "error": "Profil yüklenemedi.",
+      "guildFooter": "{guild}'daki profil",
+      "privateProfile": "Bu profil gizlidir.",
+      "rank": "Sıra",
+      "reputation": "İtibar"
+    },
     "rank": "Sıra",
+    "ranking": "Sıralama",
+    "rankingView": {
+      "advancedRankings": "Gelişmiş Sıralamalar",
+      "given": "Verildi",
+      "mode": "Mod",
+      "pageSize": "Sayfa Boyutu",
+      "received": "Alındı"
+    },
     "reputation": "İtibar",
+    "tabs": {
+      "overview": "Genel Bakış",
+      "profile": "Profil",
+      "ranking": "Sıralama"
+    },
     "title": "Gösterge paneli",
     "todayReputation": "Bugünün İtibarı",
     "topChannel": "En Popüler Kanal",
@@ -676,6 +716,7 @@
     "kofiHint": "veya bizi destekleyin",
     "kofiLink": "Ko-fi",
     "message": "{name} destekçilere ayrılmıştır. Kullanmak için destekçi olun.",
+    "perServer": "Özellikler sunucu bazında etkinleştirilir.",
     "requiredTierPlural": "Aşağıdaki destekçi seviyelerinden biri gereklidir:",
     "requiredTierSingular": "Gerekli Destekçi Seviyesi:",
     "title": "Destekçi Özelliği",
@@ -1034,6 +1075,7 @@
     "noFeatures": "Şu anda kullanılabilir özellik yok.",
     "purchase": "Satın al",
     "purchaseSuccess": "Özellik başarıyla satın alındı!",
+    "requiredTiers": "Destekçi Seviyeleri",
     "subscribe": "Abone ol",
     "subscribeSuccess": "Abonelik etkinleştirildi!",
     "subscriptionActiveNote": "Bu özellik şu anda aktif bir abonelikle etkinleştirilmiştir.",
@@ -1074,6 +1116,10 @@
           "error": "E-posta doğrulama başarısız oldu. Lütfen tekrar deneyin veya yeni bir doğrulama bağlantısı isteyin.",
           "success": "E-postanız başarıyla doğrulandı."
         }
+      },
+      "publicProfile": {
+        "description": "Sizinle aynı sunucuyu paylaşmayan diğer kullanıcıların itibar profilinizi görüntülemelerine izin verin.",
+        "label": "Herkese Açık Profil"
       },
       "title": "Kullanıcı Ayarları",
       "voteGuild": {
