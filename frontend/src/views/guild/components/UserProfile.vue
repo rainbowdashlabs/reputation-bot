@@ -100,7 +100,7 @@ const allChannels = computed(() => {
 })
 
 const channelName = (channelId: string) => {
-  return allChannels.value.find(c => c.id === channelId)?.name ?? `#${channelId}`
+  return allChannels.value.find(c => c.id === channelId)?.name ?? `${channelId}`
 }
 
 const fetchProfile = async () => {
