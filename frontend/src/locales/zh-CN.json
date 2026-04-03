@@ -216,8 +216,48 @@
     "save": "保存"
   },
   "dashboard": {
+    "profile": "个人简介",
+    "profileView": {
+      "detailedProfile": "详细资料",
+      "error": "无法加载个人资料。",
+      "given": "鉴于",
+      "maxLevel": "已达到最高等级",
+      "mostGivenChannels": "最常被赠送的频道",
+      "mostReceivedChannels": "收看次数最多的频道",
+      "progress": "晋级下一关",
+      "rank": "排名：{rank}",
+      "rankGiven": "等级（已指定）",
+      "rankReceived": "排名（已收到）",
+      "rawReputation": "原始声誉",
+      "received": "已收到",
+      "repOffset": "声望抵消",
+      "shareProfile": "分享",
+      "shareProfileCopied": "链接已复制到剪贴板！",
+      "topDonors": "主要捐赠者",
+      "topReceivers": "顶尖接球手"
+    },
+    "publicProfileView": {
+      "error": "无法加载个人资料。",
+      "guildFooter": "{guild} 个人资料",
+      "privateProfile": "该个人资料为私密状态。",
+      "rank": "排名",
+      "reputation": "声誉"
+    },
     "rank": "等级",
+    "ranking": "排名",
+    "rankingView": {
+      "advancedRankings": "高级排名",
+      "given": "鉴于",
+      "mode": "模式",
+      "pageSize": "页面大小",
+      "received": "已收到"
+    },
     "reputation": "声誉",
+    "tabs": {
+      "overview": "概述",
+      "profile": "个人简介",
+      "ranking": "排名"
+    },
     "title": "仪表板",
     "todayReputation": "今日声誉",
     "topChannel": "顶级频道",
@@ -676,6 +716,7 @@
     "kofiHint": "或支持我们",
     "kofiLink": "柯菲",
     "message": "{name} 该功能仅限支持者使用。请成为支持者以启用此功能。",
+    "perServer": "功能的解锁以服务器为单位进行。",
     "requiredTierPlural": "需选择以下其中一个支持者等级：",
     "requiredTierSingular": "所需支持者等级：",
     "title": "支持者专访",
@@ -1034,6 +1075,7 @@
     "noFeatures": "目前没有可用功能。",
     "purchase": "购买",
     "purchaseSuccess": "功能购买成功！",
+    "requiredTiers": "支持者等级",
     "subscribe": "订阅",
     "subscribeSuccess": "订阅已启用！",
     "subscriptionActiveNote": "此功能目前通过有效订阅启用。",
@@ -1074,6 +1116,10 @@
           "error": "电子邮件验证失败。请重试或申请新的验证链接。",
           "success": "您的电子邮件已成功验证。"
         }
+      },
+      "publicProfile": {
+        "description": "允许其他用户查看您的声誉档案，即使他们与您不在同一服务器上。",
+        "label": "公开资料"
       },
       "title": "用户设置",
       "voteGuild": {

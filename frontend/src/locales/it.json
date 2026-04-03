@@ -216,8 +216,48 @@
     "save": "Salva"
   },
   "dashboard": {
+    "profile": "Profilo",
+    "profileView": {
+      "detailedProfile": "Profilo dettagliato",
+      "error": "Impossibile caricare il profilo.",
+      "given": "Dato che",
+      "maxLevel": "Livello massimo raggiunto",
+      "mostGivenChannels": "I canali più seguiti",
+      "mostReceivedChannels": "I canali più seguiti",
+      "progress": "Passa al livello successivo",
+      "rank": "Classifica: {rank}",
+      "rankGiven": "Grado (assegnato)",
+      "rankReceived": "Posizione (Ricevuto)",
+      "rawReputation": "Reputazione grezza",
+      "received": "Ricevuto",
+      "repOffset": "Compensazione della reputazione",
+      "shareProfile": "Condividi",
+      "shareProfileCopied": "Il link è stato copiato negli appunti!",
+      "topDonors": "I principali donatori",
+      "topReceivers": "I migliori ricevitori"
+    },
+    "publicProfileView": {
+      "error": "Impossibile caricare il profilo.",
+      "guildFooter": "Profilo su {guild}",
+      "privateProfile": "Questo profilo è privato.",
+      "rank": "Posizione",
+      "reputation": "Reputazione"
+    },
     "rank": "Classifica",
+    "ranking": "Classifica",
+    "rankingView": {
+      "advancedRankings": "Classifiche avanzate",
+      "given": "Dato che",
+      "mode": "Modalità",
+      "pageSize": "Dimensione pagina",
+      "received": "Ricevuto"
+    },
     "reputation": "Reputazione",
+    "tabs": {
+      "overview": "Panoramica",
+      "profile": "Profilo",
+      "ranking": "Classifica"
+    },
     "title": "Pannello di controllo",
     "todayReputation": "La reputazione di oggi",
     "topChannel": "Canale principale",
@@ -676,6 +716,7 @@
     "kofiHint": "oppure seguici su",
     "kofiLink": "Ko-fi",
     "message": "{name} è solo per chi ci supporta. Diventa un sostenitore per usarlo.",
+    "perServer": "Le funzionalità vengono sbloccate per ogni singolo server.",
     "requiredTierPlural": "Devi scegliere uno di questi livelli di sostegno:",
     "requiredTierSingular": "Livello di sostegno richiesto:",
     "title": "Caratteristiche dei sostenitori",
@@ -1034,6 +1075,7 @@
     "noFeatures": "Al momento non ci sono funzioni disponibili.",
     "purchase": "Acquisto",
     "purchaseSuccess": "Funzionalità comprata con successo!",
+    "requiredTiers": "Livelli di abbonamento",
     "subscribe": "Iscriviti",
     "subscribeSuccess": "Abbonamento attivato!",
     "subscriptionActiveNote": "Questa funzione è attualmente disponibile con un abbonamento attivo.",
@@ -1074,6 +1116,10 @@
           "error": "La verifica dell'indirizzo e-mail non è andata a buon fine. Prova di nuovo o chiedi un nuovo link di verifica.",
           "success": "La tua email è stata verificata senza problemi."
         }
+      },
+      "publicProfile": {
+        "description": "Consenti agli altri utenti di visualizzare il tuo profilo di reputazione, anche se non condividono lo stesso server con te.",
+        "label": "Profilo pubblico"
       },
       "title": "Impostazioni utente",
       "voteGuild": {

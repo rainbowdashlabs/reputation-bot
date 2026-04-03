@@ -216,8 +216,48 @@
     "save": "Zapisz"
   },
   "dashboard": {
+    "profile": "Profil",
+    "profileView": {
+      "detailedProfile": "Szczegółowy profil",
+      "error": "Nie udało się załadować profilu.",
+      "given": "Biorąc pod uwagę",
+      "maxLevel": "Osiągnięto maksymalny poziom",
+      "mostGivenChannels": "Najczęściej wybierane kanały",
+      "mostReceivedChannels": "Najczęściej oglądane kanały",
+      "progress": "Przejdź do następnego poziomu",
+      "rank": "Ranking: {rank}",
+      "rankGiven": "Ranga (nadana)",
+      "rankReceived": "Ranking (Otrzymane)",
+      "rawReputation": "Raw Reputation",
+      "received": "Otrzymano",
+      "repOffset": "Korekta reputacji",
+      "shareProfile": "Udostępnij",
+      "shareProfileCopied": "Link skopiowano do schowka!",
+      "topDonors": "Najwięksi darczyńcy",
+      "topReceivers": "Najlepsi skrzydłowi"
+    },
+    "publicProfileView": {
+      "error": "Nie udało się załadować profilu.",
+      "guildFooter": "Profil na stronie {guild}",
+      "privateProfile": "Ten profil jest prywatny.",
+      "rank": "Ranking",
+      "reputation": "Reputacja"
+    },
     "rank": "Ranga",
+    "ranking": "Ranking",
+    "rankingView": {
+      "advancedRankings": "Zaawansowane rankingi",
+      "given": "Biorąc pod uwagę",
+      "mode": "Tryb",
+      "pageSize": "Rozmiar strony",
+      "received": "Otrzymano"
+    },
     "reputation": "Reputacja",
+    "tabs": {
+      "overview": "Przegląd",
+      "profile": "Profil",
+      "ranking": "Ranking"
+    },
     "title": "Pulpit nawigacyjny",
     "todayReputation": "Dzisiejsza reputacja",
     "topChannel": "Najpopularniejszy kanał",
@@ -676,6 +716,7 @@
     "kofiHint": "lub wesprzyj nas na",
     "kofiLink": "Ko-fi",
     "message": "{name} jest zarezerwowana dla kibiców. Zostań kibicem, aby z niej korzystać.",
+    "perServer": "Funkcje są odblokowywane osobno dla każdego serwera.",
     "requiredTierPlural": "Wymagany jest jeden z poniższych poziomów wsparcia:",
     "requiredTierSingular": "Wymagany poziom wsparcia:",
     "title": "Funkcja kibica",
@@ -1034,6 +1075,7 @@
     "noFeatures": "W tej chwili nie są dostępne żadne funkcje.",
     "purchase": "Zakup",
     "purchaseSuccess": "Funkcja została pomyślnie zakupiona!",
+    "requiredTiers": "Poziomy wsparcia",
     "subscribe": "Zapisz się",
     "subscribeSuccess": "Subskrypcja włączona!",
     "subscriptionActiveNote": "Ta funkcja jest obecnie dostępna dzięki aktywnej subskrypcji.",
@@ -1074,6 +1116,10 @@
           "error": "Weryfikacja adresu e-mail nie powiodła się. Spróbuj ponownie lub poproś o nowy link weryfikacyjny.",
           "success": "Twój adres e-mail został pomyślnie zweryfikowany."
         }
+      },
+      "publicProfile": {
+        "description": "Zezwól innym użytkownikom na przeglądanie twojego profilu reputacji, nawet jeśli nie korzystają z tego samego serwera co ty.",
+        "label": "Profil publiczny"
       },
       "title": "Ustawienia użytkownika",
       "voteGuild": {

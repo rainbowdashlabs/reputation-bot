@@ -216,8 +216,48 @@
     "save": "Uložit"
   },
   "dashboard": {
+    "profile": "Profil",
+    "profileView": {
+      "detailedProfile": "Podrobný profil",
+      "error": "Nepodařilo se načíst profil.",
+      "given": "Vzhledem k tomu, že",
+      "maxLevel": "Byla dosažena maximální úroveň",
+      "mostGivenChannels": "Nejčastěji sledované kanály",
+      "mostReceivedChannels": "Nejčastěji sledované kanály",
+      "progress": "Postup na další úroveň",
+      "rank": "Hodnocení: {rank}",
+      "rankGiven": "Pořadí (zadané)",
+      "rankReceived": "Pořadí (obdržených)",
+      "rawReputation": "Raw Reputation",
+      "received": "Přijato",
+      "repOffset": "Kompenzace reputace",
+      "shareProfile": "Sdílet",
+      "shareProfileCopied": "Odkaz byl zkopírován do schránky!",
+      "topDonors": "Největší dárci",
+      "topReceivers": "Nejlepší přijímače"
+    },
+    "publicProfileView": {
+      "error": "Nepodařilo se načíst profil.",
+      "guildFooter": "Profil na {guild}",
+      "privateProfile": "Tento profil je soukromý.",
+      "rank": "Pořadí",
+      "reputation": "Pověst"
+    },
     "rank": "Hodnost",
+    "ranking": "Žebříček",
+    "rankingView": {
+      "advancedRankings": "Pokročilé žebříčky",
+      "given": "Vzhledem k tomu, že",
+      "mode": "Režim",
+      "pageSize": "Velikost stránky",
+      "received": "Přijato"
+    },
     "reputation": "Reputace",
+    "tabs": {
+      "overview": "Přehled",
+      "profile": "Profil",
+      "ranking": "Žebříček"
+    },
     "title": "Přístrojová deska",
     "todayReputation": "Dnešní reputace",
     "topChannel": "Nejlepší kanál",
@@ -676,6 +716,7 @@
     "kofiHint": "nebo nás podpořte na",
     "kofiLink": "Ko-fi",
     "message": "{name} je vyhrazeno pro příznivce. Staňte se příznivcem a můžete jej používat.",
+    "perServer": "Funkce se odemykají pro jednotlivé servery.",
     "requiredTierPlural": "Je vyžadována jedna z následujících úrovní podpory:",
     "requiredTierSingular": "Požadovaná úroveň podpory:",
     "title": "Funkce pro příznivce",
@@ -1034,6 +1075,7 @@
     "noFeatures": "V současné době nejsou k dispozici žádné funkce.",
     "purchase": "Nákup",
     "purchaseSuccess": "Funkce byla úspěšně zakoupena!",
+    "requiredTiers": "Úrovně podpory",
     "subscribe": "Přihlásit se k odběru",
     "subscribeSuccess": "Předplatné aktivováno!",
     "subscriptionActiveNote": "Tato funkce je v současné době aktivována aktivním předplatným.",
@@ -1074,6 +1116,10 @@
           "error": "Ověření e-mailu se nezdařilo. Zkuste to znovu nebo požádejte o nový ověřovací odkaz.",
           "success": "Váš e-mail byl úspěšně ověřen."
         }
+      },
+      "publicProfile": {
+        "description": "Umožnit ostatním uživatelům zobrazit váš profil reputace, i když s vámi nesdílejí stejný server.",
+        "label": "Veřejný profil"
       },
       "title": "Nastavení uživatele",
       "voteGuild": {

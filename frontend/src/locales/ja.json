@@ -216,8 +216,48 @@
     "save": "保存"
   },
   "dashboard": {
+    "profile": "プロフィール",
+    "profileView": {
+      "detailedProfile": "詳細プロフィール",
+      "error": "プロファイルの読み込みに失敗した。",
+      "given": "与えられた",
+      "maxLevel": "最大レベルに達した",
+      "mostGivenChannels": "最も多く贈られたチャンネル",
+      "mostReceivedChannels": "最も視聴されているチャンネル",
+      "progress": "次のレベルへ進む",
+      "rank": "ランク：{rank}",
+      "rankGiven": "ランク（指定）",
+      "rankReceived": "ランク（受領）",
+      "rawReputation": "生の評判",
+      "received": "受信した",
+      "repOffset": "評判のオフセット",
+      "shareProfile": "共有",
+      "shareProfileCopied": "リンクがクリップボードにコピーされた！",
+      "topDonors": "主な寄付者",
+      "topReceivers": "トップレシーバー"
+    },
+    "publicProfileView": {
+      "error": "プロファイルの読み込みに失敗した。",
+      "guildFooter": "{guild}のプロフィール",
+      "privateProfile": "このプロフィールは非公開だ。",
+      "rank": "ランク",
+      "reputation": "評判"
+    },
     "rank": "ランク",
+    "ranking": "ランキング",
+    "rankingView": {
+      "advancedRankings": "詳細ランキング",
+      "given": "与えられた",
+      "mode": "モード",
+      "pageSize": "ページサイズ",
+      "received": "受信した"
+    },
     "reputation": "評判",
+    "tabs": {
+      "overview": "概要",
+      "profile": "プロフィール",
+      "ranking": "ランキング"
+    },
     "title": "ダッシュボード",
     "todayReputation": "今日の評判",
     "topChannel": "トップチャンネル",
@@ -676,6 +716,7 @@
     "kofiHint": "または支援する",
     "kofiLink": "Ko-fi",
     "message": "{name} サポーター専用だ。利用するにはサポーターになれ。",
+    "perServer": "機能はサーバーごとに有効化される。",
     "requiredTierPlural": "以下のサポーター層のいずれかが必要だ：",
     "requiredTierSingular": "必要なサポーターのレベル：",
     "title": "サポーター特集",
@@ -1034,6 +1075,7 @@
     "noFeatures": "現在利用可能な機能はない。",
     "purchase": "購入",
     "purchaseSuccess": "機能の購入が成功した！",
+    "requiredTiers": "サポーターのランク",
     "subscribe": "購読する",
     "subscribeSuccess": "購読が有効になった！",
     "subscriptionActiveNote": "この機能は現在、有効なサブスクリプションによって利用可能になっている。",
@@ -1074,6 +1116,10 @@
           "error": "メール認証に失敗した。もう一度試すか、新しい認証リンクをリクエストしてくれ。",
           "success": "メールアドレスの確認が完了した。"
         }
+      },
+      "publicProfile": {
+        "description": "同じサーバーを利用していない他のユーザーが、あなたの評判プロファイルを閲覧できるようにする。",
+        "label": "公開プロフィール"
       },
       "title": "ユーザー設定",
       "voteGuild": {

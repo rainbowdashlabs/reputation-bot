@@ -16,6 +16,7 @@ import de.chojo.repbot.dao.access.guild.settings.sub.autopost.RefreshInterval;
 import de.chojo.repbot.dao.pagination.GuildList;
 import de.chojo.sadu.postgresql.types.PostgreSqlTypes;
 import net.dv8tion.jda.api.entities.Guild;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public class GuildRepository {
         this.configuration = configuration;
     }
 
-    public RepGuild guild(Guild guild) {
+    public RepGuild guild(@NotNull Guild guild) {
         try {
             return guildRepository
                     .get(guild.getIdLong(), () -> new RepGuild(guild, configuration))

@@ -647,6 +647,14 @@ class ApiClient {
         await this.axiosInstance.patch('/user/settings', settings);
     }
 
+    public async updateUserVoteGuild(voteGuild: string): Promise<void> {
+        await this.axiosInstance.patch('/user/settings/voteguild', { voteGuild: Number(voteGuild) });
+    }
+
+    public async updateUserPublicProfile(publicProfile: boolean): Promise<void> {
+        await this.axiosInstance.patch('/user/settings/publicprofile', { publicProfile });
+    }
+
     // User Purchases (Ko-fi)
     public async getUserPurchases(): Promise<Types.KofiPurchasePOJO[]> {
         const response = await this.axiosInstance.get<Types.KofiPurchasePOJO[]>('/user/purchases');
@@ -784,6 +792,55 @@ class ApiClient {
     public async getMetricsServiceCount(unit: 'hour' | 'week', offset: number, count: number): Promise<Types.CountsStatistic> {
         const response = await this.axiosInstance.get<Types.CountsStatistic>(`/metrics/service/count/${unit}/${offset}/${count}`, {
             headers: { 'Accept': 'application/json' }
+        });
+        return response.data;
+    }
+
+    // User Profile
+    public async getUserProfileMe(): Promise<Types.UserProfilePOJO> {
+        const response = await this.axiosInstance.get<Types.UserProfilePOJO>('/guild/user/profile/me');
+        return response.data;
+    }
+
+    public async getUserProfile(userId: string): Promise<Types.UserProfilePOJO> {
+        const response = await this.axiosInstance.get<Types.UserProfilePOJO>(`/guild/user/profile/${userId}`);
+        return response.data;
+    }
+
+    // Public Profile (unauthenticated)
+    public async getPublicProfile(guildId: string, userId: string): Promise<Types.PublicProfilePOJO> {
+        const response = await this.axiosInstance.get<Types.PublicProfilePOJO>('/public/profile', {
+            params: { guildId, userId }
+        });
+        return response.data;
+    }
+
+    // Guild Ranking
+    public async getGuildRankingGiven(page: number = 0, pageSize: number = 10, mode?: Types.ReputationMode): Promise<Types.RankingPagePOJO> {
+        const response = await this.axiosInstance.get<Types.RankingPagePOJO>('/guild/ranking/given', {
+            params: { page, pageSize, ...(mode !== undefined && { mode }) }
+        });
+        return response.data;
+    }
+
+    public async getGuildRankingReceived(page: number = 0, pageSize: number = 10, mode?: Types.ReputationMode): Promise<Types.RankingPagePOJO> {
+        const response = await this.axiosInstance.get<Types.RankingPagePOJO>('/guild/ranking/received', {
+            params: { page, pageSize, ...(mode !== undefined && { mode }) }
+        });
+        return response.data;
+    }
+
+    // User Ranking
+    public async getUserRankingGiven(page: number = 0, pageSize: number = 10, mode?: Types.ReputationMode, userId?: string): Promise<Types.RankingPagePOJO> {
+        const response = await this.axiosInstance.get<Types.RankingPagePOJO>('/guild/user/ranking/given', {
+            params: { page, pageSize, ...(mode !== undefined && { mode }), ...(userId !== undefined && { userId }) }
+        });
+        return response.data;
+    }
+
+    public async getUserRankingReceived(page: number = 0, pageSize: number = 10, mode?: Types.ReputationMode, userId?: string): Promise<Types.RankingPagePOJO> {
+        const response = await this.axiosInstance.get<Types.RankingPagePOJO>('/guild/user/ranking/received', {
+            params: { page, pageSize, ...(mode !== undefined && { mode }), ...(userId !== undefined && { userId }) }
         });
         return response.data;
     }

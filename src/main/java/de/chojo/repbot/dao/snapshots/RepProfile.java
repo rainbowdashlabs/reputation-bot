@@ -11,7 +11,7 @@ import de.chojo.jdautil.localization.util.LocalizedEmbedBuilder;
 import de.chojo.jdautil.localization.util.Replacement;
 import de.chojo.jdautil.util.MentionUtil;
 import de.chojo.repbot.config.Configuration;
-import de.chojo.repbot.dao.access.guild.reputation.sub.RepUser;
+import de.chojo.repbot.dao.access.guild.reputation.sub.RepMember;
 import de.chojo.repbot.util.Text;
 import de.chojo.sadu.mapper.wrapper.Row;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
  * Snapshot of a user reputation profile.
  */
 public record RepProfile(
-        RepUser repUser,
+        RepMember repMember,
         long rank,
         long rankDonated,
         long userId,
@@ -40,11 +40,11 @@ public record RepProfile(
         long donated) {
     private static final int BAR_SIZE = 20;
 
-    public static RepProfile empty(RepUser repuser, User user) {
+    public static RepProfile empty(RepMember repuser, User user) {
         return new RepProfile(repuser, 0, user.getIdLong(), 0, 0, 0, 0, 0);
     }
 
-    public static RepProfile buildProfile(RepUser repuser, Row rs) throws SQLException {
+    public static RepProfile buildProfile(RepMember repuser, Row rs) throws SQLException {
         return new RepProfile(
                 repuser,
                 rs.getLong("rank"),
@@ -94,9 +94,9 @@ public record RepProfile(
     }
 
     private EmbedBuilder getBaseBuilder(Configuration configuration, LocalizationContext localizer, boolean detailed) {
-        var ranks = repUser.reputation().repGuild().settings().ranks();
-        var current = ranks.currentRank(repUser);
-        var next = ranks.nextRank(repUser);
+        var ranks = repMember.reputation().repGuild().settings().ranks();
+        var current = ranks.currentRank(repMember);
+        var next = ranks.nextRank(repMember);
 
         var currentRoleRep = current.map(ReputationRank::reputation).orElse(0);
         var nextRoleRep = next.map(ReputationRank::reputation).orElse(currentRoleRep);
@@ -104,7 +104,7 @@ public record RepProfile(
 
         var progressBar = Text.progressBar(progress, BAR_SIZE);
 
-        var level = current.flatMap(r -> r.getRole(repUser.member().getGuild()))
+        var level = current.flatMap(r -> r.getRole(repMember.member().getGuild()))
                 .map(IMentionable::getAsMention)
                 .orElse("/");
 
@@ -116,8 +116,8 @@ public record RepProfile(
             build.setAuthor(
                     "element.profile.title",
                     null,
-                    repUser.member().getEffectiveAvatarUrl(),
-                    Replacement.create("NAME", repUser.member().getEffectiveName()));
+                    repMember.member().getEffectiveAvatarUrl(),
+                    Replacement.create("NAME", repMember.member().getEffectiveName()));
             build.addField("words.rankreceived", rank() + "", true);
             build.addField("words.rankdonated", rankDonated() + "", true);
             build.addBlankField(false);
@@ -125,8 +125,8 @@ public record RepProfile(
             build.setAuthor(
                     "%s$%s$".formatted(rank() != 0 ? "#" + rank() + " " : "", "element.profile.title"),
                     null,
-                    repUser.member().getEffectiveAvatarUrl(),
-                    Replacement.create("NAME", repUser.member().getEffectiveName()));
+                    repMember.member().getEffectiveAvatarUrl(),
+                    Replacement.create("NAME", repMember.member().getEffectiveName()));
         }
         build.addField("words.level", level, true)
                 .addField("words.reputation", Format.BOLD.apply(String.valueOf(reputation())), true)
@@ -135,7 +135,7 @@ public record RepProfile(
                         "element.profile.nextLevel",
                         "```ANSI%n%s/%s  %s```".formatted(currProgress, nextLevel, progressBar),
                         false)
-                .setColor(repUser.member().getColors().getPrimary());
+                .setColor(repMember.member().getColors().getPrimary());
         var badge = configuration.badges().badge((int) rank());
         badge.ifPresent(build::setThumbnail);
 
@@ -149,24 +149,31 @@ public record RepProfile(
     private void addDetails(EmbedBuilder build) {
         var entries = 5;
         String topDonor =
-                repUser.reputation().ranking().user().given().defaultRanking(entries, repUser.member()).page(0).stream()
-                        .map(RankingEntry::simpleString)
-                        .collect(Collectors.joining("\n"));
-        String topReceiver =
-                repUser
+                repMember
                         .reputation()
                         .ranking()
                         .user()
-                        .received()
-                        .defaultRanking(entries, repUser.member())
+                        .given()
+                        .defaultRanking(entries, repMember.member())
                         .page(0)
                         .stream()
                         .map(RankingEntry::simpleString)
                         .collect(Collectors.joining("\n"));
-        var mostReceivedChannel = repUser.mostReceivedChannel(entries).stream()
+        String topReceiver =
+                repMember
+                        .reputation()
+                        .ranking()
+                        .user()
+                        .received()
+                        .defaultRanking(entries, repMember.member())
+                        .page(0)
+                        .stream()
+                        .map(RankingEntry::simpleString)
+                        .collect(Collectors.joining("\n"));
+        var mostReceivedChannel = repMember.mostReceivedChannel(entries).stream()
                 .map(ChannelStats::fancyString)
                 .collect(Collectors.joining("\n"));
-        var mostGivenChannel = repUser.mostGivenChannel(entries).stream()
+        var mostGivenChannel = repMember.mostGivenChannel(entries).stream()
                 .map(ChannelStats::fancyString)
                 .collect(Collectors.joining("\n"));
 

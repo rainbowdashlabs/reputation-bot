@@ -12,11 +12,13 @@ import ViewContainer from '@/components/ViewContainer.vue'
 import SettingsContainer from '../settings/components/SettingsContainer.vue'
 import LoginPanel from '../settings/components/LoginPanel.vue'
 import UserMailsSection from './components/UserMailsSection.vue'
+import Toggle from '@/components/Toggle.vue'
 
 const { t } = useI18n()
 const { userSession } = useSession()
 
 const voteGuild = ref<string>('0')
+const publicProfile = ref<boolean>(false)
 const loading = ref(true)
 
 const guilds = computed(() => {
@@ -28,6 +30,7 @@ onMounted(async () => {
   try {
     const settings = await api.getUserSettings()
     voteGuild.value = settings.voteGuild
+    publicProfile.value = settings.publicProfile
   } catch (error) {
     console.error('Failed to fetch user settings:', error)
   } finally {
@@ -37,9 +40,17 @@ onMounted(async () => {
 
 const updateVoteGuild = async () => {
   try {
-    await api.updateUserSettings({ voteGuild: voteGuild.value })
+    await api.updateUserVoteGuild(voteGuild.value)
   } catch (error) {
     console.error('Failed to update vote guild:', error)
+  }
+}
+
+const updatePublicProfile = async () => {
+  try {
+    await api.updateUserPublicProfile(publicProfile.value)
+  } catch (error) {
+    console.error('Failed to update public profile:', error)
   }
 }
 </script>
@@ -70,6 +81,16 @@ const updateVoteGuild = async () => {
           </select>
           <p class="text-sm text-gray-500 dark:text-gray-400">
             {{ t('user.settings.voteGuild.description') }}
+          </p>
+        </div>
+
+        <div class="flex flex-col gap-1.5">
+          <label class="block text-sm font-medium text-gray-700 dark:text-gray-200">
+            {{ t('user.settings.publicProfile.label') }}
+          </label>
+          <Toggle v-model="publicProfile" @update:modelValue="updatePublicProfile" />
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            {{ t('user.settings.publicProfile.description') }}
           </p>
         </div>
 

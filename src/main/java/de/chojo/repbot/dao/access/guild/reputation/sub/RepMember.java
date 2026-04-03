@@ -38,22 +38,22 @@ import static de.chojo.sadu.queries.api.query.Query.query;
 import static de.chojo.sadu.queries.converter.StandardValueConverter.INSTANT_TIMESTAMP;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class RepUser implements MemberHolder {
+public class RepMember implements MemberHolder {
     private static final String PROFILE = QueryLoader.loadQuery("repuser", "profile");
-    private static final Logger log = getLogger(RepUser.class);
+    private static final Logger log = getLogger(RepMember.class);
     private final Reputation reputation;
     private final Gdpr gdpr;
     private final User user;
     private Member member;
 
-    public RepUser(Reputation reputation, Member member) {
+    public RepMember(Reputation reputation, Member member) {
         gdpr = new Gdpr(this);
         this.reputation = reputation;
         this.member = member;
         user = member.getUser();
     }
 
-    public RepUser(Reputation reputation, User user) {
+    public RepMember(Reputation reputation, User user) {
         gdpr = new Gdpr(this);
         this.reputation = reputation;
         this.user = user;
@@ -375,7 +375,7 @@ public class RepUser implements MemberHolder {
         return reputation;
     }
 
-    public RepUser refresh(Member member) {
+    public RepMember refresh(Member member) {
         this.member = member;
         return this;
     }

@@ -357,8 +357,8 @@ public class Bot {
                 shardManager, localization.localizer(), guilds, data.cleanup(), configuration, worker);
         AnalyzerService.create(threading.repBotWorker(), data.analyzer());
         MetricService.create(threading.repBotWorker(), data.metrics());
-        autopostService =
-                AutopostService.create(shardManager, data.guildRepository(), threading, localization.localizer());
+        autopostService = AutopostService.create(
+                shardManager, data.guildRepository(), threading, localization.localizer(), configuration);
         premiumService = PremiumService.of(guilds, threading, configuration, localization.localizer(), shardManager);
         tokenPurchaseService = TokenPurchaseService.create(
                 configuration,

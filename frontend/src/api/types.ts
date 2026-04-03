@@ -576,8 +576,58 @@ export interface DashboardStatsPOJO {
   topUsers: RankingEntryPOJO[]
 }
 
+export interface RankingPagePOJO {
+    pages: number;
+    page: number;
+    entries: RankingEntryPOJO[];
+}
+
+export interface RankingEntryStatPOJO {
+    rank: number;
+    value: number;
+    member: MemberPOJO;
+}
+
+export interface ChannelStatsPOJO {
+    channelId: string;
+    count: number;
+}
+
+export interface DetailedProfilePOJO {
+    topDonors: RankingEntryStatPOJO[];
+    topReceivers: RankingEntryStatPOJO[];
+    mostGivenChannels: ChannelStatsPOJO[];
+    mostReceivedChannels: ChannelStatsPOJO[];
+}
+
+export interface AdminProfilePOJO {
+    rawReputation: number;
+    repOffset: number;
+    donated: number;
+}
+
+export interface UserProfilePOJO {
+    member: MemberPOJO;
+    rank: number;
+    rankDonated: number;
+    reputation: number;
+    donated: number;
+    level: string | null;
+    currentProgress: number;
+    nextLevelReputation: number | null;
+    detailedProfile: DetailedProfilePOJO | null;
+    adminProfile: AdminProfilePOJO | null;
+}
+
+export interface PublicProfilePOJO {
+    member: MemberPOJO;
+    rank: number;
+    reputation: number;
+}
+
 export interface UserSettingsPOJO {
     voteGuild: string;
+    publicProfile: boolean;
 }
 
 export interface SKUId {

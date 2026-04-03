@@ -216,8 +216,48 @@
     "save": "Salvar"
   },
   "dashboard": {
+    "profile": "Perfil",
+    "profileView": {
+      "detailedProfile": "Perfil detalhado",
+      "error": "Não foi possível carregar o perfil.",
+      "given": "Dado que",
+      "maxLevel": "Nível máximo alcançado",
+      "mostGivenChannels": "Canais mais indicados",
+      "mostReceivedChannels": "Canais mais assistidos",
+      "progress": "Passa para o próximo nível",
+      "rank": "Classificação: {rank}",
+      "rankGiven": "Classificação (atribuída)",
+      "rankReceived": "Classificação (Recebida)",
+      "rawReputation": "Reputação Bruta",
+      "received": "Recebido",
+      "repOffset": "Compensação de reputação",
+      "shareProfile": "Compartilhar",
+      "shareProfileCopied": "Link copiado para a área de transferência!",
+      "topDonors": "Principais doadores",
+      "topReceivers": "Principais recebedores"
+    },
+    "publicProfileView": {
+      "error": "Não foi possível carregar o perfil.",
+      "guildFooter": "Perfil no {guild}",
+      "privateProfile": "Este perfil é privado.",
+      "rank": "Classificação",
+      "reputation": "Reputação"
+    },
     "rank": "Classificação",
+    "ranking": "Ranking",
+    "rankingView": {
+      "advancedRankings": "Classificações avançadas",
+      "given": "Dado que",
+      "mode": "Modo",
+      "pageSize": "Tamanho da página",
+      "received": "Recebido"
+    },
     "reputation": "Reputação",
+    "tabs": {
+      "overview": "Visão geral",
+      "profile": "Perfil",
+      "ranking": "Ranking"
+    },
     "title": "Painel",
     "todayReputation": "Reputação atual",
     "topChannel": "Canal principal",
@@ -676,6 +716,7 @@
     "kofiHint": "ou apoie-nos em",
     "kofiLink": "Ko-fi",
     "message": "{name} é só para quem é apoiador. Torne-se um apoiador para usar.",
+    "perServer": "Os recursos são ativados por servidor.",
     "requiredTierPlural": "É preciso escolher um dos níveis de apoio a seguir:",
     "requiredTierSingular": "Nível de Apoiador necessário:",
     "title": "Recurso de Apoiador",
@@ -1034,6 +1075,7 @@
     "noFeatures": "Não tem recursos disponíveis no momento.",
     "purchase": "Compra",
     "purchaseSuccess": "Recurso comprado com sucesso!",
+    "requiredTiers": "Níveis de apoio",
     "subscribe": "Inscreva-se",
     "subscribeSuccess": "Assinatura ativada!",
     "subscriptionActiveNote": "Esse recurso está ativado agora por uma assinatura ativa.",
@@ -1074,6 +1116,10 @@
           "error": "Falha na verificação do e-mail. Tenta de novo ou pede um novo link de verificação.",
           "success": "Seu e-mail foi verificado com sucesso."
         }
+      },
+      "publicProfile": {
+        "description": "Permita que outros usuários vejam seu perfil de reputação, mesmo que não estejam no mesmo servidor que você.",
+        "label": "Perfil público"
       },
       "title": "Configurações do usuário",
       "voteGuild": {

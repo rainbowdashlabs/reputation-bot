@@ -5,7 +5,9 @@
  */
 package de.chojo.repbot.web.routes.v1.guild;
 
+import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guildsession.GuildSession;
+import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.provider.VoteRepository;
 import de.chojo.repbot.service.ScanService;
 import de.chojo.repbot.service.TokenPurchaseService;
@@ -14,10 +16,12 @@ import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
 import de.chojo.repbot.web.pojo.guild.DashboardStatsPOJO;
 import de.chojo.repbot.web.pojo.guild.GuildPOJO;
-import de.chojo.repbot.web.pojo.guild.RankingEntryPOJO;
+import de.chojo.repbot.web.pojo.ranking.RankingEntryPOJO;
 import de.chojo.repbot.web.pojo.token.WithdrawRequestPOJO;
 import de.chojo.repbot.web.pojo.user.TokensPOJO;
 import de.chojo.repbot.web.routes.RoutesBuilder;
+import de.chojo.repbot.web.services.RankingService;
+import de.chojo.repbot.web.services.UserService;
 import io.javalin.http.Context;
 import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
@@ -35,16 +39,23 @@ public class GuildRoute implements RoutesBuilder {
     private final VoteRepository voteRepository;
     private final FeaturesRoute featuresRoute;
     private final ScanRoute scanRoute;
+    private final UserRoute userRoute;
+    private final GuildRankingRoute guildRankingRoute;
 
     public GuildRoute(
             MemberCache memberCache,
             VoteRepository voteRepository,
             TokenPurchaseService tokenPurchaseService,
-            ScanService scanService) {
+            ScanService scanService,
+            GuildRepository guildRepository,
+            Configuration configuration) {
         this.memberCache = memberCache;
         this.voteRepository = voteRepository;
         featuresRoute = new FeaturesRoute(tokenPurchaseService);
         scanRoute = new ScanRoute(scanService);
+        var rankingService = new RankingService(guildRepository, memberCache);
+        userRoute = new UserRoute(new UserService(memberCache), rankingService, configuration);
+        guildRankingRoute = new GuildRankingRoute(rankingService, configuration);
     }
 
     @Override
@@ -58,6 +69,8 @@ public class GuildRoute implements RoutesBuilder {
             });
             featuresRoute.buildRoutes();
             scanRoute.buildRoutes();
+            userRoute.buildRoutes();
+            guildRankingRoute.buildRoutes();
         });
     }
 

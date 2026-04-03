@@ -70,7 +70,8 @@ import {
     faMagnifyingGlass,
     faGauge,
     faLock,
-    faClipboardList
+    faClipboardList,
+    faShareNodes
 } from '@fortawesome/free-solid-svg-icons'
 import {faGithub, faDiscord} from '@fortawesome/free-brands-svg-icons'
 
@@ -136,7 +137,8 @@ library.add(
     faMagnifyingGlass,
     faGauge,
     faLock,
-    faClipboardList
+    faClipboardList,
+    faShareNodes
 )
 
 

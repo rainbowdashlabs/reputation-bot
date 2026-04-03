@@ -28,6 +28,7 @@ import de.chojo.repbot.web.routes.v1.data.DataRoute;
 import de.chojo.repbot.web.routes.v1.guild.GuildRoute;
 import de.chojo.repbot.web.routes.v1.kofi.KofiRoute;
 import de.chojo.repbot.web.routes.v1.metrics.util.MetricsRoute;
+import de.chojo.repbot.web.routes.v1.pub.PublicRoute;
 import de.chojo.repbot.web.routes.v1.session.SessionRoute;
 import de.chojo.repbot.web.routes.v1.settings.SettingsRoute;
 import de.chojo.repbot.web.routes.v1.user.UserRoute;
@@ -58,6 +59,7 @@ public class Api {
     private final AuthRoute authRoute;
     private final UserRoute userRoute;
     private final KofiRoute kofiRoute;
+    private final PublicRoute publicRoute;
 
     public Api(
             SessionService sessionService,
@@ -106,8 +108,10 @@ public class Api {
         authRoute = new AuthRoute(discordOAuthService, userRepository, sessionService, configuration, mailService);
         userRoute =
                 new UserRoute(voteRepository, userRepository, configuration, shardManager, kofiService, mailService);
-        guildRoute = new GuildRoute(memberCache, voteRepository, tokenPurchaseService, scanService);
+        guildRoute = new GuildRoute(
+                memberCache, voteRepository, tokenPurchaseService, scanService, guildRepository, configuration);
         kofiRoute = new KofiRoute(kofiService);
+        publicRoute = new PublicRoute(guildRepository, shardManager, memberCache, userRepository);
     }
 
     public void init() {
@@ -152,6 +156,7 @@ public class Api {
             userRoute.buildRoutes();
             guildRoute.buildRoutes();
             kofiRoute.buildRoutes();
+            publicRoute.buildRoutes();
         });
     }
 }

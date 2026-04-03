@@ -5,4 +5,4 @@
  */
 package de.chojo.repbot.web.pojo.user;
 
-public record UserSettingsPOJO(long voteGuild) {}
+public record UserSettingsPOJO(long voteGuild, boolean publicProfile) {}

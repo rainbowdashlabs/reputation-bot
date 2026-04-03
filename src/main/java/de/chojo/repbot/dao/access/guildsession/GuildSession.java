@@ -90,6 +90,10 @@ public class GuildSession {
         return guildId;
     }
 
+    public long userId() {
+        return userId;
+    }
+
     public Configuration configuration() {
         return configuration;
     }

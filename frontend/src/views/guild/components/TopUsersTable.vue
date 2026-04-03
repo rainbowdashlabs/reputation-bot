@@ -13,6 +13,10 @@ defineProps<{
   entries: RankingEntryPOJO[]
 }>()
 
+const emit = defineEmits<{
+  (e: 'click-member', memberId: string): void
+}>()
+
 const {t} = useI18n()
 </script>
 
@@ -38,7 +42,8 @@ const {t} = useI18n()
         </thead>
         <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
         <tr v-for="entry in entries" :key="entry.member.id"
-            class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
+            class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer"
+            @click="emit('click-member', entry.member.id)">
           <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900 dark:text-white">
             #{{ entry.rank }}
           </td>

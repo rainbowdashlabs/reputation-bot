@@ -216,8 +216,48 @@
     "save": "Enregistrer"
   },
   "dashboard": {
+    "profile": "Profil",
+    "profileView": {
+      "detailedProfile": "Profil détaillé",
+      "error": "Échec du chargement du profil.",
+      "given": "Étant donné que",
+      "maxLevel": "Niveau maximum atteint",
+      "mostGivenChannels": "Les chaînes les plus regardées",
+      "mostReceivedChannels": "Chaînes les plus regardées",
+      "progress": "Passe au niveau suivant",
+      "rank": "Classement : {rank}",
+      "rankGiven": "Classement (attribué)",
+      "rankReceived": "Classement (Reçu)",
+      "rawReputation": "Raw Reputation",
+      "received": "Reçu",
+      "repOffset": "Compensation de réputation",
+      "shareProfile": "Partager",
+      "shareProfileCopied": "Le lien a été copié dans le presse-papiers !",
+      "topDonors": "Principaux donateurs",
+      "topReceivers": "Les meilleurs receveurs"
+    },
+    "publicProfileView": {
+      "error": "Échec du chargement du profil.",
+      "guildFooter": "Profil sur {guild}",
+      "privateProfile": "Ce profil est privé.",
+      "rank": "Classement",
+      "reputation": "Réputation"
+    },
     "rank": "Rang",
+    "ranking": "Classement",
+    "rankingView": {
+      "advancedRankings": "Classements avancés",
+      "given": "Étant donné que",
+      "mode": "Mode",
+      "pageSize": "Taille de la page",
+      "received": "Reçu"
+    },
     "reputation": "Réputation",
+    "tabs": {
+      "overview": "Aperçu",
+      "profile": "Profil",
+      "ranking": "Classement"
+    },
     "title": "Tableau de bord",
     "todayReputation": "La réputation d'aujourd'hui",
     "topChannel": "Chaîne principale",
@@ -676,6 +716,7 @@
     "kofiHint": "ou soutenez-nous sur",
     "kofiLink": "Ko-fi",
     "message": "{name} est réservé aux supporters. Deviens supporter pour pouvoir l'utiliser.",
+    "perServer": "Les fonctionnalités sont activées au niveau de chaque serveur.",
     "requiredTierPlural": "Il faut choisir un des niveaux de soutien suivants :",
     "requiredTierSingular": "Niveau de soutien requis :",
     "title": "Présentation d'un supporter",
@@ -1034,6 +1075,7 @@
     "noFeatures": "Aucune fonctionnalité pour le moment.",
     "purchase": "Acheter",
     "purchaseSuccess": "Fonctionnalité achetée, c'est bon !",
+    "requiredTiers": "Niveaux d'adhésion",
     "subscribe": "S'abonner",
     "subscribeSuccess": "Abonnement activé !",
     "subscriptionActiveNote": "Cette fonctionnalité est actuellement activée par un abonnement actif.",
@@ -1074,6 +1116,10 @@
           "error": "La vérification de l'adresse e-mail n'a pas marché. Essaie encore ou demande un nouveau lien de vérification.",
           "success": "Ton e-mail a été validé avec succès."
         }
+      },
+      "publicProfile": {
+        "description": "Autorise les autres utilisateurs à consulter ton profil de réputation, même s'ils ne partagent pas le même serveur que toi.",
+        "label": "Profil public"
       },
       "title": "Paramètres utilisateur",
       "voteGuild": {

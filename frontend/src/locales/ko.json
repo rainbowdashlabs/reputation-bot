@@ -216,8 +216,48 @@
     "save": "저장"
   },
   "dashboard": {
+    "profile": "프로필",
+    "profileView": {
+      "detailedProfile": "상세 프로필",
+      "error": "프로필을 불러오지 못했습니다.",
+      "given": "다음과 같이 주어졌을 때",
+      "maxLevel": "최대 레벨 달성",
+      "mostGivenChannels": "가장 많이 시청된 채널",
+      "mostReceivedChannels": "가장 많이 시청한 채널",
+      "progress": "다음 단계로 진행",
+      "rank": "순위: {rank}",
+      "rankGiven": "순위 (지정)",
+      "rankReceived": "순위 (수신)",
+      "rawReputation": "원시 평판",
+      "received": "수신됨",
+      "repOffset": "평판 상쇄",
+      "shareProfile": "공유하기",
+      "shareProfileCopied": "링크가 클립보드에 복사되었습니다!",
+      "topDonors": "주요 기부자",
+      "topReceivers": "최고의 리시버"
+    },
+    "publicProfileView": {
+      "error": "프로필을 불러오지 못했습니다.",
+      "guildFooter": "{guild}의 프로필",
+      "privateProfile": "이 프로필은 비공개입니다.",
+      "rank": "순위",
+      "reputation": "평판"
+    },
     "rank": "순위",
+    "ranking": "순위",
+    "rankingView": {
+      "advancedRankings": "고급 순위",
+      "given": "다음과 같이 주어졌을 때",
+      "mode": "모드",
+      "pageSize": "페이지 크기",
+      "received": "수신됨"
+    },
     "reputation": "평판",
+    "tabs": {
+      "overview": "개요",
+      "profile": "프로필",
+      "ranking": "순위"
+    },
     "title": "대시보드",
     "todayReputation": "오늘의 평판",
     "topChannel": "최상위 채널",
@@ -676,6 +716,7 @@
     "kofiHint": "또는 저희를 후원해 주세요",
     "kofiLink": "코피",
     "message": "{name} 이 기능은 후원자 전용입니다. 사용하려면 후원자가 되어 주세요.",
+    "perServer": "기능은 서버별로 활성화됩니다.",
     "requiredTierPlural": "다음 후원 등급 중 하나가 필요합니다:",
     "requiredTierSingular": "필수 후원 등급:",
     "title": "서포터 기능",
@@ -1034,6 +1075,7 @@
     "noFeatures": "현재 사용 가능한 기능이 없습니다.",
     "purchase": "구매",
     "purchaseSuccess": "기능 구매 성공!",
+    "requiredTiers": "후원 등급",
     "subscribe": "구독하기",
     "subscribeSuccess": "구독이 활성화되었습니다!",
     "subscriptionActiveNote": "이 기능은 현재 활성 구독으로 활성화되어 있습니다.",
@@ -1074,6 +1116,10 @@
           "error": "이메일 확인에 실패했습니다. 다시 시도하거나 새로운 확인 링크를 요청하세요.",
           "success": "귀하의 이메일 주소가 성공적으로 확인되었습니다."
         }
+      },
+      "publicProfile": {
+        "description": "다른 사용자가 귀하와 같은 서버를 사용하지 않는 경우에도 귀하의 평판 프로필을 볼 수 있도록 허용합니다.",
+        "label": "공개 프로필"
       },
       "title": "사용자 설정",
       "voteGuild": {
