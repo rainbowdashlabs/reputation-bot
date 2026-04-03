@@ -19,6 +19,8 @@ import io.javalin.openapi.HttpMethod;
 import io.javalin.openapi.OpenApi;
 import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiResponse;
+import net.dv8tion.jda.api.entities.Member;
+import org.jetbrains.annotations.Nullable;
 
 import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
@@ -58,7 +60,7 @@ public class UserRoute implements RoutesBuilder {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         UserSession userSession = ctx.sessionAttribute(SessionAttribute.USER_SESSION);
         GuildSessionData guildSessionData = userSession.guilds().get(String.valueOf(session.guildId()));
-        if (session.guild().getMemberById(session.userId()) == null) {
+        if (resolveMember(session, session.userId()) == null) {
             ctx.status(404);
             return;
         }
@@ -91,10 +93,18 @@ public class UserRoute implements RoutesBuilder {
             return;
         }
 
-        if (session.guild().getMemberById(targetUserId) == null) {
+        if (resolveMember(session, targetUserId) == null) {
             ctx.status(404);
             return;
         }
         ctx.json(userService.getProfile(session, targetUserId, guildSessionData));
+    }
+
+    private @Nullable Member resolveMember(GuildSession session, long userId) {
+        try {
+            return session.guild().retrieveMemberById(userId).complete();
+        }catch (Exception ignore){
+            return null;
+        }
     }
 }
