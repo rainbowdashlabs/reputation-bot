@@ -10,6 +10,7 @@ import de.chojo.repbot.web.pojo.scan.ScanProgress;
 import de.chojo.repbot.web.pojo.scan.ScanTarget;
 import net.dv8tion.jda.api.entities.channel.attribute.IThreadContainer;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
+import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 
 import java.util.HashSet;
 import java.util.List;
@@ -27,8 +28,11 @@ public class ThreadContainerScan implements Scan {
 
     public static ThreadContainerScan create(ScanProcess scanProcess, IThreadContainer postContainer) {
         Set<GuildMessageChannel> threads = new HashSet<>();
-        postContainer.retrieveArchivedPublicThreadChannels().stream().forEach(threads::add);
-        threads.addAll(postContainer.getThreadChannels());
+        try {
+            threads.addAll(postContainer.getThreadChannels());
+            postContainer.retrieveArchivedPublicThreadChannels().stream().forEach(threads::add);
+        } catch (InsufficientPermissionException ignore) {
+        }
         List<ChannelScan> list =
                 threads.stream().map(c -> ChannelScan.create(scanProcess, c)).toList();
         return new ThreadContainerScan(list, postContainer);

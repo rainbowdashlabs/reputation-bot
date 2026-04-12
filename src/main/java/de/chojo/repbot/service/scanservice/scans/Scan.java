@@ -7,10 +7,11 @@ package de.chojo.repbot.service.scanservice.scans;
 
 import de.chojo.repbot.service.scanservice.ScanProcess;
 import de.chojo.repbot.web.pojo.scan.ScanProgress;
-import net.dv8tion.jda.api.entities.channel.Channel;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.channel.attribute.IPostContainer;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildMessageChannel;
 
@@ -18,7 +19,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface Scan {
-    static Optional<Scan> create(ScanProcess scanProcess, Channel channel) {
+    static Optional<Scan> create(ScanProcess scanProcess, GuildChannel channel) {
+        if (!channel.getGuild()
+                .getSelfMember()
+                .hasPermission(
+                        channel, Permission.VIEW_CHANNEL, Permission.VOICE_CONNECT, Permission.MESSAGE_HISTORY)) {
+            return Optional.empty();
+        }
         return switch (channel.getType()) {
             case TEXT, NEWS -> Optional.of(TextChannelScan.create(scanProcess, (StandardGuildMessageChannel) channel));
             case CATEGORY -> Optional.of(CategoryScan.create(scanProcess, (Category) channel));
