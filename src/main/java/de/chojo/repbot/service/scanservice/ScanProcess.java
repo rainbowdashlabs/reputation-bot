@@ -15,7 +15,7 @@ import de.chojo.repbot.web.pojo.scan.ScanProgress;
 import de.chojo.repbot.web.pojo.scan.ScanTarget;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.channel.Channel;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import org.slf4j.Logger;
 
 import java.time.Instant;
@@ -26,7 +26,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class ScanProcess {
     private static final Logger log = getLogger(ScanProcess.class);
-    private final List<Channel> channels;
+    private final List<GuildChannel> channels;
     private List<? extends Scan> scans;
     private final MessageAnalyzer analyzer;
     private final RepGuild guild;
@@ -34,7 +34,7 @@ public class ScanProcess {
     private Instant start = Instant.now();
     private Instant lastSeen;
 
-    public ScanProcess(MessageAnalyzer analyzer, RepGuild guild, List<Channel> channels) {
+    public ScanProcess(MessageAnalyzer analyzer, RepGuild guild, List<GuildChannel> channels) {
         this.analyzer = analyzer;
         this.guild = guild;
         this.channels = channels;
@@ -88,7 +88,7 @@ public class ScanProcess {
         return scans.stream().mapToInt(Scan::hits).sum();
     }
 
-    public List<Channel> channels() {
+    public List<GuildChannel> channels() {
         return channels;
     }
 

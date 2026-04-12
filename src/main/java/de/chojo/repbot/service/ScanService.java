@@ -12,7 +12,7 @@ import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.service.scanservice.ScanProcess;
 import de.chojo.repbot.util.LogNotify;
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.channel.Channel;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -40,7 +40,7 @@ public class ScanService {
     public void scan(Guild guild) {
         if (scanProcesses.containsKey(guild.getIdLong())) return;
         RepGuild repGuild = guildRepository.guild(guild);
-        List<Channel> channels =
+        List<GuildChannel> channels =
                 new ArrayList<>(repGuild.settings().thanking().channels().channels());
         channels.addAll(repGuild.settings().thanking().channels().categories());
         ScanProcess scanProcess = new ScanProcess(analyzer, repGuild, channels);

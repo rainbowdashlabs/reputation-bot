@@ -103,7 +103,7 @@ public class UserRoute implements RoutesBuilder {
     private @Nullable Member resolveMember(GuildSession session, long userId) {
         try {
             return session.guild().retrieveMemberById(userId).complete();
-        }catch (Exception ignore){
+        } catch (Exception ignore) {
             return null;
         }
     }
