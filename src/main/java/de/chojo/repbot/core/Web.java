@@ -290,7 +290,17 @@ public class Web {
         });
 
         javalin.exception(Exception.class, (err, ctx) -> {
-            log.error(LogNotify.NOTIFY_ADMIN, "Unhandled exception on route {}", ctx.path(), err);
+            UserSession userSession = ctx.sessionAttribute(SessionAttribute.USER_SESSION);
+            UserSession guildSession = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
+            log.error(
+                    LogNotify.NOTIFY_ADMIN,
+                    "Unhandled exception on route {}\nUser: {}\nGuild: {} (GuildSession: {})\nBody: {}",
+                    ctx.path(),
+                    userSession == null ? null : userSession.userId(),
+                    ctx.header("X-Guild-Id"),
+                    guildSession == null,
+                    ctx.body(),
+                    err);
             ctx.status(HttpStatus.INTERNAL_SERVER_ERROR);
         });
     }
