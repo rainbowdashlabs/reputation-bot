@@ -14,7 +14,8 @@ import java.util.List;
 import static java.util.Collections.emptyList;
 
 public class GuildPOJO {
-    public static final GuildPOJO UNKNOWN = new GuildPOJO(RolePOJO.UNKNOWN,"Unknown", "0", "", emptyList(), ChannelViewPOJO.EMPTY, emptyList(), emptyList());
+    public static final GuildPOJO UNKNOWN = new GuildPOJO(
+            RolePOJO.UNKNOWN, "Unknown", "0", "", emptyList(), ChannelViewPOJO.EMPTY, emptyList(), emptyList());
     private final RolePOJO highestBotRole;
     private final String name;
     private final String id;
