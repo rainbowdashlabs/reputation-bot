@@ -16,6 +16,8 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.*;
+
 public class GuildSession {
     private final Configuration configuration;
     private final ShardManager shardManager;
@@ -54,7 +56,12 @@ public class GuildSession {
     @NotNull
     public GuildPOJO guildPOJO() {
         if (dirty || cachedGuild == null) {
-            cachedGuild = GuildPOJO.generate(guild());
+            Guild guild = guild();
+            if (guild == null) {
+                cachedGuild = GuildPOJO.UNKNOWN;
+            } else {
+                cachedGuild = GuildPOJO.generate(guild);
+            }
             dirty = false;
         }
         return cachedGuild;

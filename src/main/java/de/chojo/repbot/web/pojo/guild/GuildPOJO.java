@@ -11,15 +11,18 @@ import net.dv8tion.jda.api.entities.Role;
 import java.util.Comparator;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
+
 public class GuildPOJO {
+    public static final GuildPOJO UNKNOWN = new GuildPOJO(RolePOJO.UNKNOWN,"Unknown", "0", "", emptyList(), ChannelViewPOJO.EMPTY, emptyList(), emptyList());
     private final RolePOJO highestBotRole;
     private final String name;
     private final String id;
     private final String iconUrl;
-    List<RolePOJO> roles;
-    ChannelViewPOJO channels;
-    List<ReactionPOJO> reactions;
-    List<MemberPOJO> integrations;
+    private final List<RolePOJO> roles;
+    private final ChannelViewPOJO channels;
+    private final List<ReactionPOJO> reactions;
+    private final List<MemberPOJO> integrations;
 
     public GuildPOJO(
             RolePOJO highestBotRole,

@@ -13,12 +13,14 @@ import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.attribute.ICategorizableChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 public class ChannelViewPOJO {
+    public static final ChannelViewPOJO EMPTY = new ChannelViewPOJO(Collections.emptyList(), Collections.emptyList());
     List<ChannelPOJO> channels;
     List<CategoryPOJO> categories;
 

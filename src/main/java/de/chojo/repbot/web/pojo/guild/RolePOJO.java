@@ -12,6 +12,7 @@ import java.awt.*;
 import java.util.Objects;
 
 public class RolePOJO {
+    public static final RolePOJO UNKNOWN = new RolePOJO("Unknown", "0", Color.WHITE, 0);
     private final String name;
     private final String id;
     private final int position;
