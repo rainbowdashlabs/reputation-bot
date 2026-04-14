@@ -294,7 +294,8 @@ public class Web {
             UserSession guildSession = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
             log.error(
                     LogNotify.NOTIFY_ADMIN,
-                    "Unhandled exception on route {}\nUser: {}\nGuild: {} (GuildSession: {})\nBody: {}",
+                    "Unhandled exception on route {} {}\nUser: {}\nGuild: {} (GuildSession: {})\nBody: {}",
+                    ctx.method(),
                     ctx.path(),
                     userSession == null ? null : userSession.userId(),
                     ctx.header("X-Guild-Id"),

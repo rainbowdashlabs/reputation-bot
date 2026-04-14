@@ -77,7 +77,10 @@ public class MessageListener extends ListenerAdapter {
             var thread = ((ThreadChannel) event.getChannel());
             var settings = guildRepository.guild(event.getGuild()).settings();
             if (settings.thanking().channels().isEnabled(thread)) {
-                thread.join().complete();
+                try {
+                    thread.join().complete();
+                } catch (Exception ignore) {
+                }
             }
         }
     }
