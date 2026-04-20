@@ -48,7 +48,7 @@ dependencyResolutionManagement {
             version("sadu", "2.3.8")
             library("sadu-testing", "de.chojo.sadu", "sadu-testing").versionRef("sadu")
 
-            version("testcontainers", "2.0.4")
+            version("testcontainers", "2.0.5")
             library("testcontainers-postgres", "org.testcontainers", "testcontainers-postgresql").versionRef("testcontainers")
             library("testcontainers-core", "org.testcontainers", "testcontainers").versionRef("testcontainers")
             library("testcontainers-junit", "org.testcontainers", "testcontainers-junit-jupiter").versionRef("testcontainers")
