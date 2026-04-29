@@ -57,7 +57,7 @@ dependencyResolutionManagement {
             library("slf4j-noop", "org.slf4j", "slf4j-nop").versionRef("slf4j")
             library("slf4j-simple", "org.slf4j", "slf4j-simple").versionRef("slf4j")
 
-            library("driver-postgres", "org.postgresql:postgresql:42.7.10")
+            library("driver-postgres", "org.postgresql:postgresql:42.7.11")
 
             bundle("database-postgres", listOf("testcontainers-junit", "testcontainers-core", "testcontainers-postgres", "driver-postgres"))
         }
