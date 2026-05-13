@@ -16,7 +16,7 @@ dependencyResolutionManagement {
             bundle("sadu", listOf("sadu-queries", "sadu-updater", "sadu-postgresql", "sadu-datasource"))
 
             version("log4j", "2.26.0")
-            library("slf4j-api", "org.slf4j:slf4j-api:2.0.17")
+            library("slf4j-api", "org.slf4j:slf4j-api:2.0.18")
             library("log4j-core", "org.apache.logging.log4j", "log4j-core").versionRef("log4j")
             library("log4j-slf4j2", "org.apache.logging.log4j", "log4j-slf4j2-impl").versionRef("log4j")
             library("log4j-jsontemplate", "org.apache.logging.log4j", "log4j-layout-template-json").versionRef("log4j")
@@ -53,7 +53,7 @@ dependencyResolutionManagement {
             library("testcontainers-core", "org.testcontainers", "testcontainers").versionRef("testcontainers")
             library("testcontainers-junit", "org.testcontainers", "testcontainers-junit-jupiter").versionRef("testcontainers")
 
-            version("slf4j", "2.0.17")
+            version("slf4j", "2.0.18")
             library("slf4j-noop", "org.slf4j", "slf4j-nop").versionRef("slf4j")
             library("slf4j-simple", "org.slf4j", "slf4j-simple").versionRef("slf4j")
 
