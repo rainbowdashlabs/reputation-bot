@@ -83,6 +83,17 @@ export function useSession() {
         isExpired.value = expired
     }
 
+    const refreshGuilds = async (): Promise<boolean> => {
+        try {
+            const refreshed = await api.refreshSession()
+            userSession.value = refreshed
+            return true
+        } catch (e) {
+            console.error('Failed to refresh guilds:', e)
+            return false
+        }
+    }
+
     const switchSession = (guildId: string) => {
         setGuildId(guildId)
         window.location.reload()
@@ -273,6 +284,7 @@ export function useSession() {
         refreshUserTokens,
         refreshGuildTokens,
         setExpired,
+        refreshGuilds,
         switchSession,
         clearSession,
         login,

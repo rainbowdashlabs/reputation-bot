@@ -124,6 +124,11 @@ class ApiClient {
         return response.data;
     }
 
+    public async refreshSession(): Promise<Types.UserSessionPOJO> {
+        const response = await this.axiosInstance.post<Types.UserSessionPOJO>('/session/refresh');
+        return response.data;
+    }
+
     public async getDashboardStats(): Promise<Types.DashboardStatsPOJO> {
         const response = await this.axiosInstance.get<Types.DashboardStatsPOJO>('/guild/stats');
         return response.data;

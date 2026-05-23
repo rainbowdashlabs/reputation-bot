@@ -149,6 +149,14 @@ public class SessionService {
         });
     }
 
+    public void invalidateUserSession(String token) {
+        userSessions.invalidate(token);
+    }
+
+    public void invalidateAllUserSessions() {
+        userSessions.invalidateAll();
+    }
+
     private Optional<UserSession> tryReconstructSession(String token) {
         return userSessionRepository.byToken(token).map(meta -> {
             UserSession session = createUserSessionFromToken(meta.userId(), token, meta.created());

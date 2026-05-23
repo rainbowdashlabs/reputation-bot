@@ -510,7 +510,7 @@ public class Bot {
                 messageAnalyzer);
         var voiceStateListener = VoiceStateListener.of(data.voice(), threading.repBotWorker());
         var logListener = LogListener.create(threading.repBotWorker());
-        var stateListener = StateListener.of(localizer, guilds, configuration);
+        var stateListener = StateListener.of(localizer, guilds, configuration, sessionService);
         var roleUpdater = RoleUpdater.create(guilds, roleAssigner, shardManager, threading.repBotWorker());
         ChatSupportService chatSupportService =
                 new ChatSupportService(configuration, shardManager, hub.pageServices(), guilds, hub.buttonService());

@@ -67,7 +67,7 @@ public class MailEntry {
 
     public void verify() {
         query("""
-                UPDATE user_mails SET verified = TRUE WHERE mail_hash = ?
+                UPDATE user_mails SET verified = TRUE WHERE mail_hash = ?;
                 """).single(call().bind(hash)).update().ifChanged(i -> this.verified = true);
     }
 
@@ -75,7 +75,7 @@ public class MailEntry {
         var newVerificationCode = UUID.randomUUID().toString();
         var newVerificationRequested = Instant.now();
         query("""
-                UPDATE user_mails SET verification_code = ?, verification_requested = ? WHERE mail_hash = ?
+                UPDATE user_mails SET verification_code = ?, verification_requested = ? WHERE mail_hash = ?;
                 """)
                 .single(call().bind(newVerificationCode)
                         .bind(newVerificationRequested, INSTANT_TIMESTAMP)
@@ -123,7 +123,7 @@ public class MailEntry {
      */
     public void updateUser(long user) {
         query("""
-                UPDATE user_mails SET user_id = ? WHERE mail_hash = ?
+                UPDATE user_mails SET user_id = ? WHERE mail_hash = ?;
                 """).single(call().bind(user).bind(hash)).update().ifChanged(i -> {
             this.userId = user;
             regenerateVerificationCode();

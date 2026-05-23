@@ -9,6 +9,7 @@ import de.chojo.jdautil.localization.ILocalizer;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.snapshots.ReputationRank;
+import de.chojo.repbot.web.services.SessionService;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.events.channel.ChannelDeleteEvent;
 import net.dv8tion.jda.api.events.emoji.EmojiRemovedEvent;
@@ -30,20 +31,31 @@ public class StateListener extends ListenerAdapter {
     private final GuildRepository guildRepository;
     private final ILocalizer localizer;
     private final Configuration configuration;
+    private final SessionService sessionService;
 
-    private StateListener(GuildRepository guildRepository, ILocalizer localizer, Configuration configuration) {
+    private StateListener(
+            GuildRepository guildRepository,
+            ILocalizer localizer,
+            Configuration configuration,
+            SessionService sessionService) {
         this.guildRepository = guildRepository;
         this.localizer = localizer;
         this.configuration = configuration;
+        this.sessionService = sessionService;
     }
 
-    public static StateListener of(ILocalizer localizer, GuildRepository guildRepository, Configuration configuration) {
-        return new StateListener(guildRepository, localizer, configuration);
+    public static StateListener of(
+            ILocalizer localizer,
+            GuildRepository guildRepository,
+            Configuration configuration,
+            SessionService sessionService) {
+        return new StateListener(guildRepository, localizer, configuration, sessionService);
     }
 
     @Override
     public void onGuildJoin(@NotNull GuildJoinEvent event) {
         guildRepository.guild(event.getGuild()).gdpr().dequeueDeletion();
+        sessionService.invalidateAllUserSessions();
 
         if (configuration.botlist().isBotlistGuild(event.getGuild().getIdLong())) return;
 

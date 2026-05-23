@@ -109,8 +109,7 @@ public class MailService {
     public Result<MailEntry, FailureReason> registerVerifiedMail(long user, String mail, MailSource source) {
         Optional<RepUser> optUser = userRepository.byMailHash(mailHash(mail));
         if (optUser.isPresent()) {
-            // This is still considered a succcess, because the mail adress is already registered and present in the
-            // result.
+            // This is still considered a success because the mail address is already registered and present in the result.
             MailEntry mailEntry = optUser.get().mails().getMail(mailHash(mail)).get();
             mailEntry.updateUser(user);
             // If the mail entry is not verified, verify it.

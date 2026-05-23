@@ -372,7 +372,8 @@
     "title": "Switch Server",
     "current": "Current Server",
     "none": "No other servers found",
-    "add": "Add another server by opening settings from the server."
+    "add": "Add another server by opening settings from the server.",
+    "refresh": "Refresh server list"
   },
   "error": {
     "noToken": {
@@ -772,7 +773,8 @@
     "error": {
       "noSession": {
         "title": "Not Connected",
-        "description": "No server session is active. Please go back and select a server."
+        "description": "No server session is active. Please go back and select a server.",
+        "refreshing": "Refreshing server list..."
       },
       "forbidden": {
         "title": "Access Denied",

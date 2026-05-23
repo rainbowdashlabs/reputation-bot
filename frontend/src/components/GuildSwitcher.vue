@@ -35,8 +35,16 @@
           v-if="isSwitcherOpen"
           class="absolute right-0 bottom-full mb-2 w-72 rounded-xl bg-white dark:bg-gray-800 shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none z-50 overflow-hidden border border-gray-100 dark:border-gray-700"
       >
-        <div class="p-3 border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50">
+        <div class="p-3 border-b border-gray-100 dark:border-gray-700 bg-gray-50/50 dark:bg-gray-800/50 flex items-center justify-between">
           <h3 class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-widest">{{ $t('guildSwitcher.title') }}</h3>
+          <button
+              @click="handleRefresh"
+              :disabled="isRefreshing"
+              class="text-gray-400 hover:text-indigo-500 dark:hover:text-indigo-400 transition-colors disabled:opacity-50"
+              :title="$t('guildSwitcher.refresh')"
+          >
+            <font-awesome-icon :icon="['fas', 'arrows-rotate']" :class="{ 'animate-spin': isRefreshing }" class="w-3.5 h-3.5"/>
+          </button>
         </div>
         <div class="py-1 max-h-64 overflow-y-auto custom-scrollbar">
           <template v-if="otherSessions.length > 0">
@@ -61,11 +69,24 @@ import {computed, ref} from 'vue'
 import {useSession} from '@/composables/useSession'
 import GuildSwitcherItem from './GuildSwitcherItem.vue'
 
-const {userSession, session, switchSession} = useSession()
+const {userSession, session, switchSession, refreshGuilds} = useSession()
 
 const isSwitcherOpen = ref(false)
+const isRefreshing = ref(false)
 const toggleSwitcher = () => isSwitcherOpen.value = !isSwitcherOpen.value
 const closeSwitcher = () => isSwitcherOpen.value = false
+
+const handleRefresh = async () => {
+  isRefreshing.value = true
+  try {
+    const success = await refreshGuilds()
+    if (success) {
+      window.location.reload()
+    }
+  } finally {
+    isRefreshing.value = false
+  }
+}
 
 const otherSessions = computed(() => {
   if (!userSession.value) return []

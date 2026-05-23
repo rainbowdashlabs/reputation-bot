@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
+import static io.javalin.apibuilder.ApiBuilder.post;
 
 public class SessionRoute implements RoutesBuilder {
     private final SessionService sessionService;
@@ -110,10 +111,32 @@ public class SessionRoute implements RoutesBuilder {
         ctx.json(SettingsPOJO.generate(session.guild(), session.guildRepository()));
     }
 
+    @OpenApi(
+            summary = "Refresh the current user session, re-fetching the guild list from Discord.",
+            operationId = "refreshUserSession",
+            path = "v1/session/refresh",
+            methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "User Session Token")},
+            tags = {"Session"},
+            responses = {
+                @OpenApiResponse(
+                        status = "200",
+                        content = {@OpenApiContent(from = UserSessionPOJO.class, type = "application/json")})
+            })
+    private void refreshUserSession(@NotNull Context ctx) {
+        UserSession session = ctx.sessionAttribute(SessionAttribute.USER_SESSION);
+        sessionService.invalidateUserSession(session.token());
+        UserSession refreshed = sessionService.getUserSession(ctx)
+                .orElseThrow(() -> new io.javalin.http.UnauthorizedResponse("Session expired"));
+        ctx.sessionAttribute(SessionAttribute.USER_SESSION, refreshed);
+        ctx.json(refreshed.toPOJO());
+    }
+
     @Override
     public void buildRoutes() {
         path("session", () -> {
             get("me", SessionRoute::getUserSession, Role.USER);
+            post("refresh", this::refreshUserSession, Role.USER);
             path("guild", () -> {
                 get("meta", SessionRoute::getGuildMeta, Role.GUILD_USER);
                 get("premium", SessionRoute::getGuildPremium, Role.GUILD_USER);

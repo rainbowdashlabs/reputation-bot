@@ -29,7 +29,10 @@ import SetupFinishedStep from './setup/SetupFinishedStep.vue'
 const {t} = useI18n()
 const router = useRouter()
 const route = useRoute()
-const {session, loadSettings, settingsLoading, settingsError} = useSession()
+const {session, loadSettings, settingsLoading, settingsError, refreshGuilds} = useSession()
+
+const hasAttemptedRefresh = ref(false)
+const isAutoRefreshing = ref(false)
 
 // Watch session and load settings as soon as session becomes available
 watch(session, (newSession) => {
@@ -114,6 +117,22 @@ const steps = [
 ]
 
 const currentStepData = computed(() => steps.find(s => s.id === currentStep.value))
+
+// Auto-refresh guild list once if no session is active on a settings step
+watch([currentStepData, session], async ([stepData, sess]) => {
+  if (stepData?.requiresSettings && !sess && !hasAttemptedRefresh.value) {
+    hasAttemptedRefresh.value = true
+    isAutoRefreshing.value = true
+    try {
+      const success = await refreshGuilds()
+      if (success) {
+        window.location.reload()
+      }
+    } finally {
+      isAutoRefreshing.value = false
+    }
+  }
+}, {immediate: true})
 
 const canProceed = ref(true)
 const scanStarted = ref(false)
@@ -240,8 +259,16 @@ const progressPercentage = computed(() => {
           </div>
 
           <div v-else-if="currentStepData?.requiresSettings && !session" class="rounded-lg bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 p-6">
-            <p class="text-yellow-700 dark:text-yellow-400 font-medium">{{ t('setup.error.noSession.title') }}</p>
-            <p class="text-yellow-600 dark:text-yellow-300 text-sm mt-1">{{ t('setup.error.noSession.description') }}</p>
+            <template v-if="isAutoRefreshing">
+              <div class="flex items-center gap-3">
+                <font-awesome-icon :icon="['fas', 'arrows-rotate']" class="animate-spin text-yellow-600 dark:text-yellow-400"/>
+                <p class="text-yellow-700 dark:text-yellow-400 font-medium">{{ t('setup.error.noSession.refreshing') }}</p>
+              </div>
+            </template>
+            <template v-else>
+              <p class="text-yellow-700 dark:text-yellow-400 font-medium">{{ t('setup.error.noSession.title') }}</p>
+              <p class="text-yellow-600 dark:text-yellow-300 text-sm mt-1">{{ t('setup.error.noSession.description') }}</p>
+            </template>
           </div>
 
           <component
