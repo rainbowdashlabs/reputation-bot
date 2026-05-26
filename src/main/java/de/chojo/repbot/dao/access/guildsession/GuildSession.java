@@ -23,7 +23,6 @@ public class GuildSession {
     private final SettingsAuditLogRepository settingsAuditLogRepository;
     private final long guildId;
     private final long userId;
-    private PremiumValidator premiumValidator;
     private GuildValidator guildValidator;
     private volatile boolean dirty = true;
     private GuildPOJO cachedGuild;
@@ -74,10 +73,7 @@ public class GuildSession {
     }
 
     public PremiumValidator premiumValidator() {
-        if (premiumValidator == null) {
-            premiumValidator = new PremiumValidator(repGuild(), shardManager);
-        }
-        return premiumValidator;
+        return new PremiumValidator(repGuild(), shardManager);
     }
 
     public GuildValidator guildValidator() {
