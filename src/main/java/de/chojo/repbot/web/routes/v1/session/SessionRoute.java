@@ -126,7 +126,8 @@ public class SessionRoute implements RoutesBuilder {
     private void refreshUserSession(@NotNull Context ctx) {
         UserSession session = ctx.sessionAttribute(SessionAttribute.USER_SESSION);
         sessionService.invalidateUserSession(session.token());
-        UserSession refreshed = sessionService.getUserSession(ctx)
+        UserSession refreshed = sessionService
+                .getUserSession(ctx)
                 .orElseThrow(() -> new io.javalin.http.UnauthorizedResponse("Session expired"));
         ctx.sessionAttribute(SessionAttribute.USER_SESSION, refreshed);
         ctx.json(refreshed.toPOJO());
