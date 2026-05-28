@@ -31,7 +31,8 @@ const router = useRouter()
 const route = useRoute()
 const {session, loadSettings, settingsLoading, settingsError, refreshGuilds} = useSession()
 
-const hasAttemptedRefresh = ref(false)
+const SETUP_REFRESH_KEY = 'reputation-bot-setup-refresh-attempted'
+const hasAttemptedRefresh = ref(!!sessionStorage.getItem(SETUP_REFRESH_KEY))
 const isAutoRefreshing = ref(false)
 
 // Watch session and load settings as soon as session becomes available
@@ -122,6 +123,7 @@ const currentStepData = computed(() => steps.find(s => s.id === currentStep.valu
 watch([currentStepData, session], async ([stepData, sess]) => {
   if (stepData?.requiresSettings && !sess && !hasAttemptedRefresh.value) {
     hasAttemptedRefresh.value = true
+    sessionStorage.setItem(SETUP_REFRESH_KEY, 'true')
     isAutoRefreshing.value = true
     try {
       const success = await refreshGuilds()
@@ -131,6 +133,10 @@ watch([currentStepData, session], async ([stepData, sess]) => {
     } finally {
       isAutoRefreshing.value = false
     }
+  }
+  // Clear the refresh flag once session is available (refresh succeeded)
+  if (sess && hasAttemptedRefresh.value) {
+    sessionStorage.removeItem(SETUP_REFRESH_KEY)
   }
 }, {immediate: true})
 

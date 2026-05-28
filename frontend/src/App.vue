@@ -80,7 +80,7 @@ async function loadSession() {
   // If token exists, try to load session data
   if (storedToken) {
     try {
-      const [userSessionData, tokensData] = await Promise.all([
+      let [userSessionData, tokensData] = await Promise.all([
         api.getSession(),
         api.getUserTokens()
       ]);
@@ -94,10 +94,26 @@ async function loadSession() {
       // 3. First guild with admin role
       // 4. First guild in list
       let guildId: string | null = urlParams.get('guild') || (route.query.guild as string | null);
+      const requestedGuildId = guildId;
 
       if (!guildId) {
         // Fallback to localStorage if no query param
         guildId = localStorage.getItem('reputation_bot_guild_id');
+      }
+
+      // If a specific guild was requested but not in the session (e.g. bot just joined),
+      // refresh the session from Discord to pick up newly added guilds
+      if (requestedGuildId && !userSessionData.guilds[requestedGuildId] && !isBotOwner) {
+        try {
+          const refreshed = await api.refreshSession();
+          setUserSession(refreshed);
+          userSessionData = refreshed;
+          if (userSessionData.guilds[requestedGuildId]) {
+            guildId = requestedGuildId;
+          }
+        } catch (e) {
+          console.error('Failed to refresh session for new guild:', e);
+        }
       }
 
       if (!guildId || (!userSessionData.guilds[guildId] && !isBotOwner)) {
