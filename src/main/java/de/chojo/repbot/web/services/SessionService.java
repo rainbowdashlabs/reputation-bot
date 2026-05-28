@@ -153,6 +153,18 @@ public class SessionService {
         userSessions.invalidate(token);
     }
 
+    /**
+     * Fully refreshes a user session by invalidating both the session cache
+     * and the Discord guild list cache, ensuring fresh data from Discord API.
+     */
+    public void invalidateUserSessionFull(String token, long userId) {
+        userSessions.invalidate(token);
+        userRepository
+                .byId(userId)
+                .token()
+                .ifPresent(userToken -> discordOAuthService.invalidateGuildsCache(userToken.accessToken()));
+    }
+
     public void invalidateAllUserSessions() {
         userSessions.invalidateAll();
     }

@@ -129,6 +129,10 @@ public class DiscordOAuthService {
      * Revokes a Discord OAuth token for the current application.
      * See https://discord.com/developers/docs/topics/oauth2#revoking-tokens
      */
+    public void invalidateGuildsCache(String accessToken) {
+        userGuildsCache.invalidate(accessToken);
+    }
+
     public void revokeToken(String token) throws IOException, InterruptedException {
         userCache.invalidate(token);
         userGuildsCache.invalidate(token);
