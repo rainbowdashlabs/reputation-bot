@@ -55,6 +55,14 @@ public class Channels extends ChannelsPOJO implements GuildHolder {
                 return true;
             }
         }
+
+        if (channel instanceof ThreadChannel bc
+                && bc.getParentChannel() instanceof ICategorizableChannel categorizableChannel) {
+            if (isEnabledByCategory(categorizableChannel.getParentCategory())) {
+                return true;
+            }
+        }
+
         return isEnabledByChannel(baseChannel);
     }
 
