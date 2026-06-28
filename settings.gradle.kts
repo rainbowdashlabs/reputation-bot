@@ -39,7 +39,7 @@ dependencyResolutionManagement {
         }
 
         create("testlibs") {
-            version("junit", "6.1.0")
+            version("junit", "6.1.1")
             library("junit-bom", "org.junit", "junit-bom").versionRef("junit")
             library("junit-jupiter", "org.junit.jupiter", "junit-jupiter").withoutVersion()
             library("junit-params", "org.junit.jupiter", "junit-jupiter-params").withoutVersion()
