@@ -6,17 +6,16 @@
 package de.chojo.repbot.dao.access.guild.settings.sub.thanking;
 
 import com.fasterxml.jackson.annotation.JsonSerializeAs;
+import com.google.re2j.Pattern;
+import com.google.re2j.PatternSyntaxException;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.web.pojo.settings.sub.thanking.ThankwordsPOJO;
 import org.intellij.lang.annotations.Language;
 import org.slf4j.Logger;
 
-import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.locks.StampedLock;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
@@ -31,7 +30,7 @@ public class Thankwords extends ThankwordsPOJO implements GuildHolder {
     private static final String THANKWORD = "(?:^|\\b)%s(?:$|\\b)";
 
     @Language("RegExp")
-    private static final String PATTERN = "(?i)(?<match>%s)";
+    private static final String PATTERN = "(?i)(?P<match>%s)";
 
     private final Thanking thanking;
 
@@ -73,10 +72,8 @@ public class Thankwords extends ThankwordsPOJO implements GuildHolder {
         long stamp = lock.writeLock();
         try {
             try {
-                // Check whether the pattern can be compiled after adding it.
-                HashSet<String> thankwords = new HashSet<>(this.thankwords);
-                thankwords.add(pattern);
-                compilePattern(thankwords);
+                // Check whether the pattern can be compiled before adding it.
+                compileWord(pattern);
             } catch (PatternSyntaxException e) {
                 log.warn("Could not compile new pattern {} for guild {}", pattern, guildId(), e);
                 return false;
@@ -150,9 +147,29 @@ public class Thankwords extends ThankwordsPOJO implements GuildHolder {
     }
 
     private Pattern compilePattern(Set<String> thankwords) {
-        var twPattern =
-                thankwords.stream().map(t -> String.format(THANKWORD, t)).collect(Collectors.joining("|"));
+        // Words predating the switch to RE2 might use syntax RE2 rejects. They are skipped to keep the guild working.
+        var twPattern = thankwords.stream()
+                .filter(this::compilesAsWord)
+                .map(t -> String.format(THANKWORD, t))
+                .collect(Collectors.joining("|"));
+        if (twPattern.isEmpty()) return Pattern.compile("");
         return Pattern.compile(
-                String.format(PATTERN, twPattern), Pattern.CASE_INSENSITIVE + Pattern.MULTILINE + Pattern.DOTALL);
+                String.format(PATTERN, twPattern), Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+    }
+
+    private boolean compilesAsWord(String word) {
+        try {
+            compileWord(word);
+            return true;
+        } catch (PatternSyntaxException e) {
+            log.warn("Skipping thankword {} of guild {} which is not a valid RE2 pattern", word, guildId(), e);
+            return false;
+        }
+    }
+
+    private void compileWord(String word) {
+        Pattern.compile(
+                String.format(PATTERN, String.format(THANKWORD, word)),
+                Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
     }
 }

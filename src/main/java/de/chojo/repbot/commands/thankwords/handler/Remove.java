@@ -15,9 +15,6 @@ import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
-
 public class Remove implements SlashHandler {
     private final GuildRepository guildRepository;
 
@@ -28,14 +25,6 @@ public class Remove implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         var pattern = event.getOption("pattern").getAsString();
-        try {
-            Pattern.compile(pattern);
-        } catch (PatternSyntaxException e) {
-            event.reply(WebPromo.promoString(context) + "\n" + context.localize("error.invalidRegex"))
-                    .setEphemeral(true)
-                    .complete();
-            return;
-        }
         if (guildRepository
                 .guild(event.getGuild())
                 .settings()

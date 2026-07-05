@@ -5,6 +5,8 @@
  */
 package de.chojo.repbot.commands.thankwords.handler;
 
+import com.google.re2j.Pattern;
+import com.google.re2j.PatternSyntaxException;
 import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.localization.util.Format;
 import de.chojo.jdautil.localization.util.Replacement;
@@ -14,8 +16,6 @@ import de.chojo.repbot.util.WebPromo;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.util.List;
-import java.util.regex.Pattern;
-import java.util.regex.PatternSyntaxException;
 
 public class Add implements SlashHandler {
     private final GuildRepository guildRepository;
