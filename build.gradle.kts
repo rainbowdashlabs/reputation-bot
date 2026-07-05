@@ -77,6 +77,8 @@ dependencies {
 
     implementation(libs.bundles.jackson)
 
+    implementation("com.google.re2j:re2j:1.8")
+
     // database
     implementation("org.postgresql:postgresql:42.7.11")
     implementation(libs.bundles.sadu)

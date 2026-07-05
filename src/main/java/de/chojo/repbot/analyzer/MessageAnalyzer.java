@@ -8,6 +8,7 @@ package de.chojo.repbot.analyzer;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.util.concurrent.UncheckedExecutionException;
+import com.google.re2j.Pattern;
 import de.chojo.jdautil.parsing.DiscordResolver;
 import de.chojo.jdautil.parsing.WeightedEntry;
 import de.chojo.repbot.analyzer.results.AnalyzerResult;
@@ -17,7 +18,6 @@ import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.provider.Metrics;
-import de.chojo.repbot.util.LogNotify;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageType;
@@ -28,11 +28,8 @@ import org.slf4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
@@ -40,14 +37,11 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class MessageAnalyzer {
     private static final int LOOKAROUND = 6;
     private static final Logger log = getLogger(MessageAnalyzer.class);
-    private static final Object PLACEHOLDER = new Object();
     private final ContextResolver contextResolver;
     private final Cache<Long, AnalyzerResult> resultCache = CacheBuilder.newBuilder()
             .expireAfterWrite(10, TimeUnit.MINUTES)
             .maximumSize(100000)
             .build();
-    private final Cache<Long, Object> rejectionCache =
-            CacheBuilder.newBuilder().expireAfterWrite(1, TimeUnit.MINUTES).build();
     private final Configuration configuration;
     private final Metrics metrics;
     private final GuildRepository guildRepository;
@@ -70,50 +64,21 @@ public class MessageAnalyzer {
      * @return analyzer results
      */
     public AnalyzerResult processMessage(@NotNull Message message, Settings settings, boolean limitTargets) {
-        if (rejectionCache.getIfPresent(settings.guildId()) != null) {
-            return AnalyzerResult.empty(EmptyResultReason.INTERNAL_ERROR);
-        }
         var analyzer = guildRepository.guild(message.getGuild()).reputation().analyzer();
         try {
             return analyzer.log(
                     message, resultCache.get(message.getIdLong(), () -> analyze(message, settings, limitTargets)));
         } catch (ExecutionException | UncheckedExecutionException e) {
-            var pattern = settings.thanking().thankwords().thankwordPattern();
-            if (e.getCause() instanceof TimeoutException) {
-                log.warn(
-                        LogNotify.NOTIFY_ADMIN,
-                        "Timeout when analyzing message using pattern {} for guild {}",
-                        pattern,
-                        settings.guildId());
-                rejectionCache.put(settings.guildId(), PLACEHOLDER);
-            } else if (e.getCause().getCause() instanceof TimeoutException) {
-                log.warn(
-                        LogNotify.NOTIFY_ADMIN,
-                        "Timeout when analyzing message using pattern {} for guild {}",
-                        pattern.pattern(),
-                        settings.guildId());
-                rejectionCache.put(settings.guildId(), PLACEHOLDER);
-            } else {
-                log.error("Could not compute analyzer result", e);
-            }
+            log.error("Could not compute analyzer result", e);
         }
         return analyzer.log(message, AnalyzerResult.empty(EmptyResultReason.INTERNAL_ERROR));
     }
 
-    @SuppressWarnings("DataFlowIssue") // We got no issues c:
     private Optional<String> getThankword(Message message, Pattern pattern) {
-        return CompletableFuture.supplyAsync(() -> {
-                    var contentRaw = message.getContentRaw().toLowerCase();
-                    var matcher = pattern.matcher(contentRaw);
-                    if (!matcher.find()) return Optional.ofNullable((String) null); // Yes this is intended
-                    return Optional.ofNullable(matcher.group("match"));
-                })
-                .orTimeout(1L, TimeUnit.SECONDS)
-                .exceptionally(throwable -> {
-                    log.error("Could not match message of guild {}", message.getGuild(), throwable);
-                    return Optional.empty();
-                })
-                .join();
+        var contentRaw = message.getContentRaw().toLowerCase();
+        var matcher = pattern.matcher(contentRaw);
+        if (!matcher.find()) return Optional.empty();
+        return Optional.ofNullable(matcher.group("match"));
     }
 
     private AnalyzerResult analyze(Message message, @Nullable Settings settings, boolean limitTargets) {
