@@ -80,7 +80,7 @@ dependencies {
     implementation("com.google.re2j:re2j:1.8")
 
     // database
-    implementation("org.postgresql:postgresql:42.7.12")
+    implementation("org.postgresql:postgresql:42.7.13")
     implementation(libs.bundles.sadu)
 
     // Logging
