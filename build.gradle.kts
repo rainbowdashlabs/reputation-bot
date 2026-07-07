@@ -89,7 +89,7 @@ dependencies {
         exclude("org.apache.logging.log4j")
     }
 
-    implementation("org.knowm.xchart:xchart:4.0.2")
+    implementation("org.knowm.xchart:xchart:4.0.3")
 
     // Mailing
     implementation("commons-validator:commons-validator:1.10.1")
@@ -102,7 +102,7 @@ dependencies {
     testImplementation(testlibs.bundles.junit)
     testImplementation(platform(testlibs.junit.bom))
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testImplementation("org.knowm.xchart:xchart:4.0.2")
+    testImplementation("org.knowm.xchart:xchart:4.0.3")
     testImplementation(testlibs.sadu.testing)
     testImplementation(testlibs.bundles.database.postgres)
     testImplementation(testlibs.slf4j.simple)
