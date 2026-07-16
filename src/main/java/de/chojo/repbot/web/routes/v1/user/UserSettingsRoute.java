@@ -12,6 +12,7 @@ import de.chojo.repbot.dao.provider.UserRepository;
 import de.chojo.repbot.service.MailService;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
+import de.chojo.repbot.web.error.ErrorResponseWrapper;
 import de.chojo.repbot.web.pojo.user.MailEntryPOJO;
 import de.chojo.repbot.web.pojo.user.UserSettingsPOJO;
 import de.chojo.repbot.web.routes.RoutesBuilder;
@@ -92,7 +93,10 @@ public class UserSettingsRoute implements RoutesBuilder {
         UserSettingsPOJO body = ctx.bodyAsClass(UserSettingsPOJO.class);
 
         if (body.voteGuild() != 0 && !session.guilds().containsKey(String.valueOf(body.voteGuild()))) {
-            ctx.status(400).result("Guild not in session");
+            ctx.status(400)
+                    .json(new ErrorResponseWrapper(
+                            "Guild not in session",
+                            "The guild %d is not part of your session.".formatted(body.voteGuild())));
             return;
         }
 
@@ -115,7 +119,10 @@ public class UserSettingsRoute implements RoutesBuilder {
         UpdateVoteGuildPOJO body = ctx.bodyAsClass(UpdateVoteGuildPOJO.class);
 
         if (body.voteGuild() != 0 && !session.guilds().containsKey(String.valueOf(body.voteGuild()))) {
-            ctx.status(400).result("Guild not in session");
+            ctx.status(400)
+                    .json(new ErrorResponseWrapper(
+                            "Guild not in session",
+                            "The guild %d is not part of your session.".formatted(body.voteGuild())));
             return;
         }
 

@@ -23,14 +23,18 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 public class DiscordOAuthService {
     private static final String DISCORD_BASE = "https://discord.com";
     private static final String DISCORD_API = DISCORD_BASE + "/api/";
-    private final HttpClient httpClient = HttpClient.newHttpClient();
+    private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(10);
+    private final HttpClient httpClient =
+            HttpClient.newBuilder().connectTimeout(REQUEST_TIMEOUT).build();
     private final ObjectMapper mapper =
             new ObjectMapper().configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     private final Configuration configuration;
@@ -75,6 +79,7 @@ public class DiscordOAuthService {
                 .uri(URI.create(DISCORD_API + "/oauth2/token"))
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .header("Authorization", basicAuth(cfg().clientId(), cfg().clientSecret()))
+                .timeout(REQUEST_TIMEOUT)
                 .POST(HttpRequest.BodyPublishers.ofString(form))
                 .build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
@@ -84,35 +89,41 @@ public class DiscordOAuthService {
         return mapper.readValue(response.body(), DiscordTokenResponse.class).toTokenResponse();
     }
 
-    public synchronized DiscordUser getCurrentUser(String accessToken) throws IOException, InterruptedException {
-        DiscordUser cached = userCache.getIfPresent(accessToken);
-        if (cached != null) {
-            return cached;
+    public DiscordUser getCurrentUser(String accessToken) throws IOException, InterruptedException {
+        try {
+            return userCache.get(accessToken, () -> fetchCurrentUser(accessToken));
+        } catch (ExecutionException e) {
+            throw unwrap(e);
         }
+    }
 
+    private DiscordUser fetchCurrentUser(String accessToken) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(DISCORD_API + "/users/@me"))
                 .header("Authorization", "Bearer " + accessToken)
+                .timeout(REQUEST_TIMEOUT)
                 .GET()
                 .build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
         if (response.statusCode() / 100 != 2) {
             throw new IOException("Discord /users/@me failed: " + response.statusCode() + " - " + response.body());
         }
-        DiscordUser user = mapper.readValue(response.body(), DiscordUser.class);
-        userCache.put(accessToken, user);
-        return user;
+        return mapper.readValue(response.body(), DiscordUser.class);
     }
 
-    public synchronized List<DiscordGuild> getUserGuilds(String accessToken) throws IOException, InterruptedException {
-        List<DiscordGuild> cached = userGuildsCache.getIfPresent(accessToken);
-        if (cached != null) {
-            return cached;
+    public List<DiscordGuild> getUserGuilds(String accessToken) throws IOException, InterruptedException {
+        try {
+            return userGuildsCache.get(accessToken, () -> fetchUserGuilds(accessToken));
+        } catch (ExecutionException e) {
+            throw unwrap(e);
         }
+    }
 
+    private List<DiscordGuild> fetchUserGuilds(String accessToken) throws IOException, InterruptedException {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(DISCORD_API + "/users/@me/guilds"))
                 .header("Authorization", "Bearer " + accessToken)
+                .timeout(REQUEST_TIMEOUT)
                 .GET()
                 .build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
@@ -120,9 +131,18 @@ public class DiscordOAuthService {
             throw new IOException(
                     "Discord /users/@me/guilds failed: " + response.statusCode() + " - " + response.body());
         }
-        List<DiscordGuild> guilds = mapper.readValue(response.body(), new TypeReference<>() {});
-        userGuildsCache.put(accessToken, guilds);
-        return guilds;
+        return mapper.readValue(response.body(), new TypeReference<>() {});
+    }
+
+    private static IOException unwrap(ExecutionException e) throws InterruptedException {
+        Throwable cause = e.getCause();
+        if (cause instanceof InterruptedException interrupted) {
+            throw interrupted;
+        }
+        if (cause instanceof IOException io) {
+            return io;
+        }
+        return new IOException(cause);
     }
 
     /**
@@ -141,6 +161,7 @@ public class DiscordOAuthService {
                 .uri(URI.create(DISCORD_API + "/oauth2/token/revoke"))
                 .header("Content-Type", "application/x-www-form-urlencoded")
                 .header("Authorization", basicAuth(cfg().clientId(), cfg().clientSecret()))
+                .timeout(REQUEST_TIMEOUT)
                 .POST(HttpRequest.BodyPublishers.ofString(form))
                 .build();
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());

@@ -29,8 +29,10 @@ const guilds = computed(() => {
 onMounted(async () => {
   try {
     const settings = await api.getUserSettings()
-    voteGuild.value = settings.voteGuild
+    voteGuild.value = String(settings.voteGuild)
     publicProfile.value = settings.publicProfile
+    savedVoteGuild = voteGuild.value
+    savedPublicProfile = publicProfile.value
   } catch (error) {
     console.error('Failed to fetch user settings:', error)
   } finally {
@@ -38,19 +40,26 @@ onMounted(async () => {
   }
 })
 
+let savedVoteGuild = '0'
+let savedPublicProfile = false
+
 const updateVoteGuild = async () => {
   try {
     await api.updateUserVoteGuild(voteGuild.value)
+    savedVoteGuild = voteGuild.value
   } catch (error) {
     console.error('Failed to update vote guild:', error)
+    voteGuild.value = savedVoteGuild
   }
 }
 
 const updatePublicProfile = async () => {
   try {
     await api.updateUserPublicProfile(publicProfile.value)
+    savedPublicProfile = publicProfile.value
   } catch (error) {
     console.error('Failed to update public profile:', error)
+    publicProfile.value = savedPublicProfile
   }
 }
 </script>

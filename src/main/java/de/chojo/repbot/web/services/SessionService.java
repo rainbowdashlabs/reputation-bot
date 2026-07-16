@@ -184,7 +184,10 @@ public class SessionService {
         // Build member info for the current user (global, not guild-scoped)
         MemberPOJO memberPojo;
         try {
-            User user = shardManager.retrieveUserById(userId).complete();
+            User user = shardManager
+                    .retrieveUserById(userId)
+                    .timeout(10, TimeUnit.SECONDS)
+                    .complete();
             if (user != null) {
                 memberPojo =
                         new MemberPOJO(user.getName(), String.valueOf(userId), "#ffffff", user.getEffectiveAvatarUrl());
@@ -218,7 +221,9 @@ public class SessionService {
 
             Member member;
             try {
-                member = guild.retrieveMemberById(userId).complete();
+                member = guild.retrieveMemberById(userId)
+                        .timeout(10, TimeUnit.SECONDS)
+                        .complete();
             } catch (Exception e) {
                 log.error(
                         LogNotify.NOTIFY_ADMIN,
