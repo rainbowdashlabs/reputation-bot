@@ -25,6 +25,7 @@ class ApiClient {
 
         this.axiosInstance = axios.create({
             baseURL: baseURL,
+            timeout: 30000,
         });
 
         this.axiosInstance.interceptors.request.use((config) => {
@@ -84,8 +85,13 @@ class ApiClient {
                 }
 
                 if (error.response?.data) {
-                    // Backend returned an ApiErrorResponse
-                    errorStore.addError(error.response.data);
+                    // Backend returned an ApiErrorResponse or a plain text error
+                    const data = error.response.data;
+                    if (typeof data === 'string') {
+                        errorStore.addError({error: 'Request Failed', message: data});
+                    } else {
+                        errorStore.addError(data);
+                    }
                 } else if (error.request) {
                     // Request was made but no response received
                     errorStore.addError({
@@ -653,7 +659,7 @@ class ApiClient {
     }
 
     public async updateUserVoteGuild(voteGuild: string): Promise<void> {
-        await this.axiosInstance.patch('/user/settings/voteguild', { voteGuild: Number(voteGuild) });
+        await this.axiosInstance.patch('/user/settings/voteguild', { voteGuild });
     }
 
     public async updateUserPublicProfile(publicProfile: boolean): Promise<void> {

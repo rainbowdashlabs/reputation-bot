@@ -50,7 +50,7 @@ public class RepUser {
     public UserSettings settings() {
         if (settings == null) {
             settings = query("""
-                    SELECT id, vote_guild FROM user_settings WHERE id = ?
+                    SELECT id, vote_guild, public_profile FROM user_settings WHERE id = ?
                     """)
                     .single(call().bind(id))
                     .mapAs(UserSettings.class)
