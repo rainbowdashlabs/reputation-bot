@@ -92,7 +92,7 @@ dependencies {
     implementation("org.knowm.xchart:xchart:4.0.4")
 
     // Mailing
-    implementation("commons-validator:commons-validator:1.10.1")
+    implementation("commons-validator:commons-validator:1.11.0")
     implementation("org.eclipse.angus:angus-mail:2.0.5")
 
     // Markdown parsing
