@@ -14,16 +14,25 @@ import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildMessageChannel;
+import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.Optional;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public interface Scan {
+    Logger log = getLogger(Scan.class);
+
     static Optional<Scan> create(ScanProcess scanProcess, GuildChannel channel) {
         if (!channel.getGuild()
                 .getSelfMember()
-                .hasPermission(
-                        channel, Permission.VIEW_CHANNEL, Permission.VOICE_CONNECT, Permission.MESSAGE_HISTORY)) {
+                .hasPermission(channel, Permission.VIEW_CHANNEL, Permission.MESSAGE_HISTORY)) {
+            log.info(
+                    "Skipping channel {} ({}) on guild {} during scan. Missing view channel or message history permission.",
+                    channel.getName(),
+                    channel.getId(),
+                    channel.getGuild().getId());
             return Optional.empty();
         }
         return switch (channel.getType()) {
@@ -33,7 +42,15 @@ public interface Scan {
             case GUILD_NEWS_THREAD, GUILD_PRIVATE_THREAD, GUILD_PUBLIC_THREAD ->
                 Optional.of(ChannelScan.create(scanProcess, (ThreadChannel) channel));
             case FORUM, MEDIA -> Optional.of(ThreadContainerScan.create(scanProcess, (IPostContainer) channel));
-            default -> Optional.empty();
+            default -> {
+                log.info(
+                        "Skipping channel {} ({}) on guild {} during scan. Unsupported channel type {}.",
+                        channel.getName(),
+                        channel.getId(),
+                        channel.getGuild().getId(),
+                        channel.getType());
+                yield Optional.empty();
+            }
         };
     }
 
