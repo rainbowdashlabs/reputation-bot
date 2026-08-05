@@ -15,7 +15,6 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,9 +39,7 @@ public class ScanService {
     public void scan(Guild guild) {
         if (scanProcesses.containsKey(guild.getIdLong())) return;
         RepGuild repGuild = guildRepository.guild(guild);
-        List<GuildChannel> channels =
-                new ArrayList<>(repGuild.settings().thanking().channels().channels());
-        channels.addAll(repGuild.settings().thanking().channels().categories());
+        List<GuildChannel> channels = repGuild.settings().thanking().channels().scanTargets();
         ScanProcess scanProcess = new ScanProcess(analyzer, repGuild, channels);
         scanProcess.init();
         scanProcesses.put(guild.getIdLong(), scanProcess);

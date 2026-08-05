@@ -30,9 +30,7 @@ public class ScanProcess {
     private List<? extends Scan> scans;
     private final MessageAnalyzer analyzer;
     private final RepGuild guild;
-    private Thread currWorker;
-    private Instant start = Instant.now();
-    private Instant lastSeen;
+    private final Instant start = Instant.now();
 
     public ScanProcess(MessageAnalyzer analyzer, RepGuild guild, List<GuildChannel> channels) {
         this.analyzer = analyzer;
@@ -46,13 +44,16 @@ public class ScanProcess {
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .toList();
+        if (scans.isEmpty()) {
+            log.warn(
+                    "Scan on guild {} has no targets. {} configured channels were skipped.",
+                    guild.guild(),
+                    channels.size());
+        }
     }
 
     public void scan() {
         scans.stream().filter(c -> !c.done()).findFirst().ifPresent(Scan::scan);
-
-        currWorker = Thread.currentThread();
-        lastSeen = Instant.now();
         save();
     }
 
@@ -86,10 +87,6 @@ public class ScanProcess {
 
     public int hits() {
         return scans.stream().mapToInt(Scan::hits).sum();
-    }
-
-    public List<GuildChannel> channels() {
-        return channels;
     }
 
     public Instant start() {

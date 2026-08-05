@@ -19,6 +19,7 @@ import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildChannel;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -45,38 +46,59 @@ public class Channels extends ChannelsPOJO implements GuildHolder {
     }
 
     public boolean isEnabled(GuildMessageChannel channel) {
-        long baseChannel = channel.getIdLong();
-        if (channel instanceof ThreadChannel bc) {
-            baseChannel = bc.getParentChannel().getIdLong();
-        }
-
-        if (channel instanceof ICategorizableChannel categorizableChannel) {
-            if (isEnabledByCategory(categorizableChannel.getParentCategory())) {
-                return true;
-            }
-        }
-
-        if (channel instanceof ThreadChannel bc
-                && bc.getParentChannel() instanceof ICategorizableChannel categorizableChannel) {
-            if (isEnabledByCategory(categorizableChannel.getParentCategory())) {
-                return true;
-            }
-        }
-
-        return isEnabledByChannel(baseChannel);
+        return isEnabled((GuildChannel) channel);
     }
 
-    public boolean isEnabledByChannel(GuildMessageChannel channel) {
-        return isEnabledByChannel(channel.getIdLong());
+    /**
+     * Checks whether reputation is tracked in this channel.
+     * <p>
+     * A channel is enabled when it is part of the configured channels, either directly or by its category. In blacklist
+     * mode this is inverted, which means that a channel is enabled unless it or its category is configured. Threads are
+     * resolved by their parent channel.
+     *
+     * @param channel channel to check
+     * @return true if the channel is enabled
+     */
+    public boolean isEnabled(GuildChannel channel) {
+        return isWhitelist() == isConfigured(channel);
     }
 
-    public boolean isEnabledByChannel(long channel) {
-        return isWhitelist() == channels.contains(channel);
+    /**
+     * Checks whether the channel or its category is part of the configured channels, ignoring the list type.
+     *
+     * @param channel channel to check
+     * @return true if the channel or its category is configured
+     */
+    private boolean isConfigured(GuildChannel channel) {
+        if (channels.contains(baseChannel(channel).getIdLong())) {
+            return true;
+        }
+        return isConfiguredCategory(parentCategory(channel));
+    }
+
+    private boolean isConfiguredCategory(@Nullable Category category) {
+        return category != null && categories.contains(category.getIdLong());
+    }
+
+    /**
+     * The channel which holds the settings of this channel. This is the parent channel for threads.
+     *
+     * @param channel channel to resolve
+     * @return the channel itself or the parent channel of a thread
+     */
+    private GuildChannel baseChannel(GuildChannel channel) {
+        return channel instanceof ThreadChannel thread ? thread.getParentChannel() : channel;
+    }
+
+    @Nullable
+    private Category parentCategory(GuildChannel channel) {
+        return baseChannel(channel) instanceof ICategorizableChannel categorizableChannel
+                ? categorizableChannel.getParentCategory()
+                : null;
     }
 
     public boolean isEnabledByCategory(@Nullable Category category) {
-        if (category == null) return false;
-        return isWhitelist() == categories.contains(category.getIdLong());
+        return isWhitelist() == isConfiguredCategory(category);
     }
 
     public List<GuildChannel> channels() {
@@ -90,6 +112,30 @@ public class Channels extends ChannelsPOJO implements GuildHolder {
         return categories.stream()
                 .map(guild()::getCategoryById)
                 .filter(Objects::nonNull)
+                .toList();
+    }
+
+    /**
+     * All channels which should be scanned based on the current channel settings.
+     * <p>
+     * In whitelist mode these are the configured channels and categories. Channels which are already covered by a
+     * configured category are omitted, so that no channel is scanned twice. In blacklist mode all channels of the guild
+     * which are neither excluded directly nor by their category are returned. Threads are not part of the result, as
+     * they are resolved by their parent channel.
+     *
+     * @return channels and categories to scan
+     */
+    public List<GuildChannel> scanTargets() {
+        if (isWhitelist()) {
+            List<GuildChannel> targets = new ArrayList<>(channels().stream()
+                    .filter(channel -> !isConfiguredCategory(parentCategory(channel)))
+                    .toList());
+            targets.addAll(categories());
+            return targets;
+        }
+        return guild().getChannels(false).stream()
+                .filter(channel -> !(channel instanceof Category))
+                .filter(this::isEnabled)
                 .toList();
     }
 

@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Set;
 
 public class ThreadContainerScan implements Scan {
-    private ScanProcess scanProcess;
     private final IThreadContainer postContainer;
     private final List<ChannelScan> channels;
 
