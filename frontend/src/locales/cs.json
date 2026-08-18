@@ -115,14 +115,6 @@
       "general_systemchannel": "Obecné - Systémový kanál",
       "logchannel_active": "Kanál protokolu – aktivní",
       "logchannel_channel": "Kanál protokolu - Kanál",
-      "messages_announceanswer": "Reputation - Announce Answer",
-      "messages_announcecommand": "Reputation - Announce Command",
-      "messages_announcedelete": "Reputation - Delete Announcements",
-      "messages_announcedirect": "Reputation - Announce Direct",
-      "messages_announceembed": "Reputation - Announce Embed",
-      "messages_announcefuzzy": "Reputation - Announce Fuzzy",
-      "messages_announcemention": "Reputation - Announce Mention",
-      "messages_announcereaction": "Reputation - Announce Reaction",
       "messages_commandreputationephemeral": "Reputace - Reputace velení Pomíjivá",
       "messages_reactionconfirmation": "Reputace – potvrzení reakce",
       "profile_nickname": "Profil - Přezdívka",
@@ -343,26 +335,6 @@
       }
     },
     "reputation": {
-      "announcement": {
-        "delete": {
-          "description": "Remove announcements again 30 seconds after they were sent.",
-          "label": "Delete after 30 seconds"
-        },
-        "description": "Post a message when reputation is given, including the receiver's current count.",
-        "label": "Reputation Messages",
-        "types": {
-          "answer": "Announce reputation given in an answer.",
-          "command": {
-            "ephemeral": "Send a message when reputation is given via command.",
-            "public": "Add the reputation count to the command reply."
-          },
-          "direct": "Announce reputation given directly to a single user.",
-          "embed": "Announce reputation given through the embed.",
-          "fuzzy": "Announce reputation given by fuzzy matching.",
-          "mention": "Announce reputation given by mention.",
-          "reaction": "Announce reputation given by reaction."
-        }
-      },
       "description": "Nakonfigurujte způsob výpočtu reputace a povolené funkce.",
       "mode": {
         "description": "Vyberte, jak se bude reputace počítat a zobrazovat.",

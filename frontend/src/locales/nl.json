@@ -115,14 +115,6 @@
       "general_systemchannel": "Algemeen - Systeemkanaal",
       "logchannel_active": "Logkanaal - Actief",
       "logchannel_channel": "Logkanaal - Kanaal",
-      "messages_announceanswer": "Reputation - Announce Answer",
-      "messages_announcecommand": "Reputation - Announce Command",
-      "messages_announcedelete": "Reputation - Delete Announcements",
-      "messages_announcedirect": "Reputation - Announce Direct",
-      "messages_announceembed": "Reputation - Announce Embed",
-      "messages_announcefuzzy": "Reputation - Announce Fuzzy",
-      "messages_announcemention": "Reputation - Announce Mention",
-      "messages_announcereaction": "Reputation - Announce Reaction",
       "messages_commandreputationephemeral": "Reputatie - Commando Reputatie Kortstondig",
       "messages_reactionconfirmation": "Reputatie - Bevestiging van reacties",
       "profile_nickname": "Profiel - Bijnaam",
@@ -343,26 +335,6 @@
       }
     },
     "reputation": {
-      "announcement": {
-        "delete": {
-          "description": "Remove announcements again 30 seconds after they were sent.",
-          "label": "Delete after 30 seconds"
-        },
-        "description": "Post a message when reputation is given, including the receiver's current count.",
-        "label": "Reputation Messages",
-        "types": {
-          "answer": "Announce reputation given in an answer.",
-          "command": {
-            "ephemeral": "Send a message when reputation is given via command.",
-            "public": "Add the reputation count to the command reply."
-          },
-          "direct": "Announce reputation given directly to a single user.",
-          "embed": "Announce reputation given through the embed.",
-          "fuzzy": "Announce reputation given by fuzzy matching.",
-          "mention": "Announce reputation given by mention.",
-          "reaction": "Announce reputation given by reaction."
-        }
-      },
       "description": "Zet even op hoe je reputatie wordt berekend en welke functies je wilt gebruiken.",
       "mode": {
         "description": "Kies hoe je reputatie wordt berekend en weergegeven.",

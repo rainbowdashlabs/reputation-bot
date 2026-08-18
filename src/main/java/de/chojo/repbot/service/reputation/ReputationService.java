@@ -491,7 +491,7 @@ public class ReputationService {
      * case {@link de.chojo.repbot.commands.reputation.handler.Give} renders this message as its reply instead of an
      * additional message being sent.
      *
-     * @param guild    guild of the reputation
+     * @param repGuild guild of the reputation
      * @param donor    donor of the reputation
      * @param receiver receiver of the reputation
      * @return the localized message

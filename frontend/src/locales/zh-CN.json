@@ -115,14 +115,6 @@
       "general_systemchannel": "通用 - 系统频道",
       "logchannel_active": "日志通道 - 活动",
       "logchannel_channel": "日志通道 - 通道",
-      "messages_announceanswer": "Reputation - Announce Answer",
-      "messages_announcecommand": "Reputation - Announce Command",
-      "messages_announcedelete": "Reputation - Delete Announcements",
-      "messages_announcedirect": "Reputation - Announce Direct",
-      "messages_announceembed": "Reputation - Announce Embed",
-      "messages_announcefuzzy": "Reputation - Announce Fuzzy",
-      "messages_announcemention": "Reputation - Announce Mention",
-      "messages_announcereaction": "Reputation - Announce Reaction",
       "messages_commandreputationephemeral": "声望 - 指挥声望 短暂",
       "messages_reactionconfirmation": "声誉 - 反应确认",
       "profile_nickname": "个人资料 - 昵称",
@@ -343,26 +335,6 @@
       }
     },
     "reputation": {
-      "announcement": {
-        "delete": {
-          "description": "Remove announcements again 30 seconds after they were sent.",
-          "label": "Delete after 30 seconds"
-        },
-        "description": "Post a message when reputation is given, including the receiver's current count.",
-        "label": "Reputation Messages",
-        "types": {
-          "answer": "Announce reputation given in an answer.",
-          "command": {
-            "ephemeral": "Send a message when reputation is given via command.",
-            "public": "Add the reputation count to the command reply."
-          },
-          "direct": "Announce reputation given directly to a single user.",
-          "embed": "Announce reputation given through the embed.",
-          "fuzzy": "Announce reputation given by fuzzy matching.",
-          "mention": "Announce reputation given by mention.",
-          "reaction": "Announce reputation given by reaction."
-        }
-      },
       "description": "配置声誉的计算方式及启用哪些功能。",
       "mode": {
         "description": "选择声誉的计算和显示方式。",

@@ -115,14 +115,6 @@
       "general_systemchannel": "Generelt - Systemkanal",
       "logchannel_active": "Loggkanal - Aktiv",
       "logchannel_channel": "Loggkanal - Kanal",
-      "messages_announceanswer": "Reputation - Announce Answer",
-      "messages_announcecommand": "Reputation - Announce Command",
-      "messages_announcedelete": "Reputation - Delete Announcements",
-      "messages_announcedirect": "Reputation - Announce Direct",
-      "messages_announceembed": "Reputation - Announce Embed",
-      "messages_announcefuzzy": "Reputation - Announce Fuzzy",
-      "messages_announcemention": "Reputation - Announce Mention",
-      "messages_announcereaction": "Reputation - Announce Reaction",
       "messages_commandreputationephemeral": "Omdømme - Kommando Omdømme Flyktig",
       "messages_reactionconfirmation": "Omdømme – Bekreftelse av reaksjon",
       "profile_nickname": "Profil - Kallenavn",
@@ -343,26 +335,6 @@
       }
     },
     "reputation": {
-      "announcement": {
-        "delete": {
-          "description": "Remove announcements again 30 seconds after they were sent.",
-          "label": "Delete after 30 seconds"
-        },
-        "description": "Post a message when reputation is given, including the receiver's current count.",
-        "label": "Reputation Messages",
-        "types": {
-          "answer": "Announce reputation given in an answer.",
-          "command": {
-            "ephemeral": "Send a message when reputation is given via command.",
-            "public": "Add the reputation count to the command reply."
-          },
-          "direct": "Announce reputation given directly to a single user.",
-          "embed": "Announce reputation given through the embed.",
-          "fuzzy": "Announce reputation given by fuzzy matching.",
-          "mention": "Announce reputation given by mention.",
-          "reaction": "Announce reputation given by reaction."
-        }
-      },
       "description": "Konfigurer hvordan omdømme beregnes og hvilke funksjoner som er aktivert.",
       "mode": {
         "description": "Velg hvordan omdømme beregnes og vises.",

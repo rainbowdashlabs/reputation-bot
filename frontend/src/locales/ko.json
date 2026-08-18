@@ -115,14 +115,6 @@
       "general_systemchannel": "일반 - 시스템 채널",
       "logchannel_active": "로그 채널 - 활성",
       "logchannel_channel": "로그 채널 - 채널",
-      "messages_announceanswer": "Reputation - Announce Answer",
-      "messages_announcecommand": "Reputation - Announce Command",
-      "messages_announcedelete": "Reputation - Delete Announcements",
-      "messages_announcedirect": "Reputation - Announce Direct",
-      "messages_announceembed": "Reputation - Announce Embed",
-      "messages_announcefuzzy": "Reputation - Announce Fuzzy",
-      "messages_announcemention": "Reputation - Announce Mention",
-      "messages_announcereaction": "Reputation - Announce Reaction",
       "messages_commandreputationephemeral": "명성 - 명령 명성 일시적",
       "messages_reactionconfirmation": "평판 - 반응 확인",
       "profile_nickname": "프로필 - 닉네임",
@@ -343,26 +335,6 @@
       }
     },
     "reputation": {
-      "announcement": {
-        "delete": {
-          "description": "Remove announcements again 30 seconds after they were sent.",
-          "label": "Delete after 30 seconds"
-        },
-        "description": "Post a message when reputation is given, including the receiver's current count.",
-        "label": "Reputation Messages",
-        "types": {
-          "answer": "Announce reputation given in an answer.",
-          "command": {
-            "ephemeral": "Send a message when reputation is given via command.",
-            "public": "Add the reputation count to the command reply."
-          },
-          "direct": "Announce reputation given directly to a single user.",
-          "embed": "Announce reputation given through the embed.",
-          "fuzzy": "Announce reputation given by fuzzy matching.",
-          "mention": "Announce reputation given by mention.",
-          "reaction": "Announce reputation given by reaction."
-        }
-      },
       "description": "평판 계산 방식과 활성화할 기능을 구성합니다.",
       "mode": {
         "description": "평판이 계산되고 표시되는 방식을 선택하세요.",
