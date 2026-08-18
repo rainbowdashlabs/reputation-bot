@@ -5,6 +5,8 @@
  */
 package de.chojo.repbot.web.pojo.settings.sub.thanking;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 
@@ -19,7 +21,15 @@ public class ChannelsPOJO {
 
     protected boolean whitelist;
 
-    public ChannelsPOJO(Set<Long> channels, Set<Long> categories, boolean whitelist) {
+    /**
+     * All values are required. A partial body is rejected instead of silently resetting the omitted settings, because
+     * the settings are applied by difference.
+     */
+    @JsonCreator
+    public ChannelsPOJO(
+            @JsonProperty(value = "channels", required = true) Set<Long> channels,
+            @JsonProperty(value = "categories", required = true) Set<Long> categories,
+            @JsonProperty(value = "whitelist", required = true) boolean whitelist) {
         this.channels = channels;
         this.categories = categories;
         this.whitelist = whitelist;

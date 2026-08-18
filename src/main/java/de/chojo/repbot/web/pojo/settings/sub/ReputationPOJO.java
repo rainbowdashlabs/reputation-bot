@@ -5,6 +5,9 @@
  */
 package de.chojo.repbot.web.pojo.settings.sub;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ReputationPOJO {
     protected boolean reactionActive;
     protected boolean answerActive;
@@ -14,14 +17,19 @@ public class ReputationPOJO {
     protected boolean directActive;
     protected boolean commandActive;
 
+    /**
+     * All values are required. A partial body is rejected instead of silently resetting the omitted settings, because
+     * the settings are applied by difference.
+     */
+    @JsonCreator
     public ReputationPOJO(
-            boolean reactionActive,
-            boolean answerActive,
-            boolean mentionActive,
-            boolean fuzzyActive,
-            boolean embedActive,
-            boolean directActive,
-            boolean commandActive) {
+            @JsonProperty(value = "reactionActive", required = true) boolean reactionActive,
+            @JsonProperty(value = "answerActive", required = true) boolean answerActive,
+            @JsonProperty(value = "mentionActive", required = true) boolean mentionActive,
+            @JsonProperty(value = "fuzzyActive", required = true) boolean fuzzyActive,
+            @JsonProperty(value = "embedActive", required = true) boolean embedActive,
+            @JsonProperty(value = "directActive", required = true) boolean directActive,
+            @JsonProperty(value = "commandActive", required = true) boolean commandActive) {
         this.reactionActive = reactionActive;
         this.answerActive = answerActive;
         this.mentionActive = mentionActive;
