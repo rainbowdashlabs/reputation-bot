@@ -344,23 +344,23 @@
     },
     "reputation": {
       "announcement": {
-        "label": "Reputation Messages",
+        "delete": {
+          "description": "Remove announcements again 30 seconds after they were sent.",
+          "label": "Delete after 30 seconds"
+        },
         "description": "Post a message when reputation is given, including the receiver's current count.",
+        "label": "Reputation Messages",
         "types": {
-          "reaction": "Announce reputation given by reaction.",
           "answer": "Announce reputation given in an answer.",
-          "mention": "Announce reputation given by mention.",
-          "fuzzy": "Announce reputation given by fuzzy matching.",
-          "embed": "Announce reputation given through the embed.",
-          "direct": "Announce reputation given directly to a single user.",
           "command": {
             "ephemeral": "Send a message when reputation is given via command.",
             "public": "Add the reputation count to the command reply."
-          }
-        },
-        "delete": {
-          "label": "Delete after 30 seconds",
-          "description": "Remove announcements again 30 seconds after they were sent."
+          },
+          "direct": "Announce reputation given directly to a single user.",
+          "embed": "Announce reputation given through the embed.",
+          "fuzzy": "Announce reputation given by fuzzy matching.",
+          "mention": "Announce reputation given by mention.",
+          "reaction": "Announce reputation given by reaction."
         }
       },
       "description": "Konfigurer hvordan omdømme beregnes og hvilke funksjoner som er aktivert.",
@@ -459,6 +459,7 @@
     "add": "Legg til en ny server ved å åpne innstillingene fra serveren.",
     "current": "Nåværende server",
     "none": "Ingen andre servere funnet",
+    "refresh": "Oppdater serverlisten",
     "title": "Bytt server"
   },
   "help": {
@@ -922,6 +923,7 @@
       },
       "noSession": {
         "description": "Det er ingen aktiv serversesjon. Gå tilbake og velg en server.",
+        "refreshing": "Oppdaterer serverlisten...",
         "title": "Ikke tilkoblet"
       },
       "unknown": {

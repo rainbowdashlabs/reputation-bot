@@ -344,23 +344,23 @@
     },
     "reputation": {
       "announcement": {
-        "label": "Reputation Messages",
+        "delete": {
+          "description": "Remove announcements again 30 seconds after they were sent.",
+          "label": "Delete after 30 seconds"
+        },
         "description": "Post a message when reputation is given, including the receiver's current count.",
+        "label": "Reputation Messages",
         "types": {
-          "reaction": "Announce reputation given by reaction.",
           "answer": "Announce reputation given in an answer.",
-          "mention": "Announce reputation given by mention.",
-          "fuzzy": "Announce reputation given by fuzzy matching.",
-          "embed": "Announce reputation given through the embed.",
-          "direct": "Announce reputation given directly to a single user.",
           "command": {
             "ephemeral": "Send a message when reputation is given via command.",
             "public": "Add the reputation count to the command reply."
-          }
-        },
-        "delete": {
-          "label": "Delete after 30 seconds",
-          "description": "Remove announcements again 30 seconds after they were sent."
+          },
+          "direct": "Announce reputation given directly to a single user.",
+          "embed": "Announce reputation given through the embed.",
+          "fuzzy": "Announce reputation given by fuzzy matching.",
+          "mention": "Announce reputation given by mention.",
+          "reaction": "Announce reputation given by reaction."
         }
       },
       "description": "평판 계산 방식과 활성화할 기능을 구성합니다.",
@@ -459,6 +459,7 @@
     "add": "서버에서 설정을 열어 다른 서버를 추가하세요.",
     "current": "현재 서버",
     "none": "다른 서버를 찾을 수 없습니다",
+    "refresh": "서버 목록 새로 고침",
     "title": "서버 전환"
   },
   "help": {
@@ -922,6 +923,7 @@
       },
       "noSession": {
         "description": "활성화된 서버 세션이 없습니다. 돌아가서 서버를 선택해 주세요.",
+        "refreshing": "서버 목록을 새로고침 중...",
         "title": "연결되지 않음"
       },
       "unknown": {
