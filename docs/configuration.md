@@ -33,6 +33,22 @@ The bot can send level up messages when a user received a higher reputation role
 These messages can be sent in the channel where the user received their reputation or in another dedicated channel.
 You can define these settings via the `channel announcement` command.
 
+## Reputation Messages
+
+The bot can send a message into the channel when a user received reputation. This message states who gave reputation to
+whom and how much reputation the receiver has now. The count is based on your [reputation mode](#reputation-mode), so it
+always matches the number used for rankings and roles.
+
+These messages are disabled by default and can be enabled for each way to give reputation separately. You can manage
+them via the `messages states` command or in the reputation section of the web interface.
+
+Announcements stay in the channel. If you prefer them to disappear, enable `delete announcements` and they will be
+removed 30 seconds after they were sent. This applies to announcements of all reputation types.
+
+Reputation given via command is a special case. If the bot answers the command with a message only the user who used it
+can see, an announcement is sent in addition. If the answer is visible to everyone, that answer is the announcement and
+carries the reputation count instead, so no second message is sent.
+
 ## Managing ways to give reputation
 
 The bot has several ways to give reputation. The active ways can be managed via the `repsettings`. You can find

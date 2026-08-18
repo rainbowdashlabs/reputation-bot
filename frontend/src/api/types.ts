@@ -38,8 +38,16 @@ export interface MemberPOJO {
 // thanking.donorroles -> list of role ids
 // thanking.denyreceiverroles -> list of role ids
 // thanking.receiverroles -> list of role ids
-// messages.reactionconfirmation -> boolean
+// messages.reactionconfirmation -> boolean (removed, kept for historic audit entries)
 // messages.commandreputationephemeral -> boolean
+// messages.announcereaction -> boolean
+// messages.announceanswer -> boolean
+// messages.announcemention -> boolean
+// messages.announcefuzzy -> boolean
+// messages.announceembed -> boolean
+// messages.announcedirect -> boolean
+// messages.announcecommand -> boolean
+// messages.announcedelete -> boolean
 // profile.nickname -> string or null
 // profile.profilepicture -> link as string
 // profile.reputationname -> string or null
@@ -206,8 +214,16 @@ export interface LogChannelPOJO {
 }
 
 export interface MessagesPOJO {
-    reactionConfirmation: boolean; // Implement in reputation
-    commandReputationEphemeral: boolean; // Implement in reputation
+    commandReputationEphemeral: boolean; // Implemented in reputation
+    // Announcement of a given reputation per reputation type. Implemented in reputation.
+    announceReaction: boolean;
+    announceAnswer: boolean;
+    announceMention: boolean;
+    announceFuzzy: boolean;
+    announceEmbed: boolean;
+    announceDirect: boolean;
+    announceCommand: boolean;
+    announceDelete: boolean;
 }
 
 export interface ProfilePOJO {

@@ -17,6 +17,7 @@ import de.chojo.repbot.analyzer.results.match.ThankType;
 import de.chojo.repbot.commands.log.handler.LogFormatter;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.config.elements.MagicImage;
+import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.access.guild.settings.sub.Reputation;
 import de.chojo.repbot.dao.access.guild.settings.sub.integrationbypass.Bypass;
@@ -24,7 +25,9 @@ import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.snapshots.ReputationLogEntry;
 import de.chojo.repbot.service.RoleAssigner;
 import de.chojo.repbot.util.Messages;
+import de.chojo.repbot.util.PermissionErrorHandler;
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
@@ -46,11 +49,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class ReputationService {
+    private static final int ANNOUNCEMENT_DELETE_SECONDS = 30;
     private static final Logger log = getLogger(ReputationService.class);
     private final GuildRepository guildRepository;
     private final RoleAssigner assigner;
@@ -356,10 +361,7 @@ public class ReputationService {
                                         magicImage.magicImageDeleteSchedule(),
                                         TimeUnit.SECONDS,
                                         RestAction.getDefaultSuccess(),
-                                        ErrorResponseException.ignore(
-                                                ErrorResponse.UNKNOWN_MESSAGE,
-                                                ErrorResponse.UNKNOWN_CHANNEL,
-                                                ErrorResponse.ILLEGAL_OPERATION_ARCHIVED_THREAD)));
+                                        ignoreMessageErrors()));
             }
             return true;
         }
@@ -406,6 +408,8 @@ public class ReputationService {
         if (context.isMessage()) {
             Messages.markMessage(context.asMessage(), refMessage, settings);
         }
+        announceReputation(repGuild, settings, donor, receiver, context, type);
+
         // update role
         var newRank = assigner.updateReporting(receiver, context.getChannel());
 
@@ -427,6 +431,88 @@ public class ReputationService {
                     .complete();
         });
         return SubmitResult.of(SubmitResultType.SUCCESS);
+    }
+
+    /**
+     * Send a message about a given reputation into the channel the reputation was given in.
+     * <p>
+     * Whether a message is sent is defined per {@link ThankType} in the guild settings.
+     *
+     * @param repGuild guild of the reputation
+     * @param settings settings of the guild
+     * @param donor    donor of the reputation
+     * @param receiver receiver of the reputation
+     * @param context  context the reputation was given in
+     * @param type     type of reputation source
+     */
+    private void announceReputation(
+            RepGuild repGuild,
+            Settings settings,
+            Member donor,
+            Member receiver,
+            ReputationContext context,
+            ThankType type) {
+        var messageSettings = settings.messages();
+        if (!messageSettings.isAnnounced(type)) return;
+
+        var guild = repGuild.guild();
+        var channel = context.getChannel();
+
+        if (PermissionErrorHandler.assertAndHandle(
+                repGuild,
+                channel,
+                localizer.context(LocaleProvider.guild(guild)),
+                configuration,
+                "Reputation announcement",
+                donor.getUser(),
+                Permission.MESSAGE_SEND)) {
+            return;
+        }
+
+        var announcement = channel.sendMessage(announcementMessage(repGuild, donor, receiver))
+                .setAllowedMentions(Collections.emptyList());
+
+        if (messageSettings.isAnnounceDelete()) {
+            announcement
+                    .delay(ANNOUNCEMENT_DELETE_SECONDS, TimeUnit.SECONDS)
+                    .flatMap(Message::delete)
+                    .queue(RestAction.getDefaultSuccess(), ignoreMessageErrors());
+            return;
+        }
+        announcement.queue(RestAction.getDefaultSuccess(), ignoreMessageErrors());
+    }
+
+    /**
+     * Build the localized message announcing a given reputation.
+     * <p>
+     * The reputation count of the receiver is resolved based on the reputation mode of the guild.
+     * <p>
+     * This is public because a publicly visible reply of the reputation command is the announcement itself. In that
+     * case {@link de.chojo.repbot.commands.reputation.handler.Give} renders this message as its reply instead of an
+     * additional message being sent.
+     *
+     * @param guild    guild of the reputation
+     * @param donor    donor of the reputation
+     * @param receiver receiver of the reputation
+     * @return the localized message
+     */
+    public String announcementMessage(RepGuild repGuild, Member donor, Member receiver) {
+        var reputation = repGuild.reputation().user(receiver).profile().reputation();
+        return localizer.localize(
+                "listener.reputation.announcement",
+                repGuild.guild(),
+                Replacement.createMention("DONOR", donor),
+                Replacement.createMention("RECEIVER", receiver),
+                Replacement.create("COUNT", reputation));
+    }
+
+    /** Failures which just mean the message or its channel is gone, or may not be written to. */
+    private static Consumer<Throwable> ignoreMessageErrors() {
+        return ErrorResponseException.ignore(
+                ErrorResponse.UNKNOWN_MESSAGE,
+                ErrorResponse.UNKNOWN_CHANNEL,
+                ErrorResponse.MISSING_PERMISSIONS,
+                ErrorResponse.ILLEGAL_OPERATION_ARCHIVED_THREAD);
     }
 
     private void logReputationEntry(Settings settings, Guild guild, ReputationLogEntry reputationLogEntry) {

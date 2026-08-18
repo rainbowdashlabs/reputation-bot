@@ -19,7 +19,6 @@ import de.chojo.repbot.service.reputation.ReputationService;
 import de.chojo.repbot.service.reputation.SubmitResult;
 import de.chojo.repbot.service.reputation.SubmitResultType;
 import de.chojo.repbot.util.PermissionErrorHandler;
-import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
@@ -123,17 +122,8 @@ public class ReactionListener extends ListenerAdapter {
             receiver = newReceiver;
         }
 
-        if (PermissionErrorHandler.assertAndHandle(
-                guildRepository.guild(event.getGuild()),
-                event.getGuildChannel(),
-                localizer.context(LocaleProvider.guild(event.getGuild())),
-                configuration,
-                "Add reaction confirmation",
-                event.getUser(),
-                Permission.MESSAGE_SEND)) {
-            return;
-        }
-
+        // The message announcing the reputation is sent by the reputation service, which checks the required
+        // permissions itself. A channel the bot can not write in does not block the reputation itself.
         SubmitResult submitResult = reputationService.submitReputation(
                 event.getGuild(),
                 event.getMember(),
@@ -144,20 +134,6 @@ public class ReactionListener extends ListenerAdapter {
 
         if (submitResult.type() == SubmitResultType.SUCCESS) {
             reacted(event.getMember());
-            if (guildSettings.messages().isReactionConfirmation()) {
-                event.getChannel()
-                        .sendMessage(localizer.localize(
-                                "listener.reaction.confirmation",
-                                event.getGuild(),
-                                Replacement.createMention("DONOR", event.getUser()),
-                                Replacement.createMention("RECEIVER", receiver)))
-                        .mention(event.getUser())
-                        .onErrorFlatMap(err -> null)
-                        .delay(30, TimeUnit.SECONDS)
-                        .flatMap(Message::delete)
-                        .onErrorMap(err -> null)
-                        .complete();
-            }
         }
     }
 
@@ -192,7 +168,7 @@ public class ReactionListener extends ListenerAdapter {
                         .stream()
                         .filter(entry -> entry.type() == ThankType.REACTION && entry.donorId() == event.getUserIdLong())
                         .toList();
-        if (!entries.isEmpty() && guildSettings.messages().isReactionConfirmation()) {
+        if (!entries.isEmpty() && guildSettings.messages().isAnnounceReaction()) {
             reputationService.delete(entries, event.getGuildChannel(), event.getGuild());
             event.getChannel()
                     .sendMessage(localizer.localize(

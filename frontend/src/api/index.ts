@@ -386,14 +386,56 @@ class ApiClient {
         await this.axiosInstance.post('/settings/messages', data);
     }
 
-    public async updateMessagesReactionConfirmation(active: boolean) {
-        await this.axiosInstance.post('/settings/messages/reactionconfirmation', active, {
+    public async updateMessagesCommandReputationEphemeral(active: boolean) {
+        await this.axiosInstance.post('/settings/messages/commandreputationephemeral', active, {
             headers: {'Content-Type': 'application/json'}
         });
     }
 
-    public async updateMessagesCommandReputationEphemeral(active: boolean) {
-        await this.axiosInstance.post('/settings/messages/commandreputationephemeral', active, {
+    public async updateMessagesAnnounceReaction(active: boolean) {
+        await this.axiosInstance.post('/settings/messages/announcereaction', active, {
+            headers: {'Content-Type': 'application/json'}
+        });
+    }
+
+    public async updateMessagesAnnounceAnswer(active: boolean) {
+        await this.axiosInstance.post('/settings/messages/announceanswer', active, {
+            headers: {'Content-Type': 'application/json'}
+        });
+    }
+
+    public async updateMessagesAnnounceMention(active: boolean) {
+        await this.axiosInstance.post('/settings/messages/announcemention', active, {
+            headers: {'Content-Type': 'application/json'}
+        });
+    }
+
+    public async updateMessagesAnnounceFuzzy(active: boolean) {
+        await this.axiosInstance.post('/settings/messages/announcefuzzy', active, {
+            headers: {'Content-Type': 'application/json'}
+        });
+    }
+
+    public async updateMessagesAnnounceEmbed(active: boolean) {
+        await this.axiosInstance.post('/settings/messages/announceembed', active, {
+            headers: {'Content-Type': 'application/json'}
+        });
+    }
+
+    public async updateMessagesAnnounceDirect(active: boolean) {
+        await this.axiosInstance.post('/settings/messages/announcedirect', active, {
+            headers: {'Content-Type': 'application/json'}
+        });
+    }
+
+    public async updateMessagesAnnounceCommand(active: boolean) {
+        await this.axiosInstance.post('/settings/messages/announcecommand', active, {
+            headers: {'Content-Type': 'application/json'}
+        });
+    }
+
+    public async updateMessagesAnnounceDelete(active: boolean) {
+        await this.axiosInstance.post('/settings/messages/announcedelete', active, {
             headers: {'Content-Type': 'application/json'}
         });
     }

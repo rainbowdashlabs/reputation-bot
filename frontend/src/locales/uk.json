@@ -115,6 +115,14 @@
       "general_systemchannel": "Загальне - Системний канал",
       "logchannel_active": "Канал журналу - Активний",
       "logchannel_channel": "Канал журналу - Канал",
+      "messages_announceanswer": "Reputation - Announce Answer",
+      "messages_announcecommand": "Reputation - Announce Command",
+      "messages_announcedelete": "Reputation - Delete Announcements",
+      "messages_announcedirect": "Reputation - Announce Direct",
+      "messages_announceembed": "Reputation - Announce Embed",
+      "messages_announcefuzzy": "Reputation - Announce Fuzzy",
+      "messages_announcemention": "Reputation - Announce Mention",
+      "messages_announcereaction": "Reputation - Announce Reaction",
       "messages_commandreputationephemeral": "Репутація - Командна репутація Ефемерна",
       "messages_reactionconfirmation": "Репутація - Підтвердження реакції",
       "profile_nickname": "Профіль - Псевдонім",
@@ -335,6 +343,26 @@
       }
     },
     "reputation": {
+      "announcement": {
+        "label": "Reputation Messages",
+        "description": "Post a message when reputation is given, including the receiver's current count.",
+        "types": {
+          "reaction": "Announce reputation given by reaction.",
+          "answer": "Announce reputation given in an answer.",
+          "mention": "Announce reputation given by mention.",
+          "fuzzy": "Announce reputation given by fuzzy matching.",
+          "embed": "Announce reputation given through the embed.",
+          "direct": "Announce reputation given directly to a single user.",
+          "command": {
+            "ephemeral": "Send a message when reputation is given via command.",
+            "public": "Add the reputation count to the command reply."
+          }
+        },
+        "delete": {
+          "label": "Delete after 30 seconds",
+          "description": "Remove announcements again 30 seconds after they were sent."
+        }
+      },
       "description": "Налаштуйте спосіб обчислення репутації та функції, які будуть увімкнені.",
       "mode": {
         "description": "Виберіть спосіб розрахунку та відображення репутації.",
@@ -389,10 +417,6 @@
           "label": "Згадати репутацію"
         },
         "reaction": {
-          "confirmation": {
-            "description": "Надіслати підтвердження, коли репутація надається через реакцію.",
-            "label": "Підтвердження реакції"
-          },
           "description": "Надайте репутацію, коли до повідомлення додається конкретна реакція.",
           "label": "Репутація реакції"
         }

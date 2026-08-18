@@ -5,41 +5,11 @@
  */
 <script lang="ts" setup>
 import {useI18n} from 'vue-i18n'
-import {useSession} from '@/composables/useSession'
-import {api} from '@/api'
 import ReputationTypeToggle from './ReputationTypeToggle.vue'
+import {useSettingUpdate} from './useSettingUpdate'
 
 const {t} = useI18n()
-const {session, updateReputationSettings, updateMessagesSettings} = useSession()
-
-const updateSetting = async (key: string, value: boolean, type: 'reputation' | 'messages' = 'reputation') => {
-  if (!session.value?.settings?.[type]) return
-
-  // Update local state first for better UX
-  if (type === 'reputation') {
-    updateReputationSettings({[key]: value})
-  } else {
-    updateMessagesSettings({[key]: value})
-  }
-
-  try {
-    const prefix = type.charAt(0).toUpperCase() + type.slice(1)
-    const methodName = `update${prefix}${key.charAt(0).toUpperCase()}${key.slice(1)}` as keyof typeof api
-    if (typeof api[methodName] === 'function') {
-      await (api[methodName] as Function)(value)
-    } else {
-      console.error(`Method ${methodName} not found in API client`)
-    }
-  } catch (error) {
-    // Revert local state on error
-    if (type === 'reputation') {
-      updateReputationSettings({[key]: !value})
-    } else {
-      updateMessagesSettings({[key]: !value})
-    }
-    console.error(`Failed to update ${type} setting ${key}:`, error)
-  }
-}
+const {session, updateSetting} = useSettingUpdate()
 </script>
 
 <template>
@@ -50,24 +20,6 @@ const updateSetting = async (key: string, value: boolean, type: 'reputation' | '
         :model-value="session.settings.reputation.reactionActive"
         @update:model-value="updateSetting('reactionActive', $event)"
     />
-
-    <transition
-        enter-active-class="transition duration-200 ease-out"
-        enter-from-class="transform -translate-y-2 opacity-0"
-        enter-to-class="transform translate-y-0 opacity-100"
-        leave-active-class="transition duration-150 ease-in"
-        leave-from-class="transform translate-y-0 opacity-100"
-        leave-to-class="transform -translate-y-2 opacity-0"
-    >
-      <div v-if="session.settings.reputation.reactionActive" class="pl-8">
-        <ReputationTypeToggle
-            :description="t('general.reputation.types.reaction.confirmation.description')"
-            :label="t('general.reputation.types.reaction.confirmation.label')"
-            :model-value="session.settings.messages.reactionConfirmation"
-            @update:model-value="updateSetting('reactionConfirmation', $event, 'messages')"
-        />
-      </div>
-    </transition>
 
     <ReputationTypeToggle
         :description="t('general.reputation.types.answer.description')"

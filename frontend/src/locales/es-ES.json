@@ -115,6 +115,14 @@
       "general_systemchannel": "General - Canal del sistema",
       "logchannel_active": "Canal de registro - Activo",
       "logchannel_channel": "Canal de registro - Canal",
+      "messages_announceanswer": "Reputation - Announce Answer",
+      "messages_announcecommand": "Reputation - Announce Command",
+      "messages_announcedelete": "Reputation - Delete Announcements",
+      "messages_announcedirect": "Reputation - Announce Direct",
+      "messages_announceembed": "Reputation - Announce Embed",
+      "messages_announcefuzzy": "Reputation - Announce Fuzzy",
+      "messages_announcemention": "Reputation - Announce Mention",
+      "messages_announcereaction": "Reputation - Announce Reaction",
       "messages_commandreputationephemeral": "Reputación - Reputación de comando efímera",
       "messages_reactionconfirmation": "Reputación - Confirmación de reacción",
       "profile_nickname": "Perfil - Apodo",
@@ -335,6 +343,26 @@
       }
     },
     "reputation": {
+      "announcement": {
+        "label": "Reputation Messages",
+        "description": "Post a message when reputation is given, including the receiver's current count.",
+        "types": {
+          "reaction": "Announce reputation given by reaction.",
+          "answer": "Announce reputation given in an answer.",
+          "mention": "Announce reputation given by mention.",
+          "fuzzy": "Announce reputation given by fuzzy matching.",
+          "embed": "Announce reputation given through the embed.",
+          "direct": "Announce reputation given directly to a single user.",
+          "command": {
+            "ephemeral": "Send a message when reputation is given via command.",
+            "public": "Add the reputation count to the command reply."
+          }
+        },
+        "delete": {
+          "label": "Delete after 30 seconds",
+          "description": "Remove announcements again 30 seconds after they were sent."
+        }
+      },
       "description": "Configura cómo se calcula la reputación y qué funciones están habilitadas.",
       "mode": {
         "description": "Elige cómo se calcula y se muestra la reputación.",
@@ -389,10 +417,6 @@
           "label": "Mencionar reputación"
         },
         "reaction": {
-          "confirmation": {
-            "description": "Enviar un mensaje de confirmación cuando se otorgue reputación mediante una reacción.",
-            "label": "Confirmación de reacción"
-          },
           "description": "Otorga reputación cuando se añade una reacción específica a un mensaje.",
           "label": "Reputación de reacción"
         }

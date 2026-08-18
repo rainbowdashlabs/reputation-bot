@@ -9,6 +9,7 @@ import SettingsContainer from './components/SettingsContainer.vue'
 import ReputationModeSettings from './reputationview/ReputationModeSettings.vue'
 import ResetDateSettings from './reputationview/ResetDateSettings.vue'
 import ReputationTypeSettings from './reputationview/ReputationTypeSettings.vue'
+import ReputationAnnouncementSettings from './reputationview/ReputationAnnouncementSettings.vue'
 
 import {useSession} from '@/composables/useSession'
 import {ReputationMode} from '@/api/types'
@@ -27,6 +28,8 @@ const {session} = useSession()
       </template>
       <hr class="border-gray-200 dark:border-gray-700"/>
       <ReputationTypeSettings/>
+      <hr class="border-gray-200 dark:border-gray-700"/>
+      <ReputationAnnouncementSettings/>
     </div>
   </SettingsContainer>
 </template>

@@ -34,9 +34,10 @@ const applyPreset = async () => {
     commandActive: false // Disable command reputation
   }
 
-  // Enable reputation confirmation
+  // Announce reputation given by reaction and remove the announcement again after a while
   const messagesUpdates = {
-    reactionConfirmation: true
+    announceReaction: true,
+    announceDelete: true
   }
 
   // Update local state
@@ -60,7 +61,8 @@ const applyPreset = async () => {
     api.updateAbuseProtectionDonorContext(true),
     api.updateAbuseProtectionReceiverContext(true),
     // Message settings
-    api.updateMessagesReactionConfirmation(true)
+    api.updateMessagesAnnounceReaction(true),
+    api.updateMessagesAnnounceDelete(true)
   ])
 }
 </script>

@@ -184,8 +184,15 @@ public class Settings implements GuildHolder {
         }
         messages = query("""
                 SELECT
-                    reaction_confirmation,
-                    command_reputation_ephemeral
+                    command_reputation_ephemeral,
+                    announce_reaction,
+                    announce_answer,
+                    announce_mention,
+                    announce_fuzzy,
+                    announce_embed,
+                    announce_direct,
+                    announce_command,
+                    announce_delete
                 FROM
                     message_states
                 WHERE guild_id = ?;
