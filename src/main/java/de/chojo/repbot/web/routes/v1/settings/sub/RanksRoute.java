@@ -9,6 +9,7 @@ import de.chojo.repbot.dao.access.guildsession.GuildSession;
 import de.chojo.repbot.service.RoleAssigner;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
+import de.chojo.repbot.web.error.DuplicateRankException;
 import de.chojo.repbot.web.pojo.settings.sub.thanking.RanksPOJO;
 import de.chojo.repbot.web.routes.RoutesBuilder;
 import io.javalin.http.Context;
@@ -19,6 +20,9 @@ import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiRequestBody;
 import io.javalin.openapi.OpenApiResponse;
 import net.dv8tion.jda.api.sharding.ShardManager;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
@@ -59,9 +63,13 @@ public class RanksRoute implements RoutesBuilder {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         RanksPOJO ranksPOJO = ctx.bodyAsClass(RanksPOJO.class);
 
-        // Validate all role IDs
+        // Validate all role IDs. A role can only hold one rank, which is the primary key of the table.
+        Set<Long> roleIds = new HashSet<>();
         for (RanksPOJO.RankEntry rank : ranksPOJO.ranks()) {
             session.guildValidator().validateRoleIds(rank.roleId());
+            if (!roleIds.add(rank.roleId())) {
+                throw new DuplicateRankException(rank.roleId());
+            }
         }
 
         var ranks = session.repGuild().settings().ranks();
