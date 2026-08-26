@@ -18,33 +18,17 @@ import static de.chojo.sadu.queries.converter.StandardValueConverter.INSTANT_TIM
 
 public class GuildReceived extends GuildRanking {
     private static final String RANKING = QueryLoader.loadQuery("ranking", "guild", "received");
+    private static final String PAGES = QueryLoader.loadQuery("ranking", "guild", "received_pages");
 
     public GuildReceived(Rankings rankings) {
         super(rankings, RankingType.RECEIVED);
     }
 
+    @Override
     protected int pages(int pageSize, ReputationMode mode) {
-        return query("""
-                SELECT
-                    ceil(count(1)::NUMERIC / ?) AS count
-                FROM
-                    (
-                        SELECT DISTINCT
-                            receiver_id
-                        FROM
-                            reputation_log
-                        WHERE guild_id = :guild_id
-                          AND received > :date_init
-                          AND receiver_id NOT IN (
-                            SELECT user_id
-                            FROM cleanup_schedule
-                            WHERE guild_id = :guild_id
-                                                 )
-                          AND ( received > :reset_date OR :reset_date::TIMESTAMP IS NULL )
-                    ) a;
-                """)
+        return query(PAGES)
                 .single(call().bind("reset_date", resetDate(), INSTANT_TIMESTAMP)
-                        .bind(pageSize)
+                        .bind("page_size", pageSize)
                         .bind("guild_id", guildId())
                         .bind("date_init", mode.dateInit(), INSTANT_TIMESTAMP))
                 .map(row -> row.getInt("count"))
