@@ -115,6 +115,14 @@
       "general_systemchannel": "Generelt - Systemkanal",
       "logchannel_active": "Loggkanal - Aktiv",
       "logchannel_channel": "Loggkanal - Kanal",
+      "messages_announceanswer": "Omdømme – Kunngjør svar",
+      "messages_announcecommand": "Omdømme – Kommandoen «Announce»",
+      "messages_announcedelete": "Omdømme – Slett kunngjøringer",
+      "messages_announcedirect": "Omdømme – Announce Direct",
+      "messages_announceembed": "Omdømme – Kunngjøring – Innbygging",
+      "messages_announcefuzzy": "Omdømme – Announce Fuzzy",
+      "messages_announcemention": "Omdømme – Kunngjøre omtale",
+      "messages_announcereaction": "Omdømme – Kunngjør reaksjon",
       "messages_commandreputationephemeral": "Omdømme - Kommando Omdømme Flyktig",
       "messages_reactionconfirmation": "Omdømme – Bekreftelse av reaksjon",
       "profile_nickname": "Profil - Kallenavn",
@@ -335,6 +343,26 @@
       }
     },
     "reputation": {
+      "announcement": {
+        "delete": {
+          "description": "Fjern kunngjøringene igjen 30 sekunder etter at de ble sendt ut.",
+          "label": "Slett etter 30 sekunder"
+        },
+        "description": "Vis en melding når noen får omdømme, med opplysning om mottakerens nåværende poengsum.",
+        "label": "Meldinger om omdømme",
+        "types": {
+          "answer": "Vis omdømmet som er gitt i et svar.",
+          "command": {
+            "ephemeral": "Send en melding når omdømme tildeles via kommando.",
+            "public": "Legg til antall omdømmepoeng i kommandosvaret."
+          },
+          "direct": "Kunngjør omdømme som tildeles direkte til en enkelt bruker.",
+          "embed": "Vis omdømmet som er tildelt via innlegget.",
+          "fuzzy": "Oppgi omdømme basert på delvis samsvar.",
+          "mention": "Vis omdømme som følge av omtale.",
+          "reaction": "Vis omdømme basert på reaksjoner."
+        }
+      },
       "description": "Konfigurer hvordan omdømme beregnes og hvilke funksjoner som er aktivert.",
       "mode": {
         "description": "Velg hvordan omdømme beregnes og vises.",

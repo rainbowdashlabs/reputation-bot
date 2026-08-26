@@ -115,6 +115,14 @@
       "general_systemchannel": "Geral - Canal do sistema",
       "logchannel_active": "Canal de registro - Ativo",
       "logchannel_channel": "Canal de registro - Canal",
+      "messages_announceanswer": "Reputação - Anunciar resposta",
+      "messages_announcecommand": "Reputação - Comando “Anunciar”",
+      "messages_announcedelete": "Reputação - Excluir anúncios",
+      "messages_announcedirect": "Reputação - Announce Direct",
+      "messages_announceembed": "Reputação - Anunciar e incorporar",
+      "messages_announcefuzzy": "Reputação - Anúncio do Fuzzy",
+      "messages_announcemention": "Reputação - Anunciar menção",
+      "messages_announcereaction": "Reputação - Reação ao anúncio",
       "messages_commandreputationephemeral": "Reputação - Reputação de Comando Efêmera",
       "messages_reactionconfirmation": "Reputação - Confirmação da reação",
       "profile_nickname": "Perfil - Apelido",
@@ -335,6 +343,26 @@
       }
     },
     "reputation": {
+      "announcement": {
+        "delete": {
+          "description": "Apague os avisos novamente 30 segundos depois de terem sido enviados.",
+          "label": "Apagar após 30 segundos"
+        },
+        "description": "Publique uma mensagem quando for concedida reputação, incluindo a contagem atual do destinatário.",
+        "label": "Mensagens de reputação",
+        "types": {
+          "answer": "Mostrar a reputação recebida por uma resposta.",
+          "command": {
+            "ephemeral": "Envie uma mensagem quando a reputação for concedida por meio de um comando.",
+            "public": "Adicione a contagem de reputação à resposta do comando."
+          },
+          "direct": "Anuncia a reputação atribuída diretamente a um único usuário.",
+          "embed": "Anuncia a reputação recebida por meio da incorporação.",
+          "fuzzy": "Anuncia a reputação atribuída por meio da correspondência aproximada.",
+          "mention": "Anuncia a reputação ganha por menção.",
+          "reaction": "Anuncia a reputação recebida por reação."
+        }
+      },
       "description": "Configure como a reputação é calculada e quais recursos são ativados.",
       "mode": {
         "description": "Escolha como a reputação é calculada e mostrada.",

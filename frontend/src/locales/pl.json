@@ -115,6 +115,14 @@
       "general_systemchannel": "Ogólne - Kanał systemowy",
       "logchannel_active": "Kanał dziennika — aktywny",
       "logchannel_channel": "Kanał dziennika - Kanał",
+      "messages_announceanswer": "Reputacja – Ogłoś odpowiedź",
+      "messages_announcecommand": "Reputacja – polecenie „Ogłoś”",
+      "messages_announcedelete": "Reputacja – Usuń ogłoszenia",
+      "messages_announcedirect": "Reputacja – Announce Direct",
+      "messages_announceembed": "Reputacja – Ogłoszenie – Osadź",
+      "messages_announcefuzzy": "Reputacja – Ogłoszenie Fuzzy",
+      "messages_announcemention": "Reputacja – Ogłoszenie o wzmiance",
+      "messages_announcereaction": "Reputacja – Ogłoś reakcję",
       "messages_commandreputationephemeral": "Reputacja – reputacja dowódcy Efemeryczna",
       "messages_reactionconfirmation": "Reputacja – potwierdzenie reakcji",
       "profile_nickname": "Profil – pseudonim",
@@ -335,6 +343,26 @@
       }
     },
     "reputation": {
+      "announcement": {
+        "delete": {
+          "description": "Usuń ogłoszenia ponownie 30 sekund po ich wysłaniu.",
+          "label": "Usuń po 30 sekundach"
+        },
+        "description": "Wyświetlaj komunikat po przyznaniu reputacji, podając aktualną liczbę punktów odbiorcy.",
+        "label": "Wiadomości dotyczące reputacji",
+        "types": {
+          "answer": "Pokaż liczbę punktów reputacji przyznanych za odpowiedź.",
+          "command": {
+            "ephemeral": "Wyślij wiadomość, gdy reputacja zostanie przyznana za pomocą polecenia.",
+            "public": "Dodaj liczbę punktów reputacji do odpowiedzi na polecenie."
+          },
+          "direct": "Ogłoś przyznanie reputacji bezpośrednio jednemu użytkownikowi.",
+          "embed": "Poinformuj o reputacji przyznanej za pomocą osadzonego elementu.",
+          "fuzzy": "Podaj ocenę reputacji na podstawie przybliżonego dopasowania.",
+          "mention": "Poinformuj o reputacji przyznanej za wzmiankę.",
+          "reaction": "Pokaż reputację przyznaną za reakcję."
+        }
+      },
       "description": "Skonfiguruj sposób obliczania reputacji i wybierz funkcje, które chcesz włączyć.",
       "mode": {
         "description": "Wybierz sposób obliczania i wyświetlania reputacji.",

@@ -115,6 +115,14 @@
       "general_systemchannel": "Allgemein – Systemkanal",
       "logchannel_active": "Protokollkanal – Aktiv",
       "logchannel_channel": "Log-Kanal – Kanal",
+      "messages_announceanswer": "Reputation – Antwort bekanntgeben",
+      "messages_announcecommand": "Reputation – Befehl „Ankündigen“",
+      "messages_announcedelete": "Reputation – Ankündigungen löschen",
+      "messages_announcedirect": "Reputation – Announce Direct",
+      "messages_announceembed": "Reputation – Einbetten ankündigen",
+      "messages_announcefuzzy": "Reputation – Ankündigung: Fuzzy",
+      "messages_announcemention": "Reputation – Erwähnung ankündigen",
+      "messages_announcereaction": "Ruf – Reaktion ankündigen",
       "messages_commandreputationephemeral": "Reputation – Einmalige Reputation",
       "messages_reactionconfirmation": "Reputation – Bestätigung der Reaktion",
       "profile_nickname": "Profil – Bot Name",
@@ -335,6 +343,26 @@
       }
     },
     "reputation": {
+      "announcement": {
+        "delete": {
+          "description": "Lösche die Ankündigungen 30 Sekunden nach dem Versenden wieder.",
+          "label": "Nach 30 Sekunden löschen"
+        },
+        "description": "Veröffentliche eine Nachricht, wenn Reputation vergeben wird, und gib dabei die aktuelle Punktzahl des Empfängers an.",
+        "label": "Reputationsmeldungen",
+        "types": {
+          "answer": "Zeige die für eine Antwort vergebenen Reputationspunkte an.",
+          "command": {
+            "ephemeral": "Sende eine Nachricht, wenn über einen Befehl Reputation vergeben wird.",
+            "public": "Füge die Reputationszahl zur Befehlsantwort hinzu."
+          },
+          "direct": "Gib bekannt, dass die Reputation direkt an einen einzelnen Nutzer vergeben wurde.",
+          "embed": "Gib die durch die Einbettung vergebene Reputation bekannt.",
+          "fuzzy": "Gib die durch Fuzzy-Matching ermittelte Reputation bekannt.",
+          "mention": "Gib die durch die Erwähnung erhaltenen Reputationspunkte bekannt.",
+          "reaction": "Zeige die durch eine Reaktion vergebene Reputation an."
+        }
+      },
       "description": "Lege fest, wie die Reputation berechnet wird und welche Funktionen aktiviert sind.",
       "mode": {
         "description": "Entscheide, wie die Reputation berechnet und angezeigt wird.",
