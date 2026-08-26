@@ -115,6 +115,14 @@
       "general_systemchannel": "Yleinen - Järjestelmäkanava",
       "logchannel_active": "Lokikanava - Aktiivinen",
       "logchannel_channel": "Lokikanava - Kanava",
+      "messages_announceanswer": "Maine – Vastauksen julkaiseminen",
+      "messages_announcecommand": "Maine – Announce-komento",
+      "messages_announcedelete": "Maine – Ilmoitusten poistaminen",
+      "messages_announcedirect": "Maine – Announce Direct",
+      "messages_announceembed": "Maine – Ilmoita upotuksesta",
+      "messages_announcefuzzy": "Maine – Fuzzyn julkistaminen",
+      "messages_announcemention": "Maine – Ilmoitus maininnasta",
+      "messages_announcereaction": "Maine – Ilmoita reaktiosta",
       "messages_commandreputationephemeral": "Maine - Komento Maine Katoava",
       "messages_reactionconfirmation": "Maine - Reaktioiden vahvistaminen",
       "profile_nickname": "Profiili - Lempinimi",
@@ -335,6 +343,26 @@
       }
     },
     "reputation": {
+      "announcement": {
+        "delete": {
+          "description": "Poista ilmoitukset uudelleen 30 sekunnin kuluttua niiden lähettämisestä.",
+          "label": "Poista 30 sekunnin kuluttua"
+        },
+        "description": "Lähetä viesti, kun mainepisteitä annetaan, ja mainitse siinä vastaanottajan nykyinen pistemäärä.",
+        "label": "Maineeseen liittyvät viestit",
+        "types": {
+          "answer": "Ilmoita vastauksessa annettu mainepisteet.",
+          "command": {
+            "ephemeral": "Lähetä viesti, kun mainepisteitä annetaan komennon avulla.",
+            "public": "Lisää mainepisteet komennon vastaukseen."
+          },
+          "direct": "Ilmoita mainepisteet, jotka on myönnetty suoraan yhdelle käyttäjälle.",
+          "embed": "Ilmoita upotuksen kautta annettu mainepisteet.",
+          "fuzzy": "Ilmoita epätarkalla hakutuloksella saatu maine.",
+          "mention": "Ilmoita maininnasta saatu mainepisteet.",
+          "reaction": "Ilmoita reaktion perusteella annettu maine."
+        }
+      },
       "description": "Määritä, miten maine lasketaan ja mitkä ominaisuudet otetaan käyttöön.",
       "mode": {
         "description": "Valitse, miten maine lasketaan ja näytetään.",
@@ -389,10 +417,6 @@
           "label": "Mainitse maine"
         },
         "reaction": {
-          "confirmation": {
-            "description": "Lähetä vahvistusviesti, kun maine annetaan reaktion kautta.",
-            "label": "Reaktion vahvistus"
-          },
           "description": "Anna maine, kun viestiin lisätään tietty reaktio.",
           "label": "Reaktio Maine"
         }
@@ -435,6 +459,7 @@
     "add": "Lisää toinen palvelin avaamalla palvelimen asetukset.",
     "current": "Nykyinen palvelin",
     "none": "Muita palvelimia ei löytynyt",
+    "refresh": "Päivitä palvelinluettelo",
     "title": "Vaihda palvelinta"
   },
   "help": {
@@ -898,6 +923,7 @@
       },
       "noSession": {
         "description": "Palvelinsessioita ei ole käynnissä. Palaa takaisin ja valitse palvelin.",
+        "refreshing": "Palvelinluetteloa päivitetään...",
         "title": "Ei yhteydessä"
       },
       "unknown": {

@@ -29,7 +29,9 @@ const highestBotRolePosition = computed(() => {
 
 const validate = () => {
   if (newRoleId.value !== null) {
-    if (ranks.value.some(r => r.roleId === newRoleId.value)) {
+    // Role ids are strings, but compare them as such explicitly: a role can only hold a single rank and the backend
+    // rejects a list which uses one twice.
+    if (ranks.value.some(r => String(r.roleId) === String(newRoleId.value))) {
       errorMessage.value = t('general.ranks.roleAlreadyAdded')
       return
     }
@@ -48,7 +50,12 @@ const validate = () => {
 watch([newRoleId, newReputation], validate)
 
 const addRank = async () => {
-  if (newRoleId.value === null || newReputation.value === null || isNaN(newReputation.value) || newReputation.value < 0 || !!errorMessage.value) return
+  if (newRoleId.value === null || newReputation.value === null || isNaN(newReputation.value) || newReputation.value < 0) return
+
+  // The watcher which fills the error message runs asynchronously, so a click in the same tick as the selection would
+  // slip past it. Validate again before sending.
+  validate()
+  if (errorMessage.value) return
 
   try {
     const nextRanks = [...ranks.value, {

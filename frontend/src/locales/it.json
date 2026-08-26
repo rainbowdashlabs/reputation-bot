@@ -115,6 +115,14 @@
       "general_systemchannel": "Generale - Canale di sistema",
       "logchannel_active": "Canale di registro - Attivo",
       "logchannel_channel": "Canale di registrazione - Canale",
+      "messages_announceanswer": "Reputazione - Pubblica la risposta",
+      "messages_announcecommand": "Reputazione - Comando \"Annuncia\"",
+      "messages_announcedelete": "Reputazione - Elimina gli annunci",
+      "messages_announcedirect": "Reputation - Announce Direct",
+      "messages_announceembed": "Reputation - Pubblica il codice di incorporamento",
+      "messages_announcefuzzy": "Reputation - Annuncio di Fuzzy",
+      "messages_announcemention": "Reputazione - Annuncia menzione",
+      "messages_announcereaction": "Reputazione - Annuncia la reazione",
       "messages_commandreputationephemeral": "Reputazione - Reputazione di comando Effimera",
       "messages_reactionconfirmation": "Reputazione - Conferma della reazione",
       "profile_nickname": "Profilo - Soprannome",
@@ -335,6 +343,26 @@
       }
     },
     "reputation": {
+      "announcement": {
+        "delete": {
+          "description": "Elimina di nuovo gli annunci 30 secondi dopo che sono stati inviati.",
+          "label": "Elimina dopo 30 secondi"
+        },
+        "description": "Pubblica un messaggio quando viene assegnata della reputazione, indicando il conteggio attuale del destinatario.",
+        "label": "Messaggi sulla reputazione",
+        "types": {
+          "answer": "Indica i punti reputazione assegnati per una risposta.",
+          "command": {
+            "ephemeral": "Invia un messaggio quando viene assegnata la reputazione tramite comando.",
+            "public": "Aggiungi il conteggio della reputazione alla risposta del comando."
+          },
+          "direct": "Annuncia la reputazione assegnata direttamente a un singolo utente.",
+          "embed": "Indica la valutazione assegnata tramite l’incorporamento.",
+          "fuzzy": "Indica la reputazione assegnata in base alla corrispondenza approssimativa.",
+          "mention": "Annuncia la reputazione ottenuta grazie alla menzione.",
+          "reaction": "Indica la reputazione ottenuta grazie alla reazione."
+        }
+      },
       "description": "Imposta come viene calcolata la reputazione e quali funzioni sono attive.",
       "mode": {
         "description": "Scegli come calcolare e mostrare la reputazione.",
@@ -389,10 +417,6 @@
           "label": "Reputazione delle menzioni"
         },
         "reaction": {
-          "confirmation": {
-            "description": "Manda un messaggio di conferma quando qualcuno ti dà reputazione tramite una reazione.",
-            "label": "Conferma della reazione"
-          },
           "description": "Dai reputazione quando una reazione specifica viene aggiunta a un messaggio.",
           "label": "Reputazione delle reazioni"
         }
@@ -435,6 +459,7 @@
     "add": "Aggiungi un altro server aprendo le impostazioni dal server.",
     "current": "Server attuale",
     "none": "Nessun altro server trovato",
+    "refresh": "Aggiorna l'elenco dei server",
     "title": "Cambia server"
   },
   "help": {
@@ -898,6 +923,7 @@
       },
       "noSession": {
         "description": "Non c'è nessuna sessione server attiva. Torna indietro e seleziona un server.",
+        "refreshing": "Aggiornamento dell'elenco dei server...",
         "title": "Non connesso"
       },
       "unknown": {

@@ -115,6 +115,14 @@
       "general_systemchannel": "Algemeen - Systeemkanaal",
       "logchannel_active": "Logkanaal - Actief",
       "logchannel_channel": "Logkanaal - Kanaal",
+      "messages_announceanswer": "Reputatie - Antwoord bekendmaken",
+      "messages_announcecommand": "Reputatie - Commando ‘Aankondigen’",
+      "messages_announcedelete": "Reputatie - Mededelingen verwijderen",
+      "messages_announcedirect": "Reputatie - Aankondiging Direct",
+      "messages_announceembed": "Reputatie - Aankondiging insluiten",
+      "messages_announcefuzzy": "Reputatie - Aankondiging: Fuzzy",
+      "messages_announcemention": "Reputatie - Vermelding aankondigen",
+      "messages_announcereaction": "Reputatie - Reactie melden",
       "messages_commandreputationephemeral": "Reputatie - Commando Reputatie Kortstondig",
       "messages_reactionconfirmation": "Reputatie - Bevestiging van reacties",
       "profile_nickname": "Profiel - Bijnaam",
@@ -335,6 +343,26 @@
       }
     },
     "reputation": {
+      "announcement": {
+        "delete": {
+          "description": "Verwijder mededelingen weer 30 seconden nadat ze zijn verstuurd.",
+          "label": "Na 30 seconden verwijderen"
+        },
+        "description": "Plaats een bericht als er reputatiepunten worden toegekend, met vermelding van het huidige aantal punten van de ontvanger.",
+        "label": "Reputatieberichten",
+        "types": {
+          "answer": "Geef aan hoeveel reputatie je voor een antwoord hebt gekregen.",
+          "command": {
+            "ephemeral": "Stuur een bericht als er via een commando een reputatie wordt toegekend.",
+            "public": "Voeg het aantal reputatiepunten toe aan het antwoord op het commando."
+          },
+          "direct": "Laat weten dat er reputatiepunten rechtstreeks aan één gebruiker zijn toegekend.",
+          "embed": "Geef aan welke reputatie via de embed is toegekend.",
+          "fuzzy": "Geef aan welke reputatie er is toegekend op basis van fuzzy matching.",
+          "mention": "Laat weten welke reputatie je krijgt als je wordt genoemd.",
+          "reaction": "Geef aan welke reputatie je door een reactie hebt gekregen."
+        }
+      },
       "description": "Zet even op hoe je reputatie wordt berekend en welke functies je wilt gebruiken.",
       "mode": {
         "description": "Kies hoe je reputatie wordt berekend en weergegeven.",
@@ -389,10 +417,6 @@
           "label": "Reputatie noemen"
         },
         "reaction": {
-          "confirmation": {
-            "description": "Stuur een berichtje als je een reactie hebt gegeven.",
-            "label": "Bevestiging van reactie"
-          },
           "description": "Geef reputatie als er een specifieke reactie aan een bericht wordt toegevoegd.",
           "label": "Reactie Reputatie"
         }
@@ -435,6 +459,7 @@
     "add": "Voeg nog een server toe door de instellingen van de server te openen.",
     "current": "Huidige server",
     "none": "Geen andere servers gevonden",
+    "refresh": "Serverlijst vernieuwen",
     "title": "Server wisselen"
   },
   "help": {
@@ -898,6 +923,7 @@
       },
       "noSession": {
         "description": "Er is geen actieve serversessie. Ga terug en kies een server.",
+        "refreshing": "Serverlijst wordt vernieuwd...",
         "title": "Geen verbinding"
       },
       "unknown": {

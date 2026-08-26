@@ -44,12 +44,18 @@ public class Give implements SlashHandler {
         var result = reputationService.submitReputation(
                 event.getGuild(), donor, receiver, ReputationContext.fromInteraction(event), null, ThankType.COMMAND);
         if (result.type() == SubmitResultType.SUCCESS) {
-            event.reply(context.guildLocale(
+            var messages = guild.settings().messages();
+            // A reply everyone can see is the announcement of this reputation. In that case no additional message is
+            // sent and the reply carries the reputation count instead.
+            var reply = messages.isAnnouncedInReply()
+                    ? reputationService.announcementMessage(guild, donor, receiver)
+                    : context.guildLocale(
                             "command.reputation.give.message.success",
                             Replacement.createMention("DONOR", donor),
-                            Replacement.createMention("RECEIVER", receiver)))
+                            Replacement.createMention("RECEIVER", receiver));
+            event.reply(reply)
                     .mentionUsers(Collections.emptyList())
-                    .setEphemeral(guild.settings().messages().isCommandReputationEphemeral())
+                    .setEphemeral(messages.isCommandReputationEphemeral())
                     .queue();
         } else {
             event.reply(context.guildLocale(

@@ -9,6 +9,13 @@ WITH
         WHERE o.added > :date_init
           AND o.guild_id = :guild_id
           AND ( added > :reset_date OR :reset_date::TIMESTAMP IS NULL )
+          AND o.user_id NOT IN (
+            SELECT
+                user_id
+            FROM
+                cleanup_schedule
+            WHERE guild_id = :guild_id
+                               )
         GROUP BY o.user_id
            ),
     full_log

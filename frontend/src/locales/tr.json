@@ -115,6 +115,14 @@
       "general_systemchannel": "Genel - Sistem Kanalı",
       "logchannel_active": "Günlük Kanalı - Etkin",
       "logchannel_channel": "Günlük Kanalı - Kanal",
+      "messages_announceanswer": "İtibar - Cevabı Duyur",
+      "messages_announcecommand": "İtibar - Duyuru Komutu",
+      "messages_announcedelete": "İtibar - Duyuruları Sil",
+      "messages_announcedirect": "İtibar - Doğrudan Duyuru",
+      "messages_announceembed": "İtibar - Duyuru Gömme",
+      "messages_announcefuzzy": "İtibar - Fuzzy Duyurusu",
+      "messages_announcemention": "İtibar - Duyuru ve Bahsetme",
+      "messages_announcereaction": "İtibar - Tepki Duyurusu",
       "messages_commandreputationephemeral": "İtibar - Komuta İtibarı Geçici",
       "messages_reactionconfirmation": "İtibar - Tepki Onayı",
       "profile_nickname": "Profil - Takma Ad",
@@ -335,6 +343,26 @@
       }
     },
     "reputation": {
+      "announcement": {
+        "delete": {
+          "description": "Duyuruları, gönderildikten 30 saniye sonra tekrar kaldırın.",
+          "label": "30 saniye sonra sil"
+        },
+        "description": "İtibar puanı verildiğinde, alıcının o andaki puanını da içeren bir mesaj yayınla.",
+        "label": "İtibar Mesajları",
+        "types": {
+          "answer": "Bir cevapta verilen itibar puanını bildir.",
+          "command": {
+            "ephemeral": "Komut yoluyla itibar verildiğinde bir mesaj gönder.",
+            "public": "Komut yanıtına itibar puanını ekleyin."
+          },
+          "direct": "Tek bir kullanıcıya doğrudan verilen itibar puanını duyurmak.",
+          "embed": "Gömme yoluyla verilen itibar değerini duyurun.",
+          "fuzzy": "Bulanık eşleştirme yoluyla verilen itibar puanını duyurun.",
+          "mention": "Bahsedilme yoluyla kazanılan itibarın duyurulması.",
+          "reaction": "Tepkiyle verilen itibar puanını duyur."
+        }
+      },
       "description": "İtibar hesaplama yöntemini ve hangi özelliklerin etkinleştirileceğini yapılandırın.",
       "mode": {
         "description": "İtibarın nasıl hesaplanacağını ve görüntüleneceğini seçin.",
@@ -389,10 +417,6 @@
           "label": "İtibarından bahset"
         },
         "reaction": {
-          "confirmation": {
-            "description": "Reaksiyon yoluyla itibar verildiğinde bir onay mesajı gönderin.",
-            "label": "Tepki Onayı"
-          },
           "description": "Mesaja belirli bir tepki eklendiğinde itibar verin.",
           "label": "Tepki İtibarı"
         }
@@ -435,6 +459,7 @@
     "add": "Sunucudan ayarları açarak başka bir sunucu ekleyin.",
     "current": "Mevcut Sunucu",
     "none": "Başka sunucu bulunamadı",
+    "refresh": "Sunucu listesini yenile",
     "title": "Sunucu Değiştir"
   },
   "help": {
@@ -898,6 +923,7 @@
       },
       "noSession": {
         "description": "Etkin bir sunucu oturumu yok. Lütfen geri dönüp bir sunucu seçin.",
+        "refreshing": "Sunucu listesi yenileniyor...",
         "title": "Bağlı Değil"
       },
       "unknown": {

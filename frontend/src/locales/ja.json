@@ -115,6 +115,14 @@
       "general_systemchannel": "一般 - システムチャンネル",
       "logchannel_active": "ログチャネル - アクティブ",
       "logchannel_channel": "ログチャネル - チャネル",
+      "messages_announceanswer": "評判 - 回答を公表する",
+      "messages_announcecommand": "評判 - 発表コマンド",
+      "messages_announcedelete": "評判 - お知らせの削除",
+      "messages_announcedirect": "評判 - Announce Direct",
+      "messages_announceembed": "評判 - 埋め込みの告知",
+      "messages_announcefuzzy": "評判 - 「Fuzzy」の発表",
+      "messages_announcemention": "評判 - 言及の告知",
+      "messages_announcereaction": "評判 - リアクションの告知",
       "messages_commandreputationephemeral": "評判 - 指揮官の評判 一時的",
       "messages_reactionconfirmation": "評判 - 反応確認",
       "profile_nickname": "プロフィール - ニックネーム",
@@ -335,6 +343,26 @@
       }
     },
     "reputation": {
+      "announcement": {
+        "delete": {
+          "description": "告知は送信から30秒後に再度削除する。",
+          "label": "30秒後に削除する"
+        },
+        "description": "評判ポイントが与えられた際、受け取った側の現在のポイント数を含めてメッセージを表示する。",
+        "label": "評判に関するメッセージ",
+        "types": {
+          "answer": "回答で獲得したレピュテーションを通知する。",
+          "command": {
+            "ephemeral": "コマンドで評判が与えられた際にメッセージを送信する。",
+            "public": "コマンドの応答に評判の数を追加する。"
+          },
+          "direct": "特定のユーザー1人に直接与えられた評判を公表する。",
+          "embed": "埋め込みを通じて付与された評判を公表する。",
+          "fuzzy": "ファジーマッチングによって付与された評判を発表する。",
+          "mention": "メンションによって付与された評判を通知する。",
+          "reaction": "リアクションによって付与された評判を表示する。"
+        }
+      },
       "description": "評判の計算方法と有効にする機能を設定する。",
       "mode": {
         "description": "評判の計算方法と表示方法を選択する。",
@@ -389,10 +417,6 @@
           "label": "評判について言及する"
         },
         "reaction": {
-          "confirmation": {
-            "description": "リアクションで評価が与えられた際に確認メッセージを送る。",
-            "label": "反応確認"
-          },
           "description": "特定のリアクションがメッセージに追加された時に評価を与える。",
           "label": "反応評価"
         }
@@ -435,6 +459,7 @@
     "add": "サーバーから設定を開いて、別のサーバーを追加する。",
     "current": "現在のサーバー",
     "none": "他のサーバーは見つからなかった",
+    "refresh": "サーバー一覧を更新する",
     "title": "サーバーを切り替える"
   },
   "help": {
@@ -898,6 +923,7 @@
       },
       "noSession": {
         "description": "アクティブなサーバーセッションがない。戻ってサーバーを選択してほしい。",
+        "refreshing": "サーバー一覧を更新中……",
         "title": "接続されていない"
       },
       "unknown": {

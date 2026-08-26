@@ -10,6 +10,7 @@ import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.components.GuildHolder;
 import de.chojo.repbot.dao.snapshots.ReputationRank;
 import de.chojo.repbot.web.pojo.settings.sub.thanking.RanksPOJO;
+import de.chojo.sadu.queries.api.configuration.QueryConfiguration;
 import net.dv8tion.jda.api.entities.Role;
 
 import java.util.Comparator;
@@ -157,19 +158,33 @@ public class Ranks implements GuildHolder {
         return new RanksPOJO(rankEntries);
     }
 
+    /**
+     * Replaces all ranks of this guild.
+     * <p>
+     * Deleting and inserting happens in one transaction. A failing insert would otherwise leave the guild without the
+     * ranks it had, because the delete already went through.
+     * <p>
+     * A role can only hold one rank. Requests which use a role twice are rejected by the route, and an insert which
+     * still hits an existing role updates it instead of failing the whole transaction.
+     *
+     * @param pojo the new ranks
+     */
     public void apply(RanksPOJO pojo) {
-        // Delete all existing ranks for this guild
-        query("DELETE FROM guild_ranks WHERE guild_id = ?")
-                .single(call().bind(guildId()))
-                .delete();
+        try (var conn = QueryConfiguration.getDefault().withSingleTransaction()) {
+            conn.query("DELETE FROM guild_ranks WHERE guild_id = ?")
+                    .single(call().bind(guildId()))
+                    .delete();
 
-        // Insert new ranks
-        for (var entry : pojo.ranks()) {
-            query("""
-                    INSERT INTO guild_ranks(guild_id, role_id, reputation) VALUES(?,?,?)
-                    """)
-                    .single(call().bind(guildId()).bind(entry.roleId()).bind(entry.reputation()))
-                    .insert();
+            for (var entry : pojo.ranks()) {
+                conn.query("""
+                        INSERT INTO guild_ranks(guild_id, role_id, reputation) VALUES(?,?,?)
+                            ON CONFLICT(guild_id, role_id)
+                                DO UPDATE
+                                    SET reputation = excluded.reputation;
+                        """)
+                        .single(call().bind(guildId()).bind(entry.roleId()).bind(entry.reputation()))
+                        .insert();
+            }
         }
 
         // Clear cache to force reload

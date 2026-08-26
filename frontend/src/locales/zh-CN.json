@@ -115,6 +115,14 @@
       "general_systemchannel": "通用 - 系统频道",
       "logchannel_active": "日志通道 - 活动",
       "logchannel_channel": "日志通道 - 通道",
+      "messages_announceanswer": "声誉 - 发布答案",
+      "messages_announcecommand": "声望 - 公告命令",
+      "messages_announcedelete": "声誉 - 删除公告",
+      "messages_announcedirect": "声誉 - Announce Direct",
+      "messages_announceembed": "声誉 - 发布嵌入",
+      "messages_announcefuzzy": "声誉 - 发布《Fuzzy》",
+      "messages_announcemention": "声誉 - 公告提及",
+      "messages_announcereaction": "声誉 - 宣布反应",
       "messages_commandreputationephemeral": "声望 - 指挥声望 短暂",
       "messages_reactionconfirmation": "声誉 - 反应确认",
       "profile_nickname": "个人资料 - 昵称",
@@ -335,6 +343,26 @@
       }
     },
     "reputation": {
+      "announcement": {
+        "delete": {
+          "description": "公告发送后30秒再次将其删除。",
+          "label": "30秒后删除"
+        },
+        "description": "当给予声望时，发布一条消息，其中应包含接收者的当前声望值。",
+        "label": "声誉消息",
+        "types": {
+          "answer": "显示答案所获得的声望值。",
+          "command": {
+            "ephemeral": "当通过命令授予声望时，发送一条消息。",
+            "public": "在命令响应中添加声望值。"
+          },
+          "direct": "公告：直接向某位用户授予声望。",
+          "embed": "公布通过嵌入功能获得的声望。",
+          "fuzzy": "公布基于模糊匹配得出的声誉值。",
+          "mention": "公告因被提及而获得的声望。",
+          "reaction": "显示因点赞而获得的声望值。"
+        }
+      },
       "description": "配置声誉的计算方式及启用哪些功能。",
       "mode": {
         "description": "选择声誉的计算和显示方式。",
@@ -389,10 +417,6 @@
           "label": "提及声誉"
         },
         "reaction": {
-          "confirmation": {
-            "description": "当通过点赞授予声望时发送确认消息。",
-            "label": "反应确认"
-          },
           "description": "当消息被添加特定反应时给予声望值。",
           "label": "反应声誉"
         }
@@ -435,6 +459,7 @@
     "add": "通过在服务器中打开设置来添加另一台服务器。",
     "current": "当前服务器",
     "none": "未找到其他服务器",
+    "refresh": "刷新服务器列表",
     "title": "切换服务器"
   },
   "help": {
@@ -898,6 +923,7 @@
       },
       "noSession": {
         "description": "当前没有活跃的服务器会话。请返回并选择一个服务器。",
+        "refreshing": "正在刷新服务器列表...",
         "title": "未连接"
       },
       "unknown": {

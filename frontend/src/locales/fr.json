@@ -115,6 +115,14 @@
       "general_systemchannel": "Généralités - Chaîne système",
       "logchannel_active": "Canal de journalisation - Actif",
       "logchannel_channel": "Chaîne de journalisation - Chaîne",
+      "messages_announceanswer": "Réputation - Annoncer la réponse",
+      "messages_announcecommand": "Réputation - Commande « Annoncer »",
+      "messages_announcedelete": "Réputation - Supprimer les annonces",
+      "messages_announcedirect": "Réputation - Announce Direct",
+      "messages_announceembed": "Réputation - Annonce Intégrer",
+      "messages_announcefuzzy": "Réputation - Annonce Fuzzy",
+      "messages_announcemention": "Réputation - Annoncer une mention",
+      "messages_announcereaction": "Réputation - Réaction à l'annonce",
       "messages_commandreputationephemeral": "Réputation - Réputation de commandement Éphémère",
       "messages_reactionconfirmation": "Réputation - Confirmation de réaction",
       "profile_nickname": "Profil - Pseudo",
@@ -335,6 +343,26 @@
       }
     },
     "reputation": {
+      "announcement": {
+        "delete": {
+          "description": "Supprime à nouveau les annonces 30 secondes après leur envoi.",
+          "label": "Supprimer au bout de 30 secondes"
+        },
+        "description": "Affiche un message quand des points de réputation sont attribués, en indiquant le total actuel du destinataire.",
+        "label": "Messages de réputation",
+        "types": {
+          "answer": "Afficher la réputation obtenue grâce à une réponse.",
+          "command": {
+            "ephemeral": "Envoie un message quand on attribue de la réputation via une commande.",
+            "public": "Ajoute le nombre de points de réputation à la réponse de la commande."
+          },
+          "direct": "Annonce la réputation attribuée directement à un seul utilisateur.",
+          "embed": "Indique la réputation attribuée via l'intégration.",
+          "fuzzy": "Indique la réputation attribuée grâce à la correspondance approximative.",
+          "mention": "Afficher la réputation obtenue grâce à une mention.",
+          "reaction": "Afficher la réputation attribuée par la réaction."
+        }
+      },
       "description": "Configure comment la réputation est calculée et quelles fonctionnalités sont activées.",
       "mode": {
         "description": "Choisis comment la réputation est calculée et affichée.",
@@ -389,10 +417,6 @@
           "label": "Mentionner la réputation"
         },
         "reaction": {
-          "confirmation": {
-            "description": "Envoie un message de confirmation quand quelqu'un te donne une réputation via une réaction.",
-            "label": "Confirmation de la réaction"
-          },
           "description": "Donne des points de réputation quand une réaction spécifique est ajoutée à un message.",
           "label": "Réputation de réaction"
         }
@@ -435,6 +459,7 @@
     "add": "Ajoute un autre serveur en ouvrant les paramètres depuis le serveur.",
     "current": "Serveur actuel",
     "none": "Aucun autre serveur trouvé",
+    "refresh": "Actualiser la liste des serveurs",
     "title": "Serveur de commutation"
   },
   "help": {
@@ -898,6 +923,7 @@
       },
       "noSession": {
         "description": "Aucune session serveur n'est active. Reviens en arrière et sélectionne un serveur.",
+        "refreshing": "Actualisation de la liste des serveurs...",
         "title": "Pas connecté"
       },
       "unknown": {

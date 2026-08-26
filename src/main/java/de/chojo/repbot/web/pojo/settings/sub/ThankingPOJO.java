@@ -5,6 +5,8 @@
  */
 package de.chojo.repbot.web.pojo.settings.sub;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import de.chojo.repbot.web.pojo.settings.sub.thanking.ChannelsPOJO;
 import de.chojo.repbot.web.pojo.settings.sub.thanking.ReactionsPOJO;
 import de.chojo.repbot.web.pojo.settings.sub.thanking.RolesHolderPOJO;
@@ -19,14 +21,19 @@ public class ThankingPOJO {
     ReactionsPOJO reactions;
     ThankwordsPOJO thankwords;
 
+    /**
+     * All values are required. A partial body is rejected instead of silently resetting the omitted settings, because
+     * the settings are applied by difference.
+     */
+    @JsonCreator
     public ThankingPOJO(
-            ChannelsPOJO channels,
-            RolesHolderPOJO donorRoles,
-            RolesHolderPOJO denyDonorRoles,
-            RolesHolderPOJO receiverRoles,
-            RolesHolderPOJO denyReceiverRoles,
-            ReactionsPOJO reactions,
-            ThankwordsPOJO thankwords) {
+            @JsonProperty(value = "channels", required = true) ChannelsPOJO channels,
+            @JsonProperty(value = "donorRoles", required = true) RolesHolderPOJO donorRoles,
+            @JsonProperty(value = "denyDonorRoles", required = true) RolesHolderPOJO denyDonorRoles,
+            @JsonProperty(value = "receiverRoles", required = true) RolesHolderPOJO receiverRoles,
+            @JsonProperty(value = "denyReceiverRoles", required = true) RolesHolderPOJO denyReceiverRoles,
+            @JsonProperty(value = "reactions", required = true) ReactionsPOJO reactions,
+            @JsonProperty(value = "thankwords", required = true) ThankwordsPOJO thankwords) {
         this.channels = channels;
         this.donorRoles = donorRoles;
         this.denyDonorRoles = denyDonorRoles;

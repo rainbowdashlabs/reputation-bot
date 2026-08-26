@@ -3,3 +3,15 @@ tags
 dev
 .github
 config
+.git
+.idea
+.direnv
+.run
+*.iml
+build
+.gradle
+logs
+site
+docker/data
+frontend/node_modules
+frontend/dist

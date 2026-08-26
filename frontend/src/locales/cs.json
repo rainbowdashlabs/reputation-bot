@@ -115,6 +115,14 @@
       "general_systemchannel": "Obecné - Systémový kanál",
       "logchannel_active": "Kanál protokolu – aktivní",
       "logchannel_channel": "Kanál protokolu - Kanál",
+      "messages_announceanswer": "Reputace – Oznámit odpověď",
+      "messages_announcecommand": "Reputace – příkaz „Oznámit“",
+      "messages_announcedelete": "Reputace – Odstranit oznámení",
+      "messages_announcedirect": "Reputation – Oznámení Direct",
+      "messages_announceembed": "Reputation – Oznámení o vložení",
+      "messages_announcefuzzy": "Reputation – Oznámení: Fuzzy",
+      "messages_announcemention": "Reputace – Oznámení o zmínce",
+      "messages_announcereaction": "Reputace – Oznámení o reakci",
       "messages_commandreputationephemeral": "Reputace - Reputace velení Pomíjivá",
       "messages_reactionconfirmation": "Reputace – potvrzení reakce",
       "profile_nickname": "Profil - Přezdívka",
@@ -335,6 +343,26 @@
       }
     },
     "reputation": {
+      "announcement": {
+        "delete": {
+          "description": "Oznámení znovu odstraňte 30 sekund po jejich odeslání.",
+          "label": "Smazat po 30 sekundách"
+        },
+        "description": "Při přidělení reputace se zobrazí zpráva s aktuálním počtem bodů příjemce.",
+        "label": "Zprávy o reputaci",
+        "types": {
+          "answer": "Zobrazit hodnocení udělené odpovědi.",
+          "command": {
+            "ephemeral": "Odeslat zprávu, když je reputace přidělena pomocí příkazu.",
+            "public": "Do odpovědi na příkaz přidejte počet bodů reputace."
+          },
+          "direct": "Oznámit reputaci přidělenou přímo jednomu uživateli.",
+          "embed": "Zveřejněte hodnocení udělené prostřednictvím vloženého prvku.",
+          "fuzzy": "Zveřejněte hodnocení udělené na základě přibližné shody.",
+          "mention": "Zobrazit reputaci získanou díky zmínce.",
+          "reaction": "Zobrazit hodnocení udělené na základě reakce."
+        }
+      },
       "description": "Nakonfigurujte způsob výpočtu reputace a povolené funkce.",
       "mode": {
         "description": "Vyberte, jak se bude reputace počítat a zobrazovat.",
@@ -389,10 +417,6 @@
           "label": "Zmínka o reputaci"
         },
         "reaction": {
-          "confirmation": {
-            "description": "Odeslat potvrzovací zprávu, když je reputace udělena prostřednictvím reakce.",
-            "label": "Potvrzení reakce"
-          },
           "description": "Udělte reputaci, když je ke zprávě přidána konkrétní reakce.",
           "label": "Reakce Reputace"
         }
@@ -435,6 +459,7 @@
     "add": "Přidejte další server otevřením nastavení ze serveru.",
     "current": "Aktuální server",
     "none": "Nebyly nalezeny žádné další servery",
+    "refresh": "Obnovit seznam serverů",
     "title": "Přepnout server"
   },
   "help": {
@@ -898,6 +923,7 @@
       },
       "noSession": {
         "description": "Žádná relace se serverem není aktivní. Vraťte se prosím zpět a vyberte server.",
+        "refreshing": "Načítání seznamu serverů...",
         "title": "Není připojeno"
       },
       "unknown": {

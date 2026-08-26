@@ -115,6 +115,14 @@
       "general_systemchannel": "일반 - 시스템 채널",
       "logchannel_active": "로그 채널 - 활성",
       "logchannel_channel": "로그 채널 - 채널",
+      "messages_announceanswer": "평판 - 답변 공지",
+      "messages_announcecommand": "평판 - 알림 명령어",
+      "messages_announcedelete": "평판 - 공지사항 삭제",
+      "messages_announcedirect": "평판 - 직접 공지",
+      "messages_announceembed": "평판 - 삽입 알림",
+      "messages_announcefuzzy": "평판 - 퍼지 공지",
+      "messages_announcemention": "평판 - 멘션 알림",
+      "messages_announcereaction": "평판 - 반응 알림",
       "messages_commandreputationephemeral": "명성 - 명령 명성 일시적",
       "messages_reactionconfirmation": "평판 - 반응 확인",
       "profile_nickname": "프로필 - 닉네임",
@@ -335,6 +343,26 @@
       }
     },
     "reputation": {
+      "announcement": {
+        "delete": {
+          "description": "공지가 발송된 지 30초 후에 다시 삭제하세요.",
+          "label": "30초 후 삭제"
+        },
+        "description": "평판이 부여되면 수신자의 현재 평판 점수를 포함하여 메시지를 게시합니다.",
+        "label": "평판 메시지",
+        "types": {
+          "answer": "답변에 부여된 평판을 알립니다.",
+          "command": {
+            "ephemeral": "명성이 명령어를 통해 부여되면 메시지를 보내세요.",
+            "public": "명성 점수를 명령어 응답에 추가합니다."
+          },
+          "direct": "특정 사용자에게 직접 부여된 평판을 공지합니다.",
+          "embed": "임베드를 통해 부여된 평판을 공지합니다.",
+          "fuzzy": "퍼지 매칭을 통해 부여된 평판을 공지합니다.",
+          "mention": "멘션으로 부여된 평판 점수를 알립니다.",
+          "reaction": "반응을 통해 부여된 평판을 공지합니다."
+        }
+      },
       "description": "평판 계산 방식과 활성화할 기능을 구성합니다.",
       "mode": {
         "description": "평판이 계산되고 표시되는 방식을 선택하세요.",
@@ -389,10 +417,6 @@
           "label": "명성 언급"
         },
         "reaction": {
-          "confirmation": {
-            "description": "반응을 통해 평판이 부여될 때 확인 메시지를 전송합니다.",
-            "label": "반응 확인"
-          },
           "description": "메시지에 특정 반응이 추가될 때 평판을 부여합니다.",
           "label": "반응 평판"
         }
@@ -435,6 +459,7 @@
     "add": "서버에서 설정을 열어 다른 서버를 추가하세요.",
     "current": "현재 서버",
     "none": "다른 서버를 찾을 수 없습니다",
+    "refresh": "서버 목록 새로 고침",
     "title": "서버 전환"
   },
   "help": {
@@ -898,6 +923,7 @@
       },
       "noSession": {
         "description": "활성화된 서버 세션이 없습니다. 돌아가서 서버를 선택해 주세요.",
+        "refreshing": "서버 목록을 새로고침 중...",
         "title": "연결되지 않음"
       },
       "unknown": {

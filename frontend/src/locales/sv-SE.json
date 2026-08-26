@@ -115,6 +115,14 @@
       "general_systemchannel": "Allmänt - Systemkanal",
       "logchannel_active": "Loggkanal - Aktiv",
       "logchannel_channel": "Loggkanal - Kanal",
+      "messages_announceanswer": "Rykte – Offentliggör svar",
+      "messages_announcecommand": "Rykte – Kommandot ”Announce”",
+      "messages_announcedelete": "Rykte – Ta bort meddelanden",
+      "messages_announcedirect": "Rykte – Announce Direct",
+      "messages_announceembed": "Rykte – Tillkännagivande – Inbäddning",
+      "messages_announcefuzzy": "Rykte – Tillkännagivande av Fuzzy",
+      "messages_announcemention": "Rykte – Meddela omnämnande",
+      "messages_announcereaction": "Rykte – Meddela reaktion",
       "messages_commandreputationephemeral": "Rykte - Kommandorykte Flyktigt",
       "messages_reactionconfirmation": "Rykte – Bekräftelse av reaktion",
       "profile_nickname": "Profil - Smeknamn",
@@ -335,6 +343,26 @@
       }
     },
     "reputation": {
+      "announcement": {
+        "delete": {
+          "description": "Ta bort meddelandena igen 30 sekunder efter att de har skickats.",
+          "label": "Radera efter 30 sekunder"
+        },
+        "description": "Skicka ett meddelande när rykte tilldelas, med mottagarens aktuella poängantal.",
+        "label": "Meddelanden om rykte",
+        "types": {
+          "answer": "Ange vilket betyg ett svar har fått.",
+          "command": {
+            "ephemeral": "Skicka ett meddelande när anseende tilldelas via ett kommando.",
+            "public": "Lägg till antalet omdömen i kommandosvaret."
+          },
+          "direct": "Meddela om anseende som tilldelats direkt till en enskild användare.",
+          "embed": "Meddela vilket betyg som tilldelats via inbäddningen.",
+          "fuzzy": "Meddela vilket omdöme som tilldelats genom fuzzy-matchning.",
+          "mention": "Visa vilket anseende som nämnandet ger.",
+          "reaction": "Visa vilket omdöme reaktionen har gett."
+        }
+      },
       "description": "Konfigurera hur omdömet beräknas och vilka funktioner som är aktiverade.",
       "mode": {
         "description": "Välj hur omdömet ska beräknas och visas.",
@@ -389,10 +417,6 @@
           "label": "Omnämnande Ryktbarhet"
         },
         "reaction": {
-          "confirmation": {
-            "description": "Skicka ett bekräftelsemeddelande när omdöme ges via reaktion.",
-            "label": "Reaktionsbekräftelse"
-          },
           "description": "Ge rykte när en specifik reaktion läggs till ett meddelande.",
           "label": "Reaktionsrykte"
         }
@@ -435,6 +459,7 @@
     "add": "Lägg till en annan server genom att öppna inställningarna från servern.",
     "current": "Aktuell server",
     "none": "Inga andra servrar hittades",
+    "refresh": "Uppdatera serverlistan",
     "title": "Byt server"
   },
   "help": {
@@ -898,6 +923,7 @@
       },
       "noSession": {
         "description": "Det finns ingen aktiv serversession. Gå tillbaka och välj en server.",
+        "refreshing": "Uppdaterar serverlistan...",
         "title": "Ingen anslutning"
       },
       "unknown": {
