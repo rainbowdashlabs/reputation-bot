@@ -13,7 +13,7 @@ plugins {
 }
 
 group = "de.chojo"
-version = "2.8.2"
+version = "2.9.0"
 
 repositories {
     mavenLocal()
@@ -212,6 +212,16 @@ tasks {
         testLogging {
             events("passed", "skipped", "failed")
         }
+    }
+
+    register<JavaExec>("run") {
+        group = "application"
+        description = "Runs the bot from the current sources"
+        mainClass = "de.chojo.repbot.ReputationBot"
+        classpath = sourceSets.main.get().runtimeClasspath
+        systemProperties(providers.systemPropertiesPrefixedBy("bot.").get()
+                + providers.systemPropertiesPrefixedBy("cjda.").get()
+                + providers.systemPropertiesPrefixedBy("log4j2.").get())
     }
 
     register("checkLicenseBackend") {

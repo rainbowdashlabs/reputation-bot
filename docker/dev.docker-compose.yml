@@ -1,6 +1,33 @@
+# Dev stack. The source is bind-mounted into the containers and the build caches live in named
+# volumes, so a restart recompiles incrementally instead of rebuilding an image from scratch.
+#
+#   docker compose -f docker/dev.docker-compose.yml --profile app up        bot, frontend, database
+#   docker compose -f docker/dev.docker-compose.yml --profile sku up        the same, every SKU granted
+#   docker compose -f docker/dev.docker-compose.yml --profile default up    persisted database only
+#   docker compose -f docker/dev.docker-compose.yml --profile unpersisted up  throwaway database only
+#
+# The "app" and "sku" profiles mirror the "App-Testing" and "App-Testing - All SKUs" run
+# configurations and bind the same ports, so run one or the other, not both. They share the
+# Gradle caches, so switching between them does not recompile.
+#
+#   Frontend  http://localhost:5173    Database  localhost:5444
+#
+# The bot's API is not published; the Vite dev server proxies /v1 to it inside the compose
+# network, so http://localhost:5173/v1/... reaches it.
+#
+# Apply source edits with `docker compose -f docker/dev.docker-compose.yml restart bot`; the
+# frontend picks them up on its own through HMR.
+
+# Compose derives its project name from the containing directory, which is "docker" here and in
+# every other project that keeps its compose file in one. Two such stacks then share a project and
+# clobber each other's containers, networks and volumes. Naming the project explicitly keeps this
+# one to itself.
+name: repbot_dev
+
 services:
   pgdatabase:
     image: postgres:18
+    container_name: repbot_dev_db
     environment:
       POSTGRES_USER: "root"
       POSTGRES_PASSWORD: "changeme"
@@ -10,12 +37,20 @@ services:
     volumes:
       - database:/var/lib/postgresql/
     ports:
-      - 5432:5432
+      - 5444:5432
     profiles:
       - default
       - app
+      - sku
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U root"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
   pgdatabase_unpersisted:
     image: postgres:18
+    container_name: repbot_dev_db_unpersisted
     networks:
       - repbot
     environment:
@@ -26,29 +61,102 @@ services:
       - 5432:5432
     profiles:
       - unpersisted
-  app:
+
+  # Bot as the "App-Testing" run configuration sees it: test mode on, guild commands cleaned on
+  # startup, the API url pointing at the Vite dev server so links the bot posts open the frontend
+  # a developer is actually looking at.
+  bot:
+    container_name: repbot_dev
     build:
       context: ..
-      dockerfile: docker/Dockerfile
-    ports:
-      - 8888:8888
+      dockerfile: docker/backend.dev.Dockerfile
+    expose:
+      - 8888
     networks:
       - repbot
+    environment: &bot_environment
+      BOT_DB_HOST: pgdatabase
+      BOT_DB_PORT: "5432"
+      BOT_DB_DATABASE: postgres
+      BOT_DB_SCHEMA: repbot_schema
+      BOT_DB_USER: root
+      BOT_DB_PASSWORD: changeme
+      BOT_API_HOST: 0.0.0.0
+      BOT_API_PORT: "8888"
+      BOT_API_URL: http://localhost:5173
+      BOT_SELF_CLEANUP: "false"
+    volumes: &bot_volumes
+      - ..:/home/gradle/project
+      - repbot-dev-gradle-cache:/home/gradle/.gradle
+      - repbot-dev-gradle-build:/home/gradle/project/build
+      # The project-local .gradle holds incremental-build state and absolute file paths. Keeping
+      # it out of the bind mount stops host and container builds from invalidating each other's
+      # snapshots with paths the other cannot resolve.
+      - repbot-dev-project-gradle:/home/gradle/project/.gradle
+    depends_on:
+      pgdatabase:
+        condition: service_healthy
     profiles:
       - app
+
+  # Bot as the "App-Testing - All SKUs" run configuration sees it: every premium feature granted
+  # and the entitlement check skipped, so supporter-only paths can be walked without an
+  # entitlement on the test account.
+  bot_sku:
+    container_name: repbot_dev_sku
+    build:
+      context: ..
+      dockerfile: docker/backend.dev.Dockerfile
+    expose:
+      - 8888
+    # Answers to "bot" as well, so the frontend proxy has one target whichever of the two
+    # profiles is up. They are mutually exclusive, so the alias is never ambiguous.
+    networks:
+      repbot:
+        aliases:
+          - bot
     environment:
-      CJDA_INTERACTIONS_TESTMODE: true
-      BOT_GRANT_ALL_SKU: true
-      BOT_DB_HOST: "pgdatabase"
-      BOT_DB_PORT: "5432"
-      BOT_DB_DATBASE: "postgres"
-      BOT_DB_USERNAME: "root"
-      BOT_DB_PASSWORD: "changeme"
+      <<: *bot_environment
+      BOT_GRANT_ALL_SKU: "true"
+      CJDA_PREMIUM_SKIP_ENTITLED_CHECK: "true"
+    volumes: *bot_volumes
+    depends_on:
+      pgdatabase:
+        condition: service_healthy
+    profiles:
+      - sku
+
+  # Vite dev server with HMR, and the only service published to the host. Its proxy forwards /v1
+  # to the bot over the compose network, so the browser talks to one origin and the API needs no
+  # port of its own. VITE_BACKEND_HOST/PORT are blanked because the bind-mounted frontend/.env
+  # sets them for host-side development; left in place they would make the browser call an
+  # absolute backend URL and bypass the proxy.
+  frontend:
+    container_name: repbot_dev_frontend
+    build:
+      context: ..
+      dockerfile: docker/frontend.dev.Dockerfile
+    ports:
+      - 5173:5173
+    networks:
+      - repbot
+    environment:
+      BACKEND_URL: http://bot:8888
+      VITE_BACKEND_HOST: ""
+      VITE_BACKEND_PORT: ""
     volumes:
-      - ../config/config.testing.json/:/app/config/config.json
+      - ../frontend:/build
+      - repbot-dev-node-modules:/build/node_modules
+    profiles:
+      - app
+      - sku
 
 volumes:
   database:
+  repbot-dev-gradle-cache:
+  repbot-dev-gradle-build:
+  repbot-dev-project-gradle:
+  repbot-dev-node-modules:
 
 networks:
   repbot:
