@@ -18,6 +18,7 @@ import de.chojo.jdautil.botlist.BotlistService;
 import de.chojo.jdautil.interactions.dispatching.InteractionHub;
 import de.chojo.logutil.marker.LogNotify;
 import de.chojo.repbot.config.Configuration;
+import de.chojo.repbot.dao.access.guildsession.GuildSession;
 import de.chojo.repbot.service.AutopostService;
 import de.chojo.repbot.service.BotlistVoteService;
 import de.chojo.repbot.service.KofiService;
@@ -290,19 +291,30 @@ public class Web {
         });
 
         javalin.exception(Exception.class, (err, ctx) -> {
-            UserSession userSession = ctx.sessionAttribute(SessionAttribute.USER_SESSION);
-            UserSession guildSession = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-            log.error(
-                    LogNotify.NOTIFY_ADMIN,
-                    "Unhandled exception on route {} {}\nUser: {}\nGuild: {} (GuildSession: {})\nBody: {}",
-                    ctx.method(),
-                    ctx.path(),
-                    userSession == null ? null : userSession.userId(),
-                    ctx.header("X-Guild-Id"),
-                    guildSession == null,
-                    ctx.body(),
-                    err);
-            ctx.status(HttpStatus.INTERNAL_SERVER_ERROR);
+            try {
+                UserSession userSession = ctx.sessionAttribute(SessionAttribute.USER_SESSION);
+                GuildSession guildSession = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
+                log.error(
+                        LogNotify.NOTIFY_ADMIN,
+                        "Unhandled exception on route {} {}\nUser: {}\nGuild: {} (GuildSession: {})\nBody: {}",
+                        ctx.method(),
+                        ctx.path(),
+                        userSession == null ? null : userSession.userId(),
+                        ctx.header("X-Guild-Id"),
+                        guildSession == null,
+                        ctx.body(),
+                        err);
+            } catch (Exception contextFailure) {
+                log.error(
+                        LogNotify.NOTIFY_ADMIN,
+                        "Unhandled exception on route {} {}. Request context was unreadable: {}",
+                        ctx.method(),
+                        ctx.path(),
+                        contextFailure.toString(),
+                        err);
+            } finally {
+                ctx.status(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
         });
     }
 
