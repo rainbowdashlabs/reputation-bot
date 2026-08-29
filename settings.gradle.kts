@@ -34,7 +34,7 @@ dependencyResolutionManagement {
             bundle("commonmark", listOf("commonmark", "commonmark-ext-gfm-tables", "commonmark-ext-heading-anchor", "commonmark-ext-autolink"))
 
             // plugins
-            plugin("spotless", "com.diffplug.spotless").version("8.10.0")
+            plugin("spotless", "com.diffplug.spotless").version("8.10.1")
             plugin("shadow", "com.gradleup.shadow").version("9.6.1")
         }
 
