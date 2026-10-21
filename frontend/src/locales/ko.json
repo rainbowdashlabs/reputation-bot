@@ -107,6 +107,8 @@
       "autopost_channel": "자동 게시 - 채널",
       "autopost_refreshinterval": "자동 게시 - 새로 고침 간격",
       "autopost_refreshtype": "자동 게시 - 새로 고침 유형",
+      "command_aliases_profile": "명령어 이름 - /profile",
+      "command_aliases_reputation": "명령어 이름 - /reputation",
       "general_everyonetokenpurchase": "일반 - 모든 사람 토큰 구매",
       "general_language": "일반 - 언어",
       "general_reputationmode": "평판 - 평판 모드",
@@ -205,6 +207,18 @@
       "label": "지금 자동 게시하기",
       "sending": "보내기 중..."
     }
+  },
+  "commandAliases": {
+    "description": "이 서버에서 명령어에 사용자 지정 이름을 지정합니다.",
+    "invalid": "소문자, 숫자, - 또는 _를 1~32자로 사용하세요.",
+    "profile": {
+      "description": "/profile은 계속 작동하며 이 이름으로도 사용할 수 있습니다."
+    },
+    "reputation": {
+      "description": "이 서버에서 /reputation을 대체합니다. 명령어로 평판 주기가 활성화된 경우에만 표시됩니다."
+    },
+    "reset": "초기화",
+    "saveFailed": "명령어 이름을 저장할 수 없습니다."
   },
   "common": {
     "cancel": "취소",
@@ -849,6 +863,7 @@
     "auditLog": "감사 로그",
     "autopost": "자동 게시",
     "channels": "채널",
+    "commandAliases": "명령어 이름",
     "debug": {
       "goToSettings": "설정으로 이동",
       "missingPermissions": {

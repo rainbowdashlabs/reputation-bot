@@ -247,6 +247,16 @@ export function useSession() {
         }
     }
 
+    const updateCommandAlias = (command: Types.AliasableCommand, alias: string) => {
+        const aliases = session.value?.settings?.commandAliases?.aliases
+        if (!aliases) return
+        if (alias) {
+            aliases[command] = alias
+        } else {
+            delete aliases[command]
+        }
+    }
+
     const updateRanksSettings = (updates: Partial<Types.RanksPOJO>) => {
         if (session.value?.settings?.ranks) {
             // Ensure ranks array deduplication by roleId if provided
@@ -307,6 +317,7 @@ export function useSession() {
         updateRanksSettings,
         updateIntegrationBypass,
         removeIntegrationBypass,
+        updateCommandAlias,
         loadSettings,
         loadPremiumFeatures,
         refreshGuildPremium: () => loadPremiumFeatures(true)

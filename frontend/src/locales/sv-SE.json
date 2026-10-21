@@ -107,6 +107,8 @@
       "autopost_channel": "Autopost - Kanal",
       "autopost_refreshinterval": "Autopost - Uppdateringsintervall",
       "autopost_refreshtype": "Autopost - Uppdateringstyp",
+      "command_aliases_profile": "Kommandonamn – /profile",
+      "command_aliases_reputation": "Kommandonamn – /reputation",
       "general_everyonetokenpurchase": "Allmänt – Alla Token-köp",
       "general_language": "Allmänt - Språk",
       "general_reputationmode": "Rykte - Ryktesläge",
@@ -205,6 +207,18 @@
       "label": "Skicka autopost nu",
       "sending": "Skickar..."
     }
+  },
+  "commandAliases": {
+    "description": "Ge kommandon ett eget namn på den här servern.",
+    "invalid": "Använd 1 till 32 små bokstäver, siffror, - eller _.",
+    "profile": {
+      "description": "/profile fungerar fortfarande och är dessutom tillgängligt under det här namnet."
+    },
+    "reputation": {
+      "description": "Ersätter /reputation på den här servern. Visas bara medan det är aktivt att ge rykte med kommando."
+    },
+    "reset": "Återställ",
+    "saveFailed": "Kommandonamnet kunde inte sparas."
   },
   "common": {
     "cancel": "Avbryt",
@@ -849,6 +863,7 @@
     "auditLog": "Revisionslogg",
     "autopost": "Autopost",
     "channels": "Kanaler",
+    "commandAliases": "Kommandonamn",
     "debug": {
       "goToSettings": "Gå till inställningar",
       "missingPermissions": {

@@ -132,6 +132,11 @@ const routes: RouteRecordRaw[] = [
                         component: () => import('@/views/settings/IntegrationBypassView.vue')
                     },
                     {
+                        path: 'command-aliases',
+                        name: 'SettingsCommandAliases',
+                        component: () => import('@/views/settings/CommandAliasesView.vue')
+                    },
+                    {
                         path: 'scan',
                         name: 'SettingsScan',
                         component: () => import('@/views/settings/ScanView.vue')

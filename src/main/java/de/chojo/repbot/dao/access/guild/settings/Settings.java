@@ -8,6 +8,7 @@ package de.chojo.repbot.dao.access.guild.settings;
 import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.access.guild.settings.sub.AbuseProtection;
 import de.chojo.repbot.dao.access.guild.settings.sub.Announcements;
+import de.chojo.repbot.dao.access.guild.settings.sub.CommandAliases;
 import de.chojo.repbot.dao.access.guild.settings.sub.General;
 import de.chojo.repbot.dao.access.guild.settings.sub.IntegrationBypass;
 import de.chojo.repbot.dao.access.guild.settings.sub.LogChannel;
@@ -20,6 +21,9 @@ import de.chojo.repbot.dao.access.guild.settings.sub.autopost.Autopost;
 import de.chojo.repbot.dao.access.guild.settings.sub.integrationbypass.Bypass;
 import de.chojo.repbot.dao.components.GuildHolder;
 
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 
@@ -28,6 +32,7 @@ public class Settings implements GuildHolder {
     private AbuseProtection abuseProtection;
     private General general;
     private IntegrationBypass bypass;
+    private CommandAliases commandAliases;
     private Reputation reputation;
     private Ranks ranks;
     private Thanking thanking;
@@ -62,6 +67,20 @@ public class Settings implements GuildHolder {
                 WHERE guild_id = ?""").single(call().bind(guildId())).map(Bypass::new).all();
         bypass = new IntegrationBypass(this, list);
         return bypass;
+    }
+
+    public CommandAliases commandAliases() {
+        if (commandAliases != null) {
+            return commandAliases;
+        }
+        var aliases = query("SELECT command, alias FROM command_aliases WHERE guild_id = ?")
+                .single(call().bind(guildId()))
+                .map(row -> Map.entry(row.getString("command"), row.getString("alias")))
+                .all()
+                .stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        commandAliases = new CommandAliases(this, aliases);
+        return commandAliases;
     }
 
     public AbuseProtection abuseProtection() {

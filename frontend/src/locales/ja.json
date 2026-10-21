@@ -107,6 +107,8 @@
       "autopost_channel": "自動投稿 - チャンネル",
       "autopost_refreshinterval": "自動投稿 - 更新間隔",
       "autopost_refreshtype": "自動投稿 - 更新タイプ",
+      "command_aliases_profile": "コマンド名 - /profile",
+      "command_aliases_reputation": "コマンド名 - /reputation",
       "general_everyonetokenpurchase": "一般 - 全員向けトークン購入",
       "general_language": "一般 - 言語",
       "general_reputationmode": "評判 - 評判モード",
@@ -205,6 +207,18 @@
       "label": "今すぐ自動投稿する",
       "sending": "送信中..."
     }
+  },
+  "commandAliases": {
+    "description": "このサーバーでコマンドに独自の名前を付けます。",
+    "invalid": "小文字、数字、- または _ を1〜32文字で使用してください。",
+    "profile": {
+      "description": "/profile は引き続き使用でき、この名前でも利用できるようになります。"
+    },
+    "reputation": {
+      "description": "このサーバーで /reputation を置き換えます。コマンドによる評価の付与が有効な場合のみ表示されます。"
+    },
+    "reset": "リセット",
+    "saveFailed": "コマンド名を保存できませんでした。"
   },
   "common": {
     "cancel": "キャンセル",
@@ -849,6 +863,7 @@
     "auditLog": "監査ログ",
     "autopost": "自動投稿",
     "channels": "チャンネル",
+    "commandAliases": "コマンド名",
     "debug": {
       "goToSettings": "設定に行く",
       "missingPermissions": {

@@ -107,6 +107,8 @@
       "autopost_channel": "Автопост - Канал",
       "autopost_refreshinterval": "Автопост - как часто обновлять",
       "autopost_refreshtype": "Автопост - Тип обновления",
+      "command_aliases_profile": "Названия команд - /profile",
+      "command_aliases_reputation": "Названия команд - /reputation",
       "general_everyonetokenpurchase": "Общее - Покупка токенов для всех",
       "general_language": "Общее - Язык",
       "general_reputationmode": "Репутация - Режим репутации",
@@ -205,6 +207,18 @@
       "label": "Отправить автопост сейчас",
       "sending": "Отправляю..."
     }
+  },
+  "commandAliases": {
+    "description": "Задай командам собственное название на этом сервере.",
+    "invalid": "Используй от 1 до 32 строчных букв, цифр, - или _.",
+    "profile": {
+      "description": "/profile продолжает работать и дополнительно доступна под этим названием."
+    },
+    "reputation": {
+      "description": "Заменяет /reputation на этом сервере. Отображается, только пока включена выдача репутации командой."
+    },
+    "reset": "Сбросить",
+    "saveFailed": "Не удалось сохранить название команды."
   },
   "common": {
     "cancel": "Отменить",
@@ -849,6 +863,7 @@
     "auditLog": "Журнал аудита",
     "autopost": "Автопост",
     "channels": "Каналы",
+    "commandAliases": "Названия команд",
     "debug": {
       "goToSettings": "Зайди в настройки",
       "missingPermissions": {

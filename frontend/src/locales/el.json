@@ -107,6 +107,8 @@
       "autopost_channel": "Αυτόματη δημοσίευση - Κανάλι",
       "autopost_refreshinterval": "Αυτόματη δημοσίευση - Διάστημα ανανέωσης",
       "autopost_refreshtype": "Αυτόματη δημοσίευση - Τύπος ανανέωσης",
+      "command_aliases_profile": "Ονόματα εντολών - /profile",
+      "command_aliases_reputation": "Ονόματα εντολών - /reputation",
       "general_everyonetokenpurchase": "Γενικά - Αγορά token για όλους",
       "general_language": "Γενικά - Γλώσσα",
       "general_reputationmode": "Φήμη - Λειτουργία φήμης",
@@ -205,6 +207,18 @@
       "label": "Αποστολή αυτόματης ανάρτησης τώρα",
       "sending": "Αποστολή..."
     }
+  },
+  "commandAliases": {
+    "description": "Δώσε στις εντολές ένα προσαρμοσμένο όνομα σε αυτόν τον διακομιστή.",
+    "invalid": "Χρησιμοποίησε 1 έως 32 πεζά γράμματα, αριθμούς, - ή _.",
+    "profile": {
+      "description": "Το /profile συνεχίζει να λειτουργεί και είναι επιπλέον διαθέσιμο με αυτό το όνομα."
+    },
+    "reputation": {
+      "description": "Αντικαθιστά το /reputation σε αυτόν τον διακομιστή. Εμφανίζεται μόνο όσο είναι ενεργή η απόδοση φήμης μέσω εντολής."
+    },
+    "reset": "Επαναφορά",
+    "saveFailed": "Δεν ήταν δυνατή η αποθήκευση του ονόματος εντολής."
   },
   "common": {
     "cancel": "Ακύρωση",
@@ -849,6 +863,7 @@
     "auditLog": "Αρχείο ελέγχου",
     "autopost": "Αυτόματη δημοσίευση",
     "channels": "Κανάλια",
+    "commandAliases": "Ονόματα εντολών",
     "debug": {
       "goToSettings": "Μεταβείτε στις ρυθμίσεις",
       "missingPermissions": {

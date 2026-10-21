@@ -107,6 +107,8 @@
       "autopost_channel": "Automatické zveřejňování – kanál",
       "autopost_refreshinterval": "Automatické zveřejňování – interval aktualizace",
       "autopost_refreshtype": "Automatické zveřejnění – Typ aktualizace",
+      "command_aliases_profile": "Názvy příkazů – /profile",
+      "command_aliases_reputation": "Názvy příkazů – /reputation",
       "general_everyonetokenpurchase": "Obecné - Nákup tokenů pro všechny",
       "general_language": "Obecné - Jazyk",
       "general_reputationmode": "Reputace – Režim reputace",
@@ -205,6 +207,18 @@
       "label": "Odeslat automatický příspěvek nyní",
       "sending": "Odesílání..."
     }
+  },
+  "commandAliases": {
+    "description": "Dej příkazům na tomto serveru vlastní název.",
+    "invalid": "Použij 1 až 32 malých písmen, číslic, - nebo _.",
+    "profile": {
+      "description": "/profile funguje dál a je navíc dostupný pod tímto názvem."
+    },
+    "reputation": {
+      "description": "Nahrazuje /reputation na tomto serveru. Zobrazuje se jen, když je aktivní udělování reputace příkazem."
+    },
+    "reset": "Obnovit",
+    "saveFailed": "Název příkazu se nepodařilo uložit."
   },
   "common": {
     "cancel": "Zrušit",
@@ -849,6 +863,7 @@
     "auditLog": "Auditní protokol",
     "autopost": "Automatické zveřejnění",
     "channels": "Kanály",
+    "commandAliases": "Názvy příkazů",
     "debug": {
       "goToSettings": "Přejít do nastavení",
       "missingPermissions": {

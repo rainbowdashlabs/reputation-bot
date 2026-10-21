@@ -107,6 +107,8 @@
       "autopost_channel": "Autopost – Kanał",
       "autopost_refreshinterval": "Autopost – interwał odświeżania",
       "autopost_refreshtype": "Autopost – typ odświeżania",
+      "command_aliases_profile": "Nazwy komend – /profile",
+      "command_aliases_reputation": "Nazwy komend – /reputation",
       "general_everyonetokenpurchase": "Ogólne – zakup tokenów dla wszystkich",
       "general_language": "Ogólne - Język",
       "general_reputationmode": "Reputacja – tryb reputacji",
@@ -205,6 +207,18 @@
       "label": "Wyślij automatyczny post teraz",
       "sending": "Wysyłanie..."
     }
+  },
+  "commandAliases": {
+    "description": "Nadaj komendom własną nazwę na tym serwerze.",
+    "invalid": "Użyj od 1 do 32 małych liter, cyfr, - lub _.",
+    "profile": {
+      "description": "/profile nadal działa i jest dodatkowo dostępne pod tą nazwą."
+    },
+    "reputation": {
+      "description": "Zastępuje /reputation na tym serwerze. Wyświetlane tylko, gdy przyznawanie reputacji komendą jest aktywne."
+    },
+    "reset": "Resetuj",
+    "saveFailed": "Nie udało się zapisać nazwy komendy."
   },
   "common": {
     "cancel": "Anuluj",
@@ -849,6 +863,7 @@
     "auditLog": "Dziennik audytu",
     "autopost": "Autopost",
     "channels": "Kanały",
+    "commandAliases": "Nazwy komend",
     "debug": {
       "goToSettings": "Przejdź do ustawień",
       "missingPermissions": {

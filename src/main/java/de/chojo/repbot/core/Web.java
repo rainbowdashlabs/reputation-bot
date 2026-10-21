@@ -239,7 +239,8 @@ public class Web {
                                     bot.tokenPurchaseService(),
                                     kofiService,
                                     mailService,
-                                    scanService)
+                                    scanService,
+                                    bot.commandAliasService())
                             .init());
                     config.router.mount(router -> {
                         router.beforeMatched(this::handleAccess);

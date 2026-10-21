@@ -25,6 +25,7 @@ const settingsSections = [
   {key: 'autopost', path: '/settings/edit/autopost'},
   {key: 'logChannel', path: '/settings/edit/log-channel'},
   {key: 'integrationBypass', path: '/settings/edit/integration-bypass'},
+  {key: 'commandAliases', path: '/settings/edit/command-aliases'},
   {key: 'scan', path: '/settings/edit/scan'}
 ]
 

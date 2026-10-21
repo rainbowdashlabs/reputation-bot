@@ -310,6 +310,7 @@
     "reactions": "Reactions",
     "auditLog": "Audit Log",
     "integrationBypass": "Integration Bypass",
+    "commandAliases": "Command Names",
     "problems": "Problems",
     "scan": "Scan",
     "debug": {
@@ -444,6 +445,18 @@
     "selectIntegration": "Select an integration",
     "noIntegrations": "No more integrations available to add bypasses for.",
     "deleteConfirm": "Are you sure you want to remove this integration bypass?"
+  },
+  "commandAliases": {
+    "description": "Give commands a custom name on this server.",
+    "reputation": {
+      "description": "Replaces /reputation on this server. Only shown while giving reputation by command is active."
+    },
+    "profile": {
+      "description": "/profile keeps working and is additionally available under this name."
+    },
+    "invalid": "Use 1 to 32 lowercase letters, numbers, - or _.",
+    "saveFailed": "Could not save the command name.",
+    "reset": "Reset"
   },
   "profile": {
     "description": "Customize how the bot appears and behaves in your server.",
@@ -995,7 +1008,9 @@
       "autopost_refreshtype": "Autopost - Refresh Type",
       "autopost_refreshinterval": "Autopost - Refresh Interval",
       "ranks": "Ranks - Roles",
-      "general_everyonetokenpurchase": "General - Everyone Token Purchase"
+      "general_everyonetokenpurchase": "General - Everyone Token Purchase",
+      "command_aliases_reputation": "Command Names - /reputation",
+      "command_aliases_profile": "Command Names - /profile"
     }
   },
   "token_shop": {

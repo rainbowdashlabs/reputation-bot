@@ -20,8 +20,10 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
@@ -87,6 +89,21 @@ public class GuildRepository {
 
     public GuildList guilds(int pageSize) {
         return new GuildList(() -> pages(pageSize), page -> page(pageSize, page));
+    }
+
+    /**
+     * Custom names of a command on every guild that defined one.
+     *
+     * @param command name of the command
+     * @return alias keyed by guild id
+     */
+    public Map<Long, String> commandAliases(String command) {
+        return query("SELECT guild_id, alias FROM command_aliases WHERE command = ?")
+                .single(call().bind(command))
+                .map(row -> Map.entry(row.getLong("guild_id"), row.getString("alias")))
+                .all()
+                .stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
     public List<Long> byCommandReputationEnabled() {

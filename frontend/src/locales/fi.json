@@ -107,6 +107,8 @@
       "autopost_channel": "Automaattinen julkaisu - Kanava",
       "autopost_refreshinterval": "Automaattinen julkaisu - Päivitä väli",
       "autopost_refreshtype": "Automaattinen julkaisu - Päivitä tyyppi",
+      "command_aliases_profile": "Komentojen nimet - /profile",
+      "command_aliases_reputation": "Komentojen nimet - /reputation",
       "general_everyonetokenpurchase": "Yleistä - Kaikkien rahakkeiden ostaminen",
       "general_language": "Yleistä - Kieli",
       "general_reputationmode": "Maine - Maine-tila",
@@ -205,6 +207,18 @@
       "label": "Lähetä automaattinen viesti nyt",
       "sending": "Lähetetään..."
     }
+  },
+  "commandAliases": {
+    "description": "Anna komennoille oma nimi tällä palvelimella.",
+    "invalid": "Käytä 1–32 pientä kirjainta, numeroa, - tai _.",
+    "profile": {
+      "description": "/profile toimii edelleen ja on lisäksi käytettävissä tällä nimellä."
+    },
+    "reputation": {
+      "description": "Korvaa komennon /reputation tällä palvelimella. Näytetään vain, kun maineen antaminen komennolla on käytössä."
+    },
+    "reset": "Palauta",
+    "saveFailed": "Komennon nimeä ei voitu tallentaa."
   },
   "common": {
     "cancel": "Peruuta",
@@ -849,6 +863,7 @@
     "auditLog": "Tarkastusloki",
     "autopost": "Automaattinen julkaisu",
     "channels": "Kanavat",
+    "commandAliases": "Komentojen nimet",
     "debug": {
       "goToSettings": "Siirry asetuksiin",
       "missingPermissions": {

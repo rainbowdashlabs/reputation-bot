@@ -107,6 +107,8 @@
       "autopost_channel": "Autopost - Chaîne",
       "autopost_refreshinterval": "Publication automatique - Intervalle d'actualisation",
       "autopost_refreshtype": "Publication automatique - Type d'actualisation",
+      "command_aliases_profile": "Noms des commandes - /profile",
+      "command_aliases_reputation": "Noms des commandes - /reputation",
       "general_everyonetokenpurchase": "Général - Achat de jetons pour tout le monde",
       "general_language": "Généralités - Langue",
       "general_reputationmode": "Réputation - Mode Réputation",
@@ -205,6 +207,18 @@
       "label": "Envoyer la publication automatique maintenant",
       "sending": "Envoi..."
     }
+  },
+  "commandAliases": {
+    "description": "Donne un nom personnalisé aux commandes sur ce serveur.",
+    "invalid": "Utilise 1 à 32 lettres minuscules, chiffres, - ou _.",
+    "profile": {
+      "description": "/profile continue de fonctionner et est en plus disponible sous ce nom."
+    },
+    "reputation": {
+      "description": "Remplace /reputation sur ce serveur. Affiché uniquement tant que l'attribution de réputation par commande est active."
+    },
+    "reset": "Réinitialiser",
+    "saveFailed": "Impossible d'enregistrer le nom de la commande."
   },
   "common": {
     "cancel": "Annuler",
@@ -849,6 +863,7 @@
     "auditLog": "Journal d'audit",
     "autopost": "Publication automatique",
     "channels": "Chaînes",
+    "commandAliases": "Noms des commandes",
     "debug": {
       "goToSettings": "Va dans les paramètres",
       "missingPermissions": {

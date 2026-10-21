@@ -50,6 +50,7 @@ public class PremiumFeaturesPOJO {
     private final SimpleFeature additionalEmojis;
     private final SimpleFeature profile;
     private final SimpleFeature integrationBypass;
+    private final SimpleFeature commandAliases;
 
     // Complex features with limits
     private final FeatureLimit reputationChannel;
@@ -69,6 +70,7 @@ public class PremiumFeaturesPOJO {
             SimpleFeature additionalEmojis,
             SimpleFeature profile,
             SimpleFeature integrationBypass,
+            SimpleFeature commandAliases,
             FeatureLimit reputationChannel,
             FeatureLimit reputationCategories,
             List<String> activeSkus) {
@@ -83,6 +85,7 @@ public class PremiumFeaturesPOJO {
         this.additionalEmojis = additionalEmojis;
         this.profile = profile;
         this.integrationBypass = integrationBypass;
+        this.commandAliases = commandAliases;
         this.reputationChannel = reputationChannel;
         this.reputationCategories = reputationCategories;
         this.activeSkus = activeSkus;
@@ -119,6 +122,9 @@ public class PremiumFeaturesPOJO {
 
         SimpleFeature integrationBypass =
                 createSimpleFeature(subscriptions, features.integrationBypass().fullSkuEntry(), skuMap);
+
+        SimpleFeature commandAliases =
+                createSimpleFeature(subscriptions, features.commandAliases().fullSkuEntry(), skuMap);
 
         // Check complex features with limits
         int defaultChannels = features.reputationChannel().defaultChannel();
@@ -161,6 +167,7 @@ public class PremiumFeaturesPOJO {
                 additionalEmojis,
                 profile,
                 integrationBypass,
+                commandAliases,
                 reputationChannel,
                 reputationCategories,
                 active);
@@ -263,5 +270,9 @@ public class PremiumFeaturesPOJO {
 
     public SimpleFeature integrationBypass() {
         return integrationBypass;
+    }
+
+    public SimpleFeature commandAliases() {
+        return commandAliases;
     }
 }

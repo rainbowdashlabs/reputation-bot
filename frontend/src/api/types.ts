@@ -164,6 +164,12 @@ export interface IntegrationBypassPOJO {
     bypasses: Record<string, Bypass>;
 }
 
+export type AliasableCommand = 'reputation' | 'profile';
+
+export interface CommandAliasesPOJO {
+    aliases: Partial<Record<AliasableCommand, string>>;
+}
+
 export interface AnnouncementsPOJO {
     active: boolean;
     sameChannel: boolean;
@@ -288,6 +294,7 @@ export interface ThankingPOJO {
 export interface SettingsPOJO {
     abuseProtection: AbuseProtectionPOJO;
     integrationBypass: IntegrationBypassPOJO;
+    commandAliases: CommandAliasesPOJO;
     announcements: AnnouncementsPOJO;
     autopost: AutopostPOJO;
     general: GeneralPOJO;
@@ -327,6 +334,7 @@ export interface PremiumFeaturesPOJO {
     additionalEmojis: SimpleFeature;
     profile: SimpleFeature;
     integrationBypass: SimpleFeature;
+    commandAliases: SimpleFeature;
     reputationChannel: FeatureLimit;
     reputationCategories: FeatureLimit;
     activeSkus: string[];

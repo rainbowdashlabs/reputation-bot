@@ -107,6 +107,8 @@
       "autopost_channel": "Autopost - Canal",
       "autopost_refreshinterval": "Publicación automática - Intervalo de actualización",
       "autopost_refreshtype": "Autopost - Tipo de actualización",
+      "command_aliases_profile": "Nombres de comandos - /profile",
+      "command_aliases_reputation": "Nombres de comandos - /reputation",
       "general_everyonetokenpurchase": "General - Compra de tokens para todos",
       "general_language": "General - Idioma",
       "general_reputationmode": "Reputación - Modo Reputación",
@@ -205,6 +207,18 @@
       "label": "Enviar publicación automática ahora",
       "sending": "Enviando..."
     }
+  },
+  "commandAliases": {
+    "description": "Da a los comandos un nombre personalizado en este servidor.",
+    "invalid": "Usa de 1 a 32 letras minúsculas, números, - o _.",
+    "profile": {
+      "description": "/profile sigue funcionando y además está disponible con este nombre."
+    },
+    "reputation": {
+      "description": "Sustituye /reputation en este servidor. Solo se muestra mientras dar reputación por comando esté activo."
+    },
+    "reset": "Restablecer",
+    "saveFailed": "No se pudo guardar el nombre del comando."
   },
   "common": {
     "cancel": "Cancelar",
@@ -849,6 +863,7 @@
     "auditLog": "Registro de auditoría",
     "autopost": "Publicación automática",
     "channels": "Canales",
+    "commandAliases": "Nombres de comandos",
     "debug": {
       "goToSettings": "Ir a la configuración",
       "missingPermissions": {
