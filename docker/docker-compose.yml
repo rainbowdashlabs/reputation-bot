@@ -14,7 +14,7 @@ services:
     expose:
       - 5432
     volumes:
-    - db_data:/var/lib/postgresql/data
+    - db_data_18:/var/lib/postgresql
     environment:
       POSTGRES_USER: "root"
       POSTGRES_PASSWORD: "changeme"
@@ -26,4 +26,4 @@ networks:
     external: false
 
 volumes:
-  db_data:
+  db_data_18:

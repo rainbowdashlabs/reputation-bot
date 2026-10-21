@@ -107,6 +107,8 @@
       "autopost_channel": "Otomatik Yayın - Kanal",
       "autopost_refreshinterval": "Otomatik Gönderme - Yenileme Aralığı",
       "autopost_refreshtype": "Otomatik Gönderme - Yenileme Türü",
+      "command_aliases_profile": "Komut adları - /profile",
+      "command_aliases_reputation": "Komut adları - /reputation",
       "general_everyonetokenpurchase": "Genel - Herkes için Jeton Satın Alma",
       "general_language": "Genel - Dil",
       "general_reputationmode": "İtibar - İtibar Modu",
@@ -205,6 +207,18 @@
       "label": "Otomatik Gönderimi Şimdi Gönder",
       "sending": "Gönderiliyor..."
     }
+  },
+  "commandAliases": {
+    "description": "Bu sunucuda komutlara özel bir ad ver.",
+    "invalid": "1 ile 32 arasında küçük harf, rakam, - veya _ kullan.",
+    "profile": {
+      "description": "/profile çalışmaya devam eder ve ayrıca bu adla da kullanılabilir."
+    },
+    "reputation": {
+      "description": "Bu sunucuda /reputation komutunun yerini alır. Yalnızca komutla itibar verme etkinken gösterilir."
+    },
+    "reset": "Sıfırla",
+    "saveFailed": "Komut adı kaydedilemedi."
   },
   "common": {
     "cancel": "İptal",
@@ -849,6 +863,7 @@
     "auditLog": "Denetim Günlüğü",
     "autopost": "Otomatik yayınlama",
     "channels": "Kanallar",
+    "commandAliases": "Komut adları",
     "debug": {
       "goToSettings": "Ayarlar'a git",
       "missingPermissions": {

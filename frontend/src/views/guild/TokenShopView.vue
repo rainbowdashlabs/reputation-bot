@@ -133,6 +133,7 @@ const getRequiredSkus = (localeKey: string) => {
     additionalemojis: 'additionalEmojis',
     profile: 'profile',
     integrationbypass: 'integrationBypass',
+    commandaliases: 'commandAliases',
     reputationchannel: 'reputationChannel',
     reputationcategories: 'reputationCategories',
   }

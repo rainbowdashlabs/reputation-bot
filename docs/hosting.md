@@ -5,6 +5,41 @@ You can use our docker image or do manual stuff setting the bot up.
 
 Use the docker compose file in the docker directory.
 
+### Upgrading from PostgreSQL 17
+
+The compose file uses PostgreSQL 18, which stores its data in a different place than earlier versions. The data now
+lives in the volume `db_data_18`. Your old data stays in `db_data` and has to be moved over once.
+
+The volume names are prefixed with the compose project name, which is the directory name by default. Check yours with
+`docker volume ls`. The commands below assume `docker_db_data`.
+
+1. Stop the bot and the database.
+   ```sh
+   docker compose stop app database
+   ```
+2. Dump the old database with a PostgreSQL 17 container.
+   ```sh
+   docker run -d --name repbot-pg17 -v docker_db_data:/var/lib/postgresql/data postgres:17
+   docker exec repbot-pg17 sh -c 'until pg_isready -U root; do sleep 1; done'
+   docker exec repbot-pg17 pg_dump -U root -d repbot -Fc > repbot.dump
+   docker rm -f repbot-pg17
+   ```
+3. Pull the new compose file and start only the database. It creates the new volume.
+   ```sh
+   docker compose up -d database
+   ```
+4. Restore the dump.
+   ```sh
+   docker compose exec -T database sh -c 'until pg_isready -U root; do sleep 1; done'
+   docker compose exec -T database pg_restore -U root -d repbot --no-owner < repbot.dump
+   ```
+5. Start the bot.
+   ```sh
+   docker compose up -d
+   ```
+
+Once the bot runs fine, remove the old volume with `docker volume rm docker_db_data` and delete `repbot.dump`.
+
 ## Normal hosting
 
 You will need a PostgreSQL database and Java 18 or higher installed already.

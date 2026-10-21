@@ -59,6 +59,7 @@ import de.chojo.repbot.service.AnalyzerService;
 import de.chojo.repbot.service.AutopostService;
 import de.chojo.repbot.service.BotlistVoteService;
 import de.chojo.repbot.service.ChatSupportService;
+import de.chojo.repbot.service.CommandAliasService;
 import de.chojo.repbot.service.GdprService;
 import de.chojo.repbot.service.MetricService;
 import de.chojo.repbot.service.MonitorService;
@@ -108,7 +109,7 @@ public class Bot {
     private static final Set<ErrorResponse> IGNORE_ERRORS =
             Set.of(ErrorResponse.ILLEGAL_OPERATION_ARCHIVED_THREAD, ErrorResponse.MISSING_ACCESS);
     // TODO: Remove after decomissioning the commands
-    public static String WEB_COMMAND_MENTION = "";
+    public static String WEB_COMMAND_MENTION = "/settings";
     private final Data data;
     private final Threading threading;
     private final Configuration configuration;
@@ -126,6 +127,7 @@ public class Bot {
     private AutopostService autopostService;
     private PremiumService premiumService;
     private TokenPurchaseService tokenPurchaseService;
+    private CommandAliasService commandAliasService;
     private InteractionHub<Slash, Message, User> hub;
     private SessionService sessionService;
     private BotlistVoteService botlistVoteService;
@@ -146,6 +148,7 @@ public class Bot {
 
     public void init() throws LoginException {
         initShardManager();
+        awaitShards();
         configureRestActions();
         initServices();
         initInteractions();
@@ -182,6 +185,10 @@ public class Bot {
 
     public TokenPurchaseService tokenPurchaseService() {
         return tokenPurchaseService;
+    }
+
+    public CommandAliasService commandAliasService() {
+        return commandAliasService;
     }
 
     public RoleAssigner roleAssigner() {
@@ -368,6 +375,7 @@ public class Bot {
                 data.tokenPurchaseRepository(),
                 threading,
                 localization);
+        commandAliasService = new CommandAliasService(guilds, configuration, shardManager);
     }
 
     private void initInteractions() {
@@ -414,6 +422,7 @@ public class Bot {
                     case "reputation" -> data.guildRepository().byCommandReputationEnabled();
                     default -> Collections.emptyList();
                 })
+                .withCommandAliases(commandAliasService::aliasesOf)
                 .withDefaultMenuService()
                 .withPostCommandHook(result -> {
                     data.metrics()
@@ -435,29 +444,45 @@ public class Bot {
                 })
                 .build();
 
-        // TODO: Remove after decomissioning the settings commands
-        Long settingsCommandId;
-        if (TEST_MODE) {
-            settingsCommandId = shardManager
-                    .getShards()
-                    .getFirst()
-                    .getGuildById(configuration.baseSettings().botGuild())
-                    .retrieveCommands()
-                    .complete()
-                    .stream()
-                    .filter(cmd -> cmd.getName().equals("settings"))
-                    .map(ISnowflake::getIdLong)
-                    .findFirst()
-                    .get();
+        commandAliasService.start(hub, threading.repBotWorker());
+        hub.deployment().thenRun(this::resolveSettingsCommandMention);
+    }
 
-        } else {
-            settingsCommandId = shardManager.getShards().getFirst().retrieveCommands().complete().stream()
-                    .filter(cmd -> cmd.getName().equals("settings"))
-                    .map(ISnowflake::getIdLong)
-                    .findFirst()
-                    .get();
+    // TODO: Remove after decomissioning the settings commands
+    /**
+     * Resolves the mention of the settings command. Waits for the command deployment, since the command does not
+     * exist yet on a guild that receives its commands for the first time in test mode.
+     */
+    private void resolveSettingsCommandMention() {
+        var commands = TEST_MODE
+                ? shardManager
+                        .getShards()
+                        .getFirst()
+                        .getGuildById(configuration.baseSettings().botGuild())
+                        .retrieveCommands()
+                        .complete()
+                : shardManager.getShards().getFirst().retrieveCommands().complete();
+        commands.stream()
+                .filter(cmd -> cmd.getName().equals("settings"))
+                .map(ISnowflake::getIdLong)
+                .findFirst()
+                .ifPresentOrElse(
+                        id -> WEB_COMMAND_MENTION = "</settings:" + id + ">",
+                        () -> log.warn("Settings command not found. Mentions fall back to plain text."));
+    }
+
+    /**
+     * Waits until every shard is connected. Services set up afterwards rely on the guild cache and the self user.
+     */
+    private void awaitShards() {
+        for (var shard : shardManager.getShards()) {
+            try {
+                shard.awaitReady();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new IllegalStateException("Interrupted while waiting for shards.", e);
+            }
         }
-        WEB_COMMAND_MENTION = "</settings:" + settingsCommandId + ">";
     }
 
     private void handleCommandError(InteractionResult result) {

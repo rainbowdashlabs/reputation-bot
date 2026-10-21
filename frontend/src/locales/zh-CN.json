@@ -107,6 +107,8 @@
       "autopost_channel": "自动发布 - 频道",
       "autopost_refreshinterval": "自动发布 - 刷新间隔",
       "autopost_refreshtype": "自动发布 - 刷新类型",
+      "command_aliases_profile": "命令名称 - /profile",
+      "command_aliases_reputation": "命令名称 - /reputation",
       "general_everyonetokenpurchase": "通用 - 所有人代币购买",
       "general_language": "通用 - 语言",
       "general_reputationmode": "声誉 - 声誉模式",
@@ -205,6 +207,18 @@
       "label": "立即发送自动发布",
       "sending": "发送中..."
     }
+  },
+  "commandAliases": {
+    "description": "在此服务器上为命令设置自定义名称。",
+    "invalid": "请使用 1 到 32 个小写字母、数字、- 或 _。",
+    "profile": {
+      "description": "/profile 仍然可用，并且还可以通过此名称使用。"
+    },
+    "reputation": {
+      "description": "在此服务器上替换 /reputation。仅在启用通过命令给予声望时显示。"
+    },
+    "reset": "重置",
+    "saveFailed": "无法保存命令名称。"
   },
   "common": {
     "cancel": "取消",
@@ -849,6 +863,7 @@
     "auditLog": "审计日志",
     "autopost": "自动发布",
     "channels": "频道",
+    "commandAliases": "命令名称",
     "debug": {
       "goToSettings": "前往设置",
       "missingPermissions": {

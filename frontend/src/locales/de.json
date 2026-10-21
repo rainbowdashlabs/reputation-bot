@@ -107,6 +107,8 @@
       "autopost_channel": "Autopost – Kanal",
       "autopost_refreshinterval": "Autopost – Aktualisierungsintervall",
       "autopost_refreshtype": "Autopost – Aktualisiergunsart",
+      "command_aliases_profile": "Befehlsnamen – /profile",
+      "command_aliases_reputation": "Befehlsnamen – /reputation",
       "general_everyonetokenpurchase": "Allgemein – Kauf mit Token für alle",
       "general_language": "Allgemeines – Sprache",
       "general_reputationmode": "Reputation – Reputationsmodus",
@@ -122,7 +124,7 @@
       "messages_announceembed": "Reputation – Einbetten ankündigen",
       "messages_announcefuzzy": "Reputation – Ankündigung: Fuzzy",
       "messages_announcemention": "Reputation – Erwähnung ankündigen",
-      "messages_announcereaction": "Ruf – Reaktion ankündigen",
+      "messages_announcereaction": "Reputation – Reaktion ankündigen",
       "messages_commandreputationephemeral": "Reputation – Einmalige Reputation",
       "messages_reactionconfirmation": "Reputation – Bestätigung der Reaktion",
       "profile_nickname": "Profil – Bot Name",
@@ -206,6 +208,18 @@
       "sending": "Wird gesendet..."
     }
   },
+  "commandAliases": {
+    "description": "Gib Befehlen auf diesem Server einen eigenen Namen.",
+    "invalid": "Verwende 1 bis 32 Kleinbuchstaben, Zahlen, - oder _.",
+    "profile": {
+      "description": "/profile funktioniert weiterhin und ist zusätzlich unter diesem Namen verfügbar."
+    },
+    "reputation": {
+      "description": "Ersetzt /reputation auf diesem Server. Wird nur angezeigt, solange Reputation per Befehl aktiv ist."
+    },
+    "reset": "Zurücksetzen",
+    "saveFailed": "Der Befehlsname konnte nicht gespeichert werden."
+  },
   "common": {
     "cancel": "Abbrechen",
     "change": "Ändern",
@@ -249,7 +263,7 @@
       "guildFooter": "Profil auf {guild}",
       "privateProfile": "Dieses Profil ist privat.",
       "rank": "Rang",
-      "reputation": "Ruf"
+      "reputation": "Reputation"
     },
     "rank": "Rang",
     "ranking": "Rangliste",
@@ -314,7 +328,7 @@
     "description": "Mach die Grundeinstellungen vom Bot für diesen Server.",
     "everyoneTokenPurchase": {
       "description": "Lass alle Nutzer Premium-Funktionen mit ihren Tokens kaufen. Wenn das deaktiviert ist, können nur Server-Admins Funktionen kaufen.",
-      "label": "Jeder kann Token mit kaufen"
+      "label": "Jeder kann mit Token kaufen"
     },
     "language": {
       "description": "Wähle die Sprache aus, die der Bot für Nachrichten und Antworten auf diesem Server verwenden soll.",
@@ -793,9 +807,9 @@
     },
     "reputationName": {
       "description": "Passe den Namen an, der für die Reputation auf diesem Server verwendet wird.",
-      "label": "Ruf Name",
+      "label": "Reputation Name",
       "placeholder": "Gib einen eigenen Namen für die Reputation ein (z. B. „Punkte“, „Karma“).",
-      "reset": "Den Rufnamen auf die Standardeinstellung zurücksetzen"
+      "reset": "Den Reputationsnamen auf die Standardeinstellung zurücksetzen"
     },
     "reset": "Zurücksetzen",
     "tosNote": "Alles, was gegen die Nutzungsbedingungen von Discord oder gegen staatliche Gesetze verstößt, ist verboten und kann dazu führen, dass diese Funktion für den Server gesperrt wird."
@@ -849,6 +863,7 @@
     "auditLog": "Änderrungsprotokoll",
     "autopost": "Autopost",
     "channels": "Kanäle",
+    "commandAliases": "Befehlsnamen",
     "debug": {
       "goToSettings": "Geh zu den Einstellungen",
       "missingPermissions": {

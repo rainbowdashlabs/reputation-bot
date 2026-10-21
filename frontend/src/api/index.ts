@@ -311,6 +311,10 @@ class ApiClient {
         await this.axiosInstance.delete(`/settings/integrationbypass/${integrationId}`);
     }
 
+    public async updateCommandAlias(command: Types.AliasableCommand, alias: string) {
+        await this.axiosInstance.post('/settings/commandaliases', {command, alias});
+    }
+
     // Reputation Settings
     public async updateReputation(data: Types.ReputationPOJO) {
         await this.axiosInstance.post('/settings/reputation', data);

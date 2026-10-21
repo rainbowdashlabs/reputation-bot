@@ -107,6 +107,8 @@
       "autopost_channel": "Autopost - Kanal",
       "autopost_refreshinterval": "Autopost - Oppdateringsintervall",
       "autopost_refreshtype": "Autopost - Oppdateringstype",
+      "command_aliases_profile": "Kommandonavn - /profile",
+      "command_aliases_reputation": "Kommandonavn - /reputation",
       "general_everyonetokenpurchase": "Generelt - Alle Token-kjøp",
       "general_language": "Generelt - Språk",
       "general_reputationmode": "Omdømme - Omdømmemodus",
@@ -205,6 +207,18 @@
       "label": "Send Autopost nå",
       "sending": "Sender..."
     }
+  },
+  "commandAliases": {
+    "description": "Gi kommandoer et eget navn på denne serveren.",
+    "invalid": "Bruk 1 til 32 små bokstaver, tall, - eller _.",
+    "profile": {
+      "description": "/profile fungerer fortsatt og er i tillegg tilgjengelig under dette navnet."
+    },
+    "reputation": {
+      "description": "Erstatter /reputation på denne serveren. Vises bare mens det er aktivt å gi omdømme med kommando."
+    },
+    "reset": "Tilbakestill",
+    "saveFailed": "Kunne ikke lagre kommandonavnet."
   },
   "common": {
     "cancel": "Avbryt",
@@ -849,6 +863,7 @@
     "auditLog": "Revisjonslogg",
     "autopost": "Autopost",
     "channels": "Kanaler",
+    "commandAliases": "Kommandonavn",
     "debug": {
       "goToSettings": "Gå til innstillinger",
       "missingPermissions": {

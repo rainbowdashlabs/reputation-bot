@@ -9,6 +9,7 @@ import de.chojo.jdautil.interactions.dispatching.InteractionHub;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.provider.SettingsAuditLogRepository;
 import de.chojo.repbot.service.AutopostService;
+import de.chojo.repbot.service.CommandAliasService;
 import de.chojo.repbot.service.RoleAssigner;
 import de.chojo.repbot.web.cache.MemberCache;
 import de.chojo.repbot.web.routes.RoutesBuilder;
@@ -16,6 +17,7 @@ import de.chojo.repbot.web.routes.v1.settings.sub.AbuseProtectionRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.AnnouncementsRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.AuditLogRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.AutopostRoute;
+import de.chojo.repbot.web.routes.v1.settings.sub.CommandAliasesRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.DebugRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.GeneralRoute;
 import de.chojo.repbot.web.routes.v1.settings.sub.IntegrationBypassRoute;
@@ -43,6 +45,7 @@ public class SettingsRoute implements RoutesBuilder {
     private final AuditLogRoute auditLogRoute;
     private final ThankingRoute thankingRoute = new ThankingRoute();
     private final DebugRoute debugRoute;
+    private final CommandAliasesRoute commandAliasesRoute;
 
     public SettingsRoute(
             InteractionHub<?, ?, ?> hub,
@@ -51,8 +54,10 @@ public class SettingsRoute implements RoutesBuilder {
             ShardManager shardManager,
             SettingsAuditLogRepository settingsAuditLogRepository,
             MemberCache memberCache,
-            GuildRepository guildRepository) {
+            GuildRepository guildRepository,
+            CommandAliasService commandAliasService) {
         reputationRoute = new ReputationRoute(hub);
+        commandAliasesRoute = new CommandAliasesRoute(commandAliasService);
         autopostRoute = new AutopostRoute(autopostService);
         debugRoute = new DebugRoute(guildRepository);
         auditLogRoute = new AuditLogRoute(memberCache, settingsAuditLogRepository);
@@ -64,6 +69,7 @@ public class SettingsRoute implements RoutesBuilder {
         path("/settings", () -> {
             abuseProtectionRoute.buildRoutes();
             integrationBypassRoute.buildRoutes();
+            commandAliasesRoute.buildRoutes();
             generalRoute.buildRoutes();
             reputationRoute.buildRoutes();
             announcementsRoute.buildRoutes();

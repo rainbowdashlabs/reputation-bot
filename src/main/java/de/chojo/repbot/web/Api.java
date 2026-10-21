@@ -16,6 +16,7 @@ import de.chojo.repbot.dao.provider.UserRepository;
 import de.chojo.repbot.dao.provider.VoteRepository;
 import de.chojo.repbot.serialization.ThankwordsContainer;
 import de.chojo.repbot.service.AutopostService;
+import de.chojo.repbot.service.CommandAliasService;
 import de.chojo.repbot.service.KofiService;
 import de.chojo.repbot.service.MailService;
 import de.chojo.repbot.service.MarkdownService;
@@ -79,7 +80,8 @@ public class Api {
             TokenPurchaseService tokenPurchaseService,
             KofiService kofiService,
             MailService mailService,
-            ScanService scanService) {
+            ScanService scanService,
+            CommandAliasService commandAliasService) {
         this.sessionService = sessionService;
         metricsRoute = new MetricsRoute(metrics);
         sessionRoute = new SessionRoute(sessionService);
@@ -90,7 +92,8 @@ public class Api {
                 shardManager,
                 settingsAuditLogRepository,
                 memberCache,
-                guildRepository);
+                guildRepository,
+                commandAliasService);
 
         // Load thankwords container
         ThankwordsContainer thankwordsContainer;

@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -110,27 +111,36 @@ public class Subscriptions implements GuildHolder, SkuMeta {
                 .ifPresent(e -> errorMessages().put(e.type(), e));
     }
 
+    /**
+     * Subscriptions of the guild. They are loaded once and cached.
+     * <p>
+     * A load that failed is not cached. Otherwise the guild would count as unsubscribed until its cache entry expires,
+     * which does not happen for an active guild. The next call loads again instead.
+     *
+     * @return mutable list of subscriptions
+     */
     public List<Subscription> subscriptions() {
-        if (subscriptions == null) {
-            subscriptions = query("""
-                    SELECT
-                        id,
-                        sku,
-                        type,
-                        ends_at,
-                        purchase_type,
-                        persistent,
-                        source
-                    FROM
-                        subscriptions
-                    WHERE id = ?
-                      AND type = ?
-                    """)
-                    .single(call().bind(repGuild.guildId()).bind(SkuTarget.GUILD))
-                    .map(Subscription.map())
-                    .all();
-        }
-        return subscriptions;
+        if (subscriptions != null) return subscriptions;
+        var result = query("""
+                SELECT
+                    id,
+                    sku,
+                    type,
+                    ends_at,
+                    purchase_type,
+                    persistent,
+                    source
+                FROM
+                    subscriptions
+                WHERE id = ?
+                  AND type = ?
+                """)
+                .single(call().bind(repGuild.guildId()).bind(SkuTarget.GUILD))
+                .map(Subscription.map())
+                .allResults();
+        var loaded = new ArrayList<>(result.get().orElse(List.of()));
+        if (!result.hasExceptions()) subscriptions = loaded;
+        return loaded;
     }
 
     public void purchaseTokenFeature(Feature feature) {
@@ -175,8 +185,8 @@ public class Subscriptions implements GuildHolder, SkuMeta {
                         .bind(subscription.source()))
                 .insert()
                 .ifChanged(i -> {
-                    subscriptions().add(subscription);
                     subscriptions().remove(subscription);
+                    subscriptions().add(subscription);
                 });
     }
 

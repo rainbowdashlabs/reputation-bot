@@ -107,6 +107,8 @@
       "autopost_channel": "Autopost - Kanaal",
       "autopost_refreshinterval": "Autopost - Vernieuwingsinterval",
       "autopost_refreshtype": "Autopost - Vernieuwingstype",
+      "command_aliases_profile": "Commandonamen - /profile",
+      "command_aliases_reputation": "Commandonamen - /reputation",
       "general_everyonetokenpurchase": "Algemeen - Iedereen kan tokens kopen",
       "general_language": "Algemeen - Taal",
       "general_reputationmode": "Reputatie - Reputatiemodus",
@@ -205,6 +207,18 @@
       "label": "Stuur nu automatisch bericht",
       "sending": "Bezig met verzenden..."
     }
+  },
+  "commandAliases": {
+    "description": "Geef commando's een eigen naam op deze server.",
+    "invalid": "Gebruik 1 tot 32 kleine letters, cijfers, - of _.",
+    "profile": {
+      "description": "/profile blijft werken en is daarnaast beschikbaar onder deze naam."
+    },
+    "reputation": {
+      "description": "Vervangt /reputation op deze server. Wordt alleen getoond zolang reputatie geven via een commando actief is."
+    },
+    "reset": "Herstellen",
+    "saveFailed": "De commandonaam kon niet worden opgeslagen."
   },
   "common": {
     "cancel": "Annuleren",
@@ -849,6 +863,7 @@
     "auditLog": "Auditlogboek",
     "autopost": "Automatisch posten",
     "channels": "Kanalen",
+    "commandAliases": "Commandonamen",
     "debug": {
       "goToSettings": "Ga naar instellingen",
       "missingPermissions": {

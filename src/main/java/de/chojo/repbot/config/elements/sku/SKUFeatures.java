@@ -10,6 +10,7 @@ import de.chojo.repbot.config.elements.sku.feature.AdvancedRankings;
 import de.chojo.repbot.config.elements.sku.feature.AnalyzerLog;
 import de.chojo.repbot.config.elements.sku.feature.Autopost;
 import de.chojo.repbot.config.elements.sku.feature.ChannelBlacklist;
+import de.chojo.repbot.config.elements.sku.feature.CommandAliases;
 import de.chojo.repbot.config.elements.sku.feature.DetailedProfile;
 import de.chojo.repbot.config.elements.sku.feature.IntegrationBypass;
 import de.chojo.repbot.config.elements.sku.feature.LocaleOverrides;
@@ -37,6 +38,7 @@ public class SKUFeatures {
     AdditionalEmojis additionalEmojis = new AdditionalEmojis();
     Profile profile = new Profile();
     IntegrationBypass integrationBypass = new IntegrationBypass();
+    CommandAliases commandAliases = new CommandAliases();
 
     public ReputationLog reputationLog() {
         return reputationLog;
@@ -90,6 +92,10 @@ public class SKUFeatures {
         return integrationBypass;
     }
 
+    public CommandAliases commandAliases() {
+        return commandAliases;
+    }
+
     public List<Feature> features() {
         return List.of(
                 reputationLog,
@@ -104,7 +110,8 @@ public class SKUFeatures {
                 logChannel,
                 additionalEmojis,
                 profile,
-                integrationBypass);
+                integrationBypass,
+                commandAliases);
     }
 
     public Optional<Feature> byId(int id) {
