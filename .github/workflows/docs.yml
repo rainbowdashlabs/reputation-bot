@@ -12,6 +12,6 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
         with:
-          python-version: 3.14
+          python-version: 3.15
       - run: echo "repbot.docs.chojo.dev" > ./docs/CNAME
       - run: pip install pipenv && pipenv install && pipenv run mkdocs gh-deploy --force
