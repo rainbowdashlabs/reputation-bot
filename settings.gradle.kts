@@ -22,11 +22,11 @@ dependencyResolutionManagement {
             library("log4j-jsontemplate", "org.apache.logging.log4j", "log4j-layout-template-json").versionRef("log4j")
             bundle("log4j", listOf("slf4j-api", "log4j-core", "log4j-slf4j2", "log4j-jsontemplate"))
 
-            version("jackson", "2.22.3")
+            version("jackson", "2.22.4")
             library("jackson-jsr310", "com.fasterxml.jackson.datatype","jackson-datatype-jsr310").versionRef("jackson")
             bundle("jackson", listOf("jackson-jsr310"))
 
-            version("commonmark","0.30.0")
+            version("commonmark","0.31.0")
             library("commonmark", "org.commonmark", "commonmark").versionRef("commonmark")
             library("commonmark-ext-gfm-tables", "org.commonmark", "commonmark-ext-gfm-tables").versionRef("commonmark")
             library("commonmark-ext-heading-anchor", "org.commonmark", "commonmark-ext-heading-anchor").versionRef("commonmark")
@@ -34,7 +34,7 @@ dependencyResolutionManagement {
             bundle("commonmark", listOf("commonmark", "commonmark-ext-gfm-tables", "commonmark-ext-heading-anchor", "commonmark-ext-autolink"))
 
             // plugins
-            plugin("spotless", "com.diffplug.spotless").version("8.10.3")
+            plugin("spotless", "com.diffplug.spotless").version("8.10.4")
             plugin("shadow", "com.gradleup.shadow").version("9.6.1")
         }
 
@@ -57,7 +57,7 @@ dependencyResolutionManagement {
             library("slf4j-noop", "org.slf4j", "slf4j-nop").versionRef("slf4j")
             library("slf4j-simple", "org.slf4j", "slf4j-simple").versionRef("slf4j")
 
-            library("driver-postgres", "org.postgresql:postgresql:42.7.13")
+            library("driver-postgres", "org.postgresql:postgresql:42.7.14")
 
             bundle("database-postgres", listOf("testcontainers-junit", "testcontainers-core", "testcontainers-postgres", "driver-postgres"))
         }
