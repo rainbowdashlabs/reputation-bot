@@ -1038,7 +1038,16 @@
     "description": "Estas palabras se utilizarán para detectar cuándo se está agradeciendo a alguien. Se interpretan como expresiones regulares.",
     "invalidCharacter": "La palabra de agradecimiento contiene un carácter no válido: {char}",
     "none": "No hay palabras de agradecimiento configuradas.",
-    "placeholder": "Introducir palabra clave (Regex)"
+    "placeholder": "Introducir palabra clave (Regex)",
+    "check": {
+      "title": "Comprobar un mensaje",
+      "description": "Pega un mensaje para ver si el bot encuentra en él una palabra de agradecimiento y cuáles de tus palabras coinciden. Que el mensaje dé reputación también depende de a quién agradece y de tus otros ajustes.",
+      "placeholder": "Pega un mensaje",
+      "button": "Comprobar",
+      "match": "Palabra de agradecimiento encontrada: \"{match}\"",
+      "matchingWords": "Palabras de agradecimiento que coinciden:",
+      "noMatch": "No se encontró ninguna palabra de agradecimiento en este mensaje."
+    }
   },
   "timePresets": {
     "day": "1 día",

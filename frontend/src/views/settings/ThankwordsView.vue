@@ -10,6 +10,7 @@ import SettingsContainer from './components/SettingsContainer.vue'
 import ThankwordList from './thankwordsview/ThankwordList.vue'
 import ThankwordInput from './thankwordsview/ThankwordInput.vue'
 import DefaultThankwords from './thankwordsview/DefaultThankwords.vue'
+import ThankwordCheck from './thankwordsview/ThankwordCheck.vue'
 
 const {t} = useI18n()
 const isUpdating = ref(false)
@@ -32,6 +33,8 @@ const isUpdating = ref(false)
       <DefaultThankwords
           v-model:is-updating="isUpdating"
       />
+
+      <ThankwordCheck/>
     </div>
   </SettingsContainer>
 </template>

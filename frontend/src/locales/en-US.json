@@ -674,6 +674,15 @@
     "defaults": {
       "title": "Default Thankwords",
       "description": "Quickly add default thankwords for various languages."
+    },
+    "check": {
+      "title": "Check a Message",
+      "description": "Paste a message to see whether the bot finds a thankword in it and which of your thankwords match. Whether the message gives reputation also depends on whom it thanks and on your other settings.",
+      "placeholder": "Paste a message",
+      "button": "Check",
+      "match": "Thankword found: \"{match}\"",
+      "matchingWords": "Matching thankwords:",
+      "noMatch": "No thankword found in this message."
     }
   },
   "abuseProtection": {

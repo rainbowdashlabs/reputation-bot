@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 class ThankwordPatternTest {
@@ -103,5 +104,26 @@ class ThankwordPatternTest {
         Assertions.assertTimeoutPreemptively(
                 Duration.ofSeconds(2),
                 () -> Assertions.assertFalse(pattern.matcher(message).find()));
+    }
+
+    @Test
+    void checkReportsMatchAndMatchingWords() {
+        var result = thankwords("thanks?", "thx", "ty").check("Thanks for the help!");
+        Assertions.assertTrue(result.matched());
+        Assertions.assertEquals("thanks", result.match());
+        Assertions.assertEquals(List.of("thanks?"), result.thankwords());
+    }
+
+    @Test
+    void checkWithoutThankword() {
+        var result = thankwords("thanks").check("hello there");
+        Assertions.assertFalse(result.matched());
+        Assertions.assertNull(result.match());
+        Assertions.assertTrue(result.thankwords().isEmpty());
+    }
+
+    @Test
+    void checkWithoutConfiguredThankwords() {
+        Assertions.assertFalse(thankwords().check("thanks").matched());
     }
 }

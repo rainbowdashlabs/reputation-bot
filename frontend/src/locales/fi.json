@@ -1038,7 +1038,16 @@
     "description": "Näitä sanoja käytetään tunnistamaan, kun joku saa kiitosta. Ne tulkitaan säännöllisiksi lausekkeiksi.",
     "invalidCharacter": "Kiitossanassa on virheellinen merkki: {char}",
     "none": "Kiitossanoja ei ole määritetty.",
-    "placeholder": "Syötä kiitos sana (Regex)"
+    "placeholder": "Syötä kiitos sana (Regex)",
+    "check": {
+      "title": "Tarkista viesti",
+      "description": "Liitä viesti nähdäksesi, löytääkö botti siitä kiitossanan ja mitkä kiitossanoistasi täsmäävät. Se, antaako viesti mainetta, riippuu myös siitä, ketä siinä kiitetään, ja muista asetuksistasi.",
+      "placeholder": "Liitä viesti",
+      "button": "Tarkista",
+      "match": "Kiitossana löytyi: \"{match}\"",
+      "matchingWords": "Täsmäävät kiitossanat:",
+      "noMatch": "Viestistä ei löytynyt kiitossanaa."
+    }
   },
   "timePresets": {
     "day": "1 päivä",

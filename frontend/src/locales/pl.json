@@ -1038,7 +1038,16 @@
     "description": "Słowa te będą wykorzystywane do wykrywania sytuacji, w których ktoś otrzymuje podziękowania. Są one interpretowane jako wyrażenia regularne.",
     "invalidCharacter": "Słowo „thankword” zawiera nieprawidłowy znak: {char}",
     "none": "Nie skonfigurowano żadnych słów podziękowania.",
-    "placeholder": "Wprowadź słowo dziękczynne (wyrażenie regularne)"
+    "placeholder": "Wprowadź słowo dziękczynne (wyrażenie regularne)",
+    "check": {
+      "title": "Sprawdź wiadomość",
+      "description": "Wklej wiadomość, aby zobaczyć, czy bot znajdzie w niej słowo podziękowania i które z twoich słów pasują. To, czy wiadomość da reputację, zależy też od tego, komu dziękuje, i od innych ustawień.",
+      "placeholder": "Wklej wiadomość",
+      "button": "Sprawdź",
+      "match": "Znaleziono słowo podziękowania: \"{match}\"",
+      "matchingWords": "Pasujące słowa podziękowania:",
+      "noMatch": "W tej wiadomości nie znaleziono słowa podziękowania."
+    }
   },
   "timePresets": {
     "day": "1 dzień",

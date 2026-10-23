@@ -268,6 +268,12 @@ export interface ThankwordsPOJO {
     thankwords: string[];
 }
 
+export interface ThankwordCheckPOJO {
+    matched: boolean;
+    match: string | null;
+    thankwords: string[];
+}
+
 export interface RankEntry {
     roleId: string;
     reputation: number;

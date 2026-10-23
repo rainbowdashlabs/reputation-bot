@@ -1038,7 +1038,16 @@
     "description": "Queste parole saranno usate per capire quando qualcuno viene ringraziato. Sono interpretate come espressioni regolari.",
     "invalidCharacter": "La parola di ringraziamento ha un carattere che non va bene: {char}",
     "none": "Nessuna parola di ringraziamento impostata.",
-    "placeholder": "Inserisci thankword (Regex)"
+    "placeholder": "Inserisci thankword (Regex)",
+    "check": {
+      "title": "Controlla un messaggio",
+      "description": "Incolla un messaggio per vedere se il bot vi trova una parola di ringraziamento e quali delle tue parole corrispondono. Se il messaggio dà reputazione dipende anche da chi ringrazia e dalle altre impostazioni.",
+      "placeholder": "Incolla un messaggio",
+      "button": "Controlla",
+      "match": "Parola di ringraziamento trovata: \"{match}\"",
+      "matchingWords": "Parole di ringraziamento corrispondenti:",
+      "noMatch": "Nessuna parola di ringraziamento trovata in questo messaggio."
+    }
   },
   "timePresets": {
     "day": "1 giorno",

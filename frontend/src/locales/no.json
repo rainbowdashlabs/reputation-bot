@@ -1038,7 +1038,16 @@
     "description": "Disse ordene vil bli brukt til å oppdage når noen blir takket. De tolkes som regulære uttrykk.",
     "invalidCharacter": "Takkeordet inneholder et ugyldig tegn: {char}",
     "none": "Ingen takkeord konfigurert.",
-    "placeholder": "Skriv inn takkeord (Regex)"
+    "placeholder": "Skriv inn takkeord (Regex)",
+    "check": {
+      "title": "Sjekk en melding",
+      "description": "Lim inn en melding for å se om boten finner et takkeord i den, og hvilke av takkeordene dine som passer. Om meldingen gir omdømme avhenger også av hvem den takker og av de andre innstillingene dine.",
+      "placeholder": "Lim inn en melding",
+      "button": "Sjekk",
+      "match": "Takkeord funnet: \"{match}\"",
+      "matchingWords": "Takkeord som passer:",
+      "noMatch": "Fant ikke noe takkeord i denne meldingen."
+    }
   },
   "timePresets": {
     "day": "1 dag",

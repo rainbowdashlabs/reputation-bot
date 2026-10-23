@@ -1038,7 +1038,16 @@
     "description": "Ces mots serviront à repérer quand quelqu'un est remercié. Ils sont vus comme des expressions régulières.",
     "invalidCharacter": "Le mot de remerciement a un caractère bizarre : {char}",
     "none": "Aucun mot de remerciement configuré.",
-    "placeholder": "Entrer le mot de remerciement (Regex)"
+    "placeholder": "Entrer le mot de remerciement (Regex)",
+    "check": {
+      "title": "Vérifier un message",
+      "description": "Colle un message pour voir si le bot y trouve un mot de remerciement et lesquels de tes mots correspondent. Que le message donne de la réputation dépend aussi de la personne remerciée et de tes autres paramètres.",
+      "placeholder": "Colle un message",
+      "button": "Vérifier",
+      "match": "Mot de remerciement trouvé : \"{match}\"",
+      "matchingWords": "Mots de remerciement correspondants :",
+      "noMatch": "Aucun mot de remerciement trouvé dans ce message."
+    }
   },
   "timePresets": {
     "day": "1 jour",

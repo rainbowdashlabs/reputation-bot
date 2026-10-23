@@ -1038,7 +1038,16 @@
     "description": "Bu kelimeler, birine teşekkür edildiğini tespit etmek için kullanılır. Düzenli ifadeler olarak yorumlanırlar.",
     "invalidCharacter": "Teşekkür mesajında geçersiz bir karakter var: {char}",
     "none": "Teşekkür sözcüğü yapılandırılmadı.",
-    "placeholder": "Teşekkür kelimesini girin (Regex)"
+    "placeholder": "Teşekkür kelimesini girin (Regex)",
+    "check": {
+      "title": "Mesajı kontrol et",
+      "description": "Botun bir mesajda teşekkür kelimesi bulup bulmadığını ve teşekkür kelimelerinden hangilerinin eşleştiğini görmek için mesajı yapıştır. Mesajın itibar verip vermediği, kime teşekkür ettiğine ve diğer ayarlarına da bağlıdır.",
+      "placeholder": "Bir mesaj yapıştır",
+      "button": "Kontrol et",
+      "match": "Teşekkür kelimesi bulundu: \"{match}\"",
+      "matchingWords": "Eşleşen teşekkür kelimeleri:",
+      "noMatch": "Bu mesajda teşekkür kelimesi bulunamadı."
+    }
   },
   "timePresets": {
     "day": "1 Gün",

@@ -1038,7 +1038,16 @@
     "description": "Dessa ord kommer att användas för att upptäcka när någon tackas. De tolkas som reguljära uttryck.",
     "invalidCharacter": "Tackordet innehåller ett ogiltigt tecken: {char}",
     "none": "Inga tackord konfigurerade.",
-    "placeholder": "Ange tackord (Regex)"
+    "placeholder": "Ange tackord (Regex)",
+    "check": {
+      "title": "Kontrollera ett meddelande",
+      "description": "Klistra in ett meddelande för att se om boten hittar ett tackord i det och vilka av dina tackord som matchar. Om meddelandet ger rykte beror också på vem det tackar och på dina andra inställningar.",
+      "placeholder": "Klistra in ett meddelande",
+      "button": "Kontrollera",
+      "match": "Tackord hittat: \"{match}\"",
+      "matchingWords": "Matchande tackord:",
+      "noMatch": "Inget tackord hittades i det här meddelandet."
+    }
   },
   "timePresets": {
     "day": "1 dag",

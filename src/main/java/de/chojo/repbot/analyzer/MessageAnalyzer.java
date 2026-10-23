@@ -16,6 +16,7 @@ import de.chojo.repbot.analyzer.results.empty.EmptyResultReason;
 import de.chojo.repbot.analyzer.results.match.fuzzy.MemberMatch;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.settings.Settings;
+import de.chojo.repbot.dao.access.guild.settings.sub.thanking.Thankwords;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.provider.Metrics;
 import net.dv8tion.jda.api.entities.Member;
@@ -75,10 +76,7 @@ public class MessageAnalyzer {
     }
 
     private Optional<String> getThankword(Message message, Pattern pattern) {
-        var contentRaw = message.getContentRaw().toLowerCase();
-        var matcher = pattern.matcher(contentRaw);
-        if (!matcher.find()) return Optional.empty();
-        return Optional.ofNullable(matcher.group("match"));
+        return Thankwords.findThankword(pattern, message.getContentRaw());
     }
 
     private AnalyzerResult analyze(Message message, @Nullable Settings settings, boolean limitTargets) {

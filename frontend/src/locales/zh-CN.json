@@ -1038,7 +1038,16 @@
     "description": "这些词将用于检测何时有人被感谢。它们将被解释为正则表达式。",
     "invalidCharacter": "该感谢词包含无效字符：{char}",
     "none": "未配置任何感谢词。",
-    "placeholder": "输入感谢词（正则表达式）"
+    "placeholder": "输入感谢词（正则表达式）",
+    "check": {
+      "title": "检查消息",
+      "description": "粘贴一条消息，查看机器人能否在其中找到感谢词，以及你的哪些感谢词与之匹配。消息是否会给予声望，还取决于感谢的对象和你的其他设置。",
+      "placeholder": "粘贴一条消息",
+      "button": "检查",
+      "match": "找到感谢词：\"{match}\"",
+      "matchingWords": "匹配的感谢词：",
+      "noMatch": "此消息中没有找到感谢词。"
+    }
   },
   "timePresets": {
     "day": "1天",

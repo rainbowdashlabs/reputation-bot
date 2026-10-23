@@ -1038,7 +1038,16 @@
     "description": "Tato slova budou použita k detekci situací, kdy je někomu děkováno. Jsou interpretována jako regulární výrazy.",
     "invalidCharacter": "Poděkování obsahuje neplatný znak: {char}",
     "none": "Nejsou nakonfigurována žádná slova díků.",
-    "placeholder": "Zadejte thankword (Regex)"
+    "placeholder": "Zadejte thankword (Regex)",
+    "check": {
+      "title": "Zkontrolovat zprávu",
+      "description": "Vlož zprávu a uvidíš, jestli v ní bot najde děkovné slovo a která z tvých děkovných slov odpovídají. Jestli zpráva dá reputaci, záleží i na tom, komu děkuje, a na ostatních nastaveních.",
+      "placeholder": "Vlož zprávu",
+      "button": "Zkontrolovat",
+      "match": "Nalezeno děkovné slovo: \"{match}\"",
+      "matchingWords": "Odpovídající děkovná slova:",
+      "noMatch": "V této zprávě není žádné děkovné slovo."
+    }
   },
   "timePresets": {
     "day": "1 den",

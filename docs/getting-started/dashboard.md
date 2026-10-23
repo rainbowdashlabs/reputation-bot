@@ -74,7 +74,7 @@ In these docs, a path like **Settings > Abuse Protection > Cooldown (minutes)** 
 | Channels | Where the bot is active. See [channels](../configuration/channels.md). |
 | Roles | Who may give and who may receive reputation. See [roles](../configuration/roles.md#who-can-give-and-receive-reputation). |
 | Reactions | The emojis that give reputation. See [thankwords and reactions](../configuration/thankwords-and-reactions.md#reactions). |
-| Thankwords | The words that count as a thank you. See [thankwords and reactions](../configuration/thankwords-and-reactions.md#thankwords). |
+| Thankwords | The words that count as a thank you, and a check that tells you whether a message contains one. See [thankwords and reactions](../configuration/thankwords-and-reactions.md#thankwords). |
 | Abuse Protection | Cooldowns, limits, message age and context checks. See [abuse protection](../configuration/abuse-protection.md). |
 | Announcements | Messages when a member reaches a new rank. See [announcements](../configuration/announcements.md#level-up-announcements). |
 | Autopost | Posts the ranking into a channel on a schedule. See [autopost](../configuration/announcements.md#autopost). [Supporter feature](../supporter.md). |
