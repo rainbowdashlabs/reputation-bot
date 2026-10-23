@@ -333,7 +333,8 @@
     "language": {
       "description": "选择机器人在本服务器中发送消息和回复时使用的语言。",
       "label": "机器人语言",
-      "selectPlaceholder": "选择语言"
+      "selectPlaceholder": "选择语言",
+      "serverLanguage": "服务器语言（来自 Discord）"
     },
     "ranks": {
       "addRank": "添加新等级",

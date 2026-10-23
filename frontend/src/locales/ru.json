@@ -333,7 +333,8 @@
     "language": {
       "description": "Выбери язык, на котором бот будет писать сообщения и отвечать на этом сервере.",
       "label": "Язык бота",
-      "selectPlaceholder": "Выбери язык"
+      "selectPlaceholder": "Выбери язык",
+      "serverLanguage": "Язык сервера (из Discord)"
     },
     "ranks": {
       "addRank": "Добавить новый ранг",

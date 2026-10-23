@@ -90,6 +90,12 @@ Many settings can still be changed with slash commands like `/channel`, `/roles`
 are being phased out and tell you so when you use them. Use the dashboard instead.
 :::
 
+### Bot language
+
+**Settings > General > Bot Language** sets the language of the bot's messages on your server. Pick
+**Server language (from Discord)** to go back to the language of your Discord server, which the bot
+uses as long as you don't pick another one.
+
 ### Presets
 
 **Presets** change a group of settings in one click. See [first setup](./first-setup.md#presets).

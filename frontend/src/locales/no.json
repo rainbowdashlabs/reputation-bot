@@ -333,7 +333,8 @@
     "language": {
       "description": "Velg språket boten skal bruke for meldinger og svar på denne serveren.",
       "label": "Bot-språk",
-      "selectPlaceholder": "Velg språk"
+      "selectPlaceholder": "Velg språk",
+      "serverLanguage": "Serverspråk (fra Discord)"
     },
     "ranks": {
       "addRank": "Legg til ny rang",

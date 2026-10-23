@@ -333,7 +333,8 @@
     "language": {
       "description": "Bu sunucuda botun mesajlar ve yanıtlar için kullanacağı dili seçin.",
       "label": "Bot Dili",
-      "selectPlaceholder": "Bir dil seçin"
+      "selectPlaceholder": "Bir dil seçin",
+      "serverLanguage": "Sunucu dili (Discord'dan)"
     },
     "ranks": {
       "addRank": "Yeni Sıra Ekle",

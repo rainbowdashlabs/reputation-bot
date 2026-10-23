@@ -333,7 +333,8 @@
     "language": {
       "description": "Vyberte jazyk, který bude bot používat pro zprávy a odpovědi na tomto serveru.",
       "label": "Jazyk bota",
-      "selectPlaceholder": "Vyberte jazyk"
+      "selectPlaceholder": "Vyberte jazyk",
+      "serverLanguage": "Jazyk serveru (z Discordu)"
     },
     "ranks": {
       "addRank": "Přidat nové hodnocení",

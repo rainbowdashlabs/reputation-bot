@@ -333,7 +333,8 @@
     "language": {
       "description": "Wähle die Sprache aus, die der Bot für Nachrichten und Antworten auf diesem Server verwenden soll.",
       "label": "Bot-Sprache",
-      "selectPlaceholder": "Wähle eine Sprache aus"
+      "selectPlaceholder": "Wähle eine Sprache aus",
+      "serverLanguage": "Serversprache (aus Discord)"
     },
     "ranks": {
       "addRank": "Neuen Rang hinzufügen",

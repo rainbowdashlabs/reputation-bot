@@ -333,7 +333,8 @@
     "language": {
       "description": "Valitse kieli, jota botti käyttää viesteissä ja vastauksissa tällä palvelimella.",
       "label": "Bot-kieli",
-      "selectPlaceholder": "Valitse kieli"
+      "selectPlaceholder": "Valitse kieli",
+      "serverLanguage": "Palvelimen kieli (Discordista)"
     },
     "ranks": {
       "addRank": "Lisää uusi sijoitus",

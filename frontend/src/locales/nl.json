@@ -333,7 +333,8 @@
     "language": {
       "description": "Kies de taal die de bot gaat gebruiken voor berichten en reacties op deze server.",
       "label": "Bottaal",
-      "selectPlaceholder": "Kies een taal"
+      "selectPlaceholder": "Kies een taal",
+      "serverLanguage": "Servertaal (uit Discord)"
     },
     "ranks": {
       "addRank": "Nieuwe rang toevoegen",

@@ -333,7 +333,8 @@
     "language": {
       "description": "このサーバーでボットがメッセージや応答に使用する言語を選択せよ。",
       "label": "ボット言語",
-      "selectPlaceholder": "言語を選択せよ"
+      "selectPlaceholder": "言語を選択せよ",
+      "serverLanguage": "サーバーの言語（Discordの設定）"
     },
     "ranks": {
       "addRank": "新しいランクを追加する",
