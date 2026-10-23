@@ -85,6 +85,12 @@ public class SessionService {
                 .expireAfterAccess(15, TimeUnit.MINUTES)
                 .build();
         executor.scheduleAtFixedRate(this::refreshExpiredTokens, 1, 15, TimeUnit.MINUTES);
+        executor.scheduleAtFixedRate(this::deleteExpiredSessions, 1, 60, TimeUnit.MINUTES);
+    }
+
+    private void deleteExpiredSessions() {
+        int deleted = userSessionRepository.deleteExpired(configuration.api().tokenValidHours());
+        log.info("Deleted {} expired sessions", deleted);
     }
 
     private void refreshExpiredTokens() {
@@ -170,12 +176,14 @@ public class SessionService {
     }
 
     private Optional<UserSession> tryReconstructSession(String token) {
-        return userSessionRepository.byToken(token).map(meta -> {
-            UserSession session = createUserSessionFromToken(meta.userId(), token, meta.created());
-            userSessions.put(token, session);
-            userSessionRepository.updateLastUsed(token);
-            return session;
-        });
+        return userSessionRepository
+                .byToken(token, configuration.api().tokenValidHours())
+                .map(meta -> {
+                    UserSession session = createUserSessionFromToken(meta.userId(), token, meta.created());
+                    userSessions.put(token, session);
+                    userSessionRepository.updateLastUsed(token);
+                    return session;
+                });
     }
 
     private UserSession createUserSessionFromToken(long userId, String token, Instant created) {
@@ -252,10 +260,6 @@ public class SessionService {
         }
 
         return new UserSession(userId, token, guilds, memberPojo, created, isBotOwner);
-    }
-
-    private Instant tokenInvalidCutoff() {
-        return Instant.now().minus(configuration.api().tokenValidHours(), ChronoUnit.HOURS);
     }
 
     private String generateToken(long userId) {

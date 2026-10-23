@@ -93,7 +93,7 @@ The web server for the dashboard and its API.
 | `host` | `"0.0.0.0"` | `BOT_API_HOST` | Address to listen on. |
 | `port` | `8888` | `BOT_API_PORT` | Port to listen on. |
 | `url` | `"https://repbot.chojo.de"` | `BOT_API_URL` | The public address of your dashboard, without a trailing slash. Used for dashboard links in Discord, the return after Discord login, and the `/bot system metrics` charts. **Set it.** |
-| `tokenValidHours` | `720` | | How long a dashboard login stays valid, in hours. |
+| `tokenValidHours` | `720` | | How long a dashboard login stays valid without being used, in hours. Expired logins are deleted every hour. |
 
 ## discordOAuth
 
