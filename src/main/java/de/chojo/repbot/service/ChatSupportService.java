@@ -26,6 +26,7 @@ import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.ThreadChannel;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
@@ -112,26 +113,57 @@ public class ChatSupportService extends ListenerAdapter {
     }
 
     private ThreadChannel getThread(User user, Message message) {
-        Long id = query("SELECT thread_id FROM support_threads WHERE user_id = ?")
-                .single(call().bind(user.getIdLong()))
-                .mapAs(Long.class)
-                .first()
-                .orElse(0L);
-        ThreadChannel thread = home().getThreadChannelById(id);
-        if (thread == null) {
+        var thread = openThread(user);
+        if (thread.isEmpty()) {
             promptThread(user, message);
             return null;
         }
+        return thread.get();
+    }
 
-        if (thread.isLocked() || thread.isArchived()) {
+    /**
+     * Finds the open support thread of a user. A locked or archived thread counts as closed: it is locked and no longer
+     * linked to the user.
+     *
+     * @param user the user who wrote to the bot
+     * @return the open thread, or empty if the user has none
+     */
+    private synchronized Optional<ThreadChannel> openThread(User user) {
+        var thread = query("SELECT thread_id FROM support_threads WHERE user_id = ?")
+                .single(call().bind(user.getIdLong()))
+                .mapAs(Long.class)
+                .first()
+                .flatMap(this::findThread);
+        if (thread.isEmpty()) return Optional.empty();
+
+        if (thread.get().isLocked() || thread.get().isArchived()) {
             query("DELETE FROM support_threads WHERE user_id = ?")
                     .single(call().bind(user.getIdLong()))
                     .delete();
-            thread.getManager().setLocked(true).complete();
-            return getThread(user, message);
+            thread.get().getManager().setLocked(true).complete();
+            return Optional.empty();
         }
-
         return thread;
+    }
+
+    /**
+     * Finds a support thread, including archived threads that are not in the cache. Support threads start from a
+     * message in the support channel and share its id.
+     *
+     * @param threadId the id of the thread
+     * @return the thread, or empty if it or its starter message no longer exists
+     */
+    private Optional<ThreadChannel> findThread(long threadId) {
+        var cached = Optional.ofNullable(home()).map(guild -> guild.getThreadChannelById(threadId));
+        if (cached.isPresent()) return cached;
+        return supportChannel().flatMap(channel -> {
+            try {
+                return Optional.ofNullable(
+                        channel.retrieveMessageById(threadId).complete().getStartedThread());
+            } catch (ErrorResponseException e) {
+                return Optional.empty();
+            }
+        });
     }
 
     private Optional<User> getUser(ThreadChannel channel) {
@@ -144,16 +176,32 @@ public class ChatSupportService extends ListenerAdapter {
 
     private void promptThread(User user, Message initMessage) {
         menuService.register(MenuAction.forChannel("Do you need support?", initMessage.getChannel())
-                .addComponent(MenuEntry.of(Button.success("yes", "Yes"), ctx -> createThread(user, initMessage)))
+                .addComponent(MenuEntry.of(Button.success("yes", "Yes"), ctx -> {
+                    ctx.event().editComponents().complete();
+                    createThread(user, initMessage);
+                }))
                 .addComponent(MenuEntry.of(
                         Button.danger("no", "No"),
                         ctx -> ctx.event()
-                                .reply("Alright, if you need help, drop us a message here.")
+                                .editMessage("Alright, if you need help, drop us a message here.")
+                                .setComponents()
                                 .queue()))
                 .build());
     }
 
-    private void createThread(User user, Message initMessage) {
+    /**
+     * Opens a support thread for a user and posts the first message there. If the user already has an open thread, for
+     * example because they answered an earlier prompt, the message goes to that thread instead.
+     *
+     * @param user        the user who asked for support
+     * @param initMessage the message that started the request
+     */
+    private synchronized void createThread(User user, Message initMessage) {
+        var openThread = openThread(user);
+        if (openThread.isPresent()) {
+            openThread.get().sendMessage(reconstruct(initMessage)).complete();
+            return;
+        }
         var supportChannel = supportChannel();
         if (supportChannel.isEmpty()) return;
         TextChannel textChannelById = supportChannel.get();
