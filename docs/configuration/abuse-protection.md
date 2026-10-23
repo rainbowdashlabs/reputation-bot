@@ -75,8 +75,8 @@ outdated message, for example by answering it or reacting to it. The age also li
 the bot looks when it builds the [context](#receiver-and-donor-context), also for
 users who shared a voice channel.
 
-Values go from 0 to 86400 minutes (60 days). `0` turns the age check off. The **Problems** tab of
-the dashboard warns you when the value is very low.
+Values go from 0 to 86400 minutes (60 days). `0` turns the age check off, and the context then covers all
+messages the bot reads. The **Problems** tab of the dashboard warns you when the value is very low.
 
 ## Min messages
 

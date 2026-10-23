@@ -149,18 +149,15 @@ public class ContextResolver {
     /**
      * Add the recent authors.
      * <p>
-     * Authors are considered recent when they have written a message in the {@link AbuseProtection#maxMessageAge()}
+     * Authors are considered recent when they have written a message in the {@link AbuseProtection#maxMessageAge()}.
+     * A max message age of 0 sets no limit.
      *
      * @param context  context to add
      * @param settings settings
      */
     private void addRecentAuthors(MessageContext context, Settings settings) {
-        var maxAge = Instant.now()
-                .minus(
-                        settings == null
-                                ? Long.MAX_VALUE
-                                : settings.abuseProtection().maxMessageAge(),
-                        ChronoUnit.MINUTES);
+        var maxMessageAge = settings == null ? 0 : settings.abuseProtection().maxMessageAge();
+        var maxAge = maxMessageAge == 0 ? Instant.MIN : Instant.now().minus(maxMessageAge, ChronoUnit.MINUTES);
         // find the oldest message in the history written by the message author which is newer than the max message age.
         var oldest = findOldestMessageByTarget(context, maxAge);
 
