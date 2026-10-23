@@ -195,10 +195,21 @@ public class ReputationService {
         logToChannel(guildRepository.guild(guild).settings(), ":red_circle: " + deleted);
     }
 
+    /**
+     * Checks the cooldown between donor and receiver and the donor and receiver roles.
+     *
+     * @return the first failed check, or success
+     */
     public SubmitResult checkCooldown(
             ReputationContext context, Member donor, Member receiver, Guild guild, Settings settings) {
-        var repGuild = settings.repGuild();
-        var analyzer = repGuild.reputation().analyzer();
+        var cooldown = checkCooldownOnly(context, donor, receiver, guild, settings);
+        if (cooldown.type() != SubmitResultType.SUCCESS) return cooldown;
+        return checkRoles(context, donor, receiver, settings);
+    }
+
+    private SubmitResult checkCooldownOnly(
+            ReputationContext context, Member donor, Member receiver, Guild guild, Settings settings) {
+        var analyzer = settings.repGuild().reputation().analyzer();
         // block cooldown
         var optRating = guildRepository.guild(guild).reputation().user(donor).getLastReputation(receiver);
 
@@ -228,7 +239,11 @@ public class ReputationService {
                                         "TOTAL", settings.abuseProtection().cooldown())));
             }
         }
+        return SubmitResult.of(SubmitResultType.SUCCESS);
+    }
 
+    private SubmitResult checkRoles(ReputationContext context, Member donor, Member receiver, Settings settings) {
+        var analyzer = settings.repGuild().reputation().analyzer();
         if (!settings.thanking().receiverRoles().hasRole(receiver)) {
             log.trace("The receiver does not have a receiver role.");
             return analyzer.log(
@@ -302,12 +317,16 @@ public class ReputationService {
         }
 
         // Abuse protection: Cooldown
-        var canGiveReputation = checkCooldown(context, donor, receiver, guild, settings);
-        if (canGiveReputation.type() != SubmitResultType.SUCCESS
-                && !optBypass.map(Bypass::ignoreCooldown).orElse(false)) {
-            log.trace("Cooldown active on {}", contextId);
-            return canGiveReputation;
+        if (!optBypass.map(Bypass::ignoreCooldown).orElse(false)) {
+            var cooldown = checkCooldownOnly(context, donor, receiver, guild, settings);
+            if (cooldown.type() != SubmitResultType.SUCCESS) {
+                log.trace("Cooldown active on {}", contextId);
+                return cooldown;
+            }
         }
+
+        var roles = checkRoles(context, donor, receiver, settings);
+        if (roles.type() != SubmitResultType.SUCCESS) return roles;
 
         // block outdated ref message
         // Abuse protection: Message age
