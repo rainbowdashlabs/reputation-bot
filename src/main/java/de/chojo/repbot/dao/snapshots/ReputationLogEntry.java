@@ -75,13 +75,4 @@ public record ReputationLogEntry(
                 .single(call().bind(messageId).bind(receiverId).bind(donorId))
                 .update();
     }
-
-    /**
-     * Removes all reputations associated with the message
-     */
-    public void deleteAll() {
-        query("DELETE FROM reputation_log WHERE message_id = ?")
-                .single(call().bind(messageId))
-                .update();
-    }
 }

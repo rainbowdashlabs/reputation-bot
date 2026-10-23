@@ -14,16 +14,15 @@ Every reputation is tied to a message, and deleting that message removes it.
   you and the reputation is gone.
 - Reputation from a reaction is tied to the message that got the reaction. Delete that message and the reputation is
   gone.
-- Removing a reputation reaction takes back the reputation it gave.
+- Removing a reputation reaction takes back the reputation that member gave with it. When a moderator removes all
+  reactions of a message, the bot takes back every reaction reputation of that message. Other reputation of the
+  message stays.
 
 This also works when many messages are deleted at once. Reputation given with the `/reputation` command has no
 message and stays.
 
-:::warning
-Removing a single reaction only takes reputation back while the reaction message is on, under
-**Settings > Reputation > Reputation Messages > Reaction Reputation** (it is on by default). When it does, or when a moderator removes all reactions of a message, the bot removes every reputation
-tied to that message, not only the one from the reaction.
-:::
+With the **Reaction Reputation** message on, under **Settings > Reputation > Reputation Messages**, the bot also says
+in the channel that the reputation was removed.
 
 To find out which reputation a message gave, use `/log message <messageid>` or right click the message and pick
 **Apps > Message Log**. See [logs and diagnostics](../configuration/logs-and-diagnostics.md).

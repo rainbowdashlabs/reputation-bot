@@ -178,7 +178,7 @@ public class ReputationService {
 
     public void delete(List<ReputationLogEntry> entries, GuildMessageChannelUnion channel, Guild guild) {
         if (entries.isEmpty()) return;
-        entries.forEach(ReputationLogEntry::deleteAll);
+        entries.forEach(ReputationLogEntry::delete);
         LocalizationContext context = localizer.context(LocaleProvider.guild(guild));
         String deleted = entries.stream()
                 .map(e -> LogFormatter.formatMessageLogEntrySimple(context, e))

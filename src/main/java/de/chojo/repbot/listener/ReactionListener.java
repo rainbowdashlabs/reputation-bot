@@ -168,8 +168,9 @@ public class ReactionListener extends ListenerAdapter {
                         .stream()
                         .filter(entry -> entry.type() == ThankType.REACTION && entry.donorId() == event.getUserIdLong())
                         .toList();
-        if (!entries.isEmpty() && guildSettings.messages().isAnnounceReaction()) {
-            reputationService.delete(entries, event.getGuildChannel(), event.getGuild());
+        if (entries.isEmpty()) return;
+        reputationService.delete(entries, event.getGuildChannel(), event.getGuild());
+        if (guildSettings.messages().isAnnounceReaction()) {
             event.getChannel()
                     .sendMessage(localizer.localize(
                             "listener.reaction.removal",
