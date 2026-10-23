@@ -605,6 +605,13 @@ class ApiClient {
         await this.axiosInstance.post('/settings/thanking/thankwords/words', words);
     }
 
+    public async checkThankwords(message: string): Promise<Types.ThankwordCheckPOJO> {
+        const response = await this.axiosInstance.post<Types.ThankwordCheckPOJO>('/settings/thanking/thankwords/check', JSON.stringify(message), {
+            headers: {'Content-Type': 'application/json'}
+        });
+        return response.data;
+    }
+
     public async getRanks(): Promise<Types.RanksPOJO> {
         const response = await this.axiosInstance.get<Types.RanksPOJO>('/settings/ranks');
         return response.data;

@@ -60,10 +60,16 @@ to the ones you already have. The number next to each language tells you how man
 
 ### Testing a message
 
-`/thankwords check <message>` tells you whether a message would give reputation, how it would be
-given and to whom. Pass the id or the link of a message in the channel where you run the command.
-The dashboard has no such check. The command works, even though it shows the notice that settings
-commands are being phased out.
+Under **Settings > Thankwords > Check a Message**, paste a message and click **Check**. The dashboard
+tells you whether the bot finds a thankword in it, and which of your thankwords match. It looks for
+thankwords the same way the bot does when someone writes the message.
+
+The check only looks at the text. Whether the message gives reputation also depends on whom it
+thanks, see [Giving reputation](../reputation/giving-reputation.md), and on your other settings.
+
+`/thankwords check <message>` checks a real message: pass the id or the link of a message in the
+channel where you run the command. It tells you whether the message would give reputation, how it
+would be given and to whom.
 
 For a message that was already handled, the [analyzer log](./logs-and-diagnostics.md#analyzer-log)
 tells you what actually happened.

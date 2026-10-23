@@ -488,12 +488,13 @@
     "language": {
       "label": "Bot Language",
       "selectPlaceholder": "Select a language",
-      "description": "Choose the language the bot will use for messages and responses in this server."
+      "description": "Choose the language the bot will use for messages and responses in this server.",
+      "serverLanguage": "Server language (from Discord)"
     },
     "systemChannel": {
       "label": "System Channel",
       "selectPlaceholder": "Select a channel",
-      "note": "Note: This channel should be set and should be an internal channel. It will contain important messages concerning the bot's service and messages from the developers."
+      "note": "Required. Pick an internal channel. The bot sends important messages about its service and messages from the developers there. You can change the channel, but not remove it."
     },
     "everyoneTokenPurchase": {
       "label": "Everyone Token Purchase",
@@ -674,6 +675,15 @@
     "defaults": {
       "title": "Default Thankwords",
       "description": "Quickly add default thankwords for various languages."
+    },
+    "check": {
+      "title": "Check a Message",
+      "description": "Paste a message to see whether the bot finds a thankword in it and which of your thankwords match. Whether the message gives reputation also depends on whom it thanks and on your other settings.",
+      "placeholder": "Paste a message",
+      "button": "Check",
+      "match": "Thankword found: \"{match}\"",
+      "matchingWords": "Matching thankwords:",
+      "noMatch": "No thankword found in this message."
     }
   },
   "abuseProtection": {

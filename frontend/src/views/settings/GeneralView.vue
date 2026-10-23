@@ -39,9 +39,13 @@ watch(session, (newSession) => {
 
 const updateSystemChannel = async () => {
   const previous = session.value?.settings?.general?.systemChannel || null
+  if (!systemChannel.value) {
+    systemChannel.value = previous
+    return
+  }
   try {
-    await api.updateGeneralSystemChannel(systemChannel.value ? systemChannel.value.toString() : '0')
-    updateGeneralSettings({systemChannel: systemChannel.value || "0"})
+    await api.updateGeneralSystemChannel(systemChannel.value.toString())
+    updateGeneralSettings({systemChannel: systemChannel.value})
   } catch (error) {
     console.error('Failed to update system channel:', error)
     systemChannel.value = previous
@@ -81,7 +85,7 @@ const updateEveryoneTokenPurchase = async () => {
             class="select"
             @change="updateLanguage"
         >
-          <option disabled value="">{{ t('general.language.selectPlaceholder') }}</option>
+          <option value="">{{ t('general.language.serverLanguage') }}</option>
           <option v-for="lang in languages" :key="lang.internalName" :value="lang.internalName">
             {{ lang.nativeName }} ({{ lang.name }})
           </option>

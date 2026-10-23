@@ -47,6 +47,9 @@ public class GeneralRoute implements RoutesBuilder {
                 general.systemChannel(),
                 general.everyoneTokenPurchase());
         GeneralPOJO generalPOJO = ctx.bodyAsClass(GeneralPOJO.class);
+        if (generalPOJO.systemChannel() != general.systemChannel()) {
+            session.guildValidator().validateChannelIds(generalPOJO.systemChannel());
+        }
         general.apply(generalPOJO);
         session.recordChange("general", oldValue, generalPOJO);
     }

@@ -27,7 +27,7 @@ public class GuildReceived extends GuildRanking {
     @Override
     protected int pages(int pageSize, ReputationMode mode) {
         return query(PAGES)
-                .single(call().bind("reset_date", resetDate(), INSTANT_TIMESTAMP)
+                .single(call().bind("reset_date", resetDate(mode), INSTANT_TIMESTAMP)
                         .bind("page_size", pageSize)
                         .bind("guild_id", guildId())
                         .bind("date_init", mode.dateInit(), INSTANT_TIMESTAMP))
@@ -39,7 +39,7 @@ public class GuildReceived extends GuildRanking {
     @Override
     protected List<RankingEntry> getRankingPage(int pageSize, int page, ReputationMode mode) {
         return query(RANKING)
-                .single(call().bind("reset_date", resetDate(), INSTANT_TIMESTAMP)
+                .single(call().bind("reset_date", resetDate(mode), INSTANT_TIMESTAMP)
                         .bind("guild_id", guildId())
                         .bind("date_init", mode.dateInit(), INSTANT_TIMESTAMP)
                         .bind(page * pageSize)

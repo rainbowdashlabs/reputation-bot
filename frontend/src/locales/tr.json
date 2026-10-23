@@ -333,7 +333,8 @@
     "language": {
       "description": "Bu sunucuda botun mesajlar ve yanıtlar için kullanacağı dili seçin.",
       "label": "Bot Dili",
-      "selectPlaceholder": "Bir dil seçin"
+      "selectPlaceholder": "Bir dil seçin",
+      "serverLanguage": "Sunucu dili (Discord'dan)"
     },
     "ranks": {
       "addRank": "Yeni Sıra Ekle",
@@ -465,7 +466,7 @@
     },
     "systemChannel": {
       "label": "Sistem Kanalı",
-      "note": "Not: Bu kanal ayarlanmalı ve dahili bir kanal olmalıdır. Botun hizmeti ile ilgili önemli mesajları ve geliştiricilerden gelen mesajları içerecektir.",
+      "note": "Zorunlu. Dahili bir kanal seç. Bot, hizmetiyle ilgili önemli mesajları ve geliştiricilerden gelen mesajları buraya gönderir. Kanalı değiştirebilirsin ama kaldıramazsın.",
       "selectPlaceholder": "Bir kanal seçin"
     }
   },
@@ -1038,7 +1039,16 @@
     "description": "Bu kelimeler, birine teşekkür edildiğini tespit etmek için kullanılır. Düzenli ifadeler olarak yorumlanırlar.",
     "invalidCharacter": "Teşekkür mesajında geçersiz bir karakter var: {char}",
     "none": "Teşekkür sözcüğü yapılandırılmadı.",
-    "placeholder": "Teşekkür kelimesini girin (Regex)"
+    "placeholder": "Teşekkür kelimesini girin (Regex)",
+    "check": {
+      "title": "Mesajı kontrol et",
+      "description": "Botun bir mesajda teşekkür kelimesi bulup bulmadığını ve teşekkür kelimelerinden hangilerinin eşleştiğini görmek için mesajı yapıştır. Mesajın itibar verip vermediği, kime teşekkür ettiğine ve diğer ayarlarına da bağlıdır.",
+      "placeholder": "Bir mesaj yapıştır",
+      "button": "Kontrol et",
+      "match": "Teşekkür kelimesi bulundu: \"{match}\"",
+      "matchingWords": "Eşleşen teşekkür kelimeleri:",
+      "noMatch": "Bu mesajda teşekkür kelimesi bulunamadı."
+    }
   },
   "timePresets": {
     "day": "1 Gün",

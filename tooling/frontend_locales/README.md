@@ -44,6 +44,12 @@ python3 -m tooling.frontend_locales
 
 This runs all four validation checks and reports any issues found. Exit code is 0 if all checks pass, 1 otherwise.
 
+To run only some of the checks, pass their numbers. CI fails on checks 3 and 4 and only reports checks 1 and 2:
+
+```bash
+python3 -m frontend_locales --checks 3 4
+```
+
 ### Fix Issues (Dry Run)
 
 Preview what would be fixed without making changes:

@@ -333,7 +333,8 @@
     "language": {
       "description": "选择机器人在本服务器中发送消息和回复时使用的语言。",
       "label": "机器人语言",
-      "selectPlaceholder": "选择语言"
+      "selectPlaceholder": "选择语言",
+      "serverLanguage": "服务器语言（来自 Discord）"
     },
     "ranks": {
       "addRank": "添加新等级",
@@ -465,7 +466,7 @@
     },
     "systemChannel": {
       "label": "系统频道",
-      "note": "注意：此频道应设置为内部频道。该频道将包含有关机器人服务的重要通知及开发者发布的消息。",
+      "note": "必填。请选择一个内部频道。机器人会在这里发送有关其服务的重要消息以及开发者的消息。频道可以更换，但不能移除。",
       "selectPlaceholder": "选择频道"
     }
   },
@@ -1038,7 +1039,16 @@
     "description": "这些词将用于检测何时有人被感谢。它们将被解释为正则表达式。",
     "invalidCharacter": "该感谢词包含无效字符：{char}",
     "none": "未配置任何感谢词。",
-    "placeholder": "输入感谢词（正则表达式）"
+    "placeholder": "输入感谢词（正则表达式）",
+    "check": {
+      "title": "检查消息",
+      "description": "粘贴一条消息，查看机器人能否在其中找到感谢词，以及你的哪些感谢词与之匹配。消息是否会给予声望，还取决于感谢的对象和你的其他设置。",
+      "placeholder": "粘贴一条消息",
+      "button": "检查",
+      "match": "找到感谢词：\"{match}\"",
+      "matchingWords": "匹配的感谢词：",
+      "noMatch": "此消息中没有找到感谢词。"
+    }
   },
   "timePresets": {
     "day": "1天",

@@ -333,7 +333,8 @@
     "language": {
       "description": "Wähle die Sprache aus, die der Bot für Nachrichten und Antworten auf diesem Server verwenden soll.",
       "label": "Bot-Sprache",
-      "selectPlaceholder": "Wähle eine Sprache aus"
+      "selectPlaceholder": "Wähle eine Sprache aus",
+      "serverLanguage": "Serversprache (aus Discord)"
     },
     "ranks": {
       "addRank": "Neuen Rang hinzufügen",
@@ -465,7 +466,7 @@
     },
     "systemChannel": {
       "label": "Systemkanal",
-      "note": "Dieser Kanal sollte eingerichtet werden und ein interner Kanal sein. Er wird wichtige Infos zum Bot-Service und Nachrichten von den Entwicklern enthalten.",
+      "note": "Pflichtfeld. Wähle einen internen Kanal. Der Bot schickt dorthin wichtige Infos zum Bot-Service und Nachrichten von den Entwicklern. Du kannst den Kanal ändern, aber nicht entfernen.",
       "selectPlaceholder": "Wähle einen Kanal aus"
     }
   },
@@ -1038,7 +1039,16 @@
     "description": "Diese Muster werden benutzt, um zu erkennen, wenn jemandem gedankt wird. Sie werden als reguläre Ausdrücke interpretiert.",
     "invalidCharacter": "Das Muster hat ein ungültiges Zeichen: {char}",
     "none": "Keine Muster eingerichtet.",
-    "placeholder": "Muster eingeben (Regex)"
+    "placeholder": "Muster eingeben (Regex)",
+    "check": {
+      "title": "Nachricht prüfen",
+      "description": "Füge eine Nachricht ein, um zu sehen, ob der Bot darin ein Dankeswort findet und welche deiner Dankeswörter passen. Ob die Nachricht Reputation gibt, hängt auch davon ab, wem sie dankt, und von deinen anderen Einstellungen.",
+      "placeholder": "Nachricht einfügen",
+      "button": "Prüfen",
+      "match": "Dankeswort gefunden: \"{match}\"",
+      "matchingWords": "Passende Dankeswörter:",
+      "noMatch": "In dieser Nachricht wurde kein Dankeswort gefunden."
+    }
   },
   "timePresets": {
     "day": "1 Tag",

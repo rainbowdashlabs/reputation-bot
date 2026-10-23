@@ -103,23 +103,39 @@ public class General extends GeneralPOJO implements GuildHolder {
     }
 
     /**
-     * The reset date that applies right now. A reset date in the future takes effect once it has passed.
+     * The reset date that applies right now in the reputation mode of the guild.
      *
-     * @return the reset date, or null if none is set or it is still in the future
+     * @return the reset date, or null if none applies
+     * @see #activeResetDate(ReputationMode)
      */
     public @Nullable Instant activeResetDate() {
-        return activeResetDate(resetDate, Instant.now());
+        return activeResetDate(reputationMode);
     }
 
     /**
-     * The reset date that applies at a point in time.
+     * The reset date that applies right now when reputation is counted in a mode. Only {@link ReputationMode#TOTAL}
+     * uses the reset date; the other modes count from the start of their own time frame. A reset date in the future
+     * takes effect once it has passed.
      *
+     * @param mode the mode the reputation is counted in
+     * @return the reset date, or null if none applies
+     */
+    public @Nullable Instant activeResetDate(ReputationMode mode) {
+        return activeResetDate(mode, resetDate, Instant.now());
+    }
+
+    /**
+     * The reset date that applies at a point in time when reputation is counted in a mode.
+     *
+     * @param mode      the mode the reputation is counted in
      * @param resetDate the configured reset date, may be null
      * @param now       the point in time
-     * @return the reset date, or null if none is set or it lies after {@code now}
+     * @return the reset date, or null if the mode is not {@link ReputationMode#TOTAL}, none is set or it lies after
+     *     {@code now}
      */
-    static @Nullable Instant activeResetDate(@Nullable Instant resetDate, Instant now) {
-        return resetDate == null || resetDate.isAfter(now) ? null : resetDate;
+    static @Nullable Instant activeResetDate(ReputationMode mode, @Nullable Instant resetDate, Instant now) {
+        if (mode != ReputationMode.TOTAL || resetDate == null || resetDate.isAfter(now)) return null;
+        return resetDate;
     }
 
     public boolean resetDateNow() {

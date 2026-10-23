@@ -333,7 +333,8 @@
     "language": {
       "description": "Scegli la lingua che il bot userà per i messaggi e le risposte su questo server.",
       "label": "Linguaggio bot",
-      "selectPlaceholder": "Scegli una lingua"
+      "selectPlaceholder": "Scegli una lingua",
+      "serverLanguage": "Lingua del server (da Discord)"
     },
     "ranks": {
       "addRank": "Aggiungi nuovo grado",
@@ -465,7 +466,7 @@
     },
     "systemChannel": {
       "label": "Canale di sistema",
-      "note": "Nota: questo canale dovrebbe essere impostato e dovrebbe essere un canale interno. Conterrà messaggi importanti sul servizio del bot e messaggi dagli sviluppatori.",
+      "note": "Obbligatorio. Scegli un canale interno. Il bot vi invia messaggi importanti sul suo servizio e messaggi dagli sviluppatori. Puoi cambiare il canale, ma non rimuoverlo.",
       "selectPlaceholder": "Scegli un canale"
     }
   },
@@ -1038,7 +1039,16 @@
     "description": "Queste parole saranno usate per capire quando qualcuno viene ringraziato. Sono interpretate come espressioni regolari.",
     "invalidCharacter": "La parola di ringraziamento ha un carattere che non va bene: {char}",
     "none": "Nessuna parola di ringraziamento impostata.",
-    "placeholder": "Inserisci thankword (Regex)"
+    "placeholder": "Inserisci thankword (Regex)",
+    "check": {
+      "title": "Controlla un messaggio",
+      "description": "Incolla un messaggio per vedere se il bot vi trova una parola di ringraziamento e quali delle tue parole corrispondono. Se il messaggio dà reputazione dipende anche da chi ringrazia e dalle altre impostazioni.",
+      "placeholder": "Incolla un messaggio",
+      "button": "Controlla",
+      "match": "Parola di ringraziamento trovata: \"{match}\"",
+      "matchingWords": "Parole di ringraziamento corrispondenti:",
+      "noMatch": "Nessuna parola di ringraziamento trovata in questo messaggio."
+    }
   },
   "timePresets": {
     "day": "1 giorno",

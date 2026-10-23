@@ -160,72 +160,57 @@ class LocaleValidator:
         
         return len(issues) == 0, issues, extra_keys_by_locale
     
-    def run_all_checks(self) -> bool:
-        """Run all validation checks and report results."""
+    ALL_CHECKS = (1, 2, 3, 4)
+
+    def run_all_checks(self, checks=ALL_CHECKS) -> bool:
+        """Run the selected validation checks and report results.
+
+        Args:
+            checks: Numbers of the checks to run, all four by default.
+
+        Returns:
+            True if every selected check passed.
+        """
         print("=" * 80)
         print("Frontend Localization Validation")
         print("=" * 80)
         print()
-        
+
+        definitions = {
+            1: ("All translation keys used in code exist in all locale files",
+                "All keys are present in all locale files", "Some keys are missing",
+                lambda: self.check_all_keys_in_all_locales()),
+            2: ("No unused keys in en-US",
+                "No unused keys in en-US", "Unused keys found",
+                lambda: self.check_no_unused_keys()[:2]),
+            3: ("Variables consistency across all languages",
+                "All variables are consistent", "Variable inconsistencies found",
+                lambda: self.check_variables_consistency()),
+            4: ("No extra keys in other languages (not in en-US)",
+                "No extra keys in other languages", "Extra keys found",
+                lambda: self.check_no_extra_keys_in_other_locales()[:2]),
+        }
+
         all_valid = True
-        
-        # Check 1
-        print("Check 1: All translation keys used in code exist in all locale files")
-        print("-" * 80)
-        valid, issues = self.check_all_keys_in_all_locales()
-        if valid:
-            print("✓ PASS: All keys are present in all locale files")
-        else:
-            print("✗ FAIL: Some keys are missing")
-            for issue in issues:
-                print(f"  - {issue}")
-            all_valid = False
-        print()
-        
-        # Check 2
-        print("Check 2: No unused keys in en-US")
-        print("-" * 80)
-        valid, issues, unused_keys = self.check_no_unused_keys()
-        if valid:
-            print("✓ PASS: No unused keys in en-US")
-        else:
-            print("✗ FAIL: Unused keys found")
-            for issue in issues:
-                print(f"  - {issue}")
-            all_valid = False
-        print()
-        
-        # Check 3
-        print("Check 3: Variables consistency across all languages")
-        print("-" * 80)
-        valid, issues = self.check_variables_consistency()
-        if valid:
-            print("✓ PASS: All variables are consistent")
-        else:
-            print("✗ FAIL: Variable inconsistencies found")
-            for issue in issues:
-                print(f"  - {issue}")
-            all_valid = False
-        print()
-        
-        # Check 4
-        print("Check 4: No extra keys in other languages (not in en-US)")
-        print("-" * 80)
-        valid, issues, extra_keys = self.check_no_extra_keys_in_other_locales()
-        if valid:
-            print("✓ PASS: No extra keys in other languages")
-        else:
-            print("✗ FAIL: Extra keys found")
-            for issue in issues:
-                print(f"  - {issue}")
-            all_valid = False
-        print()
-        
+        for number in sorted(set(checks)):
+            title, passed, failed, run = definitions[number]
+            print(f"Check {number}: {title}")
+            print("-" * 80)
+            valid, issues = run()
+            if valid:
+                print(f"✓ PASS: {passed}")
+            else:
+                print(f"✗ FAIL: {failed}")
+                for issue in issues:
+                    print(f"  - {issue}")
+                all_valid = False
+            print()
+
         print("=" * 80)
         if all_valid:
             print("✓ All checks passed!")
         else:
             print("✗ Some checks failed. Use --fix to automatically fix issues.")
         print("=" * 80)
-        
+
         return all_valid

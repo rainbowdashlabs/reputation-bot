@@ -8,6 +8,7 @@ package de.chojo.repbot.web.routes.v1.settings.sub.thanking;
 import de.chojo.repbot.dao.access.guildsession.GuildSession;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
+import de.chojo.repbot.web.pojo.settings.sub.thanking.ThankwordCheckPOJO;
 import de.chojo.repbot.web.pojo.settings.sub.thanking.ThankwordsPOJO;
 import de.chojo.repbot.web.routes.RoutesBuilder;
 import io.javalin.http.Context;
@@ -61,11 +62,28 @@ public class ThankwordsRoute implements RoutesBuilder {
         session.recordChange("thanking.thankwords.words", oldValue, newValue.words());
     }
 
+    @OpenApi(
+            summary = "Check a message for thankwords",
+            operationId = "checkThankwords",
+            path = "v1/settings/thanking/thankwords/check",
+            methods = HttpMethod.POST,
+            headers = {@OpenApiParam(name = "Authorization", required = true, description = "Guild Session Token")},
+            tags = {"Settings"},
+            requestBody = @OpenApiRequestBody(content = @OpenApiContent(from = String.class)),
+            responses = {@OpenApiResponse(status = "200", content = @OpenApiContent(from = ThankwordCheckPOJO.class))})
+    public void checkMessage(Context ctx) {
+        GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
+        String message = ctx.bodyAsClass(String.class);
+        var thankwords = session.repGuild().settings().thanking().thankwords();
+        ctx.json(message == null ? ThankwordCheckPOJO.noMatch() : thankwords.check(message));
+    }
+
     @Override
     public void buildRoutes() {
         path("thankwords", () -> {
             post("", this::updateThankwordsSettings, Role.GUILD_ADMIN);
             post("words", this::updateWords, Role.GUILD_ADMIN);
+            post("check", this::checkMessage, Role.GUILD_ADMIN);
         });
     }
 }

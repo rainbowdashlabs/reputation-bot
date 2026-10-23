@@ -333,7 +333,8 @@
     "language": {
       "description": "Kies de taal die de bot gaat gebruiken voor berichten en reacties op deze server.",
       "label": "Bottaal",
-      "selectPlaceholder": "Kies een taal"
+      "selectPlaceholder": "Kies een taal",
+      "serverLanguage": "Servertaal (uit Discord)"
     },
     "ranks": {
       "addRank": "Nieuwe rang toevoegen",
@@ -465,7 +466,7 @@
     },
     "systemChannel": {
       "label": "Systeemkanaal",
-      "note": "Let op: dit kanaal moet worden ingesteld en moet een intern kanaal zijn. Het bevat belangrijke berichten over de service van de bot en berichten van de ontwikkelaars.",
+      "note": "Verplicht. Kies een intern kanaal. De bot stuurt daar belangrijke berichten over zijn service en berichten van de ontwikkelaars naartoe. Je kunt het kanaal wijzigen, maar niet verwijderen.",
       "selectPlaceholder": "Kies een kanaal"
     }
   },
@@ -1038,7 +1039,16 @@
     "description": "Deze woorden worden gebruikt om te zien wanneer iemand bedankt wordt. Ze worden gezien als reguliere expressies.",
     "invalidCharacter": "Het bedankwoord heeft een raar teken: {char}",
     "none": "Geen bedankjes ingesteld.",
-    "placeholder": "Voer thankword in (Regex)"
+    "placeholder": "Voer thankword in (Regex)",
+    "check": {
+      "title": "Bericht controleren",
+      "description": "Plak een bericht om te zien of de bot er een bedankwoord in vindt en welke van je bedankwoorden overeenkomen. Of het bericht reputatie geeft, hangt ook af van wie er bedankt wordt en van je andere instellingen.",
+      "placeholder": "Plak een bericht",
+      "button": "Controleren",
+      "match": "Bedankwoord gevonden: \"{match}\"",
+      "matchingWords": "Overeenkomende bedankwoorden:",
+      "noMatch": "Geen bedankwoord gevonden in dit bericht."
+    }
   },
   "timePresets": {
     "day": "1 dag",

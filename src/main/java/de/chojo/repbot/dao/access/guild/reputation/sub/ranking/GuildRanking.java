@@ -53,8 +53,14 @@ public abstract class GuildRanking implements GuildHolder {
         return byMode(ReputationMode.TOTAL, pageSize);
     }
 
-    public Instant resetDate() {
-        return rankings.reputation().repGuild().settings().general().activeResetDate();
+    /**
+     * The reset date that applies to a ranking in a reputation mode.
+     *
+     * @param mode the mode of the ranking
+     * @return the reset date, or null if none applies
+     */
+    public Instant resetDate(ReputationMode mode) {
+        return rankings.reputation().repGuild().settings().general().activeResetDate(mode);
     }
 
     protected abstract List<RankingEntry> getRankingPage(int pageSize, int page, ReputationMode mode);

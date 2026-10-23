@@ -72,9 +72,12 @@ jobs:
           python-version: ${{ env.PYTHON_VERSION }}
       - uses: gradle/actions/setup-gradle@v6
       - run: ./gradlew testLocale
-      - name: Report frontend locale variables and extra keys
+      - name: Check frontend locale variables and extra keys
         working-directory: tooling
-        run: python3 -m frontend_locales 2>&1 | grep -A 20 -E "Check (3|4):" || true
+        run: python3 -m frontend_locales --checks 3 4
+      - name: Report frontend locale coverage
+        working-directory: tooling
+        run: python3 -m frontend_locales --checks 1 2 || true
 
   verify-build:
     name: Verify Build

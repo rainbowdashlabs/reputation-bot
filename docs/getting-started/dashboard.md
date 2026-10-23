@@ -74,7 +74,7 @@ In these docs, a path like **Settings > Abuse Protection > Cooldown (minutes)** 
 | Channels | Where the bot is active. See [channels](../configuration/channels.md). |
 | Roles | Who may give and who may receive reputation. See [roles](../configuration/roles.md#who-can-give-and-receive-reputation). |
 | Reactions | The emojis that give reputation. See [thankwords and reactions](../configuration/thankwords-and-reactions.md#reactions). |
-| Thankwords | The words that count as a thank you. See [thankwords and reactions](../configuration/thankwords-and-reactions.md#thankwords). |
+| Thankwords | The words that count as a thank you, and a check that tells you whether a message contains one. See [thankwords and reactions](../configuration/thankwords-and-reactions.md#thankwords). |
 | Abuse Protection | Cooldowns, limits, message age and context checks. See [abuse protection](../configuration/abuse-protection.md). |
 | Announcements | Messages when a member reaches a new rank. See [announcements](../configuration/announcements.md#level-up-announcements). |
 | Autopost | Posts the ranking into a channel on a schedule. See [autopost](../configuration/announcements.md#autopost). [Supporter feature](../supporter.md). |
@@ -89,6 +89,12 @@ A supporter section shows a short note with the supporter tiers that unlock it w
 Many settings can still be changed with slash commands like `/channel`, `/roles` or `/abuseprotection`. These commands
 are being phased out and tell you so when you use them. Use the dashboard instead.
 :::
+
+### Bot language
+
+**Settings > General > Bot Language** sets the language of the bot's messages on your server. Pick
+**Server language (from Discord)** to go back to the language of your Discord server, which the bot
+uses as long as you don't pick another one.
 
 ### Presets
 

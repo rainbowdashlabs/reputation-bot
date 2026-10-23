@@ -333,7 +333,8 @@
     "language": {
       "description": "Valitse kieli, jota botti käyttää viesteissä ja vastauksissa tällä palvelimella.",
       "label": "Bot-kieli",
-      "selectPlaceholder": "Valitse kieli"
+      "selectPlaceholder": "Valitse kieli",
+      "serverLanguage": "Palvelimen kieli (Discordista)"
     },
     "ranks": {
       "addRank": "Lisää uusi sijoitus",
@@ -465,7 +466,7 @@
     },
     "systemChannel": {
       "label": "Järjestelmäkanava",
-      "note": "Huomautus: Tämä kanava on asetettava ja sen on oltava sisäinen kanava. Se sisältää tärkeitä viestejä botin palvelusta ja kehittäjiltä.",
+      "note": "Pakollinen. Valitse sisäinen kanava. Botti lähettää sinne tärkeitä viestejä palvelustaan ja kehittäjien viestejä. Voit vaihtaa kanavan, mutta et poistaa sitä.",
       "selectPlaceholder": "Valitse kanava"
     }
   },
@@ -1038,7 +1039,16 @@
     "description": "Näitä sanoja käytetään tunnistamaan, kun joku saa kiitosta. Ne tulkitaan säännöllisiksi lausekkeiksi.",
     "invalidCharacter": "Kiitossanassa on virheellinen merkki: {char}",
     "none": "Kiitossanoja ei ole määritetty.",
-    "placeholder": "Syötä kiitos sana (Regex)"
+    "placeholder": "Syötä kiitos sana (Regex)",
+    "check": {
+      "title": "Tarkista viesti",
+      "description": "Liitä viesti nähdäksesi, löytääkö botti siitä kiitossanan ja mitkä kiitossanoistasi täsmäävät. Se, antaako viesti mainetta, riippuu myös siitä, ketä siinä kiitetään, ja muista asetuksistasi.",
+      "placeholder": "Liitä viesti",
+      "button": "Tarkista",
+      "match": "Kiitossana löytyi: \"{match}\"",
+      "matchingWords": "Täsmäävät kiitossanat:",
+      "noMatch": "Viestistä ei löytynyt kiitossanaa."
+    }
   },
   "timePresets": {
     "day": "1 päivä",

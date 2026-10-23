@@ -52,6 +52,14 @@ def main():
         help='Fix missing keys (add to en-US only)'
     )
     parser.add_argument(
+        '--checks',
+        type=int,
+        nargs='+',
+        choices=LocaleValidator.ALL_CHECKS,
+        default=list(LocaleValidator.ALL_CHECKS),
+        help='Numbers of the checks to run (default: all)'
+    )
+    parser.add_argument(
         '--project-root',
         type=Path,
         default=Path(__file__).parent.parent.parent,
@@ -65,7 +73,7 @@ def main():
     
     # If no specific fix is requested, run all checks
     if not (args.fix or args.fix_unused or args.fix_extra or args.fix_missing or args.fix_all):
-        all_valid = validator.run_all_checks()
+        all_valid = validator.run_all_checks(args.checks)
         sys.exit(0 if all_valid else 1)
     
     # Run fixes

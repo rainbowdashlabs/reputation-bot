@@ -51,12 +51,14 @@ rank roles every Monday and "This Month" on the first of the month, shortly afte
 A reset date hides all reputation received before it. Use it to start fresh without deleting anything. Remove the
 reset date and the old reputation counts again.
 
+The reset date only applies to Total Reputation. The other modes count from the start of their own time frame and ignore it.
+
 Set it in the dashboard under **Settings > Reputation > Reset Date**. Pick a date and time in your own time zone.
 **Clear Reset Date** removes it. You can only have one reset date.
 
 The **Reset Date** field only shows up while the mode is **Total Reputation**. A reset date stays in place when you
-switch to another mode, and the bot then counts what is newer than both the reset date and the start of the mode's
-time frame. To check or remove a reset date in another mode, switch to Total Reputation, change it, and switch back.
+switch to another mode, but it has no effect there. It applies again once you switch back to Total Reputation, and
+to rankings you open in the `total` mode, for example `/top total`.
 
 A reset date in the future schedules a reset. Until that date, all reputation counts as before. Once it has passed,
 only reputation received after it counts.

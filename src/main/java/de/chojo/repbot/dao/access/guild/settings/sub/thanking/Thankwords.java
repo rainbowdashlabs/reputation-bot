@@ -10,10 +10,12 @@ import com.google.re2j.Pattern;
 import com.google.re2j.PatternSyntaxException;
 import de.chojo.repbot.dao.access.guild.settings.sub.Thanking;
 import de.chojo.repbot.dao.components.GuildHolder;
+import de.chojo.repbot.web.pojo.settings.sub.thanking.ThankwordCheckPOJO;
 import de.chojo.repbot.web.pojo.settings.sub.thanking.ThankwordsPOJO;
 import org.intellij.lang.annotations.Language;
 import org.slf4j.Logger;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.locks.StampedLock;
 import java.util.stream.Collectors;
@@ -74,6 +76,37 @@ public class Thankwords extends ThankwordsPOJO implements GuildHolder {
         // new one,
         // or we read the new one - both fine for our use
         return cachedPattern;
+    }
+
+    /**
+     * Looks for a thank word in a text the same way the message analyzer does: the first match of the thank word
+     * pattern in the lower-cased text.
+     *
+     * @param pattern the thank word pattern of a guild
+     * @param text    the text to search
+     * @return the part of the text that was recognised as a thank word
+     */
+    public static Optional<String> findThankword(Pattern pattern, String text) {
+        if (pattern.pattern().isBlank()) return Optional.empty();
+        var matcher = pattern.matcher(text.toLowerCase());
+        if (!matcher.find()) return Optional.empty();
+        return Optional.ofNullable(matcher.group("match"));
+    }
+
+    /**
+     * Checks a text for thank words of this guild.
+     *
+     * @param text the text to check
+     * @return the part of the text that was recognised as a thank word and the thank words that match it
+     */
+    public ThankwordCheckPOJO check(String text) {
+        var match = findThankword(thankwordPattern(), text);
+        if (match.isEmpty()) return ThankwordCheckPOJO.noMatch();
+        var matchingWords = words().stream()
+                .filter(word -> matchesWord(word, match.get()))
+                .sorted()
+                .toList();
+        return new ThankwordCheckPOJO(true, match.get(), matchingWords);
     }
 
     public boolean add(String pattern) {
@@ -176,8 +209,16 @@ public class Thankwords extends ThankwordsPOJO implements GuildHolder {
         }
     }
 
-    private void compileWord(String word) {
-        Pattern.compile(
+    private boolean matchesWord(String word, String text) {
+        try {
+            return compileWord(word).matcher(text).find();
+        } catch (PatternSyntaxException e) {
+            return false;
+        }
+    }
+
+    private Pattern compileWord(String word) {
+        return Pattern.compile(
                 String.format(PATTERN, BOUNDARY, String.format(THANKWORD, word)),
                 Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
     }

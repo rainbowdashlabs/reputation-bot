@@ -333,7 +333,8 @@
     "language": {
       "description": "Choisis la langue que le bot va utiliser pour les messages et les réponses sur ce serveur.",
       "label": "Langage des bots",
-      "selectPlaceholder": "Choisis une langue"
+      "selectPlaceholder": "Choisis une langue",
+      "serverLanguage": "Langue du serveur (depuis Discord)"
     },
     "ranks": {
       "addRank": "Ajouter un nouveau rang",
@@ -465,7 +466,7 @@
     },
     "systemChannel": {
       "label": "Chaîne système",
-      "note": "Remarque : ce canal doit être configuré et être un canal interne. Il contiendra des messages importants sur le service du bot et des messages des développeurs.",
+      "note": "Obligatoire. Choisis un canal interne. Le bot y envoie des messages importants sur son service et des messages des développeurs. Tu peux changer le canal, mais pas le retirer.",
       "selectPlaceholder": "Choisis un canal"
     }
   },
@@ -1038,7 +1039,16 @@
     "description": "Ces mots serviront à repérer quand quelqu'un est remercié. Ils sont vus comme des expressions régulières.",
     "invalidCharacter": "Le mot de remerciement a un caractère bizarre : {char}",
     "none": "Aucun mot de remerciement configuré.",
-    "placeholder": "Entrer le mot de remerciement (Regex)"
+    "placeholder": "Entrer le mot de remerciement (Regex)",
+    "check": {
+      "title": "Vérifier un message",
+      "description": "Colle un message pour voir si le bot y trouve un mot de remerciement et lesquels de tes mots correspondent. Que le message donne de la réputation dépend aussi de la personne remerciée et de tes autres paramètres.",
+      "placeholder": "Colle un message",
+      "button": "Vérifier",
+      "match": "Mot de remerciement trouvé : \"{match}\"",
+      "matchingWords": "Mots de remerciement correspondants :",
+      "noMatch": "Aucun mot de remerciement trouvé dans ce message."
+    }
   },
   "timePresets": {
     "day": "1 jour",
