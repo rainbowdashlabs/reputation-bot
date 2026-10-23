@@ -1076,6 +1076,10 @@
         "description": "Botun her yerde etkin olmasına izin vermek yerine, belirli kanallarda etkin olmasını engelleyin.",
         "name": "Kanal Engelleme Listesi"
       },
+      "commandaliases": {
+        "description": "Bu sunucuda komutlara özel bir ad ver.",
+        "name": "Özel komut adları"
+      },
       "detailedprofile": {
         "description": "Kullanıcı itibar profilleri hakkında daha fazla bilgi göster.",
         "name": "Ayrıntılı Profil"

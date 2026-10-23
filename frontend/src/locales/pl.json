@@ -1076,6 +1076,10 @@
         "description": "Zapobiegaj aktywności bota w określonych kanałach, zamiast zezwalać mu na działanie wszędzie.",
         "name": "Lista zablokowanych kanałów"
       },
+      "commandaliases": {
+        "description": "Nadaj komendom własną nazwę na tym serwerze.",
+        "name": "Własne nazwy komend"
+      },
       "detailedprofile": {
         "description": "Pokaż więcej informacji o profilach reputacji użytkowników.",
         "name": "Szczegółowy profil"

@@ -1076,6 +1076,10 @@
         "description": "Verhindere, dass der Bot in bestimmten Kanälen aktiv ist, anstatt ihn überall zuzulassen.",
         "name": "Kanal-Sperrliste"
       },
+      "commandaliases": {
+        "description": "Gib Befehlen auf diesem Server einen eigenen Namen.",
+        "name": "Eigene Befehlsnamen"
+      },
       "detailedprofile": {
         "description": "Zeig mehr Infos zu den Reputationsprofilen der Nutzer an.",
         "name": "Ausführliches Profil"

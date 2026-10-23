@@ -1076,6 +1076,10 @@
         "description": "Estä botin toiminta tietyissä kanavissa sen sijaan, että sallisit sen kaikkialla.",
         "name": "Kanavan estoluettelo"
       },
+      "commandaliases": {
+        "description": "Anna komennoille oma nimi tällä palvelimella.",
+        "name": "Omat komentojen nimet"
+      },
       "detailedprofile": {
         "description": "Näytä lisätietoja käyttäjien maineprofiileista.",
         "name": "Yksityiskohtainen profiili"

@@ -1076,6 +1076,10 @@
         "description": "Zorg ervoor dat de bot niet overal actief is, maar alleen in bepaalde kanalen.",
         "name": "Kanaal weigerenlijst"
       },
+      "commandaliases": {
+        "description": "Geef commando's een eigen naam op deze server.",
+        "name": "Eigen commandonamen"
+      },
       "detailedprofile": {
         "description": "Laat meer info zien over de reputatieprofielen van gebruikers.",
         "name": "Gedetailleerd profiel"

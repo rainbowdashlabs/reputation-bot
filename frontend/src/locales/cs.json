@@ -1076,6 +1076,10 @@
         "description": "Zabraňte botovi v aktivitě v konkrétních kanálech, místo aby byl povolen všude.",
         "name": "Seznam zakázaných kanálů"
       },
+      "commandaliases": {
+        "description": "Dej příkazům na tomto serveru vlastní název.",
+        "name": "Vlastní názvy příkazů"
+      },
       "detailedprofile": {
         "description": "Zobrazit více informací o profilech reputace uživatelů.",
         "name": "Podrobný profil"

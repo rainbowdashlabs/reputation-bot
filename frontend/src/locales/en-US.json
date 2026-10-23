@@ -1088,6 +1088,10 @@
       "integrationbypass": {
         "name": "Integration Bypass",
         "description": "Allow other bots and integrations to give reputation."
+      },
+      "commandaliases": {
+        "name": "Custom command names",
+        "description": "Give commands a custom name on this server."
       }
     }
   },

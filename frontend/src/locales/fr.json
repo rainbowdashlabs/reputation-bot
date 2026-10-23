@@ -1076,6 +1076,10 @@
         "description": "Empêche le bot d'être actif dans certains canaux plutôt que de le laisser partout.",
         "name": "Liste noire des chaînes"
       },
+      "commandaliases": {
+        "description": "Donne un nom personnalisé aux commandes sur ce serveur.",
+        "name": "Noms de commandes personnalisés"
+      },
       "detailedprofile": {
         "description": "Montrer plus d'infos sur les profils de réputation des utilisateurs.",
         "name": "Profil détaillé"

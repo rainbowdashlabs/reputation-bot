@@ -1076,6 +1076,10 @@
         "description": "禁止机器人在特定频道中活动，而非允许其在所有频道中运行。",
         "name": "频道拒绝列表"
       },
+      "commandaliases": {
+        "description": "在此服务器上为命令设置自定义名称。",
+        "name": "自定义命令名称"
+      },
       "detailedprofile": {
         "description": "在用户声誉档案中显示更多信息。",
         "name": "详细资料"
