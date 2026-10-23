@@ -69,8 +69,8 @@ Messages** by default.
 | `/prune user <userid>` | The same for someone who already left. Paste their user ID. |
 | `/prune guild` | Checks everyone with reputation on your server and removes those who are no longer members. |
 
-Use either `user` or `userid` with `/prune user`. Pruning removes the same data as the automatic removal above. It
-can't be undone.
+Use either `user` or `userid` with `/prune user`. Without one, the bot answers that it could not find the user.
+Pruning removes the same data as the automatic removal above. It can't be undone.
 
 You rarely need `/prune guild`, because the bot removes members who leave on its own.
 
