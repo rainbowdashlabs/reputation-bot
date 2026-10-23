@@ -72,12 +72,8 @@ channel.
 
 You can pay with your personal tokens or with the server's tokens. Only members who manage the server can spend the
 server's tokens. Whether other members can buy features with their personal tokens is set by **Everyone Token
-Purchase** under **Settings > General**. It is on by default.
-
-:::warning
-Turning **Everyone Token Purchase** off currently blocks the server's managers instead of the other members, and auto
-renewal stops working. Leave it on for now.
-:::
+Purchase** under **Settings > General**. It is on by default. With it off, only members who manage the server can
+buy features.
 
 If your server already has a feature through a supporter tier, you can't buy it with tokens.
 
