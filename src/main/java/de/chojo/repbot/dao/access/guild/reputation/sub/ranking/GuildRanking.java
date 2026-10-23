@@ -54,7 +54,7 @@ public abstract class GuildRanking implements GuildHolder {
     }
 
     public Instant resetDate() {
-        return rankings.reputation().repGuild().settings().general().resetDate();
+        return rankings.reputation().repGuild().settings().general().activeResetDate();
     }
 
     protected abstract List<RankingEntry> getRankingPage(int pageSize, int page, ReputationMode mode);

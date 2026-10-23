@@ -250,7 +250,7 @@ public class RepMember implements MemberHolder {
      */
     public RepProfile profile() {
         var mode = reputation.repGuild().settings().general().reputationMode();
-        Instant resetDate = reputation.repGuild().settings().general().resetDate();
+        Instant resetDate = reputation.repGuild().settings().general().activeResetDate();
         // We probably don't want to cache the profile. There are just too many factors which can change the user
         // reputation.
 
