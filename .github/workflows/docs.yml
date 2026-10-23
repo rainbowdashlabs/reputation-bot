@@ -1,16 +1,14 @@
-name: docs
+name: Docs
 
 on:
   push:
-    branches:
-      - main
+    paths: ['docs/**', '.github/workflows/docs.yml']
+  pull_request:
+    paths: ['docs/**', '.github/workflows/docs.yml']
+
 jobs:
-  deploy:
-    name: Deploy Docs
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
-        with:
-          python-version: 3.15
-      - run: pip install pipenv && pipenv install && pipenv run mkdocs gh-deploy --force
+  docs:
+    uses: rainbowdashlabs/docs-hub/.github/workflows/space.yml@v1
+    with:
+      hub-repository: rainbowdashlabs/docs
+      rebuild: false

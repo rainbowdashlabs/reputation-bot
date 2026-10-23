@@ -37,7 +37,6 @@ buildNumber.properties
 /logs/
 /out/
 
-/site/
 /.direnv
 .run
 .env
