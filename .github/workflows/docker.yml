@@ -1,45 +1,54 @@
-name: Docker Build
+name: Docker
 
 on:
-  release:
-    types:
-      - published
   push:
-    tags:
-    branches:
-      - main
-      - dev
+    branches: [main]
+    tags: ["v*"]
+  workflow_dispatch:
+
+concurrency:
+  group: docker-${{ github.ref }}
+  cancel-in-progress: false
 
 jobs:
-  docker-build:
-    runs-on: ubuntu-latest
-    name: Deploy Docker Image
+  verify:
+    uses: ./.github/workflows/verify.yml
 
+  image:
+    name: Image
+    needs: verify
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
-      - name: Wait for checks to succeed
-        uses: lewagon/wait-on-check-action@master
-        with:
-          ref: ${{ github.ref }}
-          # Wait for all checks that start with "Verify" to succeed
-          check-regexp: "Verify.*"
-          running-workflow-name: 'Deploy Docker Image'
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          allowed-conclusions: success
       - uses: actions/checkout@v7
-      - uses: gradle/actions/wrapper-validation@v6
-      - name: Build Image
-        run: docker build . --build-arg GITHUB_ACTIONS=true --build-arg GITHUB_REF_TYPE=${{ github.ref_type }} --build-arg GITHUB_REF_NAME=${{ github.ref_name }} --build-arg GITHUB_SHA=${{ github.sha }} -f docker/Dockerfile -t ghcr.io/rainbowdashlabs/reputation-bot:${{ github.sha }}
-      - name: Login to Registry
-        run: echo ${{ secrets.GITHUB_TOKEN }} | docker login -u $ --password-stdin ghcr.io
-      - name: Push image
-        run: |
-          docker push ghcr.io/rainbowdashlabs/reputation-bot:${{ github.sha }}
-      - name: Tag & Push branch image
-        run: |
-          docker image tag ghcr.io/rainbowdashlabs/reputation-bot:${{ github.sha }} ghcr.io/rainbowdashlabs/reputation-bot:${{ github.ref_name }}
-          docker push ghcr.io/rainbowdashlabs/reputation-bot:${{ github.ref_name }}
-      - name: Tag & Push latest image
-        if: github.ref_name == 'main'
-        run: |
-          docker image tag ghcr.io/rainbowdashlabs/reputation-bot:${{ github.sha }} ghcr.io/rainbowdashlabs/reputation-bot:latest
-          docker push ghcr.io/rainbowdashlabs/reputation-bot:latest
+      - uses: docker/setup-buildx-action@v4
+      - uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ghcr.io/${{ github.repository }}
+          flavor: latest=false
+          tags: |
+            type=sha,format=long,prefix=
+            type=raw,value=dev,enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+            type=semver,pattern=v{{version}}
+            type=semver,pattern=v{{major}}.{{minor}}
+            type=semver,pattern=v{{major}}
+      - uses: docker/build-push-action@v7
+        with:
+          context: .
+          push: true
+          build-args: |
+            GITHUB_ACTIONS=true
+            GITHUB_REF_TYPE=${{ github.ref_type }}
+            GITHUB_REF_NAME=${{ github.ref_name }}
+            GITHUB_SHA=${{ github.sha }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

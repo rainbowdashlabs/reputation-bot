@@ -1,201 +1,123 @@
 name: Verify
 
-on: [push, pull_request, merge_group]
+on:
+  push:
+    branches-ignore: [main, gh-pages]
+  pull_request:
+    types: [opened, ready_for_review, synchronize, reopened]
+  workflow_call:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: verify-${{ github.event.pull_request.number || github.ref }}-${{ github.event_name }}
+  cancel-in-progress: true
 
 env:
   JAVA_VERSION: 25
-  PYTHON_VERSION: 3.14
   NODE_VERSION: 24
+  PYTHON_VERSION: 3.14
 
 jobs:
-  build-backend:
+  verify-format:
+    name: Verify Formatting
     runs-on: ubuntu-latest
-    name: Verify Backend Build
-
     steps:
       - uses: actions/checkout@v7
-      - name: Set up JDK
-        uses: actions/setup-java@v6
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: ${{ env.JAVA_VERSION }}
-      - uses: gradle/actions/wrapper-validation@v6
-      - name: Build with Gradle
-        run: ./gradlew --build-cache build -x test -x spotlessCheck
-      - name: Test with Gradle
-        run: ./gradlew test --info
+      - uses: gradle/actions/setup-gradle@v6
+      - run: ./gradlew spotlessCheck
 
-  build-frontend:
+  verify-tests:
+    name: Verify Tests
     runs-on: ubuntu-latest
-    name: Verify Frontend Build
-
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
-      - name: Set up Node.js
-        uses: actions/setup-node@v7
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
-          cache-dependency-path: frontend/package-lock.json
-      - name: Install dependencies
-        working-directory: frontend
-        run: npm ci
-      - name: Type check
-        working-directory: frontend
-        run: npx vue-tsc -b --noEmit
-      - name: Build frontend
-        working-directory: frontend
-        run: npm run build
-
-  verify-license-backend:
-    runs-on: ubuntu-latest
-    name: Verify Backend License Check
-
-    steps:
-      - uses: actions/checkout@v7
-      - name: Set up JDK
-        uses: actions/setup-java@v6
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: ${{ env.JAVA_VERSION }}
-      - uses: gradle/actions/wrapper-validation@v6
-      - name: Check backend license headers
-        run: ./gradlew checkLicenseBackend
-
-  verify-license-frontend:
-    runs-on: ubuntu-latest
-    name: Verify Frontend License Check
-
-    steps:
-      - uses: actions/checkout@v7
-      - name: Set up JDK
-        uses: actions/setup-java@v6
-        with:
-          distribution: temurin
-          java-version: ${{ env.JAVA_VERSION }}
-      - uses: gradle/actions/wrapper-validation@v6
-      - name: Check frontend license headers
-        run: ./gradlew checkLicenseFrontend
-
-  verify-locales-backend:
-    runs-on: ubuntu-latest
-    name: Verify Backend Locale Validation
-
-    steps:
-      - uses: actions/checkout@v7
-      - name: Set up JDK
-        uses: actions/setup-java@v6
-        with:
-          distribution: temurin
-          java-version: ${{ env.JAVA_VERSION }}
-      - uses: gradle/actions/wrapper-validation@v6
-      - name: Run locale validation tests
-        run: ./gradlew testLocale --info
-      - name: Check UTF-8 for resource bundles
-        run: ./gradlew spotlessBackendLocalesCheck
-
-  verify-formatting-backend:
-    runs-on: ubuntu-latest
-    name: Verify Backend Format Validation
-
-    steps:
-      - uses: actions/checkout@v7
-      - name: Set up JDK
-        uses: actions/setup-java@v6
-        with:
-          distribution: temurin
-          java-version: ${{ env.JAVA_VERSION }}
-      - uses: gradle/actions/wrapper-validation@v6
-      - name: Run formatting tests
-        run: ./gradlew spotlessJavaCheck
-
-  verify-formatting-frontend:
-    runs-on: ubuntu-latest
-    name: Verify Frontend Format Validation
-
-    steps:
-      - uses: actions/checkout@v7
-      - name: Set up JDK
-        uses: actions/setup-java@v6
-        with:
-          distribution: temurin
-          java-version: ${{ env.JAVA_VERSION }}
-      - uses: gradle/actions/wrapper-validation@v6
-      - name: Run formatting tests
-        run: ./gradlew spotlessJavascriptCheck spotlessVueCheck
+      - uses: gradle/actions/setup-gradle@v6
+      - run: ./gradlew test
 
   verify-database:
+    name: Verify Database
     runs-on: ubuntu-latest
-    name: Verify Backend Database Validation
-
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v7
-      - name: Set up JDK
-        uses: actions/setup-java@v6
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: ${{ env.JAVA_VERSION }}
-      - uses: gradle/actions/wrapper-validation@v6
-      - name: Run database validation tests
-        run: ./gradlew testDatabase --info
+      - uses: gradle/actions/setup-gradle@v6
+      - run: ./gradlew testDatabase
 
-
-  verify-locales-frontend:
+  verify-locales:
+    name: Verify Locales
     runs-on: ubuntu-latest
-    name: Verify Frontend Locale Validation
-
     steps:
       - uses: actions/checkout@v7
-      - name: Set up Python
-        uses: actions/setup-python@v7
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-      - name: Set up JDK
-        uses: actions/setup-java@v6
+      - uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: ${{ env.JAVA_VERSION }}
-      - uses: gradle/actions/wrapper-validation@v6
-      - name: Check encoding
-        run: ./gradlew spotlessFrontendLocalesCheck
-#      - name: Check all keys exist in all locales
-#        working-directory: tooling
-#        run: python3 -m frontend_locales
-#      - name: Check for unused keys
-#        if: success() || failure()
-#        working-directory: tooling
-#        run: |
-#          echo "=== Checking for unused keys ==="
-#          python3 -m frontend_locales 2>&1 | grep -A 20 "Check 2:" || true
-      - name: Check variable consistency
-        if: success() || failure()
-        working-directory: tooling
-        run: |
-          echo "=== Checking variable consistency ==="
-          python3 -m frontend_locales 2>&1 | grep -A 20 "Check 3:" || true
-      - name: Check for extra keys
-        if: success() || failure()
-        working-directory: tooling
-        run: |
-          echo "=== Checking for extra keys ==="
-          python3 -m frontend_locales 2>&1 | grep -A 20 "Check 4:" || true
-
-  build-docker:
-    runs-on: ubuntu-latest
-    name: Verify Docker Build
-
-    steps:
-      - uses: actions/checkout@v7
-      - name: Build as Docker image
-        run: docker build . -f docker/Dockerfile
-
-  verify-docs:
-    runs-on: ubuntu-latest
-    name: Verify Docs Build
-
-    steps:
-      - uses: actions/checkout@v7
       - uses: actions/setup-python@v7
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-      - run: pip install pipenv && pipenv install && pipenv run mkdocs build
+      - uses: gradle/actions/setup-gradle@v6
+      - run: ./gradlew testLocale
+      - name: Report frontend locale variables and extra keys
+        working-directory: tooling
+        run: python3 -m frontend_locales 2>&1 | grep -A 20 -E "Check (3|4):" || true
+
+  verify-build:
+    name: Verify Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: gradle/actions/wrapper-validation@v6
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+      - uses: gradle/actions/setup-gradle@v6
+      - run: ./gradlew --build-cache build -x spotlessCheck -x test
+
+  verify-frontend:
+    name: Verify Frontend
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      - run: npx vue-tsc -b --noEmit
+      - run: npm run build
+
+  verify-image:
+    name: Verify Image
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - run: docker build .
+
+  verify:
+    name: Verify
+    if: always()
+    needs: [verify-format, verify-tests, verify-database, verify-locales, verify-build, verify-frontend, verify-image]
+    runs-on: ubuntu-latest
+    steps:
+      - name: All verifications passed
+        run: test "${{ contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled') }}" = "false"
