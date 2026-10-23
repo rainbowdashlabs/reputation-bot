@@ -63,7 +63,8 @@ public class KofiService {
     }
 
     public void handle(KofiTransaction data) {
-        if (!configuration.kofi().token().equals(data.verificationToken())) {
+        var token = configuration.kofi().token();
+        if (token == null || token.isBlank() || !token.equals(data.verificationToken())) {
             throw new UnauthorizedResponse();
         }
 

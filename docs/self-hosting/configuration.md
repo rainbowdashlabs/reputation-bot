@@ -215,7 +215,7 @@ Tokens for voting on bot lists.
 
 | Key | Default | What it does |
 |---|---|---|
-| `token` | `null` | The verification token of your Ko-fi webhook. Ko-fi sends payments to `/v1/kofi`. |
+| `token` | `null` | The verification token of your Ko-fi webhook. Ko-fi sends payments to `/v1/kofi`. Without a token, the bot rejects every payment it receives. |
 
 ## mailing
 
