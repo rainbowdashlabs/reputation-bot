@@ -465,7 +465,7 @@
     },
     "systemChannel": {
       "label": "Kanał systemowy",
-      "note": "Uwaga: ten kanał powinien być skonfigurowany i powinien być kanałem wewnętrznym. Będzie zawierał ważne wiadomości dotyczące usługi bota oraz wiadomości od twórców.",
+      "note": "Wymagane. Wybierz kanał wewnętrzny. Bot wysyła tam ważne wiadomości o swojej usłudze i wiadomości od twórców. Możesz zmienić kanał, ale nie możesz go usunąć.",
       "selectPlaceholder": "Wybierz kanał"
     }
   },

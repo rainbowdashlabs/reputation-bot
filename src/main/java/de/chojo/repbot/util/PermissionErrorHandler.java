@@ -93,7 +93,7 @@ public final class PermissionErrorHandler {
                 systemChannel.sendMessage(String.join("\n", errorMessages)).complete();
                 return true;
             } catch (Exception e) {
-                repGuild.settings().general().systemChannel(0);
+                log.debug("Could not send permission error to the system channel of {}", guild.getId(), e);
             }
         }
 

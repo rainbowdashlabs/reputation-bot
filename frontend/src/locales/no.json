@@ -465,7 +465,7 @@
     },
     "systemChannel": {
       "label": "Systemkanal",
-      "note": "Merk: Denne kanalen bør opprettes og bør være en intern kanal. Den vil inneholde viktige meldinger om botens tjeneste og meldinger fra utviklerne.",
+      "note": "Påkrevd. Velg en intern kanal. Boten sender viktige meldinger om tjenesten sin og meldinger fra utviklerne dit. Du kan bytte kanal, men ikke fjerne den.",
       "selectPlaceholder": "Velg en kanal"
     }
   },

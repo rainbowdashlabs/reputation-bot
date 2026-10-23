@@ -465,7 +465,7 @@
     },
     "systemChannel": {
       "label": "Sistem Kanalı",
-      "note": "Not: Bu kanal ayarlanmalı ve dahili bir kanal olmalıdır. Botun hizmeti ile ilgili önemli mesajları ve geliştiricilerden gelen mesajları içerecektir.",
+      "note": "Zorunlu. Dahili bir kanal seç. Bot, hizmetiyle ilgili önemli mesajları ve geliştiricilerden gelen mesajları buraya gönderir. Kanalı değiştirebilirsin ama kaldıramazsın.",
       "selectPlaceholder": "Bir kanal seçin"
     }
   },

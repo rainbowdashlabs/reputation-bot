@@ -39,9 +39,13 @@ watch(session, (newSession) => {
 
 const updateSystemChannel = async () => {
   const previous = session.value?.settings?.general?.systemChannel || null
+  if (!systemChannel.value) {
+    systemChannel.value = previous
+    return
+  }
   try {
-    await api.updateGeneralSystemChannel(systemChannel.value ? systemChannel.value.toString() : '0')
-    updateGeneralSettings({systemChannel: systemChannel.value || "0"})
+    await api.updateGeneralSystemChannel(systemChannel.value.toString())
+    updateGeneralSettings({systemChannel: systemChannel.value})
   } catch (error) {
     console.error('Failed to update system channel:', error)
     systemChannel.value = previous

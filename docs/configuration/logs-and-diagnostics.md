@@ -64,12 +64,13 @@ The system channel gets messages about the bot itself: missing permissions, chan
 supporter status, and notes from the bot's developers. Pick an internal text channel that only your
 team can read.
 
-Set it under **Settings > General > System Channel**. The dashboard can change the channel but not
-remove it. To run without a system channel, use `/channel systemchannel disable`.
+Every server needs a system channel. You pick it during the
+[setup](../getting-started/first-setup.md), and change it under **Settings > General > System Channel**.
+You can switch to another channel, but you can't remove it.
 
-Without a system channel, the bot sends missing-permission warnings to the server owner or an
-admin by direct message instead. If the bot can't write to the system channel, it forgets the
-channel.
+If the system channel is gone or the bot can't write to it, the bot sends missing-permission
+warnings to the server owner or an admin by direct message instead. It keeps the channel. The
+[Problems page](#problems-page) tells you when the channel no longer exists.
 
 ## Problems page
 

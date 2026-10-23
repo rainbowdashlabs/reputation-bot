@@ -465,7 +465,7 @@
     },
     "systemChannel": {
       "label": "Systemkanal",
-      "note": "Obs: Denna kanal ska ställas in och ska vara en intern kanal. Den kommer att innehålla viktiga meddelanden om botens tjänst och meddelanden från utvecklarna.",
+      "note": "Obligatoriskt. Välj en intern kanal. Boten skickar viktiga meddelanden om sin tjänst och meddelanden från utvecklarna dit. Du kan byta kanal, men inte ta bort den.",
       "selectPlaceholder": "Välj en kanal"
     }
   },

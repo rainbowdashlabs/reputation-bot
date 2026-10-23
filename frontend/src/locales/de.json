@@ -465,7 +465,7 @@
     },
     "systemChannel": {
       "label": "Systemkanal",
-      "note": "Dieser Kanal sollte eingerichtet werden und ein interner Kanal sein. Er wird wichtige Infos zum Bot-Service und Nachrichten von den Entwicklern enthalten.",
+      "note": "Pflichtfeld. Wähle einen internen Kanal. Der Bot schickt dorthin wichtige Infos zum Bot-Service und Nachrichten von den Entwicklern. Du kannst den Kanal ändern, aber nicht entfernen.",
       "selectPlaceholder": "Wähle einen Kanal aus"
     }
   },

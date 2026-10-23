@@ -465,7 +465,7 @@
     },
     "systemChannel": {
       "label": "Järjestelmäkanava",
-      "note": "Huomautus: Tämä kanava on asetettava ja sen on oltava sisäinen kanava. Se sisältää tärkeitä viestejä botin palvelusta ja kehittäjiltä.",
+      "note": "Pakollinen. Valitse sisäinen kanava. Botti lähettää sinne tärkeitä viestejä palvelustaan ja kehittäjien viestejä. Voit vaihtaa kanavan, mutta et poistaa sitä.",
       "selectPlaceholder": "Valitse kanava"
     }
   },

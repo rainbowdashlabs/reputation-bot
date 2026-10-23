@@ -465,7 +465,7 @@
     },
     "systemChannel": {
       "label": "Chaîne système",
-      "note": "Remarque : ce canal doit être configuré et être un canal interne. Il contiendra des messages importants sur le service du bot et des messages des développeurs.",
+      "note": "Obligatoire. Choisis un canal interne. Le bot y envoie des messages importants sur son service et des messages des développeurs. Tu peux changer le canal, mais pas le retirer.",
       "selectPlaceholder": "Choisis un canal"
     }
   },

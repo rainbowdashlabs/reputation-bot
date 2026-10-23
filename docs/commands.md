@@ -115,7 +115,7 @@ points you to the dashboard. Use the dashboard instead:
 | `/channel announcement` | **Settings > Announcements**, see [Level-up announcements](./configuration/announcements.md#level-up-announcements) |
 | `/channel autopost` | **Settings > Autopost**, see [Autopost](./configuration/announcements.md#autopost) |
 | `/channel log` | **Settings > Log Channel**, see [Log channel](./configuration/logs-and-diagnostics.md#log-channel) |
-| `/channel systemchannel` | **Settings > General > System Channel**, see [System channel](./configuration/logs-and-diagnostics.md#system-channel) |
+| `/channel systemchannel enable` | **Settings > General > System Channel**, see [System channel](./configuration/logs-and-diagnostics.md#system-channel) |
 | `/locale` | **Settings > General > Bot Language** |
 | `/messages states` | **Settings > Reputation > Reputation Messages**, see [Reputation messages](./configuration/announcements.md#reputation-messages) |
 | `/reactions` | **Settings > Reactions**, see [Reactions](./configuration/thankwords-and-reactions.md#reactions) |

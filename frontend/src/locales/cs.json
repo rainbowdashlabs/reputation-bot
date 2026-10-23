@@ -465,7 +465,7 @@
     },
     "systemChannel": {
       "label": "Systémový kanál",
-      "note": "Poznámka: Tento kanál by měl být nastaven a měl by být interním kanálem. Bude obsahovat důležité zprávy týkající se služeb bota a zprávy od vývojářů.",
+      "note": "Povinné. Vyber interní kanál. Bot do něj posílá důležité zprávy o své službě a zprávy od vývojářů. Kanál můžeš změnit, ale ne odebrat.",
       "selectPlaceholder": "Vyberte kanál"
     }
   },

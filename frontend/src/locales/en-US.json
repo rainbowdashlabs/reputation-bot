@@ -493,7 +493,7 @@
     "systemChannel": {
       "label": "System Channel",
       "selectPlaceholder": "Select a channel",
-      "note": "Note: This channel should be set and should be an internal channel. It will contain important messages concerning the bot's service and messages from the developers."
+      "note": "Required. Pick an internal channel. The bot sends important messages about its service and messages from the developers there. You can change the channel, but not remove it."
     },
     "everyoneTokenPurchase": {
       "label": "Everyone Token Purchase",

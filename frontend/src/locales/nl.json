@@ -465,7 +465,7 @@
     },
     "systemChannel": {
       "label": "Systeemkanaal",
-      "note": "Let op: dit kanaal moet worden ingesteld en moet een intern kanaal zijn. Het bevat belangrijke berichten over de service van de bot en berichten van de ontwikkelaars.",
+      "note": "Verplicht. Kies een intern kanaal. De bot stuurt daar belangrijke berichten over zijn service en berichten van de ontwikkelaars naartoe. Je kunt het kanaal wijzigen, maar niet verwijderen.",
       "selectPlaceholder": "Kies een kanaal"
     }
   },
