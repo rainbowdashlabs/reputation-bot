@@ -128,7 +128,7 @@ what it may do:
 | Allow Fuzzy | The bot can give reputation by fuzzy matching. |
 | Allow Direct | The bot can give reputation when only one receiver was found. The bot never gets a confirmation embed. |
 | Ignore Cooldown | The [cooldown](#cooldown) doesn't apply to the bot. The [donor and receiver roles](./roles.md#who-can-give-and-receive-reputation) still do. |
-| Ignore Limit | The [donor limit](#donor-and-receiver-limits) doesn't apply to the bot. |
+| Ignore Limit | The [donor and receiver limits](#donor-and-receiver-limits) don't apply to reputation from the bot. |
 | Ignore Context | The [context checks](#receiver-and-donor-context) don't apply to the bot. |
 
 Bots can never receive reputation.

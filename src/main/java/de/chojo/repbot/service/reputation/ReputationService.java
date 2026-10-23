@@ -347,7 +347,8 @@ public class ReputationService {
             return analyzer.log(context, SubmitResult.of(SubmitResultType.OUTDATED_MESSAGE));
         }
 
-        if (abuseSettings.isReceiverLimit(receiver)) {
+        if (abuseSettings.isReceiverLimit(receiver)
+                && !optBypass.map(Bypass::ignoreLimit).orElse(false)) {
             log.trace("Receiver limit is reached on {}", contextId);
             return analyzer.log(context, SubmitResult.of(SubmitResultType.RECEIVER_LIMIT));
         }
