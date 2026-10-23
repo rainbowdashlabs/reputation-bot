@@ -222,6 +222,7 @@ public class ContextResolver {
                         .retrieveMemberById(id)
                         .onErrorMap(throwable -> null)
                         .complete())
+                .filter(Objects::nonNull)
                 .map(Member::getIdLong)
                 .toList());
         return context;
