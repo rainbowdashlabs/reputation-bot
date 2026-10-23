@@ -67,7 +67,7 @@ public class List implements SlashHandler {
                         "words.categories",
                         categoryNames,
                         false,
-                        Replacement.create("MORE", channels.channels().size() - 40))
+                        Replacement.create("MORE", channels.categories().size() - 40))
                 .build();
     }
 }

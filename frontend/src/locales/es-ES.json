@@ -1076,6 +1076,10 @@
         "description": "Evita que el bot esté activo en canales específicos en lugar de permitirlo en todas partes.",
         "name": "Lista de canales denegados"
       },
+      "commandaliases": {
+        "description": "Da a los comandos un nombre personalizado en este servidor.",
+        "name": "Nombres de comandos personalizados"
+      },
       "detailedprofile": {
         "description": "Mostrar más información sobre los perfiles de reputación de los usuarios.",
         "name": "Perfil detallado"

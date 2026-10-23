@@ -149,6 +149,38 @@ public class MessageAnalyzer {
         return resolveMessage(match, message, pattern, context, limitTargets, limit);
     }
 
+    /**
+     * Finds the positions of all words that match the thank pattern.
+     *
+     * @param words        the words of the message
+     * @param thankPattern the thank word pattern
+     * @return the indices of the matching words in ascending order
+     */
+    static List<Integer> thankWordIndices(List<String> words, Pattern thankPattern) {
+        List<Integer> indices = new ArrayList<>();
+        for (var index = 0; index < words.size(); index++) {
+            if (thankPattern.matcher(words.get(index)).find()) {
+                indices.add(index);
+            }
+        }
+        return indices;
+    }
+
+    /**
+     * Collects the words around a thank word that may name the receiver.
+     *
+     * @param words          the words of the message
+     * @param thankWordIndex the index of the thank word
+     * @return up to {@link #LOOKAROUND} words before and after the thank word, without the thank word itself
+     */
+    static List<String> surroundingWords(List<String> words, int thankWordIndex) {
+        List<String> surrounding =
+                new ArrayList<>(words.subList(Math.max(0, thankWordIndex - LOOKAROUND), thankWordIndex));
+        surrounding.addAll(words.subList(
+                Math.min(thankWordIndex + 1, words.size()), Math.min(words.size(), thankWordIndex + LOOKAROUND + 1)));
+        return surrounding;
+    }
+
     private AnalyzerResult resolveMessage(
             String matchPattern,
             Message message,
@@ -161,30 +193,13 @@ public class MessageAnalyzer {
         var words = new ArrayList<>(List.of(contentRaw.split("\\s")));
         words.removeIf(String::isBlank);
 
-        List<Integer> thankWordIndices = new ArrayList<>();
-        var index = 0;
-        for (var word : words) {
-            if (thankPattern.matcher(word).find()) {
-                thankWordIndices.add(index);
-            }
-        }
+        var thankWordIndices = thankWordIndices(words, thankPattern);
         List<WeightedEntry<Member>> users = new ArrayList<>();
 
         List<MemberMatch> memberMatches = new ArrayList<>();
 
         for (var thankwordindex : thankWordIndices) {
-            List<String> resolve = new ArrayList<>();
-
-            if (thankwordindex != 0) {
-                resolve.addAll(words.subList(Math.max(0, thankwordindex - LOOKAROUND), thankwordindex));
-            }
-            if (thankwordindex != words.size() - 1) {
-                resolve.addAll(words.subList(
-                        Math.min(thankwordindex + 1, words.size() - 1),
-                        Math.min(words.size(), thankwordindex + LOOKAROUND + 1)));
-            }
-
-            for (var word : resolve) {
+            for (var word : surroundingWords(words, thankwordindex)) {
                 List<WeightedEntry<Member>> weightedMembers;
                 if (limitTargets) {
                     weightedMembers = DiscordResolver.fuzzyGuildTargetSearch(word, targets.members());

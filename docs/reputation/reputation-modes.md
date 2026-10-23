@@ -58,7 +58,5 @@ The **Reset Date** field only shows up while the mode is **Total Reputation**. A
 switch to another mode, and the bot then counts what is newer than both the reset date and the start of the mode's
 time frame. To check or remove a reset date in another mode, switch to Total Reputation, change it, and switch back.
 
-:::warning
-A reset date in the future hides all reputation until that date has passed. After that, only reputation received
-after the date counts. Until then, profiles and rankings show zero.
-:::
+A reset date in the future schedules a reset. Until that date, all reputation counts as before. Once it has passed,
+only reputation received after it counts.

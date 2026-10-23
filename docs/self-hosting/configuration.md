@@ -8,8 +8,8 @@ change those in the [dashboard](../getting-started/dashboard.md).
 
 ## How it works
 
-The bot reads one JSON file. Its path is given with the system property `bot.config`, relative to
-the working directory. The Docker image uses `config/config.json` in `/app`.
+The bot reads one JSON file. Its path is given with the system property `bot.config`, either absolute
+or relative to the working directory. The Docker image uses `config/config.json` in `/app`.
 
 On every start, and on `/bot system reload`:
 
@@ -65,14 +65,10 @@ Give the token, the client secret and the database password as `BOT_TOKEN`,
 | Key | Default | Environment | What it does |
 |---|---|---|---|
 | `token` | `""` | `BOT_TOKEN` | The bot token. **Required.** |
-| `botOwner` | `[]` | | Discord user ids of the bot owners. They can restart and stop the bot with `/bot` and open the dashboard of every server the bot is in. |
+| `botOwner` | `[]` | | Discord user ids of the bot owners. Only they can use `/bot`, and they can open the dashboard of every server the bot is in. |
 | `botGuild` | `0` | | The id of your own server. `/bot` is registered only there. **Required.** |
-| `privateSupportChannel` | `0` | | A text channel on the bot guild. When someone sends the bot a direct message, it offers to open a support thread there, and forwards messages both ways. `0` turns the threads off. |
+| `privateSupportChannel` | `0` | | A text channel on the bot guild. When someone sends the bot a direct message, it offers to open a support thread there, and forwards messages both ways. Each user has one open thread at a time; locking or archiving it closes the request. With `0`, or without a `botGuild`, the bot ignores direct messages. |
 | `reviewChannel` | `0` | | A text channel on the bot guild. The bot posts there when a server changes the bot's nickname. `0` turns it off. |
-
-:::warning
-Set `botGuild`. Direct messages to the bot fail with an error while it is `0`.
-:::
 
 ## database
 
@@ -96,8 +92,8 @@ The web server for the dashboard and its API.
 |---|---|---|---|
 | `host` | `"0.0.0.0"` | `BOT_API_HOST` | Address to listen on. |
 | `port` | `8888` | `BOT_API_PORT` | Port to listen on. |
-| `url` | `"https://repbot.chojo.de"` | `BOT_API_URL` | The public address of your dashboard, without a trailing slash. Used for dashboard links in Discord, the return after Discord login, and the `/bot system metrics` charts. **Set it.** |
-| `tokenValidHours` | `720` | | How long a dashboard login stays valid, in hours. |
+| `url` | `"https://repbot.chojo.dev"` | `BOT_API_URL` | The public address of your dashboard, without a trailing slash. Used for dashboard links in Discord, the return after Discord login, and the `/bot system metrics` charts. **Set it.** |
+| `tokenValidHours` | `720` | | How long a dashboard login stays valid without being used, in hours. Expired logins are deleted every hour. |
 
 ## discordOAuth
 
@@ -170,15 +166,10 @@ When someone thanks themselves in a message, the bot sometimes replies with an i
 
 | Key | Default | What it does |
 |---|---|---|
-| `magicImageLink` | `""` | Link to the image. |
-| `magicImagineChance` | `10` | The chance is one in this number. |
+| `magicImageLink` | `""` | Link to the image. Empty turns the image off. |
+| `magicImagineChance` | `10` | The chance is one in this number. `0` turns the image off. |
 | `magicImageCooldown` | `30` | Minutes between two images. |
 | `magicImageDeleteSchedule` | `60` | Seconds until the image is deleted again. |
-
-:::warning
-With an empty `magicImageLink`, the reply fails with an error in the log instead. Set a link to an
-image.
-:::
 
 ## badges
 
@@ -224,7 +215,7 @@ Tokens for voting on bot lists.
 
 | Key | Default | What it does |
 |---|---|---|
-| `token` | `null` | The verification token of your Ko-fi webhook. Ko-fi sends payments to `/v1/kofi`. |
+| `token` | `null` | The verification token of your Ko-fi webhook. Ko-fi sends payments to `/v1/kofi`. Without a token, the bot rejects every payment it receives. |
 
 ## mailing
 
@@ -271,7 +262,7 @@ These exist only as environment variables or system properties.
 | `CJDA_INTERACTIONS_TESTMODE` | `cjda.interactions.testmode` | `false` | For development. Registers the commands per server instead of globally. |
 | `CJDA_INTERACTIONS_CLEANGUILDCOMMANDS` | `cjda.interactions.cleanguildcommands` | `false` | For development. Redeploys the commands of every server on start. |
 | `CJDA_PREMIUM_SKIP_ENTITLED_CHECK` | `cjda.premium.skipEntitledCheck` | `false` | For development. Skips the SKU check of commands listed in `skus.interactions`. |
-| | `bot.config` | none | Path of `config.json`, relative to the working directory. **Required.** |
+| | `bot.config` | none | Path of `config.json`, absolute or relative to the working directory. **Required.** |
 | | `log4j2.configurationFile` | none | Path of the [logging setup](./logging.md). |
 | | `cjda.localisation.error.name` | | `false` hides warnings about untranslated command names. The image sets it. |
 

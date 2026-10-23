@@ -250,7 +250,7 @@ public class RepMember implements MemberHolder {
      */
     public RepProfile profile() {
         var mode = reputation.repGuild().settings().general().reputationMode();
-        Instant resetDate = reputation.repGuild().settings().general().resetDate();
+        Instant resetDate = reputation.repGuild().settings().general().activeResetDate();
         // We probably don't want to cache the profile. There are just too many factors which can change the user
         // reputation.
 
@@ -271,8 +271,9 @@ public class RepMember implements MemberHolder {
      */
     public int countReceived() {
         var hours = reputation().repGuild().settings().abuseProtection().maxReceivedHours();
-        return query("SELECT count(1) FROM reputation_log WHERE received > now() - ?::INTERVAL AND receiver_id = ?")
-                .single(call().bind("%s hours".formatted(hours)).bind(memberId()))
+        return query(
+                        "SELECT count(1) FROM reputation_log WHERE received > now() - ?::INTERVAL AND guild_id = ? AND receiver_id = ?")
+                .single(call().bind("%s hours".formatted(hours)).bind(guildId()).bind(memberId()))
                 .map(rs -> rs.getInt(1))
                 .first()
                 .orElse(0);
@@ -285,8 +286,9 @@ public class RepMember implements MemberHolder {
      */
     public int countGiven() {
         var hours = reputation().repGuild().settings().abuseProtection().maxGivenHours();
-        return query("SELECT count(1) FROM reputation_log WHERE received > now() - ?::INTERVAL AND donor_id = ?")
-                .single(call().bind("%s hours".formatted(hours)).bind(memberId()))
+        return query(
+                        "SELECT count(1) FROM reputation_log WHERE received > now() - ?::INTERVAL AND guild_id = ? AND donor_id = ?")
+                .single(call().bind("%s hours".formatted(hours)).bind(guildId()).bind(memberId()))
                 .map(rs -> rs.getInt(1))
                 .first()
                 .orElse(0);

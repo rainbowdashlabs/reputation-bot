@@ -39,9 +39,8 @@ public class User implements SlashHandler {
                         .complete();
                 return;
             }
-            event.reply(context.localize("error.userNotFound"))
-                    .setEphemeral(true)
-                    .complete();
         }
+
+        event.reply(context.localize("error.userNotFound")).setEphemeral(true).complete();
     }
 }

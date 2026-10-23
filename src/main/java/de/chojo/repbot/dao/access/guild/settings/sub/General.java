@@ -102,6 +102,26 @@ public class General extends GeneralPOJO implements GuildHolder {
         return result;
     }
 
+    /**
+     * The reset date that applies right now. A reset date in the future takes effect once it has passed.
+     *
+     * @return the reset date, or null if none is set or it is still in the future
+     */
+    public @Nullable Instant activeResetDate() {
+        return activeResetDate(resetDate, Instant.now());
+    }
+
+    /**
+     * The reset date that applies at a point in time.
+     *
+     * @param resetDate the configured reset date, may be null
+     * @param now       the point in time
+     * @return the reset date, or null if none is set or it lies after {@code now}
+     */
+    static @Nullable Instant activeResetDate(@Nullable Instant resetDate, Instant now) {
+        return resetDate == null || resetDate.isAfter(now) ? null : resetDate;
+    }
+
     public boolean resetDateNow() {
         return resetDate(Instant.now());
     }

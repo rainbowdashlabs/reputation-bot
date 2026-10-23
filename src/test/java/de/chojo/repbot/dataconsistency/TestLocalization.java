@@ -39,7 +39,7 @@ public class TestLocalization {
             "bot.cleancommands",
             "bot.gdpr.enable",
             "yyyy.MM.dd");
-    private static final Set<String> WHITELIST_ENDS = Set.of(".gg", ".com", "bot.config", ".png", ".json");
+    private static final Set<String> WHITELIST_ENDS = Set.of(".gg", ".com", ".me", "bot.config", ".png", ".json");
     private static final Set<String> WHITELIST_STARTS = Set.of("bot.");
     private static final Path EXCLUDE =
             Path.of("src", "main", "java", "de", "chojo", "repbot", "web", "routes", "v1", "settings");

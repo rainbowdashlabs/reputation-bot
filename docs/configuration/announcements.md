@@ -82,12 +82,6 @@ Set it up under **Settings > Autopost**:
 | Enable Autopost | Turns the leaderboard on or off. It is off by default. |
 | Autopost Channel | The text channel for the leaderboard. |
 | Refresh Interval | **Hourly** every full hour, **Daily** at midnight UTC, **Weekly** at midnight UTC on Mondays, **Monthly** at midnight UTC on the first day of the month. The default is Daily. |
-| Refresh Type | **Delete and Repost** deletes the old post and sends a new one, **Repost** sends a new post and keeps the old one, **Update** edits the existing post. |
+| Refresh Type | **Delete and Repost** deletes the old post and sends a new one, **Repost** sends a new post and keeps the old one, **Update** edits the existing post. The default is Delete and Repost. |
 
 **Send Autopost Now** posts or updates the leaderboard right away.
-
-:::warning
-On a server that never changed the refresh type, the dashboard shows **Delete and Repost**, but the
-bot stores **Update** as soon as you change any autopost setting. If you want Delete and Repost,
-pick another type first and then switch back to it.
-:::

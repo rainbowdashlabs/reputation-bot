@@ -1076,6 +1076,10 @@
         "description": "Hindre at boten er aktiv i bestemte kanaler, i stedet for å tillate den overalt.",
         "name": "Kanalens sperreliste"
       },
+      "commandaliases": {
+        "description": "Gi kommandoer et eget navn på denne serveren.",
+        "name": "Egne kommandonavn"
+      },
       "detailedprofile": {
         "description": "Vis mer informasjon om brukerens omdømmeprofiler.",
         "name": "Detaljert profil"

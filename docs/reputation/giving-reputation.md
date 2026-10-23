@@ -54,7 +54,8 @@ reputation from User B. User A can't. Your server can turn these checks off on t
 
 ### Voice activity
 
-Members who share a voice channel with you, or did so a short while ago, also count as part of your conversation.
+Members who share a voice channel with you, or did so within the
+[max message age](../configuration/abuse-protection.md#max-message-age) (30 minutes by default), also count as part of your conversation.
 This way you can thank someone who helped you in a voice call, in any reputation channel.
 
 ## Answer
@@ -77,17 +78,12 @@ default), the bot ignores the mentions and tries fuzzy matching instead.
 
 ## Fuzzy matching
 
-Write the member's name without a mention. The bot compares the words around the thank word with the names of the
-members in the conversation and picks names that match closely.
+Write the member's name without a mention. The bot compares up to six words before and after each thank word with the
+names of the members in the conversation and picks names that match closely.
 
 ![A thank you message that contains a member's name without a mention](./fuzzy.png)
 
 The bot only gives reputation when it is quite sure. If no name matches well enough, it falls back to the embed.
-
-:::warning
-Fuzzy matching currently only looks at the second to seventh word of a message, wherever the thank word is. A name
-further back in a long message is not found.
-:::
 
 ## Embed
 

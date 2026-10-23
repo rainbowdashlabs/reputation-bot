@@ -86,7 +86,7 @@ public class TokenPurchaseService {
         if (guild == null) return PurchaseResult.failed(GUILD_NOT_FOUND);
         RepGuild repGuild = guildRepository.guild(guild);
 
-        if (!repGuild.settings().general().everyoneTokenPurchase() && role == Role.GUILD_ADMIN) {
+        if (!mayPurchase(repGuild.settings().general().everyoneTokenPurchase(), role)) {
             return PurchaseResult.failed(ADMIN_ONLY);
         }
 
@@ -105,6 +105,17 @@ public class TokenPurchaseService {
                 .addSubscription(new Subscription(
                         feature.id(), guildId, TOKEN, SkuTarget.GUILD, APPLICATION_SUBSCRIPTION, null, true));
         return PurchaseResult.SUCCESS;
+    }
+
+    /**
+     * Checks whether a member may buy features with tokens.
+     *
+     * @param everyoneTokenPurchase whether the server lets every member buy features
+     * @param role                  the role of the member on the server
+     * @return true if everyone may buy features or the member manages the server
+     */
+    static boolean mayPurchase(boolean everyoneTokenPurchase, Role role) {
+        return everyoneTokenPurchase || role == Role.GUILD_ADMIN;
     }
 
     public PurchaseResult subscribeFeature(int id, long guildId) {

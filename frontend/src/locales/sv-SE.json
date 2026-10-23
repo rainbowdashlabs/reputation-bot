@@ -1076,6 +1076,10 @@
         "description": "Förhindra att boten är aktiv i specifika kanaler istället för att tillåta den överallt.",
         "name": "Kanalens svartlista"
       },
+      "commandaliases": {
+        "description": "Ge kommandon ett eget namn på den här servern.",
+        "name": "Egna kommandonamn"
+      },
       "detailedprofile": {
         "description": "Visa mer information om användarnas omdömesprofiler.",
         "name": "Detaljerad profil"

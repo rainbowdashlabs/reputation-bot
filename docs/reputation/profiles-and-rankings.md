@@ -49,7 +49,8 @@ To see another time frame than your server's reputation mode, pick a mode: `/top
 Everything except `/ranking server received` is a supporter feature (**Advanced Rankings**). The same rankings are in
 the dashboard under **Dashboard > Ranking**.
 
-Members whose data is about to be removed because they left your server don't show up in rankings. See
+Members whose data is about to be removed because they left your server don't show up in rankings, and their
+profile shows no reputation. See
 [removing reputation](./removing-reputation.md#members-who-leave).
 
 ## Custom command names

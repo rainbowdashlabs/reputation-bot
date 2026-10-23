@@ -11,7 +11,7 @@ import de.chojo.jdautil.util.SysVar;
 public class Api {
     private String host = "0.0.0.0";
     private int port = 8888;
-    private String url = "https://repbot.chojo.de";
+    private String url = "https://repbot.chojo.dev";
     private int tokenValidHours = 720; // 30 Days
 
     public String host() {

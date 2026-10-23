@@ -1076,6 +1076,10 @@
         "description": "Impedisci al bot di essere attivo in determinati canali invece di lasciarlo libero ovunque.",
         "name": "Lista dei canali bloccati"
       },
+      "commandaliases": {
+        "description": "Dai ai comandi un nome personalizzato su questo server.",
+        "name": "Nomi dei comandi personalizzati"
+      },
       "detailedprofile": {
         "description": "Mostra più info sui profili di reputazione degli utenti.",
         "name": "Profilo dettagliato"

@@ -26,7 +26,10 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 
 public class AutopostEnable implements SlashHandler {
     private final GuildRepository guildRepository;
@@ -68,12 +71,12 @@ public class AutopostEnable implements SlashHandler {
 
         if (event.getOption("refreshinterval") != null) {
             String refreshInterval = event.getOption("refreshinterval").getAsString();
-            autopost.refreshInterval(RefreshInterval.valueOf(refreshInterval));
+            parseOption(RefreshInterval.class, refreshInterval).ifPresent(autopost::refreshInterval);
         }
 
         if (event.getOption("refreshtype") != null) {
             String refreshType = event.getOption("refreshtype").getAsString();
-            autopost.refreshType(RefreshType.valueOf(refreshType));
+            parseOption(RefreshType.class, refreshType).ifPresent(autopost::refreshType);
         }
 
         autopostService.update(event.getGuild());
@@ -83,6 +86,25 @@ public class AutopostEnable implements SlashHandler {
                                 "command.channel.autopost.enable.message.enabled",
                                 Replacement.create("CHANNEL", MentionUtil.channel(autopost.channelId()))))
                 .complete();
+    }
+
+    /**
+     * Finds the enum constant for an option value, ignoring case, spaces and underscores.
+     *
+     * @param type  the enum type
+     * @param value the option value
+     * @param <E>   the enum type
+     * @return the matching constant, or empty if the value names none
+     */
+    static <E extends Enum<E>> Optional<E> parseOption(Class<E> type, String value) {
+        var key = normalize(value);
+        return Arrays.stream(type.getEnumConstants())
+                .filter(constant -> normalize(constant.name()).equals(key))
+                .findFirst();
+    }
+
+    private static String normalize(String value) {
+        return value.replaceAll("[\\s_]", "").toLowerCase(Locale.ROOT);
     }
 
     @Override

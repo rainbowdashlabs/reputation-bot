@@ -27,7 +27,7 @@ You sign in with your Discord account. The bot asks Discord for three things:
 
 The server you are working on is shown at the bottom right of every page, marked **Current Server**. Click it to
 switch to another server. If a server is missing, for example because you just invited the bot, click the refresh
-button (**Refresh server list**) in that menu. Your session is kept in the browser. Click **Logout** to end it.
+button (**Refresh server list**) in that menu. Your session is kept in the browser. Click **Logout** to end it. A session you don't use for 30 days ends on its own.
 
 ## Who can change settings
 

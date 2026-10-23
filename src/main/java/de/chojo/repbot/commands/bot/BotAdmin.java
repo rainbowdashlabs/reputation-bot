@@ -12,6 +12,7 @@ import de.chojo.jdautil.interactions.slash.SubCommand;
 import de.chojo.jdautil.interactions.slash.provider.SlashProvider;
 import de.chojo.jdautil.interactions.slash.structure.builder.GroupBuilder;
 import de.chojo.jdautil.interactions.slash.structure.builder.components.PartialGroupBuilder;
+import de.chojo.jdautil.interactions.slash.structure.handler.SlashHandler;
 import de.chojo.jdautil.util.SysVar;
 import de.chojo.repbot.commands.bot.handler.Debug;
 import de.chojo.repbot.commands.bot.handler.InvalidateCache;
@@ -46,12 +47,14 @@ import static de.chojo.jdautil.interactions.slash.SubCommand.sub;
 
 public class BotAdmin implements SlashProvider<Slash> {
     private final Slash slash;
+    private final Configuration configuration;
 
     public BotAdmin(
             GuildRepository guildRepository,
             Configuration configuration,
             Statistic statistics,
             SessionService sessionService) {
+        this.configuration = configuration;
         var builder = Slash.of("bot", "Bot admin commands.")
                 .unlocalized()
                 .guildOnly()
@@ -60,76 +63,81 @@ public class BotAdmin implements SlashProvider<Slash> {
         PartialGroupBuilder groupBuilder = Group.of("system", "System management");
         if (!SysVar.propOrEnv("docker", "DOCKER", "false").equals("true")) {
             groupBuilder
-                    .subCommand(SubCommand.of("restart", "Restart bot").handler(new Restart(configuration)))
-                    .subCommand(SubCommand.of("upgrade", "Deploy an update").handler(new Upgrade(configuration)))
-                    .subCommand(SubCommand.of("shutdown", "Shutdown the bot.").handler(new Shutdown(configuration)));
+                    .subCommand(SubCommand.of("restart", "Restart bot").handler(owner(new Restart(configuration))))
+                    .subCommand(SubCommand.of("upgrade", "Deploy an update").handler(owner(new Upgrade(configuration))))
+                    .subCommand(
+                            SubCommand.of("shutdown", "Shutdown the bot.").handler(owner(new Shutdown(configuration))));
         }
         groupBuilder
-                .subCommand(SubCommand.of("status", "System status").handler(new Status(statistics)))
-                .subCommand(SubCommand.of("metrics", "System metrics").handler(new Metrics(configuration)))
-                .subCommand(SubCommand.of("reload", "Reload configuration").handler(new Reload(configuration)));
+                .subCommand(SubCommand.of("status", "System status").handler(owner(new Status(statistics))))
+                .subCommand(SubCommand.of("metrics", "System metrics").handler(owner(new Metrics(configuration))))
+                .subCommand(SubCommand.of("reload", "Reload configuration").handler(owner(new Reload(configuration))));
         slash = builder.group((GroupBuilder) groupBuilder)
                 .subCommand(SubCommand.of("debug", "Debug of a guild")
-                        .handler(new Debug(guildRepository))
+                        .handler(owner(new Debug(guildRepository)))
                         .argument(Argument.text("guild_id", "Id of guild").asRequired())
                         .argument(Argument.text("channel_id", "Id of channel")))
                 .group(Group.of("log", "log access")
                         .subCommand(SubCommand.of("analyzer", "Analyzer log")
-                                .handler(new Analyzer(guildRepository))
-                                .argument(Argument.text("guildid", "Guild id").asRequired())
+                                .handler(owner(new Analyzer(guildRepository)))
+                                .argument(Argument.text("guild_id", "Guild id").asRequired())
                                 .argument(Argument.text("messageid", "Id of message")
                                         .asRequired())))
                 .subCommand(SubCommand.of("shared_guilds", "Shared guilds with a user")
-                        .handler(new SharedGuilds(configuration, guildRepository))
+                        .handler(owner(new SharedGuilds(configuration, guildRepository)))
                         .argument(Argument.text("user_id", "user id"))
                         .argument(Argument.user("user", "user"))
                         .argument(Argument.bool("deep", "true to perform a deep search")))
                 .group(group("interactions", "Manage interactions")
                         .subCommand(SubCommand.of("redeploy", "Redeploy guild commands")
-                                .handler(new Redeploy())
+                                .handler(owner(new Redeploy()))
                                 .argument(Argument.text("guild_id", "Guild id").asRequired()))
                         .subCommand(SubCommand.of("get", "Get guild commands")
-                                .handler(new Get())
+                                .handler(owner(new Get()))
                                 .argument(Argument.text("guild_id", "Guild id").asRequired())))
                 .subCommand(SubCommand.of("search", "Search for guilds")
-                        .handler(new Search())
+                        .handler(owner(new Search()))
                         .argument(Argument.text("term", "Search term").asRequired()))
                 .subCommand(SubCommand.of("invalidate_cache", "Invalidates cached data for the guild")
-                        .handler(new InvalidateCache(guildRepository))
+                        .handler(owner(new InvalidateCache(guildRepository)))
                         .argument(Argument.text("guild", "guild id").asRequired()))
                 .subCommand(SubCommand.of("leave", "Leave a guild")
-                        .handler(new Leave())
+                        .handler(owner(new Leave()))
                         .argument(Argument.text("guild_id", "Guild id").asRequired()))
                 .group(group("entitlement", "Manage entitlements")
                         .subCommand(sub("create", "Create entitlements")
-                                .handler(new Create(configuration))
+                                .handler(owner(new Create(configuration)))
                                 .argument(text("sku", "skuid").asRequired().withAutoComplete())
                                 .argument(text("ownerid", "guild id")))
                         .subCommand(sub("list", "List entitlements of a guild")
-                                .handler(new Show())
+                                .handler(owner(new Show()))
                                 .argument(text("guild_id", "Guild id")))
                         .subCommand(sub("delete", "Delete Entitlement")
-                                .handler(new Delete())
+                                .handler(owner(new Delete()))
                                 .argument(
                                         text("entitlementid", "Entitlement id").asRequired())))
                 .subCommand(sub("session", "Open a web session for another guild")
-                        .handler(new Session(configuration))
+                        .handler(owner(new Session(configuration)))
                         .argument(text("guild_id", "Guild id").asRequired()))
-                .subCommand(sub("sample", "Generate sample data").handler(new Sample(guildRepository)))
+                .subCommand(sub("sample", "Generate sample data").handler(owner(new Sample(guildRepository))))
                 .subCommand(sub("remove_nickname", "Remove bot nickname from a guild")
-                        .handler(new RemoveNickname(guildRepository))
+                        .handler(owner(new RemoveNickname(guildRepository)))
                         .argument(text("guild_id", "Guild id").asRequired()))
                 .subCommand(sub("remove_profile_picture", "Remove bot profile picture from a guild")
-                        .handler(new RemoveProfilePicture(guildRepository))
+                        .handler(owner(new RemoveProfilePicture(guildRepository)))
                         .argument(text("guild_id", "Guild id").asRequired()))
                 .group(group("system_message", "send a system message")
                         .subCommand(sub("guild", "Send a system message to a single guild")
-                                .handler(new SendGuildMessage(guildRepository))
+                                .handler(owner(new SendGuildMessage(guildRepository)))
                                 .argument(text("guild_id", "the guild id").asRequired()))
                         .subCommand(sub("all", "Send a system message to all guilds")
                                 .handler(((event, context) ->
                                         event.reply("not implemented").complete()))))
                 .build();
+    }
+
+    private SlashHandler owner(SlashHandler handler) {
+        return new BotOwnerOnly(configuration::baseSettings, handler);
     }
 
     @Override

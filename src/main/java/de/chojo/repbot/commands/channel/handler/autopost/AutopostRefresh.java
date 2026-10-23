@@ -24,13 +24,15 @@ public class AutopostRefresh implements SlashHandler {
     @Override
     public void onSlashCommand(SlashCommandInteractionEvent event, EventContext context) {
         if (!guildRepository.guild(event.getGuild()).settings().autopost().active()) {
-            event.reply(WebPromo.promoString(context) + "command.channel.autopost.refresh.message.inactive")
+            event.reply(WebPromo.promoString(context)
+                            + context.localize("command.channel.autopost.refresh.message.inactive"))
                     .setEphemeral(true)
                     .complete();
             return;
         }
         autopostService.update(event.getGuild());
-        event.reply(WebPromo.promoString(context) + "command.channel.autopost.refresh.message.refreshed")
+        event.reply(WebPromo.promoString(context)
+                        + context.localize("command.channel.autopost.refresh.message.refreshed"))
                 .setEphemeral(true)
                 .complete();
     }

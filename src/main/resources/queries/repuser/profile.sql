@@ -9,6 +9,13 @@ WITH
         WHERE o.added > :date_init
           AND ( added > :reset_date OR :reset_date::TIMESTAMP IS NULL )
           AND guild_id = :guild_id
+          AND o.user_id NOT IN (
+            SELECT
+                user_id
+            FROM
+                cleanup_schedule
+            WHERE guild_id = :guild_id
+                               )
         GROUP BY o.user_id
            ),
     raw_log
@@ -65,7 +72,7 @@ WITH
             -- Remove entries scheduled for cleanup
             user_id NOT IN (
                 SELECT
-                    1
+                    user_id
                 FROM
                     cleanup_schedule clean
                 WHERE guild_id = :guild_id

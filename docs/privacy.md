@@ -36,12 +36,6 @@ The file contains:
 - your user settings, votes and vote tokens,
 - the settings changes you made in the dashboard.
 
-:::warning
-The first time you request your data, the bot currently answers "You have requested your data in
-the last 30 days." Your request was still recorded. The file arrives by direct message within
-about an hour.
-:::
-
 ## Deleting your data
 
 Run `/gdpr delete`. Your data is deleted within the next hours. You don't get a confirmation, and

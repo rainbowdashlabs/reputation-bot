@@ -26,11 +26,19 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class Thankwords extends ThankwordsPOJO implements GuildHolder {
     private static final Logger log = getLogger(Thankwords.class);
 
+    /**
+     * Separates a thank word from its neighbours: any character that is not a letter, digit or underscore, or a
+     * character of a script that is written without spaces between words. RE2 only knows ASCII word boundaries, so
+     * {@code \b} would not find thank words in other scripts.
+     */
     @Language("RegExp")
-    private static final String THANKWORD = "(?:^|\\b)%s(?:$|\\b)";
+    private static final String BOUNDARY = "[^\\p{L}\\p{N}_]|[\\p{Han}\\p{Hiragana}\\p{Katakana}]";
 
     @Language("RegExp")
-    private static final String PATTERN = "(?i)(?P<match>%s)";
+    private static final String THANKWORD = "(?:%s)";
+
+    @Language("RegExp")
+    private static final String PATTERN = "(?i)(?:^|%1$s)(?P<match>%2$s)(?:$|%1$s)";
 
     private final Thanking thanking;
 
@@ -154,7 +162,8 @@ public class Thankwords extends ThankwordsPOJO implements GuildHolder {
                 .collect(Collectors.joining("|"));
         if (twPattern.isEmpty()) return Pattern.compile("");
         return Pattern.compile(
-                String.format(PATTERN, twPattern), Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
+                String.format(PATTERN, BOUNDARY, twPattern),
+                Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
     }
 
     private boolean compilesAsWord(String word) {
@@ -169,7 +178,7 @@ public class Thankwords extends ThankwordsPOJO implements GuildHolder {
 
     private void compileWord(String word) {
         Pattern.compile(
-                String.format(PATTERN, String.format(THANKWORD, word)),
+                String.format(PATTERN, BOUNDARY, String.format(THANKWORD, word)),
                 Pattern.CASE_INSENSITIVE | Pattern.MULTILINE | Pattern.DOTALL);
     }
 }

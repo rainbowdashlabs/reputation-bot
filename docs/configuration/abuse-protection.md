@@ -57,7 +57,8 @@ A user is in the context when:
 - they wrote a message after the first message the thanking user wrote within the
   [max message age](#max-message-age), or
 - they wrote one of the last messages set by [min messages](#min-messages), not older than 12 hours,
-- they are in a voice channel with the thanking user right now, or were recently.
+- they are in a voice channel with the thanking user right now, or shared one within the
+  [max message age](#max-message-age).
 
 **Receiver must be present**: the receiver must be in the context. Without it, users can thank
 anyone, even people who weren't part of the conversation.
@@ -71,10 +72,11 @@ Both are on by default. Turning them off makes reputation much easier to abuse.
 
 Messages older than **Max Message Age (minutes)** are outdated. Reputation can't be given for an
 outdated message, for example by answering it or reacting to it. The age also limits how far back
-the bot looks when it builds the [context](#receiver-and-donor-context).
+the bot looks when it builds the [context](#receiver-and-donor-context), also for
+users who shared a voice channel.
 
-Values go from 0 to 86400 minutes (60 days). `0` turns the age check off. The **Problems** tab of
-the dashboard warns you when the value is very low.
+Values go from 0 to 86400 minutes (60 days). `0` turns the age check off, and the context then covers all
+messages the bot reads. The **Problems** tab of the dashboard warns you when the value is very low.
 
 ## Min messages
 
@@ -104,10 +106,7 @@ reputation in 24 hours.
 **Over Hours** is the time window. Amounts go from 1 to 1000, windows from 1 to 8760 hours (one
 year). A limit you just turned on starts at 1 reputation in 1 hour, so set both values right after.
 
-:::warning
-The limits currently count reputation from every server the bot is on, not only from yours. A user
-who is active on other servers with the bot reaches your limit sooner.
-:::
+The limits only count reputation given and received on your server.
 
 ## Deleted messages
 
@@ -130,14 +129,8 @@ what it may do:
 | Allow Mention | The bot can give reputation by mentioning a user. |
 | Allow Fuzzy | The bot can give reputation by fuzzy matching. |
 | Allow Direct | The bot can give reputation when only one receiver was found. The bot never gets a confirmation embed. |
-| Ignore Cooldown | The [cooldown](#cooldown) doesn't apply to the bot. |
-| Ignore Limit | The [donor limit](#donor-and-receiver-limits) doesn't apply to the bot. |
+| Ignore Cooldown | The [cooldown](#cooldown) doesn't apply to the bot. The [donor and receiver roles](./roles.md#who-can-give-and-receive-reputation) still do. |
+| Ignore Limit | The [donor and receiver limits](#donor-and-receiver-limits) don't apply to reputation from the bot. |
 | Ignore Context | The [context checks](#receiver-and-donor-context) don't apply to the bot. |
 
 Bots can never receive reputation.
-
-:::warning
-**Ignore Cooldown** currently also skips the [donor and receiver role](./roles.md#who-can-give-and-receive-reputation)
-checks for that bot. Users without a receiver role, or with a deny receiver role, can then receive
-reputation from it.
-:::

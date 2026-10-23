@@ -34,7 +34,7 @@ public class Add extends BaseChannelModifier {
         }
         int size = channels.channels().size();
 
-        if (size > maxChannel) {
+        if (size >= maxChannel && !channels.channels().contains(channel)) {
             Premium.replyPremium(
                     context, configuration.skus().features().reputationChannel().fullSkuEntry());
             return;
@@ -60,7 +60,7 @@ public class Add extends BaseChannelModifier {
         }
         int size = channels.categories().size();
 
-        if (size > maxCategories) {
+        if (size >= maxCategories && !channels.categories().contains(category)) {
             Premium.replyPremium(
                     context,
                     configuration.skus().features().reputationCategories().fullSkuEntry());
