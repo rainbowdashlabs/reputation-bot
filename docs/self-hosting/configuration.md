@@ -67,12 +67,8 @@ Give the token, the client secret and the database password as `BOT_TOKEN`,
 | `token` | `""` | `BOT_TOKEN` | The bot token. **Required.** |
 | `botOwner` | `[]` | | Discord user ids of the bot owners. Only they can use `/bot`, and they can open the dashboard of every server the bot is in. |
 | `botGuild` | `0` | | The id of your own server. `/bot` is registered only there. **Required.** |
-| `privateSupportChannel` | `0` | | A text channel on the bot guild. When someone sends the bot a direct message, it offers to open a support thread there, and forwards messages both ways. `0` turns the threads off. |
+| `privateSupportChannel` | `0` | | A text channel on the bot guild. When someone sends the bot a direct message, it offers to open a support thread there, and forwards messages both ways. With `0`, or without a `botGuild`, the bot ignores direct messages. |
 | `reviewChannel` | `0` | | A text channel on the bot guild. The bot posts there when a server changes the bot's nickname. `0` turns it off. |
-
-:::warning
-Set `botGuild`. Direct messages to the bot fail with an error while it is `0`.
-:::
 
 ## database
 

@@ -63,6 +63,7 @@ public class ChatSupportService extends ListenerAdapter {
     public void onMessageReceived(@NotNull MessageReceivedEvent event) {
         if (event.getMessage().getAuthor().isBot()) return;
         if (!event.isFromGuild()) {
+            if (supportChannel().isEmpty()) return;
             ThreadChannel channel = getThread(event.getAuthor(), event.getMessage());
             if (channel == null) return;
             channel.sendMessage(reconstruct(event.getMessage())).complete();
@@ -153,9 +154,9 @@ public class ChatSupportService extends ListenerAdapter {
     }
 
     private void createThread(User user, Message initMessage) {
-        TextChannel textChannelById =
-                home().getTextChannelById(configuration.baseSettings().privateSupportChannel());
-        if (textChannelById == null) return;
+        var supportChannel = supportChannel();
+        if (supportChannel.isEmpty()) return;
+        TextChannel textChannelById = supportChannel.get();
 
         List<Guild> shared = SharedGuilds.sharedGuilds(user, true, configuration);
 
@@ -204,5 +205,17 @@ public class ChatSupportService extends ListenerAdapter {
 
     private Guild home() {
         return shardManager.getGuildById(configuration.baseSettings().botGuild());
+    }
+
+    /**
+     * Finds the channel that holds the support threads.
+     *
+     * @return the private support channel on the bot guild, or empty if the bot guild or the channel is not set or not
+     *     reachable
+     */
+    private Optional<TextChannel> supportChannel() {
+        return Optional.ofNullable(home())
+                .map(guild ->
+                        guild.getTextChannelById(configuration.baseSettings().privateSupportChannel()));
     }
 }
