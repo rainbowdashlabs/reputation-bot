@@ -215,7 +215,7 @@ public class ContextResolver {
         var pastUser = voiceData.getPastUser(
                 target.getUser(),
                 message.getGuild(),
-                settings == null ? 0 : settings.abuseProtection().minMessages(),
+                settings == null ? 0 : settings.abuseProtection().maxMessageAge(),
                 configuration.analyzerSettings().voiceMembers());
         context.addIds(pastUser.stream()
                 .map(id -> message.getGuild()

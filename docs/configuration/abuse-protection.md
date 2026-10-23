@@ -57,7 +57,8 @@ A user is in the context when:
 - they wrote a message after the first message the thanking user wrote within the
   [max message age](#max-message-age), or
 - they wrote one of the last messages set by [min messages](#min-messages), not older than 12 hours,
-- they are in a voice channel with the thanking user right now, or were recently.
+- they are in a voice channel with the thanking user right now, or shared one within the
+  [max message age](#max-message-age).
 
 **Receiver must be present**: the receiver must be in the context. Without it, users can thank
 anyone, even people who weren't part of the conversation.
@@ -71,7 +72,8 @@ Both are on by default. Turning them off makes reputation much easier to abuse.
 
 Messages older than **Max Message Age (minutes)** are outdated. Reputation can't be given for an
 outdated message, for example by answering it or reacting to it. The age also limits how far back
-the bot looks when it builds the [context](#receiver-and-donor-context).
+the bot looks when it builds the [context](#receiver-and-donor-context), also for
+users who shared a voice channel.
 
 Values go from 0 to 86400 minutes (60 days). `0` turns the age check off. The **Problems** tab of
 the dashboard warns you when the value is very low.
