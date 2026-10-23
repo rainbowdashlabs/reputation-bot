@@ -7,8 +7,8 @@ The slash commands of the bot, with who can use them by default. `<option>` is r
 `[option]` is optional.
 
 Server settings are not changed with commands but in the [dashboard](./getting-started/dashboard.md).
-The old settings commands are listed at the [end of this page](#settings-commands), together with the
-place in the dashboard that replaces them.
+The old settings commands still exist, but only link to the dashboard. They are listed at the
+[end of this page](#settings-commands).
 
 ## Who can use a command
 
@@ -72,7 +72,6 @@ More on this on [Removing reputation](./reputation/removing-reputation.md).
 | `/log donated <user>` | Shows the reputation a user gave. | Manage Messages, server only |
 | `/log message <messageid>` | Shows the reputation given by a message. | Manage Messages, server only |
 | `/log analyzer <messageid>` | Shows how the bot handled a message. | Manage Messages, server only |
-| `/thankwords check <message>` | Checks whether a message in this channel would give reputation. See [testing a message](./configuration/thankwords-and-reactions.md#testing-a-message). | Administrator, server only |
 | `/scan` | Starts a scan of old messages and links to its progress in the dashboard. | Administrator, server only |
 
 See [Logs and diagnostics](./configuration/logs-and-diagnostics.md).
@@ -105,25 +104,20 @@ Messages permission by default and work on servers only.
 
 ## Settings commands
 
-The bot still has commands that change settings. They are being phased out and show a notice that
-points you to the dashboard. Use the dashboard instead:
+These commands no longer change anything. Each one answers with buttons that open the matching
+sections of the dashboard for your server. Only you see the answer.
 
-| Old command | In the dashboard |
-|---|---|
-| `/abuseprotection` | **Settings > Abuse Protection**, see [Abuse protection](./configuration/abuse-protection.md) |
-| `/channel add`, `remove`, `set`, `list`, `listtype` | **Settings > Channels**, see [Reputation channels](./configuration/channels.md) |
-| `/channel announcement` | **Settings > Announcements**, see [Level-up announcements](./configuration/announcements.md#level-up-announcements) |
-| `/channel autopost` | **Settings > Autopost**, see [Autopost](./configuration/announcements.md#autopost) |
-| `/channel log` | **Settings > Log Channel**, see [Log channel](./configuration/logs-and-diagnostics.md#log-channel) |
-| `/channel systemchannel enable` | **Settings > General > System Channel**, see [System channel](./configuration/logs-and-diagnostics.md#system-channel) |
-| `/locale` | **Settings > General > Bot Language** |
-| `/messages states` | **Settings > Reputation > Reputation Messages**, see [Reputation messages](./configuration/announcements.md#reputation-messages) |
-| `/reactions` | **Settings > Reactions**, see [Reactions](./configuration/thankwords-and-reactions.md#reactions) |
-| `/repadmin resetdate` | **Settings > Reputation > Reset Date**, see [Reset date](./reputation/reputation-modes.md#reset-date) |
-| `/repsettings general` | **Settings > Reputation**, see [Giving reputation](./reputation/giving-reputation.md) and [Reputation modes](./reputation/reputation-modes.md) |
-| `/repsettings name` | **Settings > Profile > Reputation Name** |
-| `/roles` | **Settings > Ranks** and **Settings > Roles**, see [Roles](./configuration/roles.md) |
-| `/thankwords add`, `remove`, `list`, `loaddefault` | **Settings > Thankwords**, see [Thankwords](./configuration/thankwords-and-reactions.md#thankwords) |
+| Command | Opens in the dashboard | Who |
+|---|---|---|
+| `/abuseprotection` | **Abuse Protection**, see [Abuse protection](./configuration/abuse-protection.md) | Administrator, server only |
+| `/channel` | **Channels**, **Announcements**, **Autopost**, **Log Channel** and **General** (for the [system channel](./configuration/logs-and-diagnostics.md#system-channel)), see [Reputation channels](./configuration/channels.md) | Administrator, server only |
+| `/locale` | **General**, where you pick the [bot language](./getting-started/dashboard.md#bot-language) | Administrator, server only |
+| `/messages` | **Reputation**, see [Reputation messages](./configuration/announcements.md#reputation-messages) | Administrator, server only |
+| `/reactions` | **Reactions**, see [Reactions](./configuration/thankwords-and-reactions.md#reactions) | Administrator, server only |
+| `/repadmin resetdate` | **Reputation**, see [Reset date](./reputation/reputation-modes.md#reset-date) | Administrator, server only |
+| `/repsettings` | **Reputation** and **Profile**, see [Giving reputation](./reputation/giving-reputation.md) and [Reputation modes](./reputation/reputation-modes.md) | Administrator, server only |
+| `/roles` | **Ranks** and **Roles**, see [Roles](./configuration/roles.md) | Manage Roles, server only |
+| `/thankwords` | **Thankwords**, see [Thankwords](./configuration/thankwords-and-reactions.md#thankwords) and [testing a message](./configuration/thankwords-and-reactions.md#testing-a-message) | Administrator, server only |
 
 ## Bot owner command
 

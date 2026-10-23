@@ -78,7 +78,6 @@ import de.chojo.repbot.util.PermissionErrorHandler;
 import de.chojo.repbot.web.services.DiscordOAuthService;
 import de.chojo.repbot.web.services.GuildModificationService;
 import de.chojo.repbot.web.services.SessionService;
-import net.dv8tion.jda.api.entities.ISnowflake;
 import net.dv8tion.jda.api.entities.channel.middleman.StandardGuildMessageChannel;
 import net.dv8tion.jda.api.events.GenericEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
@@ -101,22 +100,18 @@ import javax.security.auth.login.LoginException;
 import static de.chojo.repbot.util.ReflectionEventExtractor.extractGuild;
 import static de.chojo.repbot.util.ReflectionEventExtractor.extractPermissionException;
 import static de.chojo.repbot.util.ReflectionEventExtractor.extractUser;
-import static de.chojo.repbot.util.States.TEST_MODE;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Bot {
     private static final Logger log = getLogger(Bot.class);
     private static final Set<ErrorResponse> IGNORE_ERRORS =
             Set.of(ErrorResponse.ILLEGAL_OPERATION_ARCHIVED_THREAD, ErrorResponse.MISSING_ACCESS);
-    // TODO: Remove after decomissioning the commands
-    public static String WEB_COMMAND_MENTION = "/settings";
     private final Data data;
     private final Threading threading;
     private final Configuration configuration;
     private final Localization localization;
     private ShardManager shardManager;
     private ScanService scanService;
-    private Roles roles;
     private RoleAssigner roleAssigner;
     private RepBotCachePolicy repBotCachePolicy;
     private MessageAnalyzer messageAnalyzer;
@@ -211,9 +206,7 @@ public class Bot {
         log.info("Initializing Shardmanager.");
         roleAssigner = new RoleAssigner(data.guildRepository(), localization.localizer());
         scanService = new ScanService(data.guildRepository(), threading);
-        roles = new Roles(data.guildRepository(), new RoleAssigner(data.guildRepository(), localization.localizer()));
-
-        repBotCachePolicy = new RepBotCachePolicy(scanService, roles);
+        repBotCachePolicy = new RepBotCachePolicy(scanService, roleAssigner);
         shardManager = DefaultShardManagerBuilder.createDefault(SysVar.envOrProp(
                         "BOT_TOKEN", "bot.token", configuration.baseSettings().token()))
                 .setEventPassthrough(true)
@@ -387,27 +380,27 @@ public class Bot {
         hub = InteractionHub.builder(shardManager)
                 .withConversationSystem()
                 .withCommands(
-                        new Channel(guilds, configuration, autopostService),
+                        new Channel(configuration),
                         new Profile(guilds, configuration, roleAssigner),
-                        roles,
-                        new RepSettings(guilds, configuration),
+                        new Roles(configuration),
+                        new RepSettings(configuration),
                         new Top(guilds, configuration),
-                        Thankwords.of(messageAnalyzer, guilds),
+                        new Thankwords(configuration),
                         new Scan(scanService, configuration),
-                        new Locale(guilds),
+                        new Locale(configuration),
                         new Invite(configuration),
                         Info.create(configuration),
                         new Log(guilds, configuration),
                         new Setup(configuration),
                         new Gdpr(data.gdpr(), data.userRepository()),
                         new Prune(gdprService),
-                        new Reactions(guilds, configuration),
+                        new Reactions(configuration),
                         new Dashboard(guilds),
-                        new AbuseProtection(guilds),
+                        new AbuseProtection(configuration),
                         new Vote(configuration, data.voteRepository()),
                         new Diagnose(configuration),
                         new RepAdmin(guilds, configuration, roleAssigner, premiumService),
-                        new Messages(guilds),
+                        new Messages(configuration),
                         botAdmin,
                         new Ranking(guilds, configuration),
                         new Reputation(guilds, reputationService) /*TODO: remove rep command*/,
@@ -445,30 +438,6 @@ public class Bot {
                 .build();
 
         commandAliasService.start(hub, threading.repBotWorker());
-        hub.deployment().thenRun(this::resolveSettingsCommandMention);
-    }
-
-    // TODO: Remove after decomissioning the settings commands
-    /**
-     * Resolves the mention of the settings command. Waits for the command deployment, since the command does not
-     * exist yet on a guild that receives its commands for the first time in test mode.
-     */
-    private void resolveSettingsCommandMention() {
-        var commands = TEST_MODE
-                ? shardManager
-                        .getShards()
-                        .getFirst()
-                        .getGuildById(configuration.baseSettings().botGuild())
-                        .retrieveCommands()
-                        .complete()
-                : shardManager.getShards().getFirst().retrieveCommands().complete();
-        commands.stream()
-                .filter(cmd -> cmd.getName().equals("settings"))
-                .map(ISnowflake::getIdLong)
-                .findFirst()
-                .ifPresentOrElse(
-                        id -> WEB_COMMAND_MENTION = "</settings:" + id + ">",
-                        () -> log.warn("Settings command not found. Mentions fall back to plain text."));
     }
 
     /**

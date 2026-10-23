@@ -6,17 +6,19 @@
 package de.chojo.repbot.commands.messages;
 
 import de.chojo.jdautil.interactions.slash.Slash;
-import de.chojo.jdautil.interactions.slash.SubCommand;
 import de.chojo.jdautil.interactions.slash.provider.SlashCommand;
-import de.chojo.repbot.commands.messages.handler.States;
-import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.commands.settings.DashboardLink;
+import de.chojo.repbot.commands.settings.DashboardSection;
+import de.chojo.repbot.config.Configuration;
 
+/**
+ * Former settings command. Links to the dashboard sections that hold its settings.
+ */
 public class Messages extends SlashCommand {
-    public Messages(GuildRepository guildRepository) {
+    public Messages(Configuration configuration) {
         super(Slash.of("messages", "command.messages.description")
                 .guildOnly()
                 .adminCommand()
-                .subCommand(SubCommand.of("states", "command.messages.states.description")
-                        .handler(new States(guildRepository))));
+                .command(new DashboardLink(configuration, DashboardSection.REPUTATION)));
     }
 }

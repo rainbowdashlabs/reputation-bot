@@ -3,16 +3,15 @@
  *
  *     Copyright (C) RainbowDashLabs and Contributor
  */
-package de.chojo.repbot.commands;
+package de.chojo.repbot.serialization;
 
-import de.chojo.repbot.commands.thankwords.Thankwords;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class ThankwordsTest {
+class ThankwordsContainerTest {
 
     @Test
-    void loadContainer() {
-        Assertions.assertDoesNotThrow(Thankwords::loadContainer);
+    void load() {
+        Assertions.assertDoesNotThrow(ThankwordsContainer::load);
     }
 }
