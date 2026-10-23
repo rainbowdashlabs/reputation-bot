@@ -3,7 +3,7 @@ name: Verify
 on: [push, pull_request, merge_group]
 
 env:
-  JAVA_VERSION: 21
+  JAVA_VERSION: 25
   PYTHON_VERSION: 3.14
   NODE_VERSION: 24
 

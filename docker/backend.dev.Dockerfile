@@ -2,7 +2,7 @@
 # (~/.gradle), the project's build/ and the project-local .gradle/ live in named volumes so
 # incremental compilation survives container restarts. Once the cache is warm, building in
 # here is as fast as building on the host.
-FROM gradle:jdk21-alpine
+FROM eclipse-temurin:25-jdk-alpine
 
 WORKDIR /home/gradle/project
 

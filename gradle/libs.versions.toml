@@ -1,0 +1,77 @@
+[versions]
+palantir = "2.84.0"
+spotless = "8.10.4"
+shadow = "9.6.1"
+idea-ext = "1.4.1"
+
+cjda-util = "2.15.0+jda-6.3.0"
+javalin-openapi = "7.2.3"
+jackson = "2.22.4"
+re2j = "1.8"
+postgresql = "42.7.14"
+sadu = "2.3.9"
+log4j = "2.26.1"
+slf4j = "2.0.20"
+log-util = "1.0.1"
+xchart = "4.0.4"
+commons-validator = "1.11.0"
+angus-mail = "2.0.5"
+commonmark = "0.31.0"
+
+junit = "6.1.3"
+testcontainers = "2.0.5"
+
+[libraries]
+cjda-util = { module = "de.chojo:cjda-util", version.ref = "cjda-util" }
+
+javalin-openapi-processor = { module = "io.javalin.community.openapi:openapi-annotation-processor", version.ref = "javalin-openapi" }
+javalin-openapi-plugin = { module = "io.javalin.community.openapi:javalin-openapi-plugin", version.ref = "javalin-openapi" }
+javalin-swagger-plugin = { module = "io.javalin.community.openapi:javalin-swagger-plugin", version.ref = "javalin-openapi" }
+
+jackson-jsr310 = { module = "com.fasterxml.jackson.datatype:jackson-datatype-jsr310", version.ref = "jackson" }
+re2j = { module = "com.google.re2j:re2j", version.ref = "re2j" }
+
+postgresql = { module = "org.postgresql:postgresql", version.ref = "postgresql" }
+sadu-queries = { module = "de.chojo.sadu:sadu-queries", version.ref = "sadu" }
+sadu-updater = { module = "de.chojo.sadu:sadu-updater", version.ref = "sadu" }
+sadu-postgresql = { module = "de.chojo.sadu:sadu-postgresql", version.ref = "sadu" }
+sadu-datasource = { module = "de.chojo.sadu:sadu-datasource", version.ref = "sadu" }
+sadu-testing = { module = "de.chojo.sadu:sadu-testing", version.ref = "sadu" }
+
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref = "slf4j" }
+slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref = "slf4j" }
+log4j-core = { module = "org.apache.logging.log4j:log4j-core", version.ref = "log4j" }
+log4j-slf4j2 = { module = "org.apache.logging.log4j:log4j-slf4j2-impl", version.ref = "log4j" }
+log4j-jsontemplate = { module = "org.apache.logging.log4j:log4j-layout-template-json", version.ref = "log4j" }
+log-util = { module = "de.chojo:log-util", version.ref = "log-util" }
+
+xchart = { module = "org.knowm.xchart:xchart", version.ref = "xchart" }
+commons-validator = { module = "commons-validator:commons-validator", version.ref = "commons-validator" }
+angus-mail = { module = "org.eclipse.angus:angus-mail", version.ref = "angus-mail" }
+
+commonmark = { module = "org.commonmark:commonmark", version.ref = "commonmark" }
+commonmark-ext-gfm-tables = { module = "org.commonmark:commonmark-ext-gfm-tables", version.ref = "commonmark" }
+commonmark-ext-heading-anchor = { module = "org.commonmark:commonmark-ext-heading-anchor", version.ref = "commonmark" }
+commonmark-ext-autolink = { module = "org.commonmark:commonmark-ext-autolink", version.ref = "commonmark" }
+
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
+junit-params = { module = "org.junit.jupiter:junit-jupiter-params" }
+junit-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+
+testcontainers-core = { module = "org.testcontainers:testcontainers", version.ref = "testcontainers" }
+testcontainers-postgresql = { module = "org.testcontainers:testcontainers-postgresql", version.ref = "testcontainers" }
+testcontainers-junit = { module = "org.testcontainers:testcontainers-junit-jupiter", version.ref = "testcontainers" }
+
+[bundles]
+sadu = ["sadu-queries", "sadu-updater", "sadu-postgresql", "sadu-datasource"]
+log4j = ["slf4j-api", "log4j-core", "log4j-slf4j2", "log4j-jsontemplate"]
+commonmark = ["commonmark", "commonmark-ext-gfm-tables", "commonmark-ext-heading-anchor", "commonmark-ext-autolink"]
+javalin-openapi = ["javalin-openapi-plugin", "javalin-swagger-plugin"]
+junit = ["junit-jupiter", "junit-params"]
+testcontainers = ["testcontainers-core", "testcontainers-postgresql", "testcontainers-junit"]
+
+[plugins]
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
+idea-ext = { id = "org.jetbrains.gradle.plugin.idea-ext", version.ref = "idea-ext" }

@@ -9,7 +9,7 @@ RUN nix-shell --run "npm ci"
 COPY frontend/ .
 RUN nix-shell --run "npm run build"
 
-FROM gradle:jdk21-alpine AS build
+FROM eclipse-temurin:25-jdk-alpine AS build
 
 ARG GITHUB_ACTIONS=false
 ARG GITHUB_REF_TYPE=null
@@ -25,7 +25,7 @@ WORKDIR /home/gradle
 COPY . .
 
 RUN mkdir -p src/main/resources/static
-RUN gradle clean shadowJar --no-daemon -x test -x javadocJar -x sourcesJar
+RUN ./gradlew --no-daemon shadowJar -x test
 
 FROM eclipse-temurin:25-alpine AS runtime
 ENV DOCKER=true

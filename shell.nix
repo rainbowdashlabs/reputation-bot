@@ -1,6 +1,6 @@
 { pkgs ? import <nixpkgs> {}, ... }:
 
 pkgs.mkShell {
-  packages = with pkgs; [jdk21 python314 pipenv nodejs_24];
+  packages = with pkgs; [jdk25 python314 pipenv nodejs_24];
 }
 
