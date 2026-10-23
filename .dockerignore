@@ -15,3 +15,5 @@ site
 docker/data
 frontend/node_modules
 frontend/dist
+.concept
+frontend/.vite

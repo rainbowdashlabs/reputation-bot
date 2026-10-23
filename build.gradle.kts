@@ -203,18 +203,6 @@ tasks {
                 + providers.systemPropertiesPrefixedBy("log4j2.").get())
     }
 
-    register("checkLicenseBackend") {
-        group = "verification"
-        description = "Checks license headers for backend Java files"
-        dependsOn("spotlessJavaCheck")
-    }
-
-    register("checkLicenseFrontend") {
-        group = "verification"
-        description = "Checks license headers for frontend Vue and JavaScript files"
-        dependsOn("spotlessJavascriptCheck", "spotlessVueCheck")
-    }
-
     shadowJar {
         transform(Log4j2PluginsCacheFileTransformer::class.java)
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
