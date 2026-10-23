@@ -11,8 +11,8 @@ public class Links {
     private String invite =
             "https://discord.com/oauth2/authorize?client_id=834843896579489794&scope=bot&permissions=1342532672";
     private String support = "";
-    private String website = "https://rainbowdashlabs.github.io/reputation-bot/";
-    private String faq = "https://rainbowdashlabs.github.io/reputation-bot/faq";
+    private String website = "https://docs.chojo.dev/reputation-bot";
+    private String faq = "https://docs.chojo.dev/reputation-bot/faq";
     private String kofi = "https://ko-fi.com/reputationbot";
 
     public String tos() {

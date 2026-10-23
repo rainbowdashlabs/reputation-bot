@@ -1,23 +1,34 @@
-[![wakatime](https://wakatime.com/badge/github/RainbowDashLabs/reputation-bot.svg)](https://wakatime.com/badge/github/RainbowDashLabs/reputation-bot)
+# Reputation Bot
 
-# Motivation
+A Discord bot that finds out who helped whom. When someone thanks another member, by mention, reply, reaction or
+just a "thanks", the bot gives that member reputation. Reputation feeds rankings, profiles and reputation roles, and a
+web dashboard holds every setting. It was built for communities where helping each other matters more than chat
+activity.
 
-This bot was created for the [DevCord Discord Server](https://discord.gg/gfEsr79d9a). \
-We needed a way to identify valuable users in our community. Most bots do these by chat activity.\
-Sadly a high chat activity doesn't mean that a user is valuable for the community.\
-That is where the reputation bot comes in place.
+Documentation: https://docs.chojo.dev/reputation-bot
 
-# How does it work
+## Use it
 
-The reputation bot will scan messages for thank phrases, which you can define.\
-When a thank phrase is found the bot will try to find the receiver of the message. This is done by several checks.
+[Invite the public bot](https://invite.repbot.chojo.dev) and run `/setup` on your server. The
+[getting started guide](https://docs.chojo.dev/reputation-bot/getting-started/invite) walks you through it.
 
-You can find more about the bot on our [website](https://rainbowdashlabs.github.io/reputation-bot/).
+## Host it yourself
 
-# Self-hosting
+The bot runs from the Docker image `ghcr.io/rainbowdashlabs/reputation-bot` with a PostgreSQL database. Start from
+[`docker/docker-compose.yml`](docker/docker-compose.yml) and follow the
+[self-hosting guide](https://docs.chojo.dev/reputation-bot/self-hosting).
 
-Take a look at our [hosting](https://rainbowdashlabs.github.io/reputation-bot/hosting/) page.
+## Build from source
 
-# Invite and more Information
+Requires JDK 25 and Node 24.
 
-For an invitation link and more information take a look at the [website](https://rainbowdashlabs.github.io/reputation-bot/invite/).
+```bash
+./gradlew build
+cd frontend && npm ci && npm run build
+```
+
+The bot jar lands in `build/libs/`, the dashboard in `frontend/dist/`. `docker build .` builds both into one image.
+
+## Licence
+
+AGPL-3.0-only, see [LICENSE.md](LICENSE.md).

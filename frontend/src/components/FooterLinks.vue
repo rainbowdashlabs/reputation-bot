@@ -23,8 +23,8 @@
         <span> • </span>
         <FooterLink
             :icon="['fas', 'question-circle']"
+            :href="links.faq"
             :label="t('navigation.faq')"
-            to="/faq"
         />
       </template>
       <template v-if="links.support">
