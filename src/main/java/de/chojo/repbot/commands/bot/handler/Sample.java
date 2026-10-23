@@ -130,27 +130,23 @@ public class Sample implements SlashHandler {
                         .bind(thankType))
                 .insert();
 
-        var result =
-                switch (thankType) {
-                    case FUZZY ->
-                        AnalyzerResult.fuzzy(
-                                receiver.getEffectiveName(),
-                                List.of("thanks"),
-                                List.of(new MemberMatch(
-                                        donor.getUser().getName(),
-                                        donor.getUser().getName(),
-                                        donor.getEffectiveName(),
-                                        1)),
-                                donor,
-                                List.of(WeightedEntry.directMatch(receiver)));
-                    case MENTION -> AnalyzerResult.mention(receiver.getEffectiveName(), donor, List.of(receiver));
-                    case ANSWER ->
-                        AnalyzerResult.answer(
-                                receiver.getEffectiveName(), donor, receiver, build(refMessage, channel, receiver));
-                    case DIRECT, EMBED, REACTION ->
-                        AnalyzerResult.empty(receiver.getEffectiveName(), EmptyResultReason.NO_MATCH);
-                    case COMMAND -> null;
-                };
+        var result = switch (thankType) {
+            case FUZZY ->
+                AnalyzerResult.fuzzy(
+                        receiver.getEffectiveName(),
+                        List.of("thanks"),
+                        List.of(new MemberMatch(
+                                donor.getUser().getName(), donor.getUser().getName(), donor.getEffectiveName(), 1)),
+                        donor,
+                        List.of(WeightedEntry.directMatch(receiver)));
+            case MENTION -> AnalyzerResult.mention(receiver.getEffectiveName(), donor, List.of(receiver));
+            case ANSWER ->
+                AnalyzerResult.answer(
+                        receiver.getEffectiveName(), donor, receiver, build(refMessage, channel, receiver));
+            case DIRECT, EMBED, REACTION ->
+                AnalyzerResult.empty(receiver.getEffectiveName(), EmptyResultReason.NO_MATCH);
+            case COMMAND -> null;
+        };
 
         addAnalyzerResult(receiver.getGuild(), channel, messageId, result);
     }
