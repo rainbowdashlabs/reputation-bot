@@ -30,7 +30,7 @@ const cooldown = computed({
 })
 
 const cooldownDirection = computed({
-  get: () => session.value?.settings?.abuseProtection.cooldownDirection ?? CooldownDirection.UNIDIRECTIONAL,
+  get: () => session.value?.settings?.abuseProtection.cooldownDirection ?? CooldownDirection.BIDIRECTIONAL,
   set: async (value) => {
     try {
       await api.updateAbuseProtectionCooldownDirection(value)
