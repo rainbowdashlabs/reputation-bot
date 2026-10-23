@@ -88,11 +88,7 @@ done
 
 | Command | What it does |
 |---|---|
-| `/bot log analyzer <guildid> <messageid>` | Meant to show how the bot analyzed a message. |
-
-:::warning
-`/bot log analyzer` fails with an error right now.
-:::
+| `/bot log analyzer <guild_id> <messageid>` | Shows how the bot analyzed a message on that server and the reputation it gave. |
 
 ## Entitlements
 

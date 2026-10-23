@@ -76,7 +76,7 @@ public class BotAdmin implements SlashProvider<Slash> {
                 .group(Group.of("log", "log access")
                         .subCommand(SubCommand.of("analyzer", "Analyzer log")
                                 .handler(new Analyzer(guildRepository))
-                                .argument(Argument.text("guildid", "Guild id").asRequired())
+                                .argument(Argument.text("guild_id", "Guild id").asRequired())
                                 .argument(Argument.text("messageid", "Id of message")
                                         .asRequired())))
                 .subCommand(SubCommand.of("shared_guilds", "Shared guilds with a user")
