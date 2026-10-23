@@ -1,29 +1,32 @@
 services:
   app:
     image: ghcr.io/rainbowdashlabs/reputation-bot:latest
-    networks:
-      - repbot
+    restart: unless-stopped
     depends_on:
       - database
-    volumes:
-      - ./config/:/app/config/
-  database:
-    networks:
-      - repbot
-    image: postgres:18
-    expose:
-      - 5432
-    volumes:
-    - db_data_18:/var/lib/postgresql
+    env_file: .env
     environment:
-      POSTGRES_USER: "root"
-      POSTGRES_PASSWORD: "changeme"
-      POSTGRES_DB: "repbot"
+      BOT_DB_HOST: database
+      BOT_DB_PORT: "5432"
+      BOT_DB_DATABASE: repbot
+      BOT_DB_SCHEMA: repbot_schema
+      BOT_DB_USER: repbot
+      BOT_API_URL: https://repbot.example.com
+    ports:
+      - 127.0.0.1:8888:8888
+    volumes:
+      - ./config:/app/config
+      - ./logs:/app/logs
 
-networks:
-  repbot:
-    name: repbot
-    external: false
+  database:
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: repbot
+      POSTGRES_PASSWORD: ${BOT_DB_PASSWORD}
+      POSTGRES_DB: repbot
+    volumes:
+      - db_data_18:/var/lib/postgresql
 
 volumes:
   db_data_18:

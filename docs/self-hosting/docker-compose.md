@@ -177,9 +177,8 @@ you to a different site.
 
 ## The Compose file in the repository
 
-The repository has a `docker/docker-compose.yml`. Use it as a starting point only: it publishes no
-port, passes no database settings to the bot and mounts an empty `./config` over the image's config
-folder. The file on this page fixes all three.
+The repository has the same file as `docker/docker-compose.yml`. You still need the `.env` file and the
+config folder from this page next to it.
 
 ## Next
 

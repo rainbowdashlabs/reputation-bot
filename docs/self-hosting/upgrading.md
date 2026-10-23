@@ -81,6 +81,6 @@ Once the bot runs fine, remove the old volume with `docker volume rm docker_db_d
 `repbot.dump`.
 
 :::tip
-If the new Compose file uses a different user, like `repbot` on the [Docker Compose](./docker-compose.md)
-page, use that user in step 4.
+The current Compose file, in the repository and on the [Docker Compose](./docker-compose.md) page, uses
+the user `repbot` instead of `root`. If you switch to it, use `repbot` in step 4.
 :::
