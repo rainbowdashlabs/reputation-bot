@@ -49,7 +49,7 @@ public class UserGiven extends UserRanking {
                 LIMIT ?;
                 """)
                 .single(call().bind(guildId())
-                        .bind("reset_date", resetDate(), INSTANT_TIMESTAMP)
+                        .bind("reset_date", resetDate(mode), INSTANT_TIMESTAMP)
                         .bind(member.getIdLong())
                         .bind(mode.dateInit(), INSTANT_TIMESTAMP)
                         .bind(page * pageSize)
@@ -77,7 +77,7 @@ public class UserGiven extends UserRanking {
                 """)
                 .single(call().bind(pageSize)
                         .bind(guildId())
-                        .bind("reset_date", resetDate(), INSTANT_TIMESTAMP)
+                        .bind("reset_date", resetDate(mode), INSTANT_TIMESTAMP)
                         .bind(member.getIdLong())
                         .bind(mode.dateInit(), INSTANT_TIMESTAMP))
                 .map(row -> row.getInt("count"))
