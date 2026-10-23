@@ -66,8 +66,9 @@ public class ContextResolver {
     @NotNull
     public MessageContext getChannelContext(Member target, Message message, @Nullable Settings settings) {
         try {
-            return messageContextCache.get(message.getIdLong(), () -> retrieveChannelContext(target, message, settings)
-                    .resolve());
+            return messageContextCache.get(
+                    message.getIdLong(),
+                    () -> retrieveChannelContext(target, message, settings).resolve());
         } catch (ExecutionException e) {
             log.error("Could not conpute channel context.", e);
         }
@@ -76,8 +77,9 @@ public class ContextResolver {
 
     public MessageContext getVoiceContext(Member target, Message message, @Nullable Settings settings) {
         try {
-            return voiceContextCache.get(message.getIdLong(), () -> retrieveVoiceContext(target, message, settings)
-                    .resolve());
+            return voiceContextCache.get(
+                    message.getIdLong(),
+                    () -> retrieveVoiceContext(target, message, settings).resolve());
         } catch (ExecutionException e) {
             log.error("Could not compute voice cache", e);
         }

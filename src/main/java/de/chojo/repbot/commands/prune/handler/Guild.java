@@ -27,9 +27,10 @@ public class Guild implements SlashHandler {
         event.reply(context.localize("command.prune.guild.message.started"))
                 .setEphemeral(true)
                 .complete();
-        service.cleanupGuildUsers(event.getGuild()).thenAccept(amount -> event.getHook()
-                .editOriginal(
-                        context.localize("command.prune.guild.message.done", Replacement.create("AMOUNT", amount)))
-                .complete());
+        service.cleanupGuildUsers(event.getGuild())
+                .thenAccept(amount -> event.getHook()
+                        .editOriginal(context.localize(
+                                "command.prune.guild.message.done", Replacement.create("AMOUNT", amount)))
+                        .complete());
     }
 }

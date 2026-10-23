@@ -74,9 +74,11 @@ public class ChatSupportService extends ListenerAdapter {
                 user.openPrivateChannel()
                         .complete()
                         .sendMessage(reconstruct(event.getMessage()))
-                        .queue(Consumers.empty(), err -> event.getChannel()
-                                .sendMessage("Message could not be sent.")
-                                .complete());
+                        .queue(
+                                Consumers.empty(),
+                                err -> event.getChannel()
+                                        .sendMessage("Message could not be sent.")
+                                        .complete());
             });
         }
     }
@@ -142,9 +144,11 @@ public class ChatSupportService extends ListenerAdapter {
     private void promptThread(User user, Message initMessage) {
         menuService.register(MenuAction.forChannel("Do you need support?", initMessage.getChannel())
                 .addComponent(MenuEntry.of(Button.success("yes", "Yes"), ctx -> createThread(user, initMessage)))
-                .addComponent(MenuEntry.of(Button.danger("no", "No"), ctx -> ctx.event()
-                        .reply("Alright, if you need help, drop us a message here.")
-                        .queue()))
+                .addComponent(MenuEntry.of(
+                        Button.danger("no", "No"),
+                        ctx -> ctx.event()
+                                .reply("Alright, if you need help, drop us a message here.")
+                                .queue()))
                 .build());
     }
 

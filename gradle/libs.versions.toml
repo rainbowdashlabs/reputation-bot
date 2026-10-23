@@ -1,5 +1,5 @@
 [versions]
-palantir = "2.84.0"
+palantir = "2.102.0"
 spotless = "8.10.4"
 shadow = "9.6.1"
 idea-ext = "1.4.1"

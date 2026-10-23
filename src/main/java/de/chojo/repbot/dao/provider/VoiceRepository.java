@@ -38,10 +38,11 @@ public class VoiceRepository {
                         DO UPDATE
                             SET seen = now()
                 """)
-                .batch(seen.stream().map(member -> call().bind(source.getIdLong() ^ member.getIdLong())
-                        .bind(source.getGuild().getIdLong())
-                        .bind(source.getIdLong())
-                        .bind(member.getIdLong())))
+                .batch(seen.stream()
+                        .map(member -> call().bind(source.getIdLong() ^ member.getIdLong())
+                                .bind(source.getGuild().getIdLong())
+                                .bind(source.getIdLong())
+                                .bind(member.getIdLong())))
                 .insert();
     }
 

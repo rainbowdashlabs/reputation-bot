@@ -69,7 +69,9 @@ public class UserMails {
     public boolean removeMail(String mailHash) {
         return query("""
                         DELETE FROM user_mails WHERE user_id = ? AND mail_hash = ?;
-                        """).single(call().bind(user.id()).bind(mailHash)).update().ifChanged(ii -> mails().remove(
-                        mailHash));
+                        """)
+                .single(call().bind(user.id()).bind(mailHash))
+                .update()
+                .ifChanged(ii -> mails().remove(mailHash));
     }
 }
