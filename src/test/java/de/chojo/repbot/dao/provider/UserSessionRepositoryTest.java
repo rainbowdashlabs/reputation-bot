@@ -5,64 +5,34 @@
  */
 package de.chojo.repbot.dao.provider;
 
-import com.zaxxer.hikari.HikariDataSource;
-import de.chojo.repbot.dataconsistency.TestSQL;
-import de.chojo.sadu.datasource.DataSourceCreator;
-import de.chojo.sadu.mapper.RowMapperRegistry;
-import de.chojo.sadu.postgresql.databases.PostgreSql;
-import de.chojo.sadu.postgresql.mapper.PostgresqlMapper;
-import de.chojo.sadu.queries.api.configuration.QueryConfiguration;
-import de.chojo.sadu.updater.SqlUpdater;
+import de.chojo.repbot.dataconsistency.TestDatabase;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.testcontainers.containers.GenericContainer;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
 @Tag("database")
 class UserSessionRepositoryTest {
-    private static GenericContainer<?> container;
-    private static HikariDataSource dataSource;
+    private static TestDatabase database;
     private final UserSessionRepository repository = new UserSessionRepository();
 
     @BeforeAll
     static void setUp() throws IOException, SQLException {
-        container = TestSQL.createContainer("postgres", "postgres");
-        dataSource = DataSourceCreator.create(PostgreSql.get())
-                .configure(conf -> conf.port(container.getFirstMappedPort()))
-                .create()
-                .usingUsername("postgres")
-                .usingPassword("postgres")
-                .forSchema("repbot_schema")
-                .build();
-        SqlUpdater.builder(dataSource, PostgreSql.get())
-                .setSchemas("repbot_schema")
-                .execute();
-        var registry = new RowMapperRegistry();
-        registry.register(PostgresqlMapper.getDefaultMapper());
-        QueryConfiguration.setDefault(QueryConfiguration.builder(dataSource)
-                .setRowMapperRegistry(registry)
-                .build());
+        database = TestDatabase.start();
     }
 
     @AfterAll
     static void tearDown() {
-        dataSource.close();
-        container.stop();
+        database.close();
     }
 
     private static void lastUsedHoursAgo(String token, int hours) throws SQLException {
-        try (var conn = dataSource.getConnection();
-                var stmt = conn.prepareStatement(
-                        "UPDATE user_session SET last_used = now() - make_interval(hours => ?) WHERE token = ?")) {
-            stmt.setInt(1, hours);
-            stmt.setString(2, token);
-            stmt.executeUpdate();
-        }
+        database.execute("UPDATE user_session SET last_used = now() - make_interval(hours => %d) WHERE token = '%s'"
+                .formatted(hours, token));
     }
 
     @Test
