@@ -8,8 +8,8 @@ change those in the [dashboard](../getting-started/dashboard.md).
 
 ## How it works
 
-The bot reads one JSON file. Its path is given with the system property `bot.config`, relative to
-the working directory. The Docker image uses `config/config.json` in `/app`.
+The bot reads one JSON file. Its path is given with the system property `bot.config`, either absolute
+or relative to the working directory. The Docker image uses `config/config.json` in `/app`.
 
 On every start, and on `/bot system reload`:
 
@@ -262,7 +262,7 @@ These exist only as environment variables or system properties.
 | `CJDA_INTERACTIONS_TESTMODE` | `cjda.interactions.testmode` | `false` | For development. Registers the commands per server instead of globally. |
 | `CJDA_INTERACTIONS_CLEANGUILDCOMMANDS` | `cjda.interactions.cleanguildcommands` | `false` | For development. Redeploys the commands of every server on start. |
 | `CJDA_PREMIUM_SKIP_ENTITLED_CHECK` | `cjda.premium.skipEntitledCheck` | `false` | For development. Skips the SKU check of commands listed in `skus.interactions`. |
-| | `bot.config` | none | Path of `config.json`, relative to the working directory. **Required.** |
+| | `bot.config` | none | Path of `config.json`, absolute or relative to the working directory. **Required.** |
 | | `log4j2.configurationFile` | none | Path of the [logging setup](./logging.md). |
 | | `cjda.localisation.error.name` | | `false` hides warnings about untranslated command names. The image sets it. |
 
