@@ -6,21 +6,15 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 plugins {
+    java
     alias(libs.plugins.shadow)
     alias(libs.plugins.spotless)
-    id("org.jetbrains.gradle.plugin.idea-ext") version "1.4.1"
-    java
+    alias(libs.plugins.idea.ext)
 }
 
-group = "de.chojo"
-version = "2.9.0"
-
 repositories {
-    mavenLocal()
     mavenCentral()
-    maven("https://eldonexus.de/repository/maven-public")
-    maven("https://eldonexus.de/repository/maven-proxies")
-    maven("https://m2.dv8tion.net/releases")
+    maven("https://eldonexus.de/repository/maven-public/")
 }
 
 spotless {
@@ -29,8 +23,7 @@ spotless {
         licenseHeaderFile(rootProject.file("HEADER.txt"))
         trimTrailingWhitespace()
         endWithNewline()
-        palantirJavaFormat("2.84.0")
-                .formatJavadoc(false)
+        palantirJavaFormat(libs.versions.palantir.get()).formatJavadoc(false)
         removeUnusedImports()
         importOrder("", "java", "javax", "\\#")
         encoding("UTF-8")
@@ -64,56 +57,41 @@ spotless {
 }
 
 dependencies {
-    // discord
-    implementation("de.chojo:cjda-util:2.15.0+jda-6.3.0") {
+    implementation(libs.cjda.util) {
         exclude(group = "club.minnced", module = "opus-java")
     }
 
-    val openapi = "7.2.3"
+    annotationProcessor(libs.javalin.openapi.processor)
+    implementation(libs.bundles.javalin.openapi)
 
-    annotationProcessor("io.javalin.community.openapi:openapi-annotation-processor:$openapi")
-    implementation("io.javalin.community.openapi:javalin-openapi-plugin:$openapi") // for /openapi route with JSON scheme
-    implementation("io.javalin.community.openapi:javalin-swagger-plugin:$openapi") // for Swagger UI
+    implementation(libs.jackson.jsr310)
+    implementation(libs.re2j)
 
-    implementation(libs.bundles.jackson)
-
-    implementation("com.google.re2j:re2j:1.8")
-
-    // database
-    implementation("org.postgresql:postgresql:42.7.14")
+    implementation(libs.postgresql)
     implementation(libs.bundles.sadu)
 
-    // Logging
     implementation(libs.bundles.log4j)
-    implementation("de.chojo:log-util:1.0.1") {
+    implementation(libs.log.util) {
         exclude("org.apache.logging.log4j")
     }
 
-    implementation("org.knowm.xchart:xchart:4.0.4")
-
-    // Mailing
-    implementation("commons-validator:commons-validator:1.11.0")
-    implementation("org.eclipse.angus:angus-mail:2.0.5")
-
-    // Markdown parsing
+    implementation(libs.xchart)
+    implementation(libs.commons.validator)
+    implementation(libs.angus.mail)
     implementation(libs.bundles.commonmark)
 
-    // unit testing
-    testImplementation(testlibs.bundles.junit)
-    testImplementation(platform(testlibs.junit.bom))
-    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-    testImplementation("org.knowm.xchart:xchart:4.0.4")
-    testImplementation(testlibs.sadu.testing)
-    testImplementation(testlibs.bundles.database.postgres)
-    testImplementation(testlibs.slf4j.simple)
+    testImplementation(platform(libs.junit.bom))
+    testImplementation(libs.bundles.junit)
+    testRuntimeOnly(libs.junit.launcher)
+    testImplementation(libs.slf4j.simple)
+    testImplementation(libs.sadu.testing)
+    testImplementation(libs.bundles.testcontainers)
 }
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(21))
+        languageVersion = JavaLanguageVersion.of(25)
     }
-    withSourcesJar()
-    withJavadocJar()
 }
 
 idea {
@@ -144,7 +122,7 @@ idea {
 }
 
 
-val projectVersion = project.version.toString();
+val projectVersion = project.version.toString()
 tasks {
     processResources {
         inputs.property("projectVersion", projectVersion)
@@ -173,6 +151,7 @@ tasks {
 
     compileJava {
         options.encoding = "UTF-8"
+        options.release = 25
     }
 
     javadoc {
