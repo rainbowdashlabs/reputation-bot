@@ -346,7 +346,8 @@ public class ReputationService {
         // block self vote
         if (Verifier.equalSnowflake(receiver, donor)) {
             MagicImage magicImage = configuration.magicImage();
-            if (lastEasterEggSent.until(Instant.now(), ChronoUnit.MINUTES) > magicImage.magicImageCooldown()
+            if (magicImage.isEnabled()
+                    && lastEasterEggSent.until(Instant.now(), ChronoUnit.MINUTES) > magicImage.magicImageCooldown()
                     && ThreadLocalRandom.current().nextInt(magicImage.magicImagineChance()) == 0
                     && context.isMessage()) {
                 lastEasterEggSent = Instant.now();

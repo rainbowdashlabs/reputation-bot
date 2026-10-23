@@ -166,15 +166,10 @@ When someone thanks themselves in a message, the bot sometimes replies with an i
 
 | Key | Default | What it does |
 |---|---|---|
-| `magicImageLink` | `""` | Link to the image. |
-| `magicImagineChance` | `10` | The chance is one in this number. |
+| `magicImageLink` | `""` | Link to the image. Empty turns the image off. |
+| `magicImagineChance` | `10` | The chance is one in this number. `0` turns the image off. |
 | `magicImageCooldown` | `30` | Minutes between two images. |
 | `magicImageDeleteSchedule` | `60` | Seconds until the image is deleted again. |
-
-:::warning
-With an empty `magicImageLink`, the reply fails with an error in the log instead. Set a link to an
-image.
-:::
 
 ## badges
 

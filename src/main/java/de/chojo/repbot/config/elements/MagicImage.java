@@ -27,4 +27,13 @@ public class MagicImage {
     public int magicImageDeleteSchedule() {
         return magicImageDeleteSchedule;
     }
+
+    /**
+     * Whether the image can be sent at all.
+     *
+     * @return true when a link is set and the chance is positive
+     */
+    public boolean isEnabled() {
+        return !magicImageLink.isBlank() && magicImagineChance > 0;
+    }
 }
