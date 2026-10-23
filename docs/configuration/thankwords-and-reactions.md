@@ -10,10 +10,11 @@ reputation. How each way works is on [Giving reputation](../reputation/giving-re
 ## Thankwords
 
 A new server has no thankwords. Until you add some, the bot finds no thanks in messages, and the
-**Problems** page of the dashboard reminds you of that.
+**Problems** tab of the dashboard reminds you of that.
 
-You manage thankwords on the **Thankwords** page of the [dashboard](../getting-started/dashboard.md)
-settings, or with the `/thankwords` command.
+You manage thankwords in the [dashboard](../getting-started/dashboard.md) under **Settings > Thankwords**.
+Type a word into the field and click **Add Thankword**. The list below shows your thankwords, each
+with a button to delete it.
 
 ### How thankwords are matched
 
@@ -23,7 +24,8 @@ lower case. So `thanks` matches "Thanks a lot!", but not "thanksgiving".
 You can use simple patterns. `thank[sx]?` matches "thank", "thanks" and "thanx".
 
 A thankword you add yourself can't contain spaces or any of these characters: `(` `)` `{` `}` `*`
-`.` `#` `<` `>`. With the command it can be at most 25 characters long.
+`.` `#` `<` `>`. The dashboard tells you when a word contains one of them, or when you already have
+the word.
 
 :::warning
 Thankwords in a script other than the Latin alphabet, for example Cyrillic, Greek, Chinese,
@@ -57,59 +59,38 @@ The bot comes with a set of thankwords for these languages:
 | 日本語 | `ありがと[うゆ]?(?:ございま[すした])?`, `あざ[すした]`, `感謝` |
 | 한국어 | `감사(?:합니다)?`, `고마워(?:요)?`, `ㄱㅅ` |
 
-Load a set with `/thankwords loaddefault <language>`, or with **Default Thankwords** on the
-Thankwords page. `/thankwords loaddefault` without a language lists the available languages. Loading
-a set adds its words to the ones you already have.
+Load a set under **Settings > Thankwords > Default Thankwords**. Click a language to add its words
+to the ones you already have. The number next to each language tells you how many words it has.
 
 ### Testing a message
 
 `/thankwords check <message>` tells you whether a message would give reputation, how it would be
 given and to whom. Pass the id or the link of a message in the channel where you run the command.
+The dashboard has no such check. The command works, even though it shows the notice that settings
+commands are being phased out.
 
 For a message that was already handled, the [analyzer log](./logs-and-diagnostics.md#analyzer-log)
 tells you what actually happened.
 
-### Commands
-
-All `/thankwords` commands need the Administrator permission by default.
-
-| Command | What it does |
-|---|---|
-| `/thankwords add <pattern>` | Adds a thankword. |
-| `/thankwords remove <pattern>` | Removes a thankword. |
-| `/thankwords list` | Lists your thankwords. |
-| `/thankwords loaddefault [language]` | Adds the default thankwords of a language. |
-| `/thankwords check <message>` | Checks whether a message would give reputation. |
-
 ## Reactions
 
 A user gives reputation by reacting to a message with a reputation emoji. The author of the
-message receives it. Reaction reputation must be turned on, see
+message receives it. **Reaction Reputation** must be turned on, see
 [Giving reputation](../reputation/giving-reputation.md).
 
-You manage the emojis on the **Reactions** page of the dashboard settings, or with the `/reactions`
-command.
+You manage the emojis in the dashboard under **Settings > Reactions**.
 
 ### Main reaction
 
 Every server has one main reaction. It is 🏅 until you change it. The bot also uses it to mark
 messages that gave reputation.
 
-You can pick a standard emoji or a custom emoji of your server. Set it with
-`/reactions main <emote>`. The command takes the emoji itself, the name of a custom emoji or its id.
+Click the emoji under **Main Reaction** to open the emoji picker. You can pick a standard emoji or a
+custom emoji of your server. Your server's own emojis are listed first. The bot needs the **Manage
+Expressions** permission to list them.
 
 ### Additional reactions
 
-You can add more emojis that also give reputation. Additional reactions are a
-[supporter feature](../supporter.md). They only count while the feature is active on your server.
-
-### Commands
-
-All `/reactions` commands need the Administrator permission by default.
-
-| Command | What it does |
-|---|---|
-| `/reactions main <emote>` | Sets the main reaction. |
-| `/reactions add <emote>` | Adds an additional reaction. |
-| `/reactions remove <emote>` | Removes an additional reaction. |
-| `/reactions info` | Shows the main reaction and the additional reactions. |
+Under **Additional Reactions**, click **Add Reaction** to add more emojis that also give
+reputation. Additional reactions are a [supporter feature](../supporter.md). They only count while
+the feature is active on your server.

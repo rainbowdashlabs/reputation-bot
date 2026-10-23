@@ -5,10 +5,13 @@ sidebar_position: 6
 
 ## The bot doesn't react to thanks at all
 
-A new server has no thankwords and no reputation channels. Add both:
+A new server has no thankwords and no reputation channels. Add both in the
+[dashboard](./getting-started/dashboard.md):
 
-- Load thankwords for your language, see [Thankwords](./configuration/thankwords-and-reactions.md#default-thankwords).
-- Add the channels where reputation should work, see [Reputation channels](./configuration/channels.md).
+- Load thankwords for your language under **Settings > Thankwords**, see
+  [Thankwords](./configuration/thankwords-and-reactions.md#default-thankwords).
+- Pick the channels where reputation should work under **Settings > Channels**, see
+  [Reputation channels](./configuration/channels.md).
 
 Then run `/diagnose`. The [Problems page](./configuration/logs-and-diagnostics.md#problems-page)
 lists missing permissions and other setup problems.
@@ -62,8 +65,8 @@ The bot no longer adds debug emojis to messages. The analyzer log replaces them.
 Only the roles registered as reputation roles. When the bot updates a user, it removes the
 reputation roles the user shouldn't have and adds the ones they should have.
 
-The bot doesn't update everyone right away when you add a new role. Use `/roles refresh` or
-**Refresh Ranks** in the dashboard for that. See [Roles](./configuration/roles.md).
+The bot doesn't update everyone right away when you add a new role. Click **Refresh Ranks** under
+**Settings > Ranks** in the dashboard for that. See [Roles](./configuration/roles.md).
 
 ## How can I remove reputation from a user?
 

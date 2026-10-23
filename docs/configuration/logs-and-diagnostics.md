@@ -55,10 +55,8 @@ The log channel gets a line for every reputation that is given, and for every re
 removed because its message was deleted or its reaction removed. The log channel is a
 [supporter feature](../supporter.md).
 
-| What | Dashboard (**Log Channel** page) | Command |
-|---|---|---|
-| Turn on and pick a text channel | **Enable Log Channel**, **Log Channel** | `/channel log enable <channel>` |
-| Turn off | **Enable Log Channel** | `/channel log disable` |
+Set it up in the [dashboard](../getting-started/dashboard.md) under **Settings > Log Channel**: turn
+on **Enable Log Channel** and pick a text channel under **Log Channel**.
 
 ## System channel
 
@@ -66,8 +64,8 @@ The system channel gets messages about the bot itself: missing permissions, chan
 supporter status, and notes from the bot's developers. Pick an internal text channel that only your
 team can read.
 
-Set it in the **General** settings of the dashboard, or with `/channel systemchannel enable <channel>`.
-`/channel systemchannel disable` turns it off.
+Set it under **Settings > General > System Channel**. The dashboard can change the channel but not
+remove it. To run without a system channel, use `/channel systemchannel disable`.
 
 Without a system channel, the bot sends missing-permission warnings to the server owner or an
 admin by direct message instead. If the bot can't write to the system channel, it forgets the
@@ -75,8 +73,9 @@ channel.
 
 ## Problems page
 
-The **Problems** page of the dashboard lists everything the bot finds wrong with your setup. Run
-`/diagnose` to get a link to it. It needs the Administrator permission by default.
+The **Problems** tab of the dashboard settings lists everything the bot finds wrong with your setup.
+A red mark next to the tab tells you that it found something. `/diagnose` gives you a link straight
+to it. The command needs the Administrator permission by default.
 
 It checks, among other things:
 
@@ -88,20 +87,22 @@ It checks, among other things:
 - a server without thankwords or without reputation channels,
 - a very low [max message age](./abuse-protection.md#max-message-age).
 
-Each entry links to the settings page where you fix it.
+Each entry has a **Go to settings** link to the section where you fix it.
 
 ## Audit log
 
-The **Audit Log** of the dashboard lists every settings change made in the dashboard, with who made
-it and when.
+The **Audit Log** tab of the dashboard settings lists every settings change made in the dashboard,
+with who made it, when, and the old and new value.
 
 ## Scanning old messages
 
 A scan looks through old messages for thanks and adds the reputation they would have given. Use it
 after you add the bot, or after you add a channel that wasn't tracked before.
 
-Start a scan on the **Scan** page of the dashboard settings, or with `/scan`. `/scan` starts the
-scan right away and gives you a link to the Scan page, where you follow the progress. It needs the
+Open **Settings > Scan** and click **Start Scan**. The page shows the progress of the running scan
+and the result of the last one: how many messages were scanned and how much reputation was found.
+
+`/scan` starts a scan from Discord and gives you a link to the Scan page. It needs the
 Administrator permission by default.
 
 What a scan does:
