@@ -53,6 +53,35 @@ class ThankwordPatternTest {
     }
 
     @Test
+    void matchesThankwordsInOtherScripts() {
+        var pattern = thankwords("спасиб[ао]?", "ευχαριστώ", "감사합니다").thankwordPattern();
+        var matcher = pattern.matcher("спасибо друг");
+        Assertions.assertTrue(matcher.find());
+        Assertions.assertEquals("спасибо", matcher.group("match"));
+        Assertions.assertTrue(pattern.matcher("σας ευχαριστώ πολύ").find());
+        Assertions.assertTrue(pattern.matcher("정말 감사합니다!").find());
+        Assertions.assertFalse(pattern.matcher("неспасибо").find());
+    }
+
+    @Test
+    void matchesThankwordsInScriptsWithoutSpaces() {
+        var pattern = thankwords("ありがと[うゆ]?(?:ございま[すした])?", "谢+").thankwordPattern();
+        var matcher = pattern.matcher("本当にありがとうございます");
+        Assertions.assertTrue(matcher.find());
+        Assertions.assertEquals("ありがとうございます", matcher.group("match"));
+        Assertions.assertTrue(pattern.matcher("非常谢谢你").find());
+    }
+
+    @Test
+    void matchesOnlyTheWordAtLineEdges() {
+        var pattern = thankwords("thanks").thankwordPattern();
+        var matcher = pattern.matcher("hey,thanks\nbye");
+        Assertions.assertTrue(matcher.find());
+        Assertions.assertEquals("thanks", matcher.group("match"));
+        Assertions.assertFalse(pattern.matcher("thanksgiving").find());
+    }
+
+    @Test
     void emptyWordsYieldBlankPattern() {
         Assertions.assertTrue(thankwords().thankwordPattern().pattern().isBlank());
     }

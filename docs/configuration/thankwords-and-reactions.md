@@ -20,18 +20,14 @@ with a button to delete it.
 
 Each thankword is a regular expression. The bot looks for it as a whole word, ignoring upper and
 lower case. So `thanks` matches "Thanks a lot!", but not "thanksgiving".
+This works in every script. In Chinese and Japanese, which are written without spaces, a thankword also counts
+when it stands between other characters, so `ありがとう` matches "本当にありがとうございます".
 
 You can use simple patterns. `thank[sx]?` matches "thank", "thanks" and "thanx".
 
 A thankword you add yourself can't contain spaces or any of these characters: `(` `)` `{` `}` `*`
 `.` `#` `<` `>`. The dashboard tells you when a word contains one of them, or when you already have
 the word.
-
-:::warning
-Thankwords in a script other than the Latin alphabet, for example Cyrillic, Greek, Chinese,
-Japanese or Korean, are currently only found when they stand alone on a line. "спасибо" on its
-own gives reputation, "спасибо друг" doesn't.
-:::
 
 ### Default thankwords
 
