@@ -3,28 +3,20 @@ title: First setup
 sidebar_position: 2
 ---
 
-Once the bot is on your server, a few minutes of setup get it working. Most of it happens in the web
+Once the bot is on your server, a few minutes of setup get it working. All of it happens in the web
 [dashboard](./dashboard.md).
 
 ## Who can manage the bot
 
-Two things decide who can change the bot's settings.
-
-**Slash commands.** The commands that change settings, like `/setup`, `/settings` and `/repadmin`, are only
-available to members with the **Administrator** permission at first. A few commands use other permissions:
-
-| Command | Available by default to members with |
-|---|---|
-| `/roles` | Manage Roles |
-| `/log`, `/prune` and the **Received Reputation**, **Given Reputation** and **Message Log** apps | Manage Messages |
-
-To let other roles or members use a command, open **Server Settings > Integrations**, pick the Reputation Bot and
-change the command's permissions there. This is Discord's own system, so it works like for any other bot.
-
 **The dashboard.** The settings in the dashboard are open to every member who has at least one of these permissions
-on your server: Administrator, Manage Server, Manage Roles, Kick Members, Ban Members or Manage Channels. The
-Integrations settings do not change this. Everyone else on the server can still open the dashboard to see rankings
-and profiles.
+on your server: Administrator, Manage Server, Manage Roles, Kick Members, Ban Members or Manage Channels. Everyone else
+on the server can still open the dashboard to see rankings and profiles.
+
+**Slash commands.** `/setup`, `/settings` and `/diagnose` give you a link into the dashboard. Like the moderation
+commands (`/repadmin`, `/prune`, `/log`), they are only available to some members by default. The
+[commands](../commands.md) page lists who can use which command. To let other roles or members use a command, open
+**Server Settings > Integrations**, pick the Reputation Bot and change the command's permissions there. This is
+Discord's own system, so it works like for any other bot. It doesn't change who can open the settings in the dashboard.
 
 ## Run the setup
 
@@ -49,12 +41,14 @@ The setup walks you through these steps:
 | Main Reaction | The emoji that gives reputation when members react with it. |
 | Donor & Receiver Roles | Optionally limit who can give and who can receive reputation. |
 
-After the last step, the setup takes you to the settings, or to the scan page if you started a scan.
+After the last step, the setup takes you to the settings, or to the scan page if you started a scan. Everything you
+picked can be changed there later.
 
 ## Presets
 
-Presets change a group of settings in one click. Open the dashboard and go to **Presets**. Each preset only changes
-the settings it names and leaves everything else alone.
+Presets change a group of settings in one click. Open **Settings** in the dashboard and pick the **Presets** tab.
+Click **Apply** on the preset you want. Each preset only changes the settings it names and leaves everything else
+alone.
 
 | Preset | What it changes |
 |---|---|
@@ -67,19 +61,20 @@ The cooldown and context checks are explained on the [abuse protection](../confi
 
 ## Open the dashboard later
 
-Use `/settings` to get a link to the dashboard for your server. The bot answers with an **Open Session** button that
-only you can see. You can also go to [repbot.chojo.dev](https://repbot.chojo.dev) directly and sign in with Discord.
+Go to [repbot.chojo.dev](https://repbot.chojo.dev) and sign in with Discord, or use `/settings` on your server. The
+bot answers with an **Open Session** button that only you can see. It opens the dashboard with your server selected.
+See [the dashboard](./dashboard.md#opening-the-dashboard).
 
 `/dashboard` is something else: it shows a short summary of your server in Discord, with total, weekly and today's
 reputation, the top channel and the member with the most reputation.
 
 ## Next steps
 
-- Check the **Problems** page in the dashboard. It lists missing permissions, missing channels and roles the bot
-  cannot give. `/diagnose` links you straight to it.
-- Run a scan if you skipped it. Open **Scan** in the settings, or use `/scan`. A scan reads up to 10,000 recent
-  messages in each reputation channel and adds the reputation it finds.
-- Fine tune your [channels](../configuration/channels.md), [thank words and reactions](../configuration/thankwords-and-reactions.md)
+- Check the **Problems** tab in the dashboard settings. It lists missing permissions, missing channels and roles the
+  bot cannot give. `/diagnose` links you straight to it.
+- Run a scan if you skipped it: **Settings > Scan > Start Scan**. A scan reads up to 10,000 recent messages in each
+  reputation channel and adds the reputation it finds.
+- Fine tune your [channels](../configuration/channels.md), [thankwords and reactions](../configuration/thankwords-and-reactions.md)
   and [abuse protection](../configuration/abuse-protection.md).
 - Tell your members how to [give reputation](../reputation/giving-reputation.md).
 

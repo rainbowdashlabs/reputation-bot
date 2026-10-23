@@ -9,8 +9,18 @@ Members give reputation the way they already say thank you. The bot watches for 
 Every reputation is tied to a message. If that message goes away, the reputation goes with it. See
 [removing reputation](./removing-reputation.md).
 
-Your server decides which of the ways below are active. You turn them on and off in the dashboard under
-**Settings > Reputation**.
+Your server decides which of the ways below are active. You turn them on and off in the
+[dashboard](../getting-started/dashboard.md) under **Settings > Reputation**:
+
+| Way | Toggle in the dashboard |
+|---|---|
+| [Answer](#answer) | Answer Reputation |
+| [Mention](#mention) | Mention Reputation |
+| [Fuzzy matching](#fuzzy-matching) | Fuzzy Matching |
+| [Embed](#embed) | Embed Reputation |
+| [Direct embed](#direct-embed) | Direct Embed Reputation, shown while Embed Reputation is on |
+| [Reaction](#reaction) | Reaction Reputation |
+| [Command](#command) | Command Reputation |
 
 ## Who can give and receive
 
@@ -115,6 +125,7 @@ the command only shows up on servers that turned it on.
 - The command works in every channel, not only in reputation channels.
 - All other checks still apply, including the conversation checks. The **Simple Reputation System**
   [preset](../getting-started/first-setup.md#presets) turns those off for you.
-- With **Ephemeral Response** on, only the giver sees the bot's answer.
+- With **Ephemeral Response** on (shown below Command Reputation), only the giver sees the bot's answer. See
+  [reputation given by command](../configuration/announcements.md#reputation-given-by-command).
 - Supporters can give the command another name. See
   [custom command names](./profiles-and-rankings.md#custom-command-names).

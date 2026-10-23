@@ -20,8 +20,8 @@ This also works when many messages are deleted at once. Reputation given with th
 message and stays.
 
 :::warning
-Removing a single reaction only takes reputation back while **Announce reputation given by reaction** is on (it is on
-by default). When it does, or when a moderator removes all reactions of a message, the bot removes every reputation
+Removing a single reaction only takes reputation back while the reaction message is on, under
+**Settings > Reputation > Reputation Messages > Reaction Reputation** (it is on by default). When it does, or when a moderator removes all reactions of a message, the bot removes every reputation
 tied to that message, not only the one from the reaction.
 :::
 
