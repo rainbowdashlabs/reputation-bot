@@ -6,7 +6,6 @@
 package de.chojo.repbot.web;
 
 import de.chojo.jdautil.interactions.dispatching.InteractionHub;
-import de.chojo.repbot.commands.thankwords.Thankwords;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.core.Localization;
 import de.chojo.repbot.dao.provider.GuildRepository;
@@ -98,7 +97,7 @@ public class Api {
         // Load thankwords container
         ThankwordsContainer thankwordsContainer;
         try {
-            thankwordsContainer = Thankwords.loadContainer();
+            thankwordsContainer = ThankwordsContainer.load();
         } catch (IOException e) {
             log.error("Could not load thankwords container", e);
             thankwordsContainer = null;

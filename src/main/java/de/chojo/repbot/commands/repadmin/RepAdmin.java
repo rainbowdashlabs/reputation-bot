@@ -14,16 +14,12 @@ import de.chojo.repbot.commands.repadmin.handler.Profile;
 import de.chojo.repbot.commands.repadmin.handler.reputation.Add;
 import de.chojo.repbot.commands.repadmin.handler.reputation.Remove;
 import de.chojo.repbot.commands.repadmin.handler.reputation.Set;
-import de.chojo.repbot.commands.repadmin.handler.resetdate.CurrentResetDate;
-import de.chojo.repbot.commands.repadmin.handler.resetdate.RemoveResetDate;
-import de.chojo.repbot.commands.repadmin.handler.resetdate.SetResetDate;
-import de.chojo.repbot.commands.repadmin.handler.resetdate.SetResetDateNow;
+import de.chojo.repbot.commands.settings.DashboardLink;
+import de.chojo.repbot.commands.settings.DashboardSection;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.service.PremiumService;
 import de.chojo.repbot.service.RoleAssigner;
-
-import java.time.LocalDate;
 
 public class RepAdmin extends SlashCommand {
 
@@ -67,30 +63,8 @@ public class RepAdmin extends SlashCommand {
                                         .min(0)
                                         .max(1_000_000)
                                         .asRequired())))
-                .group(Group.of("resetdate", "command.repadmin.resetdate.description")
-                        .subCommand(SubCommand.of("set", "command.repadmin.resetdate.set.description")
-                                .handler(new SetResetDate(guildRepository))
-                                .argument(Argument.integer(
-                                                "year", "command.repadmin.resetdate.set.options.year.description")
-                                        .asRequired()
-                                        .min(2016)
-                                        .max(LocalDate.now().getYear() + 1))
-                                .argument(Argument.integer(
-                                                "month", "command.repadmin.resetdate.set.options.month.description")
-                                        .asRequired()
-                                        .min(1)
-                                        .max(12))
-                                .argument(Argument.integer(
-                                                "day", "command.repadmin.resetdate.set.options.day.description")
-                                        .asRequired()
-                                        .min(1)
-                                        .max(31)))
-                        .subCommand(SubCommand.of("remove", "command.repadmin.resetdate.remove.description")
-                                .handler(new RemoveResetDate(guildRepository)))
-                        .subCommand(SubCommand.of("current", "command.repadmin.resetdate.current.description")
-                                .handler(new CurrentResetDate(guildRepository)))
-                        .subCommand(SubCommand.of("now", "command.repadmin.resetdate.now.description")
-                                .handler(new SetResetDateNow(guildRepository))))
+                .subCommand(SubCommand.of("resetdate", "command.repadmin.resetdate.description")
+                        .handler(new DashboardLink(configuration, DashboardSection.REPUTATION)))
                 .subCommand(SubCommand.of("profile", "command.repadmin.profile.description")
                         .handler(new Profile(guildRepository, configuration))
                         .argument(Argument.user("user", "command.repadmin.profile.options.user.description")

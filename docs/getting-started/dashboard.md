@@ -86,8 +86,8 @@ In these docs, a path like **Settings > Abuse Protection > Cooldown (minutes)** 
 A supporter section shows a short note with the supporter tiers that unlock it when your server doesn't have it yet.
 
 :::note
-Many settings can still be changed with slash commands like `/channel`, `/roles` or `/abuseprotection`. These commands
-are being phased out and tell you so when you use them. Use the dashboard instead.
+The old settings commands like `/channel`, `/roles` or `/abuseprotection` no longer change anything. They answer with
+links to the matching sections of the dashboard. See [settings commands](../commands.md#settings-commands).
 :::
 
 ### Bot language
@@ -103,7 +103,7 @@ uses as long as you don't pick another one.
 ### Audit log
 
 The **Audit Log** shows every settings change made in the dashboard: who changed which setting, when, and what it was
-before and after. Changes made with slash commands are not listed.
+before and after.
 
 ### Problems
 

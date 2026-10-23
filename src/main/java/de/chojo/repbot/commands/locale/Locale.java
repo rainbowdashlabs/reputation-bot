@@ -5,28 +5,20 @@
  */
 package de.chojo.repbot.commands.locale;
 
-import de.chojo.jdautil.interactions.slash.Argument;
 import de.chojo.jdautil.interactions.slash.Slash;
-import de.chojo.jdautil.interactions.slash.SubCommand;
 import de.chojo.jdautil.interactions.slash.provider.SlashCommand;
-import de.chojo.repbot.commands.locale.handler.List;
-import de.chojo.repbot.commands.locale.handler.Reset;
-import de.chojo.repbot.commands.locale.handler.Set;
-import de.chojo.repbot.dao.provider.GuildRepository;
+import de.chojo.repbot.commands.settings.DashboardLink;
+import de.chojo.repbot.commands.settings.DashboardSection;
+import de.chojo.repbot.config.Configuration;
 
+/**
+ * Former settings command. Links to the dashboard sections that hold its settings.
+ */
 public class Locale extends SlashCommand {
-    public Locale(GuildRepository guildRepository) {
+    public Locale(Configuration configuration) {
         super(Slash.of("locale", "command.locale.description")
                 .guildOnly()
                 .adminCommand()
-                .subCommand(SubCommand.of("set", "command.locale.set.description")
-                        .handler(new Set(guildRepository))
-                        .argument(Argument.text("language", "command.locale.set.options.language.description")
-                                .asRequired()
-                                .withAutoComplete()))
-                .subCommand(SubCommand.of("reset", "command.locale.reset.description")
-                        .handler(new Reset(guildRepository)))
-                .subCommand(
-                        SubCommand.of("list", "command.locale.list.description").handler(new List())));
+                .command(new DashboardLink(configuration, DashboardSection.GENERAL)));
     }
 }
