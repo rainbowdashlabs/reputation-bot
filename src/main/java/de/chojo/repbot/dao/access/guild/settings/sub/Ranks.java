@@ -40,33 +40,36 @@ public class Ranks implements GuildHolder {
      * @return true if the role was added or updated
      */
     public boolean add(Role role, int reputation) {
-        var deleteRank = remove(role.getIdLong());
-
-        var insertRank = query("""
-                INSERT INTO guild_ranks(guild_id, role_id, reputation) VALUES(?,?,?)
-                    ON CONFLICT(guild_id, role_id)
-                        DO UPDATE
-                            SET reputation = excluded.reputation,
-                                role_id = excluded.role_id;
-                """)
-                .single(call().bind(guildId()).bind(role.getIdLong()).bind(reputation))
-                .update()
-                .changed();
-        if (deleteRank && insertRank) {
-            ranks.removeIf(r -> r.roleId() == role.getIdLong() || reputation == r.reputation());
-            ranks.add(new ReputationRank(this, role.getIdLong(), reputation));
+        boolean changed;
+        try (var conn = QueryConfiguration.getDefault().withSingleTransaction()) {
+            conn.query("DELETE FROM guild_ranks WHERE guild_id = ? AND reputation = ? AND role_id != ?")
+                    .single(call().bind(guildId()).bind(reputation).bind(role.getIdLong()))
+                    .delete();
+            changed = conn.query("""
+                            INSERT INTO guild_ranks(guild_id, role_id, reputation) VALUES(?,?,?)
+                                ON CONFLICT(guild_id, role_id)
+                                    DO UPDATE
+                                        SET reputation = excluded.reputation;
+                            """)
+                    .single(call().bind(guildId()).bind(role.getIdLong()).bind(reputation))
+                    .insert()
+                    .changed();
         }
-        return deleteRank;
+        refresh();
+        return changed;
     }
 
     public boolean remove(long role) {
-        return query("""
+        var removed =
+                query("""
                 DELETE FROM
                     guild_ranks
                 WHERE
                     guild_id = ?
                         AND role_id = ?;
                 """).single(call().bind(guildId()).bind(role)).delete().changed();
+        refresh();
+        return removed;
     }
 
     public List<ReputationRank> ranks() {
