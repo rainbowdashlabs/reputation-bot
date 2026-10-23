@@ -104,10 +104,7 @@ reputation in 24 hours.
 **Over Hours** is the time window. Amounts go from 1 to 1000, windows from 1 to 8760 hours (one
 year). A limit you just turned on starts at 1 reputation in 1 hour, so set both values right after.
 
-:::warning
-The limits currently count reputation from every server the bot is on, not only from yours. A user
-who is active on other servers with the bot reaches your limit sooner.
-:::
+The limits only count reputation given and received on your server.
 
 ## Deleted messages
 
