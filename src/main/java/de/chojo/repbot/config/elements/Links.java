@@ -9,7 +9,7 @@ package de.chojo.repbot.config.elements;
 public class Links {
     private String tos = "";
     private String invite =
-            "https://discord.com/oauth2/authorize?client_id=834843896579489794&scope=bot&permissions=1342532672";
+            "https://discord.com/oauth2/authorize?client_id=834843896579489794&scope=bot+applications.commands&permissions=4503875914918976";
     private String support = "";
     private String website = "https://docs.chojo.dev/reputation-bot";
     private String faq = "https://docs.chojo.dev/reputation-bot/faq";
