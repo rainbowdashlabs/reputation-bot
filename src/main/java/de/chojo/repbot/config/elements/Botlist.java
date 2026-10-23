@@ -17,7 +17,7 @@ public class Botlist {
     private BotListConfig discordBotsGg = new BotListConfig("discord.bots.gg", "", "", 110373943822540800L, "", "");
     private BotListConfig discordBotlistCom =
             new BotListConfig("discordbotlist.com", "", "", 450100127256936458L, "", "");
-    private BotListConfig botListMe = new BotListConfig("discordbotlist.com", "", "", 698637043240009738L, "", "");
+    private BotListConfig botListMe = new BotListConfig("botlist.me", "", "", 698637043240009738L, "", "");
 
     public boolean isSubmit() {
         return submit;
