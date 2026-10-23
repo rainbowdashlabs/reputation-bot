@@ -97,6 +97,15 @@ public final class RemovalTask {
                 conn.query("DELETE FROM votes WHERE user_id = ?;")
                         .single(call().bind(userId()))
                         .delete();
+                conn.query("DELETE FROM vote_token WHERE entity_id = ? AND entity_type = 'USER';")
+                        .single(call().bind(userId()))
+                        .delete();
+                conn.query("DELETE FROM user_settings WHERE id = ?;")
+                        .single(call().bind(userId()))
+                        .delete();
+                conn.query("DELETE FROM settings_audit_log WHERE member_id = ?;")
+                        .single(call().bind(userId()))
+                        .delete();
                 log.trace("Removed Data of user {}", userId());
             } else {
                 // Remove user from guild

@@ -54,8 +54,11 @@ What is deleted:
 - your support threads,
 - your mail addresses and Ko-fi purchases,
 - your dashboard sessions and tokens,
-- your votes.
+- your user settings, votes and vote tokens,
+- the settings changes you made in the dashboard. They disappear from the audit log of the servers
+  where you made them.
 
+The bot keeps the record of your data requests, so it can still limit them to one every 30 days.
 ## When you leave a server
 
 When you leave a server, the bot removes your reputation on that server 14 days later. Your user
