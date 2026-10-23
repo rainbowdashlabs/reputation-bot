@@ -84,8 +84,8 @@ instance. See [configuration](./configuration.md#links).
 
 Two settings in `baseSettings` tell the bot who runs it:
 
-- **`botOwner`** is a list of Discord user ids. Bot owners can restart and stop the bot with
-  `/bot`, and they can open the dashboard of every server the bot is in.
+- **`botOwner`** is a list of Discord user ids. Only bot owners can use `/bot`, and they can open
+  the dashboard of every server the bot is in.
 - **`botGuild`** is the id of your own server. The bot registers the `/bot` command only there.
   Set it before you start the bot for real.
 

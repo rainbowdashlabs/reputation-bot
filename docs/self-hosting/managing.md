@@ -10,14 +10,8 @@ You manage your running bot with the `/bot` command. It is in English only.
 - `/bot` exists only on your **bot guild**, the server in `baseSettings.botGuild`.
 - By default, only members with the **Administrator** permission on that server see and use it. You
   can change that under **Server Settings > Integrations**.
-- `restart`, `upgrade` and `shutdown` also check that you are a **bot owner** (`baseSettings.botOwner`).
-  Everyone else gets "No.".
-
-:::warning
-All other subcommands don't check for bot owners. Anyone who can use `/bot` on your bot guild can
-look into other servers, leave them or send messages there. Give the Administrator permission on your
-bot guild only to people you trust.
-:::
+- Every subcommand also checks that you are a **bot owner** (`baseSettings.botOwner`). Everyone else
+  gets "No.".
 
 ## System
 

@@ -65,7 +65,7 @@ Give the token, the client secret and the database password as `BOT_TOKEN`,
 | Key | Default | Environment | What it does |
 |---|---|---|---|
 | `token` | `""` | `BOT_TOKEN` | The bot token. **Required.** |
-| `botOwner` | `[]` | | Discord user ids of the bot owners. They can restart and stop the bot with `/bot` and open the dashboard of every server the bot is in. |
+| `botOwner` | `[]` | | Discord user ids of the bot owners. Only they can use `/bot`, and they can open the dashboard of every server the bot is in. |
 | `botGuild` | `0` | | The id of your own server. `/bot` is registered only there. **Required.** |
 | `privateSupportChannel` | `0` | | A text channel on the bot guild. When someone sends the bot a direct message, it offers to open a support thread there, and forwards messages both ways. `0` turns the threads off. |
 | `reviewChannel` | `0` | | A text channel on the bot guild. The bot posts there when a server changes the bot's nickname. `0` turns it off. |
