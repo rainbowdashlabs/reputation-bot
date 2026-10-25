@@ -126,7 +126,7 @@ public class SharedGuilds implements SlashHandler {
             try {
                 user = event.getJDA()
                         .getShardManager()
-                        .retrieveUserById(event.getIdLong())
+                        .retrieveUserById(userIdOpt.getAsLong())
                         .complete();
             } catch (RuntimeException e) {
                 event.getHook().editOriginal("Could not find this user.").complete();
@@ -135,6 +135,10 @@ public class SharedGuilds implements SlashHandler {
         }
 
         List<Guild> shared = sharedGuilds(user, deepSearch, configuration);
+        if (shared.isEmpty()) {
+            event.getHook().editOriginal("No shared guilds found.").complete();
+            return;
+        }
         MessageEmbed messageEmbed = buildEmbed(user, shared);
         MenuActionBuilder menuActionBuilder = MenuAction.forCallback(messageEmbed, event);
         for (Guild guild : shared) {
