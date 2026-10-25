@@ -11,22 +11,30 @@ import de.chojo.repbot.dao.provider.GuildRepository;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
-import java.time.DayOfWeek;
+import java.time.Instant;
+import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static de.chojo.repbot.util.Guilds.prettyName;
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class RoleUpdater extends ListenerAdapter {
+    private static final Logger log = getLogger(RoleUpdater.class);
     private final GuildRepository guildRepository;
     private final Map<Long, Set<Long>> checked = new HashMap<>();
     private final RoleAssigner roleAssigner;
@@ -78,33 +86,41 @@ public class RoleUpdater extends ListenerAdapter {
         return checked.computeIfAbsent(guild.getIdLong(), k -> new HashSet<>());
     }
 
+    /**
+     * Recalculates the roles of every user whose reputation decayed since yesterday.
+     * <p>
+     * For each decaying reputation mode, the span between yesterday's and today's window start has just left the
+     * window. Only users who received reputation within that span can have lost reputation, so only they are updated.
+     */
     private void updateTimed() {
-        if (ZonedDateTime.now().getDayOfMonth() == 1) {
-            for (var guild : guildRepository.byReputationMode(ReputationMode.MONTH)) {
-                updateRoles(guild);
-            }
-        }
-
-        if (ZonedDateTime.now().getDayOfWeek() == DayOfWeek.MONDAY) {
-            for (var guild : guildRepository.byReputationMode(ReputationMode.WEEK)) {
-                updateRoles(guild);
+        var today = LocalDate.now();
+        for (var mode : ReputationMode.values()) {
+            if (!mode.isAutoRefresh()) continue;
+            var from = mode.dateInit(today.minusDays(1));
+            var until = mode.dateInit(today);
+            if (!from.isBefore(until)) continue;
+            for (var guild : guildRepository.byReputationMode(mode)) {
+                updateDecayed(guild, from, until);
             }
         }
     }
 
-    private void updateRoles(RepGuild guild) {
-        guild.load(shardManager);
-        if (guild.isById()) return;
-        for (var rank : guild.settings().ranks().ranks()) {
-            rank.role().ifPresent(role -> {
-                for (Member member : guild.guild().getMembersWithRoles(role)) {
-                    try {
-                        roleAssigner.update(member);
-                    } catch (RoleAccessException e) {
-                        // ignore
-                    }
-                }
-            });
+    private void updateDecayed(RepGuild repGuild, Instant from, Instant until) {
+        repGuild.load(shardManager);
+        if (repGuild.isById()) return;
+        var guild = repGuild.guild();
+        var users = repGuild.reputation().receiversBetween(from, until);
+        log.debug("Updating roles of {} users with decayed reputation on {}", users.size(), prettyName(guild));
+        for (var userId : users) {
+            retrieveMember(guild, userId).ifPresent(roleAssigner::updateSilent);
+        }
+    }
+
+    private Optional<Member> retrieveMember(Guild guild, long userId) {
+        try {
+            return Optional.of(guild.retrieveMemberById(userId).complete());
+        } catch (ErrorResponseException e) {
+            return Optional.empty();
         }
     }
 }
