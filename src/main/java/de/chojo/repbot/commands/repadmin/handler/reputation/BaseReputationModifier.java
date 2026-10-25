@@ -29,7 +29,8 @@ public abstract class BaseReputationModifier implements SlashHandler {
         var repUser = guildRepository.guild(event.getGuild()).reputation().user(user);
         var add = event.getOption("amount").getAsLong();
         execute(event, context, user, repUser, add);
-        var member = event.getGuild().retrieveMember(user).complete();
+        var member = event.getOption("user").getAsMember();
+        if (member == null) return;
         roleAssigner.updateReporting(member, event.getChannel().asGuildMessageChannel());
     }
 
