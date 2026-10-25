@@ -520,12 +520,6 @@ class ApiClient {
 
     }
 
-    public async updateProfileDescription(description: string | null) {
-        await this.axiosInstance.post('/settings/profile/description', JSON.stringify(description), {
-            headers: {'Content-Type': 'application/json'}
-        });
-    }
-
     public async updateProfileReputationName(reputationName: string | null) {
         await this.axiosInstance.post('/settings/profile/reputationname', JSON.stringify(reputationName), {
             headers: {'Content-Type': 'application/json'}
