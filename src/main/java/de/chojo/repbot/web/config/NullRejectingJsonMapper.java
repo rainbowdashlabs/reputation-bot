@@ -46,7 +46,7 @@ public class NullRejectingJsonMapper implements JsonMapper {
     @NotNull
     @Override
     public <T> T fromJsonString(@NotNull String json, @NotNull Type targetType) {
-        if (json.isBlank() || "null".equals(json.strip())) {
+        if (RequestBodies.isNull(json)) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "Request body must not be null");
         }
         return delegate.fromJsonString(json, targetType);
