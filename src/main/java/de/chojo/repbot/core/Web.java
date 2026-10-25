@@ -26,6 +26,7 @@ import de.chojo.repbot.service.MailService;
 import de.chojo.repbot.service.ScanService;
 import de.chojo.repbot.web.Api;
 import de.chojo.repbot.web.cache.MemberCache;
+import de.chojo.repbot.web.config.NullRejectingJsonMapper;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
 import de.chojo.repbot.web.error.ApiException;
@@ -245,7 +246,7 @@ public class Web {
                     config.router.mount(router -> {
                         router.beforeMatched(this::handleAccess);
                     });
-                    config.jsonMapper(jacksonMapper());
+                    config.jsonMapper(new NullRejectingJsonMapper(jacksonMapper()));
                     // Serve frontend SPA
                     if (Files.isDirectory(publicDir)) {
                         config.spaRoot.addFile(
