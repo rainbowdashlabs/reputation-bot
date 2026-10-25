@@ -30,6 +30,7 @@ import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -218,7 +219,9 @@ public class ChatSupportService extends ListenerAdapter {
                 .build();
 
         List<Button> buttons = shared.stream()
-                .map(g -> Button.primary("debug:%s".formatted(g.getIdLong()), g.getName()))
+                .map(g -> Button.primary(
+                        "debug:%s".formatted(g.getIdLong()),
+                        StringUtils.abbreviate(g.getName(), Button.LABEL_MAX_LENGTH)))
                 .toList();
 
         Message message = textChannelById
