@@ -20,11 +20,14 @@ import net.dv8tion.jda.api.entities.User;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
+import java.time.Instant;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
+import static de.chojo.sadu.queries.converter.StandardValueConverter.INSTANT_TIMESTAMP;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class Reputation implements GuildHolder {
@@ -86,6 +89,30 @@ public class Reputation implements GuildHolder {
             log.error("Could not create reputation user", e);
             throw new RuntimeException(e);
         }
+    }
+
+    /**
+     * Get the users who received reputation or an offset within the given time span.
+     * Once that span leaves the reputation window, these are the only users whose reputation drops.
+     *
+     * @param from  exclusive start of the span
+     * @param until inclusive end of the span
+     * @return ids of the affected users
+     */
+    public List<Long> receiversBetween(Instant from, Instant until) {
+        return query("""
+                        SELECT receiver_id AS user_id
+                        FROM reputation_log
+                        WHERE guild_id = :guild_id AND received > :from AND received <= :until
+                        UNION
+                        SELECT user_id
+                        FROM reputation_offset
+                        WHERE guild_id = :guild_id AND added > :from AND added <= :until""")
+                .single(call().bind("guild_id", guildId())
+                        .bind("from", from, INSTANT_TIMESTAMP)
+                        .bind("until", until, INSTANT_TIMESTAMP))
+                .map(row -> row.getLong("user_id"))
+                .all();
     }
 
     public Rankings ranking() {
