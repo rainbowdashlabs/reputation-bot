@@ -37,10 +37,10 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
@@ -52,7 +52,7 @@ public class ReputationVoteListener extends ListenerAdapter {
     private final ReputationService reputationService;
     private final ILocalizer loc;
     private final Configuration configuration;
-    private final Map<Long, VoteRequest> voteRequests = new HashMap<>();
+    private final Map<Long, VoteRequest> voteRequests = new ConcurrentHashMap<>();
 
     public ReputationVoteListener(
             GuildRepository guildRepository,
@@ -67,7 +67,8 @@ public class ReputationVoteListener extends ListenerAdapter {
 
     @Override
     public void onButtonInteraction(@NotNull ButtonInteractionEvent event) {
-        if (!voteRequests.containsKey(event.getMessageIdLong())) return;
+        var voteRequest = voteRequests.get(event.getMessageIdLong());
+        if (voteRequest == null) return;
         if (event.getButton().getCustomId() == null) return;
         if (!event.isFromGuild()) return;
 
@@ -76,7 +77,6 @@ public class ReputationVoteListener extends ListenerAdapter {
         if (!event.isAcknowledged()) {
             event.deferEdit().complete();
         }
-        var voteRequest = voteRequests.get(event.getMessageIdLong());
         if (!Verifier.equalSnowflake(voteRequest.member(), event.getMember())) {
             event.getHook()
                     .sendMessage(loc.localize("error.notYourEmbed", event.getGuild()))

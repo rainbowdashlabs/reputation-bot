@@ -8,6 +8,7 @@ package de.chojo.repbot.web.routes.v1.settings.sub;
 import de.chojo.repbot.config.elements.BaseSettings;
 import de.chojo.repbot.dao.access.guild.settings.sub.Profile;
 import de.chojo.repbot.dao.access.guildsession.GuildSession;
+import de.chojo.repbot.web.config.RequestBodies;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
 import de.chojo.repbot.web.error.ApiException;
@@ -89,7 +90,7 @@ public class ProfileRoute implements RoutesBuilder {
             })
     public void updateNickname(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        String nickname = ctx.bodyAsClass(String.class);
+        String nickname = RequestBodies.nullable(ctx, String.class);
 
         // Validate profile feature if setting a nickname
         PremiumValidator validator = session.premiumValidator();
@@ -196,7 +197,7 @@ public class ProfileRoute implements RoutesBuilder {
             })
     public void updateReputationName(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
-        String reputationName = ctx.bodyAsClass(String.class);
+        String reputationName = RequestBodies.nullable(ctx, String.class);
 
         // Validate locale overrides feature if setting a reputation name
         PremiumValidator validator = session.premiumValidator();

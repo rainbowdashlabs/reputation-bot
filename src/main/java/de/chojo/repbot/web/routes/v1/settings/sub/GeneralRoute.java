@@ -8,6 +8,7 @@ package de.chojo.repbot.web.routes.v1.settings.sub;
 import de.chojo.repbot.dao.access.guild.settings.sub.General;
 import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
 import de.chojo.repbot.dao.access.guildsession.GuildSession;
+import de.chojo.repbot.web.config.RequestBodies;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
 import de.chojo.repbot.web.pojo.settings.sub.GeneralPOJO;
@@ -145,7 +146,7 @@ public class GeneralRoute implements RoutesBuilder {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
         General general = session.repGuild().settings().general();
         Instant oldValue = general.resetDate();
-        Instant newValue = ctx.body().equals("null") ? null : ctx.bodyAsClass(Instant.class);
+        Instant newValue = RequestBodies.nullable(ctx, Instant.class);
         general.resetDate(newValue);
         session.recordChange("general.resetdate", oldValue, newValue);
     }

@@ -31,7 +31,7 @@ const hasError = ref(false);
 
 const validateAndCorrect = () => {
   if (internalValue.value === null || internalValue.value === '') {
-    modelValue.value = null;
+    internalValue.value = modelValue.value;
     hasError.value = false;
     return;
   }

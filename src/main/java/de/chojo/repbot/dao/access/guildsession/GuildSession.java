@@ -9,6 +9,7 @@ import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.provider.SettingsAuditLogRepository;
+import de.chojo.repbot.web.error.GuildUnavailableException;
 import de.chojo.repbot.web.pojo.guild.GuildPOJO;
 import de.chojo.repbot.web.validation.GuildValidator;
 import de.chojo.repbot.web.validation.PremiumValidator;
@@ -42,8 +43,16 @@ public class GuildSession {
         this.userId = userId;
     }
 
+    /**
+     * Get the guild of this session.
+     *
+     * @return the guild
+     * @throws GuildUnavailableException if the bot is no longer on the guild or the guild is unavailable
+     */
     public Guild guild() {
-        return shardManager.getGuildById(guildId);
+        Guild guild = shardManager.getGuildById(guildId);
+        if (guild == null) throw new GuildUnavailableException(guildId);
+        return guild;
     }
 
     public RepGuild repGuild() {
@@ -53,7 +62,7 @@ public class GuildSession {
     @NotNull
     public GuildPOJO guildPOJO() {
         if (dirty || cachedGuild == null) {
-            Guild guild = guild();
+            Guild guild = shardManager.getGuildById(guildId);
             if (guild == null) {
                 cachedGuild = GuildPOJO.UNKNOWN;
             } else {
