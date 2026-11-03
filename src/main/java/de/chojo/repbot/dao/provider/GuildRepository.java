@@ -76,12 +76,12 @@ public class GuildRepository {
                 .map(SKU::skuId)
                 .toList();
         return query("""
-                SELECT
+                SELECT DISTINCT
                     guild_id
                 FROM
                     autopost a LEFT JOIN subscriptions s ON a.guild_id = s.id
                 WHERE active AND refresh_interval = ?
-                AND s.sku = ANY (:sku) OR array_length(:sku, 1) IS NULL""")
+                AND (s.sku = ANY (:sku) OR array_length(:sku, 1) IS NULL)""")
                 .single(call().bind(mode.name()).bind("sku", skus, PostgreSqlTypes.BIGINT))
                 .map(row -> byId(row.getLong("guild_id")))
                 .all();
