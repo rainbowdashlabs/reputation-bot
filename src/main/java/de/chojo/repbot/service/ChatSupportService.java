@@ -28,10 +28,12 @@ import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.exceptions.ErrorResponseException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.requests.RestAction;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,8 +42,10 @@ import java.util.stream.Collectors;
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 import static net.dv8tion.jda.api.utils.messages.MessageCreateBuilder.fromMessage;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class ChatSupportService extends ListenerAdapter {
+    private static final Logger log = getLogger(ChatSupportService.class);
     private final Configuration configuration;
     private final ShardManager shardManager;
     private final PageService pageService;
@@ -141,10 +145,28 @@ public class ChatSupportService extends ListenerAdapter {
             query("DELETE FROM support_threads WHERE user_id = ?")
                     .single(call().bind(user.getIdLong()))
                     .delete();
-            thread.get().getManager().setLocked(true).complete();
+            lock(thread.get());
             return Optional.empty();
         }
         return thread;
+    }
+
+    /**
+     * Locks a closed support thread. Discord refuses any edit of an archived thread unless the same request unarchives
+     * it, so an archived thread is unarchived and locked together and archived again afterwards. A failure is only
+     * logged, because the thread is already unlinked from the user.
+     *
+     * @param thread the thread to lock
+     */
+    private void lock(ThreadChannel thread) {
+        if (thread.isLocked()) return;
+        RestAction<Void> lock = thread.isArchived()
+                ? thread.getManager()
+                        .setArchived(false)
+                        .setLocked(true)
+                        .flatMap(v -> thread.getManager().setArchived(true))
+                : thread.getManager().setLocked(true);
+        lock.queue(Consumers.empty(), err -> log.warn("Could not lock support thread {}.", thread.getIdLong(), err));
     }
 
     /**
