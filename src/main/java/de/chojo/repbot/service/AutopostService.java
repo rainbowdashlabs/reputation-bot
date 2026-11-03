@@ -134,8 +134,24 @@ public class AutopostService {
         LocalDateTime now = LocalDateTime.now().atZone(ZoneId.of("UTC")).toLocalDateTime();
         for (RefreshInterval value : RefreshInterval.values()) {
             if (value.isApplicable(now)) {
-                guildRepository.byAutopostRefreshInterval(value).forEach(this::update);
+                guildRepository.byAutopostRefreshInterval(value).forEach(this::refresh);
             }
+        }
+    }
+
+    /**
+     * Refreshes the autopost of a single guild during the scheduled check.
+     * <p>
+     * A failure is logged and swallowed, because an exception escaping the periodic task would cancel all further
+     * scheduled refreshes.
+     *
+     * @param guild guild to refresh
+     */
+    private void refresh(RepGuild guild) {
+        try {
+            update(guild);
+        } catch (RuntimeException e) {
+            log.error("Could not refresh autopost of guild {}.", guild.guildId(), e);
         }
     }
 
