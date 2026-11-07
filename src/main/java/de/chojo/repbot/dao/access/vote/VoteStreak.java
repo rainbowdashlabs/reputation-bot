@@ -54,6 +54,7 @@ public class VoteStreak {
         "last_vote",
         "streak",
         "streak_start",
+        "streak_days",
         "reminder",
         "reminder_timestamp",
         "sent"
