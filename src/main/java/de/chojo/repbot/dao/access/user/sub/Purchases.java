@@ -34,7 +34,7 @@ public class Purchases {
                     kp.guild_id
                 FROM
                     user_mails um
-                        LEFT JOIN kofi_purchase kp
+                        JOIN kofi_purchase kp
                         ON um.mail_hash = kp.mail_hash
                 WHERE user_id = ? AND verified;""")
                 .single(call().bind(repUser.id()))
@@ -55,7 +55,7 @@ public class Purchases {
                     kp.guild_id
                 FROM
                     user_mails um
-                        LEFT JOIN kofi_purchase kp
+                        JOIN kofi_purchase kp
                         ON um.mail_hash = kp.mail_hash
                 WHERE um.user_id = ? AND kp.id = ? AND um.verified;""")
                 .single(call().bind(repUser.id()).bind(id))
