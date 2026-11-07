@@ -29,7 +29,7 @@ public class MailEntry {
     private String verificationCode;
 
     @MappingProvider({
-        "id",
+        "user_id",
         "source",
         "mail_hash",
         "mail_short",
