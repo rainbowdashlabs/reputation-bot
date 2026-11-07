@@ -26,6 +26,7 @@ import io.javalin.openapi.OpenApi;
 import io.javalin.openapi.OpenApiContent;
 import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiResponse;
+import org.slf4j.Logger;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -34,8 +35,10 @@ import java.util.UUID;
 import static io.javalin.apibuilder.ApiBuilder.get;
 import static io.javalin.apibuilder.ApiBuilder.path;
 import static io.javalin.apibuilder.ApiBuilder.post;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class AuthRoute implements RoutesBuilder {
+    private static final Logger log = getLogger(AuthRoute.class);
     private final DiscordOAuthService discordOAuthService;
     private final UserRepository userRepository;
     private final SessionService sessionService;
@@ -163,6 +166,7 @@ public class AuthRoute implements RoutesBuilder {
             ctx.removeCookie("oauth_state", "/");
             ctx.redirect(redirectUrl);
         } catch (Exception e) {
+            log.error("Discord OAuth callback failed", e);
             ctx.status(HttpStatus.BAD_REQUEST).json(new ErrorResponseWrapper("Discord OAuth Failed", e.getMessage()));
         }
     }

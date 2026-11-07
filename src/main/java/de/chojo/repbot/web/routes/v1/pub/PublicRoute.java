@@ -8,6 +8,7 @@ package de.chojo.repbot.web.routes.v1.pub;
 import de.chojo.repbot.dao.access.user.RepUser;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.dao.provider.UserRepository;
+import de.chojo.repbot.util.Guilds;
 import de.chojo.repbot.web.cache.MemberCache;
 import de.chojo.repbot.web.routes.RoutesBuilder;
 import io.javalin.http.Context;
@@ -86,12 +87,7 @@ public class PublicRoute implements RoutesBuilder {
             return;
         }
 
-        Member member = null;
-        try {
-            member = guild.retrieveMemberById(userId).complete();
-        } catch (Exception ignore) {
-            // ignore
-        }
+        Member member = Guilds.retrieveMember(guild, userId);
         if (member == null) {
             ctx.status(404);
             return;

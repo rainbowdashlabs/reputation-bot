@@ -8,6 +8,7 @@ package de.chojo.repbot.web.routes.v1.guild;
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guild.settings.sub.ReputationMode;
 import de.chojo.repbot.dao.access.guildsession.GuildSession;
+import de.chojo.repbot.util.Guilds;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
 import de.chojo.repbot.web.pojo.ranking.RankingPagePOJO;
@@ -103,12 +104,9 @@ public class UserRankingRoute extends BaseRankingRoute {
 
     private Member resolveMember(Context ctx, GuildSession session) {
         String userIdParam = ctx.queryParam("userId");
-        Member member = null;
+        Member member;
         if (userIdParam == null) {
-            try {
-                member = session.guild().retrieveMemberById(session.userId()).complete();
-            } catch (Exception ignore) {
-            }
+            member = Guilds.retrieveMember(session.guild(), session.userId());
             if (member == null) {
                 ctx.status(404);
                 return null;
@@ -122,10 +120,7 @@ public class UserRankingRoute extends BaseRankingRoute {
             ctx.status(400);
             return null;
         }
-        try {
-            member = session.guild().retrieveMemberById(targetUserId).complete();
-        } catch (Exception ignore) {
-        }
+        member = Guilds.retrieveMember(session.guild(), targetUserId);
         if (member == null) {
             ctx.status(404);
             return null;
