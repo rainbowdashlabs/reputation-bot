@@ -7,6 +7,7 @@ package de.chojo.repbot.web.routes.v1.guild;
 
 import de.chojo.repbot.config.Configuration;
 import de.chojo.repbot.dao.access.guildsession.GuildSession;
+import de.chojo.repbot.util.Guilds;
 import de.chojo.repbot.web.config.Role;
 import de.chojo.repbot.web.config.SessionAttribute;
 import de.chojo.repbot.web.pojo.session.GuildSessionData;
@@ -101,10 +102,6 @@ public class UserRoute implements RoutesBuilder {
     }
 
     private @Nullable Member resolveMember(GuildSession session, long userId) {
-        try {
-            return session.guild().retrieveMemberById(userId).complete();
-        } catch (Exception ignore) {
-            return null;
-        }
+        return Guilds.retrieveMember(session.guild(), userId);
     }
 }
