@@ -63,6 +63,17 @@ class RemovalTaskTest {
         Assertions.assertEquals(1, count("SELECT count(1) FROM settings_audit_log WHERE member_id = " + OTHER_USER));
     }
 
+    @Test
+    void removesGuildWithIntegrationBypass() throws SQLException {
+        database.execute("INSERT INTO integration_bypass(guild_id, integration_id) VALUES (%d, 1)".formatted(GUILD));
+
+        RemovalTask.anonymExecute(GUILD, 0);
+
+        Assertions.assertEquals(0, count("SELECT count(1) FROM guilds WHERE guild_id = " + GUILD));
+        Assertions.assertEquals(0, count("SELECT count(1) FROM integration_bypass WHERE guild_id = " + GUILD));
+        Assertions.assertEquals(1, count("SELECT count(1) FROM guilds_archived WHERE guild_id = " + GUILD));
+    }
+
     private static long count(String sql) throws SQLException {
         try (var conn = database.dataSource().getConnection();
                 var stmt = conn.createStatement();
