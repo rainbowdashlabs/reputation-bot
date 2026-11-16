@@ -24,12 +24,19 @@ public enum SupporterFeature {
                     create("ALLOWED", sku.features().reputationChannel().defaultChannel()),
                     create(
                             "COUNT",
-                            repGuild.settings().thanking().channels().channels().size())),
+                            repGuild.settings()
+                                    .thanking()
+                                    .channels()
+                                    .accessibleChannels()
+                                    .size())),
             (sku, repGuild) -> repGuild.subscriptions()
                     .isEntitled(sku.features().reputationChannel().fullSkuEntry()),
-            (sku, repGuild) ->
-                    repGuild.settings().thanking().channels().channels().size()
-                            > sku.features().reputationChannel().defaultChannel(),
+            (sku, repGuild) -> repGuild.settings()
+                            .thanking()
+                            .channels()
+                            .accessibleChannels()
+                            .size()
+                    > sku.features().reputationChannel().defaultChannel(),
             sku -> sku.features().reputationChannel().fullSkuEntry()),
     CATEGORY_LIMIT_EXCEEDED(
             (sku, repGuild) -> List.of(

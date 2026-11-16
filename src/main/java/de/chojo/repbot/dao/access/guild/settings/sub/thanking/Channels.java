@@ -20,6 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -106,6 +107,36 @@ public class Channels extends ChannelsPOJO implements GuildHolder {
                 .map(guild()::getGuildChannelById)
                 .filter(Objects::nonNull)
                 .toList();
+    }
+
+    /**
+     * The configured channels the bot can see. Only these count towards the channel limit.
+     *
+     * @return configured channels which exist and are not hidden from the bot
+     */
+    public List<GuildChannel> accessibleChannels() {
+        return channels().stream().filter(this::isAccessible).toList();
+    }
+
+    /**
+     * Counts the channels of the given ids which exist and are not hidden from the bot.
+     * <p>
+     * Channels the bot has no view access on are obfuscated by Discord. They can not be shown to the user and are
+     * therefore not counted towards the channel limit.
+     *
+     * @param channelIds ids of the channels to count
+     * @return number of accessible channels
+     */
+    public int countAccessible(Collection<Long> channelIds) {
+        return (int) channelIds.stream()
+                .map(guild()::getGuildChannelById)
+                .filter(Objects::nonNull)
+                .filter(this::isAccessible)
+                .count();
+    }
+
+    private boolean isAccessible(GuildChannel channel) {
+        return !channel.isObfuscated() && guild().getSelfMember().hasAccess(channel);
     }
 
     public List<Category> categories() {
