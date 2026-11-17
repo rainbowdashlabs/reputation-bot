@@ -67,7 +67,11 @@ public class ThankingRoute implements RoutesBuilder {
         PremiumValidator validator = session.premiumValidator();
         if (thankingPOJO.channels() != null) {
             validator.requireWithinLimit(
-                    thankingPOJO.channels().channelIds().size(),
+                    session.repGuild()
+                            .settings()
+                            .thanking()
+                            .channels()
+                            .countAccessible(thankingPOJO.channels().channelIds()),
                     validator.features().reputationChannel(),
                     "Reputation Channels");
             validator.requireWithinLimit(

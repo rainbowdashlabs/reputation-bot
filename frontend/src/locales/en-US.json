@@ -644,6 +644,12 @@
         "channels": "Channels",
         "categories": "Categories"
       },
+      "hidden": {
+        "label": "Channels without access",
+        "description": "These channels are selected, but the bot can no longer see them. They do not count towards your channel limit. Grant the bot access again or remove them here.",
+        "name": "Hidden channel ({id})",
+        "noAccess": "No access"
+      },
       "premium": {
         "channelLimitWarning": "Selecting more than {limit} channels is reserved for supporters. Become a supporter to use it.",
         "categoryLimitWarning": "Selecting more than {limit} categories is reserved for supporters. Become a supporter to use it."

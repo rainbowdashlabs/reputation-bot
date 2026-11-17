@@ -15,6 +15,7 @@ import net.dv8tion.jda.api.events.session.SessionRecreateEvent;
 import net.dv8tion.jda.api.events.session.SessionResumeEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.slf4j.Logger;
 
 import java.time.Duration;
@@ -25,8 +26,6 @@ import java.util.Objects;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
-
-import javax.annotation.Nonnull;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -43,7 +42,7 @@ public class LogListener extends ListenerAdapter implements Runnable {
     }
 
     @Override
-    public void onGuildJoin(@Nonnull GuildJoinEvent event) {
+    public void onGuildJoin(@NonNull GuildJoinEvent event) {
         log.info(
                 LogNotify.STATUS,
                 "RepBot joined guild {} on shard {}.",
@@ -52,7 +51,7 @@ public class LogListener extends ListenerAdapter implements Runnable {
     }
 
     @Override
-    public void onGuildLeave(@Nonnull GuildLeaveEvent event) {
+    public void onGuildLeave(@NonNull GuildLeaveEvent event) {
         log.info(
                 LogNotify.STATUS,
                 "RepBot left guild {} on shard {}.",
@@ -77,7 +76,7 @@ public class LogListener extends ListenerAdapter implements Runnable {
     }
 
     @Override
-    public void onReady(@Nonnull ReadyEvent event) {
+    public void onReady(@NonNull ReadyEvent event) {
         handleShardReconnect(event.getJDA());
         log.info(
                 LogNotify.STATUS,

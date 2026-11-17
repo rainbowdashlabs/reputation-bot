@@ -20,6 +20,8 @@ import io.javalin.openapi.OpenApiParam;
 import io.javalin.openapi.OpenApiRequestBody;
 import io.javalin.openapi.OpenApiResponse;
 
+import java.util.Arrays;
+
 import static io.javalin.apibuilder.ApiBuilder.path;
 import static io.javalin.apibuilder.ApiBuilder.post;
 
@@ -47,8 +49,11 @@ public class ChannelsRoute implements RoutesBuilder {
         PremiumValidator validator = session.premiumValidator();
 
         // Validate channel count limit
+        var channels = session.repGuild().settings().thanking().channels();
         validator.requireWithinLimit(
-                channelsPOJO.channelIds().size(), validator.features().reputationChannel(), "Reputation Channels");
+                channels.countAccessible(channelsPOJO.channelIds()),
+                validator.features().reputationChannel(),
+                "Reputation Channels");
 
         // Validate category count limit
         validator.requireWithinLimit(
@@ -59,7 +64,6 @@ public class ChannelsRoute implements RoutesBuilder {
         // Validate whitelist mode (blacklist requires premium)
         validator.requireWhitelistOrPremium(channelsPOJO.isWhitelist());
 
-        var channels = session.repGuild().settings().thanking().channels();
         var oldValue = new ChannelsPOJO(channels.copyChannelIds(), channels.copyCategoryIds(), channels.isWhitelist());
         channels.apply(channelsPOJO);
         session.recordChange("thanking.channels", oldValue, channelsPOJO);
@@ -115,15 +119,17 @@ public class ChannelsRoute implements RoutesBuilder {
 
         // Validate channel count limit
         PremiumValidator validator = session.premiumValidator();
+        var channels = session.repGuild().settings().thanking().channels();
         validator.requireWithinLimit(
-                channelIds.length, validator.features().reputationChannel(), "Reputation Channels");
+                channels.countAccessible(Arrays.asList(channelIds)),
+                validator.features().reputationChannel(),
+                "Reputation Channels");
 
         // Validate all channel IDs
         for (Long channelId : channelIds) {
             session.guildValidator().validateChannelIds(channelId);
         }
 
-        var channels = session.repGuild().settings().thanking().channels();
         var oldValue = channels.copyChannelIds();
         channels.clearChannel();
         for (Long channelId : channelIds) {

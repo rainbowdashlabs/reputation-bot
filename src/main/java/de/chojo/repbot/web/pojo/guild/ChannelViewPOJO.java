@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.entities.SelfMember;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.attribute.ICategorizableChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -44,14 +45,18 @@ public class ChannelViewPOJO {
                             .computeIfAbsent(
                                     category.getIdLong(), k -> new CategoryPOJO(category.getName(), category.getId()))
                             .addChannel(new ChannelPOJO(
-                                    channel.getName(), channel.getId(), channel.getType(), self.hasAccess(channel)));
+                                    channel.getName(), channel.getId(), channel.getType(), isVisible(self, channel)));
                 } else {
                     channels.add(new ChannelPOJO(
-                            channel.getName(), channel.getId(), channel.getType(), self.hasAccess(channel)));
+                            channel.getName(), channel.getId(), channel.getType(), isVisible(self, channel)));
                 }
             }
         });
 
         return new ChannelViewPOJO(channels, new LinkedList<>(categories.values()));
+    }
+
+    private static boolean isVisible(SelfMember self, GuildChannel channel) {
+        return !channel.isObfuscated() && self.hasAccess(channel);
     }
 }

@@ -12,8 +12,7 @@ import de.chojo.repbot.dao.snapshots.ResultEntry;
 import de.chojo.repbot.dao.snapshots.analyzer.ResultSnapshot;
 import de.chojo.repbot.util.Colors;
 import net.dv8tion.jda.api.entities.Guild;
-
-import javax.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public record EmptyAnalyzerResult(@Nullable String match, EmptyResultReason reason)
         implements AnalyzerResult, ResultSnapshot {

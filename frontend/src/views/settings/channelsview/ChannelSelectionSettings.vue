@@ -41,6 +41,24 @@ const visibleGuildChannels = computed(() => {
   }
 })
 
+const allGuildChannels = computed(() => {
+  if (!guildChannels.value) return []
+  return [
+    ...guildChannels.value.categories.flatMap(category => category.channels),
+    ...guildChannels.value.channels
+  ]
+})
+
+const visibleChannelIds = computed(() => new Set(allGuildChannels.value.filter(c => c.visible).map(c => c.id)))
+
+const selectedHiddenChannels = computed(() =>
+  allGuildChannels.value.filter(c => !c.visible && isChannelSelected(c.id))
+)
+
+const selectedVisibleChannelCount = computed(() =>
+  channelsSettings.value?.channels.filter(id => visibleChannelIds.value.has(String(id))).length ?? 0
+)
+
 const toggleChannel = async (channelId: string) => {
   if (!channelsSettings.value) return
   let newChannels = channelsSettings.value.channels.slice()
@@ -102,7 +120,7 @@ const isChannelSelected = (channelId: string): boolean => {
 const isChannelLimitReached = computed(() => {
   if (!premiumFeatures.value?.reputationChannel || !channelsSettings.value) return false
   return !premiumFeatures.value.reputationChannel.unlocked &&
-      channelsSettings.value.channels.length >= premiumFeatures.value.reputationChannel.max
+      selectedVisibleChannelCount.value >= premiumFeatures.value.reputationChannel.max
 })
 
 const isCategoryLimitReached = computed(() => {
@@ -174,6 +192,32 @@ const isCategoryLimitReached = computed(() => {
         >
           <template #right>
             <span class="text-xs text-gray-500 uppercase">{{ t('general.channels.list.channels') }}</span>
+          </template>
+        </ChannelSelectionItem>
+      </div>
+    </div>
+
+    <div v-if="selectedHiddenChannels.length > 0" class="space-y-4">
+      <div class="flex flex-col gap-1">
+        <label class="block text-sm font-medium text-gray-900 dark:text-gray-100">{{
+            t('general.channels.hidden.label')
+          }}</label>
+        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">{{ t('general.channels.hidden.description') }}</p>
+      </div>
+
+      <div
+          class="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden divide-y divide-gray-200 dark:divide-gray-700">
+        <ChannelSelectionItem
+          v-for="channel in selectedHiddenChannels"
+          :key="channel.id"
+          :channel="{...channel, name: t('general.channels.hidden.name', {id: channel.id})}"
+          :selected="true"
+          :disabled="false"
+          class="bg-white dark:bg-gray-900"
+          @toggle="toggleChannel"
+        >
+          <template #right>
+            <span class="text-xs text-gray-500 uppercase">{{ t('general.channels.hidden.noAccess') }}</span>
           </template>
         </ChannelSelectionItem>
       </div>
