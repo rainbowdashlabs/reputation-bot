@@ -66,16 +66,15 @@ public class ThankingRoute implements RoutesBuilder {
         // Validate premium features in the nested channels settings
         PremiumValidator validator = session.premiumValidator();
         if (thankingPOJO.channels() != null) {
-            validator.requireWithinLimit(
-                    session.repGuild()
-                            .settings()
-                            .thanking()
-                            .channels()
-                            .countAccessible(thankingPOJO.channels().channelIds()),
+            var channels = session.repGuild().settings().thanking().channels();
+            validator.requireWithinLimitOrReduced(
+                    channels.countAccessible(thankingPOJO.channels().channelIds()),
+                    channels.accessibleChannels().size(),
                     validator.features().reputationChannel(),
                     "Reputation Channels");
-            validator.requireWithinLimit(
-                    thankingPOJO.channels().categoryIds().size(),
+            validator.requireWithinLimitOrReduced(
+                    channels.countExistingCategories(thankingPOJO.channels().categoryIds()),
+                    channels.categories().size(),
                     validator.features().reputationCategories(),
                     "Reputation Categories");
             validator.requireWhitelistOrPremium(thankingPOJO.channels().isWhitelist());

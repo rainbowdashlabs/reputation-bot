@@ -139,6 +139,19 @@ public class Channels extends ChannelsPOJO implements GuildHolder {
         return !channel.isObfuscated() && guild().getSelfMember().hasAccess(channel);
     }
 
+    /**
+     * Counts the categories of the given ids which still exist in the guild.
+     *
+     * @param categoryIds ids of the categories to count
+     * @return number of existing categories
+     */
+    public int countExistingCategories(Collection<Long> categoryIds) {
+        return (int) categoryIds.stream()
+                .map(guild()::getCategoryById)
+                .filter(Objects::nonNull)
+                .count();
+    }
+
     public List<Category> categories() {
         return categories.stream()
                 .map(guild()::getCategoryById)

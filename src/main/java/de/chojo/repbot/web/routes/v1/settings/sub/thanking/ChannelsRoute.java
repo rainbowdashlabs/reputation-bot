@@ -50,14 +50,16 @@ public class ChannelsRoute implements RoutesBuilder {
 
         // Validate channel count limit
         var channels = session.repGuild().settings().thanking().channels();
-        validator.requireWithinLimit(
+        validator.requireWithinLimitOrReduced(
                 channels.countAccessible(channelsPOJO.channelIds()),
+                channels.accessibleChannels().size(),
                 validator.features().reputationChannel(),
                 "Reputation Channels");
 
         // Validate category count limit
-        validator.requireWithinLimit(
-                channelsPOJO.categoryIds().size(),
+        validator.requireWithinLimitOrReduced(
+                channels.countExistingCategories(channelsPOJO.categoryIds()),
+                channels.categories().size(),
                 validator.features().reputationCategories(),
                 "Reputation Categories");
 
@@ -120,8 +122,9 @@ public class ChannelsRoute implements RoutesBuilder {
         // Validate channel count limit
         PremiumValidator validator = session.premiumValidator();
         var channels = session.repGuild().settings().thanking().channels();
-        validator.requireWithinLimit(
+        validator.requireWithinLimitOrReduced(
                 channels.countAccessible(Arrays.asList(channelIds)),
+                channels.accessibleChannels().size(),
                 validator.features().reputationChannel(),
                 "Reputation Channels");
 
@@ -160,15 +163,18 @@ public class ChannelsRoute implements RoutesBuilder {
 
         // Validate category count limit
         PremiumValidator validator = session.premiumValidator();
-        validator.requireWithinLimit(
-                categoryIds.length, validator.features().reputationCategories(), "Reputation Categories");
+        var channels = session.repGuild().settings().thanking().channels();
+        validator.requireWithinLimitOrReduced(
+                channels.countExistingCategories(Arrays.asList(categoryIds)),
+                channels.categories().size(),
+                validator.features().reputationCategories(),
+                "Reputation Categories");
 
         // Validate all category IDs (categories are also channels in Discord)
         for (Long categoryId : categoryIds) {
             session.guildValidator().validateCategoryIds(categoryId);
         }
 
-        var channels = session.repGuild().settings().thanking().channels();
         var oldValue = channels.copyCategoryIds();
         channels.clearCategories();
         for (Long categoryId : categoryIds) {

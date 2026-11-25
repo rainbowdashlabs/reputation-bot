@@ -20,7 +20,11 @@ public class PremiumValidator {
     private final PremiumFeaturesPOJO features;
 
     public PremiumValidator(RepGuild guild, ShardManager shardManager) {
-        this.features = PremiumFeaturesPOJO.generate(guild, shardManager);
+        this(PremiumFeaturesPOJO.generate(guild, shardManager));
+    }
+
+    PremiumValidator(PremiumFeaturesPOJO features) {
+        this.features = features;
     }
 
     /**
@@ -62,6 +66,23 @@ public class PremiumValidator {
         if (count > limit.max() && !limit.unlocked()) {
             throw new PremiumFeatureException(featureName, limit.requiredSkus(), count, limit.max());
         }
+    }
+
+    /**
+     * Validates that a count doesn't exceed the allowed limit, unless it does not grow beyond the current count.
+     * <p>
+     * Guilds which are already above the limit, for example after a subscription ended, can still reduce their
+     * count step by step until they are within the limit again.
+     *
+     * @param count        The count to validate
+     * @param currentCount The count currently stored
+     * @param limit        The feature limit
+     * @param featureName  Display name for error messages
+     * @throws PremiumFeatureException if the count exceeds the limit and is larger than the current count
+     */
+    public void requireWithinLimitOrReduced(int count, int currentCount, FeatureLimit limit, String featureName) {
+        if (count <= currentCount) return;
+        requireWithinLimit(count, limit, featureName);
     }
 
     /**
