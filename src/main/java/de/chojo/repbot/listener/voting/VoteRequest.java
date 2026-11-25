@@ -39,7 +39,7 @@ public class VoteRequest {
     }
 
     public Optional<Member> getTarget(String id) {
-        return Optional.ofNullable(voteTargets.get(id).member());
+        return Optional.ofNullable(voteTargets.get(id)).map(VoteComponent::member);
     }
 
     public void voted() {
