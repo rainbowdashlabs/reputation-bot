@@ -14,6 +14,20 @@ import java.time.Instant;
 
 public record SubscriptionError(SupporterFeature type, Instant created, Instant lastSend, int count, boolean notified) {
 
+    /**
+     * Whether the feature has to be reported in the next notice.
+     * <p>
+     * Blocking features are reported again every interval until they are fixed. Paused features are reported once;
+     * only a notice that reached nobody is repeated.
+     *
+     * @param dueBefore errors last sent before this moment are due
+     * @return true if the error is due
+     */
+    public boolean isDue(Instant dueBefore) {
+        if (!type.isBlocking() && notified) return false;
+        return lastSend.isBefore(dueBefore);
+    }
+
     public static SubscriptionError build(Row row) throws SQLException {
         return new SubscriptionError(
                 row.getEnum("type", SupporterFeature.class),

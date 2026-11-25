@@ -122,8 +122,9 @@ away. You don't have to wait for the next notice.
 
 ### Features that pause
 
-These features simply stop working while the server doesn't have them. Nothing gets blocked. The notice says they are
-paused and links to their settings page. They work again as soon as the server has the feature again.
+These features simply stop working while the server doesn't have them. Nothing gets blocked. The notice says once that
+they are paused and links to their settings page; it doesn't repeat this. They work again as soon as the server has
+the feature again.
 
 | Feature | Settings page |
 |---|---|
