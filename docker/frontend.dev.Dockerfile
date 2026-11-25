@@ -2,7 +2,7 @@
 # the host's install (possibly a different OS or architecture) does not shadow the in-container
 # one. Runs the Vite dev server with HMR; chokidar polls because inotify events from a bind
 # mount are not reliable across every host filesystem.
-FROM node:24-alpine
+FROM node:26-alpine
 
 WORKDIR /build
 
