@@ -3,10 +3,31 @@
  *
  *     Copyright (C) RainbowDashLabs and Contributor
  */
-import axios, {type AxiosError, type AxiosInstance} from 'axios';
+import axios, {type AxiosError, type AxiosInstance, type InternalAxiosRequestConfig} from 'axios';
 import * as Types from './types';
 import {useErrorStore} from '../stores/errorStore';
 import {useSession} from '../composables/useSession';
+
+let supporterStatusRefresh: ReturnType<typeof setTimeout> | null = null;
+
+/**
+ * Whether a request changed guild settings, which can resolve or cause supporter issues.
+ */
+function isSettingsWrite(config: InternalAxiosRequestConfig): boolean {
+    return config.method !== 'get' && (config.url ?? '').startsWith('/settings');
+}
+
+/**
+ * Reloads the premium features shortly after settings changed, so the supporter status shown is current.
+ * Several saves in a row cause a single reload.
+ */
+function scheduleSupporterStatusRefresh() {
+    if (supporterStatusRefresh) clearTimeout(supporterStatusRefresh);
+    supporterStatusRefresh = setTimeout(() => {
+        supporterStatusRefresh = null;
+        useSession().refreshGuildPremium();
+    }, 500);
+}
 
 class ApiClient {
     private axiosInstance: AxiosInstance;
@@ -41,7 +62,10 @@ class ApiClient {
         });
 
         this.axiosInstance.interceptors.response.use(
-            (response) => response,
+            (response) => {
+                if (isSettingsWrite(response.config)) scheduleSupporterStatusRefresh();
+                return response;
+            },
             async (error: AxiosError<Types.ApiErrorResponse>) => {
                 // Handle 401 Unauthorized - show expired warning or redirect to login
                 if (error.response?.status === 401) {

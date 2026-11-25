@@ -1271,5 +1271,25 @@
       "submit": "Transferencia",
       "title": "Transferir fichas a un gremio"
     }
+  },
+  "supporterStatus": {
+    "blocked": "La reputación está detenida en este servidor. Corrige los problemas de abajo para reanudarla al instante.",
+    "blocksAt": "La reputación se detiene el {date} si no corriges los problemas de abajo.",
+    "blocksSoon": "La reputación se detiene tras un periodo de gracia si no corriges los problemas de abajo.",
+    "paused": "Estas funciones de apoyo están en pausa porque el nivel de este servidor no las incluye:",
+    "open": "Abrir {section}",
+    "support": "Hazte partidario",
+    "feature": {
+      "CHANNEL_LIMIT_EXCEEDED": "Hay más canales de reputación seleccionados de los que permite el nivel.",
+      "CATEGORY_LIMIT_EXCEEDED": "Hay más categorías de reputación seleccionadas de las que permite el nivel.",
+      "BLACKLIST_USED": "La lista de canales es una lista de bloqueo.",
+      "BOT_NICKNAMED": "El bot tiene un apodo en este servidor. Quítalo en Discord.",
+      "AUTOPOST_USED": "La publicación automática está activada.",
+      "LOG_CHANNEL_USED": "El canal de registro está activado.",
+      "COMMAND_ALIASES_USED": "Hay nombres de comandos personalizados.",
+      "INTEGRATION_BYPASS_USED": "Las integraciones pueden dar reputación.",
+      "ADDITIONAL_EMOJIS_USED": "Hay emojis de reacción adicionales.",
+      "LOCALE_OVERRIDES_USED": "Hay un nombre personalizado para la reputación."
+    }
   }
 }

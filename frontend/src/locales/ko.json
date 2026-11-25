@@ -1271,5 +1271,25 @@
       "submit": "이체",
       "title": "길드에 토큰 이전"
     }
+  },
+  "supporterStatus": {
+    "blocked": "이 서버에서 평판이 중지되었습니다. 아래 문제를 해결하면 바로 다시 시작됩니다.",
+    "blocksAt": "아래 문제를 해결하지 않으면 {date}에 평판이 중지됩니다.",
+    "blocksSoon": "아래 문제를 해결하지 않으면 유예 기간 후 평판이 중지됩니다.",
+    "paused": "이 서버의 등급에 포함되지 않아 다음 후원자 기능이 일시 중지되었습니다:",
+    "open": "{section} 열기",
+    "support": "후원자 되기",
+    "feature": {
+      "CHANNEL_LIMIT_EXCEEDED": "등급이 허용하는 것보다 많은 평판 채널이 선택되어 있습니다.",
+      "CATEGORY_LIMIT_EXCEEDED": "등급이 허용하는 것보다 많은 평판 카테고리가 선택되어 있습니다.",
+      "BLACKLIST_USED": "채널 목록이 차단 목록입니다.",
+      "BOT_NICKNAMED": "봇에 이 서버의 별명이 있습니다. Discord에서 삭제하세요.",
+      "AUTOPOST_USED": "자동 게시가 켜져 있습니다.",
+      "LOG_CHANNEL_USED": "로그 채널이 켜져 있습니다.",
+      "COMMAND_ALIASES_USED": "사용자 지정 명령어 이름이 설정되어 있습니다.",
+      "INTEGRATION_BYPASS_USED": "연동 앱이 평판을 줄 수 있습니다.",
+      "ADDITIONAL_EMOJIS_USED": "추가 반응 이모지가 설정되어 있습니다.",
+      "LOCALE_OVERRIDES_USED": "평판의 사용자 지정 이름이 설정되어 있습니다."
+    }
   }
 }

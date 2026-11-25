@@ -1271,5 +1271,25 @@
       "submit": "Overdracht",
       "title": "Tokens naar een gilde overzetten"
     }
+  },
+  "supporterStatus": {
+    "blocked": "Reputatie is gestopt op deze server. Los de problemen hieronder op om meteen verder te gaan.",
+    "blocksAt": "Reputatie stopt op {date} als je de problemen hieronder niet oplost.",
+    "blocksSoon": "Reputatie stopt na een overgangsperiode als je de problemen hieronder niet oplost.",
+    "paused": "Deze supporterfuncties zijn gepauzeerd omdat het niveau van deze server ze niet bevat:",
+    "open": "{section} openen",
+    "support": "Word supporter",
+    "feature": {
+      "CHANNEL_LIMIT_EXCEEDED": "Er zijn meer reputatiekanalen gekozen dan het niveau toestaat.",
+      "CATEGORY_LIMIT_EXCEEDED": "Er zijn meer reputatiecategorieën gekozen dan het niveau toestaat.",
+      "BLACKLIST_USED": "De kanaallijst is een blokkeerlijst.",
+      "BOT_NICKNAMED": "De bot heeft een bijnaam op deze server. Verwijder die in Discord.",
+      "AUTOPOST_USED": "Automatisch posten staat aan.",
+      "LOG_CHANNEL_USED": "Het logkanaal staat aan.",
+      "COMMAND_ALIASES_USED": "Er zijn eigen commandonamen ingesteld.",
+      "INTEGRATION_BYPASS_USED": "Integraties mogen reputatie geven.",
+      "ADDITIONAL_EMOJIS_USED": "Er zijn extra reactie-emoji's ingesteld.",
+      "LOCALE_OVERRIDES_USED": "Er is een eigen naam voor reputatie ingesteld."
+    }
   }
 }

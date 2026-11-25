@@ -386,7 +386,7 @@ public class Bot {
                         new RepSettings(configuration),
                         new Top(guilds, configuration),
                         new Thankwords(configuration),
-                        new Scan(scanService, configuration),
+                        new Scan(scanService, configuration, data.guildRepository()),
                         new Locale(configuration),
                         new Invite(configuration),
                         Info.create(configuration),

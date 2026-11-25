@@ -57,6 +57,7 @@ public class PremiumFeaturesPOJO {
     private final FeatureLimit reputationCategories;
 
     private final List<String> activeSkus;
+    private final SupporterStatusPOJO supporterStatus;
 
     public PremiumFeaturesPOJO(
             SimpleFeature reputationLog,
@@ -73,7 +74,8 @@ public class PremiumFeaturesPOJO {
             SimpleFeature commandAliases,
             FeatureLimit reputationChannel,
             FeatureLimit reputationCategories,
-            List<String> activeSkus) {
+            List<String> activeSkus,
+            SupporterStatusPOJO supporterStatus) {
         this.reputationLog = reputationLog;
         this.analyzerLog = analyzerLog;
         this.channelBlacklist = channelBlacklist;
@@ -89,6 +91,7 @@ public class PremiumFeaturesPOJO {
         this.reputationChannel = reputationChannel;
         this.reputationCategories = reputationCategories;
         this.activeSkus = activeSkus;
+        this.supporterStatus = supporterStatus;
     }
 
     public static PremiumFeaturesPOJO generate(RepGuild guild, ShardManager shardManager) {
@@ -170,7 +173,8 @@ public class PremiumFeaturesPOJO {
                 commandAliases,
                 reputationChannel,
                 reputationCategories,
-                active);
+                active,
+                SupporterStatusPOJO.of(guild));
     }
 
     private static Map<Long, SkuInfo> resolveSkus(ShardManager shardManager) {
@@ -266,6 +270,10 @@ public class PremiumFeaturesPOJO {
 
     public List<String> activeSkus() {
         return activeSkus;
+    }
+
+    public SupporterStatusPOJO supporterStatus() {
+        return supporterStatus;
     }
 
     public SimpleFeature integrationBypass() {

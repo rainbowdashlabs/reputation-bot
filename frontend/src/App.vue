@@ -17,6 +17,7 @@ import {api} from './api'
 import {useSession} from './composables/useSession'
 import {useDarkMode} from './composables/useDarkMode'
 import ViewContainer from './components/ViewContainer.vue'
+import SupporterStatusBanner from './components/SupporterStatusBanner.vue'
 
 const router = useRouter()
 const route = useRoute()
@@ -43,6 +44,8 @@ const isSettingsPage = computed(() => route.path.startsWith('/settings/edit'))
 const showSettingsHeader = computed(() => route.path.startsWith('/settings'))
 const isSetupPage = computed(() => route.path.startsWith('/setup'))
 const isPublicPage = computed(() => ['Tos', 'Privacy', 'Faq', 'Metrics', 'Landing'].includes(route.name as string))
+const showSupporterStatus = computed(() =>
+    !!userSession.value && isGuildAdmin.value && !isPublicPage.value && route.path !== '/settings/problems')
 
 const ready = ref(false)
 
@@ -196,7 +199,12 @@ watch(isSettingsPage, async (isSettings) => {
           </p>
         </div>
       </ViewContainer>
-      <router-view v-else/>
+      <template v-else>
+        <div v-if="showSupporterStatus" class="mx-auto px-4 pt-6 w-full" style="max-width: 1200px;">
+          <SupporterStatusBanner/>
+        </div>
+        <router-view/>
+      </template>
     </div>
 
     <AppFooter/>

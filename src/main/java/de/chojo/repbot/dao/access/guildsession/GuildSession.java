@@ -16,8 +16,13 @@ import de.chojo.repbot.web.validation.PremiumValidator;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.sharding.ShardManager;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class GuildSession {
+    private static final Logger log = getLogger(GuildSession.class);
+
     private final Configuration configuration;
     private final ShardManager shardManager;
     private final GuildRepository guildRepository;
@@ -109,7 +114,7 @@ public class GuildSession {
     }
 
     /**
-     * Records a change of a guild setting.
+     * Records a change of a guild setting and removes supporter errors the change resolved.
      *
      * @param settingsKey A unique key identifying the setting.
      * @param oldValue    the old value of the setting before the change.
@@ -117,6 +122,11 @@ public class GuildSession {
      */
     public void recordChange(String settingsKey, Object oldValue, Object newValue) {
         settingsAuditLogRepository.recordChange(guildId, userId, settingsKey, oldValue, newValue);
+        try {
+            repGuild().subscriptions().clearResolvedErrors();
+        } catch (RuntimeException e) {
+            log.error("Could not clear resolved supporter errors of guild {}.", guildId, e);
+        }
     }
 
     /**

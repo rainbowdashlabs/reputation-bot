@@ -1271,5 +1271,25 @@
       "submit": "Siirto",
       "title": "Siirrä rahakkeet kiltaan"
     }
+  },
+  "supporterStatus": {
+    "blocked": "Maine on pysäytetty tällä palvelimella. Korjaa alla olevat ongelmat, niin se jatkuu heti.",
+    "blocksAt": "Maine pysähtyy {date}, jos et korjaa alla olevia ongelmia.",
+    "blocksSoon": "Maine pysähtyy armonajan jälkeen, jos et korjaa alla olevia ongelmia.",
+    "paused": "Nämä tukijaominaisuudet ovat tauolla, koska tämän palvelimen taso ei sisällä niitä:",
+    "open": "Avaa {section}",
+    "support": "Ryhdy tukijaksi",
+    "feature": {
+      "CHANNEL_LIMIT_EXCEEDED": "Mainekanavia on valittu enemmän kuin taso sallii.",
+      "CATEGORY_LIMIT_EXCEEDED": "Mainekategorioita on valittu enemmän kuin taso sallii.",
+      "BLACKLIST_USED": "Kanavalista on estolista.",
+      "BOT_NICKNAMED": "Botilla on lempinimi tällä palvelimella. Poista se Discordissa.",
+      "AUTOPOST_USED": "Automaattinen julkaisu on päällä.",
+      "LOG_CHANNEL_USED": "Lokikanava on päällä.",
+      "COMMAND_ALIASES_USED": "Omia komentojen nimiä on asetettu.",
+      "INTEGRATION_BYPASS_USED": "Integraatiot saavat antaa mainetta.",
+      "ADDITIONAL_EMOJIS_USED": "Lisäreaktioemojeja on asetettu.",
+      "LOCALE_OVERRIDES_USED": "Maineelle on asetettu oma nimi."
+    }
   }
 }

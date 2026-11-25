@@ -8,6 +8,7 @@ package de.chojo.repbot.dao.access.guild;
 import de.chojo.jdautil.interactions.base.SkuMeta;
 import de.chojo.jdautil.interactions.premium.SKU;
 import de.chojo.repbot.config.elements.sku.tokens.Feature;
+import de.chojo.repbot.dao.access.guild.subscriptions.GracePeriod;
 import de.chojo.repbot.dao.access.guild.subscriptions.SkuTarget;
 import de.chojo.repbot.dao.access.guild.subscriptions.Subscription;
 import de.chojo.repbot.dao.access.guild.subscriptions.SubscriptionError;
@@ -19,10 +20,8 @@ import de.chojo.sadu.queries.call.adapter.StandardAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +30,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static de.chojo.repbot.util.States.GRANT_ALL_SKU;
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 
@@ -65,22 +65,50 @@ public class Subscriptions implements GuildHolder, SkuMeta {
      * @return the moment of the block, or empty if none of the features is blocking
      */
     public Optional<Instant> blocksAt(Collection<SupporterFeature> features) {
-        var skus = repGuild.configuration().skus();
-        long graceHours = (long) skus.errorThresholdBlock() * skus.subscriptionErrorMessageHours();
-        return features.stream()
-                .filter(SupporterFeature::isBlocking)
-                .map(feature -> getErrorMessage(feature).created())
-                .min(Comparator.naturalOrder())
-                .map(since -> since.plus(graceHours, ChronoUnit.HOURS));
+        return GracePeriod.end(
+                features.stream().map(this::getErrorMessage).toList(),
+                feature -> true,
+                repGuild.configuration().skus());
     }
 
     /**
-     * The moment the guild stops receiving reputation because of the blocking features it was reported for.
+     * The moment the guild stops receiving reputation because of the blocking features it was reported for and still
+     * uses without entitlement.
      *
-     * @return the moment of the block, or empty if no blocking feature was reported
+     * @return the moment of the block, or empty if no such feature is still in use
      */
     public Optional<Instant> blocksAt() {
-        return blocksAt(List.copyOf(errorMessages().keySet()));
+        return GracePeriod.end(
+                errorMessages().values(),
+                this::isStillUnentitledUse,
+                repGuild.configuration().skus());
+    }
+
+    /**
+     * Whether the grace period for a blocking feature has run out, so the guild no longer receives reputation.
+     *
+     * @return true if the guild is blocked
+     */
+    public boolean isBlocked() {
+        if (GRANT_ALL_SKU) return false;
+        return GracePeriod.isOver(blocksAt(), Instant.now());
+    }
+
+    /**
+     * Removes the reported errors of features the guild is entitled to or no longer uses.
+     * <p>
+     * Without a loaded guild the settings can not be inspected, so only errors of entitled features are removed.
+     */
+    public void clearResolvedErrors() {
+        for (SupporterFeature feature : List.copyOf(errorMessages().keySet())) {
+            if (!isStillUnentitledUse(feature)) deleteError(feature);
+        }
+    }
+
+    private boolean isStillUnentitledUse(SupporterFeature feature) {
+        var skus = repGuild.configuration().skus();
+        if (repGuild.isById()) return !feature.isEntitled(skus, repGuild);
+        return feature.isUnentitledUse(skus, repGuild);
     }
 
     public void deleteSubscription(Subscription subscription) {
@@ -204,6 +232,7 @@ public class Subscriptions implements GuildHolder, SkuMeta {
                 .ifChanged(i -> {
                     subscriptions().remove(subscription);
                     subscriptions().add(subscription);
+                    clearResolvedErrors();
                 });
     }
 

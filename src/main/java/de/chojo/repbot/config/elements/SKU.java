@@ -10,6 +10,8 @@ import de.chojo.repbot.config.elements.sku.SKUFeatures;
 import de.chojo.repbot.config.elements.sku.Subscription;
 import net.dv8tion.jda.api.entities.Entitlement;
 
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,6 +38,16 @@ public class SKU {
 
     public int errorThresholdBlock() {
         return errorThresholdBlock;
+    }
+
+    /**
+     * The end of the grace period for a blocking supporter feature: one notice interval per allowed notice.
+     *
+     * @param reportedSince when the feature was first reported
+     * @return the moment the guild stops receiving reputation
+     */
+    public Instant gracePeriodEnd(Instant reportedSince) {
+        return reportedSince.plus((long) errorThresholdBlock * subscriptionErrorMessageHours, ChronoUnit.HOURS);
     }
 
     public List<Subscription> subscriptions() {

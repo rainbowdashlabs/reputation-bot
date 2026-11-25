@@ -1271,5 +1271,25 @@
       "submit": "Överföring",
       "title": "Överför tokens till en guild"
     }
+  },
+  "supporterStatus": {
+    "blocked": "Rykte är stoppat på den här servern. Åtgärda problemen nedan för att fortsätta direkt.",
+    "blocksAt": "Rykte stoppas {date} om du inte åtgärdar problemen nedan.",
+    "blocksSoon": "Rykte stoppas efter en frist om du inte åtgärdar problemen nedan.",
+    "paused": "Dessa supporterfunktioner är pausade eftersom serverns nivå inte inkluderar dem:",
+    "open": "Öppna {section}",
+    "support": "Bli supporter",
+    "feature": {
+      "CHANNEL_LIMIT_EXCEEDED": "Fler ryktekanaler är valda än nivån tillåter.",
+      "CATEGORY_LIMIT_EXCEEDED": "Fler ryktekategorier är valda än nivån tillåter.",
+      "BLACKLIST_USED": "Kanallistan är en blocklista.",
+      "BOT_NICKNAMED": "Boten har ett smeknamn på den här servern. Ta bort det i Discord.",
+      "AUTOPOST_USED": "Autopost är påslaget.",
+      "LOG_CHANNEL_USED": "Loggkanalen är påslagen.",
+      "COMMAND_ALIASES_USED": "Egna kommandonamn är inställda.",
+      "INTEGRATION_BYPASS_USED": "Integrationer får ge rykte.",
+      "ADDITIONAL_EMOJIS_USED": "Extra reaktionsemojier är inställda.",
+      "LOCALE_OVERRIDES_USED": "Ett eget namn för rykte är inställt."
+    }
   }
 }

@@ -26,7 +26,7 @@ import static de.chojo.jdautil.localization.util.Replacement.create;
  * A supporter feature a guild can use while it is not entitled to it.
  * <p>
  * Blocking features get a grace period: the guild is warned repeatedly and stops receiving reputation once the
- * warnings reach the configured threshold. Non-blocking features are paused as soon as the entitlement ends and are
+ * period since the first warning has passed. Non-blocking features are paused as soon as the entitlement ends and are
  * only reported.
  */
 public enum SupporterFeature {
@@ -166,7 +166,7 @@ public enum SupporterFeature {
     /**
      * Whether using this feature without entitlement stops reputation after the grace period.
      *
-     * @return true if the feature blocks the guild once the warnings reach the threshold
+     * @return true if the feature blocks the guild once its grace period has passed
      */
     public boolean isBlocking() {
         return blocking;
@@ -174,6 +174,17 @@ public enum SupporterFeature {
 
     public boolean isApplicable(SKU sku, RepGuild repGuild) {
         return isApplicable.apply(sku, repGuild);
+    }
+
+    /**
+     * Whether the guild uses this feature without being entitled to it.
+     *
+     * @param sku      supporter configuration
+     * @param repGuild guild to inspect
+     * @return true if the feature is in use without entitlement
+     */
+    public boolean isUnentitledUse(SKU sku, RepGuild repGuild) {
+        return !isEntitled(sku, repGuild) && isApplicable(sku, repGuild);
     }
 
     public boolean isEntitled(SKU sku, RepGuild repGuild) {

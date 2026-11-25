@@ -237,7 +237,7 @@ public class PremiumService extends ListenerAdapter {
     }
 
     private boolean isUnentitledUse(RepGuild repGuild, SupporterFeature feature) {
-        return !feature.isEntitled(skus(), repGuild) && feature.isApplicable(skus(), repGuild);
+        return feature.isUnentitledUse(skus(), repGuild);
     }
 
     private boolean resolveAutomatically(Guild guild, SupporterFeature feature) {
@@ -375,7 +375,7 @@ public class PremiumService extends ListenerAdapter {
                 .guild(guild.getIdLong())
                 .excludeEnded(true)
                 .complete();
-        RepGuild repGuild = guildRepository.byId(guild.getIdLong());
+        RepGuild repGuild = guildRepository.guild(guild);
         repGuild.subscriptions().clear(SubscriptionSource.DISCORD);
         for (Entitlement entitlement : entitlements) {
             updateEntitlement(entitlement);
