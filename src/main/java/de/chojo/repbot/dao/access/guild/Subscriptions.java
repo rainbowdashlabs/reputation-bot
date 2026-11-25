@@ -188,6 +188,18 @@ public class Subscriptions implements GuildHolder, SkuMeta {
         return loaded;
     }
 
+    /**
+     * Whether the subscriptions could be loaded. Loads them if needed.
+     * <p>
+     * A failed load looks like a guild without subscriptions, so anything that removes paid features checks this first.
+     *
+     * @return true if the subscriptions are loaded
+     */
+    public boolean isLoaded() {
+        subscriptions();
+        return subscriptions != null;
+    }
+
     public void purchaseTokenFeature(Feature feature) {
         query("""
                 INSERT

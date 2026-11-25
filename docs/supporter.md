@@ -135,6 +135,9 @@ the feature again.
 | Additional Emojis | **Settings > Reactions**. Only the main reaction still gives reputation. |
 | Locale Overrides | **Settings > Profile**. The bot uses its default word for "reputation" again. |
 
+The bot's profile picture on your server needs no fix: when the server no longer has the Bot Profile feature, the bot
+removes it by itself within a day.
+
 ## Running your own bot
 
 If you host the bot yourself, you can unlock every supporter feature on all servers with `BOT_GRANT_ALL_SKU=true`.

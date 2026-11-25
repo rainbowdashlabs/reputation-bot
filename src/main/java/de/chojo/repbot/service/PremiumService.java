@@ -130,6 +130,7 @@ public class PremiumService extends ListenerAdapter {
                 .byId(event.getEntitlement().getGuildIdLong())
                 .subscriptions()
                 .deleteSubscription(Subscription.fromEntitlement(event.getEntitlement()));
+        resetUnentitledAvatar(shardManager.getGuildById(event.getEntitlement().getGuildIdLong()));
     }
 
     @Override
@@ -176,7 +177,25 @@ public class PremiumService extends ListenerAdapter {
      */
     public void checkGuild(Guild guild) {
         refresh(guild);
+        resetUnentitledAvatar(guild);
         notifyUnentitledUse(guild);
+    }
+
+    /**
+     * Removes the bot's server avatar when the guild is not entitled to a custom profile. The bot can always reset
+     * its own avatar, so this needs no notice.
+     *
+     * @param guild guild to check
+     */
+    public void resetUnentitledAvatar(Guild guild) {
+        if (guild == null || GRANT_ALL_SKU) return;
+        if (guild.getSelfMember().getAvatarId() == null) return;
+        RepGuild repGuild = guildRepository.guild(guild);
+        if (!repGuild.subscriptions().isLoaded()) return;
+        if (SupporterFeature.BOT_NICKNAMED.isEntitled(skus(), repGuild)) return;
+        if (!repGuild.settings().profile().profilePicture(null)) {
+            log.warn("Could not reset the bot avatar in {}.", guild);
+        }
     }
 
     /**
@@ -392,6 +411,9 @@ public class PremiumService extends ListenerAdapter {
                 """).single().map(Subscription.map()).all();
         for (Subscription subscription : all) {
             guildRepository.byId(subscription.id()).subscriptions().invalidate();
+            if (subscription.skuTarget() == SkuTarget.GUILD) {
+                resetUnentitledAvatar(shardManager.getGuildById(subscription.id()));
+            }
         }
     }
 
