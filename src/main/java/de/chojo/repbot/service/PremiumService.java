@@ -353,7 +353,8 @@ public class PremiumService extends ListenerAdapter {
                 .map(de.chojo.jdautil.interactions.premium.SKU::skuId)
                 .collect(Collectors.toCollection(LinkedHashSet::new));
 
-        List<ActionRow> rows = new ArrayList<>(ActionRow.partitionOf(settingsButtons));
+        List<ActionRow> rows = new ArrayList<>();
+        if (!settingsButtons.isEmpty()) rows.addAll(ActionRow.partitionOf(settingsButtons));
         rows.addAll(Premium.buildEntitlementButtons(skuIds));
         return rows.subList(0, Math.min(rows.size(), Message.MAX_COMPONENT_COUNT));
     }
