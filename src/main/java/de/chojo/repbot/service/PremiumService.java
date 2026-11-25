@@ -20,6 +20,7 @@ import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.access.guild.Subscriptions;
 import de.chojo.repbot.dao.access.guild.subscriptions.SkuTarget;
 import de.chojo.repbot.dao.access.guild.subscriptions.Subscription;
+import de.chojo.repbot.dao.access.guild.subscriptions.SubscriptionError;
 import de.chojo.repbot.dao.access.guild.subscriptions.SubscriptionSource;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.exceptions.MissingSupportTier;
@@ -50,12 +51,14 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static de.chojo.repbot.util.States.GRANT_ALL_SKU;
@@ -66,6 +69,10 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class PremiumService extends ListenerAdapter {
     private static final Logger log = getLogger(PremiumService.class);
+    private static final String BLOCKING_TYPES = Arrays.stream(SupporterFeature.values())
+            .filter(SupporterFeature::isBlocking)
+            .map(feature -> "'%s'".formatted(feature.name()))
+            .collect(Collectors.joining(", "));
     private final GuildRepository guildRepository;
     private final Configuration configuration;
     private final Localizer localizer;
@@ -146,8 +153,8 @@ public class PremiumService extends ListenerAdapter {
 
     public void checkErrors() {
         List<Long> ids = query("""
-                SELECT DISTINCT guild_id FROM subscription_error WHERE last_send  < ?
-                """)
+                SELECT DISTINCT guild_id FROM subscription_error WHERE last_send < ? AND (NOT notified OR type IN (%s))
+                """.formatted(BLOCKING_TYPES))
                 .single(call().bind(
                                 Instant.now().minus(skus().subscriptionErrorMessageHours(), ChronoUnit.HOURS),
                                 INSTANT_TIMESTAMP))
@@ -198,8 +205,9 @@ public class PremiumService extends ListenerAdapter {
     /**
      * Collects every supporter feature the guild uses without entitlement and sends one notice listing all of them.
      * <p>
-     * Errors of features that are no longer used are removed. The notice is only sent when at least one listed
-     * feature was not reported within the configured interval; every listed feature is then marked as reported.
+     * Errors of features that are no longer used are removed. A notice is only sent when a feature is due (see
+     * {@link SubscriptionError#isDue(Instant)}). It lists every blocking feature and the paused features that are due,
+     * so a paused feature is reported once; every listed feature is then marked as reported.
      *
      * @param guild guild to notify
      */
@@ -210,16 +218,34 @@ public class PremiumService extends ListenerAdapter {
         if (problems.isEmpty()) return;
 
         Instant dueBefore = Instant.now().minus(skus().subscriptionErrorMessageHours(), ChronoUnit.HOURS);
-        boolean due = problems.stream()
-                .anyMatch(problem ->
-                        subscriptions.getErrorMessage(problem).lastSend().isBefore(dueBefore));
-        if (!due) return;
+        List<SupporterFeature> listed = listedInNotice(problems, subscriptions::getErrorMessage, dueBefore);
+        if (listed.isEmpty()) return;
 
-        log.debug("Sending supporter notice for guild {} for {}.", guild, problems);
-        boolean notified = deliver(guild, buildNotice(guild, problems));
-        for (SupporterFeature problem : problems) {
+        log.debug("Sending supporter notice for guild {} for {}.", guild, listed);
+        boolean notified = deliver(guild, buildNotice(guild, listed));
+        for (SupporterFeature problem : listed) {
             subscriptions.resendError(problem, notified);
         }
+    }
+
+    /**
+     * The problems a notice lists: none if no problem is due, otherwise every blocking problem and the paused
+     * problems that are due.
+     *
+     * @param problems  features the guild uses without entitlement
+     * @param errors    the reported error of a feature
+     * @param dueBefore errors last sent before this moment are due
+     * @return problems to list, empty if no notice is due
+     */
+    static List<SupporterFeature> listedInNotice(
+            List<SupporterFeature> problems, Function<SupporterFeature, SubscriptionError> errors, Instant dueBefore) {
+        List<SupporterFeature> due = problems.stream()
+                .filter(problem -> errors.apply(problem).isDue(dueBefore))
+                .toList();
+        if (due.isEmpty()) return List.of();
+        return problems.stream()
+                .filter(problem -> problem.isBlocking() || due.contains(problem))
+                .toList();
     }
 
     private List<SupporterFeature> collectUnentitledUse(Guild guild) {
