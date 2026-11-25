@@ -100,6 +100,11 @@ public class ReputationService {
         var repGuild = guildRepository.guild(guild);
         log.trace("Submitting reputation for message {} of type {}", context.getIdLong(), type);
         if (receiver == null) return SubmitResult.of(SubmitResultType.NO_RECEIVER);
+        if (repGuild.subscriptions().isBlocked()) {
+            return SubmitResult.of(
+                    SubmitResultType.SUPPORTER_BLOCKED,
+                    Replacement.create("URL", configuration.api().debugUrl(guild.getIdLong())));
+        }
 
         Optional<Bypass> optBypass = Optional.empty();
 

@@ -344,6 +344,19 @@ export interface PremiumFeaturesPOJO {
     reputationChannel: FeatureLimit;
     reputationCategories: FeatureLimit;
     activeSkus: string[];
+    supporterStatus: SupporterStatusPOJO;
+}
+
+export interface SupporterIssuePOJO {
+    feature: string;
+    path: string | null;
+    blocking: boolean;
+}
+
+export interface SupporterStatusPOJO {
+    issues: SupporterIssuePOJO[];
+    blocksAt: string | null;
+    blocked: boolean;
 }
 
 export interface Links {

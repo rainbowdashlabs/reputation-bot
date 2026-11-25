@@ -26,6 +26,15 @@ public class IntegrationBypass extends IntegrationBypassPOJO implements GuildHol
         bypasses.forEach(e -> this.bypasses.put(e.integrationId(), e));
     }
 
+    /**
+     * Whether at least one integration may give reputation.
+     *
+     * @return true if a bypass is configured
+     */
+    public boolean hasBypasses() {
+        return !bypasses.isEmpty();
+    }
+
     public void apply(Bypass bypass) {
         apply(bypass.integrationId(), bypass);
     }

@@ -1271,5 +1271,25 @@
       "submit": "Transferência",
       "title": "Transferir fichas para uma guilda"
     }
+  },
+  "supporterStatus": {
+    "blocked": "A reputação está parada neste servidor. Corrija os problemas abaixo para retomá-la na hora.",
+    "blocksAt": "A reputação para em {date} se você não corrigir os problemas abaixo.",
+    "blocksSoon": "A reputação para após um período de tolerância se você não corrigir os problemas abaixo.",
+    "paused": "Estes recursos de apoiador estão pausados porque o nível deste servidor não os inclui:",
+    "open": "Abrir {section}",
+    "support": "Torne-se apoiador",
+    "feature": {
+      "CHANNEL_LIMIT_EXCEEDED": "Há mais canais de reputação selecionados do que o nível permite.",
+      "CATEGORY_LIMIT_EXCEEDED": "Há mais categorias de reputação selecionadas do que o nível permite.",
+      "BLACKLIST_USED": "A lista de canais é uma lista de bloqueio.",
+      "BOT_NICKNAMED": "O bot tem um apelido neste servidor. Remova-o no Discord.",
+      "AUTOPOST_USED": "A postagem automática está ativada.",
+      "LOG_CHANNEL_USED": "O canal de registro está ativado.",
+      "COMMAND_ALIASES_USED": "Há nomes de comandos personalizados.",
+      "INTEGRATION_BYPASS_USED": "Integrações podem dar reputação.",
+      "ADDITIONAL_EMOJIS_USED": "Há emojis de reação adicionais.",
+      "LOCALE_OVERRIDES_USED": "Há um nome personalizado para reputação."
+    }
   }
 }

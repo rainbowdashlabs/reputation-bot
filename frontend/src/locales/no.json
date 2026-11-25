@@ -1271,5 +1271,25 @@
       "submit": "Overføring",
       "title": "Overfør tokens til et laug"
     }
+  },
+  "supporterStatus": {
+    "blocked": "Omdømme er stoppet på denne serveren. Rett problemene nedenfor for å fortsette med en gang.",
+    "blocksAt": "Omdømme stopper {date} hvis du ikke retter problemene nedenfor.",
+    "blocksSoon": "Omdømme stopper etter en frist hvis du ikke retter problemene nedenfor.",
+    "paused": "Disse supporterfunksjonene er satt på pause fordi nivået til denne serveren ikke inkluderer dem:",
+    "open": "Åpne {section}",
+    "support": "Bli supporter",
+    "feature": {
+      "CHANNEL_LIMIT_EXCEEDED": "Flere omdømmekanaler er valgt enn nivået tillater.",
+      "CATEGORY_LIMIT_EXCEEDED": "Flere omdømmekategorier er valgt enn nivået tillater.",
+      "BLACKLIST_USED": "Kanallisten er en blokkeringsliste.",
+      "BOT_NICKNAMED": "Boten har et kallenavn på denne serveren. Fjern det i Discord.",
+      "AUTOPOST_USED": "Autopost er slått på.",
+      "LOG_CHANNEL_USED": "Loggkanalen er slått på.",
+      "COMMAND_ALIASES_USED": "Egne kommandonavn er satt.",
+      "INTEGRATION_BYPASS_USED": "Integrasjoner kan gi omdømme.",
+      "ADDITIONAL_EMOJIS_USED": "Ekstra reaksjonsemojier er satt.",
+      "LOCALE_OVERRIDES_USED": "Et eget navn for omdømme er satt."
+    }
   }
 }

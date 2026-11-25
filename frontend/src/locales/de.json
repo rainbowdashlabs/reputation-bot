@@ -1271,5 +1271,25 @@
       "submit": "Übertragen",
       "title": "Tokens an eine Gilde übertragen"
     }
+  },
+  "supporterStatus": {
+    "blocked": "Reputation ist auf diesem Server gestoppt. Behebe die Probleme unten, damit es sofort weitergeht.",
+    "blocksAt": "Reputation stoppt am {date}, wenn du die Probleme unten nicht behebst.",
+    "blocksSoon": "Reputation stoppt nach einer Schonfrist, wenn du die Probleme unten nicht behebst.",
+    "paused": "Diese Unterstützer-Funktionen sind pausiert, weil die Stufe dieses Servers sie nicht enthält:",
+    "open": "{section} öffnen",
+    "support": "Unterstützer werden",
+    "feature": {
+      "CHANNEL_LIMIT_EXCEEDED": "Es sind mehr Reputationskanäle ausgewählt, als die Stufe erlaubt.",
+      "CATEGORY_LIMIT_EXCEEDED": "Es sind mehr Reputationskategorien ausgewählt, als die Stufe erlaubt.",
+      "BLACKLIST_USED": "Die Kanalliste ist eine Sperrliste.",
+      "BOT_NICKNAMED": "Der Bot hat auf diesem Server einen Spitznamen. Entferne ihn in Discord.",
+      "AUTOPOST_USED": "Autopost ist eingeschaltet.",
+      "LOG_CHANNEL_USED": "Der Protokollkanal ist eingeschaltet.",
+      "COMMAND_ALIASES_USED": "Eigene Befehlsnamen sind gesetzt.",
+      "INTEGRATION_BYPASS_USED": "Integrationen dürfen Reputation vergeben.",
+      "ADDITIONAL_EMOJIS_USED": "Zusätzliche Reaktions-Emojis sind gesetzt.",
+      "LOCALE_OVERRIDES_USED": "Ein eigener Name für Reputation ist gesetzt."
+    }
   }
 }

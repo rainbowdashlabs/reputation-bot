@@ -30,7 +30,8 @@ public enum SubmitResultType {
     ALL_COOLDOWN("submitresult.allcooldown"),
     SUCCESS("submitresult.success"),
     NO_RECEIVER("submitresult.no_receiver"),
-    BLOCK_BOTS("submitresult.block_bots");
+    BLOCK_BOTS("submitresult.block_bots"),
+    SUPPORTER_BLOCKED("submitresult.supporterblocked");
 
     private final String localeKey;
 

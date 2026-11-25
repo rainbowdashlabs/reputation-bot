@@ -15,14 +15,19 @@ import MissingPermissions from './components/problems/MissingPermissions.vue';
 import RankProblems from './components/problems/RankProblems.vue';
 import ReputationChannelProblems from './components/problems/ReputationChannelProblems.vue';
 import SimpleWarnings from './components/problems/SimpleWarnings.vue';
+import SupporterStatusBanner from '@/components/SupporterStatusBanner.vue';
+import {useSession} from '@/composables/useSession';
 
 const {t} = useI18n();
 const debugResult = ref<DebugResultPOJO | null>(null);
 const loading = ref(true);
+const {premiumFeatures} = useSession();
+const hasSupporterIssues = computed(() => (premiumFeatures.value?.supporterStatus?.issues.length ?? 0) > 0);
 
 const hasProblems = computed(() => {
-    if (!debugResult.value) return false;
-    return debugResult.value.missingGlobalPermissions.length > 0 ||
+    if (!debugResult.value) return hasSupporterIssues.value;
+    return hasSupporterIssues.value ||
+        debugResult.value.missingGlobalPermissions.length > 0 ||
         debugResult.value.simpleProblems.length > 0 ||
         debugResult.value.missingPermissions.length > 0 ||
         debugResult.value.rankProblems.length > 0 ||
@@ -54,6 +59,7 @@ onMounted(async () => {
                 <p class="text-sm text-green-700 dark:text-green-400 mt-1">Everything seems to be configured correctly!</p>
             </div>
             <div v-else class="space-y-8">
+                <SupporterStatusBanner/>
                 <GlobalPermissions v-if="debugResult.missingGlobalPermissions.length > 0"
                                    :permissions="debugResult.missingGlobalPermissions" />
 

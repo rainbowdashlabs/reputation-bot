@@ -8,6 +8,7 @@ package de.chojo.repbot.dao.access.guild;
 import de.chojo.jdautil.interactions.base.SkuMeta;
 import de.chojo.jdautil.interactions.premium.SKU;
 import de.chojo.repbot.config.elements.sku.tokens.Feature;
+import de.chojo.repbot.dao.access.guild.subscriptions.GracePeriod;
 import de.chojo.repbot.dao.access.guild.subscriptions.SkuTarget;
 import de.chojo.repbot.dao.access.guild.subscriptions.Subscription;
 import de.chojo.repbot.dao.access.guild.subscriptions.SubscriptionError;
@@ -19,7 +20,6 @@ import de.chojo.sadu.queries.call.adapter.StandardAdapter;
 import org.jetbrains.annotations.NotNull;
 
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumMap;
@@ -30,6 +30,7 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static de.chojo.repbot.util.States.GRANT_ALL_SKU;
 import static de.chojo.sadu.queries.api.call.Call.call;
 import static de.chojo.sadu.queries.api.query.Query.query;
 
@@ -54,11 +55,60 @@ public class Subscriptions implements GuildHolder, SkuMeta {
         return subscriptions().stream().map(e -> (SKU) e).toList();
     }
 
-    public int maxErrorCount() {
-        return errorMessages.values().stream()
-                .mapToInt(SubscriptionError::count)
-                .max()
-                .orElse(0);
+    /**
+     * The moment the guild stops receiving reputation because it keeps using the given blocking features.
+     * <p>
+     * The grace period starts when the first of these features was reported. Features that were not reported yet
+     * start now.
+     *
+     * @param features features the guild uses without entitlement
+     * @return the moment of the block, or empty if none of the features is blocking
+     */
+    public Optional<Instant> blocksAt(Collection<SupporterFeature> features) {
+        return GracePeriod.end(
+                features.stream().map(this::getErrorMessage).toList(),
+                feature -> true,
+                repGuild.configuration().skus());
+    }
+
+    /**
+     * The moment the guild stops receiving reputation because of the blocking features it was reported for and still
+     * uses without entitlement.
+     *
+     * @return the moment of the block, or empty if no such feature is still in use
+     */
+    public Optional<Instant> blocksAt() {
+        return GracePeriod.end(
+                errorMessages().values(),
+                this::isStillUnentitledUse,
+                repGuild.configuration().skus());
+    }
+
+    /**
+     * Whether the grace period for a blocking feature has run out, so the guild no longer receives reputation.
+     *
+     * @return true if the guild is blocked
+     */
+    public boolean isBlocked() {
+        if (GRANT_ALL_SKU) return false;
+        return GracePeriod.isOver(blocksAt(), Instant.now());
+    }
+
+    /**
+     * Removes the reported errors of features the guild is entitled to or no longer uses.
+     * <p>
+     * Without a loaded guild the settings can not be inspected, so only errors of entitled features are removed.
+     */
+    public void clearResolvedErrors() {
+        for (SupporterFeature feature : List.copyOf(errorMessages().keySet())) {
+            if (!isStillUnentitledUse(feature)) deleteError(feature);
+        }
+    }
+
+    private boolean isStillUnentitledUse(SupporterFeature feature) {
+        var skus = repGuild.configuration().skus();
+        if (repGuild.isById()) return !feature.isEntitled(skus, repGuild);
+        return feature.isUnentitledUse(skus, repGuild);
     }
 
     public void deleteSubscription(Subscription subscription) {
@@ -78,16 +128,11 @@ public class Subscriptions implements GuildHolder, SkuMeta {
     }
 
     public void deleteError(SupporterFeature error) {
+        if (!errorMessages().containsKey(error)) return;
         query("""
                 DELETE FROM subscription_error WHERE guild_id = ? AND type = ?
                 """).single(call().bind(guildId()).bind(error)).delete();
         errorMessages().remove(error);
-    }
-
-    public List<SubscriptionError> getExpiredErrors(int hours) {
-        return errorMessages().values().stream()
-                .filter(e -> e.lastSend().plus(hours, ChronoUnit.HOURS).isAfter(Instant.now()))
-                .toList();
     }
 
     public void resendError(SupporterFeature error, boolean notified) {
@@ -187,6 +232,7 @@ public class Subscriptions implements GuildHolder, SkuMeta {
                 .ifChanged(i -> {
                     subscriptions().remove(subscription);
                     subscriptions().add(subscription);
+                    clearResolvedErrors();
                 });
     }
 

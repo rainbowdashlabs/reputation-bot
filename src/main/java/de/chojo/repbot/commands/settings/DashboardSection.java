@@ -20,7 +20,9 @@ public enum DashboardSection {
     ABUSE_PROTECTION("settings/edit/abuse-protection", "command.settings.section.abuseprotection"),
     ANNOUNCEMENTS("settings/edit/announcements", "command.settings.section.announcements"),
     AUTOPOST("settings/edit/autopost", "command.settings.section.autopost"),
-    LOG_CHANNEL("settings/edit/log-channel", "command.settings.section.logchannel");
+    LOG_CHANNEL("settings/edit/log-channel", "command.settings.section.logchannel"),
+    INTEGRATION_BYPASS("settings/edit/integration-bypass", "command.settings.section.integrationbypass"),
+    COMMAND_ALIASES("settings/edit/command-aliases", "command.settings.section.commandaliases");
 
     private final String path;
     private final String localeKey;

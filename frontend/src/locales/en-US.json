@@ -1277,5 +1277,25 @@
       "unlock_vote": "Unlock with Vote Tokens",
       "per_server_note": "Supporter features are unlocked on a per-server basis. Purchase them on Ko-fi or earn vote tokens by voting for the bot and spend them in the token shop."
     }
+  },
+  "supporterStatus": {
+    "blocked": "Reputation is stopped on this server. Fix the problems below to resume it right away.",
+    "blocksAt": "Reputation stops on {date} unless you fix the problems below.",
+    "blocksSoon": "Reputation stops after a grace period unless you fix the problems below.",
+    "paused": "These supporter features are paused because this server's tier does not include them:",
+    "open": "Open {section}",
+    "support": "Become a supporter",
+    "feature": {
+      "CHANNEL_LIMIT_EXCEEDED": "More reputation channels are selected than the tier allows.",
+      "CATEGORY_LIMIT_EXCEEDED": "More reputation categories are selected than the tier allows.",
+      "BLACKLIST_USED": "The channel list is a deny list.",
+      "BOT_NICKNAMED": "The bot has a nickname on this server. Remove it in Discord.",
+      "AUTOPOST_USED": "Autopost is turned on.",
+      "LOG_CHANNEL_USED": "The log channel is turned on.",
+      "COMMAND_ALIASES_USED": "Custom command names are set.",
+      "INTEGRATION_BYPASS_USED": "Integrations may give reputation.",
+      "ADDITIONAL_EMOJIS_USED": "Additional reaction emojis are set.",
+      "LOCALE_OVERRIDES_USED": "A custom name for reputation is set."
+    }
   }
 }

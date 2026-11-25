@@ -1271,5 +1271,25 @@
       "submit": "Trasferimento",
       "title": "Trasferisci i gettoni a una gilda"
     }
+  },
+  "supporterStatus": {
+    "blocked": "La reputazione è ferma su questo server. Risolvi i problemi qui sotto per riprenderla subito.",
+    "blocksAt": "La reputazione si ferma il {date} se non risolvi i problemi qui sotto.",
+    "blocksSoon": "La reputazione si ferma dopo un periodo di tolleranza se non risolvi i problemi qui sotto.",
+    "paused": "Queste funzioni da sostenitore sono in pausa perché il livello di questo server non le include:",
+    "open": "Apri {section}",
+    "support": "Diventa sostenitore",
+    "feature": {
+      "CHANNEL_LIMIT_EXCEEDED": "Sono selezionati più canali di reputazione di quanti il livello ne consenta.",
+      "CATEGORY_LIMIT_EXCEEDED": "Sono selezionate più categorie di reputazione di quante il livello ne consenta.",
+      "BLACKLIST_USED": "L'elenco dei canali è una lista di blocco.",
+      "BOT_NICKNAMED": "Il bot ha un soprannome su questo server. Rimuovilo su Discord.",
+      "AUTOPOST_USED": "La pubblicazione automatica è attiva.",
+      "LOG_CHANNEL_USED": "Il canale di registrazione è attivo.",
+      "COMMAND_ALIASES_USED": "Sono impostati nomi di comandi personalizzati.",
+      "INTEGRATION_BYPASS_USED": "Le integrazioni possono dare reputazione.",
+      "ADDITIONAL_EMOJIS_USED": "Sono impostate emoji di reazione aggiuntive.",
+      "LOCALE_OVERRIDES_USED": "È impostato un nome personalizzato per la reputazione."
+    }
   }
 }

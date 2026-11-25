@@ -42,10 +42,15 @@ public class ScanRoute implements RoutesBuilder {
             tags = {"Guild"},
             responses = {
                 @OpenApiResponse(status = "202", description = "Scan started"),
+                @OpenApiResponse(status = "403", description = "Reputation is stopped for missing supporter features"),
                 @OpenApiResponse(status = "409", description = "Scan already running")
             })
     public void startScan(Context ctx) {
         GuildSession session = ctx.sessionAttribute(SessionAttribute.GUILD_SESSION);
+        if (session.repGuild().subscriptions().isBlocked()) {
+            ctx.status(HttpStatus.FORBIDDEN).result("Reputation is stopped for missing supporter features");
+            return;
+        }
         if (scanService.getScanProcess(session.repGuild().guild()).isPresent()) {
             ctx.status(HttpStatus.CONFLICT).result("Scan already running");
             return;

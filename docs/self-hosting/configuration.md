@@ -242,7 +242,7 @@ section alone.
 | `interactions` | `{"slash": {}, "messages": {}, "users": {}}` | Commands that need a SKU, as command name to a list of SKU ids. |
 | `features` | one block per feature | Each with `id`, `tokens` (price per month in the token shop), `localeKey` and `skuEntry` (SKU ids that unlock it). |
 | `subscriptionErrorMessageHours` | `36` | Hours between two messages about a missing subscription. |
-| `errorThresholdBlock` | `10` | Together with the hours above, sets the time left that the missing subscription message shows. |
+| `errorThresholdBlock` | `10` | Length of the grace period in message intervals. A server that still breaks a supporter limit is blocked `errorThresholdBlock` × `subscriptionErrorMessageHours` hours after it was first reported. See [when supporter access ends](../supporter.md#when-supporter-access-ends). |
 
 The feature blocks are `reputationLog`, `analyzerLog`, `reputationCategories`, `reputationChannel`,
 `channelBlacklist`, `localeOverrides`, `autopost`, `advancedRankings`, `detailedProfile`,

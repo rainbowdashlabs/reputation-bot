@@ -77,6 +77,63 @@ buy features.
 
 If your server already has a feature through a supporter tier, you can't buy it with tokens.
 
+## When supporter access ends
+
+A subscription can run out, a lifetime purchase can be unassigned, and a feature bought with tokens can expire. Your
+settings stay as they are, but the server may now use features it no longer has. The bot then tells you and gives you
+time to fix it.
+
+### The notice
+
+The bot sends one notice that lists everything that is wrong. It goes to your
+[system channel](./configuration/logs-and-diagnostics.md#system-channel). If that doesn't work, it goes to the server
+owner as a direct message, and if that fails too, to another administrator.
+
+The notice:
+
+- starts with the name of the server it is about, so you know which server to fix,
+- explains each problem and what to change,
+- has an **Open** button for each dashboard page you need, such as **Open Channels**, which opens that page for the right
+  server,
+- has buttons to get a supporter tier that includes the features.
+
+### Problems with a grace period
+
+These problems have to be fixed. Until then, the bot sends the notice again every 36 hours, and each notice says how
+much time is left.
+
+| Problem | How to fix it |
+|---|---|
+| More reputation channels than the free limit | Remove channels under **Settings > Channels**. |
+| More reputation categories than the free limit | Remove categories under **Settings > Channels**. |
+| The channel list is a deny list | Switch **List Type** to **Allow List** under **Settings > Channels**. |
+| The bot has a nickname | The bot first tries to remove its nickname itself. If it can't, remove the nickname in the server's member list in Discord. |
+
+Channels the bot can't see don't count toward the channel limit. A server above the limit can still remove channels
+and categories in the dashboard, even while it is above the limit.
+
+About 15 days after the first notice, the server is blocked. While it is blocked, the bot gives no reputation at all,
+by any method, stops reading the server's messages, and doesn't start scans. Moderators can still correct
+reputation by hand. As long as a problem is open, the dashboard shows a warning on
+every page and on the **Problems** page. It says what to fix, and when the block starts or that it has started.
+
+As soon as you fix the setting in the dashboard, or get a tier that includes the feature, the bot works again right
+away. You don't have to wait for the next notice.
+
+### Features that pause
+
+These features simply stop working while the server doesn't have them. Nothing gets blocked. The notice says they are
+paused and links to their settings page. They work again as soon as the server has the feature again.
+
+| Feature | Settings page |
+|---|---|
+| Autopost | **Settings > Autopost** |
+| Log Channel | **Settings > Log Channel** |
+| Custom command names | **Settings > Command Names** |
+| Integration Bypass | **Settings > Integration Bypass** |
+| Additional Emojis | **Settings > Reactions**. Only the main reaction still gives reputation. |
+| Locale Overrides | **Settings > Profile**. The bot uses its default word for "reputation" again. |
+
 ## Running your own bot
 
 If you host the bot yourself, you can unlock every supporter feature on all servers with `BOT_GRANT_ALL_SKU=true`.

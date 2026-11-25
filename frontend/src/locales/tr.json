@@ -1271,5 +1271,25 @@
       "submit": "Transfer",
       "title": "Jetonları bir Loncaya Aktar"
     }
+  },
+  "supporterStatus": {
+    "blocked": "Bu sunucuda itibar durduruldu. Hemen devam etmesi için aşağıdaki sorunları düzelt.",
+    "blocksAt": "Aşağıdaki sorunları düzeltmezsen itibar {date} tarihinde durur.",
+    "blocksSoon": "Aşağıdaki sorunları düzeltmezsen itibar bir ek süreden sonra durur.",
+    "paused": "Bu sunucunun seviyesi içermediği için şu destekçi özellikleri duraklatıldı:",
+    "open": "{section} aç",
+    "support": "Destekçi ol",
+    "feature": {
+      "CHANNEL_LIMIT_EXCEEDED": "Seviyenin izin verdiğinden fazla itibar kanalı seçili.",
+      "CATEGORY_LIMIT_EXCEEDED": "Seviyenin izin verdiğinden fazla itibar kategorisi seçili.",
+      "BLACKLIST_USED": "Kanal listesi bir engel listesi.",
+      "BOT_NICKNAMED": "Botun bu sunucuda bir takma adı var. Discord'da kaldır.",
+      "AUTOPOST_USED": "Otomatik yayınlama açık.",
+      "LOG_CHANNEL_USED": "Günlük kanalı açık.",
+      "COMMAND_ALIASES_USED": "Özel komut adları ayarlı.",
+      "INTEGRATION_BYPASS_USED": "Entegrasyonlar itibar verebilir.",
+      "ADDITIONAL_EMOJIS_USED": "Ek tepki emojileri ayarlı.",
+      "LOCALE_OVERRIDES_USED": "İtibar için özel bir ad ayarlı."
+    }
   }
 }

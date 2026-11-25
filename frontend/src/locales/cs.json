@@ -1271,5 +1271,25 @@
       "submit": "Převod",
       "title": "Převod tokenů do cechu"
     }
+  },
+  "supporterStatus": {
+    "blocked": "Reputace je na tomto serveru zastavena. Opravte problémy níže a hned bude pokračovat.",
+    "blocksAt": "Reputace se zastaví {date}, pokud neopravíte problémy níže.",
+    "blocksSoon": "Reputace se po ochranné lhůtě zastaví, pokud neopravíte problémy níže.",
+    "paused": "Tyto funkce pro podporovatele jsou pozastaveny, protože úroveň tohoto serveru je nezahrnuje:",
+    "open": "Otevřít {section}",
+    "support": "Stát se podporovatelem",
+    "feature": {
+      "CHANNEL_LIMIT_EXCEEDED": "Je vybráno více kanálů reputace, než úroveň dovoluje.",
+      "CATEGORY_LIMIT_EXCEEDED": "Je vybráno více kategorií reputace, než úroveň dovoluje.",
+      "BLACKLIST_USED": "Seznam kanálů je seznam zakázaných.",
+      "BOT_NICKNAMED": "Bot má na tomto serveru přezdívku. Odstraňte ji v Discordu.",
+      "AUTOPOST_USED": "Automatické zveřejnění je zapnuté.",
+      "LOG_CHANNEL_USED": "Kanál protokolu je zapnutý.",
+      "COMMAND_ALIASES_USED": "Jsou nastavené vlastní názvy příkazů.",
+      "INTEGRATION_BYPASS_USED": "Integrace mohou udělovat reputaci.",
+      "ADDITIONAL_EMOJIS_USED": "Jsou nastavené další reakční emoji.",
+      "LOCALE_OVERRIDES_USED": "Je nastavený vlastní název reputace."
+    }
   }
 }

@@ -1271,5 +1271,25 @@
       "submit": "移籍",
       "title": "ギルドにトークンを移す"
     }
+  },
+  "supporterStatus": {
+    "blocked": "このサーバーでは評判が停止しています。下の問題を解決するとすぐに再開します。",
+    "blocksAt": "下の問題を解決しない場合、{date} に評判が停止します。",
+    "blocksSoon": "下の問題を解決しない場合、猶予期間の後に評判が停止します。",
+    "paused": "このサーバーのティアに含まれないため、以下のサポーター機能は一時停止中です:",
+    "open": "{section}を開く",
+    "support": "サポーターになる",
+    "feature": {
+      "CHANNEL_LIMIT_EXCEEDED": "ティアの上限より多くの評判チャネルが選択されています。",
+      "CATEGORY_LIMIT_EXCEEDED": "ティアの上限より多くの評判カテゴリーが選択されています。",
+      "BLACKLIST_USED": "チャネルリストが拒否リストになっています。",
+      "BOT_NICKNAMED": "ボットにこのサーバーでのニックネームがあります。Discordで削除してください。",
+      "AUTOPOST_USED": "自動投稿がオンになっています。",
+      "LOG_CHANNEL_USED": "ログチャネルがオンになっています。",
+      "COMMAND_ALIASES_USED": "カスタムコマンド名が設定されています。",
+      "INTEGRATION_BYPASS_USED": "連携アプリが評判を付与できます。",
+      "ADDITIONAL_EMOJIS_USED": "追加のリアクション絵文字が設定されています。",
+      "LOCALE_OVERRIDES_USED": "評判のカスタム名が設定されています。"
+    }
   }
 }

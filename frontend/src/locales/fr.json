@@ -1271,5 +1271,25 @@
       "submit": "Transfert",
       "title": "Transférer des jetons à une guilde"
     }
+  },
+  "supporterStatus": {
+    "blocked": "La réputation est arrêtée sur ce serveur. Corrige les problèmes ci-dessous pour la relancer tout de suite.",
+    "blocksAt": "La réputation s'arrête le {date} si tu ne corriges pas les problèmes ci-dessous.",
+    "blocksSoon": "La réputation s'arrête après un délai de grâce si tu ne corriges pas les problèmes ci-dessous.",
+    "paused": "Ces fonctionnalités de soutien sont en pause, car le niveau de ce serveur ne les inclut pas :",
+    "open": "Ouvrir {section}",
+    "support": "Devenir soutien",
+    "feature": {
+      "CHANNEL_LIMIT_EXCEEDED": "Plus de salons de réputation sont sélectionnés que le niveau ne le permet.",
+      "CATEGORY_LIMIT_EXCEEDED": "Plus de catégories de réputation sont sélectionnées que le niveau ne le permet.",
+      "BLACKLIST_USED": "La liste de salons est une liste de blocage.",
+      "BOT_NICKNAMED": "Le bot a un pseudo sur ce serveur. Retire-le dans Discord.",
+      "AUTOPOST_USED": "La publication automatique est activée.",
+      "LOG_CHANNEL_USED": "Le canal de journalisation est activé.",
+      "COMMAND_ALIASES_USED": "Des noms de commandes personnalisés sont définis.",
+      "INTEGRATION_BYPASS_USED": "Des intégrations peuvent donner de la réputation.",
+      "ADDITIONAL_EMOJIS_USED": "Des emojis de réaction supplémentaires sont définis.",
+      "LOCALE_OVERRIDES_USED": "Un nom personnalisé pour la réputation est défini."
+    }
   }
 }

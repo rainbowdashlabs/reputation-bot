@@ -1271,5 +1271,25 @@
       "submit": "Transfer",
       "title": "Przenieś tokeny do gildii"
     }
+  },
+  "supporterStatus": {
+    "blocked": "Reputacja jest zatrzymana na tym serwerze. Napraw poniższe problemy, aby od razu ją wznowić.",
+    "blocksAt": "Reputacja zatrzyma się {date}, jeśli nie naprawisz poniższych problemów.",
+    "blocksSoon": "Reputacja zatrzyma się po okresie karencji, jeśli nie naprawisz poniższych problemów.",
+    "paused": "Te funkcje dla wspierających są wstrzymane, bo poziom tego serwera ich nie obejmuje:",
+    "open": "Otwórz {section}",
+    "support": "Zostań wspierającym",
+    "feature": {
+      "CHANNEL_LIMIT_EXCEEDED": "Wybrano więcej kanałów reputacji, niż pozwala poziom.",
+      "CATEGORY_LIMIT_EXCEEDED": "Wybrano więcej kategorii reputacji, niż pozwala poziom.",
+      "BLACKLIST_USED": "Lista kanałów jest listą blokowanych.",
+      "BOT_NICKNAMED": "Bot ma pseudonim na tym serwerze. Usuń go w Discordzie.",
+      "AUTOPOST_USED": "Autopost jest włączony.",
+      "LOG_CHANNEL_USED": "Kanał dziennika jest włączony.",
+      "COMMAND_ALIASES_USED": "Ustawiono własne nazwy poleceń.",
+      "INTEGRATION_BYPASS_USED": "Integracje mogą przyznawać reputację.",
+      "ADDITIONAL_EMOJIS_USED": "Ustawiono dodatkowe emoji reakcji.",
+      "LOCALE_OVERRIDES_USED": "Ustawiono własną nazwę reputacji."
+    }
   }
 }

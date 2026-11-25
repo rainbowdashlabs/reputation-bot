@@ -119,6 +119,7 @@ public class MessageListener extends ListenerAdapter {
         if (event.isWebhookMessage() || !event.isFromGuild()) return;
         var guild = event.getGuild();
         var repGuild = guildRepository.guild(guild);
+        if (repGuild.subscriptions().isBlocked()) return;
         var settings = repGuild.settings();
         var thank = settings.thanking();
 

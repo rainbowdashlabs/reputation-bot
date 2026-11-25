@@ -1271,5 +1271,25 @@
       "submit": "转移",
       "title": "将代币转移至公会"
     }
+  },
+  "supporterStatus": {
+    "blocked": "此服务器上的声望已停止。修复以下问题即可立即恢复。",
+    "blocksAt": "如果不修复以下问题，声望将于 {date} 停止。",
+    "blocksSoon": "如果不修复以下问题，声望将在宽限期后停止。",
+    "paused": "由于此服务器的等级不包含以下支持者功能，它们已暂停：",
+    "open": "打开{section}",
+    "support": "成为支持者",
+    "feature": {
+      "CHANNEL_LIMIT_EXCEEDED": "选择的声望频道超出了等级允许的数量。",
+      "CATEGORY_LIMIT_EXCEEDED": "选择的声望分类超出了等级允许的数量。",
+      "BLACKLIST_USED": "频道列表是黑名单。",
+      "BOT_NICKNAMED": "机器人在此服务器上有昵称。请在 Discord 中删除。",
+      "AUTOPOST_USED": "自动发布已开启。",
+      "LOG_CHANNEL_USED": "日志通道已开启。",
+      "COMMAND_ALIASES_USED": "已设置自定义命令名称。",
+      "INTEGRATION_BYPASS_USED": "已允许集成授予声望。",
+      "ADDITIONAL_EMOJIS_USED": "已设置额外的反应表情。",
+      "LOCALE_OVERRIDES_USED": "已设置声望的自定义名称。"
+    }
   }
 }
