@@ -6,6 +6,7 @@
 package de.chojo.repbot.service;
 
 import de.chojo.jdautil.interactions.dispatching.InteractionContext;
+import de.chojo.jdautil.localization.LocalizationContext;
 import de.chojo.jdautil.localization.Localizer;
 import de.chojo.jdautil.localization.util.LocaleProvider;
 import de.chojo.jdautil.localization.util.Replacement;
@@ -17,20 +18,20 @@ import de.chojo.repbot.config.elements.SKU;
 import de.chojo.repbot.core.Threading;
 import de.chojo.repbot.dao.access.guild.RepGuild;
 import de.chojo.repbot.dao.access.guild.Subscriptions;
-import de.chojo.repbot.dao.access.guild.settings.Settings;
 import de.chojo.repbot.dao.access.guild.subscriptions.SkuTarget;
 import de.chojo.repbot.dao.access.guild.subscriptions.Subscription;
-import de.chojo.repbot.dao.access.guild.subscriptions.SubscriptionError;
 import de.chojo.repbot.dao.access.guild.subscriptions.SubscriptionSource;
 import de.chojo.repbot.dao.provider.GuildRepository;
 import de.chojo.repbot.exceptions.MissingSupportTier;
 import de.chojo.repbot.util.SupporterFeature;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.components.actionrow.ActionRow;
+import net.dv8tion.jda.api.components.buttons.Button;
 import net.dv8tion.jda.api.entities.Entitlement;
 import net.dv8tion.jda.api.entities.Entitlement.EntitlementType;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.events.entitlement.EntitlementCreateEvent;
@@ -39,17 +40,23 @@ import net.dv8tion.jda.api.events.entitlement.EntitlementUpdateEvent;
 import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateNicknameEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.sharding.ShardManager;
+import net.dv8tion.jda.api.utils.MarkdownSanitizer;
 import net.dv8tion.jda.api.utils.messages.MessageCreateBuilder;
 import net.dv8tion.jda.api.utils.messages.MessageCreateData;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static de.chojo.repbot.util.States.GRANT_ALL_SKU;
 import static de.chojo.sadu.queries.api.call.Call.call;
@@ -150,145 +157,203 @@ public class PremiumService extends ListenerAdapter {
         for (Long id : ids) {
             Guild guildById = shardManager.getGuildById(id);
             if (guildById == null) continue;
-            RepGuild repGuild = guildRepository.guild(guildById);
-            refresh(guildById);
-            Subscriptions subscriptions = repGuild.subscriptions();
-            List<SubscriptionError> errors = subscriptions.getExpiredErrors(skus().subscriptionErrorMessageHours());
-            for (SubscriptionError error : errors) {
-                checkForTier(guildById, error.type());
-            }
+            checkGuild(guildById);
         }
     }
 
+    /**
+     * Refreshes the entitlements of the guild and notifies it about every supporter feature it uses without being
+     * entitled to it.
+     *
+     * @param guild guild to check
+     */
     public void checkGuild(Guild guild) {
-        RepGuild repGuild = guildRepository.guild(guild);
         refresh(guild);
-        for (SupporterFeature feature : SupporterFeature.values()) {
-            checkForTier(repGuild.load(shardManager).guild(), feature);
-        }
+        notifyUnentitledUse(guild);
     }
 
+    /**
+     * Checks whether the guild may use the feature and notifies it about every unentitled use if it may not.
+     *
+     * @param guild guild to check
+     * @param type  feature to check
+     * @return true if the guild is entitled to the feature or does not use it
+     */
     public boolean checkForTier(Guild guild, SupporterFeature type) {
         if (guild == null) return false;
         if (GRANT_ALL_SKU) return true;
         RepGuild repGuild = guildRepository.guild(guild);
-        Subscriptions subscriptions = repGuild.subscriptions();
-        if (type.isEntitled(skus(), repGuild)) {
-            subscriptions.deleteError(type);
-            return true;
+        if (isUnentitledUse(repGuild, type)) {
+            notifyUnentitledUse(guild);
+            return false;
         }
-        if (!type.isApplicable(skus(), repGuild)) {
-            subscriptions.deleteError(type);
-            return true;
-        }
-        handleMissingSupportTier(guild, type);
-        return false;
+        repGuild.subscriptions().deleteError(type);
+        return true;
     }
 
     public void handleMissingSupportTier(InteractionContext context, MissingSupportTier ex) {
-        handleMissingSupportTier(context.guild(), ex.type());
+        notifyUnentitledUse(context.guild());
     }
 
-    public void handleMissingSupportTier(Guild guild, SupporterFeature type) {
-        Settings settings = guildRepository.guild(guild).settings();
-        SKU skus = skus();
-        Subscriptions subscriptions = settings.repGuild().subscriptions();
+    /**
+     * Collects every supporter feature the guild uses without entitlement and sends one notice listing all of them.
+     * <p>
+     * Errors of features that are no longer used are removed. The notice is only sent when at least one listed
+     * feature was not reported within the configured interval; every listed feature is then marked as reported.
+     *
+     * @param guild guild to notify
+     */
+    public void notifyUnentitledUse(Guild guild) {
+        if (guild == null || GRANT_ALL_SKU) return;
+        Subscriptions subscriptions = guildRepository.guild(guild).subscriptions();
+        List<SupporterFeature> problems = collectUnentitledUse(guild);
+        if (problems.isEmpty()) return;
 
-        if (type == SupporterFeature.BOT_NICKNAMED) {
-            try {
-                guild.getSelfMember().modifyNickname(null).complete();
-                subscriptions.deleteError(type);
-                return;
-            } catch (Exception e) {
-                // ignore
+        Instant dueBefore = Instant.now().minus(skus().subscriptionErrorMessageHours(), ChronoUnit.HOURS);
+        boolean due = problems.stream()
+                .anyMatch(problem ->
+                        subscriptions.getErrorMessage(problem).lastSend().isBefore(dueBefore));
+        if (!due) return;
+
+        log.debug("Sending supporter notice for guild {} for {}.", guild, problems);
+        boolean notified = deliver(guild, buildNotice(guild, problems));
+        for (SupporterFeature problem : problems) {
+            subscriptions.resendError(problem, notified);
+        }
+    }
+
+    private List<SupporterFeature> collectUnentitledUse(Guild guild) {
+        RepGuild repGuild = guildRepository.guild(guild);
+        Subscriptions subscriptions = repGuild.subscriptions();
+        List<SupporterFeature> problems = new ArrayList<>();
+        for (SupporterFeature feature : SupporterFeature.values()) {
+            if (isUnentitledUse(repGuild, feature) && !resolveAutomatically(guild, feature)) {
+                problems.add(feature);
+            } else {
+                subscriptions.deleteError(feature);
             }
         }
+        return problems;
+    }
 
-        SubscriptionError errorMessage = subscriptions.getErrorMessage(type);
-        if (errorMessage
-                .lastSend()
-                .isAfter(Instant.now().minus(skus.subscriptionErrorMessageHours(), ChronoUnit.HOURS))) {
-            return;
+    private boolean isUnentitledUse(RepGuild repGuild, SupporterFeature feature) {
+        return !feature.isEntitled(skus(), repGuild) && feature.isApplicable(skus(), repGuild);
+    }
+
+    private boolean resolveAutomatically(Guild guild, SupporterFeature feature) {
+        if (feature != SupporterFeature.BOT_NICKNAMED) return false;
+        try {
+            guild.getSelfMember().modifyNickname(null).complete();
+            return true;
+        } catch (Exception e) {
+            log.debug("Could not reset the nickname in {}.", guild, e);
+            return false;
         }
+    }
 
-        List<Replacement> replacements = new ArrayList<>(type.replacements(skus, settings.repGuild()));
-
-        int current = subscriptions.maxErrorCount();
-        int timeLeft = (skus.errorThresholdBlock() - current) * skus.subscriptionErrorMessageHours();
-        int timeLeftDays = Math.floorDiv(timeLeft, 24);
-        int timeLeftHours = timeLeft % 24;
-        replacements.add(Replacement.create("DAYS", timeLeftDays));
-        replacements.add(Replacement.create("HOURS", timeLeftHours));
-
+    private MessageCreateData buildNotice(Guild guild, List<SupporterFeature> problems) {
+        RepGuild repGuild = guildRepository.guild(guild);
         var locale = localizer.context(LocaleProvider.guild(guild));
-        String message = locale.localize(
-                "$%s$\n$suppertererror.timeleft$\n$supportererror.considersupporting$".formatted(type.localeCode()),
-                replacements.toArray(Replacement[]::new));
 
-        List<ActionRow> buttons = Premium.buildEntitlementButtons(type.skus(skus));
-        MessageCreateData data = new MessageCreateBuilder()
-                .addContent(message)
-                .addComponents(buttons)
+        List<String> lines = new ArrayList<>();
+        lines.add(locale.localize(
+                "supportererror.server", Replacement.create("GUILD", MarkdownSanitizer.escape(guild.getName()))));
+        List<SupporterFeature> blocking =
+                problems.stream().filter(SupporterFeature::isBlocking).toList();
+        List<SupporterFeature> paused =
+                problems.stream().filter(problem -> !problem.isBlocking()).toList();
+        blocking.forEach(problem -> lines.add(problemLine(locale, repGuild, problem)));
+        repGuild.subscriptions().blocksAt(blocking).ifPresent(blocksAt -> {
+            long hoursLeft =
+                    Math.max(0, Duration.between(Instant.now(), blocksAt).toHours());
+            lines.add(locale.localize(
+                    "suppertererror.timeleft",
+                    Replacement.create("DAYS", hoursLeft / 24),
+                    Replacement.create("HOURS", hoursLeft % 24)));
+        });
+        paused.forEach(problem -> lines.add(problemLine(locale, repGuild, problem)));
+        if (!paused.isEmpty()) lines.add(locale.localize("supportererror.paused"));
+        lines.add(locale.localize("supportererror.considersupporting"));
+        String content = String.join("\n", lines);
+        if (content.length() > Message.MAX_CONTENT_LENGTH) {
+            content = content.substring(0, Message.MAX_CONTENT_LENGTH);
+        }
+
+        return new MessageCreateBuilder()
+                .addContent(content)
+                .addComponents(noticeButtons(guild, problems, locale))
                 .build();
+    }
 
-        long id = settings.general().systemChannel();
-        TextChannel textChannelById = guild.getTextChannelById(id);
-        log.debug("Sending message for guild {} for {}.", guild, type.name());
-        var notified = false;
-        if (textChannelById != null) {
+    private String problemLine(LocalizationContext locale, RepGuild repGuild, SupporterFeature problem) {
+        return "- "
+                + locale.localize(
+                        problem.localeCode(),
+                        problem.replacements(skus(), repGuild).toArray(Replacement[]::new));
+    }
+
+    private List<ActionRow> noticeButtons(Guild guild, List<SupporterFeature> problems, LocalizationContext locale) {
+        List<Button> settingsButtons = problems.stream()
+                .map(SupporterFeature::dashboardSection)
+                .flatMap(Optional::stream)
+                .distinct()
+                .map(section -> Button.link(
+                        configuration.api().pathUrl(guild.getIdLong(), section.path()),
+                        locale.localize(
+                                "supportererror.opensettings",
+                                Replacement.create("SECTION", locale.localize(section.localeKey())))))
+                .toList();
+        Set<Long> skuIds = problems.stream()
+                .flatMap(problem -> problem.skus(skus()).sku().stream())
+                .map(de.chojo.jdautil.interactions.premium.SKU::skuId)
+                .collect(Collectors.toCollection(LinkedHashSet::new));
+
+        List<ActionRow> rows = new ArrayList<>(ActionRow.partitionOf(settingsButtons));
+        rows.addAll(Premium.buildEntitlementButtons(skuIds));
+        return rows.subList(0, Math.min(rows.size(), Message.MAX_COMPONENT_COUNT));
+    }
+
+    private boolean deliver(Guild guild, MessageCreateData data) {
+        long id = guildRepository.guild(guild).settings().general().systemChannel();
+        TextChannel systemChannel = guild.getTextChannelById(id);
+        if (systemChannel != null) {
             try {
-                textChannelById.sendMessage(data).complete();
-                notified = true;
+                systemChannel.sendMessage(data).complete();
+                return true;
             } catch (Exception e) {
-                // ignore
+                log.debug("Could not send supporter notice to system channel of {}.", guild, e);
             }
         }
-        if (!notified) {
-            Member owner = guild.retrieveOwner().complete();
+
+        Member owner = guild.retrieveOwner().complete();
+        if (sendDirect(owner, data)) return true;
+
+        List<Role> adminRoles = guild.getRoles().stream()
+                .filter(r -> r.hasPermission(Permission.ADMINISTRATOR))
+                .toList();
+        for (Role adminRole : adminRoles) {
+            List<Member> admins;
             try {
-                owner.getUser()
-                        .openPrivateChannel()
-                        .complete()
-                        .sendMessage(data)
-                        .complete();
-                notified = true;
-            } catch (Exception e) {
-                log.debug("Ignoring exception while trying to send message to {} for {}.", owner, type.name());
-                // TODO: find other way to communicate
+                admins = guild.findMembersWithRoles(adminRole).get();
+            } catch (CompletionException e) {
+                continue;
+            }
+            for (Member admin : admins) {
+                if (sendDirect(admin, data)) return true;
             }
         }
+        // TODO: reach guilds whose system channel, owner and admins all refuse the notice
+        return false;
+    }
 
-        if (!notified) {
-            // Check for other admins.
-            List<Role> adminRoles = guild.getRoles().stream()
-                    .filter(r -> r.hasPermission(Permission.ADMINISTRATOR))
-                    .toList();
-            for (Role adminRole : adminRoles) {
-                if (notified) break;
-                List<Member> admin;
-                try {
-                    admin = guild.findMembersWithRoles(adminRole).get();
-                } catch (CompletionException e) {
-                    continue;
-                }
-                for (Member member : admin) {
-                    try {
-                        member.getUser()
-                                .openPrivateChannel()
-                                .complete()
-                                .sendMessage(data)
-                                .complete();
-                        notified = true;
-                        break;
-                    } catch (Exception ignored) {
-                        // Ignored. We don't want to spam the user with messages.
-                        log.debug("Ignoring exception while trying to send message to {} for {}.", member, type.name());
-                    }
-                }
-            }
+    private boolean sendDirect(Member member, MessageCreateData data) {
+        try {
+            member.getUser().openPrivateChannel().complete().sendMessage(data).complete();
+            return true;
+        } catch (Exception e) {
+            log.debug("Could not send supporter notice to {}.", member, e);
+            return false;
         }
-
-        subscriptions.resendError(type, notified);
     }
 
     public void cleanExpiredEntitlements() {

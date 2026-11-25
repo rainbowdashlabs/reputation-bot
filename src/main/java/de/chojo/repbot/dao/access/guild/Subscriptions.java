@@ -22,6 +22,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
@@ -54,11 +55,32 @@ public class Subscriptions implements GuildHolder, SkuMeta {
         return subscriptions().stream().map(e -> (SKU) e).toList();
     }
 
-    public int maxErrorCount() {
-        return errorMessages.values().stream()
-                .mapToInt(SubscriptionError::count)
-                .max()
-                .orElse(0);
+    /**
+     * The moment the guild stops receiving reputation because it keeps using the given blocking features.
+     * <p>
+     * The grace period starts when the first of these features was reported. Features that were not reported yet
+     * start now.
+     *
+     * @param features features the guild uses without entitlement
+     * @return the moment of the block, or empty if none of the features is blocking
+     */
+    public Optional<Instant> blocksAt(Collection<SupporterFeature> features) {
+        var skus = repGuild.configuration().skus();
+        long graceHours = (long) skus.errorThresholdBlock() * skus.subscriptionErrorMessageHours();
+        return features.stream()
+                .filter(SupporterFeature::isBlocking)
+                .map(feature -> getErrorMessage(feature).created())
+                .min(Comparator.naturalOrder())
+                .map(since -> since.plus(graceHours, ChronoUnit.HOURS));
+    }
+
+    /**
+     * The moment the guild stops receiving reputation because of the blocking features it was reported for.
+     *
+     * @return the moment of the block, or empty if no blocking feature was reported
+     */
+    public Optional<Instant> blocksAt() {
+        return blocksAt(List.copyOf(errorMessages().keySet()));
     }
 
     public void deleteSubscription(Subscription subscription) {
@@ -78,16 +100,11 @@ public class Subscriptions implements GuildHolder, SkuMeta {
     }
 
     public void deleteError(SupporterFeature error) {
+        if (!errorMessages().containsKey(error)) return;
         query("""
                 DELETE FROM subscription_error WHERE guild_id = ? AND type = ?
                 """).single(call().bind(guildId()).bind(error)).delete();
         errorMessages().remove(error);
-    }
-
-    public List<SubscriptionError> getExpiredErrors(int hours) {
-        return errorMessages().values().stream()
-                .filter(e -> e.lastSend().plus(hours, ChronoUnit.HOURS).isAfter(Instant.now()))
-                .toList();
     }
 
     public void resendError(SupporterFeature error, boolean notified) {
